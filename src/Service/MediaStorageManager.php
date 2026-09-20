@@ -298,6 +298,43 @@ final class MediaStorageManager
 
     public function delete(MediaAsset $asset): void
     {
+        if (!$asset->isDeletionPending()) {
+            $asset->markDeletionPending();
+            try {
+                $this->entityManager->flush();
+            } catch (\Throwable $exception) {
+                throw new \RuntimeException(
+                    'Die Medienlöschung konnte nicht sicher vorgemerkt werden. Es wurde kein Storage-Objekt gelöscht.',
+                    0,
+                    $exception,
+                );
+            }
+        }
+
+        try {
+            $this->deleteStorageFor($asset);
+        } catch (\DomainException|\RuntimeException $exception) {
+            throw new \RuntimeException(
+                'Die Medienlöschung bleibt zur Reparatur vorgemerkt, weil der Storage nicht vollständig bestätigt wurde.',
+                0,
+                $exception,
+            );
+        }
+
+        $this->entityManager->remove($asset);
+        try {
+            $this->entityManager->flush();
+        } catch (\Throwable $exception) {
+            throw new \RuntimeException(
+                'Der Storage wurde gelöscht; der persistierte Löschauftrag bleibt für den nächsten Reparaturlauf erhalten.',
+                0,
+                $exception,
+            );
+        }
+    }
+
+    private function deleteStorageFor(MediaAsset $asset): void
+    {
         if (!$asset->getReplicas()->isEmpty()) {
             foreach ($asset->getReplicas() as $replica) {
                 try {
@@ -306,23 +343,29 @@ final class MediaStorageManager
                     throw new \RuntimeException('Mindestens eine Medienkopie konnte nicht sicher gelöscht werden.');
                 }
             }
-        } elseif ($asset->isExternal()) {
-            if ($asset->getFileSize() !== null) {
-                if (!$this->objectStorage->isConfigured()) {
-                    throw new \DomainException('Die S3-Zugangsdaten werden benötigt, um diese externe Datei sicher zu löschen.');
-                }
-                $path = (string) parse_url($asset->getLocation(), PHP_URL_PATH);
-                $filename = rawurldecode(basename($path));
-                if ($filename === '' || $filename === '.' || $filename === '..') {
-                    throw new \DomainException('Der gespeicherte externe Medienpfad ist ungültig.');
-                }
-                $this->objectStorage->delete($asset->getModuleKey().'/'.$filename);
-            }
-        } else {
-            $this->deleteLocalLocation($asset->getLocation());
+
+            return;
         }
 
-        $this->entityManager->remove($asset);
+        if ($asset->isExternal()) {
+            if ($asset->getFileSize() === null) {
+                return;
+            }
+            if (!$this->objectStorage->isConfigured()) {
+                throw new \DomainException('Die S3-Zugangsdaten werden benötigt, um diese externe Datei sicher zu löschen.');
+            }
+
+            $path = (string) parse_url($asset->getLocation(), PHP_URL_PATH);
+            $filename = rawurldecode(basename($path));
+            if ($filename === '' || $filename === '.' || $filename === '..') {
+                throw new \DomainException('Der gespeicherte externe Medienpfad ist ungültig.');
+            }
+            $this->objectStorage->delete($asset->getModuleKey().'/'.$filename);
+
+            return;
+        }
+
+        $this->deleteLocalLocation($asset->getLocation());
     }
 
     /**

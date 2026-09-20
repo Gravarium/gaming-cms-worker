@@ -12,7 +12,7 @@ final class Version20260920221500 extends AbstractMigration
 {
     public function getDescription(): string
     {
-        return 'Prevent concurrent deletion of media folders that gain child folders';
+        return 'Harden media folder deletion races and persist repairable media deletion intents';
     }
 
     public function up(Schema $schema): void

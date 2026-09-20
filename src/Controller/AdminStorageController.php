@@ -220,10 +220,17 @@ final class AdminStorageController extends AbstractController
             return $this->redirectToRoute('app_admin_storage_index');
         }
 
+        if (!$this->entityManager->isOpen()) {
+            $this->addFlash('error', 'Die Mehrfachaktion wurde nach einem Datenbankfehler abgebrochen; offene Medienlöschungen bleiben reparierbar vorgemerkt.');
+
+            return $this->redirectToRoute('app_admin_storage_index');
+        }
+
         try {
             $this->entityManager->flush();
         } catch (\Throwable) {
             $this->addFlash('error', 'Die Mehrfachaktion konnte nicht sicher in der Datenbank bestätigt werden.');
+
             return $this->redirectToRoute('app_admin_storage_index');
         }
 
@@ -246,7 +253,6 @@ final class AdminStorageController extends AbstractController
         }
         try {
             $this->mediaStorage->delete($asset);
-            $this->entityManager->flush();
             $this->addFlash('success', 'Die Datei wurde gelöscht.');
         } catch (\DomainException|\RuntimeException $exception) {
             $this->addFlash('error', $exception->getMessage());

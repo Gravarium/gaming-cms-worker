@@ -6,6 +6,7 @@ namespace App\Tests\Controller;
 
 use App\Entity\ExternalConnectorTarget;
 use App\Entity\MediaAsset;
+use App\Entity\MediaAssetReplica;
 use App\Entity\MediaFolder;
 use App\Entity\User;
 use App\Security\CmsPermission;
@@ -242,6 +243,71 @@ final class MediaStorageSecurityTest extends WebTestCase
             $em->flush();
             @unlink($path);
         }
+    }
+
+    public function testExternalDeleteFailureLeavesRepairablePendingIntent(): void
+    {
+        $client = static::createClient();
+        $asset = (new MediaAsset())
+            ->setModuleKey('video')
+            ->setStorageMode('external')
+            ->setLocation('https://media.example.test/video.mp4')
+            ->setOriginalName('video.mp4')
+            ->setTitle('Video')
+            ->setMimeType('video/mp4')
+            ->setFileSize(123);
+        $this->em($client)->persist($asset);
+        $this->em($client)->flush();
+        $assetId = $asset->getId();
+        self::assertNotNull($assetId);
+        $client->loginUser($this->user($client, [CmsPermission::STORAGE]));
+
+        $client->request('POST', '/admin/storage/media/'.$assetId.'/delete', [
+            '_token' => $this->csrf($client, 'delete-media-'.$assetId),
+        ]);
+
+        self::assertResponseRedirects('/admin/storage');
+        $this->em($client)->clear();
+        $stored = $this->em($client)->find(MediaAsset::class, $assetId);
+        self::assertInstanceOf(MediaAsset::class, $stored);
+        self::assertTrue($stored->isDeletionPending());
+        self::assertNotNull($stored->getDeletionRequestedAt());
+    }
+
+    public function testUnknownReplicaTargetLeavesRepairablePendingIntent(): void
+    {
+        $client = static::createClient();
+        $asset = (new MediaAsset())
+            ->setModuleKey('video')
+            ->setStorageMode('external')
+            ->setLocation('https://media.example.test/video.mp4')
+            ->setOriginalName('video.mp4')
+            ->setTitle('Video')
+            ->setMimeType('video/mp4')
+            ->setFileSize(123);
+        $asset->addReplica(
+            (new MediaAssetReplica())
+                ->setTargetKey('missing-target')
+                ->setProviderKey('s3-compatible')
+                ->setObjectKey('video/video.mp4')
+                ->setLocation('https://media.example.test/video.mp4'),
+        );
+        $this->em($client)->persist($asset);
+        $this->em($client)->flush();
+        $assetId = $asset->getId();
+        self::assertNotNull($assetId);
+        $client->loginUser($this->user($client, [CmsPermission::STORAGE]));
+
+        $client->request('POST', '/admin/storage/media/'.$assetId.'/delete', [
+            '_token' => $this->csrf($client, 'delete-media-'.$assetId),
+        ]);
+
+        self::assertResponseRedirects('/admin/storage');
+        $this->em($client)->clear();
+        $stored = $this->em($client)->find(MediaAsset::class, $assetId);
+        self::assertInstanceOf(MediaAsset::class, $stored);
+        self::assertTrue($stored->isDeletionPending());
+        self::assertCount(1, $stored->getReplicas());
     }
 
     /** @param list<string> $permissions */
