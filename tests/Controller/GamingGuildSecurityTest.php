@@ -6,6 +6,8 @@ namespace App\Tests\Controller;
 
 use App\Entity\Game;
 use App\Entity\Guild;
+use App\Entity\GuildApplication;
+use App\Entity\GuildApplicationQuestion;
 use App\Entity\GuildEvent;
 use App\Entity\GuildEventSignup;
 use App\Entity\GuildMember;
@@ -87,6 +89,30 @@ final class GamingGuildSecurityTest extends WebTestCase
 
         $client->request('POST', '/guild-area/'.$guild->getId().'/event/'.$event->getId().'/signup');
         self::assertResponseStatusCodeSame(404);
+    }
+
+    public function testRequiredApplicationQuestionIsValidatedServerSide(): void
+    {
+        $client = static::createClient();
+        [$guild] = $this->guilds($client);
+        $guild->setRecruitmentOpen(true);
+        $question = (new GuildApplicationQuestion())->setGuild($guild)->setLabel('Warum?')->setRequired(true);
+        $this->em($client)->persist($question);
+        $this->em($client)->flush();
+
+        $crawler = $client->request('GET', '/gaming/guild/'.$guild->getSlug().'/apply');
+        $form = $crawler->selectButton('Bewerbung absenden')->form([
+            'guild_application[applicantName]' => 'Applicant',
+            'guild_application[email]' => 'applicant@example.test',
+            'guild_application[characterName]' => 'Character',
+            'guild_application[message]' => 'Dies ist eine ausreichend lange Bewerbung.',
+            'guild_application[question_'.$question->getId().']' => '',
+        ]);
+        $client->submit($form);
+
+        self::assertResponseIsSuccessful();
+        self::assertSelectorTextContains('.form-error-message', 'Bitte beantworte dieses Pflichtfeld.');
+        self::assertSame(0, $this->em($client)->getRepository(GuildApplication::class)->count(['guild' => $guild]));
     }
 
     public function testPortalAllowsOwnedMemberToSignupForPlannedEvent(): void
