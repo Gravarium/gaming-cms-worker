@@ -51,14 +51,64 @@ class MediaFolder
     public function getSlug(): string { return $this->slug; }
     public function setSlug(string $slug): self { $this->slug = trim($slug); return $this; }
     public function getParent(): ?self { return $this->parent; }
+
     public function setParent(?self $parent): self
     {
-        if ($parent === $this) { throw new \DomainException('Ein Ordner kann nicht sein eigener Unterordner sein.'); }
+        if ($parent === null) {
+            $this->parent = null;
+
+            return $this;
+        }
+
+        $seen = [];
+        $cursor = $parent;
+        for ($depth = 0; $cursor !== null && $depth < 128; ++$depth) {
+            if ($cursor === $this) {
+                throw new \DomainException('Ein Medienordner darf nicht in sich selbst oder einen eigenen Unterordner verschoben werden.');
+            }
+
+            $objectId = spl_object_id($cursor);
+            if (isset($seen[$objectId])) {
+                throw new \DomainException('Die ausgewählte Ordnerhierarchie enthält bereits einen Zyklus.');
+            }
+            $seen[$objectId] = true;
+            $cursor = $cursor->getParent();
+        }
+
+        if ($cursor !== null) {
+            throw new \DomainException('Die ausgewählte Ordnerhierarchie ist zu tief.');
+        }
+
         $this->parent = $parent;
+
         return $this;
     }
+
     /** @return Collection<int, MediaAsset> */
     public function getAssets(): Collection { return $this->assets; }
     public function getCreatedAt(): \DateTimeImmutable { return $this->createdAt; }
-    public function getPathLabel(): string { return $this->parent ? $this->parent->getPathLabel().' / '.$this->name : $this->name; }
+
+    public function getPathLabel(): string
+    {
+        $parts = [];
+        $seen = [];
+        $cursor = $this;
+
+        for ($depth = 0; $cursor !== null && $depth < 128; ++$depth) {
+            $objectId = spl_object_id($cursor);
+            if (isset($seen[$objectId])) {
+                array_unshift($parts, '[Ungültige Hierarchie]');
+                break;
+            }
+            $seen[$objectId] = true;
+            array_unshift($parts, $cursor->getName());
+            $cursor = $cursor->getParent();
+        }
+
+        if ($cursor !== null && !str_starts_with((string) ($parts[0] ?? ''), '[Ungültige Hierarchie]')) {
+            array_unshift($parts, '[Zu tiefe Hierarchie]');
+        }
+
+        return implode(' / ', $parts);
+    }
 }

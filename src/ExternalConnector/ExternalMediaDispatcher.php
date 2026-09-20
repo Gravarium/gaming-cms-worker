@@ -38,12 +38,11 @@ final readonly class ExternalMediaDispatcher
             foreach (array_reverse($successfulTargets) as $targetKey => [$adapter, $target]) {
                 try {
                     $adapter->delete($target, $objects[$targetKey]->objectKey);
+                    unset($objects[$targetKey]);
                 } catch (\Throwable) {
-                    // Best-effort rollback must not expose provider details or hide the original failure.
+                    // Residual objects stay in the result so the caller can journal cleanup safely.
                 }
             }
-
-            $objects = [];
         }
 
         return new ExternalMediaStoreResult($summary, $objects);
@@ -58,6 +57,17 @@ final readonly class ExternalMediaDispatcher
         }
 
         return $adapter->store($target, $upload);
+    }
+
+    public function deleteForTarget(string $targetKey, string $objectKey): void
+    {
+        $target = $this->targets->target(ExternalConnectorTarget::CAPABILITY_MEDIA, $targetKey);
+        $adapter = $this->adapters->forTarget($target);
+        if (!$adapter instanceof ExternalMediaConnectorAdapter) {
+            throw new \LogicException('The selected adapter does not implement the media contract.');
+        }
+
+        $adapter->delete($target, $objectKey);
     }
 
     /** @param array<string, string> $objectKeysByTarget */
