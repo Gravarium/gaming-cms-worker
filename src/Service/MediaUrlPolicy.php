@@ -29,8 +29,9 @@ final class MediaUrlPolicy
             throw new \DomainException('Lokale Medien-Adressen sind nicht erlaubt.');
         }
 
-        if (filter_var($host, FILTER_VALIDATE_IP) !== false
-            && filter_var($host, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE) === false
+        $ipHost = trim($host, '[]');
+        if (filter_var($ipHost, FILTER_VALIDATE_IP) !== false
+            && filter_var($ipHost, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE) === false
         ) {
             throw new \DomainException('Private oder reservierte IP-Adressen sind für externe Medien nicht erlaubt.');
         }

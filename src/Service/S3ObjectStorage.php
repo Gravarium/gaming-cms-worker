@@ -47,6 +47,12 @@ final class S3ObjectStorage
             throw new \RuntimeException('Die hochzuladende Datei ist nicht lesbar.');
         }
 
+        $modulePublicUrl = trim((string) $modulePublicUrl);
+        $resolvedPublicUrl = $modulePublicUrl !== '' ? $modulePublicUrl : trim($this->publicUrl);
+        if ($resolvedPublicUrl !== '') {
+            $this->assertPublicBaseUrl($resolvedPublicUrl);
+        }
+
         $payloadHash = hash_file('sha256', $filePath);
         if ($payloadHash === false) {
             throw new \RuntimeException('Die Prüfsumme der Datei konnte nicht erstellt werden.');
@@ -69,16 +75,11 @@ final class S3ObjectStorage
             fclose($stream);
         }
 
-        $modulePublicUrl = trim((string) $modulePublicUrl);
         if ($modulePublicUrl !== '') {
-            $this->assertPublicBaseUrl($modulePublicUrl);
-
             return rtrim($modulePublicUrl, '/').'/'.rawurlencode(basename($objectKey));
         }
-        if ($this->publicUrl !== '') {
-            $this->assertPublicBaseUrl($this->publicUrl);
-
-            return rtrim($this->publicUrl, '/').'/'.$encodedKey;
+        if ($resolvedPublicUrl !== '') {
+            return rtrim($resolvedPublicUrl, '/').'/'.$encodedKey;
         }
 
         return $url;
@@ -122,6 +123,8 @@ final class S3ObjectStorage
             || !in_array(strtolower((string) $urlParts['scheme']), ['http', 'https'], true)
             || isset($urlParts['user'])
             || isset($urlParts['pass'])
+            || isset($urlParts['query'])
+            || isset($urlParts['fragment'])
         ) {
             throw new \DomainException('Der konfigurierte S3-Endpunkt ist ungültig.');
         }
