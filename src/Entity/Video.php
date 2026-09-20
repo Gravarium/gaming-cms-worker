@@ -59,12 +59,12 @@ class Video
     private string $sourceType = self::SOURCE_UPLOAD;
 
     #[ORM\Column(length: 700, nullable: true)]
-    #[Assert\Url(requireTld: true)]
+    #[Assert\Url(protocols: ['http', 'https'], requireTld: true)]
     #[Assert\Length(max: 700)]
     private ?string $sourceUrl = null;
 
     #[ORM\Column(length: 700, nullable: true)]
-    #[Assert\Url(requireTld: true)]
+    #[Assert\Url(protocols: ['http', 'https'], requireTld: true)]
     #[Assert\Length(max: 700)]
     private ?string $thumbnailUrl = null;
 

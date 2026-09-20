@@ -1,6 +1,13 @@
 {% extends 'base.html.twig' %}
-{% block title %}Medienordner anlegen | Gaming CMS{% endblock %}
+{% block title %}{{ heading }} | Gaming CMS{% endblock %}
 {% block body %}
 <header class="topbar"><a class="brand" href="{{ path('app_admin_dashboard') }}">Gaming CMS</a><a class="button-link button-secondary" href="{{ path('app_admin_storage_index') }}">Zur Mediathek</a></header>
-<main class="editor-shell"><p class="eyebrow">Medienbibliothek</p><h1>Ordner anlegen</h1>{{ form_start(form, {attr: {class: 'content-form'}}) }}{{ form_widget(form) }}<button type="submit">Ordner anlegen</button>{{ form_end(form) }}</main>
+<main class="editor-shell">
+    <p class="eyebrow">Medienbibliothek</p>
+    <h1>{{ heading }}</h1>
+    {{ form_start(form, {attr: {class: 'content-form'}}) }}
+        {{ form_widget(form) }}
+        <button type="submit">{{ submitLabel }}</button>
+    {{ form_end(form) }}
+</main>
 {% endblock %}

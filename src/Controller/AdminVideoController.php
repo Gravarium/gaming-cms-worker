@@ -16,6 +16,7 @@ use App\Repository\VideoCategoryRepository;
 use App\Repository\VideoPlaylistRepository;
 use App\Repository\VideoRepository;
 use App\Service\MediaStorageManager;
+use App\Service\MediaUrlPolicy;
 use App\Service\VideoEmbedResolver;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -40,6 +41,7 @@ final class AdminVideoController extends AbstractController
         private readonly EntityManagerInterface $entityManager,
         private readonly SluggerInterface $slugger,
         private readonly MediaStorageManager $mediaStorage,
+        private readonly MediaUrlPolicy $urlPolicy,
         private readonly VideoEmbedResolver $embedResolver,
     ) {
     }
@@ -154,6 +156,9 @@ final class AdminVideoController extends AbstractController
             }
             if (!$isUpload && $video->getSourceUrl() !== null && $this->embedResolver->resolve($video, 'localhost') === null) {
                 $form->get('sourceUrl')->addError(new FormError('Die URL passt nicht zur ausgewählten Videoquelle.'));
+            }
+            if ($video->getThumbnailUrl() !== null && !$this->urlPolicy->isSafeRemote($video->getThumbnailUrl())) {
+                $form->get('thumbnailUrl')->addError(new FormError('Die Vorschaubild-URL ist nicht als sichere externe Medienadresse erlaubt.'));
             }
 
             if ($form->isValid()) {
