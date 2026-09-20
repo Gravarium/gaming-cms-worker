@@ -104,11 +104,17 @@ final class AdminUserController extends AbstractController
         ];
         $canAssignAdmin = $this->isGranted('ROLE_ADMIN');
         $editingSelf = $this->getUser() === $user;
-        $form = $this->createForm(AdminUserType::class, $user, ['can_assign_admin' => $canAssignAdmin])->handleRequest($request);
+        $form = $this->createForm(AdminUserType::class, $user, ['can_assign_admin' => $canAssignAdmin, 'self_edit' => $editingSelf])->handleRequest($request);
 
         if ($form->isSubmitted()) {
             if (!$canAssignAdmin) { $user->setAdmin($before['admin']); }
             if ($editingSelf) {
+                if ($before['email'] !== $user->getEmail()) {
+                    $currentPassword = (string) $form->get('currentPassword')->getData();
+                    if (!$this->passwordHasher->isPasswordValid($user, $currentPassword)) {
+                        $form->get('currentPassword')->addError(new FormError('Bestätige die Änderung deiner E-Mail-Adresse mit deinem aktuellen Passwort.'));
+                    }
+                }
                 $selfPassword = $form->get('plainPassword')->getData();
                 if (is_string($selfPassword) && $selfPassword !== '') {
                     $form->get('plainPassword')->addError(new FormError('Ändere dein eigenes Passwort über die Kontosicherheit mit Bestätigung des bisherigen Passworts.'));
