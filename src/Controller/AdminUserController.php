@@ -163,10 +163,12 @@ final class AdminUserController extends AbstractController
                 $securityChanged = true;
             }
             if ($securityChanged) {
+                $user->invalidateSessions();
                 if ($editingSelf) {
-                    $this->sessions->revokeAll($user, hash('sha256', $request->getSession()->getId()));
+                    $current = $this->sessions->findBySessionId($request->getSession()->getId());
+                    $this->sessions->revokeAll($user, $current?->getSessionHash());
+                    $current?->syncSecurityVersion();
                 } else {
-                    $user->invalidateSessions();
                     $this->sessions->revokeAll($user);
                 }
             }
