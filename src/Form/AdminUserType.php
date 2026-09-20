@@ -6,8 +6,9 @@ namespace App\Form;
 
 use App\Entity\AccessRole;
 use App\Entity\User;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use App\Security\CmsPermission;
+use App\Security\PasswordPolicy;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -18,6 +19,7 @@ use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
@@ -26,12 +28,28 @@ final class AdminUserType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        $passwordConstraints = [new Length(min: 12, minMessage: 'Das Passwort muss mindestens 12 Zeichen lang sein.')];
-        if ($options['password_required']) { $passwordConstraints[] = new NotBlank(message: 'Bitte gib ein Passwort ein.'); }
+        $passwordConstraints = PasswordPolicy::constraints($options['password_required']);
+        $emailOptions = ['label' => 'E-Mail-Adresse'];
+        if ($options['self_edit']) {
+            $emailOptions['mapped'] = false;
+            $emailOptions['data'] = $options['self_email'];
+            $emailOptions['constraints'] = [new NotBlank(), new Email(), new Length(max: 180)];
+        }
 
         $builder
             ->add('displayName', TextType::class, ['label' => 'Anzeigename'])
-            ->add('email', EmailType::class, ['label' => 'E-Mail-Adresse'])
+            ->add('email', EmailType::class, $emailOptions);
+
+        if ($options['self_edit']) {
+            $builder->add('currentPassword', PasswordType::class, [
+                'label' => 'Aktuelles Passwort für Änderung der eigenen E-Mail-Adresse',
+                'mapped' => false,
+                'required' => false,
+                'attr' => ['autocomplete' => 'current-password'],
+            ]);
+        }
+
+        $builder
             ->add('admin', CheckboxType::class, [
                 'label' => 'Volladministrator (alle Rechte)',
                 'required' => false,
@@ -68,15 +86,17 @@ final class AdminUserType extends AbstractType
                 'required' => $options['password_required'],
                 'invalid_message' => 'Die Passwörter stimmen nicht überein.',
                 'constraints' => $passwordConstraints,
-                'first_options' => ['label' => $options['password_required'] ? 'Passwort' : 'Neues Passwort', 'help' => $options['password_required'] ? 'Mindestens 12 Zeichen.' : 'Leer lassen, um das bisherige Passwort zu behalten.'],
+                'first_options' => ['label' => $options['password_required'] ? 'Passwort' : 'Neues Passwort', 'help' => $options['password_required'] ? 'Mindestens 12 Zeichen sowie Großbuchstabe, Kleinbuchstabe und Zahl.' : 'Leer lassen, um das bisherige Passwort zu behalten.'],
                 'second_options' => ['label' => 'Passwort wiederholen'],
             ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
-        $resolver->setDefaults(['data_class' => User::class, 'password_required' => false, 'can_assign_admin' => false])
+        $resolver->setDefaults(['data_class' => User::class, 'password_required' => false, 'can_assign_admin' => false, 'self_edit' => false, 'self_email' => null])
             ->setAllowedTypes('password_required', 'bool')
-            ->setAllowedTypes('can_assign_admin', 'bool');
+            ->setAllowedTypes('can_assign_admin', 'bool')
+            ->setAllowedTypes('self_edit', 'bool')
+            ->setAllowedTypes('self_email', ['null', 'string']);
     }
 }

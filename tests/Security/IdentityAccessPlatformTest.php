@@ -24,6 +24,18 @@ final class IdentityAccessPlatformTest extends TestCase
         self::assertSame([CmsPermission::VIDEO], $user->getEffectivePermissions());
     }
 
+    public function testUnknownCmsPermissionsAreRejectedAtDomainBoundary(): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        (new User())->setPermissions(['CMS_NOT_REAL']);
+    }
+
+    public function testUnknownRolePermissionsAreRejectedAtDomainBoundary(): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        (new AccessRole())->setPermissions(['CMS_NOT_REAL']);
+    }
+
     public function testTimedLockAndSecurityVersion(): void
     {
         $user = new User();

@@ -5,11 +5,13 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Entity\AccessRole;
+use App\Entity\User;
 use App\Form\AccessRoleType;
 use App\Repository\AccessRoleRepository;
 use App\Service\AuditLogger;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -64,11 +66,19 @@ final class AdminAccessRoleController extends AbstractController
     {
         $new = $role->getId() === null;
         $oldKey = $role->getKey();
+        $oldPermissions = $role->getPermissions();
+        $oldActive = $role->isActive();
+        $actor = $this->getUser();
+        $assignedToActor = !$new && $actor instanceof User && $actor->getAccessRoles()->contains($role);
         $form = $this->createForm(AccessRoleType::class, $role, ['key_locked' => !$new])->handleRequest($request);
+        if ($form->isSubmitted() && $assignedToActor && ($oldPermissions !== $role->getPermissions() || $oldActive !== $role->isActive())) {
+            $role->setPermissions($oldPermissions)->setActive($oldActive);
+            $form->get('permissions')->addError(new FormError('Du kannst Rechte oder Status einer dir selbst zugewiesenen Rolle nicht ändern.'));
+        }
         if ($form->isSubmitted() && $form->isValid()) {
             if (!$new) { $role->setKey($oldKey); }
             if ($new && $this->roles->findOneBy(['key' => $role->getKey()]) !== null) {
-                $form->get('key')->addError(new \Symfony\Component\Form\FormError('Dieser Schlüssel wird bereits verwendet.'));
+                $form->get('key')->addError(new FormError('Dieser Schlüssel wird bereits verwendet.'));
             } else {
                 if ($new) { $this->entityManager->persist($role); }
                 $this->audit->record($new ? 'access_role.created' : 'access_role.updated', $role, $role->getId(), $new ? 'Berechtigungsrolle angelegt.' : 'Berechtigungsrolle aktualisiert.', ['key' => $role->getKey(), 'permissions' => $role->getPermissions()]);

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use App\Security\CmsPermission;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
@@ -28,6 +29,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 180)]
     #[Assert\NotBlank]
     #[Assert\Email]
+    #[Assert\Length(max: 180)]
     private string $email = '';
 
     #[ORM\Column(type: Types::DATETIME_IMMUTABLE, nullable: true)]
@@ -71,6 +73,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?\DateTimeImmutable $lockedUntil = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Assert\Length(max: 255)]
     private ?string $lockReason = null;
 
     #[ORM\Column(options: ['default' => 1])]
@@ -116,7 +119,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /** @return list<string> */
     public function getPermissions(): array { return $this->permissions; }
     /** @param list<string> $permissions */
-    public function setPermissions(array $permissions): self { $this->permissions = array_values(array_unique($permissions)); return $this; }
+    public function setPermissions(array $permissions): self
+    {
+        foreach ($permissions as $permission) {
+            if (!in_array($permission, CmsPermission::ALL, true)) { throw new \InvalidArgumentException('Unknown CMS permission.'); }
+        }
+        $this->permissions = array_values(array_unique($permissions));
+        return $this;
+    }
     public function hasPermission(string $permission): bool { return in_array($permission, $this->getEffectivePermissions(), true); }
     /** @return list<string> */
     public function getEffectivePermissions(): array
@@ -142,10 +152,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->twoFactorSecret = $encryptedSecret;
         $this->twoFactorRecoveryCodes = $recoveryCodeHashes;
         $this->twoFactorEnabled = true;
+        $this->invalidateSessions();
         return $this;
     }
     public function disableTwoFactor(): self
     {
+        if ($this->twoFactorEnabled || $this->twoFactorSecret !== null || $this->twoFactorRecoveryCodes !== []) {
+            $this->invalidateSessions();
+        }
         $this->twoFactorEnabled = false;
         $this->twoFactorSecret = null;
         $this->twoFactorRecoveryCodes = [];
@@ -163,6 +177,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return false;
     }
     public function recoveryCodeCount(): int { return count($this->twoFactorRecoveryCodes); }
+    /** @return list<string> */
+    public function getRecoveryCodeHashes(): array { return $this->twoFactorRecoveryCodes; }
     public function eraseCredentials(): void {}
     public function getDisplayName(): string { return $this->displayName; }
     public function setDisplayName(string $displayName): self { $this->displayName = trim($displayName); return $this; }

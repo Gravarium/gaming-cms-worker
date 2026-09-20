@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Entity\AccountToken;
 use App\Entity\User;
 use App\Entity\UserSession;
 use App\Form\AccountPasswordType;
 use App\Repository\UserSessionRepository;
 use App\Security\CmsPermission;
+use App\Service\AccountTokenManager;
 use App\Service\AuditLogger;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -40,6 +42,7 @@ final class AccountController extends AbstractController
         EntityManagerInterface $entityManager,
         AuditLogger $audit,
         UserSessionRepository $sessions,
+        AccountTokenManager $tokens,
     ): Response {
         $user = $this->getUser();
         if (!$user instanceof User) { throw $this->createAccessDeniedException(); }
@@ -58,7 +61,9 @@ final class AccountController extends AbstractController
 
             if ($form->isValid()) {
                 $user->setPassword($passwordHasher->hashPassword($user, $newPassword));
-                $revoked = $sessions->revokeAll($user, hash('sha256', $request->getSession()->getId()));
+                $user->invalidateSessions();
+                $tokens->revoke($user, AccountToken::PURPOSE_PASSWORD_RESET);
+                $revoked = $sessions->revokeAll($user);
                 $audit->record('security.password.changed', $user, $user->getId(), 'Eigenes Passwort geändert.', ['revokedSessions' => $revoked]);
                 $entityManager->flush();
                 $request->getSession()->migrate(true);

@@ -9,6 +9,7 @@ use App\Entity\User;
 use App\Form\ForgotPasswordType;
 use App\Form\ResetPasswordType;
 use App\Repository\UserRepository;
+use App\Repository\UserSessionRepository;
 use App\Service\AccountMailer;
 use App\Service\AccountTokenManager;
 use App\Service\AuditLogger;
@@ -27,6 +28,7 @@ final class AccountRecoveryController extends AbstractController
 {
     public function __construct(
         private readonly UserRepository $users,
+        private readonly UserSessionRepository $sessions,
         private readonly AccountTokenManager $tokens,
         private readonly AccountMailer $mailer,
         private readonly EntityManagerInterface $entityManager,
@@ -67,7 +69,7 @@ final class AccountRecoveryController extends AbstractController
     public function resetPassword(string $token, Request $request, UserPasswordHasherInterface $passwordHasher): Response
     {
         $accountToken = $this->tokens->resolve($token, AccountToken::PURPOSE_PASSWORD_RESET);
-        if ($accountToken === null) {
+        if ($accountToken === null || !$accountToken->getUser()?->isActive()) {
             return $this->render('security/reset_password.html.twig', ['invalid' => true, 'form' => null]);
         }
 
@@ -75,12 +77,13 @@ final class AccountRecoveryController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $accountToken = $this->tokens->consume($token, AccountToken::PURPOSE_PASSWORD_RESET);
             $user = $accountToken?->getUser();
-            if (!$user instanceof User) {
+            if (!$user instanceof User || !$user->isActive()) {
                 return $this->render('security/reset_password.html.twig', ['invalid' => true, 'form' => null]);
             }
 
             $user->setPassword($passwordHasher->hashPassword($user, (string) $form->get('password')->getData()));
             $user->invalidateSessions();
+            $this->sessions->revokeAll($user);
             $this->tokens->revoke($user, AccountToken::PURPOSE_PASSWORD_RESET);
             $this->audit->record('security.password_reset.completed', $user, $user->getId(), 'Passwort erfolgreich zurückgesetzt; bestehende Sitzungen wurden ungültig gemacht.');
             $this->entityManager->flush();

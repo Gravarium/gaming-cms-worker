@@ -4,27 +4,20 @@ declare(strict_types=1);
 
 namespace App\Form;
 
+use App\Security\PasswordPolicy;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
-use Symfony\Component\Validator\Constraints\Regex;
 
 /** @extends AbstractType<null> */
 final class AccountPasswordType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        $strongPassword = [
-            new NotBlank(),
-            new Length(min: 12, max: 4096, minMessage: 'Das neue Passwort muss mindestens {{ limit }} Zeichen lang sein.'),
-            new Regex(pattern: '/\p{Ll}/u', message: 'Das neue Passwort braucht mindestens einen Kleinbuchstaben.'),
-            new Regex(pattern: '/\p{Lu}/u', message: 'Das neue Passwort braucht mindestens einen Großbuchstaben.'),
-            new Regex(pattern: '/\p{N}/u', message: 'Das neue Passwort braucht mindestens eine Zahl.'),
-        ];
+        $strongPassword = PasswordPolicy::constraints();
 
         $builder
             ->add('currentPassword', PasswordType::class, [

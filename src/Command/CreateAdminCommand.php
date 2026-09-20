@@ -6,6 +6,7 @@ namespace App\Command;
 
 use App\Entity\User;
 use App\Repository\UserRepository;
+use App\Security\PasswordPolicy;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -14,6 +15,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\Question;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 #[AsCommand(
     name: 'app:user:create-admin',
@@ -25,6 +27,7 @@ final class CreateAdminCommand extends Command
         private readonly EntityManagerInterface $entityManager,
         private readonly UserRepository $users,
         private readonly UserPasswordHasherInterface $passwordHasher,
+        private readonly ValidatorInterface $validator,
     ) {
         parent::__construct();
     }
@@ -66,8 +69,9 @@ final class CreateAdminCommand extends Command
         $questionHelper = $this->getHelper('question');
         $password = (string) $questionHelper->ask($input, $output, $question);
 
-        if (mb_strlen($password) < 12) {
-            $output->writeln('<error>Das Passwort muss mindestens 12 Zeichen lang sein.</error>');
+        $passwordViolations = $this->validator->validate($password, PasswordPolicy::constraints());
+        foreach ($passwordViolations as $passwordViolation) {
+            $output->writeln('<error>'.(string) $passwordViolation->getMessage().'</error>');
 
             return Command::INVALID;
         }

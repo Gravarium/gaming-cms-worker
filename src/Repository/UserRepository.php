@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Repository;
 
 use App\Entity\User;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -16,6 +17,28 @@ final class UserRepository extends ServiceEntityRepository
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, User::class);
+    }
+
+    /** @param list<string> $recoveryCodeHashes */
+    public function persistRecoveryCodeConsumption(User $user, int $expectedSecurityVersion, array $recoveryCodeHashes): bool
+    {
+        $updated = $this->createQueryBuilder('user')
+            ->update()
+            ->set('user.twoFactorRecoveryCodes', ':recoveryCodes')
+            ->set('user.securityVersion', ':nextSecurityVersion')
+            ->andWhere('user.id = :id')
+            ->andWhere('user.securityVersion = :expectedSecurityVersion')
+            ->setParameter('recoveryCodes', $recoveryCodeHashes, Types::JSON)
+            ->setParameter('nextSecurityVersion', $expectedSecurityVersion + 1)
+            ->setParameter('id', $user->getId())
+            ->setParameter('expectedSecurityVersion', $expectedSecurityVersion)
+            ->getQuery()
+            ->execute();
+
+        if ($updated !== 1) { return false; }
+        $this->getEntityManager()->refresh($user);
+
+        return true;
     }
 
     /** @return list<User> */

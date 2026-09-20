@@ -69,4 +69,5 @@ class UserSession
         $this->userAgent = $userAgent === null ? null : mb_substr($userAgent, 0, 255);
     }
     public function revoke(): void { $this->revokedAt ??= new \DateTimeImmutable(); }
+    public function syncSecurityVersion(): void { $this->securityVersion = $this->user->getSecurityVersion(); }
 }

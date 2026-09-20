@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use App\Repository\AccessRoleRepository;
+use App\Security\CmsPermission;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
@@ -65,7 +66,14 @@ class AccessRole
     /** @return list<string> */
     public function getPermissions(): array { return $this->permissions; }
     /** @param list<string> $permissions */
-    public function setPermissions(array $permissions): self { $this->permissions = array_values(array_unique($permissions)); return $this; }
+    public function setPermissions(array $permissions): self
+    {
+        foreach ($permissions as $permission) {
+            if (!in_array($permission, CmsPermission::ALL, true)) { throw new \InvalidArgumentException('Unknown CMS permission.'); }
+        }
+        $this->permissions = array_values(array_unique($permissions));
+        return $this;
+    }
     public function isActive(): bool { return $this->active; }
     public function setActive(bool $active): self { $this->active = $active; return $this; }
     public function isSystemRole(): bool { return $this->systemRole; }

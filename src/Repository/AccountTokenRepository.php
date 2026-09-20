@@ -19,8 +19,41 @@ final class AccountTokenRepository extends ServiceEntityRepository
 
     public function usable(string $tokenHash, string $purpose): ?AccountToken
     {
+        $token = $this->createQueryBuilder('token')
+            ->andWhere('token.tokenHash = :tokenHash')
+            ->andWhere('token.purpose = :purpose')
+            ->andWhere('token.usedAt IS NULL')
+            ->andWhere('token.expiresAt > :now')
+            ->setParameter('tokenHash', $tokenHash)
+            ->setParameter('purpose', $purpose)
+            ->setParameter('now', new \DateTimeImmutable())
+            ->getQuery()
+            ->getOneOrNullResult();
+
+        return $token instanceof AccountToken ? $token : null;
+    }
+
+    public function consumeUsable(string $tokenHash, string $purpose): ?AccountToken
+    {
+        $now = new \DateTimeImmutable();
+        $updated = $this->createQueryBuilder('token')
+            ->update()
+            ->set('token.usedAt', ':now')
+            ->andWhere('token.tokenHash = :tokenHash')
+            ->andWhere('token.purpose = :purpose')
+            ->andWhere('token.usedAt IS NULL')
+            ->andWhere('token.expiresAt > :now')
+            ->setParameter('now', $now)
+            ->setParameter('tokenHash', $tokenHash)
+            ->setParameter('purpose', $purpose)
+            ->getQuery()->execute();
+
+        if ($updated !== 1) { return null; }
+
         $token = $this->findOneBy(['tokenHash' => $tokenHash, 'purpose' => $purpose]);
-        return $token?->isUsable() ? $token : null;
+        if ($token instanceof AccountToken) { $this->getEntityManager()->refresh($token); }
+
+        return $token;
     }
 
     public function revokeActive(User $user, string $purpose): void
