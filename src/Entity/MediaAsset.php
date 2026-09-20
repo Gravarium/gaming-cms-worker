@@ -48,7 +48,7 @@ class MediaAsset
     private array $tags = [];
 
     #[ORM\ManyToOne(inversedBy: 'assets')]
-    #[ORM\JoinColumn(onDelete: 'SET NULL')]
+    #[ORM\JoinColumn(onDelete: 'RESTRICT')]
     private ?MediaFolder $folder = null;
 
     #[ORM\Column(length: 120, nullable: true)]
