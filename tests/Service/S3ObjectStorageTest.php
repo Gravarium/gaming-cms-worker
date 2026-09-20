@@ -25,14 +25,12 @@ final class S3ObjectStorageTest extends TestCase
         });
 
         $storage = $this->storage($client);
-        $file = tempnam(sys_get_temp_dir(), 'cms-s3-');
-        self::assertNotFalse($file);
-        file_put_contents($file, 'test-content');
+        $file = $this->temporaryFile('test-content');
 
         try {
             $url = $storage->upload('gaming/logo test.png', $file, 'image/png');
         } finally {
-            unlink($file);
+            @unlink($file);
         }
 
         self::assertTrue($requestSeen);
@@ -67,6 +65,62 @@ final class S3ObjectStorageTest extends TestCase
         self::addToAssertionCount(1);
     }
 
+    public function testUploadRejectsTraversalObjectKeyBeforeNetworkRequest(): void
+    {
+        $file = $this->temporaryFile('test-content');
+        try {
+            $this->expectException(\DomainException::class);
+            $this->expectExceptionMessage('Objektschlüssel');
+            $this->storage(new MockHttpClient())->upload('gaming/../secret.txt', $file, 'text/plain');
+        } finally {
+            @unlink($file);
+        }
+    }
+
+    public function testInvalidPublicBaseUrlIsRejectedBeforeUpload(): void
+    {
+        $file = $this->temporaryFile('test-content');
+        $storage = new S3ObjectStorage(
+            new MockHttpClient(),
+            'https://objects.example.test',
+            'eu-central-1',
+            'cms',
+            'access',
+            'secret',
+            'javascript:alert(1)',
+        );
+
+        try {
+            $this->expectException(\DomainException::class);
+            $this->expectExceptionMessage('öffentliche Storage-Adresse');
+            $storage->upload('gaming/logo.png', $file, 'image/png');
+        } finally {
+            @unlink($file);
+        }
+    }
+
+    public function testEndpointWithEmbeddedCredentialsIsRejected(): void
+    {
+        $file = $this->temporaryFile('test-content');
+        $storage = new S3ObjectStorage(
+            new MockHttpClient(),
+            'https://user:secret@objects.example.test',
+            'eu-central-1',
+            'cms',
+            'access',
+            'secret',
+            'https://media.example.test',
+        );
+
+        try {
+            $this->expectException(\DomainException::class);
+            $this->expectExceptionMessage('S3-Endpunkt');
+            $storage->upload('gaming/logo.png', $file, 'image/png');
+        } finally {
+            @unlink($file);
+        }
+    }
+
     public function testUploadFailsClearlyWithoutConfiguration(): void
     {
         $storage = new S3ObjectStorage(new MockHttpClient(), '', 'auto', '', '', '', '');
@@ -87,5 +141,14 @@ final class S3ObjectStorageTest extends TestCase
             'secret',
             'https://media.example.test',
         );
+    }
+
+    private function temporaryFile(string $contents): string
+    {
+        $file = tempnam(sys_get_temp_dir(), 'cms-s3-');
+        self::assertNotFalse($file);
+        file_put_contents($file, $contents);
+
+        return $file;
     }
 }
