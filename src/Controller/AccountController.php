@@ -61,6 +61,7 @@ final class AccountController extends AbstractController
 
             if ($form->isValid()) {
                 $user->setPassword($passwordHasher->hashPassword($user, $newPassword));
+                $user->invalidateSessions();
                 $tokens->revoke($user, AccountToken::PURPOSE_PASSWORD_RESET);
                 $revoked = $sessions->revokeAll($user);
                 $audit->record('security.password.changed', $user, $user->getId(), 'Eigenes Passwort geändert.', ['revokedSessions' => $revoked]);
