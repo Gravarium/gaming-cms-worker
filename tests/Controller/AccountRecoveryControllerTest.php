@@ -112,6 +112,59 @@ final class AccountRecoveryControllerTest extends WebTestCase
         self::assertNotNull($manager->resolve($second, AccountToken::PURPOSE_PASSWORD_RESET));
     }
 
+    public function testForgotPasswordResponseDoesNotEnumerateAccountState(): void
+    {
+        $client = static::createClient();
+        $entityManager = $client->getContainer()->get(EntityManagerInterface::class);
+        $active = (new User())
+            ->setEmail('known-active-'.bin2hex(random_bytes(6)).'@example.test')
+            ->setDisplayName('Known Active')
+            ->setPassword('not-used-in-this-test');
+        $inactive = (new User())
+            ->setEmail('known-inactive-'.bin2hex(random_bytes(6)).'@example.test')
+            ->setDisplayName('Known Inactive')
+            ->setPassword('not-used-in-this-test')
+            ->setActive(false);
+        $entityManager->persist($active);
+        $entityManager->persist($inactive);
+        $entityManager->flush();
+
+        $messages = [];
+        foreach ([$active->getEmail(), $inactive->getEmail(), 'missing-'.bin2hex(random_bytes(6)).'@example.test'] as $email) {
+            $crawler = $client->request('GET', '/forgot-password');
+            $client->submit($crawler->selectButton('Link anfordern')->form(['forgot_password[email]' => $email]));
+            self::assertResponseRedirects('/forgot-password');
+            $crawler = $client->followRedirect();
+            $messages[] = trim($crawler->filter('.notice')->text());
+        }
+
+        self::assertCount(1, array_unique($messages));
+        self::assertStringContainsString('Wenn ein aktives Konto', $messages[0]);
+    }
+
+    public function testTamperedResetTokenDoesNotConsumeOriginalToken(): void
+    {
+        $client = static::createClient();
+        $entityManager = $client->getContainer()->get(EntityManagerInterface::class);
+        $user = (new User())
+            ->setEmail('tampered-reset-'.bin2hex(random_bytes(6)).'@example.test')
+            ->setDisplayName('Tampered Reset Test')
+            ->setPassword('not-used-in-this-test');
+        $entityManager->persist($user);
+        $entityManager->flush();
+
+        $manager = $client->getContainer()->get(AccountTokenManager::class);
+        [, $plainToken] = $manager->issue($user, AccountToken::PURPOSE_PASSWORD_RESET, new \DateInterval('PT1H'));
+        $entityManager->flush();
+        $last = substr($plainToken, -1);
+        $tampered = substr($plainToken, 0, -1).($last === 'A' ? 'B' : 'A');
+
+        $client->request('GET', '/reset-password/'.$tampered);
+        self::assertResponseIsSuccessful();
+        self::assertSelectorTextContains('.alert', 'ungültig');
+        self::assertNotNull($manager->resolve($plainToken, AccountToken::PURPOSE_PASSWORD_RESET));
+    }
+
     public function testVerificationRequestRequiresCsrfAndCreatesOneActiveToken(): void
     {
         $client = static::createClient();
