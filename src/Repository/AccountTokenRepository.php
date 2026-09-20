@@ -19,7 +19,7 @@ final class AccountTokenRepository extends ServiceEntityRepository
 
     public function usable(string $tokenHash, string $purpose): ?AccountToken
     {
-        return $this->createQueryBuilder('token')
+        $token = $this->createQueryBuilder('token')
             ->andWhere('token.tokenHash = :tokenHash')
             ->andWhere('token.purpose = :purpose')
             ->andWhere('token.usedAt IS NULL')
@@ -29,6 +29,8 @@ final class AccountTokenRepository extends ServiceEntityRepository
             ->setParameter('now', new \DateTimeImmutable())
             ->getQuery()
             ->getOneOrNullResult();
+
+        return $token instanceof AccountToken ? $token : null;
     }
 
     public function consumeUsable(string $tokenHash, string $purpose): ?AccountToken
