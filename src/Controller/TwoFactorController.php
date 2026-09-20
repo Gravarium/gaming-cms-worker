@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Repository\UserRepository;
 use App\Repository\UserSessionRepository;
 use App\Service\AuditLogger;
 use App\Service\SensitiveDataCipher;
@@ -26,6 +27,7 @@ final class TwoFactorController extends AbstractController
         private readonly EntityManagerInterface $entityManager,
         private readonly AuditLogger $audit,
         private readonly UserSessionRepository $sessions,
+        private readonly UserRepository $users,
     ) {}
 
     #[Route('/login/2fa', name: 'app_two_factor_challenge', methods: ['GET', 'POST'])]
@@ -47,9 +49,18 @@ final class TwoFactorController extends AbstractController
 
             $code = strtoupper(trim((string) $request->request->get('code')));
             $valid = $this->totp->verify($this->cipher->decrypt($user->getTwoFactorSecret()), $code);
-            if (!$valid) { $valid = $user->consumeRecoveryCode($code); }
+            $recoveryCodeUsed = false;
+            if (!$valid) {
+                $expectedSecurityVersion = $user->getSecurityVersion();
+                if ($user->consumeRecoveryCode($code)) {
+                    $recoveryCodeUsed = $this->users->persistRecoveryCodeConsumption($user, $expectedSecurityVersion, $user->getRecoveryCodeHashes());
+                    $valid = $recoveryCodeUsed;
+                    if (!$valid) { $this->entityManager->refresh($user); }
+                }
+            }
 
             if ($valid) {
+                if ($recoveryCodeUsed) { $this->keepCurrentSession($user, $request); }
                 $request->getSession()->set('two_factor_verified', true);
                 $request->getSession()->remove('two_factor_failures');
                 $request->getSession()->remove('two_factor_locked_until');
