@@ -49,7 +49,15 @@ class GuildTeam
     public function __construct() { $this->members = new ArrayCollection(); $this->createdAt = new \DateTimeImmutable(); }
     public function getId(): ?int { return $this->id; }
     public function getGuild(): ?Guild { return $this->guild; }
-    public function setGuild(Guild $guild): self { $this->guild = $guild; return $this; }
+    public function setGuild(Guild $guild): self
+    {
+        if ($this->leader !== null && $this->leader->getGuild() !== null && $this->leader->getGuild() !== $guild) { throw new \DomainException('A guild team cannot contain members from another guild.'); }
+        foreach ($this->members as $member) {
+            if ($member->getGuild() !== null && $member->getGuild() !== $guild) { throw new \DomainException('A guild team cannot contain members from another guild.'); }
+        }
+        $this->guild = $guild;
+        return $this;
+    }
     public function getName(): string { return $this->name; }
     public function setName(string $name): self { $this->name = trim($name); return $this; }
     public function getDescription(): ?string { return $this->description; }
