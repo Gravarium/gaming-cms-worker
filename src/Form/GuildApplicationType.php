@@ -13,6 +13,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\IsTrue;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 /** @extends AbstractType<GuildApplication> */
 final class GuildApplicationType extends AbstractType
@@ -39,8 +40,10 @@ final class GuildApplicationType extends AbstractType
                 'required' => $question->isRequired(),
             ];
             if ($type === TextareaType::class) { $fieldOptions['attr'] = ['rows' => 5]; }
-            if ($type === CheckboxType::class && $question->isRequired()) {
-                $fieldOptions['constraints'] = [new IsTrue(message: 'Bitte bestätige dieses Feld.')];
+            if ($question->isRequired()) {
+                $fieldOptions['constraints'] = $type === CheckboxType::class
+                    ? [new IsTrue(message: 'Bitte bestätige dieses Feld.')]
+                    : [new NotBlank(message: 'Bitte beantworte dieses Pflichtfeld.')];
             }
             $builder->add('question_'.$question->getId(), $type, $fieldOptions);
         }
