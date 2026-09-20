@@ -44,6 +44,7 @@ final class AccountSecurityHardeningTest extends WebTestCase
             new \DateInterval('PT1H'),
         );
         $this->em($client)->flush();
+        $oldVersion = $user->getSecurityVersion();
         $client->loginUser($user);
 
         $crawler = $client->request('GET', '/account/security');
@@ -72,6 +73,8 @@ final class AccountSecurityHardeningTest extends WebTestCase
 
         $stored = $client->getContainer()->get(UserRepository::class)->find($user->getId());
         self::assertInstanceOf(User::class, $stored);
+        self::assertSame($oldVersion + 1, $stored->getSecurityVersion());
+        self::assertSame($stored->getSecurityVersion(), $current->getSecurityVersion());
         self::assertTrue($this->hasher($client)->isPasswordValid($stored, 'New-Password-84'));
     }
 
