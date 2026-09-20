@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Repository\UserSessionRepository;
 use App\Service\AuditLogger;
 use App\Service\SensitiveDataCipher;
 use App\Service\TotpAuthenticator;
@@ -24,6 +25,7 @@ final class TwoFactorController extends AbstractController
         private readonly SensitiveDataCipher $cipher,
         private readonly EntityManagerInterface $entityManager,
         private readonly AuditLogger $audit,
+        private readonly UserSessionRepository $sessions,
     ) {}
 
     #[Route('/login/2fa', name: 'app_two_factor_challenge', methods: ['GET', 'POST'])]
@@ -89,6 +91,7 @@ final class TwoFactorController extends AbstractController
             if ($this->totp->verify($secret, $code)) {
                 $recoveryCodes = $this->totp->generateRecoveryCodes();
                 $user->enableTwoFactor($this->cipher->encrypt($secret), array_map(static fn (string $item): string => password_hash($item, PASSWORD_DEFAULT), $recoveryCodes));
+                $this->keepCurrentSession($user, $request);
                 $request->getSession()->remove('two_factor_setup_secret');
                 $request->getSession()->set('two_factor_verified', true);
                 $request->getSession()->set('two_factor_new_recovery_codes', $recoveryCodes);
@@ -125,11 +128,19 @@ final class TwoFactorController extends AbstractController
         }
 
         $user->disableTwoFactor();
+        $this->keepCurrentSession($user, $request);
         $request->getSession()->set('two_factor_verified', true);
         $this->audit->record('security.2fa.disabled', $user, $user->getId(), 'Zwei-Faktor-Anmeldung deaktiviert.');
         $this->entityManager->flush();
         $this->addFlash('success', 'Die Zwei-Faktor-Anmeldung wurde deaktiviert.');
         return $this->redirectToRoute('app_account_security');
+    }
+
+    private function keepCurrentSession(User $user, Request $request): void
+    {
+        $current = $this->sessions->findBySessionId($request->getSession()->getId());
+        $this->sessions->revokeAll($user, $current?->getSessionHash());
+        $current?->syncSecurityVersion();
     }
 
     private function currentUser(): User
