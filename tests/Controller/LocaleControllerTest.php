@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Controller;
 
+use App\Repository\SiteSettingsRepository;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 final class LocaleControllerTest extends WebTestCase

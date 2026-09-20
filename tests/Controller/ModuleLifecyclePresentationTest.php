@@ -23,6 +23,7 @@ final class ModuleLifecyclePresentationTest extends WebTestCase
 
         self::assertSame('content', $modules->moduleForRoute('app_news'));
         self::assertSame('content', $modules->moduleForRoute('app_news_index'));
+        self::assertSame('content', $modules->moduleForRoute('app_content_search'));
         self::assertSame('video', $modules->moduleForRoute('app_admin_video_edit'));
         self::assertNull($modules->moduleForRoute('app_newsletter_index'));
         self::assertNull($modules->moduleForRoute('app_admin_modules_custom'));
