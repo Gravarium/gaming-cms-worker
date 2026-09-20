@@ -61,11 +61,26 @@ class GuildMember
 
     public function getId(): ?int { return $this->id; }
     public function getGuild(): ?Guild { return $this->guild; }
-    public function setGuild(Guild $guild): self { $this->guild = $guild; return $this; }
+    public function setGuild(Guild $guild): self
+    {
+        if ($this->rank !== null && $this->rank->getGuild() !== null && $this->rank->getGuild() !== $guild) {
+            throw new \DomainException('A guild member cannot use a rank from another guild.');
+        }
+        $this->guild = $guild;
+        return $this;
+    }
     public function getUser(): ?User { return $this->user; }
     public function setUser(?User $user): self { $this->user = $user; return $this; }
     public function getRank(): ?GuildRank { return $this->rank; }
-    public function setRank(?GuildRank $rank): self { $this->rank = $rank; if ($rank !== null) { $this->rankName = $rank->getName(); } return $this; }
+    public function setRank(?GuildRank $rank): self
+    {
+        if ($rank !== null && $this->guild !== null && $rank->getGuild() !== null && $rank->getGuild() !== $this->guild) {
+            throw new \DomainException('A guild member cannot use a rank from another guild.');
+        }
+        $this->rank = $rank;
+        if ($rank !== null) { $this->rankName = $rank->getName(); }
+        return $this;
+    }
     public function getCharacterName(): string { return $this->characterName; }
     public function setCharacterName(string $characterName): self { $this->characterName = trim($characterName); return $this; }
     public function getRankName(): string { return $this->rankName; }

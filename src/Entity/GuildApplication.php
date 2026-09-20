@@ -99,10 +99,16 @@ class GuildApplication
     /** @param list<array{question: string, answer: string}> $answers */
     public function setAnswers(array $answers): self { $this->answers = $answers; return $this; }
     public function getStatus(): string { return $this->status; }
+    public function isOpen(): bool { return in_array($this->status, [self::STATUS_PENDING, self::STATUS_REVIEWING], true); }
     public function getInternalNotes(): ?string { return $this->internalNotes; }
     public function setInternalNotes(?string $notes): self { $notes = $notes === null ? null : trim($notes); $this->internalNotes = $notes === '' ? null : $notes; return $this; }
     public function getCreatedAt(): \DateTimeImmutable { return $this->createdAt; }
     public function getReviewedAt(): ?\DateTimeImmutable { return $this->reviewedAt; }
-    public function accept(): self { $this->status = self::STATUS_ACCEPTED; $this->reviewedAt = new \DateTimeImmutable(); return $this; }
-    public function reject(): self { $this->status = self::STATUS_REJECTED; $this->reviewedAt = new \DateTimeImmutable(); return $this; }
+    public function accept(): self { $this->ensureOpen(); $this->status = self::STATUS_ACCEPTED; $this->reviewedAt = new \DateTimeImmutable(); return $this; }
+    public function reject(): self { $this->ensureOpen(); $this->status = self::STATUS_REJECTED; $this->reviewedAt = new \DateTimeImmutable(); return $this; }
+
+    private function ensureOpen(): void
+    {
+        if (!$this->isOpen()) { throw new \DomainException('A decided guild application cannot be decided again.'); }
+    }
 }

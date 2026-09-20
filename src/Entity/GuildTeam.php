@@ -49,7 +49,15 @@ class GuildTeam
     public function __construct() { $this->members = new ArrayCollection(); $this->createdAt = new \DateTimeImmutable(); }
     public function getId(): ?int { return $this->id; }
     public function getGuild(): ?Guild { return $this->guild; }
-    public function setGuild(Guild $guild): self { $this->guild = $guild; return $this; }
+    public function setGuild(Guild $guild): self
+    {
+        if ($this->leader !== null && $this->leader->getGuild() !== null && $this->leader->getGuild() !== $guild) { throw new \DomainException('A guild team cannot contain members from another guild.'); }
+        foreach ($this->members as $member) {
+            if ($member->getGuild() !== null && $member->getGuild() !== $guild) { throw new \DomainException('A guild team cannot contain members from another guild.'); }
+        }
+        $this->guild = $guild;
+        return $this;
+    }
     public function getName(): string { return $this->name; }
     public function setName(string $name): self { $this->name = trim($name); return $this; }
     public function getDescription(): ?string { return $this->description; }
@@ -57,13 +65,20 @@ class GuildTeam
     public function getColor(): ?string { return $this->color; }
     public function setColor(?string $value): self { $value = $value === null ? null : trim($value); $this->color = $value === '' ? null : $value; return $this; }
     public function getLeader(): ?GuildMember { return $this->leader; }
-    public function setLeader(?GuildMember $leader): self { $this->leader = $leader; return $this; }
+    public function setLeader(?GuildMember $leader): self { if ($leader !== null) { $this->assertMemberGuild($leader); } $this->leader = $leader; return $this; }
     /** @return Collection<int, GuildMember> */
     public function getMembers(): Collection { return $this->members; }
-    public function addMember(GuildMember $member): self { if (!$this->members->contains($member)) { $this->members->add($member); } return $this; }
+    public function addMember(GuildMember $member): self { $this->assertMemberGuild($member); if (!$this->members->contains($member)) { $this->members->add($member); } return $this; }
     public function removeMember(GuildMember $member): self { $this->members->removeElement($member); return $this; }
     public function isActive(): bool { return $this->active; }
     public function setActive(bool $active): self { $this->active = $active; return $this; }
     public function getCreatedAt(): \DateTimeImmutable { return $this->createdAt; }
     public function __toString(): string { return $this->name; }
+
+    private function assertMemberGuild(GuildMember $member): void
+    {
+        if ($this->guild !== null && $member->getGuild() !== null && $member->getGuild() !== $this->guild) {
+            throw new \DomainException('A guild team cannot contain members from another guild.');
+        }
+    }
 }
