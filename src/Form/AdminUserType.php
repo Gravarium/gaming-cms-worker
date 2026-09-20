@@ -19,6 +19,9 @@ use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\Email;
+use Symfony\Component\Validator\Constraints\Length;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 /** @extends AbstractType<User> */
 final class AdminUserType extends AbstractType
@@ -26,10 +29,16 @@ final class AdminUserType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $passwordConstraints = PasswordPolicy::constraints($options['password_required']);
+        $emailOptions = ['label' => 'E-Mail-Adresse'];
+        if ($options['self_edit']) {
+            $emailOptions['mapped'] = false;
+            $emailOptions['data'] = $options['self_email'];
+            $emailOptions['constraints'] = [new NotBlank(), new Email(), new Length(max: 180)];
+        }
 
         $builder
             ->add('displayName', TextType::class, ['label' => 'Anzeigename'])
-            ->add('email', EmailType::class, ['label' => 'E-Mail-Adresse']);
+            ->add('email', EmailType::class, $emailOptions);
 
         if ($options['self_edit']) {
             $builder->add('currentPassword', PasswordType::class, [
@@ -84,9 +93,10 @@ final class AdminUserType extends AbstractType
 
     public function configureOptions(OptionsResolver $resolver): void
     {
-        $resolver->setDefaults(['data_class' => User::class, 'password_required' => false, 'can_assign_admin' => false, 'self_edit' => false])
+        $resolver->setDefaults(['data_class' => User::class, 'password_required' => false, 'can_assign_admin' => false, 'self_edit' => false, 'self_email' => null])
             ->setAllowedTypes('password_required', 'bool')
             ->setAllowedTypes('can_assign_admin', 'bool')
-            ->setAllowedTypes('self_edit', 'bool');
+            ->setAllowedTypes('self_edit', 'bool')
+            ->setAllowedTypes('self_email', ['null', 'string']);
     }
 }
