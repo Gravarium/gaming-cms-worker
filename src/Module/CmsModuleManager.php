@@ -25,12 +25,7 @@ final readonly class CmsModuleManager
 
     public function isEnabled(string $key): bool
     {
-        $definition = $this->definition($key);
-        if ($definition['required']) {
-            return true;
-        }
-
-        return $this->isInstalled($key) && ($this->states->find($key)?->isEnabled() ?? true);
+        return $this->isEnabledWithStack($key, []);
     }
 
     /** @return list<array<string, mixed>> */
@@ -159,21 +154,48 @@ final readonly class CmsModuleManager
 
     public function moduleForRoute(string $route): ?string
     {
+        $match = null;
+        $matchLength = -1;
         foreach ($this->catalog->all() as $module) {
             foreach ($module['routePrefixes'] as $prefix) {
-                if (str_starts_with($route, $prefix)) {
-                    return $module['key'];
+                if (($route === $prefix || str_starts_with($route, $prefix.'_')) && strlen($prefix) > $matchLength) {
+                    $match = $module['key'];
+                    $matchLength = strlen($prefix);
                 }
             }
         }
 
-        return null;
+        return $match;
     }
 
     /** @return array{key:string,name:string,version:string,required:bool,dependencies:list<string>,routePrefixes:list<string>} */
     private function definition(string $key): array
     {
         return $this->catalog->all()[$key] ?? throw new \InvalidArgumentException('Unbekanntes CMS-Modul.');
+    }
+
+    /** @param array<string, true> $stack */
+    private function isEnabledWithStack(string $key, array $stack): bool
+    {
+        $definition = $this->definition($key);
+        if (isset($stack[$key])) {
+            throw new \LogicException('Zyklische CMS-Modulabhängigkeit erkannt.');
+        }
+        if ($definition['required']) {
+            return true;
+        }
+        if (!$this->isInstalled($key) || !($this->states->find($key)?->isEnabled() ?? true)) {
+            return false;
+        }
+
+        $stack[$key] = true;
+        foreach ($definition['dependencies'] as $dependency) {
+            if (!$this->isEnabledWithStack($dependency, $stack)) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     private function state(string $key, string $version): CmsModuleState

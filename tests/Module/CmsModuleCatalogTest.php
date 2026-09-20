@@ -27,5 +27,20 @@ final class CmsModuleCatalogTest extends TestCase
         self::assertContains('app_gaming', $modules['gaming']['routePrefixes']);
         self::assertContains('app_guild', $modules['gaming']['routePrefixes']);
         self::assertContains('app_video', $modules['video']['routePrefixes']);
+        self::assertContains('app_admin_notification', $modules['notifications']['routePrefixes']);
+        self::assertContains('app_admin_queue', $modules['operations']['routePrefixes']);
+    }
+
+    public function testRoutePrefixesAreUniqueAcrossModules(): void
+    {
+        $seen = [];
+        foreach ((new CmsModuleCatalog())->all() as $module) {
+            foreach ($module['routePrefixes'] as $prefix) {
+                self::assertArrayNotHasKey($prefix, $seen, sprintf('Route prefix "%s" belongs to more than one module.', $prefix));
+                $seen[$prefix] = $module['key'];
+            }
+        }
+
+        self::assertNotEmpty($seen);
     }
 }
