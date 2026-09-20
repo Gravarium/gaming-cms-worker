@@ -228,8 +228,11 @@ final class AccountRecoveryControllerTest extends WebTestCase
 
         $entityManager->clear();
         $stored = $entityManager->find(User::class, $user->getId());
+        $storedSession = $entityManager->find(UserSession::class, $session->getId());
         self::assertInstanceOf(User::class, $stored);
+        self::assertInstanceOf(UserSession::class, $storedSession);
         self::assertSame($oldVersion + 1, $stored->getSecurityVersion());
+        self::assertTrue($storedSession->isRevoked());
 
         $client->request('GET', '/reset-password/'.$plainToken);
         self::assertResponseIsSuccessful();
