@@ -99,6 +99,28 @@ final class S3ObjectStorageTest extends TestCase
         }
     }
 
+    public function testPublicBaseUrlWithQueryIsRejectedBeforeUpload(): void
+    {
+        $file = $this->temporaryFile('test-content');
+        $storage = new S3ObjectStorage(
+            new MockHttpClient(),
+            'https://objects.example.test',
+            'eu-central-1',
+            'cms',
+            'access',
+            'secret',
+            'https://media.example.test/base?token=unexpected',
+        );
+
+        try {
+            $this->expectException(\DomainException::class);
+            $this->expectExceptionMessage('öffentliche Storage-Adresse');
+            $storage->upload('gaming/logo.png', $file, 'image/png');
+        } finally {
+            @unlink($file);
+        }
+    }
+
     public function testEndpointWithEmbeddedCredentialsIsRejected(): void
     {
         $file = $this->temporaryFile('test-content');

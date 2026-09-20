@@ -188,6 +188,8 @@ final class S3ObjectStorage
             || !in_array(strtolower((string) $parts['scheme']), ['http', 'https'], true)
             || isset($parts['user'])
             || isset($parts['pass'])
+            || isset($parts['query'])
+            || isset($parts['fragment'])
         ) {
             throw new \DomainException('Die öffentliche Storage-Adresse ist ungültig.');
         }

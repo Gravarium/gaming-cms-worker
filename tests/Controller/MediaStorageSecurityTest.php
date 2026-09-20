@@ -310,6 +310,51 @@ final class MediaStorageSecurityTest extends WebTestCase
         self::assertCount(1, $stored->getReplicas());
     }
 
+    public function testDisabledReplicaTargetLeavesRepairablePendingIntent(): void
+    {
+        $client = static::createClient();
+        $target = (new ExternalConnectorTarget())
+            ->setCapability(ExternalConnectorTarget::CAPABILITY_MEDIA)
+            ->setTargetKey('disabled-media-'.bin2hex(random_bytes(4)))
+            ->setProviderKey('s3-compatible')
+            ->setDisplayName('Disabled target')
+            ->setConfigurationReference('media.disabled')
+            ->setRequired(false)
+            ->setEnabled(false);
+        $asset = (new MediaAsset())
+            ->setModuleKey('video')
+            ->setStorageMode('external')
+            ->setLocation('https://media.example.test/disabled.mp4')
+            ->setOriginalName('disabled.mp4')
+            ->setTitle('Disabled target video')
+            ->setMimeType('video/mp4')
+            ->setFileSize(123);
+        $asset->addReplica(
+            (new MediaAssetReplica())
+                ->setTargetKey($target->getTargetKey())
+                ->setProviderKey($target->getProviderKey())
+                ->setObjectKey('video/disabled.mp4')
+                ->setLocation('https://media.example.test/disabled.mp4'),
+        );
+        $this->em($client)->persist($target);
+        $this->em($client)->persist($asset);
+        $this->em($client)->flush();
+        $assetId = $asset->getId();
+        self::assertNotNull($assetId);
+        $client->loginUser($this->user($client, [CmsPermission::STORAGE]));
+
+        $client->request('POST', '/admin/storage/media/'.$assetId.'/delete', [
+            '_token' => $this->csrf($client, 'delete-media-'.$assetId),
+        ]);
+
+        self::assertResponseRedirects('/admin/storage');
+        $this->em($client)->clear();
+        $stored = $this->em($client)->find(MediaAsset::class, $assetId);
+        self::assertInstanceOf(MediaAsset::class, $stored);
+        self::assertTrue($stored->isDeletionPending());
+        self::assertCount(1, $stored->getReplicas());
+    }
+
     /** @param list<string> $permissions */
     private function user(KernelBrowser $client, array $permissions): User
     {
