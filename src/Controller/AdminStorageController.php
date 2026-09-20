@@ -17,6 +17,7 @@ use App\Repository\MediaFolderRepository;
 use App\Repository\ModuleStorageSettingRepository;
 use App\Service\MediaAssetUsageResolver;
 use App\Service\MediaStorageManager;
+use Doctrine\DBAL\Exception\ForeignKeyConstraintViolationException;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormError;
@@ -278,9 +279,13 @@ final class AdminStorageController extends AbstractController
             return $this->redirectToRoute('app_admin_storage_index');
         }
 
-        $this->entityManager->remove($folder);
-        $this->entityManager->flush();
-        $this->addFlash('success', 'Der Medienordner wurde gelöscht.');
+        try {
+            $this->entityManager->remove($folder);
+            $this->entityManager->flush();
+            $this->addFlash('success', 'Der Medienordner wurde gelöscht.');
+        } catch (ForeignKeyConstraintViolationException) {
+            $this->addFlash('error', 'Der Ordner wurde parallel verändert und ist nicht mehr leer. Bitte erneut prüfen.');
+        }
 
         return $this->redirectToRoute('app_admin_storage_index');
     }

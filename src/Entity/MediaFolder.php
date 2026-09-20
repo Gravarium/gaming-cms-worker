@@ -29,7 +29,7 @@ class MediaFolder
     private string $slug = '';
 
     #[ORM\ManyToOne(targetEntity: self::class)]
-    #[ORM\JoinColumn(onDelete: 'SET NULL')]
+    #[ORM\JoinColumn(onDelete: 'RESTRICT')]
     private ?self $parent = null;
 
     /** @var Collection<int, MediaAsset> */
