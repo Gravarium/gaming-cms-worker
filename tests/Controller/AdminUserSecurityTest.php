@@ -113,6 +113,57 @@ final class AdminUserSecurityTest extends WebTestCase
         self::assertTrue($storedSession->isRevoked());
     }
 
+    public function testAdministrativePasswordChangeRevokesResetTokenAndExistingSessions(): void
+    {
+        $client = static::createClient();
+        $actor = $this->createUser($client, 'password-admin')->setAdmin(true);
+        $target = $this->createUser($client, 'password-target');
+        $target->setPassword($this->hasher($client)->hashPassword($target, 'Old-Password-42'));
+        $session = new UserSession($target, 'password-target-session-'.bin2hex(random_bytes(16)), '127.0.0.4', 'Target browser');
+        $this->em($client)->persist($session);
+        [, $resetToken] = $client->getContainer()->get(AccountTokenManager::class)->issue(
+            $target,
+            AccountToken::PURPOSE_PASSWORD_RESET,
+            new \DateInterval('PT1H'),
+        );
+        $oldVersion = $target->getSecurityVersion();
+        $this->em($client)->flush();
+        $client->loginUser($actor);
+
+        $crawler = $client->request('GET', '/admin/users/'.$target->getId().'/edit');
+        $client->submit($crawler->selectButton('Speichern')->form([
+            'admin_user[plainPassword][first]' => 'New-Password-84',
+            'admin_user[plainPassword][second]' => 'New-Password-84',
+        ]));
+
+        self::assertResponseRedirects('/admin/users');
+        self::assertNull($client->getContainer()->get(AccountTokenManager::class)->resolve($resetToken, AccountToken::PURPOSE_PASSWORD_RESET));
+        self::assertTrue($session->isRevoked());
+        self::assertSame($oldVersion + 1, $target->getSecurityVersion());
+        self::assertTrue($this->hasher($client)->isPasswordValid($target, 'New-Password-84'));
+    }
+
+    public function testAdministrativeUserPasswordsUseSharedStrengthPolicy(): void
+    {
+        $client = static::createClient();
+        $actor = $this->createUser($client, 'policy-admin')->setAdmin(true);
+        $this->em($client)->flush();
+        $client->loginUser($actor);
+        $email = 'weak-password-'.bin2hex(random_bytes(6)).'@example.test';
+
+        $crawler = $client->request('GET', '/admin/users/new');
+        $client->submit($crawler->selectButton('Speichern')->form([
+            'admin_user[displayName]' => 'Weak Password User',
+            'admin_user[email]' => $email,
+            'admin_user[plainPassword][first]' => 'lowercaseonlypassword',
+            'admin_user[plainPassword][second]' => 'lowercaseonlypassword',
+        ]));
+
+        self::assertResponseStatusCodeSame(422);
+        self::assertSelectorTextContains('body', 'Großbuchstaben');
+        self::assertNull($client->getContainer()->get(UserRepository::class)->findOneBy(['email' => $email]));
+    }
+
     public function testAdminSessionRevocationRejectsSessionOwnedByDifferentTarget(): void
     {
         $client = static::createClient();
