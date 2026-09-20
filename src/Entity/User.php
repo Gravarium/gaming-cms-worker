@@ -177,6 +177,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return false;
     }
     public function recoveryCodeCount(): int { return count($this->twoFactorRecoveryCodes); }
+    /** @return list<string> */
+    public function getRecoveryCodeHashes(): array { return $this->twoFactorRecoveryCodes; }
     public function eraseCredentials(): void {}
     public function getDisplayName(): string { return $this->displayName; }
     public function setDisplayName(string $displayName): self { $this->displayName = trim($displayName); return $this; }
