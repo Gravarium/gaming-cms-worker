@@ -29,7 +29,18 @@ final class AdminUserType extends AbstractType
 
         $builder
             ->add('displayName', TextType::class, ['label' => 'Anzeigename'])
-            ->add('email', EmailType::class, ['label' => 'E-Mail-Adresse'])
+            ->add('email', EmailType::class, ['label' => 'E-Mail-Adresse']);
+
+        if ($options['self_edit']) {
+            $builder->add('currentPassword', PasswordType::class, [
+                'label' => 'Aktuelles Passwort für Änderung der eigenen E-Mail-Adresse',
+                'mapped' => false,
+                'required' => false,
+                'attr' => ['autocomplete' => 'current-password'],
+            ]);
+        }
+
+        $builder
             ->add('admin', CheckboxType::class, [
                 'label' => 'Volladministrator (alle Rechte)',
                 'required' => false,
@@ -73,8 +84,9 @@ final class AdminUserType extends AbstractType
 
     public function configureOptions(OptionsResolver $resolver): void
     {
-        $resolver->setDefaults(['data_class' => User::class, 'password_required' => false, 'can_assign_admin' => false])
+        $resolver->setDefaults(['data_class' => User::class, 'password_required' => false, 'can_assign_admin' => false, 'self_edit' => false])
             ->setAllowedTypes('password_required', 'bool')
-            ->setAllowedTypes('can_assign_admin', 'bool');
+            ->setAllowedTypes('can_assign_admin', 'bool')
+            ->setAllowedTypes('self_edit', 'bool');
     }
 }
