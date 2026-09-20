@@ -37,6 +37,7 @@ class GuildEvent
     private string $title = '';
 
     #[ORM\Column(length: 20)]
+    #[Assert\Choice(choices: [self::TYPE_RAID, self::TYPE_MEETING, self::TYPE_TRAINING, self::TYPE_OTHER])]
     private string $type = self::TYPE_RAID;
 
     #[ORM\Column(type: Types::TEXT)]
@@ -46,6 +47,7 @@ class GuildEvent
     private \DateTimeImmutable $startsAt;
 
     #[ORM\Column(type: Types::DATETIME_IMMUTABLE, nullable: true)]
+    #[Assert\GreaterThan(propertyPath: 'startsAt', message: 'Das Ende muss nach dem Beginn liegen.')]
     private ?\DateTimeImmutable $endsAt = null;
 
     #[ORM\Column(nullable: true)] #[Assert\Positive]
@@ -59,6 +61,7 @@ class GuildEvent
     private ?string $location = null;
 
     #[ORM\Column(length: 20)]
+    #[Assert\Choice(choices: [self::STATUS_PLANNED, self::STATUS_CANCELLED, self::STATUS_DONE])]
     private string $status = self::STATUS_PLANNED;
 
     #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
