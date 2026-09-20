@@ -28,6 +28,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 180)]
     #[Assert\NotBlank]
     #[Assert\Email]
+    #[Assert\Length(max: 180)]
     private string $email = '';
 
     #[ORM\Column(type: Types::DATETIME_IMMUTABLE, nullable: true)]
@@ -71,6 +72,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?\DateTimeImmutable $lockedUntil = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Assert\Length(max: 255)]
     private ?string $lockReason = null;
 
     #[ORM\Column(options: ['default' => 1])]
@@ -142,10 +144,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->twoFactorSecret = $encryptedSecret;
         $this->twoFactorRecoveryCodes = $recoveryCodeHashes;
         $this->twoFactorEnabled = true;
+        $this->invalidateSessions();
         return $this;
     }
     public function disableTwoFactor(): self
     {
+        if ($this->twoFactorEnabled || $this->twoFactorSecret !== null || $this->twoFactorRecoveryCodes !== []) {
+            $this->invalidateSessions();
+        }
         $this->twoFactorEnabled = false;
         $this->twoFactorSecret = null;
         $this->twoFactorRecoveryCodes = [];
