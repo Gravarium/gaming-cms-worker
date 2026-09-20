@@ -27,6 +27,7 @@ final class TwoFactorSecurityTest extends WebTestCase
             [password_hash($recoveryCode, PASSWORD_DEFAULT)],
         );
         $this->em($client)->flush();
+        $oldVersion = $user->getSecurityVersion();
         $client->loginUser($user);
 
         $client->request('GET', '/account/security');
@@ -42,6 +43,7 @@ final class TwoFactorSecurityTest extends WebTestCase
         $stored = $client->getContainer()->get(UserRepository::class)->find($user->getId());
         self::assertInstanceOf(User::class, $stored);
         self::assertSame(0, $stored->recoveryCodeCount());
+        self::assertSame($oldVersion + 1, $stored->getSecurityVersion());
 
         $crawler = $client->request('GET', '/login/2fa');
         $token = (string) $crawler->filter('input[name="_token"]')->attr('value');
@@ -111,8 +113,6 @@ final class TwoFactorSecurityTest extends WebTestCase
             $client->getContainer()->get(SensitiveDataCipher::class)->encrypt('GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQ'),
             [password_hash($recoveryCode, PASSWORD_DEFAULT)],
         );
-        $otherSession = new UserSession($user, 'disable-other-'.bin2hex(random_bytes(16)), '127.0.0.3', 'Other browser');
-        $this->em($client)->persist($otherSession);
         $this->em($client)->flush();
         $client->loginUser($user);
 
@@ -122,6 +122,10 @@ final class TwoFactorSecurityTest extends WebTestCase
             'code' => $recoveryCode,
         ]);
         self::assertResponseRedirects('/account');
+
+        $otherSession = new UserSession($user, 'disable-other-'.bin2hex(random_bytes(16)), '127.0.0.3', 'Other browser');
+        $this->em($client)->persist($otherSession);
+        $this->em($client)->flush();
 
         $crawler = $client->request('GET', '/account/security');
         $token = (string) $crawler->filter('form[action="/account/security/2fa/disable"] input[name="_token"]')->attr('value');
