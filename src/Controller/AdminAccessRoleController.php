@@ -73,7 +73,7 @@ final class AdminAccessRoleController extends AbstractController
         $form = $this->createForm(AccessRoleType::class, $role, ['key_locked' => !$new])->handleRequest($request);
         if ($form->isSubmitted() && $assignedToActor && ($oldPermissions !== $role->getPermissions() || $oldActive !== $role->isActive())) {
             $role->setPermissions($oldPermissions)->setActive($oldActive);
-            $form->get('permissions')->addError(new FormError('Du kannst die Rechte einer dir selbst zugewiesenen Rolle nicht ändern.'));
+            $form->get('permissions')->addError(new FormError('Du kannst Rechte oder Status einer dir selbst zugewiesenen Rolle nicht ändern.'));
         }
         if ($form->isSubmitted() && $form->isValid()) {
             if (!$new) { $role->setKey($oldKey); }
