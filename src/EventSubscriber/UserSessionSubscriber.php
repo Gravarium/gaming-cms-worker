@@ -59,7 +59,7 @@ final class UserSessionSubscriber implements EventSubscriberInterface
             $created = true;
         }
 
-        if ($session->isRevoked() || $session->getSecurityVersion() !== $user->getSecurityVersion() || !$user->isActive() || $user->isLocked()) {
+        if ($session->getUser() !== $user || $session->isRevoked() || $session->getSecurityVersion() !== $user->getSecurityVersion() || !$user->isActive() || $user->isLocked()) {
             $request->getSession()->invalidate();
             $event->setResponse(new RedirectResponse($this->urls->generate('app_login')));
             return;
