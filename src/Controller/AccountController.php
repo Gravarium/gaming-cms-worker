@@ -62,7 +62,7 @@ final class AccountController extends AbstractController
             if ($form->isValid()) {
                 $user->setPassword($passwordHasher->hashPassword($user, $newPassword));
                 $tokens->revoke($user, AccountToken::PURPOSE_PASSWORD_RESET);
-                $revoked = $sessions->revokeAll($user, hash('sha256', $request->getSession()->getId()));
+                $revoked = $sessions->revokeAll($user);
                 $audit->record('security.password.changed', $user, $user->getId(), 'Eigenes Passwort geändert.', ['revokedSessions' => $revoked]);
                 $entityManager->flush();
                 $request->getSession()->migrate(true);
