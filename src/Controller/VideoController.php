@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use App\Repository\SiteSettingsRepository;
 use App\Repository\VideoCategoryRepository;
 use App\Repository\VideoPlaylistRepository;
 use App\Repository\VideoRepository;
@@ -20,7 +19,6 @@ final class VideoController extends AbstractController
         private readonly VideoRepository $videos,
         private readonly VideoCategoryRepository $categories,
         private readonly VideoPlaylistRepository $playlists,
-        private readonly SiteSettingsRepository $settings,
         private readonly VideoEmbedResolver $embedResolver,
     ) {
     }
@@ -28,7 +26,6 @@ final class VideoController extends AbstractController
     #[Route('/videos', name: 'app_video_index', methods: ['GET'])]
     public function index(Request $request): Response
     {
-        $this->assertEnabled();
         $category = null;
         $playlist = null;
 
@@ -56,7 +53,6 @@ final class VideoController extends AbstractController
     #[Route('/videos/{slug}', name: 'app_video_show', methods: ['GET'])]
     public function show(string $slug, Request $request): Response
     {
-        $this->assertEnabled();
         $video = $this->videos->findPublishedBySlug($slug);
         if ($video === null) { throw $this->createNotFoundException(); }
 
@@ -66,10 +62,4 @@ final class VideoController extends AbstractController
         ]);
     }
 
-    private function assertEnabled(): void
-    {
-        if (!$this->settings->current()->isVideoEnabled()) {
-            throw $this->createNotFoundException();
-        }
-    }
 }

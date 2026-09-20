@@ -8,7 +8,6 @@ use App\Entity\SiteSettings;
 use App\Internationalization\LocalePolicy;
 use App\Theme\ThemeRegistry;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\ColorType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
@@ -53,14 +52,6 @@ final class SiteSettingsType extends AbstractType
                 'multiple' => true,
                 'expanded' => true,
                 'help' => 'Die Standardsprache muss ebenfalls aktiviert sein.',
-            ])
-            ->add('gamingEnabled', CheckboxType::class, [
-                'label' => 'Gaming- und Gildenmodul vollständig aktivieren',
-                'required' => false,
-            ])
-            ->add('videoEnabled', CheckboxType::class, [
-                'label' => 'Video-Modul öffentlich aktivieren',
-                'required' => false,
             ])
             ->add('logoFile', FileType::class, [
                 'label' => 'Logo hochladen',

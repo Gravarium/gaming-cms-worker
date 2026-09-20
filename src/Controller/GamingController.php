@@ -12,7 +12,6 @@ use App\Repository\GameRepository;
 use App\Repository\GuildApplicationQuestionRepository;
 use App\Repository\GuildMemberRepository;
 use App\Repository\GuildRepository;
-use App\Repository\SiteSettingsRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -26,21 +25,18 @@ final class GamingController extends AbstractController
         private readonly GuildRepository $guilds,
         private readonly GuildMemberRepository $members,
         private readonly GuildApplicationQuestionRepository $questions,
-        private readonly SiteSettingsRepository $settings,
         private readonly EntityManagerInterface $entityManager,
     ) {}
 
     #[Route('/gaming', name: 'app_gaming_index', methods: ['GET'])]
     public function index(): Response
     {
-        $this->assertEnabled();
         return $this->render('gaming/index.html.twig', ['games' => $this->games->findEnabled(), 'guilds' => $this->guilds->findPublicGuilds()]);
     }
 
     #[Route('/gaming/guild/{slug}', name: 'app_guild_show', methods: ['GET'])]
     public function showGuild(string $slug): Response
     {
-        $this->assertEnabled();
         $guild = $this->publicGuild($slug);
         return $this->render('gaming/show.html.twig', ['guild' => $guild, 'members' => $this->members->activeForGuild($guild)]);
     }
@@ -48,7 +44,6 @@ final class GamingController extends AbstractController
     #[Route('/gaming/guild/{slug}/apply', name: 'app_guild_apply', methods: ['GET', 'POST'])]
     public function apply(string $slug, Request $request): Response
     {
-        $this->assertEnabled();
         $guild = $this->publicGuild($slug);
         if (!$guild->isRecruitmentOpen()) { throw $this->createNotFoundException(); }
 
@@ -75,11 +70,6 @@ final class GamingController extends AbstractController
         }
 
         return $this->render('gaming/apply.html.twig', ['guild' => $guild, 'form' => $form]);
-    }
-
-    private function assertEnabled(): void
-    {
-        if (!$this->settings->current()->isGamingEnabled()) { throw $this->createNotFoundException(); }
     }
 
     private function publicGuild(string $slug): Guild

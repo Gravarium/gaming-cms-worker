@@ -11,9 +11,9 @@ final class CmsModuleCatalog
     {
         $definitions = [
             $this->module('core', 'CMS-Kern', true, [], []),
-            $this->module('content', 'Inhalte und Navigation', false, ['core'], ['app_admin_content', 'app_page', 'app_news']),
+            $this->module('content', 'Inhalte und Navigation', false, ['core'], ['app_admin_content', 'app_admin_category', 'app_admin_menu', 'app_page', 'app_news']),
             $this->module('media', 'Medien und Speicher', false, ['core'], ['app_admin_storage']),
-            $this->module('gaming', 'Gaming, Gilden und Clans', false, ['core', 'content'], ['app_admin_gaming', 'app_guild']),
+            $this->module('gaming', 'Gaming, Gilden und Clans', false, ['core', 'content'], ['app_admin_gaming', 'app_gaming', 'app_guild']),
             $this->module('video', 'Videokatalog', false, ['core', 'media'], ['app_admin_video', 'app_video']),
             $this->module('integrations', 'Externe Ziele und Backups', false, ['core'], ['app_admin_connector', 'app_admin_backup']),
             $this->module('users', 'Benutzer und Rechte', false, ['core'], ['app_admin_user']),

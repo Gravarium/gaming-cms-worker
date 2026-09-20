@@ -17,7 +17,6 @@ use App\Repository\GuildEventSignupRepository;
 use App\Repository\GuildMemberRepository;
 use App\Repository\GuildTeamRepository;
 use App\Repository\MemberNotificationRepository;
-use App\Repository\SiteSettingsRepository;
 use App\Service\AuditLogger;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -37,7 +36,6 @@ final class GuildPortalController extends AbstractController
         private readonly GuildAnnouncementRepository $announcements,
         private readonly GuildTeamRepository $teams,
         private readonly MemberNotificationRepository $notifications,
-        private readonly SiteSettingsRepository $settings,
         private readonly EntityManagerInterface $entityManager,
         private readonly AuditLogger $audit,
     ) {}
@@ -168,7 +166,6 @@ final class GuildPortalController extends AbstractController
     }
     private function currentUser(): User
     {
-        if (!$this->settings->current()->isGamingEnabled()) { throw $this->createNotFoundException(); }
         $user = $this->getUser();
         if (!$user instanceof User) { throw $this->createAccessDeniedException(); }
         return $user;

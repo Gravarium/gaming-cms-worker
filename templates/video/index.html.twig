@@ -4,7 +4,7 @@
 {% block body %}
 <header class="topbar">
     <a class="brand" href="{{ path('app_home') }}">{% if site.logoPath %}<img class="site-logo" src="{{ site.logoPath }}" alt="{{ site.siteName }}">{% else %}{{ site.siteName }}{% endif %}</a>
-    <nav class="top-actions"><a href="{{ path('app_news_index') }}">News</a>{% if site.gamingEnabled %}<a href="{{ path('app_gaming_index') }}">Gaming</a>{% endif %}</nav>
+    <nav class="top-actions"><a href="{{ path('app_news_index') }}">News</a>{% if cms_module_enabled('gaming') %}<a href="{{ path('app_gaming_index') }}">Gaming</a>{% endif %}</nav>
 </header>
 <main class="public-shell video-library">
     <p class="eyebrow">Mediathek</p>
