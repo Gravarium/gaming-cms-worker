@@ -85,6 +85,7 @@ final class AdminUserSecurityTest extends WebTestCase
         $this->em($client)->persist($otherSession);
         $this->em($client)->flush();
         $oldEmail = $user->getEmail();
+        $oldVersion = $user->getSecurityVersion();
         $client->loginUser($user);
 
         $crawler = $client->request('GET', '/admin/users/'.$user->getId().'/edit');
@@ -109,6 +110,8 @@ final class AdminUserSecurityTest extends WebTestCase
             'admin_user[currentPassword]' => 'Current-Password-42',
         ]));
         self::assertResponseRedirects('/admin/users');
+        $client->followRedirect();
+        self::assertResponseIsSuccessful();
 
         $this->em($client)->clear();
         $stored = $this->em($client)->find(User::class, $user->getId());
@@ -117,6 +120,7 @@ final class AdminUserSecurityTest extends WebTestCase
         self::assertInstanceOf(UserSession::class, $storedOther);
         self::assertSame($newEmail, $stored->getEmail());
         self::assertFalse($stored->isEmailVerified());
+        self::assertSame($oldVersion + 1, $stored->getSecurityVersion());
         self::assertTrue($storedOther->isRevoked());
     }
 
