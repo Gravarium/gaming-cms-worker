@@ -6,8 +6,9 @@ namespace App\Form;
 
 use App\Entity\AccessRole;
 use App\Entity\User;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use App\Security\CmsPermission;
+use App\Security\PasswordPolicy;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -18,16 +19,13 @@ use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Validator\Constraints\Length;
-use Symfony\Component\Validator\Constraints\NotBlank;
 
 /** @extends AbstractType<User> */
 final class AdminUserType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        $passwordConstraints = [new Length(min: 12, minMessage: 'Das Passwort muss mindestens 12 Zeichen lang sein.')];
-        if ($options['password_required']) { $passwordConstraints[] = new NotBlank(message: 'Bitte gib ein Passwort ein.'); }
+        $passwordConstraints = PasswordPolicy::constraints($options['password_required']);
 
         $builder
             ->add('displayName', TextType::class, ['label' => 'Anzeigename'])
@@ -68,7 +66,7 @@ final class AdminUserType extends AbstractType
                 'required' => $options['password_required'],
                 'invalid_message' => 'Die Passwörter stimmen nicht überein.',
                 'constraints' => $passwordConstraints,
-                'first_options' => ['label' => $options['password_required'] ? 'Passwort' : 'Neues Passwort', 'help' => $options['password_required'] ? 'Mindestens 12 Zeichen.' : 'Leer lassen, um das bisherige Passwort zu behalten.'],
+                'first_options' => ['label' => $options['password_required'] ? 'Passwort' : 'Neues Passwort', 'help' => $options['password_required'] ? 'Mindestens 12 Zeichen sowie Großbuchstabe, Kleinbuchstabe und Zahl.' : 'Leer lassen, um das bisherige Passwort zu behalten.'],
                 'second_options' => ['label' => 'Passwort wiederholen'],
             ]);
     }
