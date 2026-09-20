@@ -66,6 +66,9 @@ final class AdminStorageController extends AbstractController
         $query = trim($request->query->getString('q'));
         $folderFilter = $request->query->getString('folder');
         $folder = ctype_digit($folderFilter) ? $this->folders->find((int) $folderFilter) : null;
+        if (ctype_digit($folderFilter) && $folder === null) {
+            throw $this->createNotFoundException('Der Medienordner existiert nicht.');
+        }
         $withoutFolder = $folderFilter === 'none';
 
         $assets = $this->media->searchLibrary($query, $module, $storage, $type, $folder, $withoutFolder);
@@ -112,6 +115,7 @@ final class AdminStorageController extends AbstractController
             }
 
             if ($form->isValid()) {
+                $asset = null;
                 try {
                     $asset = $this->mediaStorage->storeUpload($file, $moduleKey, $this->optional($data['altText'] ?? null));
                     $asset
@@ -119,11 +123,14 @@ final class AdminStorageController extends AbstractController
                         ->setCaption($this->optional($data['caption'] ?? null))
                         ->setTagsText($this->optional($data['tags'] ?? null))
                         ->setFolder(($data['folder'] ?? null) instanceof MediaFolder ? $data['folder'] : null);
-                    $this->entityManager->flush();
+                    $this->mediaStorage->flushWithRollback($asset);
                     $this->addFlash('success', 'Die Datei wurde geprüft und in die Medienbibliothek aufgenommen.');
 
                     return $this->redirectToRoute('app_admin_storage_index', ['folder' => $asset->getFolder()?->getId()]);
                 } catch (\DomainException|\RuntimeException $exception) {
+                    if ($asset instanceof MediaAsset) {
+                        $this->mediaStorage->discardUncommitted($asset);
+                    }
                     $form->addError(new FormError($exception->getMessage()));
                 }
             }
@@ -156,14 +163,18 @@ final class AdminStorageController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $file = $form->get('file')->getData();
             if (!$file instanceof UploadedFile) { throw new \LogicException('Uploaded file expected.'); }
+            $replacement = null;
             try {
                 $replacement = $this->mediaStorage->storeUpload($file, $asset->getModuleKey(), $asset->getAltText());
                 $replacement->setTitle($asset->getTitle())->setCaption($asset->getCaption())->setTags($asset->getTags())->setFolder($asset->getFolder());
                 $changed = $this->usageResolver->replaceUsages($asset, $replacement);
-                $this->entityManager->flush();
+                $this->mediaStorage->flushWithRollback($replacement);
                 $this->addFlash('success', 'Neue Datei gespeichert und '.$changed.' bekannte Verwendungen sicher umgestellt. Die alte Datei bleibt als Rückfall erhalten.');
                 return $this->redirectToRoute('app_admin_media_edit', ['id' => $replacement->getId()]);
             } catch (\DomainException|\RuntimeException $exception) {
+                if ($replacement instanceof MediaAsset) {
+                    $this->mediaStorage->discardUncommitted($replacement);
+                }
                 $form->addError(new FormError($exception->getMessage()));
             }
         }
@@ -179,23 +190,47 @@ final class AdminStorageController extends AbstractController
         $assets = $ids === [] ? [] : $this->media->findBy(['id' => array_map('intval', $ids)]);
         $action = $request->request->getString('bulk_action');
         $changed = 0;
+        $failed = 0;
 
         if ($action === 'move') {
             $folderId = $request->request->getString('target_folder');
-            $folder = ctype_digit($folderId) ? $this->folders->find((int) $folderId) : null;
+            if ($folderId !== '' && !ctype_digit($folderId)) {
+                $this->addFlash('error', 'Der Zielordner ist ungültig.');
+                return $this->redirectToRoute('app_admin_storage_index');
+            }
+            $folder = $folderId === '' ? null : $this->folders->find((int) $folderId);
+            if ($folderId !== '' && $folder === null) {
+                $this->addFlash('error', 'Der Zielordner existiert nicht mehr.');
+                return $this->redirectToRoute('app_admin_storage_index');
+            }
             foreach ($assets as $asset) { $asset->setFolder($folder); ++$changed; }
         } elseif ($action === 'delete') {
             foreach ($assets as $asset) {
-                if ($this->usageResolver->isUsed($asset)) { continue; }
-                try { $this->mediaStorage->delete($asset); ++$changed; } catch (\DomainException|\RuntimeException) {}
+                if ($this->usageResolver->isUsed($asset)) { ++$failed; continue; }
+                try {
+                    $this->mediaStorage->delete($asset);
+                    ++$changed;
+                } catch (\DomainException|\RuntimeException) {
+                    ++$failed;
+                }
             }
         } else {
             $this->addFlash('error', 'Bitte eine gültige Mehrfachaktion wählen.');
             return $this->redirectToRoute('app_admin_storage_index');
         }
 
-        $this->entityManager->flush();
+        try {
+            $this->entityManager->flush();
+        } catch (\Throwable) {
+            $this->addFlash('error', 'Die Mehrfachaktion konnte nicht sicher in der Datenbank bestätigt werden.');
+            return $this->redirectToRoute('app_admin_storage_index');
+        }
+
+        if ($failed > 0) {
+            $this->addFlash('error', $failed.' Medien konnten nicht verarbeitet werden oder werden noch verwendet.');
+        }
         $this->addFlash('success', $changed.' Medien wurden verarbeitet.');
+
         return $this->redirectToRoute('app_admin_storage_index');
     }
 

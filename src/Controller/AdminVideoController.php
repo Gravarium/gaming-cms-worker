@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Entity\MediaAsset;
 use App\Entity\ModuleStorageSetting;
 use App\Entity\Video;
 use App\Entity\VideoCategory;
@@ -149,29 +150,34 @@ final class AdminVideoController extends AbstractController
                 && $storageMode === ModuleStorageSetting::MODE_EXTERNAL
                 && !$externalReady
             ) {
-                $form->get('videoFile')->addError(new FormError('Der externe Videospeicher ist noch nicht mit S3-Zugangsdaten verbunden.'));
+                $form->get('videoFile')->addError(new FormError('Der externe Videospeicher ist noch nicht mit einem Medienziel verbunden.'));
             }
             if (!$isUpload && $video->getSourceUrl() !== null && $this->embedResolver->resolve($video, 'localhost') === null) {
                 $form->get('sourceUrl')->addError(new FormError('Die URL passt nicht zur ausgewählten Videoquelle.'));
             }
 
             if ($form->isValid()) {
+                /** @var list<MediaAsset> $newAssets */
+                $newAssets = [];
                 try {
                     $video->setSlug($this->uniqueVideoSlug($video->getTitle(), $video->getId()));
                     if ($isUpload) {
                         $video->setSourceUrl(null);
                         if ($file instanceof UploadedFile) {
-                            $video->setMediaAsset($this->mediaStorage->storeUpload($file, self::MODULE_KEY, $video->getTitle()));
+                            $asset = $this->mediaStorage->storeUpload($file, self::MODULE_KEY, $video->getTitle());
+                            $newAssets[] = $asset;
+                            $video->setMediaAsset($asset);
                         }
                     } else {
                         $video->setMediaAsset(null);
                     }
                     if ($video->getId() === null) { $this->entityManager->persist($video); }
-                    $this->entityManager->flush();
+                    $this->mediaStorage->flushWithRollback(...$newAssets);
                     $this->addFlash('success', 'Das Video wurde gespeichert.');
 
                     return $this->redirectToRoute('app_admin_video_index');
                 } catch (\DomainException|\RuntimeException $exception) {
+                    $this->mediaStorage->discardUncommitted(...$newAssets);
                     $form->addError(new FormError($exception->getMessage()));
                 }
             }
