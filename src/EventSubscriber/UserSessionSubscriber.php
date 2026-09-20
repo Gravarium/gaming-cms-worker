@@ -52,9 +52,11 @@ final class UserSessionSubscriber implements EventSubscriberInterface
         if (!$user instanceof User || !$request->hasSession()) { return; }
 
         $session = $this->sessions->findBySessionId($request->getSession()->getId());
+        $created = false;
         if ($session === null) {
             $session = new UserSession($user, $request->getSession()->getId(), $request->getClientIp(), $request->headers->get('User-Agent'));
             $this->entityManager->persist($session);
+            $created = true;
         }
 
         if ($session->isRevoked() || $session->getSecurityVersion() !== $user->getSecurityVersion() || !$user->isActive() || $user->isLocked()) {
@@ -66,7 +68,9 @@ final class UserSessionSubscriber implements EventSubscriberInterface
         if ($session->getLastSeenAt() < new \DateTimeImmutable('-5 minutes')) {
             $session->touch($request->getClientIp(), $request->headers->get('User-Agent'));
             $user->markSeen();
-            $this->entityManager->flush();
+            $created = true;
         }
+
+        if ($created) { $this->entityManager->flush(); }
     }
 }
