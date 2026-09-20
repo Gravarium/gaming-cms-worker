@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+{% block title %}Hauptmenü | Gaming CMS{% endblock %}
+{% block body %}
+<header class="topbar">
+    <a class="brand" href="{{ path('app_admin_dashboard') }}">Gaming CMS</a>
+    <nav class="top-actions">
+        <a class="button-link" href="{{ path('app_admin_menu_new') }}">Neuer Menüpunkt</a>
+        <a class="button-link button-secondary" href="{{ path('app_admin_dashboard') }}">Übersicht</a>
+    </nav>
+</header>
+<main class="dashboard">
+    <p class="eyebrow">Darstellung</p>
+    <h1>Hauptmenü</h1>
+    {% for message in app.flashes('success') %}<div class="notice">{{ message }}</div>{% endfor %}
+    <div class="table-wrap">
+        <table>
+            <thead><tr><th>Position</th><th>Beschriftung</th><th>Ziel</th><th>Status</th><th>Aktionen</th></tr></thead>
+            <tbody>
+            {% for item in items %}
+                <tr>
+                    <td>{{ item.position }}</td>
+                    <td>{{ item.label }}</td>
+                    <td>{{ item.page ? item.page.title : item.url }}</td>
+                    <td><span class="status {{ item.enabled ? 'status-ready' : 'status-disabled' }}">{{ item.enabled ? 'Sichtbar' : 'Ausgeblendet' }}</span></td>
+                    <td class="row-actions">
+                        <a href="{{ path('app_admin_menu_edit', {id: item.id}) }}">Bearbeiten</a>
+                        <form method="post" action="{{ path('app_admin_menu_delete', {id: item.id}) }}" onsubmit="return confirm('Menüpunkt wirklich löschen?');">
+                            <input type="hidden" name="_token" value="{{ csrf_token('delete-menu-' ~ item.id) }}">
+                            <button class="text-danger" type="submit">Löschen</button>
+                        </form>
+                    </td>
+                </tr>
+            {% else %}<tr><td colspan="5">Noch keine Menüpunkte vorhanden.</td></tr>{% endfor %}
+            </tbody>
+        </table>
+    </div>
+</main>
+{% endblock %}

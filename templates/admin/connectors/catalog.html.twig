@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+{% block title %}Anbieter vorbereiten | Gaming CMS{% endblock %}
+{% block body %}
+<header class="topbar">
+    <a class="brand" href="{{ path('app_admin_dashboard') }}">Gaming CMS</a>
+    <nav class="top-actions"><a class="button-link button-secondary" href="{{ path('app_admin_connector_index') }}">Zurück</a></nav>
+</header>
+<main class="dashboard">
+    <p class="eyebrow">Globale Schnittstellen</p>
+    <h1>Anbieter gemeinsam vorbereiten</h1>
+    <p class="muted">Mail, Benachrichtigungen, Anmeldung, CDN und Analytics lassen sich mit beliebig vielen Anbietern und Konten planen. Es werden keine Konten verbunden oder Zugangsdaten gespeichert.</p>
+    <form method="post" action="{{ path('app_admin_connector_catalog_plan') }}">
+        <input type="hidden" name="_token" value="{{ csrf_token('connector-catalog-plan') }}">
+        {% for capability, providers in groups %}
+            <article class="panel">
+                <p class="eyebrow">{{ capability }}</p>
+                <h2>{{ capability|capitalize }}</h2>
+                <section class="dashboard-grid">
+                    {% for provider in providers %}
+                        {% set choice = capability ~ ':' ~ provider.key %}
+                        <label class="panel">
+                            <p class="eyebrow">{{ provider.family }}</p>
+                            <h2><input type="checkbox" name="providers[]" value="{{ choice }}"> {{ provider.name }}</h2>
+                            {% if availability[choice] ?? false %}
+                                <span class="status status-ready">Adapter bereits vorhanden</span>
+                            {% else %}
+                                <span class="status status-disabled">Adapter wird später ergänzt</span>
+                            {% endif %}
+                            <p class="muted">Ziel: {{ capability }}-{{ provider.key }}<br>Server-Verweis: {{ capability }}.{{ provider.key }}</p>
+                        </label>
+                    {% endfor %}
+                </section>
+            </article>
+        {% endfor %}
+        <article class="panel">
+            <button type="submit">Ausgewählte Ziele gemeinsam vorbereiten</button>
+            <p class="muted">Alle neuen Ziele bleiben sicher deaktiviert, bis ihre private Server-Konfiguration eingerichtet ist.</p>
+        </article>
+    </form>
+</main>
+{% endblock %}

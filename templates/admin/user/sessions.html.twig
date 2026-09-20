@@ -1,0 +1,10 @@
+{% extends 'base.html.twig' %}
+{% block title %}Sitzungen: {{ managed_user.displayName }} | Gaming CMS{% endblock %}
+{% block body %}
+<header class="topbar"><a class="brand" href="{{ path('app_admin_dashboard') }}">Gaming CMS</a><a class="button-link button-secondary" href="{{ path('app_admin_user_index') }}">Zurück</a></header>
+<main class="dashboard"><p class="eyebrow">Benutzersicherheit</p><h1>Aktive Sitzungen von {{ managed_user.displayName }}</h1><p class="muted">{{ managed_user.email }} · Sicherheitsversion {{ managed_user.securityVersion }}</p>
+{% for message in app.flashes('success') %}<div class="notice">{{ message }}</div>{% endfor %}
+<div class="table-wrap"><table><thead><tr><th>Erstellt</th><th>Zuletzt aktiv</th><th>IP-Adresse</th><th>Gerät/Browser</th><th>Aktion</th></tr></thead><tbody>
+{% for session in sessions %}<tr><td>{{ session.createdAt|date('d.m.Y H:i') }} Uhr</td><td>{{ session.lastSeenAt|date('d.m.Y H:i') }} Uhr</td><td>{{ session.ipAddress ?: 'Unbekannt' }}</td><td>{{ session.userAgent ?: 'Unbekannt' }}</td><td><form method="post" action="{{ path('app_admin_user_session_revoke', {id: managed_user.id, sessionId: session.id}) }}"><input type="hidden" name="_token" value="{{ csrf_token('revoke-user-session-' ~ session.id) }}"><button class="text-danger">Sitzung widerrufen</button></form></td></tr>
+{% else %}<tr><td colspan="5">Keine aktive Sitzung erfasst.</td></tr>{% endfor %}</tbody></table></div></main>
+{% endblock %}

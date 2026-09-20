@@ -1,0 +1,10 @@
+{% extends 'base.html.twig' %}
+{% block title %}Rollen und Rechte | Gaming CMS{% endblock %}
+{% block body %}
+<header class="topbar"><a class="brand" href="{{ path('app_admin_dashboard') }}">Gaming CMS</a><nav class="top-actions"><a class="button-link" href="{{ path('app_admin_access_role_new') }}">Neue Rolle</a><a class="button-link button-secondary" href="{{ path('app_admin_user_index') }}">Benutzer</a></nav></header>
+<main class="dashboard"><p class="eyebrow">Zugriffsverwaltung</p><h1>Zentrale Rollen</h1><p class="muted">Rollen bündeln Rechte für beliebig viele Benutzer. Zusätzliche Einzelrechte bleiben möglich.</p>
+{% for message in app.flashes('success') %}<div class="notice">{{ message }}</div>{% endfor %}{% for message in app.flashes('error') %}<div class="alert">{{ message }}</div>{% endfor %}
+<div class="table-wrap"><table><thead><tr><th>Rolle</th><th>Schlüssel</th><th>Rechte</th><th>Benutzer</th><th>Status</th><th>Aktion</th></tr></thead><tbody>
+{% for role in roles %}<tr><td>{{ role.name }}{% if role.systemRole %} <span class="status">System</span>{% endif %}<br><small>{{ role.description }}</small></td><td><code>{{ role.key }}</code></td><td>{{ role.permissions|length }}</td><td>{{ role.users|length }}</td><td><span class="status {{ role.active ? 'status-ready' : 'status-disabled' }}">{{ role.active ? 'Aktiv' : 'Deaktiviert' }}</span></td><td class="row-actions"><a href="{{ path('app_admin_access_role_edit', {id: role.id}) }}">Bearbeiten</a>{% if not role.systemRole and role.users is empty %}<form method="post" action="{{ path('app_admin_access_role_delete', {id: role.id}) }}" onsubmit="return confirm('Rolle wirklich löschen?');"><input type="hidden" name="_token" value="{{ csrf_token('delete-access-role-' ~ role.id) }}"><button class="text-danger">Löschen</button></form>{% endif %}</td></tr>
+{% else %}<tr><td colspan="6">Keine Rollen vorhanden.</td></tr>{% endfor %}</tbody></table></div></main>
+{% endblock %}

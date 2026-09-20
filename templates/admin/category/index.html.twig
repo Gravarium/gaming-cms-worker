@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Kategorien | Gaming CMS{% endblock %}
+
+{% block body %}
+<header class="topbar">
+    <a class="brand" href="{{ path('app_admin_dashboard') }}">Gaming CMS</a>
+    <nav class="top-actions">
+        <a class="button-link" href="{{ path('app_admin_category_new') }}">Neue Kategorie</a>
+        <a class="button-link button-secondary" href="{{ path('app_admin_dashboard') }}">Übersicht</a>
+    </nav>
+</header>
+<main class="dashboard">
+    <p class="eyebrow">Inhalte</p>
+    <h1>Kategorien</h1>
+    {% for message in app.flashes('success') %}<div class="notice">{{ message }}</div>{% endfor %}
+    <div class="table-wrap">
+        <table>
+            <thead><tr><th>Name</th><th>Adresse</th><th>Beschreibung</th><th>Aktionen</th></tr></thead>
+            <tbody>
+            {% for category in categories %}
+                <tr>
+                    <td>{{ category.name }}</td>
+                    <td>{{ category.slug }}</td>
+                    <td>{{ category.description ?: '–' }}</td>
+                    <td class="row-actions">
+                        <a href="{{ path('app_admin_category_edit', {id: category.id}) }}">Bearbeiten</a>
+                        <form method="post" action="{{ path('app_admin_category_delete', {id: category.id}) }}" onsubmit="return confirm('Kategorie wirklich löschen?');">
+                            <input type="hidden" name="_token" value="{{ csrf_token('delete-category-' ~ category.id) }}">
+                            <button class="text-danger" type="submit">Löschen</button>
+                        </form>
+                    </td>
+                </tr>
+            {% else %}<tr><td colspan="4">Noch keine Kategorien vorhanden.</td></tr>{% endfor %}
+            </tbody>
+        </table>
+    </div>
+</main>
+{% endblock %}

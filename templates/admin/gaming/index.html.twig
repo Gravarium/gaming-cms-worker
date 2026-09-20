@@ -1,0 +1,34 @@
+{% extends 'base.html.twig' %}
+{% block title %}Gaming und Gilden | Gaming CMS{% endblock %}
+{% block body %}
+<header class="topbar">
+    <a class="brand" href="{{ path('app_admin_dashboard') }}">Gaming CMS</a>
+    <nav class="top-actions">
+        <a class="button-link" href="{{ path('app_admin_game_new') }}">Neues Spiel</a>
+        <a class="button-link" href="{{ path('app_admin_guild_new') }}">Neue Gilde</a>
+        <a class="button-link button-secondary" href="{{ path('app_admin_guild_application_index') }}">Bewerbungen{% if pendingApplications %} ({{ pendingApplications }}){% endif %}</a>
+        <a class="button-link button-secondary" href="{{ path('app_admin_dashboard') }}">Übersicht</a>
+    </nav>
+</header>
+<main class="dashboard">
+    <p class="eyebrow">Gaming-Modul</p><h1>Spiele und Gilden</h1>
+    <div class="storage-hint"><strong>Dateispeicher: {{ storageMode == 'external' ? 'Extern' : 'Intern' }}</strong><span>Gildenlogos folgen dieser Moduleinstellung.</span></div>
+    {% for message in app.flashes('success') %}<div class="notice">{{ message }}</div>{% endfor %}
+    {% for message in app.flashes('error') %}<div class="alert">{{ message }}</div>{% endfor %}
+    <h2>Spiele</h2>
+    <div class="table-wrap"><table><thead><tr><th>Name</th><th>Status</th><th>Adresse</th><th>Aktionen</th></tr></thead><tbody>
+    {% for game in games %}<tr><td>{{ game.name }}</td><td><span class="status {{ game.enabled ? 'status-ready' : 'status-disabled' }}">{{ game.enabled ? 'Sichtbar' : 'Ausgeblendet' }}</span></td><td>{{ game.slug }}</td><td class="row-actions"><a href="{{ path('app_admin_game_edit', {id: game.id}) }}">Bearbeiten</a><form method="post" action="{{ path('app_admin_game_delete', {id: game.id}) }}" onsubmit="return confirm('Spiel wirklich löschen?');"><input type="hidden" name="_token" value="{{ csrf_token('delete-game-' ~ game.id) }}"><button class="text-danger">Löschen</button></form></td></tr>
+    {% else %}<tr><td colspan="4">Noch keine Spiele vorhanden.</td></tr>{% endfor %}</tbody></table></div>
+
+    <h2 class="section-heading">Gilden und Clans</h2>
+    <div class="table-wrap"><table><thead><tr><th>Name</th><th>Spiel</th><th>Server</th><th>Rekrutierung</th><th>Aktionen</th></tr></thead><tbody>
+    {% for guild in guilds %}<tr><td>{{ guild.name }}</td><td>{{ guild.game.name }}</td><td>{{ guild.serverName }}</td><td>{{ guild.recruitmentOpen ? 'Offen' : 'Geschlossen' }}</td><td class="row-actions">
+        <a href="{{ path('app_admin_guild_member_index', {guild: guild.id}) }}">Mitglieder</a>
+        <a href="{{ path('app_admin_guild_structure', {guild: guild.id}) }}">Ränge & Fragen</a>
+        <a href="{{ path('app_admin_guild_collaboration', {guild: guild.id}) }}">Termine & Mitteilungen</a>
+        {% if guild.enabled %}<a href="{{ path('app_guild_show', {slug: guild.slug}) }}">Ansehen</a>{% endif %}
+        <a href="{{ path('app_admin_guild_edit', {id: guild.id}) }}">Bearbeiten</a>
+        <form method="post" action="{{ path('app_admin_guild_delete', {id: guild.id}) }}" onsubmit="return confirm('Gilde wirklich löschen?');"><input type="hidden" name="_token" value="{{ csrf_token('delete-guild-' ~ guild.id) }}"><button class="text-danger">Löschen</button></form>
+    </td></tr>{% else %}<tr><td colspan="5">Noch keine Gilden oder Clans vorhanden.</td></tr>{% endfor %}</tbody></table></div>
+</main>
+{% endblock %}

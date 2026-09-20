@@ -1,0 +1,99 @@
+{% extends 'base.html.twig' %}
+{% block title %}Videos verwalten | Gaming CMS{% endblock %}
+{% block body %}
+<header class="topbar">
+    <a class="brand" href="{{ path('app_admin_dashboard') }}">Gaming CMS</a>
+    <nav class="top-actions">
+        <a class="button-link" href="{{ path('app_admin_video_new') }}">Neues Video</a>
+        <a class="button-link button-secondary" href="{{ path('app_admin_video_category_new') }}">Neue Kategorie</a>
+        <a class="button-link button-secondary" href="{{ path('app_admin_video_playlist_new') }}">Neue Playlist</a>
+        <a class="button-link button-secondary" href="{{ path('app_admin_dashboard') }}">Übersicht</a>
+    </nav>
+</header>
+<main class="dashboard">
+    <p class="eyebrow">Video-Modul</p>
+    <h1>Videos, Kategorien und Playlists</h1>
+    <div class="storage-hint"><strong>Dateispeicher: {{ storageMode == 'external' ? 'Extern' : 'Intern' }}</strong><span>Hochgeladene Videos folgen automatisch dieser Moduleinstellung.</span></div>
+    {% for message in app.flashes('success') %}<div class="notice">{{ message }}</div>{% endfor %}
+    {% for message in app.flashes('error') %}<div class="alert">{{ message }}</div>{% endfor %}
+
+    <h2 class="section-heading">Videos</h2>
+    <div class="table-wrap">
+        <table>
+            <thead><tr><th>Titel</th><th>Quelle</th><th>Kategorie</th><th>Veröffentlichung</th><th>Aktionen</th></tr></thead>
+            <tbody>
+            {% for video in videos %}
+                <tr>
+                    <td>{{ video.title }}{% if video.featured %} <span class="status">Hervorgehoben</span>{% endif %}</td>
+                    <td>{{ video.sourceType|capitalize }}</td>
+                    <td>{{ video.category ? video.category.name : '–' }}</td>
+                    <td>
+                        {% if not video.enabled %}<span class="status status-disabled">Deaktiviert</span>
+                        {% elseif video.published %}<span class="status status-ready">Veröffentlicht</span>
+                        {% elseif video.publishedAt %}<span class="status">Geplant: {{ video.publishedAt|date('d.m.Y H:i') }} Uhr</span>
+                        {% else %}<span class="status">Entwurf</span>{% endif %}
+                    </td>
+                    <td class="row-actions">
+                        {% if video.published %}<a href="{{ path('app_video_show', {slug: video.slug}) }}">Ansehen</a>{% endif %}
+                        <a href="{{ path('app_admin_video_edit', {id: video.id}) }}">Bearbeiten</a>
+                        <form method="post" action="{{ path('app_admin_video_delete', {id: video.id}) }}" onsubmit="return confirm('Video wirklich löschen?');">
+                            <input type="hidden" name="_token" value="{{ csrf_token('delete-video-' ~ video.id) }}">
+                            <button class="text-danger" type="submit">Löschen</button>
+                        </form>
+                    </td>
+                </tr>
+            {% else %}<tr><td colspan="5">Noch keine Videos vorhanden.</td></tr>{% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="video-admin-columns">
+        <section>
+            <h2 class="section-heading">Kategorien</h2>
+            <div class="table-wrap">
+                <table>
+                    <thead><tr><th>Name</th><th>Status</th><th>Aktionen</th></tr></thead>
+                    <tbody>
+                    {% for category in categories %}
+                        <tr>
+                            <td>{{ category.name }}</td>
+                            <td>{{ category.enabled ? 'Sichtbar' : 'Ausgeblendet' }}</td>
+                            <td class="row-actions">
+                                <a href="{{ path('app_admin_video_category_edit', {id: category.id}) }}">Bearbeiten</a>
+                                <form method="post" action="{{ path('app_admin_video_category_delete', {id: category.id}) }}" onsubmit="return confirm('Kategorie wirklich löschen?');">
+                                    <input type="hidden" name="_token" value="{{ csrf_token('delete-video-category-' ~ category.id) }}">
+                                    <button class="text-danger" type="submit">Löschen</button>
+                                </form>
+                            </td>
+                        </tr>
+                    {% else %}<tr><td colspan="3">Noch keine Kategorien vorhanden.</td></tr>{% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </section>
+        <section>
+            <h2 class="section-heading">Playlists</h2>
+            <div class="table-wrap">
+                <table>
+                    <thead><tr><th>Titel</th><th>Videos</th><th>Aktionen</th></tr></thead>
+                    <tbody>
+                    {% for playlist in playlists %}
+                        <tr>
+                            <td>{{ playlist.title }}</td>
+                            <td>{{ playlist.videos|length }}</td>
+                            <td class="row-actions">
+                                <a href="{{ path('app_admin_video_playlist_edit', {id: playlist.id}) }}">Bearbeiten</a>
+                                <form method="post" action="{{ path('app_admin_video_playlist_delete', {id: playlist.id}) }}" onsubmit="return confirm('Playlist wirklich löschen?');">
+                                    <input type="hidden" name="_token" value="{{ csrf_token('delete-video-playlist-' ~ playlist.id) }}">
+                                    <button class="text-danger" type="submit">Löschen</button>
+                                </form>
+                            </td>
+                        </tr>
+                    {% else %}<tr><td colspan="3">Noch keine Playlists vorhanden.</td></tr>{% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </div>
+</main>
+{% endblock %}

@@ -1,0 +1,21 @@
+{% extends 'base.html.twig' %}
+{% block title %}Speicher für {{ moduleLabel }} | Gaming CMS{% endblock %}
+{% block body %}
+<header class="topbar">
+    <a class="brand" href="{{ path('app_admin_dashboard') }}">Gaming CMS</a>
+    <a class="button-link button-secondary" href="{{ path('app_admin_storage_index') }}">Zurück</a>
+</header>
+<main class="editor-shell">
+    <p class="eyebrow">Speicherverwaltung</p>
+    <h1>{{ moduleLabel }}</h1>
+    {% if externalStorageReady %}
+        <div class="notice">Der automatische externe Upload ist einsatzbereit. Zugangsdaten bleiben ausschließlich in der Server-Konfiguration.</div>
+    {% else %}
+        <div class="alert">Für automatische externe Uploads fehlen noch S3-Zugangsdaten auf dem Server. Bereits vorhandene externe URLs funktionieren weiterhin.</div>
+    {% endif %}
+    {{ form_start(form, {attr: {class: 'content-form'}}) }}
+        {{ form_widget(form) }}
+        <button type="submit">Speicherziel übernehmen</button>
+    {{ form_end(form) }}
+</main>
+{% endblock %}

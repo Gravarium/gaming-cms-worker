@@ -1,0 +1,78 @@
+{% extends 'base.html.twig' %}
+{% set site = site_settings() %}
+{% block title %}Kontosicherheit | {{ site.siteName }}{% endblock %}
+{% block body %}
+<header class="topbar">
+    <a class="brand" href="{{ path('app_home') }}">{{ site.siteName }}</a>
+    <nav class="top-actions">
+        <a class="button-link button-secondary" href="{{ path('app_account_home') }}">Zurück</a>
+        <form method="post" action="{{ path('app_logout') }}"><input type="hidden" name="_csrf_token" value="{{ csrf_token('logout') }}"><button class="button-secondary">Abmelden</button></form>
+    </nav>
+</header>
+<main class="form-page">
+    <p class="eyebrow">Eigenes Konto</p>
+    <h1>Kontosicherheit</h1>
+    <p class="muted">{{ app.user.displayName }} · {{ app.user.email }}</p>
+    {% for message in app.flashes('success') %}<div class="notice">{{ message }}</div>{% endfor %}
+    {% for message in app.flashes('error') %}<div class="alert">{{ message }}</div>{% endfor %}
+    <section class="panel">
+        <h2>E-Mail-Adresse</h2>
+        {% if app.user.emailVerified %}
+            <p><span class="status status-ready">Bestätigt</span> {{ app.user.email }}{% if app.user.emailVerifiedAt %} · bestätigt am {{ app.user.emailVerifiedAt|date('d.m.Y H:i') }} Uhr{% endif %}</p>
+        {% else %}
+            <p><span class="status status-disabled">Nicht bestätigt</span> {{ app.user.email }}</p>
+            <form method="post" action="{{ path('app_send_email_verification') }}">
+                <input type="hidden" name="_token" value="{{ csrf_token('send-email-verification') }}">
+                <button>Bestätigungsnachricht senden</button>
+            </form>
+        {% endif %}
+    </section>
+    <section class="panel">
+        <h2>Zwei-Faktor-Anmeldung</h2>
+        {% if app.user.twoFactorEnabled %}
+            <p><span class="status status-ready">Aktiv</span> Zusätzlich zum Passwort wird ein zeitbasierter Code verlangt. {{ app.user.recoveryCodeCount }} Wiederherstellungscodes sind noch verfügbar.</p>
+            <form method="post" action="{{ path('app_two_factor_disable') }}" class="form-stack">
+                <label for="disable-2fa-password">Passwort zum Deaktivieren</label>
+                <input id="disable-2fa-password" type="password" name="password" autocomplete="current-password" required>
+                <input type="hidden" name="_token" value="{{ csrf_token('two-factor-disable') }}">
+                <button class="button-secondary">Zwei-Faktor-Anmeldung deaktivieren</button>
+            </form>
+        {% else %}
+            <p><span class="status status-disabled">Nicht aktiv</span> Schütze dein Konto mit einer Authenticator-App und einmaligen Wiederherstellungscodes.</p>
+            <a class="button-link" href="{{ path('app_two_factor_setup') }}">Zwei-Faktor-Schutz einrichten</a>
+        {% endif %}
+    </section>
+    <section class="panel">
+        <h2>Passkeys</h2>
+        <p>Melde dich mit Fingerabdruck, Gesichtserkennung, Windows Hello oder einem Sicherheitsschlüssel an. Ein Passkey ersetzt bei dieser Anmeldung Passwort und Authenticator-Code.</p>
+        <a class="button-link" href="{{ path('app_account_passkeys') }}">Passkeys verwalten</a>
+    </section>
+    <section class="panel">
+        <h2>Passwort ändern</h2>
+        <p>Mindestens 12 Zeichen sowie Großbuchstabe, Kleinbuchstabe und Zahl. Nach der Änderung werden ältere Sitzungen ungültig.</p>
+        {{ form_start(form) }}
+            {{ form_widget(form) }}
+            <button>Passwort sicher ändern</button>
+        {{ form_end(form) }}
+    </section>
+    <section class="panel">
+        <h2>Aktive Sitzungen</h2>
+        <p>Hier kannst du Geräte und Browser einzeln abmelden. Eine Passwortänderung widerruft automatisch alle anderen Sitzungen.</p>
+        <div class="table-wrap"><table><thead><tr><th>Sitzung</th><th>Zuletzt aktiv</th><th>IP-Adresse</th><th>Gerät/Browser</th><th>Aktion</th></tr></thead><tbody>
+        {% for session in sessions %}
+            {% set current = session.sessionHash == currentSessionHash %}
+            <tr><td>{{ current ? 'Diese Sitzung' : session.createdAt|date('d.m.Y H:i') ~ ' Uhr' }}</td><td>{{ session.lastSeenAt|date('d.m.Y H:i') }} Uhr</td><td>{{ session.ipAddress ?: 'Unbekannt' }}</td><td>{{ session.userAgent ?: 'Unbekannt' }}</td><td><form method="post" action="{{ path('app_account_session_revoke', {id: session.id}) }}"><input type="hidden" name="_token" value="{{ csrf_token('revoke-own-session-' ~ session.id) }}"><button class="text-danger">{{ current ? 'Hier abmelden' : 'Abmelden' }}</button></form></td></tr>
+        {% else %}<tr><td colspan="5">Noch keine Sitzung erfasst.</td></tr>{% endfor %}
+        </tbody></table></div>
+    </section>
+    <section class="panel">
+        <h2>Aktiver Schutz</h2>
+        <ul>
+            <li>Anmeldeversuche werden gedrosselt.</li>
+            <li>Erfolgreiche und fehlgeschlagene Anmeldungen werden protokolliert.</li>
+            <li>Sitzungscookies sind nur für HTTP-Anfragen zugänglich und gegen fremde Websites eingeschränkt.</li>
+            <li>Zwei-Faktor-Versuche werden nach fünf Fehlern für 15 Minuten gesperrt.</li>
+        </ul>
+    </section>
+</main>
+{% endblock %}

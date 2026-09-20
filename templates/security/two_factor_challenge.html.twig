@@ -1,0 +1,17 @@
+{% extends 'base.html.twig' %}
+{% set site = site_settings() %}
+{% block title %}Zwei-Faktor-Anmeldung | {{ site.siteName }}{% endblock %}
+{% block body %}
+<main class="auth-shell"><section class="auth-card">
+    <p class="eyebrow">Zusätzlicher Schutz</p><h1>Zwei-Faktor-Code</h1>
+    <p class="muted">Gib den sechsstelligen Code deiner Authenticator-App oder einen Wiederherstellungscode ein.</p>
+    {% for message in app.flashes('error') %}<div class="alert">{{ message }}</div>{% endfor %}
+    <form method="post" class="form-stack">
+        <label for="code">Code</label>
+        <input id="code" name="code" inputmode="numeric" autocomplete="one-time-code" required autofocus>
+        <input type="hidden" name="_token" value="{{ csrf_token('two-factor-challenge') }}">
+        <button>Anmeldung abschließen</button>
+    </form>
+    <form method="post" action="{{ path('app_logout') }}"><input type="hidden" name="_csrf_token" value="{{ csrf_token('logout') }}"><button class="button-secondary">Abbrechen und abmelden</button></form>
+</section></main>
+{% endblock %}

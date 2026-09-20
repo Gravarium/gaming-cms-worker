@@ -1,0 +1,23 @@
+{% extends 'base.html.twig' %}
+{% set site = site_settings() %}
+{% block title %}Zwei-Faktor-Schutz einrichten | {{ site.siteName }}{% endblock %}
+{% block body %}
+<header class="topbar"><a class="brand" href="{{ path('app_home') }}">{{ site.siteName }}</a><a class="button-link button-secondary" href="{{ path('app_account_security') }}">Abbrechen</a></header>
+<main class="form-page">
+    <p class="eyebrow">Kontosicherheit</p><h1>Authenticator-App verbinden</h1>
+    <ol>
+        <li>Öffne deine Authenticator-App.</li>
+        <li>Lege ein neues zeitbasiertes Konto an.</li>
+        <li>Trage diesen geheimen Schlüssel ein: <code>{{ secret }}</code></li>
+        <li>Alternativ kannst du diese Einrichtungsadresse verwenden: <code>{{ provisioningUri }}</code></li>
+        <li>Gib anschließend den erzeugten sechsstelligen Code ein.</li>
+    </ol>
+    {% for message in app.flashes('error') %}<div class="alert">{{ message }}</div>{% endfor %}
+    <form method="post" class="form-stack">
+        <label for="code">Bestätigungscode</label>
+        <input id="code" name="code" inputmode="numeric" autocomplete="one-time-code" required>
+        <input type="hidden" name="_token" value="{{ csrf_token('two-factor-setup') }}">
+        <button>Zwei-Faktor-Schutz aktivieren</button>
+    </form>
+</main>
+{% endblock %}

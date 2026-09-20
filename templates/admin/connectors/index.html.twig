@@ -1,0 +1,129 @@
+{% extends 'base.html.twig' %}
+{% block title %}Externe Ziele | Gaming CMS{% endblock %}
+{% block body %}
+<header class="topbar">
+    <a class="brand" href="{{ path('app_admin_dashboard') }}">Gaming CMS</a>
+    <nav class="top-actions">
+        <a class="button-link" href="{{ path('app_admin_connector_catalog') }}">Globale Anbieter auswählen</a>
+        <a class="button-link button-secondary" href="{{ path('app_admin_backup_provider_catalog') }}">Backup-Anbieter</a>
+        <a class="button-link button-secondary" href="{{ path('app_admin_connector_new') }}">Einzelnes Ziel</a>
+        <a class="button-link button-secondary" href="{{ path('app_admin_backup_index') }}">Backups</a>
+        <a class="button-link button-secondary" href="{{ path('app_admin_dashboard') }}">Übersicht</a>
+    </nav>
+</header>
+<main class="dashboard">
+    <p class="eyebrow">Schnittstellen</p>
+    <h1>Externe Ziele</h1>
+    <p class="muted">Beliebig viele Anbieter und Konten verwalten. Zugangsdaten bleiben getrennt auf dem Server und werden hier niemals gespeichert.</p>
+    {% for message in app.flashes('success') %}<div class="notice">{{ message }}</div>{% endfor %}
+
+    <article class="panel">
+        <p class="eyebrow">Backup-Gesamtzustand</p>
+        {% if backup_overview.overall == 'not_configured' %}
+            <h2>Noch keine aktiven Backup-Ziele</h2>
+            <p class="muted">Ziele können vorbereitet werden, ohne bereits ein Anbieter-Konto zu verbinden.</p>
+        {% else %}
+            <h2><span class="status {{ backup_overview.overall == 'healthy' ? 'status-ready' : 'status-disabled' }}">{{ backup_overview.overall == 'healthy' ? 'Alle Ziele aktuell' : 'Prüfung erforderlich' }}</span></h2>
+            <p>
+                {{ backup_overview.enabled }} aktiv · {{ backup_overview.required }} Pflicht · {{ backup_overview.optional }} optional<br>
+                {{ backup_overview.healthy }} erfolgreich · {{ backup_overview.failed }} fehlgeschlagen · {{ backup_overview.missing }} ohne Lauf · {{ backup_overview.stale }} älter als 26 Stunden
+            </p>
+            {% if backup_overview.latest %}
+                <p class="muted">Letzte Statusänderung: {{ backup_overview.latest|date('d.m.Y H:i', 'UTC') }} UTC</p>
+            {% endif %}
+        {% endif %}
+    </article>
+
+    {% if targets %}
+        <article class="panel">
+            <p class="eyebrow">Gemeinsam verwalten</p>
+            <h2>Alle Ziele gemeinsam verwalten</h2>
+            <p class="muted">Kleinere Zahlen laufen zuerst. Ein Pflichtziel macht die jeweilige Schnittstelle ungesund, wenn es nicht ausgeführt werden kann.</p>
+            <form method="post" action="{{ path('app_admin_connector_settings') }}">
+                <input type="hidden" name="_token" value="{{ csrf_token('connector-settings') }}">
+                {% for target in targets %}
+                    <p>
+                        <strong>{{ target.displayName }}</strong><br>
+                        <label for="priority-{{ target.id }}">Reihenfolge</label>
+                        <input id="priority-{{ target.id }}" type="number" min="0" max="10000" name="priority[{{ target.id }}]" value="{{ target.priority }}" required>
+                        <label><input type="checkbox" name="required[{{ target.id }}]" value="1" {{ target.required ? 'checked' : '' }}> Pflichtziel</label>
+                    </p>
+                {% endfor %}
+                <button type="submit">Alle Einstellungen gemeinsam speichern</button>
+            </form>
+        </article>
+    {% endif %}
+
+    <section class="dashboard-grid">
+        {% for target in targets %}
+            <article class="panel">
+                <p class="eyebrow">{{ target.capability }}</p>
+                <h2>{{ target.displayName }}</h2>
+                <p>Anbieter: {{ target.providerKey }}<br>Ziel: {{ target.targetKey }}<br>Reihenfolge: {{ target.priority }}</p>
+                <p>{{ target.configurationReference ? 'Server-Verweis: ' ~ target.configurationReference : 'Noch kein Server-Verweis hinterlegt' }}</p>
+                <span class="status {{ target.enabled ? 'status-ready' : 'status-disabled' }}">{{ target.enabled ? 'Aktiv' : 'Inaktiv' }} · {{ target.required ? 'Pflichtziel' : 'Optional' }}</span>
+                {% if target.capability not in ['backup', 'media'] %}
+                    {% set connector_configuration_status = connector_configuration_statuses[target.targetKey] ?? 'missing' %}
+                    <p>Private Server-Konfiguration: <span class="status {{ connector_configuration_status == 'ready' ? 'status-ready' : 'status-disabled' }}">{{ connector_configuration_status == 'ready' ? 'Vorhanden' : 'Fehlt noch' }}</span></p>
+                    {% set connector_health_status = connector_health_statuses[target.targetKey] ?? null %}
+                    {% if connector_health_status %}
+                        <p>Letzte Verbindungsprüfung: <span class="status {{ connector_health_status.successful ? 'status-ready' : 'status-disabled' }}">{{ connector_health_status.successful ? 'Erreichbar' : 'Nicht erreichbar' }}</span><br>{{ connector_health_status.checkedAt|date('d.m.Y H:i', 'UTC') }} UTC</p>
+                    {% else %}
+                        <p class="muted">Noch keine automatische Verbindungsprüfung aufgezeichnet.</p>
+                    {% endif %}
+                {% endif %}
+                {% if target.capability == 'media' %}
+                    {% set media_configuration_status = media_configuration_statuses[target.targetKey] ?? 'not_applicable' %}
+                    {% if target.providerKey == 's3-compatible' %}
+                        <p>Private Server-Konfiguration: <span class="status {{ media_configuration_status == 'ready' ? 'status-ready' : 'status-disabled' }}">{{ media_configuration_status == 'ready' ? 'Vorhanden' : 'Fehlt noch' }}</span></p>
+                    {% else %}
+                        <p class="muted">Die Konfigurationsprüfung wird vom jeweiligen Anbieter-Adapter übernommen.</p>
+                    {% endif %}
+                    {% set media_repair_count = media_repair_counts[target.targetKey] ?? 0 %}
+                    {% if media_repair_count > 0 %}
+                        <p><span class="status status-disabled">{{ media_repair_count }} Medienkopie{{ media_repair_count == 1 ? '' : 'n' }} zur automatischen Reparatur vorgemerkt</span></p>
+                    {% else %}
+                        <p class="muted">Keine ausstehenden Medien-Reparaturen.</p>
+                    {% endif %}
+                    {% set media_health_status = media_health_statuses[target.targetKey] ?? null %}
+                    {% if media_health_status %}
+                        <p>Letzte Verbindungsprüfung: <span class="status {{ media_health_status.successful ? 'status-ready' : 'status-disabled' }}">{{ media_health_status.successful ? 'Erreichbar' : 'Nicht erreichbar' }}</span><br>{{ media_health_status.checkedAt|date('d.m.Y H:i', 'UTC') }} UTC</p>
+                    {% else %}
+                        <p class="muted">Noch keine automatische Verbindungsprüfung aufgezeichnet.</p>
+                    {% endif %}
+                {% endif %}
+                {% if target.capability == 'backup' %}
+                    {% set backup_configuration_status = target.configurationReference ? (backup_configuration_statuses[target.configurationReference] ?? 'missing') : 'missing' %}
+                    <p>Private Server-Konfiguration: <span class="status {{ backup_configuration_status == 'ready' ? 'status-ready' : 'status-disabled' }}">{{ backup_configuration_status == 'ready' ? 'Vorhanden' : 'Fehlt noch' }}</span></p>
+                    {% set backup_status = backup_statuses[target.targetKey] ?? null %}
+                    {% if backup_status %}
+                        <p>Letzter externer Lauf: <span class="status {{ backup_status.successful ? 'status-ready' : 'status-disabled' }}">{{ backup_status.successful ? 'Erfolgreich' : 'Fehlgeschlagen' }}</span><br>{{ backup_status.checkedAt|date('d.m.Y H:i', 'UTC') }} UTC · {{ backup_status.attempts }} Versuch{{ backup_status.attempts == 1 ? '' : 'e' }}<br><span class="muted">Backup {{ backup_status.backupId }}</span></p>
+                    {% else %}
+                        <p class="muted">Noch kein externer Backup-Lauf für dieses Ziel aufgezeichnet.</p>
+                    {% endif %}
+                {% endif %}
+                <div class="top-actions">
+                    <a class="button-link button-secondary" href="{{ path('app_admin_connector_edit', {id: target.id}) }}">Bearbeiten</a>
+                    <form method="post" action="{{ path('app_admin_connector_duplicate', {id: target.id}) }}">
+                        <input type="hidden" name="_token" value="{{ csrf_token('duplicate-connector-' ~ target.id) }}">
+                        <button type="submit">Weiteres Konto</button>
+                    </form>
+                    <form method="post" action="{{ path('app_admin_connector_toggle', {id: target.id}) }}">
+                        <input type="hidden" name="_token" value="{{ csrf_token('toggle-connector-' ~ target.id) }}">
+                        <button type="submit">{{ target.enabled ? 'Deaktivieren' : 'Aktivieren' }}</button>
+                    </form>
+                    <form method="post" action="{{ path('app_admin_connector_delete', {id: target.id}) }}" onsubmit="return confirm('Nur diese Zieldefinition aus dem CMS entfernen?');">
+                        <input type="hidden" name="_token" value="{{ csrf_token('delete-connector-' ~ target.id) }}">
+                        <button class="text-danger" type="submit">Entfernen</button>
+                    </form>
+                </div>
+            </article>
+        {% else %}
+            <article class="panel">
+                <h2>Noch keine Ziele angelegt</h2>
+                <p>Du kannst die geplanten Anbieter bereits erfassen, ohne Konten oder Passwörter zu verbinden.</p>
+            </article>
+        {% endfor %}
+    </section>
+</main>
+{% endblock %}

@@ -1,0 +1,42 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Versionen: {{ entry.title }} | Gaming CMS{% endblock %}
+
+{% block body %}
+<header class="topbar">
+    <a class="brand" href="{{ path('app_admin_dashboard') }}">Gaming CMS</a>
+    <nav class="top-actions">
+        <a class="button-link" href="{{ path('app_admin_content_edit', {id: entry.id}) }}">Bearbeiten</a>
+        <a class="button-link button-secondary" href="{{ path('app_admin_content_index') }}">Zurück</a>
+    </nav>
+</header>
+<main class="dashboard">
+    <p class="eyebrow">Inhalte · Versionsverlauf</p>
+    <h1>{{ entry.title }}</h1>
+    <p class="muted">Beim Wiederherstellen wird der aktuelle Stand gesichert. Die gewählte Version wird aus Sicherheitsgründen als Entwurf geladen.</p>
+    <div class="table-wrap">
+        <table>
+            <thead><tr><th>Version</th><th>Titel</th><th>Status</th><th>Gespeichert</th><th>Von</th><th>Aktion</th></tr></thead>
+            <tbody>
+            {% for revision in revisions %}
+                <tr>
+                    <td>#{{ revision.revisionNumber }}</td>
+                    <td>{{ revision.title }}</td>
+                    <td>{{ revision.status }}</td>
+                    <td>{{ revision.createdAt|date('d.m.Y H:i:s') }}</td>
+                    <td>{{ revision.createdBy.email }}</td>
+                    <td>
+                        <form method="post" action="{{ path('app_admin_content_restore', {id: entry.id, revisionId: revision.id}) }}" onsubmit="return confirm('Diese Version als Entwurf wiederherstellen?');">
+                            <input type="hidden" name="_token" value="{{ csrf_token('restore-content-' ~ entry.id ~ '-' ~ revision.id) }}">
+                            <button type="submit">Wiederherstellen</button>
+                        </form>
+                    </td>
+                </tr>
+            {% else %}
+                <tr><td colspan="6">Noch keine Versionen vorhanden.</td></tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</main>
+{% endblock %}

@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %}
+{% block title %}Discord-Anbindung | Gaming CMS{% endblock %}
+{% block body %}
+<header class="topbar"><a class="brand" href="{{ path('app_admin_dashboard') }}">Gaming CMS</a><nav class="top-actions"><a class="button-link button-secondary" href="{{ path('app_admin_guild_collaboration', {guild: guild.id}) }}">Zurück</a></nav></header>
+<main class="form-page">
+    <p class="eyebrow">Gildenintegration</p>
+    <h1>Discord für {{ guild.name }}</h1>
+    <p class="muted">Die Webhook-Adresse wird verschlüsselt gespeichert und niemals wieder angezeigt.</p>
+    {% for message in app.flashes('success') %}<div class="notice">{{ message }}</div>{% endfor %}
+    {% for message in app.flashes('error') %}<div class="alert">{{ message }}</div>{% endfor %}
+    {{ form_start(form) }}
+        {{ form_widget(form) }}
+        <button class="button">Discord-Einstellungen speichern</button>
+    {{ form_end(form) }}
+    {% if integration.id and integration.enabled %}
+        <form method="post" action="{{ path('app_admin_guild_discord_test', {guild: guild.id}) }}">
+            <input type="hidden" name="_token" value="{{ csrf_token('discord-test-' ~ guild.id) }}">
+            <button class="button-secondary">Testnachricht senden</button>
+        </form>
+    {% endif %}
+</main>
+{% endblock %}

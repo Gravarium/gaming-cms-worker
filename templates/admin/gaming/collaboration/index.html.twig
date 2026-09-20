@@ -1,0 +1,21 @@
+{% extends 'base.html.twig' %}
+{% block title %}Gildenorganisation | Gaming CMS{% endblock %}
+{% block body %}
+<header class="topbar"><a class="brand" href="{{ path('app_admin_dashboard') }}">Gaming CMS</a><nav class="top-actions"><a class="button-link" href="{{ path('app_admin_guild_event_new', {guild: guild.id}) }}">Neuer Termin</a><a class="button-link" href="{{ path('app_admin_guild_announcement_new', {guild: guild.id}) }}">Neue Mitteilung</a><a class="button-link button-secondary" href="{{ path('app_admin_guild_discord', {guild: guild.id}) }}">Discord {{ discordIntegration and discordIntegration.enabled ? 'aktiv' : 'einrichten' }}</a><a class="button-link button-secondary" href="{{ path('app_admin_gaming_index') }}">Zurück</a></nav></header>
+<main class="dashboard"><p class="eyebrow">Gildenorganisation</p><h1>{{ guild.name }}</h1>
+{% for message in app.flashes('success') %}<div class="notice">{{ message }}</div>{% endfor %}
+<h2>Termine, Teams und Anwesenheit</h2>
+<div class="application-list">
+{% for event in events %}
+    {% set eventSignups = signupRepository.forEvent(event) %}
+    <article class="application-card">
+        <div class="row-actions"><div><p class="eyebrow">{{ event.type }} · {{ event.startsAt|date('d.m.Y H:i') }} Uhr{% if event.team %} · Team {{ event.team.name }}{% endif %}</p><h3>{{ event.title }}</h3><p>{{ event.description|nl2br }}</p></div><a href="{{ path('app_admin_guild_event_edit', {guild: guild.id, event: event.id}) }}">Bearbeiten</a><form method="post" action="{{ path('app_admin_guild_event_delete', {guild: guild.id, event: event.id}) }}" onsubmit="return confirm('Termin löschen?');"><input type="hidden" name="_token" value="{{ csrf_token('delete-event-' ~ event.id) }}"><button class="text-danger">Löschen</button></form></div>
+        <p><strong>{{ eventSignups|filter(s => s.response == 'going')|length }} Zusagen</strong>{% if event.maxParticipants %} / {{ event.maxParticipants }}{% endif %} · {{ eventSignups|filter(s => s.response == 'waitlist')|length }} Warteliste</p>
+        {% if eventSignups %}<div class="table-wrap"><table><thead><tr><th>Mitglied</th><th>Antwort</th><th>Rolle</th><th>Anwesenheit</th></tr></thead><tbody>
+        {% for signup in eventSignups %}<tr><td>{{ signup.member.characterName }}</td><td>{{ signup.response }}</td><td>{{ signup.role }}</td><td><form class="row-actions" method="post" action="{{ path('app_admin_guild_event_attendance', {guild: guild.id, event: event.id, signup: signup.id}) }}"><input type="hidden" name="_token" value="{{ csrf_token('attendance-' ~ signup.id) }}"><select name="attendance"><option value="unknown" {{ signup.attendance == 'unknown' ? 'selected' }}>Offen</option><option value="present" {{ signup.attendance == 'present' ? 'selected' }}>Anwesend</option><option value="absent" {{ signup.attendance == 'absent' ? 'selected' }}>Gefehlt</option><option value="excused" {{ signup.attendance == 'excused' ? 'selected' }}>Entschuldigt</option></select><button>Speichern</button></form></td></tr>{% endfor %}
+        </tbody></table></div>{% endif %}
+    </article>
+{% else %}<p class="muted">Noch keine Termine vorhanden.</p>{% endfor %}
+</div>
+<h2 class="section-heading">Interne Mitteilungen</h2><div class="application-list">{% for item in announcements %}<article class="application-card"><div><p class="eyebrow">{{ item.publishedAt|date('d.m.Y H:i') }} Uhr{% if item.pinned %} · Angeheftet{% endif %}</p><h2>{{ item.title }}</h2><p>{{ item.body|nl2br }}</p></div><div class="row-actions"><a href="{{ path('app_admin_guild_announcement_edit', {guild: guild.id, announcement: item.id}) }}">Bearbeiten</a><form method="post" action="{{ path('app_admin_guild_announcement_delete', {guild: guild.id, announcement: item.id}) }}"><input type="hidden" name="_token" value="{{ csrf_token('delete-announcement-' ~ item.id) }}"><button class="text-danger">Löschen</button></form></div></article>{% else %}<p class="muted">Noch keine internen Mitteilungen.</p>{% endfor %}</div>
+</main>{% endblock %}

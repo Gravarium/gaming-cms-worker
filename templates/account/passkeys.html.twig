@@ -1,0 +1,23 @@
+{% extends 'base.html.twig' %}
+{% set site = site_settings() %}
+{% block title %}Passkeys | {{ site.siteName }}{% endblock %}
+{% block body %}
+<header class="topbar"><a class="brand" href="{{ path('app_home') }}">{{ site.siteName }}</a><nav class="top-actions"><a class="button-link button-secondary" href="{{ path('app_account_security') }}">Zurück zur Kontosicherheit</a></nav></header>
+<main class="form-page">
+    <p class="eyebrow">Kontosicherheit</p><h1>Passkeys</h1>
+    <p class="muted">Passkeys verwenden die Gerätesperre, Fingerabdruck, Gesichtserkennung, Windows Hello oder einen Sicherheitsschlüssel. Der private Schlüssel verlässt dein Gerät nie.</p>
+    {% for message in app.flashes('success') %}<div class="notice">{{ message }}</div>{% endfor %}
+    {% for message in app.flashes('error') %}<div class="alert">{{ message }}</div>{% endfor %}
+    <section class="panel"><h2>Neuen Passkey anlegen</h2><p>Der Browser fragt anschließend nach deiner Gerätesperre oder deinem Sicherheitsschlüssel.</p>
+        <button type="button" data-passkey-register data-options-url="{{ path('webauthn.controller.creation.request.additional_authenticator') }}" data-result-url="{{ path('webauthn.controller.creation.response.additional_authenticator') }}">Passkey hinzufügen</button>
+        <p class="muted passkey-message" data-passkey-message hidden></p>
+    </section>
+    <section><h2>Gespeicherte Passkeys</h2><div class="application-list">
+    {% for passkey in passkeys %}
+        <article class="application-card"><div><h3>{{ passkey.name }}</h3><p>Angelegt am {{ passkey.createdAt|date('d.m.Y H:i') }} Uhr{% if passkey.lastUsedAt %} · zuletzt verwendet {{ passkey.lastUsedAt|date('d.m.Y H:i') }} Uhr{% endif %}</p><p class="muted">{{ passkey.backupEligible ? 'Synchronisierbarer Passkey' : 'Gerätegebundener Passkey' }}</p></div>
+        <div class="row-actions"><form method="post" action="{{ path('app_account_passkey_rename', {id: passkey.id}) }}" class="form-stack compact-form"><label for="passkey-name-{{ passkey.id }}">Name</label><input id="passkey-name-{{ passkey.id }}" name="name" value="{{ passkey.name }}" maxlength="80" required><input type="hidden" name="_token" value="{{ csrf_token('passkey-rename-' ~ passkey.id) }}"><button class="button-secondary">Umbenennen</button></form>
+        <form method="post" action="{{ path('app_account_passkey_delete', {id: passkey.id}) }}" onsubmit="return confirm('Diesen Passkey wirklich löschen?')"><input type="hidden" name="_token" value="{{ csrf_token('passkey-delete-' ~ passkey.id) }}"><button class="text-danger">Löschen</button></form></div></article>
+    {% else %}<article class="panel"><h3>Noch kein Passkey</h3><p>Lege deinen ersten Passkey mit der Schaltfläche oben an.</p></article>{% endfor %}
+    </div></section>
+</main>
+{% endblock %}

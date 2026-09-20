@@ -1,0 +1,89 @@
+{% extends 'base.html.twig' %}
+{% block title %}Speicher und Medien | Gaming CMS{% endblock %}
+{% block body %}
+<header class="topbar">
+    <a class="brand" href="{{ path('app_admin_dashboard') }}">Gaming CMS</a>
+    <nav class="top-actions">
+        <a class="button-link" href="{{ path('app_admin_media_upload') }}">Datei hochladen</a>
+        <a class="button-link button-secondary" href="{{ path('app_admin_media_folder_new') }}">Ordner anlegen</a>
+        <a class="button-link button-secondary" href="{{ path('app_admin_dashboard') }}">Übersicht</a>
+    </nav>
+</header>
+<main class="dashboard">
+    <p class="eyebrow">System</p>
+    <h1>Speicher und Medien</h1>
+    <p class="muted">Zentrale Mediathek mit Ordnern, Metadaten, Verwendungsprüfung, Prüfsummen und sicheren Mehrfachaktionen.</p>
+    {% for message in app.flashes('success') %}<div class="notice">{{ message }}</div>{% endfor %}
+    {% for message in app.flashes('error') %}<div class="alert">{{ message }}</div>{% endfor %}
+    {% if not externalStorageReady %}<div class="alert">Externe Uploads warten noch auf eine konfigurierte Verbindung. Interne Uploads funktionieren weiterhin.</div>{% endif %}
+
+    <section class="dashboard-grid">
+        {% for key, label in modules %}
+            {% set setting = configured[key] ?? null %}
+            <a class="panel panel-link" href="{{ path('app_admin_storage_edit', {moduleKey: key}) }}">
+                <h2>{{ label }}</h2>
+                <p>{{ setting and setting.storageMode == 'external' ? 'Externe Speicherung' : 'Speicherung auf dem CMS-Server' }}</p>
+                <span class="status {{ setting and setting.storageMode == 'external' ? '' : 'status-ready' }}">{{ setting and setting.storageMode == 'external' ? 'Extern' : 'Intern' }}</span>
+            </a>
+        {% endfor %}
+    </section>
+
+    <div class="media-library-heading">
+        <div><p class="eyebrow">Dateiverwaltung</p><h2>Medienbibliothek</h2><p class="muted">{{ assets|length }} Treffer · {{ (totalSize / 1048576)|number_format(2, ',', '.') }} MB</p></div>
+        <div class="top-actions"><a class="button-link" href="{{ path('app_admin_media_upload') }}">Neue Datei</a><a class="button-link button-secondary" href="{{ path('app_admin_media_folder_new') }}">Neuer Ordner</a></div>
+    </div>
+
+    <form class="media-filters" method="get" action="{{ path('app_admin_storage_index') }}">
+        <label><span>Suche</span><input type="search" name="q" value="{{ filters.q }}" placeholder="Titel, Dateiname, Beschreibung"></label>
+        <label><span>Ordner</span><select name="folder"><option value="">Alle Ordner</option><option value="none" {{ filters.folder == 'none' ? 'selected' }}>Ohne Ordner</option>{% for folder in folders %}<option value="{{ folder.id }}" {{ filters.folder == folder.id ~ '' ? 'selected' }}>{{ folder.pathLabel }}</option>{% endfor %}</select></label>
+        <label><span>Modul</span><select name="module"><option value="">Alle Module</option>{% for key, label in modules %}<option value="{{ key }}" {{ filters.module == key ? 'selected' }}>{{ label }}</option>{% endfor %}</select></label>
+        <label><span>Speicher</span><select name="storage"><option value="">Intern und extern</option><option value="internal" {{ filters.storage == 'internal' ? 'selected' }}>Intern</option><option value="external" {{ filters.storage == 'external' ? 'selected' }}>Extern</option></select></label>
+        <label><span>Dateityp</span><select name="type"><option value="">Alle Typen</option><option value="image" {{ filters.type == 'image' ? 'selected' }}>Bilder</option><option value="video" {{ filters.type == 'video' ? 'selected' }}>Videos</option><option value="other" {{ filters.type == 'other' ? 'selected' }}>Andere</option></select></label>
+        <button type="submit">Filtern</button>
+        <a class="button-link button-secondary" href="{{ path('app_admin_storage_index') }}">Zurücksetzen</a>
+    </form>
+
+    <form id="media-bulk-form" class="media-bulk" method="post" action="{{ path('app_admin_media_bulk') }}">
+        <input type="hidden" name="_token" value="{{ csrf_token('bulk-media') }}">
+        <label>Mehrfachaktion <select name="bulk_action" required><option value="">Auswählen</option><option value="move">In Ordner verschieben</option><option value="delete">Unbenutzte Dateien löschen</option></select></label>
+        <label>Zielordner <select name="target_folder"><option value="">Ohne Ordner</option>{% for folder in folders %}<option value="{{ folder.id }}">{{ folder.pathLabel }}</option>{% endfor %}</select></label>
+        <button type="submit">Auf Auswahl anwenden</button>
+    </form>
+
+    <section class="media-grid" aria-label="Medien">
+        {% for asset in assets %}
+            {% set usages = assetUsages[asset.id] ?? [] %}
+            <article class="media-card">
+                <label class="media-select"><input form="media-bulk-form" type="checkbox" name="assets[]" value="{{ asset.id }}"> Auswählen</label>
+                <a class="media-preview" href="{{ asset.location }}" target="_blank" rel="noopener noreferrer">
+                    {% if asset.image %}<img src="{{ asset.location }}" alt="{{ asset.altText ?: asset.title }}" loading="lazy">
+                    {% elseif asset.video %}<span class="media-file-icon">▶</span><span>Video öffnen</span>
+                    {% else %}<span class="media-file-icon">⬇</span><span>Datei öffnen</span>{% endif %}
+                </a>
+                <div class="media-card-body">
+                    <h3 title="{{ asset.title }}">{{ asset.title }}</h3>
+                    <p>{{ asset.originalName }}</p>
+                    {% if asset.caption %}<p>{{ asset.caption }}</p>{% endif %}
+                    {% if asset.tags %}<div class="media-meta">{% for tag in asset.tags %}<span>#{{ tag }}</span>{% endfor %}</div>{% endif %}
+                    <div class="media-meta">
+                        <span>{{ asset.folder ? asset.folder.pathLabel : 'Ohne Ordner' }}</span>
+                        <span>{{ modules[asset.moduleKey] ?? asset.moduleKey }}</span>
+                        <span>{{ asset.external ? 'Extern' : 'Intern' }}</span>
+                        <span>{{ asset.fileSize ? (asset.fileSize / 1024)|number_format(1, ',', '.') ~ ' KB' : 'Größe unbekannt' }}</span>
+                    </div>
+                    {% if usages %}<div class="status status-ready">Verwendet: {{ usages|join(', ') }}</div>{% endif %}
+                    <div class="row-actions">
+                        <a href="{{ path('app_admin_media_edit', {id: asset.id}) }}">Bearbeiten</a>
+                        <a href="{{ path('app_admin_media_replace', {id: asset.id}) }}">Ersetzen</a>
+                        {% if not usages %}
+                            <form method="post" action="{{ path('app_admin_media_delete', {id: asset.id}) }}" onsubmit="return confirm('Datei wirklich dauerhaft löschen?');">
+                                <input type="hidden" name="_token" value="{{ csrf_token('delete-media-' ~ asset.id) }}"><button class="text-danger" type="submit">Löschen</button>
+                            </form>
+                        {% endif %}
+                    </div>
+                </div>
+            </article>
+        {% else %}<div class="panel media-empty"><h3>Keine Dateien gefunden</h3><p>Ändere die Filter oder lade eine neue Datei hoch.</p></div>{% endfor %}
+    </section>
+</main>
+{% endblock %}

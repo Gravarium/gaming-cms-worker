@@ -1,0 +1,35 @@
+{% set site = site_settings() %}
+{% set theme = cms_theme(site.themeKey) %}
+<!DOCTYPE html>
+<html lang="{{ app.request.locale }}" data-theme="{{ site.colorScheme }}" data-theme-package="{{ theme.key }}">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="description" content="{{ site.description }}">
+        <meta name="color-scheme" content="{{ site.colorScheme == 'system' ? 'light dark' : site.colorScheme }}">
+        <style>:root { --accent: {{ site.primaryColor }}; --surface-radius: {{ theme.variables.surfaceRadius }}; --hero-glow: {{ theme.variables.heroGlow }}; --font-stack: {{ theme.variables.fontStack }}; }</style>
+        <title>{% block title %}{{ site.siteName }}{% endblock %}</title>
+        {% if site.faviconPath %}<link rel="icon" href="{{ site.faviconPath }}">{% endif %}
+        {% block stylesheets %}{% endblock %}
+        {% block javascripts %}
+            {% block importmap %}{{ importmap('app') }}{% endblock %}
+        {% endblock %}
+    </head>
+    <body>
+        {% if site.enabledLocaleLabels|length > 1 %}
+            <form method="post" action="{{ path('app_locale_switch', {locale: app.request.locale}) }}" class="locale-switcher" data-locale-switcher>
+                <input type="hidden" name="_token" value="{{ csrf_token('locale-switch') }}">
+                <input type="hidden" name="_target" value="{{ app.request.requestUri }}">
+                <label>
+                    <span class="sr-only">Sprache</span>
+                    <select name="locale" onchange="this.form.action='{{ path('app_locale_switch', {locale: '__locale__'}) }}'.replace('__locale__', this.value); this.form.submit()">
+                        {% for code, label in site.enabledLocaleLabels %}
+                            <option value="{{ code }}" {{ app.request.locale == code ? 'selected' : '' }}>{{ label }}</option>
+                        {% endfor %}
+                    </select>
+                </label>
+            </form>
+        {% endif %}
+        {% block body %}{% endblock %}
+    </body>
+</html>

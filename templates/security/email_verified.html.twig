@@ -1,0 +1,10 @@
+{% extends 'base.html.twig' %}
+{% set site = site_settings() %}
+{% block title %}E-Mail-Bestätigung | {{ site.siteName }}{% endblock %}
+{% block body %}
+<main class="auth-shell"><section class="auth-card">
+    <p class="eyebrow">Kontosicherheit</p><h1>{{ success ? 'E-Mail-Adresse bestätigt' : 'Link ungültig' }}</h1>
+    <div class="{{ success ? 'notice' : 'alert' }}">{{ success ? 'Deine E-Mail-Adresse wurde erfolgreich bestätigt.' : 'Dieser Bestätigungslink ist ungültig, abgelaufen oder wurde bereits verwendet.' }}</div>
+    <a class="button-link" href="{{ path(app.user ? 'app_account_home' : 'app_login') }}">Weiter</a>
+</section></main>
+{% endblock %}

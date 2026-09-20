@@ -1,0 +1,7 @@
+{% extends 'base.html.twig' %}
+{% block title %}{{ heading }} | Gaming CMS{% endblock %}
+{% block body %}
+<header class="topbar"><a class="brand" href="{{ path('app_admin_dashboard') }}">Gaming CMS</a><a class="button-link button-secondary" href="{{ path('app_admin_access_role_index') }}">Zurück</a></header>
+<main class="editor-shell"><p class="eyebrow">Zugriffsverwaltung</p><h1>{{ heading }}</h1>{% if role.systemRole %}<div class="notice">Dies ist eine mitgelieferte Systemrolle. Ihr Schlüssel und ihre Löschung sind geschützt; Rechte und Status können angepasst werden.</div>{% endif %}
+{{ form_start(form, {attr: {class: 'content-form'}}) }}{{ form_widget(form) }}<button>Rolle speichern</button>{{ form_end(form) }}</main>
+{% endblock %}

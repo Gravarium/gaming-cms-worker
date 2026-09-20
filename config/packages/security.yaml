@@ -1,0 +1,72 @@
+security:
+    password_hashers:
+        App\Entity\User: 'auto'
+
+    role_hierarchy:
+        ROLE_ADMIN: ROLE_USER
+
+    providers:
+        app_user_provider:
+            entity:
+                class: App\Entity\User
+                property: email
+
+    firewalls:
+        dev:
+            pattern: ^/(_profiler|_wdt|assets|build)/
+            security: false
+
+        main:
+            lazy: true
+            provider: app_user_provider
+            user_checker: App\Security\UserChecker
+
+            login_throttling:
+                max_attempts: 5
+                interval: '15 minutes'
+
+            webauthn:
+                registration:
+                    enabled: true
+                    profile: default
+                    routes:
+                        options_path: '/account/passkeys/options'
+                        result_path: '/account/passkeys/register'
+                authentication:
+                    enabled: true
+                    profile: default
+                    routes:
+                        options_path: '/login/passkey/options'
+                        result_path: '/login/passkey'
+
+            form_login:
+                login_path: app_login
+                check_path: app_login
+                enable_csrf: true
+                username_parameter: _username
+                password_parameter: _password
+                default_target_path: app_account_home
+
+            logout:
+                path: app_logout
+                target: app_home
+                enable_csrf: true
+
+    access_control:
+        - { path: '^/locale/[a-z]{2}$', roles: PUBLIC_ACCESS }
+        - { path: ^/login(?:/passkey(?:/options)?)?$, roles: PUBLIC_ACCESS }
+        - { path: ^/forgot-password, roles: PUBLIC_ACCESS }
+        - { path: ^/reset-password, roles: PUBLIC_ACCESS }
+        - { path: ^/verify-email, roles: PUBLIC_ACCESS }
+        - { path: ^/admin, roles: ROLE_USER }
+        - { path: ^/guild-area, roles: ROLE_USER }
+        - { path: ^/account, roles: ROLE_USER }
+
+when@test:
+    security:
+        password_hashers:
+            Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface:
+                algorithm: auto
+                cost: 4
+                time_cost: 3
+                memory_cost: 10

@@ -1,0 +1,20 @@
+{% extends 'base.html.twig' %}
+{% block title %}Datei hochladen | Gaming CMS{% endblock %}
+{% block body %}
+<header class="topbar">
+    <a class="brand" href="{{ path('app_admin_dashboard') }}">Gaming CMS</a>
+    <a class="button-link button-secondary" href="{{ path('app_admin_storage_index') }}">Zur Medienbibliothek</a>
+</header>
+<main class="editor-shell">
+    <p class="eyebrow">Medienbibliothek</p>
+    <h1>Datei hochladen</h1>
+    <p class="muted">Das ausgewählte Modul entscheidet automatisch, ob die Datei intern oder extern gespeichert wird.</p>
+    {% if not externalStorageReady %}
+        <div class="alert">Module mit externem Speicher können erst Dateien hochladen, wenn die S3-Zugangsdaten auf dem Server eingerichtet sind.</div>
+    {% endif %}
+    {{ form_start(form, {attr: {class: 'content-form'}}) }}
+        {{ form_widget(form) }}
+        <button type="submit">Datei hochladen</button>
+    {{ form_end(form) }}
+</main>
+{% endblock %}

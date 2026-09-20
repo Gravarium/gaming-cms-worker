@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %}
+{% block title %}Bewerbung prüfen | Gaming CMS{% endblock %}
+{% block body %}
+<header class="topbar"><a class="brand" href="{{ path('app_admin_dashboard') }}">Gaming CMS</a><a class="button-link button-secondary" href="{{ path('app_admin_guild_application_index') }}">Zurück</a></header>
+<main class="dashboard">
+<p class="eyebrow">{{ application.guild.name }} · Bewerbungsprüfung</p>
+<h1>{{ application.applicantName }} als {{ application.characterName }}</h1>
+<p class="muted">{{ application.email }}{% if application.characterClass %} · {{ application.characterClass }}{% endif %} · Status: {{ application.status }}</p>
+<section class="panel"><h2>Bewerbung</h2><p>{{ application.message|nl2br }}</p>
+{% if application.answers %}<dl>{% for item in application.answers %}<dt><strong>{{ item.question }}</strong></dt><dd>{{ item.answer ?: 'Keine Angabe' }}</dd>{% endfor %}</dl>{% endif %}</section>
+<section class="panel"><h2>Interne Bearbeitung</h2>
+<form class="content-form" method="post"><input type="hidden" name="_token" value="{{ csrf_token('review-application-' ~ application.id) }}">
+<label>Interne Notizen<textarea name="internal_notes" rows="8" maxlength="10000">{{ application.internalNotes }}</textarea></label>
+<label><input type="checkbox" name="release" value="1"> Zuweisung aufheben</label>
+<p class="muted">Aktuell: {{ application.assignedTo ? application.assignedTo.email : 'Niemandem zugewiesen' }}. Beim Speichern wird die Bewerbung sonst dir zugewiesen.</p>
+<button>Bearbeitung speichern</button></form></section>
+{% if application.status in ['pending', 'reviewing'] %}<div class="row-actions">
+<form method="post" action="{{ path('app_admin_guild_application_decide', {id: application.id, decision: 'accept'}) }}"><input type="hidden" name="_token" value="{{ csrf_token('application-' ~ application.id) }}"><button>Annehmen & Mitglied anlegen</button></form>
+<form method="post" action="{{ path('app_admin_guild_application_decide', {id: application.id, decision: 'reject'}) }}"><input type="hidden" name="_token" value="{{ csrf_token('application-' ~ application.id) }}"><button class="button-secondary">Ablehnen</button></form>
+</div>{% endif %}
+</main>
+{% endblock %}

@@ -1,0 +1,114 @@
+.section-heading { margin-top: 3rem; }
+
+.game-filter,
+.guild-meta,
+.member-details {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .6rem;
+}
+
+.game-filter { margin: 1.5rem 0 2rem; }
+
+.guild-grid,
+.roster-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr));
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+.guild-card,
+.member-card,
+.application-card {
+    padding: 1.5rem;
+    border: 1px solid var(--border);
+    border-radius: 1rem;
+    background: linear-gradient(145deg, var(--surface-strong), var(--surface));
+}
+
+.guild-card h2 a { text-decoration: none; }
+.guild-card > p:not(.eyebrow) { color: var(--muted); line-height: 1.65; }
+
+.guild-logo {
+    width: 5rem;
+    height: 5rem;
+    margin-bottom: 1rem;
+    border-radius: 1rem;
+    object-fit: contain;
+    background: rgba(255, 255, 255, .04);
+}
+
+.guild-logo-large {
+    width: 8rem;
+    height: 8rem;
+    margin: 0;
+}
+
+.guild-heading {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.guild-meta { margin: 1rem 0; }
+
+.guild-meta span,
+.member-details span {
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: .35rem .65rem;
+    color: var(--muted);
+    font-size: .82rem;
+}
+
+.guild-profile {
+    width: min(58rem, calc(100% - 2rem));
+    margin: 0 auto;
+    padding: clamp(3rem, 8vw, 7rem) 0;
+}
+
+.guild-meta-large { margin: 1.5rem 0; }
+.guild-description { margin: 2.5rem 0; }
+.roster { margin-top: 4rem; }
+
+.member-card {
+    min-height: 0;
+}
+
+.member-card h3 { margin: 0 0 .35rem; }
+.member-card p { color: var(--muted); }
+
+.storage-hint {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .5rem 1rem;
+    margin: 1rem 0 1.5rem;
+    padding: .9rem 1rem;
+    border: 1px solid var(--border);
+    border-radius: .8rem;
+    color: var(--muted);
+    background: var(--surface);
+}
+
+.storage-hint strong { color: var(--text); }
+
+.application-list {
+    display: grid;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+.application-card {
+    display: grid;
+    gap: 1rem;
+}
+
+.application-message {
+    line-height: 1.7;
+    white-space: normal;
+}
+
+@media (max-width: 42rem) {
+    .guild-heading { align-items: flex-start; flex-direction: column; }
+}

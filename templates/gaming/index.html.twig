@@ -1,0 +1,27 @@
+{% extends 'base.html.twig' %}
+{% set site = site_settings() %}
+{% block title %}Gaming und Gilden | {{ site.siteName }}{% endblock %}
+{% block body %}
+<header class="topbar">
+    <a class="brand" href="{{ path('app_home') }}">{% if site.logoPath %}<img class="site-logo" src="{{ site.logoPath }}" alt="{{ site.siteName }}">{% else %}{{ site.siteName }}{% endif %}</a>
+    <nav class="top-actions"><a href="{{ path('app_home') }}">Startseite</a><a href="{{ path('app_news_index') }}">News</a></nav>
+</header>
+<main class="public-shell">
+    <p class="eyebrow">Community</p>
+    <h1>Spiele und Gilden</h1>
+    <p class="hero-copy">Entdecke die Spiele, Gilden und Clans unserer Community.</p>
+    {% if games %}<div class="game-filter" aria-label="Aktive Spiele">{% for game in games %}<span class="status">{{ game.name }}</span>{% endfor %}</div>{% endif %}
+    <section class="guild-grid" aria-label="Gilden und Clans">
+        {% for guild in guilds %}
+            <article class="guild-card">
+                {% if guild.logo %}<img class="guild-logo" src="{{ guild.logo.location }}" alt="{{ guild.logo.altText ?: guild.name }}">{% endif %}
+                <p class="eyebrow">{{ guild.game.name }}</p>
+                <h2><a href="{{ path('app_guild_show', {slug: guild.slug}) }}">{{ guild.name }}</a></h2>
+                <p>{{ guild.description|striptags|slice(0, 180) }}{% if guild.description|length > 180 %}…{% endif %}</p>
+                <div class="guild-meta"><span>{{ guild.serverName }}</span>{% if guild.region %}<span>{{ guild.region }}</span>{% endif %}{% if guild.faction %}<span>{{ guild.faction }}</span>{% endif %}</div>
+                <span class="status {{ guild.recruitmentOpen ? 'status-ready' : 'status-disabled' }}">{{ guild.recruitmentOpen ? 'Mitglieder gesucht' : 'Rekrutierung geschlossen' }}</span>
+            </article>
+        {% else %}<p class="muted">Noch keine öffentlichen Gilden vorhanden.</p>{% endfor %}
+    </section>
+</main>
+{% endblock %}

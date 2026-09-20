@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Website-Einstellungen | Gaming CMS{% endblock %}
+
+{% block body %}
+<header class="topbar">
+    <a class="brand" href="{{ path('app_admin_dashboard') }}">Gaming CMS</a>
+    <a class="button-link button-secondary" href="{{ path('app_admin_dashboard') }}">Übersicht</a>
+</header>
+
+<main class="editor-shell">
+    <p class="eyebrow">Administration</p>
+    <h1>Website-Einstellungen</h1>
+
+    {% for message in app.flashes('success') %}<div class="notice">{{ message }}</div>{% endfor %}
+
+    {% if settings.logoPath or settings.faviconPath %}
+        <div class="branding-preview">
+            {% if settings.logoPath %}<img src="{{ settings.logoPath }}" alt="Aktuelles Logo">{% endif %}
+            {% if settings.faviconPath %}<img class="favicon-preview" src="{{ settings.faviconPath }}" alt="Aktuelles Favicon">{% endif %}
+        </div>
+    {% endif %}
+
+    <div class="storage-hint">
+        <strong>Speicherziel für Branding: {{ storageMode == 'external' ? 'Extern' : 'Intern' }}</strong>
+        <span>
+            {% if storageMode == 'external' %}
+                {{ externalStorageReady ? 'Datei-Uploads werden automatisch extern gespeichert.' : 'Verwende bis zur S3-Einrichtung eine externe URL.' }}
+            {% else %}
+                Datei-Uploads werden auf diesem CMS-Server gespeichert.
+            {% endif %}
+            Änderbar unter <a href="{{ path('app_admin_storage_index') }}">Speicherverwaltung</a>.
+        </span>
+    </div>
+
+    {{ form_start(form, {attr: {class: 'content-form'}}) }}
+        {{ form_widget(form) }}
+        <button type="submit">Einstellungen speichern</button>
+    {{ form_end(form) }}
+</main>
+{% endblock %}

@@ -1,0 +1,23 @@
+{% extends 'base.html.twig' %}
+{% block title %}{{ heading }} | Gaming CMS{% endblock %}
+{% block body %}
+<header class="topbar">
+    <a class="brand" href="{{ path('app_admin_dashboard') }}">Gaming CMS</a>
+    <a class="button-link button-secondary" href="{{ path('app_admin_video_index') }}">Zurück</a>
+</header>
+<main class="editor-shell">
+    <p class="eyebrow">Video-Modul</p>
+    <h1>{{ heading }}</h1>
+    <div class="storage-hint">
+        <strong>Upload-Speicher: {{ storageMode == 'external' ? 'Extern' : 'Intern' }}</strong>
+        <span>{% if storageMode == 'external' %}{{ externalStorageReady ? 'Videodateien werden automatisch extern gespeichert.' : 'S3-Zugangsdaten fehlen noch.' }}{% else %}Videodateien werden auf diesem CMS-Server gespeichert.{% endif %}</span>
+    </div>
+    {% if video.mediaAsset %}
+        <div class="notice">Aktuelle Datei: <a href="{{ video.mediaAsset.location }}" target="_blank" rel="noopener noreferrer">{{ video.mediaAsset.originalName }}</a></div>
+    {% endif %}
+    {{ form_start(form, {attr: {class: 'content-form'}}) }}
+        {{ form_widget(form) }}
+        <button type="submit">Video speichern</button>
+    {{ form_end(form) }}
+</main>
+{% endblock %}

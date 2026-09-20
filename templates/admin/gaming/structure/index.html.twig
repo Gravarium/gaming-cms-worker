@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+{% block title %}Gildenstruktur | Gaming CMS{% endblock %}
+{% block body %}
+<header class="topbar">
+    <a class="brand" href="{{ path('app_admin_dashboard') }}">Gaming CMS</a>
+    <nav class="top-actions">
+        <a class="button-link" href="{{ path('app_admin_guild_team_new', {guild: guild.id}) }}">Neues Team</a>
+        <a class="button-link" href="{{ path('app_admin_guild_rank_new', {guild: guild.id}) }}">Neuer Rang</a>
+        <a class="button-link" href="{{ path('app_admin_guild_question_new', {guild: guild.id}) }}">Neue Bewerbungsfrage</a>
+        <a class="button-link button-secondary" href="{{ path('app_admin_gaming_index') }}">Zurück</a>
+    </nav>
+</header>
+<main class="dashboard">
+    <p class="eyebrow">Gildenstruktur</p>
+    <h1>{{ guild.name }}</h1>
+    <h2>Teams</h2>
+    <div class="table-wrap"><table><thead><tr><th>Team</th><th>Leitung</th><th>Mitglieder</th><th>Status</th><th>Aktionen</th></tr></thead><tbody>
+    {% for team in teams %}<tr><td>{% if team.color %}<span style="color: {{ team.color }}">●</span>{% endif %} {{ team.name }}<br><small>{{ team.description }}</small></td><td>{{ team.leader ? team.leader.characterName : '–' }}</td><td>{{ team.members|length }}</td><td>{{ team.active ? 'Aktiv' : 'Inaktiv' }}</td><td class="row-actions"><a href="{{ path('app_admin_guild_team_edit', {guild: guild.id, team: team.id}) }}">Bearbeiten</a><form method="post" action="{{ path('app_admin_guild_team_delete', {guild: guild.id, team: team.id}) }}" onsubmit="return confirm('Team löschen? Termine bleiben erhalten und verlieren nur die Teamzuordnung.');"><input type="hidden" name="_token" value="{{ csrf_token('delete-team-' ~ team.id) }}"><button class="text-danger">Löschen</button></form></td></tr>
+    {% else %}<tr><td colspan="5">Noch keine Teams vorhanden.</td></tr>{% endfor %}</tbody></table></div>
+
+    <h2 class="section-heading">Ränge und Rechte</h2>
+    <div class="table-wrap"><table>
+        <thead><tr><th>Rang</th><th>Rechte</th><th>Standard</th><th>Status</th><th>Aktionen</th></tr></thead>
+        <tbody>{% for rank in ranks %}<tr>
+            <td>{% if rank.color %}<span style="color: {{ rank.color }}">●</span>{% endif %} {{ rank.name }}</td>
+            <td>{{ rank.permissions ? rank.permissions|join(', ') : 'Keine besonderen Rechte' }}</td>
+            <td>{{ rank.defaultRank ? 'Ja' : 'Nein' }}</td><td>{{ rank.enabled ? 'Aktiv' : 'Inaktiv' }}</td>
+            <td class="row-actions"><a href="{{ path('app_admin_guild_rank_edit', {guild: guild.id, rank: rank.id}) }}">Bearbeiten</a><form method="post" action="{{ path('app_admin_guild_rank_delete', {guild: guild.id, rank: rank.id}) }}" onsubmit="return confirm('Rang löschen?');"><input type="hidden" name="_token" value="{{ csrf_token('delete-rank-' ~ rank.id) }}"><button class="text-danger">Löschen</button></form></td>
+        </tr>{% else %}<tr><td colspan="5">Noch keine eigenen Ränge vorhanden.</td></tr>{% endfor %}</tbody>
+    </table></div>
+
+    <h2 class="section-heading">Eigene Bewerbungsfragen</h2>
+    <div class="table-wrap"><table>
+        <thead><tr><th>Frage</th><th>Typ</th><th>Pflicht</th><th>Status</th><th>Aktionen</th></tr></thead>
+        <tbody>{% for question in questions %}<tr>
+            <td>{{ question.label }}</td><td>{{ question.type }}</td><td>{{ question.required ? 'Ja' : 'Nein' }}</td><td>{{ question.enabled ? 'Aktiv' : 'Inaktiv' }}</td>
+            <td class="row-actions"><a href="{{ path('app_admin_guild_question_edit', {guild: guild.id, question: question.id}) }}">Bearbeiten</a><form method="post" action="{{ path('app_admin_guild_question_delete', {guild: guild.id, question: question.id}) }}" onsubmit="return confirm('Frage löschen?');"><input type="hidden" name="_token" value="{{ csrf_token('delete-question-' ~ question.id) }}"><button class="text-danger">Löschen</button></form></td>
+        </tr>{% else %}<tr><td colspan="5">Noch keine eigenen Fragen vorhanden.</td></tr>{% endfor %}</tbody>
+    </table></div>
+</main>
+{% endblock %}

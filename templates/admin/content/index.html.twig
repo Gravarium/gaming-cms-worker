@@ -1,0 +1,70 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Inhalte verwalten | Gaming CMS{% endblock %}
+
+{% block body %}
+<header class="topbar">
+    <a class="brand" href="{{ path('app_admin_dashboard') }}">Gaming CMS</a>
+    <nav class="top-actions">
+        <a class="button-link" href="{{ path('app_admin_content_new') }}">Neuer Inhalt</a>
+        <a class="button-link button-secondary" href="{{ path('app_admin_dashboard') }}">Übersicht</a>
+    </nav>
+</header>
+
+<main class="dashboard">
+    <p class="eyebrow">Administration</p>
+    <h1>Inhalte</h1>
+
+    {% for message in app.flashes('success') %}<div class="notice">{{ message }}</div>{% endfor %}
+
+    <form method="get" class="content-form" role="search">
+        <label>Suche <input name="q" value="{{ filters.q }}" placeholder="Titel, Slug oder Kurztext"></label>
+        <label>Status
+            <select name="status">
+                <option value="">Alle</option>
+                {% for value, label in {'draft':'Entwurf','review':'Zur Freigabe','scheduled':'Geplant','published':'Veröffentlicht','archived':'Archiviert'} %}
+                    <option value="{{ value }}" {{ filters.status == value ? 'selected' }}>{{ label }}</option>
+                {% endfor %}
+            </select>
+        </label>
+        <label>Typ
+            <select name="type">
+                <option value="">Alle</option>
+                <option value="news" {{ filters.type == 'news' ? 'selected' }}>News</option>
+                <option value="page" {{ filters.type == 'page' ? 'selected' }}>Seite</option>
+            </select>
+        </label>
+        <button type="submit">Filtern</button>
+    </form>
+
+    {% set statusLabels = {'draft':'Entwurf','review':'Zur Freigabe','scheduled':'Geplant','published':'Veröffentlicht','archived':'Archiviert'} %}
+    <div class="table-wrap">
+        <table>
+            <thead><tr><th>Titel</th><th>Typ</th><th>Status</th><th>Geändert</th><th>Aktionen</th></tr></thead>
+            <tbody>
+            {% for entry in entries %}
+                <tr>
+                    <td>{{ entry.title }}</td>
+                    <td>{{ entry.type == 'news' ? 'News' : 'Seite' }}</td>
+                    <td>
+                        <span class="status {{ entry.published ? 'status-ready' : '' }}">{{ statusLabels[entry.status] ?? entry.status }}</span>
+                        {% if entry.scheduledAt %}<small>{{ entry.scheduledAt|date('d.m.Y H:i') }}</small>{% endif %}
+                    </td>
+                    <td>{{ entry.updatedAt|date('d.m.Y H:i') }}</td>
+                    <td class="row-actions">
+                        <a href="{{ path('app_admin_content_edit', {id: entry.id}) }}">Bearbeiten</a>
+                        <a href="{{ path('app_admin_content_history', {id: entry.id}) }}">Versionen</a>
+                        <form method="post" action="{{ path('app_admin_content_delete', {id: entry.id}) }}" onsubmit="return confirm('Diesen Inhalt wirklich löschen?');">
+                            <input type="hidden" name="_token" value="{{ csrf_token('delete-content-' ~ entry.id) }}">
+                            <button class="text-danger" type="submit">Löschen</button>
+                        </form>
+                    </td>
+                </tr>
+            {% else %}
+                <tr><td colspan="5">Keine passenden Inhalte vorhanden.</td></tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</main>
+{% endblock %}

@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+{% block title %}Medium bearbeiten | Gaming CMS{% endblock %}
+{% block body %}
+<header class="topbar"><a class="brand" href="{{ path('app_admin_dashboard') }}">Gaming CMS</a><a class="button-link button-secondary" href="{{ path('app_admin_storage_index') }}">Zur Mediathek</a></header>
+<main class="editor-shell">
+    <p class="eyebrow">Medienbibliothek</p><h1>{{ asset.title }}</h1>
+    <div class="media-detail">
+        <a class="media-preview" href="{{ asset.location }}" target="_blank" rel="noopener noreferrer">{% if asset.image %}<img src="{{ asset.location }}" alt="{{ asset.altText ?: asset.title }}">{% else %}<span class="media-file-icon">⬇</span><span>{{ asset.originalName }}</span>{% endif %}</a>
+        <div><p><strong>Original:</strong> {{ asset.originalName }}</p><p><strong>Typ:</strong> {{ asset.mimeType ?: 'Unbekannt' }}</p><p><strong>SHA-256:</strong> <code>{{ asset.checksumSha256 ?: 'Für Altbestand noch nicht erfasst' }}</code></p>{% if usages %}<p class="status status-ready">Verwendet: {{ usages|join(', ') }}</p>{% else %}<p class="muted">Derzeit keine bekannte Verwendung.</p>{% endif %}</div>
+    </div>
+    {{ form_start(form, {attr: {class: 'content-form'}}) }}{{ form_widget(form) }}<button type="submit">Metadaten speichern</button>{{ form_end(form) }}
+    <p><a class="button-link button-secondary" href="{{ path('app_admin_media_replace', {id: asset.id}) }}">Datei sicher ersetzen</a></p>
+</main>
+{% endblock %}

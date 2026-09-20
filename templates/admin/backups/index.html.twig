@@ -1,0 +1,69 @@
+{% extends 'base.html.twig' %}
+{% block title %}Backup-Wiederherstellung | Gaming CMS{% endblock %}
+{% block body %}
+<header class="topbar">
+    <a class="brand" href="{{ path('app_admin_dashboard') }}">Gaming CMS</a>
+    <nav class="top-actions">
+        <a class="button-link" href="{{ path('app_admin_connector_index') }}">Externe Ziele</a>
+        <a class="button-link button-secondary" href="{{ path('app_admin_dashboard') }}">Übersicht</a>
+    </nav>
+</header>
+<main class="dashboard">
+    <p class="eyebrow">Datensicherung</p>
+    <h1>Backup und Wiederherstellung</h1>
+    <p class="muted">Nur bereinigte Bestands- und Prüfdaten werden angezeigt. Datenbankzugänge, Schlüssel und Speicherpfade bleiben verborgen.</p>
+
+    {% if not inventory_available %}
+        <article class="panel">
+            <h2>Backup-Speicher nicht lesbar</h2>
+            <p>Der Webprozess hat keinen lesenden Zugriff. Die automatische Serversicherung kann trotzdem unabhängig funktionieren.</p>
+        </article>
+    {% elseif backups is empty %}
+        <article class="panel">
+            <h2>Noch kein lokales Backup gefunden</h2>
+            <p>Nach dem nächsten erfolgreichen Backup-Lauf erscheint der Bestand hier.</p>
+        </article>
+    {% else %}
+        <article class="panel">
+            <p class="eyebrow">Wiederherstellungsbereitschaft</p>
+            <h2>{{ backups|length }} Backup{{ backups|length == 1 ? '' : 's' }} im angezeigten Bestand</h2>
+            {% set latest_status = verification_statuses[backups[0].id] ?? null %}
+            <p>
+                Neuestes Backup: <strong>{{ backups[0].createdAt|date('d.m.Y H:i', 'UTC') }} UTC</strong><br>
+                Vollständige Prüfung:
+                {% if latest_status %}
+                    <span class="status {{ latest_status.successful ? 'status-ready' : 'status-disabled' }}">{{ latest_status.successful ? 'Erfolgreich' : 'Fehlgeschlagen' }}</span>
+                {% else %}
+                    <span class="status status-disabled">Noch nicht protokolliert</span>
+                {% endif %}
+            </p>
+            <p class="muted">Eine echte Wiederherstellung bleibt absichtlich ein bestätigter Servervorgang mit separater Zieldatenbank. Diese Seite verändert keine Daten.</p>
+        </article>
+
+        <section class="dashboard-grid">
+            {% for backup in backups %}
+                {% set status = verification_statuses[backup.id] ?? null %}
+                <article class="panel">
+                    <p class="eyebrow">{{ backup.createdAt|date('d.m.Y H:i', 'UTC') }} UTC</p>
+                    <h2>{{ backup.id }}</h2>
+                    <p>
+                        Größe: {{ (backup.bytes / 1048576)|number_format(2, ',', '.') }} MiB<br>
+                        Revision: {{ backup.revision|slice(0, 12) }}
+                    </p>
+                    {% if status %}
+                        <p>
+                            <span class="status {{ status.successful ? 'status-ready' : 'status-disabled' }}">{{ status.successful ? 'Vollständig geprüft' : 'Prüfung fehlgeschlagen' }}</span><br>
+                            <span class="muted">{{ status.checkedAt|date('d.m.Y H:i', 'UTC') }} UTC</span>
+                        </p>
+                    {% else %}
+                        <p><span class="status status-disabled">Noch keine protokollierte Prüfung</span></p>
+                    {% endif %}
+                    {% if backup.objectStorage == 'skipped_requires_external_backup' %}
+                        <p class="text-danger">Externer Objektspeicher ist nicht in diesem Backup enthalten.</p>
+                    {% endif %}
+                </article>
+            {% endfor %}
+        </section>
+    {% endif %}
+</main>
+{% endblock %}

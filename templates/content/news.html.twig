@@ -1,0 +1,40 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}News | {{ site.siteName }}{% endblock %}
+
+{% block body %}
+<header class="topbar">
+    <a class="brand" href="{{ path('app_home') }}">
+        {% if site.logoPath %}<img class="site-logo" src="{{ site.logoPath }}" alt="{{ site.siteName }}">{% else %}{{ site.siteName }}{% endif %}
+    </a>
+    <nav class="top-actions" aria-label="Hauptnavigation">
+        <a href="{{ path('app_news_index') }}">News</a>
+        {% for item in main_navigation() %}
+            {% set item_url = item.page ? path('app_page_show', {slug: item.page.slug}) : item.url %}
+            <a href="{{ item_url }}" {% if item.openNewWindow %}target="_blank" rel="noopener noreferrer"{% endif %}>{{ item.label }}</a>
+        {% endfor %}
+        {% if app.user %}
+            <a class="button-link" href="{{ path('app_admin_dashboard') }}">Administration</a>
+        {% else %}
+            <a class="button-link button-secondary" href="{{ path('app_login') }}">Anmelden</a>
+        {% endif %}
+    </nav>
+</header>
+
+<main class="public-shell">
+    <p class="eyebrow">Aktuelles</p>
+    <h1>News</h1>
+    <section class="news-grid">
+    {% for entry in entries %}
+        <article class="news-card">
+            <p class="news-date">{{ entry.publishedAt|date('d.m.Y H:i') }}{% if entry.category %} · {{ entry.category.name }}{% endif %}</p>
+            <h2><a href="{{ path('app_news_show', {slug: entry.slug}) }}">{{ entry.title }}</a></h2>
+            {% if entry.excerpt %}<p>{{ entry.excerpt }}</p>{% endif %}
+            <a class="read-more" href="{{ path('app_news_show', {slug: entry.slug}) }}">Weiterlesen</a>
+        </article>
+    {% else %}
+        <p class="muted">Noch keine News veröffentlicht.</p>
+    {% endfor %}
+    </section>
+</main>
+{% endblock %}

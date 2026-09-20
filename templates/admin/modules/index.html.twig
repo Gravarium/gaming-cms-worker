@@ -1,0 +1,70 @@
+{% extends 'base.html.twig' %}
+{% block title %}Module verwalten | Gaming CMS{% endblock %}
+{% block body %}
+<header class="topbar"><a class="brand" href="{{ path('app_admin_dashboard') }}">Gaming CMS</a><a class="button-link button-secondary" href="{{ path('app_admin_dashboard') }}">Übersicht</a></header>
+<main class="dashboard">
+<p class="eyebrow">System</p><h1>Modulpakete</h1>
+<p class="muted">Gebündelte Module können installiert, aktualisiert, aktiviert und sicher deinstalliert werden. Bei der Deinstallation bleiben Daten grundsätzlich erhalten.</p>
+{% for message in app.flashes('success') %}<div class="notice">{{ message }}</div>{% endfor %}
+{% for message in app.flashes('error') %}<div class="alert">{{ message }}</div>{% endfor %}
+<section class="dashboard-grid">
+{% for module in modules %}
+<article class="panel">
+<p class="eyebrow">Paketversion {{ module.version }}</p><h2>{{ module.name }}</h2>
+<p>Kennung: {{ module.key }}<br>Abhängigkeiten: {{ module.dependencies ? module.dependencies|join(', ') : 'keine' }}</p>
+{% if module.installed %}
+    <span class="status status-ready">Installiert {{ module.installedVersion }}</span>
+    <span class="status {{ module.enabled ? 'status-ready' : 'status-disabled' }}">{{ module.enabled ? 'Aktiv' : 'Deaktiviert' }}</span>
+{% else %}
+    <span class="status status-disabled">Nicht installiert</span>
+    {% if module.dataRetained %}<p class="muted">Vorhandene Moduldaten wurden beibehalten.</p>{% endif %}
+{% endif %}
+{% if module.required %}
+    <p class="muted">Geschütztes Kernmodul</p>
+{% elseif not module.installed %}
+    <form method="post" action="{{ path('app_admin_module_install', {key: module.key}) }}">
+        <input type="hidden" name="_token" value="{{ csrf_token('module-install-' ~ module.key) }}">
+        <button type="submit">Installieren</button>
+    </form>
+{% else %}
+    <div class="top-actions">
+        <form method="post" action="{{ path('app_admin_module_toggle', {key: module.key}) }}">
+            <input type="hidden" name="_token" value="{{ csrf_token('module-toggle-' ~ module.key) }}">
+            <button type="submit">{{ module.enabled ? 'Deaktivieren' : 'Aktivieren' }}</button>
+        </form>
+        {% if module.updateAvailable %}
+            <form method="post" action="{{ path('app_admin_module_update', {key: module.key}) }}">
+                <input type="hidden" name="_token" value="{{ csrf_token('module-update-' ~ module.key) }}">
+                <button type="submit">Auf {{ module.version }} aktualisieren</button>
+            </form>
+        {% endif %}
+        <form method="post" action="{{ path('app_admin_module_remove', {key: module.key}) }}" onsubmit="return confirm('Modul deaktivieren und deinstallieren? Die Daten bleiben erhalten.');">
+            <input type="hidden" name="_token" value="{{ csrf_token('module-remove-' ~ module.key) }}">
+            <button class="text-danger" type="submit">Deinstallieren</button>
+        </form>
+    </div>
+{% endif %}
+{% if module.blockedBy %}<p class="text-danger">Fehlende oder inaktive Abhängigkeiten: {{ module.blockedBy|join(', ') }}</p>{% endif %}
+{% if module.dependents %}<p class="muted">Installierte abhängige Module: {{ module.dependents|join(', ') }}</p>{% endif %}
+</article>
+{% endfor %}
+</section>
+<section>
+<h2>Externe signierte Pakete</h2>
+<p class="muted">Diese Anzeige enthält nur installierte Pakete. Schlüssel, Signaturen und private Serverpfade werden nicht ausgegeben.</p>
+{% if externalExtensions %}
+<div class="table-wrap"><table><thead><tr><th>Typ</th><th>Paket</th><th>Version</th><th>Fähigkeiten</th><th>Laufzeit</th><th>Prüfung</th></tr></thead><tbody>
+{% for extension in externalExtensions %}
+<tr><td>{{ extension.type == 'theme' ? 'Theme' : 'Modul' }}</td><td>{{ extension.name }} <span class="muted">({{ extension.key }})</span></td><td>{{ extension.version }}</td><td>
+{% if extension.requested %}
+{{ extension.approved|length }}/{{ extension.requested|length }} freigegeben
+{% else %}Keine angefordert{% endif %}
+</td><td>
+<span class="status {{ extension.runtime.circuit == 'closed' ? 'status-ready' : 'status-disabled' }}">{{ extension.runtime.circuit == 'closed' ? 'Bereit' : 'Automatisch gesperrt' }}</span>
+<span class="muted">{{ extension.runtime.requestsThisMinute }} Aufrufe/Minute</span>
+</td><td><span class="status {{ extension.status == 'verified' ? 'status-ready' : 'status-disabled' }}">{{ extension.status == 'verified' ? 'Signiert und vollständig' : 'Gesperrt' }}</span></td></tr>
+{% endfor %}
+</tbody></table></div>
+{% else %}<div class="panel"><p>Noch keine externen Pakete installiert.</p></div>{% endif %}
+</section></main>
+{% endblock %}

@@ -1,0 +1,68 @@
+# yaml-language-server: $schema=../vendor/symfony/dependency-injection/Loader/schema/services.schema.json
+
+parameters:
+
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+
+    _instanceof:
+        App\ExternalConnector\ExternalConnectorAdapter:
+            tags: ['app.external_connector.adapter']
+
+    App\:
+        resource: '../src/'
+
+    App\ExternalConnector\ExternalConnectorTargetSource:
+        alias: App\Repository\ExternalConnectorTargetRepository
+
+    App\ExternalConnector\GuildNotificationRecipientResolver:
+        alias: App\ExternalConnector\DoctrineGuildNotificationRecipientResolver
+
+    App\Service\GuildWebhookSender:
+        alias: App\Service\DiscordWebhookNotifier
+
+    App\ExternalConnector\ExternalConnectorAdapterRegistry:
+        arguments:
+            $adapters: !tagged_iterator app.external_connector.adapter
+
+    App\Backup\BackupPrivateConfigurationStatus:
+        arguments:
+            $targetFile: '%env(string:OFFSITE_TARGETS_FILE)%'
+
+    App\Backup\BackupSelectionSynchronizer:
+        arguments:
+            $projectDir: '%kernel.project_dir%'
+
+    App\ExternalConnector\ExternalConnectorPrivateConfiguration:
+        arguments:
+            $configurationFile: '%env(string:EXTERNAL_CONNECTOR_CONFIG_FILE)%'
+
+    App\ExtensionPackage\ExtensionPackageVerifier:
+        arguments:
+            $trustedKeysFile: '%kernel.project_dir%/var/extensions/trusted-keys.json'
+
+    App\ExtensionPackage\ExtensionPackageInstaller:
+        arguments:
+            $installRoot: '%kernel.project_dir%/var/extensions/installed'
+
+    App\ExtensionPackage\ExtensionPackageInventory:
+        arguments:
+            $installRoot: '%kernel.project_dir%/var/extensions/installed'
+
+    App\ExtensionPackage\ExtensionPermissionStore:
+        arguments:
+            $permissionsFile: '%kernel.project_dir%/var/extensions/permissions.json'
+
+    App\Command\ExtensionPermissionCommand:
+        arguments:
+            $installRoot: '%kernel.project_dir%/var/extensions/installed'
+
+    App\ExtensionRuntime\ExtensionRuntimeState:
+        arguments:
+            $stateFile: '%kernel.project_dir%/var/extensions/runtime-state.json'
+
+    App\ExtensionRuntime\ExtensionRuntimeAudit:
+        arguments:
+            $auditFile: '%kernel.project_dir%/var/extensions/runtime-audit.jsonl'

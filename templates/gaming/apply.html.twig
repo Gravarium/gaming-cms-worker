@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %}
+{% set site = site_settings() %}
+{% block title %}Bei {{ guild.name }} bewerben | {{ site.siteName }}{% endblock %}
+{% block body %}
+<header class="topbar">
+    <a class="brand" href="{{ path('app_home') }}">{% if site.logoPath %}<img class="site-logo" src="{{ site.logoPath }}" alt="{{ site.siteName }}">{% else %}{{ site.siteName }}{% endif %}</a>
+    <a class="button-link button-secondary" href="{{ path('app_guild_show', {slug: guild.slug}) }}">Zur Gilde</a>
+</header>
+<main class="editor-shell">
+    <p class="eyebrow">Mitglied werden</p>
+    <h1>Bei {{ guild.name }} bewerben</h1>
+    <p class="muted">Deine Angaben werden ausschließlich für die Bearbeitung dieser Bewerbung verwendet.</p>
+    {{ form_start(form, {attr: {class: 'content-form'}}) }}
+        {{ form_widget(form) }}
+        <button type="submit">Bewerbung absenden</button>
+    {{ form_end(form) }}
+</main>
+{% endblock %}

@@ -1,0 +1,8 @@
+{% extends 'base.html.twig' %}
+{% block title %}Benachrichtigungen | Gaming CMS{% endblock %}
+{% block body %}
+<header class="topbar"><a class="brand" href="{{ path('app_admin_dashboard') }}">Gaming CMS</a><nav class="top-actions"><form method="post" action="{{ path('app_admin_notification_read_all') }}"><input type="hidden" name="_token" value="{{ csrf_token('read-all-notifications') }}"><button class="button-secondary">Alle als gelesen markieren</button></form><a class="button-link button-secondary" href="{{ path('app_admin_dashboard') }}">Zurück</a></nav></header>
+<main class="dashboard"><p class="eyebrow">Administration</p><h1>Benachrichtigungen</h1><div class="application-list">
+{% for notification in notifications %}<article class="application-card"><div><p class="eyebrow">{{ notification.createdAt|date('d.m.Y H:i') }} · {{ notification.type }}</p><h2>{{ notification.title }}</h2><p>{{ notification.message }}</p></div><span class="status {{ notification.read ? 'status-disabled' : 'status-ready' }}">{{ notification.read ? 'Gelesen' : 'Neu' }}</span>{% if not notification.read or notification.link %}<form method="post" action="{{ path('app_admin_notification_read', {id: notification.id}) }}"><input type="hidden" name="_token" value="{{ csrf_token('read-notification-' ~ notification.id) }}"><button>{{ notification.link ? 'Öffnen' : 'Als gelesen markieren' }}</button></form>{% endif %}</article>{% else %}<p class="muted">Keine Benachrichtigungen vorhanden.</p>{% endfor %}
+</div></main>
+{% endblock %}

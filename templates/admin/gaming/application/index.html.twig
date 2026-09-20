@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+{% block title %}Gildenbewerbungen | Gaming CMS{% endblock %}
+{% block body %}
+<header class="topbar"><a class="brand" href="{{ path('app_admin_dashboard') }}">Gaming CMS</a><a class="button-link button-secondary" href="{{ path('app_admin_gaming_index') }}">Zurück</a></header>
+<main class="dashboard"><p class="eyebrow">Gaming-Modul</p><h1>Beitrittsbewerbungen</h1>
+{% for message in app.flashes('success') %}<div class="notice">{{ message }}</div>{% endfor %}
+<div class="application-list">{% for application in applications %}<article class="application-card">
+<div><p class="eyebrow">{{ application.guild.name }} · {{ application.createdAt|date('d.m.Y H:i') }}</p><h2>{{ application.applicantName }} als {{ application.characterName }}</h2><p class="muted">{{ application.email }}{% if application.characterClass %} · {{ application.characterClass }}{% endif %}</p></div>
+<span class="status {{ application.status == 'accepted' ? 'status-ready' : (application.status == 'rejected' ? 'status-disabled' : '') }}">{{ application.status == 'pending' ? 'Offen' : (application.status == 'reviewing' ? 'In Prüfung' : (application.status == 'accepted' ? 'Angenommen' : 'Abgelehnt')) }}</span>
+{% if application.assignedTo %}<p class="muted">Bearbeitung: {{ application.assignedTo.email }}</p>{% endif %}<p class="application-message">{{ application.message|nl2br }}</p>
+{% if application.answers %}<dl>{% for item in application.answers %}<dt><strong>{{ item.question }}</strong></dt><dd>{{ item.answer ?: 'Keine Angabe' }}</dd>{% endfor %}</dl>{% endif %}
+{% if application.convertedMember %}<p class="notice">Mitglied {{ application.convertedMember.characterName }} wurde automatisch angelegt.</p>{% endif %}
+{% if application.status in ['pending', 'reviewing'] %}<div class="row-actions"><a class="button-link button-secondary" href="{{ path('app_admin_guild_application_review', {id: application.id}) }}">Prüfen & Notizen</a><form method="post" action="{{ path('app_admin_guild_application_decide', {id: application.id, decision: 'accept'}) }}"><input type="hidden" name="_token" value="{{ csrf_token('application-' ~ application.id) }}"><button>Annehmen & Mitglied anlegen</button></form><form method="post" action="{{ path('app_admin_guild_application_decide', {id: application.id, decision: 'reject'}) }}"><input type="hidden" name="_token" value="{{ csrf_token('application-' ~ application.id) }}"><button class="button-secondary">Ablehnen</button></form></div>{% endif %}
+</article>{% else %}<p class="muted">Noch keine Bewerbungen vorhanden.</p>{% endfor %}</div></main>
+{% endblock %}

@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+{% set site = site_settings() %}
+{% block title %}{{ guild.name }} | {{ site.siteName }}{% endblock %}
+{% block body %}
+<header class="topbar"><a class="brand" href="{{ path('app_home') }}">{% if site.logoPath %}<img class="site-logo" src="{{ site.logoPath }}" alt="{{ site.siteName }}">{% else %}{{ site.siteName }}{% endif %}</a><nav class="top-actions"><a href="{{ path('app_gaming_index') }}">Alle Gilden</a><a href="{{ path('app_news_index') }}">News</a></nav></header>
+<main class="guild-profile">
+{% for message in app.flashes('success') %}<div class="notice">{{ message }}</div>{% endfor %}
+<div class="guild-heading">{% if guild.logo %}<img class="guild-logo guild-logo-large" src="{{ guild.logo.location }}" alt="{{ guild.logo.altText ?: guild.name }}">{% endif %}<div><p class="eyebrow">{{ guild.game.name }}</p><h1>{{ guild.name }}</h1></div></div>
+<div class="guild-meta guild-meta-large"><span>Server: {{ guild.serverName }}</span>{% if guild.region %}<span>Region: {{ guild.region }}</span>{% endif %}{% if guild.faction %}<span>Fraktion: {{ guild.faction }}</span>{% endif %}</div>
+<span class="status {{ guild.recruitmentOpen ? 'status-ready' : 'status-disabled' }}">{{ guild.recruitmentOpen ? 'Wir suchen Mitglieder' : 'Rekrutierung geschlossen' }}</span>
+<div class="article-body guild-description">{{ guild.description|nl2br }}</div><div class="top-actions">{% if guild.recruitmentOpen %}<a class="button-link" href="{{ path('app_guild_apply', {slug: guild.slug}) }}">Jetzt bewerben</a>{% endif %}{% if guild.websiteUrl %}<a class="button-link button-secondary" href="{{ guild.websiteUrl }}" target="_blank" rel="noopener noreferrer">Website besuchen</a>{% endif %}</div>
+<section class="roster"><p class="eyebrow">Gildenübersicht</p><h2>Mitglieder</h2><div class="roster-grid">
+{% for member in members %}<article class="member-card"><div><h3>{{ member.characterName }}</h3><p>{% if member.rank and member.rank.color %}<span style="color: {{ member.rank.color }}">●</span>{% endif %} {{ member.displayRank }}{% if member.leader %} · Gildenleitung{% endif %}</p></div><div class="member-details">{% if member.characterClass %}<span>{{ member.characterClass }}</span>{% endif %}{% if member.characterLevel %}<span>Stufe {{ member.characterLevel }}</span>{% endif %}{% if member.playerName %}<span>{{ member.playerName }}</span>{% endif %}</div></article>
+{% else %}<p class="muted">Die Mitgliederliste ist noch leer.</p>{% endfor %}</div></section></main>
+{% endblock %}

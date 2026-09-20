@@ -1,0 +1,21 @@
+{% extends 'base.html.twig' %}
+{% block title %}Benutzer verwalten | Gaming CMS{% endblock %}
+{% block body %}
+<header class="topbar"><a class="brand" href="{{ path('app_admin_dashboard') }}">Gaming CMS</a><nav class="top-actions"><a class="button-link" href="{{ path('app_admin_user_new') }}">Neuer Benutzer</a><a class="button-link button-secondary" href="{{ path('app_admin_access_role_index') }}">Zentrale Rollen</a><a class="button-link button-secondary" href="{{ path('app_admin_dashboard') }}">Übersicht</a></nav></header>
+<main class="dashboard"><p class="eyebrow">Administration</p><h1>Benutzer und Rechte</h1>
+{% for message in app.flashes('success') %}<div class="notice">{{ message }}</div>{% endfor %}
+<form method="get" class="media-filters" role="search">
+<label><span>Suche</span><input type="search" name="q" value="{{ filters.q }}" placeholder="Name oder E-Mail"></label>
+<label><span>Status</span><select name="state"><option value="">Alle</option><option value="active" {{ filters.state == 'active' ? 'selected' }}>Aktiv</option><option value="locked" {{ filters.state == 'locked' ? 'selected' }}>Gesperrt</option><option value="unverified" {{ filters.state == 'unverified' ? 'selected' }}>E-Mail offen</option></select></label>
+<button>Filtern</button><a class="button-link button-secondary" href="{{ path('app_admin_user_index') }}">Zurücksetzen</a>
+</form>
+<div class="table-wrap"><table><thead><tr><th>Name</th><th>E-Mail</th><th>Zugriff</th><th>Sicherheit</th><th>Aktivität</th><th>Aktion</th></tr></thead><tbody>
+{% for user in users %}<tr>
+<td>{{ user.displayName }}{% if app.user == user %} <span class="muted">(du)</span>{% endif %}</td>
+<td>{{ user.email }}<br><span class="status {{ user.emailVerified ? 'status-ready' : 'status-disabled' }}">{{ user.emailVerified ? 'Bestätigt' : 'Offen' }}</span></td>
+<td>{% if user.admin %}<strong>Volladministrator</strong>{% else %}{% for role in user.accessRoles %}<span class="status">{{ role.name }}</span> {% endfor %}{% if user.permissions %}<small>+ {{ user.permissions|length }} Einzelrecht(e)</small>{% endif %}{% if user.accessRoles is empty and user.permissions is empty %}Gildenmitglied{% endif %}{% endif %}</td>
+<td><span class="status {{ user.twoFactorEnabled ? 'status-ready' : 'status-disabled' }}">2FA {{ user.twoFactorEnabled ? 'aktiv' : 'aus' }}</span>{% if user.locked %}<br><span class="status status-disabled">Gesperrt bis {{ user.lockedUntil|date('d.m.Y H:i') }} Uhr</span>{% endif %}</td>
+<td><span class="status {{ user.active and not user.locked ? 'status-ready' : 'status-disabled' }}">{{ user.active ? (user.locked ? 'Zeitweise gesperrt' : 'Aktiv') : 'Deaktiviert' }}</span><br><small>{{ user.lastSeenAt ? 'Zuletzt ' ~ user.lastSeenAt|date('d.m.Y H:i') ~ ' Uhr' : 'Noch keine Aktivität' }}</small></td>
+<td class="row-actions"><a href="{{ path('app_admin_user_edit', {id: user.id}) }}">Bearbeiten</a><a href="{{ path('app_admin_user_sessions', {id: user.id}) }}">Sitzungen</a><form method="post" action="{{ path('app_admin_user_send_verification', {id: user.id}) }}"><input type="hidden" name="_token" value="{{ csrf_token('admin-send-verification-' ~ user.id) }}"><button type="submit">{{ user.emailVerified ? 'E-Mail testen' : 'Bestätigung senden' }}</button></form></td>
+</tr>{% else %}<tr><td colspan="6">Keine Benutzer vorhanden.</td></tr>{% endfor %}</tbody></table></div></main>
+{% endblock %}

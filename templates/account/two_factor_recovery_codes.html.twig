@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+{% set site = site_settings() %}
+{% block title %}Wiederherstellungscodes | {{ site.siteName }}{% endblock %}
+{% block body %}
+<main class="form-page">
+    <p class="eyebrow">Einmalige Anzeige</p><h1>Wiederherstellungscodes sichern</h1>
+    <div class="alert">Speichere diese Codes jetzt sicher. Jeder Code kann nur einmal verwendet werden und wird später nicht erneut angezeigt.</div>
+    <div class="panel"><ul>{% for code in codes %}<li><code>{{ code }}</code></li>{% endfor %}</ul></div>
+    <a class="button-link" href="{{ path('app_account_security') }}">Ich habe die Codes gesichert</a>
+</main>
+{% endblock %}

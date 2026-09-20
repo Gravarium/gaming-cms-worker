@@ -1,0 +1,10 @@
+{% extends 'base.html.twig' %}
+{% block title %}Medium ersetzen | Gaming CMS{% endblock %}
+{% block body %}
+<header class="topbar"><a class="brand" href="{{ path('app_admin_dashboard') }}">Gaming CMS</a><a class="button-link button-secondary" href="{{ path('app_admin_media_edit', {id: asset.id}) }}">Zurück</a></header>
+<main class="editor-shell">
+    <p class="eyebrow">Sichere Ersetzung</p><h1>{{ asset.title }}</h1>
+    <div class="notice">Die Ersatzdatei wird vollständig geprüft und separat gespeichert. Bekannte Gilden-, Video-, Branding- und Inhaltsverwendungen werden danach umgestellt. Das Original bleibt als Rückfall in der Mediathek.</div>
+    {{ form_start(form, {attr: {class: 'content-form'}}) }}{{ form_widget(form) }}<button type="submit">Prüfen, speichern und Verwendungen umstellen</button>{{ form_end(form) }}
+</main>
+{% endblock %}

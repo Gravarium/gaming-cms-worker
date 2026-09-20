@@ -1,0 +1,31 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Suche | {{ site.siteName }}{% endblock %}
+
+{% block body %}
+<header class="topbar">
+    <a class="brand" href="{{ path('app_home') }}">{{ site.siteName }}</a>
+    <nav class="top-actions"><a href="{{ path('app_news_index') }}">News</a></nav>
+</header>
+<main class="public-shell">
+    <p class="eyebrow">Inhalte</p>
+    <h1>Suche</h1>
+    <form method="get" action="{{ path('app_content_search') }}" role="search" class="content-form">
+        <label for="content-search">Suchbegriff</label>
+        <input id="content-search" type="search" name="q" value="{{ query }}" minlength="2" maxlength="100" required>
+        <button type="submit">Suchen</button>
+    </form>
+    {% if query|length >= 2 %}
+        <p>{{ entries|length }} Treffer für „{{ query }}“</p>
+        <section class="news-grid">
+        {% for entry in entries %}
+            <article class="news-card">
+                <p class="news-date">{{ entry.type == 'news' ? 'News' : 'Seite' }} · {{ entry.publishedAt|date('d.m.Y') }}</p>
+                <h2><a href="{{ entry.type == 'news' ? path('app_news_show', {slug: entry.slug}) : path('app_page_show', {slug: entry.slug}) }}">{{ entry.title }}</a></h2>
+                {% if entry.excerpt %}<p>{{ entry.excerpt }}</p>{% endif %}
+            </article>
+        {% else %}<p class="muted">Keine veröffentlichten Inhalte gefunden.</p>{% endfor %}
+        </section>
+    {% endif %}
+</main>
+{% endblock %}

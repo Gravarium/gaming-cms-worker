@@ -1,0 +1,52 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Anmelden | Gaming CMS{% endblock %}
+
+{% block body %}
+<main class="auth-shell">
+    <section class="auth-card" aria-labelledby="login-title">
+        <p class="eyebrow">Geschützter Bereich</p>
+        <h1 id="login-title">Anmelden</h1>
+        <p class="muted">Melde dich mit deinem Administratorkonto an.</p>
+
+        {% for message in app.flashes('success') %}<div class="notice">{{ message }}</div>{% endfor %}
+
+        {% if error %}
+            <div class="alert" role="alert">E-Mail-Adresse oder Passwort ist falsch.</div>
+        {% endif %}
+
+        <form method="post" class="form-stack">
+            <label for="username">E-Mail-Adresse</label>
+            <input
+                type="email"
+                id="username"
+                name="_username"
+                value="{{ last_username }}"
+                autocomplete="email"
+                required
+                autofocus
+            >
+
+            <label for="password">Passwort</label>
+            <input
+                type="password"
+                id="password"
+                name="_password"
+                autocomplete="current-password"
+                required
+            >
+
+            <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+
+            <button type="submit">Anmelden</button>
+        </form>
+
+        <div class="auth-divider"><span>oder</span></div>
+        <button type="button" class="button-secondary passkey-button" data-passkey-login data-options-url="{{ path('webauthn.controller.security.main.request.options') }}" data-result-url="{{ path('webauthn.controller.security.main.request.result') }}" data-success-url="{{ path('app_account_home') }}" data-username-input="#username">Mit Passkey anmelden</button>
+        <p class="muted passkey-message" data-passkey-message hidden></p>
+
+        <a class="back-link" href="{{ path('app_forgot_password') }}">Passwort vergessen?</a>
+        <a class="back-link" href="{{ path('app_home') }}">Zurück zur Startseite</a>
+    </section>
+</main>
+{% endblock %}

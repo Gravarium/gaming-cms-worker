@@ -1,0 +1,46 @@
+{% extends 'base.html.twig' %}
+{% block title %}Nachrichten-Warteschlange | Gaming CMS{% endblock %}
+{% block body %}
+<header class="topbar">
+    <a class="brand" href="{{ path('app_admin_dashboard') }}">Gaming CMS</a>
+    <nav class="top-actions"><a class="button-link button-secondary" href="{{ path('app_admin_dashboard') }}">Übersicht</a></nav>
+</header>
+<main class="dashboard">
+    <p class="eyebrow">Systembetrieb</p>
+    <h1>Nachrichten-Warteschlange</h1>
+    <p class="muted">Hier erscheinen nur endgültig fehlgeschlagene Hintergrundaufgaben. Inhalte, Empfängeradressen, Tokens und technische Fehlermeldungen werden nicht angezeigt.</p>
+    {% for message in app.flashes('success') %}<div class="notice">{{ message }}</div>{% endfor %}
+    {% for message in app.flashes('error') %}<div class="alert">{{ message }}</div>{% endfor %}
+
+    <article class="panel">
+        <h2>{{ total }} fehlgeschlagene Nachricht{{ total == 1 ? '' : 'en' }}</h2>
+        {% if total > 0 %}
+            <form method="post" action="{{ path('app_admin_queue_retry_all') }}" onsubmit="return confirm('Bis zu 100 fehlgeschlagene Nachrichten erneut einplanen?');">
+                <input type="hidden" name="_token" value="{{ csrf_token('queue-retry-all') }}">
+                <button type="submit">Alle angezeigten erneut versuchen</button>
+            </form>
+        {% else %}
+            <p><span class="status status-ready">Keine endgültig fehlgeschlagenen Nachrichten</span></p>
+        {% endif %}
+    </article>
+
+    {% if messages %}
+        <section class="dashboard-grid">
+            {% for failed in messages %}
+                <article class="panel">
+                    <p class="eyebrow">Nachricht {{ failed.id }}</p>
+                    <h2>{{ failed.type }}</h2>
+                    <p>
+                        Fehlgeschlagen seit: {{ failed.createdAt|date('d.m.Y H:i', 'UTC') }} UTC<br>
+                        Interne Nachrichtengröße: {{ (failed.bytes / 1024)|number_format(1, ',', '.') }} KiB
+                    </p>
+                    <form method="post" action="{{ path('app_admin_queue_retry', {id: failed.id}) }}">
+                        <input type="hidden" name="_token" value="{{ csrf_token('queue-retry-' ~ failed.id) }}">
+                        <button type="submit">Erneut versuchen</button>
+                    </form>
+                </article>
+            {% endfor %}
+        </section>
+    {% endif %}
+</main>
+{% endblock %}

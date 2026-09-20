@@ -1,0 +1,17 @@
+{% extends 'base.html.twig' %}
+{% block title %}{{ new ? 'Externes Ziel hinzufügen' : 'Externes Ziel bearbeiten' }} | Gaming CMS{% endblock %}
+{% block body %}
+<header class="topbar">
+    <a class="brand" href="{{ path('app_admin_dashboard') }}">Gaming CMS</a>
+    <a class="button-link button-secondary" href="{{ path('app_admin_connector_index') }}">Zurück</a>
+</header>
+<main class="editor-shell">
+    <p class="eyebrow">Schnittstellen</p>
+    <h1>{{ new ? 'Externes Ziel hinzufügen' : target.displayName }}</h1>
+    <div class="notice">Hier werden nur Planung und Zuordnung gespeichert. Keine Passwörter, Tokens, privaten URLs oder Schlüssel eintragen.</div>
+    {{ form_start(form, {attr: {class: 'content-form'}}) }}
+        {{ form_widget(form) }}
+        <button type="submit">Zieldefinition speichern</button>
+    {{ form_end(form) }}
+</main>
+{% endblock %}

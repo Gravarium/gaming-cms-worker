@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+{% block title %}Backup-Anbieter vorbereiten | Gaming CMS{% endblock %}
+{% block body %}
+<header class="topbar">
+    <a class="brand" href="{{ path('app_admin_dashboard') }}">Gaming CMS</a>
+    <nav class="top-actions"><a class="button-link button-secondary" href="{{ path('app_admin_connector_index') }}">Zurück</a></nav>
+</header>
+<main class="dashboard">
+    <p class="eyebrow">Mehranbieter-Backups</p>
+    <h1>Backup-Anbieter vorbereiten</h1>
+    <p class="muted">Du kannst beliebig viele Ziele gleichzeitig planen. Es werden keine Konten verbunden und keine Passwörter, Tokens oder privaten URLs gespeichert. Alle neuen Ziele bleiben deaktiviert.</p>
+
+    <form method="post" action="{{ path('app_admin_backup_provider_plan') }}">
+        <input type="hidden" name="_token" value="{{ csrf_token('backup-provider-plan') }}">
+        <section class="dashboard-grid">
+            {% for provider in providers %}
+                <label class="panel">
+                    <p class="eyebrow">{{ provider.transport }}</p>
+                    <h2><input type="checkbox" name="providers[]" value="{{ provider.key }}"> {{ provider.name }}</h2>
+                    {% if provider.supported %}
+                        <span class="status status-ready">Automatisierbarer Transport vorhanden</span>
+                    {% else %}
+                        <span class="status status-disabled">Zusätzlicher Adapter erforderlich</span>
+                    {% endif %}
+                    <p class="muted">Zielkennung: backup-{{ provider.key }}<br>Server-Verweis: backup.{{ provider.key }}</p>
+                </label>
+            {% endfor %}
+        </section>
+        <article class="panel">
+            <button type="submit">Ausgewählte Ziele gemeinsam vorbereiten</button>
+            <p class="muted">Das Aktivieren erfolgt später einzeln, nachdem die private Server-Konfiguration wirklich eingerichtet und geprüft wurde.</p>
+        </article>
+    </form>
+</main>
+{% endblock %}

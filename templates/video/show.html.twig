@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+{% set site = site_settings() %}
+{% block title %}{{ video.title }} | {{ site.siteName }}{% endblock %}
+{% block body %}
+<header class="topbar">
+    <a class="brand" href="{{ path('app_home') }}">{% if site.logoPath %}<img class="site-logo" src="{{ site.logoPath }}" alt="{{ site.siteName }}">{% else %}{{ site.siteName }}{% endif %}</a>
+    <a class="button-link button-secondary" href="{{ path('app_video_index') }}">Alle Videos</a>
+</header>
+<main class="video-page">
+    <p class="eyebrow">{{ video.category ? video.category.name : 'Video' }}</p>
+    <h1>{{ video.title }}</h1>
+    {% if player %}
+        <div class="video-player">
+            {% if player.mode == 'iframe' %}
+                <iframe src="{{ player.url }}" title="{{ video.title }}" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen loading="eager" referrerpolicy="strict-origin-when-cross-origin"></iframe>
+            {% else %}
+                <video controls preload="metadata" {% if video.thumbnailUrl %}poster="{{ video.thumbnailUrl }}"{% endif %}>
+                    <source src="{{ player.url }}">
+                    Dein Browser kann dieses Video nicht abspielen.
+                </video>
+            {% endif %}
+        </div>
+    {% else %}
+        <div class="alert">Die Videoquelle konnte nicht geladen werden. Bitte prüfe die gespeicherte URL.</div>
+    {% endif %}
+    <div class="video-info">
+        <div class="video-meta">
+            <span>{{ video.publishedAt|date('d.m.Y H:i') }} Uhr</span>
+            {% if video.durationLabel %}<span>{{ video.durationLabel }}</span>{% endif %}
+            <span>{{ video.sourceType|capitalize }}</span>
+        </div>
+        <div class="article-body">{{ video.description|nl2br }}</div>
+        {% if video.playlists|length %}
+            <div class="video-filters">{% for playlist in video.playlists %}{% if playlist.enabled %}<a class="status" href="{{ path('app_video_index', {playlist: playlist.slug}) }}">{{ playlist.title }}</a>{% endif %}{% endfor %}</div>
+        {% endif %}
+    </div>
+</main>
+{% endblock %}
