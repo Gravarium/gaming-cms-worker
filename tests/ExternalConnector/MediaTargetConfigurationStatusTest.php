@@ -12,39 +12,26 @@ use PHPUnit\Framework\TestCase;
 
 final class MediaTargetConfigurationStatusTest extends TestCase
 {
-    private string $configurationFile;
-
-    protected function setUp(): void
-    {
-        $file = tempnam(sys_get_temp_dir(), 'media-status-');
-        if ($file === false) {
-            throw new \RuntimeException('Temporary configuration could not be created.');
-        }
-        $this->configurationFile = $file;
-
-        file_put_contents($file, json_encode([
-            'media.ready' => [
-                'endpoint' => 'https://objects.example.invalid',
-                'region' => 'eu-test-1',
-                'bucket' => 'media',
-                'access_key' => 'access',
-                'secret_key' => 'secret',
-                'public_url' => '',
-            ],
-        ], JSON_THROW_ON_ERROR));
-        chmod($file, 0600);
-    }
-
-    protected function tearDown(): void
-    {
-        @unlink($this->configurationFile);
-    }
-
     public function testReportsOnlySanitizedReadinessForMediaTargets(): void
     {
-        $resolver = new MediaTargetConfigurationStatus(
-            new S3MediaTargetConfigurationProvider($this->configurationFile),
-        );
+        $provider = new class implements S3MediaTargetConfigurationProvider {
+            public function forReference(string $reference): array
+            {
+                if ($reference !== 'media.ready') {
+                    throw new \RuntimeException('Unavailable.');
+                }
+
+                return [
+                    'endpoint' => 'https://objects.example.invalid',
+                    'region' => 'eu-test-1',
+                    'bucket' => 'media',
+                    'access_key' => 'test-access',
+                    'secret_key' => 'test-secret',
+                    'public_url' => '',
+                ];
+            }
+        };
+        $resolver = new MediaTargetConfigurationStatus($provider);
 
         $statuses = $resolver->forTargets([
             $this->target('ready', S3CompatibleMediaConnectorAdapter::PROVIDER_KEY, 'media.ready'),
@@ -62,7 +49,7 @@ final class MediaTargetConfigurationStatusTest extends TestCase
             'missing' => MediaTargetConfigurationStatus::MISSING,
             'other' => MediaTargetConfigurationStatus::NOT_APPLICABLE,
         ], $statuses);
-        self::assertStringNotContainsString('secret', json_encode($statuses, JSON_THROW_ON_ERROR));
+        self::assertStringNotContainsString('test-secret', json_encode($statuses, JSON_THROW_ON_ERROR));
         self::assertArrayNotHasKey('backup', $statuses);
     }
 

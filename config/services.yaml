@@ -36,8 +36,10 @@ services:
             $projectDir: '%kernel.project_dir%'
 
     App\ExternalConnector\ExternalConnectorPrivateConfiguration:
-        arguments:
-            $configurationFile: '%env(string:EXTERNAL_CONNECTOR_CONFIG_FILE)%'
+        alias: App\ExternalConnector\DevelopmentExternalConnectorPrivateConfiguration
+
+    App\ExternalConnector\S3MediaTargetConfigurationProvider:
+        alias: App\ExternalConnector\DevelopmentS3MediaTargetConfigurationProvider
 
     App\ExtensionPackage\ExtensionPackageVerifier:
         arguments:
@@ -66,3 +68,23 @@ services:
     App\ExtensionRuntime\ExtensionRuntimeAudit:
         arguments:
             $auditFile: '%kernel.project_dir%/var/extensions/runtime-audit.jsonl'
+
+when@prod:
+    services:
+        App\PrivateRuntime\ProductionExternalConnectorPrivateConfiguration:
+            class: App\PrivateRuntime\ProductionExternalConnectorPrivateConfiguration
+            file: '../private/ProductionExternalConnectorPrivateConfiguration.php'
+            arguments:
+                $configurationFile: '%env(string:EXTERNAL_CONNECTOR_CONFIG_FILE)%'
+
+        App\PrivateRuntime\ProductionS3MediaTargetConfigurationProvider:
+            class: App\PrivateRuntime\ProductionS3MediaTargetConfigurationProvider
+            file: '../private/ProductionS3MediaTargetConfigurationProvider.php'
+            arguments:
+                $configurationFile: '%env(string:MEDIA_S3_CONFIG_FILE)%'
+
+        App\ExternalConnector\ExternalConnectorPrivateConfiguration:
+            alias: App\PrivateRuntime\ProductionExternalConnectorPrivateConfiguration
+
+        App\ExternalConnector\S3MediaTargetConfigurationProvider:
+            alias: App\PrivateRuntime\ProductionS3MediaTargetConfigurationProvider

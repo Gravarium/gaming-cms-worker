@@ -5,35 +5,15 @@ declare(strict_types=1);
 namespace App\Tests\ExternalConnector;
 
 use App\Entity\ExternalConnectorTarget;
+use App\ExternalConnector\DevelopmentExternalConnectorPrivateConfiguration;
 use App\ExternalConnector\ExternalConnectorPrivateConfiguration;
+use App\ExternalConnector\ExternalConnectorTargetDefinition;
 use PHPUnit\Framework\TestCase;
 
 final class ExternalConnectorPrivateConfigurationTest extends TestCase
 {
-    private string $file;
-
-    protected function setUp(): void
+    public function testDevelopmentRuntimeFailsClosedForPrivateTargets(): void
     {
-        $this->file = tempnam(sys_get_temp_dir(), 'connector-config-');
-        self::assertIsString($this->file);
-        chmod($this->file, 0600);
-    }
-
-    protected function tearDown(): void
-    {
-        @unlink($this->file);
-    }
-
-    public function testReportsOnlyMatchingEnabledCompleteTargetAsReady(): void
-    {
-        file_put_contents($this->file, json_encode(['targets' => [[
-            'reference' => 'analytics.matomo',
-            'capability' => 'analytics',
-            'provider' => 'matomo',
-            'enabled' => true,
-            'configuration' => ['private_url' => 'https://private.invalid', 'token' => 'secret'],
-        ]]], JSON_THROW_ON_ERROR));
-
         $target = (new ExternalConnectorTarget())
             ->setCapability('analytics')
             ->setTargetKey('analytics-matomo')
@@ -42,30 +22,12 @@ final class ExternalConnectorPrivateConfigurationTest extends TestCase
             ->setConfigurationReference('analytics.matomo');
 
         self::assertSame(
-            ['analytics-matomo' => ExternalConnectorPrivateConfiguration::READY],
-            (new ExternalConnectorPrivateConfiguration($this->file))->forTargets([$target]),
+            ['analytics-matomo' => ExternalConnectorPrivateConfiguration::MISSING],
+            (new DevelopmentExternalConnectorPrivateConfiguration())->forTargets([$target]),
         );
     }
 
-    public function testFailsClosedForLoosePermissions(): void
-    {
-        file_put_contents($this->file, '{"targets":[]}');
-        chmod($this->file, 0640);
-        clearstatcache(true, $this->file);
-        $target = (new ExternalConnectorTarget())
-            ->setCapability('cdn')
-            ->setTargetKey('cdn-cloudflare')
-            ->setProviderKey('cloudflare')
-            ->setDisplayName('Cloudflare')
-            ->setConfigurationReference('cdn.cloudflare');
-
-        self::assertSame(
-            ['cdn-cloudflare' => ExternalConnectorPrivateConfiguration::MISSING],
-            (new ExternalConnectorPrivateConfiguration($this->file))->forTargets([$target]),
-        );
-    }
-
-    public function testRecognizesExistingBuiltInTransportsWithoutReadingSecrets(): void
+    public function testDevelopmentRuntimeRecognizesBuiltInTransportWithoutPrivateConfiguration(): void
     {
         $mail = (new ExternalConnectorTarget())
             ->setCapability('mail')
@@ -76,7 +38,24 @@ final class ExternalConnectorPrivateConfigurationTest extends TestCase
 
         self::assertSame(
             ['mail-default' => ExternalConnectorPrivateConfiguration::READY],
-            (new ExternalConnectorPrivateConfiguration('/missing'))->forTargets([$mail]),
+            (new DevelopmentExternalConnectorPrivateConfiguration())->forTargets([$mail]),
         );
+    }
+
+    public function testDevelopmentRuntimeCannotResolvePrivateValues(): void
+    {
+        $provider = new DevelopmentExternalConnectorPrivateConfiguration();
+
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('unavailable outside the production runtime');
+        $provider->forTarget(new ExternalConnectorTargetDefinition(
+            'analytics',
+            'matomo',
+            'matomo',
+            'Matomo',
+            true,
+            10,
+            'analytics.matomo',
+        ));
     }
 }
