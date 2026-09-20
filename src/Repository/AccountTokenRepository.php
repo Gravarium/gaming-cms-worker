@@ -19,8 +19,16 @@ final class AccountTokenRepository extends ServiceEntityRepository
 
     public function usable(string $tokenHash, string $purpose): ?AccountToken
     {
-        $token = $this->findOneBy(['tokenHash' => $tokenHash, 'purpose' => $purpose]);
-        return $token?->isUsable() ? $token : null;
+        return $this->createQueryBuilder('token')
+            ->andWhere('token.tokenHash = :tokenHash')
+            ->andWhere('token.purpose = :purpose')
+            ->andWhere('token.usedAt IS NULL')
+            ->andWhere('token.expiresAt > :now')
+            ->setParameter('tokenHash', $tokenHash)
+            ->setParameter('purpose', $purpose)
+            ->setParameter('now', new \DateTimeImmutable())
+            ->getQuery()
+            ->getOneOrNullResult();
     }
 
     public function consumeUsable(string $tokenHash, string $purpose): ?AccountToken
@@ -40,7 +48,10 @@ final class AccountTokenRepository extends ServiceEntityRepository
 
         if ($updated !== 1) { return null; }
 
-        return $this->findOneBy(['tokenHash' => $tokenHash, 'purpose' => $purpose]);
+        $token = $this->findOneBy(['tokenHash' => $tokenHash, 'purpose' => $purpose]);
+        if ($token instanceof AccountToken) { $this->getEntityManager()->refresh($token); }
+
+        return $token;
     }
 
     public function revokeActive(User $user, string $purpose): void
