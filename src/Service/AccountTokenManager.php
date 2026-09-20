@@ -35,10 +35,8 @@ final class AccountTokenManager
 
     public function consume(string $plainToken, string $purpose): ?AccountToken
     {
-        $token = $this->resolve($plainToken, $purpose);
-        if ($token === null) { return null; }
-        $token->markUsed();
-        return $token;
+        if ($plainToken === '' || strlen($plainToken) > 200) { return null; }
+        return $this->tokens->consumeUsable(hash('sha256', $plainToken), $purpose);
     }
 
     public function revoke(User $user, string $purpose): void
