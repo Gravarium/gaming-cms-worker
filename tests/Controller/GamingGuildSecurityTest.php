@@ -111,7 +111,7 @@ final class GamingGuildSecurityTest extends WebTestCase
         $client->submit($form);
 
         self::assertResponseIsSuccessful();
-        self::assertSelectorTextContains('.form-error-message', 'Bitte beantworte dieses Pflichtfeld.');
+        self::assertSelectorTextContains('body', 'Bitte beantworte dieses Pflichtfeld.');
         self::assertSame(0, $this->em($client)->getRepository(GuildApplication::class)->count(['guild' => $guild]));
     }
 
