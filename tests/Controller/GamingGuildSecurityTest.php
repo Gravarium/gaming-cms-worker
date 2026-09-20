@@ -7,12 +7,14 @@ namespace App\Tests\Controller;
 use App\Entity\Game;
 use App\Entity\Guild;
 use App\Entity\GuildEvent;
+use App\Entity\GuildEventSignup;
 use App\Entity\GuildMember;
 use App\Entity\User;
 use App\Security\CmsPermission;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 
 final class GamingGuildSecurityTest extends WebTestCase
 {
@@ -85,6 +87,55 @@ final class GamingGuildSecurityTest extends WebTestCase
 
         $client->request('POST', '/guild-area/'.$guild->getId().'/event/'.$event->getId().'/signup');
         self::assertResponseStatusCodeSame(404);
+    }
+
+    public function testPortalAllowsOwnedMemberToSignupForPlannedEvent(): void
+    {
+        $client = static::createClient();
+        $user = $this->user($client);
+        [$guild] = $this->guilds($client);
+        $member = (new GuildMember())->setGuild($guild)->setUser($user)->setCharacterName('Owned');
+        $event = (new GuildEvent())->setGuild($guild)->setTitle('Raid')->setDescription('Planned raid');
+        $this->em($client)->persist($member);
+        $this->em($client)->persist($event);
+        $this->em($client)->flush();
+        $client->loginUser($user);
+
+        $token = $client->getContainer()->get(CsrfTokenManagerInterface::class)->getToken('event-signup-'.$event->getId())->getValue();
+        $client->request('POST', '/guild-area/'.$guild->getId().'/event/'.$event->getId().'/signup', [
+            '_token' => $token,
+            'member' => $member->getId(),
+            'response' => GuildEventSignup::GOING,
+            'role' => 'damage',
+        ]);
+
+        self::assertResponseRedirects('/guild-area/'.$guild->getId());
+        $signup = $this->em($client)->getRepository(GuildEventSignup::class)->findOneBy(['event' => $event, 'member' => $member]);
+        self::assertInstanceOf(GuildEventSignup::class, $signup);
+        self::assertSame(GuildEventSignup::GOING, $signup->getResponse());
+        self::assertSame('damage', $signup->getRole());
+    }
+
+    public function testPortalRejectsOwnedCharacterFromAnotherGuild(): void
+    {
+        $client = static::createClient();
+        $user = $this->user($client);
+        [$guild, $otherGuild] = $this->guilds($client);
+        $member = (new GuildMember())->setGuild($guild)->setUser($user)->setCharacterName('Local');
+        $foreignMember = (new GuildMember())->setGuild($otherGuild)->setUser($user)->setCharacterName('Foreign');
+        $event = (new GuildEvent())->setGuild($guild)->setTitle('Raid')->setDescription('Planned raid');
+        foreach ([$member, $foreignMember, $event] as $entity) { $this->em($client)->persist($entity); }
+        $this->em($client)->flush();
+        $client->loginUser($user);
+
+        $token = $client->getContainer()->get(CsrfTokenManagerInterface::class)->getToken('event-signup-'.$event->getId())->getValue();
+        $client->request('POST', '/guild-area/'.$guild->getId().'/event/'.$event->getId().'/signup', [
+            '_token' => $token,
+            'member' => $foreignMember->getId(),
+            'response' => GuildEventSignup::GOING,
+        ]);
+
+        self::assertResponseStatusCodeSame(403);
     }
 
     private function user(KernelBrowser $client, array $permissions = []): User
