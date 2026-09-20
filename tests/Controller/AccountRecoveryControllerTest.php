@@ -40,6 +40,78 @@ final class AccountRecoveryControllerTest extends WebTestCase
 
 
 
+    public function testExpiredAndWrongPurposeResetTokensAreRejected(): void
+    {
+        $client = static::createClient();
+        $entityManager = $client->getContainer()->get(EntityManagerInterface::class);
+        $user = (new User())
+            ->setEmail('expired-reset-'.bin2hex(random_bytes(6)).'@example.test')
+            ->setDisplayName('Expired Reset Test')
+            ->setPassword('not-used-in-this-test');
+        $entityManager->persist($user);
+        $entityManager->flush();
+
+        $manager = $client->getContainer()->get(AccountTokenManager::class);
+        [$expired, $expiredPlain] = $manager->issue($user, AccountToken::PURPOSE_PASSWORD_RESET, new \DateInterval('PT1H'));
+        $expired->setExpiresAt(new \DateTimeImmutable('-1 minute'));
+        $entityManager->flush();
+
+        $client->request('GET', '/reset-password/'.$expiredPlain);
+        self::assertResponseIsSuccessful();
+        self::assertSelectorTextContains('.alert', 'ungültig');
+
+        [, $verificationPlain] = $manager->issue($user, AccountToken::PURPOSE_EMAIL_VERIFICATION, new \DateInterval('P1D'));
+        $entityManager->flush();
+        $client->request('GET', '/reset-password/'.$verificationPlain);
+        self::assertResponseIsSuccessful();
+        self::assertSelectorTextContains('.alert', 'ungültig');
+    }
+
+    public function testResetTokenBecomesInvalidWhenAccountIsDeactivated(): void
+    {
+        $client = static::createClient();
+        $entityManager = $client->getContainer()->get(EntityManagerInterface::class);
+        $user = (new User())
+            ->setEmail('inactive-reset-'.bin2hex(random_bytes(6)).'@example.test')
+            ->setDisplayName('Inactive Reset Test')
+            ->setPassword('not-used-in-this-test');
+        $entityManager->persist($user);
+        $entityManager->flush();
+
+        [, $plainToken] = $client->getContainer()->get(AccountTokenManager::class)->issue(
+            $user,
+            AccountToken::PURPOSE_PASSWORD_RESET,
+            new \DateInterval('PT1H'),
+        );
+        $user->setActive(false);
+        $entityManager->flush();
+
+        $client->request('GET', '/reset-password/'.$plainToken);
+        self::assertResponseIsSuccessful();
+        self::assertSelectorTextContains('.alert', 'ungültig');
+    }
+
+    public function testIssuingNewResetTokenRevokesPreviousToken(): void
+    {
+        $client = static::createClient();
+        $entityManager = $client->getContainer()->get(EntityManagerInterface::class);
+        $user = (new User())
+            ->setEmail('rotate-reset-'.bin2hex(random_bytes(6)).'@example.test')
+            ->setDisplayName('Rotate Reset Test')
+            ->setPassword('not-used-in-this-test');
+        $entityManager->persist($user);
+        $entityManager->flush();
+
+        $manager = $client->getContainer()->get(AccountTokenManager::class);
+        [, $first] = $manager->issue($user, AccountToken::PURPOSE_PASSWORD_RESET, new \DateInterval('PT1H'));
+        $entityManager->flush();
+        [, $second] = $manager->issue($user, AccountToken::PURPOSE_PASSWORD_RESET, new \DateInterval('PT1H'));
+        $entityManager->flush();
+
+        self::assertNull($manager->resolve($first, AccountToken::PURPOSE_PASSWORD_RESET));
+        self::assertNotNull($manager->resolve($second, AccountToken::PURPOSE_PASSWORD_RESET));
+    }
+
     public function testVerificationRequestRequiresCsrfAndCreatesOneActiveToken(): void
     {
         $client = static::createClient();
