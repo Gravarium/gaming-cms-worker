@@ -104,15 +104,25 @@ final class AdminUserController extends AbstractController
         ];
         $canAssignAdmin = $this->isGranted('ROLE_ADMIN');
         $editingSelf = $this->getUser() === $user;
-        $form = $this->createForm(AdminUserType::class, $user, ['can_assign_admin' => $canAssignAdmin, 'self_edit' => $editingSelf])->handleRequest($request);
+        $form = $this->createForm(AdminUserType::class, $user, [
+            'can_assign_admin' => $canAssignAdmin,
+            'self_edit' => $editingSelf,
+            'self_email' => $editingSelf ? $before['email'] : null,
+        ])->handleRequest($request);
+        $requestedSelfEmail = $editingSelf ? mb_strtolower(trim((string) $form->get('email')->getData())) : null;
 
         if ($form->isSubmitted()) {
             if (!$canAssignAdmin) { $user->setAdmin($before['admin']); }
             if ($editingSelf) {
-                if ($before['email'] !== $user->getEmail()) {
+                if ($requestedSelfEmail !== $before['email']) {
                     $currentPassword = (string) $form->get('currentPassword')->getData();
                     if (!$this->passwordHasher->isPasswordValid($user, $currentPassword)) {
                         $form->get('currentPassword')->addError(new FormError('Bestätige die Änderung deiner E-Mail-Adresse mit deinem aktuellen Passwort.'));
+                    } else {
+                        $existing = $this->users->findOneBy(['email' => $requestedSelfEmail]);
+                        if ($existing instanceof User && $existing !== $user) {
+                            $form->get('email')->addError(new FormError('Diese E-Mail-Adresse wird bereits verwendet.'));
+                        }
                     }
                 }
                 $selfPassword = $form->get('plainPassword')->getData();
@@ -131,6 +141,9 @@ final class AdminUserController extends AbstractController
         }
 
         if ($form->isSubmitted() && $form->isValid()) {
+            if ($editingSelf && $requestedSelfEmail !== null && $requestedSelfEmail !== $before['email']) {
+                $user->setEmail($requestedSelfEmail);
+            }
             $plainPassword = $form->get('plainPassword')->getData();
             $emailChanged = $before['email'] !== $user->getEmail();
             $securityChanged = $emailChanged
