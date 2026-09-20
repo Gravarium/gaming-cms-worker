@@ -1,32 +1,8 @@
 {% extends 'base.html.twig' %}
-
-{% block title %}{{ entry.title }} | {{ site.siteName }}{% endblock %}
-
-{% block body %}
-<header class="topbar">
-    <a class="brand" href="{{ path('app_home') }}">
-        {% if site.logoPath %}<img class="site-logo" src="{{ site.logoPath }}" alt="{{ site.siteName }}">{% else %}{{ site.siteName }}{% endif %}
-    </a>
-    <nav class="top-actions" aria-label="Hauptnavigation">
-        <a href="{{ path('app_news_index') }}">News</a>
-        {% for item in main_navigation() %}
-            {% set item_url = item.page ? path('app_page_show', {slug: item.page.slug}) : item.url %}
-            <a href="{{ item_url }}" {% if item.openNewWindow %}target="_blank" rel="noopener noreferrer"{% endif %}>{{ item.label }}</a>
-        {% endfor %}
-        {% if app.user %}
-            <a class="button-link" href="{{ path('app_admin_dashboard') }}">Administration</a>
-        {% else %}
-            <a class="button-link button-secondary" href="{{ path('app_login') }}">Anmelden</a>
-        {% endif %}
-    </nav>
-</header>
-
-<main class="article-shell">
-    {% if entry.type == 'news' %}
-        <p class="news-date">{{ entry.publishedAt|date('d.m.Y H:i') }}{% if entry.category %} · {{ entry.category.name }}{% endif %}</p>
-    {% endif %}
-    <h1>{{ entry.title }}</h1>
-    {% if entry.excerpt %}<p class="article-lead">{{ entry.excerpt }}</p>{% endif %}
-    <div class="article-body">{{ entry.body|nl2br }}</div>
-</main>
-{% endblock %}
+{% set preview = preview|default(false) %}{% set seo_title = entry.seoTitle ?: entry.title %}{% set seo_description = entry.seoDescription ?: entry.excerpt ?: site.description %}{% set canonical = entry.canonicalUrl ?: (entry.type == 'news' ? absolute_url(path('app_news_show',{slug:entry.slug})) : absolute_url(path('app_page_show',{slug:entry.slug}))) %}
+{% block title %}{{ seo_title }} | {{ site.siteName }}{% endblock %}{% block meta_description %}{{ seo_description }}{% endblock %}
+{% block head_meta %}<link rel="canonical" href="{{ canonical }}">{% if preview or entry.noIndex %}<meta name="robots" content="noindex,nofollow">{% endif %}<meta property="og:type" content="{{ entry.type == 'news' ? 'article' : 'website' }}"><meta property="og:title" content="{{ seo_title }}"><meta property="og:description" content="{{ seo_description }}"><meta property="og:url" content="{{ canonical }}"><meta name="twitter:card" content="summary"><script type="application/ld+json">{{ {'@context':'https://schema.org','@type':entry.type == 'news' ? 'NewsArticle':'WebPage','headline':entry.title,'description':seo_description,'datePublished':entry.publishedAt ? entry.publishedAt|date('c') : null,'dateModified':entry.updatedAt|date('c'),'url':canonical}|json_encode(15)|raw }}</script>{% endblock %}
+{% block body %}<header class="topbar"><a class="brand" href="{{ path('app_home') }}">{% if site.logoPath %}<img class="site-logo" src="{{ site.logoPath }}" alt="{{ site.siteName }}">{% else %}{{ site.siteName }}{% endif %}</a><nav class="top-actions" aria-label="Hauptnavigation"><a href="{{ path('app_news_index') }}">News</a>{% for item in main_navigation() %}{% set item_url=item.page ? path('app_page_show',{slug:item.page.slug}):item.url %}<a href="{{ item_url }}" {% if item.openNewWindow %}target="_blank" rel="noopener noreferrer"{% endif %}>{{ item.label }}</a>{% endfor %}{% if app.user %}<a class="button-link" href="{{ path('app_admin_dashboard') }}">Administration</a>{% else %}<a class="button-link button-secondary" href="{{ path('app_login') }}">Anmelden</a>{% endif %}</nav></header>
+<main class="article-shell">{% if preview %}<div class="notice"><strong>Vorschau:</strong> Dieser Stand ist nicht öffentlich und wird nicht gecacht.</div>{% endif %}{% if entry.type=='news' %}<p class="news-date">{% if entry.publishedAt %}{{ entry.publishedAt|date('d.m.Y H:i') }}{% else %}Noch nicht veröffentlicht{% endif %} · {{ entry.estimatedReadingMinutes }} Min. Lesezeit{% if entry.category %} · <a href="{{ path('app_news_category',{slug:entry.category.slug}) }}">{{ entry.category.name }}</a>{% endif %}</p>{% endif %}{% if entry.pinned %}<p class="eyebrow">Angeheftet</p>{% elseif entry.featured %}<p class="eyebrow">Hervorgehoben</p>{% endif %}<h1>{{ entry.title }}</h1>{% if entry.subtitle %}<h2 class="article-subtitle">{{ entry.subtitle }}</h2>{% endif %}{% if entry.excerpt %}<p class="article-lead">{{ entry.excerpt }}</p>{% endif %}<div class="article-body">{{ entry.body|nl2br }}</div>
+{% if entry.tags|length %}<nav class="tag-list" aria-label="Tags">{% for tag in entry.tags %}<a href="{{ path('app_news_tag',{slug:tag.slug}) }}">#{{ tag.name }}</a> {% endfor %}</nav>{% endif %}
+{% if related|default([])|length %}<section aria-labelledby="related-content"><h2 id="related-content">Das könnte dich auch interessieren</h2><div class="news-grid">{% for item in related %}<article class="card"><h3><a href="{{ item.type=='news' ? path('app_news_show',{slug:item.slug}) : path('app_page_show',{slug:item.slug}) }}">{{ item.title }}</a></h3>{% if item.excerpt %}<p>{{ item.excerpt }}</p>{% endif %}</article>{% endfor %}</div></section>{% endif %}</main>{% endblock %}

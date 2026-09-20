@@ -1,0 +1,2 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">{% for entry in entries %}{% if not entry.noIndex %}<url><loc>{{ absolute_url(entry.type=='news' ? path('app_news_show',{slug:entry.slug}) : path('app_page_show',{slug:entry.slug}))|e('html') }}</loc><lastmod>{{ entry.updatedAt|date('c') }}</lastmod></url>{% endif %}{% endfor %}</urlset>
