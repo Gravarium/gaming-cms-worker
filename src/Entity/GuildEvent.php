@@ -70,11 +70,21 @@ class GuildEvent
     public function __construct() { $this->startsAt = new \DateTimeImmutable('+1 day'); $this->createdAt = new \DateTimeImmutable(); }
     public function getId(): ?int { return $this->id; }
     public function getGuild(): ?Guild { return $this->guild; }
-    public function setGuild(Guild $guild): self { $this->guild = $guild; return $this; }
+    public function setGuild(Guild $guild): self
+    {
+        if ($this->team !== null && $this->team->getGuild() !== null && $this->team->getGuild() !== $guild) { throw new \DomainException('A guild event cannot use a team from another guild.'); }
+        $this->guild = $guild;
+        return $this;
+    }
     public function getCreatedBy(): ?User { return $this->createdBy; }
     public function setCreatedBy(?User $user): self { $this->createdBy = $user; return $this; }
     public function getTeam(): ?GuildTeam { return $this->team; }
-    public function setTeam(?GuildTeam $team): self { $this->team = $team; return $this; }
+    public function setTeam(?GuildTeam $team): self
+    {
+        if ($team !== null && $this->guild !== null && $team->getGuild() !== null && $team->getGuild() !== $this->guild) { throw new \DomainException('A guild event cannot use a team from another guild.'); }
+        $this->team = $team;
+        return $this;
+    }
     public function getTitle(): string { return $this->title; }
     public function setTitle(string $title): self { $this->title = trim($title); return $this; }
     public function getType(): string { return $this->type; }
