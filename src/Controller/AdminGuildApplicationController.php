@@ -58,6 +58,7 @@ final class AdminGuildApplicationController extends AbstractController
     public function decide(GuildApplication $application, string $decision, Request $request): Response
     {
         if (!$this->isCsrfTokenValid('application-'.$application->getId(), (string) $request->request->get('_token'))) { throw $this->createAccessDeniedException(); }
+        if (!$application->isOpen()) { throw $this->createNotFoundException('Diese Bewerbung wurde bereits abschließend entschieden.'); }
 
         if ($decision === 'accept') {
             $application->accept();
