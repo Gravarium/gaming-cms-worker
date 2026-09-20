@@ -76,6 +76,50 @@ final class AdminUserSecurityTest extends WebTestCase
         self::assertFalse($this->hasher($client)->isPasswordValid($stored, 'New-Password-84'));
     }
 
+    public function testOwnEmailChangeRequiresCurrentPassword(): void
+    {
+        $client = static::createClient();
+        $user = $this->createUser($client, 'self-email')->setAdmin(true)->verifyEmail();
+        $user->setPassword($this->hasher($client)->hashPassword($user, 'Current-Password-42'));
+        $otherSession = new UserSession($user, 'self-email-other-'.bin2hex(random_bytes(16)), '127.0.0.5', 'Other browser');
+        $this->em($client)->persist($otherSession);
+        $this->em($client)->flush();
+        $oldEmail = $user->getEmail();
+        $client->loginUser($user);
+
+        $crawler = $client->request('GET', '/admin/users/'.$user->getId().'/edit');
+        $firstEmail = 'first-'.bin2hex(random_bytes(6)).'@example.test';
+        $client->submit($crawler->selectButton('Speichern')->form([
+            'admin_user[email]' => $firstEmail,
+            'admin_user[currentPassword]' => 'Wrong-Password-42',
+        ]));
+        self::assertResponseStatusCodeSame(422);
+        self::assertSelectorTextContains('body', 'aktuellem Passwort');
+
+        $this->em($client)->clear();
+        $stored = $this->em($client)->find(User::class, $user->getId());
+        self::assertInstanceOf(User::class, $stored);
+        self::assertSame($oldEmail, $stored->getEmail());
+        self::assertTrue($stored->isEmailVerified());
+
+        $crawler = $client->request('GET', '/admin/users/'.$user->getId().'/edit');
+        $newEmail = 'second-'.bin2hex(random_bytes(6)).'@example.test';
+        $client->submit($crawler->selectButton('Speichern')->form([
+            'admin_user[email]' => $newEmail,
+            'admin_user[currentPassword]' => 'Current-Password-42',
+        ]));
+        self::assertResponseRedirects('/admin/users');
+
+        $this->em($client)->clear();
+        $stored = $this->em($client)->find(User::class, $user->getId());
+        $storedOther = $this->em($client)->find(UserSession::class, $otherSession->getId());
+        self::assertInstanceOf(User::class, $stored);
+        self::assertInstanceOf(UserSession::class, $storedOther);
+        self::assertSame($newEmail, $stored->getEmail());
+        self::assertFalse($stored->isEmailVerified());
+        self::assertTrue($storedOther->isRevoked());
+    }
+
     public function testEmailChangeRevokesOldAccountTokensAndExistingSessions(): void
     {
         $client = static::createClient();
