@@ -67,7 +67,7 @@ final class AccountRecoveryController extends AbstractController
     public function resetPassword(string $token, Request $request, UserPasswordHasherInterface $passwordHasher): Response
     {
         $accountToken = $this->tokens->resolve($token, AccountToken::PURPOSE_PASSWORD_RESET);
-        if ($accountToken === null) {
+        if ($accountToken === null || !$accountToken->getUser()?->isActive()) {
             return $this->render('security/reset_password.html.twig', ['invalid' => true, 'form' => null]);
         }
 
@@ -75,7 +75,7 @@ final class AccountRecoveryController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $accountToken = $this->tokens->consume($token, AccountToken::PURPOSE_PASSWORD_RESET);
             $user = $accountToken?->getUser();
-            if (!$user instanceof User) {
+            if (!$user instanceof User || !$user->isActive()) {
                 return $this->render('security/reset_password.html.twig', ['invalid' => true, 'form' => null]);
             }
 
