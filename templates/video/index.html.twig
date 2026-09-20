@@ -29,7 +29,7 @@
                     {% if video.durationLabel %}<span class="video-duration">{{ video.durationLabel }}</span>{% endif %}
                 </a>
                 <div class="video-card-body">
-                    <p class="eyebrow">{{ video.category ? video.category.name : video.sourceType|capitalize }}</p>
+                    <p class="eyebrow">{{ video.category and video.category.enabled ? video.category.name : video.sourceType|capitalize }}</p>
                     <h2><a href="{{ path('app_video_show', {slug: video.slug}) }}">{{ video.title }}</a></h2>
                     <p>{{ video.description|striptags|slice(0, 180) }}{% if video.description|length > 180 %}…{% endif %}</p>
                     <span class="video-date">{{ video.publishedAt|date('d.m.Y H:i') }} Uhr</span>

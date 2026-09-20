@@ -84,6 +84,7 @@ final class MediaStorageManager
 
             if ($storeResult->summary->status() === ExternalConnectorExecutionSummary::STATUS_FAILED) {
                 $this->journalConnectorObjects($storeResult->objectsByTarget);
+                $this->journalConnectorKeys($storeResult->cleanupObjectKeysByTarget);
                 throw new \RuntimeException('Der Upload konnte auf den erforderlichen Medienzielen nicht gespeichert werden.');
             }
 
@@ -93,10 +94,11 @@ final class MediaStorageManager
 
             try {
                 foreach ($storeResult->objectsByTarget as $object) {
-                    $this->urlPolicy->assertSafeRemote($object->location);
+                    $this->assertStorableExternalObject($object);
                 }
             } catch (\DomainException $exception) {
                 $this->cleanupConnectorObjects($storeResult->objectsByTarget);
+                $this->journalConnectorKeys($storeResult->cleanupObjectKeysByTarget);
                 throw $exception;
             }
 
@@ -112,6 +114,7 @@ final class MediaStorageManager
                 );
             } catch (\RuntimeException $exception) {
                 $this->cleanupConnectorObjects($storeResult->objectsByTarget);
+                $this->journalConnectorKeys($storeResult->cleanupObjectKeysByTarget);
                 throw $exception;
             }
         } elseif ($mode === ModuleStorageSetting::MODE_EXTERNAL) {
@@ -123,6 +126,9 @@ final class MediaStorageManager
                 $setting?->getExternalBaseUrl(),
             );
             try {
+                if (mb_strlen($location) > 500) {
+                    throw new \DomainException('Die externe Speicheradresse ist zu lang.');
+                }
                 $this->urlPolicy->assertSafeRemote($location);
             } catch (\DomainException $exception) {
                 try {
@@ -148,7 +154,7 @@ final class MediaStorageManager
             ->setStorageMode($mode)
             ->setLocation($location)
             ->setOriginalName($originalName)
-            ->setTitle(pathinfo($originalName, PATHINFO_FILENAME) ?: $originalName)
+            ->setTitle(mb_substr(pathinfo($originalName, PATHINFO_FILENAME) ?: $originalName, 0, 180))
             ->setChecksumSha256($checksum)
             ->setMimeType($mimeType)
             ->setFileSize($size === false ? null : $size)
@@ -217,15 +223,19 @@ final class MediaStorageManager
             throw new \DomainException('Dieses Modul ist auf interne Speicherung eingestellt. Bitte eine Datei hochladen.');
         }
         $this->urlPolicy->assertSafeRemote($url);
+        if (mb_strlen(trim($url)) > 500) {
+            throw new \DomainException('Die externe Medienadresse ist zu lang.');
+        }
 
         $path = (string) parse_url($url, PHP_URL_PATH);
-        $originalName = basename($path) ?: 'Externe Datei';
+        $originalName = rawurldecode(basename($path)) ?: 'Externe Datei';
+        $originalName = mb_substr($originalName, 0, 255);
         $asset = (new MediaAsset())
             ->setModuleKey($moduleKey)
             ->setStorageMode(ModuleStorageSetting::MODE_EXTERNAL)
             ->setLocation(trim($url))
             ->setOriginalName($originalName)
-            ->setTitle(pathinfo($originalName, PATHINFO_FILENAME) ?: $originalName)
+            ->setTitle(mb_substr(pathinfo($originalName, PATHINFO_FILENAME) ?: $originalName, 0, 180))
             ->setAltText($altText);
         $this->entityManager->persist($asset);
 
@@ -337,6 +347,34 @@ final class MediaStorageManager
         foreach ($objects as $targetKey => $object) {
             $this->cleanupJournal->recordConnector($targetKey, $object->objectKey);
         }
+    }
+
+    /** @param array<string, string> $keys */
+    private function journalConnectorKeys(array $keys): void
+    {
+        foreach ($keys as $targetKey => $objectKey) {
+            $this->cleanupJournal->recordConnector($targetKey, $objectKey);
+        }
+    }
+
+    private function assertStorableExternalObject(ExternalMediaObject $object): void
+    {
+        if (mb_strlen($object->objectKey) > 500
+            || str_starts_with($object->objectKey, '/')
+            || str_contains($object->objectKey, '\\')
+            || preg_match('/[\x00-\x1F\x7F]/u', $object->objectKey) === 1
+        ) {
+            throw new \DomainException('Das Medienziel lieferte einen ungültigen Objektschlüssel.');
+        }
+        foreach (explode('/', $object->objectKey) as $segment) {
+            if ($segment === '' || $segment === '.' || $segment === '..') {
+                throw new \DomainException('Das Medienziel lieferte einen ungültigen Objektschlüssel.');
+            }
+        }
+        if (mb_strlen($object->location) > 500) {
+            throw new \DomainException('Das Medienziel lieferte eine zu lange Speicheradresse.');
+        }
+        $this->urlPolicy->assertSafeRemote($object->location);
     }
 
     /**

@@ -19,17 +19,34 @@ final readonly class ExternalMediaDispatcher
     {
         /** @var array<string, ExternalMediaObject> $objects */
         $objects = [];
+        /** @var array<string, string> $uncertainCleanupKeys */
+        $uncertainCleanupKeys = [];
         /** @var array<string, array{0: ExternalMediaConnectorAdapter, 1: ExternalConnectorTargetDefinition}> $successfulTargets */
         $successfulTargets = [];
 
         $summary = $this->executor->execute(
             ExternalConnectorTarget::CAPABILITY_MEDIA,
-            static function (ExternalConnectorAdapter $adapter, ExternalConnectorTargetDefinition $target) use ($upload, &$objects, &$successfulTargets): void {
+            static function (ExternalConnectorAdapter $adapter, ExternalConnectorTargetDefinition $target) use ($upload, &$objects, &$successfulTargets, &$uncertainCleanupKeys): void {
                 if (!$adapter instanceof ExternalMediaConnectorAdapter) {
                     throw new \LogicException('The selected adapter does not implement the media contract.');
                 }
 
-                $objects[$target->targetKey] = $adapter->store($target, $upload);
+                try {
+                    $object = $adapter->store($target, $upload);
+                } catch (\Throwable $exception) {
+                    // A timeout/fault may happen after a provider committed the deterministic object key.
+                    // Try an idempotent compensation immediately. If that cannot be confirmed, surface the
+                    // key so the caller can keep it in the provider-neutral cleanup journal on abort.
+                    try {
+                        $adapter->delete($target, $upload->objectKey);
+                    } catch (\Throwable) {
+                        $uncertainCleanupKeys[$target->targetKey] = $upload->objectKey;
+                    }
+
+                    throw $exception;
+                }
+
+                $objects[$target->targetKey] = $object;
                 $successfulTargets[$target->targetKey] = [$adapter, $target];
             },
         );
@@ -40,12 +57,13 @@ final readonly class ExternalMediaDispatcher
                     $adapter->delete($target, $objects[$targetKey]->objectKey);
                     unset($objects[$targetKey]);
                 } catch (\Throwable) {
-                    // Residual objects stay in the result so the caller can journal cleanup safely.
+                    $uncertainCleanupKeys[$targetKey] = $objects[$targetKey]->objectKey;
+                    // Keep the object in objectsByTarget as additional diagnostics for the caller.
                 }
             }
         }
 
-        return new ExternalMediaStoreResult($summary, $objects);
+        return new ExternalMediaStoreResult($summary, $objects, $uncertainCleanupKeys);
     }
 
     public function storeForTarget(string $targetKey, ExternalMediaUpload $upload): ExternalMediaObject
@@ -56,7 +74,19 @@ final readonly class ExternalMediaDispatcher
             throw new \LogicException('The selected adapter does not implement the media contract.');
         }
 
-        return $adapter->store($target, $upload);
+        try {
+            return $adapter->store($target, $upload);
+        } catch (\Throwable $exception) {
+            // Repair uses the same deterministic key. A best-effort delete keeps a timed-out write from
+            // becoming an untracked duplicate before the task is retried.
+            try {
+                $adapter->delete($target, $upload->objectKey);
+            } catch (\Throwable) {
+                // The persisted replication task still owns this key and will retry it idempotently.
+            }
+
+            throw $exception;
+        }
     }
 
     public function deleteForTarget(string $targetKey, string $objectKey): void
