@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Command;
 
 use App\Repository\MediaReplicationTaskRepository;
+use App\Service\MediaDeletionRepairer;
 use App\Service\MediaReplicationRepairer;
 use App\Service\MediaStorageCleanupRepairer;
 use Doctrine\ORM\EntityManagerInterface;
@@ -23,6 +24,7 @@ final class RepairMediaReplicasCommand extends Command
         private readonly MediaReplicationTaskRepository $tasks,
         private readonly MediaReplicationRepairer $repairer,
         private readonly MediaStorageCleanupRepairer $cleanupRepairer,
+        private readonly MediaDeletionRepairer $deletionRepairer,
         private readonly EntityManagerInterface $entityManager,
     ) {
         parent::__construct();
@@ -57,15 +59,20 @@ final class RepairMediaReplicasCommand extends Command
         }
 
         $cleanup = $this->cleanupRepairer->repairPending();
+        $deletions = $this->deletionRepairer->repairPending();
 
         $output->writeln(sprintf(
-            'Medien-Reparatur: %d Replikate erfolgreich, %d weiterhin offen; %d Cleanups erfolgreich, %d weiterhin offen.',
+            'Medien-Reparatur: %d Replikate erfolgreich, %d offen; %d Cleanups erfolgreich, %d offen; %d Löschungen abgeschlossen, %d offen.',
             $successful,
             $failed,
             $cleanup['repaired'],
             $cleanup['failed'],
+            $deletions['repaired'],
+            $deletions['failed'],
         ));
 
-        return $failed === 0 && $cleanup['failed'] === 0 ? Command::SUCCESS : Command::FAILURE;
+        return $failed === 0 && $cleanup['failed'] === 0 && $deletions['failed'] === 0
+            ? Command::SUCCESS
+            : Command::FAILURE;
     }
 }

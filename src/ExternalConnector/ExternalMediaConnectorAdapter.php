@@ -8,5 +8,8 @@ interface ExternalMediaConnectorAdapter extends ExternalConnectorAdapter
 {
     public function store(ExternalConnectorTargetDefinition $target, ExternalMediaUpload $upload): ExternalMediaObject;
 
+    /**
+     * Delete must be idempotent: retrying an already deleted object key must be treated as success.
+     */
     public function delete(ExternalConnectorTargetDefinition $target, string $objectKey): void;
 }

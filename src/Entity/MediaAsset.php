@@ -16,6 +16,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\HasLifecycleCallbacks]
 class MediaAsset
 {
+    public const DELETION_ACTIVE = 'active';
+    public const DELETION_PENDING = 'pending';
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
