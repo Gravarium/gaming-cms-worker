@@ -11,6 +11,7 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 final class MediaUploadPolicyTest extends TestCase
 {
+    /** @var list<string> */
     private array $files = [];
 
     protected function tearDown(): void
@@ -34,6 +35,34 @@ final class MediaUploadPolicyTest extends TestCase
         $this->expectException(\DomainException::class);
         $this->expectExceptionMessage('gefährliche Erweiterung');
         $this->policy()->assertSafe($file, 'content');
+    }
+
+    public function testRejectsPathLikeAndReservedNames(): void
+    {
+        foreach (['../notes.txt', 'folder\\notes.txt', 'CON.txt'] as $name) {
+            try {
+                $this->policy()->assertSafe($this->upload($name, 'safe text'), 'content');
+                self::fail('Unsafe filename accepted: '.$name);
+            } catch (\DomainException) {
+                self::addToAssertionCount(1);
+            }
+        }
+    }
+
+    public function testRejectsInvalidModuleKeyBeforeStoragePathConstruction(): void
+    {
+        $this->expectException(\DomainException::class);
+        $this->expectExceptionMessage('Zielmodul');
+
+        $this->policy()->assertSafe($this->upload('notes.txt', 'safe text'), '../content');
+    }
+
+    public function testRejectsEmptyUpload(): void
+    {
+        $this->expectException(\DomainException::class);
+        $this->expectExceptionMessage('leer');
+
+        $this->policy()->assertSafe($this->upload('empty.txt', ''), 'content');
     }
 
     public function testRejectsMimeExtensionMismatch(): void
