@@ -26,7 +26,7 @@ class Guild
     private ?Game $game = null;
 
     #[ORM\ManyToOne]
-    #[ORM\JoinColumn(onDelete: 'SET NULL')]
+    #[ORM\JoinColumn(onDelete: 'RESTRICT')]
     private ?MediaAsset $logo = null;
 
     #[ORM\Column(length: 120)]
