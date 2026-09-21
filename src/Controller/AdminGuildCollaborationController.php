@@ -19,6 +19,7 @@ use App\Repository\GuildEventSignupRepository;
 use App\Repository\GuildDiscordIntegrationRepository;
 use App\Service\AuditLogger;
 use App\Service\DiscordWebhookNotifier;
+use App\Service\DiscordWebhookUrlPolicy;
 use App\Service\GuildNotifier;
 use App\Service\SensitiveDataCipher;
 use Doctrine\ORM\EntityManagerInterface;
@@ -44,6 +45,7 @@ final class AdminGuildCollaborationController extends AbstractController
         private readonly GuildNotifier $notifier,
         private readonly DiscordWebhookNotifier $discordNotifier,
         private readonly SensitiveDataCipher $cipher,
+        private readonly DiscordWebhookUrlPolicy $discordWebhookUrlPolicy,
     ) {}
 
     #[Route('', name: 'app_admin_guild_collaboration', methods: ['GET'])]
@@ -66,7 +68,12 @@ final class AdminGuildCollaborationController extends AbstractController
         if ($form->isSubmitted()) {
             $webhookUrl = trim((string) $form->get('webhookUrl')->getData());
             if ($webhookUrl !== '') {
-                $integration->setEncryptedWebhookUrl($this->cipher->encrypt($webhookUrl));
+                try {
+                    $this->discordWebhookUrlPolicy->assertAllowed($webhookUrl);
+                    $integration->setEncryptedWebhookUrl($this->cipher->encrypt($webhookUrl));
+                } catch (\DomainException $exception) {
+                    $form->get('webhookUrl')->addError(new FormError($exception->getMessage()));
+                }
             } elseif (!$integration->hasWebhook()) {
                 $form->get('webhookUrl')->addError(new FormError('Bitte zuerst eine Discord-Webhook-Adresse eintragen.'));
             }
@@ -80,7 +87,12 @@ final class AdminGuildCollaborationController extends AbstractController
             }
         }
 
-        return $this->render('admin/gaming/discord.html.twig', ['guild' => $guild, 'integration' => $integration, 'form' => $form]);
+        $response = $this->render('admin/gaming/discord.html.twig', ['guild' => $guild, 'integration' => $integration, 'form' => $form]);
+        if ($form->isSubmitted() && !$form->isValid()) {
+            $response->setStatusCode(Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+
+        return $response;
     }
 
     #[Route('/discord/test', name: 'app_admin_guild_discord_test', methods: ['POST'])]

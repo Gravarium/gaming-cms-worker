@@ -14,6 +14,7 @@ final class DiscordWebhookNotifier implements GuildWebhookSender
     public function __construct(
         private readonly GuildDiscordIntegrationRepository $integrations,
         private readonly SensitiveDataCipher $cipher,
+        private readonly DiscordWebhookUrlPolicy $urlPolicy,
         private readonly HttpClientInterface $httpClient,
         private readonly LoggerInterface $logger,
     ) {}
@@ -27,10 +28,12 @@ final class DiscordWebhookNotifier implements GuildWebhookSender
 
         try {
             $url = $this->cipher->decrypt($integration->getEncryptedWebhookUrl());
+            $this->urlPolicy->assertAllowed($url);
             $content = mb_strimwidth('**'.$title."**\n".$message, 0, 1900, '…');
             $response = $this->httpClient->request('POST', $url, [
                 'json' => ['content' => $content, 'allowed_mentions' => ['parse' => []]],
                 'timeout' => 4,
+                'max_redirects' => 0,
             ]);
             $status = $response->getStatusCode();
             if ($status >= 200 && $status < 300) { return true; }
