@@ -30,6 +30,21 @@ final class SecurityArchitectureTest extends TestCase
         self::assertStringContainsString("'%env(WEBAUTHN_ALLOWED_ORIGIN)%'", $webauthn);
     }
 
+    public function testPasskeyDeletionAndAuditShareOneFlushBoundary(): void
+    {
+        $source = $this->readProjectFile('src/Controller/PasskeyController.php');
+        $remove = strpos($source, '$this->entityManager->remove($credential);');
+        $audit = strpos($source, "'security.passkey.deleted'");
+        $flush = strpos($source, '$this->entityManager->flush();', $remove === false ? 0 : $remove);
+
+        self::assertNotFalse($remove);
+        self::assertNotFalse($audit);
+        self::assertNotFalse($flush);
+        self::assertLessThan($audit, $remove);
+        self::assertLessThan($flush, $audit);
+        self::assertStringNotContainsString('$this->credentials->remove($credential)', $source);
+    }
+
     #[DataProvider('adminControllers')]
     public function testEveryAdminControllerHasAnExplicitPermissionBoundary(string $path): void
     {
