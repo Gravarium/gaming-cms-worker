@@ -97,9 +97,10 @@ final readonly class MediaReplicationRepairer
 
     private function stagedPath(MediaReplicationTask $task): string
     {
-        $repairDirectory = $this->projectDir.'/var/media-repair';
-        if (is_link($repairDirectory)) {
-            throw new \DomainException('Das Medien-Reparaturverzeichnis darf kein symbolischer Link sein.');
+        $varDirectory = $this->projectDir.'/var';
+        $repairDirectory = $varDirectory.'/media-repair';
+        if (is_link($varDirectory) || is_link($repairDirectory)) {
+            throw new \DomainException('Das Medien-Reparaturverzeichnis darf keine symbolischen Links verwenden.');
         }
 
         return $repairDirectory.'/'.$task->getStagedFilename();
