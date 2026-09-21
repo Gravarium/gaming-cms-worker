@@ -115,6 +115,33 @@ final class GamingGuildSecurityTest extends WebTestCase
         self::assertSame(0, $this->em($client)->getRepository(GuildApplication::class)->count(['guild' => $guild]));
     }
 
+    public function testGuildApplicationRejectsOversizedCustomAnswer(): void
+    {
+        $client = static::createClient();
+        [$guild] = $this->guilds($client);
+        $guild->setRecruitmentOpen(true);
+        $question = (new GuildApplicationQuestion())
+            ->setGuild($guild)
+            ->setLabel('Erzähl uns mehr')
+            ->setType(GuildApplicationQuestion::TYPE_TEXTAREA)
+            ->setRequired(true);
+        $this->em($client)->persist($question);
+        $this->em($client)->flush();
+
+        $crawler = $client->request('GET', '/gaming/guild/'.$guild->getSlug().'/apply');
+        $form = $crawler->selectButton('Bewerbung absenden')->form([
+            'guild_application[applicantName]' => 'Applicant',
+            'guild_application[email]' => 'oversized@example.test',
+            'guild_application[characterName]' => 'Character',
+            'guild_application[message]' => 'Dies ist eine ausreichend lange Bewerbung.',
+            'guild_application[question_'.$question->getId().']' => str_repeat('x', 5001),
+        ]);
+        $client->submit($form);
+
+        self::assertResponseStatusCodeSame(422);
+        self::assertSame(0, $this->em($client)->getRepository(GuildApplication::class)->count(['guild' => $guild]));
+    }
+
     public function testGuildApplicationRateLimitStopsRepeatedValidSubmissions(): void
     {
         $client = static::createClient();
