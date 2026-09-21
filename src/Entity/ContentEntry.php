@@ -104,7 +104,7 @@ class ContentEntry
     private ?User $author = null;
 
     #[ORM\ManyToOne]
-    #[ORM\JoinColumn(onDelete: 'SET NULL')]
+    #[ORM\JoinColumn(onDelete: 'RESTRICT')]
     private ?Category $category = null;
 
     /** @var Collection<int, ContentTag> */
