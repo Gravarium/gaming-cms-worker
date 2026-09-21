@@ -16,6 +16,7 @@ final class AuditLogger
         private readonly EntityManagerInterface $entityManager,
         private readonly Security $security,
         private readonly RequestStack $requestStack,
+        private readonly AuditContextSanitizer $contextSanitizer,
     ) {}
 
     /** @param array<string, mixed> $context */
@@ -23,16 +24,9 @@ final class AuditLogger
     {
         $actor = $this->security->getUser();
         $type = is_object($subject) ? $subject::class : $subject;
-        $log = (new AuditLog())->setActor($actor instanceof User ? $actor : null)->setAction($action)->setSubjectType($type)->setSubjectId($subjectId)->setSummary($summary)->setContext($this->sanitize($context))->setIpAddress($this->requestStack->getCurrentRequest()?->getClientIp());
+        $log = (new AuditLog())->setActor($actor instanceof User ? $actor : null)->setAction($action)->setSubjectType($type)->setSubjectId($subjectId)->setSummary($summary)->setContext($this->contextSanitizer->sanitize($context))->setIpAddress($this->requestStack->getCurrentRequest()?->getClientIp());
         $this->entityManager->persist($log);
     }
 
-    /** @param array<string, mixed> $context
-     * @return array<string, mixed>
-     */
-    private function sanitize(array $context): array
-    {
-        foreach (['password', 'plainPassword', 'token', 'secret', 'webhook'] as $key) { unset($context[$key]); }
-        return $context;
-    }
+
 }

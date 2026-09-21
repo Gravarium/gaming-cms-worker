@@ -6,6 +6,7 @@ namespace App\Controller;
 
 use App\Internationalization\LocalePolicy;
 use App\Repository\SiteSettingsRepository;
+use App\Security\LocalRedirectTarget;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\Request;
@@ -31,12 +32,9 @@ final class LocaleController extends AbstractController
             throw $this->createNotFoundException();
         }
 
-        $target = (string) $request->request->get('_target', '/');
-        if (!str_starts_with($target, '/') || str_starts_with($target, '//')) {
-            $target = '/';
-        }
+        $target = LocalRedirectTarget::normalize((string) $request->request->get('_target', '/'), '/');
 
-        $response = $this->redirect($target);
+        $response = $this->redirect($target ?? '/');
         $response->headers->setCookie(Cookie::create(
             LocalePolicy::COOKIE,
             $selected,
