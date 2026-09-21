@@ -37,6 +37,13 @@ final class BackupPrivateConfigurationStatusTest extends TestCase
         );
     }
 
+    public function testMissingPrivateConfigFileDoesNotReportReady(): void
+    {
+        file_put_contents($this->file, "backup.dropbox|1|0|repo|/private/password|\n");
+
+        self::assertSame([], (new BackupPrivateConfigurationStatus($this->file))->read());
+    }
+
     public function testMalformedOrDuplicatedConfigurationFailsClosed(): void
     {
         file_put_contents($this->file, "backup.dropbox|1|0|repo|password|\nbackup.dropbox|1|0|repo|password|\n");
