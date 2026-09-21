@@ -7,6 +7,7 @@ use App\Form\CategoryType;
 use App\Repository\CategoryRepository;
 use App\Repository\ContentEntryRepository;
 use App\Service\AuditLogger;
+use Doctrine\DBAL\Exception\ForeignKeyConstraintViolationException;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormError;
@@ -31,8 +32,20 @@ final class AdminCategoryController extends AbstractController
     {
         if (!$this->isCsrfTokenValid('delete-category-'.$category->getId(), (string) $request->request->get('_token'))) { throw $this->createAccessDeniedException(); }
         if (!$category->getChildren()->isEmpty() || $this->entries->count(['category' => $category]) > 0) { $this->addFlash('error', 'Die Kategorie wird noch verwendet oder enthält Unterkategorien. Verschiebe diese zuerst.'); return $this->redirectToRoute('app_admin_category_index'); }
-        $id = $category->getId(); $this->audit->record('content_category.delete', Category::class, $id, 'Content-Kategorie gelöscht.');
-        $this->entityManager->remove($category); $this->entityManager->flush(); $this->addFlash('success', 'Die Kategorie wurde gelöscht.');
+        $id = $category->getId();
+        try {
+            $this->entityManager->remove($category);
+            $this->entityManager->flush();
+        } catch (ForeignKeyConstraintViolationException) {
+            $this->addFlash('error', 'Die Kategorie wurde parallel erneut verwendet oder erhielt eine Unterkategorie. Bitte verschiebe diese zuerst.');
+
+            return $this->redirectToRoute('app_admin_category_index');
+        }
+
+        $this->audit->record('content_category.delete', Category::class, $id, 'Content-Kategorie gelöscht.');
+        $this->entityManager->flush();
+        $this->addFlash('success', 'Die Kategorie wurde gelöscht.');
+
         return $this->redirectToRoute('app_admin_category_index');
     }
     private function form(Category $category, Request $request, string $heading): Response
