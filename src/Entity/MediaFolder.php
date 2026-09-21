@@ -8,7 +8,6 @@ use App\Repository\MediaFolderRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: MediaFolderRepository::class)]
 #[ORM\Table(name: 'media_folder')]
@@ -21,15 +20,13 @@ class MediaFolder
     private ?int $id = null;
 
     #[ORM\Column(length: 120)]
-    #[Assert\NotBlank]
-    #[Assert\Length(max: 120)]
     private string $name = '';
 
-    #[ORM\Column(length: 140)]
+    #[ORM\Column(length: 150)]
     private string $slug = '';
 
     #[ORM\ManyToOne(targetEntity: self::class)]
-    #[ORM\JoinColumn(onDelete: 'RESTRICT')]
+    #[ORM\JoinColumn(onDelete: 'SET NULL')]
     private ?self $parent = null;
 
     /** @var Collection<int, MediaAsset> */
@@ -54,29 +51,23 @@ class MediaFolder
 
     public function setParent(?self $parent): self
     {
-        if ($parent === null) {
-            $this->parent = null;
-
-            return $this;
+        if ($parent === $this) {
+            throw new \DomainException('Ein Medienordner kann nicht sein eigener Elternordner sein.');
         }
 
-        $seen = [];
+        $seen = [spl_object_id($this) => true];
         $cursor = $parent;
-        for ($depth = 0; $cursor !== null && $depth < 128; ++$depth) {
-            if ($cursor === $this) {
-                throw new \DomainException('Ein Medienordner darf nicht in sich selbst oder einen eigenen Unterordner verschoben werden.');
+        for ($depth = 0; $cursor !== null; ++$depth) {
+            if ($depth >= 128) {
+                throw new \DomainException('Die Medienordner-Hierarchie ist zu tief oder beschädigt.');
             }
 
             $objectId = spl_object_id($cursor);
             if (isset($seen[$objectId])) {
-                throw new \DomainException('Die ausgewählte Ordnerhierarchie enthält bereits einen Zyklus.');
+                throw new \DomainException('Die Medienordner-Hierarchie darf keinen Zyklus enthalten.');
             }
             $seen[$objectId] = true;
             $cursor = $cursor->getParent();
-        }
-
-        if ($cursor !== null) {
-            throw new \DomainException('Die ausgewählte Ordnerhierarchie ist zu tief.');
         }
 
         $this->parent = $parent;
@@ -105,7 +96,7 @@ class MediaFolder
             $cursor = $cursor->getParent();
         }
 
-        if ($cursor !== null && !str_starts_with((string) ($parts[0] ?? ''), '[Ungültige Hierarchie]')) {
+        if ($cursor !== null && !str_starts_with($parts[0], '[Ungültige Hierarchie]')) {
             array_unshift($parts, '[Zu tiefe Hierarchie]');
         }
 
