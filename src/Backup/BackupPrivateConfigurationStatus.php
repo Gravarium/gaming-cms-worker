@@ -36,7 +36,7 @@ final readonly class BackupPrivateConfigurationStatus
                 return [];
             }
 
-            [$reference, $enabled, $required, $repository, $passwordFile] = array_map('trim', $fields);
+            [$reference, $enabled, $required, $repository, $passwordFile, $configFile] = array_map('trim', $fields);
             if (
                 preg_match('/^[A-Za-z0-9][A-Za-z0-9_.-]{0,119}$/', $reference) !== 1
                 || isset($seen[$reference])
@@ -47,7 +47,7 @@ final readonly class BackupPrivateConfigurationStatus
             }
             $seen[$reference] = true;
 
-            if ($enabled === '1' && $repository !== '' && $passwordFile !== '') {
+            if ($enabled === '1' && $repository !== '' && $passwordFile !== '' && $configFile !== '') {
                 $ready[strtolower($reference)] = 'ready';
             }
         }
