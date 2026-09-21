@@ -76,6 +76,32 @@ final class ExtensionRuntimeSecurityTest extends TestCase
         $state->consume('module:example', 'notifications.send');
     }
 
+    public function testRuntimeStateRejectsSymlinkFile(): void
+    {
+        if (!function_exists('symlink')) {
+            self::markTestSkipped('Symlinks are unavailable.');
+        }
+        $outside = $this->directory.'/outside-state.json';
+        file_put_contents($outside, '{}');
+        symlink($outside, $this->directory.'/state.json');
+
+        $this->expectException(\DomainException::class);
+        (new ExtensionRuntimeState($this->directory.'/state.json'))->failure('module:example');
+    }
+
+    public function testAuditRejectsSymlinkFile(): void
+    {
+        if (!function_exists('symlink')) {
+            self::markTestSkipped('Symlinks are unavailable.');
+        }
+        $outside = $this->directory.'/outside-audit.jsonl';
+        file_put_contents($outside, '');
+        symlink($outside, $this->directory.'/audit.jsonl');
+
+        $this->expectException(\DomainException::class);
+        (new ExtensionRuntimeAudit($this->directory.'/audit.jsonl'))->record('module:example', 'content.read', 'success');
+    }
+
     public function testAuditContainsNoPayloadOrSecretFields(): void
     {
         $file = $this->directory.'/audit.jsonl';

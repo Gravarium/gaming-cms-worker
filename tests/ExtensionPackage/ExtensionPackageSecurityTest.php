@@ -88,6 +88,23 @@ final class ExtensionPackageSecurityTest extends TestCase
         (new ExtensionPackageVerifier($this->keys, new ExtensionCapabilityPolicy()))->verify($this->package);
     }
 
+    public function testInstallerRejectsSymlinkInstallRoot(): void
+    {
+        if (!function_exists('symlink')) {
+            self::markTestSkipped('Symlinks are unavailable.');
+        }
+        $realRoot = $this->temp.'/real-installed';
+        mkdir($realRoot, 0700, true);
+        $linkRoot = $this->temp.'/linked-installed';
+        symlink($realRoot, $linkRoot);
+
+        $this->expectException(\DomainException::class);
+        (new ExtensionPackageInstaller(
+            new ExtensionPackageVerifier($this->keys, new ExtensionCapabilityPolicy()),
+            $linkRoot,
+        ))->install($this->package);
+    }
+
     public function testRejectsTraversalManifestPathEvenWhenSigned(): void
     {
         $data = json_decode((string) file_get_contents($this->package.'/manifest.json'), true, 32, JSON_THROW_ON_ERROR);

@@ -34,8 +34,11 @@ final class ExtensionCapabilitySandboxTest extends TestCase
 
     protected function tearDown(): void
     {
-        if (is_file($this->directory.'/permissions.json')) {
-            unlink($this->directory.'/permissions.json');
+        foreach (['permissions.json', 'permissions.json.lock'] as $name) {
+            $path = $this->directory.'/'.$name;
+            if (is_file($path) || is_link($path)) {
+                unlink($path);
+            }
         }
         if (is_dir($this->directory)) {
             rmdir($this->directory);
@@ -72,6 +75,27 @@ final class ExtensionCapabilitySandboxTest extends TestCase
             } catch (\DomainException) {
                 self::addToAssertionCount(1);
             }
+        }
+    }
+
+    public function testPermissionStoreRejectsSymlinkTarget(): void
+    {
+        if (!function_exists('symlink')) {
+            self::markTestSkipped('Symlinks are unavailable.');
+        }
+        if (!is_dir($this->directory)) {
+            mkdir($this->directory, 0700, true);
+        }
+        $outside = $this->directory.'/outside.json';
+        file_put_contents($outside, '{}');
+        symlink($outside, $this->directory.'/permissions.json');
+
+        try {
+            $this->expectException(\DomainException::class);
+            $this->store->grant($this->manifest, 'content.read');
+        } finally {
+            @unlink($this->directory.'/permissions.json');
+            @unlink($outside);
         }
     }
 
