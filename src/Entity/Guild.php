@@ -74,7 +74,15 @@ class Guild
     public function getGame(): ?Game { return $this->game; }
     public function setGame(Game $game): self { $this->game = $game; return $this; }
     public function getLogo(): ?MediaAsset { return $this->logo; }
-    public function setLogo(?MediaAsset $logo): self { $this->logo = $logo; return $this; }
+    public function setLogo(?MediaAsset $logo): self
+    {
+        if ($logo?->isDeletionPending()) {
+            throw new \DomainException('A guild cannot reference media that is pending deletion.');
+        }
+        $this->logo = $logo;
+
+        return $this;
+    }
     public function getName(): string { return $this->name; }
     public function setName(string $name): self { $this->name = trim($name); return $this; }
     public function getSlug(): string { return $this->slug; }
