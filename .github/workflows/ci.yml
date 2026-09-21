@@ -82,7 +82,7 @@ jobs:
         run: php bin/console doctrine:schema:create --env=test
 
       - name: Run worker-visible application tests with coverage visibility
-        run: vendor/bin/phpunit --coverage-text --coverage-clover=var/coverage.xml
+        run: vendor/bin/phpunit --configuration phpunit.dist.xml --coverage-text --coverage-clover=var/coverage.xml
 
   postgres-migrations:
     name: Validate worker-visible PostgreSQL 18 migration chain
