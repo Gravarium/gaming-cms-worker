@@ -94,7 +94,15 @@ class Video
     public function getCategory(): ?VideoCategory { return $this->category; }
     public function setCategory(?VideoCategory $category): self { $this->category = $category; return $this; }
     public function getMediaAsset(): ?MediaAsset { return $this->mediaAsset; }
-    public function setMediaAsset(?MediaAsset $mediaAsset): self { $this->mediaAsset = $mediaAsset; return $this; }
+    public function setMediaAsset(?MediaAsset $mediaAsset): self
+    {
+        if ($mediaAsset?->isDeletionPending()) {
+            throw new \DomainException('A video cannot reference media that is pending deletion.');
+        }
+        $this->mediaAsset = $mediaAsset;
+
+        return $this;
+    }
     /** @return Collection<int, VideoPlaylist> */
     public function getPlaylists(): Collection { return $this->playlists; }
     public function addPlaylist(VideoPlaylist $playlist): self { if (!$this->playlists->contains($playlist)) { $this->playlists->add($playlist); } return $this; }
