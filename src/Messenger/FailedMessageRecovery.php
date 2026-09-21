@@ -46,7 +46,16 @@ final readonly class FailedMessageRecovery
             ->withoutAll(TransportMessageIdStamp::class);
 
         $this->bus->dispatch($retry);
-        $this->failedReceiver->ack($envelope);
+
+        try {
+            $this->failedReceiver->ack($envelope);
+        } catch (\Throwable $exception) {
+            throw new FailedMessageRetryUncertainException(
+                'Retry dispatch succeeded, but removing the original failure could not be confirmed.',
+                0,
+                $exception,
+            );
+        }
 
         return true;
     }

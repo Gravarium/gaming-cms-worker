@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Messenger;
 
 use App\Messenger\FailedMessageRecovery;
+use App\Messenger\FailedMessageRetryUncertainException;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\MessageBusInterface;
@@ -70,6 +71,20 @@ final class FailedMessageRecoveryTest extends TestCase
         $receiver->expects(self::once())->method('ack')->with($failed);
 
         self::assertTrue((new FailedMessageRecovery($receiver, $bus))->retry('42'));
+    }
+
+    public function testAckFailureAfterDispatchIsReportedAsUncertain(): void
+    {
+        $failed = new Envelope(new \stdClass(), [new TransportMessageIdStamp('42')]);
+        $receiver = $this->createMock(ListableReceiverInterface::class);
+        $receiver->method('find')->with('42')->willReturn($failed);
+        $receiver->method('ack')->with($failed)->willThrowException(new \RuntimeException('ack failed'));
+
+        $bus = $this->createMock(MessageBusInterface::class);
+        $bus->expects(self::once())->method('dispatch')->willReturnArgument(0);
+
+        $this->expectException(FailedMessageRetryUncertainException::class);
+        (new FailedMessageRecovery($receiver, $bus))->retry('42');
     }
 
     public function testDispatchFailureLeavesOriginalFailureUnacknowledged(): void

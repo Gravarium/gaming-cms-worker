@@ -6,6 +6,7 @@ namespace App\Controller;
 
 use App\Messenger\FailedMessageOverview;
 use App\Messenger\FailedMessageRecovery;
+use App\Messenger\FailedMessageRetryUncertainException;
 use App\Service\AuditLogger;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -41,13 +42,27 @@ final class AdminQueueController extends AbstractController
             throw $this->createAccessDeniedException();
         }
 
+        $uncertain = false;
         try {
             $retried = $this->recovery->retry($id);
+        } catch (FailedMessageRetryUncertainException) {
+            $retried = false;
+            $uncertain = true;
         } catch (\Throwable) {
             $retried = false;
         }
 
-        if ($retried) {
+        if ($uncertain) {
+            $this->audit->record(
+                'queue.failed.retry_uncertain',
+                self::class,
+                null,
+                'Queue-Retry ausgelöst, aber Entfernen aus der Fehlerqueue nicht bestätigt.',
+                ['messageId' => $id],
+            );
+            $this->entityManager->flush();
+            $this->addFlash('error', 'Die erneute Zustellung wurde ausgelöst, aber der Queue-Zustand ist unklar. Nicht blind erneut versuchen.');
+        } elseif ($retried) {
             $this->audit->record('queue.failed.retry', self::class, null, 'Fehlgeschlagene Nachricht erneut eingeplant.', ['messageId' => $id]);
             $this->entityManager->flush();
             $this->addFlash('success', 'Die Nachricht wurde sicher erneut eingeplant.');
@@ -67,23 +82,37 @@ final class AdminQueueController extends AbstractController
 
         $messages = $this->overview->read()['messages'];
         $successful = 0;
+        $uncertain = 0;
         foreach ($messages as $message) {
             try {
                 if ($this->recovery->retry($message['id'])) {
                     ++$successful;
                 }
+            } catch (FailedMessageRetryUncertainException) {
+                ++$uncertain;
             } catch (\Throwable) {
-                // Leave the individual message in the failure transport.
+                // Dispatch did not complete; the original failure remains available for a later retry.
             }
         }
 
-        if ($successful > 0) {
-            $this->audit->record('queue.failed.retry_all', self::class, null, 'Fehlgeschlagene Nachrichten erneut eingeplant.', ['count' => $successful]);
+        if ($successful > 0 || $uncertain > 0) {
+            $this->audit->record(
+                'queue.failed.retry_all',
+                self::class,
+                null,
+                'Fehlgeschlagene Nachrichten erneut eingeplant.',
+                ['confirmed' => $successful, 'uncertain' => $uncertain],
+            );
             $this->entityManager->flush();
         }
         $this->addFlash(
-            $successful === count($messages) ? 'success' : 'error',
-            sprintf('%d von %d Nachrichten wurden erneut eingeplant.', $successful, count($messages)),
+            $successful === count($messages) && $uncertain === 0 ? 'success' : 'error',
+            sprintf(
+                '%d von %d Nachrichten bestätigt erneut eingeplant; %d weitere haben einen unklaren Dispatch/Ack-Zustand.',
+                $successful,
+                count($messages),
+                $uncertain,
+            ),
         );
 
         return $this->redirectToRoute('app_admin_queue_index');
