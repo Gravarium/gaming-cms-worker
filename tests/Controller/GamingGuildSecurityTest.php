@@ -115,6 +115,34 @@ final class GamingGuildSecurityTest extends WebTestCase
         self::assertSame(0, $this->em($client)->getRepository(GuildApplication::class)->count(['guild' => $guild]));
     }
 
+    public function testGuildApplicationRateLimitStopsRepeatedValidSubmissions(): void
+    {
+        $client = static::createClient();
+        [$guild] = $this->guilds($client);
+        $guild->setRecruitmentOpen(true);
+        $this->em($client)->flush();
+
+        for ($attempt = 1; $attempt <= 6; ++$attempt) {
+            $crawler = $client->request('GET', '/gaming/guild/'.$guild->getSlug().'/apply');
+            $form = $crawler->selectButton('Bewerbung absenden')->form([
+                'guild_application[applicantName]' => 'Applicant '.$attempt,
+                'guild_application[email]' => 'applicant-'.$attempt.'@example.test',
+                'guild_application[characterName]' => 'Character '.$attempt,
+                'guild_application[message]' => 'Dies ist eine ausreichend lange Bewerbung Nummer '.$attempt.'.',
+            ]);
+            $client->submit($form);
+
+            if ($attempt <= 5) {
+                self::assertResponseRedirects('/gaming/guild/'.$guild->getSlug());
+            } else {
+                self::assertResponseStatusCodeSame(429);
+                self::assertSelectorTextContains('body', 'Zu viele Bewerbungsversuche');
+            }
+        }
+
+        self::assertSame(5, $this->em($client)->getRepository(GuildApplication::class)->count(['guild' => $guild]));
+    }
+
     public function testPortalAllowsOwnedMemberToSignupForPlannedEvent(): void
     {
         $client = static::createClient();
