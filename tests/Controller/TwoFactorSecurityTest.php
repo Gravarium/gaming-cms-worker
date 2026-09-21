@@ -73,6 +73,44 @@ final class TwoFactorSecurityTest extends WebTestCase
         self::assertSame(1, $stored->recoveryCodeCount());
     }
 
+    public function testTwoFactorRateLimitSurvivesSessionCounterReset(): void
+    {
+        $client = static::createClient();
+        $user = $this->createUser($client, 'rate-limit');
+        $recoveryCode = 'RATE-LIMIT-1234';
+        $user->enableTwoFactor(
+            $client->getContainer()->get(SensitiveDataCipher::class)->encrypt('GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQ'),
+            [password_hash($recoveryCode, PASSWORD_DEFAULT)],
+        );
+        $this->em($client)->flush();
+        $userId = $user->getId();
+        self::assertNotNull($userId);
+        $client->loginUser($user);
+
+        for ($attempt = 0; $attempt < 5; ++$attempt) {
+            $crawler = $client->request('GET', '/login/2fa');
+            $client->request('POST', '/login/2fa', [
+                '_token' => (string) $crawler->filter('input[name="_token"]')->attr('value'),
+                'code' => '000000',
+            ]);
+            self::assertResponseRedirects('/login/2fa');
+            $client->getRequest()->getSession()->remove('two_factor_failures');
+            $client->getRequest()->getSession()->remove('two_factor_locked_until');
+        }
+
+        $crawler = $client->request('GET', '/login/2fa');
+        $client->request('POST', '/login/2fa', [
+            '_token' => (string) $crawler->filter('input[name="_token"]')->attr('value'),
+            'code' => $recoveryCode,
+        ]);
+        self::assertResponseRedirects('/login/2fa');
+
+        $this->em($client)->clear();
+        $stored = $this->em($client)->find(User::class, $userId);
+        self::assertInstanceOf(User::class, $stored);
+        self::assertSame(1, $stored->recoveryCodeCount());
+    }
+
     public function testEnablingTwoFactorRevokesOtherSessionsAndKeepsCurrentSessionValid(): void
     {
         $client = static::createClient();

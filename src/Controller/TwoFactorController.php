@@ -13,8 +13,10 @@ use App\Service\TotpAuthenticator;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\RateLimiter\RateLimiterFactory;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
@@ -28,6 +30,8 @@ final class TwoFactorController extends AbstractController
         private readonly AuditLogger $audit,
         private readonly UserSessionRepository $sessions,
         private readonly UserRepository $users,
+        #[Autowire(service: 'limiter.two_factor_challenge')]
+        private readonly RateLimiterFactory $challengeLimiter,
     ) {}
 
     #[Route('/login/2fa', name: 'app_two_factor_challenge', methods: ['GET', 'POST'])]
@@ -43,7 +47,20 @@ final class TwoFactorController extends AbstractController
         if ($request->isMethod('POST')) {
             if (!$this->isCsrfTokenValid('two-factor-challenge', (string) $request->request->get('_token'))) { throw $this->createAccessDeniedException(); }
             if ($lockedUntil > time()) {
-                $this->addFlash('error', 'Zu viele Versuche. Bitte warte bis '.date('H:i', $lockedUntil).' Uhr.');
+                $this->addFlash('error', 'Zu viele Versuche. Bitte später erneut versuchen.');
+                return $this->redirectToRoute('app_two_factor_challenge');
+            }
+
+            $userId = $user->getId();
+            if ($userId === null) {
+                throw $this->createAccessDeniedException();
+            }
+            $limit = $this->challengeLimiter->create('user-'.$userId)->consume();
+            if (!$limit->isAccepted()) {
+                $this->audit->record('security.2fa.throttled', $user, $userId, 'Zwei-Faktor-Anmeldung wegen zu vieler Versuche blockiert.');
+                $this->entityManager->flush();
+                $this->addFlash('error', 'Zu viele Versuche. Bitte später erneut versuchen.');
+
                 return $this->redirectToRoute('app_two_factor_challenge');
             }
 
