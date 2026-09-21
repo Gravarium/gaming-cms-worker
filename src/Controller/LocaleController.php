@@ -31,10 +31,7 @@ final class LocaleController extends AbstractController
             throw $this->createNotFoundException();
         }
 
-        $target = (string) $request->request->get('_target', '/');
-        if (!str_starts_with($target, '/') || str_starts_with($target, '//')) {
-            $target = '/';
-        }
+        $target = $this->safeLocalTarget((string) $request->request->get('_target', '/'));
 
         $response = $this->redirect($target);
         $response->headers->setCookie(Cookie::create(
@@ -50,5 +47,34 @@ final class LocaleController extends AbstractController
         ));
 
         return $response;
+    }
+    private function safeLocalTarget(string $target): string
+    {
+        $target = trim($target);
+        if ($target === '' || preg_match('/[\x00-\x1F\x7F\\\\]/u', $target) === 1) {
+            return '/';
+        }
+
+        $candidate = $target;
+        for ($round = 0; $round < 3; ++$round) {
+            if (!str_starts_with($candidate, '/') || str_starts_with($candidate, '//') || str_contains($candidate, '\\')) {
+                return '/';
+            }
+            $parts = parse_url($candidate);
+            if ($parts === false || isset($parts['scheme']) || isset($parts['host']) || isset($parts['user']) || isset($parts['pass'])) {
+                return '/';
+            }
+
+            $decoded = rawurldecode($candidate);
+            if ($decoded === $candidate) {
+                break;
+            }
+            if (preg_match('/[\x00-\x1F\x7F\\\\]/u', $decoded) === 1) {
+                return '/';
+            }
+            $candidate = $decoded;
+        }
+
+        return $target;
     }
 }

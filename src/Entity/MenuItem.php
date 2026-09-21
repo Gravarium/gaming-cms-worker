@@ -23,7 +23,7 @@ class MenuItem
     private string $label = '';
 
     #[ORM\Column(length: 500, nullable: true)]
-    #[Assert\Url(requireTld: false)]
+    #[Assert\Url(protocols: ['http', 'https'], requireTld: false)]
     private ?string $url = null;
 
     #[ORM\ManyToOne]

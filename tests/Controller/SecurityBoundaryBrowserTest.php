@@ -29,6 +29,10 @@ final class SecurityBoundaryBrowserTest extends WebTestCase
         self::assertSelectorExists('input[name="_csrf_token"]');
         self::assertSelectorExists('[data-passkey-login]');
         self::assertSelectorNotExists('.exception-message');
+        self::assertResponseHeaderSame('X-Content-Type-Options', 'nosniff');
+        self::assertResponseHeaderSame('X-Frame-Options', 'SAMEORIGIN');
+        self::assertResponseHeaderSame('Referrer-Policy', 'strict-origin-when-cross-origin');
+        self::assertResponseHeaderSame('Permissions-Policy', 'camera=(), microphone=(), geolocation=()');
     }
 
     public function testProtectedMutationsRejectGetRequests(): void
