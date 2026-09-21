@@ -37,10 +37,11 @@ final class ExternalMediaDispatcherTest extends TestCase
 
         self::assertSame(ExternalConnectorExecutionSummary::STATUS_HEALTHY, $result->summary->status());
         self::assertSame(['primary', 'replica'], array_keys($result->objectsByTarget));
+        self::assertSame([], $result->cleanupObjectKeysByTarget);
         self::assertSame(['store:primary', 'store:replica'], iterator_to_array($calls));
     }
 
-    public function testOptionalFailureKeepsSuccessfulReplica(): void
+    public function testOptionalFailureCompensatesUncertainWriteAndKeepsSuccessfulReplica(): void
     {
         $calls = new \ArrayObject();
         $dispatcher = $this->dispatcher(
@@ -50,7 +51,7 @@ final class ExternalMediaDispatcherTest extends TestCase
             ],
             [
                 $this->adapter('store-a', $calls),
-                $this->adapter('broken', $calls, true),
+                $this->adapter('broken', $calls, failStore: true),
             ],
         );
 
@@ -58,6 +59,8 @@ final class ExternalMediaDispatcherTest extends TestCase
 
         self::assertSame(ExternalConnectorExecutionSummary::STATUS_DEGRADED, $result->summary->status());
         self::assertSame(['primary'], array_keys($result->objectsByTarget));
+        self::assertSame([], $result->cleanupObjectKeysByTarget);
+        self::assertSame(['store:primary', 'store:optional', 'delete:optional'], iterator_to_array($calls));
     }
 
     public function testMismatchedProviderObjectKeyIsRejectedAndExpectedKeyIsCompensated(): void
@@ -85,7 +88,7 @@ final class ExternalMediaDispatcherTest extends TestCase
             ],
             [
                 $this->adapter('store-a', $calls),
-                $this->adapter('broken', $calls, true),
+                $this->adapter('broken', $calls, failStore: true),
             ],
         );
 
@@ -93,7 +96,48 @@ final class ExternalMediaDispatcherTest extends TestCase
 
         self::assertSame(ExternalConnectorExecutionSummary::STATUS_FAILED, $result->summary->status());
         self::assertSame([], $result->objectsByTarget);
-        self::assertSame(['store:first', 'store:required-broken', 'delete:first'], iterator_to_array($calls));
+        self::assertSame([], $result->cleanupObjectKeysByTarget);
+        self::assertSame(
+            ['store:first', 'store:required-broken', 'delete:required-broken', 'delete:first'],
+            iterator_to_array($calls),
+        );
+    }
+
+    public function testUncertainFailedWriteIsExposedWhenCompensatingDeleteAlsoFails(): void
+    {
+        $calls = new \ArrayObject();
+        $dispatcher = $this->dispatcher(
+            [$this->target('required-broken', 'broken', true)],
+            [$this->adapter('broken', $calls, failStore: true, failDelete: true)],
+        );
+
+        $result = $dispatcher->store(new ExternalMediaUpload('video/file.mp4', '/tmp/file.mp4'));
+
+        self::assertSame(ExternalConnectorExecutionSummary::STATUS_FAILED, $result->summary->status());
+        self::assertSame([], $result->objectsByTarget);
+        self::assertSame(['required-broken' => 'video/file.mp4'], $result->cleanupObjectKeysByTarget);
+        self::assertSame(['store:required-broken', 'delete:required-broken'], iterator_to_array($calls));
+    }
+
+    public function testFailedRollbackKeepsSuccessfulObjectAndCleanupKeyVisible(): void
+    {
+        $calls = new \ArrayObject();
+        $dispatcher = $this->dispatcher(
+            [
+                $this->target('first', 'store-a', true),
+                $this->target('required-broken', 'broken', true),
+            ],
+            [
+                $this->adapter('store-a', $calls, failDelete: true),
+                $this->adapter('broken', $calls, failStore: true),
+            ],
+        );
+
+        $result = $dispatcher->store(new ExternalMediaUpload('image/file.webp', '/tmp/file.webp'));
+
+        self::assertSame(ExternalConnectorExecutionSummary::STATUS_FAILED, $result->summary->status());
+        self::assertSame(['first'], array_keys($result->objectsByTarget));
+        self::assertSame(['first' => 'image/file.webp'], $result->cleanupObjectKeysByTarget);
     }
 
     /** @param \ArrayObject<int, string> $calls */
@@ -115,7 +159,7 @@ final class ExternalMediaDispatcherTest extends TestCase
             public function store(ExternalConnectorTargetDefinition $target, ExternalMediaUpload $upload): ExternalMediaObject
             {
                 $this->calls[] = 'store:'.$target->targetKey;
-                if ($this->fail) {
+                if ($this->failStore) {
                     throw new \RuntimeException('Provider failure with potentially sensitive details.');
                 }
 
@@ -125,6 +169,9 @@ final class ExternalMediaDispatcherTest extends TestCase
             public function delete(ExternalConnectorTargetDefinition $target, string $objectKey): void
             {
                 $this->calls[] = 'delete:'.$target->targetKey;
+                if ($this->failDelete) {
+                    throw new \RuntimeException('Delete failed.');
+                }
             }
         };
     }

@@ -16,7 +16,7 @@ final class MediaAssetReplicaTest extends TestCase
         $replica = (new MediaAssetReplica())
             ->setTargetKey(' S3-Primary ')
             ->setProviderKey(' S3-Compatible ')
-            ->setObjectKey('/media/file.png')
+            ->setObjectKey('media/file.png')
             ->setLocation(' https://cdn.example.invalid/media/file.png ');
 
         $asset->addReplica($replica);
@@ -30,5 +30,17 @@ final class MediaAssetReplicaTest extends TestCase
 
         $asset->removeReplica($replica);
         self::assertFalse($asset->getReplicas()->contains($replica));
+    }
+
+    public function testRejectsTraversalAndAbsoluteObjectKeys(): void
+    {
+        foreach (['/media/file.png', '../file.png', 'media/../file.png', 'media\\file.png'] as $key) {
+            try {
+                (new MediaAssetReplica())->setObjectKey($key);
+                self::fail('Unsafe replica key accepted: '.$key);
+            } catch (\InvalidArgumentException) {
+                self::addToAssertionCount(1);
+            }
+        }
     }
 }
