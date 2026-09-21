@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Backup\BackupProviderCatalog;
-use App\Backup\BackupSelectionSynchronizer;
 use App\Backup\BackupTargetPlanner;
 use App\Service\AuditLogger;
 use Doctrine\ORM\EntityManagerInterface;
@@ -31,7 +30,6 @@ final class AdminBackupProviderController extends AbstractController
     public function plan(
         Request $request,
         BackupTargetPlanner $planner,
-        BackupSelectionSynchronizer $selection,
         AuditLogger $audit,
         EntityManagerInterface $entityManager,
     ): Response {
@@ -50,7 +48,6 @@ final class AdminBackupProviderController extends AbstractController
                 ['count' => $result['created'], 'targetKeys' => $result['keys']],
             );
             $entityManager->flush();
-            $selection->synchronize();
         }
 
         $this->addFlash(

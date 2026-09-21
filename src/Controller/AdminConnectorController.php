@@ -14,6 +14,7 @@ use App\ExternalConnector\MediaTargetConfigurationStatus;
 use App\ExternalConnector\OffsiteBackupStatusReader;
 use App\Repository\ExternalConnectorHealthStatusRepository;
 use App\Repository\ExternalConnectorTargetRepository;
+use App\Repository\MediaAssetReplicaRepository;
 use App\Repository\MediaReplicationTaskRepository;
 use App\Service\AuditLogger;
 use Doctrine\ORM\EntityManagerInterface;
@@ -37,6 +38,7 @@ final class AdminConnectorController extends AbstractController
         private readonly MediaTargetConfigurationStatus $mediaConfigurationStatuses,
         private readonly ExternalConnectorHealthStatusRepository $healthStatuses,
         private readonly MediaReplicationTaskRepository $mediaReplicationTasks,
+        private readonly MediaAssetReplicaRepository $mediaReplicas,
         private readonly EntityManagerInterface $entityManager,
         private readonly AuditLogger $audit,
     ) {
@@ -91,6 +93,7 @@ final class AdminConnectorController extends AbstractController
         $priorities = $request->request->all('priority');
         $required = $request->request->all('required');
         $changed = 0;
+        $backupChanged = false;
 
         foreach ($priorities as $id => $priority) {
             if (!is_scalar($priority) || preg_match('/^\d{1,5}$/', (string) $priority) !== 1) {
@@ -103,6 +106,7 @@ final class AdminConnectorController extends AbstractController
             }
 
             $target->setPriority($value)->setRequired(array_key_exists((string) $id, $required));
+            $backupChanged = $backupChanged || $target->getCapability() === ExternalConnectorTarget::CAPABILITY_BACKUP;
             ++$changed;
         }
 
@@ -114,8 +118,13 @@ final class AdminConnectorController extends AbstractController
                 'Reihenfolge und Pflichtziele externer Ziele gemeinsam aktualisiert.',
                 ['count' => $changed],
             );
+            if ($backupChanged) {
+                $this->backupSelection->markPending();
+            }
             $this->entityManager->flush();
-            $this->backupSelection->synchronize();
+            if ($backupChanged && !$this->synchronizePendingBackupSelection()) {
+                return $this->redirectToRoute('app_admin_connector_index');
+            }
         }
 
         $this->addFlash('success', sprintf('%d externe Ziele gemeinsam aktualisiert.', $changed));
@@ -159,7 +168,6 @@ final class AdminConnectorController extends AbstractController
             ['sourceTargetKey' => $target->getTargetKey(), 'targetKey' => $targetKey],
         );
         $this->entityManager->flush();
-        $this->synchronizeBackupSelection($copy);
         $this->addFlash('success', 'Ein weiteres Konto für denselben Anbieter wurde vorbereitet und bleibt deaktiviert.');
 
         return $this->redirectToRoute('app_admin_connector_index');
@@ -178,6 +186,10 @@ final class AdminConnectorController extends AbstractController
             throw $this->createAccessDeniedException();
         }
 
+        $isBackup = $target->getCapability() === ExternalConnectorTarget::CAPABILITY_BACKUP;
+        if ($isBackup) {
+            $this->backupSelection->markPending();
+        }
         $target->setEnabled(!$target->isEnabled());
         $this->audit->record(
             'connector.toggle',
@@ -187,7 +199,9 @@ final class AdminConnectorController extends AbstractController
             ['targetKey' => $target->getTargetKey(), 'capability' => $target->getCapability()],
         );
         $this->entityManager->flush();
-        $this->synchronizeBackupSelection($target);
+        if ($isBackup && !$this->synchronizePendingBackupSelection()) {
+            return $this->redirectToRoute('app_admin_connector_index');
+        }
         $this->addFlash('success', $target->isEnabled() ? 'Das Ziel wurde aktiviert.' : 'Das Ziel wurde deaktiviert.');
 
         return $this->redirectToRoute('app_admin_connector_index');
@@ -200,7 +214,19 @@ final class AdminConnectorController extends AbstractController
             throw $this->createAccessDeniedException();
         }
 
+        if ($target->getCapability() === ExternalConnectorTarget::CAPABILITY_MEDIA
+            && ($this->mediaReplicas->count(['targetKey' => $target->getTargetKey()]) > 0
+                || $this->mediaReplicationTasks->count(['targetKey' => $target->getTargetKey()]) > 0)
+        ) {
+            $this->addFlash('error', 'Dieses Medienziel wird noch von gespeicherten Kopien oder Reparaturaufträgen referenziert. Deaktiviere es vorläufig statt die Definition zu löschen.');
+
+            return $this->redirectToRoute('app_admin_connector_index');
+        }
+
         $isBackup = $target->getCapability() === ExternalConnectorTarget::CAPABILITY_BACKUP;
+        if ($isBackup) {
+            $this->backupSelection->markPending();
+        }
         $this->audit->record(
             'connector.delete',
             ExternalConnectorTarget::class,
@@ -210,8 +236,8 @@ final class AdminConnectorController extends AbstractController
         );
         $this->entityManager->remove($target);
         $this->entityManager->flush();
-        if ($isBackup) {
-            $this->backupSelection->synchronize();
+        if ($isBackup && !$this->synchronizePendingBackupSelection()) {
+            return $this->redirectToRoute('app_admin_connector_index');
         }
         $this->addFlash('success', 'Die Zieldefinition wurde entfernt. Externe Daten und Server-Zugangsdaten wurden nicht gelöscht.');
 
@@ -220,8 +246,13 @@ final class AdminConnectorController extends AbstractController
 
     private function save(ExternalConnectorTarget $target, Request $request, bool $new): Response
     {
+        $wasBackup = !$new && $target->getCapability() === ExternalConnectorTarget::CAPABILITY_BACKUP;
         $form = $this->createForm(ExternalConnectorTargetType::class, $target)->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
+            $affectsBackupSelection = $wasBackup || $target->getCapability() === ExternalConnectorTarget::CAPABILITY_BACKUP;
+            if ($affectsBackupSelection) {
+                $this->backupSelection->markPending();
+            }
             if ($new) {
                 $this->entityManager->persist($target);
             }
@@ -233,7 +264,9 @@ final class AdminConnectorController extends AbstractController
                 ['targetKey' => $target->getTargetKey(), 'capability' => $target->getCapability(), 'providerKey' => $target->getProviderKey()],
             );
             $this->entityManager->flush();
-            $this->synchronizeBackupSelection($target);
+            if ($affectsBackupSelection && !$this->synchronizePendingBackupSelection()) {
+                return $this->redirectToRoute('app_admin_connector_index');
+            }
             $this->addFlash('success', 'Die Zieldefinition wurde gespeichert. Es wurden keine Zugangsdaten im CMS gespeichert.');
 
             return $this->redirectToRoute('app_admin_connector_index');
@@ -246,10 +279,19 @@ final class AdminConnectorController extends AbstractController
         ]);
     }
 
-    private function synchronizeBackupSelection(ExternalConnectorTarget $target): void
+    private function synchronizePendingBackupSelection(): bool
     {
-        if ($target->getCapability() === ExternalConnectorTarget::CAPABILITY_BACKUP) {
+        try {
             $this->backupSelection->synchronize();
+
+            return true;
+        } catch (\Throwable) {
+            $this->addFlash(
+                'error',
+                'Die CMS-Änderung wurde gespeichert, aber die Backup-Zielauswahl konnte nicht bestätigt werden. Der Reparaturmarker bleibt gesetzt; führe app:connectors:repair-backup-selection aus.',
+            );
+
+            return false;
         }
     }
 }

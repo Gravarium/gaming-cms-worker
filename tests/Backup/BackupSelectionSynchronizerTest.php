@@ -26,8 +26,13 @@ final class BackupSelectionSynchronizerTest extends TestCase
         $exporter = new BackupTargetSelectionExporter(new ExternalConnectorRegistry($source));
 
         $synchronizer = new BackupSelectionSynchronizer($exporter, $projectDir);
+        $synchronizer->markPending();
+        self::assertTrue($synchronizer->hasPending());
+        self::assertSame(0600, fileperms($synchronizer->pendingFile()) & 0777);
+
         $synchronizer->synchronize();
 
+        self::assertFalse($synchronizer->hasPending());
         self::assertSame(
             "# configuration_reference|target_key|required\n",
             file_get_contents($synchronizer->outputFile()),

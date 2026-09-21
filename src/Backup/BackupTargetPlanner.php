@@ -60,10 +60,6 @@ final readonly class BackupTargetPlanner
             $priority += 10;
         }
 
-        if ($created > 0) {
-            $this->entityManager->flush();
-        }
-
         return ['created' => $created, 'skipped' => $skipped, 'keys' => $keys];
     }
 }
