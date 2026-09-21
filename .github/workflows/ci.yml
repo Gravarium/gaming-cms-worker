@@ -82,7 +82,7 @@ jobs:
         run: php bin/console doctrine:schema:create --env=test
 
       - name: Run worker-visible application tests with coverage visibility
-        run: php bin/phpunit --coverage-text --coverage-clover=var/coverage.xml
+        run: vendor/bin/phpunit --coverage-text --coverage-clover=var/coverage.xml
 
   postgres-migrations:
     name: Validate worker-visible PostgreSQL 18 migration chain
@@ -107,7 +107,7 @@ jobs:
     env:
       APP_ENV: test
       APP_SECRET: ci-only-secret
-      DATABASE_URL: "postgresql://app:ci-only-password@127.0.0.1:5432/gaming_cms_ci_test?serverVersion=18&charset=utf8"
+      DATABASE_URL: "postgresql://app:ci-only-password@127.0.0.1:5432/gaming_cms_ci?serverVersion=18&charset=utf8"
 
     steps:
       - name: Check out repository
