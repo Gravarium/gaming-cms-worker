@@ -11,6 +11,7 @@ final readonly class MediaDeletionRepairer
     public function __construct(
         private MediaAssetRepository $assets,
         private MediaStorageManager $storage,
+        private MediaAssetUsageResolver $usageResolver,
     ) {
     }
 
@@ -21,6 +22,11 @@ final readonly class MediaDeletionRepairer
         $failed = 0;
 
         foreach ($this->assets->pendingDeletion($limit) as $asset) {
+            if ($this->usageResolver->isUsed($asset)) {
+                ++$failed;
+                continue;
+            }
+
             try {
                 $this->storage->delete($asset);
                 ++$repaired;

@@ -245,6 +245,25 @@ final class MediaStorageSecurityTest extends WebTestCase
         }
     }
 
+    public function testPendingDeletionCannotBeEditedReplacedOrDeletedAgain(): void
+    {
+        $client = static::createClient();
+        $asset = $this->asset($client, 'pending.txt')->markDeletionPending();
+        $this->em($client)->flush();
+        $assetId = $asset->getId();
+        self::assertNotNull($assetId);
+        $client->loginUser($this->user($client, [CmsPermission::STORAGE]));
+
+        $client->request('GET', '/admin/storage/media/'.$assetId.'/edit');
+        self::assertResponseStatusCodeSame(409);
+
+        $client->request('GET', '/admin/storage/media/'.$assetId.'/replace');
+        self::assertResponseStatusCodeSame(409);
+
+        $client->request('POST', '/admin/storage/media/'.$assetId.'/delete');
+        self::assertResponseStatusCodeSame(409);
+    }
+
     public function testExternalDeleteFailureLeavesRepairablePendingIntent(): void
     {
         $client = static::createClient();

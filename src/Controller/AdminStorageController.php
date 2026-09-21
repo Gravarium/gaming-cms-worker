@@ -25,6 +25,7 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\HttpKernel\Exception\ConflictHttpException;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\String\Slugger\SluggerInterface;
 
@@ -143,6 +144,7 @@ final class AdminStorageController extends AbstractController
     #[Route('/media/{id}/edit', name: 'app_admin_media_edit', requirements: ['id' => '\\d+'], methods: ['GET', 'POST'])]
     public function editMedia(MediaAsset $asset, Request $request): Response
     {
+        $this->ensureActiveAsset($asset);
         $form = $this->createForm(MediaAssetMetadataType::class, $asset)->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $this->entityManager->flush();
@@ -160,6 +162,7 @@ final class AdminStorageController extends AbstractController
     #[Route('/media/{id}/replace', name: 'app_admin_media_replace', requirements: ['id' => '\\d+'], methods: ['GET', 'POST'])]
     public function replace(MediaAsset $asset, Request $request): Response
     {
+        $this->ensureActiveAsset($asset);
         $form = $this->createForm(MediaAssetReplacementType::class)->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $file = $form->get('file')->getData();
@@ -188,7 +191,10 @@ final class AdminStorageController extends AbstractController
     {
         if (!$this->isCsrfTokenValid('bulk-media', $request->request->getString('_token'))) { throw $this->createAccessDeniedException(); }
         $ids = array_values(array_unique(array_filter((array) $request->request->all('assets'), static fn ($id): bool => ctype_digit((string) $id))));
-        $assets = $ids === [] ? [] : $this->media->findBy(['id' => array_map('intval', $ids)]);
+        $assets = $ids === [] ? [] : array_values(array_filter(
+            $this->media->findBy(['id' => array_map('intval', $ids)]),
+            static fn (MediaAsset $asset): bool => !$asset->isDeletionPending(),
+        ));
         $action = $request->request->getString('bulk_action');
         $changed = 0;
         $failed = 0;
@@ -245,6 +251,7 @@ final class AdminStorageController extends AbstractController
     #[Route('/media/{id}/delete', name: 'app_admin_media_delete', requirements: ['id' => '\\d+'], methods: ['POST'])]
     public function delete(MediaAsset $asset, Request $request): Response
     {
+        $this->ensureActiveAsset($asset);
         if (!$this->isCsrfTokenValid('delete-media-'.$asset->getId(), $request->request->getString('_token'))) { throw $this->createAccessDeniedException(); }
         $usages = $this->usageResolver->usages($asset);
         if ($usages !== []) {
@@ -364,6 +371,13 @@ final class AdminStorageController extends AbstractController
         }
 
         return $slug;
+    }
+
+    private function ensureActiveAsset(MediaAsset $asset): void
+    {
+        if ($asset->isDeletionPending()) {
+            throw new ConflictHttpException('Diese Datei ist bereits zur sicheren Löschung vorgemerkt und kann nicht mehr verändert werden.');
+        }
     }
 
     private function optional(mixed $value): ?string
