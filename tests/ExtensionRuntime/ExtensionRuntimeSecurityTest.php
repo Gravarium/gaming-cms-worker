@@ -85,4 +85,25 @@ final class ExtensionRuntimeSecurityTest extends TestCase
         self::assertSame(['at', 'extension', 'operation', 'status'], array_keys($entry));
         self::assertSame(0600, fileperms($file) & 0777);
     }
+    public function testRuntimeStateRefusesSymbolicLinkFile(): void
+    {
+        $target = $this->directory.'/real-state.json';
+        file_put_contents($target, '{}');
+        $link = $this->directory.'/state-link.json';
+        self::assertTrue(symlink($target, $link));
+
+        $this->expectException(\RuntimeException::class);
+        (new ExtensionRuntimeState($link))->failure('module:example');
+    }
+
+    public function testRuntimeAuditRefusesSymbolicLinkFile(): void
+    {
+        $target = $this->directory.'/real-audit.jsonl';
+        file_put_contents($target, '');
+        $link = $this->directory.'/audit-link.jsonl';
+        self::assertTrue(symlink($target, $link));
+
+        $this->expectException(\RuntimeException::class);
+        (new ExtensionRuntimeAudit($link))->record('module:example', 'content.read', 'success');
+    }
 }

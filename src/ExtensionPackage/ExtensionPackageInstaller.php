@@ -21,8 +21,14 @@ final readonly class ExtensionPackageInstaller
         $stage = $root.'/.stage-'.$manifest->type.'-'.$manifest->key.'-'.bin2hex(random_bytes(6));
         $rollback = $root.'/.rollback-'.$manifest->type.'-'.$manifest->key.'-'.bin2hex(random_bytes(6));
 
+        if (is_link($root) || is_link($typeRoot)) {
+            throw new \DomainException('Extension install roots may not be symbolic links.');
+        }
         if (!is_dir($typeRoot) && !mkdir($typeRoot, 0750, true) && !is_dir($typeRoot)) {
             throw new \RuntimeException('Extension install root cannot be created.');
+        }
+        if (is_link($target)) {
+            throw new \DomainException('Existing extension target may not be a symbolic link.');
         }
 
         try {
@@ -82,6 +88,9 @@ final readonly class ExtensionPackageInstaller
 
     private function removeTree(string $root): void
     {
+        if (is_link($root)) {
+            throw new \DomainException('Extension cleanup refuses symbolic-link roots.');
+        }
         $iterator = new \RecursiveIteratorIterator(
             new \RecursiveDirectoryIterator($root, \FilesystemIterator::SKIP_DOTS),
             \RecursiveIteratorIterator::CHILD_FIRST,

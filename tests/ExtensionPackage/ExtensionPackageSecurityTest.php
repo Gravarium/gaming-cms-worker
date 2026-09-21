@@ -102,4 +102,21 @@ final class ExtensionPackageSecurityTest extends TestCase
         $this->expectException(\DomainException::class);
         (new ExtensionPackageVerifier($this->keys, new ExtensionCapabilityPolicy()))->verify($this->package);
     }
+    public function testInstallerRejectsExistingSymbolicLinkTarget(): void
+    {
+        $verifier = new ExtensionPackageVerifier($this->keys, new ExtensionCapabilityPolicy());
+        $installRoot = $this->temp.'/installed';
+        self::assertTrue(mkdir($installRoot.'/theme', 0750, true));
+        $target = $installRoot.'/theme/signed-theme';
+        self::assertTrue(symlink($this->package, $target));
+
+        try {
+            (new ExtensionPackageInstaller($verifier, $installRoot))->install($this->package);
+            self::fail('Symbolic-link extension target was accepted.');
+        } catch (\DomainException) {
+            self::addToAssertionCount(1);
+        } finally {
+            @unlink($target);
+        }
+    }
 }

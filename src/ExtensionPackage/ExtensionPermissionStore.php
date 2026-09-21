@@ -84,6 +84,9 @@ final readonly class ExtensionPermissionStore
     private function write(array $permissions): void
     {
         $directory = dirname($this->permissionsFile);
+        if (is_link($directory)) {
+            throw new \RuntimeException('Extension permission directory may not be a symbolic link.');
+        }
         if (!is_dir($directory) && !mkdir($directory, 0700, true) && !is_dir($directory)) {
             throw new \RuntimeException('Extension permission directory cannot be created.');
         }
