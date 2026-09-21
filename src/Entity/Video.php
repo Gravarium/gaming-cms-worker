@@ -34,7 +34,7 @@ class Video
     private ?VideoCategory $category = null;
 
     #[ORM\ManyToOne(targetEntity: MediaAsset::class)]
-    #[ORM\JoinColumn(onDelete: 'SET NULL')]
+    #[ORM\JoinColumn(onDelete: 'RESTRICT')]
     private ?MediaAsset $mediaAsset = null;
 
     /** @var Collection<int, VideoPlaylist> */
