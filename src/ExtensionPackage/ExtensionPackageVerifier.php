@@ -90,6 +90,9 @@ final readonly class ExtensionPackageVerifier
             if ($item->isLink()) {
                 throw new \DomainException('Extension packages may not contain symbolic links.');
             }
+            if (!$item->isFile() && !$item->isDir()) {
+                throw new \DomainException('Extension packages may contain only regular files and directories.');
+            }
             if ($item->isFile()) {
                 $relative = substr($item->getPathname(), strlen($root) + 1);
                 if (!isset($allowed[$relative])) {
