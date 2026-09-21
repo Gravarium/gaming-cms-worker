@@ -45,7 +45,10 @@ final readonly class ExtensionPackageInstaller
 
         try {
             $this->copyPackage($packageDirectory, $stage);
-            $this->verifier->verify($stage);
+            $stagedManifest = $this->verifier->verify($stage);
+            if (!$this->sameManifest($manifest, $stagedManifest)) {
+                throw new \DomainException('Extension package changed after its initial verification.');
+            }
 
             if (is_dir($target) && !rename($target, $rollback)) {
                 throw new \RuntimeException('Existing extension could not be staged for rollback.');
@@ -70,6 +73,17 @@ final readonly class ExtensionPackageInstaller
         }
 
         return $manifest;
+    }
+
+    private function sameManifest(ExtensionManifest $expected, ExtensionManifest $actual): bool
+    {
+        return $expected->type === $actual->type
+            && $expected->key === $actual->key
+            && $expected->name === $actual->name
+            && $expected->version === $actual->version
+            && $expected->cmsConstraint === $actual->cmsConstraint
+            && $expected->files === $actual->files
+            && $expected->capabilities === $actual->capabilities;
     }
 
     private function copyPackage(string $source, string $target): void
