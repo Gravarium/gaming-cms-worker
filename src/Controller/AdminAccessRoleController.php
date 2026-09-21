@@ -96,7 +96,12 @@ final class AdminAccessRoleController extends AbstractController
             }
         }
 
-        return $this->render('admin/access_role/form.html.twig', ['form' => $form, 'heading' => $heading, 'role' => $role]);
+        $response = $this->render('admin/access_role/form.html.twig', ['form' => $form, 'heading' => $heading, 'role' => $role]);
+        if ($form->isSubmitted() && !$form->isValid()) {
+            $response->setStatusCode(Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+
+        return $response;
     }
 
     private function ensureCanManageRole(AccessRole $role): void

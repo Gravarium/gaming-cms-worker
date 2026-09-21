@@ -69,7 +69,12 @@ final class GamingController extends AbstractController
             return $this->redirectToRoute('app_guild_show', ['slug' => $guild->getSlug()]);
         }
 
-        return $this->render('gaming/apply.html.twig', ['guild' => $guild, 'form' => $form]);
+        $response = $this->render('gaming/apply.html.twig', ['guild' => $guild, 'form' => $form]);
+        if ($form->isSubmitted() && !$form->isValid()) {
+            $response->setStatusCode(Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+
+        return $response;
     }
 
     private function publicGuild(string $slug): Guild

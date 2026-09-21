@@ -72,11 +72,16 @@ final class AccountController extends AbstractController
             }
         }
 
-        return $this->render('account/security.html.twig', [
+        $response = $this->render('account/security.html.twig', [
             'form' => $form,
             'sessions' => $sessions->activeFor($user),
             'currentSessionHash' => hash('sha256', $request->getSession()->getId()),
         ]);
+        if ($form->isSubmitted() && !$form->isValid()) {
+            $response->setStatusCode(Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+
+        return $response;
     }
 
     #[Route('/account/security/sessions/{id}/revoke', name: 'app_account_session_revoke', requirements: ['id' => '\\d+'], methods: ['POST'])]

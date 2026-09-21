@@ -74,7 +74,12 @@ final class AdminUserController extends AbstractController
             return $this->redirectToRoute('app_admin_user_index');
         }
 
-        return $this->render('admin/user/form.html.twig', ['form' => $form, 'heading' => 'Benutzer anlegen']);
+        $response = $this->render('admin/user/form.html.twig', ['form' => $form, 'heading' => 'Benutzer anlegen']);
+        if ($form->isSubmitted() && !$form->isValid()) {
+            $response->setStatusCode(Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+
+        return $response;
     }
 
     #[Route('/{id}/send-verification', name: 'app_admin_user_send_verification', requirements: ['id' => '\d+'], methods: ['POST'])]
@@ -196,7 +201,12 @@ final class AdminUserController extends AbstractController
             return $this->redirectToRoute('app_admin_user_index');
         }
 
-        return $this->render('admin/user/form.html.twig', ['form' => $form, 'heading' => 'Benutzer bearbeiten', 'edited_user' => $user]);
+        $response = $this->render('admin/user/form.html.twig', ['form' => $form, 'heading' => 'Benutzer bearbeiten', 'edited_user' => $user]);
+        if ($form->isSubmitted() && !$form->isValid()) {
+            $response->setStatusCode(Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+
+        return $response;
     }
 
     #[Route('/{id}/sessions', name: 'app_admin_user_sessions', requirements: ['id' => '\d+'], methods: ['GET'])]
