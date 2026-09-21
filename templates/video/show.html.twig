@@ -7,7 +7,7 @@
     <a class="button-link button-secondary" href="{{ path('app_video_index') }}">Alle Videos</a>
 </header>
 <main class="video-page">
-    <p class="eyebrow">{{ video.category ? video.category.name : 'Video' }}</p>
+    <p class="eyebrow">{{ video.category and video.category.enabled ? video.category.name : 'Video' }}</p>
     <h1>{{ video.title }}</h1>
     {% if player %}
         <div class="video-player">

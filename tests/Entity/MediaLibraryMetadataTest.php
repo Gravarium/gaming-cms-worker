@@ -42,6 +42,16 @@ final class MediaLibraryMetadataTest extends TestCase
         $child->setParent($child);
     }
 
+    public function testFolderRejectsMovingAncestorBelowDescendant(): void
+    {
+        $root = (new MediaFolder())->setName('Root')->setSlug('root');
+        $child = (new MediaFolder())->setName('Child')->setSlug('child')->setParent($root);
+        $grandchild = (new MediaFolder())->setName('Grandchild')->setSlug('grandchild')->setParent($child);
+
+        $this->expectException(\DomainException::class);
+        $root->setParent($grandchild);
+    }
+
     public function testMediaTypeHelpersRemainStable(): void
     {
         $asset = (new MediaAsset())->setMimeType('image/webp');

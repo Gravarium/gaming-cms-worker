@@ -17,7 +17,7 @@ final class MediaReplicationTaskTest extends TestCase
             ->setAsset($asset)
             ->setTargetKey(' Archive.One ')
             ->setProviderKey(' S3-Compatible ')
-            ->setObjectKey('/news/example.jpg')
+            ->setObjectKey('news/example.jpg')
             ->setStagedFilename('0123456789abcdef0123456789abcdef.bin');
 
         self::assertSame('archive.one', $task->getTargetKey());
@@ -34,5 +34,11 @@ final class MediaReplicationTaskTest extends TestCase
     {
         $this->expectException(\InvalidArgumentException::class);
         (new MediaReplicationTask())->setStagedFilename('../secret');
+    }
+
+    public function testRejectsUnsafeObjectKey(): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        (new MediaReplicationTask())->setObjectKey('media/../secret');
     }
 }

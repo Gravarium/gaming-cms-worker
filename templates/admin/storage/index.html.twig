@@ -28,6 +28,25 @@
         {% endfor %}
     </section>
 
+    {% if folders %}
+        <section class="panel">
+            <p class="eyebrow">Ordnerstruktur</p>
+            <h2>Medienordner</h2>
+            <div class="row-actions">
+                {% for folder in folders %}
+                    <span>
+                        {{ folder.pathLabel }}
+                        <a href="{{ path('app_admin_media_folder_edit', {id: folder.id}) }}">Bearbeiten</a>
+                        <form method="post" action="{{ path('app_admin_media_folder_delete', {id: folder.id}) }}" onsubmit="return confirm('Leeren Ordner wirklich löschen?');">
+                            <input type="hidden" name="_token" value="{{ csrf_token('delete-media-folder-' ~ folder.id) }}">
+                            <button class="text-danger" type="submit">Löschen</button>
+                        </form>
+                    </span>
+                {% endfor %}
+            </div>
+        </section>
+    {% endif %}
+
     <div class="media-library-heading">
         <div><p class="eyebrow">Dateiverwaltung</p><h2>Medienbibliothek</h2><p class="muted">{{ assets|length }} Treffer · {{ (totalSize / 1048576)|number_format(2, ',', '.') }} MB</p></div>
         <div class="top-actions"><a class="button-link" href="{{ path('app_admin_media_upload') }}">Neue Datei</a><a class="button-link button-secondary" href="{{ path('app_admin_media_folder_new') }}">Neuer Ordner</a></div>

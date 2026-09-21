@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Entity\MediaAsset;
 use App\Entity\ModuleStorageSetting;
 use App\Form\SiteSettingsType;
 use App\Repository\SiteSettingsRepository;
@@ -55,27 +56,38 @@ final class AdminSettingsController extends AbstractController
             }
 
             if ($form->isValid()) {
+                /** @var list<MediaAsset> $newAssets */
+                $newAssets = [];
                 try {
                     if ($logo instanceof UploadedFile) {
-                        $settings->setLogoPath($this->mediaStorage->storeUpload($logo, self::MODULE_KEY, 'Website-Logo')->getLocation());
+                        $asset = $this->mediaStorage->storeUpload($logo, self::MODULE_KEY, 'Website-Logo');
+                        $newAssets[] = $asset;
+                        $settings->setLogoPath($asset->getLocation());
                     } elseif ($logoUrl !== '') {
-                        $settings->setLogoPath($this->mediaStorage->storeExternal($logoUrl, self::MODULE_KEY, 'Website-Logo')->getLocation());
+                        $asset = $this->mediaStorage->storeExternal($logoUrl, self::MODULE_KEY, 'Website-Logo');
+                        $newAssets[] = $asset;
+                        $settings->setLogoPath($asset->getLocation());
                     }
 
                     if ($favicon instanceof UploadedFile) {
-                        $settings->setFaviconPath($this->mediaStorage->storeUpload($favicon, self::MODULE_KEY, 'Favicon')->getLocation());
+                        $asset = $this->mediaStorage->storeUpload($favicon, self::MODULE_KEY, 'Favicon');
+                        $newAssets[] = $asset;
+                        $settings->setFaviconPath($asset->getLocation());
                     } elseif ($faviconUrl !== '') {
-                        $settings->setFaviconPath($this->mediaStorage->storeExternal($faviconUrl, self::MODULE_KEY, 'Favicon')->getLocation());
+                        $asset = $this->mediaStorage->storeExternal($faviconUrl, self::MODULE_KEY, 'Favicon');
+                        $newAssets[] = $asset;
+                        $settings->setFaviconPath($asset->getLocation());
                     }
 
                     if ($settings->getId() === null) {
                         $this->entityManager->persist($settings);
                     }
-                    $this->entityManager->flush();
+                    $this->mediaStorage->flushWithRollback(...$newAssets);
                     $this->addFlash('success', 'Die Website-Einstellungen wurden gespeichert.');
 
                     return $this->redirectToRoute('app_admin_settings');
                 } catch (\DomainException|\RuntimeException $exception) {
+                    $this->mediaStorage->discardUncommitted(...$newAssets);
                     $form->addError(new FormError($exception->getMessage()));
                 }
             }
