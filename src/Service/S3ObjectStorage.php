@@ -42,8 +42,15 @@ final class S3ObjectStorage
         ?string $modulePublicUrl = null,
     ): string {
         $this->assertConfigured();
+        $this->assertObjectKey($objectKey);
         if (!is_file($filePath) || !is_readable($filePath)) {
             throw new \RuntimeException('Die hochzuladende Datei ist nicht lesbar.');
+        }
+
+        $modulePublicUrl = trim((string) $modulePublicUrl);
+        $resolvedPublicUrl = $modulePublicUrl !== '' ? $modulePublicUrl : trim($this->publicUrl);
+        if ($resolvedPublicUrl !== '') {
+            $this->assertPublicBaseUrl($resolvedPublicUrl);
         }
 
         $payloadHash = hash_file('sha256', $filePath);
@@ -68,12 +75,11 @@ final class S3ObjectStorage
             fclose($stream);
         }
 
-        $modulePublicUrl = trim((string) $modulePublicUrl);
         if ($modulePublicUrl !== '') {
             return rtrim($modulePublicUrl, '/').'/'.rawurlencode(basename($objectKey));
         }
-        if ($this->publicUrl !== '') {
-            return rtrim($this->publicUrl, '/').'/'.$encodedKey;
+        if ($resolvedPublicUrl !== '') {
+            return rtrim($resolvedPublicUrl, '/').'/'.$encodedKey;
         }
 
         return $url;
@@ -93,6 +99,7 @@ final class S3ObjectStorage
     public function delete(string $objectKey): void
     {
         $this->assertConfigured();
+        $this->assertObjectKey($objectKey);
         [$url, $headers] = $this->signedRequest('DELETE', $objectKey, hash('sha256', ''));
         $statusCode = $this->httpClient->request('DELETE', $url, ['headers' => $headers])->getStatusCode();
 
@@ -104,10 +111,21 @@ final class S3ObjectStorage
     /** @return array{string, array<string, string>, string} */
     private function signedRequest(string $method, string $objectKey, string $payloadHash): array
     {
+        if ($objectKey !== '') {
+            $this->assertObjectKey($objectKey);
+        }
+
         $encodedKey = implode('/', array_map('rawurlencode', explode('/', ltrim($objectKey, '/'))));
         $url = rtrim($this->endpoint, '/').'/'.rawurlencode($this->bucket).'/'.$encodedKey;
         $urlParts = parse_url($url);
-        if (!is_array($urlParts) || !isset($urlParts['host'], $urlParts['path'])) {
+        if (!is_array($urlParts)
+            || !isset($urlParts['scheme'], $urlParts['host'], $urlParts['path'])
+            || !in_array(strtolower((string) $urlParts['scheme']), ['http', 'https'], true)
+            || isset($urlParts['user'])
+            || isset($urlParts['pass'])
+            || isset($urlParts['query'])
+            || isset($urlParts['fragment'])
+        ) {
             throw new \DomainException('Der konfigurierte S3-Endpunkt ist ungültig.');
         }
 
@@ -140,6 +158,40 @@ final class S3ObjectStorage
     {
         if (!$this->isConfigured()) {
             throw new \DomainException('Der externe S3-Speicher ist noch nicht vollständig konfiguriert.');
+        }
+    }
+
+    private function assertObjectKey(string $objectKey): void
+    {
+        if ($objectKey === ''
+            || $objectKey !== trim($objectKey)
+            || mb_strlen($objectKey) > 500
+            || str_starts_with($objectKey, '/')
+            || str_contains($objectKey, '\\')
+            || preg_match('/[\x00-\x1F\x7F]/u', $objectKey) === 1
+        ) {
+            throw new \DomainException('Der Storage-Objektschlüssel ist ungültig.');
+        }
+
+        foreach (explode('/', $objectKey) as $segment) {
+            if ($segment === '' || $segment === '.' || $segment === '..') {
+                throw new \DomainException('Der Storage-Objektschlüssel ist ungültig.');
+            }
+        }
+    }
+
+    private function assertPublicBaseUrl(string $url): void
+    {
+        $parts = parse_url($url);
+        if (!is_array($parts)
+            || !isset($parts['scheme'], $parts['host'])
+            || !in_array(strtolower((string) $parts['scheme']), ['http', 'https'], true)
+            || isset($parts['user'])
+            || isset($parts['pass'])
+            || isset($parts['query'])
+            || isset($parts['fragment'])
+        ) {
+            throw new \DomainException('Die öffentliche Storage-Adresse ist ungültig.');
         }
     }
 
