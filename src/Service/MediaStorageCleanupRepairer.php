@@ -53,12 +53,31 @@ final readonly class MediaStorageCleanupRepairer
     private function localPath(string $location): string
     {
         if (!str_starts_with($location, '/uploads/media/')
-            || str_contains($location, '..')
             || str_contains($location, '\\')
+            || preg_match('/[\x00-\x1F\x7F]/u', $location) === 1
         ) {
             throw new \RuntimeException('Invalid local cleanup location.');
         }
 
-        return $this->projectDir.'/public'.$location;
+        $relative = substr($location, strlen('/uploads/media/'));
+        if ($relative === '' || mb_strlen($relative) > 500) {
+            throw new \RuntimeException('Invalid local cleanup location.');
+        }
+        $segments = explode('/', $relative);
+        foreach ($segments as $segment) {
+            if ($segment === '' || $segment === '.' || $segment === '..') {
+                throw new \RuntimeException('Invalid local cleanup location.');
+            }
+        }
+
+        $current = $this->projectDir;
+        foreach (array_merge(['public', 'uploads', 'media'], array_slice($segments, 0, -1)) as $segment) {
+            $current .= '/'.$segment;
+            if (is_link($current)) {
+                throw new \RuntimeException('Local media cleanup may not follow symbolic links.');
+            }
+        }
+
+        return $this->projectDir.'/public/uploads/media/'.$relative;
     }
 }
