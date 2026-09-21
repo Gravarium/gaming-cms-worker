@@ -44,6 +44,19 @@ final class MediaStorageCleanupJournalTest extends TestCase
         $journal->recordConnector('archive', 'video/../secret');
     }
 
+    public function testJournalRejectsSymlinkVarDirectory(): void
+    {
+        $root = $this->root();
+        $this->outside = sys_get_temp_dir().'/media-journal-var-outside-'.bin2hex(random_bytes(8));
+        self::assertTrue(mkdir($this->outside, 0700, true));
+        if (!@symlink($this->outside, $root.'/var')) {
+            self::markTestSkipped('Symbolic links are unavailable in this test environment.');
+        }
+
+        $this->expectException(\DomainException::class);
+        (new MediaStorageCleanupJournal($root))->recordLocal('/uploads/media/content/file.txt');
+    }
+
     public function testJournalRejectsSymlinkRepairDirectory(): void
     {
         $root = $this->root();
