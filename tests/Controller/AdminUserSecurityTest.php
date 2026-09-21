@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Controller;
 
 use App\Entity\AccountToken;
+use App\Entity\AccessRole;
 use App\Entity\User;
 use App\Entity\UserSession;
 use App\Repository\AccountTokenRepository;
@@ -19,6 +20,73 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 final class AdminUserSecurityTest extends WebTestCase
 {
+    public function testUserManagerCannotManageMorePrivilegedNonAdminAccount(): void
+    {
+        $client = static::createClient();
+        $manager = $this->createUser($client, 'limited-manager', [CmsPermission::USERS]);
+        $target = $this->createUser($client, 'settings-target', [CmsPermission::SETTINGS]);
+        $client->loginUser($manager);
+
+        $client->request('GET', '/admin/users/'.$target->getId().'/edit');
+        self::assertResponseStatusCodeSame(403);
+
+        $client->request('GET', '/admin/users/'.$target->getId().'/sessions');
+        self::assertResponseStatusCodeSame(403);
+
+        $client->request('POST', '/admin/users/'.$target->getId().'/send-verification');
+        self::assertResponseStatusCodeSame(403);
+    }
+
+    public function testUserManagerCannotCreateAccountWithPermissionTheyDoNotOwn(): void
+    {
+        $client = static::createClient();
+        $manager = $this->createUser($client, 'delegation-manager', [CmsPermission::USERS]);
+        $client->loginUser($manager);
+        $email = 'delegation-target-'.bin2hex(random_bytes(6)).'@example.test';
+
+        $crawler = $client->request('GET', '/admin/users/new');
+        $form = $crawler->selectButton('Speichern')->form();
+        $values = $form->getPhpValues();
+        $values['admin_user']['displayName'] = 'Delegation target';
+        $values['admin_user']['email'] = $email;
+        $values['admin_user']['permissions'] = [CmsPermission::SETTINGS];
+        $values['admin_user']['plainPassword']['first'] = 'Strong-Password-42';
+        $values['admin_user']['plainPassword']['second'] = 'Strong-Password-42';
+        $client->request('POST', '/admin/users/new', $values);
+
+        self::assertResponseStatusCodeSame(422);
+        self::assertSelectorTextContains('body', 'nur Berechtigungen vergeben');
+        self::assertNull($client->getContainer()->get(UserRepository::class)->findOneBy(['email' => $email]));
+    }
+
+    public function testUserManagerCannotAssignRoleContainingPermissionTheyDoNotOwn(): void
+    {
+        $client = static::createClient();
+        $manager = $this->createUser($client, 'role-delegation-manager', [CmsPermission::USERS]);
+        $role = (new AccessRole())
+            ->setKey('strong-role-'.bin2hex(random_bytes(3)))
+            ->setName('Strong role')
+            ->setPermissions([CmsPermission::SETTINGS]);
+        $this->em($client)->persist($role);
+        $this->em($client)->flush();
+        $client->loginUser($manager);
+        $email = 'role-delegation-target-'.bin2hex(random_bytes(6)).'@example.test';
+
+        $crawler = $client->request('GET', '/admin/users/new');
+        $form = $crawler->selectButton('Speichern')->form();
+        $values = $form->getPhpValues();
+        $values['admin_user']['displayName'] = 'Role delegation target';
+        $values['admin_user']['email'] = $email;
+        $values['admin_user']['accessRoles'] = [(string) $role->getId()];
+        $values['admin_user']['plainPassword']['first'] = 'Strong-Password-42';
+        $values['admin_user']['plainPassword']['second'] = 'Strong-Password-42';
+        $client->request('POST', '/admin/users/new', $values);
+
+        self::assertResponseStatusCodeSame(422);
+        self::assertSelectorTextContains('body', 'nur Rollen vergeben');
+        self::assertNull($client->getContainer()->get(UserRepository::class)->findOneBy(['email' => $email]));
+    }
+
     public function testUserManagerCannotManageFullAdministratorAccount(): void
     {
         $client = static::createClient();

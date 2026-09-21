@@ -14,6 +14,42 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 final class AccessRoleSecurityTest extends WebTestCase
 {
+    public function testUserManagerCannotEditRoleWithPermissionsTheyDoNotOwn(): void
+    {
+        $client = static::createClient();
+        $user = $this->createUser($client, 'role-boundary')->setPermissions([CmsPermission::USERS]);
+        $role = (new AccessRole())
+            ->setKey('higher-role-'.bin2hex(random_bytes(3)))
+            ->setName('Higher role')
+            ->setPermissions([CmsPermission::SETTINGS]);
+        $this->em($client)->persist($role);
+        $this->em($client)->flush();
+        $client->loginUser($user);
+
+        $client->request('GET', '/admin/access-roles/'.$role->getId().'/edit');
+        self::assertResponseStatusCodeSame(403);
+    }
+
+    public function testUserManagerCannotCreateRoleWithPermissionTheyDoNotOwn(): void
+    {
+        $client = static::createClient();
+        $user = $this->createUser($client, 'role-create-boundary')->setPermissions([CmsPermission::USERS]);
+        $client->loginUser($user);
+        $key = 'forbidden-role-'.bin2hex(random_bytes(3));
+
+        $crawler = $client->request('GET', '/admin/access-roles/new');
+        $form = $crawler->selectButton('Rolle speichern')->form();
+        $values = $form->getPhpValues();
+        $values['access_role']['key'] = $key;
+        $values['access_role']['name'] = 'Forbidden role';
+        $values['access_role']['permissions'] = [CmsPermission::SETTINGS];
+        $client->request('POST', '/admin/access-roles/new', $values);
+
+        self::assertResponseStatusCodeSame(422);
+        self::assertSelectorTextContains('body', 'nur Berechtigungen geben');
+        self::assertNull($client->getContainer()->get(AccessRoleRepository::class)->findOneBy(['key' => $key]));
+    }
+
     public function testUserCannotEscalateThroughRoleAssignedToOwnAccount(): void
     {
         $client = static::createClient();
@@ -49,7 +85,7 @@ final class AccessRoleSecurityTest extends WebTestCase
         $role = (new AccessRole())
             ->setKey('managed-role-'.bin2hex(random_bytes(3)))
             ->setName('Managed role')
-            ->setPermissions([CmsPermission::CONTENT]);
+            ->setPermissions([CmsPermission::USERS]);
         $this->em($client)->persist($role);
         $this->em($client)->flush();
         $client->loginUser($user);

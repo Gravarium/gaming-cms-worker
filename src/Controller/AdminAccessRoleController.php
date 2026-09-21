@@ -8,6 +8,7 @@ use App\Entity\AccessRole;
 use App\Entity\User;
 use App\Form\AccessRoleType;
 use App\Repository\AccessRoleRepository;
+use App\Security\PermissionDelegationPolicy;
 use App\Service\AuditLogger;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -25,6 +26,7 @@ final class AdminAccessRoleController extends AbstractController
         private readonly AccessRoleRepository $roles,
         private readonly EntityManagerInterface $entityManager,
         private readonly AuditLogger $audit,
+        private readonly PermissionDelegationPolicy $delegation,
     ) {}
 
     #[Route('', name: 'app_admin_access_role_index', methods: ['GET'])]
@@ -43,12 +45,15 @@ final class AdminAccessRoleController extends AbstractController
     #[Route('/{id}/edit', name: 'app_admin_access_role_edit', requirements: ['id' => '\\d+'], methods: ['GET', 'POST'])]
     public function edit(AccessRole $role, Request $request): Response
     {
+        $this->ensureCanManageRole($role);
+
         return $this->handle($role, $request, 'Rolle bearbeiten');
     }
 
     #[Route('/{id}/delete', name: 'app_admin_access_role_delete', requirements: ['id' => '\\d+'], methods: ['POST'])]
     public function delete(AccessRole $role, Request $request): Response
     {
+        $this->ensureCanManageRole($role);
         if (!$this->isCsrfTokenValid('delete-access-role-'.$role->getId(), $request->request->getString('_token'))) { throw $this->createAccessDeniedException(); }
         if ($role->isSystemRole() || !$role->getUsers()->isEmpty()) {
             $this->addFlash('error', 'Systemrollen und zugewiesene Rollen können nicht gelöscht werden.');
@@ -75,6 +80,9 @@ final class AdminAccessRoleController extends AbstractController
             $role->setPermissions($oldPermissions)->setActive($oldActive);
             $form->get('permissions')->addError(new FormError('Du kannst Rechte oder Status einer dir selbst zugewiesenen Rolle nicht ändern.'));
         }
+        if ($form->isSubmitted() && $actor instanceof User && !$this->delegation->canDelegatePermissions($actor, $role->getPermissions())) {
+            $form->get('permissions')->addError(new FormError('Du kannst einer Rolle nur Berechtigungen geben, die du selbst besitzt.'));
+        }
         if ($form->isSubmitted() && $form->isValid()) {
             if (!$new) { $role->setKey($oldKey); }
             if ($new && $this->roles->findOneBy(['key' => $role->getKey()]) !== null) {
@@ -89,5 +97,13 @@ final class AdminAccessRoleController extends AbstractController
         }
 
         return $this->render('admin/access_role/form.html.twig', ['form' => $form, 'heading' => $heading, 'role' => $role]);
+    }
+
+    private function ensureCanManageRole(AccessRole $role): void
+    {
+        $actor = $this->getUser();
+        if (!$actor instanceof User || !$this->delegation->canManageRole($actor, $role)) {
+            throw $this->createAccessDeniedException('Du darfst keine stärker privilegierte Rolle verwalten.');
+        }
     }
 }
