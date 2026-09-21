@@ -92,8 +92,12 @@ final readonly class ExtensionPackageInstaller
                 if (!is_dir($destination) && !mkdir($destination, 0750, true) && !is_dir($destination)) {
                     throw new \RuntimeException('Extension directory could not be staged.');
                 }
-            } elseif (!copy($item->getPathname(), $destination)) {
-                throw new \RuntimeException('Extension file could not be staged.');
+            } elseif ($item->isFile()) {
+                if (!copy($item->getPathname(), $destination)) {
+                    throw new \RuntimeException('Extension file could not be staged.');
+                }
+            } else {
+                throw new \DomainException('Extension packages may contain only regular files and directories.');
             }
         }
     }
