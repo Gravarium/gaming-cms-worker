@@ -22,6 +22,7 @@ final class MediaAssetRepository extends ServiceEntityRepository
     {
         $builder = $this->createQueryBuilder('asset')
             ->leftJoin('asset.folder', 'folder')->addSelect('folder')
+            ->andWhere('asset.deletionState = :active')->setParameter('active', MediaAsset::DELETION_ACTIVE)
             ->orderBy('asset.updatedAt', 'DESC')
             ->setMaxResults(250);
 
@@ -56,6 +57,23 @@ final class MediaAssetRepository extends ServiceEntityRepository
 
     public function findDuplicate(string $checksum, int $size): ?MediaAsset
     {
-        return $this->findOneBy(['checksumSha256' => $checksum, 'fileSize' => $size]);
+        return $this->findOneBy([
+            'checksumSha256' => $checksum,
+            'fileSize' => $size,
+            'deletionState' => MediaAsset::DELETION_ACTIVE,
+        ]);
+    }
+
+    /** @return list<MediaAsset> */
+    public function pendingDeletion(int $limit = 100): array
+    {
+        return $this->createQueryBuilder('asset')
+            ->andWhere('asset.deletionState = :pending')
+            ->setParameter('pending', MediaAsset::DELETION_PENDING)
+            ->orderBy('asset.deletionRequestedAt', 'ASC')
+            ->addOrderBy('asset.id', 'ASC')
+            ->setMaxResults(max(1, min(500, $limit)))
+            ->getQuery()
+            ->getResult();
     }
 }
