@@ -16,13 +16,31 @@ final readonly class ExtensionPackageInstaller
     {
         $manifest = $this->verifier->verify($packageDirectory);
         $root = rtrim($this->installRoot, '/');
+        if ($root === '' || is_link($root)) {
+            throw new \DomainException('Extension install root may not be a symbolic link.');
+        }
+        if (!is_dir($root) && !mkdir($root, 0750, true) && !is_dir($root)) {
+            throw new \RuntimeException('Extension install root cannot be created.');
+        }
+        $resolvedRoot = realpath($root);
+        if ($resolvedRoot === false) {
+            throw new \RuntimeException('Extension install root cannot be resolved.');
+        }
+        $root = $resolvedRoot;
         $typeRoot = $root.'/'.$manifest->type;
         $target = $typeRoot.'/'.$manifest->key;
         $stage = $root.'/.stage-'.$manifest->type.'-'.$manifest->key.'-'.bin2hex(random_bytes(6));
         $rollback = $root.'/.rollback-'.$manifest->type.'-'.$manifest->key.'-'.bin2hex(random_bytes(6));
 
+        if (is_link($typeRoot) || is_link($target)) {
+            throw new \DomainException('Extension install paths may not be symbolic links.');
+        }
         if (!is_dir($typeRoot) && !mkdir($typeRoot, 0750, true) && !is_dir($typeRoot)) {
             throw new \RuntimeException('Extension install root cannot be created.');
+        }
+        $resolvedTypeRoot = realpath($typeRoot);
+        if ($resolvedTypeRoot === false || dirname($resolvedTypeRoot) !== $root) {
+            throw new \DomainException('Extension type install root escapes the configured install root.');
         }
 
         try {
@@ -82,11 +100,18 @@ final readonly class ExtensionPackageInstaller
 
     private function removeTree(string $root): void
     {
+        if (is_link($root)) {
+            throw new \DomainException('Extension cleanup may not follow symbolic links.');
+        }
         $iterator = new \RecursiveIteratorIterator(
             new \RecursiveDirectoryIterator($root, \FilesystemIterator::SKIP_DOTS),
             \RecursiveIteratorIterator::CHILD_FIRST,
         );
         foreach ($iterator as $item) {
+            if ($item->isLink()) {
+                unlink($item->getPathname());
+                continue;
+            }
             $item->isDir() ? rmdir($item->getPathname()) : unlink($item->getPathname());
         }
         rmdir($root);

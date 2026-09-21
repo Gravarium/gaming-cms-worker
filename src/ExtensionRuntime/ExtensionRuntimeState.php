@@ -69,6 +69,7 @@ final readonly class ExtensionRuntimeState
     private function mutate(callable $callback): void
     {
         $directory = dirname($this->stateFile);
+        if (is_link($directory) || is_link($this->stateFile)) { throw new \DomainException('Extension runtime state may not use symbolic links.'); }
         if (!is_dir($directory) && !mkdir($directory, 0700, true) && !is_dir($directory)) { throw new \RuntimeException('Runtime state directory unavailable.'); }
         $handle = fopen($this->stateFile, 'c+');
         if ($handle === false || !flock($handle, LOCK_EX)) { throw new \RuntimeException('Runtime state lock unavailable.'); }
@@ -85,6 +86,7 @@ final readonly class ExtensionRuntimeState
     /** @return array<string,mixed> */
     private function read(): array
     {
+        if (is_link($this->stateFile)) { throw new \DomainException('Extension runtime state may not be a symbolic link.'); }
         if (!is_file($this->stateFile)) { return []; }
         try { $state = json_decode((string) file_get_contents($this->stateFile), true, 32, JSON_THROW_ON_ERROR); }
         catch (\JsonException) { throw new \DomainException('Extension runtime state is invalid.'); }

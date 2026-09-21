@@ -11,6 +11,7 @@ final readonly class ExtensionRuntimeAudit
             || !in_array($status, ['success', 'denied', 'failed'], true)
         ) { throw new \InvalidArgumentException('Invalid sanitized runtime audit event.'); }
         $directory = dirname($this->auditFile);
+        if (is_link($directory) || is_link($this->auditFile)) { throw new \DomainException('Extension runtime audit may not use symbolic links.'); }
         if (!is_dir($directory) && !mkdir($directory, 0700, true) && !is_dir($directory)) { throw new \RuntimeException('Runtime audit directory unavailable.'); }
         $line = json_encode(['at' => gmdate('c'), 'extension' => $extensionId, 'operation' => $operation, 'status' => $status], JSON_THROW_ON_ERROR)."\n";
         if (file_put_contents($this->auditFile, $line, FILE_APPEND | LOCK_EX) === false || !chmod($this->auditFile, 0600)) {
