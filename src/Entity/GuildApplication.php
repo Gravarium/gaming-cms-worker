@@ -83,7 +83,15 @@ class GuildApplication
     public function getConvertedMember(): ?GuildMember { return $this->convertedMember; }
     public function getAssignedTo(): ?User { return $this->assignedTo; }
     public function assignTo(?User $user): self { $this->assignedTo = $user; if ($user !== null && $this->status === self::STATUS_PENDING) { $this->status = self::STATUS_REVIEWING; } elseif ($user === null && $this->status === self::STATUS_REVIEWING) { $this->status = self::STATUS_PENDING; } return $this; }
-    public function setConvertedMember(?GuildMember $member): self { $this->convertedMember = $member; return $this; }
+    public function setConvertedMember(?GuildMember $member): self
+    {
+        if ($member !== null && $this->guild !== null && $member->getGuild() !== $this->guild) {
+            throw new \DomainException('A guild application cannot convert to a member of another guild.');
+        }
+        $this->convertedMember = $member;
+
+        return $this;
+    }
     public function getApplicantName(): string { return $this->applicantName; }
     public function setApplicantName(string $value): self { $this->applicantName = trim($value); return $this; }
     public function getEmail(): string { return $this->email; }

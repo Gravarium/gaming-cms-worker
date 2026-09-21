@@ -18,6 +18,7 @@ use App\Repository\GuildMemberRepository;
 use App\Repository\GuildTeamRepository;
 use App\Repository\MemberNotificationRepository;
 use App\Service\AuditLogger;
+use Doctrine\DBAL\LockMode;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -106,33 +107,62 @@ final class GuildPortalController extends AbstractController
         return $this->render('guild_portal/show.html.twig', ['guild' => $guild, 'characters' => $characters, 'members' => $this->members->activeForGuild($guild), 'teams' => $this->teams->forGuild($guild), 'events' => $this->visibleEvents($guild, $characters), 'announcements' => $this->announcements->forGuild($guild), 'signupRepository' => $this->signups]);
     }
 
-    #[Route('/{id}/event/{event}/signup', name: 'app_guild_event_signup', requirements: ['id' => '\d+', 'event' => '\d+'], methods: ['POST'])]
+    #[Route('/{id}/event/{event}/signup', name: 'app_guild_event_signup', requirements: ['id' => '\\d+', 'event' => '\\d+'], methods: ['POST'])]
     public function signup(Guild $guild, GuildEvent $event, Request $request): Response
     {
         if ($event->getGuild()?->getId() !== $guild->getId()) { throw $this->createNotFoundException(); }
-        if ($event->getStatus() !== GuildEvent::STATUS_PLANNED) { throw $this->createNotFoundException('Für diesen Termin sind keine Anmeldungen mehr möglich.'); }
         if (!$this->isCsrfTokenValid('event-signup-'.$event->getId(), (string) $request->request->get('_token'))) { throw $this->createAccessDeniedException(); }
+
         $characters = $this->characters($guild);
-        if (!$this->isVisibleToCharacters($event, $characters)) { throw $this->createAccessDeniedException('Dieser Termin gehört zu einem anderen Team.'); }
         $memberId = (int) $request->request->get('member');
         $member = null;
-        foreach ($characters as $candidate) { if ($candidate->getId() === $memberId) { $member = $candidate; break; } }
+        foreach ($characters as $candidate) {
+            if ($candidate->getId() === $memberId) { $member = $candidate; break; }
+        }
         if (!$member instanceof GuildMember) { throw $this->createAccessDeniedException('Dieser Charakter gehört nicht zu deinem Konto.'); }
-        $response = (string) $request->request->get('response');
-        if (!in_array($response, [GuildEventSignup::GOING, GuildEventSignup::MAYBE, GuildEventSignup::DECLINED], true)) { throw $this->createNotFoundException(); }
+
+        $requestedResponse = (string) $request->request->get('response');
+        if (!in_array($requestedResponse, [GuildEventSignup::GOING, GuildEventSignup::MAYBE, GuildEventSignup::DECLINED], true)) {
+            throw $this->createNotFoundException();
+        }
         $role = (string) $request->request->get('role', 'other');
         if (!in_array($role, ['tank', 'heal', 'damage', 'support', 'other'], true)) { $role = 'other'; }
-        $signup = $this->signups->forEventAndMember($event, $member) ?? (new GuildEventSignup())->setEvent($event)->setMember($member)->setUser($this->currentUser());
-        $wasConfirmed = $signup->getId() !== null && $signup->getResponse() === GuildEventSignup::GOING;
-        if ($response === GuildEventSignup::GOING && !$wasConfirmed && $event->getMaxParticipants() !== null && $this->signups->confirmedCount($event) >= $event->getMaxParticipants()) { $response = GuildEventSignup::WAITLIST; }
-        $signup->setResponse($response)->setRole($role)->setNote((string) $request->request->get('note'));
-        if ($signup->getId() === null) { $this->entityManager->persist($signup); }
-        $this->audit->record('guild_event.signup', $event, $event->getId(), $member->getCharacterName().' hat die Terminanmeldung aktualisiert.', ['response' => $response, 'role' => $role]);
-        $this->entityManager->flush();
+        $note = (string) $request->request->get('note');
+        $actor = $this->currentUser();
+
+        $response = $this->entityManager->wrapInTransaction(function (EntityManagerInterface $entityManager) use ($event, $characters, $member, $requestedResponse, $role, $note, $actor): string {
+            $entityManager->refresh($event, LockMode::PESSIMISTIC_WRITE);
+
+            if ($event->getStatus() !== GuildEvent::STATUS_PLANNED) {
+                throw $this->createNotFoundException('Für diesen Termin sind keine Anmeldungen mehr möglich.');
+            }
+            if (!$this->isVisibleToCharacters($event, $characters)) {
+                throw $this->createAccessDeniedException('Dieser Termin gehört zu einem anderen Team.');
+            }
+
+            $signup = $this->signups->forEventAndMember($event, $member)
+                ?? (new GuildEventSignup())->setEvent($event)->setMember($member)->setUser($actor);
+            $wasConfirmed = $signup->getId() !== null && $signup->getResponse() === GuildEventSignup::GOING;
+            $response = $requestedResponse;
+            if ($response === GuildEventSignup::GOING
+                && !$wasConfirmed
+                && $event->getMaxParticipants() !== null
+                && $this->signups->confirmedCount($event) >= $event->getMaxParticipants()
+            ) {
+                $response = GuildEventSignup::WAITLIST;
+            }
+
+            $signup->setResponse($response)->setRole($role)->setNote($note);
+            if ($signup->getId() === null) { $entityManager->persist($signup); }
+            $this->audit->record('guild_event.signup', $event, $event->getId(), $member->getCharacterName().' hat die Terminanmeldung aktualisiert.', ['response' => $response, 'role' => $role]);
+
+            return $response;
+        });
+
         $this->addFlash('success', $response === GuildEventSignup::WAITLIST ? 'Der Termin ist voll. Du stehst auf der Warteliste.' : 'Deine Anmeldung wurde gespeichert.');
+
         return $this->redirectToRoute('app_guild_portal_show', ['id' => $guild->getId()]);
     }
-
 
     /** @param list<GuildMember> $characters
      * @return list<GuildEvent>
