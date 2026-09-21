@@ -461,8 +461,14 @@ final class MediaStorageManager
     /** @param list<string> $paths */
     private function cleanupStagedPaths(array $paths): void
     {
+        $varDirectory = $this->projectDir.'/var';
+        $repairDirectory = $varDirectory.'/media-repair';
+        if (is_link($varDirectory) || is_link($repairDirectory)) {
+            return;
+        }
+
         foreach ($paths as $path) {
-            if (str_starts_with($path, $this->projectDir.'/var/media-repair/')
+            if (str_starts_with($path, $repairDirectory.'/')
                 && (is_file($path) || is_link($path))
             ) {
                 @unlink($path);
