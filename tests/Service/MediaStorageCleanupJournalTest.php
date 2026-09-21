@@ -36,6 +36,25 @@ final class MediaStorageCleanupJournalTest extends TestCase
         self::assertCount(1, $journal->pending());
     }
 
+    public function testTamperedJournalPayloadIsNotExecuted(): void
+    {
+        $root = $this->root();
+        $journal = new MediaStorageCleanupJournal($root);
+        $journal->recordConnector('archive', 'video/original.mp4');
+
+        $pending = $journal->pending();
+        self::assertCount(1, $pending);
+        $path = $root.'/var/media-repair/cleanup-'.$pending[0]['id'].'.json';
+        file_put_contents($path, json_encode([
+            'kind' => MediaStorageCleanupJournal::KIND_CONNECTOR,
+            'targetKey' => 'archive',
+            'value' => 'video/other.mp4',
+        ], JSON_THROW_ON_ERROR));
+
+        self::assertSame([], $journal->pending());
+        self::assertFileExists($path);
+    }
+
     public function testJournalRejectsTraversalInsteadOfPersistingIt(): void
     {
         $journal = new MediaStorageCleanupJournal($this->root());
