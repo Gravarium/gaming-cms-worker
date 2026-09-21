@@ -26,14 +26,14 @@ final class MediaDeletionRepairerTest extends KernelTestCase
             ->setOriginalName('repair.mp4')
             ->setTitle('Repair')
             ->setMimeType('video/mp4')
-            ->setFileSize(123)
-            ->markDeletionPending();
+            ->setFileSize(123);
         $video = (new Video())
             ->setTitle('Uses pending asset')
             ->setSlug('uses-pending-'.bin2hex(random_bytes(5)))
             ->setDescription('Regression test')
             ->setSourceType(Video::SOURCE_UPLOAD)
             ->setMediaAsset($asset);
+        $asset->markDeletionPending();
 
         $em->persist($asset);
         $em->persist($video);
