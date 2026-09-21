@@ -57,6 +57,18 @@ final class SecurityArchitectureTest extends TestCase
         self::assertStringContainsString('FK_CONTENT_CATEGORY_PARENT FOREIGN KEY (parent_id) REFERENCES content_category (id) ON DELETE RESTRICT', $migration);
     }
 
+    public function testStructuredMediaReferencesRestrictAssetDeletion(): void
+    {
+        $guild = $this->readProjectFile('src/Entity/Guild.php');
+        $video = $this->readProjectFile('src/Entity/Video.php');
+        $migration = $this->readProjectFile('migrations/Version20260921225000.php');
+
+        self::assertStringContainsString("#[ORM\\JoinColumn(onDelete: 'RESTRICT')]\n    private ?MediaAsset \$logo = null;", $guild);
+        self::assertStringContainsString("#[ORM\\JoinColumn(onDelete: 'RESTRICT')]\n    private ?MediaAsset \$mediaAsset = null;", $video);
+        self::assertStringContainsString('FK_GUILD_LOGO FOREIGN KEY (logo_id) REFERENCES media_asset (id) ON DELETE RESTRICT', $migration);
+        self::assertStringContainsString('FK_VIDEO_MEDIA FOREIGN KEY (media_asset_id) REFERENCES media_asset (id) ON DELETE RESTRICT', $migration);
+    }
+
     #[DataProvider('adminControllers')]
     public function testEveryAdminControllerHasAnExplicitPermissionBoundary(string $path): void
     {
