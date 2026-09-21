@@ -34,16 +34,16 @@ final class AdminCategoryController extends AbstractController
         if (!$category->getChildren()->isEmpty() || $this->entries->count(['category' => $category]) > 0) { $this->addFlash('error', 'Die Kategorie wird noch verwendet oder enthält Unterkategorien. Verschiebe diese zuerst.'); return $this->redirectToRoute('app_admin_category_index'); }
         $id = $category->getId();
         try {
-            $this->entityManager->remove($category);
-            $this->entityManager->flush();
+            $this->entityManager->wrapInTransaction(function (EntityManagerInterface $entityManager) use ($category, $id): void {
+                $this->audit->record('content_category.delete', Category::class, $id, 'Content-Kategorie gelöscht.');
+                $entityManager->remove($category);
+            });
         } catch (ForeignKeyConstraintViolationException) {
             $this->addFlash('error', 'Die Kategorie wurde parallel erneut verwendet oder erhielt eine Unterkategorie. Bitte verschiebe diese zuerst.');
 
             return $this->redirectToRoute('app_admin_category_index');
         }
 
-        $this->audit->record('content_category.delete', Category::class, $id, 'Content-Kategorie gelöscht.');
-        $this->entityManager->flush();
         $this->addFlash('success', 'Die Kategorie wurde gelöscht.');
 
         return $this->redirectToRoute('app_admin_category_index');
