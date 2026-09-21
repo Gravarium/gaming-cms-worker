@@ -69,6 +69,15 @@ final class SecurityArchitectureTest extends TestCase
         self::assertStringContainsString('FK_VIDEO_MEDIA FOREIGN KEY (media_asset_id) REFERENCES media_asset (id) ON DELETE RESTRICT', $migration);
     }
 
+    public function testExtensionInstallerRebindsStagedPackageToInitialManifest(): void
+    {
+        $installer = $this->readProjectFile('src/ExtensionPackage/ExtensionPackageInstaller.php');
+
+        self::assertStringContainsString('$stagedManifest = $this->verifier->verify($stage);', $installer);
+        self::assertStringContainsString('if (!$this->sameManifest($manifest, $stagedManifest))', $installer);
+        self::assertStringContainsString('Extension package changed after its initial verification.', $installer);
+    }
+
     #[DataProvider('adminControllers')]
     public function testEveryAdminControllerHasAnExplicitPermissionBoundary(string $path): void
     {
