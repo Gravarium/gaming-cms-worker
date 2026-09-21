@@ -20,8 +20,8 @@ final readonly class BackupSelectionSynchronizer
     public function synchronize(): void
     {
         $parent = dirname($this->outputFile);
-        if (!is_dir($parent) || is_link($parent)) {
-            throw new \RuntimeException('Das Verzeichnis für die Backup-Auswahl ist nicht sicher verfügbar.');
+        if (!is_dir($parent) || is_link($parent) || is_link($this->outputFile)) {
+            throw new \RuntimeException('Das Verzeichnis oder Ziel für die Backup-Auswahl ist nicht sicher verfügbar.');
         }
 
         $temporary = tempnam($parent, '.backup-selection.');
