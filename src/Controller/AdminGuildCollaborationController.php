@@ -65,6 +65,7 @@ final class AdminGuildCollaborationController extends AbstractController
     {
         $integration = $this->discordIntegrations->forGuild($guild) ?? (new GuildDiscordIntegration())->setGuild($guild);
         $form = $this->createForm(GuildDiscordIntegrationType::class, $integration, ['has_webhook' => $integration->hasWebhook()])->handleRequest($request);
+        $invalidSubmission = false;
         if ($form->isSubmitted()) {
             $webhookUrl = trim((string) $form->get('webhookUrl')->getData());
             if ($webhookUrl !== '') {
@@ -85,10 +86,12 @@ final class AdminGuildCollaborationController extends AbstractController
                 $this->addFlash('success', 'Die Discord-Einstellungen wurden gespeichert.');
                 return $this->redirectToRoute('app_admin_guild_discord', ['guild' => $guild->getId()]);
             }
+
+            $invalidSubmission = true;
         }
 
         $response = $this->render('admin/gaming/discord.html.twig', ['guild' => $guild, 'integration' => $integration, 'form' => $form]);
-        if ($form->isSubmitted() && !$form->isValid()) {
+        if ($invalidSubmission) {
             $response->setStatusCode(Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
