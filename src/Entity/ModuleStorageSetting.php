@@ -33,7 +33,7 @@ class ModuleStorageSetting
     private string $storageMode = self::MODE_INTERNAL;
 
     #[ORM\Column(length: 500, nullable: true)]
-    #[Assert\Url(requireTld: true)]
+    #[Assert\Url(protocols: ['http', 'https'], requireTld: true)]
     #[Assert\Length(max: 500)]
     private ?string $externalBaseUrl = null;
 
