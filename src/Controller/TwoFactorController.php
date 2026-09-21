@@ -15,6 +15,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\RateLimiter\RateLimiterFactory;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
@@ -28,6 +30,8 @@ final class TwoFactorController extends AbstractController
         private readonly AuditLogger $audit,
         private readonly UserSessionRepository $sessions,
         private readonly UserRepository $users,
+        #[Autowire(service: 'limiter.two_factor_account')]
+        private readonly RateLimiterFactory $twoFactorAccountLimiter,
     ) {}
 
     #[Route('/login/2fa', name: 'app_two_factor_challenge', methods: ['GET', 'POST'])]
@@ -44,6 +48,16 @@ final class TwoFactorController extends AbstractController
             if (!$this->isCsrfTokenValid('two-factor-challenge', (string) $request->request->get('_token'))) { throw $this->createAccessDeniedException(); }
             if ($lockedUntil > time()) {
                 $this->addFlash('error', 'Zu viele Versuche. Bitte warte bis '.date('H:i', $lockedUntil).' Uhr.');
+                return $this->redirectToRoute('app_two_factor_challenge');
+            }
+
+            $accountLimiter = $this->twoFactorAccountLimiter->create('user-'.$user->getId());
+            $accountLimit = $accountLimiter->consume(1);
+            if (!$accountLimit->isAccepted()) {
+                $this->audit->record('security.2fa.rate_limited', $user, $user->getId(), 'Zwei-Faktor-Anmeldung wegen zu vieler kontoweiter Versuche blockiert.');
+                $this->entityManager->flush();
+                $this->addFlash('error', 'Zu viele Zwei-Faktor-Versuche für dieses Konto. Bitte versuche es später erneut.');
+
                 return $this->redirectToRoute('app_two_factor_challenge');
             }
 
@@ -64,6 +78,7 @@ final class TwoFactorController extends AbstractController
                 $request->getSession()->set('two_factor_verified', true);
                 $request->getSession()->remove('two_factor_failures');
                 $request->getSession()->remove('two_factor_locked_until');
+                $accountLimiter->reset();
                 $this->audit->record('security.2fa.success', $user, $user->getId(), 'Zwei-Faktor-Anmeldung erfolgreich.');
                 $this->entityManager->flush();
                 return $this->redirectToRoute('app_account_home');
