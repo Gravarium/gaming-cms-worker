@@ -10,9 +10,11 @@ use App\Entity\MediaAssetReplica;
 use App\Entity\MediaFolder;
 use App\Entity\User;
 use App\Security\CmsPermission;
+use App\Service\MediaStorageManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 
 final class MediaStorageSecurityTest extends WebTestCase
@@ -241,6 +243,39 @@ final class MediaStorageSecurityTest extends WebTestCase
                 $em->remove($storedTarget);
             }
             $em->flush();
+            @unlink($path);
+        }
+    }
+
+    public function testInternalUploadRejectsSymlinkedModuleDirectory(): void
+    {
+        $client = static::createClient();
+        $root = (string) $client->getContainer()->getParameter('kernel.project_dir');
+        $mediaRoot = $root.'/public/uploads/media';
+        if (!is_dir($mediaRoot) && !mkdir($mediaRoot, 0777, true) && !is_dir($mediaRoot)) {
+            self::fail('Unable to prepare media root.');
+        }
+
+        $module = 'symlinktest'.bin2hex(random_bytes(3));
+        $moduleDirectory = $mediaRoot.'/'.$module;
+        $outside = sys_get_temp_dir().'/cms-media-outside-'.bin2hex(random_bytes(8));
+        self::assertTrue(mkdir($outside, 0777, true));
+        if (!@symlink($outside, $moduleDirectory)) {
+            @rmdir($outside);
+            self::markTestSkipped('Symbolic links are unavailable in this test environment.');
+        }
+
+        $path = tempnam(sys_get_temp_dir(), 'cms-media-upload-');
+        self::assertNotFalse($path);
+        file_put_contents($path, 'safe text');
+
+        try {
+            $upload = new UploadedFile($path, 'safe.txt', 'text/plain', null, true);
+            $this->expectException(\DomainException::class);
+            $client->getContainer()->get(MediaStorageManager::class)->storeUpload($upload, $module);
+        } finally {
+            @unlink($moduleDirectory);
+            @rmdir($outside);
             @unlink($path);
         }
     }
