@@ -11,6 +11,7 @@ use App\Entity\UserSession;
 use App\Form\AdminUserType;
 use App\Repository\UserRepository;
 use App\Repository\UserSessionRepository;
+use App\Security\PermissionDelegationPolicy;
 use App\Service\AccountMailer;
 use App\Service\AccountTokenManager;
 use App\Service\AuditLogger;

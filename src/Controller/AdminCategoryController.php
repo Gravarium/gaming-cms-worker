@@ -9,6 +9,7 @@ use App\Repository\ContentEntryRepository;
 use App\Service\AuditLogger;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -37,6 +38,14 @@ final class AdminCategoryController extends AbstractController
     private function form(Category $category, Request $request, string $heading): Response
     {
         $form = $this->createForm(CategoryType::class, $category)->handleRequest($request);
+        if ($form->isSubmitted()) {
+            $parent = $form->get('parent')->getData();
+            try {
+                $category->setParent($parent instanceof Category ? $parent : null);
+            } catch (\DomainException $exception) {
+                $form->get('parent')->addError(new FormError($exception->getMessage()));
+            }
+        }
         if ($form->isSubmitted() && $form->isValid()) {
             $category->setSlug($this->uniqueSlug($category->getName(), $category->getId()));
             if ($category->getId() === null) { $this->entityManager->persist($category); }
@@ -44,7 +53,12 @@ final class AdminCategoryController extends AbstractController
             $this->entityManager->flush(); $this->addFlash('success', 'Die Kategorie wurde gespeichert.');
             return $this->redirectToRoute('app_admin_category_index');
         }
-        return $this->render('admin/category/form.html.twig', ['form' => $form, 'heading' => $heading]);
+        $response = $this->render('admin/category/form.html.twig', ['form' => $form, 'heading' => $heading]);
+        if ($form->isSubmitted() && !$form->isValid()) {
+            $response->setStatusCode(Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+
+        return $response;
     }
     private function uniqueSlug(string $name, ?int $exceptId): string { $base = mb_strtolower($this->slugger->slug($name)->toString()) ?: 'kategorie'; $slug = $base; $number = 2; while ($this->categories->slugExists($slug, $exceptId)) { $slug = $base.'-'.$number++; } return $slug; }
 }
