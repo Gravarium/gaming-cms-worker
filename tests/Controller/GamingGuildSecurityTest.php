@@ -143,6 +143,36 @@ final class GamingGuildSecurityTest extends WebTestCase
         self::assertSame('damage', $signup->getRole());
     }
 
+    public function testPortalPlacesNewSignupOnWaitlistWhenCapacityIsFull(): void
+    {
+        $client = static::createClient();
+        $firstUser = $this->user($client);
+        $secondUser = $this->user($client);
+        [$guild] = $this->guilds($client);
+        $firstMember = (new GuildMember())->setGuild($guild)->setUser($firstUser)->setCharacterName('First');
+        $secondMember = (new GuildMember())->setGuild($guild)->setUser($secondUser)->setCharacterName('Second');
+        $event = (new GuildEvent())->setGuild($guild)->setTitle('Limited raid')->setDescription('Only one spot')->setMaxParticipants(1);
+        $existing = (new GuildEventSignup())->setEvent($event)->setMember($firstMember)->setUser($firstUser)->setResponse(GuildEventSignup::GOING);
+        foreach ([$firstMember, $secondMember, $event, $existing] as $entity) { $this->em($client)->persist($entity); }
+        $this->em($client)->flush();
+        $client->loginUser($secondUser);
+
+        $crawler = $client->request('GET', '/guild-area/'.$guild->getId());
+        $token = $crawler->filter('form[action="/guild-area/'.$guild->getId().'/event/'.$event->getId().'/signup"] input[name="_token"]')->attr('value');
+        $client->request('POST', '/guild-area/'.$guild->getId().'/event/'.$event->getId().'/signup', [
+            '_token' => $token,
+            'member' => $secondMember->getId(),
+            'response' => GuildEventSignup::GOING,
+            'role' => 'damage',
+        ]);
+
+        self::assertResponseRedirects('/guild-area/'.$guild->getId());
+        $signup = $this->em($client)->getRepository(GuildEventSignup::class)->findOneBy(['event' => $event, 'member' => $secondMember]);
+        self::assertInstanceOf(GuildEventSignup::class, $signup);
+        self::assertSame(GuildEventSignup::WAITLIST, $signup->getResponse());
+        self::assertSame(1, $this->em($client)->getRepository(GuildEventSignup::class)->count(['event' => $event, 'response' => GuildEventSignup::GOING]));
+    }
+
     public function testPortalRejectsOwnedCharacterFromAnotherGuild(): void
     {
         $client = static::createClient();

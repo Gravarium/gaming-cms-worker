@@ -115,6 +115,42 @@ final class GuildOperationsPlatformTest extends TestCase
         self::assertContains('status', $paths);
     }
 
+    public function testSignupRejectsMemberFromAnotherGuild(): void
+    {
+        $guild = new Guild();
+        $otherGuild = new Guild();
+        $event = (new GuildEvent())->setGuild($guild);
+        $member = (new GuildMember())->setGuild($otherGuild);
+        $signup = (new GuildEventSignup())->setEvent($event);
+
+        $this->expectException(\DomainException::class);
+        $signup->setMember($member);
+    }
+
+    public function testSignupRejectsUserThatDoesNotOwnLinkedMember(): void
+    {
+        $guild = new Guild();
+        $owner = new User();
+        $other = new User();
+        $event = (new GuildEvent())->setGuild($guild);
+        $member = (new GuildMember())->setGuild($guild)->setUser($owner);
+        $signup = (new GuildEventSignup())->setEvent($event)->setMember($member);
+
+        $this->expectException(\DomainException::class);
+        $signup->setUser($other);
+    }
+
+    public function testApplicationCannotConvertToForeignGuildMember(): void
+    {
+        $guild = new Guild();
+        $otherGuild = new Guild();
+        $application = (new GuildApplication())->setGuild($guild);
+        $member = (new GuildMember())->setGuild($otherGuild);
+
+        $this->expectException(\DomainException::class);
+        $application->setConvertedMember($member);
+    }
+
     public function testAttendanceAcceptsOnlyKnownStates(): void
     {
         $signup = new GuildEventSignup();
