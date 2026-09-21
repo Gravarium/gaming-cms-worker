@@ -47,11 +47,49 @@ class MediaReplicationTask
     public function getAsset(): ?MediaAsset { return $this->asset; }
     public function setAsset(MediaAsset $asset): self { $this->asset = $asset; return $this; }
     public function getTargetKey(): string { return $this->targetKey; }
-    public function setTargetKey(string $value): self { $this->targetKey = strtolower(trim($value)); return $this; }
+
+    public function setTargetKey(string $value): self
+    {
+        $value = strtolower(trim($value));
+        if (preg_match('/^[a-z0-9][a-z0-9_.-]*$/', $value) !== 1 || strlen($value) > 64) {
+            throw new \InvalidArgumentException('Invalid replication target key.');
+        }
+        $this->targetKey = $value;
+
+        return $this;
+    }
+
     public function getProviderKey(): string { return $this->providerKey; }
-    public function setProviderKey(string $value): self { $this->providerKey = strtolower(trim($value)); return $this; }
+
+    public function setProviderKey(string $value): self
+    {
+        $value = strtolower(trim($value));
+        if (preg_match('/^[a-z0-9][a-z0-9_.-]*$/', $value) !== 1 || strlen($value) > 64) {
+            throw new \InvalidArgumentException('Invalid replication provider key.');
+        }
+        $this->providerKey = $value;
+
+        return $this;
+    }
+
     public function getObjectKey(): string { return $this->objectKey; }
-    public function setObjectKey(string $value): self { $this->objectKey = ltrim(trim($value), '/'); return $this; }
+
+    public function setObjectKey(string $value): self
+    {
+        $value = trim($value);
+        if ($value === '' || mb_strlen($value) > 500 || str_starts_with($value, '/') || str_contains($value, '\\') || preg_match('/[\x00-\x1F\x7F]/u', $value) === 1) {
+            throw new \InvalidArgumentException('Invalid replication object key.');
+        }
+        foreach (explode('/', $value) as $segment) {
+            if ($segment === '' || $segment === '.' || $segment === '..') {
+                throw new \InvalidArgumentException('Invalid replication object key.');
+            }
+        }
+        $this->objectKey = $value;
+
+        return $this;
+    }
+
     public function getStagedFilename(): string { return $this->stagedFilename; }
     public function setStagedFilename(string $value): self
     {

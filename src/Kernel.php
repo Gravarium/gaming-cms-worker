@@ -3,6 +3,7 @@
 namespace App;
 
 use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Kernel as BaseKernel;
 
 class Kernel extends BaseKernel
@@ -16,4 +17,14 @@ class Kernel extends BaseKernel
         parent::__construct($environment, $debug);
     }
     use MicroKernelTrait;
+
+    protected function build(ContainerBuilder $container): void
+    {
+        if ($this->environment === 'prod') {
+            require_once dirname(__DIR__).'/private/ProductionExternalConnectorPrivateConfiguration.php';
+            require_once dirname(__DIR__).'/private/ProductionS3MediaTargetConfigurationProvider.php';
+        }
+
+        parent::build($container);
+    }
 }

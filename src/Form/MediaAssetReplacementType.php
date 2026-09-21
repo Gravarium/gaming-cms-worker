@@ -17,8 +17,8 @@ final class MediaAssetReplacementType extends AbstractType
     {
         $builder->add('file', FileType::class, [
             'label' => 'Neue Datei',
-            'help' => 'Die neue Datei wird zuerst vollständig geprüft und gespeichert. Erst danach werden bekannte Verwendungen umgestellt; die alte Datei bleibt als Rückfall erhalten.',
-            'constraints' => [new File(maxSize: '100M')],
+            'help' => 'Die zentrale Upload-Policy prüft Typ, Endung, Größe und Integrität passend zum bestehenden Zielmodul. Erst danach werden bekannte Verwendungen umgestellt.',
+            'constraints' => [new File(maxSize: '500M')],
         ]);
     }
 

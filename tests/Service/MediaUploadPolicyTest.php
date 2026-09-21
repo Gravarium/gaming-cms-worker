@@ -11,6 +11,7 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 final class MediaUploadPolicyTest extends TestCase
 {
+    /** @var list<string> */
     private array $files = [];
 
     protected function tearDown(): void
@@ -34,6 +35,46 @@ final class MediaUploadPolicyTest extends TestCase
         $this->expectException(\DomainException::class);
         $this->expectExceptionMessage('gefährliche Erweiterung');
         $this->policy()->assertSafe($file, 'content');
+    }
+
+    public function testRejectsPathLikeAndReservedNames(): void
+    {
+        foreach (['../notes.txt', 'folder\\notes.txt', 'CON.txt'] as $name) {
+            $file = $this->upload($name, 'safe text');
+            $reflectedName = (new \ReflectionProperty(UploadedFile::class, 'originalName'))->getValue($file);
+
+            // HttpFoundation normalizes client path components before our policy sees
+            // the name. Assert the normalization rather than claiming the policy can
+            // reject information that Symfony has already removed.
+            if ($name === '../notes.txt' || $name === 'folder\\notes.txt') {
+                self::assertSame('notes.txt', $reflectedName);
+                $this->policy()->assertSafe($file, 'content');
+                continue;
+            }
+
+            try {
+                $this->policy()->assertSafe($file, 'content');
+                self::fail('Unsafe filename accepted: '.$name);
+            } catch (\DomainException) {
+                self::addToAssertionCount(1);
+            }
+        }
+    }
+
+    public function testRejectsInvalidModuleKeyBeforeStoragePathConstruction(): void
+    {
+        $this->expectException(\DomainException::class);
+        $this->expectExceptionMessage('Zielmodul');
+
+        $this->policy()->assertSafe($this->upload('notes.txt', 'safe text'), '../content');
+    }
+
+    public function testRejectsEmptyUpload(): void
+    {
+        $this->expectException(\DomainException::class);
+        $this->expectExceptionMessage('leer');
+
+        $this->policy()->assertSafe($this->upload('empty.txt', ''), 'content');
     }
 
     public function testRejectsMimeExtensionMismatch(): void

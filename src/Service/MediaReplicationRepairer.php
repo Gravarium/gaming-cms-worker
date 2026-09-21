@@ -25,10 +25,18 @@ final readonly class MediaReplicationRepairer
     {
         $task->markAttempted();
         $asset = $task->getAsset();
-        $path = $this->projectDir.'/var/media-repair/'.$task->getStagedFilename();
+        $path = $this->stagedPath($task);
 
         if ($asset === null || !is_file($path) || is_link($path)) {
             return false;
+        }
+
+        foreach ($asset->getReplicas() as $replica) {
+            if ($replica->getTargetKey() === $task->getTargetKey()) {
+                $this->entityManager->remove($task);
+
+                return true;
+            }
         }
 
         try {
@@ -48,8 +56,20 @@ final readonly class MediaReplicationRepairer
                 ->setLocation($object->location),
         );
         $this->entityManager->remove($task);
-        @unlink($path);
 
         return true;
+    }
+
+    public function finalize(MediaReplicationTask $task): void
+    {
+        $path = $this->stagedPath($task);
+        if ((is_file($path) || is_link($path)) && !unlink($path)) {
+            throw new \RuntimeException('Die erledigte Medien-Reparaturdatei konnte nicht entfernt werden.');
+        }
+    }
+
+    private function stagedPath(MediaReplicationTask $task): string
+    {
+        return $this->projectDir.'/var/media-repair/'.$task->getStagedFilename();
     }
 }

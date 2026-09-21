@@ -6,6 +6,7 @@ namespace App\Controller;
 
 use App\Entity\Game;
 use App\Entity\Guild;
+use App\Entity\MediaAsset;
 use App\Entity\ModuleStorageSetting;
 use App\Form\GameType;
 use App\Form\GuildType;
@@ -145,21 +146,28 @@ final class AdminGamingController extends AbstractController
             }
 
             if ($form->isValid()) {
+                /** @var list<MediaAsset> $newAssets */
+                $newAssets = [];
                 try {
                     $guild->setSlug($this->uniqueSlug($guild->getName(), $guild->getId(), false));
                     if ($logoFile instanceof UploadedFile) {
-                        $guild->setLogo($this->mediaStorage->storeUpload($logoFile, self::MODULE_KEY, $guild->getName()));
+                        $logo = $this->mediaStorage->storeUpload($logoFile, self::MODULE_KEY, $guild->getName());
+                        $newAssets[] = $logo;
+                        $guild->setLogo($logo);
                     } elseif ($logoUrl !== '') {
-                        $guild->setLogo($this->mediaStorage->storeExternal($logoUrl, self::MODULE_KEY, $guild->getName()));
+                        $logo = $this->mediaStorage->storeExternal($logoUrl, self::MODULE_KEY, $guild->getName());
+                        $newAssets[] = $logo;
+                        $guild->setLogo($logo);
                     }
                     if ($guild->getId() === null) {
                         $this->entityManager->persist($guild);
                     }
-                    $this->entityManager->flush();
+                    $this->mediaStorage->flushWithRollback(...$newAssets);
                     $this->addFlash('success', 'Die Gilde wurde gespeichert.');
 
                     return $this->redirectToRoute('app_admin_gaming_index');
                 } catch (\DomainException|\RuntimeException $exception) {
+                    $this->mediaStorage->discardUncommitted(...$newAssets);
                     $form->addError(new FormError($exception->getMessage()));
                 }
             }

@@ -16,6 +16,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\HasLifecycleCallbacks]
 class MediaAsset
 {
+    public const DELETION_ACTIVE = 'active';
+    public const DELETION_PENDING = 'pending';
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -46,7 +48,7 @@ class MediaAsset
     private array $tags = [];
 
     #[ORM\ManyToOne(inversedBy: 'assets')]
-    #[ORM\JoinColumn(onDelete: 'SET NULL')]
+    #[ORM\JoinColumn(onDelete: 'RESTRICT')]
     private ?MediaFolder $folder = null;
 
     #[ORM\Column(length: 120, nullable: true)]
@@ -60,6 +62,12 @@ class MediaAsset
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $altText = null;
+
+    #[ORM\Column(length: 12, options: ['default' => self::DELETION_ACTIVE])]
+    private string $deletionState = self::DELETION_ACTIVE;
+
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $deletionRequestedAt = null;
 
     /** @var Collection<int, MediaAssetReplica> */
     #[ORM\OneToMany(mappedBy: 'asset', targetEntity: MediaAssetReplica::class, cascade: ['persist', 'remove'], orphanRemoval: true)]
@@ -116,6 +124,16 @@ class MediaAsset
     public function setChecksumSha256(?string $checksum): self { $this->checksumSha256 = $checksum; return $this; }
     public function getAltText(): ?string { return $this->altText; }
     public function setAltText(?string $altText): self { $altText = $altText === null ? null : trim($altText); $this->altText = $altText === '' ? null : $altText; return $this; }
+    public function getDeletionState(): string { return $this->deletionState; }
+    public function isDeletionPending(): bool { return $this->deletionState === self::DELETION_PENDING; }
+    public function getDeletionRequestedAt(): ?\DateTimeImmutable { return $this->deletionRequestedAt; }
+    public function markDeletionPending(): self
+    {
+        $this->deletionState = self::DELETION_PENDING;
+        $this->deletionRequestedAt ??= new \DateTimeImmutable();
+
+        return $this;
+    }
     public function getCreatedAt(): \DateTimeImmutable { return $this->createdAt; }
     public function getUpdatedAt(): \DateTimeImmutable { return $this->updatedAt; }
     /** @return Collection<int, MediaAssetReplica> */
