@@ -51,6 +51,9 @@ final readonly class MediaStorageCleanupJournal
     public function pending(int $limit = 100): array
     {
         $directory = $this->directory();
+        if (is_link($directory)) {
+            throw new \DomainException('Das Medien-Cleanup-Journal darf kein symbolischer Link sein.');
+        }
         if (!is_dir($directory)) {
             return [];
         }
@@ -93,7 +96,11 @@ final readonly class MediaStorageCleanupJournal
             throw new \InvalidArgumentException('Invalid media cleanup id.');
         }
 
-        $path = $this->directory().'/cleanup-'.$id.'.json';
+        $directory = $this->directory();
+        if (is_link($directory)) {
+            throw new \DomainException('Das Medien-Cleanup-Journal darf kein symbolischer Link sein.');
+        }
+        $path = $directory.'/cleanup-'.$id.'.json';
         if (is_file($path) && !unlink($path)) {
             throw new \RuntimeException('Der erledigte Medien-Cleanup konnte nicht aus dem Journal entfernt werden.');
         }
@@ -102,8 +109,21 @@ final readonly class MediaStorageCleanupJournal
     private function record(string $kind, ?string $targetKey, string $value): void
     {
         $directory = $this->directory();
-        if (!is_dir($directory) && !mkdir($directory, 0700, true) && !is_dir($directory)) {
+        $parent = dirname($directory);
+        if (is_link($parent) || is_link($directory)) {
+            throw new \DomainException('Das Medien-Cleanup-Journal darf keine symbolischen Links verwenden.');
+        }
+        if (!is_dir($parent) && !mkdir($parent, 0700) && !is_dir($parent)) {
             throw new \RuntimeException('Das Medien-Cleanup-Journal konnte nicht angelegt werden.');
+        }
+        if (is_link($parent)) {
+            throw new \DomainException('Das Medien-Cleanup-Journal darf keine symbolischen Links verwenden.');
+        }
+        if (!is_dir($directory) && !mkdir($directory, 0700) && !is_dir($directory)) {
+            throw new \RuntimeException('Das Medien-Cleanup-Journal konnte nicht angelegt werden.');
+        }
+        if (is_link($directory)) {
+            throw new \DomainException('Das Medien-Cleanup-Journal darf keine symbolischen Links verwenden.');
         }
 
         $id = hash('sha256', $kind."\0".($targetKey ?? '')."\0".$value);
