@@ -13,6 +13,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\RateLimiter\RateLimiterFactory;
 
 final class TwoFactorSecurityTest extends WebTestCase
 {
@@ -168,6 +169,46 @@ final class TwoFactorSecurityTest extends WebTestCase
         self::assertFalse($storedUser->isTwoFactorEnabled());
         self::assertSame($oldVersion + 1, $storedUser->getSecurityVersion());
         self::assertTrue($storedOther->isRevoked());
+    }
+
+    public function testTwoFactorFailuresAreLimitedAcrossFreshSessionsForSameAccount(): void
+    {
+        $client = static::createClient();
+        $user = $this->createUser($client, 'account-limit');
+        $secret = 'GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQ';
+        $user->enableTwoFactor(
+            $client->getContainer()->get(SensitiveDataCipher::class)->encrypt($secret),
+            [password_hash('ZZZZ-YYYY-XXXX', PASSWORD_DEFAULT)],
+        );
+        $this->em($client)->flush();
+        $userId = $user->getId();
+        self::assertNotNull($userId);
+
+        /** @var RateLimiterFactory $factory */
+        $factory = $client->getContainer()->get('limiter.two_factor_account');
+        $limiter = $factory->create('user-'.$userId);
+        $limiter->reset();
+
+        try {
+            for ($attempt = 0; $attempt < 5; ++$attempt) {
+                $client->loginUser($user);
+                $crawler = $client->request('GET', '/login/2fa');
+                $token = (string) $crawler->filter('input[name="_token"]')->attr('value');
+                $client->request('POST', '/login/2fa', ['_token' => $token, 'code' => '000000']);
+                self::assertResponseRedirects('/login/2fa');
+                $client->getRequest()->getSession()->invalidate();
+            }
+
+            $client->loginUser($user);
+            $crawler = $client->request('GET', '/login/2fa');
+            $token = (string) $crawler->filter('input[name="_token"]')->attr('value');
+            $client->request('POST', '/login/2fa', ['_token' => $token, 'code' => '000000']);
+            self::assertResponseRedirects('/login/2fa');
+            $client->followRedirect();
+            self::assertSelectorTextContains('body', 'Zu viele Zwei-Faktor-Versuche');
+        } finally {
+            $limiter->reset();
+        }
     }
 
     private function createUser(KernelBrowser $client, string $label, string $password = 'Unused-Password-42'): User
