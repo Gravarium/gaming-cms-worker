@@ -13,6 +13,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\IsTrue;
+use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
 /** @extends AbstractType<GuildApplication> */
@@ -39,11 +40,20 @@ final class GuildApplicationType extends AbstractType
                 'help' => $question->getHelpText(),
                 'required' => $question->isRequired(),
             ];
-            if ($type === TextareaType::class) { $fieldOptions['attr'] = ['rows' => 5]; }
+            if ($type === TextareaType::class) {
+                $fieldOptions['attr'] = ['rows' => 5, 'maxlength' => 5000];
+                $fieldOptions['constraints'] = [new Length(max: 5000)];
+            } elseif ($type !== CheckboxType::class) {
+                $fieldOptions['attr'] = ['maxlength' => 500];
+                $fieldOptions['constraints'] = [new Length(max: 500)];
+            }
             if ($question->isRequired()) {
-                $fieldOptions['constraints'] = $type === CheckboxType::class
-                    ? [new IsTrue(message: 'Bitte bestätige dieses Feld.')]
-                    : [new NotBlank(message: 'Bitte beantworte dieses Pflichtfeld.')];
+                $fieldOptions['constraints'] = [
+                    ...($fieldOptions['constraints'] ?? []),
+                    $type === CheckboxType::class
+                        ? new IsTrue(message: 'Bitte bestätige dieses Feld.')
+                        : new NotBlank(message: 'Bitte beantworte dieses Pflichtfeld.'),
+                ];
             }
             $builder->add('question_'.$question->getId(), $type, $fieldOptions);
         }
