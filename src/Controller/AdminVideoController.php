@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Entity\MediaAsset;
 use App\Entity\ModuleStorageSetting;
 use App\Entity\Video;
 use App\Entity\VideoCategory;
@@ -15,6 +16,7 @@ use App\Repository\VideoCategoryRepository;
 use App\Repository\VideoPlaylistRepository;
 use App\Repository\VideoRepository;
 use App\Service\MediaStorageManager;
+use App\Service\MediaUrlPolicy;
 use App\Service\VideoEmbedResolver;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -39,6 +41,7 @@ final class AdminVideoController extends AbstractController
         private readonly EntityManagerInterface $entityManager,
         private readonly SluggerInterface $slugger,
         private readonly MediaStorageManager $mediaStorage,
+        private readonly MediaUrlPolicy $urlPolicy,
         private readonly VideoEmbedResolver $embedResolver,
     ) {
     }
@@ -149,29 +152,37 @@ final class AdminVideoController extends AbstractController
                 && $storageMode === ModuleStorageSetting::MODE_EXTERNAL
                 && !$externalReady
             ) {
-                $form->get('videoFile')->addError(new FormError('Der externe Videospeicher ist noch nicht mit S3-Zugangsdaten verbunden.'));
+                $form->get('videoFile')->addError(new FormError('Der externe Videospeicher ist noch nicht mit einem Medienziel verbunden.'));
             }
             if (!$isUpload && $video->getSourceUrl() !== null && $this->embedResolver->resolve($video, 'localhost') === null) {
                 $form->get('sourceUrl')->addError(new FormError('Die URL passt nicht zur ausgewählten Videoquelle.'));
             }
+            if ($video->getThumbnailUrl() !== null && !$this->urlPolicy->isSafeRemote($video->getThumbnailUrl())) {
+                $form->get('thumbnailUrl')->addError(new FormError('Die Vorschaubild-URL ist nicht als sichere externe Medienadresse erlaubt.'));
+            }
 
             if ($form->isValid()) {
+                /** @var list<MediaAsset> $newAssets */
+                $newAssets = [];
                 try {
                     $video->setSlug($this->uniqueVideoSlug($video->getTitle(), $video->getId()));
                     if ($isUpload) {
                         $video->setSourceUrl(null);
                         if ($file instanceof UploadedFile) {
-                            $video->setMediaAsset($this->mediaStorage->storeUpload($file, self::MODULE_KEY, $video->getTitle()));
+                            $asset = $this->mediaStorage->storeUpload($file, self::MODULE_KEY, $video->getTitle());
+                            $newAssets[] = $asset;
+                            $video->setMediaAsset($asset);
                         }
                     } else {
                         $video->setMediaAsset(null);
                     }
                     if ($video->getId() === null) { $this->entityManager->persist($video); }
-                    $this->entityManager->flush();
+                    $this->mediaStorage->flushWithRollback(...$newAssets);
                     $this->addFlash('success', 'Das Video wurde gespeichert.');
 
                     return $this->redirectToRoute('app_admin_video_index');
                 } catch (\DomainException|\RuntimeException $exception) {
+                    $this->mediaStorage->discardUncommitted(...$newAssets);
                     $form->addError(new FormError($exception->getMessage()));
                 }
             }
