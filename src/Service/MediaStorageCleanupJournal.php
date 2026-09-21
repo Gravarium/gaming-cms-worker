@@ -51,8 +51,8 @@ final readonly class MediaStorageCleanupJournal
     public function pending(int $limit = 100): array
     {
         $directory = $this->directory();
-        if (is_link($directory)) {
-            throw new \DomainException('Das Medien-Cleanup-Journal darf kein symbolischer Link sein.');
+        if (is_link(dirname($directory)) || is_link($directory)) {
+            throw new \DomainException('Das Medien-Cleanup-Journal darf keine symbolischen Links verwenden.');
         }
         if (!is_dir($directory)) {
             return [];
@@ -97,8 +97,8 @@ final readonly class MediaStorageCleanupJournal
         }
 
         $directory = $this->directory();
-        if (is_link($directory)) {
-            throw new \DomainException('Das Medien-Cleanup-Journal darf kein symbolischer Link sein.');
+        if (is_link(dirname($directory)) || is_link($directory)) {
+            throw new \DomainException('Das Medien-Cleanup-Journal darf keine symbolischen Links verwenden.');
         }
         $path = $directory.'/cleanup-'.$id.'.json';
         if (is_file($path) && !unlink($path)) {
