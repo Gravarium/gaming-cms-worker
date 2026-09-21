@@ -23,7 +23,7 @@ class MenuItem
     private string $label = '';
 
     #[ORM\Column(length: 500, nullable: true)]
-    #[Assert\Url(requireTld: false)]
+    #[Assert\Url(protocols: ['http', 'https'], requireTld: true)]
     private ?string $url = null;
 
     #[ORM\ManyToOne]
@@ -47,7 +47,19 @@ class MenuItem
     public function setUrl(?string $url): self
     {
         $url = $url === null ? null : trim($url);
-        $this->url = $url === '' ? null : $url;
+        if ($url === '') {
+            $url = null;
+        }
+        if ($url !== null) {
+            $parts = parse_url($url);
+            $scheme = is_array($parts) ? strtolower((string) ($parts['scheme'] ?? '')) : '';
+            $host = is_array($parts) ? trim((string) ($parts['host'] ?? '')) : '';
+            if (!in_array($scheme, ['http', 'https'], true) || $host === '' || isset($parts['user']) || isset($parts['pass'])) {
+                throw new \InvalidArgumentException('External menu URLs must use HTTP(S) without embedded credentials.');
+            }
+        }
+        $this->url = $url;
+
         return $this;
     }
     public function getPage(): ?ContentEntry { return $this->page; }

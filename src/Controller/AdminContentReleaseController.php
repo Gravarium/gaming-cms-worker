@@ -13,6 +13,7 @@ use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\HttpKernel\Exception\ConflictHttpException;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 #[Route('/admin/content/releases')]
 #[IsGranted('CMS_CONTENT_MANAGE')]
@@ -33,6 +34,9 @@ final class AdminContentReleaseController extends AbstractController
     public function publish(ContentRelease $release, Request $request): Response
     {
         $this->assertCsrf('publish-content-release-'.$release->getId(), $request);
+        if (in_array($release->getStatus(), [ContentRelease::STATUS_CANCELLED, ContentRelease::STATUS_PUBLISHED], true)) {
+            throw new ConflictHttpException('Dieser Release ist bereits finalisiert und kann nicht erneut veröffentlicht werden.');
+        }
         $count = $release->publish(new \DateTimeImmutable());
         $this->audit->record('content_release.publish', $release, $release->getId(), 'Content-Release veröffentlicht.', ['count' => $count]);
         $this->entityManager->flush();
