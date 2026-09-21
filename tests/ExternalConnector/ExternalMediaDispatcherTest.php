@@ -60,6 +60,21 @@ final class ExternalMediaDispatcherTest extends TestCase
         self::assertSame(['primary'], array_keys($result->objectsByTarget));
     }
 
+    public function testMismatchedProviderObjectKeyIsRejectedAndExpectedKeyIsCompensated(): void
+    {
+        $calls = new \ArrayObject();
+        $dispatcher = $this->dispatcher(
+            [$this->target('primary', 'store-a', true)],
+            [$this->adapter('store-a', $calls, false, 'other/file.mp4')],
+        );
+
+        $result = $dispatcher->store(new ExternalMediaUpload('video/file.mp4', '/tmp/file.mp4', 'video/mp4'));
+
+        self::assertSame(ExternalConnectorExecutionSummary::STATUS_FAILED, $result->summary->status());
+        self::assertSame([], $result->objectsByTarget);
+        self::assertSame(['store:primary', 'delete:primary'], iterator_to_array($calls));
+    }
+
     public function testRequiredFailureRollsBackSuccessfulUploads(): void
     {
         $calls = new \ArrayObject();
@@ -82,14 +97,15 @@ final class ExternalMediaDispatcherTest extends TestCase
     }
 
     /** @param \ArrayObject<int, string> $calls */
-    private function adapter(string $provider, \ArrayObject $calls, bool $fail = false): ExternalMediaConnectorAdapter
+    private function adapter(string $provider, \ArrayObject $calls, bool $fail = false, ?string $returnedObjectKey = null): ExternalMediaConnectorAdapter
     {
-        return new class($provider, $calls, $fail) implements ExternalMediaConnectorAdapter {
+        return new class($provider, $calls, $fail, $returnedObjectKey) implements ExternalMediaConnectorAdapter {
             /** @param \ArrayObject<int, string> $calls */
             public function __construct(
                 private readonly string $provider,
                 private readonly \ArrayObject $calls,
                 private readonly bool $fail,
+                private readonly ?string $returnedObjectKey,
             ) {
             }
 
@@ -103,7 +119,7 @@ final class ExternalMediaDispatcherTest extends TestCase
                     throw new \RuntimeException('Provider failure with potentially sensitive details.');
                 }
 
-                return new ExternalMediaObject($upload->objectKey, 'https://media.invalid/'.$target->targetKey.'/'.$upload->objectKey, 123);
+                return new ExternalMediaObject($this->returnedObjectKey ?? $upload->objectKey, 'https://media.invalid/'.$target->targetKey.'/'.$upload->objectKey, 123);
             }
 
             public function delete(ExternalConnectorTargetDefinition $target, string $objectKey): void
