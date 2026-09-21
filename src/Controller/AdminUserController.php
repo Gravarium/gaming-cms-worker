@@ -239,6 +239,7 @@ final class AdminUserController extends AbstractController
         }
     }
 
+    /** @param FormInterface<mixed> $form */
     private function validateDelegation(User $actor, User $target, FormInterface $form): void
     {
         if (!$this->delegation->canDelegatePermissions($actor, $target->getPermissions())) {
