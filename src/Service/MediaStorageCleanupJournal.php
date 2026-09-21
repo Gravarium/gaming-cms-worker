@@ -35,16 +35,7 @@ final readonly class MediaStorageCleanupJournal
 
     public function recordLocal(string $location): void
     {
-        $location = trim($location);
-        if (!str_starts_with($location, '/uploads/media/')
-            || str_contains($location, '..')
-            || str_contains($location, '\\')
-            || preg_match('/[\x00-\x1F\x7F]/u', $location) === 1
-        ) {
-            throw new \InvalidArgumentException('Invalid local media cleanup location.');
-        }
-
-        $this->record(self::KIND_LOCAL, null, $location);
+        $this->record(self::KIND_LOCAL, null, $this->safeLocalLocation($location));
     }
 
     /** @return list<array{id:string,kind:string,targetKey:?string,value:string}> */
@@ -80,7 +71,31 @@ final readonly class MediaStorageCleanupJournal
             $kind = (string) ($decoded['kind'] ?? '');
             $targetKey = isset($decoded['targetKey']) && is_string($decoded['targetKey']) ? $decoded['targetKey'] : null;
             $value = (string) ($decoded['value'] ?? '');
-            if (!in_array($kind, [self::KIND_CONNECTOR, self::KIND_LEGACY_S3, self::KIND_LOCAL], true) || $value === '') {
+            try {
+                if ($kind === self::KIND_CONNECTOR) {
+                    if ($targetKey === null || preg_match('/^[a-z0-9][a-z0-9_.-]*$/', $targetKey) !== 1) {
+                        continue;
+                    }
+                    $value = $this->safeObjectKey($value);
+                } elseif ($kind === self::KIND_LEGACY_S3) {
+                    if ($targetKey !== null) {
+                        continue;
+                    }
+                    $value = $this->safeObjectKey($value);
+                } elseif ($kind === self::KIND_LOCAL) {
+                    if ($targetKey !== null) {
+                        continue;
+                    }
+                    $value = $this->safeLocalLocation($value);
+                } else {
+                    continue;
+                }
+            } catch (\InvalidArgumentException) {
+                continue;
+            }
+
+            $expectedId = hash('sha256', $kind."\0".($targetKey ?? '')."\0".$value);
+            if (!hash_equals($expectedId, $id)) {
                 continue;
             }
 
@@ -146,6 +161,21 @@ final readonly class MediaStorageCleanupJournal
             throw new \RuntimeException('Der Medien-Cleanup konnte nicht atomar vorgemerkt werden.');
         }
         @chmod($path, 0600);
+    }
+
+    private function safeLocalLocation(string $location): string
+    {
+        $location = trim($location);
+        if (!str_starts_with($location, '/uploads/media/')
+            || mb_strlen($location) > 500
+            || str_contains($location, '..')
+            || str_contains($location, '\\')
+            || preg_match('/[\x00-\x1F\x7F]/u', $location) === 1
+        ) {
+            throw new \InvalidArgumentException('Invalid local media cleanup location.');
+        }
+
+        return $location;
     }
 
     private function safeObjectKey(string $objectKey): string
