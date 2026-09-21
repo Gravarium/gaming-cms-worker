@@ -30,9 +30,9 @@ final class MediaAssetUploadType extends AbstractType
             ])
             ->add('file', FileType::class, [
                 'label' => 'Datei',
-                'help' => 'Bilder, Videos, Audio, PDF, Text- und ZIP-Dateien bis 100 MB. Aktive Formate wie SVG sind gesperrt.',
+                'help' => 'Erlaubte Größe wird serverseitig je Zielmodul begrenzt: Branding/Gaming 5 MB, Standard 100 MB, Video 500 MB. Aktive Formate wie SVG/HTML/XML sind gesperrt.',
                 'constraints' => [new File(
-                    maxSize: '100M',
+                    maxSize: '500M',
                     mimeTypes: [
                         'image/png', 'image/jpeg', 'image/webp', 'image/gif',
                         'image/x-icon', 'image/vnd.microsoft.icon',
