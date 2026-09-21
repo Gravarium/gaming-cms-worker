@@ -33,6 +33,9 @@ final readonly class ExternalMediaDispatcher
 
                 try {
                     $object = $adapter->store($target, $upload);
+                    if ($object->objectKey !== $upload->objectKey) {
+                        throw new \DomainException('The media provider returned an unexpected object key.');
+                    }
                 } catch (\Throwable $exception) {
                     // A timeout/fault may happen after a provider committed the deterministic object key.
                     // Try an idempotent compensation immediately. If that cannot be confirmed, surface the
@@ -75,7 +78,12 @@ final readonly class ExternalMediaDispatcher
         }
 
         try {
-            return $adapter->store($target, $upload);
+            $object = $adapter->store($target, $upload);
+            if ($object->objectKey !== $upload->objectKey) {
+                throw new \DomainException('The media provider returned an unexpected object key.');
+            }
+
+            return $object;
         } catch (\Throwable $exception) {
             // Repair uses the same deterministic key. A best-effort delete keeps a timed-out write from
             // becoming an untracked duplicate before the task is retried.
