@@ -14,7 +14,7 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 final class ModuleLifecyclePresentationTest extends WebTestCase
 {
-    private const MODULE_KEYS = ['content', 'gaming', 'notifications', 'operations'];
+    private const MODULE_KEYS = ['content', 'gaming', 'users', 'notifications', 'operations'];
 
     public function testRouteOwnershipUsesRouteNameBoundaries(): void
     {
@@ -25,6 +25,8 @@ final class ModuleLifecyclePresentationTest extends WebTestCase
         self::assertSame('content', $modules->moduleForRoute('app_news_index'));
         self::assertSame('content', $modules->moduleForRoute('app_content_search'));
         self::assertSame('video', $modules->moduleForRoute('app_admin_video_edit'));
+        self::assertSame('gaming', $modules->moduleForRoute('app_admin_guild_member_edit'));
+        self::assertSame('users', $modules->moduleForRoute('app_admin_access_role_edit'));
         self::assertNull($modules->moduleForRoute('app_newsletter_index'));
         self::assertNull($modules->moduleForRoute('app_admin_modules_custom'));
     }
@@ -102,6 +104,40 @@ final class ModuleLifecyclePresentationTest extends WebTestCase
 
             $client->request('GET', '/admin/modules');
             self::assertResponseIsSuccessful();
+        } finally {
+            $this->resetModuleStates($client);
+        }
+    }
+
+    public function testDisabledGamingAlsoBlocksNestedGuildAdministration(): void
+    {
+        $client = static::createClient();
+        $this->resetModuleStates($client);
+
+        try {
+            $this->moduleState($client, 'gaming', false);
+            $user = $this->user($client, [CmsPermission::ACCESS, CmsPermission::GAMING]);
+            $client->loginUser($user);
+
+            $client->request('GET', '/admin/gaming/guild/999999/member');
+            self::assertResponseStatusCodeSame(404);
+        } finally {
+            $this->resetModuleStates($client);
+        }
+    }
+
+    public function testDisabledUsersAlsoBlocksAccessRoleAdministration(): void
+    {
+        $client = static::createClient();
+        $this->resetModuleStates($client);
+
+        try {
+            $this->moduleState($client, 'users', false);
+            $user = $this->user($client, [CmsPermission::ACCESS, CmsPermission::USERS]);
+            $client->loginUser($user);
+
+            $client->request('GET', '/admin/access-roles');
+            self::assertResponseStatusCodeSame(404);
         } finally {
             $this->resetModuleStates($client);
         }
