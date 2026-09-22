@@ -10,7 +10,6 @@ use App\Security\CmsPermission;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 
 final class ExternalConnectorSecurityTest extends WebTestCase
 {
@@ -27,13 +26,13 @@ final class ExternalConnectorSecurityTest extends WebTestCase
         $this->em($client)->persist($target);
         $this->em($client)->flush();
         $client->loginUser($this->user($client));
-        $client->request('GET', '/admin/connectors');
+        $crawler = $client->request('GET', '/admin/connectors');
         self::assertResponseIsSuccessful();
+        $token = (string) $crawler
+            ->filter('form[action="/admin/connectors/'.$target->getId().'/toggle"] input[name="_token"]')
+            ->attr('value');
 
-        $client->request('POST', '/admin/connectors/'.$target->getId().'/toggle', [
-            '_token' => $client->getContainer()->get(CsrfTokenManagerInterface::class)
-                ->getToken('toggle-connector-'.$target->getId())->getValue(),
-        ]);
+        $client->request('POST', '/admin/connectors/'.$target->getId().'/toggle', ['_token' => $token]);
 
         self::assertResponseRedirects('/admin/connectors');
         $this->em($client)->clear();
