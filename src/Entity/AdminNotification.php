@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use App\Repository\AdminNotificationRepository;
+use App\Security\LocalRedirectTarget;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -44,7 +45,7 @@ class AdminNotification
     public function getMessage(): string { return $this->message; }
     public function setMessage(string $message): self { $this->message = trim($message); return $this; }
     public function getLink(): ?string { return $this->link; }
-    public function setLink(?string $link): self { $this->link = $link; return $this; }
+    public function setLink(?string $link): self { $this->link = LocalRedirectTarget::requireSafe($link); return $this; }
     public function getCreatedAt(): \DateTimeImmutable { return $this->createdAt; }
     public function getReadAt(): ?\DateTimeImmutable { return $this->readAt; }
     public function isRead(): bool { return $this->readAt !== null; }

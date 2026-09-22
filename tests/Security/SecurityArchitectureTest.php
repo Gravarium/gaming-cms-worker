@@ -30,6 +30,54 @@ final class SecurityArchitectureTest extends TestCase
         self::assertStringContainsString("'%env(WEBAUTHN_ALLOWED_ORIGIN)%'", $webauthn);
     }
 
+    public function testPasskeyDeletionAndAuditShareOneFlushBoundary(): void
+    {
+        $source = $this->readProjectFile('src/Controller/PasskeyController.php');
+        $remove = strpos($source, '$this->entityManager->remove($credential);');
+        $audit = strpos($source, "'security.passkey.deleted'");
+        $flush = strpos($source, '$this->entityManager->flush();', $remove === false ? 0 : $remove);
+
+        self::assertNotFalse($remove);
+        self::assertNotFalse($audit);
+        self::assertNotFalse($flush);
+        self::assertLessThan($audit, $remove);
+        self::assertLessThan($flush, $audit);
+        self::assertStringNotContainsString('$this->credentials->remove($credential)', $source);
+    }
+
+    public function testCategoryDeletionIsDatabaseRestrictedAgainstConcurrentReuse(): void
+    {
+        $category = $this->readProjectFile('src/Entity/Category.php');
+        $content = $this->readProjectFile('src/Entity/ContentEntry.php');
+        $migration = $this->readProjectFile('migrations/Version20260921224000.php');
+
+        self::assertStringContainsString("#[ORM\\JoinColumn(onDelete: 'RESTRICT')]", $category);
+        self::assertStringContainsString("#[ORM\\JoinColumn(onDelete: 'RESTRICT')]\n    private ?Category \$category = null;", $content);
+        self::assertStringContainsString('FK_CONTENT_ENTRY_CATEGORY FOREIGN KEY (category_id) REFERENCES content_category (id) ON DELETE RESTRICT', $migration);
+        self::assertStringContainsString('FK_CONTENT_CATEGORY_PARENT FOREIGN KEY (parent_id) REFERENCES content_category (id) ON DELETE RESTRICT', $migration);
+    }
+
+    public function testStructuredMediaReferencesRestrictAssetDeletion(): void
+    {
+        $guild = $this->readProjectFile('src/Entity/Guild.php');
+        $video = $this->readProjectFile('src/Entity/Video.php');
+        $migration = $this->readProjectFile('migrations/Version20260921225000.php');
+
+        self::assertStringContainsString("#[ORM\\JoinColumn(onDelete: 'RESTRICT')]\n    private ?MediaAsset \$logo = null;", $guild);
+        self::assertStringContainsString("#[ORM\\JoinColumn(onDelete: 'RESTRICT')]\n    private ?MediaAsset \$mediaAsset = null;", $video);
+        self::assertStringContainsString('FK_GUILD_LOGO FOREIGN KEY (logo_id) REFERENCES media_asset (id) ON DELETE RESTRICT', $migration);
+        self::assertStringContainsString('FK_VIDEO_MEDIA FOREIGN KEY (media_asset_id) REFERENCES media_asset (id) ON DELETE RESTRICT', $migration);
+    }
+
+    public function testExtensionInstallerRebindsStagedPackageToInitialManifest(): void
+    {
+        $installer = $this->readProjectFile('src/ExtensionPackage/ExtensionPackageInstaller.php');
+
+        self::assertStringContainsString('$stagedManifest = $this->verifier->verify($stage);', $installer);
+        self::assertStringContainsString('if (!$this->sameManifest($manifest, $stagedManifest))', $installer);
+        self::assertStringContainsString('Extension package changed after its initial verification.', $installer);
+    }
+
     #[DataProvider('adminControllers')]
     public function testEveryAdminControllerHasAnExplicitPermissionBoundary(string $path): void
     {

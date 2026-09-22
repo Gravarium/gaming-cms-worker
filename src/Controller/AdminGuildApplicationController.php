@@ -11,6 +11,7 @@ use App\Repository\GuildApplicationRepository;
 use App\Repository\GuildRankRepository;
 use App\Repository\UserRepository;
 use App\Service\AuditLogger;
+use Doctrine\DBAL\LockMode;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -54,37 +55,44 @@ final class AdminGuildApplicationController extends AbstractController
         return $this->render('admin/gaming/application/review.html.twig', ['application' => $application]);
     }
 
-    #[Route('/{id}/{decision}', name: 'app_admin_guild_application_decide', requirements: ['id' => '\d+', 'decision' => 'accept|reject'], methods: ['POST'])]
+    #[Route('/{id}/{decision}', name: 'app_admin_guild_application_decide', requirements: ['id' => '\\d+', 'decision' => 'accept|reject'], methods: ['POST'])]
     public function decide(GuildApplication $application, string $decision, Request $request): Response
     {
         if (!$this->isCsrfTokenValid('application-'.$application->getId(), (string) $request->request->get('_token'))) { throw $this->createAccessDeniedException(); }
-        if (!$application->isOpen()) { throw $this->createNotFoundException('Diese Bewerbung wurde bereits abschließend entschieden.'); }
 
-        if ($decision === 'accept') {
-            $application->accept();
-            if ($application->getConvertedMember() === null) {
-                /** @var \App\Entity\Guild $guild */
-                $guild = $application->getGuild();
-                $rank = $this->ranks->defaultForGuild($guild);
-                $member = (new GuildMember())
-                    ->setGuild($guild)
-                    ->setUser($this->users->findOneBy(['email' => $application->getEmail()]))
-                    ->setCharacterName($application->getCharacterName())
-                    ->setCharacterClass($application->getCharacterClass())
-                    ->setPlayerName($application->getApplicantName())
-                    ->setRank($rank)
-                    ->setRankName($rank?->getName() ?? 'Mitglied')
-                    ->setActive(true);
-                $this->entityManager->persist($member);
-                $application->setConvertedMember($member);
+        $this->entityManager->wrapInTransaction(function (EntityManagerInterface $entityManager) use ($application, $decision): void {
+            $entityManager->refresh($application, LockMode::PESSIMISTIC_WRITE);
+            if (!$application->isOpen()) {
+                throw $this->createNotFoundException('Diese Bewerbung wurde bereits abschließend entschieden.');
             }
-        } else {
-            $application->reject();
-        }
 
-        $this->audit->record('guild_application.'.$decision, $application, $application->getId(), $decision === 'accept' ? 'Bewerbung angenommen.' : 'Bewerbung abgelehnt.', ['guild' => $application->getGuild()?->getName()]);
-        $this->entityManager->flush();
+            if ($decision === 'accept') {
+                $application->accept();
+                if ($application->getConvertedMember() === null) {
+                    /** @var \App\Entity\Guild $guild */
+                    $guild = $application->getGuild();
+                    $rank = $this->ranks->defaultForGuild($guild);
+                    $member = (new GuildMember())
+                        ->setGuild($guild)
+                        ->setUser($this->users->findOneBy(['email' => $application->getEmail()]))
+                        ->setCharacterName($application->getCharacterName())
+                        ->setCharacterClass($application->getCharacterClass())
+                        ->setPlayerName($application->getApplicantName())
+                        ->setRank($rank)
+                        ->setRankName($rank?->getName() ?? 'Mitglied')
+                        ->setActive(true);
+                    $entityManager->persist($member);
+                    $application->setConvertedMember($member);
+                }
+            } else {
+                $application->reject();
+            }
+
+            $this->audit->record('guild_application.'.$decision, $application, $application->getId(), $decision === 'accept' ? 'Bewerbung angenommen.' : 'Bewerbung abgelehnt.', ['guild' => $application->getGuild()?->getName()]);
+        });
+
         $this->addFlash('success', $decision === 'accept' ? 'Bewerbung angenommen und Mitglied angelegt.' : 'Die Bewerbung wurde abgelehnt.');
+
         return $this->redirectToRoute('app_admin_guild_application_index');
     }
 }

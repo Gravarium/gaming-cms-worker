@@ -58,11 +58,38 @@ class GuildEventSignup
     public function __construct() { $this->updatedAt = new \DateTimeImmutable(); }
     public function getId(): ?int { return $this->id; }
     public function getEvent(): ?GuildEvent { return $this->event; }
-    public function setEvent(GuildEvent $event): self { $this->event = $event; return $this; }
+    public function setEvent(GuildEvent $event): self
+    {
+        if ($this->member !== null && $this->member->getGuild() !== $event->getGuild()) {
+            throw new \DomainException('An event signup cannot use a member from another guild.');
+        }
+        $this->event = $event;
+
+        return $this;
+    }
     public function getMember(): ?GuildMember { return $this->member; }
-    public function setMember(GuildMember $member): self { $this->member = $member; return $this; }
+    public function setMember(GuildMember $member): self
+    {
+        if ($this->event !== null && $member->getGuild() !== $this->event->getGuild()) {
+            throw new \DomainException('An event signup cannot use a member from another guild.');
+        }
+        if ($this->user !== null && $member->getUser() !== null && $member->getUser() !== $this->user) {
+            throw new \DomainException('An event signup member must belong to the signup user.');
+        }
+        $this->member = $member;
+
+        return $this;
+    }
     public function getUser(): ?User { return $this->user; }
-    public function setUser(User $user): self { $this->user = $user; return $this; }
+    public function setUser(User $user): self
+    {
+        if ($this->member !== null && $this->member->getUser() !== null && $this->member->getUser() !== $user) {
+            throw new \DomainException('An event signup member must belong to the signup user.');
+        }
+        $this->user = $user;
+
+        return $this;
+    }
     public function getResponse(): string { return $this->response; }
     public function setResponse(string $response): self { $this->response = $response; $this->updatedAt = new \DateTimeImmutable(); return $this; }
     public function getRole(): string { return $this->role; }

@@ -14,8 +14,10 @@ use App\Repository\GuildMemberRepository;
 use App\Repository\GuildRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\RateLimiter\RateLimiterFactory;
 use Symfony\Component\Routing\Attribute\Route;
 
 final class GamingController extends AbstractController
@@ -26,6 +28,8 @@ final class GamingController extends AbstractController
         private readonly GuildMemberRepository $members,
         private readonly GuildApplicationQuestionRepository $questions,
         private readonly EntityManagerInterface $entityManager,
+        #[Autowire(service: 'limiter.guild_application')]
+        private readonly RateLimiterFactory $applicationLimiter,
     ) {}
 
     #[Route('/gaming', name: 'app_gaming_index', methods: ['GET'])]
@@ -50,6 +54,14 @@ final class GamingController extends AbstractController
         $questions = $this->questions->enabledForGuild($guild);
         $application = (new GuildApplication())->setGuild($guild);
         $form = $this->createForm(GuildApplicationType::class, $application, ['questions' => $questions])->handleRequest($request);
+        $rateLimited = false;
+        if ($form->isSubmitted()) {
+            $key = 'guild-'.$guild->getId().'-'.($request->getClientIp() ?? 'unknown');
+            if (!$this->applicationLimiter->create($key)->consume(1)->isAccepted()) {
+                $form->addError(new \Symfony\Component\Form\FormError('Zu viele Bewerbungsversuche. Bitte versuche es später erneut.'));
+                $rateLimited = true;
+            }
+        }
         if ($form->isSubmitted() && $form->isValid()) {
             $answers = [];
             foreach ($questions as $question) {
@@ -69,7 +81,14 @@ final class GamingController extends AbstractController
             return $this->redirectToRoute('app_guild_show', ['slug' => $guild->getSlug()]);
         }
 
-        return $this->render('gaming/apply.html.twig', ['guild' => $guild, 'form' => $form]);
+        $response = $this->render('gaming/apply.html.twig', ['guild' => $guild, 'form' => $form]);
+        if ($rateLimited) {
+            $response->setStatusCode(Response::HTTP_TOO_MANY_REQUESTS);
+        } elseif ($form->isSubmitted() && !$form->isValid()) {
+            $response->setStatusCode(Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+
+        return $response;
     }
 
     private function publicGuild(string $slug): Guild

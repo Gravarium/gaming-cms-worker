@@ -38,8 +38,10 @@ final class PasskeyController extends AbstractController
     {
         $credential = $this->ownedCredential($id);
         if (!$this->isCsrfTokenValid('passkey-delete-'.$id, (string) $request->request->get('_token'))) { throw $this->createAccessDeniedException(); }
-        $this->audit->record('security.passkey.deleted', $this->currentUser(), null, 'Passkey gelöscht.', ['credentialId' => $id]); $this->entityManager->flush();
-        $this->credentials->remove($credential); $this->addFlash('success', 'Der Passkey wurde gelöscht.');
+        $this->entityManager->remove($credential);
+        $this->audit->record('security.passkey.deleted', $this->currentUser(), null, 'Passkey gelöscht.', ['credentialId' => $id]);
+        $this->entityManager->flush();
+        $this->addFlash('success', 'Der Passkey wurde gelöscht.');
         return $this->redirectToRoute('app_account_passkeys');
     }
     private function ownedCredential(string $id): CredentialRecord

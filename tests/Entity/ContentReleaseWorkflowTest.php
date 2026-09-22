@@ -20,4 +20,14 @@ final class ContentReleaseWorkflowTest extends TestCase
     {
         $entry = (new ContentEntry())->setStatus(ContentEntry::STATUS_DRAFT); $release = (new ContentRelease())->setStatus(ContentRelease::STATUS_CANCELLED)->addEntry($entry); self::assertSame(0, $release->publish(new \DateTimeImmutable())); self::assertSame(ContentEntry::STATUS_DRAFT, $entry->getStatus());
     }
+
+    public function testReleaseWithOnlyTrashedEntriesCannotClaimSuccessfulPublication(): void
+    {
+        $trashed = new ContentEntry();
+        $trashed->trash();
+        $release = (new ContentRelease())->addEntry($trashed);
+
+        $this->expectException(\DomainException::class);
+        $release->publish(new \DateTimeImmutable());
+    }
 }

@@ -69,7 +69,7 @@ class ContentRelease
     {
         if ($this->status === self::STATUS_SCHEDULED) {
             if ($this->scheduledAt === null || $this->scheduledAt <= new \DateTimeImmutable()) { throw new \DomainException('Ein geplanter Release benötigt einen zukünftigen Zeitpunkt.'); }
-            if ($this->entries->isEmpty()) { throw new \DomainException('Ein geplanter Release benötigt mindestens einen Inhalt.'); }
+            if ($this->publishableEntries() === []) { throw new \DomainException('Ein geplanter Release benötigt mindestens einen nicht gelöschten Inhalt.'); }
             return;
         }
         if ($this->status === self::STATUS_DRAFT || $this->status === self::STATUS_CANCELLED) { $this->scheduledAt = null; }
@@ -78,10 +78,10 @@ class ContentRelease
     public function publish(\DateTimeImmutable $now): int
     {
         if ($this->status === self::STATUS_CANCELLED || $this->status === self::STATUS_PUBLISHED) { return 0; }
-        if ($this->entries->isEmpty()) { throw new \DomainException('Ein leerer Release kann nicht veröffentlicht werden.'); }
+        $entries = $this->publishableEntries();
+        if ($entries === []) { throw new \DomainException('Ein Release ohne veröffentlichbare Inhalte kann nicht veröffentlicht werden.'); }
         $count = 0;
-        foreach ($this->entries as $entry) {
-            if ($entry->getStatus() === ContentEntry::STATUS_TRASHED) { continue; }
+        foreach ($entries as $entry) {
             $entry->setStatus(ContentEntry::STATUS_PUBLISHED)->setScheduledAt(null)->setScheduledUnpublishAt(null)->setPublishedAt($now);
             ++$count;
         }
@@ -89,5 +89,14 @@ class ContentRelease
         $this->publishedAt = $now;
         $this->scheduledAt = null;
         return $count;
+    }
+
+    /** @return list<ContentEntry> */
+    private function publishableEntries(): array
+    {
+        return array_values(array_filter(
+            $this->entries->toArray(),
+            static fn (ContentEntry $entry): bool => $entry->getStatus() !== ContentEntry::STATUS_TRASHED,
+        ));
     }
 }

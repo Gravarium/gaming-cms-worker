@@ -54,29 +54,23 @@ class MediaFolder
 
     public function setParent(?self $parent): self
     {
-        if ($parent === null) {
-            $this->parent = null;
-
-            return $this;
+        if ($parent === $this) {
+            throw new \DomainException('Ein Medienordner kann nicht sein eigener Elternordner sein.');
         }
 
-        $seen = [];
+        $seen = [spl_object_id($this) => true];
         $cursor = $parent;
-        for ($depth = 0; $cursor !== null && $depth < 128; ++$depth) {
-            if ($cursor === $this) {
-                throw new \DomainException('Ein Medienordner darf nicht in sich selbst oder einen eigenen Unterordner verschoben werden.');
+        for ($depth = 0; $cursor !== null; ++$depth) {
+            if ($depth >= 128) {
+                throw new \DomainException('Die Medienordner-Hierarchie ist zu tief oder beschädigt.');
             }
 
             $objectId = spl_object_id($cursor);
             if (isset($seen[$objectId])) {
-                throw new \DomainException('Die ausgewählte Ordnerhierarchie enthält bereits einen Zyklus.');
+                throw new \DomainException('Die Medienordner-Hierarchie darf keinen Zyklus enthalten.');
             }
             $seen[$objectId] = true;
             $cursor = $cursor->getParent();
-        }
-
-        if ($cursor !== null) {
-            throw new \DomainException('Die ausgewählte Ordnerhierarchie ist zu tief.');
         }
 
         $this->parent = $parent;
@@ -94,23 +88,18 @@ class MediaFolder
         $seen = [];
         $cursor = $this;
 
-        $depth = 0;
-        $invalidHierarchy = false;
-        while ($cursor !== null && $depth < 128) {
+        for ($depth = 0; $cursor !== null && $depth < 128; ++$depth) {
             $objectId = spl_object_id($cursor);
             if (isset($seen[$objectId])) {
-                $invalidHierarchy = true;
+                array_unshift($parts, '[Ungültige Hierarchie]');
                 break;
             }
             $seen[$objectId] = true;
             array_unshift($parts, $cursor->getName());
             $cursor = $cursor->getParent();
-            ++$depth;
         }
 
-        if ($invalidHierarchy) {
-            array_unshift($parts, '[Ungültige Hierarchie]');
-        } elseif ($cursor !== null) {
+        if ($cursor !== null && !str_starts_with($parts[0], '[Ungültige Hierarchie]')) {
             array_unshift($parts, '[Zu tiefe Hierarchie]');
         }
 

@@ -35,22 +35,14 @@ final readonly class MediaStorageCleanupJournal
 
     public function recordLocal(string $location): void
     {
-        $location = trim($location);
-        if (!str_starts_with($location, '/uploads/media/')
-            || str_contains($location, '..')
-            || str_contains($location, '\\')
-            || preg_match('/[\x00-\x1F\x7F]/u', $location) === 1
-        ) {
-            throw new \InvalidArgumentException('Invalid local media cleanup location.');
-        }
-
-        $this->record(self::KIND_LOCAL, null, $location);
+        $this->record(self::KIND_LOCAL, null, $this->safeLocalLocation($location));
     }
 
     /** @return list<array{id:string,kind:string,targetKey:?string,value:string}> */
     public function pending(int $limit = 100): array
     {
         $directory = $this->directory();
+        $this->assertNotSymlink(dirname($directory), $directory);
         if (!is_dir($directory)) {
             return [];
         }
@@ -77,7 +69,31 @@ final readonly class MediaStorageCleanupJournal
             $kind = (string) ($decoded['kind'] ?? '');
             $targetKey = isset($decoded['targetKey']) && is_string($decoded['targetKey']) ? $decoded['targetKey'] : null;
             $value = (string) ($decoded['value'] ?? '');
-            if (!in_array($kind, [self::KIND_CONNECTOR, self::KIND_LEGACY_S3, self::KIND_LOCAL], true) || $value === '') {
+            try {
+                if ($kind === self::KIND_CONNECTOR) {
+                    if ($targetKey === null || preg_match('/^[a-z0-9][a-z0-9_.-]*$/', $targetKey) !== 1) {
+                        continue;
+                    }
+                    $value = $this->safeObjectKey($value);
+                } elseif ($kind === self::KIND_LEGACY_S3) {
+                    if ($targetKey !== null) {
+                        continue;
+                    }
+                    $value = $this->safeObjectKey($value);
+                } elseif ($kind === self::KIND_LOCAL) {
+                    if ($targetKey !== null) {
+                        continue;
+                    }
+                    $value = $this->safeLocalLocation($value);
+                } else {
+                    continue;
+                }
+            } catch (\InvalidArgumentException) {
+                continue;
+            }
+
+            $expectedId = hash('sha256', $kind."\0".($targetKey ?? '')."\0".$value);
+            if (!hash_equals($expectedId, $id)) {
                 continue;
             }
 
@@ -93,7 +109,9 @@ final readonly class MediaStorageCleanupJournal
             throw new \InvalidArgumentException('Invalid media cleanup id.');
         }
 
-        $path = $this->directory().'/cleanup-'.$id.'.json';
+        $directory = $this->directory();
+        $this->assertNotSymlink(dirname($directory), $directory);
+        $path = $directory.'/cleanup-'.$id.'.json';
         if (is_file($path) && !unlink($path)) {
             throw new \RuntimeException('Der erledigte Medien-Cleanup konnte nicht aus dem Journal entfernt werden.');
         }
@@ -102,9 +120,16 @@ final readonly class MediaStorageCleanupJournal
     private function record(string $kind, ?string $targetKey, string $value): void
     {
         $directory = $this->directory();
-        if (!is_dir($directory) && !mkdir($directory, 0700, true) && !is_dir($directory)) {
+        $parent = dirname($directory);
+        $this->assertNotSymlink($parent, $directory);
+        if (!is_dir($parent) && !mkdir($parent, 0700) && !is_dir($parent)) {
             throw new \RuntimeException('Das Medien-Cleanup-Journal konnte nicht angelegt werden.');
         }
+        $this->assertNotSymlink($parent);
+        if (!is_dir($directory) && !mkdir($directory, 0700) && !is_dir($directory)) {
+            throw new \RuntimeException('Das Medien-Cleanup-Journal konnte nicht angelegt werden.');
+        }
+        $this->assertNotSymlink($directory);
 
         $id = hash('sha256', $kind."\0".($targetKey ?? '')."\0".$value);
         $path = $directory.'/cleanup-'.$id.'.json';
@@ -128,6 +153,21 @@ final readonly class MediaStorageCleanupJournal
         @chmod($path, 0600);
     }
 
+    private function safeLocalLocation(string $location): string
+    {
+        $location = trim($location);
+        if (!str_starts_with($location, '/uploads/media/')
+            || mb_strlen($location) > 500
+            || str_contains($location, '..')
+            || str_contains($location, '\\')
+            || preg_match('/[\x00-\x1F\x7F]/u', $location) === 1
+        ) {
+            throw new \InvalidArgumentException('Invalid local media cleanup location.');
+        }
+
+        return $location;
+    }
+
     private function safeObjectKey(string $objectKey): string
     {
         $objectKey = trim($objectKey);
@@ -147,6 +187,16 @@ final readonly class MediaStorageCleanupJournal
         }
 
         return $objectKey;
+    }
+
+    private function assertNotSymlink(string ...$paths): void
+    {
+        foreach ($paths as $path) {
+            clearstatcache(true, $path);
+            if (is_link($path)) {
+                throw new \DomainException('Das Medien-Cleanup-Journal darf keine symbolischen Links verwenden.');
+            }
+        }
     }
 
     private function directory(): string

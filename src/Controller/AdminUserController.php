@@ -11,12 +11,14 @@ use App\Entity\UserSession;
 use App\Form\AdminUserType;
 use App\Repository\UserRepository;
 use App\Repository\UserSessionRepository;
+use App\Security\PermissionDelegationPolicy;
 use App\Service\AccountMailer;
 use App\Service\AccountTokenManager;
 use App\Service\AuditLogger;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormError;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
@@ -35,6 +37,7 @@ final class AdminUserController extends AbstractController
         private readonly AccountTokenManager $tokens,
         private readonly AccountMailer $mailer,
         private readonly AuditLogger $audit,
+        private readonly PermissionDelegationPolicy $delegation,
     ) {}
 
     #[Route('', name: 'app_admin_user_index', methods: ['GET'])]
@@ -54,11 +57,16 @@ final class AdminUserController extends AbstractController
     public function new(Request $request): Response
     {
         $user = new User();
-        $canAssignAdmin = $this->isGranted('ROLE_ADMIN');
+        $actor = $this->currentActor();
+        $canAssignAdmin = $actor->isAdmin();
         $form = $this->createForm(AdminUserType::class, $user, ['password_required' => true, 'can_assign_admin' => $canAssignAdmin])->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
+        if ($form->isSubmitted()) {
             if (!$canAssignAdmin) { $user->setAdmin(false); }
+            $this->validateDelegation($actor, $user, $form);
+        }
+
+        if ($form->isSubmitted() && $form->isValid()) {
             $user->setPassword($this->passwordHasher->hashPassword($user, (string) $form->get('plainPassword')->getData()));
             $this->entityManager->persist($user);
             $this->audit->record('user.created', $user, null, 'Benutzerkonto angelegt.', ['email' => $user->getEmail(), 'roles' => $this->roleKeys($user)]);
@@ -67,7 +75,12 @@ final class AdminUserController extends AbstractController
             return $this->redirectToRoute('app_admin_user_index');
         }
 
-        return $this->render('admin/user/form.html.twig', ['form' => $form, 'heading' => 'Benutzer anlegen']);
+        $response = $this->render('admin/user/form.html.twig', ['form' => $form, 'heading' => 'Benutzer anlegen']);
+        if ($form->isSubmitted() && !$form->isValid()) {
+            $response->setStatusCode(Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+
+        return $response;
     }
 
     #[Route('/{id}/send-verification', name: 'app_admin_user_send_verification', requirements: ['id' => '\d+'], methods: ['POST'])]
@@ -102,8 +115,9 @@ final class AdminUserController extends AbstractController
             'lockedUntil' => $user->getLockedUntil(),
             'lockReason' => $user->getLockReason(),
         ];
-        $canAssignAdmin = $this->isGranted('ROLE_ADMIN');
-        $editingSelf = $this->getUser() === $user;
+        $actor = $this->currentActor();
+        $canAssignAdmin = $actor->isAdmin();
+        $editingSelf = $actor === $user;
         $form = $this->createForm(AdminUserType::class, $user, [
             'can_assign_admin' => $canAssignAdmin,
             'self_edit' => $editingSelf,
@@ -138,6 +152,8 @@ final class AdminUserController extends AbstractController
                 foreach ($user->getAccessRoles()->toArray() as $role) { $user->removeAccessRole($role); }
                 foreach ($before['roles'] as $role) { $user->addAccessRole($role); }
             }
+
+            $this->validateDelegation($actor, $user, $form);
         }
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -186,7 +202,12 @@ final class AdminUserController extends AbstractController
             return $this->redirectToRoute('app_admin_user_index');
         }
 
-        return $this->render('admin/user/form.html.twig', ['form' => $form, 'heading' => 'Benutzer bearbeiten', 'edited_user' => $user]);
+        $response = $this->render('admin/user/form.html.twig', ['form' => $form, 'heading' => 'Benutzer bearbeiten', 'edited_user' => $user]);
+        if ($form->isSubmitted() && !$form->isValid()) {
+            $response->setStatusCode(Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+
+        return $response;
     }
 
     #[Route('/{id}/sessions', name: 'app_admin_user_sessions', requirements: ['id' => '\d+'], methods: ['GET'])]
@@ -212,9 +233,32 @@ final class AdminUserController extends AbstractController
 
     private function ensureCanManageTarget(User $user): void
     {
-        if ($user->isAdmin() && !$this->isGranted('ROLE_ADMIN')) {
-            throw $this->createAccessDeniedException('Nur Volladministratoren dürfen Volladministratorkonten verwalten.');
+        $actor = $this->currentActor();
+        if (!$this->delegation->canManageUser($actor, $user)) {
+            throw $this->createAccessDeniedException('Du darfst kein stärker privilegiertes Benutzerkonto verwalten.');
         }
+    }
+
+    /** @param FormInterface<mixed> $form */
+    private function validateDelegation(User $actor, User $target, FormInterface $form): void
+    {
+        if (!$this->delegation->canDelegatePermissions($actor, $target->getPermissions())) {
+            $form->get('permissions')->addError(new FormError('Du kannst nur Berechtigungen vergeben, die du selbst besitzt.'));
+        }
+
+        if (!$this->delegation->canDelegateRoles($actor, $target->getAccessRoles())) {
+            $form->get('accessRoles')->addError(new FormError('Du kannst nur Rollen vergeben, deren Berechtigungen du selbst besitzt.'));
+        }
+    }
+
+    private function currentActor(): User
+    {
+        $actor = $this->getUser();
+        if (!$actor instanceof User) {
+            throw $this->createAccessDeniedException();
+        }
+
+        return $actor;
     }
 
     /** @return list<string> */

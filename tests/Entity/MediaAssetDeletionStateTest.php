@@ -4,11 +4,28 @@ declare(strict_types=1);
 
 namespace App\Tests\Entity;
 
+use App\Entity\Guild;
 use App\Entity\MediaAsset;
+use App\Entity\Video;
 use PHPUnit\Framework\TestCase;
 
 final class MediaAssetDeletionStateTest extends TestCase
 {
+    public function testPendingAssetCannotGainNewStructuredReferences(): void
+    {
+        $asset = (new MediaAsset())->markDeletionPending();
+
+        try {
+            (new Guild())->setLogo($asset);
+            self::fail('Pending media was accepted as a guild logo.');
+        } catch (\DomainException) {
+            self::addToAssertionCount(1);
+        }
+
+        $this->expectException(\DomainException::class);
+        (new Video())->setMediaAsset($asset);
+    }
+
     public function testDeletionIntentIsStableAcrossRetries(): void
     {
         $asset = new MediaAsset();

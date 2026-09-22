@@ -33,7 +33,7 @@ class Category
     #[Assert\Length(max: 500)]
     private ?string $description = null;
     #[ORM\ManyToOne(targetEntity: self::class, inversedBy: 'children')]
-    #[ORM\JoinColumn(onDelete: 'SET NULL')]
+    #[ORM\JoinColumn(onDelete: 'RESTRICT')]
     private ?self $parent = null;
     /** @var Collection<int, self> */
     #[ORM\OneToMany(mappedBy: 'parent', targetEntity: self::class)]
@@ -49,15 +49,58 @@ class Category
     public function getDescription(): ?string { return $this->description; }
     public function setDescription(?string $description): self { $description = $description === null ? null : trim($description); $this->description = $description === '' ? null : $description; return $this; }
     public function getParent(): ?self { return $this->parent; }
-    public function setParent(?self $parent): self { $this->parent = $parent; return $this; }
+    public function setParent(?self $parent): self
+    {
+        $this->assertValidParent($parent);
+        $this->parent = $parent;
+
+        return $this;
+    }
+
     #[Assert\Callback]
     public function validateHierarchy(ExecutionContextInterface $context): void
     {
-        for ($cursor = $this->parent; $cursor !== null; $cursor = $cursor->getParent()) {
-            if ($cursor === $this) { $context->buildViolation('Die Kategorie-Hierarchie darf keinen Zyklus enthalten.')->atPath('parent')->addViolation(); return; }
+        try {
+            $this->assertValidParent($this->parent);
+        } catch (\DomainException $exception) {
+            $context->buildViolation($exception->getMessage())->atPath('parent')->addViolation();
         }
     }
+
     /** @return Collection<int, self> */
     public function getChildren(): Collection { return $this->children; }
-    public function getDisplayName(): string { return $this->parent === null ? $this->name : $this->parent->getDisplayName().' / '.$this->name; }
+
+    public function getDisplayName(): string
+    {
+        $names = [];
+        $seen = [];
+        $cursor = $this;
+        while ($cursor !== null) {
+            $id = spl_object_id($cursor);
+            if (isset($seen[$id]) || count($names) >= 100) {
+                throw new \DomainException('Die Kategorie-Hierarchie ist zyklisch oder zu tief.');
+            }
+            $seen[$id] = true;
+            array_unshift($names, $cursor->getName());
+            $cursor = $cursor->getParent();
+        }
+
+        return implode(' / ', $names);
+    }
+
+    private function assertValidParent(?self $parent): void
+    {
+        $seen = [spl_object_id($this) => true];
+        $depth = 0;
+        for ($cursor = $parent; $cursor !== null; $cursor = $cursor->getParent()) {
+            $id = spl_object_id($cursor);
+            if (isset($seen[$id])) {
+                throw new \DomainException('Die Kategorie-Hierarchie darf keinen Zyklus enthalten.');
+            }
+            $seen[$id] = true;
+            if (++$depth >= 100) {
+                throw new \DomainException('Die Kategorie-Hierarchie ist zu tief.');
+            }
+        }
+    }
 }

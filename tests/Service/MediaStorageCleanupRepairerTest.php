@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Tests\Service;
 
-use App\Entity\ExternalConnectorTarget;
 use App\ExternalConnector\ExternalConnectorAdapterRegistry;
 use App\ExternalConnector\ExternalConnectorExecutor;
 use App\ExternalConnector\ExternalConnectorRegistry;
@@ -19,11 +18,15 @@ use Symfony\Component\HttpClient\MockHttpClient;
 final class MediaStorageCleanupRepairerTest extends TestCase
 {
     private ?string $root = null;
+    private ?string $outside = null;
 
     protected function tearDown(): void
     {
         if ($this->root !== null) {
             $this->removeTree($this->root);
+        }
+        if ($this->outside !== null) {
+            $this->removeTree($this->outside);
         }
     }
 
@@ -46,6 +49,25 @@ final class MediaStorageCleanupRepairerTest extends TestCase
         $journal->recordLocal('/uploads/media/content/file.txt');
         self::assertSame(['repaired' => 1, 'failed' => 0], $this->repairer($journal, $root)->repairPending());
         self::assertSame([], $journal->pending());
+    }
+
+    public function testLocalCleanupDoesNotFollowSymlinkedParentDirectory(): void
+    {
+        $root = $this->root();
+        self::assertTrue(mkdir($root.'/public/uploads/media', 0777, true));
+        $this->outside = sys_get_temp_dir().'/media-cleanup-outside-'.bin2hex(random_bytes(8));
+        self::assertTrue(mkdir($this->outside, 0777, true));
+        file_put_contents($this->outside.'/file.txt', 'must stay');
+        if (!@symlink($this->outside, $root.'/public/uploads/media/content')) {
+            self::markTestSkipped('Symbolic links are unavailable in this test environment.');
+        }
+
+        $journal = new MediaStorageCleanupJournal($root);
+        $journal->recordLocal('/uploads/media/content/file.txt');
+
+        self::assertSame(['repaired' => 0, 'failed' => 1], $this->repairer($journal, $root)->repairPending());
+        self::assertFileExists($this->outside.'/file.txt');
+        self::assertCount(1, $journal->pending());
     }
 
     private function repairer(MediaStorageCleanupJournal $journal, string $root): MediaStorageCleanupRepairer
@@ -72,6 +94,10 @@ final class MediaStorageCleanupRepairerTest extends TestCase
 
     private function removeTree(string $path): void
     {
+        if (is_link($path)) {
+            @unlink($path);
+            return;
+        }
         if (!is_dir($path)) {
             return;
         }

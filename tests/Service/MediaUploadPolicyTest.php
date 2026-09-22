@@ -40,20 +40,8 @@ final class MediaUploadPolicyTest extends TestCase
     public function testRejectsPathLikeAndReservedNames(): void
     {
         foreach (['../notes.txt', 'folder\\notes.txt', 'CON.txt'] as $name) {
-            $file = $this->upload($name, 'safe text');
-            $reflectedName = (new \ReflectionProperty(UploadedFile::class, 'originalName'))->getValue($file);
-
-            // HttpFoundation normalizes client path components before our policy sees
-            // the name. Assert the normalization rather than claiming the policy can
-            // reject information that Symfony has already removed.
-            if ($name === '../notes.txt' || $name === 'folder\\notes.txt') {
-                self::assertSame('notes.txt', $reflectedName);
-                $this->policy()->assertSafe($file, 'content');
-                continue;
-            }
-
             try {
-                $this->policy()->assertSafe($file, 'content');
+                $this->policy()->assertSafe($this->upload($name, 'safe text'), 'content');
                 self::fail('Unsafe filename accepted: '.$name);
             } catch (\DomainException) {
                 self::addToAssertionCount(1);
@@ -109,6 +97,16 @@ final class MediaUploadPolicyTest extends TestCase
         file_put_contents($path, $contents);
         $this->files[] = $path;
 
-        return new UploadedFile($path, $name, null, UPLOAD_ERR_OK, true);
+        return new class($path, $name) extends UploadedFile {
+            public function __construct(string $path, private readonly string $untrustedOriginalName)
+            {
+                parent::__construct($path, $untrustedOriginalName, null, UPLOAD_ERR_OK, true);
+            }
+
+            public function getClientOriginalName(): string
+            {
+                return $this->untrustedOriginalName;
+            }
+        };
     }
 }

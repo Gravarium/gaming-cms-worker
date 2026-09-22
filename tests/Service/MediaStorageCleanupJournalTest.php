@@ -10,11 +10,15 @@ use PHPUnit\Framework\TestCase;
 final class MediaStorageCleanupJournalTest extends TestCase
 {
     private ?string $root = null;
+    private ?string $outside = null;
 
     protected function tearDown(): void
     {
         if ($this->root !== null) {
             $this->removeTree($this->root);
+        }
+        if ($this->outside !== null) {
+            $this->removeTree($this->outside);
         }
     }
 
@@ -32,6 +36,25 @@ final class MediaStorageCleanupJournalTest extends TestCase
         self::assertCount(1, $journal->pending());
     }
 
+    public function testTamperedJournalPayloadIsNotExecuted(): void
+    {
+        $root = $this->root();
+        $journal = new MediaStorageCleanupJournal($root);
+        $journal->recordConnector('archive', 'video/original.mp4');
+
+        $pending = $journal->pending();
+        self::assertCount(1, $pending);
+        $path = $root.'/var/media-repair/cleanup-'.$pending[0]['id'].'.json';
+        file_put_contents($path, json_encode([
+            'kind' => MediaStorageCleanupJournal::KIND_CONNECTOR,
+            'targetKey' => 'archive',
+            'value' => 'video/other.mp4',
+        ], JSON_THROW_ON_ERROR));
+
+        self::assertSame([], $journal->pending());
+        self::assertFileExists($path);
+    }
+
     public function testJournalRejectsTraversalInsteadOfPersistingIt(): void
     {
         $journal = new MediaStorageCleanupJournal($this->root());
@@ -40,10 +63,40 @@ final class MediaStorageCleanupJournalTest extends TestCase
         $journal->recordConnector('archive', 'video/../secret');
     }
 
+    public function testJournalRejectsSymlinkVarDirectory(): void
+    {
+        $root = $this->root();
+        $this->outside = sys_get_temp_dir().'/media-journal-var-outside-'.bin2hex(random_bytes(8));
+        self::assertTrue(mkdir($this->outside, 0700, true));
+        if (!@symlink($this->outside, $root.'/var')) {
+            self::markTestSkipped('Symbolic links are unavailable in this test environment.');
+        }
+
+        $this->expectException(\DomainException::class);
+        (new MediaStorageCleanupJournal($root))->recordLocal('/uploads/media/content/file.txt');
+    }
+
+    public function testJournalRejectsSymlinkRepairDirectory(): void
+    {
+        $root = $this->root();
+        self::assertTrue(mkdir($root.'/var', 0700, true));
+        $this->outside = sys_get_temp_dir().'/media-journal-outside-'.bin2hex(random_bytes(8));
+        self::assertTrue(mkdir($this->outside, 0700, true));
+        if (!@symlink($this->outside, $root.'/var/media-repair')) {
+            self::markTestSkipped('Symbolic links are unavailable in this test environment.');
+        }
+
+        $this->expectException(\DomainException::class);
+        (new MediaStorageCleanupJournal($root))->recordLocal('/uploads/media/content/file.txt');
+    }
+
     private function root(): string
     {
         if ($this->root === null) {
             $this->root = sys_get_temp_dir().'/media-journal-'.bin2hex(random_bytes(8));
+            if (!mkdir($this->root, 0700, true) && !is_dir($this->root)) {
+                self::fail('Unable to create temporary media journal root.');
+            }
         }
 
         return $this->root;
@@ -51,6 +104,10 @@ final class MediaStorageCleanupJournalTest extends TestCase
 
     private function removeTree(string $path): void
     {
+        if (is_link($path)) {
+            @unlink($path);
+            return;
+        }
         if (!is_dir($path)) {
             return;
         }

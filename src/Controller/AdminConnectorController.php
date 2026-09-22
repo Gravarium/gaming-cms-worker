@@ -178,7 +178,14 @@ final class AdminConnectorController extends AbstractController
             throw $this->createAccessDeniedException();
         }
 
-        $target->setEnabled(!$target->isEnabled());
+        $enable = !$target->isEnabled();
+        if ($enable && $target->getConfigurationReference() === null) {
+            $this->addFlash('error', 'Das Ziel kann ohne Server-Konfigurationsverweis nicht aktiviert werden.');
+
+            return $this->redirectToRoute('app_admin_connector_index');
+        }
+
+        $target->setEnabled($enable);
         $this->audit->record(
             'connector.toggle',
             $target,

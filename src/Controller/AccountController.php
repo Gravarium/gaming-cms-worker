@@ -48,6 +48,7 @@ final class AccountController extends AbstractController
         if (!$user instanceof User) { throw $this->createAccessDeniedException(); }
 
         $form = $this->createForm(AccountPasswordType::class)->handleRequest($request);
+        $invalidSubmission = false;
         if ($form->isSubmitted()) {
             $currentPassword = (string) $form->get('currentPassword')->getData();
             $newPassword = (string) $form->get('newPassword')->getData();
@@ -70,13 +71,20 @@ final class AccountController extends AbstractController
                 $this->addFlash('success', 'Das Passwort wurde geändert. Ältere Sitzungen werden ungültig.');
                 return $this->redirectToRoute('app_account_security');
             }
+
+            $invalidSubmission = true;
         }
 
-        return $this->render('account/security.html.twig', [
+        $response = $this->render('account/security.html.twig', [
             'form' => $form,
             'sessions' => $sessions->activeFor($user),
             'currentSessionHash' => hash('sha256', $request->getSession()->getId()),
         ]);
+        if ($invalidSubmission) {
+            $response->setStatusCode(Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+
+        return $response;
     }
 
     #[Route('/account/security/sessions/{id}/revoke', name: 'app_account_session_revoke', requirements: ['id' => '\\d+'], methods: ['POST'])]

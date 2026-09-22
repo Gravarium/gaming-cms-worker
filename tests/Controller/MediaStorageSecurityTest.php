@@ -10,9 +10,11 @@ use App\Entity\MediaAssetReplica;
 use App\Entity\MediaFolder;
 use App\Entity\User;
 use App\Security\CmsPermission;
+use App\Service\MediaStorageManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 final class MediaStorageSecurityTest extends WebTestCase
 {
@@ -66,7 +68,7 @@ final class MediaStorageSecurityTest extends WebTestCase
         $client->loginUser($this->user($client, [CmsPermission::STORAGE]));
 
         $client->request('POST', '/admin/storage/media/bulk', [
-            '_token' => $this->csrf($client, 'bulk-media', 'form[action$="/media/bulk"] input[name="_token"]'),
+            '_token' => $this->csrf($client, 'bulk-media'),
             'bulk_action' => 'move',
             'target_folder' => '999999999',
             'assets' => [(string) $assetId],
@@ -95,7 +97,7 @@ final class MediaStorageSecurityTest extends WebTestCase
         $client->loginUser($this->user($client, [CmsPermission::STORAGE]));
 
         $client->request('POST', '/admin/storage/media/bulk', [
-            '_token' => $this->csrf($client, 'bulk-media', 'form[action$="/media/bulk"] input[name="_token"]'),
+            '_token' => $this->csrf($client, 'bulk-media'),
             'bulk_action' => 'move',
             'target_folder' => (string) $targetId,
             'assets' => [(string) $assetId],
@@ -129,7 +131,7 @@ final class MediaStorageSecurityTest extends WebTestCase
         $client->submit($form);
 
         self::assertResponseStatusCodeSame(422);
-        self::assertSelectorTextContains('body', 'Unterordner');
+        self::assertSelectorTextContains('body', 'darf keinen Zyklus enthalten');
 
         $this->em($client)->clear();
         $storedRoot = $this->em($client)->find(MediaFolder::class, $rootId);
@@ -242,6 +244,58 @@ final class MediaStorageSecurityTest extends WebTestCase
             $em->flush();
             @unlink($path);
         }
+    }
+
+    public function testInternalUploadRejectsSymlinkedModuleDirectory(): void
+    {
+        $client = static::createClient();
+        $root = (string) $client->getContainer()->getParameter('kernel.project_dir');
+        $mediaRoot = $root.'/public/uploads/media';
+        if (!is_dir($mediaRoot) && !mkdir($mediaRoot, 0777, true) && !is_dir($mediaRoot)) {
+            self::fail('Unable to prepare media root.');
+        }
+
+        $module = 'symlinktest'.bin2hex(random_bytes(3));
+        $moduleDirectory = $mediaRoot.'/'.$module;
+        $outside = sys_get_temp_dir().'/cms-media-outside-'.bin2hex(random_bytes(8));
+        self::assertTrue(mkdir($outside, 0777, true));
+        if (!@symlink($outside, $moduleDirectory)) {
+            @rmdir($outside);
+            self::markTestSkipped('Symbolic links are unavailable in this test environment.');
+        }
+
+        $path = tempnam(sys_get_temp_dir(), 'cms-media-upload-');
+        self::assertNotFalse($path);
+        file_put_contents($path, 'safe text');
+
+        try {
+            $upload = new UploadedFile($path, 'safe.txt', 'text/plain', null, true);
+            $this->expectException(\DomainException::class);
+            $client->getContainer()->get(MediaStorageManager::class)->storeUpload($upload, $module);
+        } finally {
+            @unlink($moduleDirectory);
+            @rmdir($outside);
+            @unlink($path);
+        }
+    }
+
+    public function testPendingDeletionCannotBeEditedReplacedOrDeletedAgain(): void
+    {
+        $client = static::createClient();
+        $asset = $this->asset($client, 'pending.txt')->markDeletionPending();
+        $this->em($client)->flush();
+        $assetId = $asset->getId();
+        self::assertNotNull($assetId);
+        $client->loginUser($this->user($client, [CmsPermission::STORAGE]));
+
+        $client->request('GET', '/admin/storage/media/'.$assetId.'/edit');
+        self::assertResponseStatusCodeSame(409);
+
+        $client->request('GET', '/admin/storage/media/'.$assetId.'/replace');
+        self::assertResponseStatusCodeSame(409);
+
+        $client->request('POST', '/admin/storage/media/'.$assetId.'/delete');
+        self::assertResponseStatusCodeSame(409);
     }
 
     public function testExternalDeleteFailureLeavesRepairablePendingIntent(): void
@@ -385,40 +439,19 @@ final class MediaStorageSecurityTest extends WebTestCase
         return $asset;
     }
 
-    private function csrf(KernelBrowser $client, string $id, string $selector = 'input[name="_token"]'): string
+    private function csrf(KernelBrowser $client, string $id): string
     {
-        // Read the token exactly as an authorized browser would: from the real
-        // server-rendered form after login. This exercises authentication,
-        // session persistence and production CSRF generation together.
         $crawler = $client->request('GET', '/admin/storage');
         self::assertResponseIsSuccessful();
 
-        if ($selector === 'input[name="_token"]') {
-            if (str_starts_with($id, 'delete-media-folder-')) {
-                $entityId = substr($id, strlen('delete-media-folder-'));
-                $selector = sprintf('form[action$="/folders/%s/delete"] input[name="_token"]', $entityId);
-            } elseif (str_starts_with($id, 'delete-media-')) {
-                $entityId = substr($id, strlen('delete-media-'));
-                $selector = sprintf('form[action$="/media/%s/delete"] input[name="_token"]', $entityId);
-            }
-        }
+        $selector = match (true) {
+            $id === 'bulk-media' => '#media-bulk-form input[name="_token"]',
+            str_starts_with($id, 'delete-media-folder-') => 'form[action="/admin/storage/folders/'.substr($id, strlen('delete-media-folder-')).'/delete"] input[name="_token"]',
+            str_starts_with($id, 'delete-media-') => 'form[action="/admin/storage/media/'.substr($id, strlen('delete-media-')).'/delete"] input[name="_token"]',
+            default => throw new \LogicException('Unsupported rendered CSRF token id.'),
+        };
 
-        $nodes = $crawler->filter($selector);
-        if ($nodes->count() !== 1) {
-            throw new \RuntimeException(sprintf(
-                'Expected exactly one rendered CSRF token for "%s" using selector "%s"; found %d.',
-                $id,
-                $selector,
-                $nodes->count(),
-            ));
-        }
-
-        $token = $nodes->attr('value');
-        if (!is_string($token) || $token === '') {
-            throw new \RuntimeException(sprintf('Rendered CSRF token for "%s" is empty.', $id));
-        }
-
-        return $token;
+        return (string) $crawler->filter($selector)->attr('value');
     }
 
     private function em(KernelBrowser $client): EntityManagerInterface

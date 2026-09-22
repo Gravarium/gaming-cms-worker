@@ -115,6 +115,61 @@ final class GamingGuildSecurityTest extends WebTestCase
         self::assertSame(0, $this->em($client)->getRepository(GuildApplication::class)->count(['guild' => $guild]));
     }
 
+    public function testGuildApplicationRejectsOversizedCustomAnswer(): void
+    {
+        $client = static::createClient();
+        [$guild] = $this->guilds($client);
+        $guild->setRecruitmentOpen(true);
+        $question = (new GuildApplicationQuestion())
+            ->setGuild($guild)
+            ->setLabel('Erzähl uns mehr')
+            ->setType(GuildApplicationQuestion::TYPE_TEXTAREA)
+            ->setRequired(true);
+        $this->em($client)->persist($question);
+        $this->em($client)->flush();
+
+        $crawler = $client->request('GET', '/gaming/guild/'.$guild->getSlug().'/apply');
+        $form = $crawler->selectButton('Bewerbung absenden')->form([
+            'guild_application[applicantName]' => 'Applicant',
+            'guild_application[email]' => 'oversized@example.test',
+            'guild_application[characterName]' => 'Character',
+            'guild_application[message]' => 'Dies ist eine ausreichend lange Bewerbung.',
+            'guild_application[question_'.$question->getId().']' => str_repeat('x', 5001),
+        ]);
+        $client->submit($form);
+
+        self::assertResponseStatusCodeSame(422);
+        self::assertSame(0, $this->em($client)->getRepository(GuildApplication::class)->count(['guild' => $guild]));
+    }
+
+    public function testGuildApplicationRateLimitStopsRepeatedValidSubmissions(): void
+    {
+        $client = static::createClient();
+        [$guild] = $this->guilds($client);
+        $guild->setRecruitmentOpen(true);
+        $this->em($client)->flush();
+
+        for ($attempt = 1; $attempt <= 6; ++$attempt) {
+            $crawler = $client->request('GET', '/gaming/guild/'.$guild->getSlug().'/apply');
+            $form = $crawler->selectButton('Bewerbung absenden')->form([
+                'guild_application[applicantName]' => 'Applicant '.$attempt,
+                'guild_application[email]' => 'applicant-'.$attempt.'@example.test',
+                'guild_application[characterName]' => 'Character '.$attempt,
+                'guild_application[message]' => 'Dies ist eine ausreichend lange Bewerbung Nummer '.$attempt.'.',
+            ]);
+            $client->submit($form);
+
+            if ($attempt <= 5) {
+                self::assertResponseRedirects('/gaming/guild/'.$guild->getSlug());
+            } else {
+                self::assertResponseStatusCodeSame(429);
+                self::assertSelectorTextContains('body', 'Zu viele Bewerbungsversuche');
+            }
+        }
+
+        self::assertSame(5, $this->em($client)->getRepository(GuildApplication::class)->count(['guild' => $guild]));
+    }
+
     public function testPortalAllowsOwnedMemberToSignupForPlannedEvent(): void
     {
         $client = static::createClient();
@@ -141,6 +196,36 @@ final class GamingGuildSecurityTest extends WebTestCase
         self::assertInstanceOf(GuildEventSignup::class, $signup);
         self::assertSame(GuildEventSignup::GOING, $signup->getResponse());
         self::assertSame('damage', $signup->getRole());
+    }
+
+    public function testPortalPlacesNewSignupOnWaitlistWhenCapacityIsFull(): void
+    {
+        $client = static::createClient();
+        $firstUser = $this->user($client);
+        $secondUser = $this->user($client);
+        [$guild] = $this->guilds($client);
+        $firstMember = (new GuildMember())->setGuild($guild)->setUser($firstUser)->setCharacterName('First');
+        $secondMember = (new GuildMember())->setGuild($guild)->setUser($secondUser)->setCharacterName('Second');
+        $event = (new GuildEvent())->setGuild($guild)->setTitle('Limited raid')->setDescription('Only one spot')->setMaxParticipants(1);
+        $existing = (new GuildEventSignup())->setEvent($event)->setMember($firstMember)->setUser($firstUser)->setResponse(GuildEventSignup::GOING);
+        foreach ([$firstMember, $secondMember, $event, $existing] as $entity) { $this->em($client)->persist($entity); }
+        $this->em($client)->flush();
+        $client->loginUser($secondUser);
+
+        $crawler = $client->request('GET', '/guild-area/'.$guild->getId());
+        $token = $crawler->filter('form[action="/guild-area/'.$guild->getId().'/event/'.$event->getId().'/signup"] input[name="_token"]')->attr('value');
+        $client->request('POST', '/guild-area/'.$guild->getId().'/event/'.$event->getId().'/signup', [
+            '_token' => $token,
+            'member' => $secondMember->getId(),
+            'response' => GuildEventSignup::GOING,
+            'role' => 'damage',
+        ]);
+
+        self::assertResponseRedirects('/guild-area/'.$guild->getId());
+        $signup = $this->em($client)->getRepository(GuildEventSignup::class)->findOneBy(['event' => $event, 'member' => $secondMember]);
+        self::assertInstanceOf(GuildEventSignup::class, $signup);
+        self::assertSame(GuildEventSignup::WAITLIST, $signup->getResponse());
+        self::assertSame(1, $this->em($client)->getRepository(GuildEventSignup::class)->count(['event' => $event, 'response' => GuildEventSignup::GOING]));
     }
 
     public function testPortalRejectsOwnedCharacterFromAnotherGuild(): void

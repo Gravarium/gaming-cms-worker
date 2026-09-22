@@ -12,6 +12,37 @@ use PHPUnit\Framework\TestCase;
 
 final class BackupSelectionSynchronizerTest extends TestCase
 {
+    public function testRejectsSymlinkSelectionTarget(): void
+    {
+        if (!function_exists('symlink')) {
+            self::markTestSkipped('Symlinks are unavailable.');
+        }
+
+        $projectDir = sys_get_temp_dir().'/backup-selection-link-'.bin2hex(random_bytes(6));
+        mkdir($projectDir.'/var', 0700, true);
+        $outside = $projectDir.'/outside.conf';
+        file_put_contents($outside, 'protected');
+        symlink($outside, $projectDir.'/var/backup-selection.conf');
+
+        $source = new class implements ExternalConnectorTargetSource {
+            public function enabledFor(string $capability): array { return []; }
+        };
+        $synchronizer = new BackupSelectionSynchronizer(
+            new BackupTargetSelectionExporter(new ExternalConnectorRegistry($source)),
+            $projectDir,
+        );
+
+        try {
+            $this->expectException(\RuntimeException::class);
+            $synchronizer->synchronize();
+        } finally {
+            @unlink($projectDir.'/var/backup-selection.conf');
+            @unlink($outside);
+            @rmdir($projectDir.'/var');
+            @rmdir($projectDir);
+        }
+    }
+
     public function testWritesEmptySelectionAtomicallyWithPrivatePermissions(): void
     {
         $projectDir = sys_get_temp_dir().'/backup-selection-'.bin2hex(random_bytes(6));

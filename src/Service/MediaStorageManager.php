@@ -94,7 +94,7 @@ final class MediaStorageManager
 
             try {
                 foreach ($storeResult->objectsByTarget as $object) {
-                    $this->assertStorableExternalObject($object);
+                    $this->assertStorableExternalObject($object, $objectKey);
                 }
             } catch (\DomainException $exception) {
                 $this->cleanupConnectorObjects($storeResult->objectsByTarget);
@@ -140,10 +140,7 @@ final class MediaStorageManager
             }
             $legacyObjectKey = $objectKey;
         } else {
-            $directory = $this->projectDir.'/public/uploads/media/'.$moduleKey;
-            if (!is_dir($directory) && !mkdir($directory, 0775, true) && !is_dir($directory)) {
-                throw new \RuntimeException('Der Upload-Ordner konnte nicht erstellt werden.');
-            }
+            $directory = $this->localMediaDirectory($moduleKey);
             $file->move($directory, $filename);
             $location = '/uploads/media/'.$objectKey;
             $localLocation = $location;
@@ -400,9 +397,10 @@ final class MediaStorageManager
         }
     }
 
-    private function assertStorableExternalObject(ExternalMediaObject $object): void
+    private function assertStorableExternalObject(ExternalMediaObject $object, string $expectedObjectKey): void
     {
-        if (mb_strlen($object->objectKey) > 500
+        if ($object->objectKey !== $expectedObjectKey
+            || mb_strlen($object->objectKey) > 500
             || str_starts_with($object->objectKey, '/')
             || str_contains($object->objectKey, '\\')
             || preg_match('/[\x00-\x1F\x7F]/u', $object->objectKey) === 1
@@ -436,10 +434,7 @@ final class MediaStorageManager
             return [];
         }
 
-        $repairDirectory = $this->projectDir.'/var/media-repair';
-        if (!is_dir($repairDirectory) && !mkdir($repairDirectory, 0700, true) && !is_dir($repairDirectory)) {
-            throw new \RuntimeException('Fehlgeschlagene optionale Medienkopien konnten nicht zur Reparatur vorgemerkt werden.');
-        }
+        $repairDirectory = $this->repairDirectory();
 
         $paths = [];
         try {
@@ -466,8 +461,14 @@ final class MediaStorageManager
     /** @param list<string> $paths */
     private function cleanupStagedPaths(array $paths): void
     {
+        $varDirectory = $this->projectDir.'/var';
+        $repairDirectory = $varDirectory.'/media-repair';
+        if (is_link($varDirectory) || is_link($repairDirectory)) {
+            return;
+        }
+
         foreach ($paths as $path) {
-            if (str_starts_with($path, $this->projectDir.'/var/media-repair/')
+            if (str_starts_with($path, $repairDirectory.'/')
                 && (is_file($path) || is_link($path))
             ) {
                 @unlink($path);
@@ -477,17 +478,89 @@ final class MediaStorageManager
 
     private function deleteLocalLocation(string $location): void
     {
+        $filePath = $this->localMediaPath($location);
+        if ((is_file($filePath) || is_link($filePath)) && !unlink($filePath)) {
+            throw new \RuntimeException('Die Datei konnte nicht vom CMS-Server gelöscht werden.');
+        }
+    }
+
+    private function localMediaDirectory(string $moduleKey): string
+    {
+        if (preg_match('/^[a-z][a-z0-9_]{0,49}$/', $moduleKey) !== 1) {
+            throw new \DomainException('Das Upload-Zielmodul ist ungültig.');
+        }
+
+        $public = $this->projectDir.'/public';
+        if (!is_dir($public) || is_link($public)) {
+            throw new \DomainException('Das öffentliche Medienverzeichnis ist nicht sicher verfügbar.');
+        }
+
+        $uploads = $public.'/uploads';
+        $media = $uploads.'/media';
+        $module = $media.'/'.$moduleKey;
+        foreach ([$uploads, $media, $module] as $directory) {
+            $this->assertNotSymlink($directory, 'Lokale Medienverzeichnisse dürfen keine symbolischen Links sein.');
+            if (!is_dir($directory) && !mkdir($directory, 0775) && !is_dir($directory)) {
+                throw new \RuntimeException('Der Upload-Ordner konnte nicht erstellt werden.');
+            }
+            $this->assertNotSymlink($directory, 'Lokale Medienverzeichnisse dürfen keine symbolischen Links sein.');
+        }
+
+        return $module;
+    }
+
+    private function localMediaPath(string $location): string
+    {
         if (!str_starts_with($location, '/uploads/media/')
-            || str_contains($location, '..')
             || str_contains($location, '\\')
             || preg_match('/[\x00-\x1F\x7F]/u', $location) === 1
         ) {
             throw new \DomainException('Der gespeicherte lokale Medienpfad ist ungültig.');
         }
 
-        $filePath = $this->projectDir.'/public'.$location;
-        if ((is_file($filePath) || is_link($filePath)) && !unlink($filePath)) {
-            throw new \RuntimeException('Die Datei konnte nicht vom CMS-Server gelöscht werden.');
+        $relative = substr($location, strlen('/uploads/media/'));
+        if ($relative === '' || mb_strlen($relative) > 500) {
+            throw new \DomainException('Der gespeicherte lokale Medienpfad ist ungültig.');
+        }
+        $segments = explode('/', $relative);
+        foreach ($segments as $segment) {
+            if ($segment === '' || $segment === '.' || $segment === '..') {
+                throw new \DomainException('Der gespeicherte lokale Medienpfad ist ungültig.');
+            }
+        }
+
+        $current = $this->projectDir;
+        foreach (array_merge(['public', 'uploads', 'media'], array_slice($segments, 0, -1)) as $segment) {
+            $current .= '/'.$segment;
+            if (is_link($current)) {
+                throw new \DomainException('Der gespeicherte lokale Medienpfad führt über einen symbolischen Link.');
+            }
+        }
+
+        return $this->projectDir.'/public/uploads/media/'.$relative;
+    }
+
+    private function repairDirectory(): string
+    {
+        $var = $this->projectDir.'/var';
+        $repair = $var.'/media-repair';
+
+        foreach ([$var, $repair] as $directory) {
+            $this->assertNotSymlink($directory, 'Das Medien-Reparaturverzeichnis darf kein symbolischer Link sein.');
+            if (!is_dir($directory) && !mkdir($directory, 0700) && !is_dir($directory)) {
+                throw new \RuntimeException('Fehlgeschlagene optionale Medienkopien konnten nicht zur Reparatur vorgemerkt werden.');
+            }
+            $this->assertNotSymlink($directory, 'Das Medien-Reparaturverzeichnis darf kein symbolischer Link sein.');
+        }
+
+        return $repair;
+    }
+
+    private function assertNotSymlink(string $path, string $message): void
+    {
+        clearstatcache(true, $path);
+        if (is_link($path)) {
+            throw new \DomainException($message);
         }
     }
 
