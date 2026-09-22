@@ -45,6 +45,10 @@ final class MediaStorageCleanupRepairerTest extends TestCase
         self::assertSame(['repaired' => 1, 'failed' => 0], $result);
         self::assertFileDoesNotExist($path);
         self::assertSame([], $journal->pending());
+
+        $journal->recordLocal('/uploads/media/content/file.txt');
+        self::assertSame(['repaired' => 1, 'failed' => 0], $this->repairer($journal, $root)->repairPending());
+        self::assertSame([], $journal->pending());
     }
 
     public function testLocalCleanupDoesNotFollowSymlinkedParentDirectory(): void
