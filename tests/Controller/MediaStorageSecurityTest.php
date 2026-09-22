@@ -15,7 +15,6 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
-use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 
 final class MediaStorageSecurityTest extends WebTestCase
 {
@@ -442,10 +441,17 @@ final class MediaStorageSecurityTest extends WebTestCase
 
     private function csrf(KernelBrowser $client, string $id): string
     {
-        $client->request('GET', '/admin/storage');
+        $crawler = $client->request('GET', '/admin/storage');
         self::assertResponseIsSuccessful();
 
-        return $client->getContainer()->get(CsrfTokenManagerInterface::class)->getToken($id)->getValue();
+        $selector = match (true) {
+            $id === 'bulk-media' => '#media-bulk-form input[name="_token"]',
+            str_starts_with($id, 'delete-media-folder-') => 'form[action="/admin/storage/folders/'.substr($id, strlen('delete-media-folder-')).'/delete"] input[name="_token"]',
+            str_starts_with($id, 'delete-media-') => 'form[action="/admin/storage/media/'.substr($id, strlen('delete-media-')).'/delete"] input[name="_token"]',
+            default => throw new \LogicException('Unsupported rendered CSRF token id.'),
+        };
+
+        return (string) $crawler->filter($selector)->attr('value');
     }
 
     private function em(KernelBrowser $client): EntityManagerInterface
