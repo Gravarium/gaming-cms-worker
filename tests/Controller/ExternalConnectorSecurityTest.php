@@ -27,6 +27,8 @@ final class ExternalConnectorSecurityTest extends WebTestCase
         $this->em($client)->persist($target);
         $this->em($client)->flush();
         $client->loginUser($this->user($client));
+        $client->request('GET', '/admin/connectors');
+        self::assertResponseIsSuccessful();
 
         $client->request('POST', '/admin/connectors/'.$target->getId().'/toggle', [
             '_token' => $client->getContainer()->get(CsrfTokenManagerInterface::class)
