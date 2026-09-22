@@ -15,6 +15,7 @@ final class DiscordWebhookUrlPolicyTest extends TestCase
 
         foreach ([
             'https://discord.com/api/webhooks/123456/Abc_DEF-123.token',
+            'https://discord.com:443/api/webhooks/123456/Abc_DEF-123.token',
             'https://canary.discord.com/api/webhooks/1/token',
             'https://ptb.discordapp.com/api/webhooks/987654/token_value',
         ] as $url) {
@@ -23,7 +24,7 @@ final class DiscordWebhookUrlPolicyTest extends TestCase
         }
     }
 
-    public function testRejectsSsrfSchemesHostsCredentialsAndRedirectStyleParameters(): void
+    public function testRejectsSsrfSchemesHostsCredentialsPortsAndRedirectStyleParameters(): void
     {
         $policy = new DiscordWebhookUrlPolicy();
 
@@ -32,6 +33,7 @@ final class DiscordWebhookUrlPolicyTest extends TestCase
             'https://127.0.0.1/api/webhooks/1/token',
             'https://localhost/api/webhooks/1/token',
             'https://discord.com.evil.test/api/webhooks/1/token',
+            'https://discord.com:8443/api/webhooks/1/token',
             'https://user:secret@discord.com/api/webhooks/1/token',
             'https://discord.com/api/webhooks/1/token?redirect=https://127.0.0.1',
             'https://discord.com/api/webhooks/1/token#fragment',

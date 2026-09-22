@@ -16,12 +16,13 @@ final class DiscordWebhookUrlPolicy
         $parts = parse_url($url);
         if (!is_array($parts)
             || strtolower((string) ($parts['scheme'] ?? '')) !== 'https'
+            || (isset($parts['port']) && (int) $parts['port'] !== 443)
             || isset($parts['user'])
             || isset($parts['pass'])
             || isset($parts['query'])
             || isset($parts['fragment'])
         ) {
-            throw new \DomainException('Discord-Webhooks müssen sichere HTTPS-Adressen ohne Zugangsdaten, Query oder Fragment sein.');
+            throw new \DomainException('Discord-Webhooks müssen sichere HTTPS-Adressen auf dem Standardport ohne Zugangsdaten, Query oder Fragment sein.');
         }
 
         $host = strtolower(rtrim((string) ($parts['host'] ?? ''), '.'));

@@ -14,6 +14,9 @@ final class AuditContextSanitizerTest extends TestCase
         $sanitized = (new AuditContextSanitizer())->sanitize([
             'targetKey' => 'media-primary',
             'plainPassword' => 'never-log-me',
+            'apiKey' => 'api-secret',
+            'private_key' => 'private-secret',
+            'masterKey' => 'master-secret',
             'nested' => [
                 'access_token' => 'secret-token',
                 'credentialId' => 'credential-secret',
@@ -26,6 +29,9 @@ final class AuditContextSanitizerTest extends TestCase
 
         self::assertSame('media-primary', $sanitized['targetKey']);
         self::assertArrayNotHasKey('plainPassword', $sanitized);
+        self::assertArrayNotHasKey('apiKey', $sanitized);
+        self::assertArrayNotHasKey('private_key', $sanitized);
+        self::assertArrayNotHasKey('masterKey', $sanitized);
         self::assertSame(['status' => 'failed'], $sanitized['nested']);
         self::assertSame([['provider' => 'discord']], $sanitized['items']);
     }
