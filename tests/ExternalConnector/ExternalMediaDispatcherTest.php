@@ -141,15 +141,16 @@ final class ExternalMediaDispatcherTest extends TestCase
     }
 
     /** @param \ArrayObject<int, string> $calls */
-    private function adapter(string $provider, \ArrayObject $calls, bool $fail = false, ?string $returnedObjectKey = null): ExternalMediaConnectorAdapter
+    private function adapter(string $provider, \ArrayObject $calls, bool $failStore = false, ?string $returnedObjectKey = null, bool $failDelete = false): ExternalMediaConnectorAdapter
     {
-        return new class($provider, $calls, $fail, $returnedObjectKey) implements ExternalMediaConnectorAdapter {
+        return new class($provider, $calls, $failStore, $returnedObjectKey, $failDelete) implements ExternalMediaConnectorAdapter {
             /** @param \ArrayObject<int, string> $calls */
             public function __construct(
                 private readonly string $provider,
                 private readonly \ArrayObject $calls,
-                private readonly bool $fail,
+                private readonly bool $failStore,
                 private readonly ?string $returnedObjectKey,
+                private readonly bool $failDelete,
             ) {
             }
 
