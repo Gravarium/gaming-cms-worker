@@ -111,6 +111,7 @@ final class GuildPortalController extends AbstractController
     public function signup(Guild $guild, GuildEvent $event, Request $request): Response
     {
         if ($event->getGuild()?->getId() !== $guild->getId()) { throw $this->createNotFoundException(); }
+        if ($event->getStatus() !== GuildEvent::STATUS_PLANNED) { throw $this->createNotFoundException('Für diesen Termin sind keine Anmeldungen mehr möglich.'); }
         if (!$this->isCsrfTokenValid('event-signup-'.$event->getId(), (string) $request->request->get('_token'))) { throw $this->createAccessDeniedException(); }
 
         $characters = $this->characters($guild);
