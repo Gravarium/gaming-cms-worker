@@ -1,0 +1,1 @@
+{% if data.image|default(null) %}<figure class="portal-image"><img src="{{ data.image.url }}" alt="{{ data.image.alt }}" loading="lazy">{% if config.text %}<figcaption>{{ config.text }}</figcaption>{% endif %}</figure>{% else %}<p class="portal-empty">Kein Bild ausgewählt.</p>{% endif %}

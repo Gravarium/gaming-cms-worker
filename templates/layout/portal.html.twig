@@ -1,0 +1,25 @@
+{% set options = portal.document.options %}
+<div style="{{ options.accent ? '--p-accent:'~options.accent~';' : '' }}" class="portal font-{{ options.font }} sidebar-{{ options.sidebar }} overlay-{{ options.overlay }} theme-{{ portal.theme.key }} width-{{ options.width }} spacing-{{ options.spacing }} corners-{{ options.corners }} hero-{{ options.heroHeight }}{{ not options.animations ? ' no-motion' : '' }}" data-sticky="{{ options.sticky }}" data-controller="portal-header">
+<a class="portal-skip" href="#portal-content">Zum Inhalt</a>
+{% include 'layout/region.html.twig' with {name:'top'} %}
+<div class="portal-header-group">
+<div class="portal-meta"><span>{{ site.description ?: 'Deine Welt. Deine Community.' }}</span><span>GAMING · GILDEN · COMMUNITY</span></div>
+<header class="portal-navigation"><a class="portal-brand" href="{{ path('app_home') }}">{% if site.logoPath %}<img src="{{ site.logoPath }}" alt="{{ site.siteName }}">{% else %}<span class="brand-emblem" aria-hidden="true">G</span>{{ site.siteName }}{% endif %}</a>
+<nav aria-label="Hauptnavigation"><a href="{{ path('app_home') }}">Start</a>{% if cms_module_enabled('content') %}<a href="{{ path('app_news_index') }}">News</a>{% endif %}{% if cms_module_enabled('gaming') %}<a href="{{ path('app_gaming_index') }}">Gilden</a>{% endif %}{% if cms_module_enabled('video') %}<a href="{{ path('app_video_index') }}">Videos</a>{% endif %}
+{% for item in main_navigation() %}<a href="{{ item.page ? path('app_page_show',{slug:item.page.slug}) : item.url }}" {% if item.openNewWindow %}target="_blank" rel="noopener noreferrer"{% endif %}>{{ item.label }}</a>{% endfor %}</nav>
+<a class="portal-account" href="{{ path(app.user ? 'app_admin_dashboard' : 'app_login') }}">{{ app.user ? 'Administration' : 'Anmelden' }} <span aria-hidden="true">↗</span></a></header>
+</div>
+{% include 'layout/region.html.twig' with {name:'header'} %}
+<main id="portal-content">
+{% include 'layout/region.html.twig' with {name:'hero'} %}
+<div class="portal-content-wrap">
+{% include 'layout/region.html.twig' with {name:'below-hero'} %}
+<div class="portal-columns{{ portal.regions['left-sidebar']|default([])|length or portal.regions['sidebar']|default([])|length ? ' has-left' : '' }}{{ portal.regions['right-sidebar']|default([])|length ? ' has-right' : '' }}">
+<div class="portal-left">{% include 'layout/region.html.twig' with {name:'left-sidebar'} %}{% include 'layout/region.html.twig' with {name:'sidebar'} %}</div>
+<div class="portal-main">{% if entry|default(null) %}<article class="portal-article"><p class="portal-kicker">{{ site.siteName }}</p><h1>{{ entry.title }}</h1>{% if entry.excerpt %}<p>{{ entry.excerpt }}</p>{% endif %}<div>{{ entry.body|nl2br }}</div></article>{% endif %}{% include 'layout/region.html.twig' with {name:'main'} %}{% include 'layout/region.html.twig' with {name:'content'} %}</div>
+<div class="portal-right">{% include 'layout/region.html.twig' with {name:'right-sidebar'} %}</div>
+</div>
+{% include 'layout/region.html.twig' with {name:'content-wide-1'} %}{% include 'layout/region.html.twig' with {name:'content-wide-2'} %}{% include 'layout/region.html.twig' with {name:'bottom'} %}
+</div></main>
+<footer class="portal-footer">{% include 'layout/region.html.twig' with {name:'footer'} %}<div><a class="portal-brand" href="{{ path('app_home') }}">{{ site.siteName }}</a><p>{{ site.description }}</p></div><span>Ein Ort für deine Community.</span></footer>
+</div>

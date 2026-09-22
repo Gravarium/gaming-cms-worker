@@ -1,5 +1,5 @@
 {% set site = site_settings() %}
-{% set theme = cms_theme(site.themeKey) %}
+{% set theme = portal is defined ? portal.theme : cms_theme(site.themeKey) %}
 <!DOCTYPE html>
 <html lang="{{ app.request.locale }}" data-theme="{{ site.colorScheme }}" data-theme-package="{{ theme.key }}">
 <head>

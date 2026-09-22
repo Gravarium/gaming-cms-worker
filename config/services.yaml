@@ -8,6 +8,8 @@ services:
         autoconfigure: true
 
     _instanceof:
+        App\Widget\WidgetProvider:
+            tags: ['app.widget_provider']
         App\ExternalConnector\ExternalConnectorAdapter:
             tags: ['app.external_connector.adapter']
 
@@ -68,6 +70,10 @@ services:
     App\ExtensionRuntime\ExtensionRuntimeAudit:
         arguments:
             $auditFile: '%kernel.project_dir%/var/extensions/runtime-audit.jsonl'
+
+    App\Widget\WidgetRegistry:
+        arguments:
+            $providers: !tagged_iterator app.widget_provider
 
 when@prod:
     services:

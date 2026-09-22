@@ -1,28 +1,3 @@
 {% extends 'base.html.twig' %}
 {% block title %}{{ site.siteName }}{% endblock %}
-{% block body %}
-<header class="topbar">
-    <a class="brand" href="{{ path('app_home') }}">{% if site.logoPath %}<img class="site-logo" src="{{ site.logoPath }}" alt="{{ site.siteName }}">{% else %}{{ site.siteName }}{% endif %}</a>
-    <nav class="top-actions" aria-label="Hauptnavigation">
-        {% if cms_module_enabled('content') %}<a href="{{ path('app_news_index') }}">News</a>{% endif %}
-        {% if cms_module_enabled('gaming') %}<a href="{{ path('app_gaming_index') }}">Gaming und Gilden</a>{% endif %}
-        {% if cms_module_enabled('video') %}<a href="{{ path('app_video_index') }}">Videos</a>{% endif %}
-        {% for item in main_navigation() %}
-            {% set item_url = item.page ? path('app_page_show', {slug: item.page.slug}) : item.url %}
-            <a href="{{ item_url }}" {% if item.openNewWindow %}target="_blank" rel="noopener noreferrer"{% endif %}>{{ item.label }}</a>
-        {% endfor %}
-        {% if app.user %}<a class="button-link" href="{{ path('app_admin_dashboard') }}">Administration</a>{% else %}<a class="button-link button-secondary" href="{{ path('app_login') }}">Anmelden</a>{% endif %}
-    </nav>
-</header>
-<main class="hero">
-    <p class="eyebrow">{{ site.description }}</p>
-    <h1>{{ site.homeTitle|nl2br }}</h1>
-    <p class="hero-copy">{{ site.homeText|nl2br }}</p>
-    <div class="top-actions">
-        {% if cms_module_enabled('content') %}<a class="button-link" href="{{ path('app_news_index') }}">News ansehen</a>{% endif %}
-        {% if cms_module_enabled('gaming') %}<a class="button-link button-secondary" href="{{ path('app_gaming_index') }}">Gilden entdecken</a>{% endif %}
-        {% if cms_module_enabled('video') %}<a class="button-link button-secondary" href="{{ path('app_video_index') }}">Videos ansehen</a>{% endif %}
-        {% if app.user and is_granted('CMS_CONTENT_MANAGE') and cms_module_enabled('content') %}<a class="button-link button-secondary" href="{{ path('app_admin_content_index') }}">Inhalte verwalten</a>{% endif %}
-    </div>
-</main>
-{% endblock %}
+{% block body %}{% include 'layout/portal.html.twig' with {portal: portal} %}{% endblock %}

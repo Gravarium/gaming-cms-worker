@@ -1,0 +1,6 @@
+{% set widgets = portal.regions[name]|default([]) %}
+{% if widgets|length %}<div class="portal-region portal-region-{{ name }}" data-region="{{ name }}">
+{% for widget in widgets %}<section id="widget-{{ widget.id }}" class="portal-widget widget-{{ widget.definition.key|replace({'.':'-'}) }} frame-{{ widget.config.frame }} spacing-{{ widget.config.space }} display-{{ widget.config.display }}{{ not widget.config.desktop ? ' hide-desktop' : '' }}{{ not widget.config.tablet ? ' hide-tablet' : '' }}{{ not widget.config.mobile ? ' hide-mobile' : '' }}">
+{% if widget.definition.key != 'core.welcome' %}<div class="widget-heading"><span class="widget-marker" aria-hidden="true"></span><h2>{{ widget.config.title ?: widget.definition.label }}</h2></div>{% endif %}
+{% include widget.definition.template with {config:widget.config,data:widget.data} %}
+</section>{% endfor %}</div>{% endif %}

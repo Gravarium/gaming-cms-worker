@@ -102,6 +102,7 @@ final class PublicContentController extends AbstractController
             throw $this->createNotFoundException();
         }
         $response = $this->render('content/show.html.twig', ['entry' => $entry, 'related' => $this->entries->findRelated($entry), 'preview' => false]);
+        if ($type === ContentEntry::TYPE_PAGE) { $response->headers->set('Cache-Control', 'private, no-store'); return $response; }
         return $this->cache($request, $response, hash('sha256', $entry->getId().'|'.$entry->getUpdatedAt()->format('U.u')), 300, $entry->getUpdatedAt());
     }
     private function resolveCategory(string $slug): ?Category

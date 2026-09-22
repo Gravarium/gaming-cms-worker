@@ -29,6 +29,24 @@ final class ThemeRegistry
             ]),
         ];
 
+        foreach ([
+            'gravarium-portal'=>'Gravarium Portal',
+            'gravarium-fantasy'=>'Gravarium Fantasy',
+            'gravarium-fantasy-rebuild'=>'Gravarium Fantasy Rebuild',
+            'gravarium-fantasy-v3'=>'Gravarium Fantasy V3',
+            'gravarium-cyberpunk'=>'Gravarium Cyberpunk',
+            'gravarium-visual'=>'Gravarium Visual',
+            'gravarium-cinematic'=>'Gravarium Cinematic',
+        ] as $key=>$name) {
+            $regions = ['top','header','hero','below-hero','left-sidebar','main','right-sidebar','content-wide-1','content-wide-2','bottom','footer'];
+            if ($key === 'gravarium-cinematic') $regions = ['top','header','hero','below-hero','sidebar','content','content-wide-1','content-wide-2','bottom','footer'];
+            $definitions[] = new ThemeDefinition($key,$name,'1.0.0','^1.0',[
+                'surfaceRadius'=>$key==='gravarium-cyberpunk'?'0.25rem':'0.6rem',
+                'heroGlow'=>$key==='gravarium-cyberpunk'?'rgba(60,230,255,.15)':'rgba(213,181,106,.12)',
+                'fontStack'=>'Inter, ui-sans-serif, system-ui, sans-serif',
+            ], $regions, $key==='gravarium-cinematic'?'content':'main');
+        }
+
         foreach ($definitions as $definition) {
             if (isset($this->themes[$definition->key])) {
                 throw new \LogicException('Duplicate theme key.');
@@ -36,6 +54,8 @@ final class ThemeRegistry
             $this->themes[$definition->key] = $definition;
         }
     }
+
+    public function has(string $key): bool { return isset($this->themes[$key]); }
 
     public function get(string $key): ThemeDefinition
     {

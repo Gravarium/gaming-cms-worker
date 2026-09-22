@@ -14,7 +14,9 @@ final class ThemeRegistryTest extends TestCase
     {
         $registry = new ThemeRegistry();
 
-        self::assertSame(['Nebula 1.0.0' => 'nebula', 'Ember 1.0.0' => 'ember', 'Ocean 1.0.0' => 'ocean'], $registry->choices());
+        foreach (['Nebula 1.0.0'=>'nebula','Ember 1.0.0'=>'ember','Ocean 1.0.0'=>'ocean'] as $name=>$key) self::assertSame($key,$registry->choices()[$name]);
+        self::assertCount(10,$registry->choices());
+        self::assertSame('content',$registry->get('gravarium-cinematic')->fallbackRegion);
         self::assertSame('ember', $registry->get('ember')->key);
         self::assertSame('nebula', $registry->get('unknown')->key);
     }
