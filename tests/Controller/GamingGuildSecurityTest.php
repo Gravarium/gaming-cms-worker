@@ -70,8 +70,16 @@ final class GamingGuildSecurityTest extends WebTestCase
         $this->em($client)->persist($event);
         $this->em($client)->flush();
         $client->loginUser($user);
+        $client->request('GET', '/guild-area/'.$guild->getId());
+        self::assertResponseIsSuccessful();
+        $token = $client->getContainer()->get(CsrfTokenManagerInterface::class)
+            ->getToken('event-signup-'.$event->getId())->getValue();
 
-        $client->request('POST', '/guild-area/'.$guild->getId().'/event/'.$event->getId().'/signup');
+        $client->request('POST', '/guild-area/'.$guild->getId().'/event/'.$event->getId().'/signup', [
+            '_token' => $token,
+            'member' => $member->getId(),
+            'response' => GuildEventSignup::GOING,
+        ]);
         self::assertResponseStatusCodeSame(404);
     }
 
