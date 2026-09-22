@@ -6,7 +6,7 @@ namespace App\Service;
 
 final class AuditContextSanitizer
 {
-    private const SENSITIVE_KEY = '/(?:^|[_\-.])(?:password|passphrase|token|secret|credential|authorization|cookie|webhook|(?:api|private|access|signing|encryption|master|symmetric|client)_key|key_material)(?:$|[_\-.])/i';
+    private const SENSITIVE_KEY = '/(?:^|[_\-.])(?:password|passwd|pwd|passphrase|token|secret|credential|authorization|cookie|webhook|(?:api|private|access|signing|encryption|master|symmetric|client)[_\-.]?key|key[_\-.]?material)(?:$|[_\-.])/i';
 
     /** @param array<string, mixed> $context
      * @return array<string, mixed>
