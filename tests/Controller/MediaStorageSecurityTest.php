@@ -131,7 +131,7 @@ final class MediaStorageSecurityTest extends WebTestCase
         $client->submit($form);
 
         self::assertResponseStatusCodeSame(422);
-        self::assertSelectorTextContains('body', 'Unterordner');
+        self::assertSelectorTextContains('body', 'darf keinen Zyklus enthalten');
 
         $this->em($client)->clear();
         $storedRoot = $this->em($client)->find(MediaFolder::class, $rootId);
