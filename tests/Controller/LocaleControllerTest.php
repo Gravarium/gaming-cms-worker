@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Tests\Controller;
 
 use App\Repository\SiteSettingsRepository;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 final class LocaleControllerTest extends WebTestCase
@@ -20,9 +22,7 @@ final class LocaleControllerTest extends WebTestCase
     public function testLocaleSwitchRejectsBackslashRedirectTarget(): void
     {
         $client = static::createClient();
-        $client->request('GET', '/login');
-        self::assertResponseIsSuccessful();
-        $token = $client->getContainer()->get('security.csrf.token_manager')->getToken('locale-switch')->getValue();
+        $token = $this->localeToken($client);
 
         $client->request('POST', '/locale/de', [
             '_token' => $token,
@@ -35,9 +35,7 @@ final class LocaleControllerTest extends WebTestCase
     public function testLocaleSwitchRejectsEncodedPathSeparatorRedirectTarget(): void
     {
         $client = static::createClient();
-        $client->request('GET', '/login');
-        self::assertResponseIsSuccessful();
-        $token = $client->getContainer()->get('security.csrf.token_manager')->getToken('locale-switch')->getValue();
+        $token = $this->localeToken($client);
 
         $client->request('POST', '/locale/de', [
             '_token' => $token,
@@ -53,5 +51,19 @@ final class LocaleControllerTest extends WebTestCase
         $client->request('POST', '/locale/de');
 
         self::assertResponseStatusCodeSame(403);
+    }
+
+    private function localeToken(KernelBrowser $client): string
+    {
+        $settings = $client->getContainer()->get(SiteSettingsRepository::class)->current();
+        $settings->setEnabledLocales(['de', 'en']);
+        $entityManager = $client->getContainer()->get(EntityManagerInterface::class);
+        $entityManager->persist($settings);
+        $entityManager->flush();
+
+        $crawler = $client->request('GET', '/');
+        self::assertResponseIsSuccessful();
+
+        return (string) $crawler->filter('form[data-locale-switcher] input[name="_token"]')->attr('value');
     }
 }
