@@ -97,6 +97,16 @@ final class MediaUploadPolicyTest extends TestCase
         file_put_contents($path, $contents);
         $this->files[] = $path;
 
-        return new UploadedFile($path, $name, null, UPLOAD_ERR_OK, true);
+        return new class($path, $name) extends UploadedFile {
+            public function __construct(string $path, private readonly string $untrustedOriginalName)
+            {
+                parent::__construct($path, $untrustedOriginalName, null, UPLOAD_ERR_OK, true);
+            }
+
+            public function getClientOriginalName(): string
+            {
+                return $this->untrustedOriginalName;
+            }
+        };
     }
 }
