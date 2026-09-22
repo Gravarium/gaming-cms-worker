@@ -499,15 +499,11 @@ final class MediaStorageManager
         $media = $uploads.'/media';
         $module = $media.'/'.$moduleKey;
         foreach ([$uploads, $media, $module] as $directory) {
-            if (is_link($directory)) {
-                throw new \DomainException('Lokale Medienverzeichnisse dürfen keine symbolischen Links sein.');
-            }
+            $this->assertNotSymlink($directory, 'Lokale Medienverzeichnisse dürfen keine symbolischen Links sein.');
             if (!is_dir($directory) && !mkdir($directory, 0775) && !is_dir($directory)) {
                 throw new \RuntimeException('Der Upload-Ordner konnte nicht erstellt werden.');
             }
-            if (is_link($directory)) {
-                throw new \DomainException('Lokale Medienverzeichnisse dürfen keine symbolischen Links sein.');
-            }
+            $this->assertNotSymlink($directory, 'Lokale Medienverzeichnisse dürfen keine symbolischen Links sein.');
         }
 
         return $module;
@@ -550,18 +546,22 @@ final class MediaStorageManager
         $repair = $var.'/media-repair';
 
         foreach ([$var, $repair] as $directory) {
-            if (is_link($directory)) {
-                throw new \DomainException('Das Medien-Reparaturverzeichnis darf kein symbolischer Link sein.');
-            }
+            $this->assertNotSymlink($directory, 'Das Medien-Reparaturverzeichnis darf kein symbolischer Link sein.');
             if (!is_dir($directory) && !mkdir($directory, 0700) && !is_dir($directory)) {
                 throw new \RuntimeException('Fehlgeschlagene optionale Medienkopien konnten nicht zur Reparatur vorgemerkt werden.');
             }
-            if (is_link($directory)) {
-                throw new \DomainException('Das Medien-Reparaturverzeichnis darf kein symbolischer Link sein.');
-            }
+            $this->assertNotSymlink($directory, 'Das Medien-Reparaturverzeichnis darf kein symbolischer Link sein.');
         }
 
         return $repair;
+    }
+
+    private function assertNotSymlink(string $path, string $message): void
+    {
+        clearstatcache(true, $path);
+        if (is_link($path)) {
+            throw new \DomainException($message);
+        }
     }
 
     private function settingFor(string $moduleKey): ?ModuleStorageSetting

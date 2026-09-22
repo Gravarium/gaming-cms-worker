@@ -42,9 +42,7 @@ final readonly class MediaStorageCleanupJournal
     public function pending(int $limit = 100): array
     {
         $directory = $this->directory();
-        if (is_link(dirname($directory)) || is_link($directory)) {
-            throw new \DomainException('Das Medien-Cleanup-Journal darf keine symbolischen Links verwenden.');
-        }
+        $this->assertNotSymlink(dirname($directory), $directory);
         if (!is_dir($directory)) {
             return [];
         }
@@ -112,9 +110,7 @@ final readonly class MediaStorageCleanupJournal
         }
 
         $directory = $this->directory();
-        if (is_link(dirname($directory)) || is_link($directory)) {
-            throw new \DomainException('Das Medien-Cleanup-Journal darf keine symbolischen Links verwenden.');
-        }
+        $this->assertNotSymlink(dirname($directory), $directory);
         $path = $directory.'/cleanup-'.$id.'.json';
         if (is_file($path) && !unlink($path)) {
             throw new \RuntimeException('Der erledigte Medien-Cleanup konnte nicht aus dem Journal entfernt werden.');
@@ -125,21 +121,15 @@ final readonly class MediaStorageCleanupJournal
     {
         $directory = $this->directory();
         $parent = dirname($directory);
-        if (is_link($parent) || is_link($directory)) {
-            throw new \DomainException('Das Medien-Cleanup-Journal darf keine symbolischen Links verwenden.');
-        }
+        $this->assertNotSymlink($parent, $directory);
         if (!is_dir($parent) && !mkdir($parent, 0700) && !is_dir($parent)) {
             throw new \RuntimeException('Das Medien-Cleanup-Journal konnte nicht angelegt werden.');
         }
-        if (is_link($parent)) {
-            throw new \DomainException('Das Medien-Cleanup-Journal darf keine symbolischen Links verwenden.');
-        }
+        $this->assertNotSymlink($parent);
         if (!is_dir($directory) && !mkdir($directory, 0700) && !is_dir($directory)) {
             throw new \RuntimeException('Das Medien-Cleanup-Journal konnte nicht angelegt werden.');
         }
-        if (is_link($directory)) {
-            throw new \DomainException('Das Medien-Cleanup-Journal darf keine symbolischen Links verwenden.');
-        }
+        $this->assertNotSymlink($directory);
 
         $id = hash('sha256', $kind."\0".($targetKey ?? '')."\0".$value);
         $path = $directory.'/cleanup-'.$id.'.json';
@@ -197,6 +187,16 @@ final readonly class MediaStorageCleanupJournal
         }
 
         return $objectKey;
+    }
+
+    private function assertNotSymlink(string ...$paths): void
+    {
+        foreach ($paths as $path) {
+            clearstatcache(true, $path);
+            if (is_link($path)) {
+                throw new \DomainException('Das Medien-Cleanup-Journal darf keine symbolischen Links verwenden.');
+            }
+        }
     }
 
     private function directory(): string

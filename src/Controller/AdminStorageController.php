@@ -117,22 +117,23 @@ final class AdminStorageController extends AbstractController
             }
 
             if ($form->isValid()) {
-                $asset = null;
                 try {
                     $asset = $this->mediaStorage->storeUpload($file, $moduleKey, $this->optional($data['altText'] ?? null));
-                    $asset
-                        ->setTitle($this->optional($data['title'] ?? null) ?? $asset->getTitle())
-                        ->setCaption($this->optional($data['caption'] ?? null))
-                        ->setTagsText($this->optional($data['tags'] ?? null))
-                        ->setFolder(($data['folder'] ?? null) instanceof MediaFolder ? $data['folder'] : null);
-                    $this->mediaStorage->flushWithRollback($asset);
+                    try {
+                        $asset
+                            ->setTitle($this->optional($data['title'] ?? null) ?? $asset->getTitle())
+                            ->setCaption($this->optional($data['caption'] ?? null))
+                            ->setTagsText($this->optional($data['tags'] ?? null))
+                            ->setFolder(($data['folder'] ?? null) instanceof MediaFolder ? $data['folder'] : null);
+                        $this->mediaStorage->flushWithRollback($asset);
+                    } catch (\DomainException|\RuntimeException $exception) {
+                        $this->mediaStorage->discardUncommitted($asset);
+                        throw $exception;
+                    }
                     $this->addFlash('success', 'Die Datei wurde geprüft und in die Medienbibliothek aufgenommen.');
 
                     return $this->redirectToRoute('app_admin_storage_index', ['folder' => $asset->getFolder()?->getId()]);
                 } catch (\DomainException|\RuntimeException $exception) {
-                    if ($asset instanceof MediaAsset) {
-                        $this->mediaStorage->discardUncommitted($asset);
-                    }
                     $form->addError(new FormError($exception->getMessage()));
                 }
             }
@@ -141,7 +142,7 @@ final class AdminStorageController extends AbstractController
         return $this->render('admin/storage/upload.html.twig', ['form' => $form, 'externalStorageReady' => $this->mediaStorage->externalUploadReady()]);
     }
 
-    #[Route('/media/{id}/edit', name: 'app_admin_media_edit', requirements: ['id' => '\\d+'], methods: ['GET', 'POST'])]
+    #[Route('/media/{id}/edit', name: 'app_admin_media_edit', requirements: ['id' => '\d+'], methods: ['GET', 'POST'])]
     public function editMedia(MediaAsset $asset, Request $request): Response
     {
         $this->ensureActiveAsset($asset);
@@ -159,7 +160,7 @@ final class AdminStorageController extends AbstractController
         ]);
     }
 
-    #[Route('/media/{id}/replace', name: 'app_admin_media_replace', requirements: ['id' => '\\d+'], methods: ['GET', 'POST'])]
+    #[Route('/media/{id}/replace', name: 'app_admin_media_replace', requirements: ['id' => '\d+'], methods: ['GET', 'POST'])]
     public function replace(MediaAsset $asset, Request $request): Response
     {
         $this->ensureActiveAsset($asset);
@@ -167,18 +168,19 @@ final class AdminStorageController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $file = $form->get('file')->getData();
             if (!$file instanceof UploadedFile) { throw new \LogicException('Uploaded file expected.'); }
-            $replacement = null;
             try {
                 $replacement = $this->mediaStorage->storeUpload($file, $asset->getModuleKey(), $asset->getAltText());
-                $replacement->setTitle($asset->getTitle())->setCaption($asset->getCaption())->setTags($asset->getTags())->setFolder($asset->getFolder());
-                $changed = $this->usageResolver->replaceUsages($asset, $replacement);
-                $this->mediaStorage->flushWithRollback($replacement);
+                try {
+                    $replacement->setTitle($asset->getTitle())->setCaption($asset->getCaption())->setTags($asset->getTags())->setFolder($asset->getFolder());
+                    $changed = $this->usageResolver->replaceUsages($asset, $replacement);
+                    $this->mediaStorage->flushWithRollback($replacement);
+                } catch (\DomainException|\RuntimeException $exception) {
+                    $this->mediaStorage->discardUncommitted($replacement);
+                    throw $exception;
+                }
                 $this->addFlash('success', 'Neue Datei gespeichert und '.$changed.' bekannte Verwendungen sicher umgestellt. Die alte Datei bleibt als Rückfall erhalten.');
                 return $this->redirectToRoute('app_admin_media_edit', ['id' => $replacement->getId()]);
             } catch (\DomainException|\RuntimeException $exception) {
-                if ($replacement instanceof MediaAsset) {
-                    $this->mediaStorage->discardUncommitted($replacement);
-                }
                 $form->addError(new FormError($exception->getMessage()));
             }
         }
@@ -248,7 +250,7 @@ final class AdminStorageController extends AbstractController
         return $this->redirectToRoute('app_admin_storage_index');
     }
 
-    #[Route('/media/{id}/delete', name: 'app_admin_media_delete', requirements: ['id' => '\\d+'], methods: ['POST'])]
+    #[Route('/media/{id}/delete', name: 'app_admin_media_delete', requirements: ['id' => '\d+'], methods: ['POST'])]
     public function delete(MediaAsset $asset, Request $request): Response
     {
         $this->ensureActiveAsset($asset);
@@ -273,13 +275,13 @@ final class AdminStorageController extends AbstractController
         return $this->folderForm(new MediaFolder(), $request, 'Medienordner anlegen', 'Ordner anlegen');
     }
 
-    #[Route('/folders/{id}/edit', name: 'app_admin_media_folder_edit', requirements: ['id' => '\\d+'], methods: ['GET', 'POST'])]
+    #[Route('/folders/{id}/edit', name: 'app_admin_media_folder_edit', requirements: ['id' => '\d+'], methods: ['GET', 'POST'])]
     public function editFolder(MediaFolder $folder, Request $request): Response
     {
         return $this->folderForm($folder, $request, 'Medienordner bearbeiten', 'Ordner speichern');
     }
 
-    #[Route('/folders/{id}/delete', name: 'app_admin_media_folder_delete', requirements: ['id' => '\\d+'], methods: ['POST'])]
+    #[Route('/folders/{id}/delete', name: 'app_admin_media_folder_delete', requirements: ['id' => '\d+'], methods: ['POST'])]
     public function deleteFolder(MediaFolder $folder, Request $request): Response
     {
         if (!$this->isCsrfTokenValid('delete-media-folder-'.$folder->getId(), $request->request->getString('_token'))) {
@@ -328,7 +330,7 @@ final class AdminStorageController extends AbstractController
     {
         $form = $this->createForm(MediaFolderType::class, $folder, ['current_folder' => $folder])->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
+        if ($form->isSubmitted()) {
             $parent = $form->get('parent')->getData();
             try {
                 $folder->setParent($parent instanceof MediaFolder ? $parent : null);
@@ -353,7 +355,7 @@ final class AdminStorageController extends AbstractController
             'heading' => $heading,
             'submitLabel' => $submitLabel,
         ]);
-        if ($form->isSubmitted() && !$form->isValid()) {
+        if ($form->isSubmitted()) {
             $response->setStatusCode(Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
