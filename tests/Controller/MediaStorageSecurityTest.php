@@ -442,6 +442,9 @@ final class MediaStorageSecurityTest extends WebTestCase
 
     private function csrf(KernelBrowser $client, string $id): string
     {
+        $client->request('GET', '/admin/storage');
+        self::assertResponseIsSuccessful();
+
         return $client->getContainer()->get(CsrfTokenManagerInterface::class)->getToken($id)->getValue();
     }
 
