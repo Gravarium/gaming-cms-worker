@@ -56,6 +56,7 @@ final class LocaleControllerTest extends WebTestCase
     private function localeToken(KernelBrowser $client): string
     {
         $settings = $client->getContainer()->get(SiteSettingsRepository::class)->current();
+        $previousLocales = $settings->getEnabledLocales();
         $settings->setEnabledLocales(['de', 'en']);
         $entityManager = $client->getContainer()->get(EntityManagerInterface::class);
         $entityManager->persist($settings);
@@ -63,7 +64,14 @@ final class LocaleControllerTest extends WebTestCase
 
         $crawler = $client->request('GET', '/');
         self::assertResponseIsSuccessful();
+        $token = (string) $crawler->filter('form[data-locale-switcher] input[name="_token"]')->attr('value');
 
-        return (string) $crawler->filter('form[data-locale-switcher] input[name="_token"]')->attr('value');
+        $settings = $client->getContainer()->get(SiteSettingsRepository::class)->current();
+        $settings->setEnabledLocales($previousLocales);
+        $entityManager = $client->getContainer()->get(EntityManagerInterface::class);
+        $entityManager->persist($settings);
+        $entityManager->flush();
+
+        return $token;
     }
 }
