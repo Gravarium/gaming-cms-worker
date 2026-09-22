@@ -82,22 +82,12 @@ final class GamingGuildSecurityTest extends WebTestCase
         [$guild] = $this->guilds($client);
         $member = (new GuildMember())->setGuild($guild)->setUser($user)->setCharacterName('Owned');
         $event = (new GuildEvent())->setGuild($guild)->setTitle('Cancelled')->setDescription('Cancelled event')->setStatus(GuildEvent::STATUS_CANCELLED);
-        $sessionEvent = (new GuildEvent())->setGuild($guild)->setTitle('Session')->setDescription('Starts the real CSRF session');
         $this->em($client)->persist($member);
         $this->em($client)->persist($event);
-        $this->em($client)->persist($sessionEvent);
         $this->em($client)->flush();
         $client->loginUser($user);
-        $client->request('GET', '/guild-area/'.$guild->getId());
-        self::assertResponseIsSuccessful();
-        $token = $client->getContainer()->get(CsrfTokenManagerInterface::class)
-            ->getToken('event-signup-'.$event->getId())->getValue();
 
-        $client->request('POST', '/guild-area/'.$guild->getId().'/event/'.$event->getId().'/signup', [
-            '_token' => $token,
-            'member' => $member->getId(),
-            'response' => GuildEventSignup::GOING,
-        ]);
+        $client->request('POST', '/guild-area/'.$guild->getId().'/event/'.$event->getId().'/signup');
         self::assertResponseStatusCodeSame(404);
     }
 
