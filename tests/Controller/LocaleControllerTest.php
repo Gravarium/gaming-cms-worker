@@ -20,7 +20,8 @@ final class LocaleControllerTest extends WebTestCase
     public function testLocaleSwitchRejectsBackslashRedirectTarget(): void
     {
         $client = static::createClient();
-        $crawler = $client->request('GET', '/');
+        $client->request('GET', '/login');
+        self::assertResponseIsSuccessful();
         $token = $client->getContainer()->get('security.csrf.token_manager')->getToken('locale-switch')->getValue();
 
         $client->request('POST', '/locale/de', [
@@ -34,6 +35,8 @@ final class LocaleControllerTest extends WebTestCase
     public function testLocaleSwitchRejectsEncodedPathSeparatorRedirectTarget(): void
     {
         $client = static::createClient();
+        $client->request('GET', '/login');
+        self::assertResponseIsSuccessful();
         $token = $client->getContainer()->get('security.csrf.token_manager')->getToken('locale-switch')->getValue();
 
         $client->request('POST', '/locale/de', [
