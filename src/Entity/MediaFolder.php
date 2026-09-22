@@ -8,6 +8,7 @@ use App\Repository\MediaFolderRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: MediaFolderRepository::class)]
 #[ORM\Table(name: 'media_folder')]
@@ -20,13 +21,15 @@ class MediaFolder
     private ?int $id = null;
 
     #[ORM\Column(length: 120)]
+    #[Assert\NotBlank]
+    #[Assert\Length(max: 120)]
     private string $name = '';
 
-    #[ORM\Column(length: 150)]
+    #[ORM\Column(length: 140)]
     private string $slug = '';
 
     #[ORM\ManyToOne(targetEntity: self::class)]
-    #[ORM\JoinColumn(onDelete: 'SET NULL')]
+    #[ORM\JoinColumn(onDelete: 'RESTRICT')]
     private ?self $parent = null;
 
     /** @var Collection<int, MediaAsset> */
