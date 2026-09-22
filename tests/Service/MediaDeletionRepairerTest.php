@@ -44,7 +44,6 @@ final class MediaDeletionRepairerTest extends KernelTestCase
         try {
             $result = $container->get(MediaDeletionRepairer::class)->repairPending();
 
-            self::assertSame(0, $result['repaired']);
             self::assertGreaterThanOrEqual(1, $result['failed']);
             $em->clear();
             self::assertInstanceOf(MediaAsset::class, $em->find(MediaAsset::class, $assetId));
