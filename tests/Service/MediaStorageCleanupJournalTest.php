@@ -94,6 +94,9 @@ final class MediaStorageCleanupJournalTest extends TestCase
     {
         if ($this->root === null) {
             $this->root = sys_get_temp_dir().'/media-journal-'.bin2hex(random_bytes(8));
+            if (!mkdir($this->root, 0700, true) && !is_dir($this->root)) {
+                self::fail('Unable to create temporary media journal root.');
+            }
         }
 
         return $this->root;
