@@ -154,6 +154,7 @@ final class AdminContentController extends AbstractController
             $document = is_string($payload['document'] ?? null) ? $payload['document'] : '';
             $expectedUpdatedAt = is_string($payload['updatedAt'] ?? null) ? $payload['updatedAt'] : '';
             $normalized = $this->contentBlocks->normalizeForStorage($document);
+            $plainText = $this->contentBlocks->plainText($normalized);
         } catch (\InvalidArgumentException|\JsonException $exception) {
             return $this->json(['error' => $exception->getMessage()], 422);
         }
@@ -161,13 +162,13 @@ final class AdminContentController extends AbstractController
         if ($expectedUpdatedAt === '' || !hash_equals($entry->getUpdatedAt()->format(DATE_ATOM), $expectedUpdatedAt)) {
             return $this->json(['error' => 'Der Inhalt wurde zwischenzeitlich geändert. Bitte neu laden.'], 409);
         }
-        if ($normalized === $entry->getBody()) {
+        if ($normalized === $entry->getEditorDocument() && $plainText === $entry->getBody()) {
             return $this->json(['document' => $normalized, 'updatedAt' => $expectedUpdatedAt, 'unchanged' => true]);
         }
 
         $user = $this->requireUser();
         try {
-            $this->entityManager->wrapInTransaction(function (EntityManagerInterface $entityManager) use ($entry, $normalized, $expectedUpdatedAt, $user): void {
+            $this->entityManager->wrapInTransaction(function (EntityManagerInterface $entityManager) use ($entry, $normalized, $plainText, $expectedUpdatedAt, $user): void {
                 $entityManager->refresh($entry, LockMode::PESSIMISTIC_WRITE);
                 if (!hash_equals($entry->getUpdatedAt()->format(DATE_ATOM), $expectedUpdatedAt)) {
                     throw new ConflictHttpException('Der Inhalt wurde zwischenzeitlich geändert.');
@@ -175,7 +176,7 @@ final class AdminContentController extends AbstractController
                 if (!in_array($entry->getStatus(), [ContentEntry::STATUS_DRAFT, ContentEntry::STATUS_REVIEW], true)) {
                     throw new ConflictHttpException('Autosave ist für diesen Status nicht erlaubt.');
                 }
-                $entry->setBody($normalized);
+                $entry->setEditorDocument($normalized)->setBody($plainText);
                 $this->revisionManager->capture($entry, $user);
                 $this->audit->record('content.autosave', $entry, $entry->getId(), 'Editor-Entwurf automatisch gesichert.');
             });
@@ -183,7 +184,7 @@ final class AdminContentController extends AbstractController
             return $this->json(['error' => $exception->getMessage()], 409);
         }
 
-        return $this->json(['document' => $entry->getBody(), 'updatedAt' => $entry->getUpdatedAt()->format(DATE_ATOM), 'unchanged' => false]);
+        return $this->json(['document' => $entry->getEditableDocument(), 'updatedAt' => $entry->getUpdatedAt()->format(DATE_ATOM), 'unchanged' => false]);
     }
 
     #[Route('/{id}/duplicate', name: 'app_admin_content_duplicate', requirements: ['id' => '\\d+'], methods: ['POST'])]
@@ -192,7 +193,7 @@ final class AdminContentController extends AbstractController
         $this->assertCsrf('duplicate-content-'.$entry->getId(), $request);
         $copy = (new ContentEntry())->setAuthor($this->requireUser())->setType($entry->getType())->setTitle('Kopie von '.$entry->getTitle())
             ->setSubtitle($entry->getSubtitle())->setSlug($this->createUniqueSlug($entry->getTitle().'-kopie'))->setExcerpt($entry->getExcerpt())
-            ->setBody($entry->getBody())->setCategory($entry->getCategory())->setStatus(ContentEntry::STATUS_DRAFT)->setFeatured(false)->setPinned(false)
+            ->setBody($entry->getBody())->setEditorDocument($entry->getEditorDocument())->setCategory($entry->getCategory())->setStatus(ContentEntry::STATUS_DRAFT)->setFeatured(false)->setPinned(false)
             ->setUnlisted($entry->isUnlisted())->setSeoTitle($entry->getSeoTitle())->setSeoDescription($entry->getSeoDescription())->setCanonicalUrl(null)->setNoIndex(true);
         foreach ($entry->getTags() as $tag) { $copy->addTag($tag); }
         $this->entityManager->persist($copy); $this->entityManager->flush();
@@ -307,7 +308,8 @@ final class AdminContentController extends AbstractController
     private function synchronizeOrReject(ContentEntry $entry, FormInterface $form): bool
     {
         try {
-            $entry->setBody($this->contentBlocks->normalizeForStorage($entry->getBody()));
+            $normalized = $this->contentBlocks->normalizeForStorage($entry->getEditableDocument());
+            $entry->setEditorDocument($normalized)->setBody($this->contentBlocks->plainText($normalized));
             $entry->synchronizePublication();
             return true;
         } catch (\DomainException|\InvalidArgumentException $exception) {

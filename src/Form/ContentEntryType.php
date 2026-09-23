@@ -25,7 +25,7 @@ final class ContentEntryType extends AbstractType
             ->add('category', EntityType::class, ['label' => 'Kategorie', 'class' => Category::class, 'choice_label' => 'displayName', 'placeholder' => 'Keine Kategorie', 'required' => false])
             ->add('tags', EntityType::class, ['label' => 'Tags', 'class' => ContentTag::class, 'choice_label' => 'name', 'multiple' => true, 'expanded' => true, 'required' => false])
             ->add('excerpt', TextareaType::class, ['label' => 'Kurztext', 'required' => false, 'attr' => ['rows' => 3, 'maxlength' => 500]])
-            ->add('body', TextareaType::class, ['label' => 'Inhalt', 'attr' => ['rows' => 12, 'data-content-editor-target' => 'source', 'class' => 'content-editor-source']])
+            ->add('body', TextareaType::class, ['label' => 'Inhalt', 'property_path' => 'editableDocument', 'attr' => ['rows' => 12, 'data-content-editor-target' => 'source', 'class' => 'content-editor-source']])
             ->add('status', ChoiceType::class, ['label' => 'Workflow-Status', 'choices' => ['Entwurf' => ContentEntry::STATUS_DRAFT, 'Zur Freigabe' => ContentEntry::STATUS_REVIEW, 'Geplant' => ContentEntry::STATUS_SCHEDULED, 'Veröffentlicht' => ContentEntry::STATUS_PUBLISHED, 'Archiviert' => ContentEntry::STATUS_ARCHIVED]])
             ->add('scheduledAt', DateTimeType::class, ['label' => 'Veröffentlichung planen', 'required' => false, 'widget' => 'single_text', 'help' => 'Nur für den Status „Geplant“.'])
             ->add('scheduledUnpublishAt', DateTimeType::class, ['label' => 'Veröffentlichung automatisch beenden', 'required' => false, 'widget' => 'single_text', 'help' => 'Optional. Muss nach Veröffentlichung bzw. geplantem Start liegen.'])

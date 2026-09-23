@@ -62,7 +62,10 @@ final class ContentEditorControllerTest extends WebTestCase
 
         $em = $client->getContainer()->get(EntityManagerInterface::class);
         $em->clear();
-        self::assertSame($original, $em->find(ContentEntry::class, $entry->getId())?->getBody());
+        $reloaded = $em->find(ContentEntry::class, $entry->getId());
+        self::assertInstanceOf(ContentEntry::class, $reloaded);
+        self::assertSame($original, $reloaded->getBody());
+        self::assertNull($reloaded->getEditorDocument());
     }
 
     public function testPreviewRejectsUnsafeLinkAndUnsafeOrForeignMediaReferences(): void
@@ -147,8 +150,16 @@ final class ContentEditorControllerTest extends WebTestCase
         $em->clear();
         $saved = $em->find(ContentEntry::class, $entry->getId());
         self::assertInstanceOf(ContentEntry::class, $saved);
-        self::assertStringStartsWith(ContentBlockDocument::PREFIX, $saved->getBody());
-        self::assertSame(1, $em->getRepository(ContentRevision::class)->count(['entry' => $saved]));
+        self::assertSame("Autosave\nGesicherter Entwurf", $saved->getBody());
+        self::assertStringNotContainsString(ContentBlockDocument::PREFIX, $saved->getBody());
+        self::assertNotNull($saved->getEditorDocument());
+        self::assertStringStartsWith(ContentBlockDocument::PREFIX, $saved->getEditorDocument());
+
+        $revisions = $em->getRepository(ContentRevision::class)->findBy(['entry' => $saved]);
+        self::assertCount(1, $revisions);
+        self::assertSame("Autosave\nGesicherter Entwurf", $revisions[0]->getBody());
+        self::assertNotNull($revisions[0]->getEditorDocument());
+        self::assertStringStartsWith(ContentBlockDocument::PREFIX, $revisions[0]->getEditorDocument());
     }
 
     public function testAutosaveRejectsStaleWrites(): void
@@ -191,6 +202,13 @@ final class ContentEditorControllerTest extends WebTestCase
             json_encode(['document' => $document, 'updatedAt' => $updatedAt], JSON_THROW_ON_ERROR),
         );
         self::assertResponseStatusCodeSame(409);
+
+        $em = $client->getContainer()->get(EntityManagerInterface::class);
+        $em->clear();
+        $reloaded = $em->find(ContentEntry::class, $published->getId());
+        self::assertInstanceOf(ContentEntry::class, $reloaded);
+        self::assertSame('Legacy original', $reloaded->getBody());
+        self::assertNull($reloaded->getEditorDocument());
     }
 
     public function testDisabledContentModuleRejectsEditorEndpoint(): void

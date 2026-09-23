@@ -34,6 +34,8 @@ class ContentRevision
     private ?string $excerpt;
     #[ORM\Column(type: Types::TEXT)]
     private string $body;
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $editorDocument;
     #[ORM\Column(length: 20)]
     private string $status;
     #[ORM\Column(type: Types::DATETIME_IMMUTABLE, nullable: true)]
@@ -81,6 +83,7 @@ class ContentRevision
         $this->slug = $entry->getSlug();
         $this->excerpt = $entry->getExcerpt();
         $this->body = $entry->getBody();
+        $this->editorDocument = $entry->getEditorDocument();
         $this->status = $entry->getStatus();
         $this->publishedAt = $entry->getPublishedAt();
         $this->scheduledAt = $entry->getScheduledAt();
@@ -104,6 +107,7 @@ class ContentRevision
     public function getSlug(): string { return $this->slug; }
     public function getExcerpt(): ?string { return $this->excerpt; }
     public function getBody(): string { return $this->body; }
+    public function getEditorDocument(): ?string { return $this->editorDocument; }
     public function getStatus(): string { return $this->status; }
     public function getCategory(): ?Category { return $this->category; }
     /** @return list<string> */
@@ -115,7 +119,7 @@ class ContentRevision
     {
         if ($entry !== $this->entry) { throw new \DomainException('Revision belongs to another content entry.'); }
         $entry->setType($this->type)->setTitle($this->title)->setSubtitle($this->subtitle)->setSlug($this->slug)
-            ->setExcerpt($this->excerpt)->setBody($this->body)->setStatus($this->status)
+            ->setExcerpt($this->excerpt)->setBody($this->body)->setEditorDocument($this->editorDocument)->setStatus($this->status)
             ->setPublishedAt($this->publishedAt)->setScheduledAt($this->scheduledAt)
             ->setScheduledUnpublishAt($this->scheduledUnpublishAt)->setCategory($this->category)
             ->setFeatured($this->featured)->setPinned($this->pinned)->setUnlisted($this->unlisted)

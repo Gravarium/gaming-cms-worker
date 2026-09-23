@@ -10,4 +10,9 @@ final readonly class ContentBlockPolicy
         foreach($this->documents->decode($normalized)['blocks'] as $block){if(($block['type']??null)!=='media')continue;$id=(int)$block['assetId'];if($this->media->resolve($id)===null)throw new \InvalidArgumentException('Die Medienreferenz #'.$id.' ist nicht verfügbar oder nicht für Content freigegeben.');}
         return $normalized;
     }
+
+    public function plainText(string $document): string
+    {
+        return $this->documents->plainText($document);
+    }
 }
