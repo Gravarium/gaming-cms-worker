@@ -6,6 +6,7 @@ namespace App\Controller;
 
 use App\Entity\ContentEntry;
 use App\Entity\ContentRedirect;
+use App\Entity\PageLayout;
 use App\Entity\User;
 use App\Form\ContentEntryType;
 use App\Repository\CategoryRepository;
@@ -87,6 +88,7 @@ final class AdminContentController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $entry->setSlug($this->createUniqueSlug($entry->getSlug() ?: $entry->getTitle(), $entry->getId()));
             if ($this->synchronizeOrReject($entry, $form)) {
+                $this->removePageLayoutIfNotPage($entry);
                 if ($oldSlug !== '' && $oldSlug !== $entry->getSlug()) { $this->rememberRedirect($entry->getType(), $oldSlug, $entry); }
                 $this->revisionManager->capture($entry, $this->requireUser());
                 $this->audit->record('content.update', $entry, $entry->getId(), 'Inhalt bearbeitet.', ['status' => $entry->getStatus()]);
@@ -141,6 +143,7 @@ final class AdminContentController extends AbstractController
         if ($revision === null || $revision->getEntry() !== $entry) { throw $this->createNotFoundException(); }
         $this->assertCsrf('restore-content-'.$entry->getId().'-'.$revisionId, $request);
         $this->revisionManager->restore($entry, $revision, $this->requireUser());
+        $this->removePageLayoutIfNotPage($entry);
         $this->audit->record('content.restore_revision', $entry, $entry->getId(), 'Content-Revision wiederhergestellt.', ['revision' => $revision->getRevisionNumber()]);
         $this->entityManager->flush(); $this->addFlash('success', 'Revision '.$revision->getRevisionNumber().' wurde als Entwurf wiederhergestellt.');
         return $this->redirectToRoute('app_admin_content_edit', ['id' => $entry->getId()]);
@@ -173,7 +176,10 @@ final class AdminContentController extends AbstractController
         $this->assertCsrf('purge-content-'.$entry->getId(), $request);
         if ($entry->getStatus() !== ContentEntry::STATUS_TRASHED) { throw $this->createAccessDeniedException('Nur Inhalte aus dem Papierkorb können endgültig gelöscht werden.'); }
         $id = $entry->getId(); $this->audit->record('content.purge', ContentEntry::class, $id, 'Inhalt endgültig gelöscht.');
-        $this->entityManager->remove($entry); $this->entityManager->flush(); $this->addFlash('success', 'Der Inhalt wurde endgültig gelöscht.');
+        $this->entityManager->wrapInTransaction(function () use ($entry): void {
+            $this->removePageLayout($entry);
+            $this->entityManager->remove($entry);
+        }); $this->addFlash('success', 'Der Inhalt wurde endgültig gelöscht.');
         return $this->redirectToRoute('app_admin_content_index', ['status' => ContentEntry::STATUS_TRASHED]);
     }
 
@@ -203,6 +209,19 @@ final class AdminContentController extends AbstractController
         $this->audit->record('content.bulk', ContentEntry::class, null, 'Bulk-Aktion auf Inhalte angewendet.', ['actionName' => $action, 'count' => $changed]);
         $this->entityManager->flush(); $this->addFlash('success', sprintf('%d Inhalte wurden aktualisiert.', $changed));
         return $this->redirectToRoute('app_admin_content_index');
+    }
+
+    private function removePageLayoutIfNotPage(ContentEntry $entry): void
+    {
+        if ($entry->getType() !== ContentEntry::TYPE_PAGE) { $this->removePageLayout($entry); }
+    }
+
+    private function removePageLayout(ContentEntry $entry): void
+    {
+        $id = $entry->getId();
+        if ($id === null) { return; }
+        $layout = $this->entityManager->find(PageLayout::class, 'page-'.$id);
+        if ($layout !== null) { $this->entityManager->remove($layout); }
     }
 
     /** @param FormInterface<mixed> $form */

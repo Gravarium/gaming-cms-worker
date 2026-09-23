@@ -5,16 +5,18 @@ namespace App\Layout;
 
 use App\Entity\MediaAsset;
 use App\Module\CmsModuleManager;
+use App\Service\MediaUrlPolicy;
 use Doctrine\ORM\EntityManagerInterface;
 
 final readonly class LayoutImages
 {
-    public function __construct(private EntityManagerInterface $em,private CmsModuleManager $modules) {}
+    public function __construct(private EntityManagerInterface $em,private CmsModuleManager $modules, private MediaUrlPolicy $mediaUrls) {}
     public function usable(MediaAsset $asset): bool
     {
         $url=$asset->getLocation();
         return !$asset->isDeletionPending() && in_array($asset->getMimeType(),['image/jpeg','image/png','image/webp','image/gif','image/avif'],true)
-            && (preg_match('#^/uploads/[a-zA-Z0-9/_\-.]+$#D',$url)===1 || (str_starts_with($url,'https://') && filter_var($url,FILTER_VALIDATE_URL)!==false && parse_url($url,PHP_URL_USER)===null && parse_url($url,PHP_URL_PASS)===null));
+            && (str_starts_with($url, '/uploads/media/') || str_starts_with($url, 'https://'))
+            && $this->mediaUrls->isSafePlayback($url);
     }
     /** @return list<array{id:int,title:string}> */
     public function choices(): array

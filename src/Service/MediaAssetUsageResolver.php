@@ -8,6 +8,7 @@ use App\Entity\Guild;
 use App\Entity\MediaAsset;
 use App\Entity\Video;
 use App\Entity\PageLayout;
+use App\Entity\ContentEntry;
 use App\Repository\ContentEntryRepository;
 use App\Repository\SiteSettingsRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -91,6 +92,12 @@ final class MediaAssetUsageResolver
         if ($asset->getId() === null) return [];
         $found=[];
         foreach ($this->entityManager->getRepository(PageLayout::class)->findAll() as $layout) {
+            $context = $layout->getContext();
+            if ($context !== 'home') {
+                if (preg_match('/^page-([1-9][0-9]*)$/D', $context, $match) !== 1) continue;
+                $entry = $this->entityManager->find(ContentEntry::class, (int) $match[1]);
+                if (!$entry instanceof ContentEntry || $entry->getType() !== ContentEntry::TYPE_PAGE) continue;
+            }
             $document=$layout->getDocument();
             if (!is_array($document['widgets'] ?? null)) continue;
             foreach ($document['widgets'] as $widget) if (is_array($widget) && is_array($widget['config'] ?? null) && ($widget['config']['imageId'] ?? null) === $asset->getId()) { $found[]=$layout;break; }
