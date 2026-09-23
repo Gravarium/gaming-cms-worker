@@ -1,0 +1,96 @@
+{
+  "schema_version": 1,
+  "package_id": "FCP-050",
+  "instruction": "WORK",
+  "repository": "Gravarium/gaming-cms-worker",
+  "worker_id": "worker-6",
+  "baseline": "worker/account-6",
+  "base_sha": "39493afbf0849a37d1c294b9f77972fcb844d4f7",
+  "branch": "feature/fcp-050-security-reassessment-g2",
+  "lease_id": "FCP-050-g2",
+  "generation": 2,
+  "claimed_at": "2026-09-23T13:52:07Z",
+  "expires_at": "2026-09-23T15:42:07Z",
+  "allowed_paths": [
+    "SECURITY-ASSIGNMENT.json",
+    "assets/",
+    "composer.json",
+    "composer.lock",
+    "config/",
+    "importmap.php",
+    "migrations/",
+    "package.json",
+    "phpstan.neon.dist",
+    "phpunit.dist.xml",
+    "public/",
+    "src/",
+    "symfony.lock",
+    "templates/",
+    "tests/",
+    "translations/"
+  ],
+  "forbidden_paths": [
+    "private/",
+    "PrivateCore/",
+    "ops/",
+    "docs/",
+    "bin/",
+    ".github/",
+    "AGENTS.md",
+    "WORKER.md",
+    "WORKER-TASK.json",
+    "WORKER-MANIFEST.json",
+    "WORKER-FILES.sha256",
+    ".worker-snapshot",
+    ".env",
+    ".env.local",
+    ".env.prod",
+    ".env.prod.local"
+  ],
+  "objective": "Continue the existing complete security reassessment, hardening and quality improvement of the entire worker-visible system after the Trusted integration of the two confirmed layout regressions. Re-review all changes since sanitized baseline 2c5b2ba311f3706a3185092100862658fa00240e, particularly Layout/Widget/Theme, verify the Trusted fixes and investigate further weaknesses. Historical green HEAD is evidence only for its own SHA.",
+  "required_deliverables": [
+    "Confirm worker main and worker/account-6 exactly match this generation-2 base before edits; if either advances or the lease expires, STOP, checkpoint the current feature HEAD and request a new Trusted assignment.",
+    "Review entire worker-visible system and all changes since 2c5b2ba311f3706a3185092100862658fa00240e; include new Layout/Widget/Theme, admin and public render boundaries, media, content, lifecycle, auth, and module isolation. Record reviewed areas and residual risks without claiming old green CI covers new code.",
+    "Verify the integrated LayoutImages::usable central MediaUrlPolicy fix, including unsafe paths, remote hosts, MIME, and positive/negative regression coverage; report any remaining gap.",
+    "Verify integrated PageLayout lifecycle behavior on purge, page-to-news edit, revision restoration and media usage; add missing lifecycle regressions and report any remaining orphan or race.",
+    "Preserve protection across every fix: CSRF, authorization, URL/MIME policy, browser escaping, concurrency, recovery and fail-closed behavior; never suppress diagnostics or weaken tests, PHPStan level or CI to get green.",
+    "Stop immediately on red tests or CI and repair the root cause; keep narrow reviewable commits and checkpoint before lease expiry.",
+    "Create worker PR into worker/account-6 from the assigned feature branch; provide exact final SHA, complete changed_paths, tested commands/results and detached WORKER-TASK.json; worker does not merge or deploy.",
+    "Do not reconstruct private/trusted-only implementation; report any necessary trusted-only fix as a separate Trusted handoff and do not modify forbidden paths."
+  ],
+  "required_tests": [
+    "targeted PHPunit regression suites for both findings and other changed domains",
+    "PHPStan at existing gate without baseline/suppression change",
+    "Composer audit on locked dependencies",
+    "existing JS security tests, Symfony/Twig/YAML/container/Doctrine and migration checks",
+    "full Worker CI on exact final PR HEAD including PostgreSQL 18 migration chain"
+  ],
+  "completion_report": [
+    "exact branch, base_sha, lease_id, generation and current worker baseline",
+    "exact final HEAD and complete changed_paths as detached WORKER-TASK.json (never committed)",
+    "CI run IDs and every required job conclusion on the exact final SHA",
+    "areas reviewed since 2c5b2ba311f3706a3185092100862658fa00240e and confirmed fixes",
+    "unresolved risks, private/trusted-only follow-ups and next action"
+  ],
+  "security_invariants": [
+    "trusted-main-is-the-only-integration-and-deployment-source",
+    "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+    "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+    "no-executable-public-uploads",
+    "no-secrets-or-trusted-private-runtime-in-worker-source",
+    "preserve-existing-security-controls-tests-phpstan-and-ci",
+    "red-ci-stops-integration",
+    "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment",
+    "no-private-runtime-reconstruction"
+  ],
+  "continuation": {
+    "master_scope": "The complete pre-existing worker-visible security reassessment remains in force. Generation 1 ended without worker edits; generation 2 starts from the corrected sanitized baseline. Trusted-only/private implementation remains outside Worker access.",
+    "last_accepted_head": "1e774e31d970c3e2623c3606cdae573bab9efade",
+    "review_changes_since": "2c5b2ba311f3706a3185092100862658fa00240e",
+    "priority_findings": [
+      "Trusted PR #123 already corrected LayoutImages by central MediaUrlPolicy; verify full behavior and tests, report any remaining bypass.",
+      "Trusted PR #123 corrected PageLayout on purge/type changes and orphan media usage; verify revision restoration, concurrent edits, existing orphan handling and deletion behavior."
+    ]
+  },
+  "freshness": "The only current authority is the Trusted queue. Before every resumed session or commit, compare current worker/account-6 and main against exact base_sha and verify lease/generation/expiry with Trusted coordinator. STOP and checkpoint the feature HEAD on expired lease, changed generation/baseline or unavailable freshness; new generation or worker can continue from reviewed checkpoint without claiming old authorization."
+}
