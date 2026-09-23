@@ -92,7 +92,7 @@ class ContentEntry
     private ?string $seoDescription = null;
 
     #[ORM\Column(length: 500, nullable: true)]
-    #[Assert\Url(protocols: ['http', 'https'])]
+    #[Assert\Url(protocols: ['http', 'https'], requireTld: false)]
     #[Assert\Length(max: 500)]
     private ?string $canonicalUrl = null;
 

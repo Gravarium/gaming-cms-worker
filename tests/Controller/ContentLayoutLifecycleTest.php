@@ -11,7 +11,6 @@ use App\Entity\User;
 use App\Security\CmsPermission;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 
 final class ContentLayoutLifecycleTest extends WebTestCase
 {
@@ -50,8 +49,10 @@ final class ContentLayoutLifecycleTest extends WebTestCase
         $revision=new ContentRevision($entry,1,$user);$em->persist($revision);$entry->setType(ContentEntry::TYPE_PAGE);$em->flush();
         $layout=new PageLayout('page-'.$entry->getId());$layout->replace(['widgets'=>[]]);$em->persist($layout);$em->flush();
         $client->loginUser($user);
-        $token=$client->getContainer()->get(CsrfTokenManagerInterface::class)->getToken('restore-content-'.$entry->getId().'-'.$revision->getId())->getValue();
-        $client->request('POST','/admin/content/'.$entry->getId().'/revisions/'.$revision->getId().'/restore',['_token'=>$token]);self::assertResponseRedirects();
+        $crawler=$client->request('GET','/admin/content/'.$entry->getId().'/history');self::assertResponseIsSuccessful();
+        $action='/admin/content/'.$entry->getId().'/revisions/'.$revision->getId().'/restore';
+        $token=$crawler->filter('form[action="'.$action.'"] input[name="_token"]')->attr('value');self::assertNotNull($token);
+        $client->request('POST',$action,['_token'=>$token]);self::assertResponseRedirects();
         $em->clear();
         self::assertNull($em->find(PageLayout::class,'page-'.$entry->getId()));
         self::assertSame(ContentEntry::TYPE_NEWS,$em->find(ContentEntry::class,$entry->getId())?->getType());
