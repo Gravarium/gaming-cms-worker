@@ -31,7 +31,10 @@ final class ContentBlockDocument
         $body=trim($body); if($body==='')return []; $parts=preg_split('/\R{2,}/u',$body)?:[$body];$blocks=[];
         foreach($parts as $part){$text=$this->boundedText($part,8000,'Textblock');if($text!=='')$blocks[]=['type'=>'text','text'=>$text];if(count($blocks)>=self::MAX_BLOCKS)throw new \InvalidArgumentException('Der vorhandene Inhalt enthält zu viele Abschnitte für den Block-Editor.');}return $blocks;
     }
-    /** @param array<string,mixed> $block @return array<string,mixed> */
+    /**
+     * @param array<string, mixed> $block
+     * @return array<string, mixed>
+     */
     private function normalizeBlock(array $block): array
     {
         $type=is_string($block['type']??null)?$block['type']:'';
