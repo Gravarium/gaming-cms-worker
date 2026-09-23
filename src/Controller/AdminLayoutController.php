@@ -13,6 +13,7 @@ use App\Service\AuditLogger;
 use App\Theme\ThemeRegistry;
 use App\Widget\WidgetRegistry;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
+use Doctrine\DBAL\LockMode;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\OptimisticLockException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -55,32 +56,47 @@ final class AdminLayoutController extends AbstractController
         try {
             $input=json_decode($request->getContent(),true,32,JSON_THROW_ON_ERROR);
             if (!is_array($input) || !is_int($input['version']??null) || !is_array($input['document']??null) || array_diff(array_keys($input),['version','document'])!==[]) throw new \DomainException('Ungültige Anfrage.');
-            $record=$this->store->record($context);
-            if (($record?->getVersion()??0)!==$input['version']) return $this->error('Die Seite wurde inzwischen geändert. Bitte neu laden; deine Änderungen wurden nicht überschrieben.',409);
-            $previous=$this->store->load($context);
-            $document=$this->validator->validate($input['document'],$previous,($input['document']['theme']??null)!==$previous->theme);
-            $this->images->resolve($document,true);
             if ($operation==='preview') {
+                $record=$this->store->record($context);
+                if (($record?->getVersion()??0)!==$input['version']) return $this->error('Die Seite wurde inzwischen geändert. Bitte neu laden; deine Änderungen wurden nicht überschrieben.',409);
+                $previous=$this->store->load($context);
+                $document=$this->validator->validate($input['document'],$previous,($input['document']['theme']??null)!==$previous->theme);
+                $this->images->resolve($document,true);
                 $entry=$context==='home'?null:$this->em->find(ContentEntry::class,(int)substr($context,5));
                 $response=$this->render('layout/preview.html.twig',['portal'=>$this->renderer->view($document),'entry'=>$entry]);
                 $response->headers->set('Cache-Control','private, no-store');
                 $response->headers->set('X-Robots-Tag','noindex, nofollow');
                 return $response;
             }
-            $record??=new PageLayout($context);
-            $record->replace($document->toArray());
-            $this->em->wrapInTransaction(function () use ($record,$context): void {
-                $this->em->persist($record);
+            return $this->em->wrapInTransaction(function (EntityManagerInterface $entityManager) use ($context,$input): JsonResponse {
+                $this->lockPageContext($entityManager,$context);
+                $record=$this->store->record($context);
+                if (($record?->getVersion()??0)!==$input['version']) return $this->error('Die Seite wurde inzwischen geändert. Bitte neu laden; deine Änderungen wurden nicht überschrieben.',409);
+                $previous=$this->store->load($context);
+                $document=$this->validator->validate($input['document'],$previous,($input['document']['theme']??null)!==$previous->theme);
+                $this->images->resolve($document,true);
+                $record??=new PageLayout($context);
+                $record->replace($document->toArray());
+                $entityManager->persist($record);
                 $this->audit->record('layout.saved',PageLayout::class,null,'Seitenlayout gespeichert',['context'=>$context]);
+                $response=new JsonResponse(['document'=>$document->toArray(),'version'=>$record->getVersion(),'notices'=>$document->notices]);
+                $response->headers->set('Cache-Control','private, no-store');
+                return $response;
             });
-            $response=new JsonResponse(['document'=>$document->toArray(),'version'=>$record->getVersion(),'notices'=>$document->notices]);
-            $response->headers->set('Cache-Control','private, no-store');
-            return $response;
         } catch (OptimisticLockException|UniqueConstraintViolationException) {
             return $this->error('Gleichzeitige Änderung erkannt. Bitte neu laden.',409);
         } catch (\JsonException|\DomainException $exception) {
             return $this->error($exception instanceof \JsonException?'Ungültiges JSON.':$exception->getMessage(),422);
         }
+    }
+    private function lockPageContext(EntityManagerInterface $entityManager,string $context): void
+    {
+        if ($context==='home') return;
+        $entry=$entityManager->createQueryBuilder()->select('entry')->from(ContentEntry::class,'entry')
+            ->andWhere('entry.id = :id')->andWhere('entry.type = :type')
+            ->setParameter('id',(int)substr($context,5))->setParameter('type',ContentEntry::TYPE_PAGE)
+            ->getQuery()->setLockMode(LockMode::PESSIMISTIC_WRITE)->getOneOrNullResult();
+        if (!$entry instanceof ContentEntry) throw $this->createNotFoundException();
     }
     private function error(string $message,int $status): JsonResponse { return new JsonResponse(['error'=>$message],$status,['Cache-Control'=>'private, no-store']); }
 }
