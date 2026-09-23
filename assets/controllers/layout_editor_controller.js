@@ -3,13 +3,14 @@ export default class extends Controller {
     static targets = ['theme','palette','options','canvas','status','preview'];
     static values = { state:Object,saveUrl:String,previewUrl:String,token:String };
     connect() {
-        this.state=structuredClone(this.stateValue);this.dirty=false;this.busy=false;this.dragged=null;
+        this.state=structuredClone(this.stateValue);this.dirty=false;this.busy=false;this.dragged=null;this.pointerDrag=null;
+        this.pointerMove=e=>this.movePointer(e);this.pointerEnd=e=>this.endPointer(e);window.addEventListener('pointermove',this.pointerMove,{passive:false});window.addEventListener('pointerup',this.pointerEnd);window.addEventListener('pointercancel',this.pointerEnd);
         this.beforeUnload=e=>{if(this.dirty){e.preventDefault();e.returnValue='';}};
         window.addEventListener('beforeunload',this.beforeUnload);
         this.beforeVisit=e=>{if(this.dirty&&!window.confirm('Ungespeicherte Änderungen verwerfen?'))e.preventDefault();};document.addEventListener('turbo:before-visit',this.beforeVisit);
         this.themeTarget.replaceChildren();this.state.themes.forEach(t=>this.themeTarget.add(new Option(t.label,t.key)));this.render();
     }
-    disconnect(){window.removeEventListener('beforeunload',this.beforeUnload);document.removeEventListener('turbo:before-visit',this.beforeVisit);}
+    disconnect(){window.removeEventListener('beforeunload',this.beforeUnload);document.removeEventListener('turbo:before-visit',this.beforeVisit);window.removeEventListener('pointermove',this.pointerMove);window.removeEventListener('pointerup',this.pointerEnd);window.removeEventListener('pointercancel',this.pointerEnd);this.clearPointer();}
     node(tag,text,className){const n=document.createElement(tag);if(text!==undefined)n.textContent=text;if(className)n.className=className;return n;}
     button(text,callback){const b=this.node('button',text);b.type='button';b.addEventListener('click',callback);return b;}
     changed(){this.dirty=true;this.statusTarget.textContent='Ungespeicherte Änderungen.';}
@@ -27,18 +28,20 @@ export default class extends Controller {
         const doc=this.state.document,theme=this.state.themes.find(t=>t.key===doc.theme);
         this.themeTarget.value=doc.theme;this.paletteTarget.replaceChildren();this.optionsTarget.replaceChildren();this.canvasTarget.replaceChildren();this.schemaFields(this.state.optionSchema,doc.options,this.optionsTarget);
         this.state.widgets.forEach(def=>{const add=this.button('+ '+def.label,()=>{
+            if(this.suppressPaletteClick){this.suppressPaletteClick=false;return;}
             const region=theme.regions.find(r=>(r==='main'||r==='content')&&(!def.regions.length||def.regions.includes(r)))??theme.regions.find(r=>!def.regions.length||def.regions.includes(r));
             if(!region){this.statusTarget.textContent='Kein kompatibler Bereich.';return;}
             const config=Object.fromEntries(Object.entries(def.schema??this.state.widgetSchema).map(([k,f])=>[k,f.default]));
             doc.widgets.push({id:crypto.randomUUID(),type:def.key,region,enabled:true,config});this.changed();this.render();
-        });add.disabled=!def.multiple&&doc.widgets.some(w=>w.type===def.key);this.paletteTarget.append(add);});
+        });add.disabled=!def.multiple&&doc.widgets.some(w=>w.type===def.key);add.addEventListener('pointerdown',e=>{if(!add.disabled)this.startPointer(e,{type:def.key},add);});this.paletteTarget.append(add);});
         const regions=[...new Set([...theme.regions,...doc.widgets.map(w=>w.region)])];
         regions.forEach(region=>{
             const zone=this.node('section',undefined,'editor-zone');zone.dataset.region=region;zone.append(this.node('h2',region+(theme.regions.includes(region)?'':' → wird beim Speichern zugeordnet')));
             zone.addEventListener('dragover',e=>e.preventDefault());zone.addEventListener('drop',e=>{e.preventDefault();if(this.busy)return;const w=doc.widgets.find(w=>w.id===this.dragged);if(w&&this.canMove(w,region)){w.region=region;this.changed();this.render();}this.dragged=null;});
             doc.widgets.filter(w=>w.region===region).forEach(w=>{
-                const def=this.state.widgets.find(d=>d.key===w.type),card=this.node('article',undefined,'editor-widget');card.draggable=Boolean(def);card.dataset.widgetId=w.id;
-                card.addEventListener('dragstart',e=>{if(this.busy){e.preventDefault();return;}this.dragged=w.id;e.dataTransfer.setData('text/plain',w.id);});card.append(this.node('h3',def?.label??w.type+' (derzeit nicht verfügbar)'));
+                const def=this.state.widgets.find(d=>d.key===w.type),card=this.node('article',undefined,'editor-widget');card.draggable=false;card.dataset.widgetId=w.id;
+                card.append(this.node('h3',def?.label??w.type+' (derzeit nicht verfügbar)'));
+                const handle=this.button('↕ Verschieben',()=>{});handle.className='editor-drag-handle';handle.setAttribute('aria-label','Widget ziehen: '+(def?.label??w.type));handle.addEventListener('pointerdown',e=>this.startPointer(e,{id:w.id},handle));card.append(handle);
                 card.addEventListener('dragover',e=>e.preventDefault());card.addEventListener('drop',e=>{e.preventDefault();e.stopPropagation();if(this.busy)return;const moved=doc.widgets.find(x=>x.id===this.dragged);if(!moved||moved===w||!this.canMove(moved,w.region))return;moved.region=w.region;doc.widgets=doc.widgets.filter(x=>x!==moved);doc.widgets.splice(doc.widgets.indexOf(w),0,moved);this.dragged=null;this.changed();this.render();});
                 const controls=this.node('div',undefined,'editor-widget-tools'),active=this.node('label','Aktiv'),check=this.node('input');check.type='checkbox';check.checked=w.enabled;check.disabled=!def;check.addEventListener('change',()=>{w.enabled=check.checked;this.changed();});active.append(check);controls.append(active);
                 const regionLabel=this.node('label','Region'),select=this.node('select');regions.forEach(r=>{if(this.canMove(w,r)||r===w.region)select.add(new Option(r,r));});select.value=w.region;select.addEventListener('change',()=>{w.region=select.value;this.changed();this.render();});regionLabel.append(select);controls.append(regionLabel);
@@ -47,6 +50,51 @@ export default class extends Controller {
             });
             if(!doc.widgets.some(w=>w.region===region))zone.append(this.node('p','Leer. Widgets hierher ziehen.','editor-empty'));this.canvasTarget.append(zone);
         });
+    }
+    startPointer(e,source,element){
+        if(this.busy||e.button!==0)return;
+        this.pointerDrag={id:e.pointerId,x:e.clientX,y:e.clientY,source,element,active:false,ghost:null,target:null};
+    }
+    movePointer(e){
+        const drag=this.pointerDrag;if(!drag||drag.id!==e.pointerId)return;
+        if(!drag.active&&Math.hypot(e.clientX-drag.x,e.clientY-drag.y)<6)return;
+        if(!drag.active){
+            drag.active=true;drag.ghost=this.node('div',drag.element.textContent,'editor-drag-ghost');document.body.append(drag.ghost);
+            drag.element.classList.add('editor-dragging');
+        }
+        e.preventDefault();drag.ghost.style.left=(e.clientX+14)+'px';drag.ghost.style.top=(e.clientY+14)+'px';
+        const node=document.elementFromPoint(e.clientX,e.clientY)?.closest('.editor-widget,.editor-zone');
+        drag.target=node&&this.canvasTarget.contains(node)?node:null;
+        this.canvasTarget.querySelectorAll('.editor-drop-target').forEach(el=>el.classList.remove('editor-drop-target'));
+        drag.target?.classList.add('editor-drop-target');
+        if(e.clientY<70)window.scrollBy(0,-14);else if(e.clientY>innerHeight-70)window.scrollBy(0,14);
+    }
+    clearPointer(){
+        const drag=this.pointerDrag;if(!drag)return;
+        drag.ghost?.remove();drag.element.classList.remove('editor-dragging');
+        this.canvasTarget.querySelectorAll('.editor-drop-target').forEach(el=>el.classList.remove('editor-drop-target'));
+        this.pointerDrag=null;
+    }
+    endPointer(e){
+        const drag=this.pointerDrag;if(!drag||drag.id!==e.pointerId)return;
+        const target=drag.target,wasActive=drag.active,source=drag.source;
+        if(wasActive&&source.type){this.suppressPaletteClick=true;setTimeout(()=>{this.suppressPaletteClick=false;},0);}
+        this.clearPointer();
+        if(!wasActive||e.type==='pointercancel'||!target)return;
+        const region=target.closest('.editor-zone')?.dataset.region;
+        if(!region)return;
+        const doc=this.state.document,def=this.state.widgets.find(d=>d.key===source.type);
+        let widget=source.id?doc.widgets.find(w=>w.id===source.id):null;
+        if(source.type){
+            if(!def||(!def.multiple&&doc.widgets.some(w=>w.type===def.key)))return;
+            widget={id:crypto.randomUUID(),type:def.key,region,enabled:true,config:Object.fromEntries(Object.entries(def.schema??this.state.widgetSchema).map(([k,f])=>[k,f.default]))};
+        }
+        if(!widget||!this.canMove(widget,region))return;
+        doc.widgets=doc.widgets.filter(w=>w!==widget);widget.region=region;
+        const targetWidget=target.closest('.editor-widget');
+        const before=targetWidget&&doc.widgets.find(w=>w.id===targetWidget.dataset.widgetId);
+        if(before)doc.widgets.splice(doc.widgets.indexOf(before),0,widget);else doc.widgets.push(widget);
+        this.changed();this.render();
     }
     canMove(w,r){const t=this.state.themes.find(t=>t.key===this.state.document.theme),d=this.state.widgets.find(d=>d.key===w.type);return t.regions.includes(r)&&(!d||!d.regions.length||d.regions.includes(r));}
     move(w,direction){const rows=this.state.document.widgets,siblings=rows.filter(x=>x.region===w.region),other=siblings[siblings.indexOf(w)+direction];if(!other)return;const a=rows.indexOf(w),b=rows.indexOf(other);[rows[a],rows[b]]=[rows[b],rows[a]];this.changed();this.render();}

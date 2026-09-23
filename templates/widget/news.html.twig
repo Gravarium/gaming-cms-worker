@@ -1,1 +1,16 @@
+{% set theme = portal.theme.key %}
+{% if theme starts with 'gravarium-' and theme != 'gravarium-portal' %}
+<div class="news-editorial news-editorial-{{ theme }}">
+{% if data.items|length %}
+{% set lead = data.items|first %}
+<a class="news-lead" href="{{ path('app_news_show',{slug:lead.slug}) }}"><span class="news-lead-art" aria-hidden="true"></span><span class="news-lead-copy"><span class="portal-kicker">Titelstory · {{ lead.publishedAt ? lead.publishedAt|date('d.m.Y') : '' }}</span><strong>{{ lead.title }}</strong>{% if lead.excerpt %}<span class="news-excerpt">{{ lead.excerpt }}</span>{% endif %}<span class="portal-read">Geschichte lesen ↗</span></span></a>
+{% if theme in ['gravarium-fantasy-rebuild','gravarium-cyberpunk'] %}
+<div class="news-stack">{% for item in data.items|slice(1,2) %}<a class="news-stack-item" href="{{ path('app_news_show',{slug:item.slug}) }}"><span class="portal-kicker">{{ item.publishedAt ? item.publishedAt|date('d.m.Y') : 'News' }}</span><strong>{{ item.title }}</strong><span class="portal-read">Weiterlesen ↗</span></a>{% endfor %}</div>
+{% endif %}
+{% set followups = theme in ['gravarium-fantasy-rebuild','gravarium-cyberpunk'] ? data.items|slice(3) : data.items|slice(1) %}
+{% if followups|length %}<div class="news-followups">{% for item in followups %}<article class="news-followup"><a class="news-followup-art art-{{ loop.index % 3 }}" href="{{ path('app_news_show',{slug:item.slug}) }}" aria-label="{{ item.title }}"></a><div><p class="portal-kicker">{{ item.publishedAt ? item.publishedAt|date('d.m.Y H:i') : 'News' }}</p><h3><a href="{{ path('app_news_show',{slug:item.slug}) }}">{{ item.title }}</a></h3>{% if item.excerpt %}<p>{{ item.excerpt }}</p>{% endif %}<a class="portal-read" href="{{ path('app_news_show',{slug:item.slug}) }}">Weiterlesen ↗</a></div></article>{% endfor %}</div>{% endif %}
+{% else %}<p class="portal-empty">Noch keine veröffentlichten Beiträge.</p>{% endif %}
+</div>
+{% else %}
 <div class="portal-cards">{% for item in data.items %}<article class="portal-card"><div class="portal-card-art art-{{ loop.index % 3 }}" aria-hidden="true"><span>NEWS</span></div><div class="portal-card-copy"><p class="portal-kicker">{{ item.publishedAt ? item.publishedAt|date('d.m.Y H:i') : '' }}</p><h3><a href="{{ path('app_news_show',{slug:item.slug}) }}">{{ item.title }}</a></h3>{% if item.excerpt %}<p>{{ item.excerpt }}</p>{% endif %}<a class="portal-read" href="{{ path('app_news_show',{slug:item.slug}) }}">Weiterlesen <span aria-hidden="true">↗</span></a></div></article>{% else %}<p class="portal-empty">Noch keine veröffentlichten Beiträge.</p>{% endfor %}</div>
+{% endif %}
