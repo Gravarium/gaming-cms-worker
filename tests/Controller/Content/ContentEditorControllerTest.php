@@ -151,7 +151,7 @@ final class ContentEditorControllerTest extends WebTestCase
         self::assertSame(1, $em->getRepository(ContentRevision::class)->count(['entry' => $saved]));
     }
 
-    public function testAutosaveRejectsStaleAndPublishedWrites(): void
+    public function testAutosaveRejectsStaleWrites(): void
     {
         $client = static::createClient();
         [$user, $draft] = $this->persistEntry($client);
@@ -168,18 +168,27 @@ final class ContentEditorControllerTest extends WebTestCase
             json_encode(['document' => $document, 'updatedAt' => '2000-01-01T00:00:00+00:00'], JSON_THROW_ON_ERROR),
         );
         self::assertResponseStatusCodeSame(409);
+    }
 
-        [$publishedUser, $published] = $this->persistEntry($client, [CmsPermission::ACCESS, CmsPermission::CONTENT], ContentEntry::STATUS_PUBLISHED);
-        $client->loginUser($publishedUser);
-        [$publishedToken, $publishedUpdatedAt] = $this->editorState($client, $published);
+    public function testAutosaveRejectsPublishedWrites(): void
+    {
+        $client = static::createClient();
+        [$user, $published] = $this->persistEntry(
+            $client,
+            [CmsPermission::ACCESS, CmsPermission::CONTENT],
+            ContentEntry::STATUS_PUBLISHED,
+        );
+        $client->loginUser($user);
+        [$token, $updatedAt] = $this->editorState($client, $published);
+        $document = $this->document([['type' => 'text', 'text' => 'must stay out of published content']]);
 
         $client->request(
             'POST',
             '/admin/content/'.$published->getId().'/editor/autosave',
             [],
             [],
-            ['CONTENT_TYPE' => 'application/json', 'HTTP_X_CSRF_TOKEN' => $publishedToken],
-            json_encode(['document' => $document, 'updatedAt' => $publishedUpdatedAt], JSON_THROW_ON_ERROR),
+            ['CONTENT_TYPE' => 'application/json', 'HTTP_X_CSRF_TOKEN' => $token],
+            json_encode(['document' => $document, 'updatedAt' => $updatedAt], JSON_THROW_ON_ERROR),
         );
         self::assertResponseStatusCodeSame(409);
     }

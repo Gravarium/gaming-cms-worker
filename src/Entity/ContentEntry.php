@@ -260,7 +260,12 @@ class ContentEntry
     }
 
     #[ORM\PreUpdate]
-    public function updateTimestamp(): void { $this->updatedAt = new \DateTimeImmutable(); }
+    public function updateTimestamp(): void
+    {
+        $now = new \DateTimeImmutable();
+        $minimumNext = $this->updatedAt->modify('+1 second');
+        $this->updatedAt = $now > $minimumNext ? $now : $minimumNext;
+    }
 
     private function normalizeNullable(?string $value): ?string
     {
