@@ -16,13 +16,15 @@ final class LayoutMediaTest extends KernelTestCase
     public function testUnsafeMediaIsNotRenderable(): void
     {
         self::bootKernel();$images=self::getContainer()->get(LayoutImages::class);
-        $asset=(new MediaAsset())->setMimeType('image/svg+xml')->setLocation('/uploads/unsafe.svg');self::assertFalse($images->usable($asset));
+        $asset=(new MediaAsset())->setMimeType('image/svg+xml')->setLocation('/uploads/media/unsafe.svg');self::assertFalse($images->usable($asset));
         $asset->setMimeType('image/png')->setLocation('javascript:alert(1)');self::assertFalse($images->usable($asset));
         $asset->setLocation('https://user:password@example.test/a.png');self::assertFalse($images->usable($asset));
         foreach (['/uploads/images/safe.png', '/uploads/media/../secret.png', '/uploads/media/evil\\\\file.png', "https://localhost/image.png", 'https://127.0.0.1/image.png', 'https://10.1.2.3/image.png', 'https://user:password@example.test/a.png'] as $url) {
             $asset->setLocation($url);self::assertFalse($images->usable($asset),$url);
         }
         $asset->setLocation('/uploads/media/safe.png');self::assertTrue($images->usable($asset));
+        $asset->setLocation('https://cdn.example.test/image.png');self::assertTrue($images->usable($asset));
+        $asset->setLocation('http://cdn.example.test/image.png');self::assertFalse($images->usable($asset));
         $asset->markDeletionPending();self::assertFalse($images->usable($asset));
     }
     public function testOrphanedPageLayoutDoesNotBlockMediaDeletion(): void

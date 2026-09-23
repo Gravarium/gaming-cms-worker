@@ -78,6 +78,17 @@ final class SecurityArchitectureTest extends TestCase
         self::assertStringContainsString('Extension package changed after its initial verification.', $installer);
     }
 
+    public function testPageLayoutLifecycleSerializesContentAndLayoutMutations(): void
+    {
+        $content = $this->readProjectFile('src/Controller/AdminContentController.php');
+        $layout = $this->readProjectFile('src/Controller/AdminLayoutController.php');
+
+        self::assertStringContainsString('LockMode::PESSIMISTIC_WRITE', $content);
+        self::assertStringContainsString('$entityManager->lock($entry, LockMode::PESSIMISTIC_WRITE);', $content);
+        self::assertStringContainsString('->setLockMode(LockMode::PESSIMISTIC_WRITE)', $layout);
+        self::assertStringContainsString("->andWhere('entry.type = :type')", $layout);
+    }
+
     #[DataProvider('adminControllers')]
     public function testEveryAdminControllerHasAnExplicitPermissionBoundary(string $path): void
     {
