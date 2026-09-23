@@ -1,0 +1,73 @@
+{
+  "schema_version": 1,
+  "package_id": "FCP-051",
+  "lease_id": "FCP-051-g1",
+  "generation": 1,
+  "worker_id": "worker-6",
+  "repository": "Gravarium/gaming-cms-worker",
+  "baseline_branch": "worker/account-6",
+  "base_sha": "330c655636e6b18816c7334bbec9b9093f41c269",
+  "feature_branch": "feature/fcp-051-safe-content-block-editor-g1",
+  "claimed_at": "2026-09-23T21:46:12Z",
+  "heartbeat_at": "2026-09-23T21:46:12Z",
+  "expires_at": "2026-09-24T04:46:12Z",
+  "assignment_status": "active",
+  "authoritative_source": "Trusted docs/ai-work-queue.json; this copy is advisory and stale/expired means STOP",
+  "objective": "Replace the plain content textarea with a bounded structured block-editor foundation that preserves revisions, preview, sanitization and safe media references without permitting arbitrary HTML or scripts.",
+  "allowed_paths": [
+    "MODULE-ASSIGNMENT.json",
+    "WORKER-START.md",
+    "src/ContentEditor/",
+    "src/Controller/AdminContentController.php",
+    "src/Entity/ContentEntry.php",
+    "src/Entity/ContentRevision.php",
+    "src/Form/ContentEntryType.php",
+    "templates/admin/content/",
+    "templates/content/",
+    "assets/controllers/content_editor_controller.js",
+    "assets/styles/content-editor.css",
+    "config/services.yaml",
+    "migrations/",
+    "tests/ContentEditor/",
+    "tests/Controller/Content/"
+  ],
+  "forbidden_paths": [
+    "private/",
+    "PrivateCore/",
+    "ops/",
+    "docs/",
+    "bin/",
+    "AGENTS.md",
+    "WORKER-TASK.json",
+    "WORKER-MANIFEST.json",
+    "WORKER-FILES.sha256",
+    ".worker-snapshot",
+    ".github/workflows/"
+  ],
+  "deliverables": [
+    "Versioned allowlisted text, heading, list, quote, link and owned-media blocks",
+    "Safe migration and fallback rendering for existing textarea content",
+    "Autosave draft and no-write preview contracts without changing publication permissions",
+    "Explicit Fortress seam and legacy security/database retirement impact without weakening current enforcement",
+    "Positive and negative authorization, CSRF, validation, disabled-module and data-visibility regression coverage"
+  ],
+  "required_tests": [
+    "targeted content/editor PHPUnit tests",
+    "browser-side editor protocol tests where JavaScript behavior is added",
+    "complete worker CI on the exact final HEAD"
+  ],
+  "completion_report": [
+    "exact final worker HEAD SHA and exact sanitized base SHA",
+    "complete changed-path list and worker PR",
+    "targeted tests plus complete worker CI results",
+    "unresolved risks assumptions and intentionally deferred features",
+    "current protection path future Fortress contract legacy symbols tables grants and retirement impact",
+    "module data ownership fresh and populated migration evidence rollback restore boundary and negative tests"
+  ],
+  "immutable_constraints": [
+    "preserve-existing-security-controls-tests-phpstan-and-ci",
+    "red-ci-stops-integration",
+    "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment",
+    "fortress-ready-replaceable-boundaries-no-private-runtime-reconstruction"
+  ]
+}
