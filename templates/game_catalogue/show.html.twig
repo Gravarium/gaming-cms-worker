@@ -1,0 +1,32 @@
+{% extends 'base.html.twig' %}
+{% block title %}{{ entry.game.name }}{% endblock %}
+{% block body %}
+<main class="content-shell">
+    <header class="page-header">
+        <p class="eyebrow">Game Hub</p>
+        <h1>{{ entry.game.name }}</h1>
+        {% if entry.developer %}<p>Entwickler: {{ entry.developer }}</p>{% endif %}
+        {% if entry.publisher %}<p>Publisher: {{ entry.publisher.name }}</p>{% endif %}
+        {% if entry.summary %}<p>{{ entry.summary }}</p>{% endif %}
+        {% if entry.game.websiteUrl %}<a href="{{ entry.game.websiteUrl }}" rel="noopener noreferrer">Offizielle Website</a>{% endif %}
+    </header>
+
+    {% if entry.genres|length %}
+    <section><h2>Genres</h2><p>{% for genre in entry.genres %}<span class="portal-tag">{{ genre.name }}</span> {% endfor %}</p></section>
+    {% endif %}
+
+    <section>
+        <h2>Veröffentlichungen</h2>
+        <div class="table-wrap"><table><thead><tr><th>Datum</th><th>Edition</th><th>Plattform</th><th>Region</th><th>Status</th></tr></thead><tbody>
+        {% for release in releases %}
+            <tr><td>{{ release.releaseAt|date('d.m.Y') }}</td><td>{{ release.edition ? release.edition.name : 'Standard' }}</td><td>{{ release.platform.name }}</td><td>{{ release.region }}</td><td>{{ release.status }}</td></tr>
+            {% if release.edition and release.edition.systemRequirements %}<tr><td colspan="5"><strong>Systemanforderungen:</strong> {{ release.edition.systemRequirements }}</td></tr>{% endif %}
+        {% else %}<tr><td colspan="5">Noch keine Release-Daten.</td></tr>{% endfor %}
+        </tbody></table></div>
+    </section>
+
+    {% if links %}
+    <section><h2>Verknüpfte Bereiche</h2><ul>{% for link in links %}<li>{{ link.targetType|capitalize }}: {{ link.label }}</li>{% endfor %}</ul></section>
+    {% endif %}
+</main>
+{% endblock %}
