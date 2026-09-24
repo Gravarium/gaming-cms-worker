@@ -1,5 +1,5 @@
 {
-  "schema_version": 3,
+  "schema_version": 4,
   "mode": "shared-reservable-worker-pool",
   "source_queue": {
     "repository": "Gravarium/gaming-cms",
@@ -10,20 +10,24 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "worker/account-6",
   "base_sha": "ad876fea62817d705ad997175e03f2253ca0e445",
-  "published_at": "2026-09-24T09:30:00Z",
+  "published_at": "2026-09-24T13:10:00Z",
   "summary": {
     "total_remaining_worker_tasks": 27,
-    "unclaimed": 27,
-    "immediately_claimable": 7
+    "completed_worker_prs_awaiting_trusted_review": 4,
+    "recovery_tasks": 3,
+    "unclaimed": 20,
+    "immediately_claimable": 0,
+    "next_required_action": "Resume FCP-053 and repair its red CI, then finish FCP-067, then FCP-071. Do not search for a new claim."
   },
   "rules": {
     "choose": "Choose the first unclaimed task whose blocked_by_at_publication is empty and whose exact claim branch does not exist.",
     "atomic_reservation": "Create the exact claim_branch from base_sha. If it already exists, skip it and claim the next eligible task.",
     "no_worker_numbers": "Worker numbers are not assignment identities. Any authorized Worker AI uses the same shared pool.",
-    "one_at_a_time": "A Worker AI owns at most one live claim and finishes its implementation, PR, and exact-head CI before claiming another task.",
+    "one_at_a_time": "Work on exactly one recovery or claimed feature branch at a time. Do not create additional claim branches while any owned recovery item remains.",
     "lease": "Reservation lasts seven hours after the last verified push; the task remains in the pool.",
     "dependencies": "A completed Worker PR is not enough. Dependencies must be Trusted-integrated and present in this sanitized base.",
-    "final_authority": "Never merge to Trusted and never deploy."
+    "final_authority": "Never merge to Trusted and never deploy.",
+    "resume_before_claim": "Before looking for an unclaimed task, resume any package in recovery_queue in listed order. Existing own work is never skipped merely because its claim branch exists."
   },
   "tasks": [
     {
@@ -147,7 +151,7 @@
       "package_id": "FCP-052",
       "title": "Shared comments reactions reports and moderation core",
       "risk": "high",
-      "execution_state": "unclaimed",
+      "execution_state": "worker_pr_complete_awaiting_trusted_review",
       "dependencies": [
         "FCP-051"
       ],
@@ -212,14 +216,15 @@
         "red-ci-stops-integration",
         "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment",
         "fortress-ready-replaceable-boundaries-no-private-runtime-reconstruction"
-      ]
+      ],
+      "worker_pr": 13
     },
     {
       "priority": 4,
       "package_id": "FCP-053",
       "title": "Guild roster recruitment onboarding and member lifecycle",
       "risk": "high",
-      "execution_state": "unclaimed",
+      "execution_state": "changes_requested_red_ci",
       "dependencies": [
         "FCP-051"
       ],
@@ -286,7 +291,9 @@
         "red-ci-stops-integration",
         "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment",
         "fortress-ready-replaceable-boundaries-no-private-runtime-reconstruction"
-      ]
+      ],
+      "worker_pr": 14,
+      "resume_branch": "feature/fcp-053-pool-g1"
     },
     {
       "priority": 5,
@@ -441,7 +448,7 @@
       "package_id": "FCP-056",
       "title": "Game catalogue release calendar and game hubs",
       "risk": "medium",
-      "execution_state": "unclaimed",
+      "execution_state": "worker_pr_complete_awaiting_trusted_review",
       "dependencies": [
         "FCP-051"
       ],
@@ -508,7 +515,8 @@
         "red-ci-stops-integration",
         "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment",
         "fortress-ready-replaceable-boundaries-no-private-runtime-reconstruction"
-      ]
+      ],
+      "worker_pr": 15
     },
     {
       "priority": 8,
@@ -972,7 +980,7 @@
       "package_id": "FCP-063",
       "title": "Downloads mods add-ons modpacks and version delivery",
       "risk": "critical",
-      "execution_state": "unclaimed",
+      "execution_state": "worker_pr_complete_awaiting_trusted_review",
       "dependencies": [
         "FCP-051",
         "FCP-010"
@@ -1041,7 +1049,8 @@
         "red-ci-stops-integration",
         "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment",
         "fortress-ready-replaceable-boundaries-no-private-runtime-reconstruction"
-      ]
+      ],
+      "worker_pr": 16
     },
     {
       "priority": 15,
@@ -1278,7 +1287,7 @@
       "package_id": "FCP-067",
       "title": "Video discovery watchlists clips creators and live streams",
       "risk": "high",
-      "execution_state": "unclaimed",
+      "execution_state": "in_progress_resume_existing_branch",
       "dependencies": [
         "FCP-051",
         "FCP-010"
@@ -1347,14 +1356,15 @@
         "red-ci-stops-integration",
         "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment",
         "fortress-ready-replaceable-boundaries-no-private-runtime-reconstruction"
-      ]
+      ],
+      "resume_branch": "feature/fcp-067-pool-g1"
     },
     {
       "priority": 19,
       "package_id": "FCP-068",
       "title": "Notification preferences mentions subscriptions and newsletters",
       "risk": "critical",
-      "execution_state": "unclaimed",
+      "execution_state": "worker_pr_complete_awaiting_trusted_review",
       "dependencies": [
         "FCP-051",
         "FCP-009"
@@ -1425,7 +1435,8 @@
         "red-ci-stops-integration",
         "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment",
         "fortress-ready-replaceable-boundaries-no-private-runtime-reconstruction"
-      ]
+      ],
+      "worker_pr": 17
     },
     {
       "priority": 20,
@@ -1585,7 +1596,7 @@
       "package_id": "FCP-071",
       "title": "Member profiles invitations registration privacy and data rights",
       "risk": "critical",
-      "execution_state": "unclaimed",
+      "execution_state": "in_progress_resume_existing_branch",
       "dependencies": [
         "FCP-006"
       ],
@@ -1656,7 +1667,8 @@
         "red-ci-stops-integration",
         "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment",
         "fortress-ready-replaceable-boundaries-no-private-runtime-reconstruction"
-      ]
+      ],
+      "resume_branch": "feature/fcp-071-pool-g1"
     },
     {
       "priority": 23,
@@ -2045,6 +2057,35 @@
         "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment",
         "fortress-ready-replaceable-boundaries-no-private-runtime-reconstruction"
       ]
+    }
+  ],
+  "recovery_queue": [
+    {
+      "package_id": "FCP-053",
+      "action": "resume_and_fix_red_ci",
+      "feature_branch": "feature/fcp-053-pool-g1",
+      "worker_pr": 14,
+      "last_observed_head": "54e42b2e4efee7ad7703f294febcfb2b03debea3",
+      "ci_run_id": 35992798754,
+      "ci_result": "failure"
+    },
+    {
+      "package_id": "FCP-067",
+      "action": "resume_finish_test_and_open_pr",
+      "feature_branch": "feature/fcp-067-pool-g1",
+      "worker_pr": null,
+      "last_observed_head": "97d7168ca6515d4bbc1e3da0c9753bd2618164c7",
+      "ci_run_id": null,
+      "ci_result": "not_started"
+    },
+    {
+      "package_id": "FCP-071",
+      "action": "resume_finish_test_and_open_pr",
+      "feature_branch": "feature/fcp-071-pool-g1",
+      "worker_pr": null,
+      "last_observed_head": "1386b459b960e3c97cb52dc5bddf8ae38130b3da",
+      "ci_run_id": null,
+      "ci_result": "not_started"
     }
   ]
 }
