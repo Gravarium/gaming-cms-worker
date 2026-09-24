@@ -10,8 +10,11 @@ use App\Entity\GuildApplication;
 use App\Entity\GuildMember;
 use App\Entity\User;
 use App\Entity\Guild\GuildApplicationVote;
+use App\Entity\Guild\GuildCharacter;
 use App\Entity\Guild\GuildCharacterProfile;
 use App\Entity\Guild\GuildMemberLifecycleEvent;
+use App\Entity\Guild\GuildMemberPrivateNote;
+use App\Entity\Guild\GuildOnboardingTask;
 use App\Entity\Guild\GuildPrivateMemberNote;
 use App\Entity\Guild\GuildRecruitmentCase;
 use App\Entity\Guild\GuildRoleNeed;
@@ -21,17 +24,6 @@ use App\Gaming\Guild\MemberLifecycleHistory;
 use App\Gaming\Guild\RecruitmentPipeline;
 use App\Gaming\Guild\RosterFilter;
 use App\Gaming\Guild\RosterPrivacyPolicy;
-use App\Entity\Game;
-use App\Entity\Guild;
-use App\Entity\GuildApplication;
-use App\Entity\GuildMember;
-use App\Entity\User;
-use App\Entity\Guild\GuildApplicationVote;
-use App\Entity\Guild\GuildCharacter;
-use App\Entity\Guild\GuildMemberLifecycleEvent;
-use App\Entity\Guild\GuildMemberPrivateNote;
-use App\Entity\Guild\GuildOnboardingTask;
-use App\Entity\Guild\GuildRoleNeed;
 use PHPUnit\Framework\TestCase;
 
 final class GuildLifecycleCoreTest extends TestCase
@@ -113,10 +105,10 @@ final class GuildLifecycleCoreTest extends TestCase
         self::assertTrue($character->isMainCharacter());
         self::assertSame('dps', $character->getRole());
 
-        $need = new GuildRoleNeed($guild, $game, 'healer', 2, 'Priest');
-        self::assertSame(2, $need->getSlots());
+        $need = (new GuildRoleNeed($guild, $game, 'healer', 'Priest'))->setDesiredCount(2);
+        self::assertSame(2, $need->getDesiredCount());
 
-        $event = new GuildMemberLifecycleEvent($guild, $member, $actor, 'absence', 'Holiday', new \DateTimeImmutable('+1 day'), new \DateTimeImmutable('+2 days'));
+        $event = new GuildMemberLifecycleEvent($guild, $member, $actor, 'absence', 'Holiday');
         self::assertSame('absence', $event->getAction());
 
         $note = new GuildMemberPrivateNote($guild, $member, $actor, 'Officer-only note');
@@ -127,8 +119,8 @@ final class GuildLifecycleCoreTest extends TestCase
         self::assertTrue($task->isCompleted());
 
         $application = (new GuildApplication())->setGuild($guild);
-        $vote = new GuildApplicationVote($application, $actor, GuildApplicationVote::ACCEPT, 'Good fit');
-        self::assertSame('accept', $vote->getDecision());
+        $vote = new GuildApplicationVote($application, $guild, $actor, 'approve', 'Good fit');
+        self::assertSame('approve', $vote->getDecision());
 
         $foreignMember = (new GuildMember())->setGuild($other)->setCharacterName('Foreign');
         $this->expectException(\DomainException::class);
