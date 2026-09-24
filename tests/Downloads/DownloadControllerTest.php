@@ -44,7 +44,7 @@ final class DownloadControllerTest extends WebTestCase
     {
         $client=static::createClient();$this->ensureDownloadsEnabled($client);$user=$this->user($client,[CmsPermission::STORAGE]);$client->loginUser($user);
         $package=new DownloadPackage('Safe2','safe2','file');$this->em($client)->persist($package);$this->em($client)->flush();$id=$package->getId();self::assertNotNull($id);
-        $client->request('GET','/');self::assertResponseIsSuccessful();
+        $client->request('GET','/account/security');self::assertResponseIsSuccessful();
         $token=$client->getContainer()->get(CsrfTokenManagerInterface::class)->getToken('download-upload-'.$id)->getValue();
         $path=sys_get_temp_dir().'/download-'.bin2hex(random_bytes(5)).'.php';file_put_contents($path,'<?php echo 1;');
         try{
