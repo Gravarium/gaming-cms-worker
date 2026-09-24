@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "62e1b6fec6ce6f9a4096c6c5a6912d74df36da5c",
-  "published_at": "2026-09-24T19:42:57.885Z",
+  "published_at": "2026-09-24T19:49:47.563Z",
   "summary": {
     "total_remaining_worker_tasks": 27,
-    "completed_worker_prs_awaiting_trusted_review": 8,
+    "completed_worker_prs_awaiting_trusted_review": 9,
     "recovery_tasks": 0,
-    "unclaimed": 19,
+    "unclaimed": 18,
     "immediately_claimable": 1,
-    "next_required_action": "Claim FCP-055 from the exact green FCP-054 proposal HEAD and continue dependency-safe Worker proposal sequencing."
+    "next_required_action": "Claim FCP-057 from the exact green FCP-056 proposal HEAD and continue dependency-safe Worker proposal sequencing."
   },
   "rules": {
     "choose": "Resume any owned unfinished claim first. Otherwise choose exactly the first unclaimed task with an empty current blocked_by list and a published exact proposal_base_sha. A completed Worker proposal may satisfy proposal-only dependencies when its exact HEAD has green Worker CI.",
@@ -401,7 +401,7 @@
       "package_id": "FCP-055",
       "title": "Loot DKP EPGP wishlist and guild vault",
       "risk": "critical",
-      "execution_state": "unclaimed",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [
         "FCP-054"
       ],
@@ -478,7 +478,13 @@
           "ci_run_id": 36049808987,
           "ci_result": "success"
         }
-      ]
+      ],
+      "worker_pr": 21,
+      "resume_branch": "feature/fcp-055-pool-g1",
+      "final_head": "10d2a2d610f552ae1d177627f3612e03527481ea",
+      "ci_run_id": 36050507111,
+      "ci_result": "success",
+      "claim_state": "locked_until_trusted_resolution"
     },
     {
       "priority": 7,
@@ -567,9 +573,7 @@
       "dependencies_integrated_at_publication": [
         "FCP-051"
       ],
-      "blocked_by_at_publication": [
-        "FCP-056"
-      ],
+      "blocked_by_at_publication": [],
       "claim_branch": "claim/fcp-057-g1",
       "suggested_branch": "feature/fcp-057-pool-g1",
       "base_branch": "main",
@@ -630,8 +634,22 @@
         "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment",
         "fortress-ready-replaceable-boundaries-no-private-runtime-reconstruction"
       ],
-      "proposal_base_branch": "main",
-      "proposal_base_sha": "62e1b6fec6ce6f9a4096c6c5a6912d74df36da5c"
+      "proposal_base_branch": "feature/fcp-056-pool-g1",
+      "proposal_base_sha": "ace25fcf5ab5f463bc04c75afcb2598dd726ff32",
+      "proposal_dependency_evidence": [
+        {
+          "package_id": "FCP-056",
+          "feature_branch": "feature/fcp-056-pool-g1",
+          "worker_pr": 15,
+          "exact_head": "ace25fcf5ab5f463bc04c75afcb2598dd726ff32",
+          "ci_run_id": 35986941400,
+          "ci_result": "success"
+        },
+        {
+          "package_id": "FCP-051",
+          "integration_state": "trusted_integrated_at_publication"
+        }
+      ]
     },
     {
       "priority": 9,
@@ -2172,6 +2190,16 @@
       "worker_pr": 20,
       "last_observed_head": "ea81a427d5921f4bd9e76f9d9a9cd057905e99b4",
       "ci_run_id": 36049808987,
+      "ci_result": "success",
+      "claim_state": "locked_until_trusted_resolution"
+    },
+    {
+      "package_id": "FCP-055",
+      "action": "worker_complete_awaiting_trusted_review",
+      "feature_branch": "feature/fcp-055-pool-g1",
+      "worker_pr": 21,
+      "last_observed_head": "10d2a2d610f552ae1d177627f3612e03527481ea",
+      "ci_run_id": 36050507111,
       "ci_result": "success",
       "claim_state": "locked_until_trusted_resolution"
     }
