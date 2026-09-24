@@ -251,8 +251,7 @@ final class MediaStorageSecurityTest extends WebTestCase
     {
         $client = static::createClient();
         $client->loginUser($this->user($client, [CmsPermission::STORAGE]));
-        $path = tempnam(sys_get_temp_dir(), 'media-svg-');
-        self::assertNotFalse($path);
+        $path = sys_get_temp_dir().'/media-svg-'.bin2hex(random_bytes(6)).'.svg';
         file_put_contents($path, '<svg xmlns="http://www.w3.org/2000/svg"><script>alert(1)</script></svg>');
 
         try {
@@ -280,13 +279,12 @@ final class MediaStorageSecurityTest extends WebTestCase
         self::assertNotNull($assetId);
         $client->loginUser($this->user($client, [CmsPermission::STORAGE]));
 
-        $path = tempnam(sys_get_temp_dir(), 'media-replace-svg-');
-        self::assertNotFalse($path);
+        $path = sys_get_temp_dir().'/media-replace-svg-'.bin2hex(random_bytes(6)).'.svg';
         file_put_contents($path, '<svg xmlns="http://www.w3.org/2000/svg"><script>alert(1)</script></svg>');
 
         try {
             $crawler = $client->request('GET', '/admin/storage/media/'.$assetId.'/replace');
-            $form = $crawler->selectButton('Datei ersetzen')->form();
+            $form = $crawler->selectButton('Prüfen, speichern und Verwendungen umstellen')->form();
             $form['media_asset_replacement[file]']->upload($path);
             $client->submit($form);
 
