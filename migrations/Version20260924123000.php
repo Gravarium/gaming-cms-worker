@@ -66,7 +66,7 @@ final class Version20260924123000 extends AbstractMigration
         $this->addSql('CREATE INDEX IDX_GUILD_PRIVATE_NOTE_GUILD ON guild_private_member_note (guild_id)');
         $this->addSql('CREATE INDEX IDX_GUILD_PRIVATE_NOTE_MEMBER ON guild_private_member_note (member_id)');
         $this->addSql('CREATE INDEX IDX_GUILD_PRIVATE_NOTE_AUTHOR ON guild_private_member_note (author_id)');
-        $this->addSql('CREATE INDEX idx_guild_private_note_member ON guild_private_member_note (guild_id, member_id, created_at)');
+        $this->addSql('CREATE INDEX idx_guild_private_note_timeline ON guild_private_member_note (guild_id, member_id, created_at)');
         $this->addSql('ALTER TABLE guild_private_member_note ADD CONSTRAINT FK_GUILD_PRIVATE_NOTE_GUILD FOREIGN KEY (guild_id) REFERENCES guild (id) ON DELETE CASCADE NOT DEFERRABLE INITIALLY IMMEDIATE');
         $this->addSql('ALTER TABLE guild_private_member_note ADD CONSTRAINT FK_GUILD_PRIVATE_NOTE_MEMBER FOREIGN KEY (member_id) REFERENCES guild_member (id) ON DELETE CASCADE NOT DEFERRABLE INITIALLY IMMEDIATE');
         $this->addSql('ALTER TABLE guild_private_member_note ADD CONSTRAINT FK_GUILD_PRIVATE_NOTE_AUTHOR FOREIGN KEY (author_id) REFERENCES cms_user (id) ON DELETE RESTRICT NOT DEFERRABLE INITIALLY IMMEDIATE');
