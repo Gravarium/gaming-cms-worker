@@ -4,36 +4,50 @@ Verwende ausschließlich Branch `continuous/work-pool-v4`.
 
 ## Wichtigste Regel
 
-**Bestehende eigene Arbeit kommt immer vor einem neuen Claim.** Ein vorhandener Claim-Branch bedeutet nicht automatisch „überspringen“. Prüfe zuerst `recovery_queue`.
+**Bestehende eigene Arbeit kommt immer vor einem neuen Claim.** Ein Claim bleibt bei Fehlern, Limits, Chatverlust und Worker-Abschluss eine harte Sperre für jede zweite KI. Die besitzende Fortsetzung arbeitet denselben Branch weiter.
 
-## Aktuelle Wiederaufnahme
+## Neue Basisregel
 
-Arbeite genau in dieser Reihenfolge und immer nur an einem Branch gleichzeitig:
+- Neue unabhängige Arbeit startet ausschließlich vom veröffentlichten exakten `worker/main`-HEAD.
+- Nummerierte Account-Baselines sind außer Betrieb und dürfen nicht für neue Arbeit verwendet werden.
+- Eine Folgeaufgabe darf auf dem exakten grünen HEAD ihres abgeschlossenen Worker-Vorgängers gestapelt werden.
+- Diese Stapelung ist nur untrusted Worker-Vorschlagsarbeit. Sie bedeutet niemals Trusted-Integration, Merge- oder Deployment-Recht.
+- Bei mehreren Vorgängern ist ein ausdrücklich veröffentlichter Worker-only-Kompositions-HEAD mit vollständiger grüner CI erforderlich. Nichts blind zusammenführen und keine Basis erraten.
 
-1. `FCP-053` auf `feature/fcp-053-pool-g1`: CI-Run `35992798754` ist rot. Fehlerlogs lesen, Root Cause beheben, vollständige CI auf dem neuen exakten HEAD grün machen und PR #14 aktualisieren.
-2. `FCP-067` auf `feature/fcp-067-pool-g1`: vorhandenen Stand `97d7168ca6515d4bbc1e3da0c9753bd2618164c7` prüfen, fertigstellen, vollständige CI ausführen und Worker-PR erstellen.
-3. `FCP-071` auf `feature/fcp-071-pool-g1`: vorhandenen Stand `1386b459b960e3c97cb52dc5bddf8ae38130b3da` prüfen, fertigstellen, vollständige CI ausführen und Worker-PR erstellen.
+## Sofortige nächste Arbeit
 
-Erst wenn diese drei Einträge abgeschlossen sind, darf nach einem neuen freien Claim gesucht werden.
+Der Recovery-Stand ist vollständig abgeglichen. FCP-053, FCP-067 und FCP-071 besitzen fertige Worker-PRs mit grüner exakter HEAD-CI.
 
-## Abgeschlossene Worker-PRs
+Als nächstes ist `FCP-054` zulässig:
 
-FCP-052/PR #13, FCP-056/PR #15, FCP-063/PR #16 und FCP-068/PR #17 sind abgeschlossen und warten auf Trusted-Prüfung. Ihre Claim-Branches bleiben als Historie bestehen und blockieren keine Wiederaufnahme.
+- Claim: `claim/fcp-054-g1`
+- Feature-Branch: `feature/fcp-054-pool-g1`
+- exakte Vorschlagsbasis: `feature/fcp-053-pool-g1`
+- Basis-HEAD: `8ce1ea7d64ddf347ed5ab5ec322449ba0307a9e7`
+- Nachweis: PR #14, Worker-CI `36010756549` erfolgreich
+
+Erzeuge Claim und Feature-Branch atomar von genau diesem HEAD und arbeite FCP-054 vollständig ab.
+
+## Fortlaufender Betrieb ohne Nachfragen
+
+Nach jedem vollständig grünen Worker-PR:
+
+1. den eigenen Pool-Eintrag auf `worker_complete_awaiting_trusted_review` setzen und PR, finalen HEAD sowie CI-Run eintragen;
+2. den Claim als Sperre bestehen lassen;
+3. genau den ersten unbeanspruchten Folgeauftrag auswählen, dessen Abhängigkeiten entweder Trusted-integriert oder durch exakte grüne Worker-PR-HEADs belegt sind;
+4. für genau diesen nächsten Auftrag die eindeutige Vorschlagsbasis veröffentlichen;
+5. sofort claimen und weiterarbeiten, ohne auf Trusted-Prüfung oder eine neue Chat-Anweisung zu warten.
+
+Die KI hält nur an, wenn echte Divergenz, ein unbekannter Schreiber, fehlende Berechtigung, ein Sicherheitskonflikt oder bei mehreren Abhängigkeiten keine eindeutig grün geprüfte Kompositionsbasis existiert. In diesem Fall überspringt sie den unsicheren Auftrag und prüft den nächsten eindeutig zulässigen Auftrag, statt pauschal den gesamten Pool zu beenden.
 
 ## Allgemeine Regeln
 
-- Keine feste Worker-Nummer als persönliche Zuteilung verlangen.
-- Genau ein Feature-Branch wird gleichzeitig bearbeitet.
-- Innerhalb von 30 Minuten tatsächlicher Arbeit einen sinnvollen Push erstellen.
+- Genau ein Feature-Branch wird gleichzeitig aktiv bearbeitet.
+- Innerhalb von 30 Minuten tatsächlicher Arbeit und vor Unterbrechungen einen sinnvollen Push erstellen.
 - Eigene lineare Folgecommits sind kein STOP.
-- Bei roter CI Root Cause beheben; Schutz, Tests, PHPStan und CI niemals abschwächen.
+- Bei roter CI auf demselben Branch die Root Cause beheben; Schutz, Tests, PHPStan und CI niemals abschwächen.
 - Nur erlaubte Pfade bearbeiten.
 - Nichts nach Trusted mergen und nichts deployen.
-- Ein fertiger Worker-PR erfüllt Abhängigkeiten erst nach Trusted-Prüfung, Integration und neuer bereinigter Basis.
-
-Nach erfolgreicher exakter Worker-CI und fertigem PR aktualisiere im Pool ausschließlich den eigenen Eintrag auf `worker_complete_awaiting_trusted_review` und trage PR, finalen HEAD und CI-Run ein. Setze niemals `integrated`, lösche keinen Claim und verändere keine fremden Einträge. Der Claim bleibt als Sperre bestehen.
-
-Bei einem Werkzeug-, Modell-, Chat- oder Nachrichtenlimit, einer roten CI oder einer sonstigen Unterbrechung wird derselbe Branch am letzten bestätigten Remote-HEAD fortgesetzt. Keine neue Aufgabe beginnen und keinen künstlichen/no-op Commit erzeugen. Nur bei echter Divergenz, unbekanntem Schreiber, fehlender Berechtigung oder Sicherheitskonflikt anhalten und den exakten Blocker dokumentieren.
-
-Wenn keine offene eigene Arbeit und kein zulässiger neuer Claim vorhanden ist, melde:
-`ARBEITSPOOL VORHANDEN - TRUSTED-PRÜFUNG FÜR FOLGEAUFTRÄGE ERFORDERLICH`
+- Keine künstlichen oder leeren Commits erzeugen.
+- Nach Werkzeug-, Modell-, Chat- oder Nachrichtenlimit denselben Branch am letzten bestätigten Remote-HEAD fortsetzen.
+- Fremde Claims, Feature-Branches, PRs und Pool-Einträge bleiben unangetastet.
