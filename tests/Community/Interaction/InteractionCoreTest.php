@@ -8,9 +8,15 @@ use App\Community\Interaction\CommentRecord;
 use App\Community\Interaction\InteractionActor;
 use App\Community\Interaction\InteractionAuthorization;
 use App\Community\Interaction\InteractionTargetContext;
+use App\Community\Interaction\InteractionTargetRegistry;
 use App\Community\Interaction\ModerationDecision;
 use App\Community\Interaction\ReactionPolicy;
 use App\Community\Interaction\ReportRecord;
+use App\Entity\Community\CommunityComment;
+use App\Entity\Community\CommunityModerationDecision;
+use App\Entity\Community\CommunityReaction;
+use App\Entity\Community\CommunityReport;
+use App\Entity\User;
 use PHPUnit\Framework\TestCase;
 
 final class InteractionCoreTest extends TestCase
@@ -29,6 +35,14 @@ final class InteractionCoreTest extends TestCase
         self::assertFalse($policy->canView(null, $moderator));
         self::assertFalse($policy->canView(new InteractionTargetContext('content', 10, false, true, 7), $owner));
         self::assertFalse($policy->canInteract($private, new InteractionActor(null)));
+    }
+
+    public function testUnknownRegistryTargetFailsClosed(): void
+    {
+        $registry = new InteractionTargetRegistry();
+        self::assertFalse($registry->supports('video'));
+        self::assertNull($registry->resolve('video', 1));
+        self::assertNull($registry->resolve('content', 0));
     }
 
     public function testRepliesAreTargetBoundAndDepthIsBounded(): void
@@ -92,5 +106,40 @@ final class InteractionCoreTest extends TestCase
 
         $this->expectException(\InvalidArgumentException::class);
         new ModerationDecision('comment', 12, 9, 'delete_forever', 'not allowed');
+    }
+
+    public function testPersistentCommunityModelsPreserveLifecycleAndAuditEvidence(): void
+    {
+        $author = $this->user('author');
+        $moderator = $this->user('moderator');
+        $root = new CommunityComment('content', 44, $author, 'Root comment');
+        $reply = new CommunityComment('content', 44, $author, 'Reply', $root);
+        self::assertSame(1, $reply->depth());
+
+        $reaction = new CommunityReaction($root, $author, 'like');
+        self::assertSame('like', $reaction->getReaction());
+
+        $report = new CommunityReport($root, $author, 'abuse', 'Evidence');
+        $report->startReview();
+        $report->decide(true, $moderator, 'Confirmed.');
+        self::assertSame(ReportRecord::STATUS_RESOLVED, $report->getStatus());
+
+        $root->softDelete($moderator, 'Confirmed report');
+        self::assertTrue($root->isDeleted());
+        self::assertSame('Confirmed report', $root->getDeletionReason());
+        $root->restore();
+        self::assertFalse($root->isDeleted());
+
+        $audit = new CommunityModerationDecision('comment', 44, $moderator, 'hide', 'Confirmed report');
+        self::assertSame('hide', $audit->getAction());
+        self::assertSame('Confirmed report', $audit->getReason());
+    }
+
+    private function user(string $name): User
+    {
+        return (new User())
+            ->setEmail($name.'@example.test')
+            ->setDisplayName($name)
+            ->verifyEmail();
     }
 }
