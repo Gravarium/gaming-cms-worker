@@ -20,7 +20,6 @@ use App\Video\Discovery\VideoVisibilityPolicy;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 
 final class VideoDiscoverySecurityTest extends WebTestCase
 {
@@ -104,13 +103,15 @@ final class VideoDiscoverySecurityTest extends WebTestCase
     public function testDisabledVideoModuleBlocksPreferenceMutation(): void
     {
         $client = static::createClient();
+        $this->setVideoModule($client, true);
         $user = $this->user($client, 'disabled');
         $client->loginUser($user);
+        $token = $this->csrf($client);
         $this->setVideoModule($client, false);
 
         try {
             $client->request('POST', '/account/video-discovery/history-preference', [
-                '_token' => $this->csrf($client),
+                '_token' => $token,
                 'enabled' => '1',
             ]);
 
@@ -270,10 +271,10 @@ final class VideoDiscoverySecurityTest extends WebTestCase
 
     private function csrf(KernelBrowser $client): string
     {
-        return $client->getContainer()
-            ->get(CsrfTokenManagerInterface::class)
-            ->getToken('video-history-preference')
-            ->getValue();
+        $crawler = $client->request('GET', '/account/video-discovery/history-preference');
+        self::assertResponseIsSuccessful();
+
+        return (string) $crawler->filter('input[name="_token"]')->attr('value');
     }
 
     private function em(KernelBrowser $client): EntityManagerInterface
