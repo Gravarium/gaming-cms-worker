@@ -10,6 +10,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 final class DownloadControllerTest extends WebTestCase
 {
     public function testMemberDownloadIsNotVisibleToAnonymousUser():void
