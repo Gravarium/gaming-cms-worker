@@ -1,5 +1,5 @@
 {
-  "schema_version": 4,
+  "schema_version": 5,
   "mode": "shared-reservable-worker-pool",
   "source_queue": {
     "repository": "Gravarium/gaming-cms",
@@ -8,29 +8,31 @@
     "updated_at": "2026-09-24T09:20:00Z"
   },
   "repository": "Gravarium/gaming-cms-worker",
-  "baseline_branch": "worker/account-6",
-  "base_sha": "ad876fea62817d705ad997175e03f2253ca0e445",
-  "published_at": "2026-09-24T17:35:38Z",
+  "baseline_branch": "main",
+  "base_sha": "62e1b6fec6ce6f9a4096c6c5a6912d74df36da5c",
+  "published_at": "2026-09-24T18:55:00Z",
   "summary": {
     "total_remaining_worker_tasks": 27,
     "completed_worker_prs_awaiting_trusted_review": 7,
     "recovery_tasks": 0,
     "unclaimed": 20,
-    "immediately_claimable": 0,
-    "next_required_action": "Reconcile live GitHub state. No recovery remains. Keep completed claims locked. Select another task only if dependencies are already Trusted-integrated and it is independently claimable; otherwise wait for Trusted integration."
+    "immediately_claimable": 1,
+    "next_required_action": "Claim FCP-054 from the exact green FCP-053 proposal HEAD. After every green exact-head Worker PR, self-reconcile it, publish exactly one dependency-safe next proposal base, and continue without waiting for Trusted review."
   },
   "rules": {
-    "choose": "Choose the first unclaimed task whose blocked_by_at_publication is empty and whose exact claim branch does not exist.",
-    "atomic_reservation": "Create the exact claim_branch from base_sha. If it already exists, skip it and claim the next eligible task.",
+    "choose": "Resume any owned unfinished claim first. Otherwise choose exactly the first unclaimed task with an empty current blocked_by list and a published exact proposal_base_sha. A completed Worker proposal may satisfy proposal-only dependencies when its exact HEAD has green Worker CI.",
+    "atomic_reservation": "Create the exact claim_branch and suggested feature branch from that task's published proposal_base_sha. If the claim already exists, treat it as a hard lock; the owning continuation resumes it and every other AI skips it.",
     "no_worker_numbers": "Worker numbers are not assignment identities. Any authorized Worker AI uses the same shared pool.",
-    "one_at_a_time": "Work on exactly one recovery or claimed feature branch at a time. Do not create additional claim branches while any owned recovery item remains.",
+    "one_at_a_time": "Exactly one claimed feature branch may be actively edited. After its exact-head CI is green and its pool entry is reconciled, immediately publish and claim exactly one next dependency-safe package instead of waiting for Trusted review.",
     "lease": "Reservation lasts seven hours after the last verified push; the task remains in the pool.",
-    "dependencies": "A completed Worker PR is not enough. Dependencies must be Trusted-integrated and present in this sanitized base.",
+    "dependencies": "For Worker proposal sequencing, a dependency is satisfied by either Trusted integration in worker/main or a completed Worker PR with green CI on its exact HEAD. This only authorizes stacked untrusted proposal work; it never marks the dependency integrated and never authorizes Trusted merge or deployment.",
     "final_authority": "Never merge to Trusted and never deploy.",
     "resume_before_claim": "Before looking for an unclaimed task, resume any package in recovery_queue in listed order. Existing own work is never skipped merely because its claim branch exists.",
-    "self_reconcile": "After a Worker PR has green CI on its exact final HEAD, the owning Worker may update only its own package/recovery status to worker_complete_awaiting_trusted_review with PR, HEAD and CI evidence. It must not set integrated or release/delete the claim.",
+    "self_reconcile": "After a Worker PR has green CI on its exact final HEAD, the owning Worker updates its own package to worker_complete_awaiting_trusted_review with PR, HEAD and CI evidence. It may then update exactly one still-unclaimed dependent package with a deterministic proposal_base_branch/proposal_base_sha and clear only dependencies proven by exact green Worker CI or Trusted integration. It must never set integrated, release/delete claims, modify another active claim, merge to Trusted or deploy.",
     "claim_lock": "A claim survives errors, chat loss, limits and Worker completion. It blocks every other AI until Trusted explicitly integrates, cancels or transfers it with checkpoint evidence.",
-    "continue_after_interrupt": "On any recoverable tool/model/chat interruption, fetch the same feature branch and continue from the verified remote HEAD. Do not abandon or duplicate work."
+    "continue_after_interrupt": "On any recoverable tool/model/chat interruption, fetch the same feature branch and continue from the verified remote HEAD. Do not abandon or duplicate work.",
+    "proposal_stacking": "A single completed dependency uses that dependency's exact green feature HEAD as proposal base. Multiple completed dependencies require an explicitly published Worker-only composition base with complete green CI before the next claim. Never guess or blind-merge a composition base.",
+    "no_account_baselines": "New work uses worker/main or an explicitly published exact green predecessor/composition HEAD. Retired numbered account baselines are not assignment sources."
   },
   "tasks": [
     {
@@ -50,8 +52,8 @@
       ],
       "claim_branch": "claim/fcp-012-g1",
       "suggested_branch": "feature/fcp-012-pool-g1",
-      "base_branch": "worker/account-6",
-      "base_sha": "ad876fea62817d705ad997175e03f2253ca0e445",
+      "base_branch": "main",
+      "base_sha": "62e1b6fec6ce6f9a4096c6c5a6912d74df36da5c",
       "objective": "Define versioned public passport/decision DTOs and deny-by-default pure evaluation contracts with synthetic fixtures. Do not wire privileged production policy or host access.",
       "allowed_paths": [
         "src/Fortress/Contract/",
@@ -90,7 +92,9 @@
         "preserve-all-security-and-worker-isolation-invariants",
         "red-ci-stops-integration",
         "no-secret-or-private-runtime-export"
-      ]
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "62e1b6fec6ce6f9a4096c6c5a6912d74df36da5c"
     },
     {
       "priority": 2,
@@ -107,8 +111,8 @@
       ],
       "claim_branch": "claim/fcp-013-g1",
       "suggested_branch": "feature/fcp-013-pool-g1",
-      "base_branch": "worker/account-6",
-      "base_sha": "ad876fea62817d705ad997175e03f2253ca0e445",
+      "base_branch": "main",
+      "base_sha": "62e1b6fec6ce6f9a4096c6c5a6912d74df36da5c",
       "objective": "Validate public signed-update metadata and freshness/version constraints using synthetic keys and fixtures. Production key management, activation and rollback stay Trusted.",
       "allowed_paths": [
         "src/ExtensionPackage/Update/",
@@ -147,7 +151,9 @@
         "preserve-all-security-and-worker-isolation-invariants",
         "red-ci-stops-integration",
         "no-secret-or-private-runtime-export"
-      ]
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "62e1b6fec6ce6f9a4096c6c5a6912d74df36da5c"
     },
     {
       "priority": 3,
@@ -164,8 +170,6 @@
       "blocked_by_at_publication": [],
       "claim_branch": "claim/fcp-052-g1",
       "suggested_branch": "feature/fcp-052-pool-g1",
-      "base_branch": "worker/account-6",
-      "base_sha": "ad876fea62817d705ad997175e03f2253ca0e445",
       "objective": "Build one reusable interaction core for comments, replies, reactions, reports and moderation, initially wired to one content target and designed for later video, forum and download targets.",
       "allowed_paths": [
         "src/Community/Interaction/",
@@ -220,7 +224,8 @@
         "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment",
         "fortress-ready-replaceable-boundaries-no-private-runtime-reconstruction"
       ],
-      "worker_pr": 13
+      "worker_pr": 13,
+      "completed_on_historical_pool": true
     },
     {
       "priority": 4,
@@ -237,8 +242,6 @@
       "blocked_by_at_publication": [],
       "claim_branch": "claim/fcp-053-g1",
       "suggested_branch": "feature/fcp-053-pool-g1",
-      "base_branch": "worker/account-6",
-      "base_sha": "ad876fea62817d705ad997175e03f2253ca0e445",
       "objective": "Deepen the existing guild module with multi-game roster filtering, characters/alts, role needs, configurable applications, officer voting, trials, onboarding, absences, private notes and audited member lifecycle.",
       "allowed_paths": [
         "src/Gaming/Guild/",
@@ -300,7 +303,8 @@
       "final_head": "8ce1ea7d64ddf347ed5ab5ec322449ba0307a9e7",
       "ci_run_id": 36010756549,
       "ci_result": "success",
-      "claim_state": "locked_until_trusted_resolution"
+      "claim_state": "locked_until_trusted_resolution",
+      "completed_on_historical_pool": true
     },
     {
       "priority": 5,
@@ -312,13 +316,11 @@
         "FCP-053"
       ],
       "dependencies_integrated_at_publication": [],
-      "blocked_by_at_publication": [
-        "FCP-053"
-      ],
+      "blocked_by_at_publication": [],
       "claim_branch": "claim/fcp-054-g1",
       "suggested_branch": "feature/fcp-054-pool-g1",
-      "base_branch": "worker/account-6",
-      "base_sha": "ad876fea62817d705ad997175e03f2253ca0e445",
+      "base_branch": "feature/fcp-053-pool-g1",
+      "base_sha": "8ce1ea7d64ddf347ed5ab5ec322449ba0307a9e7",
       "objective": "Expand guild events into recurring raid, training and squad planning with role capacities, RSVP, waitlists, substitutes, check-in, actual attendance, reminders, preparation and calendar export.",
       "allowed_paths": [
         "src/Gaming/Event/",
@@ -374,6 +376,18 @@
         "red-ci-stops-integration",
         "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment",
         "fortress-ready-replaceable-boundaries-no-private-runtime-reconstruction"
+      ],
+      "proposal_base_branch": "feature/fcp-053-pool-g1",
+      "proposal_base_sha": "8ce1ea7d64ddf347ed5ab5ec322449ba0307a9e7",
+      "proposal_dependency_evidence": [
+        {
+          "package_id": "FCP-053",
+          "pull_request": 14,
+          "head_sha": "8ce1ea7d64ddf347ed5ab5ec322449ba0307a9e7",
+          "ci_run_id": 36010756549,
+          "result": "success",
+          "authority": "worker-proposal-only"
+        }
       ]
     },
     {
@@ -391,8 +405,8 @@
       ],
       "claim_branch": "claim/fcp-055-g1",
       "suggested_branch": "feature/fcp-055-pool-g1",
-      "base_branch": "worker/account-6",
-      "base_sha": "ad876fea62817d705ad997175e03f2253ca0e445",
+      "base_branch": "main",
+      "base_sha": "62e1b6fec6ce6f9a4096c6c5a6912d74df36da5c",
       "objective": "Add optional auditable guild loot accounting and vault management with multiple point models, wishlists, raid linkage, corrections and export, without any real-money economy.",
       "allowed_paths": [
         "src/Gaming/Loot/",
@@ -448,7 +462,9 @@
         "red-ci-stops-integration",
         "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment",
         "fortress-ready-replaceable-boundaries-no-private-runtime-reconstruction"
-      ]
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "62e1b6fec6ce6f9a4096c6c5a6912d74df36da5c"
     },
     {
       "priority": 7,
@@ -465,8 +481,6 @@
       "blocked_by_at_publication": [],
       "claim_branch": "claim/fcp-056-g1",
       "suggested_branch": "feature/fcp-056-pool-g1",
-      "base_branch": "worker/account-6",
-      "base_sha": "ad876fea62817d705ad997175e03f2253ca0e445",
       "objective": "Create game pages and a release centre with platforms, genres, publishers, editions, dates, regions, system requirements and links to CMS content, guilds, videos and servers.",
       "allowed_paths": [
         "src/Gaming/Catalogue/",
@@ -523,7 +537,8 @@
         "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment",
         "fortress-ready-replaceable-boundaries-no-private-runtime-reconstruction"
       ],
-      "worker_pr": 15
+      "worker_pr": 15,
+      "completed_on_historical_pool": true
     },
     {
       "priority": 8,
@@ -543,8 +558,8 @@
       ],
       "claim_branch": "claim/fcp-057-g1",
       "suggested_branch": "feature/fcp-057-pool-g1",
-      "base_branch": "worker/account-6",
-      "base_sha": "ad876fea62817d705ad997175e03f2253ca0e445",
+      "base_branch": "main",
+      "base_sha": "62e1b6fec6ce6f9a4096c6c5a6912d74df36da5c",
       "objective": "Add structured editorial types for reviews, previews, reports, interviews, columns, hardware tests and buying guides with transparent scoring and revisions.",
       "allowed_paths": [
         "src/Editorial/",
@@ -600,7 +615,9 @@
         "red-ci-stops-integration",
         "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment",
         "fortress-ready-replaceable-boundaries-no-private-runtime-reconstruction"
-      ]
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "62e1b6fec6ce6f9a4096c6c5a6912d74df36da5c"
     },
     {
       "priority": 9,
@@ -620,8 +637,8 @@
       ],
       "claim_branch": "claim/fcp-058-g1",
       "suggested_branch": "feature/fcp-058-pool-g1",
-      "base_branch": "worker/account-6",
-      "base_sha": "ad876fea62817d705ad997175e03f2253ca0e445",
+      "base_branch": "main",
+      "base_sha": "62e1b6fec6ce6f9a4096c6c5a6912d74df36da5c",
       "objective": "Implement patch-aware guides, builds, loadouts and tier lists with structured components, alternatives, criteria, reviewer workflow and stale-version handling.",
       "allowed_paths": [
         "src/Gaming/Guide/",
@@ -677,7 +694,9 @@
         "red-ci-stops-integration",
         "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment",
         "fortress-ready-replaceable-boundaries-no-private-runtime-reconstruction"
-      ]
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "62e1b6fec6ce6f9a4096c6c5a6912d74df36da5c"
     },
     {
       "priority": 10,
@@ -697,8 +716,8 @@
       ],
       "claim_branch": "claim/fcp-059-g1",
       "suggested_branch": "feature/fcp-059-pool-g1",
-      "base_branch": "worker/account-6",
-      "base_sha": "ad876fea62817d705ad997175e03f2253ca0e445",
+      "base_branch": "main",
+      "base_sha": "62e1b6fec6ce6f9a4096c6c5a6912d74df36da5c",
       "objective": "Create an optional per-game knowledge schema for classes, items, quests, NPCs, bosses, zones and collection markers, with moderated sources and no copied third-party dataset.",
       "allowed_paths": [
         "src/Gaming/Knowledge/",
@@ -754,7 +773,9 @@
         "red-ci-stops-integration",
         "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment",
         "fortress-ready-replaceable-boundaries-no-private-runtime-reconstruction"
-      ]
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "62e1b6fec6ce6f9a4096c6c5a6912d74df36da5c"
     },
     {
       "priority": 11,
@@ -773,8 +794,8 @@
       ],
       "claim_branch": "claim/fcp-060-g1",
       "suggested_branch": "feature/fcp-060-pool-g1",
-      "base_branch": "worker/account-6",
-      "base_sha": "ad876fea62817d705ad997175e03f2253ca0e445",
+      "base_branch": "main",
+      "base_sha": "62e1b6fec6ce6f9a4096c6c5a6912d74df36da5c",
       "objective": "Add opt-in multi-character profiles with server, region, class, role, builds, professions, progression and collections, keeping imported and manual data distinguishable.",
       "allowed_paths": [
         "src/Gaming/Character/",
@@ -830,7 +851,9 @@
         "red-ci-stops-integration",
         "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment",
         "fortress-ready-replaceable-boundaries-no-private-runtime-reconstruction"
-      ]
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "62e1b6fec6ce6f9a4096c6c5a6912d74df36da5c"
     },
     {
       "priority": 12,
@@ -849,8 +872,8 @@
       ],
       "claim_branch": "claim/fcp-061-g1",
       "suggested_branch": "feature/fcp-061-pool-g1",
-      "base_branch": "worker/account-6",
-      "base_sha": "ad876fea62817d705ad997175e03f2253ca0e445",
+      "base_branch": "main",
+      "base_sha": "62e1b6fec6ce6f9a4096c6c5a6912d74df36da5c",
       "objective": "Implement team and solo competitions with registration, check-in, seeding, bracket/league formats, match scheduling, evidence, disputes and season archives.",
       "allowed_paths": [
         "src/Gaming/Competition/",
@@ -906,7 +929,9 @@
         "red-ci-stops-integration",
         "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment",
         "fortress-ready-replaceable-boundaries-no-private-runtime-reconstruction"
-      ]
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "62e1b6fec6ce6f9a4096c6c5a6912d74df36da5c"
     },
     {
       "priority": 13,
@@ -923,8 +948,8 @@
       ],
       "claim_branch": "claim/fcp-062-g1",
       "suggested_branch": "feature/fcp-062-pool-g1",
-      "base_branch": "worker/account-6",
-      "base_sha": "ad876fea62817d705ad997175e03f2253ca0e445",
+      "base_branch": "main",
+      "base_sha": "62e1b6fec6ce6f9a4096c6c5a6912d74df36da5c",
       "objective": "Build a safe public gameserver registry and polling model with approved protocol adapters, cached status, outage history and alerts while blocking arbitrary network targets.",
       "allowed_paths": [
         "src/Gaming/Server/",
@@ -980,7 +1005,9 @@
         "red-ci-stops-integration",
         "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment",
         "fortress-ready-replaceable-boundaries-no-private-runtime-reconstruction"
-      ]
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "62e1b6fec6ce6f9a4096c6c5a6912d74df36da5c"
     },
     {
       "priority": 14,
@@ -999,8 +1026,6 @@
       "blocked_by_at_publication": [],
       "claim_branch": "claim/fcp-063-g1",
       "suggested_branch": "feature/fcp-063-pool-g1",
-      "base_branch": "worker/account-6",
-      "base_sha": "ad876fea62817d705ad997175e03f2253ca0e445",
       "objective": "Create a controlled download catalogue for files, mods and add-ons with versions, compatibility, dependencies, changelogs, checksums, mirrors and authorization.",
       "allowed_paths": [
         "src/Downloads/",
@@ -1057,7 +1082,8 @@
         "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment",
         "fortress-ready-replaceable-boundaries-no-private-runtime-reconstruction"
       ],
-      "worker_pr": 16
+      "worker_pr": 16,
+      "completed_on_historical_pool": true
     },
     {
       "priority": 15,
@@ -1077,8 +1103,8 @@
       ],
       "claim_branch": "claim/fcp-064-g1",
       "suggested_branch": "feature/fcp-064-pool-g1",
-      "base_branch": "worker/account-6",
-      "base_sha": "ad876fea62817d705ad997175e03f2253ca0e445",
+      "base_branch": "main",
+      "base_sha": "62e1b6fec6ce6f9a4096c6c5a6912d74df36da5c",
       "objective": "Build albums, screenshots, fanart and moderated media competitions with licensing, submissions and voting on top of the hardened media contracts.",
       "allowed_paths": [
         "src/Gallery/",
@@ -1134,7 +1160,9 @@
         "red-ci-stops-integration",
         "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment",
         "fortress-ready-replaceable-boundaries-no-private-runtime-reconstruction"
-      ]
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "62e1b6fec6ce6f9a4096c6c5a6912d74df36da5c"
     },
     {
       "priority": 16,
@@ -1154,8 +1182,8 @@
       ],
       "claim_branch": "claim/fcp-065-g1",
       "suggested_branch": "feature/fcp-065-pool-g1",
-      "base_branch": "worker/account-6",
-      "base_sha": "ad876fea62817d705ad997175e03f2253ca0e445",
+      "base_branch": "main",
+      "base_sha": "62e1b6fec6ce6f9a4096c6c5a6912d74df36da5c",
       "objective": "Create forums and Q&A with categories, threads, replies, quotes, mentions, subscriptions, solved answers, attachments and private guild rooms.",
       "allowed_paths": [
         "src/Forum/",
@@ -1211,7 +1239,9 @@
         "red-ci-stops-integration",
         "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment",
         "fortress-ready-replaceable-boundaries-no-private-runtime-reconstruction"
-      ]
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "62e1b6fec6ce6f9a4096c6c5a6912d74df36da5c"
     },
     {
       "priority": 17,
@@ -1230,8 +1260,8 @@
       ],
       "claim_branch": "claim/fcp-066-g1",
       "suggested_branch": "feature/fcp-066-pool-g1",
-      "base_branch": "worker/account-6",
-      "base_sha": "ad876fea62817d705ad997175e03f2253ca0e445",
+      "base_branch": "main",
+      "base_sha": "62e1b6fec6ce6f9a4096c6c5a6912d74df36da5c",
       "objective": "Add private/group messages, blocking, reporting, retention and social relationships with strict participant authorization; real-time transport remains optional until capacity proof.",
       "allowed_paths": [
         "src/Social/",
@@ -1287,7 +1317,9 @@
         "red-ci-stops-integration",
         "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment",
         "fortress-ready-replaceable-boundaries-no-private-runtime-reconstruction"
-      ]
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "62e1b6fec6ce6f9a4096c6c5a6912d74df36da5c"
     },
     {
       "priority": 18,
@@ -1306,8 +1338,6 @@
       "blocked_by_at_publication": [],
       "claim_branch": "claim/fcp-067-g1",
       "suggested_branch": "feature/fcp-067-pool-g1",
-      "base_branch": "worker/account-6",
-      "base_sha": "ad876fea62817d705ad997175e03f2253ca0e445",
       "objective": "Expand video with search, tags, thumbnails, visibility, favorites, watchlists, optional history, timestamp comments, clips, creator profiles and privacy-aware live embeds.",
       "allowed_paths": [
         "src/Video/Discovery/",
@@ -1369,7 +1399,8 @@
       "final_head": "7fcf03aebce6ad2291984fba14c344901fa84142",
       "ci_run_id": 36031150957,
       "ci_result": "success",
-      "claim_state": "locked_until_trusted_resolution"
+      "claim_state": "locked_until_trusted_resolution",
+      "completed_on_historical_pool": true
     },
     {
       "priority": 19,
@@ -1388,8 +1419,6 @@
       "blocked_by_at_publication": [],
       "claim_branch": "claim/fcp-068-g1",
       "suggested_branch": "feature/fcp-068-pool-g1",
-      "base_branch": "worker/account-6",
-      "base_sha": "ad876fea62817d705ad997175e03f2253ca0e445",
       "objective": "Complete per-channel notification preferences, mentions, subscriptions, quiet hours, deduplication and a consent-based newsletter workflow separated from transactional mail.",
       "allowed_paths": [
         "src/Notification/Preferences/",
@@ -1448,7 +1477,8 @@
         "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment",
         "fortress-ready-replaceable-boundaries-no-private-runtime-reconstruction"
       ],
-      "worker_pr": 17
+      "worker_pr": 17,
+      "completed_on_historical_pool": true
     },
     {
       "priority": 20,
@@ -1471,8 +1501,8 @@
       ],
       "claim_branch": "claim/fcp-069-g1",
       "suggested_branch": "feature/fcp-069-pool-g1",
-      "base_branch": "worker/account-6",
-      "base_sha": "ad876fea62817d705ad997175e03f2253ca0e445",
+      "base_branch": "main",
+      "base_sha": "62e1b6fec6ce6f9a4096c6c5a6912d74df36da5c",
       "objective": "Build modular global search, filters and discovery that never indexes or returns content the current viewer cannot access, reusing existing content feeds.",
       "allowed_paths": [
         "src/Search/",
@@ -1525,7 +1555,9 @@
         "red-ci-stops-integration",
         "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment",
         "fortress-ready-replaceable-boundaries-no-private-runtime-reconstruction"
-      ]
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "62e1b6fec6ce6f9a4096c6c5a6912d74df36da5c"
     },
     {
       "priority": 21,
@@ -1544,8 +1576,8 @@
       ],
       "claim_branch": "claim/fcp-070-g1",
       "suggested_branch": "feature/fcp-070-pool-g1",
-      "base_branch": "worker/account-6",
-      "base_sha": "ad876fea62817d705ad997175e03f2253ca0e445",
+      "base_branch": "main",
+      "base_sha": "62e1b6fec6ce6f9a4096c6c5a6912d74df36da5c",
       "objective": "Expose narrowly scoped versioned APIs and signed webhooks for completed modules with revocable tokens, permissions, rate limits and replay protection.",
       "allowed_paths": [
         "src/Api/",
@@ -1601,7 +1633,9 @@
         "red-ci-stops-integration",
         "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment",
         "fortress-ready-replaceable-boundaries-no-private-runtime-reconstruction"
-      ]
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "62e1b6fec6ce6f9a4096c6c5a6912d74df36da5c"
     },
     {
       "priority": 22,
@@ -1618,8 +1652,6 @@
       "blocked_by_at_publication": [],
       "claim_branch": "claim/fcp-071-g1",
       "suggested_branch": "feature/fcp-071-pool-g1",
-      "base_branch": "worker/account-6",
-      "base_sha": "ad876fea62817d705ad997175e03f2253ca0e445",
       "objective": "Expand accounts with invitation/registration variants, avatars/banners/bios, per-field privacy, export, deletion and retention while preserving existing identity protections.",
       "allowed_paths": [
         "src/Profile/",
@@ -1685,7 +1717,8 @@
       "final_head": "82e10e0c10d16b52009132fa7b56e475b7c58f1c",
       "ci_run_id": 36020706272,
       "ci_result": "success",
-      "claim_state": "locked_until_trusted_resolution"
+      "claim_state": "locked_until_trusted_resolution",
+      "completed_on_historical_pool": true
     },
     {
       "priority": 23,
@@ -1705,8 +1738,8 @@
       ],
       "claim_branch": "claim/fcp-072-g1",
       "suggested_branch": "feature/fcp-072-pool-g1",
-      "base_branch": "worker/account-6",
-      "base_sha": "ad876fea62817d705ad997175e03f2253ca0e445",
+      "base_branch": "main",
+      "base_sha": "62e1b6fec6ce6f9a4096c6c5a6912d74df36da5c",
       "objective": "Finish module translation coverage, keyboard/screenreader flows and mobile administration; define a conservative opt-in PWA cache that never stores private/admin responses.",
       "allowed_paths": [
         "translations/",
@@ -1762,7 +1795,9 @@
         "red-ci-stops-integration",
         "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment",
         "fortress-ready-replaceable-boundaries-no-private-runtime-reconstruction"
-      ]
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "62e1b6fec6ce6f9a4096c6c5a6912d74df36da5c"
     },
     {
       "priority": 24,
@@ -1782,8 +1817,8 @@
       ],
       "claim_branch": "claim/fcp-073-g1",
       "suggested_branch": "feature/fcp-073-pool-g1",
-      "base_branch": "worker/account-6",
-      "base_sha": "ad876fea62817d705ad997175e03f2253ca0e445",
+      "base_branch": "main",
+      "base_sha": "62e1b6fec6ce6f9a4096c6c5a6912d74df36da5c",
       "objective": "Create structured hardware editorial data, test systems, benchmark series, comparison charts and community setups with methodology and disclosure.",
       "allowed_paths": [
         "src/Hardware/",
@@ -1839,7 +1874,9 @@
         "red-ci-stops-integration",
         "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment",
         "fortress-ready-replaceable-boundaries-no-private-runtime-reconstruction"
-      ]
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "62e1b6fec6ce6f9a4096c6c5a6912d74df36da5c"
     },
     {
       "priority": 25,
@@ -1856,8 +1893,8 @@
       ],
       "claim_branch": "claim/fcp-074-g1",
       "suggested_branch": "feature/fcp-074-pool-g1",
-      "base_branch": "worker/account-6",
-      "base_sha": "ad876fea62817d705ad997175e03f2253ca0e445",
+      "base_branch": "main",
+      "base_sha": "62e1b6fec6ce6f9a4096c6c5a6912d74df36da5c",
       "objective": "Implement private support and moderation case management with assignments, deadlines, evidence, sanctions and appeals under narrow visibility and retention rules.",
       "allowed_paths": [
         "src/Support/",
@@ -1913,7 +1950,9 @@
         "red-ci-stops-integration",
         "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment",
         "fortress-ready-replaceable-boundaries-no-private-runtime-reconstruction"
-      ]
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "62e1b6fec6ce6f9a4096c6c5a6912d74df36da5c"
     },
     {
       "priority": 26,
@@ -1934,8 +1973,8 @@
       ],
       "claim_branch": "claim/fcp-076-g1",
       "suggested_branch": "feature/fcp-076-pool-g1",
-      "base_branch": "worker/account-6",
-      "base_sha": "ad876fea62817d705ad997175e03f2253ca0e445",
+      "base_branch": "main",
+      "base_sha": "62e1b6fec6ce6f9a4096c6c5a6912d74df36da5c",
       "objective": "Implement worker-visible provider-neutral adapters, mocks and consent/import lifecycle for public Discord, Twitch, YouTube, Steam and game API data while leaving every secret/provider runtime implementation Trusted-only.",
       "allowed_paths": [
         "src/Integration/Public/",
@@ -1991,7 +2030,9 @@
         "red-ci-stops-integration",
         "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment",
         "fortress-ready-replaceable-boundaries-no-private-runtime-reconstruction"
-      ]
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "62e1b6fec6ce6f9a4096c6c5a6912d74df36da5c"
     },
     {
       "priority": 27,
@@ -2016,8 +2057,8 @@
       ],
       "claim_branch": "claim/fcp-077-g1",
       "suggested_branch": "feature/fcp-077-pool-g1",
-      "base_branch": "worker/account-6",
-      "base_sha": "ad876fea62817d705ad997175e03f2253ca0e445",
+      "base_branch": "main",
+      "base_sha": "62e1b6fec6ce6f9a4096c6c5a6912d74df36da5c",
       "objective": "Add real permission-aware widgets and genuinely different module page compositions for completed modules without duplicating business logic in templates.",
       "allowed_paths": [
         "src/Widget/Module/",
@@ -2073,7 +2114,9 @@
         "red-ci-stops-integration",
         "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment",
         "fortress-ready-replaceable-boundaries-no-private-runtime-reconstruction"
-      ]
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "62e1b6fec6ce6f9a4096c6c5a6912d74df36da5c"
     }
   ],
   "recovery_queue": [],
