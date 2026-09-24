@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "62e1b6fec6ce6f9a4096c6c5a6912d74df36da5c",
-  "published_at": "2026-09-24T21:10:34.549Z",
+  "published_at": "2026-09-24T21:21:24.261Z",
   "summary": {
     "total_remaining_worker_tasks": 27,
-    "completed_worker_prs_awaiting_trusted_review": 16,
+    "completed_worker_prs_awaiting_trusted_review": 17,
     "recovery_tasks": 0,
-    "unclaimed": 11,
-    "immediately_claimable": 1,
-    "next_required_action": "Claim FCP-074 from the exact green FCP-052 proposal HEAD and continue dependency-safe Worker proposal sequencing."
+    "unclaimed": 10,
+    "immediately_claimable": 0,
+    "next_required_action": "Publish exact green composition bases for multi-head dependencies or integrate missing prerequisite packages; no remaining task has a currently unambiguous proposal base."
   },
   "rules": {
     "choose": "Resume any owned unfinished claim first. Otherwise choose exactly the first unclaimed task with an empty current blocked_by list and a published exact proposal_base_sha. A completed Worker proposal may satisfy proposal-only dependencies when its exact HEAD has green Worker CI.",
@@ -2025,7 +2025,7 @@
       "package_id": "FCP-074",
       "title": "Support tickets rules sanctions appeals and case management",
       "risk": "critical",
-      "execution_state": "unclaimed",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [
         "FCP-052"
       ],
@@ -2102,7 +2102,13 @@
           "ci_run_id": 35983942285,
           "ci_result": "success"
         }
-      ]
+      ],
+      "worker_pr": 29,
+      "resume_branch": "feature/fcp-074-pool-g1",
+      "final_head": "4e374041c2f92a91c298d30f85e2cc85938fdf57",
+      "ci_run_id": 36060702197,
+      "ci_result": "success",
+      "claim_state": "locked_until_trusted_resolution"
     },
     {
       "priority": 26,
@@ -2388,6 +2394,16 @@
       "worker_pr": 28,
       "last_observed_head": "7f129ec40b9c03ecbefc2abe14c03b79940af1eb",
       "ci_run_id": 36059508392,
+      "ci_result": "success",
+      "claim_state": "locked_until_trusted_resolution"
+    },
+    {
+      "package_id": "FCP-074",
+      "action": "worker_complete_awaiting_trusted_review",
+      "feature_branch": "feature/fcp-074-pool-g1",
+      "worker_pr": 29,
+      "last_observed_head": "4e374041c2f92a91c298d30f85e2cc85938fdf57",
+      "ci_run_id": 36060702197,
       "ci_result": "success",
       "claim_state": "locked_until_trusted_resolution"
     }
