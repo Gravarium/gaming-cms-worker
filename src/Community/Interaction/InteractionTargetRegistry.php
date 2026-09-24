@@ -29,6 +29,11 @@ final readonly class InteractionTargetRegistry
             return null;
         }
 
-        return $this->providers[$type]->resolve($targetId) ?? null;
+        $provider = $this->providers[$type] ?? null;
+        if ($provider === null) {
+            return null;
+        }
+
+        return $provider->resolve($targetId);
     }
 }
