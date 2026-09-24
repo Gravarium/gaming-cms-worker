@@ -131,6 +131,21 @@ final class GuildLifecycleCoreTest extends TestCase
         new GuildPrivateMemberNote($otherGuild, $member, $actor, 'Must fail.');
     }
 
+    public function testApplicationVoteRejectsCrossGuildApplication(): void
+    {
+        [$guild, $otherGuild] = $this->guilds();
+        $actor = $this->user('vote-officer');
+        $application = (new GuildApplication())
+            ->setGuild($guild)
+            ->setApplicantName('Applicant')
+            ->setEmail('cross-guild@example.test')
+            ->setCharacterName('CrossGuild')
+            ->setMessage(str_repeat('b', 30));
+
+        $this->expectException(\DomainException::class);
+        new GuildApplicationVote($application, $otherGuild, $actor, 'approve', 'Must not cross guild boundaries.');
+    }
+
     /** @return array{Guild, Guild, Game} */
     private function guilds(): array
     {
