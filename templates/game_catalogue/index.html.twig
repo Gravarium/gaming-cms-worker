@@ -1,0 +1,25 @@
+{% extends 'base.html.twig' %}
+{% block title %}Spiele{% endblock %}
+{% block body %}
+<main class="content-shell">
+    <header class="page-header">
+        <p class="eyebrow">Spielekatalog</p>
+        <h1>Game Hubs</h1>
+        <p>Spiele, Plattformen, Genres und Veröffentlichungen an einem Ort.</p>
+        <a class="button-link" href="{{ path('app_game_catalogue_releases') }}">Release-Kalender</a>
+    </header>
+    <section class="portal-cards" aria-label="Spiele">
+        {% for entry in entries %}
+            <article class="portal-card">
+                <p class="portal-kicker">{{ entry.publisher ? entry.publisher.name : 'Publisher offen' }}</p>
+                <h2><a href="{{ path('app_game_catalogue_show', {slug: entry.game.slug}) }}">{{ entry.game.name }}</a></h2>
+                {% if entry.developer %}<p>{{ entry.developer }}</p>{% endif %}
+                {% if entry.summary %}<p>{{ entry.summary }}</p>{% endif %}
+                {% if entry.genres|length %}<p>{% for genre in entry.genres %}<span class="portal-tag">{{ genre.name }}</span> {% endfor %}</p>{% endif %}
+            </article>
+        {% else %}
+            <p>Aktuell sind keine Spiele im Katalog veröffentlicht.</p>
+        {% endfor %}
+    </section>
+</main>
+{% endblock %}
