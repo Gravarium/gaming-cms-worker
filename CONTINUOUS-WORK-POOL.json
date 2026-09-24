@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "62e1b6fec6ce6f9a4096c6c5a6912d74df36da5c",
-  "published_at": "2026-09-24T20:43:56.967Z",
+  "published_at": "2026-09-24T20:56:51.625Z",
   "summary": {
     "total_remaining_worker_tasks": 27,
-    "completed_worker_prs_awaiting_trusted_review": 13,
+    "completed_worker_prs_awaiting_trusted_review": 14,
     "recovery_tasks": 0,
-    "unclaimed": 14,
+    "unclaimed": 13,
     "immediately_claimable": 1,
-    "next_required_action": "Claim FCP-064 from the exact green FCP-052 proposal HEAD and continue dependency-safe Worker proposal sequencing."
+    "next_required_action": "Claim FCP-065 from the exact green FCP-052 proposal HEAD and continue dependency-safe Worker proposal sequencing."
   },
   "rules": {
     "choose": "Resume any owned unfinished claim first. Otherwise choose exactly the first unclaimed task with an empty current blocked_by list and a published exact proposal_base_sha. A completed Worker proposal may satisfy proposal-only dependencies when its exact HEAD has green Worker CI.",
@@ -1178,7 +1178,7 @@
       "package_id": "FCP-064",
       "title": "Galleries screenshots fanart and competitions",
       "risk": "high",
-      "execution_state": "unclaimed",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [
         "FCP-052",
         "FCP-010"
@@ -1262,7 +1262,13 @@
           "package_id": "FCP-010",
           "integration_state": "trusted_integrated_at_publication"
         }
-      ]
+      ],
+      "worker_pr": 26,
+      "resume_branch": "feature/fcp-064-pool-g1",
+      "final_head": "3638dc6d02dfd0fa8145f6365b9cd9eca5b18320",
+      "ci_run_id": 36058025374,
+      "ci_result": "success",
+      "claim_state": "locked_until_trusted_resolution"
     },
     {
       "priority": 16,
@@ -1277,9 +1283,7 @@
       "dependencies_integrated_at_publication": [
         "FCP-051"
       ],
-      "blocked_by_at_publication": [
-        "FCP-052"
-      ],
+      "blocked_by_at_publication": [],
       "claim_branch": "claim/fcp-065-g1",
       "suggested_branch": "feature/fcp-065-pool-g1",
       "base_branch": "main",
@@ -1340,8 +1344,22 @@
         "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment",
         "fortress-ready-replaceable-boundaries-no-private-runtime-reconstruction"
       ],
-      "proposal_base_branch": "main",
-      "proposal_base_sha": "62e1b6fec6ce6f9a4096c6c5a6912d74df36da5c"
+      "proposal_base_branch": "feature/fcp-052-pool-g1",
+      "proposal_base_sha": "f2e0ceea07b5152a30d78797a9427c9aebfe4e40",
+      "proposal_dependency_evidence": [
+        {
+          "package_id": "FCP-052",
+          "feature_branch": "feature/fcp-052-pool-g1",
+          "worker_pr": 13,
+          "exact_head": "f2e0ceea07b5152a30d78797a9427c9aebfe4e40",
+          "ci_run_id": 35983942285,
+          "ci_result": "success"
+        },
+        {
+          "package_id": "FCP-051",
+          "integration_state": "trusted_integrated_at_publication"
+        }
+      ]
     },
     {
       "priority": 17,
@@ -2308,6 +2326,16 @@
       "worker_pr": 25,
       "last_observed_head": "0e1b01eeab371abcdb58753c8187cd6cb6856821",
       "ci_run_id": 36056580821,
+      "ci_result": "success",
+      "claim_state": "locked_until_trusted_resolution"
+    },
+    {
+      "package_id": "FCP-064",
+      "action": "worker_complete_awaiting_trusted_review",
+      "feature_branch": "feature/fcp-064-pool-g1",
+      "worker_pr": 26,
+      "last_observed_head": "3638dc6d02dfd0fa8145f6365b9cd9eca5b18320",
+      "ci_run_id": 36058025374,
       "ci_result": "success",
       "claim_state": "locked_until_trusted_resolution"
     }
