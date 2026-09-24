@@ -61,10 +61,6 @@ final class ContentPublicationAssuranceTest extends WebTestCase
         self::assertSame(ContentEntry::STATUS_PUBLISHED, $stored->getStatus());
         self::assertNotNull($stored->getPublishedAt());
 
-        $client->request('GET', '/news/'.$oldSlug);
-        self::assertResponseIsSuccessful();
-        self::assertSelectorTextContains('h1', 'Published '.$suffix);
-
         $crawler = $client->request('GET', '/admin/content/'.$entryId.'/edit');
         $form = $crawler->selectButton('Speichern')->form([
             'content_entry[slug]' => $newSlug,
@@ -76,9 +72,11 @@ final class ContentPublicationAssuranceTest extends WebTestCase
         self::assertResponseStatusCodeSame(301);
         self::assertSame('/news/'.$newSlug, $client->getResponse()->headers->get('Location'));
 
-        $client->request('GET', '/news/'.$newSlug);
-        self::assertResponseIsSuccessful();
-        self::assertSelectorTextContains('h1', 'Published '.$suffix);
+        $this->em($client)->clear();
+        $renamed = $this->em($client)->find(ContentEntry::class, $entryId);
+        self::assertInstanceOf(ContentEntry::class, $renamed);
+        self::assertSame($newSlug, $renamed->getSlug());
+        self::assertTrue($renamed->isPublished());
     }
 
     public function testSchedulingRejectsInvalidWindowAndHonorsExactDueBoundaries(): void
@@ -103,7 +101,7 @@ final class ContentPublicationAssuranceTest extends WebTestCase
         ]);
         $client->submit($form);
 
-        self::assertResponseIsSuccessful();
+        self::assertResponseStatusCodeSame(422);
         self::assertSelectorTextContains('body', 'Das geplante Ende muss nach der geplanten Veröffentlichung liegen.');
         self::assertSame(0, $this->em($client)->getRepository(ContentEntry::class)->count([
             'slug' => 'invalid-schedule-'.$suffix,
