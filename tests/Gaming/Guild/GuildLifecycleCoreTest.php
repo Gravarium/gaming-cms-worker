@@ -21,6 +21,17 @@ use App\Gaming\Guild\MemberLifecycleHistory;
 use App\Gaming\Guild\RecruitmentPipeline;
 use App\Gaming\Guild\RosterFilter;
 use App\Gaming\Guild\RosterPrivacyPolicy;
+use App\Entity\Game;
+use App\Entity\Guild;
+use App\Entity\GuildApplication;
+use App\Entity\GuildMember;
+use App\Entity\User;
+use App\Entity\Guild\GuildApplicationVote;
+use App\Entity\Guild\GuildCharacter;
+use App\Entity\Guild\GuildMemberLifecycleEvent;
+use App\Entity\Guild\GuildMemberPrivateNote;
+use App\Entity\Guild\GuildOnboardingTask;
+use App\Entity\Guild\GuildRoleNeed;
 use PHPUnit\Framework\TestCase;
 
 final class GuildLifecycleCoreTest extends TestCase
@@ -88,6 +99,40 @@ final class GuildLifecycleCoreTest extends TestCase
     {
         $this->expectException(\InvalidArgumentException::class);
         new RosterFilter(0, 'tank');
+    }
+
+    public function testPersistentGuildLifecycleModelsEnforceGuildBoundaries(): void
+    {
+        $game = (new Game())->setName('Game')->setSlug('game');
+        $guild = (new Guild())->setGame($game)->setName('Guild')->setSlug('guild')->setServerName('Server')->setDescription('Guild');
+        $other = (new Guild())->setGame($game)->setName('Other')->setSlug('other')->setServerName('Server')->setDescription('Other');
+        $member = (new GuildMember())->setGuild($guild)->setCharacterName('Main');
+        $actor = (new User())->setEmail('officer@example.test')->setDisplayName('Officer');
+
+        $character = new GuildCharacter($guild, $member, $game, 'Main', 'Mage', 'dps', true);
+        self::assertTrue($character->isMainCharacter());
+        self::assertSame('dps', $character->getRole());
+
+        $need = new GuildRoleNeed($guild, $game, 'healer', 2, 'Priest');
+        self::assertSame(2, $need->getSlots());
+
+        $event = new GuildMemberLifecycleEvent($guild, $member, $actor, 'absence', 'Holiday', new \DateTimeImmutable('+1 day'), new \DateTimeImmutable('+2 days'));
+        self::assertSame('absence', $event->getAction());
+
+        $note = new GuildMemberPrivateNote($guild, $member, $actor, 'Officer-only note');
+        self::assertSame('Officer-only note', $note->getBody());
+
+        $task = new GuildOnboardingTask($guild, $member, 'Join Discord');
+        $task->complete($actor);
+        self::assertTrue($task->isCompleted());
+
+        $application = (new GuildApplication())->setGuild($guild);
+        $vote = new GuildApplicationVote($application, $actor, GuildApplicationVote::ACCEPT, 'Good fit');
+        self::assertSame('accept', $vote->getDecision());
+
+        $foreignMember = (new GuildMember())->setGuild($other)->setCharacterName('Foreign');
+        $this->expectException(\DomainException::class);
+        new GuildMemberPrivateNote($guild, $foreignMember, $actor, 'Must fail');
     }
 
     public function testPersistentRosterAndRecruitmentObjectsKeepGuildBoundary(): void
