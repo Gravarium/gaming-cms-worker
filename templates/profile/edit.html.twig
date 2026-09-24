@@ -8,6 +8,7 @@
     <h1>Profil bearbeiten</h1>
     {% for message in app.flashes('success') %}<div class="notice">{{ message }}</div>{% endfor %}
     {{ form_start(form) }}
+        {{ form_errors(form) }}
         {{ form_row(form.bio) }}
         <fieldset>
             <legend>Medien</legend>
