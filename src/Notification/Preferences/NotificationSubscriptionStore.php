@@ -45,13 +45,13 @@ final readonly class NotificationSubscriptionStore
     /** @return list<string> */
     public function topicsForUser(int $userId): array
     {
-        return array_values(array_map(
+        return array_map(
             static fn (mixed $topic): string => (string) $topic,
             $this->connection->fetchFirstColumn(
                 'SELECT topic FROM notification_subscription WHERE user_id = :user ORDER BY topic ASC',
                 ['user' => $userId],
             ),
-        ));
+        );
     }
 
     private function topic(string $topic): string
