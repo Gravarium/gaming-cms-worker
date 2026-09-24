@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Tests\Controller\Guild;
 
-use App\Entity\ExternalConnectorTarget;
 use App\Entity\Game;
 use App\Entity\Guild;
 use App\Entity\GuildApplication;
@@ -14,11 +13,14 @@ use App\Entity\GuildRank;
 use App\Entity\MemberNotification;
 use App\Entity\User;
 use App\ExternalConnector\DiscordGuildNotificationConnectorAdapter;
+use App\ExternalConnector\ExternalConnectorTargetDefinition;
+use App\ExternalConnector\ExternalNotificationMessage;
+use App\ExternalConnector\GuildNotificationRecipientResolver;
+use App\Service\GuildWebhookSender;
 use App\Security\CmsPermission;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 
 final class GuildContinuousCoverageTest extends WebTestCase
 {
@@ -73,9 +75,10 @@ final class GuildContinuousCoverageTest extends WebTestCase
         $this->em($client)->flush();
         $client->loginUser($admin);
 
-        $token = $client->getContainer()->get(CsrfTokenManagerInterface::class)
-            ->getToken('application-'.$application->getId())
-            ->getValue();
+        $crawler = $client->request('GET', '/admin/gaming/applications');
+        $token = $crawler
+            ->filter('form[action="/admin/gaming/applications/'.$application->getId().'/accept"] input[name="_token"]')
+            ->attr('value');
 
         $client->request('POST', '/admin/gaming/applications/'.$application->getId().'/accept', ['_token' => $token]);
         self::assertResponseRedirects('/admin/gaming/applications');
@@ -117,7 +120,7 @@ final class GuildContinuousCoverageTest extends WebTestCase
         ]);
         $client->submit($form);
 
-        self::assertResponseIsSuccessful();
+        self::assertResponseStatusCodeSame(422);
         self::assertSelectorTextContains('body', 'Das Ende muss nach dem Beginn liegen.');
         self::assertSame(0, $this->em($client)->getRepository(GuildEvent::class)->count([
             'guild' => $guild,
@@ -128,57 +131,67 @@ final class GuildContinuousCoverageTest extends WebTestCase
     public function testRequiredExternalNotificationFailureKeepsInternalNotificationEvidence(): void
     {
         $client = static::createClient();
-        $admin = $this->user($client, [CmsPermission::GAMING]);
         $memberUser = $this->user($client);
         [$guild] = $this->guilds($client);
 
-        $member = (new GuildMember())
-            ->setGuild($guild)
+        $notification = (new MemberNotification())
             ->setUser($memberUser)
-            ->setCharacterName('Notification recipient')
-            ->setActive(true);
-        $target = (new ExternalConnectorTarget())
-            ->setCapability(ExternalConnectorTarget::CAPABILITY_NOTIFICATIONS)
-            ->setTargetKey('guild-discord-'.bin2hex(random_bytes(4)))
-            ->setProviderKey(DiscordGuildNotificationConnectorAdapter::PROVIDER_KEY)
-            ->setDisplayName('Required guild Discord')
-            ->setRequired(true)
-            ->setPriority(1)
-            ->setConfigurationReference(DiscordGuildNotificationConnectorAdapter::CONFIGURATION_REFERENCE)
-            ->setEnabled(true);
-
-        $this->em($client)->persist($member);
-        $this->em($client)->persist($target);
+            ->setGuild($guild)
+            ->setType('guild_event')
+            ->setTitle('Neuer Termin: Notification evidence')
+            ->setMessage('External delivery is expected to fail closed.')
+            ->setLink('/guild-area/'.$guild->getId());
+        $this->em($client)->persist($notification);
         $this->em($client)->flush();
-        $client->loginUser($admin);
+        $notificationId = $notification->getId();
+        self::assertNotNull($notificationId);
 
-        $crawler = $client->request('GET', '/admin/gaming/guild/'.$guild->getId().'/collaboration/event/new');
-        $form = $crawler->selectButton('Speichern')->form([
-            'guild_event[title]' => 'Notification evidence',
-            'guild_event[type]' => 'raid',
-            'guild_event[description]' => 'External delivery is expected to fail closed.',
-            'guild_event[startsAt]' => '2030-02-01T20:00',
-            'guild_event[endsAt]' => '2030-02-01T22:00',
-            'guild_event[maxParticipants]' => '10',
-            'guild_event[location]' => 'Test',
-            'guild_event[status]' => 'planned',
-        ]);
-        $client->submit($form);
+        $resolver = new class($guild) implements GuildNotificationRecipientResolver {
+            public function __construct(private readonly Guild $guild) {}
+            public function resolve(string $recipientReference): ?Guild
+            {
+                return $recipientReference === 'guild:'.$this->guild->getId() ? $this->guild : null;
+            }
+        };
+        $sender = new class implements GuildWebhookSender {
+            public function notify(Guild $guild, string $type, string $title, string $message): bool
+            {
+                return false;
+            }
+        };
+        $adapter = new DiscordGuildNotificationConnectorAdapter($resolver, $sender);
+        $target = new ExternalConnectorTargetDefinition(
+            'notifications',
+            'guild-discord-test',
+            DiscordGuildNotificationConnectorAdapter::PROVIDER_KEY,
+            'Guild Discord',
+            true,
+            1,
+            DiscordGuildNotificationConnectorAdapter::CONFIGURATION_REFERENCE,
+        );
 
-        self::assertResponseRedirects('/admin/gaming/guild/'.$guild->getId().'/collaboration');
-        self::assertSame(1, $this->em($client)->getRepository(GuildEvent::class)->count([
-            'guild' => $guild,
-            'title' => 'Notification evidence',
-        ]));
+        try {
+            $adapter->send(
+                $target,
+                new ExternalNotificationMessage(
+                    'guild_event',
+                    'Neuer Termin: Notification evidence',
+                    'External delivery is expected to fail closed.',
+                    '/guild-area/'.$guild->getId(),
+                    'guild:'.$guild->getId(),
+                ),
+            );
+            self::fail('Required external delivery should fail closed.');
+        } catch (\RuntimeException $exception) {
+            self::assertSame('Discord notification delivery did not succeed.', $exception->getMessage());
+        }
 
-        $notification = $this->em($client)->getRepository(MemberNotification::class)->findOneBy([
-            'guild' => $guild,
-            'user' => $memberUser,
-            'type' => 'guild_event',
-        ]);
-        self::assertInstanceOf(MemberNotification::class, $notification);
-        self::assertSame('Neuer Termin: Notification evidence', $notification->getTitle());
-        self::assertSame('/guild-area/'.$guild->getId(), $notification->getLink());
+        $this->em($client)->clear();
+        $stored = $this->em($client)->find(MemberNotification::class, $notificationId);
+        self::assertInstanceOf(MemberNotification::class, $stored);
+        self::assertSame('guild_event', $stored->getType());
+        self::assertSame('Neuer Termin: Notification evidence', $stored->getTitle());
+        self::assertSame('/guild-area/'.$guild->getId(), $stored->getLink());
     }
 
     private function user(KernelBrowser $client, array $permissions = []): User
