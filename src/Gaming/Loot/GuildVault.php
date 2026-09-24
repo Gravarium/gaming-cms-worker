@@ -35,4 +35,10 @@ final class GuildVault
     {
         return $this->stock[$itemKey] ?? 0;
     }
+
+    /** @return list<array{item: string, delta: int, actorId: int, reason: string}> */
+    public function auditTrail(): array
+    {
+        return $this->audit;
+    }
 }

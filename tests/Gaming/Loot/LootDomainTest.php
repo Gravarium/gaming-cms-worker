@@ -52,6 +52,7 @@ final class LootDomainTest extends TestCase
         $vault->adjust('item.flask', 20, 2, 'Raid preparation deposit');
         $vault->adjust('item.flask', -3, 2, 'Raid distribution');
         self::assertSame(17, $vault->quantity('item.flask'));
+        self::assertCount(2, $vault->auditTrail());
     }
 
     public function testApprovalRequiresSameGuildOfficerAndEnabledModule(): void
