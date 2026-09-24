@@ -1,0 +1,27 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Meine Daten | Gaming CMS{% endblock %}
+
+{% block body %}
+<main class="dashboard">
+    <p class="eyebrow">Konto · Datenschutz</p>
+    <h1>Meine Daten</h1>
+    {% for message in app.flashes('success') %}<div class="notice">{{ message }}</div>{% endfor %}
+
+    <p><a class="button-link" href="{{ path('app_profile_export') }}">Datenexport herunterladen</a></p>
+
+    {% if deletion and deletion.status == 'pending' %}
+        <p>Kontolöschung vorgemerkt. Früheste Ausführung: {{ deletion.executeAfter|date('d.m.Y H:i') }}.</p>
+        <form method="post" action="{{ path('app_profile_delete_cancel') }}">
+            <input type="hidden" name="_token" value="{{ csrf_token('profile-delete-cancel') }}">
+            <button type="submit">Löschung abbrechen</button>
+        </form>
+    {% else %}
+        <p>Eine Löschanforderung wird erst nach einer 30-tägigen Aufbewahrungsfrist ausgeführt.</p>
+        <form method="post" action="{{ path('app_profile_delete_request') }}">
+            <input type="hidden" name="_token" value="{{ csrf_token('profile-delete-request') }}">
+            <button type="submit" class="text-danger">Kontolöschung vormerken</button>
+        </form>
+    {% endif %}
+</main>
+{% endblock %}
