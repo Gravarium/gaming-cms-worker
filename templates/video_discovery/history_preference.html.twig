@@ -1,0 +1,19 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Video-Verlauf | Gaming CMS{% endblock %}
+
+{% block body %}
+<main class="dashboard">
+    <p class="eyebrow">Video · Datenschutz</p>
+    <h1>Video-Verlauf</h1>
+    <p>Der Wiedergabeverlauf ist optional und standardmäßig deaktiviert.</p>
+    <form method="post" action="{{ path('app_video_discovery_history_preference') }}">
+        <input type="hidden" name="_token" value="{{ csrf_token('video-history-preference') }}">
+        <label>
+            <input type="checkbox" name="enabled" value="1"{% if historyEnabled %} checked{% endif %}>
+            Wiedergabeverlauf speichern
+        </label>
+        <button type="submit">Speichern</button>
+    </form>
+</main>
+{% endblock %}
