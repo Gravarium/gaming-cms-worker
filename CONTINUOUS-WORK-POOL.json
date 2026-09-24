@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "worker/account-6",
   "base_sha": "ad876fea62817d705ad997175e03f2253ca0e445",
-  "published_at": "2026-09-24T13:10:00Z",
+  "published_at": "2026-09-24T17:35:38Z",
   "summary": {
     "total_remaining_worker_tasks": 27,
-    "completed_worker_prs_awaiting_trusted_review": 4,
-    "recovery_tasks": 3,
+    "completed_worker_prs_awaiting_trusted_review": 7,
+    "recovery_tasks": 0,
     "unclaimed": 20,
     "immediately_claimable": 0,
-    "next_required_action": "Resume FCP-053 and repair its red CI, then finish FCP-067, then FCP-071. Do not search for a new claim."
+    "next_required_action": "Reconcile live GitHub state. No recovery remains. Keep completed claims locked. Select another task only if dependencies are already Trusted-integrated and it is independently claimable; otherwise wait for Trusted integration."
   },
   "rules": {
     "choose": "Choose the first unclaimed task whose blocked_by_at_publication is empty and whose exact claim branch does not exist.",
@@ -27,7 +27,10 @@
     "lease": "Reservation lasts seven hours after the last verified push; the task remains in the pool.",
     "dependencies": "A completed Worker PR is not enough. Dependencies must be Trusted-integrated and present in this sanitized base.",
     "final_authority": "Never merge to Trusted and never deploy.",
-    "resume_before_claim": "Before looking for an unclaimed task, resume any package in recovery_queue in listed order. Existing own work is never skipped merely because its claim branch exists."
+    "resume_before_claim": "Before looking for an unclaimed task, resume any package in recovery_queue in listed order. Existing own work is never skipped merely because its claim branch exists.",
+    "self_reconcile": "After a Worker PR has green CI on its exact final HEAD, the owning Worker may update only its own package/recovery status to worker_complete_awaiting_trusted_review with PR, HEAD and CI evidence. It must not set integrated or release/delete the claim.",
+    "claim_lock": "A claim survives errors, chat loss, limits and Worker completion. It blocks every other AI until Trusted explicitly integrates, cancels or transfers it with checkpoint evidence.",
+    "continue_after_interrupt": "On any recoverable tool/model/chat interruption, fetch the same feature branch and continue from the verified remote HEAD. Do not abandon or duplicate work."
   },
   "tasks": [
     {
@@ -224,7 +227,7 @@
       "package_id": "FCP-053",
       "title": "Guild roster recruitment onboarding and member lifecycle",
       "risk": "high",
-      "execution_state": "changes_requested_red_ci",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [
         "FCP-051"
       ],
@@ -293,7 +296,11 @@
         "fortress-ready-replaceable-boundaries-no-private-runtime-reconstruction"
       ],
       "worker_pr": 14,
-      "resume_branch": "feature/fcp-053-pool-g1"
+      "resume_branch": "feature/fcp-053-pool-g1",
+      "final_head": "8ce1ea7d64ddf347ed5ab5ec322449ba0307a9e7",
+      "ci_run_id": 36010756549,
+      "ci_result": "success",
+      "claim_state": "locked_until_trusted_resolution"
     },
     {
       "priority": 5,
@@ -1287,7 +1294,7 @@
       "package_id": "FCP-067",
       "title": "Video discovery watchlists clips creators and live streams",
       "risk": "high",
-      "execution_state": "in_progress_resume_existing_branch",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [
         "FCP-051",
         "FCP-010"
@@ -1357,7 +1364,12 @@
         "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment",
         "fortress-ready-replaceable-boundaries-no-private-runtime-reconstruction"
       ],
-      "resume_branch": "feature/fcp-067-pool-g1"
+      "resume_branch": "feature/fcp-067-pool-g1",
+      "worker_pr": 18,
+      "final_head": "7fcf03aebce6ad2291984fba14c344901fa84142",
+      "ci_run_id": 36031150957,
+      "ci_result": "success",
+      "claim_state": "locked_until_trusted_resolution"
     },
     {
       "priority": 19,
@@ -1596,7 +1608,7 @@
       "package_id": "FCP-071",
       "title": "Member profiles invitations registration privacy and data rights",
       "risk": "critical",
-      "execution_state": "in_progress_resume_existing_branch",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [
         "FCP-006"
       ],
@@ -1668,7 +1680,12 @@
         "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment",
         "fortress-ready-replaceable-boundaries-no-private-runtime-reconstruction"
       ],
-      "resume_branch": "feature/fcp-071-pool-g1"
+      "resume_branch": "feature/fcp-071-pool-g1",
+      "worker_pr": 19,
+      "final_head": "82e10e0c10d16b52009132fa7b56e475b7c58f1c",
+      "ci_run_id": 36020706272,
+      "ci_result": "success",
+      "claim_state": "locked_until_trusted_resolution"
     },
     {
       "priority": 23,
@@ -2059,33 +2076,37 @@
       ]
     }
   ],
-  "recovery_queue": [
+  "recovery_queue": [],
+  "completed_recovery": [
     {
       "package_id": "FCP-053",
-      "action": "resume_and_fix_red_ci",
+      "action": "worker_complete_awaiting_trusted_review",
       "feature_branch": "feature/fcp-053-pool-g1",
       "worker_pr": 14,
-      "last_observed_head": "54e42b2e4efee7ad7703f294febcfb2b03debea3",
-      "ci_run_id": 35992798754,
-      "ci_result": "failure"
+      "last_observed_head": "8ce1ea7d64ddf347ed5ab5ec322449ba0307a9e7",
+      "ci_run_id": 36010756549,
+      "ci_result": "success",
+      "claim_state": "locked_until_trusted_resolution"
     },
     {
       "package_id": "FCP-067",
-      "action": "resume_finish_test_and_open_pr",
+      "action": "worker_complete_awaiting_trusted_review",
       "feature_branch": "feature/fcp-067-pool-g1",
-      "worker_pr": null,
-      "last_observed_head": "97d7168ca6515d4bbc1e3da0c9753bd2618164c7",
-      "ci_run_id": null,
-      "ci_result": "not_started"
+      "worker_pr": 18,
+      "last_observed_head": "7fcf03aebce6ad2291984fba14c344901fa84142",
+      "ci_run_id": 36031150957,
+      "ci_result": "success",
+      "claim_state": "locked_until_trusted_resolution"
     },
     {
       "package_id": "FCP-071",
-      "action": "resume_finish_test_and_open_pr",
+      "action": "worker_complete_awaiting_trusted_review",
       "feature_branch": "feature/fcp-071-pool-g1",
-      "worker_pr": null,
-      "last_observed_head": "1386b459b960e3c97cb52dc5bddf8ae38130b3da",
-      "ci_run_id": null,
-      "ci_result": "not_started"
+      "worker_pr": 19,
+      "last_observed_head": "82e10e0c10d16b52009132fa7b56e475b7c58f1c",
+      "ci_run_id": 36020706272,
+      "ci_result": "success",
+      "claim_state": "locked_until_trusted_resolution"
     }
   ]
 }
