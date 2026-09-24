@@ -16,7 +16,6 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
-use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 
 final class MediaStorageSecurityTest extends WebTestCase
 {
@@ -312,24 +311,24 @@ final class MediaStorageSecurityTest extends WebTestCase
             ->setTitle('Video media')
             ->setMimeType('video/mp4')
             ->setFileSize(123);
+        $this->em($client)->persist($asset);
+        $this->em($client)->flush();
+        $assetId = $asset->getId();
+        self::assertNotNull($assetId);
+        $client->loginUser($this->user($client, [CmsPermission::STORAGE]));
+
+        // Capture the genuine rendered delete token while the asset is still unused.
+        // Once a Video references it, the UI deliberately stops rendering delete controls.
+        $token = $this->csrf($client, 'delete-media-'.$assetId);
+
         $video = (new Video())
             ->setTitle('Protected video')
             ->setSlug('protected-video-'.bin2hex(random_bytes(4)))
             ->setDescription('Video keeps the media in use.')
             ->setSourceType(Video::SOURCE_UPLOAD)
             ->setMediaAsset($asset);
-        $this->em($client)->persist($asset);
         $this->em($client)->persist($video);
         $this->em($client)->flush();
-        $assetId = $asset->getId();
-        self::assertNotNull($assetId);
-        $client->loginUser($this->user($client, [CmsPermission::STORAGE]));
-
-        $client->request('GET', '/admin/storage');
-        self::assertResponseIsSuccessful();
-        $token = $client->getContainer()->get(CsrfTokenManagerInterface::class)
-            ->getToken('delete-media-'.$assetId)
-            ->getValue();
 
         $client->request('POST', '/admin/storage/media/'.$assetId.'/delete', [
             '_token' => $token,
