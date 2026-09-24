@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controller\Invitation;
 
+use App\Entity\AccessRole;
 use App\Entity\Invitation\MemberInvitation;
 use App\Entity\User;
 use App\Form\Invitation\InvitationIssueType;
@@ -36,10 +37,12 @@ final class AdminInvitationController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             try {
+                $roleData = $form->get('accessRole')->getData();
+                $role = $roleData instanceof AccessRole ? $roleData : null;
                 $result = $this->invitations->issue(
                     $actor,
                     (string) $form->get('email')->getData(),
-                    $form->get('accessRole')->getData(),
+                    $role,
                     (int) $form->get('ttlHours')->getData(),
                     new \DateTimeImmutable(),
                 );
