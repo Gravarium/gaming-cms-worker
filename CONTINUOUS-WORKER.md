@@ -31,5 +31,9 @@ FCP-052/PR #13, FCP-056/PR #15, FCP-063/PR #16 und FCP-068/PR #17 sind abgeschlo
 - Nichts nach Trusted mergen und nichts deployen.
 - Ein fertiger Worker-PR erfüllt Abhängigkeiten erst nach Trusted-Prüfung, Integration und neuer bereinigter Basis.
 
-Wenn die Recovery-Liste abgeschlossen ist und kein neuer freier Auftrag existiert, melde:
+Nach erfolgreicher exakter Worker-CI und fertigem PR aktualisiere im Pool ausschließlich den eigenen Eintrag auf `worker_complete_awaiting_trusted_review` und trage PR, finalen HEAD und CI-Run ein. Setze niemals `integrated`, lösche keinen Claim und verändere keine fremden Einträge. Der Claim bleibt als Sperre bestehen.
+
+Bei einem Werkzeug-, Modell-, Chat- oder Nachrichtenlimit, einer roten CI oder einer sonstigen Unterbrechung wird derselbe Branch am letzten bestätigten Remote-HEAD fortgesetzt. Keine neue Aufgabe beginnen und keinen künstlichen/no-op Commit erzeugen. Nur bei echter Divergenz, unbekanntem Schreiber, fehlender Berechtigung oder Sicherheitskonflikt anhalten und den exakten Blocker dokumentieren.
+
+Wenn keine offene eigene Arbeit und kein zulässiger neuer Claim vorhanden ist, melde:
 `ARBEITSPOOL VORHANDEN - TRUSTED-PRÜFUNG FÜR FOLGEAUFTRÄGE ERFORDERLICH`
