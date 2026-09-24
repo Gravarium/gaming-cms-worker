@@ -16,6 +16,7 @@ final readonly class CaseEvidence
         }
     }
 
+    /** @return array{type: string, referenceId: int|null, description: string, checksum: string} */
     public function export(bool $authorized, bool $includeSensitive): array
     {
         if (!$authorized) throw new \DomainException('Evidence export denied.');
