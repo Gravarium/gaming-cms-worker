@@ -74,6 +74,32 @@ final class VideoEmbedResolverTest extends TestCase
         self::assertSame(['mode' => 'video', 'url' => 'https://media.example.test/video.mp4'], $resolver->resolve($safe, 'example.test'));
     }
 
+    public function testExternalVideoRejectsCredentialsAndReservedNetworkTargets(): void
+    {
+        $resolver = $this->resolver();
+
+        $credentialed = (new Video())->setSourceType(Video::SOURCE_EXTERNAL)->setSourceUrl('https://user:secret@media.example.test/video.mp4');
+        $metadata = (new Video())->setSourceType(Video::SOURCE_EXTERNAL)->setSourceUrl('http://169.254.169.254/latest/meta-data');
+        $loopbackV6 = (new Video())->setSourceType(Video::SOURCE_EXTERNAL)->setSourceUrl('http://[::1]/video.mp4');
+
+        self::assertNull($resolver->resolve($credentialed, 'example.test'));
+        self::assertNull($resolver->resolve($metadata, 'example.test'));
+        self::assertNull($resolver->resolve($loopbackV6, 'example.test'));
+    }
+
+    public function testProviderUrlsWithCredentialsAreRejected(): void
+    {
+        $resolver = $this->resolver();
+
+        $youtube = (new Video())->setSourceType(Video::SOURCE_YOUTUBE)->setSourceUrl('https://user:secret@www.youtube.com/watch?v=abcdefghijk');
+        $vimeo = (new Video())->setSourceType(Video::SOURCE_VIMEO)->setSourceUrl('https://user:secret@vimeo.com/123456789');
+        $twitch = (new Video())->setSourceType(Video::SOURCE_TWITCH)->setSourceUrl('https://user:secret@www.twitch.tv/videos/987654321');
+
+        self::assertNull($resolver->resolve($youtube, 'example.test'));
+        self::assertNull($resolver->resolve($vimeo, 'example.test'));
+        self::assertNull($resolver->resolve($twitch, 'example.test'));
+    }
+
     public function testUploadedVideoMustUseOwnedOrSafePlaybackUrl(): void
     {
         $resolver = $this->resolver();
