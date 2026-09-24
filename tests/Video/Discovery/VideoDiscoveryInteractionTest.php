@@ -63,18 +63,27 @@ final class VideoDiscoveryInteractionTest extends WebTestCase
         $video = $this->video($client, 'history', true);
         $profile = new VideoDiscoveryProfile($video);
         $this->em($client)->persist($profile);
+        $preference = (new VideoHistoryPreference($user))->setEnabled(true);
+        $this->em($client)->persist($preference);
         $this->em($client)->flush();
         $client->loginUser($user);
 
+        $crawler = $client->request('GET', '/video-discovery/videos/'.$profile->getId());
+        self::assertResponseIsSuccessful();
+        $token = (string) $crawler
+            ->filter('form[action="/account/video-discovery/history/'.$video->getId().'"] input[name="_token"]')
+            ->attr('value');
+
+        $preference->setEnabled(false);
+        $this->em($client)->flush();
         $client->request('POST', '/account/video-discovery/history/'.$video->getId(), [
-            '_token' => $this->csrf($client, 'video-history-record-'.$video->getId()),
+            '_token' => $token,
             'position_seconds' => '12',
         ]);
         self::assertResponseStatusCodeSame(409);
         self::assertCount(0, $this->em($client)->getRepository(VideoHistoryEntry::class)->findBy(['user' => $user]));
 
-        $preference = (new VideoHistoryPreference($user))->setEnabled(true);
-        $this->em($client)->persist($preference);
+        $preference->setEnabled(true);
         $this->em($client)->flush();
 
         $client->request('POST', '/account/video-discovery/history/'.$video->getId(), [
@@ -85,7 +94,7 @@ final class VideoDiscoveryInteractionTest extends WebTestCase
         self::assertCount(0, $this->em($client)->getRepository(VideoHistoryEntry::class)->findBy(['user' => $user]));
 
         $client->request('POST', '/account/video-discovery/history/'.$video->getId(), [
-            '_token' => $this->csrf($client, 'video-history-record-'.$video->getId()),
+            '_token' => $token,
             'position_seconds' => '12',
         ]);
         self::assertResponseRedirects('/video-discovery/videos/'.$profile->getId());
@@ -101,16 +110,23 @@ final class VideoDiscoveryInteractionTest extends WebTestCase
         $this->setVideoModule($client, true);
         $user = $this->user($client, 'favorite');
         $video = $this->video($client, 'favorite', true);
-        $this->em($client)->persist(new VideoDiscoveryProfile($video));
+        $profile = new VideoDiscoveryProfile($video);
+        $this->em($client)->persist($profile);
         $this->em($client)->flush();
         $client->loginUser($user);
+
+        $crawler = $client->request('GET', '/video-discovery/videos/'.$profile->getId());
+        self::assertResponseIsSuccessful();
+        $token = (string) $crawler
+            ->filter('form[action="/account/video-discovery/favorite/'.$video->getId().'"] input[name="_token"]')
+            ->attr('value');
 
         $client->request('POST', '/account/video-discovery/favorite/'.$video->getId(), ['_token' => 'invalid']);
         self::assertResponseStatusCodeSame(403);
         self::assertNull($this->em($client)->getRepository(VideoFavorite::class)->findOneBy(['user' => $user, 'video' => $video]));
 
         $client->request('POST', '/account/video-discovery/favorite/'.$video->getId(), [
-            '_token' => $this->csrf($client, 'video-favorite-'.$video->getId()),
+            '_token' => $token,
         ]);
         self::assertResponseRedirects();
         self::assertInstanceOf(
@@ -133,7 +149,7 @@ final class VideoDiscoveryInteractionTest extends WebTestCase
 
         $client->loginUser($other);
         $client->request('POST', '/account/video-discovery/watchlists/'.$watchlist->getId().'/videos/'.$video->getId(), [
-            '_token' => $this->csrf($client, 'video-watchlist-add-'.$watchlist->getId().'-'.$video->getId()),
+            '_token' => 'invalid',
         ]);
 
         self::assertResponseStatusCodeSame(404);
@@ -179,9 +195,10 @@ final class VideoDiscoveryInteractionTest extends WebTestCase
         self::assertResponseIsSuccessful();
         self::assertStringNotContainsString('youtube-nocookie.com', (string) $client->getResponse()->getContent());
         self::assertStringContainsString('erst nach deiner Zustimmung', $crawler->filter('body')->text());
+        $token = (string) $crawler->filter('form input[name="_token"]')->attr('value');
 
         $client->request('POST', '/video-discovery/live/'.$stream->getId().'/consent', [
-            '_token' => $this->csrf($client, 'video-live-consent-'.$stream->getId()),
+            '_token' => $token,
         ]);
         self::assertResponseIsSuccessful();
         self::assertStringContainsString('https://www.youtube-nocookie.com/embed/abcdef123', (string) $client->getResponse()->getContent());
@@ -226,13 +243,6 @@ final class VideoDiscoveryInteractionTest extends WebTestCase
         }
         $state->setEnabled($enabled);
         $this->em($client)->flush();
-    }
-
-    private function csrf(KernelBrowser $client, string $id): string
-    {
-        $manager = $client->getContainer()->get(CsrfTokenManagerInterface::class);
-
-        return $manager->getToken($id)->getValue();
     }
 
     private function em(KernelBrowser $client): EntityManagerInterface
