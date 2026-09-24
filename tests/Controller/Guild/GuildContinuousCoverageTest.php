@@ -117,7 +117,8 @@ final class GuildContinuousCoverageTest extends WebTestCase
         ]);
         $client->submit($form);
 
-        self::assertResponseStatusCodeSame(422);
+        self::assertResponseIsSuccessful();
+        self::assertSelectorTextContains('body', 'Das Ende muss nach dem Beginn liegen.');
         self::assertSame(0, $this->em($client)->getRepository(GuildEvent::class)->count([
             'guild' => $guild,
             'title' => 'Invalid event',
