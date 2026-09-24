@@ -85,13 +85,15 @@ final class InvitationSecurityTest extends WebTestCase
 
         $client->request('POST', '/admin/invitations/'.$id.'/revoke');
         self::assertResponseStatusCodeSame(403);
-        $this->em($client)->refresh($invitation);
-        self::assertSame(MemberInvitation::STATUS_PENDING, $invitation->getStatus());
+        $pending = $this->em($client)->find(MemberInvitation::class, $id);
+        self::assertInstanceOf(MemberInvitation::class, $pending);
+        self::assertSame(MemberInvitation::STATUS_PENDING, $pending->getStatus());
 
         $client->request('POST', '/admin/invitations/'.$id.'/revoke', ['_token' => $revokeToken]);
         self::assertResponseRedirects('/admin/invitations');
-        $this->em($client)->refresh($invitation);
-        self::assertSame(MemberInvitation::STATUS_REVOKED, $invitation->getStatus());
+        $revoked = $this->em($client)->find(MemberInvitation::class, $id);
+        self::assertInstanceOf(MemberInvitation::class, $revoked);
+        self::assertSame(MemberInvitation::STATUS_REVOKED, $revoked->getStatus());
     }
 
     public function testIssuerCannotDelegateRoleAboveOwnPermissionCeiling(): void
