@@ -9,6 +9,7 @@ use App\Entity\MediaAsset;
 use App\Entity\MediaAssetReplica;
 use App\Entity\MediaFolder;
 use App\Entity\User;
+use App\Entity\Video;
 use App\Security\CmsPermission;
 use App\Service\MediaStorageManager;
 use Doctrine\ORM\EntityManagerInterface;
@@ -244,6 +245,100 @@ final class MediaStorageSecurityTest extends WebTestCase
             $em->flush();
             @unlink($path);
         }
+    }
+
+    public function testUploadJourneyRejectsExecutableSvgWithoutCreatingMedia(): void
+    {
+        $client = static::createClient();
+        $client->loginUser($this->user($client, [CmsPermission::STORAGE]));
+        $path = sys_get_temp_dir().'/media-svg-'.bin2hex(random_bytes(6)).'.svg';
+        file_put_contents($path, '<svg xmlns="http://www.w3.org/2000/svg"><script>alert(1)</script></svg>');
+
+        try {
+            $before = $this->em($client)->getRepository(MediaAsset::class)->count([]);
+            $crawler = $client->request('GET', '/admin/storage/media/upload');
+            $form = $crawler->selectButton('Datei hochladen')->form();
+            $form['media_asset_upload[moduleKey]']->select('content');
+            $form['media_asset_upload[file]']->upload($path);
+            $client->submit($form);
+
+            self::assertResponseStatusCodeSame(422);
+            self::assertSelectorTextContains('body', 'Dateityp');
+            self::assertSame($before, $this->em($client)->getRepository(MediaAsset::class)->count([]));
+        } finally {
+            @unlink($path);
+        }
+    }
+
+    public function testReplacementJourneyRejectsExecutableSvgAndKeepsOriginalReference(): void
+    {
+        $client = static::createClient();
+        $asset = $this->asset($client, 'replacement-source.txt');
+        $assetId = $asset->getId();
+        $originalLocation = $asset->getLocation();
+        self::assertNotNull($assetId);
+        $client->loginUser($this->user($client, [CmsPermission::STORAGE]));
+
+        $path = sys_get_temp_dir().'/media-replace-svg-'.bin2hex(random_bytes(6)).'.svg';
+        file_put_contents($path, '<svg xmlns="http://www.w3.org/2000/svg"><script>alert(1)</script></svg>');
+
+        try {
+            $crawler = $client->request('GET', '/admin/storage/media/'.$assetId.'/replace');
+            $form = $crawler->selectButton('Prüfen, speichern und Verwendungen umstellen')->form();
+            $form['media_asset_replacement[file]']->upload($path);
+            $client->submit($form);
+
+            self::assertResponseStatusCodeSame(422);
+            self::assertSelectorTextContains('body', 'gefährliche Erweiterung');
+            $this->em($client)->clear();
+            $stored = $this->em($client)->find(MediaAsset::class, $assetId);
+            self::assertInstanceOf(MediaAsset::class, $stored);
+            self::assertSame($originalLocation, $stored->getLocation());
+            self::assertFalse($stored->isDeletionPending());
+        } finally {
+            @unlink($path);
+        }
+    }
+
+    public function testInUseVideoAssetCannotBeDeleted(): void
+    {
+        $client = static::createClient();
+        $asset = (new MediaAsset())
+            ->setModuleKey('video')
+            ->setStorageMode('internal')
+            ->setLocation('/uploads/media/video/'.bin2hex(random_bytes(6)).'-video.mp4')
+            ->setOriginalName('video.mp4')
+            ->setTitle('Video media')
+            ->setMimeType('video/mp4')
+            ->setFileSize(123);
+        $this->em($client)->persist($asset);
+        $this->em($client)->flush();
+        $assetId = $asset->getId();
+        self::assertNotNull($assetId);
+        $client->loginUser($this->user($client, [CmsPermission::STORAGE]));
+
+        // Capture the genuine rendered delete token while the asset is still unused.
+        // Once a Video references it, the UI deliberately stops rendering delete controls.
+        $token = $this->csrf($client, 'delete-media-'.$assetId);
+
+        $video = (new Video())
+            ->setTitle('Protected video')
+            ->setSlug('protected-video-'.bin2hex(random_bytes(4)))
+            ->setDescription('Video keeps the media in use.')
+            ->setSourceType(Video::SOURCE_UPLOAD)
+            ->setMediaAsset($asset);
+        $this->em($client)->persist($video);
+        $this->em($client)->flush();
+
+        $client->request('POST', '/admin/storage/media/'.$assetId.'/delete', [
+            '_token' => $token,
+        ]);
+
+        self::assertResponseRedirects('/admin/storage');
+        $this->em($client)->clear();
+        $stored = $this->em($client)->find(MediaAsset::class, $assetId);
+        self::assertInstanceOf(MediaAsset::class, $stored);
+        self::assertFalse($stored->isDeletionPending());
     }
 
     public function testInternalUploadRejectsSymlinkedModuleDirectory(): void

@@ -55,8 +55,10 @@ class ContentEntry
     private ?string $excerpt = null;
 
     #[ORM\Column(type: Types::TEXT)]
-    #[Assert\NotBlank]
     private string $body = '';
+
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $editorDocument = null;
 
     #[ORM\Column(length: 20)]
     #[Assert\Choice(choices: [self::STATUS_DRAFT, self::STATUS_REVIEW, self::STATUS_SCHEDULED, self::STATUS_PUBLISHED, self::STATUS_ARCHIVED, self::STATUS_TRASHED])]
@@ -139,6 +141,17 @@ class ContentEntry
     public function setExcerpt(?string $excerpt): self { $this->excerpt = $this->normalizeNullable($excerpt); return $this; }
     public function getBody(): string { return $this->body; }
     public function setBody(string $body): self { $this->body = trim($body); return $this; }
+    public function getEditorDocument(): ?string { return $this->editorDocument; }
+    public function setEditorDocument(?string $document): self
+    {
+        $document = $document === null ? null : trim($document);
+        $this->editorDocument = $document === '' ? null : $document;
+        return $this;
+    }
+    #[Assert\NotBlank]
+    #[Assert\Length(max: 60000)]
+    public function getEditableDocument(): string { return $this->editorDocument ?? $this->body; }
+    public function setEditableDocument(string $document): self { $this->editorDocument = trim($document); return $this; }
     public function getStatus(): string { return $this->status; }
     public function setStatus(string $status): self { $this->status = $status; return $this; }
     public function getPublishedAt(): ?\DateTimeImmutable { return $this->publishedAt; }
@@ -260,7 +273,12 @@ class ContentEntry
     }
 
     #[ORM\PreUpdate]
-    public function updateTimestamp(): void { $this->updatedAt = new \DateTimeImmutable(); }
+    public function updateTimestamp(): void
+    {
+        $now = new \DateTimeImmutable();
+        $minimumNext = $this->updatedAt->modify('+1 second');
+        $this->updatedAt = $now > $minimumNext ? $now : $minimumNext;
+    }
 
     private function normalizeNullable(?string $value): ?string
     {

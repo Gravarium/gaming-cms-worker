@@ -4,11 +4,14 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\ContentEditor\ContentBlockPolicy;
+use App\ContentEditor\ContentBlockRenderer;
 use App\Entity\ContentEntry;
 use App\Entity\ContentRedirect;
 use App\Entity\PageLayout;
 use App\Entity\User;
 use App\Form\ContentEntryType;
+use App\Module\CmsModuleManager;
 use App\Repository\CategoryRepository;
 use App\Repository\ContentEntryRepository;
 use App\Repository\ContentRedirectRepository;
@@ -21,8 +24,10 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\ConflictHttpException;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\String\Slugger\SluggerInterface;
@@ -41,6 +46,9 @@ final class AdminContentController extends AbstractController
         private readonly EntityManagerInterface $entityManager,
         private readonly SluggerInterface $slugger,
         private readonly AuditLogger $audit,
+        private readonly ContentBlockPolicy $contentBlocks,
+        private readonly ContentBlockRenderer $blockRenderer,
+        private readonly CmsModuleManager $modules,
     ) {}
 
     #[Route('', name: 'app_admin_content_index', methods: ['GET'])]
@@ -116,13 +124,76 @@ final class AdminContentController extends AbstractController
         return $response;
     }
 
+    #[Route('/{id}/editor/preview', name: 'app_admin_content_editor_preview', requirements: ['id' => '\\d+'], methods: ['POST'])]
+    public function editorPreview(ContentEntry $entry, Request $request): JsonResponse
+    {
+        $this->assertContentModuleEnabled();
+        $this->assertEditorCsrf($entry, $request);
+        try {
+            $payload = $this->editorPayload($request);
+            $document = is_string($payload['document'] ?? null) ? $payload['document'] : '';
+            $normalized = $this->contentBlocks->normalizeForStorage($document);
+        } catch (\InvalidArgumentException|\JsonException $exception) {
+            return $this->json(['error' => $exception->getMessage()], 422);
+        }
+
+        return $this->json(['html' => $this->blockRenderer->render($normalized), 'document' => $normalized]);
+    }
+
+    #[Route('/{id}/editor/autosave', name: 'app_admin_content_editor_autosave', requirements: ['id' => '\\d+'], methods: ['POST'])]
+    public function editorAutosave(ContentEntry $entry, Request $request): JsonResponse
+    {
+        $this->assertContentModuleEnabled();
+        $this->assertEditorCsrf($entry, $request);
+        if (!in_array($entry->getStatus(), [ContentEntry::STATUS_DRAFT, ContentEntry::STATUS_REVIEW], true)) {
+            return $this->json(['error' => 'Autosave ist nur für Entwurf oder Freigabe-Status erlaubt.'], 409);
+        }
+
+        try {
+            $payload = $this->editorPayload($request);
+            $document = is_string($payload['document'] ?? null) ? $payload['document'] : '';
+            $expectedUpdatedAt = is_string($payload['updatedAt'] ?? null) ? $payload['updatedAt'] : '';
+            $normalized = $this->contentBlocks->normalizeForStorage($document);
+            $plainText = $this->contentBlocks->plainText($normalized);
+        } catch (\InvalidArgumentException|\JsonException $exception) {
+            return $this->json(['error' => $exception->getMessage()], 422);
+        }
+
+        if ($expectedUpdatedAt === '' || !hash_equals($entry->getUpdatedAt()->format(DATE_ATOM), $expectedUpdatedAt)) {
+            return $this->json(['error' => 'Der Inhalt wurde zwischenzeitlich geändert. Bitte neu laden.'], 409);
+        }
+        if ($normalized === $entry->getEditorDocument() && $plainText === $entry->getBody()) {
+            return $this->json(['document' => $normalized, 'updatedAt' => $expectedUpdatedAt, 'unchanged' => true]);
+        }
+
+        $user = $this->requireUser();
+        try {
+            $this->entityManager->wrapInTransaction(function (EntityManagerInterface $entityManager) use ($entry, $normalized, $plainText, $expectedUpdatedAt, $user): void {
+                $entityManager->refresh($entry, LockMode::PESSIMISTIC_WRITE);
+                if (!hash_equals($entry->getUpdatedAt()->format(DATE_ATOM), $expectedUpdatedAt)) {
+                    throw new ConflictHttpException('Der Inhalt wurde zwischenzeitlich geändert.');
+                }
+                if (!in_array($entry->getStatus(), [ContentEntry::STATUS_DRAFT, ContentEntry::STATUS_REVIEW], true)) {
+                    throw new ConflictHttpException('Autosave ist für diesen Status nicht erlaubt.');
+                }
+                $entry->setEditorDocument($normalized)->setBody($plainText);
+                $this->revisionManager->capture($entry, $user);
+                $this->audit->record('content.autosave', $entry, $entry->getId(), 'Editor-Entwurf automatisch gesichert.');
+            });
+        } catch (ConflictHttpException $exception) {
+            return $this->json(['error' => $exception->getMessage()], 409);
+        }
+
+        return $this->json(['document' => $entry->getEditableDocument(), 'updatedAt' => $entry->getUpdatedAt()->format(DATE_ATOM), 'unchanged' => false]);
+    }
+
     #[Route('/{id}/duplicate', name: 'app_admin_content_duplicate', requirements: ['id' => '\\d+'], methods: ['POST'])]
     public function duplicate(ContentEntry $entry, Request $request): Response
     {
         $this->assertCsrf('duplicate-content-'.$entry->getId(), $request);
         $copy = (new ContentEntry())->setAuthor($this->requireUser())->setType($entry->getType())->setTitle('Kopie von '.$entry->getTitle())
             ->setSubtitle($entry->getSubtitle())->setSlug($this->createUniqueSlug($entry->getTitle().'-kopie'))->setExcerpt($entry->getExcerpt())
-            ->setBody($entry->getBody())->setCategory($entry->getCategory())->setStatus(ContentEntry::STATUS_DRAFT)->setFeatured(false)->setPinned(false)
+            ->setBody($entry->getBody())->setEditorDocument($entry->getEditorDocument())->setCategory($entry->getCategory())->setStatus(ContentEntry::STATUS_DRAFT)->setFeatured(false)->setPinned(false)
             ->setUnlisted($entry->isUnlisted())->setSeoTitle($entry->getSeoTitle())->setSeoDescription($entry->getSeoDescription())->setCanonicalUrl(null)->setNoIndex(true);
         foreach ($entry->getTags() as $tag) { $copy->addTag($tag); }
         $this->entityManager->persist($copy); $this->entityManager->flush();
@@ -236,7 +307,40 @@ final class AdminContentController extends AbstractController
     /** @param FormInterface<mixed> $form */
     private function synchronizeOrReject(ContentEntry $entry, FormInterface $form): bool
     {
-        try { $entry->synchronizePublication(); return true; } catch (\DomainException $exception) { $form->addError(new FormError($exception->getMessage())); return false; }
+        try {
+            $normalized = $this->contentBlocks->normalizeForStorage($entry->getEditableDocument());
+            $entry->setEditorDocument($normalized)->setBody($this->contentBlocks->plainText($normalized));
+            $entry->synchronizePublication();
+            return true;
+        } catch (\DomainException|\InvalidArgumentException $exception) {
+            $form->addError(new FormError($exception->getMessage()));
+            return false;
+        }
+    }
+
+    /** @return array<string,mixed> */
+    private function editorPayload(Request $request): array
+    {
+        $payload = json_decode($request->getContent(), true, 32, JSON_THROW_ON_ERROR);
+        if (!is_array($payload)) {
+            throw new \InvalidArgumentException('Ungültige Editor-Anfrage.');
+        }
+        return $payload;
+    }
+
+    private function assertContentModuleEnabled(): void
+    {
+        if (!$this->modules->isEnabled('content')) {
+            throw $this->createNotFoundException();
+        }
+    }
+
+    private function assertEditorCsrf(ContentEntry $entry, Request $request): void
+    {
+        $token = (string) $request->headers->get('X-CSRF-TOKEN');
+        if (!$this->isCsrfTokenValid('content-editor-'.$entry->getId(), $token)) {
+            throw $this->createAccessDeniedException('Ungültige Sicherheitsprüfung.');
+        }
     }
     private function requireUser(): User { $user = $this->getUser(); if (!$user instanceof User) { throw $this->createAccessDeniedException(); } return $user; }
     private function createUniqueSlug(string $raw, ?int $exceptId = null): string

@@ -16,6 +16,9 @@ services:
     App\:
         resource: '../src/'
 
+    App\ContentEditor\OwnedMediaReferenceGateway:
+        alias: App\ContentEditor\DoctrineOwnedMediaReferenceGateway
+
     App\ExternalConnector\ExternalConnectorTargetSource:
         alias: App\Repository\ExternalConnectorTargetRepository
 
