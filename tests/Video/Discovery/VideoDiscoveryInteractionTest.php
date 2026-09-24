@@ -83,7 +83,9 @@ final class VideoDiscoveryInteractionTest extends WebTestCase
         self::assertResponseStatusCodeSame(409);
         self::assertCount(0, $this->em($client)->getRepository(VideoHistoryEntry::class)->findBy(['user' => $user]));
 
-        $preference->setEnabled(true);
+        $storedPreference = $this->em($client)->getRepository(VideoHistoryPreference::class)->findOneBy(['user' => $user]);
+        self::assertInstanceOf(VideoHistoryPreference::class, $storedPreference);
+        $storedPreference->setEnabled(true);
         $this->em($client)->flush();
 
         $client->request('POST', '/account/video-discovery/history/'.$video->getId(), [
