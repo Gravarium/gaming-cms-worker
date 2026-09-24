@@ -6,7 +6,10 @@ namespace App\Editorial;
 
 final readonly class EditorialScore
 {
-    /** @param list<string> $pros @param list<string> $cons */
+    /**
+     * @param list<string> $pros
+     * @param list<string> $cons
+     */
     public function __construct(
         public int $score,
         public string $methodology,
