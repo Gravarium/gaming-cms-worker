@@ -26,6 +26,27 @@ final class VideoHistoryPreferenceController extends AbstractController
     ) {
     }
 
+    #[Route('/history-preference', name: 'app_video_discovery_history_preference_view', methods: ['GET'])]
+    public function view(): Response
+    {
+        if (!$this->availability->enabled()) {
+            throw $this->createNotFoundException();
+        }
+
+        $user = $this->getUser();
+        if (!$user instanceof User) {
+            throw $this->createAccessDeniedException();
+        }
+
+        $preference = $this->entityManager
+            ->getRepository(VideoHistoryPreference::class)
+            ->findOneBy(['user' => $user]);
+
+        return $this->render('video_discovery/history_preference.html.twig', [
+            'historyEnabled' => $preference instanceof VideoHistoryPreference && $preference->isEnabled(),
+        ]);
+    }
+
     #[Route('/history-preference', name: 'app_video_discovery_history_preference', methods: ['POST'])]
     public function update(Request $request): Response
     {
