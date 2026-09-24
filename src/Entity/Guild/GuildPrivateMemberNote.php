@@ -12,7 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity]
 #[ORM\Table(name: 'guild_private_member_note')]
-#[ORM\Index(name: 'idx_guild_private_note_member', columns: ['guild_id','member_id','created_at'])]
+#[ORM\Index(name: 'idx_guild_private_note_timeline', columns: ['guild_id','member_id','created_at'])]
 class GuildPrivateMemberNote
 {
     #[ORM\Id]
