@@ -16,6 +16,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 
 final class MediaStorageSecurityTest extends WebTestCase
 {
@@ -262,7 +263,7 @@ final class MediaStorageSecurityTest extends WebTestCase
             $form['media_asset_upload[file]']->upload($path);
             $client->submit($form);
 
-            self::assertResponseIsSuccessful();
+            self::assertResponseStatusCodeSame(422);
             self::assertSelectorTextContains('body', 'Dateityp');
             self::assertSame($before, $this->em($client)->getRepository(MediaAsset::class)->count([]));
         } finally {
@@ -288,7 +289,7 @@ final class MediaStorageSecurityTest extends WebTestCase
             $form['media_asset_replacement[file]']->upload($path);
             $client->submit($form);
 
-            self::assertResponseIsSuccessful();
+            self::assertResponseStatusCodeSame(422);
             self::assertSelectorTextContains('body', 'gefährliche Erweiterung');
             $this->em($client)->clear();
             $stored = $this->em($client)->find(MediaAsset::class, $assetId);
@@ -324,8 +325,14 @@ final class MediaStorageSecurityTest extends WebTestCase
         self::assertNotNull($assetId);
         $client->loginUser($this->user($client, [CmsPermission::STORAGE]));
 
+        $client->request('GET', '/admin/storage');
+        self::assertResponseIsSuccessful();
+        $token = $client->getContainer()->get(CsrfTokenManagerInterface::class)
+            ->getToken('delete-media-'.$assetId)
+            ->getValue();
+
         $client->request('POST', '/admin/storage/media/'.$assetId.'/delete', [
-            '_token' => $this->csrf($client, 'delete-media-'.$assetId),
+            '_token' => $token,
         ]);
 
         self::assertResponseRedirects('/admin/storage');
