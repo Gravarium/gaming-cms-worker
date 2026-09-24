@@ -10,7 +10,6 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
-use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 final class DownloadControllerTest extends WebTestCase
 {
     public function testMemberDownloadIsNotVisibleToAnonymousUser():void
@@ -44,8 +43,8 @@ final class DownloadControllerTest extends WebTestCase
     {
         $client=static::createClient();$this->ensureDownloadsEnabled($client);$user=$this->user($client,[CmsPermission::STORAGE]);$client->loginUser($user);
         $package=new DownloadPackage('Safe2','safe2','file');$this->em($client)->persist($package);$this->em($client)->flush();$id=$package->getId();self::assertNotNull($id);
-        $client->request('GET','/account/security');self::assertResponseIsSuccessful();
-        $token=$client->getContainer()->get(CsrfTokenManagerInterface::class)->getToken('download-upload-'.$id)->getValue();
+        $crawler=$client->request('GET','/admin/downloads/'.$id.'/upload');self::assertResponseIsSuccessful();
+        $token=(string)$crawler->filter('input[name="_token"]')->attr('value');self::assertNotSame('',$token);
         $path=sys_get_temp_dir().'/download-'.bin2hex(random_bytes(5)).'.php';file_put_contents($path,'<?php echo 1;');
         try{
             $client->request('POST','/admin/downloads/'.$id.'/upload',['version'=>'1.0','_token'=>$token],['file'=>new UploadedFile($path,'bad.php','application/x-php',null,true)]);
