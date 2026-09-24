@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "62e1b6fec6ce6f9a4096c6c5a6912d74df36da5c",
-  "published_at": "2026-09-24T18:55:00Z",
+  "published_at": "2026-09-24T19:42:57.885Z",
   "summary": {
     "total_remaining_worker_tasks": 27,
-    "completed_worker_prs_awaiting_trusted_review": 7,
+    "completed_worker_prs_awaiting_trusted_review": 8,
     "recovery_tasks": 0,
-    "unclaimed": 20,
+    "unclaimed": 19,
     "immediately_claimable": 1,
-    "next_required_action": "Claim FCP-054 from the exact green FCP-053 proposal HEAD. After every green exact-head Worker PR, self-reconcile it, publish exactly one dependency-safe next proposal base, and continue without waiting for Trusted review."
+    "next_required_action": "Claim FCP-055 from the exact green FCP-054 proposal HEAD and continue dependency-safe Worker proposal sequencing."
   },
   "rules": {
     "choose": "Resume any owned unfinished claim first. Otherwise choose exactly the first unclaimed task with an empty current blocked_by list and a published exact proposal_base_sha. A completed Worker proposal may satisfy proposal-only dependencies when its exact HEAD has green Worker CI.",
@@ -311,7 +311,7 @@
       "package_id": "FCP-054",
       "title": "Raid event attendance and squad planning",
       "risk": "high",
-      "execution_state": "unclaimed",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [
         "FCP-053"
       ],
@@ -388,7 +388,13 @@
           "result": "success",
           "authority": "worker-proposal-only"
         }
-      ]
+      ],
+      "worker_pr": 20,
+      "resume_branch": "feature/fcp-054-pool-g1",
+      "final_head": "ea81a427d5921f4bd9e76f9d9a9cd057905e99b4",
+      "ci_run_id": 36049808987,
+      "ci_result": "success",
+      "claim_state": "locked_until_trusted_resolution"
     },
     {
       "priority": 6,
@@ -400,9 +406,7 @@
         "FCP-054"
       ],
       "dependencies_integrated_at_publication": [],
-      "blocked_by_at_publication": [
-        "FCP-054"
-      ],
+      "blocked_by_at_publication": [],
       "claim_branch": "claim/fcp-055-g1",
       "suggested_branch": "feature/fcp-055-pool-g1",
       "base_branch": "main",
@@ -463,8 +467,18 @@
         "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment",
         "fortress-ready-replaceable-boundaries-no-private-runtime-reconstruction"
       ],
-      "proposal_base_branch": "main",
-      "proposal_base_sha": "62e1b6fec6ce6f9a4096c6c5a6912d74df36da5c"
+      "proposal_base_branch": "feature/fcp-054-pool-g1",
+      "proposal_base_sha": "ea81a427d5921f4bd9e76f9d9a9cd057905e99b4",
+      "proposal_dependency_evidence": [
+        {
+          "package_id": "FCP-054",
+          "feature_branch": "feature/fcp-054-pool-g1",
+          "worker_pr": 20,
+          "exact_head": "ea81a427d5921f4bd9e76f9d9a9cd057905e99b4",
+          "ci_run_id": 36049808987,
+          "ci_result": "success"
+        }
+      ]
     },
     {
       "priority": 7,
@@ -2148,6 +2162,16 @@
       "worker_pr": 19,
       "last_observed_head": "82e10e0c10d16b52009132fa7b56e475b7c58f1c",
       "ci_run_id": 36020706272,
+      "ci_result": "success",
+      "claim_state": "locked_until_trusted_resolution"
+    },
+    {
+      "package_id": "FCP-054",
+      "action": "worker_complete_awaiting_trusted_review",
+      "feature_branch": "feature/fcp-054-pool-g1",
+      "worker_pr": 20,
+      "last_observed_head": "ea81a427d5921f4bd9e76f9d9a9cd057905e99b4",
+      "ci_run_id": 36049808987,
       "ci_result": "success",
       "claim_state": "locked_until_trusted_resolution"
     }
