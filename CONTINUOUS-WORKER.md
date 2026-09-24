@@ -6,7 +6,7 @@ Diese Datei gilt für eine oder mehrere autorisierte Worker-KIs. Es gibt keine f
 
 Bei **JOB ANFANGEN** oder **WEITERARBEITEN**:
 
-1. Lies auf Branch `continuous/work-pool-v2` vollständig `CONTINUOUS-WORK-POOL.json`.
+1. Lies auf Branch `continuous/work-pool-v3` vollständig `CONTINUOUS-WORK-POOL.json`.
 2. Überspringe Einträge mit `worker_pr_complete_awaiting_trusted_review`.
 3. Ein Auftrag ist nur wählbar, wenn `execution_state` `unclaimed` ist, `blocked_by_at_publication` leer ist und der angegebene Claim-Branch noch nicht existiert.
 4. Reserviere den Auftrag, indem du den exakt angegebenen `claim_branch` atomar vom exakten `base_sha` erstellst.
