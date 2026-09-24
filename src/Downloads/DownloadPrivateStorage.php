@@ -17,7 +17,9 @@ final readonly class DownloadPrivateStorage
         $base=preg_replace('/[^A-Za-z0-9._-]+/','-',pathinfo($original,PATHINFO_FILENAME))?:'download';
         $filename=trim($base,'-_.').'-'.bin2hex(random_bytes(8)).'.'.$ext;
         if(!preg_match('/^[A-Za-z0-9][A-Za-z0-9._-]{0,254}$/D',$filename))throw new \DomainException('Safe filename could not be produced.');
+        $scannerStatus=$this->scanner->status();
         $this->scanner->scan($file->getPathname());
+        $scan=$scannerStatus==='ready'?'clean':'unavailable';
         $sha=hash_file('sha256',$file->getPathname());
         if(!is_string($sha)||!preg_match('/^[a-f0-9]{64}$/D',$sha))throw new \RuntimeException('SHA-256 could not be calculated.');
         $dir=$this->projectDir.'/var/private-downloads';
@@ -26,7 +28,7 @@ final readonly class DownloadPrivateStorage
         $targetDir=$dir.'/'.date('Y/m');
         if(!is_dir($targetDir)&&!mkdir($targetDir,0700,true)&&!is_dir($targetDir))throw new \RuntimeException('Private download directory unavailable.');
         $file->move($targetDir,$filename);
-        return ['reference'=>$reference,'filename'=>$filename,'sha256'=>$sha,'scan'=>'clean'];
+        return ['reference'=>$reference,'filename'=>$filename,'sha256'=>$sha,'scan'=>$scan];
     }
     public function absolutePath(string $reference):string
     {
