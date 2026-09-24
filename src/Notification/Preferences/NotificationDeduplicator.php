@@ -37,7 +37,7 @@ final readonly class NotificationDeduplicator
 
     public function purgeExpired(\DateTimeImmutable $now): int
     {
-        return $this->connection->executeStatement(
+        return (int) $this->connection->executeStatement(
             'DELETE FROM notification_deduplication WHERE expires_at <= :now',
             ['now' => $now->format('Y-m-d H:i:s')],
         );
