@@ -35,17 +35,21 @@ final class NewsletterConsentControllerTest extends WebTestCase
         $client->request('GET', '/newsletter/confirm/'.$id.'/'.$confirmToken);
         self::assertResponseIsSuccessful();
 
-        $this->em($client)->refresh($subscription);
-        self::assertTrue($subscription->canReceive());
+        $this->em($client)->clear();
+        $stored = $this->em($client)->find(NewsletterSubscription::class, $id);
+        self::assertInstanceOf(NewsletterSubscription::class, $stored);
+        self::assertTrue($stored->canReceive());
 
-        $unsubscribeToken = $subscription->issueUnsubscribeToken(new \DateTimeImmutable());
+        $unsubscribeToken = $stored->issueUnsubscribeToken(new \DateTimeImmutable());
         $this->em($client)->flush();
         $client->request('GET', '/newsletter/unsubscribe/'.$id.'/'.$unsubscribeToken);
         self::assertResponseIsSuccessful();
 
-        $this->em($client)->refresh($subscription);
-        self::assertSame(NewsletterSubscription::STATUS_UNSUBSCRIBED, $subscription->getStatus());
-        self::assertFalse($subscription->canReceive());
+        $this->em($client)->clear();
+        $stored = $this->em($client)->find(NewsletterSubscription::class, $id);
+        self::assertInstanceOf(NewsletterSubscription::class, $stored);
+        self::assertSame(NewsletterSubscription::STATUS_UNSUBSCRIBED, $stored->getStatus());
+        self::assertFalse($stored->canReceive());
 
         $client->request('GET', '/newsletter/unsubscribe/'.$id.'/'.$unsubscribeToken);
         self::assertResponseStatusCodeSame(404);
