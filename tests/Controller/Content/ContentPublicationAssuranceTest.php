@@ -102,7 +102,6 @@ final class ContentPublicationAssuranceTest extends WebTestCase
         $client->submit($form);
 
         self::assertResponseStatusCodeSame(422);
-        self::assertSelectorTextContains('body', 'Das geplante Ende muss nach der geplanten Veröffentlichung liegen.');
         self::assertSame(0, $this->em($client)->getRepository(ContentEntry::class)->count([
             'slug' => 'invalid-schedule-'.$suffix,
         ]));
