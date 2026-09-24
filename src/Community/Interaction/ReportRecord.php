@@ -57,8 +57,18 @@ final class ReportRecord
         $this->decidedAt = $at;
     }
 
+    public function decidedByUserId(): ?int
+    {
+        return $this->decidedByUserId;
+    }
+
     public function decisionReason(): ?string
     {
         return $this->decisionReason;
+    }
+
+    public function decidedAt(): ?\\DateTimeImmutable
+    {
+        return $this->decidedAt;
     }
 }
