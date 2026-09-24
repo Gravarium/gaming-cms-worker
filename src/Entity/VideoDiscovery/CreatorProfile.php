@@ -42,9 +42,14 @@ class CreatorProfile
     {
         $displayName = trim($displayName);
         $slug = trim($slug);
-        if ($displayName === '' || preg_match('/^[a-z0-9]+(?:-[a-z0-9]+)*$/D', $slug) !== 1) {
+        if ($displayName === ''
+            || mb_strlen($displayName) > 160
+            || mb_strlen($slug) > 180
+            || preg_match('/^[a-z0-9]+(?:-[a-z0-9]+)*$/D', $slug) !== 1
+        ) {
             throw new \InvalidArgumentException('Invalid creator profile.');
         }
+
         $this->displayName = $displayName;
         $this->slug = $slug;
     }
@@ -55,14 +60,28 @@ class CreatorProfile
     public function getOwner(): ?User { return $this->owner; }
     public function setOwner(?User $owner): self { $this->owner = $owner; return $this; }
     public function getBio(): ?string { return $this->bio; }
-    public function setBio(?string $bio): self { $bio=$bio===null?null:trim($bio); $this->bio=$bio===''?null:$bio; return $this; }
+
+    public function setBio(?string $bio): self
+    {
+        $bio = $bio === null ? null : trim($bio);
+        if ($bio !== null && mb_strlen($bio) > 10000) {
+            throw new \InvalidArgumentException('Creator bio is too long.');
+        }
+        $this->bio = $bio === '' ? null : $bio;
+
+        return $this;
+    }
+
     public function getVisibility(): string { return $this->visibility; }
+
     public function setVisibility(string $visibility): self
     {
-        if (!in_array($visibility, [self::VISIBILITY_PUBLIC,self::VISIBILITY_MEMBER,self::VISIBILITY_PRIVATE], true)) {
+        if (!in_array($visibility, [self::VISIBILITY_PUBLIC, self::VISIBILITY_MEMBER, self::VISIBILITY_PRIVATE], true)) {
             throw new \InvalidArgumentException('Invalid creator visibility.');
         }
+
         $this->visibility = $visibility;
+
         return $this;
     }
 }

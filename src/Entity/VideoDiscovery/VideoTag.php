@@ -14,21 +14,31 @@ class VideoTag
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    private ?int $id=null;
+    private ?int $id = null;
 
-    #[ORM\Column(length:100)]
+    #[ORM\Column(length: 100)]
     private string $name;
 
-    #[ORM\Column(length:120)]
+    #[ORM\Column(length: 120)]
     private string $slug;
 
-    public function __construct(string $name,string $slug)
+    public function __construct(string $name, string $slug)
     {
-        $name=trim($name);$slug=trim($slug);
-        if($name===''||preg_match('/^[a-z0-9]+(?:-[a-z0-9]+)*$/D',$slug)!==1)throw new \InvalidArgumentException('Invalid video tag.');
-        $this->name=$name;$this->slug=$slug;
+        $name = trim($name);
+        $slug = trim($slug);
+        if ($name === ''
+            || mb_strlen($name) > 100
+            || mb_strlen($slug) > 120
+            || preg_match('/^[a-z0-9]+(?:-[a-z0-9]+)*$/D', $slug) !== 1
+        ) {
+            throw new \InvalidArgumentException('Invalid video tag.');
+        }
+
+        $this->name = $name;
+        $this->slug = $slug;
     }
-    public function getId():?int{return $this->id;}
-    public function getName():string{return $this->name;}
-    public function getSlug():string{return $this->slug;}
+
+    public function getId(): ?int { return $this->id; }
+    public function getName(): string { return $this->name; }
+    public function getSlug(): string { return $this->slug; }
 }
