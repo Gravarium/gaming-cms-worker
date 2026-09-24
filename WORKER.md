@@ -2,13 +2,16 @@
 
 This repository is a sanitized development workspace. It is intentionally not a production distribution.
 
-## Branch model
+## Branch and continuation model
 
-- `main` is the generated sanitized baseline from the trusted repository.
-- `worker/account-N` branches are also generated baselines and may be force-refreshed automatically after trusted `main` changes.
-- Never commit directly to `main` or `worker/account-N`.
-- Create a feature branch from your assigned `worker/account-N` branch and work only there.
-- A worker PR back to `worker/account-N` is a review/integration handoff. Do not treat the worker repository as the production source of truth.
+- `main` is the sole generated sanitized baseline for new work.
+- Never commit directly to `main`.
+- Work on exactly one published FCP feature branch at a time.
+- Existing unfinished work always comes before a new task. After any error, red CI, tool failure, usage limit or chat interruption, fetch and continue the same feature branch from its verified remote checkpoint.
+- An active claim remains exclusive across interruptions. The owning continuation resumes it; every other AI must leave that FCP, feature branch and PR untouched until an explicit release or transfer.
+- Push a coherent checkpoint within 30 minutes of real work and before interruption.
+- Historical `worker/account-N` refs are not assignable baselines. Existing recovery feature branches keep their ancestry until complete.
+- A Worker PR is a review handoff only. Do not treat the Worker repository as the production source of truth.
 - Automatic baseline refreshes never reset worker-owned feature branches. Reconcile conflicts in the feature branch instead of weakening the baseline policy.
 
 ## Security and private boundary
