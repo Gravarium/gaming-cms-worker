@@ -26,6 +26,8 @@ class VideoDiscoveryProfile
     /** @var Collection<int,VideoTag> */
     #[ORM\ManyToMany(targetEntity:VideoTag::class)]
     #[ORM\JoinTable(name:'video_discovery_profile_tag')]
+    #[ORM\JoinColumn(name:'profile_id', referencedColumnName:'id', onDelete:'CASCADE')]
+    #[ORM\InverseJoinColumn(name:'tag_id', referencedColumnName:'id', onDelete:'CASCADE')]
     private Collection $tags;
 
     public function __construct(Video $video){$this->video=$video;$this->tags=new ArrayCollection();}
