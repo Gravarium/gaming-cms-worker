@@ -29,7 +29,7 @@ class NewsletterSubscription
     #[ORM\JoinColumn(onDelete: 'SET NULL')]
     private ?User $user = null;
 
-    #[ORM\Column(length: 180, unique: true)]
+    #[ORM\Column(length: 180)]
     #[Assert\Email]
     private string $email = '';
 

@@ -72,11 +72,15 @@ final class NotificationPreferencesController extends AbstractController
     public function subscribeTopic(Request $request): Response
     {
         $this->assertTopicCsrf($request);
-        $this->subscriptions->subscribe(
-            $this->requireUserId($this->requireUser()),
-            $request->request->getString('topic'),
-            new \DateTimeImmutable(),
-        );
+        try {
+            $this->subscriptions->subscribe(
+                $this->requireUserId($this->requireUser()),
+                $request->request->getString('topic'),
+                new \DateTimeImmutable(),
+            );
+        } catch (\InvalidArgumentException $exception) {
+            $this->addFlash('error', $exception->getMessage());
+        }
 
         return $this->redirectToRoute('app_admin_notification_preferences_index');
     }
@@ -85,10 +89,14 @@ final class NotificationPreferencesController extends AbstractController
     public function unsubscribeTopic(Request $request): Response
     {
         $this->assertTopicCsrf($request);
-        $this->subscriptions->unsubscribe(
-            $this->requireUserId($this->requireUser()),
-            $request->request->getString('topic'),
-        );
+        try {
+            $this->subscriptions->unsubscribe(
+                $this->requireUserId($this->requireUser()),
+                $request->request->getString('topic'),
+            );
+        } catch (\InvalidArgumentException $exception) {
+            $this->addFlash('error', $exception->getMessage());
+        }
 
         return $this->redirectToRoute('app_admin_notification_preferences_index');
     }
