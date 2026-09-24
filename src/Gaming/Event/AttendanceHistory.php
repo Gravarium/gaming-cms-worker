@@ -14,7 +14,7 @@ final class AttendanceHistory
         if (!in_array($status, ['checked_in', 'attended', 'absent', 'excused'], true) || $actorId < 1) {
             throw new \InvalidArgumentException('Invalid attendance evidence.');
         }
-        $previous = $this->entries[array_key_last($this->entries)] ?? null;
+        $previous = $this->entries === [] ? null : $this->entries[count($this->entries) - 1];
         if ($previous !== null && $occurredAt < $previous['occurredAt']) {
             throw new \DomainException('Attendance history is append-only and chronological.');
         }
