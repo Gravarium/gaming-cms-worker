@@ -1,0 +1,58 @@
+{% extends 'base.html.twig' %}
+{% block title %}Benachrichtigungen | Gaming CMS{% endblock %}
+{% block body %}
+<header class="topbar"><a class="brand" href="{{ path('app_home') }}">Gaming CMS</a></header>
+<main class="editor-shell">
+    <p class="eyebrow">Konto · Benachrichtigungen</p>
+    <h1>Benachrichtigungen</h1>
+    {% for message in app.flashes('success') %}<div class="notice">{{ message }}</div>{% endfor %}
+    {% for message in app.flashes('error') %}<div class="notice text-danger">{{ message }}</div>{% endfor %}
+
+    <form method="post" action="{{ path('app_admin_notification_preferences_update') }}" class="content-form">
+        <input type="hidden" name="_token" value="{{ csrf_token('notification-preferences') }}">
+        <label><input type="checkbox" name="in_app_enabled" value="1" {% if preference.inAppEnabled %}checked{% endif %}> In-App</label>
+        <label><input type="checkbox" name="email_enabled" value="1" {% if preference.emailEnabled %}checked{% endif %}> E-Mail</label>
+        <label><input type="checkbox" name="mentions_enabled" value="1" {% if preference.mentionsEnabled %}checked{% endif %}> Erwähnungen</label>
+        <label><input type="checkbox" name="subscriptions_enabled" value="1" {% if preference.subscriptionsEnabled %}checked{% endif %}> Abonnierte Themen</label>
+        <label>Digest
+            <select name="digest_frequency">
+                {% for value,label in {'immediate':'Sofort','daily':'Täglich','weekly':'Wöchentlich','off':'Aus'} %}
+                    <option value="{{ value }}" {% if preference.digestFrequency == value %}selected{% endif %}>{{ label }}</option>
+                {% endfor %}
+            </select>
+        </label>
+        <label>Ruhezeit von <input name="quiet_hours_start" value="{{ preference.quietHoursStart ?? '' }}" placeholder="22:00"></label>
+        <label>Ruhezeit bis <input name="quiet_hours_end" value="{{ preference.quietHoursEnd ?? '' }}" placeholder="07:00"></label>
+        <label>Zeitzone <input name="timezone" value="{{ preference.timezone }}" maxlength="64"></label>
+        <button>Speichern</button>
+    </form>
+
+    <h2>Themen-Abos</h2>
+    <ul>{% for topic in topics %}<li>{{ topic }}
+        <form method="post" action="{{ path('app_admin_notification_preferences_topic_unsubscribe') }}">
+            <input type="hidden" name="_token" value="{{ csrf_token('notification-topic') }}">
+            <input type="hidden" name="topic" value="{{ topic }}">
+            <button>Abbestellen</button>
+        </form>
+    </li>{% else %}<li>Keine Themen abonniert.</li>{% endfor %}</ul>
+    <form method="post" action="{{ path('app_admin_notification_preferences_topic_subscribe') }}">
+        <input type="hidden" name="_token" value="{{ csrf_token('notification-topic') }}">
+        <input name="topic" maxlength="128" placeholder="forum:thread:42" required>
+        <button>Thema abonnieren</button>
+    </form>
+
+    <h2>Newsletter</h2>
+    <p>Status: {{ newsletter_subscription ? newsletter_subscription.status : 'nicht angemeldet' }}</p>
+    {% if not newsletter_subscription or newsletter_subscription.status != 'active' %}
+        <form method="post" action="{{ path('app_admin_notification_newsletter_account_subscribe') }}">
+            <input type="hidden" name="_token" value="{{ csrf_token('newsletter-account-subscribe') }}">
+            <button>Double-Opt-in starten</button>
+        </form>
+    {% else %}
+        <form method="post" action="{{ path('app_admin_notification_newsletter_account_unsubscribe') }}">
+            <input type="hidden" name="_token" value="{{ csrf_token('newsletter-account-unsubscribe') }}">
+            <button>Newsletter abbestellen</button>
+        </form>
+    {% endif %}
+</main>
+{% endblock %}

@@ -1,0 +1,6 @@
+{% extends 'base.html.twig' %}
+{% block title %}Vorschau: {{ campaign.title }} | Gaming CMS{% endblock %}
+{% block body %}
+<header class="topbar"><a class="brand" href="{{ path('app_admin_notification_newsletter_admin_index') }}">Newsletter</a></header>
+<main class="article-shell"><p class="eyebrow">Newsletter-Vorschau</p><h1>{{ campaign.subject }}</h1><div class="article-body">{{ campaign.bodyText|nl2br }}</div><p class="muted">Segment: {{ campaign.segment }} · Maximal {{ campaign.maxRecipients }} Empfänger</p></main>
+{% endblock %}

@@ -163,6 +163,19 @@ class NewsletterSubscription
         $this->touch($now);
     }
 
+    public function unsubscribeForAccount(\DateTimeImmutable $now): void
+    {
+        if ($this->status === self::STATUS_SUPPRESSED) {
+            return;
+        }
+
+        $this->status = self::STATUS_UNSUBSCRIBED;
+        $this->unsubscribedAt = $now;
+        $this->confirmationTokenHash = null;
+        $this->unsubscribeTokenHash = null;
+        $this->touch($now);
+    }
+
     public function suppress(string $reason, \DateTimeImmutable $now): void
     {
         $reason = trim($reason);
