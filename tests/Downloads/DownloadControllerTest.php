@@ -35,6 +35,19 @@ final class DownloadControllerTest extends WebTestCase
             self::assertSame(0,$this->em($client)->getRepository(DownloadVersion::class)->count([]));
         }finally{@unlink($path);}
     }
+    public function testValidCsrfStillRejectsExecutableUpload():void
+    {
+        $client=static::createClient();$user=$this->user($client,[CmsPermission::STORAGE]);$client->loginUser($user);
+        $package=new DownloadPackage('Safe2','safe2','file');$this->em($client)->persist($package);$this->em($client)->flush();$id=$package->getId();self::assertNotNull($id);
+        $token=$client->getContainer()->get(CsrfTokenManagerInterface::class)->getToken('download-upload-'.$id)->getValue();
+        $path=sys_get_temp_dir().'/download-'.bin2hex(random_bytes(5)).'.php';file_put_contents($path,'<?php echo 1;');
+        try{
+            $client->request('POST','/admin/downloads/'.$id.'/upload',['version'=>'1.0','_token'=>$token],['file'=>new UploadedFile($path,'bad.php','application/x-php',null,true)]);
+            self::assertResponseStatusCodeSame(422);
+            self::assertSame(0,$this->em($client)->getRepository(DownloadVersion::class)->count([]));
+        }finally{@unlink($path);}
+    }
+
     private function user(KernelBrowser $client,array $permissions):User{$user=(new User())->setEmail('download-'.bin2hex(random_bytes(5)).'@example.test')->setDisplayName('Download')->setPermissions($permissions)->verifyEmail();$this->em($client)->persist($user);$this->em($client)->flush();return $user;}
     private function em(KernelBrowser $client):EntityManagerInterface{return $client->getContainer()->get(EntityManagerInterface::class);}
 }
