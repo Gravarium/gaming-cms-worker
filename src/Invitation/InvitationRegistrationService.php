@@ -11,9 +11,11 @@ use App\Repository\Invitation\MemberInvitationRepository;
 use App\Repository\UserRepository;
 use App\Service\AccountMailer;
 use App\Service\AccountTokenManager;
+use App\Security\PasswordPolicy;
 use Doctrine\DBAL\LockMode;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 final readonly class InvitationRegistrationService
 {
@@ -24,6 +26,7 @@ final readonly class InvitationRegistrationService
         private AccountTokenManager $tokens,
         private AccountMailer $mailer,
         private EntityManagerInterface $entityManager,
+        private ValidatorInterface $validator,
     ) {}
 
     public function resolve(string $rawToken, \DateTimeImmutable $now): ?MemberInvitation
@@ -39,8 +42,11 @@ final readonly class InvitationRegistrationService
         \DateTimeImmutable $now,
     ): InvitationRegistrationResult {
         $displayName = trim($displayName);
-        if ($displayName === '' || mb_strlen($displayName) > 80 || $plainPassword === '') {
+        if ($displayName === '' || mb_strlen($displayName) > 80) {
             throw new \InvalidArgumentException('Invalid invitation registration data.');
+        }
+        if (count($this->validator->validate($plainPassword, PasswordPolicy::constraints())) > 0) {
+            throw new \InvalidArgumentException('Invitation password does not satisfy the account password policy.');
         }
 
         $user = null;
