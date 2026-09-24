@@ -1,335 +1,37 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "mode": "shared-reservable-worker-pool",
   "source_queue": {
     "repository": "Gravarium/gaming-cms",
     "path": "docs/ai-work-queue.json",
-    "blob_sha": "b3508a80adb0359513e3fae2d7a7336760b06fb6",
-    "updated_at": "2026-09-24T06:32:43Z"
+    "blob_sha": "ac6977914355b97d1cafd0874435eeb599f3ca40",
+    "updated_at": "2026-09-24T09:20:00Z"
   },
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "worker/account-6",
-  "base_sha": "330c655636e6b18816c7334bbec9b9093f41c269",
-  "published_at": "2026-09-24T10:00:00Z",
+  "base_sha": "ad876fea62817d705ad997175e03f2253ca0e445",
+  "published_at": "2026-09-24T09:30:00Z",
   "summary": {
-    "total_worker_tasks": 32,
-    "completed_worker_prs": 4,
-    "unclaimed": 28,
-    "immediately_claimable": 1
+    "total_remaining_worker_tasks": 27,
+    "unclaimed": 27,
+    "immediately_claimable": 7
   },
   "rules": {
-    "choose": "Choose the first unclaimed task whose dependencies are integrated in the published sanitized baseline and whose claim branch does not exist.",
-    "atomic_reservation": "Create the exact claim_branch from base_sha. GitHub branch creation is the atomic reservation: if creation fails because it exists, do not edit that task and choose the next eligible task.",
+    "choose": "Choose the first unclaimed task whose blocked_by_at_publication is empty and whose exact claim branch does not exist.",
+    "atomic_reservation": "Create the exact claim_branch from base_sha. If it already exists, skip it and claim the next eligible task.",
     "no_worker_numbers": "Worker numbers are not assignment identities. Any authorized Worker AI uses the same shared pool.",
     "one_at_a_time": "A Worker AI owns at most one live claim and finishes its implementation, PR, and exact-head CI before claiming another task.",
-    "lease": "The claim remains active for seven hours after the last verified push. Tasks never expire. Recovery requires checking the existing branch, PR and checkpoint before a new generation.",
-    "dependencies": "A completed Worker PR alone does not satisfy a code dependency. The dependency must be Trusted-reviewed, integrated, and present in a refreshed sanitized baseline before a dependent task can be claimed.",
-    "final_authority": "Worker output remains untrusted until Trusted review. Never merge to Trusted and never deploy."
+    "lease": "Reservation lasts seven hours after the last verified push; the task remains in the pool.",
+    "dependencies": "A completed Worker PR is not enough. Dependencies must be Trusted-integrated and present in this sanitized base.",
+    "final_authority": "Never merge to Trusted and never deploy."
   },
   "tasks": [
     {
       "priority": 1,
-      "package_id": "FCP-006",
-      "title": "Account browser assurance",
-      "risk": "high",
-      "queue_state": "ready",
-      "execution_state": "worker_pr_complete_awaiting_trusted_review",
-      "worker_pr": 11,
-      "dependencies": [
-        "FCP-005",
-        "FCP-017"
-      ],
-      "dependencies_integrated_at_publication": [
-        "FCP-005",
-        "FCP-017"
-      ],
-      "blocked_by_at_publication": [],
-      "claim_branch": "claim/fcp-006-g1",
-      "suggested_branch": "feature/fcp-006-pool-g1",
-      "base_branch": "worker/account-6",
-      "base_sha": "330c655636e6b18816c7334bbec9b9093f41c269",
-      "objective": "Add fail-closed browser-level assurance for TOTP, passkeys and sensitive session transitions.",
-      "allowed_paths": [
-        "assets/passkey.js",
-        "src/Controller/AccountController.php",
-        "src/Controller/PasskeyController.php",
-        "src/Controller/TwoFactorController.php",
-        "src/EventSubscriber/TwoFactorGateSubscriber.php",
-        "tests/JavaScript/passkey.test.mjs",
-        "tests/Controller/AccountSecurityHardeningTest.php",
-        "tests/Controller/TwoFactorSecurityTest.php",
-        "tests/Controller/AccountSecurity/"
-      ],
-      "forbidden_paths": [
-        "private/",
-        "ops/",
-        "docs/",
-        "bin/worker-sync",
-        "bin/build-worker-snapshot",
-        ".github/workflows/"
-      ],
-      "deliverables": [
-        "browser tests for successful and rejected ceremonies",
-        "negative tests for stale sessions, CSRF and authorization",
-        "no production secret or server dependency",
-        "Preserve current security behavior through replaceable contracts; register any temporary compatibility adapter with an explicit retirement gate.",
-        "Use only literal allowed files/directories; request a reviewed scope change before touching shared fixtures or additional files."
-      ],
-      "tests": [
-        "targeted PHPUnit application tests",
-        "node --test tests/JavaScript/passkey.test.mjs",
-        "complete worker CI"
-      ],
-      "completion_report": [
-        "exact head SHA",
-        "complete changed-file list",
-        "test commands and results",
-        "unresolved risks and assumptions",
-        "exact sanitized baseline SHA and trusted-issued assignment revision",
-        "last green checkpoint and one exact next action",
-        "compatibility seam and old-security retirement impact"
-      ],
-      "immutable_constraints": [
-        "trusted-main-is-the-only-integration-and-deployment-source",
-        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
-        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
-        "no-executable-public-uploads",
-        "no-secrets-or-trusted-private-runtime-in-worker-source",
-        "preserve-all-security-and-worker-isolation-invariants",
-        "red-ci-stops-integration",
-        "no-secret-or-private-runtime-export"
-      ]
-    },
-    {
-      "priority": 2,
-      "package_id": "FCP-008",
-      "title": "Content publication browser assurance",
-      "risk": "medium",
-      "queue_state": "ready",
-      "execution_state": "unclaimed",
-      "worker_pr": null,
-      "dependencies": [
-        "FCP-005",
-        "FCP-017"
-      ],
-      "dependencies_integrated_at_publication": [
-        "FCP-005",
-        "FCP-017"
-      ],
-      "blocked_by_at_publication": [],
-      "claim_branch": "claim/fcp-008-g1",
-      "suggested_branch": "feature/fcp-008-pool-g1",
-      "base_branch": "worker/account-6",
-      "base_sha": "330c655636e6b18816c7334bbec9b9093f41c269",
-      "objective": "Cover draft, review, scheduling, publishing, immutable revision restore and redirect behavior.",
-      "allowed_paths": [
-        "src/Controller/AdminContentController.php",
-        "src/Controller/AdminContentReleaseController.php",
-        "src/Entity/ContentEntry.php",
-        "src/Entity/ContentRelease.php",
-        "src/Entity/ContentRevision.php",
-        "src/Form/ContentEntryType.php",
-        "src/Form/ContentReleaseType.php",
-        "templates/admin/content/",
-        "tests/Controller/ContentAccessTest.php",
-        "tests/Controller/Content/"
-      ],
-      "forbidden_paths": [
-        "private/",
-        "ops/",
-        "docs/",
-        "bin/worker-sync",
-        "bin/build-worker-snapshot",
-        ".github/workflows/"
-      ],
-      "deliverables": [
-        "positive publication journey",
-        "negative CSRF, permission and invalid-transition tests",
-        "time-bound scheduling regression coverage",
-        "Preserve current security behavior through replaceable contracts; register any temporary compatibility adapter with an explicit retirement gate.",
-        "Use only literal allowed files/directories; request a reviewed scope change before touching shared fixtures or additional files."
-      ],
-      "tests": [
-        "targeted PHPUnit application tests",
-        "complete worker CI"
-      ],
-      "completion_report": [
-        "exact head SHA",
-        "complete changed-file list",
-        "test commands and results",
-        "unresolved risks and assumptions",
-        "exact sanitized baseline SHA and trusted-issued assignment revision",
-        "last green checkpoint and one exact next action",
-        "compatibility seam and old-security retirement impact"
-      ],
-      "immutable_constraints": [
-        "trusted-main-is-the-only-integration-and-deployment-source",
-        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
-        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
-        "no-executable-public-uploads",
-        "no-secrets-or-trusted-private-runtime-in-worker-source",
-        "preserve-all-security-and-worker-isolation-invariants",
-        "red-ci-stops-integration",
-        "no-secret-or-private-runtime-export"
-      ]
-    },
-    {
-      "priority": 3,
-      "package_id": "FCP-009",
-      "title": "Guild and notification behavior coverage",
-      "risk": "high",
-      "queue_state": "ready",
-      "execution_state": "worker_pr_complete_awaiting_trusted_review",
-      "worker_pr": 9,
-      "dependencies": [
-        "FCP-005",
-        "FCP-017"
-      ],
-      "dependencies_integrated_at_publication": [
-        "FCP-005",
-        "FCP-017"
-      ],
-      "blocked_by_at_publication": [],
-      "claim_branch": "claim/fcp-009-g1",
-      "suggested_branch": "feature/fcp-009-pool-g1",
-      "base_branch": "worker/account-6",
-      "base_sha": "330c655636e6b18816c7334bbec9b9093f41c269",
-      "objective": "Complete cross-guild isolation, application decisions, event rules and notification failure behavior coverage.",
-      "allowed_paths": [
-        "src/Controller/AdminGuildApplicationController.php",
-        "src/Controller/AdminGuildCollaborationController.php",
-        "src/Controller/AdminGuildMemberController.php",
-        "src/Controller/AdminGuildStructureController.php",
-        "src/Controller/GuildPortalController.php",
-        "src/Entity/GuildApplication.php",
-        "src/Entity/GuildEvent.php",
-        "src/ExternalConnector/DiscordGuildNotificationConnectorAdapter.php",
-        "tests/ExternalConnector/DiscordGuildNotificationConnectorAdapterTest.php",
-        "tests/Controller/GamingGuildSecurityTest.php",
-        "tests/Controller/Guild/"
-      ],
-      "forbidden_paths": [
-        "private/",
-        "ops/",
-        "docs/",
-        "bin/worker-sync",
-        "bin/build-worker-snapshot",
-        ".github/workflows/"
-      ],
-      "deliverables": [
-        "cross-guild negative tests",
-        "decision and event invariant tests",
-        "external failure never removes internal notification evidence",
-        "Preserve current security behavior through replaceable contracts; register any temporary compatibility adapter with an explicit retirement gate.",
-        "Use only literal allowed files/directories; request a reviewed scope change before touching shared fixtures or additional files."
-      ],
-      "tests": [
-        "targeted PHPUnit application tests",
-        "complete worker CI"
-      ],
-      "completion_report": [
-        "exact head SHA",
-        "complete changed-file list",
-        "test commands and results",
-        "unresolved risks and assumptions",
-        "exact sanitized baseline SHA and trusted-issued assignment revision",
-        "last green checkpoint and one exact next action",
-        "compatibility seam and old-security retirement impact"
-      ],
-      "immutable_constraints": [
-        "trusted-main-is-the-only-integration-and-deployment-source",
-        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
-        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
-        "no-executable-public-uploads",
-        "no-secrets-or-trusted-private-runtime-in-worker-source",
-        "preserve-all-security-and-worker-isolation-invariants",
-        "red-ci-stops-integration",
-        "no-secret-or-private-runtime-export"
-      ]
-    },
-    {
-      "priority": 4,
-      "package_id": "FCP-010",
-      "title": "Media and video browser assurance",
-      "risk": "high",
-      "queue_state": "ready",
-      "execution_state": "worker_pr_complete_awaiting_trusted_review",
-      "worker_pr": 10,
-      "dependencies": [
-        "FCP-005",
-        "FCP-017"
-      ],
-      "dependencies_integrated_at_publication": [
-        "FCP-005",
-        "FCP-017"
-      ],
-      "blocked_by_at_publication": [],
-      "claim_branch": "claim/fcp-010-g1",
-      "suggested_branch": "feature/fcp-010-pool-g1",
-      "base_branch": "worker/account-6",
-      "base_sha": "330c655636e6b18816c7334bbec9b9093f41c269",
-      "objective": "Prove upload, replacement, deletion refusal, provider privacy and executable-upload rejection through application-level tests.",
-      "allowed_paths": [
-        "src/Controller/AdminStorageController.php",
-        "src/Controller/AdminVideoController.php",
-        "src/Service/MediaDeletionRepairer.php",
-        "src/Service/MediaMalwareScanner.php",
-        "src/Service/MediaUploadPolicy.php",
-        "src/Service/MediaUrlPolicy.php",
-        "src/Service/VideoEmbedResolver.php",
-        "tests/Controller/MediaStorageSecurityTest.php",
-        "tests/Controller/MediaStorageCsrfRenderingTest.php",
-        "tests/Controller/MediaVideo/",
-        "tests/Service/MediaUploadPolicyTest.php",
-        "tests/Service/VideoEmbedResolverTest.php"
-      ],
-      "forbidden_paths": [
-        "private/",
-        "ops/",
-        "docs/",
-        "bin/worker-sync",
-        "bin/build-worker-snapshot",
-        ".github/workflows/"
-      ],
-      "deliverables": [
-        "upload and replacement journeys",
-        "negative executable, MIME, CSRF and in-use deletion tests",
-        "provider URL/privacy regressions",
-        "Preserve current security behavior through replaceable contracts; register any temporary compatibility adapter with an explicit retirement gate.",
-        "Use only literal allowed files/directories; request a reviewed scope change before touching shared fixtures or additional files."
-      ],
-      "tests": [
-        "targeted PHPUnit application tests",
-        "complete worker CI"
-      ],
-      "completion_report": [
-        "exact head SHA",
-        "complete changed-file list",
-        "test commands and results",
-        "unresolved risks and assumptions",
-        "exact sanitized baseline SHA and trusted-issued assignment revision",
-        "last green checkpoint and one exact next action",
-        "compatibility seam and old-security retirement impact"
-      ],
-      "immutable_constraints": [
-        "trusted-main-is-the-only-integration-and-deployment-source",
-        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
-        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
-        "no-executable-public-uploads",
-        "no-secrets-or-trusted-private-runtime-in-worker-source",
-        "preserve-all-security-and-worker-isolation-invariants",
-        "red-ci-stops-integration",
-        "no-secret-or-private-runtime-export"
-      ]
-    },
-    {
-      "priority": 5,
       "package_id": "FCP-012",
       "title": "Public Security Passport and decision-model contracts",
       "risk": "critical",
-      "queue_state": "ready",
       "execution_state": "unclaimed",
-      "worker_pr": null,
       "dependencies": [
         "FCP-020",
         "FCP-021"
@@ -342,7 +44,7 @@
       "claim_branch": "claim/fcp-012-g1",
       "suggested_branch": "feature/fcp-012-pool-g1",
       "base_branch": "worker/account-6",
-      "base_sha": "330c655636e6b18816c7334bbec9b9093f41c269",
+      "base_sha": "ad876fea62817d705ad997175e03f2253ca0e445",
       "objective": "Define versioned public passport/decision DTOs and deny-by-default pure evaluation contracts with synthetic fixtures. Do not wire privileged production policy or host access.",
       "allowed_paths": [
         "src/Fortress/Contract/",
@@ -384,13 +86,11 @@
       ]
     },
     {
-      "priority": 6,
+      "priority": 2,
       "package_id": "FCP-013",
       "title": "Public signed-update metadata validation",
       "risk": "critical",
-      "queue_state": "ready",
       "execution_state": "unclaimed",
-      "worker_pr": null,
       "dependencies": [
         "FCP-025"
       ],
@@ -401,7 +101,7 @@
       "claim_branch": "claim/fcp-013-g1",
       "suggested_branch": "feature/fcp-013-pool-g1",
       "base_branch": "worker/account-6",
-      "base_sha": "330c655636e6b18816c7334bbec9b9093f41c269",
+      "base_sha": "ad876fea62817d705ad997175e03f2253ca0e445",
       "objective": "Validate public signed-update metadata and freshness/version constraints using synthetic keys and fixtures. Production key management, activation and rollback stay Trusted.",
       "allowed_paths": [
         "src/ExtensionPackage/Update/",
@@ -443,108 +143,22 @@
       ]
     },
     {
-      "priority": 7,
-      "package_id": "FCP-051",
-      "title": "Safe content block editor and media-selection foundation",
-      "risk": "high",
-      "queue_state": "review",
-      "execution_state": "worker_pr_complete_awaiting_trusted_review",
-      "worker_pr": 8,
-      "dependencies": [
-        "FCP-005",
-        "FCP-017"
-      ],
-      "dependencies_integrated_at_publication": [
-        "FCP-005",
-        "FCP-017"
-      ],
-      "blocked_by_at_publication": [],
-      "claim_branch": "claim/fcp-051-g2",
-      "suggested_branch": "feature/fcp-051-pool-g2",
-      "base_branch": "worker/account-6",
-      "base_sha": "330c655636e6b18816c7334bbec9b9093f41c269",
-      "objective": "Replace the plain content textarea with a bounded structured block-editor foundation that preserves revisions, preview, sanitization and safe media references without permitting arbitrary HTML or scripts.",
-      "allowed_paths": [
-        "MODULE-ASSIGNMENT.json",
-        "WORKER-START.md",
-        "src/ContentEditor/",
-        "src/Controller/AdminContentController.php",
-        "src/Entity/ContentEntry.php",
-        "src/Entity/ContentRevision.php",
-        "src/Form/ContentEntryType.php",
-        "templates/admin/content/",
-        "templates/content/",
-        "assets/controllers/content_editor_controller.js",
-        "assets/styles/content-editor.css",
-        "config/services.yaml",
-        "migrations/",
-        "tests/ContentEditor/",
-        "tests/Controller/Content/"
-      ],
-      "forbidden_paths": [
-        "private/",
-        "PrivateCore/",
-        "ops/",
-        "docs/",
-        "bin/",
-        "AGENTS.md",
-        "WORKER-TASK.json",
-        "WORKER-MANIFEST.json",
-        "WORKER-FILES.sha256",
-        ".worker-snapshot",
-        ".github/workflows/"
-      ],
-      "deliverables": [
-        "Versioned allowlisted text, heading, list, quote, link and owned-media blocks",
-        "Safe migration and fallback rendering for existing textarea content",
-        "Autosave draft and no-write preview contracts without changing publication permissions",
-        "Explicit Fortress seam and legacy security/database retirement impact without weakening current enforcement",
-        "Positive and negative authorization, CSRF, validation, disabled-module and data-visibility regression coverage"
-      ],
-      "tests": [
-        "targeted content/editor PHPUnit tests",
-        "browser-side editor protocol tests where JavaScript behavior is added",
-        "complete worker CI on the exact final HEAD"
-      ],
-      "completion_report": [
-        "exact final worker HEAD SHA and exact sanitized base SHA",
-        "complete changed-path list and worker PR",
-        "targeted tests plus complete worker CI results",
-        "unresolved risks assumptions and intentionally deferred features",
-        "current protection path future Fortress contract legacy symbols tables grants and retirement impact",
-        "module data ownership fresh and populated migration evidence rollback restore boundary and negative tests"
-      ],
-      "immutable_constraints": [
-        "trusted-main-is-the-only-integration-and-deployment-source",
-        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
-        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
-        "no-executable-public-uploads",
-        "no-secrets-or-trusted-private-runtime-in-worker-source",
-        "preserve-existing-security-controls-tests-phpstan-and-ci",
-        "red-ci-stops-integration",
-        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment",
-        "fortress-ready-replaceable-boundaries-no-private-runtime-reconstruction"
-      ]
-    },
-    {
-      "priority": 8,
+      "priority": 3,
       "package_id": "FCP-052",
       "title": "Shared comments reactions reports and moderation core",
       "risk": "high",
-      "queue_state": "ready",
       "execution_state": "unclaimed",
-      "worker_pr": null,
       "dependencies": [
         "FCP-051"
       ],
-      "dependencies_integrated_at_publication": [],
-      "blocked_by_at_publication": [
+      "dependencies_integrated_at_publication": [
         "FCP-051"
       ],
+      "blocked_by_at_publication": [],
       "claim_branch": "claim/fcp-052-g1",
       "suggested_branch": "feature/fcp-052-pool-g1",
       "base_branch": "worker/account-6",
-      "base_sha": "330c655636e6b18816c7334bbec9b9093f41c269",
+      "base_sha": "ad876fea62817d705ad997175e03f2253ca0e445",
       "objective": "Build one reusable interaction core for comments, replies, reactions, reports and moderation, initially wired to one content target and designed for later video, forum and download targets.",
       "allowed_paths": [
         "src/Community/Interaction/",
@@ -601,24 +215,22 @@
       ]
     },
     {
-      "priority": 9,
+      "priority": 4,
       "package_id": "FCP-053",
       "title": "Guild roster recruitment onboarding and member lifecycle",
       "risk": "high",
-      "queue_state": "ready",
       "execution_state": "unclaimed",
-      "worker_pr": null,
       "dependencies": [
         "FCP-051"
       ],
-      "dependencies_integrated_at_publication": [],
-      "blocked_by_at_publication": [
+      "dependencies_integrated_at_publication": [
         "FCP-051"
       ],
+      "blocked_by_at_publication": [],
       "claim_branch": "claim/fcp-053-g1",
       "suggested_branch": "feature/fcp-053-pool-g1",
       "base_branch": "worker/account-6",
-      "base_sha": "330c655636e6b18816c7334bbec9b9093f41c269",
+      "base_sha": "ad876fea62817d705ad997175e03f2253ca0e445",
       "objective": "Deepen the existing guild module with multi-game roster filtering, characters/alts, role needs, configurable applications, officer voting, trials, onboarding, absences, private notes and audited member lifecycle.",
       "allowed_paths": [
         "src/Gaming/Guild/",
@@ -677,13 +289,11 @@
       ]
     },
     {
-      "priority": 10,
+      "priority": 5,
       "package_id": "FCP-054",
       "title": "Raid event attendance and squad planning",
       "risk": "high",
-      "queue_state": "ready",
       "execution_state": "unclaimed",
-      "worker_pr": null,
       "dependencies": [
         "FCP-053"
       ],
@@ -694,7 +304,7 @@
       "claim_branch": "claim/fcp-054-g1",
       "suggested_branch": "feature/fcp-054-pool-g1",
       "base_branch": "worker/account-6",
-      "base_sha": "330c655636e6b18816c7334bbec9b9093f41c269",
+      "base_sha": "ad876fea62817d705ad997175e03f2253ca0e445",
       "objective": "Expand guild events into recurring raid, training and squad planning with role capacities, RSVP, waitlists, substitutes, check-in, actual attendance, reminders, preparation and calendar export.",
       "allowed_paths": [
         "src/Gaming/Event/",
@@ -753,13 +363,11 @@
       ]
     },
     {
-      "priority": 11,
+      "priority": 6,
       "package_id": "FCP-055",
       "title": "Loot DKP EPGP wishlist and guild vault",
       "risk": "critical",
-      "queue_state": "ready",
       "execution_state": "unclaimed",
-      "worker_pr": null,
       "dependencies": [
         "FCP-054"
       ],
@@ -770,7 +378,7 @@
       "claim_branch": "claim/fcp-055-g1",
       "suggested_branch": "feature/fcp-055-pool-g1",
       "base_branch": "worker/account-6",
-      "base_sha": "330c655636e6b18816c7334bbec9b9093f41c269",
+      "base_sha": "ad876fea62817d705ad997175e03f2253ca0e445",
       "objective": "Add optional auditable guild loot accounting and vault management with multiple point models, wishlists, raid linkage, corrections and export, without any real-money economy.",
       "allowed_paths": [
         "src/Gaming/Loot/",
@@ -829,24 +437,22 @@
       ]
     },
     {
-      "priority": 12,
+      "priority": 7,
       "package_id": "FCP-056",
       "title": "Game catalogue release calendar and game hubs",
       "risk": "medium",
-      "queue_state": "ready",
       "execution_state": "unclaimed",
-      "worker_pr": null,
       "dependencies": [
         "FCP-051"
       ],
-      "dependencies_integrated_at_publication": [],
-      "blocked_by_at_publication": [
+      "dependencies_integrated_at_publication": [
         "FCP-051"
       ],
+      "blocked_by_at_publication": [],
       "claim_branch": "claim/fcp-056-g1",
       "suggested_branch": "feature/fcp-056-pool-g1",
       "base_branch": "worker/account-6",
-      "base_sha": "330c655636e6b18816c7334bbec9b9093f41c269",
+      "base_sha": "ad876fea62817d705ad997175e03f2253ca0e445",
       "objective": "Create game pages and a release centre with platforms, genres, publishers, editions, dates, regions, system requirements and links to CMS content, guilds, videos and servers.",
       "allowed_paths": [
         "src/Gaming/Catalogue/",
@@ -905,26 +511,25 @@
       ]
     },
     {
-      "priority": 13,
+      "priority": 8,
       "package_id": "FCP-057",
       "title": "Gaming magazine reviews previews and comparisons",
       "risk": "medium",
-      "queue_state": "ready",
       "execution_state": "unclaimed",
-      "worker_pr": null,
       "dependencies": [
         "FCP-051",
         "FCP-056"
       ],
-      "dependencies_integrated_at_publication": [],
+      "dependencies_integrated_at_publication": [
+        "FCP-051"
+      ],
       "blocked_by_at_publication": [
-        "FCP-051",
         "FCP-056"
       ],
       "claim_branch": "claim/fcp-057-g1",
       "suggested_branch": "feature/fcp-057-pool-g1",
       "base_branch": "worker/account-6",
-      "base_sha": "330c655636e6b18816c7334bbec9b9093f41c269",
+      "base_sha": "ad876fea62817d705ad997175e03f2253ca0e445",
       "objective": "Add structured editorial types for reviews, previews, reports, interviews, columns, hardware tests and buying guides with transparent scoring and revisions.",
       "allowed_paths": [
         "src/Editorial/",
@@ -983,26 +588,25 @@
       ]
     },
     {
-      "priority": 14,
+      "priority": 9,
       "package_id": "FCP-058",
       "title": "Patch seasons guides builds and tier lists",
       "risk": "high",
-      "queue_state": "ready",
       "execution_state": "unclaimed",
-      "worker_pr": null,
       "dependencies": [
         "FCP-051",
         "FCP-056"
       ],
-      "dependencies_integrated_at_publication": [],
+      "dependencies_integrated_at_publication": [
+        "FCP-051"
+      ],
       "blocked_by_at_publication": [
-        "FCP-051",
         "FCP-056"
       ],
       "claim_branch": "claim/fcp-058-g1",
       "suggested_branch": "feature/fcp-058-pool-g1",
       "base_branch": "worker/account-6",
-      "base_sha": "330c655636e6b18816c7334bbec9b9093f41c269",
+      "base_sha": "ad876fea62817d705ad997175e03f2253ca0e445",
       "objective": "Implement patch-aware guides, builds, loadouts and tier lists with structured components, alternatives, criteria, reviewer workflow and stale-version handling.",
       "allowed_paths": [
         "src/Gaming/Guide/",
@@ -1061,26 +665,25 @@
       ]
     },
     {
-      "priority": 15,
+      "priority": 10,
       "package_id": "FCP-059",
       "title": "Game knowledge database maps and collection helpers",
       "risk": "high",
-      "queue_state": "ready",
       "execution_state": "unclaimed",
-      "worker_pr": null,
       "dependencies": [
         "FCP-051",
         "FCP-056"
       ],
-      "dependencies_integrated_at_publication": [],
+      "dependencies_integrated_at_publication": [
+        "FCP-051"
+      ],
       "blocked_by_at_publication": [
-        "FCP-051",
         "FCP-056"
       ],
       "claim_branch": "claim/fcp-059-g1",
       "suggested_branch": "feature/fcp-059-pool-g1",
       "base_branch": "worker/account-6",
-      "base_sha": "330c655636e6b18816c7334bbec9b9093f41c269",
+      "base_sha": "ad876fea62817d705ad997175e03f2253ca0e445",
       "objective": "Create an optional per-game knowledge schema for classes, items, quests, NPCs, bosses, zones and collection markers, with moderated sources and no copied third-party dataset.",
       "allowed_paths": [
         "src/Gaming/Knowledge/",
@@ -1139,13 +742,11 @@
       ]
     },
     {
-      "priority": 16,
+      "priority": 11,
       "package_id": "FCP-060",
       "title": "Character account collection and progression profiles",
       "risk": "high",
-      "queue_state": "ready",
       "execution_state": "unclaimed",
-      "worker_pr": null,
       "dependencies": [
         "FCP-053",
         "FCP-056"
@@ -1158,7 +759,7 @@
       "claim_branch": "claim/fcp-060-g1",
       "suggested_branch": "feature/fcp-060-pool-g1",
       "base_branch": "worker/account-6",
-      "base_sha": "330c655636e6b18816c7334bbec9b9093f41c269",
+      "base_sha": "ad876fea62817d705ad997175e03f2253ca0e445",
       "objective": "Add opt-in multi-character profiles with server, region, class, role, builds, professions, progression and collections, keeping imported and manual data distinguishable.",
       "allowed_paths": [
         "src/Gaming/Character/",
@@ -1217,13 +818,11 @@
       ]
     },
     {
-      "priority": 17,
+      "priority": 12,
       "package_id": "FCP-061",
       "title": "Tournaments leagues brackets matches and scrims",
       "risk": "high",
-      "queue_state": "ready",
       "execution_state": "unclaimed",
-      "worker_pr": null,
       "dependencies": [
         "FCP-053",
         "FCP-056"
@@ -1236,7 +835,7 @@
       "claim_branch": "claim/fcp-061-g1",
       "suggested_branch": "feature/fcp-061-pool-g1",
       "base_branch": "worker/account-6",
-      "base_sha": "330c655636e6b18816c7334bbec9b9093f41c269",
+      "base_sha": "ad876fea62817d705ad997175e03f2253ca0e445",
       "objective": "Implement team and solo competitions with registration, check-in, seeding, bracket/league formats, match scheduling, evidence, disputes and season archives.",
       "allowed_paths": [
         "src/Gaming/Competition/",
@@ -1295,13 +894,11 @@
       ]
     },
     {
-      "priority": 18,
+      "priority": 13,
       "package_id": "FCP-062",
       "title": "Gameserver directory monitoring and public status",
       "risk": "critical",
-      "queue_state": "ready",
       "execution_state": "unclaimed",
-      "worker_pr": null,
       "dependencies": [
         "FCP-056"
       ],
@@ -1312,7 +909,7 @@
       "claim_branch": "claim/fcp-062-g1",
       "suggested_branch": "feature/fcp-062-pool-g1",
       "base_branch": "worker/account-6",
-      "base_sha": "330c655636e6b18816c7334bbec9b9093f41c269",
+      "base_sha": "ad876fea62817d705ad997175e03f2253ca0e445",
       "objective": "Build a safe public gameserver registry and polling model with approved protocol adapters, cached status, outage history and alerts while blocking arbitrary network targets.",
       "allowed_paths": [
         "src/Gaming/Server/",
@@ -1371,26 +968,24 @@
       ]
     },
     {
-      "priority": 19,
+      "priority": 14,
       "package_id": "FCP-063",
       "title": "Downloads mods add-ons modpacks and version delivery",
       "risk": "critical",
-      "queue_state": "ready",
       "execution_state": "unclaimed",
-      "worker_pr": null,
       "dependencies": [
         "FCP-051",
         "FCP-010"
       ],
-      "dependencies_integrated_at_publication": [],
-      "blocked_by_at_publication": [
+      "dependencies_integrated_at_publication": [
         "FCP-051",
         "FCP-010"
       ],
+      "blocked_by_at_publication": [],
       "claim_branch": "claim/fcp-063-g1",
       "suggested_branch": "feature/fcp-063-pool-g1",
       "base_branch": "worker/account-6",
-      "base_sha": "330c655636e6b18816c7334bbec9b9093f41c269",
+      "base_sha": "ad876fea62817d705ad997175e03f2253ca0e445",
       "objective": "Create a controlled download catalogue for files, mods and add-ons with versions, compatibility, dependencies, changelogs, checksums, mirrors and authorization.",
       "allowed_paths": [
         "src/Downloads/",
@@ -1449,26 +1044,25 @@
       ]
     },
     {
-      "priority": 20,
+      "priority": 15,
       "package_id": "FCP-064",
       "title": "Galleries screenshots fanart and competitions",
       "risk": "high",
-      "queue_state": "ready",
       "execution_state": "unclaimed",
-      "worker_pr": null,
       "dependencies": [
         "FCP-052",
         "FCP-010"
       ],
-      "dependencies_integrated_at_publication": [],
-      "blocked_by_at_publication": [
-        "FCP-052",
+      "dependencies_integrated_at_publication": [
         "FCP-010"
+      ],
+      "blocked_by_at_publication": [
+        "FCP-052"
       ],
       "claim_branch": "claim/fcp-064-g1",
       "suggested_branch": "feature/fcp-064-pool-g1",
       "base_branch": "worker/account-6",
-      "base_sha": "330c655636e6b18816c7334bbec9b9093f41c269",
+      "base_sha": "ad876fea62817d705ad997175e03f2253ca0e445",
       "objective": "Build albums, screenshots, fanart and moderated media competitions with licensing, submissions and voting on top of the hardened media contracts.",
       "allowed_paths": [
         "src/Gallery/",
@@ -1527,26 +1121,25 @@
       ]
     },
     {
-      "priority": 21,
+      "priority": 16,
       "package_id": "FCP-065",
       "title": "Forum questions answers and guild rooms",
       "risk": "high",
-      "queue_state": "ready",
       "execution_state": "unclaimed",
-      "worker_pr": null,
       "dependencies": [
         "FCP-051",
         "FCP-052"
       ],
-      "dependencies_integrated_at_publication": [],
+      "dependencies_integrated_at_publication": [
+        "FCP-051"
+      ],
       "blocked_by_at_publication": [
-        "FCP-051",
         "FCP-052"
       ],
       "claim_branch": "claim/fcp-065-g1",
       "suggested_branch": "feature/fcp-065-pool-g1",
       "base_branch": "worker/account-6",
-      "base_sha": "330c655636e6b18816c7334bbec9b9093f41c269",
+      "base_sha": "ad876fea62817d705ad997175e03f2253ca0e445",
       "objective": "Create forums and Q&A with categories, threads, replies, quotes, mentions, subscriptions, solved answers, attachments and private guild rooms.",
       "allowed_paths": [
         "src/Forum/",
@@ -1605,13 +1198,11 @@
       ]
     },
     {
-      "priority": 22,
+      "priority": 17,
       "package_id": "FCP-066",
       "title": "Private messages group chat and social relationships",
       "risk": "critical",
-      "queue_state": "ready",
       "execution_state": "unclaimed",
-      "worker_pr": null,
       "dependencies": [
         "FCP-052",
         "FCP-071"
@@ -1624,7 +1215,7 @@
       "claim_branch": "claim/fcp-066-g1",
       "suggested_branch": "feature/fcp-066-pool-g1",
       "base_branch": "worker/account-6",
-      "base_sha": "330c655636e6b18816c7334bbec9b9093f41c269",
+      "base_sha": "ad876fea62817d705ad997175e03f2253ca0e445",
       "objective": "Add private/group messages, blocking, reporting, retention and social relationships with strict participant authorization; real-time transport remains optional until capacity proof.",
       "allowed_paths": [
         "src/Social/",
@@ -1683,26 +1274,24 @@
       ]
     },
     {
-      "priority": 23,
+      "priority": 18,
       "package_id": "FCP-067",
       "title": "Video discovery watchlists clips creators and live streams",
       "risk": "high",
-      "queue_state": "ready",
       "execution_state": "unclaimed",
-      "worker_pr": null,
       "dependencies": [
         "FCP-051",
         "FCP-010"
       ],
-      "dependencies_integrated_at_publication": [],
-      "blocked_by_at_publication": [
+      "dependencies_integrated_at_publication": [
         "FCP-051",
         "FCP-010"
       ],
+      "blocked_by_at_publication": [],
       "claim_branch": "claim/fcp-067-g1",
       "suggested_branch": "feature/fcp-067-pool-g1",
       "base_branch": "worker/account-6",
-      "base_sha": "330c655636e6b18816c7334bbec9b9093f41c269",
+      "base_sha": "ad876fea62817d705ad997175e03f2253ca0e445",
       "objective": "Expand video with search, tags, thumbnails, visibility, favorites, watchlists, optional history, timestamp comments, clips, creator profiles and privacy-aware live embeds.",
       "allowed_paths": [
         "src/Video/Discovery/",
@@ -1761,26 +1350,24 @@
       ]
     },
     {
-      "priority": 24,
+      "priority": 19,
       "package_id": "FCP-068",
       "title": "Notification preferences mentions subscriptions and newsletters",
       "risk": "critical",
-      "queue_state": "ready",
       "execution_state": "unclaimed",
-      "worker_pr": null,
       "dependencies": [
         "FCP-051",
         "FCP-009"
       ],
-      "dependencies_integrated_at_publication": [],
-      "blocked_by_at_publication": [
+      "dependencies_integrated_at_publication": [
         "FCP-051",
         "FCP-009"
       ],
+      "blocked_by_at_publication": [],
       "claim_branch": "claim/fcp-068-g1",
       "suggested_branch": "feature/fcp-068-pool-g1",
       "base_branch": "worker/account-6",
-      "base_sha": "330c655636e6b18816c7334bbec9b9093f41c269",
+      "base_sha": "ad876fea62817d705ad997175e03f2253ca0e445",
       "objective": "Complete per-channel notification preferences, mentions, subscriptions, quiet hours, deduplication and a consent-based newsletter workflow separated from transactional mail.",
       "allowed_paths": [
         "src/Notification/Preferences/",
@@ -1841,13 +1428,11 @@
       ]
     },
     {
-      "priority": 25,
+      "priority": 20,
       "package_id": "FCP-069",
       "title": "Permission-aware global search discovery and feeds",
       "risk": "critical",
-      "queue_state": "ready",
       "execution_state": "unclaimed",
-      "worker_pr": null,
       "dependencies": [
         "FCP-052",
         "FCP-056",
@@ -1864,7 +1449,7 @@
       "claim_branch": "claim/fcp-069-g1",
       "suggested_branch": "feature/fcp-069-pool-g1",
       "base_branch": "worker/account-6",
-      "base_sha": "330c655636e6b18816c7334bbec9b9093f41c269",
+      "base_sha": "ad876fea62817d705ad997175e03f2253ca0e445",
       "objective": "Build modular global search, filters and discovery that never indexes or returns content the current viewer cannot access, reusing existing content feeds.",
       "allowed_paths": [
         "src/Search/",
@@ -1920,13 +1505,11 @@
       ]
     },
     {
-      "priority": 26,
+      "priority": 21,
       "package_id": "FCP-070",
       "title": "Versioned scoped API webhook and event surface",
       "risk": "critical",
-      "queue_state": "ready",
       "execution_state": "unclaimed",
-      "worker_pr": null,
       "dependencies": [
         "FCP-037",
         "FCP-069"
@@ -1939,7 +1522,7 @@
       "claim_branch": "claim/fcp-070-g1",
       "suggested_branch": "feature/fcp-070-pool-g1",
       "base_branch": "worker/account-6",
-      "base_sha": "330c655636e6b18816c7334bbec9b9093f41c269",
+      "base_sha": "ad876fea62817d705ad997175e03f2253ca0e445",
       "objective": "Expose narrowly scoped versioned APIs and signed webhooks for completed modules with revocable tokens, permissions, rate limits and replay protection.",
       "allowed_paths": [
         "src/Api/",
@@ -1998,24 +1581,22 @@
       ]
     },
     {
-      "priority": 27,
+      "priority": 22,
       "package_id": "FCP-071",
       "title": "Member profiles invitations registration privacy and data rights",
       "risk": "critical",
-      "queue_state": "ready",
       "execution_state": "unclaimed",
-      "worker_pr": null,
       "dependencies": [
         "FCP-006"
       ],
-      "dependencies_integrated_at_publication": [],
-      "blocked_by_at_publication": [
+      "dependencies_integrated_at_publication": [
         "FCP-006"
       ],
+      "blocked_by_at_publication": [],
       "claim_branch": "claim/fcp-071-g1",
       "suggested_branch": "feature/fcp-071-pool-g1",
       "base_branch": "worker/account-6",
-      "base_sha": "330c655636e6b18816c7334bbec9b9093f41c269",
+      "base_sha": "ad876fea62817d705ad997175e03f2253ca0e445",
       "objective": "Expand accounts with invitation/registration variants, avatars/banners/bios, per-field privacy, export, deletion and retention while preserving existing identity protections.",
       "allowed_paths": [
         "src/Profile/",
@@ -2078,26 +1659,25 @@
       ]
     },
     {
-      "priority": 28,
+      "priority": 23,
       "package_id": "FCP-072",
       "title": "Translations accessibility mobile editing and optional PWA",
       "risk": "high",
-      "queue_state": "ready",
       "execution_state": "unclaimed",
-      "worker_pr": null,
       "dependencies": [
         "FCP-035",
         "FCP-051"
       ],
-      "dependencies_integrated_at_publication": [],
-      "blocked_by_at_publication": [
-        "FCP-035",
+      "dependencies_integrated_at_publication": [
         "FCP-051"
+      ],
+      "blocked_by_at_publication": [
+        "FCP-035"
       ],
       "claim_branch": "claim/fcp-072-g1",
       "suggested_branch": "feature/fcp-072-pool-g1",
       "base_branch": "worker/account-6",
-      "base_sha": "330c655636e6b18816c7334bbec9b9093f41c269",
+      "base_sha": "ad876fea62817d705ad997175e03f2253ca0e445",
       "objective": "Finish module translation coverage, keyboard/screenreader flows and mobile administration; define a conservative opt-in PWA cache that never stores private/admin responses.",
       "allowed_paths": [
         "translations/",
@@ -2156,26 +1736,25 @@
       ]
     },
     {
-      "priority": 29,
+      "priority": 24,
       "package_id": "FCP-073",
       "title": "Hardware products benchmarks comparisons and setups",
       "risk": "medium",
-      "queue_state": "ready",
       "execution_state": "unclaimed",
-      "worker_pr": null,
       "dependencies": [
         "FCP-051",
         "FCP-056"
       ],
-      "dependencies_integrated_at_publication": [],
+      "dependencies_integrated_at_publication": [
+        "FCP-051"
+      ],
       "blocked_by_at_publication": [
-        "FCP-051",
         "FCP-056"
       ],
       "claim_branch": "claim/fcp-073-g1",
       "suggested_branch": "feature/fcp-073-pool-g1",
       "base_branch": "worker/account-6",
-      "base_sha": "330c655636e6b18816c7334bbec9b9093f41c269",
+      "base_sha": "ad876fea62817d705ad997175e03f2253ca0e445",
       "objective": "Create structured hardware editorial data, test systems, benchmark series, comparison charts and community setups with methodology and disclosure.",
       "allowed_paths": [
         "src/Hardware/",
@@ -2234,13 +1813,11 @@
       ]
     },
     {
-      "priority": 30,
+      "priority": 25,
       "package_id": "FCP-074",
       "title": "Support tickets rules sanctions appeals and case management",
       "risk": "critical",
-      "queue_state": "ready",
       "execution_state": "unclaimed",
-      "worker_pr": null,
       "dependencies": [
         "FCP-052"
       ],
@@ -2251,7 +1828,7 @@
       "claim_branch": "claim/fcp-074-g1",
       "suggested_branch": "feature/fcp-074-pool-g1",
       "base_branch": "worker/account-6",
-      "base_sha": "330c655636e6b18816c7334bbec9b9093f41c269",
+      "base_sha": "ad876fea62817d705ad997175e03f2253ca0e445",
       "objective": "Implement private support and moderation case management with assignments, deadlines, evidence, sanctions and appeals under narrow visibility and retention rules.",
       "allowed_paths": [
         "src/Support/",
@@ -2310,13 +1887,11 @@
       ]
     },
     {
-      "priority": 31,
+      "priority": 26,
       "package_id": "FCP-076",
       "title": "Public integration adapters and game data import contracts",
       "risk": "critical",
-      "queue_state": "ready",
       "execution_state": "unclaimed",
-      "worker_pr": null,
       "dependencies": [
         "FCP-019",
         "FCP-056",
@@ -2331,7 +1906,7 @@
       "claim_branch": "claim/fcp-076-g1",
       "suggested_branch": "feature/fcp-076-pool-g1",
       "base_branch": "worker/account-6",
-      "base_sha": "330c655636e6b18816c7334bbec9b9093f41c269",
+      "base_sha": "ad876fea62817d705ad997175e03f2253ca0e445",
       "objective": "Implement worker-visible provider-neutral adapters, mocks and consent/import lifecycle for public Discord, Twitch, YouTube, Steam and game API data while leaving every secret/provider runtime implementation Trusted-only.",
       "allowed_paths": [
         "src/Integration/Public/",
@@ -2390,13 +1965,11 @@
       ]
     },
     {
-      "priority": 32,
+      "priority": 27,
       "package_id": "FCP-077",
       "title": "Module widgets dashboards and distinct theme compositions",
       "risk": "high",
-      "queue_state": "ready",
       "execution_state": "unclaimed",
-      "worker_pr": null,
       "dependencies": [
         "FCP-049",
         "FCP-054",
@@ -2415,7 +1988,7 @@
       "claim_branch": "claim/fcp-077-g1",
       "suggested_branch": "feature/fcp-077-pool-g1",
       "base_branch": "worker/account-6",
-      "base_sha": "330c655636e6b18816c7334bbec9b9093f41c269",
+      "base_sha": "ad876fea62817d705ad997175e03f2253ca0e445",
       "objective": "Add real permission-aware widgets and genuinely different module page compositions for completed modules without duplicating business logic in templates.",
       "allowed_paths": [
         "src/Widget/Module/",
