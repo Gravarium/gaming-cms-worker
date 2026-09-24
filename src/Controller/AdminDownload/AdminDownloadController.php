@@ -23,9 +23,13 @@ final class AdminDownloadController extends AbstractController
         if(!$this->availability->enabled())throw $this->createNotFoundException();
         if(!$this->isCsrfTokenValid('download-upload-'.$package->getId(),$request->request->getString('_token')))throw $this->createAccessDeniedException();
         $file=$request->files->get('file');if(!$file instanceof UploadedFile)throw $this->createNotFoundException();
-        $version=trim($request->request->getString('version'));$stored=$this->storage->store($file);
-        $record=(new DownloadVersion($package,$version,$stored['filename'],$stored['sha256'],$stored['reference']))->markScan($stored['scan']);
-        $this->em->persist($record);$this->em->flush();
+        try{
+            $version=trim($request->request->getString('version'));$stored=$this->storage->store($file);
+            $record=(new DownloadVersion($package,$version,$stored['filename'],$stored['sha256'],$stored['reference']))->markScan($stored['scan']);
+            $this->em->persist($record);$this->em->flush();
+        }catch(\DomainException|\InvalidArgumentException $exception){
+            return new Response($exception->getMessage(),Response::HTTP_UNPROCESSABLE_ENTITY,['Content-Type'=>'text/plain; charset=utf-8']);
+        }
         return $this->redirectToRoute('app_download_show',['slug'=>$package->getSlug()]);
     }
 }
