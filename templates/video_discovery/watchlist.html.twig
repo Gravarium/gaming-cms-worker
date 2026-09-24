@@ -1,0 +1,9 @@
+{% extends 'base.html.twig' %}
+{% block title %}{{ watchlist.name }} | Video-Entdeckung{% endblock %}
+{% block body %}
+<main class="content-page">
+    <p><a href="{{ path('app_video_discovery_index') }}">Zur Video-Entdeckung</a></p>
+    <h1>{{ watchlist.name }}</h1>
+    {% for item in items %}<p><a href="{{ path('app_video_show', {slug: item.video.slug}) }}">{{ item.video.title }}</a></p>{% else %}<p>Keine sichtbaren Videos in dieser Watchlist.</p>{% endfor %}
+</main>
+{% endblock %}

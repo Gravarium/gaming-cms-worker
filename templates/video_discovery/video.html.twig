@@ -1,0 +1,54 @@
+{% extends 'base.html.twig' %}
+{% block title %}{{ video.title }} | Video-Entdeckung{% endblock %}
+{% block body %}
+<main class="content-page">
+    <p><a href="{{ path('app_video_discovery_index') }}">Zur Video-Entdeckung</a></p>
+    <h1>{{ video.title }}</h1>
+    {% if creator %}<p>Creator: <a href="{{ path('app_video_discovery_creator', {slug: creator.slug}) }}">{{ creator.displayName }}</a></p>{% endif %}
+    <p>{{ video.description }}</p>
+    <p><a href="{{ path('app_video_show', {slug: video.slug}) }}">Video abspielen</a></p>
+
+    {% if app.user %}
+        <form method="post" action="{{ path('app_video_discovery_favorite_toggle', {videoId: video.id}) }}">
+            <input type="hidden" name="_token" value="{{ csrf_token('video-favorite-' ~ video.id) }}">
+            <button type="submit">Favorit umschalten</button>
+        </form>
+        {% for watchlist in viewerWatchlists %}
+            <form method="post" action="{{ path('app_video_discovery_watchlist_add', {watchlistId: watchlist.id, videoId: video.id}) }}">
+                <input type="hidden" name="_token" value="{{ csrf_token('video-watchlist-add-' ~ watchlist.id ~ '-' ~ video.id) }}">
+                <button type="submit">Zu „{{ watchlist.name }}“ hinzufügen</button>
+            </form>
+        {% endfor %}
+        {% if historyEnabled %}
+            <form method="post" action="{{ path('app_video_discovery_history_record', {videoId: video.id}) }}">
+                <input type="hidden" name="_token" value="{{ csrf_token('video-history-record-' ~ video.id) }}">
+                <label>Position in Sekunden <input type="number" min="0" max="86400" name="position_seconds" value="0"></label>
+                <button type="submit">Im Verlauf speichern</button>
+            </form>
+        {% endif %}
+        <h2>Zeitkommentar</h2>
+        <form method="post" action="{{ path('app_video_discovery_comment_create', {videoId: video.id}) }}">
+            <input type="hidden" name="_token" value="{{ csrf_token('video-comment-' ~ video.id) }}">
+            <label>Zeitpunkt <input type="number" min="0" max="86400" name="timestamp_seconds" value="0" required></label>
+            <label>Text <textarea name="body" maxlength="4000" required></textarea></label>
+            <label>Sichtbarkeit <select name="visibility"><option value="public">Öffentlich</option><option value="member">Mitglieder</option></select></label>
+            <button type="submit">Kommentar speichern</button>
+        </form>
+        <h2>Clip anlegen</h2>
+        <form method="post" action="{{ path('app_video_discovery_clip_create', {videoId: video.id}) }}">
+            <input type="hidden" name="_token" value="{{ csrf_token('video-clip-' ~ video.id) }}">
+            <label>Titel <input type="text" name="title" maxlength="160" required></label>
+            <label>Start <input type="number" min="0" max="86400" name="start_seconds" required></label>
+            <label>Ende <input type="number" min="1" max="86400" name="end_seconds" required></label>
+            <label>Sichtbarkeit <select name="visibility"><option value="public">Öffentlich</option><option value="member">Mitglieder</option><option value="private">Privat</option></select></label>
+            <button type="submit">Clip speichern</button>
+        </form>
+    {% endif %}
+
+    <h2>Zeitkommentare</h2>
+    {% for comment in comments %}<article><strong>{{ comment.timestampSeconds }}s</strong> {{ comment.body }}</article>{% else %}<p>Noch keine sichtbaren Kommentare.</p>{% endfor %}
+
+    <h2>Clips</h2>
+    {% for clip in clips %}<p><a href="{{ path('app_video_discovery_clip', {slug: clip.slug}) }}">{{ clip.title }}</a> ({{ clip.startSeconds }}–{{ clip.endSeconds }}s)</p>{% else %}<p>Noch keine sichtbaren Clips.</p>{% endfor %}
+</main>
+{% endblock %}

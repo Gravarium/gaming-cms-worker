@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+{% block title %}Video-Entdeckung{% endblock %}
+{% block body %}
+<main class="content-page">
+    <h1>Video-Entdeckung</h1>
+    <form method="get" action="{{ path('app_video_discovery_index') }}">
+        <label>Suche <input type="search" name="q" value="{{ query }}" maxlength="160"></label>
+        <label>Tag
+            <select name="tag">
+                <option value="">Alle</option>
+                {% for tag in tags %}<option value="{{ tag.slug }}"{% if activeTag and activeTag.id == tag.id %} selected{% endif %}>{{ tag.name }}</option>{% endfor %}
+            </select>
+        </label>
+        <button type="submit">Suchen</button>
+    </form>
+    {% if app.user %}<p><a href="{{ path('app_video_discovery_library') }}">Meine Video-Sammlung</a></p>{% endif %}
+    {% for row in rows %}
+        <article>
+            <h2><a href="{{ path('app_video_discovery_video', {id: row.profile.id}) }}">{{ row.profile.video.title }}</a></h2>
+            {% if row.creator %}<p>Creator: <a href="{{ path('app_video_discovery_creator', {slug: row.creator.slug}) }}">{{ row.creator.displayName }}</a></p>{% endif %}
+            <p>{{ row.profile.video.description }}</p>
+            {% if app.user %}
+                <form method="post" action="{{ path('app_video_discovery_favorite_toggle', {videoId: row.profile.video.id}) }}">
+                    <input type="hidden" name="_token" value="{{ csrf_token('video-favorite-' ~ row.profile.video.id) }}">
+                    <button type="submit">Favorit umschalten</button>
+                </form>
+                {% for watchlist in viewerWatchlists %}
+                    <form method="post" action="{{ path('app_video_discovery_watchlist_add', {watchlistId: watchlist.id, videoId: row.profile.video.id}) }}">
+                        <input type="hidden" name="_token" value="{{ csrf_token('video-watchlist-add-' ~ watchlist.id ~ '-' ~ row.profile.video.id) }}">
+                        <button type="submit">Zu „{{ watchlist.name }}“ hinzufügen</button>
+                    </form>
+                {% endfor %}
+            {% endif %}
+        </article>
+    {% else %}
+        <p>Keine passenden Videos gefunden.</p>
+    {% endfor %}
+</main>
+{% endblock %}

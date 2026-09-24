@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+{% block title %}Meine Video-Sammlung{% endblock %}
+{% block body %}
+<main class="content-page">
+    <h1>Meine Video-Sammlung</h1>
+    <p><a href="{{ path('app_video_discovery_index') }}">Zur Video-Entdeckung</a> · <a href="{{ path('app_video_discovery_history_preference_view') }}">Verlauf-Einstellungen</a></p>
+
+    <h2>Watchlist anlegen</h2>
+    <form method="post" action="{{ path('app_video_discovery_watchlist_create') }}">
+        <input type="hidden" name="_token" value="{{ csrf_token('video-watchlist-create') }}">
+        <label>Name <input type="text" name="name" maxlength="120" required></label>
+        <label>Sichtbarkeit <select name="public"><option value="0">Privat</option><option value="1">Öffentlich</option></select></label>
+        <button type="submit">Anlegen</button>
+    </form>
+
+    <h2>Watchlists</h2>
+    {% for watchlist in watchlists %}<p><a href="{{ path('app_video_discovery_watchlist', {id: watchlist.id}) }}">{{ watchlist.name }}</a> · {{ watchlist.public ? 'öffentlich' : 'privat' }}</p>{% else %}<p>Keine Watchlists.</p>{% endfor %}
+
+    <h2>Favoriten</h2>
+    {% for favorite in favorites %}<p><a href="{{ path('app_video_show', {slug: favorite.video.slug}) }}">{{ favorite.video.title }}</a></p>{% else %}<p>Keine Favoriten.</p>{% endfor %}
+
+    <h2>Verlauf</h2>
+    {% if not historyEnabled %}<p>Der Verlauf ist deaktiviert.</p>{% endif %}
+    {% for entry in history %}<p><a href="{{ path('app_video_show', {slug: entry.video.slug}) }}">{{ entry.video.title }}</a> · {{ entry.watchedAt|date('d.m.Y H:i') }} · {{ entry.positionSeconds }}s</p>{% else %}{% if historyEnabled %}<p>Noch kein Verlauf.</p>{% endif %}{% endfor %}
+</main>
+{% endblock %}

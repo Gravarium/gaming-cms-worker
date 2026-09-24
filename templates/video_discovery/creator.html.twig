@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+{% block title %}{{ creator.displayName }} | Video-Entdeckung{% endblock %}
+{% block body %}
+<main class="content-page">
+    <p><a href="{{ path('app_video_discovery_index') }}">Zur Video-Entdeckung</a></p>
+    <h1>{{ creator.displayName }}</h1>
+    {% if creator.bio %}<p>{{ creator.bio }}</p>{% endif %}
+    <h2>Videos</h2>
+    {% for profile in profiles %}<p><a href="{{ path('app_video_discovery_video', {id: profile.id}) }}">{{ profile.video.title }}</a></p>{% else %}<p>Keine sichtbaren Videos.</p>{% endfor %}
+    <h2>Live</h2>
+    {% for stream in streams %}<p><a href="{{ path('app_video_discovery_live', {id: stream.id}) }}">{{ stream.title }}</a></p>{% else %}<p>Keine sichtbaren Livestreams.</p>{% endfor %}
+</main>
+{% endblock %}
