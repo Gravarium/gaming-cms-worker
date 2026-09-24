@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "62e1b6fec6ce6f9a4096c6c5a6912d74df36da5c",
-  "published_at": "2026-09-24T20:56:51.625Z",
+  "published_at": "2026-09-24T21:04:20.875Z",
   "summary": {
     "total_remaining_worker_tasks": 27,
-    "completed_worker_prs_awaiting_trusted_review": 14,
+    "completed_worker_prs_awaiting_trusted_review": 15,
     "recovery_tasks": 0,
-    "unclaimed": 13,
+    "unclaimed": 12,
     "immediately_claimable": 1,
-    "next_required_action": "Claim FCP-065 from the exact green FCP-052 proposal HEAD and continue dependency-safe Worker proposal sequencing."
+    "next_required_action": "Claim FCP-073 from the exact green FCP-056 proposal HEAD; packages requiring multi-head composition remain blocked."
   },
   "rules": {
     "choose": "Resume any owned unfinished claim first. Otherwise choose exactly the first unclaimed task with an empty current blocked_by list and a published exact proposal_base_sha. A completed Worker proposal may satisfy proposal-only dependencies when its exact HEAD has green Worker CI.",
@@ -1275,7 +1275,7 @@
       "package_id": "FCP-065",
       "title": "Forum questions answers and guild rooms",
       "risk": "high",
-      "execution_state": "unclaimed",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [
         "FCP-051",
         "FCP-052"
@@ -1359,7 +1359,13 @@
           "package_id": "FCP-051",
           "integration_state": "trusted_integrated_at_publication"
         }
-      ]
+      ],
+      "worker_pr": 27,
+      "resume_branch": "feature/fcp-065-pool-g1",
+      "final_head": "0fe766be15b5bdd44bfb70007393fad94ae43b5a",
+      "ci_run_id": 36058814049,
+      "ci_result": "success",
+      "claim_state": "locked_until_trusted_resolution"
     },
     {
       "priority": 17,
@@ -1930,9 +1936,7 @@
       "dependencies_integrated_at_publication": [
         "FCP-051"
       ],
-      "blocked_by_at_publication": [
-        "FCP-056"
-      ],
+      "blocked_by_at_publication": [],
       "claim_branch": "claim/fcp-073-g1",
       "suggested_branch": "feature/fcp-073-pool-g1",
       "base_branch": "main",
@@ -1993,8 +1997,22 @@
         "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment",
         "fortress-ready-replaceable-boundaries-no-private-runtime-reconstruction"
       ],
-      "proposal_base_branch": "main",
-      "proposal_base_sha": "62e1b6fec6ce6f9a4096c6c5a6912d74df36da5c"
+      "proposal_base_branch": "feature/fcp-056-pool-g1",
+      "proposal_base_sha": "ace25fcf5ab5f463bc04c75afcb2598dd726ff32",
+      "proposal_dependency_evidence": [
+        {
+          "package_id": "FCP-056",
+          "feature_branch": "feature/fcp-056-pool-g1",
+          "worker_pr": 15,
+          "exact_head": "ace25fcf5ab5f463bc04c75afcb2598dd726ff32",
+          "ci_run_id": 35986941400,
+          "ci_result": "success"
+        },
+        {
+          "package_id": "FCP-051",
+          "integration_state": "trusted_integrated_at_publication"
+        }
+      ]
     },
     {
       "priority": 25,
@@ -2336,6 +2354,16 @@
       "worker_pr": 26,
       "last_observed_head": "3638dc6d02dfd0fa8145f6365b9cd9eca5b18320",
       "ci_run_id": 36058025374,
+      "ci_result": "success",
+      "claim_state": "locked_until_trusted_resolution"
+    },
+    {
+      "package_id": "FCP-065",
+      "action": "worker_complete_awaiting_trusted_review",
+      "feature_branch": "feature/fcp-065-pool-g1",
+      "worker_pr": 27,
+      "last_observed_head": "0fe766be15b5bdd44bfb70007393fad94ae43b5a",
+      "ci_run_id": 36058814049,
       "ci_result": "success",
       "claim_state": "locked_until_trusted_resolution"
     }
