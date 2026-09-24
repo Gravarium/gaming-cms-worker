@@ -9,10 +9,11 @@
     <p>Der Wiedergabeverlauf ist optional und standardmäßig deaktiviert.</p>
     <form method="post" action="{{ path('app_video_discovery_history_preference') }}">
         <input type="hidden" name="_token" value="{{ csrf_token('video-history-preference') }}">
-        <label>
-            <input type="checkbox" name="enabled" value="1"{% if historyEnabled %} checked{% endif %}>
-            Wiedergabeverlauf speichern
-        </label>
+        <label for="video-history-enabled">Wiedergabeverlauf</label>
+        <select id="video-history-enabled" name="enabled">
+            <option value="0"{% if not historyEnabled %} selected{% endif %}>Nicht speichern</option>
+            <option value="1"{% if historyEnabled %} selected{% endif %}>Speichern</option>
+        </select>
         <button type="submit">Speichern</button>
     </form>
 </main>
