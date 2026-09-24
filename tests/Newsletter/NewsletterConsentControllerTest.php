@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Newsletter;
 
+use App\Entity\CmsModuleState;
 use App\Entity\Newsletter\NewsletterSubscription;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
@@ -14,6 +15,12 @@ final class NewsletterConsentControllerTest extends WebTestCase
     public function testConfirmationAndUnsubscribeBearerTokensAreOneWayAndStateBound(): void
     {
         $client = static::createClient();
+        $module = $this->em($client)->find(CmsModuleState::class, 'notifications');
+        if ($module instanceof CmsModuleState) {
+            $module->setEnabled(true);
+            $this->em($client)->flush();
+        }
+
         $subscription = (new NewsletterSubscription())->setEmail('consent-'.bin2hex(random_bytes(4)).'@example.test');
         $now = new \DateTimeImmutable();
         $confirmToken = $subscription->issueConfirmation('account', 'v1', $now);
