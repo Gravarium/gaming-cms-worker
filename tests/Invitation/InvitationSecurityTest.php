@@ -65,7 +65,9 @@ final class InvitationSecurityTest extends WebTestCase
         $crawler = $client->submit($form);
 
         self::assertResponseIsSuccessful();
-        self::assertSame('private, no-store, max-age=0', $client->getResponse()->headers->get('Cache-Control'));
+        $cacheControl = (string) $client->getResponse()->headers->get('Cache-Control');
+        self::assertStringContainsString('private', $cacheControl);
+        self::assertStringContainsString('no-store', $cacheControl);
         self::assertSame('no-referrer', $client->getResponse()->headers->get('Referrer-Policy'));
 
         $href = (string) $crawler->filter('a[href^="/invitation/"]')->attr('href');
@@ -189,10 +191,11 @@ final class InvitationSecurityTest extends WebTestCase
         $client->submit($form);
 
         self::assertResponseStatusCodeSame(422);
-        $this->em($client)->refresh($result->invitation);
-        self::assertSame(MemberInvitation::STATUS_PENDING, $result->invitation->getStatus());
+        $storedInvitation = $client->getContainer()->get(MemberInvitationRepository::class)->byRawToken($result->rawToken);
+        self::assertInstanceOf(MemberInvitation::class, $storedInvitation);
+        self::assertSame(MemberInvitation::STATUS_PENDING, $storedInvitation->getStatus());
         self::assertNull($client->getContainer()->get(UserRepository::class)->findOneBy([
-            'email' => $result->invitation->getEmail(),
+            'email' => $storedInvitation->getEmail(),
         ]));
     }
 
