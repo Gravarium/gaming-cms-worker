@@ -17,6 +17,7 @@ class DownloadVersion
     #[ORM\Column(length:64)] private string $sha256;
     #[ORM\Column(length:20)] private string $scanStatus='pending';
     #[ORM\Column(length:500)] private string $storageReference;
+    /** @var list<string> */
     #[ORM\Column(type:Types::JSON)] private array $compatibility=[];
     #[ORM\Column(type:Types::TEXT,nullable:true)] private ?string $changelog=null;
     #[ORM\Column(options:['default'=>false])] private bool $obsolete=false;
