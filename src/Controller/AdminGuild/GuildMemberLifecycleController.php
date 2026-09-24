@@ -55,7 +55,6 @@ final class GuildMemberLifecycleController extends AbstractController
             $actor,
             $action,
             $reason,
-            $action === 'absence' ? new \DateTimeImmutable() : null,
         );
         $this->entityManager->persist($event);
         $this->entityManager->flush();
