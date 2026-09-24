@@ -67,7 +67,7 @@ final class ReportRecord
         return $this->decisionReason;
     }
 
-    public function decidedAt(): ?\\DateTimeImmutable
+    public function decidedAt(): ?\DateTimeImmutable
     {
         return $this->decidedAt;
     }
