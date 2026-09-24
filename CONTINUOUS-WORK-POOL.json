@@ -1,25 +1,198 @@
 {
-  "schema_version": 1,
-  "mode": "continuous-single-worker",
-  "pool_revision": "f17b7deb9d3e844497995e057a22acfd177f61dc",
+  "schema_version": 2,
+  "mode": "shared-reservable-worker-pool",
+  "source_queue": {
+    "repository": "Gravarium/gaming-cms",
+    "path": "docs/ai-work-queue.json",
+    "blob_sha": "b3508a80adb0359513e3fae2d7a7336760b06fb6",
+    "updated_at": "2026-09-24T06:32:43Z"
+  },
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "worker/account-6",
   "base_sha": "330c655636e6b18816c7334bbec9b9093f41c269",
-  "published_at": "2026-09-24T06:32:43Z",
+  "published_at": "2026-09-24T10:00:00Z",
+  "summary": {
+    "total_worker_tasks": 32,
+    "completed_worker_prs": 4,
+    "unclaimed": 28,
+    "immediately_claimable": 1
+  },
   "rules": {
-    "choose": "Take the first listed task that has no existing open or completed Worker PR and is not already being edited.",
-    "one_at_a_time": "Finish, push, open the Worker PR and start exact-head Worker CI before taking the next task.",
-    "reservation": "The seven-hour work window starts with the first product commit and renews after each verified push; the task itself does not expire.",
-    "final_authority": "Every result remains untrusted until Trusted review; never merge or deploy."
+    "choose": "Choose the first unclaimed task whose dependencies are integrated in the published sanitized baseline and whose claim branch does not exist.",
+    "atomic_reservation": "Create the exact claim_branch from base_sha. GitHub branch creation is the atomic reservation: if creation fails because it exists, do not edit that task and choose the next eligible task.",
+    "no_worker_numbers": "Worker numbers are not assignment identities. Any authorized Worker AI uses the same shared pool.",
+    "one_at_a_time": "A Worker AI owns at most one live claim and finishes its implementation, PR, and exact-head CI before claiming another task.",
+    "lease": "The claim remains active for seven hours after the last verified push. Tasks never expire. Recovery requires checking the existing branch, PR and checkpoint before a new generation.",
+    "dependencies": "A completed Worker PR alone does not satisfy a code dependency. The dependency must be Trusted-reviewed, integrated, and present in a refreshed sanitized baseline before a dependent task can be claimed.",
+    "final_authority": "Worker output remains untrusted until Trusted review. Never merge to Trusted and never deploy."
   },
   "tasks": [
     {
       "priority": 1,
+      "package_id": "FCP-006",
+      "title": "Account browser assurance",
+      "risk": "high",
+      "queue_state": "ready",
+      "execution_state": "worker_pr_complete_awaiting_trusted_review",
+      "worker_pr": 11,
+      "dependencies": [
+        "FCP-005",
+        "FCP-017"
+      ],
+      "dependencies_integrated_at_publication": [
+        "FCP-005",
+        "FCP-017"
+      ],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/fcp-006-g1",
+      "suggested_branch": "feature/fcp-006-pool-g1",
+      "base_branch": "worker/account-6",
+      "base_sha": "330c655636e6b18816c7334bbec9b9093f41c269",
+      "objective": "Add fail-closed browser-level assurance for TOTP, passkeys and sensitive session transitions.",
+      "allowed_paths": [
+        "assets/passkey.js",
+        "src/Controller/AccountController.php",
+        "src/Controller/PasskeyController.php",
+        "src/Controller/TwoFactorController.php",
+        "src/EventSubscriber/TwoFactorGateSubscriber.php",
+        "tests/JavaScript/passkey.test.mjs",
+        "tests/Controller/AccountSecurityHardeningTest.php",
+        "tests/Controller/TwoFactorSecurityTest.php",
+        "tests/Controller/AccountSecurity/"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "ops/",
+        "docs/",
+        "bin/worker-sync",
+        "bin/build-worker-snapshot",
+        ".github/workflows/"
+      ],
+      "deliverables": [
+        "browser tests for successful and rejected ceremonies",
+        "negative tests for stale sessions, CSRF and authorization",
+        "no production secret or server dependency",
+        "Preserve current security behavior through replaceable contracts; register any temporary compatibility adapter with an explicit retirement gate.",
+        "Use only literal allowed files/directories; request a reviewed scope change before touching shared fixtures or additional files."
+      ],
+      "tests": [
+        "targeted PHPUnit application tests",
+        "node --test tests/JavaScript/passkey.test.mjs",
+        "complete worker CI"
+      ],
+      "completion_report": [
+        "exact head SHA",
+        "complete changed-file list",
+        "test commands and results",
+        "unresolved risks and assumptions",
+        "exact sanitized baseline SHA and trusted-issued assignment revision",
+        "last green checkpoint and one exact next action",
+        "compatibility seam and old-security retirement impact"
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "no-executable-public-uploads",
+        "no-secrets-or-trusted-private-runtime-in-worker-source",
+        "preserve-all-security-and-worker-isolation-invariants",
+        "red-ci-stops-integration",
+        "no-secret-or-private-runtime-export"
+      ]
+    },
+    {
+      "priority": 2,
+      "package_id": "FCP-008",
+      "title": "Content publication browser assurance",
+      "risk": "medium",
+      "queue_state": "ready",
+      "execution_state": "unclaimed",
+      "worker_pr": null,
+      "dependencies": [
+        "FCP-005",
+        "FCP-017"
+      ],
+      "dependencies_integrated_at_publication": [
+        "FCP-005",
+        "FCP-017"
+      ],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/fcp-008-g1",
+      "suggested_branch": "feature/fcp-008-pool-g1",
+      "base_branch": "worker/account-6",
+      "base_sha": "330c655636e6b18816c7334bbec9b9093f41c269",
+      "objective": "Cover draft, review, scheduling, publishing, immutable revision restore and redirect behavior.",
+      "allowed_paths": [
+        "src/Controller/AdminContentController.php",
+        "src/Controller/AdminContentReleaseController.php",
+        "src/Entity/ContentEntry.php",
+        "src/Entity/ContentRelease.php",
+        "src/Entity/ContentRevision.php",
+        "src/Form/ContentEntryType.php",
+        "src/Form/ContentReleaseType.php",
+        "templates/admin/content/",
+        "tests/Controller/ContentAccessTest.php",
+        "tests/Controller/Content/"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "ops/",
+        "docs/",
+        "bin/worker-sync",
+        "bin/build-worker-snapshot",
+        ".github/workflows/"
+      ],
+      "deliverables": [
+        "positive publication journey",
+        "negative CSRF, permission and invalid-transition tests",
+        "time-bound scheduling regression coverage",
+        "Preserve current security behavior through replaceable contracts; register any temporary compatibility adapter with an explicit retirement gate.",
+        "Use only literal allowed files/directories; request a reviewed scope change before touching shared fixtures or additional files."
+      ],
+      "tests": [
+        "targeted PHPUnit application tests",
+        "complete worker CI"
+      ],
+      "completion_report": [
+        "exact head SHA",
+        "complete changed-file list",
+        "test commands and results",
+        "unresolved risks and assumptions",
+        "exact sanitized baseline SHA and trusted-issued assignment revision",
+        "last green checkpoint and one exact next action",
+        "compatibility seam and old-security retirement impact"
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "no-executable-public-uploads",
+        "no-secrets-or-trusted-private-runtime-in-worker-source",
+        "preserve-all-security-and-worker-isolation-invariants",
+        "red-ci-stops-integration",
+        "no-secret-or-private-runtime-export"
+      ]
+    },
+    {
+      "priority": 3,
       "package_id": "FCP-009",
       "title": "Guild and notification behavior coverage",
-      "next_generation": 1,
-      "claim_id": "FCP-009-continuous-g1",
-      "suggested_branch": "feature/fcp-009-continuous-g1",
+      "risk": "high",
+      "queue_state": "ready",
+      "execution_state": "worker_pr_complete_awaiting_trusted_review",
+      "worker_pr": 9,
+      "dependencies": [
+        "FCP-005",
+        "FCP-017"
+      ],
+      "dependencies_integrated_at_publication": [
+        "FCP-005",
+        "FCP-017"
+      ],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/fcp-009-g1",
+      "suggested_branch": "feature/fcp-009-pool-g1",
+      "base_branch": "worker/account-6",
       "base_sha": "330c655636e6b18816c7334bbec9b9093f41c269",
       "objective": "Complete cross-guild isolation, application decisions, event rules and notification failure behavior coverage.",
       "allowed_paths": [
@@ -75,12 +248,25 @@
       ]
     },
     {
-      "priority": 2,
+      "priority": 4,
       "package_id": "FCP-010",
       "title": "Media and video browser assurance",
-      "next_generation": 1,
-      "claim_id": "FCP-010-continuous-g1",
-      "suggested_branch": "feature/fcp-010-continuous-g1",
+      "risk": "high",
+      "queue_state": "ready",
+      "execution_state": "worker_pr_complete_awaiting_trusted_review",
+      "worker_pr": 10,
+      "dependencies": [
+        "FCP-005",
+        "FCP-017"
+      ],
+      "dependencies_integrated_at_publication": [
+        "FCP-005",
+        "FCP-017"
+      ],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/fcp-010-g1",
+      "suggested_branch": "feature/fcp-010-pool-g1",
+      "base_branch": "worker/account-6",
       "base_sha": "330c655636e6b18816c7334bbec9b9093f41c269",
       "objective": "Prove upload, replacement, deletion refusal, provider privacy and executable-upload rejection through application-level tests.",
       "allowed_paths": [
@@ -137,24 +323,30 @@
       ]
     },
     {
-      "priority": 3,
-      "package_id": "FCP-006",
-      "title": "Account browser assurance",
-      "next_generation": 1,
-      "claim_id": "FCP-006-continuous-g1",
-      "suggested_branch": "feature/fcp-006-continuous-g1",
+      "priority": 5,
+      "package_id": "FCP-012",
+      "title": "Public Security Passport and decision-model contracts",
+      "risk": "critical",
+      "queue_state": "ready",
+      "execution_state": "unclaimed",
+      "worker_pr": null,
+      "dependencies": [
+        "FCP-020",
+        "FCP-021"
+      ],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [
+        "FCP-020",
+        "FCP-021"
+      ],
+      "claim_branch": "claim/fcp-012-g1",
+      "suggested_branch": "feature/fcp-012-pool-g1",
+      "base_branch": "worker/account-6",
       "base_sha": "330c655636e6b18816c7334bbec9b9093f41c269",
-      "objective": "Add fail-closed browser-level assurance for TOTP, passkeys and sensitive session transitions.",
+      "objective": "Define versioned public passport/decision DTOs and deny-by-default pure evaluation contracts with synthetic fixtures. Do not wire privileged production policy or host access.",
       "allowed_paths": [
-        "assets/passkey.js",
-        "src/Controller/AccountController.php",
-        "src/Controller/PasskeyController.php",
-        "src/Controller/TwoFactorController.php",
-        "src/EventSubscriber/TwoFactorGateSubscriber.php",
-        "tests/JavaScript/passkey.test.mjs",
-        "tests/Controller/AccountSecurityHardeningTest.php",
-        "tests/Controller/TwoFactorSecurityTest.php",
-        "tests/Controller/AccountSecurity/"
+        "src/Fortress/Contract/",
+        "tests/Fortress/Contract/"
       ],
       "forbidden_paths": [
         "private/",
@@ -165,25 +357,20 @@
         ".github/workflows/"
       ],
       "deliverables": [
-        "browser tests for successful and rejected ceremonies",
-        "negative tests for stale sessions, CSRF and authorization",
-        "no production secret or server dependency",
-        "Preserve current security behavior through replaceable contracts; register any temporary compatibility adapter with an explicit retirement gate.",
-        "Use only literal allowed files/directories; request a reviewed scope change before touching shared fixtures or additional files."
+        "versioned public identity/actor/site/resource and PASS/WARN/FAIL/UNAVAILABLE result schemas",
+        "pure deny-by-default contract tests including missing/unknown context",
+        "no private configuration parser or production enforcement implementation"
       ],
       "tests": [
-        "targeted PHPUnit application tests",
-        "node --test tests/JavaScript/passkey.test.mjs",
+        "targeted PHPUnit security tests",
+        "PHPStan level 8",
         "complete worker CI"
       ],
       "completion_report": [
         "exact head SHA",
         "complete changed-file list",
         "test commands and results",
-        "unresolved risks and assumptions",
-        "exact sanitized baseline SHA and trusted-issued assignment revision",
-        "last green checkpoint and one exact next action",
-        "compatibility seam and old-security retirement impact"
+        "unresolved risks and assumptions"
       ],
       "immutable_constraints": [
         "trusted-main-is-the-only-integration-and-deployment-source",
@@ -194,6 +381,2096 @@
         "preserve-all-security-and-worker-isolation-invariants",
         "red-ci-stops-integration",
         "no-secret-or-private-runtime-export"
+      ]
+    },
+    {
+      "priority": 6,
+      "package_id": "FCP-013",
+      "title": "Public signed-update metadata validation",
+      "risk": "critical",
+      "queue_state": "ready",
+      "execution_state": "unclaimed",
+      "worker_pr": null,
+      "dependencies": [
+        "FCP-025"
+      ],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [
+        "FCP-025"
+      ],
+      "claim_branch": "claim/fcp-013-g1",
+      "suggested_branch": "feature/fcp-013-pool-g1",
+      "base_branch": "worker/account-6",
+      "base_sha": "330c655636e6b18816c7334bbec9b9093f41c269",
+      "objective": "Validate public signed-update metadata and freshness/version constraints using synthetic keys and fixtures. Production key management, activation and rollback stay Trusted.",
+      "allowed_paths": [
+        "src/ExtensionPackage/Update/",
+        "tests/ExtensionPackage/Update/"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "ops/",
+        "docs/",
+        "bin/worker-sync",
+        "bin/build-worker-snapshot",
+        ".github/workflows/"
+      ],
+      "deliverables": [
+        "reject tampering, replay, expired metadata and unauthorized version rollback",
+        "public validation contract and synthetic key rotation fixtures",
+        "no signing secrets or deployment execution"
+      ],
+      "tests": [
+        "targeted PHPUnit security tests",
+        "PHPStan level 8",
+        "complete worker CI"
+      ],
+      "completion_report": [
+        "exact head SHA",
+        "complete changed-file list",
+        "test commands and results",
+        "unresolved risks and assumptions"
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "no-executable-public-uploads",
+        "no-secrets-or-trusted-private-runtime-in-worker-source",
+        "preserve-all-security-and-worker-isolation-invariants",
+        "red-ci-stops-integration",
+        "no-secret-or-private-runtime-export"
+      ]
+    },
+    {
+      "priority": 7,
+      "package_id": "FCP-051",
+      "title": "Safe content block editor and media-selection foundation",
+      "risk": "high",
+      "queue_state": "review",
+      "execution_state": "worker_pr_complete_awaiting_trusted_review",
+      "worker_pr": 8,
+      "dependencies": [
+        "FCP-005",
+        "FCP-017"
+      ],
+      "dependencies_integrated_at_publication": [
+        "FCP-005",
+        "FCP-017"
+      ],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/fcp-051-g2",
+      "suggested_branch": "feature/fcp-051-pool-g2",
+      "base_branch": "worker/account-6",
+      "base_sha": "330c655636e6b18816c7334bbec9b9093f41c269",
+      "objective": "Replace the plain content textarea with a bounded structured block-editor foundation that preserves revisions, preview, sanitization and safe media references without permitting arbitrary HTML or scripts.",
+      "allowed_paths": [
+        "MODULE-ASSIGNMENT.json",
+        "WORKER-START.md",
+        "src/ContentEditor/",
+        "src/Controller/AdminContentController.php",
+        "src/Entity/ContentEntry.php",
+        "src/Entity/ContentRevision.php",
+        "src/Form/ContentEntryType.php",
+        "templates/admin/content/",
+        "templates/content/",
+        "assets/controllers/content_editor_controller.js",
+        "assets/styles/content-editor.css",
+        "config/services.yaml",
+        "migrations/",
+        "tests/ContentEditor/",
+        "tests/Controller/Content/"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/"
+      ],
+      "deliverables": [
+        "Versioned allowlisted text, heading, list, quote, link and owned-media blocks",
+        "Safe migration and fallback rendering for existing textarea content",
+        "Autosave draft and no-write preview contracts without changing publication permissions",
+        "Explicit Fortress seam and legacy security/database retirement impact without weakening current enforcement",
+        "Positive and negative authorization, CSRF, validation, disabled-module and data-visibility regression coverage"
+      ],
+      "tests": [
+        "targeted content/editor PHPUnit tests",
+        "browser-side editor protocol tests where JavaScript behavior is added",
+        "complete worker CI on the exact final HEAD"
+      ],
+      "completion_report": [
+        "exact final worker HEAD SHA and exact sanitized base SHA",
+        "complete changed-path list and worker PR",
+        "targeted tests plus complete worker CI results",
+        "unresolved risks assumptions and intentionally deferred features",
+        "current protection path future Fortress contract legacy symbols tables grants and retirement impact",
+        "module data ownership fresh and populated migration evidence rollback restore boundary and negative tests"
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "no-executable-public-uploads",
+        "no-secrets-or-trusted-private-runtime-in-worker-source",
+        "preserve-existing-security-controls-tests-phpstan-and-ci",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment",
+        "fortress-ready-replaceable-boundaries-no-private-runtime-reconstruction"
+      ]
+    },
+    {
+      "priority": 8,
+      "package_id": "FCP-052",
+      "title": "Shared comments reactions reports and moderation core",
+      "risk": "high",
+      "queue_state": "ready",
+      "execution_state": "unclaimed",
+      "worker_pr": null,
+      "dependencies": [
+        "FCP-051"
+      ],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [
+        "FCP-051"
+      ],
+      "claim_branch": "claim/fcp-052-g1",
+      "suggested_branch": "feature/fcp-052-pool-g1",
+      "base_branch": "worker/account-6",
+      "base_sha": "330c655636e6b18816c7334bbec9b9093f41c269",
+      "objective": "Build one reusable interaction core for comments, replies, reactions, reports and moderation, initially wired to one content target and designed for later video, forum and download targets.",
+      "allowed_paths": [
+        "src/Community/Interaction/",
+        "src/Controller/Community/",
+        "src/Entity/Community/",
+        "src/Form/Community/",
+        "src/Repository/Community/",
+        "templates/community/",
+        "migrations/",
+        "tests/Community/Interaction/"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/"
+      ],
+      "deliverables": [
+        "Target-type registry with fail-closed visibility and ownership checks",
+        "Threaded comments, bounded reactions, report queue, moderation decisions and audit evidence",
+        "Retention, soft-delete and restoration rules",
+        "Explicit Fortress seam and legacy security/database retirement impact without weakening current enforcement",
+        "Positive and negative authorization, CSRF, validation, disabled-module and data-visibility regression coverage"
+      ],
+      "tests": [
+        "targeted community interaction PHPUnit tests",
+        "complete worker CI on the exact final HEAD"
+      ],
+      "completion_report": [
+        "exact final worker HEAD SHA and exact sanitized base SHA",
+        "complete changed-path list and worker PR",
+        "targeted tests plus complete worker CI results",
+        "unresolved risks assumptions and intentionally deferred features",
+        "current protection path future Fortress contract legacy symbols tables grants and retirement impact",
+        "module data ownership fresh and populated migration evidence rollback restore boundary and negative tests"
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "no-executable-public-uploads",
+        "no-secrets-or-trusted-private-runtime-in-worker-source",
+        "preserve-existing-security-controls-tests-phpstan-and-ci",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment",
+        "fortress-ready-replaceable-boundaries-no-private-runtime-reconstruction"
+      ]
+    },
+    {
+      "priority": 9,
+      "package_id": "FCP-053",
+      "title": "Guild roster recruitment onboarding and member lifecycle",
+      "risk": "high",
+      "queue_state": "ready",
+      "execution_state": "unclaimed",
+      "worker_pr": null,
+      "dependencies": [
+        "FCP-051"
+      ],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [
+        "FCP-051"
+      ],
+      "claim_branch": "claim/fcp-053-g1",
+      "suggested_branch": "feature/fcp-053-pool-g1",
+      "base_branch": "worker/account-6",
+      "base_sha": "330c655636e6b18816c7334bbec9b9093f41c269",
+      "objective": "Deepen the existing guild module with multi-game roster filtering, characters/alts, role needs, configurable applications, officer voting, trials, onboarding, absences, private notes and audited member lifecycle.",
+      "allowed_paths": [
+        "src/Gaming/Guild/",
+        "src/Controller/AdminGuild/",
+        "src/Controller/Guild/",
+        "src/Entity/Guild/",
+        "src/Form/Guild/",
+        "src/Repository/Guild/",
+        "templates/admin/guild/",
+        "templates/guild/",
+        "migrations/",
+        "tests/Gaming/Guild/"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/"
+      ],
+      "deliverables": [
+        "Cross-guild isolation and field-level privacy",
+        "Recruitment pipeline with decisions, reasons, expiry and appeal record",
+        "Promotion demotion warning absence and return history with audit",
+        "Explicit Fortress seam and legacy security/database retirement impact without weakening current enforcement",
+        "Positive and negative authorization, CSRF, validation, disabled-module and data-visibility regression coverage"
+      ],
+      "tests": [
+        "targeted guild lifecycle PHPUnit tests",
+        "complete worker CI on the exact final HEAD"
+      ],
+      "completion_report": [
+        "exact final worker HEAD SHA and exact sanitized base SHA",
+        "complete changed-path list and worker PR",
+        "targeted tests plus complete worker CI results",
+        "unresolved risks assumptions and intentionally deferred features",
+        "current protection path future Fortress contract legacy symbols tables grants and retirement impact",
+        "module data ownership fresh and populated migration evidence rollback restore boundary and negative tests"
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "no-executable-public-uploads",
+        "no-secrets-or-trusted-private-runtime-in-worker-source",
+        "preserve-existing-security-controls-tests-phpstan-and-ci",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment",
+        "fortress-ready-replaceable-boundaries-no-private-runtime-reconstruction"
+      ]
+    },
+    {
+      "priority": 10,
+      "package_id": "FCP-054",
+      "title": "Raid event attendance and squad planning",
+      "risk": "high",
+      "queue_state": "ready",
+      "execution_state": "unclaimed",
+      "worker_pr": null,
+      "dependencies": [
+        "FCP-053"
+      ],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [
+        "FCP-053"
+      ],
+      "claim_branch": "claim/fcp-054-g1",
+      "suggested_branch": "feature/fcp-054-pool-g1",
+      "base_branch": "worker/account-6",
+      "base_sha": "330c655636e6b18816c7334bbec9b9093f41c269",
+      "objective": "Expand guild events into recurring raid, training and squad planning with role capacities, RSVP, waitlists, substitutes, check-in, actual attendance, reminders, preparation and calendar export.",
+      "allowed_paths": [
+        "src/Gaming/Event/",
+        "src/Controller/AdminGuildEvent/",
+        "src/Controller/GuildEvent/",
+        "src/Entity/GuildEvent/",
+        "src/Form/GuildEvent/",
+        "src/Repository/GuildEvent/",
+        "templates/admin/guild_event/",
+        "templates/guild_event/",
+        "migrations/",
+        "tests/Gaming/Event/"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/"
+      ],
+      "deliverables": [
+        "Timezone-safe recurring event model and immutable attendance history",
+        "Role/class capacity, waitlist and substitute promotion rules",
+        "Private preparation notes and VOD references with correct visibility",
+        "Explicit Fortress seam and legacy security/database retirement impact without weakening current enforcement",
+        "Positive and negative authorization, CSRF, validation, disabled-module and data-visibility regression coverage"
+      ],
+      "tests": [
+        "targeted event and attendance PHPUnit tests",
+        "complete worker CI on the exact final HEAD"
+      ],
+      "completion_report": [
+        "exact final worker HEAD SHA and exact sanitized base SHA",
+        "complete changed-path list and worker PR",
+        "targeted tests plus complete worker CI results",
+        "unresolved risks assumptions and intentionally deferred features",
+        "current protection path future Fortress contract legacy symbols tables grants and retirement impact",
+        "module data ownership fresh and populated migration evidence rollback restore boundary and negative tests"
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "no-executable-public-uploads",
+        "no-secrets-or-trusted-private-runtime-in-worker-source",
+        "preserve-existing-security-controls-tests-phpstan-and-ci",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment",
+        "fortress-ready-replaceable-boundaries-no-private-runtime-reconstruction"
+      ]
+    },
+    {
+      "priority": 11,
+      "package_id": "FCP-055",
+      "title": "Loot DKP EPGP wishlist and guild vault",
+      "risk": "critical",
+      "queue_state": "ready",
+      "execution_state": "unclaimed",
+      "worker_pr": null,
+      "dependencies": [
+        "FCP-054"
+      ],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [
+        "FCP-054"
+      ],
+      "claim_branch": "claim/fcp-055-g1",
+      "suggested_branch": "feature/fcp-055-pool-g1",
+      "base_branch": "worker/account-6",
+      "base_sha": "330c655636e6b18816c7334bbec9b9093f41c269",
+      "objective": "Add optional auditable guild loot accounting and vault management with multiple point models, wishlists, raid linkage, corrections and export, without any real-money economy.",
+      "allowed_paths": [
+        "src/Gaming/Loot/",
+        "src/Controller/AdminGuildLoot/",
+        "src/Controller/GuildLoot/",
+        "src/Entity/GuildLoot/",
+        "src/Form/GuildLoot/",
+        "src/Repository/GuildLoot/",
+        "templates/admin/guild_loot/",
+        "templates/guild_loot/",
+        "migrations/",
+        "tests/Gaming/Loot/"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/"
+      ],
+      "deliverables": [
+        "Double-entry-like immutable ledger and compensating corrections",
+        "Per-guild isolation, officer approval boundary and complete audit trail",
+        "DKP EPGP loot-council wishlist roll and vault inventory strategies",
+        "Explicit Fortress seam and legacy security/database retirement impact without weakening current enforcement",
+        "Positive and negative authorization, CSRF, validation, disabled-module and data-visibility regression coverage"
+      ],
+      "tests": [
+        "targeted loot ledger and concurrency PHPUnit tests",
+        "complete worker CI on the exact final HEAD"
+      ],
+      "completion_report": [
+        "exact final worker HEAD SHA and exact sanitized base SHA",
+        "complete changed-path list and worker PR",
+        "targeted tests plus complete worker CI results",
+        "unresolved risks assumptions and intentionally deferred features",
+        "current protection path future Fortress contract legacy symbols tables grants and retirement impact",
+        "module data ownership fresh and populated migration evidence rollback restore boundary and negative tests"
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "no-executable-public-uploads",
+        "no-secrets-or-trusted-private-runtime-in-worker-source",
+        "preserve-existing-security-controls-tests-phpstan-and-ci",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment",
+        "fortress-ready-replaceable-boundaries-no-private-runtime-reconstruction"
+      ]
+    },
+    {
+      "priority": 12,
+      "package_id": "FCP-056",
+      "title": "Game catalogue release calendar and game hubs",
+      "risk": "medium",
+      "queue_state": "ready",
+      "execution_state": "unclaimed",
+      "worker_pr": null,
+      "dependencies": [
+        "FCP-051"
+      ],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [
+        "FCP-051"
+      ],
+      "claim_branch": "claim/fcp-056-g1",
+      "suggested_branch": "feature/fcp-056-pool-g1",
+      "base_branch": "worker/account-6",
+      "base_sha": "330c655636e6b18816c7334bbec9b9093f41c269",
+      "objective": "Create game pages and a release centre with platforms, genres, publishers, editions, dates, regions, system requirements and links to CMS content, guilds, videos and servers.",
+      "allowed_paths": [
+        "src/Gaming/Catalogue/",
+        "src/Controller/AdminGameCatalogue/",
+        "src/Controller/GameCatalogue/",
+        "src/Entity/GameCatalogue/",
+        "src/Form/GameCatalogue/",
+        "src/Repository/GameCatalogue/",
+        "templates/admin/game_catalogue/",
+        "templates/game_catalogue/",
+        "migrations/",
+        "tests/Gaming/Catalogue/"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/"
+      ],
+      "deliverables": [
+        "Release date history, timezone handling, filters, watchlist-ready events",
+        "Explicit source and licensing fields for imported metadata",
+        "Public/private visibility and disabled-module behavior",
+        "Explicit Fortress seam and legacy security/database retirement impact without weakening current enforcement",
+        "Positive and negative authorization, CSRF, validation, disabled-module and data-visibility regression coverage"
+      ],
+      "tests": [
+        "targeted game catalogue PHPUnit tests",
+        "complete worker CI on the exact final HEAD"
+      ],
+      "completion_report": [
+        "exact final worker HEAD SHA and exact sanitized base SHA",
+        "complete changed-path list and worker PR",
+        "targeted tests plus complete worker CI results",
+        "unresolved risks assumptions and intentionally deferred features",
+        "current protection path future Fortress contract legacy symbols tables grants and retirement impact",
+        "module data ownership fresh and populated migration evidence rollback restore boundary and negative tests"
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "no-executable-public-uploads",
+        "no-secrets-or-trusted-private-runtime-in-worker-source",
+        "preserve-existing-security-controls-tests-phpstan-and-ci",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment",
+        "fortress-ready-replaceable-boundaries-no-private-runtime-reconstruction"
+      ]
+    },
+    {
+      "priority": 13,
+      "package_id": "FCP-057",
+      "title": "Gaming magazine reviews previews and comparisons",
+      "risk": "medium",
+      "queue_state": "ready",
+      "execution_state": "unclaimed",
+      "worker_pr": null,
+      "dependencies": [
+        "FCP-051",
+        "FCP-056"
+      ],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [
+        "FCP-051",
+        "FCP-056"
+      ],
+      "claim_branch": "claim/fcp-057-g1",
+      "suggested_branch": "feature/fcp-057-pool-g1",
+      "base_branch": "worker/account-6",
+      "base_sha": "330c655636e6b18816c7334bbec9b9093f41c269",
+      "objective": "Add structured editorial types for reviews, previews, reports, interviews, columns, hardware tests and buying guides with transparent scoring and revisions.",
+      "allowed_paths": [
+        "src/Editorial/",
+        "src/Controller/AdminEditorial/",
+        "src/Controller/Editorial/",
+        "src/Entity/Editorial/",
+        "src/Form/Editorial/",
+        "src/Repository/Editorial/",
+        "templates/admin/editorial/",
+        "templates/editorial/",
+        "migrations/",
+        "tests/Editorial/"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/"
+      ],
+      "deliverables": [
+        "Editorial score model with platform/version, methodology, pro/contra and disclosure",
+        "Separate moderated community rating from editorial rating",
+        "Comparison views and update history",
+        "Explicit Fortress seam and legacy security/database retirement impact without weakening current enforcement",
+        "Positive and negative authorization, CSRF, validation, disabled-module and data-visibility regression coverage"
+      ],
+      "tests": [
+        "targeted editorial PHPUnit tests",
+        "complete worker CI on the exact final HEAD"
+      ],
+      "completion_report": [
+        "exact final worker HEAD SHA and exact sanitized base SHA",
+        "complete changed-path list and worker PR",
+        "targeted tests plus complete worker CI results",
+        "unresolved risks assumptions and intentionally deferred features",
+        "current protection path future Fortress contract legacy symbols tables grants and retirement impact",
+        "module data ownership fresh and populated migration evidence rollback restore boundary and negative tests"
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "no-executable-public-uploads",
+        "no-secrets-or-trusted-private-runtime-in-worker-source",
+        "preserve-existing-security-controls-tests-phpstan-and-ci",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment",
+        "fortress-ready-replaceable-boundaries-no-private-runtime-reconstruction"
+      ]
+    },
+    {
+      "priority": 14,
+      "package_id": "FCP-058",
+      "title": "Patch seasons guides builds and tier lists",
+      "risk": "high",
+      "queue_state": "ready",
+      "execution_state": "unclaimed",
+      "worker_pr": null,
+      "dependencies": [
+        "FCP-051",
+        "FCP-056"
+      ],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [
+        "FCP-051",
+        "FCP-056"
+      ],
+      "claim_branch": "claim/fcp-058-g1",
+      "suggested_branch": "feature/fcp-058-pool-g1",
+      "base_branch": "worker/account-6",
+      "base_sha": "330c655636e6b18816c7334bbec9b9093f41c269",
+      "objective": "Implement patch-aware guides, builds, loadouts and tier lists with structured components, alternatives, criteria, reviewer workflow and stale-version handling.",
+      "allowed_paths": [
+        "src/Gaming/Guide/",
+        "src/Controller/AdminGuide/",
+        "src/Controller/Guide/",
+        "src/Entity/Guide/",
+        "src/Form/Guide/",
+        "src/Repository/Guide/",
+        "templates/admin/guide/",
+        "templates/guide/",
+        "migrations/",
+        "tests/Gaming/Guide/"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/"
+      ],
+      "deliverables": [
+        "Patch/season validity and visible outdated-content state",
+        "Structured skills gear rotation alternatives and import/export text codes",
+        "Tier-list criteria provenance author/reviewer and revision history",
+        "Explicit Fortress seam and legacy security/database retirement impact without weakening current enforcement",
+        "Positive and negative authorization, CSRF, validation, disabled-module and data-visibility regression coverage"
+      ],
+      "tests": [
+        "targeted guide and versioning PHPUnit tests",
+        "complete worker CI on the exact final HEAD"
+      ],
+      "completion_report": [
+        "exact final worker HEAD SHA and exact sanitized base SHA",
+        "complete changed-path list and worker PR",
+        "targeted tests plus complete worker CI results",
+        "unresolved risks assumptions and intentionally deferred features",
+        "current protection path future Fortress contract legacy symbols tables grants and retirement impact",
+        "module data ownership fresh and populated migration evidence rollback restore boundary and negative tests"
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "no-executable-public-uploads",
+        "no-secrets-or-trusted-private-runtime-in-worker-source",
+        "preserve-existing-security-controls-tests-phpstan-and-ci",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment",
+        "fortress-ready-replaceable-boundaries-no-private-runtime-reconstruction"
+      ]
+    },
+    {
+      "priority": 15,
+      "package_id": "FCP-059",
+      "title": "Game knowledge database maps and collection helpers",
+      "risk": "high",
+      "queue_state": "ready",
+      "execution_state": "unclaimed",
+      "worker_pr": null,
+      "dependencies": [
+        "FCP-051",
+        "FCP-056"
+      ],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [
+        "FCP-051",
+        "FCP-056"
+      ],
+      "claim_branch": "claim/fcp-059-g1",
+      "suggested_branch": "feature/fcp-059-pool-g1",
+      "base_branch": "worker/account-6",
+      "base_sha": "330c655636e6b18816c7334bbec9b9093f41c269",
+      "objective": "Create an optional per-game knowledge schema for classes, items, quests, NPCs, bosses, zones and collection markers, with moderated sources and no copied third-party dataset.",
+      "allowed_paths": [
+        "src/Gaming/Knowledge/",
+        "src/Controller/AdminGameKnowledge/",
+        "src/Controller/GameKnowledge/",
+        "src/Entity/GameKnowledge/",
+        "src/Form/GameKnowledge/",
+        "src/Repository/GameKnowledge/",
+        "templates/admin/game_knowledge/",
+        "templates/game_knowledge/",
+        "migrations/",
+        "tests/Gaming/Knowledge/"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/"
+      ],
+      "deliverables": [
+        "Versioned extensible record types and typed relationships",
+        "Map layers markers routes and private collection checklists",
+        "Source licence correction proposal and moderation workflow",
+        "Explicit Fortress seam and legacy security/database retirement impact without weakening current enforcement",
+        "Positive and negative authorization, CSRF, validation, disabled-module and data-visibility regression coverage"
+      ],
+      "tests": [
+        "targeted knowledge and map authorization PHPUnit tests",
+        "complete worker CI on the exact final HEAD"
+      ],
+      "completion_report": [
+        "exact final worker HEAD SHA and exact sanitized base SHA",
+        "complete changed-path list and worker PR",
+        "targeted tests plus complete worker CI results",
+        "unresolved risks assumptions and intentionally deferred features",
+        "current protection path future Fortress contract legacy symbols tables grants and retirement impact",
+        "module data ownership fresh and populated migration evidence rollback restore boundary and negative tests"
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "no-executable-public-uploads",
+        "no-secrets-or-trusted-private-runtime-in-worker-source",
+        "preserve-existing-security-controls-tests-phpstan-and-ci",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment",
+        "fortress-ready-replaceable-boundaries-no-private-runtime-reconstruction"
+      ]
+    },
+    {
+      "priority": 16,
+      "package_id": "FCP-060",
+      "title": "Character account collection and progression profiles",
+      "risk": "high",
+      "queue_state": "ready",
+      "execution_state": "unclaimed",
+      "worker_pr": null,
+      "dependencies": [
+        "FCP-053",
+        "FCP-056"
+      ],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [
+        "FCP-053",
+        "FCP-056"
+      ],
+      "claim_branch": "claim/fcp-060-g1",
+      "suggested_branch": "feature/fcp-060-pool-g1",
+      "base_branch": "worker/account-6",
+      "base_sha": "330c655636e6b18816c7334bbec9b9093f41c269",
+      "objective": "Add opt-in multi-character profiles with server, region, class, role, builds, professions, progression and collections, keeping imported and manual data distinguishable.",
+      "allowed_paths": [
+        "src/Gaming/Character/",
+        "src/Controller/AdminCharacter/",
+        "src/Controller/Character/",
+        "src/Entity/GameCharacter/",
+        "src/Form/GameCharacter/",
+        "src/Repository/GameCharacter/",
+        "templates/admin/character/",
+        "templates/character/",
+        "migrations/",
+        "tests/Gaming/Character/"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/"
+      ],
+      "deliverables": [
+        "Field-level visibility consent deletion and import provenance",
+        "Main/alt relationships and multi-game account organization",
+        "Conflict-safe refresh contract for future official API adapters",
+        "Explicit Fortress seam and legacy security/database retirement impact without weakening current enforcement",
+        "Positive and negative authorization, CSRF, validation, disabled-module and data-visibility regression coverage"
+      ],
+      "tests": [
+        "targeted character privacy and import PHPUnit tests",
+        "complete worker CI on the exact final HEAD"
+      ],
+      "completion_report": [
+        "exact final worker HEAD SHA and exact sanitized base SHA",
+        "complete changed-path list and worker PR",
+        "targeted tests plus complete worker CI results",
+        "unresolved risks assumptions and intentionally deferred features",
+        "current protection path future Fortress contract legacy symbols tables grants and retirement impact",
+        "module data ownership fresh and populated migration evidence rollback restore boundary and negative tests"
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "no-executable-public-uploads",
+        "no-secrets-or-trusted-private-runtime-in-worker-source",
+        "preserve-existing-security-controls-tests-phpstan-and-ci",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment",
+        "fortress-ready-replaceable-boundaries-no-private-runtime-reconstruction"
+      ]
+    },
+    {
+      "priority": 17,
+      "package_id": "FCP-061",
+      "title": "Tournaments leagues brackets matches and scrims",
+      "risk": "high",
+      "queue_state": "ready",
+      "execution_state": "unclaimed",
+      "worker_pr": null,
+      "dependencies": [
+        "FCP-053",
+        "FCP-056"
+      ],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [
+        "FCP-053",
+        "FCP-056"
+      ],
+      "claim_branch": "claim/fcp-061-g1",
+      "suggested_branch": "feature/fcp-061-pool-g1",
+      "base_branch": "worker/account-6",
+      "base_sha": "330c655636e6b18816c7334bbec9b9093f41c269",
+      "objective": "Implement team and solo competitions with registration, check-in, seeding, bracket/league formats, match scheduling, evidence, disputes and season archives.",
+      "allowed_paths": [
+        "src/Gaming/Competition/",
+        "src/Controller/AdminCompetition/",
+        "src/Controller/Competition/",
+        "src/Entity/Competition/",
+        "src/Form/Competition/",
+        "src/Repository/Competition/",
+        "templates/admin/competition/",
+        "templates/competition/",
+        "migrations/",
+        "tests/Gaming/Competition/"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/"
+      ],
+      "deliverables": [
+        "Single/double elimination, round robin, Swiss and group-stage domain contracts",
+        "Result confirmation by both sides, dispute evidence and admin decisions",
+        "No gambling or money-stake functionality",
+        "Explicit Fortress seam and legacy security/database retirement impact without weakening current enforcement",
+        "Positive and negative authorization, CSRF, validation, disabled-module and data-visibility regression coverage"
+      ],
+      "tests": [
+        "targeted bracket and competition invariant PHPUnit tests",
+        "complete worker CI on the exact final HEAD"
+      ],
+      "completion_report": [
+        "exact final worker HEAD SHA and exact sanitized base SHA",
+        "complete changed-path list and worker PR",
+        "targeted tests plus complete worker CI results",
+        "unresolved risks assumptions and intentionally deferred features",
+        "current protection path future Fortress contract legacy symbols tables grants and retirement impact",
+        "module data ownership fresh and populated migration evidence rollback restore boundary and negative tests"
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "no-executable-public-uploads",
+        "no-secrets-or-trusted-private-runtime-in-worker-source",
+        "preserve-existing-security-controls-tests-phpstan-and-ci",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment",
+        "fortress-ready-replaceable-boundaries-no-private-runtime-reconstruction"
+      ]
+    },
+    {
+      "priority": 18,
+      "package_id": "FCP-062",
+      "title": "Gameserver directory monitoring and public status",
+      "risk": "critical",
+      "queue_state": "ready",
+      "execution_state": "unclaimed",
+      "worker_pr": null,
+      "dependencies": [
+        "FCP-056"
+      ],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [
+        "FCP-056"
+      ],
+      "claim_branch": "claim/fcp-062-g1",
+      "suggested_branch": "feature/fcp-062-pool-g1",
+      "base_branch": "worker/account-6",
+      "base_sha": "330c655636e6b18816c7334bbec9b9093f41c269",
+      "objective": "Build a safe public gameserver registry and polling model with approved protocol adapters, cached status, outage history and alerts while blocking arbitrary network targets.",
+      "allowed_paths": [
+        "src/Gaming/Server/",
+        "src/Controller/AdminGameServer/",
+        "src/Controller/GameServer/",
+        "src/Entity/GameServer/",
+        "src/Form/GameServer/",
+        "src/Repository/GameServer/",
+        "templates/admin/game_server/",
+        "templates/game_server/",
+        "migrations/",
+        "tests/Gaming/Server/"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/"
+      ],
+      "deliverables": [
+        "Protocol adapter allowlist, SSRF/private-address rejection, rate limits and circuit breaker",
+        "Slots ping map version maintenance uptime and stale-state display",
+        "Public status strictly separated from Trusted-only RCON/admin secrets",
+        "Explicit Fortress seam and legacy security/database retirement impact without weakening current enforcement",
+        "Positive and negative authorization, CSRF, validation, disabled-module and data-visibility regression coverage"
+      ],
+      "tests": [
+        "targeted server URL policy adapter and outage PHPUnit tests",
+        "complete worker CI on the exact final HEAD"
+      ],
+      "completion_report": [
+        "exact final worker HEAD SHA and exact sanitized base SHA",
+        "complete changed-path list and worker PR",
+        "targeted tests plus complete worker CI results",
+        "unresolved risks assumptions and intentionally deferred features",
+        "current protection path future Fortress contract legacy symbols tables grants and retirement impact",
+        "module data ownership fresh and populated migration evidence rollback restore boundary and negative tests"
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "no-executable-public-uploads",
+        "no-secrets-or-trusted-private-runtime-in-worker-source",
+        "preserve-existing-security-controls-tests-phpstan-and-ci",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment",
+        "fortress-ready-replaceable-boundaries-no-private-runtime-reconstruction"
+      ]
+    },
+    {
+      "priority": 19,
+      "package_id": "FCP-063",
+      "title": "Downloads mods add-ons modpacks and version delivery",
+      "risk": "critical",
+      "queue_state": "ready",
+      "execution_state": "unclaimed",
+      "worker_pr": null,
+      "dependencies": [
+        "FCP-051",
+        "FCP-010"
+      ],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [
+        "FCP-051",
+        "FCP-010"
+      ],
+      "claim_branch": "claim/fcp-063-g1",
+      "suggested_branch": "feature/fcp-063-pool-g1",
+      "base_branch": "worker/account-6",
+      "base_sha": "330c655636e6b18816c7334bbec9b9093f41c269",
+      "objective": "Create a controlled download catalogue for files, mods and add-ons with versions, compatibility, dependencies, changelogs, checksums, mirrors and authorization.",
+      "allowed_paths": [
+        "src/Downloads/",
+        "src/Controller/AdminDownload/",
+        "src/Controller/Download/",
+        "src/Entity/Download/",
+        "src/Form/Download/",
+        "src/Repository/Download/",
+        "templates/admin/download/",
+        "templates/download/",
+        "migrations/",
+        "tests/Downloads/"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/"
+      ],
+      "deliverables": [
+        "Private authorized delivery distinct from public media URLs",
+        "SHA-256, safe filenames, scan status, mirror policy and obsolete/replaced lifecycle",
+        "Dependency/conflict and modpack manifest model",
+        "Explicit Fortress seam and legacy security/database retirement impact without weakening current enforcement",
+        "Positive and negative authorization, CSRF, validation, disabled-module and data-visibility regression coverage"
+      ],
+      "tests": [
+        "targeted download authorization upload-policy and lifecycle PHPUnit tests",
+        "complete worker CI on the exact final HEAD"
+      ],
+      "completion_report": [
+        "exact final worker HEAD SHA and exact sanitized base SHA",
+        "complete changed-path list and worker PR",
+        "targeted tests plus complete worker CI results",
+        "unresolved risks assumptions and intentionally deferred features",
+        "current protection path future Fortress contract legacy symbols tables grants and retirement impact",
+        "module data ownership fresh and populated migration evidence rollback restore boundary and negative tests"
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "no-executable-public-uploads",
+        "no-secrets-or-trusted-private-runtime-in-worker-source",
+        "preserve-existing-security-controls-tests-phpstan-and-ci",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment",
+        "fortress-ready-replaceable-boundaries-no-private-runtime-reconstruction"
+      ]
+    },
+    {
+      "priority": 20,
+      "package_id": "FCP-064",
+      "title": "Galleries screenshots fanart and competitions",
+      "risk": "high",
+      "queue_state": "ready",
+      "execution_state": "unclaimed",
+      "worker_pr": null,
+      "dependencies": [
+        "FCP-052",
+        "FCP-010"
+      ],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [
+        "FCP-052",
+        "FCP-010"
+      ],
+      "claim_branch": "claim/fcp-064-g1",
+      "suggested_branch": "feature/fcp-064-pool-g1",
+      "base_branch": "worker/account-6",
+      "base_sha": "330c655636e6b18816c7334bbec9b9093f41c269",
+      "objective": "Build albums, screenshots, fanart and moderated media competitions with licensing, submissions and voting on top of the hardened media contracts.",
+      "allowed_paths": [
+        "src/Gallery/",
+        "src/Controller/AdminGallery/",
+        "src/Controller/Gallery/",
+        "src/Entity/Gallery/",
+        "src/Form/Gallery/",
+        "src/Repository/Gallery/",
+        "templates/admin/gallery/",
+        "templates/gallery/",
+        "migrations/",
+        "tests/Gallery/"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/"
+      ],
+      "deliverables": [
+        "Album and submission visibility, licence/credit and moderation",
+        "Competition windows, one-account voting limits and auditable corrections",
+        "No direct bypass of MediaUrlPolicy or usage tracking",
+        "Explicit Fortress seam and legacy security/database retirement impact without weakening current enforcement",
+        "Positive and negative authorization, CSRF, validation, disabled-module and data-visibility regression coverage"
+      ],
+      "tests": [
+        "targeted gallery visibility and competition PHPUnit tests",
+        "complete worker CI on the exact final HEAD"
+      ],
+      "completion_report": [
+        "exact final worker HEAD SHA and exact sanitized base SHA",
+        "complete changed-path list and worker PR",
+        "targeted tests plus complete worker CI results",
+        "unresolved risks assumptions and intentionally deferred features",
+        "current protection path future Fortress contract legacy symbols tables grants and retirement impact",
+        "module data ownership fresh and populated migration evidence rollback restore boundary and negative tests"
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "no-executable-public-uploads",
+        "no-secrets-or-trusted-private-runtime-in-worker-source",
+        "preserve-existing-security-controls-tests-phpstan-and-ci",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment",
+        "fortress-ready-replaceable-boundaries-no-private-runtime-reconstruction"
+      ]
+    },
+    {
+      "priority": 21,
+      "package_id": "FCP-065",
+      "title": "Forum questions answers and guild rooms",
+      "risk": "high",
+      "queue_state": "ready",
+      "execution_state": "unclaimed",
+      "worker_pr": null,
+      "dependencies": [
+        "FCP-051",
+        "FCP-052"
+      ],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [
+        "FCP-051",
+        "FCP-052"
+      ],
+      "claim_branch": "claim/fcp-065-g1",
+      "suggested_branch": "feature/fcp-065-pool-g1",
+      "base_branch": "worker/account-6",
+      "base_sha": "330c655636e6b18816c7334bbec9b9093f41c269",
+      "objective": "Create forums and Q&A with categories, threads, replies, quotes, mentions, subscriptions, solved answers, attachments and private guild rooms.",
+      "allowed_paths": [
+        "src/Forum/",
+        "src/Controller/AdminForum/",
+        "src/Controller/Forum/",
+        "src/Entity/Forum/",
+        "src/Form/Forum/",
+        "src/Repository/Forum/",
+        "templates/admin/forum/",
+        "templates/forum/",
+        "migrations/",
+        "tests/Forum/"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/"
+      ],
+      "deliverables": [
+        "Object-level room visibility and cross-guild isolation",
+        "Thread states subscriptions solved answers and moderation history",
+        "Attachment references only through hardened media/download contracts",
+        "Explicit Fortress seam and legacy security/database retirement impact without weakening current enforcement",
+        "Positive and negative authorization, CSRF, validation, disabled-module and data-visibility regression coverage"
+      ],
+      "tests": [
+        "targeted forum authorization and concurrency PHPUnit tests",
+        "complete worker CI on the exact final HEAD"
+      ],
+      "completion_report": [
+        "exact final worker HEAD SHA and exact sanitized base SHA",
+        "complete changed-path list and worker PR",
+        "targeted tests plus complete worker CI results",
+        "unresolved risks assumptions and intentionally deferred features",
+        "current protection path future Fortress contract legacy symbols tables grants and retirement impact",
+        "module data ownership fresh and populated migration evidence rollback restore boundary and negative tests"
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "no-executable-public-uploads",
+        "no-secrets-or-trusted-private-runtime-in-worker-source",
+        "preserve-existing-security-controls-tests-phpstan-and-ci",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment",
+        "fortress-ready-replaceable-boundaries-no-private-runtime-reconstruction"
+      ]
+    },
+    {
+      "priority": 22,
+      "package_id": "FCP-066",
+      "title": "Private messages group chat and social relationships",
+      "risk": "critical",
+      "queue_state": "ready",
+      "execution_state": "unclaimed",
+      "worker_pr": null,
+      "dependencies": [
+        "FCP-052",
+        "FCP-071"
+      ],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [
+        "FCP-052",
+        "FCP-071"
+      ],
+      "claim_branch": "claim/fcp-066-g1",
+      "suggested_branch": "feature/fcp-066-pool-g1",
+      "base_branch": "worker/account-6",
+      "base_sha": "330c655636e6b18816c7334bbec9b9093f41c269",
+      "objective": "Add private/group messages, blocking, reporting, retention and social relationships with strict participant authorization; real-time transport remains optional until capacity proof.",
+      "allowed_paths": [
+        "src/Social/",
+        "src/Controller/AdminSocial/",
+        "src/Controller/Social/",
+        "src/Entity/Social/",
+        "src/Form/Social/",
+        "src/Repository/Social/",
+        "templates/admin/social/",
+        "templates/social/",
+        "migrations/",
+        "tests/Social/"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/"
+      ],
+      "deliverables": [
+        "Conversation membership checks on every read/write and attachment access",
+        "Friend/follower request, block and privacy state machine",
+        "Rate limits retention deletion export and moderation evidence",
+        "Explicit Fortress seam and legacy security/database retirement impact without weakening current enforcement",
+        "Positive and negative authorization, CSRF, validation, disabled-module and data-visibility regression coverage"
+      ],
+      "tests": [
+        "targeted messaging privacy and abuse PHPUnit tests",
+        "complete worker CI on the exact final HEAD"
+      ],
+      "completion_report": [
+        "exact final worker HEAD SHA and exact sanitized base SHA",
+        "complete changed-path list and worker PR",
+        "targeted tests plus complete worker CI results",
+        "unresolved risks assumptions and intentionally deferred features",
+        "current protection path future Fortress contract legacy symbols tables grants and retirement impact",
+        "module data ownership fresh and populated migration evidence rollback restore boundary and negative tests"
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "no-executable-public-uploads",
+        "no-secrets-or-trusted-private-runtime-in-worker-source",
+        "preserve-existing-security-controls-tests-phpstan-and-ci",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment",
+        "fortress-ready-replaceable-boundaries-no-private-runtime-reconstruction"
+      ]
+    },
+    {
+      "priority": 23,
+      "package_id": "FCP-067",
+      "title": "Video discovery watchlists clips creators and live streams",
+      "risk": "high",
+      "queue_state": "ready",
+      "execution_state": "unclaimed",
+      "worker_pr": null,
+      "dependencies": [
+        "FCP-051",
+        "FCP-010"
+      ],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [
+        "FCP-051",
+        "FCP-010"
+      ],
+      "claim_branch": "claim/fcp-067-g1",
+      "suggested_branch": "feature/fcp-067-pool-g1",
+      "base_branch": "worker/account-6",
+      "base_sha": "330c655636e6b18816c7334bbec9b9093f41c269",
+      "objective": "Expand video with search, tags, thumbnails, visibility, favorites, watchlists, optional history, timestamp comments, clips, creator profiles and privacy-aware live embeds.",
+      "allowed_paths": [
+        "src/Video/Discovery/",
+        "src/Controller/AdminVideoDiscovery/",
+        "src/Controller/VideoDiscovery/",
+        "src/Entity/VideoDiscovery/",
+        "src/Form/VideoDiscovery/",
+        "src/Repository/VideoDiscovery/",
+        "templates/admin/video_discovery/",
+        "templates/video_discovery/",
+        "migrations/",
+        "tests/Video/Discovery/"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/"
+      ],
+      "deliverables": [
+        "Opt-in history and field-level visibility",
+        "Provider consent mode and safe embed URL enforcement",
+        "No local transcoding until separate capacity/security approval",
+        "Explicit Fortress seam and legacy security/database retirement impact without weakening current enforcement",
+        "Positive and negative authorization, CSRF, validation, disabled-module and data-visibility regression coverage"
+      ],
+      "tests": [
+        "targeted video discovery privacy and provider PHPUnit tests",
+        "complete worker CI on the exact final HEAD"
+      ],
+      "completion_report": [
+        "exact final worker HEAD SHA and exact sanitized base SHA",
+        "complete changed-path list and worker PR",
+        "targeted tests plus complete worker CI results",
+        "unresolved risks assumptions and intentionally deferred features",
+        "current protection path future Fortress contract legacy symbols tables grants and retirement impact",
+        "module data ownership fresh and populated migration evidence rollback restore boundary and negative tests"
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "no-executable-public-uploads",
+        "no-secrets-or-trusted-private-runtime-in-worker-source",
+        "preserve-existing-security-controls-tests-phpstan-and-ci",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment",
+        "fortress-ready-replaceable-boundaries-no-private-runtime-reconstruction"
+      ]
+    },
+    {
+      "priority": 24,
+      "package_id": "FCP-068",
+      "title": "Notification preferences mentions subscriptions and newsletters",
+      "risk": "critical",
+      "queue_state": "ready",
+      "execution_state": "unclaimed",
+      "worker_pr": null,
+      "dependencies": [
+        "FCP-051",
+        "FCP-009"
+      ],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [
+        "FCP-051",
+        "FCP-009"
+      ],
+      "claim_branch": "claim/fcp-068-g1",
+      "suggested_branch": "feature/fcp-068-pool-g1",
+      "base_branch": "worker/account-6",
+      "base_sha": "330c655636e6b18816c7334bbec9b9093f41c269",
+      "objective": "Complete per-channel notification preferences, mentions, subscriptions, quiet hours, deduplication and a consent-based newsletter workflow separated from transactional mail.",
+      "allowed_paths": [
+        "src/Notification/Preferences/",
+        "src/Newsletter/",
+        "src/Controller/AdminNewsletter/",
+        "src/Controller/NotificationPreferences/",
+        "src/Entity/Newsletter/",
+        "src/Form/Newsletter/",
+        "src/Repository/Newsletter/",
+        "templates/admin/newsletter/",
+        "templates/account/notifications/",
+        "migrations/",
+        "tests/Notification/",
+        "tests/Newsletter/"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/"
+      ],
+      "deliverables": [
+        "Channel preference, quiet-hours, digest and deduplication model",
+        "Double-opt-in/consent evidence, unsubscribe and suppression state",
+        "Preview scheduling segmentation quota failure and retry behavior",
+        "Explicit Fortress seam and legacy security/database retirement impact without weakening current enforcement",
+        "Positive and negative authorization, CSRF, validation, disabled-module and data-visibility regression coverage"
+      ],
+      "tests": [
+        "targeted notification and newsletter PHPUnit tests",
+        "complete worker CI on the exact final HEAD"
+      ],
+      "completion_report": [
+        "exact final worker HEAD SHA and exact sanitized base SHA",
+        "complete changed-path list and worker PR",
+        "targeted tests plus complete worker CI results",
+        "unresolved risks assumptions and intentionally deferred features",
+        "current protection path future Fortress contract legacy symbols tables grants and retirement impact",
+        "module data ownership fresh and populated migration evidence rollback restore boundary and negative tests"
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "no-executable-public-uploads",
+        "no-secrets-or-trusted-private-runtime-in-worker-source",
+        "preserve-existing-security-controls-tests-phpstan-and-ci",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment",
+        "fortress-ready-replaceable-boundaries-no-private-runtime-reconstruction"
+      ]
+    },
+    {
+      "priority": 25,
+      "package_id": "FCP-069",
+      "title": "Permission-aware global search discovery and feeds",
+      "risk": "critical",
+      "queue_state": "ready",
+      "execution_state": "unclaimed",
+      "worker_pr": null,
+      "dependencies": [
+        "FCP-052",
+        "FCP-056",
+        "FCP-058",
+        "FCP-065"
+      ],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [
+        "FCP-052",
+        "FCP-056",
+        "FCP-058",
+        "FCP-065"
+      ],
+      "claim_branch": "claim/fcp-069-g1",
+      "suggested_branch": "feature/fcp-069-pool-g1",
+      "base_branch": "worker/account-6",
+      "base_sha": "330c655636e6b18816c7334bbec9b9093f41c269",
+      "objective": "Build modular global search, filters and discovery that never indexes or returns content the current viewer cannot access, reusing existing content feeds.",
+      "allowed_paths": [
+        "src/Search/",
+        "src/Controller/Search/",
+        "src/Entity/Search/",
+        "src/Repository/Search/",
+        "templates/search/",
+        "migrations/",
+        "tests/Search/"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/"
+      ],
+      "deliverables": [
+        "Module index adapters and fail-closed visibility filtering",
+        "Deterministic reindex deletion and stale-document repair",
+        "Explainable popularity/recommendation signals with opt-out",
+        "Explicit Fortress seam and legacy security/database retirement impact without weakening current enforcement",
+        "Positive and negative authorization, CSRF, validation, disabled-module and data-visibility regression coverage"
+      ],
+      "tests": [
+        "targeted cross-module search leakage and reindex PHPUnit tests",
+        "complete worker CI on the exact final HEAD"
+      ],
+      "completion_report": [
+        "exact final worker HEAD SHA and exact sanitized base SHA",
+        "complete changed-path list and worker PR",
+        "targeted tests plus complete worker CI results",
+        "unresolved risks assumptions and intentionally deferred features",
+        "current protection path future Fortress contract legacy symbols tables grants and retirement impact",
+        "module data ownership fresh and populated migration evidence rollback restore boundary and negative tests"
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "no-executable-public-uploads",
+        "no-secrets-or-trusted-private-runtime-in-worker-source",
+        "preserve-existing-security-controls-tests-phpstan-and-ci",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment",
+        "fortress-ready-replaceable-boundaries-no-private-runtime-reconstruction"
+      ]
+    },
+    {
+      "priority": 26,
+      "package_id": "FCP-070",
+      "title": "Versioned scoped API webhook and event surface",
+      "risk": "critical",
+      "queue_state": "ready",
+      "execution_state": "unclaimed",
+      "worker_pr": null,
+      "dependencies": [
+        "FCP-037",
+        "FCP-069"
+      ],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [
+        "FCP-037",
+        "FCP-069"
+      ],
+      "claim_branch": "claim/fcp-070-g1",
+      "suggested_branch": "feature/fcp-070-pool-g1",
+      "base_branch": "worker/account-6",
+      "base_sha": "330c655636e6b18816c7334bbec9b9093f41c269",
+      "objective": "Expose narrowly scoped versioned APIs and signed webhooks for completed modules with revocable tokens, permissions, rate limits and replay protection.",
+      "allowed_paths": [
+        "src/Api/",
+        "src/Webhook/",
+        "src/Controller/Api/",
+        "src/Entity/Api/",
+        "src/Form/Api/",
+        "src/Repository/Api/",
+        "config/routes/api.yaml",
+        "migrations/",
+        "tests/Api/",
+        "tests/Webhook/"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/"
+      ],
+      "deliverables": [
+        "Explicit per-module schemas and capability scopes",
+        "Token hashing rotation revocation rate limit and audit",
+        "Signed delivery retry replay protection and secret-free logs",
+        "Explicit Fortress seam and legacy security/database retirement impact without weakening current enforcement",
+        "Positive and negative authorization, CSRF, validation, disabled-module and data-visibility regression coverage"
+      ],
+      "tests": [
+        "targeted API authorization and webhook signature PHPUnit tests",
+        "complete worker CI on the exact final HEAD"
+      ],
+      "completion_report": [
+        "exact final worker HEAD SHA and exact sanitized base SHA",
+        "complete changed-path list and worker PR",
+        "targeted tests plus complete worker CI results",
+        "unresolved risks assumptions and intentionally deferred features",
+        "current protection path future Fortress contract legacy symbols tables grants and retirement impact",
+        "module data ownership fresh and populated migration evidence rollback restore boundary and negative tests"
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "no-executable-public-uploads",
+        "no-secrets-or-trusted-private-runtime-in-worker-source",
+        "preserve-existing-security-controls-tests-phpstan-and-ci",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment",
+        "fortress-ready-replaceable-boundaries-no-private-runtime-reconstruction"
+      ]
+    },
+    {
+      "priority": 27,
+      "package_id": "FCP-071",
+      "title": "Member profiles invitations registration privacy and data rights",
+      "risk": "critical",
+      "queue_state": "ready",
+      "execution_state": "unclaimed",
+      "worker_pr": null,
+      "dependencies": [
+        "FCP-006"
+      ],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [
+        "FCP-006"
+      ],
+      "claim_branch": "claim/fcp-071-g1",
+      "suggested_branch": "feature/fcp-071-pool-g1",
+      "base_branch": "worker/account-6",
+      "base_sha": "330c655636e6b18816c7334bbec9b9093f41c269",
+      "objective": "Expand accounts with invitation/registration variants, avatars/banners/bios, per-field privacy, export, deletion and retention while preserving existing identity protections.",
+      "allowed_paths": [
+        "src/Profile/",
+        "src/Controller/Profile/",
+        "src/Controller/Invitation/",
+        "src/Entity/Profile/",
+        "src/Entity/Invitation/",
+        "src/Form/Profile/",
+        "src/Form/Invitation/",
+        "src/Repository/Profile/",
+        "src/Repository/Invitation/",
+        "templates/profile/",
+        "templates/invitation/",
+        "migrations/",
+        "tests/Profile/",
+        "tests/Invitation/"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/"
+      ],
+      "deliverables": [
+        "Invite lifecycle with expiry single use role ceilings and abuse limits",
+        "Per-field visibility plus data export deletion and retention workflow",
+        "Avatar/banner references through hardened media contracts",
+        "Explicit Fortress seam and legacy security/database retirement impact without weakening current enforcement",
+        "Positive and negative authorization, CSRF, validation, disabled-module and data-visibility regression coverage"
+      ],
+      "tests": [
+        "targeted profile privacy invite and data-rights PHPUnit tests",
+        "complete worker CI on the exact final HEAD"
+      ],
+      "completion_report": [
+        "exact final worker HEAD SHA and exact sanitized base SHA",
+        "complete changed-path list and worker PR",
+        "targeted tests plus complete worker CI results",
+        "unresolved risks assumptions and intentionally deferred features",
+        "current protection path future Fortress contract legacy symbols tables grants and retirement impact",
+        "module data ownership fresh and populated migration evidence rollback restore boundary and negative tests"
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "no-executable-public-uploads",
+        "no-secrets-or-trusted-private-runtime-in-worker-source",
+        "preserve-existing-security-controls-tests-phpstan-and-ci",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment",
+        "fortress-ready-replaceable-boundaries-no-private-runtime-reconstruction"
+      ]
+    },
+    {
+      "priority": 28,
+      "package_id": "FCP-072",
+      "title": "Translations accessibility mobile editing and optional PWA",
+      "risk": "high",
+      "queue_state": "ready",
+      "execution_state": "unclaimed",
+      "worker_pr": null,
+      "dependencies": [
+        "FCP-035",
+        "FCP-051"
+      ],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [
+        "FCP-035",
+        "FCP-051"
+      ],
+      "claim_branch": "claim/fcp-072-g1",
+      "suggested_branch": "feature/fcp-072-pool-g1",
+      "base_branch": "worker/account-6",
+      "base_sha": "330c655636e6b18816c7334bbec9b9093f41c269",
+      "objective": "Finish module translation coverage, keyboard/screenreader flows and mobile administration; define a conservative opt-in PWA cache that never stores private/admin responses.",
+      "allowed_paths": [
+        "translations/",
+        "src/Accessibility/",
+        "src/Pwa/",
+        "src/Controller/LocaleController.php",
+        "templates/",
+        "assets/styles/accessibility.css",
+        "assets/controllers/accessibility_controller.js",
+        "public/manifest.webmanifest",
+        "tests/Accessibility/",
+        "tests/Pwa/"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/"
+      ],
+      "deliverables": [
+        "Translation catalogue coverage and locale fallback tests",
+        "WCAG-focused keyboard labels focus errors contrast and reduced-motion behavior",
+        "Public-only cache policy with logout/session invalidation and zero private response caching",
+        "Explicit Fortress seam and legacy security/database retirement impact without weakening current enforcement",
+        "Positive and negative authorization, CSRF, validation, disabled-module and data-visibility regression coverage"
+      ],
+      "tests": [
+        "targeted accessibility browser checks and PWA cache-policy tests",
+        "complete worker CI on the exact final HEAD"
+      ],
+      "completion_report": [
+        "exact final worker HEAD SHA and exact sanitized base SHA",
+        "complete changed-path list and worker PR",
+        "targeted tests plus complete worker CI results",
+        "unresolved risks assumptions and intentionally deferred features",
+        "current protection path future Fortress contract legacy symbols tables grants and retirement impact",
+        "module data ownership fresh and populated migration evidence rollback restore boundary and negative tests"
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "no-executable-public-uploads",
+        "no-secrets-or-trusted-private-runtime-in-worker-source",
+        "preserve-existing-security-controls-tests-phpstan-and-ci",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment",
+        "fortress-ready-replaceable-boundaries-no-private-runtime-reconstruction"
+      ]
+    },
+    {
+      "priority": 29,
+      "package_id": "FCP-073",
+      "title": "Hardware products benchmarks comparisons and setups",
+      "risk": "medium",
+      "queue_state": "ready",
+      "execution_state": "unclaimed",
+      "worker_pr": null,
+      "dependencies": [
+        "FCP-051",
+        "FCP-056"
+      ],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [
+        "FCP-051",
+        "FCP-056"
+      ],
+      "claim_branch": "claim/fcp-073-g1",
+      "suggested_branch": "feature/fcp-073-pool-g1",
+      "base_branch": "worker/account-6",
+      "base_sha": "330c655636e6b18816c7334bbec9b9093f41c269",
+      "objective": "Create structured hardware editorial data, test systems, benchmark series, comparison charts and community setups with methodology and disclosure.",
+      "allowed_paths": [
+        "src/Hardware/",
+        "src/Controller/AdminHardware/",
+        "src/Controller/Hardware/",
+        "src/Entity/Hardware/",
+        "src/Form/Hardware/",
+        "src/Repository/Hardware/",
+        "templates/admin/hardware/",
+        "templates/hardware/",
+        "migrations/",
+        "tests/Hardware/"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/"
+      ],
+      "deliverables": [
+        "Typed specifications units benchmark methodology and revision history",
+        "Clear separation of editorial measurements community values and advertising",
+        "Comparison and chart data with accessible table fallback",
+        "Explicit Fortress seam and legacy security/database retirement impact without weakening current enforcement",
+        "Positive and negative authorization, CSRF, validation, disabled-module and data-visibility regression coverage"
+      ],
+      "tests": [
+        "targeted hardware data validation and comparison PHPUnit tests",
+        "complete worker CI on the exact final HEAD"
+      ],
+      "completion_report": [
+        "exact final worker HEAD SHA and exact sanitized base SHA",
+        "complete changed-path list and worker PR",
+        "targeted tests plus complete worker CI results",
+        "unresolved risks assumptions and intentionally deferred features",
+        "current protection path future Fortress contract legacy symbols tables grants and retirement impact",
+        "module data ownership fresh and populated migration evidence rollback restore boundary and negative tests"
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "no-executable-public-uploads",
+        "no-secrets-or-trusted-private-runtime-in-worker-source",
+        "preserve-existing-security-controls-tests-phpstan-and-ci",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment",
+        "fortress-ready-replaceable-boundaries-no-private-runtime-reconstruction"
+      ]
+    },
+    {
+      "priority": 30,
+      "package_id": "FCP-074",
+      "title": "Support tickets rules sanctions appeals and case management",
+      "risk": "critical",
+      "queue_state": "ready",
+      "execution_state": "unclaimed",
+      "worker_pr": null,
+      "dependencies": [
+        "FCP-052"
+      ],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [
+        "FCP-052"
+      ],
+      "claim_branch": "claim/fcp-074-g1",
+      "suggested_branch": "feature/fcp-074-pool-g1",
+      "base_branch": "worker/account-6",
+      "base_sha": "330c655636e6b18816c7334bbec9b9093f41c269",
+      "objective": "Implement private support and moderation case management with assignments, deadlines, evidence, sanctions and appeals under narrow visibility and retention rules.",
+      "allowed_paths": [
+        "src/Support/",
+        "src/Controller/AdminSupport/",
+        "src/Controller/Support/",
+        "src/Entity/Support/",
+        "src/Form/Support/",
+        "src/Repository/Support/",
+        "templates/admin/support/",
+        "templates/support/",
+        "migrations/",
+        "tests/Support/"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/"
+      ],
+      "deliverables": [
+        "Case participants roles evidence access and immutable decision history",
+        "Rules knowledge links sanctions expiry and appeal state machine",
+        "Redaction export retention and no public shaming",
+        "Explicit Fortress seam and legacy security/database retirement impact without weakening current enforcement",
+        "Positive and negative authorization, CSRF, validation, disabled-module and data-visibility regression coverage"
+      ],
+      "tests": [
+        "targeted case authorization retention and appeal PHPUnit tests",
+        "complete worker CI on the exact final HEAD"
+      ],
+      "completion_report": [
+        "exact final worker HEAD SHA and exact sanitized base SHA",
+        "complete changed-path list and worker PR",
+        "targeted tests plus complete worker CI results",
+        "unresolved risks assumptions and intentionally deferred features",
+        "current protection path future Fortress contract legacy symbols tables grants and retirement impact",
+        "module data ownership fresh and populated migration evidence rollback restore boundary and negative tests"
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "no-executable-public-uploads",
+        "no-secrets-or-trusted-private-runtime-in-worker-source",
+        "preserve-existing-security-controls-tests-phpstan-and-ci",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment",
+        "fortress-ready-replaceable-boundaries-no-private-runtime-reconstruction"
+      ]
+    },
+    {
+      "priority": 31,
+      "package_id": "FCP-076",
+      "title": "Public integration adapters and game data import contracts",
+      "risk": "critical",
+      "queue_state": "ready",
+      "execution_state": "unclaimed",
+      "worker_pr": null,
+      "dependencies": [
+        "FCP-019",
+        "FCP-056",
+        "FCP-060"
+      ],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [
+        "FCP-019",
+        "FCP-056",
+        "FCP-060"
+      ],
+      "claim_branch": "claim/fcp-076-g1",
+      "suggested_branch": "feature/fcp-076-pool-g1",
+      "base_branch": "worker/account-6",
+      "base_sha": "330c655636e6b18816c7334bbec9b9093f41c269",
+      "objective": "Implement worker-visible provider-neutral adapters, mocks and consent/import lifecycle for public Discord, Twitch, YouTube, Steam and game API data while leaving every secret/provider runtime implementation Trusted-only.",
+      "allowed_paths": [
+        "src/Integration/Public/",
+        "src/Gaming/Import/",
+        "src/Controller/IntegrationConsent/",
+        "src/Entity/IntegrationPublic/",
+        "src/Form/IntegrationPublic/",
+        "src/Repository/IntegrationPublic/",
+        "templates/integration/",
+        "migrations/",
+        "tests/Integration/Public/",
+        "tests/Gaming/Import/"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/"
+      ],
+      "deliverables": [
+        "Versioned adapter interfaces, synthetic fixtures and fail-closed unavailable state",
+        "Consent revoke provenance cache rate-limit and partial-failure contracts",
+        "No credentials RCON private endpoints or provider secrets",
+        "Explicit Fortress seam and legacy security/database retirement impact without weakening current enforcement",
+        "Positive and negative authorization, CSRF, validation, disabled-module and data-visibility regression coverage"
+      ],
+      "tests": [
+        "targeted adapter contract consent and import reconciliation PHPUnit tests",
+        "complete worker CI on the exact final HEAD"
+      ],
+      "completion_report": [
+        "exact final worker HEAD SHA and exact sanitized base SHA",
+        "complete changed-path list and worker PR",
+        "targeted tests plus complete worker CI results",
+        "unresolved risks assumptions and intentionally deferred features",
+        "current protection path future Fortress contract legacy symbols tables grants and retirement impact",
+        "module data ownership fresh and populated migration evidence rollback restore boundary and negative tests"
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "no-executable-public-uploads",
+        "no-secrets-or-trusted-private-runtime-in-worker-source",
+        "preserve-existing-security-controls-tests-phpstan-and-ci",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment",
+        "fortress-ready-replaceable-boundaries-no-private-runtime-reconstruction"
+      ]
+    },
+    {
+      "priority": 32,
+      "package_id": "FCP-077",
+      "title": "Module widgets dashboards and distinct theme compositions",
+      "risk": "high",
+      "queue_state": "ready",
+      "execution_state": "unclaimed",
+      "worker_pr": null,
+      "dependencies": [
+        "FCP-049",
+        "FCP-054",
+        "FCP-056",
+        "FCP-062",
+        "FCP-065"
+      ],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [
+        "FCP-049",
+        "FCP-054",
+        "FCP-056",
+        "FCP-062",
+        "FCP-065"
+      ],
+      "claim_branch": "claim/fcp-077-g1",
+      "suggested_branch": "feature/fcp-077-pool-g1",
+      "base_branch": "worker/account-6",
+      "base_sha": "330c655636e6b18816c7334bbec9b9093f41c269",
+      "objective": "Add real permission-aware widgets and genuinely different module page compositions for completed modules without duplicating business logic in templates.",
+      "allowed_paths": [
+        "src/Widget/Module/",
+        "src/Theme/Module/",
+        "src/Layout/Module/",
+        "templates/widgets/modules/",
+        "templates/themes/modules/",
+        "assets/styles/modules/",
+        "tests/Widget/Module/",
+        "tests/Theme/Module/",
+        "tests/Layout/Module/"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/"
+      ],
+      "deliverables": [
+        "Events server status forum guides downloads rankings and presence widgets using real data",
+        "Distinct navigation/content/sidebar structures across themes, not recolours only",
+        "Permission, disabled-module, empty/error and mobile behavior",
+        "Explicit Fortress seam and legacy security/database retirement impact without weakening current enforcement",
+        "Positive and negative authorization, CSRF, validation, disabled-module and data-visibility regression coverage"
+      ],
+      "tests": [
+        "targeted widget/theme PHPUnit tests",
+        "Chromium layout and pointer-drag regression checks",
+        "complete worker CI on the exact final HEAD"
+      ],
+      "completion_report": [
+        "exact final worker HEAD SHA and exact sanitized base SHA",
+        "complete changed-path list and worker PR",
+        "targeted tests plus complete worker CI results",
+        "unresolved risks assumptions and intentionally deferred features",
+        "current protection path future Fortress contract legacy symbols tables grants and retirement impact",
+        "module data ownership fresh and populated migration evidence rollback restore boundary and negative tests"
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "no-executable-public-uploads",
+        "no-secrets-or-trusted-private-runtime-in-worker-source",
+        "preserve-existing-security-controls-tests-phpstan-and-ci",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment",
+        "fortress-ready-replaceable-boundaries-no-private-runtime-reconstruction"
       ]
     }
   ]
