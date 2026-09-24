@@ -85,6 +85,11 @@ final class CommentRecord
         return $this->deletedAt;
     }
 
+    public function deletedByUserId(): ?int
+    {
+        return $this->deletedByUserId;
+    }
+
     public function deletionReason(): ?string
     {
         return $this->deletionReason;
