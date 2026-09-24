@@ -53,6 +53,9 @@ final class NewsletterAdminSecurityTest extends WebTestCase
 
         $client->request('GET', '/admin/newsletter');
         self::assertResponseStatusCodeSame(404);
+
+        $state->setEnabled(true);
+        $this->em($client)->flush();
     }
 
     private function user(KernelBrowser $client, array $permissions): User
