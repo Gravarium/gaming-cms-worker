@@ -1,0 +1,200 @@
+{
+  "schema_version": 1,
+  "mode": "continuous-single-worker",
+  "pool_revision": "f17b7deb9d3e844497995e057a22acfd177f61dc",
+  "repository": "Gravarium/gaming-cms-worker",
+  "baseline_branch": "worker/account-6",
+  "base_sha": "330c655636e6b18816c7334bbec9b9093f41c269",
+  "published_at": "2026-09-24T06:32:43Z",
+  "rules": {
+    "choose": "Take the first listed task that has no existing open or completed Worker PR and is not already being edited.",
+    "one_at_a_time": "Finish, push, open the Worker PR and start exact-head Worker CI before taking the next task.",
+    "reservation": "The seven-hour work window starts with the first product commit and renews after each verified push; the task itself does not expire.",
+    "final_authority": "Every result remains untrusted until Trusted review; never merge or deploy."
+  },
+  "tasks": [
+    {
+      "priority": 1,
+      "package_id": "FCP-009",
+      "title": "Guild and notification behavior coverage",
+      "next_generation": 1,
+      "claim_id": "FCP-009-continuous-g1",
+      "suggested_branch": "feature/fcp-009-continuous-g1",
+      "base_sha": "330c655636e6b18816c7334bbec9b9093f41c269",
+      "objective": "Complete cross-guild isolation, application decisions, event rules and notification failure behavior coverage.",
+      "allowed_paths": [
+        "src/Controller/AdminGuildApplicationController.php",
+        "src/Controller/AdminGuildCollaborationController.php",
+        "src/Controller/AdminGuildMemberController.php",
+        "src/Controller/AdminGuildStructureController.php",
+        "src/Controller/GuildPortalController.php",
+        "src/Entity/GuildApplication.php",
+        "src/Entity/GuildEvent.php",
+        "src/ExternalConnector/DiscordGuildNotificationConnectorAdapter.php",
+        "tests/ExternalConnector/DiscordGuildNotificationConnectorAdapterTest.php",
+        "tests/Controller/GamingGuildSecurityTest.php",
+        "tests/Controller/Guild/"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "ops/",
+        "docs/",
+        "bin/worker-sync",
+        "bin/build-worker-snapshot",
+        ".github/workflows/"
+      ],
+      "deliverables": [
+        "cross-guild negative tests",
+        "decision and event invariant tests",
+        "external failure never removes internal notification evidence",
+        "Preserve current security behavior through replaceable contracts; register any temporary compatibility adapter with an explicit retirement gate.",
+        "Use only literal allowed files/directories; request a reviewed scope change before touching shared fixtures or additional files."
+      ],
+      "tests": [
+        "targeted PHPUnit application tests",
+        "complete worker CI"
+      ],
+      "completion_report": [
+        "exact head SHA",
+        "complete changed-file list",
+        "test commands and results",
+        "unresolved risks and assumptions",
+        "exact sanitized baseline SHA and trusted-issued assignment revision",
+        "last green checkpoint and one exact next action",
+        "compatibility seam and old-security retirement impact"
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "no-executable-public-uploads",
+        "no-secrets-or-trusted-private-runtime-in-worker-source",
+        "preserve-all-security-and-worker-isolation-invariants",
+        "red-ci-stops-integration",
+        "no-secret-or-private-runtime-export"
+      ]
+    },
+    {
+      "priority": 2,
+      "package_id": "FCP-010",
+      "title": "Media and video browser assurance",
+      "next_generation": 1,
+      "claim_id": "FCP-010-continuous-g1",
+      "suggested_branch": "feature/fcp-010-continuous-g1",
+      "base_sha": "330c655636e6b18816c7334bbec9b9093f41c269",
+      "objective": "Prove upload, replacement, deletion refusal, provider privacy and executable-upload rejection through application-level tests.",
+      "allowed_paths": [
+        "src/Controller/AdminStorageController.php",
+        "src/Controller/AdminVideoController.php",
+        "src/Service/MediaDeletionRepairer.php",
+        "src/Service/MediaMalwareScanner.php",
+        "src/Service/MediaUploadPolicy.php",
+        "src/Service/MediaUrlPolicy.php",
+        "src/Service/VideoEmbedResolver.php",
+        "tests/Controller/MediaStorageSecurityTest.php",
+        "tests/Controller/MediaStorageCsrfRenderingTest.php",
+        "tests/Controller/MediaVideo/",
+        "tests/Service/MediaUploadPolicyTest.php",
+        "tests/Service/VideoEmbedResolverTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "ops/",
+        "docs/",
+        "bin/worker-sync",
+        "bin/build-worker-snapshot",
+        ".github/workflows/"
+      ],
+      "deliverables": [
+        "upload and replacement journeys",
+        "negative executable, MIME, CSRF and in-use deletion tests",
+        "provider URL/privacy regressions",
+        "Preserve current security behavior through replaceable contracts; register any temporary compatibility adapter with an explicit retirement gate.",
+        "Use only literal allowed files/directories; request a reviewed scope change before touching shared fixtures or additional files."
+      ],
+      "tests": [
+        "targeted PHPUnit application tests",
+        "complete worker CI"
+      ],
+      "completion_report": [
+        "exact head SHA",
+        "complete changed-file list",
+        "test commands and results",
+        "unresolved risks and assumptions",
+        "exact sanitized baseline SHA and trusted-issued assignment revision",
+        "last green checkpoint and one exact next action",
+        "compatibility seam and old-security retirement impact"
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "no-executable-public-uploads",
+        "no-secrets-or-trusted-private-runtime-in-worker-source",
+        "preserve-all-security-and-worker-isolation-invariants",
+        "red-ci-stops-integration",
+        "no-secret-or-private-runtime-export"
+      ]
+    },
+    {
+      "priority": 3,
+      "package_id": "FCP-006",
+      "title": "Account browser assurance",
+      "next_generation": 1,
+      "claim_id": "FCP-006-continuous-g1",
+      "suggested_branch": "feature/fcp-006-continuous-g1",
+      "base_sha": "330c655636e6b18816c7334bbec9b9093f41c269",
+      "objective": "Add fail-closed browser-level assurance for TOTP, passkeys and sensitive session transitions.",
+      "allowed_paths": [
+        "assets/passkey.js",
+        "src/Controller/AccountController.php",
+        "src/Controller/PasskeyController.php",
+        "src/Controller/TwoFactorController.php",
+        "src/EventSubscriber/TwoFactorGateSubscriber.php",
+        "tests/JavaScript/passkey.test.mjs",
+        "tests/Controller/AccountSecurityHardeningTest.php",
+        "tests/Controller/TwoFactorSecurityTest.php",
+        "tests/Controller/AccountSecurity/"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "ops/",
+        "docs/",
+        "bin/worker-sync",
+        "bin/build-worker-snapshot",
+        ".github/workflows/"
+      ],
+      "deliverables": [
+        "browser tests for successful and rejected ceremonies",
+        "negative tests for stale sessions, CSRF and authorization",
+        "no production secret or server dependency",
+        "Preserve current security behavior through replaceable contracts; register any temporary compatibility adapter with an explicit retirement gate.",
+        "Use only literal allowed files/directories; request a reviewed scope change before touching shared fixtures or additional files."
+      ],
+      "tests": [
+        "targeted PHPUnit application tests",
+        "node --test tests/JavaScript/passkey.test.mjs",
+        "complete worker CI"
+      ],
+      "completion_report": [
+        "exact head SHA",
+        "complete changed-file list",
+        "test commands and results",
+        "unresolved risks and assumptions",
+        "exact sanitized baseline SHA and trusted-issued assignment revision",
+        "last green checkpoint and one exact next action",
+        "compatibility seam and old-security retirement impact"
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "no-executable-public-uploads",
+        "no-secrets-or-trusted-private-runtime-in-worker-source",
+        "preserve-all-security-and-worker-isolation-invariants",
+        "red-ci-stops-integration",
+        "no-secret-or-private-runtime-export"
+      ]
+    }
+  ]
+}
