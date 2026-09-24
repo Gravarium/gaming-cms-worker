@@ -76,7 +76,7 @@ final class NewsletterDomainTest extends TestCase
 
         $delivery->markFailure('transport_unavailable', $now);
         self::assertSame(NewsletterDelivery::STATUS_RETRY, $delivery->getStatus());
-        self::assertSame($now->modify('+5 minutes'), $delivery->getRetryAt());
+        self::assertEquals($now->modify('+5 minutes'), $delivery->getRetryAt());
 
         for ($attempt = 2; $attempt <= 5; ++$attempt) {
             $delivery->markFailure('transport_unavailable', $now->modify('+'.$attempt.' minutes'));
