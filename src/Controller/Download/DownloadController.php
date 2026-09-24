@@ -32,7 +32,7 @@ final class DownloadController extends AbstractController
         return $this->render('download/show.html.twig',['package'=>$package,'versions'=>$this->versions->forPackage($package)]);
     }
     #[Route('/{slug}/file/{id}',name:'app_download_file',requirements:['slug'=>'[a-z0-9-]+','id'=>'\d+'],methods:['GET'])]
-    public function file(string $slug,DownloadVersion $version):Response
+    public function deliver(string $slug,DownloadVersion $version):Response
     {
         $this->assertAvailable();$package=$version->getPackage();
         if($package->getSlug()!==$slug||!$this->authorization->canDownload($package,$this->user())||!$version->isDeliverable())throw $this->createNotFoundException();
