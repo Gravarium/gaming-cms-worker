@@ -12,7 +12,10 @@ final class CompetitionResultPolicy
 {
     public function canSubmit(CompetitionMatch $match, CompetitionParticipant $participant, User $actor): bool
     {
-        return $match->isParticipant($participant) && $participant->containsUser($actor) && $participant->isCheckedIn() && !$match->isConfirmed();
+        return $match->isParticipant($participant)
+            && $participant->containsUser($actor)
+            && $participant->isCheckedIn()
+            && in_array($match->getStatus(), [CompetitionMatch::STATUS_READY, CompetitionMatch::STATUS_IN_PROGRESS, CompetitionMatch::STATUS_PENDING_CONFIRMATION], true);
     }
 
     public function canConfirm(CompetitionMatch $match, CompetitionParticipant $participant, User $actor): bool
