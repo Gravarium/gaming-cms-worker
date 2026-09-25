@@ -116,7 +116,12 @@ class Competition
 
     public function getId(): ?int { return $this->id; }
     public function getGame(): ?Game { return $this->game; }
-    public function setGame(Game $game): self { $this->game = $game; return $this; }
+    public function setGame(Game $game): self
+    {
+        if ($this->season !== null && $this->season->getGame() !== null && $this->season->getGame() !== $game) { throw new \DomainException('A competition season must belong to the same game.'); }
+        $this->game = $game;
+        return $this;
+    }
     public function getSeason(): ?CompetitionSeason { return $this->season; }
     public function setSeason(?CompetitionSeason $season): self
     {

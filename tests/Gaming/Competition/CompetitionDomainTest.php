@@ -47,6 +47,21 @@ final class CompetitionDomainTest extends TestCase
         (new CompetitionBracket())->initialPairings($competition, [$first]);
     }
 
+    public function testDoubleEliminationPromotionKeepsWinnerAndLoserBracketsSeparate(): void
+    {
+        $game = (new Game())->setName('Arena')->setSlug('arena');
+        $competition = (new Competition())->setGame($game)->setName('Double Cup')->setSlug('double-cup')->setFormat(Competition::FORMAT_DOUBLE_ELIMINATION);
+        $competition->open();
+        $participants = [];
+        for ($index = 1; $index <= 4; ++$index) {
+            $participants[] = (new CompetitionParticipant())->setCompetition($competition)->setCaptain(new User())->setName('P'.$index)->setSeed($index);
+        }
+        $pairings = (new CompetitionBracket())->nextEliminationPairings($competition, 2, [$participants[0], $participants[1]], [$participants[2], $participants[3]]);
+        self::assertCount(2, $pairings);
+        self::assertSame(CompetitionMatch::BRACKET_WINNERS, $pairings[0]['bracket']);
+        self::assertSame(CompetitionMatch::BRACKET_LOSERS, $pairings[1]['bracket']);
+    }
+
     public function testCheckInAndBothSideConfirmationAreRequired(): void
     {
         $game = (new Game())->setName('Arena')->setSlug('arena');

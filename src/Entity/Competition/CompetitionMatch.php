@@ -160,6 +160,7 @@ class CompetitionMatch
         if (!$this->isParticipant($by)) { throw new \DomainException('Only match participants may submit a result.'); }
         if (!$by->containsUser($submittedBy)) { throw new \DomainException('The submitting user is not a member of this participant.'); }
         if ($scoreA < 0 || $scoreB < 0) { throw new \InvalidArgumentException('Scores cannot be negative.'); }
+        if ($scoreA === $scoreB && in_array($this->competition?->getFormat(), [Competition::FORMAT_SINGLE_ELIMINATION, Competition::FORMAT_DOUBLE_ELIMINATION], true)) { throw new \DomainException('Elimination matches cannot end in a draw.'); }
         if (!in_array($this->status, [self::STATUS_READY, self::STATUS_IN_PROGRESS, self::STATUS_PENDING_CONFIRMATION], true)) { throw new \DomainException('This match no longer accepts results.'); }
         $this->scoreA = $scoreA;
         $this->scoreB = $scoreB;
@@ -195,6 +196,7 @@ class CompetitionMatch
     {
         if ($this->status !== self::STATUS_DISPUTED) { throw new \DomainException('Only disputed matches can be resolved.'); }
         if ($scoreA < 0 || $scoreB < 0) { throw new \InvalidArgumentException('Scores cannot be negative.'); }
+        if ($scoreA === $scoreB && in_array($this->competition?->getFormat(), [Competition::FORMAT_SINGLE_ELIMINATION, Competition::FORMAT_DOUBLE_ELIMINATION], true)) { throw new \DomainException('Elimination matches cannot end in a draw.'); }
         if ($winner !== null && !$this->isParticipant($winner)) { throw new \DomainException('The winner must be a match participant.'); }
         $this->scoreA = $scoreA;
         $this->scoreB = $scoreB;
