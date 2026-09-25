@@ -181,7 +181,7 @@ class CompetitionMatch
         if (!$this->isParticipant($by)) { throw new \DomainException('Only match participants may confirm a result.'); }
         if (!$by->isCheckedIn()) { throw new \DomainException('Only checked-in participants may confirm a result.'); }
         if ($this->scoreA === null || $this->scoreB === null) { throw new \DomainException('A result must be submitted before confirmation.'); }
-        if ($this->status === self::STATUS_DISPUTED || $this->status === self::STATUS_CANCELLED) { throw new \DomainException('This match is not confirmable.'); }
+        if ($this->status !== self::STATUS_PENDING_CONFIRMATION) { throw new \DomainException('Only pending results can be confirmed.'); }
         $this->setConfirmedFlag($by, true);
         if ($this->participantAConfirmed && $this->participantBConfirmed) {
             $this->status = self::STATUS_CONFIRMED;

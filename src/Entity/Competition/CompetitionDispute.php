@@ -90,6 +90,7 @@ class CompetitionDispute
     public function decide(User $decidedBy, string $status, string $decision): self
     {
         if (!$this->isOpen()) { throw new \DomainException('This dispute has already been decided.'); }
+        if ($this->match?->getStatus() !== CompetitionMatch::STATUS_DISPUTED) { throw new \DomainException('Only disputed matches can receive a dispute decision.'); }
         if (!in_array($status, [self::STATUS_UPHELD, self::STATUS_REJECTED], true)) { throw new \InvalidArgumentException('Invalid dispute decision.'); }
         $decision = trim($decision);
         if ($decision === '') { throw new \InvalidArgumentException('A dispute decision needs an explanation.'); }
