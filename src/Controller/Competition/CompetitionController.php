@@ -70,7 +70,7 @@ final class CompetitionController extends AbstractController
         if ($this->participants->forCompetitionAndUser($competition, $user) !== null) { $this->addFlash('error', 'Du bist bereits registriert.'); return $this->redirectToRoute('app_competition_show', ['id' => $competition->getId()]); }
 
         $participant = (new CompetitionParticipant())->setCompetition($competition)->setCaptain($user);
-        $form = $this->createForm(CompetitionRegistrationType::class, $participant)->handleRequest($request);
+        $form = $this->createForm(CompetitionRegistrationType::class, $participant, ['competition_mode' => $competition->getMode()])->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($competition->getMode() === Competition::MODE_SOLO && $participant->getKind() !== CompetitionParticipant::KIND_SOLO) {
                 $form->addError(new \Symfony\Component\Form\FormError('Diese Competition akzeptiert nur Einzelanmeldungen.'));
