@@ -1,0 +1,23 @@
+{% extends 'base.html.twig' %}
+{% set site = site_settings() %}
+{% block title %}Charaktere | {{ site.siteName }}{% endblock %}
+{% block body %}
+<header class="topbar"><a class="brand" href="{{ path('app_home') }}">{{ site.siteName }}</a><nav class="top-actions"><a href="{{ path('app_gaming_index') }}">Gaming</a></nav></header>
+<main class="public-shell">
+    <p class="eyebrow">Gaming</p>
+    <h1>Öffentliche Charakterprofile</h1>
+    <p class="hero-copy">Profile werden nur mit aktivem Account- und Feld-Consent angezeigt.</p>
+    <section class="guild-grid" aria-label="Charakterprofile">
+        {% for profile in profiles %}
+            <article class="guild-card">
+                <p class="eyebrow">{{ profile.game.name }} · {{ profile.account.displayName }}</p>
+                <h2><a href="{{ path('app_character_show', {id: profile.id}) }}">{{ profile.name }}</a></h2>
+                <div class="guild-meta"><span>{{ profile.server ?: 'Server unbekannt' }}</span><span>{{ profile.region ?: 'Region unbekannt' }}</span></div>
+                {% if profile.characterClass %}<p>{{ profile.characterClass }}{% if profile.role %} · {{ profile.role }}{% endif %}</p>{% endif %}
+            </article>
+        {% else %}
+            <p class="muted">Keine öffentlichen Charakterprofile vorhanden.</p>
+        {% endfor %}
+    </section>
+</main>
+{% endblock %}
