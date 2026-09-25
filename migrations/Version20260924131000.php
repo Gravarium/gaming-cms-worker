@@ -11,7 +11,7 @@ final class Version20260924131000 extends AbstractMigration
 {
     public function getDescription(): string
     {
-        return 'Add game catalogue, editions, platforms, genres, release calendar and hub links (worker composition)';
+        return 'Add game catalogue, editions, platforms, genres, release calendar and hub links';
     }
 
     public function up(Schema $schema): void
