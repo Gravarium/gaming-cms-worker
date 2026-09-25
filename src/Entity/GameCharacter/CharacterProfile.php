@@ -226,6 +226,7 @@ final class CharacterProfile
         if ($consent === null) {
             $consent = new CharacterFieldConsent($this, $fieldKey, $source);
             $this->consents->add($consent);
+            $consent->grant($source);
         } else {
             $consent->grant($source);
         }
