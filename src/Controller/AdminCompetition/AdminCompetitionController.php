@@ -7,6 +7,7 @@ namespace App\Controller\AdminCompetition;
 use App\Entity\Competition\Competition;
 use App\Entity\Competition\CompetitionDispute;
 use App\Entity\Competition\CompetitionMatch;
+use App\Entity\Competition\CompetitionSeason;
 use App\Entity\User;
 use App\Form\Competition\CompetitionType;
 use App\Gaming\Competition\CompetitionBracket;
@@ -116,6 +117,16 @@ final class AdminCompetitionController extends AbstractController
         $this->assertAvailable();
         if (!$this->isCsrfTokenValid('competition-archive-'.$competition->getId(), (string) $request->request->get('_token'))) { throw $this->createAccessDeniedException(); }
         $competition->archive();
+        $this->entityManager->flush();
+        return $this->redirectToRoute('app_admin_competition_index');
+    }
+
+    #[Route('/season/{season}/archive', name: 'app_admin_competition_season_archive', requirements: ['season' => '\\d+'], methods: ['POST'])]
+    public function archiveSeason(CompetitionSeason $season, Request $request): Response
+    {
+        $this->assertAvailable();
+        if (!$this->isCsrfTokenValid('competition-season-archive-'.$season->getId(), (string) $request->request->get('_token'))) { throw $this->createAccessDeniedException(); }
+        $season->archive();
         $this->entityManager->flush();
         return $this->redirectToRoute('app_admin_competition_index');
     }
