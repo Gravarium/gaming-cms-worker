@@ -154,7 +154,7 @@ class CompetitionMatch
     public function markReady(): self
     {
         if ($this->participantA === null || $this->participantB === null) { throw new \DomainException('A match needs two participants before it can start.'); }
-        if ($this->status === self::STATUS_CANCELLED) { throw new \DomainException('Cancelled matches cannot be reopened.'); }
+        if (!in_array($this->status, [self::STATUS_SCHEDULED, self::STATUS_READY], true)) { throw new \DomainException('Only scheduled matches can become ready.'); }
         $this->status = self::STATUS_READY;
         return $this;
     }
