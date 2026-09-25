@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "62e1b6fec6ce6f9a4096c6c5a6912d74df36da5c",
-  "published_at": "2026-09-25T05:00:00Z",
+  "published_at": "2026-09-25T05:18:00Z",
   "summary": {
     "total_remaining_worker_tasks": 27,
-    "completed_worker_prs_awaiting_trusted_review": 17,
+    "completed_worker_prs_awaiting_trusted_review": 18,
     "recovery_tasks": 0,
     "unclaimed": 9,
-    "immediately_claimable": 0,
-    "next_required_action": "Continue FCP-060 on feature/fcp-060-pool-g1; after exact green completion reconcile the package and publish the next dependency-safe composition base."
+    "immediately_claimable": 1,
+    "next_required_action": "Claim FCP-061 from composition/fcp-060-g1 at exact HEAD 92ec2f33785d1979d3e8dfeeb726e6e94f5a7b7d and continue its Worker implementation."
   },
   "rules": {
     "choose": "Resume any owned unfinished claim first. Otherwise choose exactly the first unclaimed task with an empty current blocked_by list and a published exact proposal_base_sha. A completed Worker proposal may satisfy proposal-only dependencies when its exact HEAD has green Worker CI.",
@@ -856,7 +856,7 @@
       "package_id": "FCP-060",
       "title": "Character account collection and progression profiles",
       "risk": "high",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [
         "FCP-053",
         "FCP-056"
@@ -943,11 +943,13 @@
           "ci_result": "success"
         }
       ],
-      "claim_state": "locked_until_worker_completion",
+      "claim_state": "locked_until_trusted_resolution",
       "claimed_on": "2026-09-25T05:00:00Z",
-      "active_head": "92ec2f33785d1979d3e8dfeeb726e6e94f5a7b7d",
-      "active_base_branch": "composition/fcp-060-g1",
-      "active_base_sha": "92ec2f33785d1979d3e8dfeeb726e6e94f5a7b7d"
+      "worker_pr": 31,
+      "resume_branch": "feature/fcp-060-pool-g1",
+      "final_head": "033760d40032e3d8db0adf46fb0fedc46970b993",
+      "ci_run_id": 36097623499,
+      "ci_result": "success"
     },
     {
       "priority": 12,
@@ -960,10 +962,7 @@
         "FCP-056"
       ],
       "dependencies_integrated_at_publication": [],
-      "blocked_by_at_publication": [
-        "FCP-053",
-        "FCP-056"
-      ],
+      "blocked_by_at_publication": [],
       "claim_branch": "claim/fcp-061-g1",
       "suggested_branch": "feature/fcp-061-pool-g1",
       "base_branch": "main",
@@ -1024,8 +1023,26 @@
         "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment",
         "fortress-ready-replaceable-boundaries-no-private-runtime-reconstruction"
       ],
-      "proposal_base_branch": "main",
-      "proposal_base_sha": "62e1b6fec6ce6f9a4096c6c5a6912d74df36da5c"
+      "proposal_base_branch": "composition/fcp-060-g1",
+      "proposal_base_sha": "92ec2f33785d1979d3e8dfeeb726e6e94f5a7b7d",
+      "proposal_dependency_evidence": [
+        {
+          "package_id": "FCP-053",
+          "feature_branch": "feature/fcp-053-pool-g1",
+          "worker_pr": 14,
+          "exact_head": "ad5386177203b018415c95037cb32e96afda44d4",
+          "ci_run_id": 36064749189,
+          "ci_result": "success"
+        },
+        {
+          "package_id": "FCP-056",
+          "feature_branch": "feature/fcp-056-pool-g1",
+          "worker_pr": 15,
+          "exact_head": "2066da8905b18e7afc3973601d71686f4ed5651b",
+          "ci_run_id": 36065083751,
+          "ci_result": "success"
+        }
+      ]
     },
     {
       "priority": 13,
