@@ -161,6 +161,7 @@ class CompetitionMatch
 
     public function submitResult(CompetitionParticipant $by, int $scoreA, int $scoreB, User $submittedBy): self
     {
+        if ($this->competition?->getStatus() !== Competition::STATUS_IN_PROGRESS) { throw new \DomainException('Only active competitions accept results.'); }
         if (!$this->isParticipant($by)) { throw new \DomainException('Only match participants may submit a result.'); }
         if (!$by->containsUser($submittedBy)) { throw new \DomainException('The submitting user is not a member of this participant.'); }
         if (!$by->isCheckedIn()) { throw new \DomainException('Only checked-in participants may submit a result.'); }
@@ -178,6 +179,7 @@ class CompetitionMatch
 
     public function confirmResult(CompetitionParticipant $by): self
     {
+        if ($this->competition?->getStatus() !== Competition::STATUS_IN_PROGRESS) { throw new \DomainException('Only active competitions accept confirmations.'); }
         if (!$this->isParticipant($by)) { throw new \DomainException('Only match participants may confirm a result.'); }
         if (!$by->isCheckedIn()) { throw new \DomainException('Only checked-in participants may confirm a result.'); }
         if ($this->scoreA === null || $this->scoreB === null) { throw new \DomainException('A result must be submitted before confirmation.'); }
@@ -193,6 +195,7 @@ class CompetitionMatch
 
     public function markDisputed(): self
     {
+        if ($this->competition?->getStatus() !== Competition::STATUS_IN_PROGRESS) { throw new \DomainException('Only active competitions accept disputes.'); }
         if ($this->status !== self::STATUS_PENDING_CONFIRMATION) { throw new \DomainException('Only pending results can be disputed.'); }
         $this->status = self::STATUS_DISPUTED;
         return $this;

@@ -161,7 +161,7 @@ final class CompetitionController extends AbstractController
         $user = $this->currentUser();
         if (!$this->isCsrfTokenValid('competition-evidence-'.$match->getId(), (string) $request->request->get('_token'))) { throw $this->createAccessDeniedException(); }
         $participant = $this->participantFromRequest($match, (int) $request->request->get('participant'));
-        if (!$participant->containsUser($user)) { throw $this->createAccessDeniedException(); }
+        if ($competition->getStatus() !== Competition::STATUS_IN_PROGRESS || !$participant->isCheckedIn() || !$participant->containsUser($user)) { throw $this->createAccessDeniedException(); }
         $locator = trim((string) $request->request->get('locator'));
         $scheme = strtolower((string) parse_url($locator, PHP_URL_SCHEME));
         if (!filter_var($locator, FILTER_VALIDATE_URL) || !in_array($scheme, ['http', 'https'], true)) { throw new BadRequestHttpException('Der Beleg muss eine gültige HTTP(S)-URL sein.'); }

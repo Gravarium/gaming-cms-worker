@@ -67,7 +67,7 @@ final class AdminCompetitionController extends AbstractController
     public function edit(Competition $competition, Request $request): Response
     {
         $this->assertAvailable();
-        $form = $this->createForm(CompetitionType::class, $competition)->handleRequest($request);
+        $form = $this->createForm(CompetitionType::class, $competition, ['lock_structure' => $competition->getStatus() !== Competition::STATUS_DRAFT])->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $competition->setSlug($this->slug($competition->getName(), $competition->getId()));
             $this->entityManager->flush();

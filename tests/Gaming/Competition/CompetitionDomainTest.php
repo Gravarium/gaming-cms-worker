@@ -92,6 +92,7 @@ final class CompetitionDomainTest extends TestCase
         $game = (new Game())->setName('Arena')->setSlug('arena');
         $competition = (new Competition())->setGame($game)->setName('Cup')->setSlug('cup');
         $competition->open();
+        $competition->start();
         $userA = new User();
         $userB = new User();
         $a = (new CompetitionParticipant())->setCompetition($competition)->setCaptain($userA)->setName('A');
@@ -111,6 +112,7 @@ final class CompetitionDomainTest extends TestCase
         $game = (new Game())->setName('Arena')->setSlug('arena');
         $competition = (new Competition())->setGame($game)->setName('Cup')->setSlug('cup');
         $competition->open();
+        $competition->start();
         $userA = new User();
         $userB = new User();
         $a = (new CompetitionParticipant())->setCompetition($competition)->setCaptain($userA)->setName('A');
@@ -126,6 +128,7 @@ final class CompetitionDomainTest extends TestCase
         $game = (new Game())->setName('Arena')->setSlug('arena');
         $competition = (new Competition())->setGame($game)->setName('Cup')->setSlug('cup');
         $competition->open();
+        $competition->start();
         $userA = new User();
         $userB = new User();
         $a = (new CompetitionParticipant())->setCompetition($competition)->setCaptain($userA)->setName('A')->checkIn();
@@ -142,6 +145,7 @@ final class CompetitionDomainTest extends TestCase
         $game = (new Game())->setName('Arena')->setSlug('arena');
         $competition = (new Competition())->setGame($game)->setName('Cup')->setSlug('cup');
         $competition->open();
+        $competition->start();
         $userA = new User();
         $userB = new User();
         $a = (new CompetitionParticipant())->setCompetition($competition)->setCaptain($userA)->setName('A')->checkIn();
@@ -179,6 +183,7 @@ final class CompetitionDomainTest extends TestCase
         $game = (new Game())->setName('Arena')->setSlug('arena');
         $competition = (new Competition())->setGame($game)->setName('Cup')->setSlug('cup');
         $competition->open();
+        $competition->start();
         $userA = new User();
         $userB = new User();
         $a = (new CompetitionParticipant())->setCompetition($competition)->setCaptain($userA)->setName('A')->checkIn();
@@ -192,6 +197,22 @@ final class CompetitionDomainTest extends TestCase
         $match->resolveDispute($b, 0, 2);
         self::assertSame(CompetitionDispute::STATUS_UPHELD, $dispute->getStatus());
         self::assertSame($b, $match->getWinner());
+    }
+
+    public function testArchivedCompetitionRejectsParticipantResults(): void
+    {
+        $game = (new Game())->setName('Arena')->setSlug('arena');
+        $competition = (new Competition())->setGame($game)->setName('Cup')->setSlug('cup');
+        $competition->open()->start();
+        $userA = new User();
+        $userB = new User();
+        $a = (new CompetitionParticipant())->setCompetition($competition)->setCaptain($userA)->setName('A')->checkIn();
+        $b = (new CompetitionParticipant())->setCompetition($competition)->setCaptain($userB)->setName('B')->checkIn();
+        $match = (new CompetitionMatch())->setCompetition($competition)->setParticipants($a, $b)->markReady();
+        $competition->archive();
+
+        $this->expectException(\DomainException::class);
+        $match->submitResult($a, 1, 0, $userA);
     }
 
     public function testPrivateVisibilityFailsClosed(): void

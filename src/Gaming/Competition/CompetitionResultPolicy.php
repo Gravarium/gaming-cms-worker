@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Gaming\Competition;
 
+use App\Entity\Competition\Competition;
 use App\Entity\Competition\CompetitionMatch;
 use App\Entity\Competition\CompetitionParticipant;
 use App\Entity\User;
@@ -34,6 +35,9 @@ final class CompetitionResultPolicy
 
     private function canAct(CompetitionMatch $match, CompetitionParticipant $participant, User $actor): bool
     {
-        return $match->isParticipant($participant) && $participant->containsUser($actor) && $participant->isCheckedIn();
+        return $match->getCompetition()?->getStatus() === Competition::STATUS_IN_PROGRESS
+            && $match->isParticipant($participant)
+            && $participant->containsUser($actor)
+            && $participant->isCheckedIn();
     }
 }
