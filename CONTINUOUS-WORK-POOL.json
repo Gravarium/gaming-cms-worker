@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "62e1b6fec6ce6f9a4096c6c5a6912d74df36da5c",
-  "published_at": "2026-09-25T04:59:30Z",
+  "published_at": "2026-09-25T05:00:00Z",
   "summary": {
     "total_remaining_worker_tasks": 27,
     "completed_worker_prs_awaiting_trusted_review": 17,
     "recovery_tasks": 0,
-    "unclaimed": 10,
-    "immediately_claimable": 1,
-    "next_required_action": "FCP-060 is claimable from exact green composition/fcp-060-g1 HEAD 92ec2f33785d1979d3e8dfeeb726e6e94f5a7b7d; claim it before selecting another task."
+    "unclaimed": 9,
+    "immediately_claimable": 0,
+    "next_required_action": "Continue FCP-060 on feature/fcp-060-pool-g1; after exact green completion reconcile the package and publish the next dependency-safe composition base."
   },
   "rules": {
     "choose": "Resume any owned unfinished claim first. Otherwise choose exactly the first unclaimed task with an empty current blocked_by list and a published exact proposal_base_sha. A completed Worker proposal may satisfy proposal-only dependencies when its exact HEAD has green Worker CI.",
@@ -856,7 +856,7 @@
       "package_id": "FCP-060",
       "title": "Character account collection and progression profiles",
       "risk": "high",
-      "execution_state": "unclaimed",
+      "execution_state": "worker_in_progress",
       "dependencies": [
         "FCP-053",
         "FCP-056"
@@ -942,7 +942,12 @@
           "ci_run_id": 36065083751,
           "ci_result": "success"
         }
-      ]
+      ],
+      "claim_state": "locked_until_worker_completion",
+      "claimed_on": "2026-09-25T05:00:00Z",
+      "active_head": "92ec2f33785d1979d3e8dfeeb726e6e94f5a7b7d",
+      "active_base_branch": "composition/fcp-060-g1",
+      "active_base_sha": "92ec2f33785d1979d3e8dfeeb726e6e94f5a7b7d"
     },
     {
       "priority": 12,
