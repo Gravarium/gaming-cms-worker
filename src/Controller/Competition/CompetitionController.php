@@ -199,7 +199,7 @@ final class CompetitionController extends AbstractController
     private function participantFromRequest(CompetitionMatch $match, int $id): CompetitionParticipant
     {
         foreach ([$match->getParticipantA(), $match->getParticipantB()] as $participant) {
-            if ($participant?->getId() === $id) { return $participant; }
+            if ($participant instanceof CompetitionParticipant && $participant->getId() === $id) { return $participant; }
         }
         throw $this->createAccessDeniedException();
     }

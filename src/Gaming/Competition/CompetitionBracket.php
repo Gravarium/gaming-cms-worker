@@ -25,6 +25,7 @@ final class CompetitionBracket
         });
 
         $bracket = $this->formats->bracketFor($competition->getFormat());
+        /** @var list<array{round:int, bracket:string, sequence:int, participantA:CompetitionParticipant, participantB:CompetitionParticipant}> $pairings */
         $pairings = [];
         $sequence = 1;
         for ($index = 0; $index + 1 < count($active); $index += 2) {

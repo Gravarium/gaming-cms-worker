@@ -101,6 +101,7 @@ class CompetitionParticipant
     /** @param list<int> $userIds */
     public function setRosterUserIds(array $userIds): self
     {
+        /** @var list<int> $normalized */
         $normalized = [];
         foreach ($userIds as $userId) {
             if ($userId < 1) { throw new \InvalidArgumentException('Roster user IDs must be positive.'); }
