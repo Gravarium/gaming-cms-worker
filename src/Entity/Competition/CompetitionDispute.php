@@ -65,7 +65,13 @@ class CompetitionDispute
     public function getDecidedBy(): ?User { return $this->decidedBy; }
     public function getStatus(): string { return $this->status; }
     public function getReason(): string { return $this->reason; }
-    public function setReason(string $reason): self { $this->reason = trim($reason); return $this; }
+    public function setReason(string $reason): self
+    {
+        $reason = trim($reason);
+        if ($reason === '') { throw new \InvalidArgumentException('A dispute needs a reason.'); }
+        $this->reason = $reason;
+        return $this;
+    }
     public function getDecision(): ?string { return $this->decision; }
     public function getCreatedAt(): \DateTimeImmutable { return $this->createdAt; }
     public function getDecidedAt(): ?\DateTimeImmutable { return $this->decidedAt; }

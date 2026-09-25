@@ -158,6 +158,7 @@ class CompetitionMatch
     public function submitResult(CompetitionParticipant $by, int $scoreA, int $scoreB, User $submittedBy): self
     {
         if (!$this->isParticipant($by)) { throw new \DomainException('Only match participants may submit a result.'); }
+        if (!$by->containsUser($submittedBy)) { throw new \DomainException('The submitting user is not a member of this participant.'); }
         if ($scoreA < 0 || $scoreB < 0) { throw new \InvalidArgumentException('Scores cannot be negative.'); }
         if (!in_array($this->status, [self::STATUS_READY, self::STATUS_IN_PROGRESS, self::STATUS_PENDING_CONFIRMATION], true)) { throw new \DomainException('This match no longer accepts results.'); }
         $this->scoreA = $scoreA;
