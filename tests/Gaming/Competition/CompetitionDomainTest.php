@@ -13,6 +13,7 @@ use App\Entity\Game;
 use App\Entity\User;
 use App\Gaming\Competition\CompetitionBracket;
 use App\Gaming\Competition\CompetitionFormat;
+use App\Gaming\Competition\CompetitionResultPolicy;
 use App\Gaming\Competition\CompetitionVisibilityPolicy;
 use PHPUnit\Framework\TestCase;
 
@@ -111,6 +112,25 @@ final class CompetitionDomainTest extends TestCase
 
         $this->expectException(\DomainException::class);
         $match->submitResult($b, 0, 2, $userB);
+    }
+
+    public function testOnlyTheOtherCheckedInSideMayConfirmOrDispute(): void
+    {
+        $game = (new Game())->setName('Arena')->setSlug('arena');
+        $competition = (new Competition())->setGame($game)->setName('Cup')->setSlug('cup');
+        $competition->open();
+        $userA = new User();
+        $userB = new User();
+        $a = (new CompetitionParticipant())->setCompetition($competition)->setCaptain($userA)->setName('A')->checkIn();
+        $b = (new CompetitionParticipant())->setCompetition($competition)->setCaptain($userB)->setName('B')->checkIn();
+        $match = (new CompetitionMatch())->setCompetition($competition)->setParticipants($a, $b)->markReady();
+        $match->submitResult($a, 1, 0, $userA);
+        $policy = new CompetitionResultPolicy();
+
+        self::assertFalse($policy->canConfirm($match, $a, $userA));
+        self::assertTrue($policy->canConfirm($match, $b, $userB));
+        self::assertFalse($policy->canOpenDispute($match, $a, $userA));
+        self::assertTrue($policy->canOpenDispute($match, $b, $userB));
     }
 
     public function testEvidenceAcceptsOnlyParticipantHttpSources(): void

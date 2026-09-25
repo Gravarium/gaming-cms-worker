@@ -12,19 +12,28 @@ final class CompetitionResultPolicy
 {
     public function canSubmit(CompetitionMatch $match, CompetitionParticipant $participant, User $actor): bool
     {
-        return $match->isParticipant($participant)
-            && $participant->containsUser($actor)
-            && $participant->isCheckedIn()
+        return $this->canAct($match, $participant, $actor)
             && in_array($match->getStatus(), [CompetitionMatch::STATUS_READY, CompetitionMatch::STATUS_IN_PROGRESS], true);
     }
 
     public function canConfirm(CompetitionMatch $match, CompetitionParticipant $participant, User $actor): bool
     {
-        return $this->canSubmit($match, $participant, $actor) && $match->getScoreA() !== null && $match->getScoreB() !== null;
+        return $this->canAct($match, $participant, $actor)
+            && $match->getStatus() === CompetitionMatch::STATUS_PENDING_CONFIRMATION
+            && $match->getScoreA() !== null
+            && $match->getScoreB() !== null
+            && !$match->hasConfirmedBy($participant);
     }
 
     public function canOpenDispute(CompetitionMatch $match, CompetitionParticipant $participant, User $actor): bool
     {
-        return $this->canSubmit($match, $participant, $actor) && $match->getStatus() === CompetitionMatch::STATUS_PENDING_CONFIRMATION;
+        return $this->canAct($match, $participant, $actor)
+            && $match->getStatus() === CompetitionMatch::STATUS_PENDING_CONFIRMATION
+            && !$match->hasConfirmedBy($participant);
+    }
+
+    private function canAct(CompetitionMatch $match, CompetitionParticipant $participant, User $actor): bool
+    {
+        return $match->isParticipant($participant) && $participant->containsUser($actor) && $participant->isCheckedIn();
     }
 }

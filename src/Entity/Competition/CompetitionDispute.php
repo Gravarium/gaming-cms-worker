@@ -59,9 +59,19 @@ class CompetitionDispute
 
     public function getId(): ?int { return $this->id; }
     public function getMatch(): ?CompetitionMatch { return $this->match; }
-    public function setMatch(CompetitionMatch $match): self { $this->match = $match; return $this; }
+    public function setMatch(CompetitionMatch $match): self
+    {
+        if ($this->openedBy !== null && !$match->hasUser($this->openedBy)) { throw new \DomainException('A dispute must be opened by a match participant.'); }
+        $this->match = $match;
+        return $this;
+    }
     public function getOpenedBy(): ?User { return $this->openedBy; }
-    public function setOpenedBy(User $openedBy): self { $this->openedBy = $openedBy; return $this; }
+    public function setOpenedBy(User $openedBy): self
+    {
+        if ($this->match !== null && !$this->match->hasUser($openedBy)) { throw new \DomainException('A dispute must be opened by a match participant.'); }
+        $this->openedBy = $openedBy;
+        return $this;
+    }
     public function getDecidedBy(): ?User { return $this->decidedBy; }
     public function getStatus(): string { return $this->status; }
     public function getReason(): string { return $this->reason; }
