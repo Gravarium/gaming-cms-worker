@@ -166,7 +166,7 @@ class CompetitionMatch
         if (!$by->containsUser($submittedBy)) { throw new \DomainException('The submitting user is not a member of this participant.'); }
         if (!$by->isCheckedIn()) { throw new \DomainException('Only checked-in participants may submit a result.'); }
         if ($scoreA < 0 || $scoreB < 0) { throw new \InvalidArgumentException('Scores cannot be negative.'); }
-        if ($scoreA === $scoreB && in_array($this->competition?->getFormat(), [Competition::FORMAT_SINGLE_ELIMINATION, Competition::FORMAT_DOUBLE_ELIMINATION], true)) { throw new \DomainException('Elimination matches cannot end in a draw.'); }
+        if ($scoreA === $scoreB && in_array($this->competition->getFormat(), [Competition::FORMAT_SINGLE_ELIMINATION, Competition::FORMAT_DOUBLE_ELIMINATION], true)) { throw new \DomainException('Elimination matches cannot end in a draw.'); }
         if (!in_array($this->status, [self::STATUS_READY, self::STATUS_IN_PROGRESS], true)) { throw new \DomainException('This match no longer accepts results.'); }
         $this->scoreA = $scoreA;
         $this->scoreB = $scoreB;
