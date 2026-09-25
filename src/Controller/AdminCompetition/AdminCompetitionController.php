@@ -137,6 +137,7 @@ final class AdminCompetitionController extends AbstractController
         $this->assertAvailable();
         if ($match->getCompetition()?->getId() !== $competition->getId() || !$this->isCsrfTokenValid('competition-schedule-'.$match->getId(), (string) $request->request->get('_token'))) { throw $this->createAccessDeniedException(); }
         $raw = trim((string) $request->request->get('scheduled_at'));
+        if ($raw === '') { throw new BadRequestHttpException('Der Spieltermin ist erforderlich.'); }
         try {
             $scheduledAt = new \DateTimeImmutable($raw);
         } catch (\Exception) {
