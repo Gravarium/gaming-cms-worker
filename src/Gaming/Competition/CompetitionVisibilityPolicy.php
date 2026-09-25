@@ -20,6 +20,10 @@ final class CompetitionVisibilityPolicy
     public function canViewMatch(CompetitionMatch $match, ?User $viewer): bool
     {
         $competition = $match->getCompetition();
-        return $competition instanceof Competition && ($this->canView($competition, $viewer) || ($viewer !== null && (($match->getParticipantA()?->containsUser($viewer)) || ($match->getParticipantB()?->containsUser($viewer)))));
+        if (!$competition instanceof Competition || $competition->getStatus() === Competition::STATUS_DRAFT || $competition->getGame()?->isEnabled() !== true) {
+            return false;
+        }
+        return $this->canView($competition, $viewer)
+            || ($viewer !== null && (($match->getParticipantA()?->containsUser($viewer)) || ($match->getParticipantB()?->containsUser($viewer))));
     }
 }

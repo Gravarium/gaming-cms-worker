@@ -180,4 +180,21 @@ final class CompetitionDomainTest extends TestCase
         self::assertFalse($policy->canView($competition, new User()));
         self::assertFalse($policy->canView($competition, $competition->getCreatedBy()));
     }
+
+    public function testMatchVisibilityFailsClosedForDraftAndDisabledGame(): void
+    {
+        $game = (new Game())->setName('Arena')->setSlug('arena');
+        $competition = (new Competition())->setGame($game)->setName('Cup')->setSlug('cup');
+        $userA = new User();
+        $userB = new User();
+        $a = (new CompetitionParticipant())->setCompetition($competition)->setCaptain($userA)->setName('A');
+        $b = (new CompetitionParticipant())->setCompetition($competition)->setCaptain($userB)->setName('B');
+        $match = (new CompetitionMatch())->setCompetition($competition)->setParticipants($a, $b);
+        $policy = new CompetitionVisibilityPolicy();
+
+        self::assertFalse($policy->canViewMatch($match, $userA));
+        $competition->open();
+        $game->setEnabled(false);
+        self::assertFalse($policy->canViewMatch($match, $userA));
+    }
 }
