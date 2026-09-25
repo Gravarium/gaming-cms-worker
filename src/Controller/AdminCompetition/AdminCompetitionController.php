@@ -158,11 +158,13 @@ final class AdminCompetitionController extends AbstractController
         $status = (string) $request->request->get('status');
         $decision = trim((string) $request->request->get('decision'));
         if (!in_array($status, [CompetitionDispute::STATUS_UPHELD, CompetitionDispute::STATUS_REJECTED], true) || $decision === '') { throw $this->createNotFoundException(); }
-        $scoreA = $status === CompetitionDispute::STATUS_REJECTED && $match->getScoreA() !== null
-            ? $match->getScoreA()
+        $storedScoreA = $match->getScoreA();
+        $storedScoreB = $match->getScoreB();
+        $scoreA = $status === CompetitionDispute::STATUS_REJECTED && $storedScoreA !== null
+            ? $storedScoreA
             : $this->nonNegativeScore($request, 'score_a');
-        $scoreB = $status === CompetitionDispute::STATUS_REJECTED && $match->getScoreB() !== null
-            ? $match->getScoreB()
+        $scoreB = $status === CompetitionDispute::STATUS_REJECTED && $storedScoreB !== null
+            ? $storedScoreB
             : $this->nonNegativeScore($request, 'score_b');
         $winnerId = (int) $request->request->get('winner');
         $winner = null;
