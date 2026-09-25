@@ -18,6 +18,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\String\Slugger\SluggerInterface;
@@ -115,6 +116,23 @@ final class AdminCompetitionController extends AbstractController
         $this->assertAvailable();
         if (!$this->isCsrfTokenValid('competition-archive-'.$competition->getId(), (string) $request->request->get('_token'))) { throw $this->createAccessDeniedException(); }
         $competition->archive();
+        $this->entityManager->flush();
+        return $this->redirectToRoute('app_admin_competition_index');
+    }
+
+    #[Route('/{id}/match/{match}/schedule', name: 'app_admin_competition_match_schedule', requirements: ['id' => '\\d+', 'match' => '\\d+'], methods: ['POST'])]
+    public function schedule(Competition $competition, CompetitionMatch $match, Request $request): Response
+    {
+        $this->assertAvailable();
+        if ($match->getCompetition()?->getId() !== $competition->getId() || !$this->isCsrfTokenValid('competition-schedule-'.$match->getId(), (string) $request->request->get('_token'))) { throw $this->createAccessDeniedException(); }
+        $raw = trim((string) $request->request->get('scheduled_at'));
+        try {
+            $scheduledAt = new \DateTimeImmutable($raw);
+        } catch (\Exception) {
+            throw new BadRequestHttpException('Der Spieltermin ist ungültig.');
+        }
+        if ($scheduledAt < new \DateTimeImmutable('-5 minutes')) { throw new BadRequestHttpException('Ein Spieltermin darf nicht in der Vergangenheit liegen.'); }
+        $match->setScheduledAt($scheduledAt);
         $this->entityManager->flush();
         return $this->redirectToRoute('app_admin_competition_index');
     }

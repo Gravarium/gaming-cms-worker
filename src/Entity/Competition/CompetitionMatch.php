@@ -159,7 +159,7 @@ class CompetitionMatch
     {
         if (!$this->isParticipant($by)) { throw new \DomainException('Only match participants may submit a result.'); }
         if ($scoreA < 0 || $scoreB < 0) { throw new \InvalidArgumentException('Scores cannot be negative.'); }
-        if (!in_array($this->status, [self::STATUS_READY, self::STATUS_IN_PROGRESS, self::STATUS_PENDING_CONFIRMATION, self::STATUS_DISPUTED], true)) { throw new \DomainException('This match no longer accepts results.'); }
+        if (!in_array($this->status, [self::STATUS_READY, self::STATUS_IN_PROGRESS, self::STATUS_PENDING_CONFIRMATION], true)) { throw new \DomainException('This match no longer accepts results.'); }
         $this->scoreA = $scoreA;
         $this->scoreB = $scoreB;
         $this->submittedBy = $submittedBy;

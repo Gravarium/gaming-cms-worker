@@ -164,7 +164,9 @@ final class CompetitionController extends AbstractController
         if (!$participant->containsUser($user)) { throw $this->createAccessDeniedException(); }
         $locator = trim((string) $request->request->get('locator'));
         if (!filter_var($locator, FILTER_VALIDATE_URL)) { throw new BadRequestHttpException('Der Beleg muss eine gültige URL sein.'); }
-        $evidence = (new CompetitionMatchEvidence())->setMatch($match)->setSubmittedBy($user)->setLocator($locator)->setType((string) $request->request->get('type', CompetitionMatchEvidence::TYPE_URL));
+        $type = (string) $request->request->get('type', CompetitionMatchEvidence::TYPE_URL);
+        if (!in_array($type, [CompetitionMatchEvidence::TYPE_SCREENSHOT, CompetitionMatchEvidence::TYPE_VIDEO, CompetitionMatchEvidence::TYPE_URL], true)) { throw new BadRequestHttpException('Der Belegtyp ist ungültig.'); }
+        $evidence = (new CompetitionMatchEvidence())->setMatch($match)->setSubmittedBy($user)->setLocator($locator)->setType($type);
         $this->entityManager->persist($evidence);
         $this->entityManager->flush();
         return $this->redirectToRoute('app_competition_show', ['id' => $competition->getId()]);
