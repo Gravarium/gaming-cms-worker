@@ -136,7 +136,7 @@ class CompetitionParticipant
     public function checkIn(): self
     {
         if (!$this->isActive()) { throw new \DomainException('Withdrawn or disqualified participants cannot check in.'); }
-        if (!$this->competition?->isRegistrationOpen() && $this->competition?->getStatus() !== Competition::STATUS_IN_PROGRESS) {
+        if (!$this->competition->isRegistrationOpen() && $this->competition->getStatus() !== Competition::STATUS_IN_PROGRESS) {
             throw new \DomainException('The competition is not accepting check-ins.');
         }
         $deadline = $this->competition->getCheckInDeadline();
