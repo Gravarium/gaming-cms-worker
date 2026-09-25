@@ -7,6 +7,7 @@ namespace App\Tests\Gaming\Competition;
 use App\Entity\Competition\Competition;
 use App\Entity\Competition\CompetitionDispute;
 use App\Entity\Competition\CompetitionMatch;
+use App\Entity\Competition\CompetitionMatchEvidence;
 use App\Entity\Competition\CompetitionParticipant;
 use App\Entity\Game;
 use App\Entity\User;
@@ -79,6 +80,55 @@ final class CompetitionDomainTest extends TestCase
         $match->confirmResult($b);
         self::assertSame(CompetitionMatch::STATUS_CONFIRMED, $match->getStatus());
         self::assertSame($a, $match->getWinner());
+    }
+
+    public function testUncheckedParticipantCannotSubmitResults(): void
+    {
+        $game = (new Game())->setName('Arena')->setSlug('arena');
+        $competition = (new Competition())->setGame($game)->setName('Cup')->setSlug('cup');
+        $competition->open();
+        $userA = new User();
+        $userB = new User();
+        $a = (new CompetitionParticipant())->setCompetition($competition)->setCaptain($userA)->setName('A');
+        $b = (new CompetitionParticipant())->setCompetition($competition)->setCaptain($userB)->setName('B')->checkIn();
+        $match = (new CompetitionMatch())->setCompetition($competition)->setParticipants($a, $b)->markReady();
+
+        $this->expectException(\DomainException::class);
+        $match->submitResult($a, 1, 0, $userA);
+    }
+
+    public function testPendingResultCannotBeOverwrittenByTheOtherSide(): void
+    {
+        $game = (new Game())->setName('Arena')->setSlug('arena');
+        $competition = (new Competition())->setGame($game)->setName('Cup')->setSlug('cup');
+        $competition->open();
+        $userA = new User();
+        $userB = new User();
+        $a = (new CompetitionParticipant())->setCompetition($competition)->setCaptain($userA)->setName('A')->checkIn();
+        $b = (new CompetitionParticipant())->setCompetition($competition)->setCaptain($userB)->setName('B')->checkIn();
+        $match = (new CompetitionMatch())->setCompetition($competition)->setParticipants($a, $b)->markReady();
+        $match->submitResult($a, 1, 0, $userA);
+
+        $this->expectException(\DomainException::class);
+        $match->submitResult($b, 0, 2, $userB);
+    }
+
+    public function testEvidenceAcceptsOnlyParticipantHttpSources(): void
+    {
+        $game = (new Game())->setName('Arena')->setSlug('arena');
+        $competition = (new Competition())->setGame($game)->setName('Cup')->setSlug('cup');
+        $competition->open();
+        $userA = new User();
+        $userB = new User();
+        $a = (new CompetitionParticipant())->setCompetition($competition)->setCaptain($userA)->setName('A')->checkIn();
+        $b = (new CompetitionParticipant())->setCompetition($competition)->setCaptain($userB)->setName('B')->checkIn();
+        $match = (new CompetitionMatch())->setCompetition($competition)->setParticipants($a, $b)->markReady();
+
+        $evidence = (new CompetitionMatchEvidence())->setMatch($match)->setSubmittedBy($userA)->setLocator('https://example.test/result.png');
+        self::assertSame('https://example.test/result.png', $evidence->getLocator());
+
+        $this->expectException(\InvalidArgumentException::class);
+        (new CompetitionMatchEvidence())->setLocator('file:///tmp/result.png');
     }
 
     public function testDisputeMustBeExplainedAndAdminCanResolveIt(): void

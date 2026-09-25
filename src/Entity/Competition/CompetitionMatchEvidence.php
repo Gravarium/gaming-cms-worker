@@ -58,9 +58,19 @@ class CompetitionMatchEvidence
 
     public function getId(): ?int { return $this->id; }
     public function getMatch(): ?CompetitionMatch { return $this->match; }
-    public function setMatch(CompetitionMatch $match): self { $this->match = $match; return $this; }
+    public function setMatch(CompetitionMatch $match): self
+    {
+        if ($this->submittedBy !== null && !$match->hasUser($this->submittedBy)) { throw new \DomainException('Evidence must be submitted by a match participant.'); }
+        $this->match = $match;
+        return $this;
+    }
     public function getSubmittedBy(): ?User { return $this->submittedBy; }
-    public function setSubmittedBy(User $submittedBy): self { $this->submittedBy = $submittedBy; return $this; }
+    public function setSubmittedBy(User $submittedBy): self
+    {
+        if ($this->match !== null && !$this->match->hasUser($submittedBy)) { throw new \DomainException('Evidence must be submitted by a match participant.'); }
+        $this->submittedBy = $submittedBy;
+        return $this;
+    }
     public function getType(): string { return $this->type; }
     public function setType(string $type): self
     {
@@ -69,7 +79,14 @@ class CompetitionMatchEvidence
         return $this;
     }
     public function getLocator(): string { return $this->locator; }
-    public function setLocator(string $locator): self { $this->locator = trim($locator); return $this; }
+    public function setLocator(string $locator): self
+    {
+        $locator = trim($locator);
+        $scheme = strtolower((string) parse_url($locator, PHP_URL_SCHEME));
+        if (!filter_var($locator, FILTER_VALIDATE_URL) || !in_array($scheme, ['http', 'https'], true)) { throw new \InvalidArgumentException('Evidence locator must be an HTTP(S) URL.'); }
+        $this->locator = $locator;
+        return $this;
+    }
     public function getDescription(): ?string { return $this->description; }
     public function setDescription(?string $description): self { $description = $description === null ? null : trim($description); $this->description = $description === '' ? null : $description; return $this; }
     public function getVisibility(): string { return $this->visibility; }

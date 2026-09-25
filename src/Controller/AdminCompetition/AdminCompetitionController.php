@@ -158,14 +158,23 @@ final class AdminCompetitionController extends AbstractController
         $status = (string) $request->request->get('status');
         $decision = trim((string) $request->request->get('decision'));
         if (!in_array($status, [CompetitionDispute::STATUS_UPHELD, CompetitionDispute::STATUS_REJECTED], true) || $decision === '') { throw $this->createNotFoundException(); }
-        $scoreA = $this->nonNegativeScore($request, 'score_a');
-        $scoreB = $this->nonNegativeScore($request, 'score_b');
+        $scoreA = $status === CompetitionDispute::STATUS_REJECTED && $match->getScoreA() !== null
+            ? $match->getScoreA()
+            : $this->nonNegativeScore($request, 'score_a');
+        $scoreB = $status === CompetitionDispute::STATUS_REJECTED && $match->getScoreB() !== null
+            ? $match->getScoreB()
+            : $this->nonNegativeScore($request, 'score_b');
         $winnerId = (int) $request->request->get('winner');
         $winner = null;
         foreach ([$match->getParticipantA(), $match->getParticipantB()] as $candidate) {
             if ($candidate?->getId() === $winnerId) { $winner = $candidate; }
         }
-        if ($status === CompetitionDispute::STATUS_UPHELD && $winner === null && $scoreA !== $scoreB) { throw $this->createNotFoundException(); }
+        $expectedWinner = $scoreA === $scoreB ? null : ($scoreA > $scoreB ? $match->getParticipantA() : $match->getParticipantB());
+        if ($status === CompetitionDispute::STATUS_REJECTED) {
+            $winner = $expectedWinner;
+        } elseif ($winner !== $expectedWinner) {
+            throw $this->createNotFoundException();
+        }
         $dispute->decide($this->currentUser(), $status, $decision);
         $match->resolveDispute($winner, $scoreA, $scoreB);
         $this->entityManager->flush();
