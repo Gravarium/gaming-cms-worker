@@ -186,6 +186,7 @@ class Competition
     public function open(): self
     {
         if ($this->game === null || !$this->game->isEnabled()) { throw new \DomainException('The competition game must be enabled.'); }
+        if ($this->season?->isArchived() === true) { throw new \DomainException('A competition cannot open in an archived season.'); }
         if ($this->name === '' || $this->slug === '') { throw new \DomainException('A competition needs a name and slug.'); }
         if ($this->mode === self::MODE_SOLO && $this->teamSize !== 1) { throw new \DomainException('Solo competitions always use team size one.'); }
         $this->status = self::STATUS_OPEN;

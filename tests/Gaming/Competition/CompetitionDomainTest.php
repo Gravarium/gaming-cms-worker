@@ -49,6 +49,18 @@ final class CompetitionDomainTest extends TestCase
         (new CompetitionBracket())->initialPairings($competition, [$first]);
     }
 
+    public function testParticipantKindAndRosterFollowCompetitionMode(): void
+    {
+        $game = (new Game())->setName('Arena')->setSlug('arena');
+        $competition = (new Competition())->setGame($game)->setName('Team Cup')->setSlug('team-cup')->setMode(Competition::MODE_TEAM)->setTeamSize(2);
+        $participant = (new CompetitionParticipant())->setCompetition($competition)->setCaptain(new User())->setName('Team');
+        self::assertSame(CompetitionParticipant::KIND_TEAM, $participant->getKind());
+        $participant->setRosterUserIds([1, 2]);
+
+        $this->expectException(\DomainException::class);
+        $participant->setRosterUserIds([1, 2, 3]);
+    }
+
     public function testDoubleEliminationPromotionKeepsWinnerAndLoserBracketsSeparate(): void
     {
         $game = (new Game())->setName('Arena')->setSlug('arena');

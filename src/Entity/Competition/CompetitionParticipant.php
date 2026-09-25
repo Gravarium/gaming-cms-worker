@@ -76,7 +76,12 @@ class CompetitionParticipant
 
     public function getId(): ?int { return $this->id; }
     public function getCompetition(): ?Competition { return $this->competition; }
-    public function setCompetition(Competition $competition): self { $this->competition = $competition; return $this; }
+    public function setCompetition(Competition $competition): self
+    {
+        $this->competition = $competition;
+        if ($competition->getMode() === Competition::MODE_TEAM && $this->kind === self::KIND_SOLO) { $this->kind = self::KIND_TEAM; }
+        return $this;
+    }
     public function getCaptain(): ?User { return $this->captain; }
     public function setCaptain(User $captain): self { $this->captain = $captain; return $this; }
     public function getName(): string { return $this->name; }
@@ -85,6 +90,8 @@ class CompetitionParticipant
     public function setKind(string $kind): self
     {
         if (!in_array($kind, [self::KIND_SOLO, self::KIND_TEAM], true)) { throw new \InvalidArgumentException('Unsupported participant kind.'); }
+        if ($this->competition?->getMode() === Competition::MODE_SOLO && $kind !== self::KIND_SOLO) { throw new \DomainException('Solo competitions only accept solo participants.'); }
+        if ($this->competition?->getMode() === Competition::MODE_TEAM && $kind !== self::KIND_TEAM) { throw new \DomainException('Team competitions only accept team participants.'); }
         $this->kind = $kind;
         return $this;
     }
@@ -107,7 +114,10 @@ class CompetitionParticipant
             if ($userId < 1) { throw new \InvalidArgumentException('Roster user IDs must be positive.'); }
             $normalized[] = $userId;
         }
-        $this->rosterUserIds = array_values(array_unique($normalized));
+        $normalized = array_values(array_unique($normalized));
+        if ($this->competition?->getMode() === Competition::MODE_SOLO && count($normalized) > 1) { throw new \DomainException('Solo participants cannot have a roster.'); }
+        if ($this->competition?->getMode() === Competition::MODE_TEAM && count($normalized) > $this->competition->getTeamSize()) { throw new \DomainException('The participant roster exceeds the team size.'); }
+        $this->rosterUserIds = $normalized;
         return $this;
     }
     public function containsUser(User $user): bool
