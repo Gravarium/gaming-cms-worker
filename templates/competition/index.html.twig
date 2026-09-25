@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Competitions{% endblock %}
+
+{% block body %}
+<main class="container">
+    <h1>Competitions</h1>
+    {% for competition in competitions %}
+        <article>
+            <h2><a href="{{ path('app_competition_show', {id: competition.id}) }}">{{ competition.name }}</a></h2>
+            <p>{{ competition.game.name }} · {{ competition.format }} · {{ competition.mode }}</p>
+            <time datetime="{{ competition.startsAt|date('c') }}">{{ competition.startsAt|date('d.m.Y H:i') }}</time>
+        </article>
+    {% else %}
+        <p>Noch keine öffentlichen Competitions.</p>
+    {% endfor %}
+</main>
+{% endblock %}

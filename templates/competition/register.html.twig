@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ competition.name }} – Anmeldung{% endblock %}
+
+{% block body %}
+<main class="container">
+    <h1>{{ competition.name }} – Anmeldung</h1>
+    {{ form_start(form) }}
+        {{ form_widget(form) }}
+        <button type="submit">Anmelden</button>
+    {{ form_end(form) }}
+</main>
+{% endblock %}
