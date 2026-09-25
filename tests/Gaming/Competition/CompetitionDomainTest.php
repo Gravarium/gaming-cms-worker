@@ -61,6 +61,17 @@ final class CompetitionDomainTest extends TestCase
         $participant->setRosterUserIds([1, 2, 3]);
     }
 
+    public function testOpeningRejectsInvalidCompetitionTimeline(): void
+    {
+        $game = (new Game())->setName('Arena')->setSlug('arena');
+        $competition = (new Competition())->setGame($game)->setName('Cup')->setSlug('cup')
+            ->setStartsAt(new \DateTimeImmutable('+2 days'))
+            ->setEndsAt(new \DateTimeImmutable('+1 day'));
+
+        $this->expectException(\DomainException::class);
+        $competition->open();
+    }
+
     public function testDoubleEliminationPromotionKeepsWinnerAndLoserBracketsSeparate(): void
     {
         $game = (new Game())->setName('Arena')->setSlug('arena');

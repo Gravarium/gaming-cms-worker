@@ -188,6 +188,9 @@ class Competition
         if ($this->game === null || !$this->game->isEnabled()) { throw new \DomainException('The competition game must be enabled.'); }
         if ($this->season?->isArchived() === true) { throw new \DomainException('A competition cannot open in an archived season.'); }
         if ($this->name === '' || $this->slug === '') { throw new \DomainException('A competition needs a name and slug.'); }
+        if ($this->endsAt !== null && $this->endsAt <= $this->startsAt) { throw new \DomainException('A competition must end after it starts.'); }
+        if ($this->checkInDeadline !== null && $this->checkInDeadline > $this->startsAt) { throw new \DomainException('The check-in deadline must be at or before the start.'); }
+        if ($this->maxParticipants !== null && $this->maxParticipants < 1) { throw new \DomainException('Maximum participants must be positive.'); }
         if ($this->mode === self::MODE_SOLO && $this->teamSize !== 1) { throw new \DomainException('Solo competitions always use team size one.'); }
         $this->status = self::STATUS_OPEN;
         return $this;
