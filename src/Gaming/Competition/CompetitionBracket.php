@@ -10,7 +10,12 @@ use App\Entity\Competition\CompetitionParticipant;
 
 final class CompetitionBracket
 {
-    public function __construct(private readonly CompetitionFormat $formats = new CompetitionFormat()) {}
+    private readonly CompetitionFormat $formats;
+
+    public function __construct(?CompetitionFormat $formats = null)
+    {
+        $this->formats = $formats ?? new CompetitionFormat();
+    }
 
     /**
      * @param list<CompetitionParticipant> $participants
