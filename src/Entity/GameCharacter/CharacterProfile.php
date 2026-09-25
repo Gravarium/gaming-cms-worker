@@ -284,6 +284,12 @@ final class CharacterProfile
         };
     }
 
+    /**
+     * @param array<string, mixed> $builds
+     * @param array<string, mixed> $professions
+     * @param array<string, mixed> $progression
+     * @param array<string, mixed> $collections
+     */
     public function applyImportedData(
         string $name,
         ?string $server,
@@ -343,7 +349,8 @@ final class CharacterProfile
     }
     private static function optional(?string $value, int $maxLength = 255): ?string
     {
-        $value = $value === null ? null : trim($value);
+        if ($value === null) { return null; }
+        $value = trim($value);
         if ($value === '') { return null; }
         if (mb_strlen($value) > $maxLength) { throw new \InvalidArgumentException('Character field is too long.'); }
 

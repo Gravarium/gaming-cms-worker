@@ -40,9 +40,11 @@ final class CharacterImportProvenance
     #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
     private \DateTimeImmutable $observedAt;
 
+    /** @var array<string, mixed> */
     #[ORM\Column(type: Types::JSON)]
     private array $metadata = [];
 
+    /** @param array<string, mixed> $metadata */
     public function __construct(
         CharacterProfile $profile,
         string $provider,
