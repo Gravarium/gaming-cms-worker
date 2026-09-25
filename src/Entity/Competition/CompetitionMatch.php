@@ -105,7 +105,12 @@ class CompetitionMatch
         return $this;
     }
     public function getBracket(): string { return $this->bracket; }
-    public function setBracket(string $bracket): self { $this->bracket = $bracket; return $this; }
+    public function setBracket(string $bracket): self
+    {
+        if (!in_array($bracket, [self::BRACKET_WINNERS, self::BRACKET_LOSERS, self::BRACKET_GROUP, self::BRACKET_SWISS, self::BRACKET_ROUND_ROBIN], true)) { throw new \InvalidArgumentException('Unsupported match bracket.'); }
+        $this->bracket = $bracket;
+        return $this;
+    }
     public function getSequence(): int { return $this->sequence; }
     public function setSequence(int $sequence): self
     {
@@ -154,7 +159,7 @@ class CompetitionMatch
     {
         if (!$this->isParticipant($by)) { throw new \DomainException('Only match participants may submit a result.'); }
         if ($scoreA < 0 || $scoreB < 0) { throw new \InvalidArgumentException('Scores cannot be negative.'); }
-        if ($this->status === self::STATUS_CONFIRMED || $this->status === self::STATUS_CANCELLED) { throw new \DomainException('This match no longer accepts results.'); }
+        if (!in_array($this->status, [self::STATUS_READY, self::STATUS_IN_PROGRESS, self::STATUS_PENDING_CONFIRMATION, self::STATUS_DISPUTED], true)) { throw new \DomainException('This match no longer accepts results.'); }
         $this->scoreA = $scoreA;
         $this->scoreB = $scoreB;
         $this->submittedBy = $submittedBy;

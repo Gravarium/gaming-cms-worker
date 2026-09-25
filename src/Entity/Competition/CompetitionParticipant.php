@@ -111,7 +111,9 @@ class CompetitionParticipant
     }
     public function containsUser(User $user): bool
     {
-        return ($user->getId() !== null && in_array($user->getId(), $this->rosterUserIds, true)) || $this->captain === $user;
+        return ($user->getId() !== null && in_array($user->getId(), $this->rosterUserIds, true))
+            || $this->captain === $user
+            || ($this->captain?->getId() !== null && $this->captain->getId() === $user->getId());
     }
     public function getStatusReason(): ?string { return $this->statusReason; }
     public function getRegisteredAt(): \DateTimeImmutable { return $this->registeredAt; }

@@ -36,8 +36,8 @@ final class CompetitionBracket
                 'participantB' => $active[$index + 1],
             ];
         }
-        if (count($active) % 2 !== 0 && $this->formats->isElimination($competition->getFormat())) {
-            throw new \DomainException('Elimination brackets require an even participant count after seeding.');
+        if (count($active) % 2 !== 0 && $competition->getFormat() !== Competition::FORMAT_ROUND_ROBIN) {
+            throw new \DomainException('This bracket format requires an even participant count after seeding.');
         }
 
         if ($competition->getFormat() === Competition::FORMAT_ROUND_ROBIN) {

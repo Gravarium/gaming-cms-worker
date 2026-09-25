@@ -11,7 +11,7 @@ use App\Entity\User;
 use App\Form\Competition\CompetitionType;
 use App\Gaming\Competition\CompetitionBracket;
 use App\Module\CmsModuleManager;
-use App\Repository\Competition\CompetitionDisputeRepository;
+use App\Repository\Competition\CompetitionMatchRepository;
 use App\Repository\Competition\CompetitionParticipantRepository;
 use App\Repository\Competition\CompetitionRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -29,7 +29,7 @@ final class AdminCompetitionController extends AbstractController
     public function __construct(
         private readonly CompetitionRepository $competitions,
         private readonly CompetitionParticipantRepository $participants,
-        private readonly CompetitionDisputeRepository $disputes,
+        private readonly CompetitionMatchRepository $matches,
         private readonly CompetitionBracket $brackets,
         private readonly CmsModuleManager $modules,
         private readonly EntityManagerInterface $entityManager,
@@ -90,6 +90,7 @@ final class AdminCompetitionController extends AbstractController
     {
         $this->assertAvailable();
         if (!$this->isCsrfTokenValid('competition-seed-'.$competition->getId(), (string) $request->request->get('_token'))) { throw $this->createAccessDeniedException(); }
+        if ($this->matches->forCompetition($competition) !== []) { throw $this->createNotFoundException('Für diese Competition existieren bereits Paarungen.'); }
         $active = $this->participants->checkedInFor($competition);
         $pairings = $this->brackets->initialPairings($competition, $active);
         foreach ($pairings as $pairing) {
