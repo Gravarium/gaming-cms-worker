@@ -139,7 +139,7 @@ class CompetitionParticipant
         if (!$this->competition?->isRegistrationOpen() && $this->competition?->getStatus() !== Competition::STATUS_IN_PROGRESS) {
             throw new \DomainException('The competition is not accepting check-ins.');
         }
-        $deadline = $this->competition?->getCheckInDeadline();
+        $deadline = $this->competition->getCheckInDeadline();
         if ($deadline !== null && $deadline < new \DateTimeImmutable()) { throw new \DomainException('The check-in deadline has passed.'); }
         $this->status = self::STATUS_CHECKED_IN;
         $this->checkedInAt = new \DateTimeImmutable();

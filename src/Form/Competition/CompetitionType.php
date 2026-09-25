@@ -26,7 +26,7 @@ final class CompetitionType extends AbstractType
             ->add('game', EntityType::class, ['class' => Game::class, 'choice_label' => 'name', 'label' => 'Spiel'])
             ->add('season', EntityType::class, ['class' => CompetitionSeason::class, 'choice_label' => 'name', 'required' => false, 'label' => 'Saison'])
             ->add('description', TextareaType::class, ['required' => false, 'label' => 'Beschreibung'])
-            ->add('format', ChoiceType::class, ['choices' => array_combine(Competition::FORMATS, Competition::FORMATS) ?: [], 'label' => 'Format'])
+            ->add('format', ChoiceType::class, ['choices' => array_combine(Competition::FORMATS, Competition::FORMATS), 'label' => 'Format'])
             ->add('mode', ChoiceType::class, ['choices' => ['Einzel' => Competition::MODE_SOLO, 'Team' => Competition::MODE_TEAM], 'label' => 'Teilnehmertyp'])
             ->add('visibility', ChoiceType::class, ['choices' => ['Öffentlich' => Competition::VISIBILITY_PUBLIC, 'Privat' => Competition::VISIBILITY_PRIVATE], 'label' => 'Sichtbarkeit'])
             ->add('startsAt', DateTimeType::class, ['widget' => 'single_text', 'label' => 'Beginn'])

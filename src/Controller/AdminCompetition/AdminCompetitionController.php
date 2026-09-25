@@ -154,7 +154,7 @@ final class AdminCompetitionController extends AbstractController
     {
         $this->assertAvailable();
         $match = $dispute->getMatch();
-        if ($match?->getCompetition()?->getId() !== $competition->getId() || !$this->isCsrfTokenValid('competition-dispute-'.$dispute->getId(), (string) $request->request->get('_token'))) { throw $this->createAccessDeniedException(); }
+        if (!$match instanceof CompetitionMatch || $match->getCompetition()?->getId() !== $competition->getId() || !$this->isCsrfTokenValid('competition-dispute-'.$dispute->getId(), (string) $request->request->get('_token'))) { throw $this->createAccessDeniedException(); }
         $status = (string) $request->request->get('status');
         $decision = trim((string) $request->request->get('decision'));
         if (!in_array($status, [CompetitionDispute::STATUS_UPHELD, CompetitionDispute::STATUS_REJECTED], true) || $decision === '') { throw $this->createNotFoundException(); }
