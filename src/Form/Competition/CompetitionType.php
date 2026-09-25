@@ -22,12 +22,16 @@ final class CompetitionType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $lockStructure = $options['lock_structure'];
+        $formatChoices = [];
+        foreach (Competition::FORMATS as $format) {
+            $formatChoices[$format] = $format;
+        }
         $builder
             ->add('name', null, ['label' => 'Name'])
             ->add('game', EntityType::class, ['class' => Game::class, 'choice_label' => 'name', 'label' => 'Spiel', 'disabled' => $lockStructure])
             ->add('season', EntityType::class, ['class' => CompetitionSeason::class, 'choice_label' => 'name', 'required' => false, 'label' => 'Saison', 'disabled' => $lockStructure])
             ->add('description', TextareaType::class, ['required' => false, 'label' => 'Beschreibung'])
-            ->add('format', ChoiceType::class, ['choices' => array_combine(Competition::FORMATS, Competition::FORMATS), 'label' => 'Format', 'disabled' => $lockStructure])
+            ->add('format', ChoiceType::class, ['choices' => $formatChoices, 'label' => 'Format', 'disabled' => $lockStructure])
             ->add('mode', ChoiceType::class, ['choices' => ['Einzel' => Competition::MODE_SOLO, 'Team' => Competition::MODE_TEAM], 'label' => 'Teilnehmertyp', 'disabled' => $lockStructure])
             ->add('visibility', ChoiceType::class, ['choices' => ['Öffentlich' => Competition::VISIBILITY_PUBLIC, 'Privat' => Competition::VISIBILITY_PRIVATE], 'label' => 'Sichtbarkeit'])
             ->add('startsAt', DateTimeType::class, ['widget' => 'single_text', 'label' => 'Beginn', 'disabled' => $lockStructure])

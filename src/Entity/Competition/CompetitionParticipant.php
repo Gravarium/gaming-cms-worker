@@ -136,10 +136,12 @@ class CompetitionParticipant
     public function checkIn(): self
     {
         if (!$this->isActive()) { throw new \DomainException('Withdrawn or disqualified participants cannot check in.'); }
-        if (!$this->competition?->isRegistrationOpen() && $this->competition?->getStatus() !== Competition::STATUS_IN_PROGRESS) {
+        $competition = $this->competition;
+        if (!$competition instanceof Competition) { throw new \DomainException('The participant is not assigned to a competition.'); }
+        if (!$competition->isRegistrationOpen() && $competition->getStatus() !== Competition::STATUS_IN_PROGRESS) {
             throw new \DomainException('The competition is not accepting check-ins.');
         }
-        $deadline = $this->competition->getCheckInDeadline();
+        $deadline = $competition->getCheckInDeadline();
         if ($deadline !== null && $deadline < new \DateTimeImmutable()) { throw new \DomainException('The check-in deadline has passed.'); }
         $this->status = self::STATUS_CHECKED_IN;
         $this->checkedInAt = new \DateTimeImmutable();
