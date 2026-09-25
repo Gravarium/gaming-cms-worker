@@ -51,6 +51,9 @@ class GuildCharacterProfile
         if ($member->getGuild() !== $guild) {
             throw new \DomainException('Character profile member must belong to the same guild.');
         }
+        if ($guild->getGame() !== null && $game !== $guild->getGame()) {
+            throw new \DomainException('Character profile game must match the guild game.');
+        }
         $characterName = trim($characterName);
         if ($characterName === '') {
             throw new \InvalidArgumentException('Character name is required.');
