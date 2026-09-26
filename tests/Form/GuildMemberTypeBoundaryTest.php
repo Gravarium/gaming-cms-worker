@@ -30,9 +30,8 @@ final class GuildMemberTypeBoundaryTest extends KernelTestCase
 
         self::assertTrue($form->isSynchronized());
         self::assertTrue($form->isValid());
-        $view = $form->createView();
         foreach ($limits as $field => $limit) {
-            self::assertSame($limit, $view->children[$field]->vars['attr']['maxlength']);
+            self::assertSame($limit, $form->get($field)->createView()->vars['attr']['maxlength']);
         }
     }
 
