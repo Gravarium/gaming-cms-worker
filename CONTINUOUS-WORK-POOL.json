@@ -10,10 +10,10 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-26T13:15:57.686Z",
+  "published_at": "2026-09-26T13:19:45.499Z",
   "summary": {
     "total_remaining_worker_tasks": 103,
-    "completed_worker_prs_awaiting_trusted_review": 96,
+    "completed_worker_prs_awaiting_trusted_review": 97,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
@@ -9928,7 +9928,7 @@
       "package_id": "WCP-321",
       "title": "Bound guild application question label storage",
       "risk": "medium",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -10005,9 +10005,9 @@
         ]
       },
       "claimed_on": "2026-09-26T13:14:42.800Z",
-      "claim_state": "active_worker_claim",
-      "last_checkpoint_at": "2026-09-26T13:15:40.077Z",
-      "next_action": "Complete Worker CI on exact HEAD 2b0b369c1ca0b904cc11284952f4725c988a5e01; repair any failures only within the two allowlisted files, then reconcile exact-head evidence.",
+      "claim_state": "locked_until_trusted_resolution",
+      "last_checkpoint_at": "2026-09-26T13:19:45.499Z",
+      "next_action": "Await Trusted review; keep the claim locked and do not merge or deploy.",
       "last_verified_push_at": "2026-09-26T13:15:40.077Z",
       "checkpoint_paths": [
         "src/Entity/GuildApplicationQuestion.php",
@@ -10016,7 +10016,20 @@
       "worker_pr": 115,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/115",
       "ci_run_id": 36244572939,
-      "ci_status": "in_progress"
+      "pr_state": "open_ready_for_review",
+      "final_head": "2b0b369c1ca0b904cc11284952f4725c988a5e01",
+      "ci_result": "success",
+      "completed_on": "2026-09-26T13:19:45.499Z",
+      "final_changed_paths": [
+        "src/Entity/GuildApplicationQuestion.php",
+        "tests/Entity/GuildApplicationQuestionBoundaryTest.php"
+      ],
+      "test_evidence": [
+        "Worker CI run 36244572939 (#407) succeeded on exact final HEAD 2b0b369c1ca0b904cc11284952f4725c988a5e01.",
+        "PHP/Symfony job 108411252204 passed PHPStan level 8 and the complete worker-visible application test suite: 432 tests, 1,870 assertions; one PHPUnit deprecation and one notice were reported.",
+        "PostgreSQL 18 job 108411252289 applied and verified all 39 migrations with no pending migrations.",
+        "PR #115 is open and ready for review. Exact diff against sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d contains only src/Entity/GuildApplicationQuestion.php and tests/Entity/GuildApplicationQuestionBoundaryTest.php."
+      ]
     },
     {
       "priority": 103,
