@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-26T22:00:49.773Z",
+  "published_at": "2026-09-26T22:01:08.963Z",
   "summary": {
     "total_remaining_worker_tasks": 134,
     "completed_worker_prs_awaiting_trusted_review": 183,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-414 is claimed on exact sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d; implement the accessible managed-navigation reorder screen in its four allowed paths and preserve existing menu fields.",
+    "next_required_action": "WCP-416 is reserved on exact sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d; add test-only public guild visibility coverage in its exclusive file and run exact-head Worker CI.",
     "composition_preparable": 0,
     "immediately_actionable": 0,
     "must_continue": true
@@ -20643,6 +20643,91 @@
         "src/Controller/AdminAccessRoleMembersController.php",
         "src/Repository/AccessRoleRepository.php"
       ]
+    },
+    {
+      "priority": 196,
+      "package_id": "WCP-416",
+      "title": "Verify public guild visibility boundaries",
+      "risk": "low",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-416-public-guild-visibility-g1",
+      "suggested_branch": "feature/wcp-416-public-guild-visibility-g1",
+      "base_branch": "main",
+      "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "objective": "Add focused functional coverage for the public guild directory visibility boundary. Verify enabled guilds on enabled games remain listed and directly viewable, while disabled guilds and guilds on disabled games stay out of the public directory and fail closed on direct detail and application routes. Keep the package test-only.",
+      "allowed_paths": [
+        "tests/Controller/PublicGuildVisibilityTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/",
+        "src/",
+        "templates/",
+        "assets/",
+        "public/"
+      ],
+      "deliverables": [
+        "An enabled guild on an enabled game is listed in /gaming and renders at its public detail route.",
+        "A disabled guild and a guild on a disabled game are absent from /gaming and return 404 at direct detail and application routes.",
+        "Only tests/Controller/PublicGuildVisibilityTest.php changes; no runtime or schema modifications."
+      ],
+      "tests": [
+        "php bin/phpunit tests/Controller/PublicGuildVisibilityTest.php",
+        "PHPStan level 8 and complete Worker CI on the exact final HEAD, including PostgreSQL 18 migration-chain checks."
+      ],
+      "completion_report": [
+        "Exact final Worker HEAD and sanitized main base SHA.",
+        "Complete changed-file list and Worker PR.",
+        "Positive listing/detail and negative hidden-guild route results.",
+        "Exact-head PHPStan and complete Worker CI results.",
+        "Confirmation that only the allowed test path changed."
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "preserve-public-guild-and-enabled-game-visibility-controls",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "proposal_kind": "worker_only",
+      "collision_check": {
+        "compared_against": "Current continuous/work-pool-v4 blob 680df5a515f1a2542904fba459eeab6c8c1e742c, all active and claim-locked allowlists, and exact sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d.",
+        "result": "No active or locked claim owns tests/Controller/PublicGuildVisibilityTest.php. Existing GamingAccessTest only checks that /gaming returns successfully; it does not assert which guilds are listed or direct detail/application behavior for disabled guilds or disabled games. GuildRepository::findPublicGuilds and findPublicBySlug enforce both enabled flags, and GamingController show/apply routes share the fail-closed lookup. WCP-414 admin menu ordering, WCP-415 access-role membership, WCP-413 category manager security, WCP-411 guild application inbox, and WCP-407 competition registration use disjoint paths. The proposed test file is absent from main.",
+        "paths": [
+          "tests/Controller/PublicGuildVisibilityTest.php"
+        ]
+      },
+      "claimed_on": "2026-09-26T22:01:08.963Z",
+      "claim_state": "active",
+      "active_base_branch": "main",
+      "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "resume_branch": "feature/wcp-416-public-guild-visibility-g1",
+      "last_checkpoint_at": "2026-09-26T22:01:08.963Z",
+      "last_verified_push_at": "2026-09-26T22:01:08.963Z",
+      "checkpoint_paths": [],
+      "branch_heads": {
+        "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+        "feature_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d"
+      },
+      "next_action": "Implement the enabled/disabled guild listing, direct-detail and application-route visibility tests in the single allowed file; then open a Worker PR for exact-head CI."
     }
   ],
   "recovery_queue": [],
