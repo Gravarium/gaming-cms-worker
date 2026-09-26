@@ -10,7 +10,7 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-26T22:09:16.271Z",
+  "published_at": "2026-09-26T22:09:36.930Z",
   "summary": {
     "total_remaining_worker_tasks": 134,
     "completed_worker_prs_awaiting_trusted_review": 183,
@@ -20634,7 +20634,7 @@
       "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-      "active_head": "3f04f8ad8c64a3ece1b01c839db025ec0c795cc2",
+      "active_head": "742c3e8e14359f715eec701a6c0bb4e3659790c",
       "resume_branch": "feature/wcp-415-access-role-members-g1",
       "proposal_kind": "worker_only",
       "collision_check": {
@@ -20650,13 +20650,13 @@
       },
       "claimed_on": "2026-09-26T21:58:03.676Z",
       "claim_state": "active",
-      "next_action": "Monitor exact-head Worker CI run 36275205253 for HEAD 3f04f8ad8c64a3ece1b01c839db025ec0c795cc2; diagnose and repair any red check on this same feature branch.",
+      "next_action": "Re-run full Worker CI on repaired exact HEAD 742c3e8e14359f715eec701a6c0bb4e3659790c; repair any remaining failure on this same branch.",
       "branch_heads": {
         "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-        "feature_branch": "3f04f8ad8c64a3ece1b01c839db025ec0c795cc2"
+        "feature_branch": "742c3e8e14359f715eec701a6c0bb4e3659790c"
       },
-      "last_checkpoint_at": "2026-09-26T22:07:21.092Z",
-      "last_verified_push_at": "2026-09-26T22:07:21.092Z",
+      "last_checkpoint_at": "2026-09-26T22:09:36.930Z",
+      "last_verified_push_at": "2026-09-26T22:09:36.930Z",
       "checkpoint_paths": [
         "src/Controller/AdminAccessRoleMembersController.php",
         "src/Repository/AccessRoleRepository.php",
@@ -20668,12 +20668,13 @@
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/210",
       "pr_state": "open_draft",
       "last_ci_run_id": 36275205253,
-      "last_ci_result": "queued",
+      "last_ci_result": "failure",
       "ci_attempts": [
         {
           "run_id": 36275205253,
           "head": "3f04f8ad8c64a3ece1b01c839db025ec0c795cc2",
-          "result": "queued"
+          "result": "failure",
+          "diagnosis": "Doctrine DQL rejected the alias `member` as a reserved keyword. Renamed the query alias to `rosterUser`; no tests or security checks were weakened."
         }
       ]
     },
