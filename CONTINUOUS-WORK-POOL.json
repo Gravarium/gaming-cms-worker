@@ -12,12 +12,12 @@
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
   "published_at": "2026-09-26T13:06:37.642Z",
   "summary": {
-    "total_remaining_worker_tasks": 98,
+    "total_remaining_worker_tasks": 99,
     "completed_worker_prs_awaiting_trusted_review": 92,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "Re-evaluate current claims and blocked FCPs; continue with another independent worker-only CMS proposal from verified code gaps.",
+    "next_required_action": "Implement WCP-318 on exclusive GuildTeam entity/test paths from exact sanitized main; run complete exact-head Worker CI and preserve all locked claims.",
     "composition_preparable": 0,
     "immediately_actionable": 1,
     "must_continue": true
@@ -9587,6 +9587,96 @@
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/111",
       "ci_run_id": 36244055717,
       "ci_status": "in_progress"
+    },
+    {
+      "priority": 99,
+      "package_id": "WCP-318",
+      "title": "Bound guild team name persistence input",
+      "risk": "low",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-318-guild-team-name-boundary-g1",
+      "suggested_branch": "feature/wcp-318-guild-team-name-boundary-g1",
+      "base_branch": "main",
+      "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "objective": "Bound GuildTeam.name to its mapped varchar(120) in the entity setter. Preserve existing trim normalization and NotBlank/Length validation, reject malformed UTF-8/NUL, and reject normalized names above 120 UTF-8 characters/480 bytes before assignment; rejected input must leave the prior name unchanged.",
+      "allowed_paths": [
+        "src/Entity/GuildTeam.php",
+        "tests/Entity/GuildTeamBoundaryTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/",
+        "src/Controller/",
+        "src/Form/",
+        "src/Repository/",
+        "src/Service/",
+        "templates/",
+        "assets/",
+        "public/"
+      ],
+      "deliverables": [
+        "Preserve existing team-name trimming and accept normalized values through the mapped 120-character/480-byte boundary.",
+        "Reject malformed UTF-8, NUL, and oversized normalized names before assignment without truncation.",
+        "Preserve previous name after rejection and retain existing NotBlank/Length validation.",
+        "Do not modify team/guild membership, leader validation, uniqueness scope, descriptions, colors, or active state."
+      ],
+      "tests": [
+        "Targeted GuildTeam boundary PHPUnit tests for exact ASCII and multibyte limits, 121-character rejection, trim normalization, malformed UTF-8/NUL, and prior-state preservation.",
+        "PHPStan level 8.",
+        "Complete Worker CI on the exact final HEAD."
+      ],
+      "completion_report": [
+        "exact final Worker HEAD and sanitized main base SHA",
+        "complete changed-file list and Worker PR",
+        "targeted guild-team name tests and complete exact-head Worker CI result",
+        "120-character/480-byte ceiling with preserved normalization, validation and membership semantics"
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "no-secrets-or-trusted-private-runtime-in-worker-source",
+        "preserve guild/team relationship integrity, leader/member rules and unique name scope",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_base_branch": "main",
+      "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "resume_branch": "feature/wcp-318-guild-team-name-boundary-g1",
+      "proposal_kind": "worker_only",
+      "collision_check": {
+        "compared_against": "all current continuous/work-pool-v4 task allowlists including active WCP-317 Game slug claim; exact WCP-318 branch/PR searches and test-path absence verified against sanitized main",
+        "result": "GuildTeam name setter and focused boundary test are disjoint from every current allowlist; no relation, leadership, controller, form, repository, migration, DI, template or workflow path is included",
+        "paths": [
+          "src/Entity/GuildTeam.php",
+          "tests/Entity/GuildTeamBoundaryTest.php"
+        ]
+      },
+      "claimed_on": "2026-09-26T13:07:35.351Z",
+      "claim_state": "active_worker_claim",
+      "last_checkpoint_at": "2026-09-26T13:07:35.351Z",
+      "checkpoint_paths": [
+        "src/Entity/GuildTeam.php",
+        "tests/Entity/GuildTeamBoundaryTest.php"
+      ],
+      "next_action": "Create exact claim and feature branches from sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d, then implement only the two allowlisted files and run exact-head Worker CI."
     }
   ],
   "recovery_queue": [],
