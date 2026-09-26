@@ -6,6 +6,7 @@ namespace App\Twig;
 
 use App\Entity\ContentEntry;
 use App\Entity\MenuItem;
+use App\Entity\SiteSettings;
 use App\Module\CmsModuleManager;
 use App\Repository\MenuItemRepository;
 use App\Repository\SiteSettingsRepository;
@@ -19,6 +20,12 @@ final class SiteExtension extends AbstractExtension
         private readonly MenuItemRepository $menuItems,
         private readonly CmsModuleManager $modules,
     ) {
+    }
+
+    /** @return array{site: SiteSettings} */
+    public function getGlobals(): array
+    {
+        return ['site' => $this->settings->current()];
     }
 
     public function getFunctions(): array
