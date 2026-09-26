@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-26T23:00:09.756Z",
+  "published_at": "2026-09-26T23:02:19.458Z",
   "summary": {
     "total_remaining_worker_tasks": 134,
     "completed_worker_prs_awaiting_trusted_review": 191,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-424 PR #218 now uses a standalone restricted-user session after diagnosing the second test failure; run 36278019727 must finish green on exact head 59f17ff7feea4e9248865bd222189926593ee787 before completion.",
+    "next_required_action": "WCP-425 is reserved on exact sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d; verify the CMS_AUDIT_VIEW audit-log boundary in its exclusive test path.",
     "composition_preparable": 0,
     "immediately_actionable": 0,
     "must_continue": true
@@ -21869,6 +21869,91 @@
           "result": "in_progress"
         }
       ]
+    },
+    {
+      "priority": 205,
+      "package_id": "WCP-425",
+      "title": "Guard administrative audit-log visibility",
+      "risk": "low",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-425-admin-audit-access-g1",
+      "suggested_branch": "feature/wcp-425-admin-audit-access-g1",
+      "base_branch": "main",
+      "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "objective": "Add test-only functional coverage for the audit-log permission boundary. Users without CMS_AUDIT_VIEW must not see the dashboard link or access the log route; users granted that permission must see the link and access rendered audit entries.",
+      "allowed_paths": [
+        "tests/Controller/AdminAuditLogAccessSecurityTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/",
+        "src/",
+        "templates/",
+        "assets/",
+        "public/"
+      ],
+      "deliverables": [
+        "A CMS content manager can reach the admin dashboard but does not see the audit-log link and receives 403 from /admin/audit-log.",
+        "A user with CMS_AUDIT_VIEW sees the audit-log link and can read a seeded audit entry.",
+        "Only tests/Controller/AdminAuditLogAccessSecurityTest.php changes."
+      ],
+      "tests": [
+        "php bin/phpunit tests/Controller/AdminAuditLogAccessSecurityTest.php",
+        "PHPStan level 8 and complete Worker CI on the exact final HEAD, including PostgreSQL 18 migration-chain checks."
+      ],
+      "completion_report": [
+        "Exact final Worker HEAD and sanitized main base SHA.",
+        "Complete changed-file list and Worker PR.",
+        "Denied dashboard link/route for users without CMS_AUDIT_VIEW and successful read for an authorized user.",
+        "Exact-head PHPStan and complete Worker CI results.",
+        "Confirmation that only the allowed test path changed."
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "preserve-CMS_AUDIT_VIEW-authorization-and-audit-log-data-boundary",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "proposal_kind": "worker_only",
+      "collision_check": {
+        "compared_against": "Latest pool blob 1b73d9f00dedacfa424830c9e0686de5826c2136; all active and claim-locked allowlists; sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d.",
+        "result": "AdminAuditLogController requires CMS_AUDIT_VIEW and the dashboard only renders its link for that permission. Existing CriticalSecurityJourneyTest covers CMS_CONTENT_MANAGE and other administration boundaries, but no test references the audit-log route; code search finds only the controller and dashboard template. The target test path is absent on main and disjoint from all active and locked claims.",
+        "paths": [
+          "tests/Controller/AdminAuditLogAccessSecurityTest.php"
+        ]
+      },
+      "claimed_on": "2026-09-26T23:02:19.458Z",
+      "claim_state": "active",
+      "active_base_branch": "main",
+      "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "resume_branch": "feature/wcp-425-admin-audit-access-g1",
+      "last_checkpoint_at": "2026-09-26T23:02:19.458Z",
+      "last_verified_push_at": "2026-09-26T23:02:19.458Z",
+      "checkpoint_paths": [],
+      "branch_heads": {
+        "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+        "feature_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d"
+      },
+      "next_action": "Add audit-log permission and rendered-entry regressions in the single allowed test file, then open a Worker PR."
     }
   ],
   "recovery_queue": [],
