@@ -17,9 +17,9 @@
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "Implement WCP-082 on feature/wcp-082-discord-webhook-url-g1 from main @ f1a246c64527ef3ad51f7490773d9bbf9d42be5d; WCP-081 remains owned by another chat.",
+    "next_required_action": "Re-evaluate remaining unclaimed work and self-publish the next bounded independent Worker proposal while FCP-077 remains owned by another chat; WCP-081 is complete on its exact green head and awaits Trusted review.",
     "composition_preparable": 0,
-    "immediately_actionable": 2,
+    "immediately_actionable": 1,
     "must_continue": true
   },
   "rules": {
@@ -2749,7 +2749,7 @@
       "package_id": "WCP-081",
       "title": "Bound sensitive-data cipher inputs and payloads",
       "risk": "high",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -2816,7 +2816,14 @@
           "tests/Service/SensitiveDataCipherTest.php"
         ]
       },
-      "claimed_on": "2026-09-26T09:01:55.535Z"
+      "claimed_on": "2026-09-26T09:01:55.535Z",
+      "worker_pr": 44,
+      "final_head": "3959f0d8993f4b80249dcb62e51d5246a3d8656d",
+      "ci_run_id": 36231634668,
+      "ci_result": "success",
+      "claim_state": "locked_until_trusted_resolution",
+      "completed_on": "2026-09-26T09:05:44.314Z",
+      "next_action": "Remain claim-locked while awaiting Trusted review; do not merge or deploy from the Worker repository."
     },
     {
       "priority": 32,
