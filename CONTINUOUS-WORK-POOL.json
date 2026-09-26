@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-26T22:48:20.584Z",
+  "published_at": "2026-09-26T22:49:57.721Z",
   "summary": {
     "total_remaining_worker_tasks": 134,
     "completed_worker_prs_awaiting_trusted_review": 190,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-423 is reserved on exact sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d; test individual account session revocation ownership and CSRF behavior in its exclusive test path.",
+    "next_required_action": "WCP-424 is reserved on exact sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d; add focused CMS_ACCESS and CSRF coverage for admin notification acknowledgement in its exclusive test path and run exact-head Worker CI.",
     "composition_preparable": 0,
     "immediately_actionable": 0,
     "must_continue": true
@@ -21700,6 +21700,93 @@
         "feature_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d"
       },
       "next_action": "Add tests for cross-account denial, rendered-token owner revocation, and current-session logout in the single allowed file; then open a Worker PR."
+    },
+    {
+      "priority": 204,
+      "package_id": "WCP-424",
+      "title": "Guard admin notification acknowledgement and CSRF",
+      "risk": "low",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-424-admin-notification-security-g1",
+      "suggested_branch": "feature/wcp-424-admin-notification-security-g1",
+      "base_branch": "main",
+      "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "objective": "Add test-only functional security coverage for the admin notification inbox. Prove users without CMS_ACCESS cannot list or acknowledge notifications, missing or invalid CSRF tokens cannot mark one or all notifications read, and a rendered valid single-notification token marks only its selected notification read.",
+      "allowed_paths": [
+        "tests/Controller/AdminNotificationSecurityTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/",
+        "src/",
+        "templates/",
+        "assets/",
+        "public/"
+      ],
+      "deliverables": [
+        "Verify users without CMS_ACCESS receive 403 for the notification list and both acknowledgement POST routes, including when they present a valid CSRF token.",
+        "Verify missing and invalid CSRF tokens leave individual and all-notification read state unchanged for an authorized CMS_ACCESS user.",
+        "Verify the rendered single-notification token marks only its target notification read.",
+        "Keep the change test-only in tests/Controller/AdminNotificationSecurityTest.php."
+      ],
+      "tests": [
+        "php bin/phpunit tests/Controller/AdminNotificationSecurityTest.php",
+        "Existing notification entity and security tests remain green.",
+        "PHPStan level 8 and complete Worker CI on exact final HEAD, including PostgreSQL 18 migration-chain checks."
+      ],
+      "completion_report": [
+        "Exact sanitized main base SHA and final Worker HEAD.",
+        "Complete changed-path list and Worker PR.",
+        "CMS_ACCESS denial, individual/read-all CSRF denial, unchanged unread state, and valid single-token behavior.",
+        "Exact-head PHPStan and full Worker CI results; confirm test-only and no schema changes."
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "preserve-CMS_ACCESS-authorization-and-CSRF-validation-before-notification-read-state-changes",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "proposal_kind": "worker_only",
+      "proposal_dependency_evidence": [],
+      "collision_check": {
+        "compared_against": "Fresh continuous/work-pool-v4 blob 917a26c156dd7ccf0f69070878089a88296efb96, all active and claim-locked allowlists, and exact sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d.",
+        "result": "No active or claim-locked claim owns tests/Controller/AdminNotificationSecurityTest.php. Searches for app_admin_notification_read and read-all-notifications return only the controller and Twig template, not existing functional tests. WCP-409 is claim-locked and touches the separate notification-history controller plus repository/template paths; this proposal changes only its new test file and does not modify those shared files.",
+        "paths": [
+          "tests/Controller/AdminNotificationSecurityTest.php"
+        ]
+      },
+      "claimed_on": "2026-09-26T22:49:57.721Z",
+      "claim_state": "active",
+      "active_base_branch": "main",
+      "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "resume_branch": "feature/wcp-424-admin-notification-security-g1",
+      "last_checkpoint_at": "2026-09-26T22:49:57.721Z",
+      "last_verified_push_at": "2026-09-26T22:49:57.721Z",
+      "checkpoint_paths": [],
+      "branch_heads": {
+        "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+        "feature_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d"
+      },
+      "next_action": "Add functional CMS_ACCESS and CSRF regressions for individual and read-all acknowledgement, then open a Worker PR."
     }
   ],
   "recovery_queue": [],
