@@ -8,15 +8,16 @@ use App\Theme\Module\ModuleThemeComposition;
 use App\Widget\Module\ModuleWidgetDefinition;
 use App\Widget\Module\ModuleWidgetPayload;
 
+/**
+ * @phpstan-type RenderedWidget array{
+ *     definition: ModuleWidgetDefinition,
+ *     payload: ModuleWidgetPayload,
+ *     config: array<string, string|int|bool>
+ * }
+ */
 final class ModuleLayoutComposer
 {
     /**
-     * @phpstan-type RenderedWidget array{
-     *     definition: ModuleWidgetDefinition,
-     *     payload: ModuleWidgetPayload,
-     *     config: array<string, string|int|bool>
-     * }
-     *
      * @param array<string, RenderedWidget> $rendered
      * @return array{
      *     template: string,
@@ -40,12 +41,6 @@ final class ModuleLayoutComposer
     }
 
     /**
-     * @phpstan-type RenderedWidget array{
-     *     definition: ModuleWidgetDefinition,
-     *     payload: ModuleWidgetPayload,
-     *     config: array<string, string|int|bool>
-     * }
-     *
      * @param list<string> $keys
      * @param array<string, RenderedWidget> $rendered
      * @return list<RenderedWidget>
