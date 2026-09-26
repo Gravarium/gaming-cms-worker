@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-26T15:13:39.836Z",
+  "published_at": "2026-09-26T15:17:02.532Z",
   "summary": {
-    "total_remaining_worker_tasks": 123,
+    "total_remaining_worker_tasks": 124,
     "completed_worker_prs_awaiting_trusted_review": 118,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "Re-evaluate remaining unclaimed dependencies and continue with an independent disjoint Worker-only package.",
+    "next_required_action": "Continue the active WCP-343 connector settings boundary package.",
     "composition_preparable": 0,
     "immediately_actionable": 0,
     "must_continue": true
@@ -12327,6 +12327,95 @@
         "PostgreSQL 18 applied and verified all 39 migrations; the migration status check passed.",
         "PR #136 is open, ready for review and unmerged. Its exact changed-file list against sanitized main contains only the two allowed paths.",
         "The functional regression posts 201 repeated valid asset IDs with valid CSRF, verifies the visible no-change error, and confirms the media asset remains in its original folder."
+      ]
+    },
+    {
+      "priority": 124,
+      "package_id": "WCP-343",
+      "title": "Bound connector settings bulk input",
+      "risk": "medium",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-343-connector-settings-selection-boundary-g1",
+      "suggested_branch": "feature/wcp-343-connector-settings-selection-boundary-g1",
+      "base_branch": "main",
+      "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "objective": "Reject connector settings submissions with more than 200 raw priority entries immediately after CSRF validation and before per-ID repository lookups. Show an explicit visible no-change notice and return before audit, flush or backup-selection synchronization. Preserve bounded updates, authorization, CSRF, priority validation and required-target behavior.",
+      "allowed_paths": [
+        "src/Controller/AdminConnectorController.php",
+        "tests/Controller/ExternalConnectorSecurityTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/",
+        "src/Entity/",
+        "src/Repository/",
+        "src/Form/",
+        "templates/",
+        "assets/",
+        "public/"
+      ],
+      "deliverables": [
+        "Enforce a maximum of 200 raw priority-map entries immediately after CSRF validation and before the repository lookup loop.",
+        "Reject the complete oversized map with a visible no-change notice.",
+        "Preserve existing bounded priority and required-target updates and their security controls."
+      ],
+      "tests": [
+        "Functional regression submits 201 entries including a real connector target and verifies visible no-change feedback and unchanged priority/required state.",
+        "Verify a valid bounded settings submission still updates priority and required state.",
+        "PHPStan level 8.",
+        "Complete Worker CI on the exact final HEAD."
+      ],
+      "completion_report": [
+        "exact final Worker HEAD and sanitized main base SHA",
+        "complete changed-file list and Worker PR",
+        "oversized and valid-bounded settings regressions, PHPStan level 8 and exact-head Worker CI results",
+        "confirmation oversized maps cause no entity, audit or selection-sync changes"
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "no-secrets-or-trusted-private-runtime-in-worker-source",
+        "preserve connector authorization, CSRF, target-validation and disabled-by-default transport isolation",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_base_branch": "main",
+      "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "resume_branch": "feature/wcp-343-connector-settings-selection-boundary-g1",
+      "proposal_kind": "worker_only",
+      "collision_check": {
+        "compared_against": "all published current work-pool-v4 task allowlists and active/locked claims through WCP-342; exact paths checked against sanitized main at f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+        "result": "Both paths are absent from every current allowlist and claim. No migration, DI, config, template, entity, repository, connector transport or private-runtime path is included.",
+        "paths": [
+          "src/Controller/AdminConnectorController.php",
+          "tests/Controller/ExternalConnectorSecurityTest.php"
+        ]
+      },
+      "claimed_on": "2026-09-26T15:17:02.532Z",
+      "claim_state": "active_worker_claim",
+      "last_checkpoint_at": "2026-09-26T15:17:02.532Z",
+      "next_action": "Add a bounded raw priority-map check and functional regressions on exact sanitized main; preserve auth, CSRF and in-limit settings behavior.",
+      "checkpoint_paths": [
+        "src/Controller/AdminConnectorController.php",
+        "tests/Controller/ExternalConnectorSecurityTest.php"
       ]
     }
   ],
