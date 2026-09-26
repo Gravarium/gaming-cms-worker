@@ -18,7 +18,7 @@ final readonly class ExternalMailMessage
     public string $text;
     public ?string $html;
 
-    /** @param list<string> $recipients */
+    /** @param array<mixed> $recipients */
     public function __construct(
         array $recipients,
         string $subject,
@@ -45,10 +45,6 @@ final readonly class ExternalMailMessage
             if (!in_array($recipient, $normalizedRecipients, true)) {
                 $normalizedRecipients[] = $recipient;
             }
-        }
-
-        if ($normalizedRecipients === []) {
-            throw new \InvalidArgumentException('External mail has no valid recipients.');
         }
 
         $this->recipients = $normalizedRecipients;
