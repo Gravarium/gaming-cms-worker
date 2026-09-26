@@ -13,13 +13,13 @@
   "published_at": "2026-09-26T09:37:32.484Z",
   "summary": {
     "total_remaining_worker_tasks": 40,
-    "completed_worker_prs_awaiting_trusted_review": 33,
+    "completed_worker_prs_awaiting_trusted_review": 34,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "Continue the next independent Worker proposal while preserving foreign active claims; WCP-088 is complete on its exact green head and remains claim-locked pending Trusted review.",
+    "next_required_action": "Re-evaluate remaining unclaimed work and continue independent Worker-only work while FCP-077, WCP-087 and the WCP-088 reservation remain owned by other chats; WCP-089 is complete on its exact green head and awaits Trusted review.",
     "composition_preparable": 0,
-    "immediately_actionable": 2,
+    "immediately_actionable": 1,
     "must_continue": true
   },
   "rules": {
@@ -3454,7 +3454,7 @@
       "package_id": "WCP-089",
       "title": "Bound media cleanup repair paths",
       "risk": "high",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -3509,7 +3509,7 @@
       "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "b953a95430bd4d0b1c17059d094d5c43aee90eed",
       "resume_branch": "feature/wcp-089-media-cleanup-repair-boundary-g1",
       "proposal_kind": "worker_only",
       "collision_check": {
@@ -3520,7 +3520,14 @@
           "tests/Service/MediaStorageCleanupRepairerTest.php"
         ]
       },
-      "claimed_on": "2026-09-26T09:33:43.036Z"
+      "claimed_on": "2026-09-26T09:33:43.036Z",
+      "worker_pr": 52,
+      "final_head": "b953a95430bd4d0b1c17059d094d5c43aee90eed",
+      "ci_run_id": 36233366982,
+      "ci_result": "success",
+      "claim_state": "locked_until_trusted_resolution",
+      "completed_on": "2026-09-26T09:40:52.674Z",
+      "next_action": "Remain claim-locked while awaiting Trusted review; do not merge or deploy from the Worker repository."
     },
     {
       "priority": 40,
