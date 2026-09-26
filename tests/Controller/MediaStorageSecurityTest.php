@@ -111,6 +111,42 @@ final class MediaStorageSecurityTest extends WebTestCase
         self::assertSame($targetId, $stored->getFolder()?->getId());
     }
 
+    public function testBulkMoveRejectsOversizedRawSelectionWithoutChangingAssets(): void
+    {
+        $client = static::createClient();
+        $source = (new MediaFolder())->setName('Source')->setSlug('bulk-source-'.bin2hex(random_bytes(4)));
+        $target = (new MediaFolder())->setName('Target')->setSlug('bulk-target-'.bin2hex(random_bytes(4)));
+        $this->em($client)->persist($source);
+        $this->em($client)->persist($target);
+        $this->em($client)->flush();
+
+        $asset = $this->asset($client, 'oversized-move.txt')->setFolder($source);
+        $this->em($client)->flush();
+        $assetId = $asset->getId();
+        $sourceId = $source->getId();
+        $targetId = $target->getId();
+        self::assertNotNull($assetId);
+        self::assertNotNull($sourceId);
+        self::assertNotNull($targetId);
+        $client->loginUser($this->user($client, [CmsPermission::STORAGE]));
+
+        $client->request('POST', '/admin/storage/media/bulk', [
+            '_token' => $this->csrf($client, 'bulk-media'),
+            'bulk_action' => 'move',
+            'target_folder' => (string) $targetId,
+            'assets' => array_fill(0, 201, (string) $assetId),
+        ]);
+
+        self::assertResponseRedirects('/admin/storage');
+        $client->followRedirect();
+        self::assertSelectorTextContains('body', 'Zu viele Medien ausgewählt. Es wurden keine Änderungen vorgenommen.');
+
+        $this->em($client)->clear();
+        $stored = $this->em($client)->find(MediaAsset::class, $assetId);
+        self::assertInstanceOf(MediaAsset::class, $stored);
+        self::assertSame($sourceId, $stored->getFolder()?->getId());
+    }
+
     public function testFolderEditRejectsDescendantAsParent(): void
     {
         $client = static::createClient();
