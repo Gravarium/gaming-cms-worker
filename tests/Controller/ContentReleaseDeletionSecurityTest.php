@@ -75,19 +75,24 @@ final class ContentReleaseDeletionSecurityTest extends WebTestCase
     {
         $client = static::createClient();
         $user = $this->createUser($client, [CmsPermission::CONTENT]);
-        [$releaseId, $entryId] = $this->createPublishedRelease($client, $user);
+        [$releaseId, $entryId] = $this->createDraftReleaseWithEntry($client, $user);
         $client->loginUser($user);
 
-        $crawler = $client->request('GET', '/admin/content/releases');
+        $draftCrawler = $client->request('GET', '/admin/content/releases');
+        self::assertResponseIsSuccessful();
+        $token = $this->renderedDeleteToken($draftCrawler, $releaseId);
+
+        $release = $this->findRelease($client, $releaseId);
+        self::assertInstanceOf(ContentRelease::class, $release);
+        $release->publish(new \DateTimeImmutable());
+        $client->getContainer()->get(EntityManagerInterface::class)->flush();
+
+        $publishedCrawler = $client->request('GET', '/admin/content/releases');
         self::assertResponseIsSuccessful();
         self::assertSame(
             0,
-            $crawler->filter('form[action="/admin/content/releases/'.$releaseId.'/delete"]')->count(),
+            $publishedCrawler->filter('form[action="/admin/content/releases/'.$releaseId.'/delete"]')->count(),
         );
-        $token = $client->getContainer()
-            ->get(CsrfTokenManagerInterface::class)
-            ->getToken('delete-content-release-'.$releaseId)
-            ->getValue();
         $client->request('POST', '/admin/content/releases/'.$releaseId.'/delete', [
             '_token' => $token,
         ]);
@@ -140,7 +145,7 @@ final class ContentReleaseDeletionSecurityTest extends WebTestCase
     /**
      * @return array{int, int}
      */
-    private function createPublishedRelease(KernelBrowser $client, User $creator): array
+    private function createDraftReleaseWithEntry(KernelBrowser $client, User $creator): array
     {
         $suffix = bin2hex(random_bytes(6));
         $entry = (new ContentEntry())
@@ -153,7 +158,6 @@ final class ContentReleaseDeletionSecurityTest extends WebTestCase
             ->setName('Published release '.$suffix)
             ->setCreatedBy($creator)
             ->addEntry($entry);
-        $release->publish(new \DateTimeImmutable());
         $entityManager = $client->getContainer()->get(EntityManagerInterface::class);
         $entityManager->persist($entry);
         $entityManager->persist($release);
