@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-26T08:26:00Z",
+  "published_at": "2026-09-26T08:41:01Z",
   "summary": {
-    "total_remaining_worker_tasks": 27,
+    "total_remaining_worker_tasks": 28,
     "completed_worker_prs_awaiting_trusted_review": 21,
     "recovery_tasks": 0,
     "unclaimed": 6,
     "immediately_claimable": 0,
-    "next_required_action": "Start the FCP-077 worker-only composition now. This preparation is actionable Worker work and does not wait for Trusted review. If it cannot proceed, derive and claim the next bounded independent worker-visible CMS proposal.",
+    "next_required_action": "Continue WCP-078 bounded audit-context privacy hardening on feature/wcp-078-audit-context-g1; after green exact-head Worker CI, reconcile the WCP entry and continue with the next independent worker-safe package.",
     "composition_preparable": 1,
     "immediately_actionable": 1,
     "must_continue": true
@@ -2440,6 +2440,78 @@
       ],
       "composition_required": true,
       "next_action": "Immediately prepare the worker-only composition from the verified exact predecessor heads, run complete exact-head Worker CI when capacity permits, publish the green composition SHA and claim FCP-077. Trusted review is a later integration gate and is not a reason to wait. If CI capacity itself is unavailable, preserve this preparation checkpoint and derive a disjoint worker-visible WCP that can progress without it."
+    },
+    {
+      "priority": 28,
+      "package_id": "WCP-078",
+      "title": "Bounded audit-context privacy boundary",
+      "risk": "high",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-078-audit-context-g1",
+      "suggested_branch": "feature/wcp-078-audit-context-g1",
+      "base_branch": "main",
+      "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "objective": "Harden the worker-visible audit context boundary so audit records remain privacy-safe and bounded: recursively remove sensitive-key fields, retain only safe scalar values and bounded arrays, omit objects/resources and over-depth data, and preserve useful non-secret diagnostics without introducing private runtime behavior.",
+      "allowed_paths": [
+        "src/Service/AuditContextSanitizer.php",
+        "tests/Service/AuditContextSanitizerTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/"
+      ],
+      "deliverables": [
+        "bounded recursive sanitizer with explicit depth, entry-count and string-size limits",
+        "fail-closed omission of objects, resources and sensitive-key fields",
+        "positive and negative regression coverage for nested maps/lists, normalized secret keys, bounds and safe scalar diagnostics",
+        "no schema, migration, private runtime or production secret changes"
+      ],
+      "tests": [
+        "targeted AuditContextSanitizer PHPUnit tests",
+        "PHPStan level 8",
+        "complete Worker CI on the exact final HEAD"
+      ],
+      "completion_report": [
+        "exact final Worker HEAD and sanitized base SHA",
+        "complete changed-path list and Worker PR",
+        "targeted tests plus complete Worker CI result",
+        "privacy, truncation and deferred-behavior risks"
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "no-secrets-or-trusted-private-runtime-in-worker-source",
+        "preserve-existing-audit redaction and fail-closed privacy behavior",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_base_branch": "main",
+      "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "resume_branch": "feature/wcp-078-audit-context-g1",
+      "proposal_kind": "worker_only",
+      "collision_check": {
+        "compared_against": "current continuous/work-pool-v4 task allowlists and active branches",
+        "result": "disjoint from FCP-077 and all published FCP allowlists",
+        "paths": [
+          "src/Service/AuditContextSanitizer.php",
+          "tests/Service/AuditContextSanitizerTest.php"
+        ]
+      }
     }
   ],
   "recovery_queue": [],
