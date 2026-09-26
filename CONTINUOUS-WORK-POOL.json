@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-26T13:48:35.234Z",
+  "published_at": "2026-09-26T13:50:08.268Z",
   "summary": {
-    "total_remaining_worker_tasks": 110,
+    "total_remaining_worker_tasks": 111,
     "completed_worker_prs_awaiting_trusted_review": 105,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "Re-evaluate all unclaimed tasks and dependency-safe predecessors; if none can start, publish another bounded independent Worker-only CMS proposal without modifying foreign claims.",
+    "next_required_action": "Implement WCP-330 on the exclusive UserSession IP boundary paths from exact sanitized main; run complete exact-head Worker CI, then continue while preserving existing claims.",
     "composition_preparable": 0,
     "immediately_actionable": 0,
     "must_continue": true
@@ -10902,6 +10902,96 @@
         "PHP/Symfony job 108415910111 passed PHPStan level 8 and the complete worker-visible application suite: 432 tests and 1,870 assertions; one PHPUnit deprecation and one notice were reported.",
         "PostgreSQL 18 job 108415909923 applied and verified all 39 migrations with no pending migrations.",
         "PR #123 is open and ready for review. Exact comparison against sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d contains only src/Entity/AuditLog.php and tests/Entity/AuditLogActionBoundaryTest.php."
+      ]
+    },
+    {
+      "priority": 109,
+      "package_id": "WCP-330",
+      "title": "Bound user session IP persistence",
+      "risk": "medium",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-330-user-session-ip-boundary-g1",
+      "suggested_branch": "feature/wcp-330-user-session-ip-boundary-g1",
+      "base_branch": "main",
+      "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "objective": "Enforce UserSession.ipAddress's mapped nullable varchar(45) boundary in both construction and touch(). Preserve null and exact in-bound values; reject malformed UTF-8, NUL, and values above 45 UTF-8 characters/180 bytes without truncation. Validate a touch() IP before changing lastSeenAt, ipAddress, or userAgent so rejected input leaves the session unchanged. Do not add IP syntax validation or change session hash, user-agent truncation, revocation, or security-version behavior.",
+      "allowed_paths": [
+        "src/Entity/UserSession.php",
+        "tests/Entity/UserSessionIpAddressBoundaryTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/",
+        "src/Controller/",
+        "src/Form/",
+        "src/Repository/",
+        "src/Service/",
+        "templates/",
+        "assets/",
+        "public/"
+      ],
+      "deliverables": [
+        "Enforce the 45-character/180-byte IP storage boundary in both the constructor and touch().",
+        "Reject malformed UTF-8, NUL, and overflow before assignment without truncation.",
+        "Keep touch() atomic for rejected IP values, preserving lastSeenAt, ipAddress, and userAgent.",
+        "Preserve null and exact in-bound IP string behavior; leave user-agent truncation and session security state unchanged."
+      ],
+      "tests": [
+        "Targeted UserSession IP boundary PHPUnit tests for constructor/touch, exact ASCII and four-byte multibyte limits, null, overflow, malformed UTF-8/NUL, exact-value preservation, and no partial state change on rejection.",
+        "PHPStan level 8.",
+        "Complete Worker CI on the exact final HEAD."
+      ],
+      "completion_report": [
+        "exact final Worker HEAD and sanitized main base SHA",
+        "complete changed-file list and Worker PR",
+        "targeted UserSession IP boundary tests and complete exact-head Worker CI result",
+        "45-character/180-byte nullable boundary with atomic touch() rejection behavior"
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "no-secrets-or-trusted-private-runtime-in-worker-source",
+        "preserve session hashing, security-version synchronization, revocation, and user-agent behavior",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_base_branch": "main",
+      "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "resume_branch": "feature/wcp-330-user-session-ip-boundary-g1",
+      "proposal_kind": "worker_only",
+      "collision_check": {
+        "compared_against": "all current continuous/work-pool-v4 task allowlists and active/locked claims through WCP-329; exact WCP-330 branch/PR names and new test path checked against sanitized main",
+        "result": "UserSession.ipAddress and its focused boundary test are disjoint from every published task allowlist and claim. No session repository, controller, authentication flow, migration, DI, template, or workflow path is included.",
+        "paths": [
+          "src/Entity/UserSession.php",
+          "tests/Entity/UserSessionIpAddressBoundaryTest.php"
+        ]
+      },
+      "claimed_on": "2026-09-26T13:50:08.268Z",
+      "claim_state": "active_worker_claim",
+      "last_checkpoint_at": "2026-09-26T13:50:08.268Z",
+      "next_action": "Implement only the UserSession IP storage boundary and focused constructor/touch tests in the two allowlisted paths, then record a remote checkpoint and run complete exact-head Worker CI.",
+      "checkpoint_paths": [
+        "src/Entity/UserSession.php",
+        "tests/Entity/UserSessionIpAddressBoundaryTest.php"
       ]
     }
   ],
