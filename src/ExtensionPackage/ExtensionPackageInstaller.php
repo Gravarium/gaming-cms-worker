@@ -6,6 +6,10 @@ namespace App\ExtensionPackage;
 
 final readonly class ExtensionPackageInstaller
 {
+    private const MAX_STAGED_FILES = 500;
+    private const MAX_STAGED_ENTRIES = 502;
+    private const MAX_STAGED_BYTES = 268435456;
+
     public function __construct(
         private ExtensionPackageVerifier $verifier,
         private string $installRoot,
@@ -96,7 +100,14 @@ final readonly class ExtensionPackageInstaller
             new \RecursiveDirectoryIterator($source, \FilesystemIterator::SKIP_DOTS),
             \RecursiveIteratorIterator::SELF_FIRST,
         );
+        $entryCount = 0;
+        $fileCount = 0;
+        $totalBytes = 0;
         foreach ($iterator as $item) {
+            ++$entryCount;
+            if ($entryCount > self::MAX_STAGED_ENTRIES) {
+                throw new \DomainException('Extension package contains too many filesystem entries.');
+            }
             if ($item->isLink()) {
                 throw new \DomainException('Extension packages may not contain symbolic links.');
             }
@@ -107,6 +118,17 @@ final readonly class ExtensionPackageInstaller
                     throw new \RuntimeException('Extension directory could not be staged.');
                 }
             } elseif ($item->isFile()) {
+                ++$fileCount;
+                $size = $item->getSize();
+                if (
+                    $fileCount > self::MAX_STAGED_FILES
+                    || $size < 0
+                    || $size > self::MAX_STAGED_BYTES
+                    || $size > self::MAX_STAGED_BYTES - $totalBytes
+                ) {
+                    throw new \DomainException('Extension package staging exceeds its safe bound.');
+                }
+                $totalBytes += $size;
                 if (!copy($item->getPathname(), $destination)) {
                     throw new \RuntimeException('Extension file could not be staged.');
                 }
