@@ -10,10 +10,10 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-26T21:17:45.812Z",
+  "published_at": "2026-09-26T21:18:26.358Z",
   "summary": {
     "total_remaining_worker_tasks": 134,
-    "completed_worker_prs_awaiting_trusted_review": 175,
+    "completed_worker_prs_awaiting_trusted_review": 176,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
@@ -19240,7 +19240,7 @@
       "package_id": "WCP-405",
       "title": "Let members edit their own guild character profiles",
       "risk": "medium",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -19292,10 +19292,11 @@
         "PHPStan level 8 and complete Worker CI on the exact final HEAD, including PostgreSQL 18 migration-chain checks."
       ],
       "completion_report": [
-        "Exact sanitized Worker main base and final feature HEAD.",
-        "Complete changed-file list, Worker PR and exact-head CI run.",
-        "Owner and cross-guild authorization, CSRF, validation and forged-field regression results.",
-        "Open scope limits and Trusted/Fortress follow-up for ownership policy mapping."
+        "Exact sanitized Worker base f1a246c64527ef3ad51f7490773d9bbf9d42be5d; final feature HEAD 608eab128b085ced45eacb0806f36427a905bdf5.",
+        "Worker PR #200 is open, ready for review, and unmerged.",
+        "Only the five allowlisted controller, form, template and browser-test files changed; no schema or migration.",
+        "Functional tests cover the portal edit link, owner update, private/no-store response, field allowlist, Unicode limits, missing/invalid CSRF, forged privileged fields, foreign/cross-guild/inactive 404s, and generic audit privacy.",
+        "Exact-head Worker CI run 36272205503 passed: PHPStan level 8, 434 tests and 1,978 assertions with zero failures, and all 39 PostgreSQL 18 migrations."
       ],
       "immutable_constraints": [
         "trusted-main-is-the-only-integration-and-deployment-source",
@@ -19325,14 +19326,14 @@
         ]
       },
       "claimed_on": "2026-09-26T20:58:48.551Z",
-      "claim_state": "active",
-      "next_action": "Run complete exact-head Worker CI on 608eab128b085ced45eacb0806f36427a905bdf5; repair any remaining findings on this branch before marking the PR ready.",
+      "claim_state": "locked_until_trusted_resolution",
+      "next_action": "Await Trusted review; keep the claim locked until Trusted explicitly integrates, cancels or transfers it. Do not merge or deploy.",
       "branch_heads": {
         "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
         "feature_branch": "608eab128b085ced45eacb0806f36427a905bdf5"
       },
-      "last_checkpoint_at": "2026-09-26T21:14:00.134Z",
-      "last_verified_push_at": "2026-09-26T21:14:00.134Z",
+      "last_checkpoint_at": "2026-09-26T21:18:26.358Z",
+      "last_verified_push_at": "2026-09-26T21:18:26.358Z",
       "checkpoint_paths": [
         "src/Controller/GuildCharacterProfileController.php",
         "src/Form/GuildCharacterProfileType.php",
@@ -19342,8 +19343,8 @@
       ],
       "worker_pr": 200,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/200",
-      "last_ci_run_id": 36272063833,
-      "last_ci_result": "failure",
+      "last_ci_run_id": 36272205503,
+      "last_ci_result": "success",
       "ci_attempts": [
         {
           "run_id": 36271786243,
@@ -19362,8 +19363,37 @@
           "head": "5b6e137b985aa9747d07f6232233bc760d1440a7",
           "result": "failure",
           "diagnosis": "PHPStan and PostgreSQL passed; one unchanged-state test fixture expected Protected character while it was created as Validated character. Fixture is corrected on current head."
+        },
+        {
+          "run_id": 36272205503,
+          "head": "608eab128b085ced45eacb0806f36427a905bdf5",
+          "result": "success"
         }
-      ]
+      ],
+      "final_head": "608eab128b085ced45eacb0806f36427a905bdf5",
+      "final_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "completed_at": "2026-09-26T21:18:26.358Z",
+      "ci_run_id": 36272205503,
+      "ci_result": "success",
+      "changed_paths": [
+        "src/Controller/GuildCharacterProfileController.php",
+        "src/Form/GuildCharacterProfileType.php",
+        "templates/guild_portal/show.html.twig",
+        "templates/guild_portal/character_edit.html.twig",
+        "tests/Controller/GuildCharacterProfileTest.php"
+      ],
+      "test_results": {
+        "phpunit": "434 tests, 1,978 assertions, 0 failures; one existing deprecation and one notice.",
+        "phpstan": "Level 8 passed with no errors.",
+        "php_symfony": "Worker PHP/Symfony validation job passed.",
+        "postgres18": "39 migrations executed; migration status check passed.",
+        "exact_head_ci": {
+          "run_id": 36272205503,
+          "head": "608eab128b085ced45eacb0806f36427a905bdf5",
+          "result": "success"
+        }
+      },
+      "trusted_follow_up": "Port the owner/active-membership boundary, CSRF form and explicit name/class field allowlist to a fresh Trusted branch; map guild-member ownership through the trusted subject policy and run full Trusted CI."
     },
     {
       "priority": 186,
