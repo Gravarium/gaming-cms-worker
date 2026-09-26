@@ -10,10 +10,10 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-26T13:54:49.306Z",
+  "published_at": "2026-09-26T13:55:13.497Z",
   "summary": {
     "total_remaining_worker_tasks": 112,
-    "completed_worker_prs_awaiting_trusted_review": 105,
+    "completed_worker_prs_awaiting_trusted_review": 106,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
@@ -10909,7 +10909,7 @@
       "package_id": "WCP-330",
       "title": "Bound user session IP persistence",
       "risk": "medium",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -10986,9 +10986,9 @@
         ]
       },
       "claimed_on": "2026-09-26T13:50:08.268Z",
-      "claim_state": "active_worker_claim",
-      "last_checkpoint_at": "2026-09-26T13:53:15.234Z",
-      "next_action": "Complete Worker CI run 36246634885 on exact HEAD 63f10cb8eb24a36ea80953dcaf4eb877d058ab55; repair failures only within the two allowed paths, then reconcile exact-head evidence.",
+      "claim_state": "locked_until_trusted_resolution",
+      "last_checkpoint_at": "2026-09-26T13:55:13.497Z",
+      "next_action": "Await Trusted review; keep the claim locked and do not merge or deploy.",
       "checkpoint_paths": [
         "src/Entity/UserSession.php",
         "tests/Entity/UserSessionIpAddressBoundaryTest.php"
@@ -10997,7 +10997,20 @@
       "worker_pr": 124,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/124",
       "ci_run_id": 36246634885,
-      "ci_status": "in_progress"
+      "pr_state": "open_ready_for_review",
+      "final_head": "63f10cb8eb24a36ea80953dcaf4eb877d058ab55",
+      "ci_result": "success",
+      "completed_on": "2026-09-26T13:55:13.497Z",
+      "final_changed_paths": [
+        "src/Entity/UserSession.php",
+        "tests/Entity/UserSessionIpAddressBoundaryTest.php"
+      ],
+      "test_evidence": [
+        "Worker CI run 36246634885 (#417) succeeded on exact final HEAD 63f10cb8eb24a36ea80953dcaf4eb877d058ab55.",
+        "PHP/Symfony job 108416927551 passed PHPStan level 8 and the complete worker-visible application suite: 433 tests and 1,891 assertions; one PHPUnit deprecation and one notice were reported.",
+        "PostgreSQL 18 job 108416927398 applied and verified all 39 migrations with no pending migrations.",
+        "PR #124 is open and ready for review. Exact comparison against sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d contains only src/Entity/UserSession.php and tests/Entity/UserSessionIpAddressBoundaryTest.php."
+      ]
     },
     {
       "priority": 110,
