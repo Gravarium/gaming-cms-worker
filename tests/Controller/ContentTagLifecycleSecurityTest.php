@@ -66,7 +66,7 @@ final class ContentTagLifecycleSecurityTest extends WebTestCase
         ]);
 
         self::assertResponseRedirects('/admin/content/tags');
-        $crawler = $client->followRedirect();
+        $client->followRedirect();
         self::assertSelectorTextContains('.notice.text-danger', 'wird noch von Inhalten verwendet');
         self::assertInstanceOf(ContentTag::class, $this->findTag($client, $tagId));
     }
