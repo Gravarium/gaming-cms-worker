@@ -30,7 +30,7 @@ final class AdminStorageLibraryPaginationTest extends WebTestCase
         $seen = [];
 
         for ($page = 1; $page <= 11; ++$page) {
-            $crawler = $client->request('GET', '/admin/storage/library?'.http_build_query([
+            $crawler = $client->request('GET', '/admin/storage/library/all?'.http_build_query([
                 'q' => $needle,
                 'page' => $page,
             ]));
@@ -98,7 +98,7 @@ final class AdminStorageLibraryPaginationTest extends WebTestCase
 
         self::assertResponseIsSuccessful();
         $libraryUrl = (string) $crawler->selectLink('Vollständige Mediathek')->attr('href');
-        self::assertSame('/admin/storage/library', parse_url($libraryUrl, PHP_URL_PATH));
+        self::assertSame('/admin/storage/library/all', parse_url($libraryUrl, PHP_URL_PATH));
         parse_str((string) parse_url($libraryUrl, PHP_URL_QUERY), $linkQuery);
         foreach ($query as $key => $value) {
             self::assertSame($value, $linkQuery[$key] ?? null);
@@ -127,16 +127,16 @@ final class AdminStorageLibraryPaginationTest extends WebTestCase
         $client = static::createClient();
         $client->loginUser($this->user($client, [CmsPermission::STORAGE]));
 
-        $client->request('GET', '/admin/storage/library?folder=not-a-folder');
+        $client->request('GET', '/admin/storage/library/all?folder=not-a-folder');
         self::assertResponseStatusCodeSame(400);
 
-        $client->request('GET', '/admin/storage/library?folder=999999999');
+        $client->request('GET', '/admin/storage/library/all?folder=999999999');
         self::assertResponseStatusCodeSame(404);
 
-        $client->request('GET', '/admin/storage/library?page=0');
+        $client->request('GET', '/admin/storage/library/all?page=0');
         self::assertResponseStatusCodeSame(400);
 
-        $client->request('GET', '/admin/storage/library?page=not-a-number');
+        $client->request('GET', '/admin/storage/library/all?page=not-a-number');
         self::assertResponseStatusCodeSame(400);
     }
 
@@ -145,7 +145,7 @@ final class AdminStorageLibraryPaginationTest extends WebTestCase
         $client = static::createClient();
         $client->loginUser($this->user($client, [CmsPermission::CONTENT]));
 
-        $client->request('GET', '/admin/storage/library');
+        $client->request('GET', '/admin/storage/library/all');
         self::assertResponseStatusCodeSame(403);
     }
 
