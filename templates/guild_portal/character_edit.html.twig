@@ -1,0 +1,28 @@
+{% extends 'base.html.twig' %}
+{% set site = site_settings() %}
+{% block title %}Charakterprofil bearbeiten | {{ guild.name }}{% endblock %}
+{% block body %}
+<header class="topbar">
+    <a class="brand" href="{{ path('app_guild_portal_index') }}">Mein Gildenbereich</a>
+    <nav class="top-actions">
+        <a href="{{ path('app_guild_portal_show', {id: guild.id}) }}">Zurück zur Gilde</a>
+        <form method="post" action="{{ path('app_logout') }}">
+            <input type="hidden" name="_csrf_token" value="{{ csrf_token('logout') }}">
+            <button class="button-secondary">Abmelden</button>
+        </form>
+    </nav>
+</header>
+<main class="dashboard">
+    <p class="eyebrow">{{ guild.name }} · Nur für Mitglieder</p>
+    <h1>Charakterprofil bearbeiten</h1>
+    <p>Du kannst hier den Namen und die Klasse dieses Charakters ändern.</p>
+    {{ form_start(form, {'attr': {'class': 'content-form'}}) }}
+        {{ form_row(form.characterName) }}
+        {{ form_row(form.characterClass) }}
+        <div class="row-actions">
+            {{ form_widget(form.save, {'attr': {'class': 'button-primary'}}) }}
+            <a class="button-link button-secondary" href="{{ path('app_guild_portal_show', {id: guild.id}) }}">Abbrechen</a>
+        </div>
+    {{ form_end(form) }}
+</main>
+{% endblock %}
