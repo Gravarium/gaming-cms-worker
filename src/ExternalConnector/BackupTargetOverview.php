@@ -25,8 +25,9 @@ final readonly class BackupTargetOverview
 
             ++$result['enabled'];
             ++$result[$target->isRequired() ? 'required' : 'optional'];
-            $status = $statuses[$target->getTargetKey()] ?? null;
-            if ($status === null) {
+            $targetKey = $target->getTargetKey();
+            $status = $statuses[$targetKey] ?? null;
+            if ($status === null || $status->targetKey !== $targetKey) {
                 ++$result['missing'];
                 continue;
             }
