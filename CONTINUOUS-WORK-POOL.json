@@ -10,7 +10,7 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-26T20:02:06.879Z",
+  "published_at": "2026-09-26T20:05:42.802Z",
   "summary": {
     "total_remaining_worker_tasks": 133,
     "completed_worker_prs_awaiting_trusted_review": 165,
@@ -17820,7 +17820,8 @@
         "src/Controller/Competition/CompetitionController.php",
         "src/Repository/Competition/CompetitionRepository.php",
         "templates/competition/index.html.twig",
-        "tests/Controller/Competition/CompetitionGameFilterTest.php"
+        "tests/Controller/Competition/CompetitionGameFilterTest.php",
+        "tests/Controller/Competition/CompetitionIndexFilterTest.php"
       ],
       "forbidden_paths": [
         "private/",
@@ -17864,7 +17865,7 @@
         "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
         "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
         "no-private-runtime-or-secret-export",
-        "preserve-public-competition-visibility-enabled-game-draft-exclusion-and-gaming-module protections",
+        "preserve-public-competition-visibility-enabled-game-draft-exclusion-and-gaming-module-protections",
         "red-ci-stops-integration",
         "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
       ],
@@ -17882,29 +17883,31 @@
       ],
       "active_base_branch": "feature/wcp-391-competition-status-filter-g1",
       "active_base_sha": "9988284a0536acb5b3ac0b5b91d3205bfd2019cb",
-      "active_head": "9988284a0536acb5b3ac0b5b91d3205bfd2019cb",
+      "active_head": "3a1f6faef506adf138996161618cf3b659fbfcce",
       "resume_branch": "feature/wcp-393-competition-game-filter-g1",
       "proposal_kind": "worker_only",
       "collision_check": {
         "compared_against": "Fresh continuous/work-pool-v4 snapshot at 2026-09-26T20:02:06.879Z, all active/locked allowlists, and exact WCP-391 base 9988284a0536acb5b3ac0b5b91d3205bfd2019cb.",
-        "result": "This is a direct follow-on from WCP-391's exact green PR #185 HEAD 9988284a0536acb5b3ac0b5b91d3205bfd2019cb (CI 36267727456); the predecessor branch remains untouched. No foreign active allowed path overlaps. Active WCP-392 explicitly forbids templates/competition and its allowed paths are disjoint; WCP-383 is limited to command tests. FCP-061 is the completed green ancestor and remains unchanged. FCP-072 is unclaimed and dependency-blocked with no active writer.",
+        "result": "This is a direct follow-on from WCP-391's exact green PR #185 HEAD 9988284a0536acb5b3ac0b5b91d3205bfd2019cb (CI 36267727456); the predecessor branch remains untouched. The stacked branch inherits WCP-391's controller, repository, template, and status regression test at that exact green revision, then extends the first three files and adds the game-filter test. No foreign active allowed path overlaps. Active WCP-392 forbids templates/competition and its allowed paths are disjoint; WCP-383 is limited to command tests. FCP-061 is the completed green ancestor and remains unchanged. FCP-072 is unclaimed and dependency-blocked with no active writer.",
         "paths": [
           "src/Controller/Competition/CompetitionController.php",
           "src/Repository/Competition/CompetitionRepository.php",
           "templates/competition/index.html.twig",
-          "tests/Controller/Competition/CompetitionGameFilterTest.php"
+          "tests/Controller/Competition/CompetitionGameFilterTest.php",
+          "tests/Controller/Competition/CompetitionIndexFilterTest.php"
         ]
       },
       "claimed_on": "2026-09-26T20:02:06.879Z",
       "claim_state": "active",
-      "last_checkpoint_at": "2026-09-26T20:02:06.879Z",
-      "next_action": "Extend the competition repository/controller/template with a strict game-slug selector that composes with status, then add focused public-visibility functional tests.",
+      "last_checkpoint_at": "2026-09-26T20:05:42.802Z",
+      "next_action": "Review the stacked diff, create the Worker PR against main, then verify full CI on this exact HEAD.",
       "checkpoint_paths": [
         "src/Controller/Competition/CompetitionController.php",
         "src/Repository/Competition/CompetitionRepository.php",
         "templates/competition/index.html.twig",
         "tests/Controller/Competition/CompetitionGameFilterTest.php"
-      ]
+      ],
+      "last_verified_push_at": "2026-09-26T20:05:42.802Z"
     },
     {
       "priority": 174,
