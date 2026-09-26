@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-26T21:49:30.570Z",
+  "published_at": "2026-09-26T21:51:36.354Z",
   "summary": {
     "total_remaining_worker_tasks": 134,
     "completed_worker_prs_awaiting_trusted_review": 182,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-413 is reserved on exact sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d; add category manager authorization, hierarchy, and CSRF regressions in its single allowed test file.",
+    "next_required_action": "WCP-414 is claimed on exact sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d; implement the accessible managed-navigation reorder screen in its four allowed paths and preserve existing menu fields.",
     "composition_preparable": 0,
     "immediately_actionable": 0,
     "must_continue": true
@@ -20371,6 +20371,104 @@
         "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
         "feature_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d"
       }
+    },
+    {
+      "priority": 194,
+      "package_id": "WCP-414",
+      "title": "Reorder managed main-navigation items in one accessible screen",
+      "risk": "medium",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-414-admin-menu-reordering-g1",
+      "suggested_branch": "feature/wcp-414-admin-menu-reordering-g1",
+      "base_branch": "main",
+      "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "objective": "The managed main navigation persists a position on each item, and the public menu sorts by position, but administrators must edit items individually to change the order. Add a discoverable, permission-gated ordering screen with keyboard-accessible move-up/move-down actions. Moves must preserve labels, destinations, visibility, and window behavior, and use CSRF-protected POST requests with a transaction and row locking. Do not change the schema or public rendering contract.",
+      "allowed_paths": [
+        "src/Controller/AdminMenuOrderController.php",
+        "templates/admin/menu/form.html.twig",
+        "templates/admin/menu/order.html.twig",
+        "tests/Controller/AdminMenuOrderingTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/",
+        "assets/",
+        "public/",
+        "src/Controller/AdminMenuController.php",
+        "src/Repository/MenuItemRepository.php",
+        "src/Entity/MenuItem.php",
+        "src/Form/MenuItemType.php",
+        "templates/admin/menu/index.html.twig",
+        "templates/base.html.twig",
+        "templates/menu/main_navigation.html.twig",
+        "src/Twig/SiteExtension.php",
+        "tests/Controller/AdminMenuManagementSecurityTest.php"
+      ],
+      "deliverables": [
+        "Add a discoverable link to the reorder screen from the existing create/edit menu-item form.",
+        "List enabled and disabled menu items in the same stable position/id order used by public navigation.",
+        "Provide accessible move-up and move-down POST actions; persist deterministic consecutive positions atomically while preserving every item's other fields.",
+        "Require CMS_CONTENT_MANAGE and a per-action CSRF token; reject unknown items and invalid directions without changing order.",
+        "Keep the existing public navigation rendering, route destinations, schema, and menu-item CRUD behavior unchanged."
+      ],
+      "tests": [
+        "php bin/phpunit tests/Controller/AdminMenuOrderingTest.php",
+        "Verify the reorder screen link and authorization denial.",
+        "Verify up/down moves, boundary no-ops, stable ordering with duplicate/gapped starting positions, and inclusion of disabled items.",
+        "Verify invalid CSRF and unknown item requests do not change persisted positions.",
+        "Verify labels, enabled state, destinations, and open-new-window settings remain unchanged by reordering.",
+        "PHPStan level 8 and complete Worker CI on the exact final HEAD, including PostgreSQL 18 migration-chain checks."
+      ],
+      "completion_report": [
+        "Exact sanitized main base SHA and final Worker HEAD.",
+        "Complete changed-path list and Worker PR.",
+        "Ordering, authorization, CSRF, boundary, and unchanged-field test results.",
+        "Exact-head PHPStan and complete Worker CI results.",
+        "Open limitations and Trusted follow-up."
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "preserve-admin-permissions-CSRF-public-navigation-destinations-and-visibility",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "proposal_kind": "worker_only",
+      "proposal_dependency_evidence": [],
+      "active_base_branch": "main",
+      "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "resume_branch": "feature/wcp-414-admin-menu-reordering-g1",
+      "collision_check": {
+        "compared_against": "Fresh continuous/work-pool-v4 HEAD d6e2c86fcd27a834f43f20245c29a81c35d7ae1f, sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d, every active and claim-locked allowlist.",
+        "result": "No active task is working in menu management. WCP-392 is locked on the public navigation and admin menu index files; WCP-410 is locked on its security test; WCP-309 and WCP-350 are locked on the MenuItem entity and form type. This claim uses disjoint files only. FCP-072 is unclaimed and dependency-blocked, with a broad templates/ allowlist; this WCP records the exact menu-form and new ordering template paths so any later FCP claimant can keep work disjoint.",
+        "paths": [
+          "src/Controller/AdminMenuOrderController.php",
+          "templates/admin/menu/form.html.twig",
+          "templates/admin/menu/order.html.twig",
+          "tests/Controller/AdminMenuOrderingTest.php"
+        ]
+      },
+      "claimed_on": "2026-09-26T21:51:36.354Z",
+      "claim_state": "active",
+      "next_action": "Implement the accessible reorder page and CSRF-protected transactional move actions, then push a checkpoint and run focused and full exact-head CI."
     }
   ],
   "recovery_queue": [],
