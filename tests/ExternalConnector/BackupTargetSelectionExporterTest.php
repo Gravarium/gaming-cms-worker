@@ -29,6 +29,41 @@ final class BackupTargetSelectionExporterTest extends TestCase
         self::assertStringNotContainsString('repository', $content);
     }
 
+    public function testRejectsDelimiterControlAndMalformedEncodingWithoutEchoingInput(): void
+    {
+        $invalid = [
+            ['primary|injected', 'private.primary'],
+            ["secondary\ninjected", 'private.secondary'],
+            ['secondary', 'private.secondary|injected'],
+            ['secondary', "private.secondary\r\ninjected"],
+            ['secondary', "private.\0injected"],
+            ['secondary', "private.\xFF"],
+        ];
+
+        foreach ($invalid as [$key, $reference]) {
+            $this->assertExportRejects($this->target($key, $reference, false));
+        }
+    }
+
+    public function testRejectsOverlongExportFields(): void
+    {
+        $this->assertExportRejects($this->target(str_repeat('a', 65), 'private.secondary', false));
+        $this->assertExportRejects($this->target('secondary', str_repeat('a', 121), false));
+    }
+
+    public function testAcceptsExportTokensAtTheirByteLimits(): void
+    {
+        $key = str_repeat('a', 64);
+        $reference = str_repeat('b', 120);
+
+        self::assertSame(
+            "# configuration_reference|target_key|required\n".$reference.'|'.$key."|1\n",
+            (new BackupTargetSelectionExporter($this->registry([
+                $this->target($key, $reference, true),
+            ])))->export(),
+        );
+    }
+
     public function testRefusesAnEmptyBackupSelection(): void
     {
         $this->expectException(\RuntimeException::class);
@@ -42,6 +77,23 @@ final class BackupTargetSelectionExporterTest extends TestCase
             "# configuration_reference|target_key|required\n",
             (new BackupTargetSelectionExporter($this->registry([])))->export(true),
         );
+    }
+
+    private function assertExportRejects(ExternalConnectorTarget $invalidTarget): void
+    {
+        $registry = $this->registry([
+            $this->target('primary', 'private.primary', true),
+            $invalidTarget,
+        ]);
+
+        try {
+            (new BackupTargetSelectionExporter($registry))->export();
+        } catch (\RuntimeException $exception) {
+            self::assertSame('Backup target selection contains invalid data.', $exception->getMessage());
+            return;
+        }
+
+        self::fail('Expected unsafe persisted backup selection values to be rejected.');
     }
 
     /** @param list<ExternalConnectorTarget> $targets */
