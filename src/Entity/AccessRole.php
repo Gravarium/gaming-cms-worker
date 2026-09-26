@@ -17,6 +17,9 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\UniqueConstraint(name: 'uniq_access_role_key', columns: ['role_key'])]
 class AccessRole
 {
+    private const MAX_KEY_BYTES = 320;
+    private const MAX_KEY_LENGTH = 80;
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -58,7 +61,18 @@ class AccessRole
 
     public function getId(): ?int { return $this->id; }
     public function getKey(): string { return $this->key; }
-    public function setKey(string $key): self { $this->key = mb_strtolower(trim($key)); return $this; }
+    public function setKey(string $key): self
+    {
+        if (!mb_check_encoding($key, 'UTF-8') || str_contains($key, "\0")) {
+            throw new \InvalidArgumentException('Access role key is invalid or exceeds the allowed length.');
+        }
+
+        $normalizedKey = mb_strtolower(trim($key));
+        $this->assertKeyColumnBoundary($normalizedKey);
+        $this->key = $normalizedKey;
+
+        return $this;
+    }
     public function getName(): string { return $this->name; }
     public function setName(string $name): self { $this->name = trim($name); return $this; }
     public function getDescription(): ?string { return $this->description; }
@@ -81,4 +95,12 @@ class AccessRole
     /** @return Collection<int, User> */
     public function getUsers(): Collection { return $this->users; }
     public function getCreatedAt(): \DateTimeImmutable { return $this->createdAt; }
+
+    private function assertKeyColumnBoundary(string $key): void
+    {
+        if (strlen($key) > self::MAX_KEY_BYTES || mb_strlen($key, 'UTF-8') > self::MAX_KEY_LENGTH) {
+            throw new \InvalidArgumentException('Access role key is invalid or exceeds the allowed length.');
+        }
+    }
+
 }
