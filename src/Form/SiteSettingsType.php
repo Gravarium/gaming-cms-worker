@@ -18,6 +18,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\File;
 use Symfony\Component\Validator\Constraints\Image;
 use Symfony\Component\Validator\Constraints\Url;
+use Symfony\Component\Validator\Constraints\Length;
 
 /** @extends AbstractType<SiteSettings> */
 final class SiteSettingsType extends AbstractType
@@ -30,7 +31,11 @@ final class SiteSettingsType extends AbstractType
         $builder
             ->add('siteName', null, ['label' => 'Website-Name'])
             ->add('description', TextareaType::class, ['label' => 'Beschreibung', 'required' => false, 'attr' => ['rows' => 3]])
-            ->add('homeTitle', null, ['label' => 'Überschrift der Startseite'])
+            ->add('homeTitle', null, [
+                'label' => 'Überschrift der Startseite',
+                'attr' => ['maxlength' => 180],
+                'constraints' => [new Length(max: 180)],
+            ])
             ->add('homeText', TextareaType::class, ['label' => 'Text der Startseite', 'attr' => ['rows' => 5]])
             ->add('primaryColor', ColorType::class, ['label' => 'Grundfarbe'])
             ->add('colorScheme', ChoiceType::class, [
