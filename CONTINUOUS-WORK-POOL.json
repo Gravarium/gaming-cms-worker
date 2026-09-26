@@ -16532,6 +16532,95 @@
         "templates/video/search.html.twig",
         "tests/Controller/VideoSearchTest.php"
       ]
+    },
+    {
+      "priority": 162,
+      "package_id": "WCP-382",
+      "title": "Test Discord webhook failure handling and log privacy",
+      "risk": "medium",
+      "execution_state": "worker_in_progress",
+      "dependencies": [
+        "WCP-379"
+      ],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-382-discord-webhook-failure-tests-g1",
+      "suggested_branch": "feature/wcp-382-discord-webhook-failure-tests-g1",
+      "base_branch": "feature/wcp-379-discord-webhook-delivery-tests-g1",
+      "base_sha": "a67ef9cb1d489d57157258d236445f34ee9e144a",
+      "objective": "Add service-level regression tests proving that Discord webhook non-2xx responses and simulated transport exceptions fail closed without retrying, and that warning logs expose neither the webhook URL nor transport exception message. Use synthetic persisted guild/integration data, MockHttpClient, and a mocked logger only. Make no production changes or external network requests.",
+      "allowed_paths": [
+        "tests/Service/DiscordWebhookNotifierFailureSecurityTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/",
+        "src/",
+        "templates/",
+        "assets/",
+        "public/"
+      ],
+      "deliverables": [
+        "Assert an HTTP 503 response returns false, performs one request, and logs only guild/status metadata.",
+        "Assert a simulated transport exception returns false, performs one request, and logs only guild/exception-class metadata.",
+        "Prove the synthetic webhook URL and exception message never appear in logger warning arguments.",
+        "Keep all data synthetic, mock all HTTP, and change no production paths."
+      ],
+      "tests": [
+        "Targeted DiscordWebhookNotifierFailureSecurityTest PHPUnit tests pass.",
+        "PHPStan level 8 passes.",
+        "Complete Worker CI passes on the exact final HEAD."
+      ],
+      "completion_report": [
+        "Exact WCP-379 green base SHA and dependency evidence",
+        "Exact final Worker HEAD, Worker PR and complete changed-path list",
+        "503 and transport-exception fail-closed/no-retry assertions",
+        "No webhook URL or exception message in warning logs",
+        "Targeted tests, PHPStan level 8 and exact-head Worker CI",
+        "Confirmation that no production code or real network behavior changed"
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "no-secrets-or-trusted-private-runtime-in-worker-source",
+        "preserve Discord webhook host validation, mention suppression, redirect refusal, timeout and failure behavior",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
+      ],
+      "proposal_base_branch": "feature/wcp-379-discord-webhook-delivery-tests-g1",
+      "proposal_base_sha": "a67ef9cb1d489d57157258d236445f34ee9e144a",
+      "active_base_branch": "feature/wcp-379-discord-webhook-delivery-tests-g1",
+      "active_base_sha": "a67ef9cb1d489d57157258d236445f34ee9e144a",
+      "active_head": "a67ef9cb1d489d57157258d236445f34ee9e144a",
+      "resume_branch": "feature/wcp-382-discord-webhook-failure-tests-g1",
+      "proposal_kind": "worker_only",
+      "collision_check": {
+        "compared_against": "All allowed-path scopes on the latest continuous/work-pool-v4 pool and the exact WCP-379 green proposal base a67ef9cb1d489d57157258d236445f34ee9e144a, including the foreign active WCP-380 and WCP-381 claims.",
+        "result": "No exact, enclosing-scope or nested-path collision. The new test path does not exist on the WCP-379 base. WCP-379's notifier test path is a sibling; WCP-380 owns taxonomy controller tests and WCP-381 owns video-search controller/repository/template tests.",
+        "paths": [
+          "tests/Service/DiscordWebhookNotifierFailureSecurityTest.php"
+        ]
+      },
+      "claimed_on": "2026-09-26T19:10:55.677Z",
+      "claim_state": "active",
+      "last_checkpoint_at": "2026-09-26T19:10:55.677Z",
+      "next_action": "Add mocked 503 and transport-exception delivery failure tests with logger privacy assertions, then run targeted PHPUnit, PHPStan level 8 and exact-head Worker CI.",
+      "checkpoint_paths": [
+        "tests/Service/DiscordWebhookNotifierFailureSecurityTest.php"
+      ],
+      "last_verified_push_at": "2026-09-26T19:10:55.677Z"
     }
   ],
   "recovery_queue": [],
