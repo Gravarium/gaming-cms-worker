@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-26T22:57:37.551Z",
+  "published_at": "2026-09-26T23:00:09.756Z",
   "summary": {
     "total_remaining_worker_tasks": 134,
     "completed_worker_prs_awaiting_trusted_review": 191,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-423 is complete on PR #217 at exact green head 855e0187b9f12af00ec209ef1c07297ea615a64c; its claim remains locked pending Trusted review. Continue with the next unclaimed dependency-safe task while preserving other active claims.",
+    "next_required_action": "WCP-424 PR #218 now uses a standalone restricted-user session after diagnosing the second test failure; run 36278019727 must finish green on exact head 59f17ff7feea4e9248865bd222189926593ee787 before completion.",
     "composition_preparable": 0,
     "immediately_actionable": 0,
     "must_continue": true
@@ -21786,7 +21786,7 @@
         "public/"
       ],
       "deliverables": [
-        "Verify users without CMS_ACCESS receive 403 for the notification list and both acknowledgement POST routes, including when they present a valid CSRF token.",
+        "Verify users without CMS_ACCESS receive 403 for the notification list and both acknowledgement POST routes; denied actions leave fixtures unread.",
         "Verify missing and invalid CSRF tokens leave individual and all-notification read state unchanged for an authorized CMS_ACCESS user.",
         "Verify the rendered single-notification token marks only its target notification read.",
         "Keep the change test-only in tests/Controller/AdminNotificationSecurityTest.php."
@@ -21825,23 +21825,23 @@
       "claim_state": "active",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-      "active_head": "cb23f2a548de2691f7b0075cff3559b925a7f2d6",
+      "active_head": "59f17ff7feea4e9248865bd222189926593ee787",
       "resume_branch": "feature/wcp-424-admin-notification-security-g1",
-      "last_checkpoint_at": "2026-09-26T22:56:46.832Z",
-      "last_verified_push_at": "2026-09-26T22:56:46.832Z",
+      "last_checkpoint_at": "2026-09-26T23:00:09.756Z",
+      "last_verified_push_at": "2026-09-26T23:00:09.756Z",
       "checkpoint_paths": [
         "tests/Controller/AdminNotificationSecurityTest.php"
       ],
       "branch_heads": {
         "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-        "feature_branch": "cb23f2a548de2691f7b0075cff3559b925a7f2d6"
+        "feature_branch": "59f17ff7feea4e9248865bd222189926593ee787"
       },
-      "next_action": "Wait for Worker CI run 36277849213 on exact HEAD cb23f2a548de2691f7b0075cff3559b925a7f2d6; if it fails, diagnose and repair before marking complete.",
+      "next_action": "Wait for Worker CI run 36278019727 on exact HEAD 59f17ff7feea4e9248865bd222189926593ee787; diagnose and repair any failure before completion.",
       "worker_pr": 218,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/218",
       "draft_pr": false,
       "pr_state": "open_ready_for_review_unmerged",
-      "final_head": "cb23f2a548de2691f7b0075cff3559b925a7f2d6",
+      "final_head": "59f17ff7feea4e9248865bd222189926593ee787",
       "final_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
       "final_changed_paths": [
         "tests/Controller/AdminNotificationSecurityTest.php"
@@ -21849,17 +21849,23 @@
       "changed_paths": [
         "tests/Controller/AdminNotificationSecurityTest.php"
       ],
-      "last_ci_run_id": 36277849213,
+      "last_ci_run_id": 36278019727,
       "ci_attempts": [
         {
           "run_id": 36277674833,
           "head": "b31d8bdb8f52062b8c4637336e96af548c8e1735",
           "result": "failure",
-          "diagnosis": "Authorized CSRF token creation was attempted after a completed 403 request, when no Request session was on RequestStack. The test now extracts rendered valid tokens during an authorized page request before checking the restricted user."
+          "diagnosis": "CSRF manager attempted to create tokens after a completed 403 request with no active Request session. Replaced that token-generation approach with rendered tokens."
         },
         {
           "run_id": 36277849213,
           "head": "cb23f2a548de2691f7b0075cff3559b925a7f2d6",
+          "result": "failure",
+          "diagnosis": "Switching authenticated users within the same browser client redirected the second user to login, so the permission assertion saw 302. Restricted-user checks now use their own browser session; authorized CSRF and valid-token cases remain separate."
+        },
+        {
+          "run_id": 36278019727,
+          "head": "59f17ff7feea4e9248865bd222189926593ee787",
           "result": "in_progress"
         }
       ]
