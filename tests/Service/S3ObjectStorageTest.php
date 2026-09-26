@@ -19,7 +19,7 @@ final class S3ObjectStorageTest extends TestCase
             self::assertSame('https://objects.example.test/cms/gaming/logo%20test.png', $url);
             self::assertArrayHasKey('authorization', $options['normalized_headers']);
             self::assertStringContainsString('AWS4-HMAC-SHA256 Credential=access/', $options['normalized_headers']['authorization'][0]);
-            self::assertSame(['image/png'], $options['normalized_headers']['content-type']);
+            self::assertSame(['Content-Type: image/png'], $options['normalized_headers']['content-type']);
             $requestSeen = true;
 
             return new MockResponse('', ['http_code' => 200]);
