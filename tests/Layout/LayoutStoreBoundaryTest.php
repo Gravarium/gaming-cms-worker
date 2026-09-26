@@ -7,7 +7,6 @@ namespace App\Tests\Layout;
 use App\Entity\PageLayout;
 use App\Layout\LayoutDocument;
 use App\Layout\LayoutStore;
-use App\Layout\LayoutValidator;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
