@@ -10,10 +10,32 @@ use App\Security\CmsPermission;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 
 final class AdminMenuOrderingTest extends WebTestCase
 {
+    /** @var list<int> */
+    private array $menuItemIds = [];
+
+    protected function tearDown(): void
+    {
+        if (self::$kernel !== null) {
+            $entityManager = self::$kernel->getContainer()->get(EntityManagerInterface::class);
+            foreach ($this->menuItemIds as $id) {
+                $item = $entityManager->find(MenuItem::class, $id);
+                if ($item instanceof MenuItem) {
+                    $entityManager->remove($item);
+                }
+            }
+            $entityManager->flush();
+        }
+
+        parent::tearDown();
+    }
+
     public function testManagerCanOpenTheLinkedReorderScreenAndMoveAnItem(): void
     {
         $client = static::createClient();
@@ -97,8 +119,7 @@ final class AdminMenuOrderingTest extends WebTestCase
         self::assertSame($before, array_map(static fn (MenuItem $item): ?int => $item->getId(), $this->ordered($client)));
 
         $unknownId = 2147483000;
-        $tokenManager = $client->getContainer()->get(CsrfTokenManagerInterface::class);
-        $token = $tokenManager->getToken('menu-order-'.$unknownId.'-up')->getValue();
+        $token = $this->csrfToken($client, 'menu-order-'.$unknownId.'-up');
         $client->request('POST', '/admin/menu/order/'.$unknownId.'/up', ['_token' => $token]);
         self::assertResponseStatusCodeSame(404);
         self::assertSame($before, array_map(static fn (MenuItem $item): ?int => $item->getId(), $this->ordered($client)));
@@ -134,6 +155,7 @@ final class AdminMenuOrderingTest extends WebTestCase
     private function fixture(KernelBrowser $client, array $permissions = [CmsPermission::CONTENT]): array
     {
         $suffix = bin2hex(random_bytes(5));
+        $entityManager = $this->em($client);
         $manager = (new User())
             ->setEmail('menu-order-'.$suffix.'@example.test')
             ->setDisplayName('Menu manager')
@@ -156,11 +178,17 @@ final class AdminMenuOrderingTest extends WebTestCase
             ->setPosition(60)
             ->setEnabled(true);
 
-        $entityManager = $this->em($client);
         foreach ([$manager, $first, $hidden, $last] as $entity) {
             $entityManager->persist($entity);
         }
         $entityManager->flush();
+
+        foreach ([$first, $hidden, $last] as $item) {
+            $id = $item->getId();
+            if ($id !== null) {
+                $this->menuItemIds[] = $id;
+            }
+        }
 
         self::assertNotNull($first->getId());
         self::assertNotNull($hidden->getId());
@@ -186,6 +214,27 @@ final class AdminMenuOrderingTest extends WebTestCase
         self::assertNotNull($id);
 
         return $id;
+    }
+
+    private function csrfToken(KernelBrowser $client, string $tokenId): string
+    {
+        $container = $client->getContainer();
+        $session = $container->get('session');
+        self::assertInstanceOf(SessionInterface::class, $session);
+        $session->start();
+
+        $request = Request::create('/');
+        $request->setSession($session);
+        $requestStack = $container->get(RequestStack::class);
+        $requestStack->push($request);
+
+        try {
+            $tokenManager = $container->get(CsrfTokenManagerInterface::class);
+            return $tokenManager->getToken($tokenId)->getValue();
+        } finally {
+            $requestStack->pop();
+            $session->save();
+        }
     }
 
     private function em(KernelBrowser $client): EntityManagerInterface
