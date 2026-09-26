@@ -94,7 +94,7 @@ final class MediaUploadPolicyTest extends TestCase
 
     public function testRejectsImageWithExcessiveDimensions(): void
     {
-        $file = $this->upload('huge.png', $this->pngHeader(9000, 1));
+        $file = $this->upload('huge.png', $this->pngHeader(9000, 1), 'image/png');
 
         $this->expectException(\DomainException::class);
         $this->expectExceptionMessage('Bildabmessungen');
@@ -104,7 +104,7 @@ final class MediaUploadPolicyTest extends TestCase
     public function testRejectsDeepJsonBeforeUnboundedDecode(): void
     {
         $json = str_repeat('[', 33).'0'.str_repeat(']', 33);
-        $file = $this->upload('deep.json', $json);
+        $file = $this->upload('deep.json', $json, 'application/json');
 
         $this->expectException(\DomainException::class);
         $this->expectExceptionMessage('JSON-Datei');
@@ -116,7 +116,7 @@ final class MediaUploadPolicyTest extends TestCase
         return new MediaUploadPolicy(new MediaMalwareScanner('off', ''));
     }
 
-    private function upload(string $name, string $contents): UploadedFile
+    private function upload(string $name, string $contents, ?string $forcedMimeType = null): UploadedFile
     {
         $path = tempnam(sys_get_temp_dir(), 'upload-policy-');
         if ($path === false) {
@@ -125,15 +125,23 @@ final class MediaUploadPolicyTest extends TestCase
         file_put_contents($path, $contents);
         $this->files[] = $path;
 
-        return new class($path, $name) extends UploadedFile {
-            public function __construct(string $path, private readonly string $untrustedOriginalName)
-            {
+        return new class($path, $name, $forcedMimeType) extends UploadedFile {
+            public function __construct(
+                string $path,
+                private readonly string $untrustedOriginalName,
+                private readonly ?string $forcedMimeType,
+            ) {
                 parent::__construct($path, $untrustedOriginalName, null, UPLOAD_ERR_OK, true);
             }
 
             public function getClientOriginalName(): string
             {
                 return $this->untrustedOriginalName;
+            }
+
+            public function getMimeType(): ?string
+            {
+                return $this->forcedMimeType ?? parent::getMimeType();
             }
         };
     }
