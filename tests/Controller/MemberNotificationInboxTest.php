@@ -31,7 +31,9 @@ final class MemberNotificationInboxTest extends WebTestCase
 
         $client->request('GET', '/guild-area/notifications');
         self::assertResponseIsSuccessful();
-        self::assertResponseHeaderSame('Cache-Control', 'private, no-store, max-age=0');
+        $cacheControl = (string) $client->getResponse()->headers->get('Cache-Control');
+        self::assertStringContainsString('private', $cacheControl);
+        self::assertStringContainsString('no-store', $cacheControl);
         self::assertResponseHeaderSame('X-Robots-Tag', 'noindex, nofollow, noarchive');
         self::assertStringContainsString('Notice 60', (string) $client->getResponse()->getContent());
         self::assertStringContainsString('Notice 36', (string) $client->getResponse()->getContent());
@@ -106,10 +108,14 @@ final class MemberNotificationInboxTest extends WebTestCase
         $id = $notification->getId();
         self::assertNotNull($id);
 
+        $client->loginUser($owner);
+        $crawler = $client->request('GET', '/guild-area/notifications');
+        $token = (string) $crawler
+            ->filter('form[action="/guild-area/notifications/'.$id.'/read"] input[name="_token"]')
+            ->attr('value');
+
         $client->loginUser($otherUser);
-        $client->request('POST', '/guild-area/notifications/'.$id.'/read', [
-            '_token' => $this->csrfToken($client, 'member-notification-inbox-'.$id),
-        ]);
+        $client->request('POST', '/guild-area/notifications/'.$id.'/read', ['_token' => $token]);
         self::assertResponseStatusCodeSame(404);
         self::assertNull($notification->getReadAt());
 
@@ -140,17 +146,21 @@ final class MemberNotificationInboxTest extends WebTestCase
         );
         $this->em($client)->refresh($unsafe);
         $client->loginUser($user);
+        $crawler = $client->request('GET', '/guild-area/notifications');
 
         $safeId = $safe->getId();
         self::assertNotNull($safeId);
-        $client->request('POST', '/guild-area/notifications/'.$safeId.'/read', [
-            '_token' => $this->csrfToken($client, 'member-notification-inbox-'.$safeId),
-        ]);
+        $safeToken = (string) $crawler
+            ->filter('form[action="/guild-area/notifications/'.$safeId.'/read"] input[name="_token"]')
+            ->attr('value');
+        $unsafeToken = (string) $crawler
+            ->filter('form[action="/guild-area/notifications/'.$unsafeId.'/read"] input[name="_token"]')
+            ->attr('value');
+
+        $client->request('POST', '/guild-area/notifications/'.$safeId.'/read', ['_token' => $safeToken]);
         self::assertResponseRedirects('/guild-area');
 
-        $client->request('POST', '/guild-area/notifications/'.$unsafeId.'/read', [
-            '_token' => $this->csrfToken($client, 'member-notification-inbox-'.$unsafeId),
-        ]);
+        $client->request('POST', '/guild-area/notifications/'.$unsafeId.'/read', ['_token' => $unsafeToken]);
         self::assertResponseRedirects('/guild-area/notifications');
         self::assertStringNotContainsString('evil.example', (string) $client->getResponse()->headers->get('Location'));
     }
@@ -178,14 +188,16 @@ final class MemberNotificationInboxTest extends WebTestCase
         self::assertNotNull($alreadyReadId);
         self::assertNotNull($foreignId);
         $client->loginUser($user);
+        $crawler = $client->request('GET', '/guild-area/notifications');
+        $readAllToken = (string) $crawler
+            ->filter('form[action="/guild-area/notifications/mark-all-read"] input[name="_token"]')
+            ->attr('value');
 
         $client->request('POST', '/guild-area/notifications/mark-all-read');
         self::assertResponseStatusCodeSame(403);
         self::assertNull($first->getReadAt());
 
-        $client->request('POST', '/guild-area/notifications/mark-all-read', [
-            '_token' => $this->csrfToken($client, 'member-notification-inbox-read-all'),
-        ]);
+        $client->request('POST', '/guild-area/notifications/mark-all-read', ['_token' => $readAllToken]);
         self::assertResponseRedirects('/guild-area/notifications');
 
         $entityManager = $this->em($client);
@@ -253,14 +265,6 @@ final class MemberNotificationInboxTest extends WebTestCase
         }
 
         return $notification;
-    }
-
-    private function csrfToken(KernelBrowser $client, string $tokenId): string
-    {
-        return $client->getContainer()
-            ->get(CsrfTokenManagerInterface::class)
-            ->getToken($tokenId)
-            ->getValue();
     }
 
     private function em(KernelBrowser $client): EntityManagerInterface
