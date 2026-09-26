@@ -10,16 +10,16 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-26T10:24:00.094Z",
+  "published_at": "2026-09-26T10:24:13.686Z",
   "summary": {
     "total_remaining_worker_tasks": 55,
-    "completed_worker_prs_awaiting_trusted_review": 48,
+    "completed_worker_prs_awaiting_trusted_review": 49,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "Re-evaluate remaining unclaimed Worker proposals and continue an independent package while preserving WCP-097, WCP-100, WCP-102, WCP-103 and all other completed foreign claim locks; do not merge or deploy.",
+    "next_required_action": "Re-evaluate remaining unclaimed Worker proposals and continue an independent package while preserving all foreign active claims and completed claim locks; do not modify WCP-097, WCP-100 or WCP-104.",
     "composition_preparable": 0,
-    "immediately_actionable": 2,
+    "immediately_actionable": 1,
     "must_continue": true
   },
   "rules": {
@@ -4788,7 +4788,7 @@
       "package_id": "WCP-104",
       "title": "Bound external media store results",
       "risk": "high",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -4859,7 +4859,7 @@
       "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "2541d3f6bcc7c377de89f6acb986e68ecd967fbe",
       "resume_branch": "feature/wcp-104-media-store-result-boundary-g1",
       "proposal_kind": "worker_only",
       "collision_check": {
@@ -4870,7 +4870,14 @@
           "tests/ExternalConnector/ExternalMediaStoreResultTest.php"
         ]
       },
-      "claimed_on": "2026-09-26T10:20:43.874Z"
+      "claimed_on": "2026-09-26T10:20:43.874Z",
+      "worker_pr": 67,
+      "final_head": "2541d3f6bcc7c377de89f6acb986e68ecd967fbe",
+      "ci_run_id": 36235577587,
+      "ci_result": "success",
+      "claim_state": "locked_until_trusted_resolution",
+      "completed_on": "2026-09-26T10:24:13.686Z",
+      "next_action": "Remain claim-locked while awaiting Trusted review; do not merge or deploy from the Worker repository."
     },
     {
       "priority": 55,
