@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-26T13:38:33.367Z",
+  "published_at": "2026-09-26T13:38:45.457Z",
   "summary": {
-    "total_remaining_worker_tasks": 107,
+    "total_remaining_worker_tasks": 108,
     "completed_worker_prs_awaiting_trusted_review": 101,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "Implement WCP-326 on the exclusive ExternalConnectorTarget display-name boundary paths from exact sanitized main; run complete exact-head Worker CI, then continue while preserving existing claims.",
+    "next_required_action": "Implement WCP-327 on the exclusive User display-name setter and boundary-test paths from exact sanitized main; run complete exact-head Worker CI, then continue while preserving existing claims.",
     "composition_preparable": 0,
     "immediately_actionable": 0,
     "must_continue": true
@@ -10561,6 +10561,96 @@
       "pr_state": "draft",
       "ci_run_id": 36245826716,
       "ci_result": "in_progress"
+    },
+    {
+      "priority": 106,
+      "package_id": "WCP-327",
+      "title": "Bound user display-name persistence",
+      "risk": "medium",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-327-user-display-name-boundary-g1",
+      "suggested_branch": "feature/wcp-327-user-display-name-boundary-g1",
+      "base_branch": "main",
+      "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "objective": "Enforce the User.displayName mapped varchar(80) storage boundary after its existing trim normalization. Reject malformed UTF-8 and NUL and reject normalized values above 80 UTF-8 characters/320 bytes before assignment, without truncation or replacing the previous display name. Preserve the existing NotBlank/Length validation and do not change email, authentication, roles, permissions, sessions, lock state, or 2FA behavior.",
+      "allowed_paths": [
+        "src/Entity/User.php",
+        "tests/Entity/UserDisplayNameBoundaryTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/",
+        "src/Controller/",
+        "src/Form/",
+        "src/Repository/",
+        "src/Service/",
+        "templates/",
+        "assets/",
+        "public/"
+      ],
+      "deliverables": [
+        "Preserve existing display-name trim normalization for in-bound values.",
+        "Reject malformed UTF-8, NUL, and normalized values above the mapped 80-character/320-byte boundary before assignment, without truncation.",
+        "Preserve the previous display name after rejected input.",
+        "Leave NotBlank/Length validation and all authentication, role, permission, session, lock, and 2FA behavior unchanged."
+      ],
+      "tests": [
+        "Targeted User display-name boundary PHPUnit tests for exact ASCII/multibyte limits, normalized values at the bound, overflow, malformed UTF-8/NUL, state preservation, and trim behavior.",
+        "PHPStan level 8.",
+        "Complete Worker CI on the exact final HEAD."
+      ],
+      "completion_report": [
+        "exact final Worker HEAD and sanitized main base SHA",
+        "complete changed-file list and Worker PR",
+        "targeted User display-name boundary tests and complete exact-head Worker CI result",
+        "80-character/320-byte bound with preserved trim and validator semantics"
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "no-secrets-or-trusted-private-runtime-in-worker-source",
+        "preserve email identity, authentication, roles, permissions, sessions, lock state, and two-factor protections",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_base_branch": "main",
+      "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "resume_branch": "feature/wcp-327-user-display-name-boundary-g1",
+      "proposal_kind": "worker_only",
+      "collision_check": {
+        "compared_against": "all current continuous/work-pool-v4 task allowlists and active/locked claims including foreign WCP-326; exact WCP-327 branch/PR names and new test path checked against sanitized main",
+        "result": "User.displayName and its focused boundary test are disjoint from every published allowlist and claim. No email/authentication, role, permission, session, lock, 2FA, controller, form, migration, repository, DI, template, or workflow path is included.",
+        "paths": [
+          "src/Entity/User.php",
+          "tests/Entity/UserDisplayNameBoundaryTest.php"
+        ]
+      },
+      "claimed_on": "2026-09-26T13:38:45.457Z",
+      "claim_state": "active_worker_claim",
+      "last_checkpoint_at": "2026-09-26T13:38:45.457Z",
+      "next_action": "Implement only the display-name storage boundary and focused tests in the two allowlisted paths, then record a remote checkpoint and run complete exact-head Worker CI.",
+      "checkpoint_paths": [
+        "src/Entity/User.php",
+        "tests/Entity/UserDisplayNameBoundaryTest.php"
+      ]
     }
   ],
   "recovery_queue": [],
