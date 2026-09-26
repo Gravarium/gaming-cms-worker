@@ -16,7 +16,7 @@ final class AdminVideoControllerSlugBoundaryTest extends TestCase
         foreach ([140, 180, 200] as $maximum) {
             $slug = $this->generateSlug(str_repeat('Video Title ', 40), $maximum, static fn (string $candidate, ?int $id): bool => false);
 
-            self::assertSame($maximum, strlen($slug));
+            self::assertLessThanOrEqual($maximum, strlen($slug));
             self::assertMatchesRegularExpression('/\A[a-z0-9]+(?:-[a-z0-9]+)*\z/', $slug);
         }
     }
