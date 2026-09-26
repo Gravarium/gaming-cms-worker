@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-26T23:27:10.231Z",
+  "published_at": "2026-09-26T23:46:48.636Z",
   "summary": {
-    "total_remaining_worker_tasks": 135,
-    "completed_worker_prs_awaiting_trusted_review": 200,
+    "total_remaining_worker_tasks": 136,
+    "completed_worker_prs_awaiting_trusted_review": 201,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-433 is reserved from exact sanitized main; create its exclusive branches and implement the independent access-role create/edit CSRF regressions.",
+    "next_required_action": "WCP-434 is actively claimed on exact sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d; implement the searchable paginated layout page directory and validate it on the same branch.",
     "composition_preparable": 0,
     "immediately_actionable": 0,
     "must_continue": true
@@ -23121,6 +23121,103 @@
         "feature_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d"
       },
       "next_action": "Create both exclusive branches from the exact sanitized main SHA, then add the authorized and unauthorized create/edit CSRF regressions."
+    },
+    {
+      "priority": 214,
+      "package_id": "WCP-434",
+      "title": "Find and open every page layout",
+      "risk": "low",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-434-layout-page-directory-g1",
+      "suggested_branch": "feature/wcp-434-layout-page-directory-g1",
+      "base_branch": "main",
+      "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "objective": "Complete the existing layout editor's page-context navigation. Add a CMS_SETTINGS_MANAGE-protected, searchable and paginated directory that reaches every page layout beyond the editor's 200-page picker, links each result to its existing layout editor context, and is reachable from the editor. Keep the current layout save and preview routes unchanged.",
+      "allowed_paths": [
+        "src/Controller/AdminLayoutPageDirectoryController.php",
+        "src/Repository/AdminLayoutPageDirectoryRepository.php",
+        "templates/admin/layout/edit.html.twig",
+        "templates/admin/layout/pages.html.twig",
+        "tests/Controller/AdminLayoutPageDirectoryTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/",
+        "src/Entity/",
+        "src/Controller/AdminLayoutController.php",
+        "assets/controllers/layout_editor_controller.js"
+      ],
+      "deliverables": [
+        "Add an authorized read-only GET page directory with title/slug search, stable pagination and clear empty/result states.",
+        "Link the directory from the layout editor; link every result to the existing page-{id} layout context.",
+        "Validate query and page parameters, clamp valid out-of-range pages, and mark the administrative response private/no-store and noindex.",
+        "Keep the current layout write/preview security boundary and schema unchanged."
+      ],
+      "tests": [
+        "Browser test denies users without CMS_SETTINGS_MANAGE and verifies the authorized directory and editor links.",
+        "Create more than 200 matching test pages and prove a later result page opens an existing page layout context without duplicates.",
+        "Cover title/slug search, stable ordering, invalid scalar/array parameters, out-of-range clamping and private/no-store/noindex headers.",
+        "Run PHPStan level 8 and complete Worker CI on exact final HEAD, including PostgreSQL migration-chain checks."
+      ],
+      "completion_report": [
+        "Exact sanitized main base SHA and final Worker HEAD.",
+        "All changed paths and Worker PR.",
+        "Directory authorization, search, pagination, out-of-range behavior and page-context navigation.",
+        "Exact-head targeted tests, PHPStan and full Worker CI results.",
+        "Remaining integration work to replace or augment the legacy 200-item picker in Trusted."
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "preserve-CMS_SETTINGS_MANAGE-on-layout-administration-and-existing-layout-CSRF-on-writes",
+        "read-only-navigation-only-no-schema-layout-write-path-preview-path-or-persistence-changes",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "proposal_kind": "worker_only",
+      "proposal_dependency_evidence": [],
+      "active_base_branch": "main",
+      "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "resume_branch": "feature/wcp-434-layout-page-directory-g1",
+      "collision_check": {
+        "compared_against": "Fresh continuous/work-pool-v4 blob 693cfffc170dba611a219892aa137f0f0bb4715b, all active and claim-locked allowlists, and exact sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d.",
+        "result": "No path collisions. WCP-378 locks AdminLayoutController.php, the layout editor JavaScript and a separate LayoutEditorTest.php path. WCP-433 owns only an access-role mutation security test. This package adds a separate directory controller/repository/template/test plus a link in the unclaimed layout editor template. No entity, migration, shared layout write or preview path changes.",
+        "paths": [
+          "src/Controller/AdminLayoutPageDirectoryController.php",
+          "src/Repository/AdminLayoutPageDirectoryRepository.php",
+          "templates/admin/layout/edit.html.twig",
+          "templates/admin/layout/pages.html.twig",
+          "tests/Controller/AdminLayoutPageDirectoryTest.php"
+        ]
+      },
+      "claimed_on": "2026-09-26T23:46:48.636Z",
+      "claim_state": "active",
+      "last_checkpoint_at": "2026-09-26T23:46:48.636Z",
+      "last_verified_push_at": "2026-09-26T23:46:48.636Z",
+      "checkpoint_paths": [],
+      "branch_heads": {
+        "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+        "feature_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d"
+      },
+      "next_action": "Implement the read-only page layout directory, editor link and functional boundary tests on this feature branch; push a coherent checkpoint before interruption."
     }
   ],
   "recovery_queue": [],
