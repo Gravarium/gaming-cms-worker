@@ -10,16 +10,16 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-26T10:05:07.168Z",
+  "published_at": "2026-09-26T10:06:49.259Z",
   "summary": {
     "total_remaining_worker_tasks": 49,
-    "completed_worker_prs_awaiting_trusted_review": 42,
+    "completed_worker_prs_awaiting_trusted_review": 43,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "Re-evaluate the remaining unclaimed Worker proposals and continue an independent package while preserving WCP-095, WCP-098 and WCP-099 foreign claims; do not modify WCP-097.",
+    "next_required_action": "Re-evaluate remaining unclaimed work and continue independent Worker-only work while WCP-097 and WCP-098 remain owned by other chats; WCP-099 is complete on its exact green head and awaits Trusted review.",
     "composition_preparable": 0,
-    "immediately_actionable": 2,
+    "immediately_actionable": 1,
     "must_continue": true
   },
   "rules": {
@@ -4289,7 +4289,7 @@
       "package_id": "WCP-099",
       "title": "Bound external media result descriptors",
       "risk": "high",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -4331,10 +4331,11 @@
         "complete Worker CI on the exact final HEAD"
       ],
       "completion_report": [
-        "exact final Worker HEAD and sanitized base SHA",
-        "complete changed-path list and Worker PR",
-        "targeted tests plus complete Worker CI result",
-        "provider encoding, URL-policy handoff and deferred Fortress connector-boundary risks"
+        "exact final Worker HEAD 60fa342a226c72f6475a3d55efff470353248578 on sanitized base f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+        "changed paths: src/ExternalConnector/ExternalMediaObject.php; tests/ExternalConnector/ExternalMediaObjectTest.php",
+        "targeted ExternalMediaObject tests plus exact-head Worker CI run 36234654441 passed",
+        "preserved provider object-key identity, downstream MediaUrlPolicy ownership and connector cleanup/replication behavior",
+        "remaining risk: provider-specific URL semantics and private/Fortress connector ownership remain outside this Worker package"
       ],
       "immutable_constraints": [
         "trusted-main-is-the-only-integration-and-deployment-source",
@@ -4349,7 +4350,7 @@
       "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "60fa342a226c72f6475a3d55efff470353248578",
       "resume_branch": "feature/wcp-099-media-object-boundary-g1",
       "proposal_kind": "worker_only",
       "collision_check": {
@@ -4360,7 +4361,24 @@
           "tests/ExternalConnector/ExternalMediaObjectTest.php"
         ]
       },
-      "claimed_on": "2026-09-26T10:02:57.308Z"
+      "claimed_on": "2026-09-26T10:02:57.308Z",
+      "worker_pr": 61,
+      "final_head": "60fa342a226c72f6475a3d55efff470353248578",
+      "ci_run_id": 36234654441,
+      "ci_result": "success",
+      "claim_state": "locked_until_trusted_resolution",
+      "completed_on": "2026-09-26T10:06:49.259Z",
+      "next_action": "Remain claim-locked while awaiting Trusted review; do not merge or deploy from the Worker repository.",
+      "final_changed_paths": [
+        "src/ExternalConnector/ExternalMediaObject.php",
+        "tests/ExternalConnector/ExternalMediaObjectTest.php"
+      ],
+      "test_evidence": [
+        "Targeted ExternalMediaObject PHPUnit coverage passed for identity preservation, location normalization, unknown size and invalid descriptor rejection.",
+        "Exact-head Worker CI run 36234654441 succeeded.",
+        "PostgreSQL migration job 108384126425 succeeded.",
+        "PHP/Symfony validation and application-test job 108384126349 succeeded."
+      ]
     }
   ],
   "recovery_queue": [],
