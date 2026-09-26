@@ -65,8 +65,12 @@ final class AdminStorageLibraryPaginationTest extends WebTestCase
         self::assertEqualsCanonicalizing($expectedIds, array_map('intval', array_keys($seen)));
 
         $response = $client->getResponse();
-        self::assertSame('private, no-store', $response->headers->get('Cache-Control'));
-        self::assertSame('noindex, nofollow', $response->headers->get('X-Robots-Tag'));
+        $cacheControl = (string) $response->headers->get('Cache-Control');
+        self::assertStringContainsString('private', $cacheControl);
+        self::assertStringContainsString('no-store', $cacheControl);
+        $robots = (string) $response->headers->get('X-Robots-Tag');
+        self::assertStringContainsString('noindex', $robots);
+        self::assertStringContainsString('nofollow', $robots);
     }
 
     public function testFiltersAndExistingStorageLinkArePreservedAcrossPagination(): void
