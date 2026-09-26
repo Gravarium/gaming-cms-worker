@@ -56,9 +56,11 @@ final class GameCatalogueControllerTest extends WebTestCase
         $rolePlaying = new GameGenre('Role-playing '.$suffix, 'rpg-'.$suffix);
         $racing = new GameGenre('Racing '.$suffix, 'racing-'.$suffix);
         $hiddenGenre = new GameGenre('Hidden genre '.$suffix, 'hidden-genre-'.$suffix);
+        $disabledEntryGenre = new GameGenre('Disabled-entry genre '.$suffix, 'disabled-entry-genre-'.$suffix);
         $pc = new GamePlatform('PC '.$suffix, 'pc-'.$suffix);
         $console = new GamePlatform('Console '.$suffix, 'console-'.$suffix);
         $hiddenPlatform = new GamePlatform('Hidden platform '.$suffix, 'hidden-platform-'.$suffix);
+        $disabledEntryPlatform = new GamePlatform('Disabled-entry platform '.$suffix, 'disabled-entry-platform-'.$suffix);
         $cancelledPlatform = new GamePlatform('Cancelled platform '.$suffix, 'cancelled-platform-'.$suffix);
 
         $gameA = (new Game())->setName('RPG Northwind '.$suffix)->setSlug('rpg-northwind-'.$suffix);
@@ -81,12 +83,17 @@ final class GameCatalogueControllerTest extends WebTestCase
         $hiddenEntry = (new GameCatalogueEntry($hiddenGame))->addGenre($hiddenGenre);
         $hiddenRelease = new GameRelease($hiddenEntry, $hiddenPlatform, 'EU', $releaseAt);
 
+        $disabledEntryGame = (new Game())->setName('Hidden Entry Game '.$suffix)->setSlug('hidden-entry-game-'.$suffix);
+        $disabledEntry = (new GameCatalogueEntry($disabledEntryGame))->setEnabled(false)->addGenre($disabledEntryGenre);
+        $disabledEntryRelease = new GameRelease($disabledEntry, $disabledEntryPlatform, 'EU', $releaseAt);
+
         foreach ([
-            $rolePlaying, $racing, $hiddenGenre, $pc, $console, $hiddenPlatform, $cancelledPlatform,
+            $rolePlaying, $racing, $hiddenGenre, $disabledEntryGenre, $pc, $console, $hiddenPlatform, $disabledEntryPlatform, $cancelledPlatform,
             $gameA, $entryA, $releaseAPc, $releaseACancelled,
             $gameB, $entryB, $releaseBConsole,
             $gameC, $entryC, $releaseCPc,
             $hiddenGame, $hiddenEntry, $hiddenRelease,
+            $disabledEntryGame, $disabledEntry, $disabledEntryRelease,
         ] as $entity) {
             $em->persist($entity);
         }
@@ -99,9 +106,11 @@ final class GameCatalogueControllerTest extends WebTestCase
         self::assertSame(1, $crawler->filter('label[for="game-catalogue-platform"]')->count());
         self::assertSame(1, $crawler->filter('#game-catalogue-genre option[value="'.$rolePlaying->getSlug().'"]')->count());
         self::assertSame(0, $crawler->filter('#game-catalogue-genre option[value="'.$hiddenGenre->getSlug().'"]')->count());
+        self::assertSame(0, $crawler->filter('#game-catalogue-genre option[value="'.$disabledEntryGenre->getSlug().'"]')->count());
         self::assertSame(0, $crawler->filter('#game-catalogue-platform option[value="'.$hiddenPlatform->getSlug().'"]')->count());
+        self::assertSame(0, $crawler->filter('#game-catalogue-platform option[value="'.$disabledEntryPlatform->getSlug().'"]')->count());
         self::assertSame(0, $crawler->filter('#game-catalogue-platform option[value="'.$cancelledPlatform->getSlug().'"]')->count());
-        self::assertSame(1, $crawler->filter('a[href="/games"]')->count());
+        self::assertSame(1, $crawler->filter('a[aria-label="Alle Spiele anzeigen"][href="/games"]')->count());
 
         $client->request('GET', '/games', ['genre' => $rolePlaying->getSlug()]);
         self::assertResponseIsSuccessful();
@@ -128,9 +137,17 @@ final class GameCatalogueControllerTest extends WebTestCase
         self::assertStringNotContainsString($gameB->getName(), $combinedBody);
         self::assertStringNotContainsString($gameC->getName(), $combinedBody);
 
+        $client->request('GET', '/games', ['platform' => $cancelledPlatform->getSlug()]);
+        self::assertResponseIsSuccessful();
+        self::assertSelectorTextContains('[role="status"]', 'nicht verfügbar');
+        $cancelledBody = $client->getResponse()->getContent();
+        self::assertIsString($cancelledBody);
+        self::assertStringNotContainsString($gameA->getName(), $cancelledBody);
+        self::assertStringNotContainsString($cancelledPlatform->getSlug(), $cancelledBody);
+
         $client->request('GET', '/games', ['genre' => '', 'platform' => '']);
         self::assertResponseIsSuccessful();
-        self::assertSelectorTextNotContains('[role="status"]', 'nicht verfügbar');
+        self::assertSame(0, $client->getCrawler()->filter('[role="status"]')->count());
         self::assertStringContainsString($gameA->getName(), (string) $client->getResponse()->getContent());
     }
 
