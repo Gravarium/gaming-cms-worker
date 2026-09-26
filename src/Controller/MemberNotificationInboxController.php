@@ -55,13 +55,12 @@ final class MemberNotificationInboxController extends AbstractController
     public function read(int $id, Request $request): Response
     {
         $user = $this->currentUser();
-        if (!$this->isCsrfTokenValid('member-notification-inbox-'.$id, (string) $request->request->get('_token'))) {
-            throw $this->createAccessDeniedException();
-        }
-
         $notification = $this->notifications->findOneBy(['id' => $id, 'user' => $user]);
         if (!$notification instanceof MemberNotification) {
             throw $this->createNotFoundException();
+        }
+        if (!$this->isCsrfTokenValid('member-notification-inbox-'.$id, (string) $request->request->get('_token'))) {
+            throw $this->createAccessDeniedException();
         }
 
         $notification->markRead();
