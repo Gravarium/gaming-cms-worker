@@ -36,6 +36,12 @@ final readonly class MediaUploadPolicy
         'js', 'mjs', 'html', 'htm', 'svg', 'shtml', 'xhtml', 'xml', 'xsl', 'xslt',
     ];
 
+    private const MAX_JSON_BYTES = 5 * 1024 * 1024;
+    private const MAX_JSON_DEPTH = 32;
+    private const MAX_IMAGE_WIDTH = 8192;
+    private const MAX_IMAGE_HEIGHT = 8192;
+    private const MAX_IMAGE_PIXELS = 40_000_000;
+
     public function __construct(private MediaMalwareScanner $malwareScanner)
     {
     }
@@ -92,8 +98,9 @@ final readonly class MediaUploadPolicy
     private function assertOriginalName(string $originalName): void
     {
         if ($originalName === ''
+            || !mb_check_encoding($originalName, 'UTF-8')
             || mb_strlen($originalName) > 255
-            || preg_match('/[\x00-\x1F\x7F]/u', $originalName) === 1
+            || preg_match('/[\x00-\x1F\x7F]/u', $originalName) !== 0
             || str_contains($originalName, '/')
             || str_contains($originalName, '\\')
             || str_contains($originalName, '..')
@@ -117,10 +124,23 @@ final readonly class MediaUploadPolicy
 
     private function assertBasicIntegrity(string $path, string $mimeType): void
     {
-        if (in_array($mimeType, ['image/png', 'image/jpeg', 'image/webp', 'image/gif'], true)
-            && @getimagesize($path) === false
-        ) {
-            throw new \DomainException('Die Bilddatei ist beschädigt oder unvollständig.');
+        if (in_array($mimeType, ['image/png', 'image/jpeg', 'image/webp', 'image/gif'], true)) {
+            $imageInfo = @getimagesize($path);
+            if ($imageInfo === false) {
+                throw new \DomainException('Die Bilddatei ist beschädigt oder unvollständig.');
+            }
+
+            $width = (int) $imageInfo[0];
+            $height = (int) $imageInfo[1];
+            if (
+                $width < 1
+                || $height < 1
+                || $width > self::MAX_IMAGE_WIDTH
+                || $height > self::MAX_IMAGE_HEIGHT
+                || $width > intdiv(self::MAX_IMAGE_PIXELS, $height)
+            ) {
+                throw new \DomainException('Die Bildabmessungen überschreiten die erlaubte Sicherheitsgrenze.');
+            }
         }
 
         $prefix = file_get_contents($path, false, null, 0, 16);
@@ -141,10 +161,20 @@ final readonly class MediaUploadPolicy
         }
 
         if ($mimeType === 'application/json') {
+            $jsonSize = filesize($path);
+            if ($jsonSize === false || $jsonSize > self::MAX_JSON_BYTES) {
+                throw new \DomainException('Die JSON-Datei überschreitet die erlaubte Strukturgröße.');
+            }
+
+            $json = file_get_contents($path);
+            if ($json === false) {
+                throw new \DomainException('Die JSON-Datei konnte nicht geprüft werden.');
+            }
+
             try {
-                json_decode((string) file_get_contents($path), true, 512, JSON_THROW_ON_ERROR);
+                json_decode($json, true, self::MAX_JSON_DEPTH, JSON_THROW_ON_ERROR);
             } catch (\JsonException) {
-                throw new \DomainException('Die JSON-Datei ist beschädigt oder ungültig.');
+                throw new \DomainException('Die JSON-Datei ist beschädigt, zu tief verschachtelt oder ungültig.');
             }
         }
 
