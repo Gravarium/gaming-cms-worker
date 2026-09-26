@@ -33,6 +33,7 @@ final class AdminGuildApplicationInboxTest extends WebTestCase
         $anonymousClient = static::createClient();
         $anonymousClient->request('GET', self::INBOX_PATH);
         self::assertResponseRedirects('/login');
+        static::ensureKernelShutdown();
 
         $client = static::createClient();
         $client->loginUser($this->user($client, [CmsPermission::CONTENT]));
