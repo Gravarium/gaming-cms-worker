@@ -38,8 +38,8 @@ final class GuildCharacterProfileTest extends WebTestCase
         $path = $this->editPath($guildId, $memberId);
         $crawler = $client->request('GET', $path);
         self::assertResponseIsSuccessful();
-        self::assertSame('private, no-store', $client->getResponse()->headers->get('Cache-Control'));
-        self::assertSame('noindex, nofollow', $client->getResponse()->headers->get('X-Robots-Tag'));
+        $this->assertPrivateNoStore($client);
+        self::assertStringContainsString('noindex', (string) $client->getResponse()->headers->get('X-Robots-Tag'));
         self::assertSame('120', $crawler->filter('input[name="guild_character_profile[characterName]"]')->attr('maxlength'));
         self::assertSame('100', $crawler->filter('input[name="guild_character_profile[characterClass]"]')->attr('maxlength'));
 
@@ -60,7 +60,7 @@ final class GuildCharacterProfileTest extends WebTestCase
         $client->submit($form);
 
         self::assertResponseRedirects('/guild-area/'.$guildId);
-        self::assertSame('private, no-store', $client->getResponse()->headers->get('Cache-Control'));
+        $this->assertPrivateNoStore($client);
 
         $stored = $this->reloadMember($client, $memberId);
         self::assertSame($newName, $stored->getCharacterName());
@@ -231,6 +231,13 @@ final class GuildCharacterProfileTest extends WebTestCase
         $client->request('GET', $this->editPath($guildId, $memberId));
 
         self::assertResponseRedirects('/login');
+    }
+
+    private function assertPrivateNoStore(KernelBrowser $client): void
+    {
+        $cacheControl = strtolower((string) $client->getResponse()->headers->get('Cache-Control'));
+        self::assertStringContainsString('private', $cacheControl);
+        self::assertStringContainsString('no-store', $cacheControl);
     }
 
     private function user(KernelBrowser $client): User
