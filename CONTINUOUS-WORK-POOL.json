@@ -32,7 +32,10 @@
     "claim_lock": "A claim survives errors, chat loss, limits and Worker completion. It blocks every other AI until Trusted explicitly integrates, cancels or transfers it with checkpoint evidence.",
     "continue_after_interrupt": "On any recoverable tool/model/chat interruption, fetch the same feature branch and continue from the verified remote HEAD. Do not abandon or duplicate work.",
     "proposal_stacking": "A single completed dependency uses that dependency's exact green feature HEAD as proposal base. Multiple completed dependencies require an explicitly published Worker-only composition base with complete green CI before the next claim. Never guess or blind-merge a composition base.",
-    "no_account_baselines": "New work uses worker/main or an explicitly published exact green predecessor/composition HEAD. Retired numbered account baselines are not assignment sources."
+    "no_account_baselines": "New work uses worker/main or an explicitly published exact green predecessor/composition HEAD. Retired numbered account baselines are not assignment sources.",
+    "autonomous_continuation": "After every green exact-head Worker PR, self-reconcile, prepare and validate any required dependency-safe composition base, then atomically claim and start the next eligible package without asking the user for another instruction or FCP number.",
+    "connector_access": "Use the connected GitHub plugin for repository writes. Missing terminal credentials or failed command-line git push is not a blocker unless a GitHub plugin write also fails for authorization.",
+    "no_false_global_block": "Re-evaluate every unclaimed package and proven green dependency after each completion. Do not report the whole pool blocked merely because the first candidate is blocked or because a composition base has not yet been prepared."
   },
   "tasks": [
     {
