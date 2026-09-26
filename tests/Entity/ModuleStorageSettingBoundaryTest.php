@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\\Tests\\Entity;
+namespace App\Tests\Entity;
 
-use App\\Entity\\ModuleStorageSetting;
-use PHPUnit\\Framework\\TestCase;
+use App\Entity\ModuleStorageSetting;
+use PHPUnit\Framework\TestCase;
 
 final class ModuleStorageSettingBoundaryTest extends TestCase
 {
@@ -23,7 +23,7 @@ final class ModuleStorageSettingBoundaryTest extends TestCase
     {
         $state = (new ModuleStorageSetting())->setModuleKey('video');
 
-        foreach ([str_repeat('a', 51), str_repeat('a', 201), "invalid\\xFFutf8", "video\\0suffix"] as $key) {
+        foreach ([str_repeat('a', 51), str_repeat('a', 201), "invalid\xFFutf8", "video\0suffix"] as $key) {
             $this->assertRejected(static function () use ($state, $key): void {
                 $state->setModuleKey($key);
             });
@@ -49,7 +49,7 @@ final class ModuleStorageSettingBoundaryTest extends TestCase
         $url = 'https://example.invalid/old';
         $state = (new ModuleStorageSetting())->setExternalBaseUrl($url);
 
-        foreach ([str_repeat(' ', 2001), str_repeat('a', 501), "https://example.invalid/\\xFF", "https://example.invalid/\\0suffix"] as $candidate) {
+        foreach ([str_repeat(' ', 2001), str_repeat('a', 501), "https://example.invalid/\xFF", "https://example.invalid/\0suffix"] as $candidate) {
             $this->assertRejected(static function () use ($state, $candidate): void {
                 $state->setExternalBaseUrl($candidate);
             });
@@ -66,12 +66,12 @@ final class ModuleStorageSettingBoundaryTest extends TestCase
         self::assertSame('https://example.invalid/path', $state->setExternalBaseUrl('  https://example.invalid/path///  ')->getExternalBaseUrl());
     }
 
-    /** @param \\Closure(): mixed $operation */
-    private function assertRejected(\\Closure $operation): void
+    /** @param \Closure(): mixed $operation */
+    private function assertRejected(\Closure $operation): void
     {
         try {
             $operation();
-        } catch (\\InvalidArgumentException) {
+        } catch (\InvalidArgumentException) {
             self::addToAssertionCount(1);
 
             return;

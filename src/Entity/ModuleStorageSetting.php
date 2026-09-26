@@ -70,11 +70,11 @@ class ModuleStorageSetting
     private function assertColumnBoundedUtf8(string $value, int $maxBytes, int $maxCharacters, string $field): void
     {
         if (strlen($value) > $maxBytes || !mb_check_encoding($value, 'UTF-8')) {
-            throw new \\InvalidArgumentException($field.' ist ungültig oder überschreitet die zulässige Länge.');
+            throw new \InvalidArgumentException($field.' ist ungültig oder überschreitet die zulässige Länge.');
         }
 
-        if (str_contains($value, "\\0") || mb_strlen($value, 'UTF-8') > $maxCharacters) {
-            throw new \\InvalidArgumentException($field.' ist ungültig oder überschreitet die zulässige Länge.');
+        if (str_contains($value, "\0") || mb_strlen($value, 'UTF-8') > $maxCharacters) {
+            throw new \InvalidArgumentException($field.' ist ungültig oder überschreitet die zulässige Länge.');
         }
     }
 }
