@@ -16,7 +16,6 @@ use App\ExtensionRuntime\ExtensionRuntimeContext;
 use App\ExtensionRuntime\ExtensionRuntimeState;
 use App\Repository\ContentEntryRepository;
 use App\Repository\MediaAssetRepository;
-use PHPUnit\Framework\TestCase;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\HttpClient\MockHttpClient;
 use Symfony\Component\HttpClient\Response\MockResponse;
@@ -47,11 +46,11 @@ final class ExtensionRuntimeBrokerBoundaryTest extends KernelTestCase
     public function testOversizedResponseIsRejectedAndCanceledWhileStreaming(): void
     {
         $response = new MockResponse(
-            static function (): \Generator {
+            (static function (): \Generator {
                 for ($index = 0; $index < 33; ++$index) {
                     yield str_repeat('x', 8192);
                 }
-            },
+            })(),
             ['response_headers' => ['content-type' => ['application/json']]],
         );
         $requestOptions = null;
