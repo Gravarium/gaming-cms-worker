@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-26T20:37:16.182Z",
+  "published_at": "2026-09-26T20:38:52.973Z",
   "summary": {
     "total_remaining_worker_tasks": 134,
     "completed_worker_prs_awaiting_trusted_review": 170,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-400 PR #194 is open as draft at 8cc02a50a1d29d713dfaa24cdb551f5eb4a03823; exact-head Worker CI run 36270090068 is in progress.",
+    "next_required_action": "WCP-400 PR #194 has corrected test commit 2bcc7c2e1a2b4d964e4e984c797ab87a4a41570f; full exact-head CI rerun is pending.",
     "composition_preparable": 0,
     "immediately_actionable": 0,
     "must_continue": true
@@ -18682,7 +18682,7 @@
       "proposal_dependency_evidence": [],
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-      "active_head": "8cc02a50a1d29d713dfaa24cdb551f5eb4a03823",
+      "active_head": "2bcc7c2e1a2b4d964e4e984c797ab87a4a41570f",
       "resume_branch": "feature/wcp-400-admin-audit-log-browser-g1",
       "claim_state": "active",
       "collision_check": {
@@ -18697,14 +18697,22 @@
       },
       "fortress_privacy_impact": "Retains CMS_AUDIT_VIEW at the existing controller boundary and keeps AuditLogRepository as the query seam. Search includes only action, summary, and actor email, all already displayed to authorized viewers; it excludes context and does not change audit creation or private runtime behavior.",
       "claimed_on": "2026-09-26T20:27:50.908Z",
-      "last_verified_push_at": "2026-09-26T20:37:16.182Z",
+      "last_verified_push_at": "2026-09-26T20:38:52.973Z",
       "worker_pr": 194,
       "final_head": null,
-      "ci_run_id": 36270090068,
-      "ci_result": "in_progress",
-      "next_action": "Inspect the exact-head Worker CI run; correct any failing test or analysis on this same feature branch, then rerun complete CI.",
-      "last_verified_push_sha": "8cc02a50a1d29d713dfaa24cdb551f5eb4a03823",
-      "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/194"
+      "ci_run_id": null,
+      "ci_result": "pending",
+      "next_action": "Rerun full exact-head CI on the corrected test commit; inspect failures and continue on this branch.",
+      "last_verified_push_sha": "2bcc7c2e1a2b4d964e4e984c797ab87a4a41570f",
+      "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/194",
+      "ci_history": [
+        {
+          "head": "8cc02a50a1d29d713dfaa24cdb551f5eb4a03823",
+          "run_id": 36270090068,
+          "result": "failure",
+          "note": "The new privacy assertion counted the submitted search field value; narrowed it to the result table."
+        }
+      ]
     },
     {
       "priority": 181,
