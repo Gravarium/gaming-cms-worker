@@ -10,7 +10,7 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-26T21:45:49.045Z",
+  "published_at": "2026-09-26T21:46:09.598Z",
   "summary": {
     "total_remaining_worker_tasks": 134,
     "completed_worker_prs_awaiting_trusted_review": 181,
@@ -20095,13 +20095,13 @@
       },
       "claimed_on": "2026-09-26T21:29:08.842Z",
       "claim_state": "active",
-      "next_action": "Re-run exact-head Worker CI for repaired HEAD 68f68abcb33cefffb273d51968f50d2942809164; record result and repair any additional failures on this same branch.",
+      "next_action": "Monitor exact-head Worker CI run 36274025968 for repaired HEAD 68f68abcb33cefffb273d51968f50d2942809164; repair any remaining red check on this same branch.",
       "branch_heads": {
         "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
         "feature_branch": "68f68abcb33cefffb273d51968f50d2942809164"
       },
-      "last_checkpoint_at": "2026-09-26T21:45:49.045Z",
-      "last_verified_push_at": "2026-09-26T21:45:49.045Z",
+      "last_checkpoint_at": "2026-09-26T21:46:09.598Z",
+      "last_verified_push_at": "2026-09-26T21:46:09.598Z",
       "checkpoint_paths": [
         "src/Controller/AdminGuildApplicationInboxController.php",
         "src/Repository/GuildApplicationRepository.php",
@@ -20111,14 +20111,19 @@
       ],
       "worker_pr": 206,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/206",
-      "last_ci_run_id": 36273876801,
-      "last_ci_result": "failure",
+      "last_ci_run_id": 36274025968,
+      "last_ci_result": "in_progress",
       "ci_attempts": [
         {
           "run_id": 36273876801,
           "head": "99433460f1989313e3812bf081da5bba0231db7c",
           "result": "failure",
           "diagnosis": "PHPUnit's permission test created a second KernelBrowser before shutting down the first kernel. Added ensureKernelShutdown() between anonymous and unauthorized requests; PHPStan and PostgreSQL migration checks were green."
+        },
+        {
+          "run_id": 36274025968,
+          "head": "68f68abcb33cefffb273d51968f50d2942809164",
+          "result": "in_progress"
         }
       ],
       "pr_state": "open_draft"
