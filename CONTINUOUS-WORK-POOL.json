@@ -10,16 +10,16 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-26T10:48:31.064Z",
+  "published_at": "2026-09-26T10:53:20.538Z",
   "summary": {
     "total_remaining_worker_tasks": 63,
-    "completed_worker_prs_awaiting_trusted_review": 57,
+    "completed_worker_prs_awaiting_trusted_review": 58,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "Continue WCP-113 on its exclusive extension-permission-store claim while preserving WCP-110's foreign active lock and all completed claim locks; after exact-head green CI, reconcile and continue independently.",
+    "next_required_action": "Continue independent Worker proposal work while preserving foreign active claims and WCP-113's Trusted-review lock; after each exact-head green CI, reconcile and continue.",
     "composition_preparable": 0,
-    "immediately_actionable": 2,
+    "immediately_actionable": 0,
     "must_continue": true
   },
   "rules": {
@@ -5751,7 +5751,7 @@
       "package_id": "WCP-113",
       "title": "Bound extension permission store persistence",
       "risk": "high",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -5825,7 +5825,7 @@
       "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "f6247efb947195b61d9688b758ee59d0f0fd6f06",
       "resume_branch": "feature/wcp-113-extension-permission-store-g1",
       "proposal_kind": "worker_only",
       "collision_check": {
@@ -5836,7 +5836,25 @@
           "tests/ExtensionPackage/ExtensionPermissionStoreBoundaryTest.php"
         ]
       },
-      "claimed_on": "2026-09-26T10:48:31.064Z"
+      "claimed_on": "2026-09-26T10:48:31.064Z",
+      "worker_pr": 76,
+      "final_head": "f6247efb947195b61d9688b758ee59d0f0fd6f06",
+      "ci_run_id": 36237037834,
+      "ci_result": "success",
+      "claim_state": "locked_until_trusted_resolution",
+      "completed_on": "2026-09-26T10:53:20.538Z",
+      "next_action": "Remain claim-locked while awaiting Trusted review; do not merge or deploy from the Worker repository.",
+      "final_changed_paths": [
+        "src/ExtensionPackage/ExtensionPermissionStore.php",
+        "tests/ExtensionPackage/ExtensionPermissionStoreBoundaryTest.php"
+      ],
+      "test_evidence": [
+        "Targeted ExtensionPermissionStore boundary coverage passed for unsafe paths, oversized files, malformed JSON, invalid persisted shapes, overlarge extension maps and fail-closed identity handling.",
+        "Existing extension capability sandbox/security tests passed.",
+        "Exact-head Worker CI run 36237037834 succeeded.",
+        "PHP/Symfony validation and application-test job 108390584072 succeeded.",
+        "PostgreSQL migration chain job 108390584276 succeeded."
+      ]
     }
   ],
   "recovery_queue": [],
