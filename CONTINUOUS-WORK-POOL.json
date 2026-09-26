@@ -12,8 +12,8 @@
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
   "published_at": "2026-09-26T19:54:32.247Z",
   "summary": {
-    "total_remaining_worker_tasks": 132,
-    "completed_worker_prs_awaiting_trusted_review": 163,
+    "total_remaining_worker_tasks": 131,
+    "completed_worker_prs_awaiting_trusted_review": 164,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
@@ -17461,7 +17461,7 @@
       "package_id": "WCP-390",
       "title": "Allow members to edit their own display name",
       "risk": "medium",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -17510,11 +17510,12 @@
         "PHPStan level 8 and complete Worker CI on the exact final HEAD, including PostgreSQL 18 migration-chain checks."
       ],
       "completion_report": [
-        "Exact final Worker HEAD and sanitized main base SHA.",
-        "Complete changed-file list and Worker PR.",
-        "Profile-link, self-update, CSRF, validation and forged-field test results.",
-        "Exact-head PHPStan and Worker CI results.",
-        "Confirmation that no schema or identity/security state changed; note later Trusted port and validation follow-up."
+        "Sanitized Worker main base: f1a246c64527ef3ad51f7490773d9bbf9d42be5d; exact final feature HEAD: b11e0e96bbbd6a1ea906a3571211945bd88fb4cf.",
+        "Worker PR #184 is open and ready for Trusted review: https://github.com/Gravarium/gaming-cms-worker/pull/184.",
+        "Changed paths: src/Controller/AccountController.php, src/Form/AccountProfileType.php, templates/account/profile.html.twig, templates/account/security.html.twig, tests/Controller/AccountProfileControllerTest.php.",
+        "Browser coverage verifies security-page discoverability, persisted self-update, privacy-safe generic audit logging, unauthenticated redirect, missing CSRF, blank and overlong names, and rejection of forged email/role/permission fields. Existing account security, recovery, and user-management regressions passed as part of the full suite.",
+        "Exact-head Worker CI run 36267532488 succeeded: PHPStan level 8 and PHP/Symfony checks passed; PHPUnit passed (433 tests, 1,901 assertions, zero failures, one deprecation and one notice); PostgreSQL 18 applied and verified all 39 migrations.",
+        "No schema changes. The route only writes displayName and a generic audit event; email, roles, permissions, password, sessions, and security version remain unchanged. Trusted follow-up is to port the five paths on a reviewed Trusted branch, confirm its route/translation conventions, and run full Trusted CI."
       ],
       "immutable_constraints": [
         "trusted-main-is-the-only-integration-and-deployment-source",
@@ -17544,9 +17545,9 @@
         ]
       },
       "claimed_on": "2026-09-26T19:40:52.421Z",
-      "claim_state": "active",
-      "last_checkpoint_at": "2026-09-26T19:52:25.032Z",
-      "next_action": "Review exact-head Worker CI run 36267532488, repair any real failure on this branch, and rerun full CI after the final commit.",
+      "claim_state": "locked_until_trusted_resolution",
+      "last_checkpoint_at": "2026-09-26T19:55:46.458Z",
+      "next_action": "Await Trusted review with the claim locked; proceed only on a different free, independent claim. Do not merge or deploy.",
       "checkpoint_paths": [
         "src/Controller/AccountController.php",
         "src/Form/AccountProfileType.php",
@@ -17554,7 +17555,23 @@
         "templates/account/security.html.twig",
         "tests/Controller/AccountProfileControllerTest.php"
       ],
-      "worker_pr": 184
+      "worker_pr": 184,
+      "last_verified_push_at": "2026-09-26T19:55:46.458Z",
+      "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/184",
+      "pr_state": "open_ready_for_review",
+      "last_ci_run_id": 36267532488,
+      "last_ci_result": "success",
+      "final_head": "b11e0e96bbbd6a1ea906a3571211945bd88fb4cf",
+      "ci_run_id": 36267532488,
+      "ci_result": "success",
+      "final_changed_paths": [
+        "src/Controller/AccountController.php",
+        "src/Form/AccountProfileType.php",
+        "templates/account/profile.html.twig",
+        "templates/account/security.html.twig",
+        "tests/Controller/AccountProfileControllerTest.php"
+      ],
+      "completed_at": "2026-09-26T19:55:46.458Z"
     },
     {
       "priority": 171,
