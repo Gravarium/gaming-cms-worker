@@ -10,7 +10,7 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-26T20:41:55.152Z",
+  "published_at": "2026-09-26T20:42:04.147Z",
   "summary": {
     "total_remaining_worker_tasks": 134,
     "completed_worker_prs_awaiting_trusted_review": 171,
@@ -18937,6 +18937,90 @@
       "resume_branch": "feature/wcp-402-public-content-release-archive-g1",
       "trusted_follow_up": "Transfer the route, repository visibility predicates, templates, news-list link and functional tests into a fresh Trusted feature branch. Preserve the same release/entry visibility predicates, no-store policy and CMS public route boundaries; run full Trusted CI.",
       "fortress_boundary": "Keep public-release eligibility in the module repository/controller boundary and return only ContentRelease and ContentEntry records already eligible for public display. Do not expose admin/audit author relations or add a second authorization model; this leaves the module boundary clear for future Fortress policy enforcement."
+    },
+    {
+      "priority": 183,
+      "package_id": "WCP-403",
+      "title": "Protect member passkey management actions",
+      "risk": "medium",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-403-passkey-management-security-g1",
+      "suggested_branch": "feature/wcp-403-passkey-management-security-g1",
+      "base_branch": "main",
+      "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "objective": "Add functional browser regressions for the authenticated passkey-management routes. Verify a member can rename and delete only their own credentials with valid CSRF tokens; another member's credential returns 404 and remains unchanged; missing or invalid CSRF cannot rename or delete. Test-only; do not change runtime behavior, entities, templates or schema.",
+      "allowed_paths": [
+        "tests/Controller/PasskeyManagementSecurityTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/",
+        "src/",
+        "templates/",
+        "assets/",
+        "public/"
+      ],
+      "deliverables": [
+        "Verify the passkey-management page remains behind authentication.",
+        "Verify an authenticated user can rename an owned passkey with its valid CSRF token and the new name persists.",
+        "Verify rename and delete attempts against another user's credential return 404 without changing or removing it.",
+        "Verify missing or invalid CSRF tokens reject owned rename and delete requests without changing stored credentials.",
+        "Verify an owned passkey can be deleted with its valid CSRF token.",
+        "Keep changes test-only in the single allowed file."
+      ],
+      "tests": [
+        "php bin/phpunit tests/Controller/PasskeyManagementSecurityTest.php",
+        "Existing security-boundary and two-factor browser regressions remain green.",
+        "PHPStan level 8 and complete Worker CI on the exact final HEAD, including PostgreSQL 18 migration-chain checks."
+      ],
+      "completion_report": [
+        "Exact final Worker HEAD and sanitized main base SHA.",
+        "Complete changed-file list and Worker PR.",
+        "Owned rename/delete, CSRF rejection and foreign-credential isolation results.",
+        "Exact-head PHPStan and complete Worker CI results.",
+        "Confirmation that only the test file changed; no runtime or schema changes."
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "preserve-passkey-ownership-authentication-and-CSRF-protection",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_base_branch": "main",
+      "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "resume_branch": "feature/wcp-403-passkey-management-security-g1",
+      "proposal_kind": "worker_only",
+      "collision_check": {
+        "compared_against": "Fresh continuous/work-pool-v4 blob d2500deb5dd2579acdc58977344694d72d17a3b8, all active and claim-locked scopes, and sanitized Worker main f1a246c64527ef3ad51f7490773d9bbf9d42be5d.",
+        "result": "No active or claim-locked task owns tests/Controller/PasskeyManagementSecurityTest.php. WCP-331 owns src/Entity/CredentialRecord.php and its entity boundary test only. Existing SecurityBoundaryBrowserTest checks that anonymous users are redirected and GET cannot invoke deletion, but there are no functional owner-scoped rename/delete or CSRF mutation assertions. WCP-400 admin audit log, WCP-401 Game Hub administration and WCP-402 public release archive belong to other chats and use disjoint paths. No immediately claimable FCP is available in the live pool.",
+        "paths": [
+          "tests/Controller/PasskeyManagementSecurityTest.php"
+        ]
+      },
+      "claimed_on": "2026-09-26T20:42:04.147Z",
+      "claim_state": "active",
+      "last_checkpoint_at": "2026-09-26T20:42:04.147Z",
+      "checkpoint_paths": [],
+      "next_action": "Create the exclusive claim and feature branches from sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d; add functional passkey ownership and CSRF regressions in the allowed test file."
     }
   ],
   "recovery_queue": [],
