@@ -52,7 +52,9 @@ final class DiscordWebhookNotifierSecurityTest extends WebTestCase
         self::assertSame(0, $request['options']['max_redirects'] ?? null);
         self::assertSame(4.0, $request['options']['timeout'] ?? null);
 
-        $payload = $request['options']['json'] ?? null;
+        $payloadBody = $request['options']['body'] ?? null;
+        self::assertIsString($payloadBody);
+        $payload = json_decode($payloadBody, true, 512, JSON_THROW_ON_ERROR);
         self::assertIsArray($payload);
         self::assertSame(['parse' => []], $payload['allowed_mentions'] ?? null);
 
