@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+    <channel>
+        <title>{{ site.siteName|e('html') }} Videos</title>
+        <link>{{ absolute_url(path('app_video_index'))|e('html') }}</link>
+        <description>{{ site.description|e('html') }}</description>
+        <language>de-DE</language>
+        {% if videos|length %}
+            <lastBuildDate>{{ videos[0].publishedAt|date('r') }}</lastBuildDate>
+        {% endif %}
+        {% for video in videos %}
+            {% set videoUrl = absolute_url(path('app_video_show', {slug: video.slug})) %}
+            <item>
+                <title>{{ video.title|e('html') }}</title>
+                <link>{{ videoUrl|e('html') }}</link>
+                <guid isPermaLink="true">{{ videoUrl|e('html') }}</guid>
+                <pubDate>{{ video.publishedAt|date('r') }}</pubDate>
+                <description>{{ video.description|striptags|slice(0, 500)|e('html') }}</description>
+                {% if video.category and video.category.enabled %}
+                    <category>{{ video.category.name|e('html') }}</category>
+                {% endif %}
+            </item>
+        {% endfor %}
+    </channel>
+</rss>
