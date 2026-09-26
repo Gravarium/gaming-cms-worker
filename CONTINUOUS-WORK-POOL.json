@@ -13,13 +13,13 @@
   "published_at": "2026-09-26T08:42:05.413Z",
   "summary": {
     "total_remaining_worker_tasks": 31,
-    "completed_worker_prs_awaiting_trusted_review": 24,
+    "completed_worker_prs_awaiting_trusted_review": 25,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "Continue WCP-081 on its existing claim while FCP-077 remains owned by another chat; WCP-078, WCP-079 and WCP-080 are complete on exact green heads and await Trusted review.",
+    "next_required_action": "Continue an independent Worker proposal while WCP-081 remains owned by another chat; FCP-077 is complete on its exact green head and remains claim-locked pending Trusted review.",
     "composition_preparable": 0,
-    "immediately_actionable": 2,
+    "immediately_actionable": 1,
     "must_continue": true
   },
   "rules": {
@@ -2324,7 +2324,7 @@
       "package_id": "FCP-077",
       "title": "Module widgets dashboards and distinct theme compositions",
       "risk": "high",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [
         "FCP-049",
         "FCP-054",
@@ -2376,12 +2376,11 @@
         "complete worker CI on the exact final HEAD"
       ],
       "completion_report": [
-        "exact final worker HEAD SHA and exact sanitized base SHA",
-        "complete changed-path list and worker PR",
-        "targeted tests plus complete worker CI results",
-        "unresolved risks assumptions and intentionally deferred features",
-        "current protection path future Fortress contract legacy symbols tables grants and retirement impact",
-        "module data ownership fresh and populated migration evidence rollback restore boundary and negative tests"
+        "exact final Worker HEAD 4e7c1e12dcd6e8c3584d786c27f1d3ddbbd3e666",
+        "exact sanitized composition base composition/fcp-077-g1 @ 6ebe7780b86c073ab8704fca6dc670ae6571af20",
+        "complete changed-file list recorded in final_changed_paths",
+        "targeted module widget/theme/layout tests and complete Worker CI run 36231332045 are green",
+        "unavailable worker-visible persistence sources remain explicit and fail-closed; no private runtime, credentials, migration, merge or deployment changes"
       ],
       "immutable_constraints": [
         "trusted-main-is-the-only-integration-and-deployment-source",
@@ -2439,13 +2438,13 @@
         }
       ],
       "composition_required": true,
-      "next_action": "Implement FCP-077 on feature/fcp-077-pool-g1 from the exact green composition HEAD; keep all changes within the published module widget/theme/layout paths and run full exact-head Worker CI.",
+      "next_action": "Remain claim-locked while awaiting Trusted review; do not merge or deploy from the Worker repository.",
       "composition_pr": 39,
       "composition_ci_run_id": 36230385948,
       "composition_ci_result": "success",
       "active_base_branch": "composition/fcp-077-g1",
       "active_base_sha": "6ebe7780b86c073ab8704fca6dc670ae6571af20",
-      "active_head": "6ebe7780b86c073ab8704fca6dc670ae6571af20",
+      "active_head": "4e7c1e12dcd6e8c3584d786c27f1d3ddbbd3e666",
       "resume_branch": "feature/fcp-077-pool-g1",
       "claimed_on": "2026-09-26T08:42:05.413Z",
       "proposal_kind": "fcp_composition",
@@ -2463,6 +2462,45 @@
           "tests/Theme/Module/",
           "tests/Layout/Module/"
         ]
+      },
+      "worker_pr": 41,
+      "final_head": "4e7c1e12dcd6e8c3584d786c27f1d3ddbbd3e666",
+      "ci_run_id": 36231332045,
+      "ci_result": "success",
+      "claim_state": "locked_until_trusted_resolution",
+      "completed_on": "2026-09-26T09:03:01.453Z",
+      "final_changed_paths": [
+        "src/Widget/Module/ModuleWidgetViewer.php",
+        "src/Widget/Module/ModuleWidgetDefinition.php",
+        "src/Widget/Module/ModuleWidgetPayload.php",
+        "src/Widget/Module/ModuleWidgetCatalog.php",
+        "src/Widget/Module/ModuleWidgetAccessPolicy.php",
+        "src/Widget/Module/ModuleWidgetAvailability.php",
+        "src/Widget/Module/ModuleWidgetDataSource.php",
+        "src/Widget/Module/DoctrineModuleWidgetDataSource.php",
+        "src/Widget/Module/ModuleWidgetRegistry.php",
+        "src/Theme/Module/ModuleThemeComposition.php",
+        "src/Theme/Module/ModuleThemeCompositionRegistry.php",
+        "src/Layout/Module/ModuleLayoutComposer.php",
+        "templates/widgets/modules/cards.html.twig",
+        "templates/widgets/modules/status.html.twig",
+        "templates/widgets/modules/empty.html.twig",
+        "templates/themes/modules/nebula.html.twig",
+        "templates/themes/modules/ember.html.twig",
+        "templates/themes/modules/ocean.html.twig",
+        "assets/styles/modules/compositions.css",
+        "tests/Widget/Module/ModuleWidgetPolicyTest.php",
+        "tests/Theme/Module/ModuleThemeCompositionTest.php",
+        "tests/Layout/Module/ModuleLayoutComposerTest.php"
+      ],
+      "test_evidence": {
+        "targeted_tests": "ModuleWidgetPolicyTest, ModuleThemeCompositionTest, ModuleLayoutComposerTest",
+        "complete_worker_ci_run_id": 36231332045,
+        "complete_worker_ci_result": "success",
+        "postgres_migration_job": 108374932908,
+        "postgres_migration_result": "success",
+        "php_symfony_job": 108374932961,
+        "php_symfony_result": "success"
       }
     },
     {
