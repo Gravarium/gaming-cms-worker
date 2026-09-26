@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Twig;
 
+use App\Entity\ContentEntry;
 use App\Entity\MenuItem;
 use App\Module\CmsModuleManager;
 use App\Repository\MenuItemRepository;
@@ -25,6 +26,7 @@ final class SiteExtension extends AbstractExtension
         return [
             new TwigFunction('site_settings', $this->settings->current(...)),
             new TwigFunction('main_navigation', $this->mainNavigation(...)),
+            new TwigFunction('menu_item_visible', $this->isMainNavigationItemVisible(...)),
             new TwigFunction('cms_module_enabled', $this->modules->isEnabled(...)),
         ];
     }
@@ -32,14 +34,28 @@ final class SiteExtension extends AbstractExtension
     /** @return list<MenuItem> */
     public function mainNavigation(): array
     {
-        $items = $this->menuItems->activeNavigation();
-        if ($this->modules->isEnabled('content')) {
-            return $items;
+        return array_values(array_filter(
+            $this->menuItems->activeNavigation(),
+            $this->isMainNavigationItemVisible(...),
+        ));
+    }
+
+    public function isMainNavigationItemVisible(MenuItem $item): bool
+    {
+        if (!$item->isEnabled()) {
+            return false;
         }
 
-        return array_values(array_filter(
-            $items,
-            static fn (MenuItem $item): bool => $item->getPage() === null,
-        ));
+        $page = $item->getPage();
+        if ($page === null) {
+            return $item->getUrl() !== null;
+        }
+
+        $scheduledUnpublishAt = $page->getScheduledUnpublishAt();
+
+        return $this->modules->isEnabled('content')
+            && $page->getType() === ContentEntry::TYPE_PAGE
+            && $page->isPubliclyListed()
+            && ($scheduledUnpublishAt === null || $scheduledUnpublishAt > new \DateTimeImmutable());
     }
 }
