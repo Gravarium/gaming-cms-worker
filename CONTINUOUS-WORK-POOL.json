@@ -9,15 +9,15 @@
   },
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
-  "base_sha": "62e1b6fec6ce6f9a4096c6c5a6912d74df36da5c",
-  "published_at": "2026-09-25T05:18:33Z",
+  "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+  "published_at": "2026-09-26T00:16:00Z",
   "summary": {
     "total_remaining_worker_tasks": 27,
-    "completed_worker_prs_awaiting_trusted_review": 18,
+    "completed_worker_prs_awaiting_trusted_review": 19,
     "recovery_tasks": 0,
     "unclaimed": 8,
-    "immediately_claimable": 0,
-    "next_required_action": "Continue FCP-061 on feature/fcp-061-pool-g1; complete the competition domain, routes, templates, migration and regression coverage, then run complete Worker CI."
+    "immediately_claimable": 1,
+    "next_required_action": "Claim FCP-066 from exact green composition/fcp-066-g1 at dc8499655807fe916495b8345762ff1c4be5673a, then implement its complete package and run complete Worker CI."
   },
   "rules": {
     "choose": "Resume any owned unfinished claim first. Otherwise choose exactly the first unclaimed task with an empty current blocked_by list and a published exact proposal_base_sha. A completed Worker proposal may satisfy proposal-only dependencies when its exact HEAD has green Worker CI.",
@@ -956,7 +956,7 @@
       "package_id": "FCP-061",
       "title": "Tournaments leagues brackets matches and scrims",
       "risk": "high",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [
         "FCP-053",
         "FCP-056"
@@ -1043,11 +1043,19 @@
           "ci_result": "success"
         }
       ],
-      "claim_state": "locked_until_worker_completion",
+      "claim_state": "locked_until_trusted_resolution",
       "claimed_on": "2026-09-25T05:18:33Z",
-      "active_head": "92ec2f33785d1979d3e8dfeeb726e6e94f5a7b7d",
-      "active_base_branch": "composition/fcp-060-g1",
-      "active_base_sha": "92ec2f33785d1979d3e8dfeeb726e6e94f5a7b7d"
+      "worker_pr": 32,
+      "resume_branch": "feature/fcp-061-pool-g1",
+      "final_head": "655c31e59914f5d99013bee85beb9edb8166fee1",
+      "ci_run_id": 36191815415,
+      "ci_result": "success",
+      "corrective_worker_pr": 34,
+      "corrective_branch": "fix/fcp-061-phpstan-g1",
+      "corrective_head": "ec6bb200affc3e5a46d416e98f7a1b0621c38ded",
+      "corrective_ci_run_id": 36200833419,
+      "corrective_ci_result": "success",
+      "integrated_worker_main_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d"
     },
     {
       "priority": 13,
@@ -1420,10 +1428,7 @@
         "FCP-071"
       ],
       "dependencies_integrated_at_publication": [],
-      "blocked_by_at_publication": [
-        "FCP-052",
-        "FCP-071"
-      ],
+      "blocked_by_at_publication": [],
       "claim_branch": "claim/fcp-066-g1",
       "suggested_branch": "feature/fcp-066-pool-g1",
       "base_branch": "main",
@@ -1484,8 +1489,29 @@
         "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment",
         "fortress-ready-replaceable-boundaries-no-private-runtime-reconstruction"
       ],
-      "proposal_base_branch": "main",
-      "proposal_base_sha": "62e1b6fec6ce6f9a4096c6c5a6912d74df36da5c"
+      "proposal_base_branch": "composition/fcp-066-g1",
+      "proposal_base_sha": "dc8499655807fe916495b8345762ff1c4be5673a",
+      "proposal_dependency_evidence": [
+        {
+          "package_id": "FCP-052",
+          "feature_branch": "feature/fcp-052-pool-g1",
+          "worker_pr": 13,
+          "exact_head": "f2e0ceea07b5152a30d78797a9427c9aebfe4e40",
+          "ci_run_id": 35983942285,
+          "ci_result": "success"
+        },
+        {
+          "package_id": "FCP-071",
+          "feature_branch": "feature/fcp-071-pool-g1",
+          "worker_pr": 19,
+          "exact_head": "82e10e0c10d16b52009132fa7b56e475b7c58f1c",
+          "ci_run_id": 36020706272,
+          "ci_result": "success"
+        }
+      ],
+      "composition_pr": 35,
+      "composition_ci_run_id": 36203966114,
+      "composition_ci_result": "success"
     },
     {
       "priority": 18,
@@ -2447,6 +2473,20 @@
       "last_observed_head": "4e374041c2f92a91c298d30f85e2cc85938fdf57",
       "ci_run_id": 36060702197,
       "ci_result": "success",
+      "claim_state": "locked_until_trusted_resolution"
+    },
+    {
+      "package_id": "FCP-061",
+      "action": "worker_complete_awaiting_trusted_review",
+      "feature_branch": "feature/fcp-061-pool-g1",
+      "worker_pr": 32,
+      "last_observed_head": "655c31e59914f5d99013bee85beb9edb8166fee1",
+      "ci_run_id": 36191815415,
+      "ci_result": "success",
+      "corrective_worker_pr": 34,
+      "corrective_head": "ec6bb200affc3e5a46d416e98f7a1b0621c38ded",
+      "corrective_ci_run_id": 36200833419,
+      "corrective_ci_result": "success",
       "claim_state": "locked_until_trusted_resolution"
     }
   ]
