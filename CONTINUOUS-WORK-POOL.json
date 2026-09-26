@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-26T23:02:27.971Z",
+  "published_at": "2026-09-26T23:02:43.142Z",
   "summary": {
     "total_remaining_worker_tasks": 134,
-    "completed_worker_prs_awaiting_trusted_review": 192,
+    "completed_worker_prs_awaiting_trusted_review": 193,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-424 PR #218 is complete with green exact-head CI and remains claim-locked pending Trusted resolution; continue with an independent worker-only proposal because all five unclaimed FCPs remain dependency-blocked.",
+    "next_required_action": "WCP-424 PR #218 exact HEAD cb23f2a548de2691f7b0075cff3559b925a7f2d6 has failing CI run 36277849213; its owning continuation should diagnose and rerun full CI on that branch. Continue independent Worker work without touching its claim.",
     "composition_preparable": 0,
     "immediately_actionable": 0,
     "must_continue": true
@@ -21390,7 +21390,7 @@
       "package_id": "WCP-421",
       "title": "Browse every media asset with paginated filters",
       "risk": "medium",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -21466,7 +21466,7 @@
         ]
       },
       "claimed_on": "2026-09-26T22:35:01.813Z",
-      "claim_state": "active",
+      "claim_state": "locked_until_trusted_resolution",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
       "active_head": "27eb0aa2c766c6964867e89c9be98038a36840ba",
@@ -21484,7 +21484,74 @@
         "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
         "feature_branch": "27eb0aa2c766c6964867e89c9be98038a36840ba"
       },
-      "next_action": "Run complete Worker CI on the cache-header assertion fix at this exact head; resolve any remaining failures on the same branch and rerun full CI."
+      "next_action": "PR #215 is ready for Trusted review; keep this claim locked until Trusted explicitly integrates, cancels, or transfers it. Continue with an independent dependency-safe Worker task.",
+      "worker_pr": 215,
+      "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/215",
+      "pr_state": "open_ready_for_review_unmerged",
+      "last_ci_run_id": 36277596394,
+      "last_ci_result": "success",
+      "ci_run_id": 36277596394,
+      "ci_result": "success",
+      "ci_attempts": [
+        {
+          "run_id": 36277203567,
+          "head": "b40930a",
+          "result": "failure",
+          "note": "PHPStan Level 8 flagged redundant query-parameter type checks; strict digit and range validation was retained."
+        },
+        {
+          "run_id": 36277309952,
+          "head": "eb317",
+          "result": "failure",
+          "note": "Tests exposed route collision with existing /admin/storage/{moduleKey}; pagination route moved to /admin/storage/library/all."
+        },
+        {
+          "run_id": 36277446922,
+          "head": "722ece",
+          "result": "failure",
+          "note": "Privacy-header test expected exact Cache-Control contents; assertion now checks required directives independently."
+        },
+        {
+          "run_id": 36277596394,
+          "head": "27eb0aa2c766c6964867e89c9be98038a36840ba",
+          "result": "success"
+        }
+      ],
+      "draft_pr": false,
+      "final_head": "27eb0aa2c766c6964867e89c9be98038a36840ba",
+      "final_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "final_changed_paths": [
+        "src/Controller/AdminStorageLibraryController.php",
+        "src/Repository/MediaAssetRepository.php",
+        "templates/admin/storage/index.html.twig",
+        "templates/admin/storage/library.html.twig",
+        "tests/Controller/AdminStorageLibraryPaginationTest.php"
+      ],
+      "changed_paths": [
+        "src/Controller/AdminStorageLibraryController.php",
+        "src/Repository/MediaAssetRepository.php",
+        "templates/admin/storage/index.html.twig",
+        "templates/admin/storage/library.html.twig",
+        "tests/Controller/AdminStorageLibraryPaginationTest.php"
+      ],
+      "completed_at": "2026-09-26T23:02:43.142Z",
+      "test_results": {
+        "phpunit": "434 tests, 2,461 assertions, 0 failures; one pre-existing deprecation and one notice.",
+        "phpstan": "Level 8 passed with no errors.",
+        "php_symfony": "Worker PHP/Symfony validation passed on the exact final HEAD; Twig lint, dependency container, AssetMapper and Doctrine mapping checks passed.",
+        "postgres18": "PostgreSQL 18.6 completed the full migration chain: 39 migrations executed, 0 unavailable.",
+        "exact_head_ci": {
+          "run_id": 36277596394,
+          "head": "27eb0aa2c766c6964867e89c9be98038a36840ba",
+          "result": "success"
+        }
+      },
+      "completion_summary": "Added a CMS_STORAGE_MANAGE-gated paginated view for all active media beyond the legacy 250-result cap, with deterministic newest-first ordering, total/page counts, preserved search/module/storage/type/folder/no-folder filters, pending-deletion exclusion, private no-store/noindex responses and navigation from the existing index. Existing edit/replace and CSRF-protected delete flows remain available. Only the five allowed files changed; no schema change.",
+      "open_limitations": [
+        "The legacy /admin/storage page still renders the first 250 results. The complete paginated view is linked from it; Trusted can route the original page through the new query after the WCP-342 lock resolves.",
+        "Awaiting Trusted review and Trusted integration CI."
+      ],
+      "trusted_follow_up": "After WCP-342 is resolved, route the primary /admin/storage index through the paginated query and decide whether to retire its capped rendering. Preserve CMS_STORAGE_MANAGE, private cache directives, media use checks, deletion protections and recovery behavior."
     },
     {
       "priority": 202,
