@@ -1,0 +1,105 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Alle Inhalte | Gaming CMS{% endblock %}
+
+{% block body %}
+<header class="topbar">
+    <a class="brand" href="{{ path('app_admin_dashboard') }}">Gaming CMS</a>
+    <nav class="top-actions">
+        <a class="button-link" href="{{ path('app_admin_content_new') }}">Neuer Inhalt</a>
+        <a class="button-link button-secondary" href="{{ path('app_admin_content_release_index') }}">Releases</a>
+        <a class="button-link button-secondary" href="{{ path('app_admin_content_index', filters) }}">Zur Inhaltsverwaltung</a>
+    </nav>
+</header>
+<main class="dashboard">
+    <p class="eyebrow">Administration · Inhaltsverwaltung</p>
+    <h1>Alle Inhalte</h1>
+    <p class="muted">{{ total }} Treffer · Seite {{ page }} von {{ pageCount }} · {{ entries|length }} Einträge auf dieser Seite</p>
+    {% for message in app.flashes('success') %}<div class="notice">{{ message }}</div>{% endfor %}
+    {% for message in app.flashes('error') %}<div class="alert">{{ message }}</div>{% endfor %}
+
+    <form method="get" class="content-form" action="{{ path('app_admin_content_browser') }}" role="search">
+        <label>Suche <input name="q" value="{{ filters.q }}" maxlength="160" placeholder="Titel, Slug, Kurztext oder Tag"></label>
+        <label>Status
+            <select name="status">
+                <option value="">Alle</option>
+                {% for value,label in {'draft':'Entwurf','review':'Zur Freigabe','scheduled':'Geplant','published':'Veröffentlicht','archived':'Archiviert','trashed':'Papierkorb'} %}
+                    <option value="{{ value }}" {{ filters.status == value ? 'selected' }}>{{ label }}</option>
+                {% endfor %}
+            </select>
+        </label>
+        <label>Typ
+            <select name="type">
+                <option value="">Alle</option>
+                <option value="news" {{ filters.type == 'news' ? 'selected' }}>News</option>
+                <option value="page" {{ filters.type == 'page' ? 'selected' }}>Seite</option>
+            </select>
+        </label>
+        <label>Kategorie
+            <select name="category">
+                <option value="">Alle</option>
+                {% for category in categories %}
+                    <option value="{{ category.slug }}" {{ filters.category == category.slug ? 'selected' }}>{{ category.displayName }}</option>
+                {% endfor %}
+            </select>
+        </label>
+        <label>Tag
+            <select name="tag">
+                <option value="">Alle</option>
+                {% for tag in tags %}
+                    <option value="{{ tag.slug }}" {{ filters.tag == tag.slug ? 'selected' }}>#{{ tag.name }}</option>
+                {% endfor %}
+            </select>
+        </label>
+        <button type="submit">Filtern</button>
+        <a class="button-link button-secondary" href="{{ path('app_admin_content_browser') }}">Zurücksetzen</a>
+    </form>
+
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr><th>Titel</th><th>Typ</th><th>Status</th><th>Kategorie</th><th>Geändert</th><th>Aktionen</th></tr>
+            </thead>
+            <tbody>
+                {% set statusLabels = {'draft':'Entwurf','review':'Zur Freigabe','scheduled':'Geplant','published':'Veröffentlicht','archived':'Archiviert','trashed':'Papierkorb'} %}
+                {% for entry in entries %}
+                    <tr data-content-id="{{ entry.id }}">
+                        <td><strong>{{ entry.title }}</strong>{% if entry.subtitle %}<small>{{ entry.subtitle }}</small>{% endif %}</td>
+                        <td>{{ entry.type == 'news' ? 'News' : 'Seite' }}</td>
+                        <td><span class="status {{ entry.published ? 'status-ready' : '' }}">{{ statusLabels[entry.status] ?? entry.status }}</span></td>
+                        <td>{{ entry.category ? entry.category.displayName : '—' }}</td>
+                        <td>{{ entry.updatedAt|date('d.m.Y H:i') }}</td>
+                        <td class="row-actions">
+                            <a href="{{ path('app_admin_content_edit', {id: entry.id}) }}">Bearbeiten</a>
+                            <a href="{{ path('app_admin_content_preview', {id: entry.id}) }}" target="_blank" rel="noopener noreferrer">Vorschau</a>
+                            <a href="{{ path('app_admin_content_history', {id: entry.id}) }}">Versionen</a>
+                            {% if entry.status == 'trashed' %}
+                                <form method="post" action="{{ path('app_admin_content_restore_trash', {id: entry.id}) }}">
+                                    <input type="hidden" name="_token" value="{{ csrf_token('restore-trash-content-' ~ entry.id) }}">
+                                    <button type="submit">Wiederherstellen</button>
+                                </form>
+                                <form method="post" action="{{ path('app_admin_content_purge', {id: entry.id}) }}" onsubmit="return confirm('Endgültig löschen?')">
+                                    <input type="hidden" name="_token" value="{{ csrf_token('purge-content-' ~ entry.id) }}">
+                                    <button class="text-danger" type="submit">Endgültig löschen</button>
+                                </form>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr><td colspan="6">Keine passenden Inhalte vorhanden.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <nav class="top-actions" aria-label="Seitennavigation">
+        {% if page > 1 %}
+            <a class="button-link button-secondary" rel="prev" href="{{ path('app_admin_content_browser', filters|merge({page: page - 1})) }}">Vorherige Seite</a>
+        {% endif %}
+        <span aria-current="page">Seite {{ page }} von {{ pageCount }}</span>
+        {% if page < pageCount %}
+            <a class="button-link" rel="next" href="{{ path('app_admin_content_browser', filters|merge({page: page + 1})) }}">Nächste Seite</a>
+        {% endif %}
+    </nav>
+</main>
+{% endblock %}
