@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace App\\Tests\\Service;
+namespace App\Tests\Service;
 
-use App\\Entity\\ContentEntry;
-use App\\Entity\\ContentRevision;
-use App\\Entity\\User;
-use App\\Service\\ContentRevisionManager;
-use Doctrine\\ORM\\EntityManagerInterface;
-use Symfony\\Bundle\\FrameworkBundle\\Test\\KernelTestCase;
+use App\Entity\ContentEntry;
+use App\Entity\ContentRevision;
+use App\Entity\User;
+use App\Service\ContentRevisionManager;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 final class ContentRevisionManagerTest extends KernelTestCase
 {
@@ -54,7 +54,7 @@ final class ContentRevisionManagerTest extends KernelTestCase
         try {
             $container->get(ContentRevisionManager::class)->restore($target, $revision, $user);
             self::fail('A revision from another content entry must be rejected.');
-        } catch (\\DomainException $exception) {
+        } catch (\DomainException $exception) {
             self::assertSame('Revision belongs to another content entry.', $exception->getMessage());
         }
 
