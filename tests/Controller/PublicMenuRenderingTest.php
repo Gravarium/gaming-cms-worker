@@ -99,6 +99,13 @@ final class PublicMenuRenderingTest extends WebTestCase
         $externalIndex = array_search($externalLabel, $labels, true);
         $pageIndex = array_search($pageLabel, $labels, true);
         self::assertTrue(is_int($externalIndex) && is_int($pageIndex) && $externalIndex < $pageIndex);
+
+        $detailCrawler = $client->request('GET', '/page/'.$visiblePage->getSlug());
+
+        self::assertResponseIsSuccessful();
+        $detailNavigation = $detailCrawler->filter('nav[aria-label="Hauptnavigation"]');
+        self::assertSame(1, $detailNavigation->count());
+        self::assertSame(1, $detailNavigation->filter('a[href="'.$externalUrl.'"]')->count());
     }
 
     public function testDisablingContentHidesPageLinksButKeepsExternalLinks(): void
