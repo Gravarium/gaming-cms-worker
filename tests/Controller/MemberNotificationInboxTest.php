@@ -107,15 +107,27 @@ final class MemberNotificationInboxTest extends WebTestCase
         $id = $notification->getId();
         self::assertNotNull($id);
 
-        $attackerClient = static::createClient();
-        $attackerClient->loginUser($otherUser);
-        $attackerClient->request('POST', '/guild-area/notifications/'.$id.'/read');
-        self::assertSame(404, $attackerClient->getResponse()->getStatusCode());
+        $client->loginUser($owner);
+        $crawler = $client->request('GET', '/guild-area/notifications');
+        $token = (string) $crawler
+            ->filter('form[action="/guild-area/notifications/'.$id.'/read"] input[name="_token"]')
+            ->attr('value');
+
+        $client->request('POST', '/guild-area/notifications/'.$id.'/read');
+        self::assertResponseStatusCodeSame(403);
         self::assertNull($notification->getReadAt());
 
-        $client->loginUser($owner);
-        $client->request('POST', '/guild-area/notifications/'.$id.'/read');
-        self::assertSame(403, $client->getResponse()->getStatusCode());
+        $otherUserId = $otherUser->getId();
+        self::assertNotNull($otherUserId);
+        $this->em($client)->getConnection()->update(
+            'member_notification',
+            ['user_id' => $otherUserId],
+            ['id' => $id],
+        );
+        $this->em($client)->refresh($notification);
+
+        $client->request('POST', '/guild-area/notifications/'.$id.'/read', ['_token' => $token]);
+        self::assertResponseStatusCodeSame(404);
         self::assertNull($notification->getReadAt());
     }
 
