@@ -10,16 +10,16 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-26T12:30:24.998Z",
+  "published_at": "2026-09-26T12:31:35.933Z",
   "summary": {
-    "total_remaining_worker_tasks": 88,
+    "total_remaining_worker_tasks": 89,
     "completed_worker_prs_awaiting_trusted_review": 83,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "Re-evaluate dependency-safe unclaimed work, preserve WCP-306 and all foreign/completed claim locks, and continue autonomously.",
+    "next_required_action": "Implement WCP-308 from the exact sanitized main base while preserving all foreign and completed claim locks; reconcile after exact-head green CI and continue.",
     "composition_preparable": 0,
-    "immediately_actionable": 4,
+    "immediately_actionable": 5,
     "must_continue": true
   },
   "rules": {
@@ -8521,6 +8521,97 @@
         "PostgreSQL 18 migration job 108404166463 succeeded.",
         "The exact diff against sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d contains only the two WCP-307 allowlisted paths."
       ]
+    },
+    {
+      "priority": 89,
+      "package_id": "WCP-308",
+      "title": "Bound CMS module state key and version columns",
+      "risk": "medium",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-308-cms-module-state-boundary-g1",
+      "suggested_branch": "feature/wcp-308-cms-module-state-boundary-g1",
+      "base_branch": "main",
+      "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "objective": "Bound CMS module-state keys and installed versions before normalization or persistence to match their mapped varchar lengths, and reject invalid version writes before lifecycle state changes.",
+      "allowed_paths": [
+        "src/Entity/CmsModuleState.php",
+        "tests/Entity/CmsModuleStateBoundaryTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/",
+        "src/Controller/",
+        "src/Form/",
+        "src/Repository/",
+        "src/Module/",
+        "templates/",
+        "assets/",
+        "public/"
+      ],
+      "deliverables": [
+        "Reject malformed UTF-8 and raw key/version values above finite byte ceilings before normalization or persistence.",
+        "Preserve module-key trim/lowercase behavior while enforcing the mapped 64-character key limit.",
+        "Enforce the mapped 32-character installed-version limit without changing valid version values.",
+        "Validate versions before mutating install/update lifecycle state so rejected inputs leave prior state unchanged.",
+        "Add positive and negative tests for exact character boundaries, multibyte/byte overflow and atomic rejection."
+      ],
+      "tests": [
+        "targeted CmsModuleState boundary PHPUnit tests",
+        "PHPStan level 8",
+        "complete Worker CI on the exact final HEAD"
+      ],
+      "completion_report": [
+        "exact final Worker HEAD and sanitized base SHA",
+        "complete changed-path list and Worker PR",
+        "targeted module state boundary tests and exact-head Worker CI result",
+        "raw-byte and normalized-character ceilings plus invalid-version state-preservation evidence"
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "no-secrets-or-trusted-private-runtime-in-worker-source",
+        "preserve module catalog identity, version comparison and lifecycle semantics for valid values",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_base_branch": "main",
+      "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "resume_branch": "feature/wcp-308-cms-module-state-boundary-g1",
+      "proposal_kind": "worker_only",
+      "collision_check": {
+        "compared_against": "latest continuous/work-pool-v4 task allowlists and all active or locked claims, including completed WCP-305/WCP-306/WCP-307",
+        "result": "the CmsModuleState entity and focused test paths are disjoint from every published allowlist; no controller, form, repository, module catalog, migration, config, DI or template path is included",
+        "paths": [
+          "src/Entity/CmsModuleState.php",
+          "tests/Entity/CmsModuleStateBoundaryTest.php"
+        ]
+      },
+      "claimed_on": "2026-09-26T12:31:35.933Z",
+      "claim_state": "active_worker_claim",
+      "last_checkpoint_at": "2026-09-26T12:31:35.933Z",
+      "checkpoint_paths": [
+        "src/Entity/CmsModuleState.php",
+        "tests/Entity/CmsModuleStateBoundaryTest.php"
+      ],
+      "next_action": "Implement only the two allowlisted files, open a Worker PR, run complete exact-head CI, and retain the claim until Trusted resolution."
     }
   ],
   "recovery_queue": [],
