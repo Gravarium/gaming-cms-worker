@@ -13,7 +13,7 @@
   "published_at": "2026-09-26T21:04:17.724Z",
   "summary": {
     "total_remaining_worker_tasks": 134,
-    "completed_worker_prs_awaiting_trusted_review": 173,
+    "completed_worker_prs_awaiting_trusted_review": 174,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
@@ -19337,7 +19337,7 @@
       "package_id": "WCP-406",
       "title": "Guard public video release visibility",
       "risk": "low",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -19380,11 +19380,12 @@
         "PHPStan level 8 and complete Worker CI on the exact final HEAD, including PostgreSQL 18 migration-chain checks."
       ],
       "completion_report": [
-        "Exact final Worker HEAD and sanitized main base SHA.",
-        "Complete changed-file list and Worker PR.",
-        "Public listing and direct-route visibility results for enabled/published, disabled, unpublished and future-dated videos.",
-        "Exact-head PHPStan and full Worker CI results.",
-        "Confirmation that only the test file changed; no runtime or schema changes."
+        "Exact sanitized main base: f1a246c64527ef3ad51f7490773d9bbf9d42be5d; exact final Worker HEAD: 0717acc5fed292780f040c15d9ec41ad0e8abf40.",
+        "Worker PR #199 is open and ready for Trusted review.",
+        "Only tests/Controller/VideoPublicationVisibilityTest.php changed; no runtime or schema changes.",
+        "The public library includes an enabled, published video; disabled, unpublished and future-dated videos are omitted and direct detail requests return 404.",
+        "Exact-head Worker CI 36271602711 passed: PHPUnit 430 tests/1,866 assertions/0 failures, PHPStan level 8 no errors, PostgreSQL 18.6 migration chain 39 migrations.",
+        "Claim remains locked until Trusted resolution. No merge or deployment."
       ],
       "immutable_constraints": [
         "trusted-main-is-the-only-integration-and-deployment-source",
@@ -19409,17 +19410,44 @@
         ]
       },
       "claimed_on": "2026-09-26T21:00:29.714Z",
-      "claim_state": "active",
-      "last_checkpoint_at": "2026-09-26T21:03:35.642Z",
+      "claim_state": "locked_until_trusted_resolution",
+      "last_checkpoint_at": "2026-09-26T21:05:55.821Z",
       "checkpoint_paths": [
         "tests/Controller/VideoPublicationVisibilityTest.php"
       ],
-      "next_action": "Inspect exact-head Worker CI run 36271602711; verify public visibility regressions, PHPStan and PostgreSQL 18 migration checks.",
-      "last_verified_push_at": "2026-09-26T21:03:35.642Z",
+      "next_action": "PR #199 is ready for Trusted review; keep this claim locked until Trusted explicitly integrates, cancels or transfers it. Continue only with a different independent claim; do not merge or deploy.",
+      "last_verified_push_at": "2026-09-26T21:05:55.821Z",
       "worker_pr": 199,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/199",
       "last_ci_run_id": 36271602711,
-      "last_ci_result": "in_progress"
+      "last_ci_result": "success",
+      "final_head": "0717acc5fed292780f040c15d9ec41ad0e8abf40",
+      "final_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "ci_run_id": 36271602711,
+      "ci_result": "success",
+      "completed_at": "2026-09-26T21:05:55.821Z",
+      "changed_paths": [
+        "tests/Controller/VideoPublicationVisibilityTest.php"
+      ],
+      "ci_attempts": [
+        {
+          "run_id": 36271602711,
+          "head": "0717acc5fed292780f040c15d9ec41ad0e8abf40",
+          "result": "success"
+        }
+      ],
+      "test_results": {
+        "phpunit": "430 tests, 1,866 assertions, 0 failures; one PHPUnit deprecation and one notice.",
+        "phpstan": "Level 8 passed with no errors.",
+        "php_symfony": "Worker PHP/Symfony validation job passed.",
+        "postgres18": "PostgreSQL 18.6 completed the full migration chain: 39 migrations executed, 0 unavailable.",
+        "exact_head_ci": {
+          "run_id": 36271602711,
+          "head": "0717acc5fed292780f040c15d9ec41ad0e8abf40",
+          "result": "success"
+        }
+      },
+      "trusted_follow_up": "Preserve enabled and publication-time visibility checks in the Trusted video listing and detail routes; run full Trusted CI."
     },
     {
       "priority": 187,
