@@ -205,6 +205,7 @@ final class CompetitionController extends AbstractController
         $participant = $this->participantFromRequest($match, (int) $request->request->get('participant'));
         if ($competition->getStatus() !== Competition::STATUS_IN_PROGRESS || !$participant->isCheckedIn() || !$participant->containsUser($user)) { throw $this->createAccessDeniedException(); }
         $locator = trim((string) $request->request->get('locator'));
+        if (mb_strlen($locator, 'UTF-8') > 500) { throw new BadRequestHttpException('Der Beleg darf höchstens 500 Zeichen lang sein.'); }
         $scheme = strtolower((string) parse_url($locator, PHP_URL_SCHEME));
         if (!filter_var($locator, FILTER_VALIDATE_URL) || !in_array($scheme, ['http', 'https'], true)) { throw new BadRequestHttpException('Der Beleg muss eine gültige HTTP(S)-URL sein.'); }
         $type = (string) $request->request->get('type', CompetitionMatchEvidence::TYPE_URL);
