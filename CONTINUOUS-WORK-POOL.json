@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-26T16:12:06.369Z",
+  "published_at": "2026-09-26T16:13:55Z",
   "summary": {
-    "total_remaining_worker_tasks": 131,
-    "completed_worker_prs_awaiting_trusted_review": 124,
+    "total_remaining_worker_tasks": 130,
+    "completed_worker_prs_awaiting_trusted_review": 125,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "Continue the independent active WCP-349 media upload and WCP-350 menu URL form boundary packages on their disjoint claims.",
+    "next_required_action": "Continue independent worker packages; WCP-350 menu URL form boundary is also active on a disjoint claim.",
     "composition_preparable": 0,
     "immediately_actionable": 0,
     "must_continue": true
@@ -12980,7 +12980,7 @@
       "package_id": "WCP-349",
       "title": "Validate media upload title and alt-text boundaries",
       "risk": "medium",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -13058,9 +13058,9 @@
         ]
       },
       "claimed_on": "2026-09-26T16:00:48.316Z",
-      "claim_state": "active_worker_claim",
+      "claim_state": "locked_until_trusted_resolution",
       "last_checkpoint_at": "2026-09-26T16:10:27Z",
-      "next_action": "Run complete Worker CI on exact HEAD 922c8d9a1e00aa10a17e53131509827af8ebe409; confirm Unicode boundary tests and PHPStan.",
+      "next_action": "Await Trusted review with the claim locked; do not merge or deploy.",
       "checkpoint_paths": [
         "src/Form/MediaAssetUploadType.php",
         "tests/Form/MediaAssetUploadTypeBoundaryTest.php"
@@ -13068,9 +13068,24 @@
       "last_verified_push_at": "2026-09-26T16:10:27Z",
       "worker_pr": 143,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/143",
-      "pr_state": "draft",
+      "pr_state": "ready_for_review",
       "last_failed_ci_run_id": 36254366552,
-      "last_failed_ci_result": "The acceptance form initially rejected the test's moduleKey because the modules fixture inverted the production option mapping; fixture corrected to ['gaming' => 'Gaming']."
+      "last_failed_ci_result": "The acceptance form initially rejected the test's moduleKey because the modules fixture inverted the production option mapping; fixture corrected to ['gaming' => 'Gaming'].",
+      "final_head": "922c8d9a1e00aa10a17e53131509827af8ebe409",
+      "ci_run_id": 36254512160,
+      "ci_result": "success",
+      "completed_on": "2026-09-26T16:13:55Z",
+      "final_changed_paths": [
+        "src/Form/MediaAssetUploadType.php",
+        "tests/Form/MediaAssetUploadTypeBoundaryTest.php"
+      ],
+      "test_evidence": [
+        "Worker CI run 36254512160 (#442) succeeded on exact final HEAD 922c8d9a1e00aa10a17e53131509827af8ebe409.",
+        "PHPStan level 8 passed; complete Symfony suite passed with 432 tests and 1,873 assertions (one PHPUnit deprecation and one notice).",
+        "PostgreSQL 18 migration validation applied and confirmed all 39 migrations.",
+        "Boundary tests accept Unicode title/alt-text values at 180/255 characters and reject 181/256 characters at the corresponding fields.",
+        "PR #143 is open, ready for review and unmerged. Diff from sanitized main contains only the two allowed paths."
+      ]
     },
     {
       "priority": 131,
