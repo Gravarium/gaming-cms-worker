@@ -10,16 +10,16 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-26T11:04:47.118Z",
+  "published_at": "2026-09-26T11:08:00.344Z",
   "summary": {
-    "total_remaining_worker_tasks": 67,
+    "total_remaining_worker_tasks": 68,
     "completed_worker_prs_awaiting_trusted_review": 62,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "Continue independent Worker proposal work while preserving all foreign and completed claim locks; after each exact-head green CI, reconcile and continue.",
+    "next_required_action": "Continue WCP-117 on its exclusive backup-status aggregation claim while preserving all foreign and completed claim locks; after exact-head green CI, reconcile and continue independently.",
     "composition_preparable": 0,
-    "immediately_actionable": 0,
+    "immediately_actionable": 1,
     "must_continue": true
   },
   "rules": {
@@ -6283,6 +6283,90 @@
         "PHP/Symfony validation and application-test job 108392091777 succeeded.",
         "PostgreSQL migration chain job 108392091951 succeeded."
       ]
+    },
+    {
+      "priority": 68,
+      "package_id": "WCP-117",
+      "title": "Match offsite status to target identity",
+      "risk": "medium",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-117-backup-status-identity-g1",
+      "suggested_branch": "feature/wcp-117-backup-status-identity-g1",
+      "base_branch": "main",
+      "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "objective": "Fail closed when BackupTargetOverview receives a status-map entry whose OffsiteBackupTargetStatus.targetKey does not match the requested enabled target. Treat that record as missing and do not use its success, freshness or timestamp in the target summary.",
+      "allowed_paths": [
+        "src/ExternalConnector/BackupTargetOverview.php",
+        "tests/ExternalConnector/BackupTargetOverviewTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/",
+        "src/Controller/",
+        "src/Entity/",
+        "src/ExternalConnector/OffsiteBackupStatusReader.php",
+        "tests/ExternalConnector/OffsiteBackupStatusReaderTest.php",
+        "src/ExternalConnector/OffsiteBackupTargetStatus.php",
+        "tests/ExternalConnector/OffsiteBackupTargetStatusTest.php",
+        "src/ExternalConnector/BackupTargetSelectionExporter.php",
+        "tests/ExternalConnector/BackupTargetSelectionExporterTest.php"
+      ],
+      "deliverables": [
+        "require status DTO identity to equal the enabled target key before using any result field",
+        "count mismatched or absent statuses as missing without advancing latest or stale/failed counters",
+        "preserve summary behavior for matching healthy, failed and stale statuses",
+        "positive and negative aggregate regression tests; no reader, DTO, schema, migration or controller changes"
+      ],
+      "tests": [
+        "targeted BackupTargetOverview PHPUnit tests",
+        "PHPStan level 8",
+        "complete Worker CI on the exact final HEAD"
+      ],
+      "completion_report": [
+        "exact final Worker HEAD and sanitized base SHA",
+        "complete changed-path list and Worker PR",
+        "targeted tests and complete exact-head Worker CI result",
+        "status identity invariant and any deferred upstream producer assumptions"
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "no-secrets-or-trusted-private-runtime-in-worker-source",
+        "preserve backup status parsing, target requirements, fail-closed behavior and recovery safeguards",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_base_branch": "main",
+      "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "resume_branch": "feature/wcp-117-backup-status-identity-g1",
+      "proposal_kind": "worker_only",
+      "collision_check": {
+        "compared_against": "current continuous/work-pool-v4 task allowlists and searched active foreign claims",
+        "result": "disjoint from all published paths and WCP-103/106 status reader/value object, WCP-115 exporter and WCP-200 content-editor claims; no shared schema, migration, DI or template paths",
+        "paths": [
+          "src/ExternalConnector/BackupTargetOverview.php",
+          "tests/ExternalConnector/BackupTargetOverviewTest.php"
+        ]
+      },
+      "claimed_on": "2026-09-26T11:08:00.344Z"
     }
   ],
   "recovery_queue": [],
