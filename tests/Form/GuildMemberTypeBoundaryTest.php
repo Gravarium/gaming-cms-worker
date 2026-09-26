@@ -10,7 +10,6 @@ use App\Form\GuildMemberType;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormInterface;
-use Symfony\Component\Form\FormView;
 
 final class GuildMemberTypeBoundaryTest extends KernelTestCase
 {
@@ -31,8 +30,9 @@ final class GuildMemberTypeBoundaryTest extends KernelTestCase
 
         self::assertTrue($form->isSynchronized());
         self::assertTrue($form->isValid());
+        $view = $form->createView();
         foreach ($limits as $field => $limit) {
-            self::assertSame($limit, $form->get($field)->createView(new FormView())->vars['attr']['maxlength']);
+            self::assertSame($limit, $view->children[$field]->vars['attr']['maxlength']);
         }
     }
 
@@ -79,15 +79,16 @@ final class GuildMemberTypeBoundaryTest extends KernelTestCase
             throw new \LogicException('The Symfony form factory is unavailable.');
         }
 
-        $form = $formFactory->create(GuildMemberType::class, $member ?? new GuildMember(), [
+        $builder = $formFactory->createBuilder(GuildMemberType::class, $member ?? new GuildMember(), [
             'guild' => new Guild(),
             'csrf_protection' => false,
         ]);
+        $builder->remove('user');
+        $builder->remove('rank');
+        $form = $builder->getForm();
         $form->submit(array_replace([
-            'user' => '',
             'characterName' => 'Synthetic character',
             'playerName' => '',
-            'rank' => '',
             'rankName' => '',
             'characterClass' => '',
             'characterLevel' => '',
