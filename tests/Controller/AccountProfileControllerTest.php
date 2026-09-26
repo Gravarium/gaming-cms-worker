@@ -7,7 +7,6 @@ namespace App\Tests\Controller;
 use App\Entity\AuditLog;
 use App\Entity\User;
 use App\Repository\AuditLogRepository;
-use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
@@ -22,6 +21,7 @@ final class AccountProfileControllerTest extends WebTestCase
         $userId = $user->getId();
         self::assertNotNull($userId);
         $email = $user->getEmail();
+        $oldDisplayName = $user->getDisplayName();
         $roles = $user->getRoles();
         $permissions = $user->getPermissions();
         $password = $user->getPassword();
@@ -62,7 +62,9 @@ final class AccountProfileControllerTest extends WebTestCase
         self::assertInstanceOf(AuditLog::class, $logs[0]);
         self::assertSame('Eigenen Anzeigenamen geändert.', $logs[0]->getSummary());
         self::assertSame([], $logs[0]->getContext());
+        self::assertStringNotContainsString('Account profile-positive', $logs[0]->getSummary());
         self::assertStringNotContainsString('Neuer Anzeigename', $logs[0]->getSummary());
+        self::assertNotSame($oldDisplayName, '');
     }
 
     public function testProfileRequiresAuthentication(): void
@@ -91,6 +93,13 @@ final class AccountProfileControllerTest extends WebTestCase
         $crawler = $client->request('GET', '/account/profile');
         $values = $crawler->selectButton('Anzeigename speichern')->form()->getPhpValues();
         $values['account_profile']['displayName'] = str_repeat('x', 81);
+        $client->request('POST', '/account/profile', $values);
+        self::assertResponseStatusCodeSame(422);
+        $this->assertStoredDisplayName($client, $userId, 'Account profile-validation');
+
+        $crawler = $client->request('GET', '/account/profile');
+        $values = $crawler->selectButton('Anzeigename speichern')->form()->getPhpValues();
+        $values['account_profile']['displayName'] = '   ';
         $client->request('POST', '/account/profile', $values);
         self::assertResponseStatusCodeSame(422);
         $this->assertStoredDisplayName($client, $userId, 'Account profile-validation');
