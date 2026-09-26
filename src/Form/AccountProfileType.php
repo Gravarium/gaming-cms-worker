@@ -20,6 +20,7 @@ final class AccountProfileType extends AbstractType
             'label' => 'Anzeigename',
             'help' => 'Dieser Name wird in deinem Konto angezeigt. Maximal 80 Zeichen.',
             'required' => true,
+            'mapped' => false,
             'constraints' => [new NotBlank(), new Length(max: 80)],
             'attr' => [
                 'autocomplete' => 'nickname',
