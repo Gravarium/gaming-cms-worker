@@ -10,16 +10,16 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-26T11:57:30.519Z",
+  "published_at": "2026-09-26T12:02:19.327Z",
   "summary": {
-    "total_remaining_worker_tasks": 84,
+    "total_remaining_worker_tasks": 85,
     "completed_worker_prs_awaiting_trusted_review": 78,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "Continue independent Worker proposal work while preserving WCP-129 and all foreign/completed claim locks; after each exact-head green CI reconcile and continue.",
+    "next_required_action": "Implement WCP-304 on its exact main base while preserving WCP-128, WCP-129 and all completed/foreign claim locks; reconcile after exact-head green CI and continue.",
     "composition_preparable": 0,
-    "immediately_actionable": 4,
+    "immediately_actionable": 5,
     "must_continue": true
   },
   "rules": {
@@ -8058,6 +8058,90 @@
         "PHP/Symfony validation and application-test job 108399427707 succeeded.",
         "PostgreSQL migration chain job 108399427701 succeeded."
       ]
+    },
+    {
+      "priority": 85,
+      "package_id": "WCP-304",
+      "title": "Validate content redirect source identities",
+      "risk": "medium",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-304-content-redirect-boundary-g1",
+      "suggested_branch": "feature/wcp-304-content-redirect-boundary-g1",
+      "base_branch": "main",
+      "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "objective": "Validate content redirect target type and bound its stored source slug to the existing route-safe 200-character database shape before persistence.",
+      "allowed_paths": [
+        "src/Entity/ContentRedirect.php",
+        "tests/Entity/ContentRedirectBoundaryTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/",
+        "src/Controller/",
+        "src/Form/",
+        "src/Repository/",
+        "templates/",
+        "assets/"
+      ],
+      "deliverables": [
+        "Reject unsupported redirect types outside the existing page/news content types.",
+        "Reject empty, oversized, malformed, path-like and non-route-safe source slugs before creating a redirect entity.",
+        "Preserve valid generated page/news redirect identities and the existing 200-character database boundary.",
+        "Add positive and negative entity regression coverage for type and slug boundaries."
+      ],
+      "tests": [
+        "targeted ContentRedirect boundary PHPUnit tests",
+        "PHPStan level 8",
+        "complete Worker CI on the exact final HEAD"
+      ],
+      "completion_report": [
+        "exact final Worker HEAD and sanitized base SHA",
+        "complete changed-path list and Worker PR",
+        "targeted redirect identity tests and exact-head Worker CI result",
+        "source slug byte/character bound, accepted grammar, and unsupported-type behavior"
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "no-secrets-or-trusted-private-runtime-in-worker-source",
+        "preserve existing content redirect resolution, uniqueness and ownership semantics",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_base_branch": "main",
+      "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "resume_branch": "feature/wcp-304-content-redirect-boundary-g1",
+      "proposal_kind": "worker_only",
+      "collision_check": {
+        "compared_against": "latest continuous/work-pool-v4 allowed paths and every active or locked task claim",
+        "result": "both entity and focused test paths are disjoint from all published paths, including WCP-128/WCP-129; no migration, schema, controller, repository, DI or template overlap",
+        "paths": [
+          "src/Entity/ContentRedirect.php",
+          "tests/Entity/ContentRedirectBoundaryTest.php"
+        ]
+      },
+      "claimed_on": "2026-09-26T12:02:19.327Z",
+      "claim_state": "active_worker_claim",
+      "next_action": "Implement only the two allowlisted files, open a Worker PR, run exact-head full CI and retain the claim until Trusted resolution."
     }
   ],
   "recovery_queue": [],
