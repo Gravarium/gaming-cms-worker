@@ -42,6 +42,17 @@ final class FailedMessageRecoveryTest extends TestCase
         self::assertFalse((new FailedMessageRecovery($receiver, $bus))->retry('42'));
     }
 
+    public function testOutOfRangeNumericMessageIdIsNotLookedUpOrDispatchedOrAcknowledged(): void
+    {
+        $receiver = $this->createMock(ListableReceiverInterface::class);
+        $bus = $this->createMock(MessageBusInterface::class);
+        $receiver->expects(self::never())->method('find');
+        $bus->expects(self::never())->method('dispatch');
+        $receiver->expects(self::never())->method('ack');
+
+        self::assertFalse((new FailedMessageRecovery($receiver, $bus))->retry((string) PHP_INT_MAX.'0'));
+    }
+
     public function testRetryRemovesFailureAndTransportStampsBeforeDispatchAndAcknowledgesAfterwards(): void
     {
         $message = new \stdClass();
