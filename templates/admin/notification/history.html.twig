@@ -1,0 +1,57 @@
+{% extends 'base.html.twig' %}
+{% block title %}Benachrichtigungsverlauf | Gaming CMS{% endblock %}
+{% block body %}
+<header class="topbar">
+    <a class="brand" href="{{ path('app_admin_dashboard') }}">Gaming CMS</a>
+    <nav class="top-actions">
+        <a class="button-link button-secondary" href="{{ path('app_admin_notification_index') }}">Zurück zu Benachrichtigungen</a>
+        <a class="button-link button-secondary" href="{{ path('app_admin_dashboard') }}">Übersicht</a>
+    </nav>
+</header>
+<main class="dashboard">
+    <p class="eyebrow">Administration</p>
+    <h1>Benachrichtigungsverlauf</h1>
+    <p class="muted">Durchsuche ältere Benachrichtigungen und filtere nach Lesestatus.</p>
+
+    <form class="media-filters" method="get" action="{{ path('app_admin_notification_history') }}">
+        <label><span>Suche</span><input type="search" name="q" value="{{ query }}" maxlength="100" placeholder="Titel, Nachricht oder Typ"></label>
+        <label><span>Lesestatus</span><select name="state">
+            <option value="all" {{ state == 'all' ? 'selected' }}>Alle</option>
+            <option value="unread" {{ state == 'unread' ? 'selected' }}>Ungelesen</option>
+            <option value="read" {{ state == 'read' ? 'selected' }}>Gelesen</option>
+        </select></label>
+        <button type="submit">Filtern</button>
+        <a class="button-link button-secondary" href="{{ path('app_admin_notification_history') }}">Zurücksetzen</a>
+    </form>
+
+    <p class="muted">{{ total }} Benachrichtigungen</p>
+    <div class="application-list">
+        {% for notification in notifications %}
+            <article class="application-card">
+                <div>
+                    <p class="eyebrow">{{ notification.createdAt|date('d.m.Y H:i') }} · {{ notification.type }}</p>
+                    <h2>{{ notification.title }}</h2>
+                    <p>{{ notification.message }}</p>
+                </div>
+                <span class="status {{ notification.read ? 'status-disabled' : 'status-ready' }}">{{ notification.read ? 'Gelesen' : 'Neu' }}</span>
+                {% if notification.link or not notification.read %}
+                    <form method="post" action="{{ path('app_admin_notification_read', {id: notification.id}) }}">
+                        <input type="hidden" name="_token" value="{{ csrf_token('read-notification-' ~ notification.id) }}">
+                        <button>{{ notification.link ? 'Öffnen' : 'Als gelesen markieren' }}</button>
+                    </form>
+                {% endif %}
+            </article>
+        {% else %}
+            <p class="muted">Keine passenden Benachrichtigungen vorhanden.</p>
+        {% endfor %}
+    </div>
+
+    {% if pages > 1 %}
+        <nav class="pagination" aria-label="Seitennavigation">
+            {% if page > 1 %}<a href="{{ path('app_admin_notification_history', {q: query, state: state, page: page - 1}) }}">← Neuer</a>{% endif %}
+            <span>Seite {{ page }} von {{ pages }}</span>
+            {% if page < pages %}<a href="{{ path('app_admin_notification_history', {q: query, state: state, page: page + 1}) }}">Älter →</a>{% endif %}
+        </nav>
+    {% endif %}
+</main>
+{% endblock %}
