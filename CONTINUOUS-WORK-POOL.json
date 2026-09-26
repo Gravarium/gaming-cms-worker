@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-26T19:43:44.447Z",
+  "published_at": "2026-09-26T19:46:44.436Z",
   "summary": {
     "total_remaining_worker_tasks": 131,
-    "completed_worker_prs_awaiting_trusted_review": 162,
+    "completed_worker_prs_awaiting_trusted_review": 163,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-387 facet queries now return scalar slug/name rows; Worker CI run 36267032101 is pending on exact HEAD 79bf3d5f3d9d8a3d03b8b79d6ea2d98908bb1bb4. Check the full results and repair any real failure on the same branch.",
+    "next_required_action": "WCP-387 is complete on exact green HEAD 79bf3d5f3d9d8a3d03b8b79d6ea2d98908bb1bb4 with PR #182 ready for Trusted review; its claim remains locked. Continue with a different independent package and leave other claims untouched.",
     "composition_preparable": 0,
     "immediately_actionable": 0,
     "must_continue": true
@@ -17093,7 +17093,7 @@
       "package_id": "WCP-387",
       "title": "Filter the public game catalogue by genre and platform",
       "risk": "low",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -17145,11 +17145,13 @@
         "Run PHPStan level 8 and complete Worker CI on the exact final HEAD, including PostgreSQL migration-chain checks."
       ],
       "completion_report": [
-        "Exact sanitized Worker main base and final feature HEAD.",
-        "Worker PR URL and full changed-file list.",
-        "Filter form and applied genre/platform behavior, visibility boundaries, invalid-value handling and reset path.",
-        "Exact-head CI run, PHPStan, PHPUnit and migration-chain results.",
-        "Confirmation that no schema, module-availability, game-detail, release-calendar or Guild-directory behavior changed."
+        "Sanitized Worker main base: f1a246c64527ef3ad51f7490773d9bbf9d42be5d; exact final feature HEAD: 79bf3d5f3d9d8a3d03b8b79d6ea2d98908bb1bb4.",
+        "Worker PR #182 is open and ready for Trusted review: https://github.com/Gravarium/gaming-cms-worker/pull/182.",
+        "Changed paths: src/Controller/GameCatalogue/GameCatalogueController.php, src/Repository/GameCatalogue/GameCatalogueEntryRepository.php, templates/game_catalogue/index.html.twig, tests/Gaming/Catalogue/GameCatalogueControllerTest.php.",
+        "Added accessible GET genre/platform selectors and reset on /games, combined AND filtering, visible facets only from enabled entries and games, non-cancelled release platform filtering, and generic fail-closed handling without echoing malformed, overlong, unknown, or unavailable values.",
+        "Functional regressions cover route availability, genre/platform/combined results, disabled game and entry facet exclusion, cancelled-only platforms, reset behavior, malformed arrays, unknown and overlong values, existing game hub/release calendar behavior, and disabled-module 404 behavior.",
+        "Exact-head Worker CI run 36267032101 succeeded: PHP/Symfony validation including PHPStan level 8 (no errors), Composer audit (no advisories), Twig/container/AssetMapper/Doctrine checks, full PHPUnit (431 tests, 1,912 assertions, zero failures; one deprecation and one notice), and PostgreSQL 18 migration chain. Initial CI run 36266833604 found three 500s from Doctrine DISTINCT entity hydration without a root alias; scalar facet rows fixed the issue and the full suite is green on this final head.",
+        "Open limitation: the existing catalogue remains unpaginated. Trusted follow-up is to port the four files on a reviewed branch, retain enabled visibility and cancelled-release rules, coordinate the public template with accessibility follow-up, and run full Trusted CI. No schema change is needed."
       ],
       "immutable_constraints": [
         "trusted-main-is-the-only-integration-and-deployment-source",
@@ -17179,9 +17181,9 @@
         ]
       },
       "claimed_on": "2026-09-26T19:31:33.162Z",
-      "claim_state": "active",
-      "last_checkpoint_at": "2026-09-26T19:43:44.447Z",
-      "next_action": "Inspect Worker CI run 36267032101 on exact HEAD 79bf3d5f3d9d8a3d03b8b79d6ea2d98908bb1bb4; confirm the scalar facet queries pass functional tests and full validation, repair any real failure on this branch, and rerun on any new exact HEAD.",
+      "claim_state": "locked_until_trusted_resolution",
+      "last_checkpoint_at": "2026-09-26T19:46:44.436Z",
+      "next_action": "Await Trusted review with this claim locked; continue only on a different free, independent claim. Do not merge or deploy.",
       "checkpoint_paths": [
         "src/Controller/GameCatalogue/GameCatalogueController.php",
         "src/Repository/GameCatalogue/GameCatalogueEntryRepository.php",
@@ -17191,9 +17193,25 @@
       "last_verified_push_at": "2026-09-26T19:43:44.447Z",
       "worker_pr": 182,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/182",
-      "pr_state": "open_draft",
+      "pr_state": "open_ready_for_review",
       "last_ci_run_id": 36267032101,
-      "last_ci_result": "pending"
+      "last_ci_result": "success",
+      "final_head": "79bf3d5f3d9d8a3d03b8b79d6ea2d98908bb1bb4",
+      "ci_run_id": 36267032101,
+      "ci_result": "success",
+      "final_changed_paths": [
+        "src/Controller/GameCatalogue/GameCatalogueController.php",
+        "src/Repository/GameCatalogue/GameCatalogueEntryRepository.php",
+        "templates/game_catalogue/index.html.twig",
+        "tests/Gaming/Catalogue/GameCatalogueControllerTest.php"
+      ],
+      "follow_on_changed_paths": [
+        "src/Controller/GameCatalogue/GameCatalogueController.php",
+        "src/Repository/GameCatalogue/GameCatalogueEntryRepository.php",
+        "templates/game_catalogue/index.html.twig",
+        "tests/Gaming/Catalogue/GameCatalogueControllerTest.php"
+      ],
+      "completed_at": "2026-09-26T19:46:44.436Z"
     },
     {
       "priority": 168,
