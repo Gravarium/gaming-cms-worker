@@ -40,7 +40,7 @@ final class AdminBackupProviderController extends AbstractController
         }
 
         $providers = $request->request->all('providers');
-        $result = $planner->plan(array_values($providers));
+        $result = $planner->plan($providers);
         if ($result['rejected']) {
             $this->addFlash('success', 'Zu viele Anbieter ausgewählt. Es wurden keine Backup-Ziele geändert.');
 
