@@ -10,7 +10,7 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-26T21:28:28.947Z",
+  "published_at": "2026-09-26T21:29:08.842Z",
   "summary": {
     "total_remaining_worker_tasks": 134,
     "completed_worker_prs_awaiting_trusted_review": 178,
@@ -19963,6 +19963,107 @@
         "Awaiting Trusted review and Trusted integration CI."
       ],
       "trusted_follow_up": "Preserve CMS_CONTENT_MANAGE authorization, form CSRF, empty-target rejection, and delete CSRF when porting or changing the menu manager in Trusted; run full Trusted CI."
+    },
+    {
+      "priority": 191,
+      "package_id": "WCP-411",
+      "title": "Search and paginate the guild application inbox",
+      "risk": "medium",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-411-guild-application-inbox-g1",
+      "suggested_branch": "feature/wcp-411-guild-application-inbox-g1",
+      "base_branch": "main",
+      "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "objective": "The existing admin guild-application list loads every application in one findBy call and has no search, status filter or pagination. Add a separate permission-gated inbox page linked from that list. Search applicant name, email, character and guild; filter open/accepted/rejected status; show newest-first 25-row pages with a total and filter-preserving links. Reuse the existing review route for application actions. Validate scalar query inputs, keep application PII private/no-store, and make no schema change.",
+      "allowed_paths": [
+        "src/Controller/AdminGuildApplicationInboxController.php",
+        "src/Repository/GuildApplicationRepository.php",
+        "templates/admin/gaming/application/index.html.twig",
+        "templates/admin/gaming/application/inbox.html.twig",
+        "tests/Controller/AdminGuildApplicationInboxTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "src/Entity/",
+        "src/Controller/AdminGuildApplicationController.php",
+        "config/",
+        "assets/",
+        "public/",
+        "templates/admin/gaming/application/review.html.twig",
+        "tests/Controller/GuildApplicationInternalNotesBoundaryTest.php"
+      ],
+      "deliverables": [
+        "Add a visible link from the existing guild-application list to the new inbox.",
+        "Add an inbox gated by CMS_GAMING_MANAGE with bounded search over applicant name, email, character name and guild name.",
+        "Add strict all/open/accepted/rejected status filtering and deterministic newest-first 25-row pagination with a total count and preserved filters.",
+        "Link each result to the existing application review route; keep decision and mutation behavior in the existing controller.",
+        "Return private, no-store and noindex responses because the listing contains applicant contact details.",
+        "Keep the existing application and decision entities/schema unchanged."
+      ],
+      "tests": [
+        "php bin/phpunit tests/Controller/AdminGuildApplicationInboxTest.php",
+        "Verify the existing application list links to the inbox and managers can search by applicant, email, character and guild.",
+        "Verify open/accepted/rejected filters, stable 25-row pagination and query-preserving navigation.",
+        "Verify users without CMS_GAMING_MANAGE cannot view the inbox.",
+        "Verify array, malformed, unknown status, zero/out-of-range page and overlong query parameters fail closed.",
+        "Verify private/no-store/noindex response headers and no change to existing review/decision behavior.",
+        "PHPStan level 8 and complete Worker CI on the exact final HEAD, including PostgreSQL 18 migration-chain checks."
+      ],
+      "completion_report": [
+        "Exact sanitized Worker base and final feature HEAD.",
+        "Complete changed-file list and Worker PR.",
+        "Search/status/pagination, permission-denial, malformed-query and cache-privacy test results.",
+        "Exact-head PHPStan, full Worker CI and PostgreSQL migration results.",
+        "Open limitations and Trusted/Fortress permission-mapping follow-up."
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "preserve-CMS_GAMING_MANAGE-authorization-and-existing-application-decision-CSRF-locking",
+        "do-not-expose-applicant-PII-in-public-or-cacheable-responses",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_base_branch": "main",
+      "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "resume_branch": "feature/wcp-411-guild-application-inbox-g1",
+      "proposal_kind": "worker_only",
+      "collision_check": {
+        "compared_against": "Fresh continuous/work-pool-v4 blob 5c6587f9472e66e84bb224de6be4ce995871e631, all active and claim-locked allowlists, and exact sanitized Worker main f1a246c64527ef3ad51f7490773d9bbf9d42be5d.",
+        "result": "No active or claim-locked task owns the five exact paths. WCP-347 locks the existing AdminGuildApplicationController and its internal-notes test; this proposal adds a separate inbox controller and modifies the existing list template, repository query boundary and a separate inbox template. Active WCP-401 uses the gaming dashboard, WCP-407 is a test-only competition claim, WCP-409 is notification history and WCP-410 is menu security; all are disjoint. FCP-072 has an unclaimed dependency-blocked templates/ wildcard but no active claim. No migration, schema or shared DI work is included.",
+        "paths": [
+          "src/Controller/AdminGuildApplicationInboxController.php",
+          "src/Repository/GuildApplicationRepository.php",
+          "templates/admin/gaming/application/index.html.twig",
+          "templates/admin/gaming/application/inbox.html.twig",
+          "tests/Controller/AdminGuildApplicationInboxTest.php"
+        ]
+      },
+      "claimed_on": "2026-09-26T21:29:08.842Z",
+      "claim_state": "active",
+      "next_action": "Implement the separate owner-permission-gated inbox and repository search/count queries within the five allowed paths; checkpoint a coherent commit before continuing.",
+      "branch_heads": {
+        "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+        "feature_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d"
+      }
     }
   ],
   "recovery_queue": [],
