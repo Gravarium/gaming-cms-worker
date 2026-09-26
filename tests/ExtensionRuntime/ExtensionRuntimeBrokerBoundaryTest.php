@@ -41,6 +41,7 @@ final class ExtensionRuntimeBrokerBoundaryTest extends KernelTestCase
             }
         }
         @rmdir($this->directory);
+        parent::tearDown();
     }
 
     public function testOversizedResponseIsRejectedAndCanceledWhileStreaming(): void
