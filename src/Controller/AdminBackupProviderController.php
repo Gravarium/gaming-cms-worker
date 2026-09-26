@@ -40,7 +40,13 @@ final class AdminBackupProviderController extends AbstractController
         }
 
         $providers = $request->request->all('providers');
-        $result = $planner->plan(array_values(array_filter($providers, 'is_string')));
+        $result = $planner->plan(array_values($providers));
+        if ($result['rejected']) {
+            $this->addFlash('success', 'Zu viele Anbieter ausgewählt. Es wurden keine Backup-Ziele geändert.');
+
+            return $this->redirectToRoute('app_admin_connector_index');
+        }
+
         if ($result['created'] > 0) {
             $audit->record(
                 'connector.backup_catalog.plan',
