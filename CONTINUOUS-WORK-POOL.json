@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-26T11:42:00.933Z",
+  "published_at": "2026-09-26T11:42:24.671Z",
   "summary": {
-    "total_remaining_worker_tasks": 79,
+    "total_remaining_worker_tasks": 80,
     "completed_worker_prs_awaiting_trusted_review": 73,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-302 is complete with exact-head green CI and remains locked. Continue independent Worker work while preserving active WCP-124/WCP-125 and all other claim locks.",
+    "next_required_action": "Continue WCP-126 independent Worker proposal work while preserving all foreign and completed claim locks; after exact-head green CI reconcile and continue.",
     "composition_preparable": 0,
     "immediately_actionable": 3,
     "must_continue": true
@@ -7517,6 +7517,96 @@
         ]
       },
       "claimed_on": "2026-09-26T11:40:42.369Z",
+      "claim_state": "active_worker_claim",
+      "next_action": "Implement only the two allowlisted files, open a Worker PR, run exact-head full CI and retain the claim until Trusted resolution."
+    },
+    {
+      "priority": 80,
+      "package_id": "WCP-126",
+      "title": "Bound signed extension package verifier inputs",
+      "risk": "critical",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-126-extension-verifier-boundary-g1",
+      "suggested_branch": "feature/wcp-126-extension-verifier-boundary-g1",
+      "base_branch": "main",
+      "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "objective": "Harden the worker-visible signed extension package verifier with bounded manifest/signature/key reads, declared-entry limits and package file byte limits while preserving signature verification, path safety and fail-closed package acceptance.",
+      "allowed_paths": [
+        "src/ExtensionPackage/ExtensionPackageVerifier.php",
+        "tests/ExtensionPackage/ExtensionPackageVerifierBoundaryTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/",
+        "src/Controller/",
+        "src/Entity/",
+        "src/Repository/",
+        "src/ExtensionPackage/ExtensionPackageInstaller.php",
+        "tests/ExtensionPackage/ExtensionPackageSecurityTest.php",
+        "src/ExtensionPackage/ExtensionManifest.php",
+        "tests/ExtensionPackage/ExtensionManifestBoundaryTest.php",
+        "src/ExtensionPackage/ExtensionCapabilityPolicy.php",
+        "tests/ExtensionPackage/ExtensionCapabilityPolicyBoundaryTest.php",
+        "src/ExtensionPackage/ExtensionPermissionStore.php",
+        "tests/ExtensionPackage/ExtensionPermissionStoreBoundaryTest.php"
+      ],
+      "deliverables": [
+        "bounded manifest, signature and trusted-key reads with fail-closed oversized metadata rejection",
+        "bounded declared file-entry count and per-file/total package bytes before hashing",
+        "preserved detached-signature, trusted-key, relative-path, symlink and staged-manifest equality checks",
+        "positive and negative verifier boundary coverage without installer, schema, controller or private-runtime changes"
+      ],
+      "tests": [
+        "targeted ExtensionPackageVerifier boundary PHPUnit tests",
+        "existing ExtensionPackageSecurity tests",
+        "PHPStan level 8",
+        "complete Worker CI on the exact final HEAD"
+      ],
+      "completion_report": [
+        "exact final Worker HEAD and sanitized base SHA",
+        "complete changed-path list and Worker PR",
+        "targeted plus existing verifier tests and complete exact-head Worker CI result",
+        "metadata/file/entry bounds and deferred trusted package retention risks"
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "no-secrets-or-trusted-private-runtime-in-worker-source",
+        "preserve existing signature, package, path, symlink and fail-closed safeguards",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_base_branch": "main",
+      "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "resume_branch": "feature/wcp-126-extension-verifier-boundary-g1",
+      "proposal_kind": "worker_only",
+      "collision_check": {
+        "compared_against": "current continuous/work-pool-v4 task allowlists and searched WCP-126 branches; exact source/test files are disjoint from WCP-125 layout, WCP-112 manifest and extension permission/capability claims",
+        "result": "disjoint from all published allowlists and foreign claims; no shared schema, migration, DI, controller or template paths",
+        "paths": [
+          "src/ExtensionPackage/ExtensionPackageVerifier.php",
+          "tests/ExtensionPackage/ExtensionPackageVerifierBoundaryTest.php"
+        ]
+      },
+      "claimed_on": "2026-09-26T11:42:24.671Z",
       "claim_state": "active_worker_claim",
       "next_action": "Implement only the two allowlisted files, open a Worker PR, run exact-head full CI and retain the claim until Trusted resolution."
     }
