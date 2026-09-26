@@ -1,0 +1,17 @@
+{% if data.status == 'ready' %}
+<div class="module-widget-status-grid">
+    {% for item in data.items %}
+        <article class="module-widget-status-card">
+            <span class="module-widget-status-dot" aria-hidden="true"></span>
+            <div><p class="module-widget-eyebrow">{{ item.eyebrow|default('Server') }}</p><h3>{{ item.title }}</h3>{% if item.summary|default('') %}<p>{{ item.summary }}</p>{% endif %}</div>
+            {% if item.badge|default('') %}<strong>{{ item.badge }}</strong>{% endif %}
+        </article>
+    {% endfor %}
+</div>
+{% elseif data.status == 'empty' %}
+<p class="module-widget-state module-widget-state-empty">Keine Serverstatusdaten vorhanden.</p>
+{% elseif data.status == 'unavailable' %}
+<p class="module-widget-state module-widget-state-unavailable">Serverstatus ist derzeit nicht verfügbar.</p>
+{% else %}
+<p class="module-widget-state module-widget-state-error">Serverstatus konnte nicht geladen werden.</p>
+{% endif %}

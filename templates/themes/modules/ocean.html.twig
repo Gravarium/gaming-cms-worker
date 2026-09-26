@@ -1,0 +1,26 @@
+<div class="module-page module-page-ocean" data-module-structure="catalogue">
+    <div class="module-page-catalogue-toolbar">
+        <nav class="module-page-navigation" aria-label="Katalog-Navigation">
+            {% for item in composition.navigation %}<a href="{{ item.href }}">{{ item.label }}</a>{% endfor %}
+        </nav>
+        <span class="module-page-catalogue-label">ENTDECKEN</span>
+    </div>
+    <div class="module-page-catalogue-grid">
+        <main class="module-page-content">
+            {% for widget in regions.content %}
+                <section class="module-page-widget module-page-widget-catalogue">
+                    <h2>{{ widget.definition.label }}</h2>
+                    {% include widget.definition.template with {definition: widget.definition, data: widget.payload, config: widget.config} only %}
+                </section>
+            {% endfor %}
+        </main>
+        <aside class="module-page-sidebar">
+            {% for widget in regions.sidebar %}
+                <section class="module-page-widget module-page-widget-dock">
+                    <h2>{{ widget.definition.label }}</h2>
+                    {% include widget.definition.template with {definition: widget.definition, data: widget.payload, config: widget.config} only %}
+                </section>
+            {% endfor %}
+        </aside>
+    </div>
+</div>
