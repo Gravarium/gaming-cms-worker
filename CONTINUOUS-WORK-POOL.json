@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-26T16:05:27Z",
+  "published_at": "2026-09-26T16:07:03.888Z",
   "summary": {
-    "total_remaining_worker_tasks": 130,
+    "total_remaining_worker_tasks": 131,
     "completed_worker_prs_awaiting_trusted_review": 124,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "Continue the active WCP-349 media upload metadata boundary package.",
+    "next_required_action": "Continue the independent active WCP-349 media upload metadata and WCP-350 menu URL form boundary packages on their disjoint claims.",
     "composition_preparable": 0,
     "immediately_actionable": 0,
     "must_continue": true
@@ -13069,6 +13069,98 @@
       "worker_pr": 143,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/143",
       "pr_state": "draft"
+    },
+    {
+      "priority": 131,
+      "package_id": "WCP-350",
+      "title": "Validate menu URL length before entity mapping",
+      "risk": "medium",
+      "execution_state": "worker_in_progress",
+      "dependencies": [
+        "WCP-309"
+      ],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-350-menu-item-url-form-boundary-g1",
+      "suggested_branch": "feature/wcp-350-menu-item-url-form-boundary-g1",
+      "base_branch": "feature/wcp-309-menu-item-storage-bounds-g1",
+      "base_sha": "50c64210e9f96d1a1c88e6aaf797dbfe99f15d34",
+      "objective": "Make over-limit or malformed external menu URLs submitted through the admin form produce visible validation errors before MenuItem entity mapping. Preserve the 500-character/2000-byte boundary and HTTP(S), host, credential, authentication and CSRF protections. Keep exactly-at-limit URLs usable and leave stored values unchanged on rejection.",
+      "allowed_paths": [
+        "src/Form/MenuItemType.php",
+        "tests/Controller/MenuItemUrlBoundaryTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/",
+        "src/Controller/",
+        "src/Entity/",
+        "src/Repository/",
+        "templates/",
+        "assets/",
+        "public/",
+        "tests/Entity/"
+      ],
+      "deliverables": [
+        "Add a form-layer model transformer that rejects URL inputs exceeding 500 UTF-8 characters or 2000 bytes, containing NUL bytes, or malformed UTF-8 before the entity setter receives them.",
+        "Show clear URL field validation feedback without persisting an invalid new menu item or changing an existing URL.",
+        "Preserve the existing entity URL policy, form CSRF and authentication behavior; accept a valid URL at exactly 500 characters."
+      ],
+      "tests": [
+        "Functional authenticated POST with a valid CSRF token persists an exactly 500-character HTTP(S) menu URL.",
+        "Functional over-character and over-byte URL submissions show validation feedback and leave the menu item count or existing URL unchanged.",
+        "Existing WCP-309 entity boundary and HTTP(S)/host/credential tests pass on its exact green head.",
+        "PHPStan level 8 and complete Worker CI on the exact final HEAD."
+      ],
+      "completion_report": [
+        "exact final Worker HEAD and WCP-309 proposal base SHA",
+        "complete changed-file list and Worker PR",
+        "valid and rejected URL boundary functional coverage with exact-head CI",
+        "confirmation no entity, controller, template, schema, authentication or CSRF behavior was weakened"
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "no-secrets-or-trusted-private-runtime-in-worker-source",
+        "preserve menu HTTP(S), host and credential checks and CSRF",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
+      ],
+      "proposal_base_branch": "feature/wcp-309-menu-item-storage-bounds-g1",
+      "proposal_base_sha": "50c64210e9f96d1a1c88e6aaf797dbfe99f15d34",
+      "active_base_branch": "feature/wcp-309-menu-item-storage-bounds-g1",
+      "active_base_sha": "50c64210e9f96d1a1c88e6aaf797dbfe99f15d34",
+      "active_head": "50c64210e9f96d1a1c88e6aaf797dbfe99f15d34",
+      "resume_branch": "feature/wcp-350-menu-item-url-form-boundary-g1",
+      "proposal_kind": "worker_only",
+      "collision_check": {
+        "compared_against": "all current continuous/work-pool-v4 allowlists and active/locked claims through priority 130, including WCP-349; exact paths checked against the green WCP-309 head 50c64210e9f96d1a1c88e6aaf797dbfe99f15d34 and sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+        "result": "The MenuItem form type and dedicated controller boundary test are absent from every current allowlist. WCP-309's entity and entity test remain untouched. This package uses its exact green feature HEAD as a stacked proposal base and does not change controllers, entities, templates, routes, migrations or private-boundary files.",
+        "paths": [
+          "src/Form/MenuItemType.php",
+          "tests/Controller/MenuItemUrlBoundaryTest.php"
+        ]
+      },
+      "claimed_on": "2026-09-26T16:07:03.888Z",
+      "claim_state": "active_worker_claim",
+      "last_checkpoint_at": "2026-09-26T16:07:03.888Z",
+      "next_action": "Create both branches from the exact green WCP-309 HEAD, then implement pre-mapping form validation and functional regressions.",
+      "checkpoint_paths": [
+        "src/Form/MenuItemType.php",
+        "tests/Controller/MenuItemUrlBoundaryTest.php"
+      ]
     }
   ],
   "recovery_queue": [],
