@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-26T23:07:46.584Z",
+  "published_at": "2026-09-26T23:09:12.906Z",
   "summary": {
     "total_remaining_worker_tasks": 134,
     "completed_worker_prs_awaiting_trusted_review": 194,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-426 PR #220 is open on exact sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d; run and record complete Worker CI on exact head 216df34ac05de0629fc2c5d6c94844d9d6a4640e.",
+    "next_required_action": "WCP-427 is reserved on exact sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d; test content-tag authorization, deletion CSRF and reference integrity in its exclusive path.",
     "composition_preparable": 0,
     "immediately_actionable": 0,
     "must_continue": true
@@ -22192,6 +22192,93 @@
           "result": "in_progress"
         }
       ]
+    },
+    {
+      "priority": 207,
+      "package_id": "WCP-427",
+      "title": "Protect content-tag deletion and authorization",
+      "risk": "low",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-427-content-tag-security-g1",
+      "suggested_branch": "feature/wcp-427-content-tag-security-g1",
+      "base_branch": "main",
+      "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "objective": "Add test-only functional regressions for content-tag administration. Users without CMS_CONTENT_MANAGE must be denied; invalid deletion CSRF must leave a tag unchanged; a tag referenced by content must remain undeletable even with a valid token; and an unused tag can be deleted with its rendered token.",
+      "allowed_paths": [
+        "tests/Controller/ContentTagLifecycleSecurityTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/",
+        "src/",
+        "templates/",
+        "assets/",
+        "public/"
+      ],
+      "deliverables": [
+        "A user without CMS_CONTENT_MANAGE receives 403 from the tag listing and delete route.",
+        "An invalid delete CSRF token returns 403 and preserves the target tag.",
+        "A referenced tag remains present when submitted with its rendered delete token.",
+        "An unused tag is removed after an owner submits the token rendered for that tag.",
+        "Only tests/Controller/ContentTagLifecycleSecurityTest.php changes."
+      ],
+      "tests": [
+        "php bin/phpunit tests/Controller/ContentTagLifecycleSecurityTest.php",
+        "PHPStan level 8 and complete Worker CI on the exact final HEAD, including PostgreSQL 18 migration-chain checks."
+      ],
+      "completion_report": [
+        "Exact final Worker HEAD and sanitized main base SHA.",
+        "Complete changed-file list and Worker PR.",
+        "Permission denial, CSRF non-mutation, referenced-tag protection and valid unused-tag deletion results.",
+        "Exact-head PHPStan and complete Worker CI results.",
+        "Confirmation that only the allowed test path changed."
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "preserve-CMS_CONTENT_MANAGE-authorization-CSRF-and-referenced-tag-integrity",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "proposal_kind": "worker_only",
+      "collision_check": {
+        "compared_against": "Latest pool blob 6356d2134c118fc0116150e7f85b753521116cb3; all active and claim-locked allowlists; sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d.",
+        "result": "AdminContentTagController requires CMS_CONTENT_MANAGE and its delete route checks a per-tag CSRF token, refuses deletion while content entries reference the tag, and permits removal of unused tags. Code search for app_admin_content_tag_delete finds only the controller and template; no existing test exercises the route or its reference guard. The target test path is absent on main and disjoint from every active and locked claim.",
+        "paths": [
+          "tests/Controller/ContentTagLifecycleSecurityTest.php"
+        ]
+      },
+      "claimed_on": "2026-09-26T23:09:12.906Z",
+      "claim_state": "active",
+      "active_base_branch": "main",
+      "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "resume_branch": "feature/wcp-427-content-tag-security-g1",
+      "last_checkpoint_at": "2026-09-26T23:09:12.906Z",
+      "last_verified_push_at": "2026-09-26T23:09:12.906Z",
+      "checkpoint_paths": [],
+      "branch_heads": {
+        "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+        "feature_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d"
+      },
+      "next_action": "Add tag-management authorization, invalid-CSRF preservation, referenced-tag denial and valid unused-tag deletion tests in the single allowed file."
     }
   ],
   "recovery_queue": [],
