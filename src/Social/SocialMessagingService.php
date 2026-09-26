@@ -54,7 +54,7 @@ final readonly class SocialMessagingService
         $this->assertEnabled();
         $unique = [];
         foreach ([$actor, ...$members] as $member) {
-            if (!$member instanceof User || !$member->isActive()) {
+            if (!$member->isActive()) {
                 throw new \DomainException('All conversation participants must be active users.');
             }
             $key = $member->getId() !== null ? 'id:'.$member->getId() : 'object:'.spl_object_id($member);
