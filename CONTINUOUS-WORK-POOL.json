@@ -10,7 +10,7 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-26T21:25:32.087Z",
+  "published_at": "2026-09-26T21:28:25.136Z",
   "summary": {
     "total_remaining_worker_tasks": 134,
     "completed_worker_prs_awaiting_trusted_review": 178,
@@ -19784,7 +19784,7 @@
       "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-      "active_head": "d05cfc8b81e8e2ea4644c6e73ebbdb90c1b48016",
+      "active_head": "7b0126b06509f057fedaeba25206ee5d46498fda",
       "resume_branch": "feature/wcp-409-admin-notification-history-g1",
       "proposal_kind": "worker_only",
       "collision_check": {
@@ -19800,12 +19800,12 @@
       },
       "claimed_on": "2026-09-26T21:13:11.082Z",
       "claim_state": "active",
-      "next_action": "PR #203 is open as a draft at exact HEAD d05cfc8b81e8e2ea4644c6e73ebbdb90c1b48016; inspect exact-head Worker CI and repair any failures on this branch.",
+      "next_action": "Run and inspect complete Worker CI on repaired exact HEAD 7b0126b06509f057fedaeba25206ee5d46498fda; repair any remaining failures on this branch.",
       "branch_heads": {
         "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-        "feature_branch": "d05cfc8b81e8e2ea4644c6e73ebbdb90c1b48016"
+        "feature_branch": "7b0126b06509f057fedaeba25206ee5d46498fda"
       },
-      "last_checkpoint_at": "2026-09-26T21:25:32.087Z",
+      "last_checkpoint_at": "2026-09-26T21:28:25.136Z",
       "checkpoint_paths": [
         "src/Controller/AdminNotificationHistoryController.php",
         "src/Repository/AdminNotificationRepository.php",
@@ -19813,9 +19813,22 @@
         "templates/admin/notification/history.html.twig",
         "tests/Controller/AdminNotificationHistoryTest.php"
       ],
-      "last_verified_push_at": "2026-09-26T21:24:07.702Z",
+      "last_verified_push_at": "2026-09-26T21:28:25.136Z",
       "worker_pr": 203,
-      "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/203"
+      "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/203",
+      "last_ci_run_id": 36272865406,
+      "last_ci_result": "failure",
+      "ci_attempts": [
+        {
+          "run_id": 36272865406,
+          "head": "d05cfc8b81e8e2ea4644c6e73ebbdb90c1b48016",
+          "result": "failure",
+          "diagnosis": "PHP/Symfony unit test job reported one error and two failures: split anonymous/member clients across separate test methods to avoid double kernel boot; accept Symfony's normalized private/no-store Cache-Control directives; make the out-of-range page test query select a guaranteed empty result set. PHPStan, Twig, container, assets, Doctrine mappings and PostgreSQL 18 migration chain passed."
+        }
+      ],
+      "test_results": {
+        "first_ci_failure": "Run 36272865406 on d05cfc8b81e8e2ea4644c6e73ebbdb90c1b48016: PHPunit 440 tests, 1,894 assertions, 1 error, 2 failures; PHPStan level 8 and PostgreSQL 18 migration-chain job passed."
+      }
     },
     {
       "priority": 190,
