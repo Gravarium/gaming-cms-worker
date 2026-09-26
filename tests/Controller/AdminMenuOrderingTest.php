@@ -223,8 +223,9 @@ final class AdminMenuOrderingTest extends WebTestCase
 
     private function csrfToken(KernelBrowser $client, string $tokenId): string
     {
-        $container = $client->getContainer();
-        $session = $container->get('session');
+        $browserRequest = $client->getRequest();
+        self::assertTrue($browserRequest->hasSession());
+        $session = $browserRequest->getSession();
         self::assertInstanceOf(SessionInterface::class, $session);
         $session->start();
 
