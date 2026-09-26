@@ -8,11 +8,11 @@ use App\Entity\CredentialRecord;
 use App\Entity\User;
 use App\Repository\CredentialRecordRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\Uid\Uuid;
 use Webauthn\TrustPath\EmptyTrustPath;
-use Symfony\Component\DomCrawler\Crawler;
 
 final class PasskeyManagementSecurityTest extends WebTestCase
 {
