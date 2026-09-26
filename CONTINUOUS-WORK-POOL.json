@@ -17,7 +17,7 @@
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-418 is reserved on exact sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d; test module listing/toggle authorization and CSRF no-mutation in its exclusive test file.",
+    "next_required_action": "WCP-418 is reserved on exact sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d; test module-manager permission denial and a valid-token toggle with state restoration in its exclusive test file.",
     "composition_preparable": 0,
     "immediately_actionable": 0,
     "must_continue": true
@@ -20982,7 +20982,7 @@
     {
       "priority": 198,
       "package_id": "WCP-418",
-      "title": "Verify module administration authorization and toggle CSRF",
+      "title": "Test module manager permissions and authorized toggles",
       "risk": "low",
       "execution_state": "worker_in_progress",
       "dependencies": [],
@@ -20992,7 +20992,7 @@
       "suggested_branch": "feature/wcp-418-admin-module-security-g1",
       "base_branch": "main",
       "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-      "objective": "Add functional security regressions for CMS module administration. Anonymous visitors must be redirected, authenticated users without CMS_SETTINGS_MANAGE must be denied from both the listing and toggle action, and missing CSRF must leave the selected module's enabled state unchanged for an authorized settings manager. Test-only; no runtime or schema changes.",
+      "objective": "Add functional regressions for the CMS module manager's authenticated boundary: a user without CMS_SETTINGS_MANAGE cannot list modules or submit a toggle, while a settings manager can use the rendered CSRF token to toggle a safe independent module. Assert the state transition and restore the original module state even if an assertion fails. Test-only; no runtime or schema changes.",
       "allowed_paths": [
         "tests/Controller/AdminModuleManagementSecurityTest.php"
       ],
@@ -21016,21 +21016,21 @@
         "public/"
       ],
       "deliverables": [
-        "Verify anonymous access to /admin/modules redirects to login.",
-        "Verify an authenticated user without CMS_SETTINGS_MANAGE receives 403 for module listing and toggle POST.",
-        "Verify an authorized settings manager can open the module list and the notifications toggle token is rendered.",
-        "Verify toggle POST without a token returns 403 and leaves the module enabled state unchanged.",
+        "Verify a logged-in user without CMS_SETTINGS_MANAGE receives 403 for module listing and toggle POST.",
+        "Verify a settings manager can view the module list and submit the rendered CSRF token for the notifications module.",
+        "Assert a valid toggle changes the module state, then restore the original state in a finally block.",
         "Keep the change test-only in the single allowed file."
       ],
       "tests": [
         "php bin/phpunit tests/Controller/AdminModuleManagementSecurityTest.php",
-        "Existing ModuleLifecyclePresentationTest and CmsModuleStateTest remain green.",
+        "Existing ModuleLifecyclePresentationTest remains green; it already covers missing-CSRF rejection without state mutation.",
         "PHPStan level 8 and complete Worker CI on exact final HEAD, including PostgreSQL 18 migration-chain checks."
       ],
       "completion_report": [
         "Exact sanitized main base SHA and final Worker HEAD.",
         "Complete changed-file list and Worker PR.",
-        "Anonymous/unauthorized/authorized access and missing-token no-mutation results.",
+        "Denied listing/toggle for users without CMS_SETTINGS_MANAGE and successful token-backed toggle for authorized settings manager.",
+        "Confirm module state restoration in test teardown/finally.",
         "Exact-head PHPStan and full Worker CI results; confirm test-only and no schema changes."
       ],
       "immutable_constraints": [
@@ -21050,17 +21050,17 @@
       "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
       "resume_branch": "feature/wcp-418-admin-module-security-g1",
       "collision_check": {
-        "compared_against": "Fresh continuous/work-pool-v4 blob 640cec5bc60483611d54cacae78eb9d578a6e47c; all active and claim-locked allowlists; sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d.",
-        "result": "No active or claim-locked task owns the exact new module-security test path. Current active WCP-383 command tests, WCP-401 game catalogue, WCP-414 menu ordering, and WCP-415 access-role members use disjoint paths; WCP-416 and WCP-417 have completed and remain locked on unrelated paths. No runtime, template, schema, or migration changes.",
+        "compared_against": "Fresh continuous/work-pool-v4 blob d25f5751064d5dd38bca0f916862b39a274a41fb; all active and claim-locked allowlists; sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d.",
+        "result": "No active or claim-locked task owns the new test path. The existing ModuleLifecyclePresentationTest already covers a missing-CSRF toggle and unchanged state, so this package targets the uncovered authenticated boundary: denying users without CMS_SETTINGS_MANAGE and proving an authorized valid-token toggle changes state then restores it. Active WCP-414 menu ordering, WCP-415 access-role members and completed WCP-416 public guild visibility are disjoint.",
         "paths": [
           "tests/Controller/AdminModuleManagementSecurityTest.php"
         ]
       },
       "claimed_on": "2026-09-26T22:15:48.331Z",
       "claim_state": "active",
-      "last_checkpoint_at": "2026-09-26T22:16:24.562Z",
+      "last_checkpoint_at": "2026-09-26T22:18:07.066Z",
       "checkpoint_paths": [],
-      "next_action": "Add functional tests for anonymous/unauthorized listing and toggle access, then prove missing CSRF does not change notifications module state.",
+      "next_action": "Add authenticated role-denial tests and a valid-token notifications toggle that restores its initial state in finally; keep the test isolated to the allowed file.",
       "branch_heads": {
         "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
         "feature_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d"
