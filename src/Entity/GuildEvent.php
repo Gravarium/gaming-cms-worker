@@ -97,12 +97,38 @@ class GuildEvent
     public function setEndsAt(?\DateTimeImmutable $endsAt): self { $this->endsAt = $endsAt; return $this; }
     public function getMaxParticipants(): ?int { return $this->maxParticipants; }
     public function setMaxParticipants(?int $max): self { $this->maxParticipants = $max; return $this; }
-    /** @return array<string, int> */
+    /** @return array<string, int> */ 
     public function getRoleLimits(): array { return $this->roleLimits; }
     /** @param array<string, int> $limits */
     public function setRoleLimits(array $limits): self { $this->roleLimits = $limits; return $this; }
     public function getLocation(): ?string { return $this->location; }
-    public function setLocation(?string $location): self { $this->location = $location === null || trim($location) === '' ? null : trim($location); return $this; }
+    public function setLocation(?string $location): self
+    {
+        if ($location === null) {
+            $this->location = null;
+
+            return $this;
+        }
+
+        if (!mb_check_encoding($location, 'UTF-8') || str_contains($location, "\0")) {
+            throw new \InvalidArgumentException('Guild event location must be valid UTF-8 without NUL bytes.');
+        }
+
+        $normalizedLocation = trim($location);
+        if ($normalizedLocation === '') {
+            $this->location = null;
+
+            return $this;
+        }
+
+        if (strlen($normalizedLocation) > 560 || mb_strlen($normalizedLocation, 'UTF-8') > 140) {
+            throw new \InvalidArgumentException('Guild event location must fit its 140-character storage column.');
+        }
+
+        $this->location = $normalizedLocation;
+
+        return $this;
+    }
     public function getStatus(): string { return $this->status; }
     public function setStatus(string $status): self { $this->status = $status; return $this; }
     public function getCreatedAt(): \DateTimeImmutable { return $this->createdAt; }
