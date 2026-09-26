@@ -10,6 +10,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\Length;
 
 /** @extends AbstractType<null> */
 final class ForgotPasswordType extends AbstractType
@@ -19,8 +20,8 @@ final class ForgotPasswordType extends AbstractType
         $builder->add('email', EmailType::class, [
             'label' => 'E-Mail-Adresse',
             'mapped' => false,
-            'constraints' => [new NotBlank(), new Email()],
-            'attr' => ['autocomplete' => 'email'],
+            'constraints' => [new NotBlank(), new Email(), new Length(max: 180)],
+            'attr' => ['autocomplete' => 'email', 'maxlength' => 180],
         ]);
     }
 
