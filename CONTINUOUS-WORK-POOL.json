@@ -17,7 +17,7 @@
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-407 PR #204 is open on exact HEAD 42714a90700b297a5189640e05e2f2ce86cb3353; monitor exact-head CI run 36273078540 and repair any failures within its allowed test path.",
+    "next_required_action": "WCP-412 is reserved on exact sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5; fix the admin active-state predicate and add functional regression coverage in its two allowed paths.",
     "composition_preparable": 0,
     "immediately_actionable": 0,
     "must_continue": true
@@ -20096,6 +20096,96 @@
       "claimed_on": "2026-09-26T21:29:08.842Z",
       "claim_state": "active",
       "next_action": "Implement the separate owner-permission-gated inbox and repository search/count queries within the five allowed paths; checkpoint a coherent commit before continuing.",
+      "branch_heads": {
+        "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+        "feature_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d"
+      }
+    },
+    {
+      "priority": 192,
+      "package_id": "WCP-412",
+      "title": "Exclude inactive accounts from the active admin filter",
+      "risk": "low",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-412-admin-user-active-filter-g1",
+      "suggested_branch": "feature/wcp-412-admin-user-active-filter-g1",
+      "base_branch": "main",
+      "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "objective": "Correct the admin user directory's active-state filter so it includes only accounts that are enabled and not currently locked. A disabled account with an old, expired lockedUntil timestamp must remain excluded. Preserve the existing locked filter and search behavior; make no schema or template changes.",
+      "allowed_paths": [
+        "src/Repository/UserRepository.php",
+        "tests/Controller/AdminUserDirectoryStateFilterTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/",
+        "templates/",
+        "assets/",
+        "public/",
+        "src/Controller/AdminUserController.php",
+        "src/Form/",
+        "src/Entity/"
+      ],
+      "deliverables": [
+        "Group the active-state DQL predicate so an expired lock timestamp cannot bypass isActive=true.",
+        "Add functional coverage for enabled/unlocked, enabled/currently locked, and disabled/expired-lock accounts through the admin user directory.",
+        "Keep locked and unverified filtering and query search behavior unchanged.",
+        "Change only UserRepository and the single new functional test file."
+      ],
+      "tests": [
+        "php bin/phpunit tests/Controller/AdminUserDirectoryStateFilterTest.php",
+        "Existing AdminUserSecurityTest and user search boundary tests remain green.",
+        "PHPStan level 8 and complete Worker CI on exact final HEAD, including PostgreSQL 18 migration-chain checks."
+      ],
+      "completion_report": [
+        "Exact sanitized main base SHA and final Worker HEAD.",
+        "Complete changed-path list and Worker PR.",
+        "Active filter results for enabled, locked, and disabled accounts, including disabled account with expired lock timestamp.",
+        "Exact-head PHPStan and complete Worker CI results; confirm locked filter and search behavior remain unchanged."
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "preserve-admin-user-access-controls-and-existing-search-and-locked-state-semantics",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "proposal_kind": "worker_only",
+      "proposal_dependency_evidence": [],
+      "active_base_branch": "main",
+      "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "resume_branch": "feature/wcp-412-admin-user-active-filter-g1",
+      "collision_check": {
+        "compared_against": "Fresh continuous/work-pool-v4 blob d0e70d18313d0305e14680109721e8a2a477bfa1; every active and claim-locked allowlist; sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d.",
+        "result": "WCP-411 is held by another chat and left untouched; its guild-application inbox paths are disjoint. No active or claim-locked task owns UserRepository.php or the new AdminUserDirectoryStateFilterTest.php. WCP-348 is locked on AdminUserController.php and AdminUserSearchBoundaryTest.php, neither of which this task changes. The new test exercises existing directory behavior with a bounded query; no controller, form, template, entity, schema, or migration changes.",
+        "paths": [
+          "src/Repository/UserRepository.php",
+          "tests/Controller/AdminUserDirectoryStateFilterTest.php"
+        ]
+      },
+      "claimed_on": "2026-09-26T21:33:24.480Z",
+      "claim_state": "active",
+      "last_checkpoint_at": "2026-09-26T21:33:24.480Z",
+      "checkpoint_paths": [],
+      "next_action": "Create the claim and feature branches from exact sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5; add the repository predicate fix and functional regression in the two allowed paths.",
       "branch_heads": {
         "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
         "feature_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d"
