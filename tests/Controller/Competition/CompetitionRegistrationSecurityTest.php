@@ -66,7 +66,7 @@ final class CompetitionRegistrationSecurityTest extends WebTestCase
         ]);
         $client->submit($form);
 
-        self::assertResponseStatusCodeSame(200);
+        self::assertResponseStatusCodeSame(422);
         self::assertSame(0, $this->participantCount($client, $fixture['competitionId'], $fixture['userId']));
     }
 
