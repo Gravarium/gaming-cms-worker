@@ -25,7 +25,10 @@ final class VideoType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('title', null, ['label' => 'Titel'])
+            ->add('title', null, [
+                'label' => 'Titel',
+                'attr' => ['maxlength' => 180],
+            ])
             ->add('category', EntityType::class, [
                 'class' => VideoCategory::class,
                 'choice_label' => 'name',
