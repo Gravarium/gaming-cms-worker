@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-26T18:38:56.857Z",
+  "published_at": "2026-09-26T18:41:09.915Z",
   "summary": {
     "total_remaining_worker_tasks": 131,
     "completed_worker_prs_awaiting_trusted_review": 152,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "Run and inspect full Worker CI 36263274791 for WCP-377 on exact HEAD 7367245a38e7c68ea06f0d44c47a8d55a789c57d.",
+    "next_required_action": "Repair WCP-377 nested form-error assertions within its test allowlist, then rerun full Worker CI.",
     "composition_preparable": 0,
     "immediately_actionable": 0,
     "must_continue": true
@@ -16095,8 +16095,8 @@
       },
       "claimed_on": "2026-09-26T18:36:56.545Z",
       "claim_state": "active_worker_claim",
-      "last_checkpoint_at": "2026-09-26T18:38:56.857Z",
-      "next_action": "Inspect Worker CI run 36263274791 on exact HEAD 7367245a38e7c68ea06f0d44c47a8d55a789c57d; repair only within the three allowlisted paths, then mark ready after green.",
+      "last_checkpoint_at": "2026-09-26T18:41:09.915Z",
+      "next_action": "Repair two test assertions to inspect nested RepeatedType errors; the over-limit form submissions already reject as required. Rerun full Worker CI on the new exact PR head.",
       "checkpoint_paths": [
         "src/Form/ResetPasswordType.php",
         "src/Form/AccountPasswordType.php",
@@ -16107,7 +16107,7 @@
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/171",
       "ci_run_id": 36263274791,
       "final_head": null,
-      "ci_result": null,
+      "ci_result": "failure",
       "completed_on": null,
       "final_changed_paths": []
     }
