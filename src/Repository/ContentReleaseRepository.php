@@ -86,8 +86,11 @@ final class ContentReleaseRepository extends ServiceEntityRepository
 
     private function publicEntriesBuilder(int $releaseId, \DateTimeImmutable $now): \Doctrine\ORM\QueryBuilder
     {
-        return $this->createQueryBuilder('release')
-            ->join('release.entries', 'entry')
+        return $this->getEntityManager()->createQueryBuilder()
+            ->from(ContentEntry::class, 'entry')
+            ->from(ContentRelease::class, 'release')
+            ->join('release.entries', 'linkedEntry')
+            ->andWhere('linkedEntry.id = entry.id')
             ->andWhere('release.id = :releaseId')
             ->andWhere('release.status = :releaseStatus')
             ->andWhere('release.publishedAt <= :now')
