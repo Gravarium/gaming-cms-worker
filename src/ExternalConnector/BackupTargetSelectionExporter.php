@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\\ExternalConnector;
+namespace App\ExternalConnector;
 
-use App\\Entity\\ExternalConnectorTarget;
+use App\Entity\ExternalConnectorTarget;
 
 final readonly class BackupTargetSelectionExporter
 {
@@ -20,7 +20,7 @@ final readonly class BackupTargetSelectionExporter
         $targets = $this->targets->forCapability(ExternalConnectorTarget::CAPABILITY_BACKUP);
 
         if ($targets === [] && !$allowEmpty) {
-            throw new \\RuntimeException('No enabled backup targets are configured in the CMS.');
+            throw new \RuntimeException('No enabled backup targets are configured in the CMS.');
         }
 
         $lines = ['# configuration_reference|target_key|required'];
@@ -29,7 +29,7 @@ final readonly class BackupTargetSelectionExporter
                 !$this->isSafeToken($target->configurationReference, self::MAX_CONFIGURATION_REFERENCE_BYTES)
                 || !$this->isSafeToken($target->targetKey, self::MAX_TARGET_KEY_BYTES)
             ) {
-                throw new \\RuntimeException('Backup target selection contains invalid data.');
+                throw new \RuntimeException('Backup target selection contains invalid data.');
             }
 
             $lines[] = sprintf(
@@ -40,13 +40,13 @@ final readonly class BackupTargetSelectionExporter
             );
         }
 
-        return implode("\\n", $lines)."\\n";
+        return implode("\n", $lines)."\n";
     }
 
     private function isSafeToken(string $value, int $maxBytes): bool
     {
         return $value !== ''
             && strlen($value) <= $maxBytes
-            && preg_match('/\\A[a-z0-9][a-z0-9_.-]*\\z/', $value) === 1;
+            && preg_match('/\A[a-z0-9][a-z0-9_.-]*\z/', $value) === 1;
     }
 }
