@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Neue Unterhaltung{% endblock %}
+
+{% block body %}
+<main>
+    <h1>Neue Unterhaltung</h1>
+    {{ form_start(form) }}
+        {{ form_row(form.recipientId) }}
+        {{ form_row(form.title) }}
+        <button type="submit">Erstellen</button>
+    {{ form_end(form) }}
+    <p><a href="{{ path('app_social_index') }}">Zurück zu Social</a></p>
+</main>
+{% endblock %}
