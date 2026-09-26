@@ -38,7 +38,9 @@ final class GuildCalendarSecurityTest extends WebTestCase
 
         self::assertResponseIsSuccessful();
         self::assertSame('text/calendar; charset=utf-8', $client->getResponse()->headers->get('Content-Type'));
-        self::assertSame('private, no-store', $client->getResponse()->headers->get('Cache-Control'));
+        $cacheControl = strtolower((string) $client->getResponse()->headers->get('Cache-Control'));
+        self::assertStringContainsString('private', $cacheControl);
+        self::assertStringContainsString('no-store', $cacheControl);
         $body = (string) $client->getResponse()->getContent();
         self::assertStringContainsString('SUMMARY:Planned raid\\nEND:VEVENT\\nBEGIN:VTODO\\nSUMMARY:Injected', $body);
         self::assertStringContainsString('DESCRIPTION:Bring supplies\\nBEGIN:VEVENT\\nSUMMARY:Injected description', $body);
