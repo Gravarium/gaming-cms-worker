@@ -10,8 +10,10 @@ use App\Entity\GuildApplication;
 use App\Entity\GuildMember;
 use App\Entity\User;
 use App\Entity\Guild\GuildApplicationVote;
+use App\Entity\Guild\GuildCharacter;
 use App\Entity\Guild\GuildCharacterProfile;
 use App\Entity\Guild\GuildMemberLifecycleEvent;
+use App\Entity\Guild\GuildMemberPrivateNote;
 use App\Entity\Guild\GuildOnboardingTask;
 use App\Entity\Guild\GuildPrivateMemberNote;
 use App\Entity\Guild\GuildRecruitmentCase;
@@ -99,10 +101,7 @@ final class GuildLifecycleCoreTest extends TestCase
         $member = (new GuildMember())->setGuild($guild)->setCharacterName('Main');
         $actor = (new User())->setEmail('officer@example.test')->setDisplayName('Officer');
 
-        $character = (new GuildCharacterProfile($guild, $member, $game, 'Main'))
-            ->setCharacterClass('Mage')
-            ->setRole('dps')
-            ->setMainCharacter(true);
+        $character = new GuildCharacter($guild, $member, $game, 'Main', 'Mage', 'dps', true);
         self::assertTrue($character->isMainCharacter());
         self::assertSame('dps', $character->getRole());
 
@@ -112,8 +111,8 @@ final class GuildLifecycleCoreTest extends TestCase
         $event = new GuildMemberLifecycleEvent($guild, $member, $actor, 'absence', 'Holiday');
         self::assertSame('absence', $event->getAction());
 
-        $note = new GuildPrivateMemberNote($guild, $member, $actor, 'Officer-only note');
-        self::assertSame('Officer-only note', $note->getNote());
+        $note = new GuildMemberPrivateNote($guild, $member, $actor, 'Officer-only note');
+        self::assertSame('Officer-only note', $note->getBody());
 
         $task = new GuildOnboardingTask($guild, $member, 'Join Discord');
         $task->complete($actor);
@@ -125,7 +124,7 @@ final class GuildLifecycleCoreTest extends TestCase
 
         $foreignMember = (new GuildMember())->setGuild($other)->setCharacterName('Foreign');
         $this->expectException(\DomainException::class);
-        new GuildPrivateMemberNote($guild, $foreignMember, $actor, 'Must fail');
+        new GuildMemberPrivateNote($guild, $foreignMember, $actor, 'Must fail');
     }
 
     public function testPersistentRosterAndRecruitmentObjectsKeepGuildBoundary(): void
