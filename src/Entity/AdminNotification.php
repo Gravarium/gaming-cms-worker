@@ -21,6 +21,7 @@ class AdminNotification
     private const MAX_MESSAGE_BYTES = 16000;
     private const MAX_LINK_CHARACTERS = 500;
     private const MAX_LINK_BYTES = 2000;
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -84,15 +85,15 @@ class AdminNotification
     private function normalize(string $value, int $maxCharacters, int $maxBytes, string $field): string
     {
         if (strlen($value) > $maxBytes) {
-            throw new \\LengthException('Notification '.$field.' exceeds its UTF-8 byte limit.');
+            throw new \LengthException('Notification '.$field.' exceeds its UTF-8 byte limit.');
         }
-        if (str_contains($value, "\\0") || !mb_check_encoding($value, 'UTF-8')) {
-            throw new \\InvalidArgumentException('Notification '.$field.' must be valid UTF-8 without NUL bytes.');
+        if (str_contains($value, "\0") || !mb_check_encoding($value, 'UTF-8')) {
+            throw new \InvalidArgumentException('Notification '.$field.' must be valid UTF-8 without NUL bytes.');
         }
 
         $value = trim($value);
         if (mb_strlen($value, 'UTF-8') > $maxCharacters) {
-            throw new \\LengthException('Notification '.$field.' exceeds its character limit.');
+            throw new \LengthException('Notification '.$field.' exceeds its character limit.');
         }
 
         return $value;
