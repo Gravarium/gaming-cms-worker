@@ -110,12 +110,12 @@ final class MemberNotificationInboxTest extends WebTestCase
         $attackerClient = static::createClient();
         $attackerClient->loginUser($otherUser);
         $attackerClient->request('POST', '/guild-area/notifications/'.$id.'/read');
-        self::assertResponseStatusCodeSame(404);
+        self::assertSame(404, $attackerClient->getResponse()->getStatusCode());
         self::assertNull($notification->getReadAt());
 
         $client->loginUser($owner);
         $client->request('POST', '/guild-area/notifications/'.$id.'/read');
-        self::assertResponseStatusCodeSame(403);
+        self::assertSame(403, $client->getResponse()->getStatusCode());
         self::assertNull($notification->getReadAt());
     }
 
