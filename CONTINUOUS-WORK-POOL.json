@@ -10,16 +10,16 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-26T10:18:30.246Z",
+  "published_at": "2026-09-26T10:19:31.614Z",
   "summary": {
-    "total_remaining_worker_tasks": 52,
+    "total_remaining_worker_tasks": 53,
     "completed_worker_prs_awaiting_trusted_review": 47,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "Re-evaluate remaining unclaimed Worker proposals and continue an independent package while preserving all foreign active claims and completed claim locks; do not modify WCP-097, WCP-100 or WCP-102.",
+    "next_required_action": "Continue WCP-103 on its exclusive offsite-status boundary claim while preserving WCP-102 and all completed foreign claim locks; after exact-head green CI, reconcile and continue independently.",
     "composition_preparable": 0,
-    "immediately_actionable": 0,
+    "immediately_actionable": 1,
     "must_continue": true
   },
   "rules": {
@@ -4667,6 +4667,103 @@
       "claim_state": "locked_until_trusted_resolution",
       "completed_on": "2026-09-26T10:18:30.246Z",
       "next_action": "Remain claim-locked while awaiting Trusted review; do not merge or deploy from the Worker repository."
+    },
+    {
+      "priority": 53,
+      "package_id": "WCP-103",
+      "title": "Bound offsite backup status file inputs",
+      "risk": "high",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-103-offsite-status-boundary-g1",
+      "suggested_branch": "feature/wcp-103-offsite-status-boundary-g1",
+      "base_branch": "main",
+      "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "objective": "Harden the worker-visible OffsiteBackupStatusReader file boundary: validate bounded absolute status-file paths before filesystem access, cap file and record sizes, reject malformed UTF-8/control or overlong status lines and unsafe numeric fields, and fail closed while preserving the existing header, status-map, timestamp, attempts and required-flag semantics.",
+      "allowed_paths": [
+        "src/ExternalConnector/OffsiteBackupStatusReader.php",
+        "tests/ExternalConnector/OffsiteBackupStatusReaderTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/",
+        "src/Controller/",
+        "src/Entity/",
+        "src/ExternalConnector/OffsiteBackupTargetStatus.php",
+        "src/ExternalConnector/BackupTargetOverview.php",
+        "tests/ExternalConnector/BackupTargetOverviewTest.php",
+        "src/ExternalConnector/ExternalConnectorExecutionSummary.php",
+        "tests/ExternalConnector/ExternalConnectorExecutionSummaryTest.php",
+        "src/ExternalConnector/ExternalConnectorTargetDefinition.php",
+        "tests/ExternalConnector/ExternalConnectorTargetDefinitionTest.php",
+        "src/ExternalConnector/ExternalMailMessage.php",
+        "tests/ExternalConnector/ExternalMailMessageTest.php",
+        "src/ExternalConnector/ExternalMediaObject.php",
+        "tests/ExternalConnector/ExternalMediaObjectTest.php",
+        "src/ExternalConnector/ExternalMediaUpload.php",
+        "tests/ExternalConnector/ExternalMediaUploadTest.php",
+        "src/ExternalConnector/ExternalNotificationMessage.php",
+        "tests/ExternalConnector/ExternalNotificationMessageTest.php",
+        "src/Security/LocalRedirectTarget.php",
+        "tests/Security/LocalRedirectTargetTest.php",
+        "src/Service/MediaMalwareScanner.php",
+        "tests/Service/MediaMalwareScannerTest.php"
+      ],
+      "deliverables": [
+        "bounded absolute UTF-8/control-safe status-file path validation with fail-closed missing, symlink, unreadable and non-regular-file handling",
+        "bounded file bytes, line bytes and record count before untrusted status parsing",
+        "strict status-field validation including safe target/backup identifiers, canonical UTC timestamps, bounded positive attempts and duplicate rejection",
+        "positive and negative parser regression coverage without schema, migration, controller or private-runtime changes"
+      ],
+      "tests": [
+        "targeted OffsiteBackupStatusReader PHPUnit tests",
+        "PHPStan level 8",
+        "complete Worker CI on the exact final HEAD"
+      ],
+      "completion_report": [
+        "exact final Worker HEAD and sanitized base SHA",
+        "complete changed-path list and Worker PR",
+        "targeted tests plus complete Worker CI result",
+        "status-file path, parser-size, timestamp and deferred backup/Fortress boundary risks"
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "no-secrets-or-trusted-private-runtime-in-worker-source",
+        "preserve existing offsite backup status header, timestamp, attempts, required-flag and fail-closed semantics",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_base_branch": "main",
+      "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "resume_branch": "feature/wcp-103-offsite-status-boundary-g1",
+      "proposal_kind": "worker_only",
+      "collision_check": {
+        "compared_against": "current continuous/work-pool-v4 task allowlists and active branches at publication",
+        "result": "disjoint from all published task allowlists, WCP-102 completed foreign execution-summary claim, WCP-101 completed mail claim, and all searched WCP-103/offsite-status-reader branches",
+        "paths": [
+          "src/ExternalConnector/OffsiteBackupStatusReader.php",
+          "tests/ExternalConnector/OffsiteBackupStatusReaderTest.php"
+        ]
+      },
+      "claimed_on": "2026-09-26T10:19:31.614Z"
     }
   ],
   "recovery_queue": [],
