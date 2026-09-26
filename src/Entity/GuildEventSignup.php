@@ -123,11 +123,11 @@ class GuildEventSignup
     private function assertRoleColumnBoundary(string $role): void
     {
         if (strlen($role) > self::MAX_ROLE_BYTES || !mb_check_encoding($role, 'UTF-8')) {
-            throw new \\InvalidArgumentException('Signup role is invalid or exceeds the allowed length.');
+            throw new \InvalidArgumentException('Signup role is invalid or exceeds the allowed length.');
         }
 
-        if (str_contains($role, "\\0") || mb_strlen($role, 'UTF-8') > self::MAX_ROLE_LENGTH) {
-            throw new \\InvalidArgumentException('Signup role is invalid or exceeds the allowed length.');
+        if (str_contains($role, "\0") || mb_strlen($role, 'UTF-8') > self::MAX_ROLE_LENGTH) {
+            throw new \InvalidArgumentException('Signup role is invalid or exceeds the allowed length.');
         }
     }
 

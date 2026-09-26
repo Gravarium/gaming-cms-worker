@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\\Tests\\Entity;
+namespace App\Tests\Entity;
 
-use App\\Entity\\GuildEventSignup;
-use PHPUnit\\Framework\\TestCase;
+use App\Entity\GuildEventSignup;
+use PHPUnit\Framework\TestCase;
 
 final class GuildEventSignupBoundaryTest extends TestCase
 {
@@ -23,7 +23,7 @@ final class GuildEventSignupBoundaryTest extends TestCase
     {
         $signup = (new GuildEventSignup())->setRole('tank');
 
-        foreach ([str_repeat('R', 21), str_repeat('é', 21), str_repeat('🎮', 21), "bad\\xFFrole", "tank\\0suffix"] as $candidate) {
+        foreach ([str_repeat('R', 21), str_repeat('é', 21), str_repeat('🎮', 21), "bad\xFFrole", "tank\0suffix"] as $candidate) {
             $this->assertRejected(static function () use ($signup, $candidate): void {
                 $signup->setRole($candidate);
             });
@@ -41,12 +41,12 @@ final class GuildEventSignupBoundaryTest extends TestCase
         self::assertSame($value, $signup->getRole());
     }
 
-    /** @param \\Closure(): mixed $operation */
-    private function assertRejected(\\Closure $operation): void
+    /** @param \Closure(): mixed $operation */
+    private function assertRejected(\Closure $operation): void
     {
         try {
             $operation();
-        } catch (\\InvalidArgumentException) {
+        } catch (\InvalidArgumentException) {
             self::addToAssertionCount(1);
 
             return;
