@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-26T16:25:29Z",
+  "published_at": "2026-09-26T16:28:06.758Z",
   "summary": {
-    "total_remaining_worker_tasks": 130,
+    "total_remaining_worker_tasks": 131,
     "completed_worker_prs_awaiting_trusted_review": 127,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "Re-evaluate unclaimed dependencies and continue with the next dependency-safe Worker package.",
+    "next_required_action": "Implement WCP-352 video category name form boundary from exact sanitized main; re-evaluate blocked FCP dependencies after exact-head Worker CI.",
     "composition_preparable": 0,
     "immediately_actionable": 0,
     "must_continue": true
@@ -13302,6 +13302,95 @@
         "Form tests accept exact ASCII field widths 64/64/120 and reject 65/65/121 at the corresponding fields.",
         "PR #145 is open, ready for review and unmerged. Diff from sanitized main contains only the two allowed paths."
       ]
+    },
+    {
+      "priority": 133,
+      "package_id": "WCP-352",
+      "title": "Bound video category name form input",
+      "risk": "medium",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-352-video-category-name-boundary-g1",
+      "suggested_branch": "feature/wcp-352-video-category-name-boundary-g1",
+      "base_branch": "main",
+      "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "objective": "Add a server-side field-level maximum to VideoCategoryType.name and matching browser maxlength of 120, matching the persisted varchar(120). The entity currently requires a nonblank name but does not cap its length, so oversized names can pass form validation and fail at database flush instead of receiving field feedback. Preserve trim behavior, generated slugs, authentication, CSRF and persistence flow.",
+      "allowed_paths": [
+        "src/Form/VideoCategoryType.php",
+        "tests/Form/VideoCategoryTypeBoundaryTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/",
+        "src/Entity/VideoCategory.php",
+        "src/Controller/AdminVideoController.php",
+        "src/Repository/VideoCategoryRepository.php",
+        "templates/",
+        "assets/",
+        "public/"
+      ],
+      "deliverables": [
+        "Add a Length(max: 120) form constraint and maxlength=120 to the name field.",
+        "Show a field-level error for oversized names before the existing controller isValid guard can persist or flush them.",
+        "Keep the entity, controller, repository, schema, slug generation and authorization behavior unchanged."
+      ],
+      "tests": [
+        "Form regression accepts a name of exactly 120 characters.",
+        "Form regression rejects a 121-character name with a name-field error and confirms maxlength=120 in the form view.",
+        "PHPStan level 8 and complete Worker CI on the exact final HEAD."
+      ],
+      "completion_report": [
+        "exact final Worker HEAD and sanitized main base SHA",
+        "complete changed-file list and Worker PR",
+        "exact and over-limit form results, PHPStan level 8 and exact-head Worker CI",
+        "confirmation no entity, controller, repository, schema, authentication, CSRF or slug behavior changed"
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "no-secrets-or-trusted-private-runtime-in-worker-source",
+        "preserve entity trim, slug generation, authentication, CSRF and persistence guard",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_base_branch": "main",
+      "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "resume_branch": "feature/wcp-352-video-category-name-boundary-g1",
+      "proposal_kind": "worker_only",
+      "collision_check": {
+        "compared_against": "all current continuous/work-pool-v4 allowed-path scopes and active/locked claims through WCP-351; exact files checked against sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+        "result": "Neither exact path occurs in any current allowed-path scope. WCP-351's active connector target form and test are disjoint; WCP-350 and all earlier locked claims also have distinct paths. No entity, controller, repository, template, schema, migration, authentication or private-boundary path is changed.",
+        "paths": [
+          "src/Form/VideoCategoryType.php",
+          "tests/Form/VideoCategoryTypeBoundaryTest.php"
+        ]
+      },
+      "claimed_on": "2026-09-26T16:28:06.758Z",
+      "claim_state": "active_worker_claim",
+      "last_checkpoint_at": "2026-09-26T16:28:06.758Z",
+      "next_action": "Create the exact claim and feature refs from sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d; add the form boundary and exact/oversized form regressions, then run exact-head Worker CI.",
+      "checkpoint_paths": [
+        "src/Form/VideoCategoryType.php",
+        "tests/Form/VideoCategoryTypeBoundaryTest.php"
+      ],
+      "last_verified_push_at": "2026-09-26T16:28:06.758Z"
     }
   ],
   "recovery_queue": [],
