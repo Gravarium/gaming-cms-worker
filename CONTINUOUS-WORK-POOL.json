@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-26T20:17:39.989Z",
+  "published_at": "2026-09-26T20:18:15.402Z",
   "summary": {
-    "total_remaining_worker_tasks": 133,
-    "completed_worker_prs_awaiting_trusted_review": 168,
+    "total_remaining_worker_tasks": 132,
+    "completed_worker_prs_awaiting_trusted_review": 169,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-398 is active on feature/wcp-398-guild-calendar-crlf-security-g1 from sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d. Add guild calendar membership and CRLF-injection regressions only; leave all foreign claims untouched.",
+    "next_required_action": "WCP-397 PR #191 is complete on exact green HEAD c611544aefa68918078c7caf2e6cdf1c66495113 (CI 36268919819); claim remains locked. Continue with the next independent dependency-safe Worker proposal.",
     "composition_preparable": 0,
     "immediately_actionable": 0,
     "must_continue": true
@@ -18229,7 +18229,7 @@
       "package_id": "WCP-397",
       "title": "Filter public competitions by participation mode",
       "risk": "medium",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [
         "WCP-393"
       ],
@@ -18324,9 +18324,9 @@
         ]
       },
       "claimed_on": "2026-09-26T20:13:50.935Z",
-      "claim_state": "active",
-      "last_checkpoint_at": "2026-09-26T20:16:19.002Z",
-      "next_action": "Inspect exact-head Worker CI run 36268919819; repair any concrete failure on this branch.",
+      "claim_state": "locked_until_trusted_resolution",
+      "last_checkpoint_at": "2026-09-26T20:18:15.402Z",
+      "next_action": "Await Trusted review and keep this exact claim locked; do not merge or deploy.",
       "checkpoint_paths": [
         "src/Controller/Competition/CompetitionController.php",
         "src/Repository/Competition/CompetitionRepository.php",
@@ -18335,10 +18335,11 @@
         "tests/Controller/Competition/CompetitionGameFilterTest.php",
         "tests/Controller/Competition/CompetitionModeFilterTest.php"
       ],
-      "last_verified_push_at": "2026-09-26T20:15:47.394Z",
+      "last_verified_push_at": "2026-09-26T20:18:15.402Z",
       "worker_pr": 191,
       "ci_run_id": 36268919819,
-      "ci_result": "in_progress"
+      "ci_result": "success",
+      "final_head": "c611544aefa68918078c7caf2e6cdf1c66495113"
     },
     {
       "priority": 178,
