@@ -48,7 +48,7 @@ final class SensitiveDataCipherTest extends TestCase
         $cipher = new SensitiveDataCipher('test-secret');
 
         try {
-            $cipher->decrypt(base64_encode(str_repeat('\\0', SODIUM_CRYPTO_SECRETBOX_NONCEBYTES)));
+            $cipher->decrypt(base64_encode(str_repeat(chr(0), SODIUM_CRYPTO_SECRETBOX_NONCEBYTES)));
             self::fail('An undersized authenticated payload was accepted.');
         } catch (\RuntimeException) {
             self::addToAssertionCount(1);
