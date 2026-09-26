@@ -9,6 +9,8 @@ final readonly class DoctrineGuildNotificationRecipientResolver implements Guild
     public function resolve(string $recipientReference): ?Guild
     {
         if (preg_match('/^guild:([1-9][0-9]*)$/', $recipientReference, $matches) !== 1) { return null; }
-        return $this->guilds->find((int) $matches[1]);
+        $guildId = filter_var($matches[1], FILTER_VALIDATE_INT);
+        if (!is_int($guildId) || $guildId < 1) { return null; }
+        return $this->guilds->find($guildId);
     }
 }
