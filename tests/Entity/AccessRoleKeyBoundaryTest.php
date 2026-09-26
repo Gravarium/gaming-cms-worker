@@ -14,7 +14,7 @@ final class AccessRoleKeyBoundaryTest extends TestCase
         $asciiKey = str_repeat('r', 80);
         self::assertSame($asciiKey, (new AccessRole())->setKey($asciiKey)->getKey());
 
-        $multibyteKey = str_repeat('é', 80);
+        $multibyteKey = str_repeat('🎮', 80);
         self::assertSame(320, strlen($multibyteKey));
         self::assertSame($multibyteKey, (new AccessRole())->setKey($multibyteKey)->getKey());
     }
