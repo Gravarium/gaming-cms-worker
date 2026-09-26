@@ -56,11 +56,11 @@ final readonly class FailedMessageOverview
         }
 
         $type = is_array($decoded) && is_string($decoded['type'] ?? null) ? $decoded['type'] : '';
-        if (preg_match('/^[A-Za-z_][A-Za-z0-9_\\\\\\\\]{0,240}$/', $type) !== 1) {
+        if (preg_match('/^[A-Za-z_][A-Za-z0-9_\\\\]{0,240}$/', $type) !== 1) {
             return 'Unbekannte Nachricht';
         }
 
-        $parts = explode('\\\\', $type);
+        $parts = explode('\\', $type);
 
         return (string) end($parts);
     }
