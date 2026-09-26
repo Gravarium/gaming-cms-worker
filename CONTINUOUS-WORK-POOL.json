@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-26T22:31:38.103Z",
+  "published_at": "2026-09-26T22:35:01.813Z",
   "summary": {
     "total_remaining_worker_tasks": 134,
     "completed_worker_prs_awaiting_trusted_review": 187,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-420 is reserved on exact sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d; add focused CMS_SETTINGS_MANAGE and CSRF regressions for both admin failed-queue retry POST actions in its exclusive test path and run exact-head Worker CI.",
+    "next_required_action": "WCP-421 is reserved on exact sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d; add a paginated admin media-library route that exposes all active filtered assets beyond the current 250-result cap, link it from storage, and test filters, ordering and access.",
     "composition_preparable": 0,
     "immediately_actionable": 0,
     "must_continue": true
@@ -21290,6 +21290,101 @@
         "feature_branch": "9f37a344fc524b89265325e27d09df00bed88e12"
       },
       "next_action": "Open the test-only Worker PR, then run and record complete CI on its exact final HEAD."
+    },
+    {
+      "priority": 201,
+      "package_id": "WCP-421",
+      "title": "Browse every media asset with paginated filters",
+      "risk": "medium",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-421-media-library-pagination-g1",
+      "suggested_branch": "feature/wcp-421-media-library-pagination-g1",
+      "base_branch": "main",
+      "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "objective": "Complete the existing admin media library's browse flow beyond its current 250-result repository cap. Add a separate permission-gated, paginated library route that reuses the current search, module, storage, file-type and folder filters, gives stable page navigation and result counts, and is linked from the existing library with its active filters preserved. Keep the existing per-asset edit/replace/delete workflows and storage protections.",
+      "allowed_paths": [
+        "src/Controller/AdminStorageLibraryController.php",
+        "src/Repository/MediaAssetRepository.php",
+        "templates/admin/storage/index.html.twig",
+        "templates/admin/storage/library.html.twig",
+        "tests/Controller/AdminStorageLibraryPaginationTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/",
+        "src/Controller/AdminStorageController.php",
+        "tests/Controller/MediaStorageSecurityTest.php",
+        "src/Service/MediaAssetUsageResolver.php"
+      ],
+      "deliverables": [
+        "A CMS_STORAGE_MANAGE-gated admin route browses all active assets in bounded pages with deterministic updated-time and ID ordering; pending-deletion assets remain excluded.",
+        "Existing query, module, storage-mode, media-type, folder and no-folder filters are retained across page navigation and link from the current storage index.",
+        "The paginated view reports total matches and page position, shows use status, and links back to existing asset edit and replacement flows without introducing a new mutation path.",
+        "Private no-store/noindex response handling and malformed folder/page handling are covered.",
+        "No schema change; do not edit AdminStorageController.php or WCP-342's locked security test."
+      ],
+      "tests": [
+        "Targeted AdminStorageLibraryPaginationTest covering more than 250 matching assets across pages, no duplicates or omissions, stable ordering, filter preservation, pending-deletion exclusion, malformed filters, anonymous and insufficient-permission denial, and the integration link.",
+        "PHPStan level 8 and full Worker CI on the exact final HEAD, including Twig/container/AssetMapper/Doctrine checks and PostgreSQL migration-chain verification."
+      ],
+      "completion_report": [
+        "Exact final HEAD and sanitized main base SHA.",
+        "Complete changed-file list and Worker PR.",
+        "Pagination/filter/authorization negative and positive test results.",
+        "Exact-head PHPStan and full Worker CI results.",
+        "Open main-CMS follow-up and any remaining limits, including replacement of the legacy 250-item page after WCP-342 is resolved."
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "preserve-media-authorization-upload-scan-reference-deletion-and-recovery protections",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "proposal_kind": "worker_only",
+      "proposal_dependency_evidence": [],
+      "collision_check": {
+        "compared_against": "Fresh continuous/work-pool-v4 blob 412bb0d1c2e5856a8c63f6e1d177415e42c771d3, all active and claim-locked allowlists, and sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d.",
+        "result": "No active or claim-locked task owns any proposed path. WCP-342 locks AdminStorageController.php and MediaStorageSecurityTest.php, both explicitly excluded; WCP-339's MediaAssetUsageResolver.php is also excluded. The current searchLibrary method applies filters but hard-limits the media library to 250 results; the new controller/repository paging path, template link and new test file do not overlap active module branches. FCP-072 remains unclaimed and dependency-blocked; its broad templates allowlist is not an active claim.",
+        "paths": [
+          "src/Controller/AdminStorageLibraryController.php",
+          "src/Repository/MediaAssetRepository.php",
+          "templates/admin/storage/index.html.twig",
+          "templates/admin/storage/library.html.twig",
+          "tests/Controller/AdminStorageLibraryPaginationTest.php"
+        ]
+      },
+      "claimed_on": "2026-09-26T22:35:01.813Z",
+      "claim_state": "active",
+      "active_base_branch": "main",
+      "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "resume_branch": "feature/wcp-421-media-library-pagination-g1",
+      "last_checkpoint_at": "2026-09-26T22:35:01.813Z",
+      "last_verified_push_at": "2026-09-26T22:35:01.813Z",
+      "checkpoint_paths": [],
+      "branch_heads": {
+        "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+        "feature_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d"
+      },
+      "next_action": "Add a bounded count-and-page query, separate protected library route and paginated view; link it from the existing storage page while preserving filters, then add focused controller tests and open a Worker PR."
     }
   ],
   "recovery_queue": [],
