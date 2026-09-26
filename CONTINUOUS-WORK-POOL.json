@@ -10,10 +10,10 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-26T21:30:26.269Z",
+  "published_at": "2026-09-26T21:32:17.393Z",
   "summary": {
     "total_remaining_worker_tasks": 134,
-    "completed_worker_prs_awaiting_trusted_review": 178,
+    "completed_worker_prs_awaiting_trusted_review": 179,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
@@ -19729,7 +19729,7 @@
       "package_id": "WCP-409",
       "title": "Search and paginate administrative notification history",
       "risk": "medium",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -19812,13 +19812,13 @@
         ]
       },
       "claimed_on": "2026-09-26T21:13:11.082Z",
-      "claim_state": "active",
-      "next_action": "Run and inspect complete Worker CI on repaired exact HEAD 7b0126b06509f057fedaeba25206ee5d46498fda; repair any remaining failures on this branch.",
+      "claim_state": "locked_until_trusted_resolution",
+      "next_action": "PR #203 is ready for Trusted review at exact head 7b0126b06509f057fedaeba25206ee5d46498fda with successful exact-head CI; keep this claim locked until Trusted explicitly integrates, cancels, or transfers it.",
       "branch_heads": {
         "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
         "feature_branch": "7b0126b06509f057fedaeba25206ee5d46498fda"
       },
-      "last_checkpoint_at": "2026-09-26T21:28:25.136Z",
+      "last_checkpoint_at": "2026-09-26T21:32:17.393Z",
       "checkpoint_paths": [
         "src/Controller/AdminNotificationHistoryController.php",
         "src/Repository/AdminNotificationRepository.php",
@@ -19826,22 +19826,54 @@
         "templates/admin/notification/history.html.twig",
         "tests/Controller/AdminNotificationHistoryTest.php"
       ],
-      "last_verified_push_at": "2026-09-26T21:28:25.136Z",
+      "last_verified_push_at": "2026-09-26T21:32:17.393Z",
       "worker_pr": 203,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/203",
-      "last_ci_run_id": 36272865406,
-      "last_ci_result": "failure",
+      "last_ci_run_id": 36273034709,
+      "last_ci_result": "success",
       "ci_attempts": [
         {
           "run_id": 36272865406,
           "head": "d05cfc8b81e8e2ea4644c6e73ebbdb90c1b48016",
           "result": "failure",
-          "diagnosis": "PHP/Symfony unit test job reported one error and two failures: split anonymous/member clients across separate test methods to avoid double kernel boot; accept Symfony's normalized private/no-store Cache-Control directives; make the out-of-range page test query select a guaranteed empty result set. PHPStan, Twig, container, assets, Doctrine mappings and PostgreSQL 18 migration chain passed."
+          "diagnosis": "Fixed strict Cache-Control assertion, unique empty-result query for out-of-range page test, and Symfony double-kernel test setup."
+        },
+        {
+          "run_id": 36273034709,
+          "head": "7b0126b06509f057fedaeba25206ee5d46498fda",
+          "result": "success"
         }
       ],
       "test_results": {
-        "first_ci_failure": "Run 36272865406 on d05cfc8b81e8e2ea4644c6e73ebbdb90c1b48016: PHPunit 440 tests, 1,894 assertions, 1 error, 2 failures; PHPStan level 8 and PostgreSQL 18 migration-chain job passed."
-      }
+        "phpunit": "441 tests, 1,900 assertions, 0 errors/failures; one PHPUnit deprecation and one notice.",
+        "phpstan": "Level 8 passed with no errors.",
+        "php_symfony": "Passed: Composer metadata/dependency audit, Twig lint, container validation, AssetMapper compilation, Doctrine mapping validation, and complete PHPUnit suite.",
+        "postgres18": "PostgreSQL 18.6 full migration chain passed: 39 migrations executed, 0 unavailable.",
+        "exact_head_ci": {
+          "run_id": 36273034709,
+          "head": "7b0126b06509f057fedaeba25206ee5d46498fda",
+          "result": "success"
+        }
+      },
+      "final_head": "7b0126b06509f057fedaeba25206ee5d46498fda",
+      "final_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "ci_run_id": 36273034709,
+      "ci_result": "success",
+      "completed_at": "2026-09-26T21:32:17.393Z",
+      "changed_paths": [
+        "src/Controller/AdminNotificationHistoryController.php",
+        "src/Repository/AdminNotificationRepository.php",
+        "templates/admin/notification/index.html.twig",
+        "templates/admin/notification/history.html.twig",
+        "tests/Controller/AdminNotificationHistoryTest.php"
+      ],
+      "last_ci_diagnosis": "Initial CI failure was limited to three test assumptions; all were corrected on the same branch. The repaired exact head passed the complete Worker CI.",
+      "open_limits": [
+        "History search covers notification title, message, and type; no export or source-specific filtering.",
+        "Admin notifications remain globally shared and admin-only; this change adds no per-admin ownership or delete/archive action.",
+        "Trusted integration into the main CMS and a future Fortress permission mapping remain pending."
+      ],
+      "trusted_follow_up": "Apply the five changed files to the main CMS after Trusted review, run full Trusted CI, preserve the CMS_ACCESS and existing CSRF/safe-redirect controls, and map admin notification read access to the future Fortress permission. No schema or migration follow-up is required."
     },
     {
       "priority": 190,
