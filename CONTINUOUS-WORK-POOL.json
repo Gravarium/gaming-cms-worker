@@ -12,12 +12,12 @@
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
   "published_at": "2026-09-26T23:46:48.636Z",
   "summary": {
-    "total_remaining_worker_tasks": 136,
+    "total_remaining_worker_tasks": 137,
     "completed_worker_prs_awaiting_trusted_review": 201,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-434 is actively claimed on exact sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d; implement the searchable paginated layout page directory and validate it on the same branch.",
+    "next_required_action": "WCP-435 is claimed from sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d; create its exclusive branches and add test-only content-entry trash, restore, and purge security regressions.",
     "composition_preparable": 0,
     "immediately_actionable": 0,
     "must_continue": true
@@ -23220,6 +23220,97 @@
         "feature_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d"
       },
       "next_action": "Implement the read-only page layout directory, editor link and functional boundary tests on this feature branch; push a coherent checkpoint before interruption."
+    },
+    {
+      "priority": 215,
+      "package_id": "WCP-435",
+      "title": "Protect content-entry trash, restore, and permanent purge",
+      "risk": "low",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-435-content-entry-deletion-g1",
+      "suggested_branch": "feature/wcp-435-content-entry-deletion-g1",
+      "base_branch": "main",
+      "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "objective": "Add test-only functional security regressions for the content-entry trash lifecycle. Users without CMS_CONTENT_MANAGE cannot trash, restore or purge. Missing/invalid CSRF cannot mutate content. Rendered tokens move entries to trash, restore them as drafts, and purge only trashed entries; a previously rendered valid purge token cannot remove an entry after it has left trash.",
+      "allowed_paths": [
+        "tests/Controller/ContentEntryDeletionSecurityTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/",
+        "src/",
+        "templates/",
+        "assets/",
+        "public/"
+      ],
+      "deliverables": [
+        "Verify a user without CMS_CONTENT_MANAGE receives 403 on trash, restore-trash, and purge routes, with content unchanged.",
+        "Verify missing or invalid route-specific CSRF tokens leave draft and trashed entries unchanged.",
+        "Verify rendered tokens trash an entry, restore it as a draft, and permanently remove only a trashed synthetic entry.",
+        "Verify a valid purge token rendered while an entry is trashed cannot purge it after the entry is restored to draft.",
+        "Only tests/Controller/ContentEntryDeletionSecurityTest.php changes."
+      ],
+      "tests": [
+        "php bin/phpunit tests/Controller/ContentEntryDeletionSecurityTest.php",
+        "Existing ContentPublicationAssuranceTest remains green.",
+        "PHPStan level 8 and complete Worker CI on exact final HEAD, including PostgreSQL 18 migration-chain checks."
+      ],
+      "completion_report": [
+        "Exact sanitized main base SHA and final Worker HEAD.",
+        "Complete changed-path list and Worker PR.",
+        "Permission denial, CSRF non-mutation, trash/restore/purge transitions, and non-trashed purge rejection.",
+        "Exact-head PHPStan and full Worker CI; confirm only synthetic local entities were changed."
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "preserve-CMS_CONTENT_MANAGE-authorization-and-route-specific-CSRF",
+        "only-permanently-purge-content-in-the-trashed-state",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "proposal_kind": "worker_only",
+      "proposal_dependency_evidence": [],
+      "collision_check": {
+        "compared_against": "Fresh continuous/work-pool-v4 blob e3c3d1c12d7e856ffcbeec36fde21b7e2d35ef0d, all active and claim-locked allowlists, and exact sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d.",
+        "result": "No active or claim-locked claim owns tests/Controller/ContentEntryDeletionSecurityTest.php, and the path is absent from sanitized main. AdminContentController exposes CMS_CONTENT_MANAGE-protected POST trash, restore-trash, and purge routes with per-action CSRF checks; purge refreshes the row under a write lock and refuses non-trashed entries. Search for app_admin_content_trash, app_admin_content_purge and their CSRF token IDs found controller/template references only, not route-level functional tests. WCP-430 covers the separate ContentRelease entity and a different test path. Active WCP-383, WCP-401, WCP-414, WCP-433, and WCP-434 paths are disjoint.",
+        "paths": [
+          "tests/Controller/ContentEntryDeletionSecurityTest.php"
+        ]
+      },
+      "claimed_on": "2026-09-26T23:48:19.961Z",
+      "claim_state": "active",
+      "active_base_branch": "main",
+      "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "resume_branch": "feature/wcp-435-content-entry-deletion-g1",
+      "last_checkpoint_at": "2026-09-26T23:48:19.961Z",
+      "last_verified_push_at": "2026-09-26T23:48:19.961Z",
+      "checkpoint_paths": [
+        "tests/Controller/ContentEntryDeletionSecurityTest.php"
+      ],
+      "branch_heads": {
+        "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+        "feature_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d"
+      },
+      "next_action": "Create the exclusive WCP-435 claim and feature branches from sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d, then implement test-only content-entry trash, restore, and purge regressions."
     }
   ],
   "recovery_queue": [],
