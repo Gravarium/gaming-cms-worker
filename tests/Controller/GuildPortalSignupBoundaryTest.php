@@ -161,8 +161,7 @@ final class GuildPortalSignupBoundaryTest extends WebTestCase
         self::assertResponseIsSuccessful();
 
         return (string) $crawler
-            ->filter('/guild-area/'.$fixture['guildId'].'/event/'.$fixture['eventId'].'/signup')
-            ->filter('input[name="_token"]')
+            ->filter('form[action="'.$this->signupPath($fixture).'"] input[name="_token"]')
             ->attr('value');
     }
 
