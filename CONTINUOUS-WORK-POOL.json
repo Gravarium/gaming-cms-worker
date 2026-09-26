@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-26T23:02:43.142Z",
+  "published_at": "2026-09-26T23:04:11.018Z",
   "summary": {
     "total_remaining_worker_tasks": 134,
     "completed_worker_prs_awaiting_trusted_review": 193,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-424 PR #218 exact HEAD cb23f2a548de2691f7b0075cff3559b925a7f2d6 has failing CI run 36277849213; its owning continuation should diagnose and rerun full CI on that branch. Continue independent Worker work without touching its claim.",
+    "next_required_action": "WCP-425 is on PR #219 at exact head cef66647824c74c0afde2806588a5a37fce2848e; complete exact-head Worker CI and reconcile its claim.",
     "composition_preparable": 0,
     "immediately_actionable": 0,
     "must_continue": true
@@ -22031,16 +22031,32 @@
       "claim_state": "active",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "cef66647824c74c0afde2806588a5a37fce2848e",
       "resume_branch": "feature/wcp-425-admin-audit-access-g1",
-      "last_checkpoint_at": "2026-09-26T23:02:19.458Z",
-      "last_verified_push_at": "2026-09-26T23:02:19.458Z",
-      "checkpoint_paths": [],
+      "last_checkpoint_at": "2026-09-26T23:04:11.018Z",
+      "last_verified_push_at": "2026-09-26T23:04:11.018Z",
+      "checkpoint_paths": [
+        "tests/Controller/AdminAuditLogAccessSecurityTest.php"
+      ],
       "branch_heads": {
         "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-        "feature_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d"
+        "feature_branch": "cef66647824c74c0afde2806588a5a37fce2848e"
       },
-      "next_action": "Add audit-log permission and rendered-entry regressions in the single allowed test file, then open a Worker PR."
+      "next_action": "Wait for exact-head Worker CI on PR #219; repair any concrete failure and update this active checkpoint.",
+      "worker_pr": 219,
+      "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/219",
+      "pr_state": "open_ci_pending",
+      "last_ci_run_id": 36278236159,
+      "last_ci_result": "in_progress",
+      "ci_run_id": 36278236159,
+      "ci_result": "in_progress",
+      "ci_attempts": [
+        {
+          "run_id": 36278236159,
+          "head": "cef66647824c74c0afde2806588a5a37fce2848e",
+          "result": "in_progress"
+        }
+      ]
     }
   ],
   "recovery_queue": [],
