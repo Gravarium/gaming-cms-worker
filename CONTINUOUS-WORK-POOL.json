@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-26T00:16:00Z",
+  "published_at": "2026-09-26T00:22:00Z",
   "summary": {
     "total_remaining_worker_tasks": 27,
     "completed_worker_prs_awaiting_trusted_review": 19,
     "recovery_tasks": 0,
     "unclaimed": 8,
-    "immediately_claimable": 1,
-    "next_required_action": "Claim FCP-066 from exact green composition/fcp-066-g1 at dc8499655807fe916495b8345762ff1c4be5673a, then implement its complete package and run complete Worker CI."
+    "immediately_claimable": 0,
+    "next_required_action": "Continue FCP-066 on feature/fcp-066-pool-g1 from dc8499655807fe916495b8345762ff1c4be5673a; complete the messaging, group chat and social relationship package, then run complete exact-head Worker CI."
   },
   "rules": {
     "choose": "Resume any owned unfinished claim first. Otherwise choose exactly the first unclaimed task with an empty current blocked_by list and a published exact proposal_base_sha. A completed Worker proposal may satisfy proposal-only dependencies when its exact HEAD has green Worker CI.",
@@ -1422,7 +1422,7 @@
       "package_id": "FCP-066",
       "title": "Private messages group chat and social relationships",
       "risk": "critical",
-      "execution_state": "unclaimed",
+      "execution_state": "worker_in_progress",
       "dependencies": [
         "FCP-052",
         "FCP-071"
@@ -1511,7 +1511,12 @@
       ],
       "composition_pr": 35,
       "composition_ci_run_id": 36203966114,
-      "composition_ci_result": "success"
+      "composition_ci_result": "success",
+      "claim_state": "locked_until_worker_completion",
+      "claimed_on": "2026-09-26T00:22:00Z",
+      "active_head": "dc8499655807fe916495b8345762ff1c4be5673a",
+      "active_base_branch": "composition/fcp-066-g1",
+      "active_base_sha": "dc8499655807fe916495b8345762ff1c4be5673a"
     },
     {
       "priority": 18,
