@@ -19,6 +19,7 @@ final class S3ObjectStorageTest extends TestCase
             self::assertSame('https://objects.example.test/cms/gaming/logo%20test.png', $url);
             self::assertArrayHasKey('authorization', $options['normalized_headers']);
             self::assertStringContainsString('AWS4-HMAC-SHA256 Credential=access/', $options['normalized_headers']['authorization'][0]);
+            self::assertSame(['image/png'], $options['normalized_headers']['content-type']);
             $requestSeen = true;
 
             return new MockResponse('', ['http_code' => 200]);
@@ -35,6 +36,108 @@ final class S3ObjectStorageTest extends TestCase
 
         self::assertTrue($requestSeen);
         self::assertSame('https://media.example.test/gaming/logo%20test.png', $url);
+    }
+
+    public function testUploadRejectsContentTypeHeaderInjectionBeforeNetworkRequest(): void
+    {
+        $requestSeen = false;
+        $client = new MockHttpClient(static function (string $method, string $url, array $options) use (&$requestSeen): MockResponse {
+            $requestSeen = true;
+
+            return new MockResponse('', ['http_code' => 200]);
+        });
+        $file = $this->temporaryFile('test-content');
+
+        try {
+            try {
+                $this->storage($client)->upload(
+                    'gaming/logo.png',
+                    $file,
+                    "image/png\r\nX-Injected: yes",
+                );
+                self::fail('A Content-Type header injection must be rejected.');
+            } catch (\DomainException $exception) {
+                self::assertStringContainsString('Content-Type', $exception->getMessage());
+            }
+        } finally {
+            @unlink($file);
+        }
+
+        self::assertFalse($requestSeen);
+    }
+
+    public function testUploadRejectsOversizedContentTypeBeforeNetworkRequest(): void
+    {
+        $requestSeen = false;
+        $client = new MockHttpClient(static function (string $method, string $url, array $options) use (&$requestSeen): MockResponse {
+            $requestSeen = true;
+
+            return new MockResponse('', ['http_code' => 200]);
+        });
+        $file = $this->temporaryFile('test-content');
+
+        try {
+            try {
+                $this->storage($client)->upload(
+                    'gaming/logo.png',
+                    $file,
+                    'application/'.str_repeat('a', 256),
+                );
+                self::fail('An oversized Content-Type must be rejected.');
+            } catch (\DomainException $exception) {
+                self::assertStringContainsString('Content-Type', $exception->getMessage());
+            }
+        } finally {
+            @unlink($file);
+        }
+
+        self::assertFalse($requestSeen);
+    }
+
+    public function testUploadRejectsMalformedUtf8ObjectKeyBeforeNetworkRequest(): void
+    {
+        $requestSeen = false;
+        $client = new MockHttpClient(static function (string $method, string $url, array $options) use (&$requestSeen): MockResponse {
+            $requestSeen = true;
+
+            return new MockResponse('', ['http_code' => 200]);
+        });
+        $file = $this->temporaryFile('test-content');
+
+        try {
+            try {
+                $this->storage($client)->upload("gaming/\xC3\x28.png", $file, 'image/png');
+                self::fail('A malformed UTF-8 object key must be rejected.');
+            } catch (\DomainException $exception) {
+                self::assertStringContainsString('Objektschlüssel', $exception->getMessage());
+            }
+        } finally {
+            @unlink($file);
+        }
+
+        self::assertFalse($requestSeen);
+    }
+
+    public function testPublicBaseUrlControlCharactersAreRejectedBeforeUpload(): void
+    {
+        $file = $this->temporaryFile('test-content');
+        $storage = new S3ObjectStorage(
+            new MockHttpClient(),
+            'https://objects.example.test',
+            'eu-central-1',
+            'cms',
+            'access',
+            'secret',
+            "https://media.example.test\r\nX-Injected: yes",
+        );
+
+        try {
+            $this->expectException(\DomainException::class);
+            $this->expectExceptionMessage('öffentliche Storage-Adresse');
+            $storage->upload('gaming/logo.png', $file, 'image/png');
+        } finally {
+            @unlink($file);
+        }
     }
 
     public function testDeleteUsesSignedDeleteRequest(): void
