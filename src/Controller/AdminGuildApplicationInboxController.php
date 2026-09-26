@@ -12,7 +12,7 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
-#[Route('/admin/gaming/applications/inbox', name: 'app_admin_guild_application_inbox', methods: ['GET'])]
+#[Route('/admin/gaming/applications')]
 #[IsGranted('CMS_GAMING_MANAGE')]
 final class AdminGuildApplicationInboxController extends AbstractController
 {
@@ -21,7 +21,8 @@ final class AdminGuildApplicationInboxController extends AbstractController
 
     public function __construct(private readonly GuildApplicationRepository $applications) {}
 
-    public function __invoke(Request $request): Response
+    #[Route('/inbox', name: 'app_admin_guild_application_inbox', methods: ['GET'])]
+    public function index(Request $request): Response
     {
         $parameters = $request->query->all();
         $query = $this->stringParameter($parameters, 'q', '', 100);
