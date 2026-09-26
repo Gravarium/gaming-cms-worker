@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-26T23:12:18.694Z",
+  "published_at": "2026-09-26T23:12:43.996Z",
   "summary": {
     "total_remaining_worker_tasks": 134,
     "completed_worker_prs_awaiting_trusted_review": 195,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-427 is on PR #221 at exact head 6cf2180880485a3053f46a4f22bbb4c9e907c334; complete exact-head Worker CI and reconcile its claim.",
+    "next_required_action": "WCP-429 is reserved on exact sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d; add focused CMS_CONNECTORS_MANAGE and CSRF tests for connector-target deletion, then run exact-head Worker CI.",
     "composition_preparable": 0,
     "immediately_actionable": 0,
     "must_continue": true
@@ -22416,6 +22416,94 @@
         "feature_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d"
       },
       "next_action": "Implement the paginated admin content browser only on the claimed feature branch; push a coherent checkpoint within 30 minutes and run the complete Worker CI on the final exact HEAD."
+    },
+    {
+      "priority": 209,
+      "package_id": "WCP-429",
+      "title": "Guard connector-target deletion authorization and CSRF",
+      "risk": "low",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-429-admin-connector-delete-security-g1",
+      "suggested_branch": "feature/wcp-429-admin-connector-delete-security-g1",
+      "base_branch": "main",
+      "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "objective": "Add test-only functional security coverage for deleting an admin connector target. A user without CMS_CONNECTORS_MANAGE cannot access the connector manager or delete a target; an authorized connector manager cannot delete without a valid CSRF token; the rendered token deletes only the synthetic CMS target definition.",
+      "allowed_paths": [
+        "tests/Controller/AdminConnectorMutationSecurityTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/",
+        "src/",
+        "templates/",
+        "assets/",
+        "public/"
+      ],
+      "deliverables": [
+        "Verify a content manager without CMS_CONNECTORS_MANAGE receives 403 for the connector manager and a connector-target delete POST.",
+        "Verify missing and invalid CSRF tokens leave an authorized connector target unchanged.",
+        "Verify the rendered delete token removes only the synthetic connector target row.",
+        "Keep work test-only; do not call any external connector or delete external data."
+      ],
+      "tests": [
+        "php bin/phpunit tests/Controller/AdminConnectorMutationSecurityTest.php",
+        "Existing ExternalConnectorSecurityTest remains green.",
+        "PHPStan level 8 and complete Worker CI on exact final HEAD, including PostgreSQL 18 migration-chain checks."
+      ],
+      "completion_report": [
+        "Exact sanitized main base SHA and final Worker HEAD.",
+        "Complete changed-path list and Worker PR.",
+        "Permission denial, missing/invalid CSRF no-mutation, and rendered-token deletion results.",
+        "Exact-head PHPStan and full Worker CI; confirm only a synthetic local entity was changed."
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "preserve-CMS_CONNECTORS_MANAGE-authorization-and-CSRF-validation-before-connector-target-deletion",
+        "never-delete-external-provider-data-or-secrets",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "proposal_kind": "worker_only",
+      "proposal_dependency_evidence": [],
+      "collision_check": {
+        "compared_against": "Fresh continuous/work-pool-v4 blob 13ede45084f17b27316d938f4e96d8346208b6f5, all active and claim-locked allowlists, and exact sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d.",
+        "result": "No active or claim-locked claim owns tests/Controller/AdminConnectorMutationSecurityTest.php. Existing ExternalConnectorSecurityTest proves a rendered valid toggle cannot enable an unconfigured target, but does not cover connector-manager authorization or deletion CSRF. WCP-428's admin content browser path and WCP-427's content-tag test are disjoint.",
+        "paths": [
+          "tests/Controller/AdminConnectorMutationSecurityTest.php"
+        ]
+      },
+      "claimed_on": "2026-09-26T23:12:43.996Z",
+      "claim_state": "active",
+      "active_base_branch": "main",
+      "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "resume_branch": "feature/wcp-429-admin-connector-delete-security-g1",
+      "last_checkpoint_at": "2026-09-26T23:12:43.996Z",
+      "last_verified_push_at": "2026-09-26T23:12:43.996Z",
+      "checkpoint_paths": [],
+      "branch_heads": {
+        "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+        "feature_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d"
+      },
+      "next_action": "Add focused controller regressions for connector deletion authorization and CSRF, then open a Worker PR."
     }
   ],
   "recovery_queue": [],
