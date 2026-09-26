@@ -8,6 +8,9 @@ use App\Entity\ExternalConnectorTarget;
 
 final readonly class ExternalConnectorRegistry
 {
+    private const MAX_TARGET_KEY_BYTES = 64;
+    private const TARGET_NOT_FOUND_MESSAGE = 'No enabled external connector target matches the requested key.';
+
     public function __construct(private ExternalConnectorTargetSource $targetSource)
     {
     }
@@ -25,14 +28,19 @@ final readonly class ExternalConnectorRegistry
 
     public function target(string $capability, string $targetKey): ExternalConnectorTargetDefinition
     {
-        $targetKey = strtolower(trim($targetKey));
+        $this->assertCapability($capability);
+        $targetKey = $this->normalizeTargetKey($targetKey);
+        if ($targetKey === null) {
+            throw new \RuntimeException(self::TARGET_NOT_FOUND_MESSAGE);
+        }
+
         foreach ($this->forCapability($capability) as $target) {
             if ($target->targetKey === $targetKey) {
                 return $target;
             }
         }
 
-        throw new \RuntimeException(sprintf('No enabled target "%s" exists for capability "%s".', $targetKey, $capability));
+        throw new \RuntimeException(self::TARGET_NOT_FOUND_MESSAGE);
     }
 
     /** @return list<ExternalConnectorTargetDefinition> */
@@ -56,6 +64,24 @@ final readonly class ExternalConnectorRegistry
     public function hasTargets(string $capability): bool
     {
         return $this->forCapability($capability) !== [];
+    }
+
+    private function normalizeTargetKey(string $targetKey): ?string
+    {
+        if (
+            strlen($targetKey) > self::MAX_TARGET_KEY_BYTES
+            || !mb_check_encoding($targetKey, 'UTF-8')
+            || preg_match('/[\x00-\x1F\x7F]/', $targetKey) === 1
+        ) {
+            return null;
+        }
+
+        $targetKey = strtolower(trim($targetKey));
+        if (preg_match('/^[a-z0-9][a-z0-9_.-]{0,63}$/D', $targetKey) !== 1) {
+            return null;
+        }
+
+        return $targetKey;
     }
 
     private function assertCapability(string $capability): void
