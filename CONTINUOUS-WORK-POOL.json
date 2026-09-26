@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-26T11:20:31.905Z",
+  "published_at": "2026-09-26T11:22:18.097Z",
   "summary": {
-    "total_remaining_worker_tasks": 71,
+    "total_remaining_worker_tasks": 72,
     "completed_worker_prs_awaiting_trusted_review": 65,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "Continue independent Worker proposal work while preserving WCP-118 and all foreign/completed claim locks; after each exact-head green CI reconcile and continue.",
+    "next_required_action": "Continue WCP-120 independent Worker proposal work while preserving all foreign and completed claim locks; after exact-head green CI reconcile and continue.",
     "composition_preparable": 0,
     "immediately_actionable": 1,
     "must_continue": true
@@ -6686,6 +6686,94 @@
         "src/Internationalization/LocalePolicy.php",
         "tests/Internationalization/LocalePolicyTest.php"
       ]
+    },
+    {
+      "priority": 72,
+      "package_id": "WCP-120",
+      "title": "Bound extension runtime audit persistence",
+      "risk": "high",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-120-runtime-audit-boundary-g1",
+      "suggested_branch": "feature/wcp-120-runtime-audit-boundary-g1",
+      "base_branch": "main",
+      "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "objective": "Harden the worker-visible extension runtime audit sink with bounded, control-safe event fields and audit lines, fail-closed bounded file growth, symlink protection and preserved 0600 append semantics.",
+      "allowed_paths": [
+        "src/ExtensionRuntime/ExtensionRuntimeAudit.php",
+        "tests/ExtensionRuntime/ExtensionRuntimeAuditBoundaryTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/",
+        "src/Controller/",
+        "src/Entity/",
+        "src/ExtensionRuntime/ExtensionRuntimeState.php",
+        "tests/ExtensionRuntime/ExtensionRuntimeStateBoundaryTest.php",
+        "src/ExtensionRuntime/ExtensionOutboundUrlPolicy.php",
+        "tests/ExtensionRuntime/ExtensionOutboundUrlPolicyBoundaryTest.php",
+        "tests/ExtensionRuntime/ExtensionRuntimeSecurityTest.php",
+        "src/ExtensionPackage/",
+        "tests/ExtensionPackage/"
+      ],
+      "deliverables": [
+        "bounded UTF-8/control-safe extension, operation and status event validation without payload or secret fields",
+        "bounded serialized audit line and fail-closed audit-file growth with exclusive append/flush handling",
+        "preserved symlink rejection, directory creation, append ordering and 0600 file permissions",
+        "positive and negative boundary coverage without private runtime, schema, migration, controller or CI changes"
+      ],
+      "tests": [
+        "targeted ExtensionRuntimeAudit boundary PHPUnit tests",
+        "existing ExtensionRuntimeSecurity audit tests",
+        "PHPStan level 8",
+        "complete Worker CI on the exact final HEAD"
+      ],
+      "completion_report": [
+        "exact final Worker HEAD and sanitized base SHA",
+        "complete changed-path list and Worker PR",
+        "targeted plus existing audit tests and complete exact-head Worker CI result",
+        "event/file/line bounds, fail-closed behavior and deferred trusted log retention/rotation risks"
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "no-secrets-or-trusted-private-runtime-in-worker-source",
+        "preserve existing extension runtime, audit, privacy and filesystem safeguards",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_base_branch": "main",
+      "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "resume_branch": "feature/wcp-120-runtime-audit-boundary-g1",
+      "proposal_kind": "worker_only",
+      "collision_check": {
+        "compared_against": "current continuous/work-pool-v4 task allowlists and searched WCP-120 branches; exact source/test files are disjoint from WCP-105 runtime-state, WCP-118 outbound-url and WCP-119 locale-policy claims",
+        "result": "disjoint from all published allowlists and foreign claims; no shared schema, migration, DI, controller or template paths",
+        "paths": [
+          "src/ExtensionRuntime/ExtensionRuntimeAudit.php",
+          "tests/ExtensionRuntime/ExtensionRuntimeAuditBoundaryTest.php"
+        ]
+      },
+      "claimed_on": "2026-09-26T11:22:18.097Z",
+      "claim_state": "active_worker_claim",
+      "next_action": "Implement only the two allowlisted files, open a Worker PR, run exact-head full CI and retain the claim until Trusted resolution."
     }
   ],
   "recovery_queue": [],
