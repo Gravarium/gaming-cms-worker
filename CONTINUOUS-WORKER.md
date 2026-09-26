@@ -20,7 +20,11 @@ Für Schreibvorgänge die GitHub-Plugin-Funktionen verwenden, insbesondere Datei
 
 Der aktuelle Pool-Eintrag ist die einzige Wahrheit. Wenn ein Paket als `worker_in_progress` markiert ist, seinen dort genannten `resume_branch`, `active_base_branch`, `active_base_sha` und `active_head` verwenden und es vollständig abschließen.
 
-FCP-069 ist auf grünem exaktem Worker-HEAD abgeschlossen und sein Claim bleibt gesperrt. Der aktuelle JSON-Pool weist FCP-077 als nächstes vorbereitbares Paket aus: erst die belegten Vorgänger-HEADs in einer Worker-only-Composition prüfen, danach bei grüner vollständiger CI die Vorschlagsbasis veröffentlichen und FCP-077 claimen. Die Live-Abnahme von FCP-049 bleibt als Betriebsnachweis offen; dessen Produktcode ist bereits geprüft und im Worker-Snapshot vorhanden. Bei Abweichung gilt immer der neuere JSON-Pool.
+FCP-069 ist auf grünem exaktem Worker-HEAD abgeschlossen und sein Claim bleibt gesperrt. Das blockiert keine andere Arbeit. Der aktuelle JSON-Pool weist die Vorbereitung von FCP-077 als sofort auszuführende Worker-Arbeit aus: die belegten Vorgänger-HEADs in einer Worker-only-Composition prüfen, danach bei grüner vollständiger CI die Vorschlagsbasis veröffentlichen und FCP-077 claimen. Die Live-Abnahme von FCP-049 bleibt als Betriebsnachweis offen; dessen Produktcode ist bereits geprüft und im Worker-Snapshot vorhanden. Bei Abweichung gilt immer der neuere JSON-Pool.
+
+## Trusted ist kein Worker-Scheduler
+
+Trusted prüft und integriert fertige Vorschläge später. Ein offener Trusted-Review, ein gesperrter Claim einer bereits fertigen Aufgabe oder eine noch nicht aktualisierte Trusted-Queue verbietet keine weitere unabhängige Arbeit im sichtbaren CMS-Code. Die Worker-KI wartet deshalb nicht auf Trusted, wenn sie einen disjunkten Auftrag, eine belegte Vorgänger-Composition oder einen neuen begrenzten WCP-Vorschlag sicher bearbeiten kann. Nur private beziehungsweise nicht exportierte Implementierung bleibt der Trusted-Seite vorbehalten.
 
 ## Autonomer Dauerlauf
 
