@@ -26,6 +26,62 @@ final class MediaLibraryMetadataTest extends TestCase
         self::assertSame('raid, news', $asset->getTagsText());
     }
 
+    public function testRejectsOversizedTagInputsWithoutMutatingExistingTags(): void
+    {
+        $asset = (new MediaAsset())->setTags(['kept']);
+
+        $asset->setTagsText(str_repeat('x', 4097));
+        self::assertSame(['kept'], $asset->getTags());
+
+        $asset->setTagsText(implode(',', array_fill(0, 121, 'tag')));
+        self::assertSame(['kept'], $asset->getTags());
+
+        $asset->setTags(array_fill(0, 121, 'tag'));
+        self::assertSame(['kept'], $asset->getTags());
+
+        $asset->setTags(['primary' => 'tag']);
+        self::assertSame(['kept'], $asset->getTags());
+    }
+
+    public function testAcceptsTagTextAtTheByteBoundaryAndKeepsExistingNormalization(): void
+    {
+        $segments = array_merge(
+            [str_repeat(' ', 151).'x'],
+            array_fill(0, 29, str_repeat(' ', 134).'x'),
+        );
+        $text = implode(',', $segments);
+        self::assertSame(4096, strlen($text));
+
+        $asset = (new MediaAsset())->setTagsText($text);
+        self::assertSame(['x'], $asset->getTags());
+    }
+
+    public function testCapsCandidatesAndSkipsMalformedTagValues(): void
+    {
+        $asset = new MediaAsset();
+        $candidates = array_merge(
+            array_map(static fn (int $index): string => 'Tag '.$index, range(1, 30)),
+            array_fill(0, 90, 'Tag 1'),
+        );
+
+        $asset->setTags($candidates);
+        self::assertCount(30, $asset->getTags());
+        self::assertSame('tag 1', $asset->getTags()[0]);
+        self::assertSame('tag 30', $asset->getTags()[29]);
+
+        $asset->setTags([
+            ' Raid ',
+            7,
+            null,
+            ['nested'],
+            new \stdClass(),
+            "\xFF",
+            str_repeat('x', 1025),
+            ' News ',
+        ]);
+        self::assertSame(['raid', 'news'], $asset->getTags());
+    }
+
     public function testEmptyTitleFallsBackToOriginalName(): void
     {
         $asset = (new MediaAsset())->setOriginalName('original.webp')->setTitle('');
