@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-26T12:40:19.374Z",
+  "published_at": "2026-09-26T12:43:00.727Z",
   "summary": {
-    "total_remaining_worker_tasks": 91,
+    "total_remaining_worker_tasks": 92,
     "completed_worker_prs_awaiting_trusted_review": 85,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "Implement WCP-310 on exact sanitized main while preserving all foreign/completed claim locks; reconcile after exact-head CI and continue.",
+    "next_required_action": "Continue WCP-310 on its separate active claim; implement WCP-311 from exact sanitized main and reconcile each claim only with its owning chat.",
     "composition_preparable": 0,
     "immediately_actionable": 4,
     "must_continue": true
@@ -8827,6 +8827,93 @@
         "src/Entity/AccountToken.php",
         "tests/Entity/AccountTokenBoundaryTest.php"
       ]
+    },
+    {
+      "priority": 92,
+      "package_id": "WCP-311",
+      "title": "Bound module storage setting key and endpoint inputs",
+      "risk": "medium",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-311-module-storage-setting-bounds-g1",
+      "suggested_branch": "feature/wcp-311-module-storage-setting-bounds-g1",
+      "base_branch": "main",
+      "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "objective": "Bound ModuleStorageSetting's module key and external base URL bytes/characters before assignment or normalization so values cannot exceed their mapped varchar columns. Preserve valid current values, URL trim/trailing-slash normalization, validation policy, and storage-mode behavior.",
+      "allowed_paths": [
+        "src/Entity/ModuleStorageSetting.php",
+        "tests/Entity/ModuleStorageSettingBoundaryTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/",
+        "src/Controller/",
+        "src/Form/",
+        "src/Repository/",
+        "src/Service/",
+        "src/Module/",
+        "templates/",
+        "assets/",
+        "public/"
+      ],
+      "deliverables": [
+        "Reject malformed UTF-8, NUL-containing strings, and module keys above 200 raw bytes or 50 UTF-8 characters before assignment.",
+        "Reject external base URLs above 2,000 raw UTF-8 bytes or 500 characters before trim/rtrim normalization; keep null and empty-to-null behavior.",
+        "On rejection, preserve the previously stored entity value; leave URL scheme/TLD and module-key syntax validation rules intact.",
+        "Keep storage mode constants and media-storage behavior unchanged."
+      ],
+      "tests": [
+        "Targeted ModuleStorageSetting boundary PHPUnit tests for exact ASCII and multibyte column limits, raw byte/character overflow, malformed UTF-8/NUL, prior-state preservation, null/empty values, and existing URL normalization.",
+        "PHPStan level 8.",
+        "Complete Worker CI on the exact final HEAD."
+      ],
+      "completion_report": [
+        "exact final Worker HEAD and sanitized main base SHA",
+        "complete changed-path list and Worker PR",
+        "targeted module-storage setting tests and complete exact-head Worker CI result",
+        "key and URL byte/character ceilings with state-preserving rejection and retained normalization/validation behavior"
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "no-secrets-or-trusted-private-runtime-in-worker-source",
+        "preserve existing module-key grammar, external URL validation and normalization, and storage-mode semantics",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_base_branch": "main",
+      "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "resume_branch": "feature/wcp-311-module-storage-setting-bounds-g1",
+      "proposal_kind": "worker_only",
+      "collision_check": {
+        "compared_against": "all current continuous/work-pool-v4 task allowlists and active/locked claims through WCP-310; exact WCP-311 branch/PR names and new test path were checked",
+        "result": "the ModuleStorageSetting entity and focused boundary test are disjoint from every current allowlist; no controller, form, repository, service, media-routing, migration, DI or template path is included",
+        "paths": [
+          "src/Entity/ModuleStorageSetting.php",
+          "tests/Entity/ModuleStorageSettingBoundaryTest.php"
+        ]
+      },
+      "claimed_on": "2026-09-26T12:43:00.727Z",
+      "claim_state": "active_worker_claim",
+      "last_checkpoint_at": "2026-09-26T12:43:00.727Z",
+      "next_action": "Create the claim and feature branches from exact sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d, then implement only the two allowlisted files and run exact-head Worker CI."
     }
   ],
   "recovery_queue": [],
