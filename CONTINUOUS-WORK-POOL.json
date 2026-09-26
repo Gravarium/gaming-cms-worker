@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-26T11:35:58.527Z",
+  "published_at": "2026-09-26T11:36:52.910Z",
   "summary": {
-    "total_remaining_worker_tasks": 77,
+    "total_remaining_worker_tasks": 78,
     "completed_worker_prs_awaiting_trusted_review": 70,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "Continue WCP-302 on its exclusive ContentRelease entity claim while preserving active WCP-122/WCP-123 and all completed claim locks; reconcile only after exact-head green CI.",
+    "next_required_action": "Continue WCP-124 independent Worker proposal work while preserving all foreign and completed claim locks; after exact-head green CI reconcile and continue.",
     "composition_preparable": 0,
     "immediately_actionable": 3,
     "must_continue": true
@@ -7292,6 +7292,93 @@
         ]
       },
       "claimed_on": "2026-09-26T11:35:58.527Z",
+      "claim_state": "active_worker_claim",
+      "next_action": "Implement only the two allowlisted files, open a Worker PR, run exact-head full CI and retain the claim until Trusted resolution."
+    },
+    {
+      "priority": 78,
+      "package_id": "WCP-124",
+      "title": "Bound extension capability policy normalization",
+      "risk": "high",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-124-capability-policy-boundary-g1",
+      "suggested_branch": "feature/wcp-124-capability-policy-boundary-g1",
+      "base_branch": "main",
+      "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "objective": "Harden the worker-visible extension capability policy before allowlist decisions: bound requested-list cardinality and token size, reject malformed UTF-8/control data fail-closed, and preserve the existing declarable/never-grant normalization semantics.",
+      "allowed_paths": [
+        "src/ExtensionPackage/ExtensionCapabilityPolicy.php",
+        "tests/ExtensionPackage/ExtensionCapabilityPolicyBoundaryTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/",
+        "src/Controller/",
+        "src/Entity/",
+        "src/ExtensionPackage/ExtensionManifest.php",
+        "tests/ExtensionPackage/ExtensionManifestBoundaryTest.php",
+        "src/ExtensionPackage/ExtensionPermissionStore.php",
+        "tests/ExtensionPackage/ExtensionPermissionStoreBoundaryTest.php",
+        "src/ExtensionPackage/ExtensionCapabilityGate.php",
+        "tests/ExtensionPackage/ExtensionCapabilityGateBoundaryTest.php"
+      ],
+      "deliverables": [
+        "bounded JSON-list cardinality and capability token length before normalization",
+        "fail-closed rejection of malformed UTF-8/control-bearing, forbidden and unknown capability values",
+        "preserved declarable allowlist, never-grant rejection, sorting and duplicate collapse semantics",
+        "positive and negative normalization boundary coverage without manifest, persistence, schema, controller or private-runtime changes"
+      ],
+      "tests": [
+        "targeted ExtensionCapabilityPolicy boundary PHPUnit tests",
+        "existing ExtensionCapabilitySandbox tests",
+        "PHPStan level 8",
+        "complete Worker CI on the exact final HEAD"
+      ],
+      "completion_report": [
+        "exact final Worker HEAD and sanitized base SHA",
+        "complete changed-path list and Worker PR",
+        "targeted plus existing capability tests and complete exact-head Worker CI result",
+        "list/token bounds, fail-closed behavior and deferred trusted manifest provenance risks"
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "no-secrets-or-trusted-private-runtime-in-worker-source",
+        "preserve existing extension capability, permission, privacy and fail-closed safeguards",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_base_branch": "main",
+      "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "resume_branch": "feature/wcp-124-capability-policy-boundary-g1",
+      "proposal_kind": "worker_only",
+      "collision_check": {
+        "compared_against": "current continuous/work-pool-v4 task allowlists and searched WCP-124 branches; exact source/test files are disjoint from WCP-121 gate, WCP-112 manifest and WCP-113 permission-store claims",
+        "result": "disjoint from all published allowlists and foreign claims; no shared schema, migration, DI, controller or template paths",
+        "paths": [
+          "src/ExtensionPackage/ExtensionCapabilityPolicy.php",
+          "tests/ExtensionPackage/ExtensionCapabilityPolicyBoundaryTest.php"
+        ]
+      },
+      "claimed_on": "2026-09-26T11:36:52.910Z",
       "claim_state": "active_worker_claim",
       "next_action": "Implement only the two allowlisted files, open a Worker PR, run exact-head full CI and retain the claim until Trusted resolution."
     }
