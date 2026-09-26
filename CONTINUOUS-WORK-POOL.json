@@ -12,12 +12,12 @@
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
   "published_at": "2026-09-26T20:17:39.989Z",
   "summary": {
-    "total_remaining_worker_tasks": 132,
+    "total_remaining_worker_tasks": 133,
     "completed_worker_prs_awaiting_trusted_review": 168,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-397 PR #191 is open on exact HEAD c611544aefa68918078c7caf2e6cdf1c66495113; Worker CI run 36268919819 is in progress. Inspect it and preserve foreign claims.",
+    "next_required_action": "WCP-398 is active on feature/wcp-398-guild-calendar-crlf-security-g1 from sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d. Add guild calendar membership and CRLF-injection regressions only; leave all foreign claims untouched.",
     "composition_preparable": 0,
     "immediately_actionable": 0,
     "must_continue": true
@@ -18339,6 +18339,88 @@
       "worker_pr": 191,
       "ci_run_id": 36268919819,
       "ci_result": "in_progress"
+    },
+    {
+      "priority": 178,
+      "package_id": "WCP-398",
+      "title": "Guard the private guild calendar against line injection",
+      "risk": "medium",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-398-guild-calendar-crlf-security-g1",
+      "suggested_branch": "feature/wcp-398-guild-calendar-crlf-security-g1",
+      "base_branch": "main",
+      "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "objective": "Add functional security regressions for the authenticated guild calendar export: only a guild member may retrieve it, user-controlled event text cannot inject ICS lines through CRLF, and the response remains private/no-store. Test-only; do not change runtime behavior or schema.",
+      "allowed_paths": [
+        "tests/Controller/GuildCalendarSecurityTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/",
+        "src/",
+        "templates/",
+        "assets/",
+        "public/"
+      ],
+      "deliverables": [
+        "Verify a signed-in nonmember receives 403 for the private guild calendar route.",
+        "Verify a member receives the calendar with private, no-store caching.",
+        "Verify CRLF in event title, description and location is encoded as literal ICS escapes and cannot introduce new content lines/components.",
+        "Keep the change test-only in the single allowed path."
+      ],
+      "tests": [
+        "php bin/phpunit tests/Controller/GuildCalendarSecurityTest.php",
+        "Existing guild membership, event signup and full Worker CI regressions remain green.",
+        "PHPStan level 8 and complete Worker CI on the exact final HEAD, including PostgreSQL 18 migration-chain checks."
+      ],
+      "completion_report": [
+        "Exact final Worker HEAD and sanitized main base SHA.",
+        "Complete changed-file list and Worker PR.",
+        "Member-only calendar access, private/no-store headers and CRLF-injection regression results.",
+        "Exact-head PHPStan and full Worker CI results.",
+        "Confirmation that only tests changed; no runtime or schema changes."
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "preserve-guild-membership-authorization-and-calendar-content-safety",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_base_branch": "main",
+      "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "resume_branch": "feature/wcp-398-guild-calendar-crlf-security-g1",
+      "proposal_kind": "worker_only",
+      "collision_check": {
+        "compared_against": "Fresh pool blob 4a923e09263591948d9d0a5e540fa3a155ee94ef, all published task paths, GuildPortalController/GuildEventRepository code and exact sanitized Worker main f1a246c64527ef3ad51f7490773d9bbf9d42be5d.",
+        "result": "No active or claim-locked task owns tests/Controller/GuildCalendarSecurityTest.php. WCP-383 scheduled-publish tests, WCP-392 public-menu files, WCP-395 notification inbox, WCP-397 competition filters and other locked scopes are disjoint. Existing GamingGuildSecurityTest covers signup and foreign resources but no calendar route. The calendar controller already enforces membership and escapes CRLF; this proposal locks those safeguards with a focused HTTP regression. No immediately claimable FCP exists in the current pool.",
+        "paths": [
+          "tests/Controller/GuildCalendarSecurityTest.php"
+        ]
+      },
+      "claimed_on": "2026-09-26T20:18:00.742Z",
+      "claim_state": "active",
+      "last_checkpoint_at": "2026-09-26T20:18:00.742Z",
+      "next_action": "Add functional tests for member-only access, private/no-store response headers, and CRLF-safe ICS event text in the single allowed test file; then run targeted and complete CI.",
+      "checkpoint_paths": []
     }
   ],
   "recovery_queue": [],
