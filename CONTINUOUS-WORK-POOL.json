@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-26T16:39:52Z",
+  "published_at": "2026-09-26T16:41:54Z",
   "summary": {
-    "total_remaining_worker_tasks": 131,
-    "completed_worker_prs_awaiting_trusted_review": 130,
+    "total_remaining_worker_tasks": 130,
+    "completed_worker_prs_awaiting_trusted_review": 131,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "Re-evaluate blocked FCP dependencies; skip active disjoint claims owned by other chats and publish the next independent WCP proposal if no FCP is eligible.",
+    "next_required_action": "Re-evaluate unclaimed dependencies and continue with the next dependency-safe Worker package.",
     "composition_preparable": 0,
     "immediately_actionable": 0,
     "must_continue": true
@@ -13631,7 +13631,7 @@
       "package_id": "WCP-355",
       "title": "Bound site home-title before branding storage",
       "risk": "medium",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -13707,9 +13707,9 @@
         ]
       },
       "claimed_on": "2026-09-26T16:38:21.577Z",
-      "claim_state": "active_worker_claim",
+      "claim_state": "locked_until_trusted_resolution",
       "last_checkpoint_at": "2026-09-26T16:39:22Z",
-      "next_action": "Wait for complete Worker CI on exact HEAD 39e428a5b38a9c181c9a7ff4524862d6dbc5b686; repair any concrete failure only within allowed paths.",
+      "next_action": "Await Trusted review with the claim locked; do not merge or deploy.",
       "checkpoint_paths": [
         "src/Form/SiteSettingsType.php",
         "tests/Form/SiteSettingsHomeTitleBoundaryTest.php"
@@ -13717,7 +13717,22 @@
       "last_verified_push_at": "2026-09-26T16:39:22Z",
       "worker_pr": 149,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/149",
-      "pr_state": "draft"
+      "pr_state": "ready_for_review",
+      "final_head": "39e428a5b38a9c181c9a7ff4524862d6dbc5b686",
+      "ci_run_id": 36256257239,
+      "ci_result": "success",
+      "completed_on": "2026-09-26T16:41:54Z",
+      "final_changed_paths": [
+        "src/Form/SiteSettingsType.php",
+        "tests/Form/SiteSettingsHomeTitleBoundaryTest.php"
+      ],
+      "test_evidence": [
+        "Worker CI run 36256257239 (#449) succeeded on exact final HEAD 39e428a5b38a9c181c9a7ff4524862d6dbc5b686.",
+        "PHPStan level 8 passed; complete Symfony suite passed with 431 tests and 1,861 assertions (one PHPUnit deprecation and one notice).",
+        "PostgreSQL 18 migration validation applied and confirmed all 39 migrations.",
+        "Form regressions accept exactly 180 Unicode home-title characters and reject 181 at the homeTitle field.",
+        "PR #149 is open, ready for review and unmerged. Diff from sanitized main contains only the two allowed paths."
+      ]
     }
   ],
   "recovery_queue": [],
