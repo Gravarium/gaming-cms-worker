@@ -10,7 +10,7 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-26T21:51:36.354Z",
+  "published_at": "2026-09-26T21:58:03.676Z",
   "summary": {
     "total_remaining_worker_tasks": 134,
     "completed_worker_prs_awaiting_trusted_review": 182,
@@ -20495,6 +20495,110 @@
       "claimed_on": "2026-09-26T21:51:36.354Z",
       "claim_state": "active",
       "next_action": "Implement the accessible reorder page and CSRF-protected transactional move actions, then push a checkpoint and run focused and full exact-head CI."
+    },
+    {
+      "priority": 195,
+      "package_id": "WCP-415",
+      "title": "Browse and find users assigned to an access role",
+      "risk": "medium",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-415-access-role-members-g1",
+      "suggested_branch": "feature/wcp-415-access-role-members-g1",
+      "base_branch": "main",
+      "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "objective": "The access-role list displays only a member count, while role assignments are edited through individual user forms. Add a role-member screen so managers can inspect, search, filter and page through the users assigned to a selected role, with links to the existing user edit flow. Reuse the existing permission-delegation policy, validate query parameters, protect member PII with private/no-store/noindex responses, and make no schema change or direct membership mutation.",
+      "allowed_paths": [
+        "src/Controller/AdminAccessRoleMembersController.php",
+        "src/Repository/AccessRoleRepository.php",
+        "templates/admin/access_role/index.html.twig",
+        "templates/admin/access_role/members.html.twig",
+        "tests/Controller/AdminAccessRoleMembersTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "src/Entity/",
+        "src/Controller/AdminUserController.php",
+        "src/Form/AdminUserType.php",
+        "src/Form/AccessRoleType.php",
+        "src/Security/PermissionDelegationPolicy.php",
+        "src/Repository/UserRepository.php",
+        "templates/admin/user/",
+        "tests/Controller/AdminUserSecurityTest.php",
+        "tests/Controller/AdminUserDirectoryStateFilterTest.php"
+      ],
+      "deliverables": [
+        "Link each access-role member count to a role-specific roster.",
+        "Add a CMS_USERS_MANAGE-gated, PermissionDelegationPolicy-checked roster with name/email search, active/locked/unverified filters and stable 25-row pagination.",
+        "Link listed users to the existing per-user edit route, respecting the existing full-administrator editing restriction; preserve the existing user form as the membership mutation path.",
+        "Validate scalar query parameters and return private, no-store, noindex responses because the roster contains account identifiers.",
+        "Add focused integration tests for membership scoping, search/status filters, pagination, denied role hierarchy, malformed query values, and privacy headers.",
+        "Keep account entities, permission-assignment logic, sessions, schema and existing CSRF behavior unchanged."
+      ],
+      "tests": [
+        "php bin/phpunit tests/Controller/AdminAccessRoleMembersTest.php",
+        "Verify role list links to the correct membership roster and unrelated users are excluded.",
+        "Verify name/email search, account-state filters, deterministic 25-row pagination and preserved filter navigation.",
+        "Verify CMS_USERS_MANAGE and PermissionDelegationPolicy role-hierarchy checks deny unauthorized access.",
+        "Verify malformed/array/unknown status/overlong search/invalid or out-of-range page values fail closed.",
+        "Verify private/no-store/noindex response headers and existing user-edit link restrictions.",
+        "PHPStan level 8 and complete Worker CI on the exact final HEAD, including PostgreSQL 18 migration-chain checks."
+      ],
+      "completion_report": [
+        "Exact sanitized Worker base and final feature HEAD.",
+        "Complete changed-file list and Worker PR.",
+        "Roster, search/status/pagination, hierarchy-denial, malformed-query and privacy test results.",
+        "Exact-head PHPStan, full Worker CI and PostgreSQL migration results.",
+        "Open limitations and trusted permission-mapping follow-up."
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "preserve-CMS_USERS_MANAGE-and-PermissionDelegationPolicy-hierarchy-checks",
+        "do-not-bypass-the-existing-user-edit-session-invalidation-and-CSRF-paths",
+        "do-not-expose-account-identifiers-in-public-or-cacheable-responses",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_base_branch": "main",
+      "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "resume_branch": "feature/wcp-415-access-role-members-g1",
+      "proposal_kind": "worker_only",
+      "collision_check": {
+        "compared_against": "Fresh continuous/work-pool-v4 blob 4da2e7a37ac521d4db49ab3068de2a92a05a9760, every active and claim-locked allowlist, exact sanitized Worker main f1a246c64527ef3ad51f7490773d9bbf9d42be5d.",
+        "result": "No active or claim-locked task owns these exact paths or their parent scopes. WCP-325 locks AccessRole entity validation; WCP-372 locks AccessRoleType; WCP-412 locks UserRepository and its state-filter test; WCP-413 is category security tests; WCP-414 is menu ordering. This proposal uses a separate role-members controller, AccessRoleRepository query, access-role templates and a separate test. FCP-072 has a dependency-blocked unclaimed templates/ wildcard only; no active template claim applies. No migration, entity, shared security-policy or existing user mutation file is included.",
+        "paths": [
+          "src/Controller/AdminAccessRoleMembersController.php",
+          "src/Repository/AccessRoleRepository.php",
+          "templates/admin/access_role/index.html.twig",
+          "templates/admin/access_role/members.html.twig",
+          "tests/Controller/AdminAccessRoleMembersTest.php"
+        ]
+      },
+      "claimed_on": "2026-09-26T21:58:03.676Z",
+      "claim_state": "active",
+      "next_action": "Implement the read-only role-member roster, repository search/count queries, linked list view and security/privacy integration tests within the five allowed paths; checkpoint the feature branch.",
+      "branch_heads": {
+        "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+        "feature_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d"
+      }
     }
   ],
   "recovery_queue": [],
