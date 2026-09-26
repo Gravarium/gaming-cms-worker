@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-26T23:17:30.211Z",
+  "published_at": "2026-09-26T23:17:34.067Z",
   "summary": {
     "total_remaining_worker_tasks": 134,
     "completed_worker_prs_awaiting_trusted_review": 197,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-429 PR #222 is complete with green exact-head CI and remains claim-locked pending Trusted resolution; continue with an independent worker-only proposal because all five unclaimed FCPs remain dependency-blocked.",
+    "next_required_action": "WCP-430 is reserved on exact sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d; test release deletion CSRF and published-history preservation in its exclusive path.",
     "composition_preparable": 0,
     "immediately_actionable": 0,
     "must_continue": true
@@ -22572,6 +22572,93 @@
         "Awaiting Trusted review and Trusted integration CI."
       ],
       "trusted_follow_up": "Preserve CMS_CONNECTORS_MANAGE authorization and connector deletion CSRF before removing target definitions; confirm that deleting a CMS target never deletes external provider data or credentials."
+    },
+    {
+      "priority": 210,
+      "package_id": "WCP-430",
+      "title": "Preserve published content-release history",
+      "risk": "low",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-430-content-release-deletion-g1",
+      "suggested_branch": "feature/wcp-430-content-release-deletion-g1",
+      "base_branch": "main",
+      "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "objective": "Add test-only functional regressions for ContentRelease deletion. Invalid CSRF must not delete a draft release; a valid rendered token may delete an unpublished release; and a published release must remain immutable even when a direct request carries a valid delete token.",
+      "allowed_paths": [
+        "tests/Controller/ContentReleaseDeletionSecurityTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/",
+        "src/",
+        "templates/",
+        "assets/",
+        "public/"
+      ],
+      "deliverables": [
+        "A user without CMS_CONTENT_MANAGE receives 403 on the release listing and deletion route.",
+        "An invalid deletion CSRF token returns 403 and leaves a draft release unchanged.",
+        "A user can delete an unpublished release using the token rendered for that release.",
+        "A published release remains persisted and published when a direct deletion request carries a valid token.",
+        "Only tests/Controller/ContentReleaseDeletionSecurityTest.php changes."
+      ],
+      "tests": [
+        "php bin/phpunit tests/Controller/ContentReleaseDeletionSecurityTest.php",
+        "PHPStan level 8 and complete Worker CI on the exact final HEAD, including PostgreSQL 18 migration-chain checks."
+      ],
+      "completion_report": [
+        "Exact final Worker HEAD and sanitized main base SHA.",
+        "Complete changed-file list and Worker PR.",
+        "Permission denial, invalid-CSRF non-mutation, valid draft deletion, and published-release deletion denial results.",
+        "Exact-head PHPStan and complete Worker CI results.",
+        "Confirmation that only the allowed test path changed."
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "preserve-CMS_CONTENT_MANAGE-authorization-release-CSRF-and-published-history-invariants",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "proposal_kind": "worker_only",
+      "collision_check": {
+        "compared_against": "Latest pool blob fa5bd60c09cd179dd671d9f30319586a5ad8a49a; all active and claim-locked allowlists; sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d.",
+        "result": "ContentPublicationAssuranceTest covers CMS_CONTENT_MANAGE, release publish CSRF and post-publication finality, but has no DELETE test for ContentRelease. Code search for app_admin_content_release_delete finds the controller only. The published-release deletion guard in AdminContentReleaseController has no functional regression for a valid CSRF request; the target test path is absent on main and disjoint from every active or locked claim.",
+        "paths": [
+          "tests/Controller/ContentReleaseDeletionSecurityTest.php"
+        ]
+      },
+      "claimed_on": "2026-09-26T23:17:34.067Z",
+      "claim_state": "active",
+      "active_base_branch": "main",
+      "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "resume_branch": "feature/wcp-430-content-release-deletion-g1",
+      "last_checkpoint_at": "2026-09-26T23:17:34.067Z",
+      "last_verified_push_at": "2026-09-26T23:17:34.067Z",
+      "checkpoint_paths": [],
+      "branch_heads": {
+        "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+        "feature_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d"
+      },
+      "next_action": "Add permission, CSRF, draft-deletion and published-history regressions in the single allowed file, then open a Worker PR."
     }
   ],
   "recovery_queue": [],
