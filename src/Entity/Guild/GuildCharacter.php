@@ -10,9 +10,9 @@ use App\Entity\GuildMember;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity]
-#[ORM\Table(name: 'guild_character_profile')]
-#[ORM\UniqueConstraint(name: 'uniq_guild_character_name', columns: ['guild_id', 'game_id', 'character_name'])]
-class GuildCharacterProfile
+#[ORM\Table(name: 'guild_character')]
+#[ORM\UniqueConstraint(name: 'uniq_guild_character_identity', columns: ['guild_id', 'game_id', 'character_name'])]
+class GuildCharacter
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -35,31 +35,33 @@ class GuildCharacterProfile
     private string $characterName;
 
     #[ORM\Column(length: 100, nullable: true)]
-    private ?string $characterClass = null;
+    private ?string $characterClass;
 
-    #[ORM\Column(length: 40, nullable: true)]
-    private ?string $role = null;
+    #[ORM\Column(length: 80, nullable: true)]
+    private ?string $role;
 
     #[ORM\Column(options: ['default' => false])]
-    private bool $mainCharacter = false;
+    private bool $mainCharacter;
 
-    #[ORM\Column(options: ['default' => true])]
-    private bool $active = true;
-
-    public function __construct(Guild $guild, GuildMember $member, Game $game, string $characterName)
+    public function __construct(Guild $guild, GuildMember $member, Game $game, string $characterName, ?string $characterClass = null, ?string $role = null, bool $mainCharacter = false)
     {
         if ($member->getGuild() !== $guild) {
-            throw new \DomainException('Character profile member must belong to the same guild.');
+            throw new \DomainException('Character member must belong to the same guild.');
+        }
+        if ($guild->getGame() !== null && $game !== $guild->getGame()) {
+            throw new \DomainException('Character game must match the guild game.');
         }
         $characterName = trim($characterName);
         if ($characterName === '') {
             throw new \InvalidArgumentException('Character name is required.');
         }
-
         $this->guild = $guild;
         $this->member = $member;
         $this->game = $game;
         $this->characterName = $characterName;
+        $this->characterClass = self::optional($characterClass);
+        $this->role = self::optional($role);
+        $this->mainCharacter = $mainCharacter;
     }
 
     public function getId(): ?int { return $this->id; }
@@ -68,11 +70,12 @@ class GuildCharacterProfile
     public function getGame(): Game { return $this->game; }
     public function getCharacterName(): string { return $this->characterName; }
     public function getCharacterClass(): ?string { return $this->characterClass; }
-    public function setCharacterClass(?string $value): self { $value=$value===null?null:trim($value); $this->characterClass=$value===''?null:$value; return $this; }
     public function getRole(): ?string { return $this->role; }
-    public function setRole(?string $value): self { $value=$value===null?null:trim($value); $this->role=$value===''?null:$value; return $this; }
     public function isMainCharacter(): bool { return $this->mainCharacter; }
-    public function setMainCharacter(bool $main): self { $this->mainCharacter=$main; return $this; }
-    public function isActive(): bool { return $this->active; }
-    public function setActive(bool $active): self { $this->active=$active; return $this; }
+
+    private static function optional(?string $value): ?string
+    {
+        $value = $value === null ? null : trim($value);
+        return $value === '' ? null : $value;
+    }
 }

@@ -1,0 +1,23 @@
+<div class="module-page module-page-nebula" data-module-structure="editorial">
+    <nav class="module-page-navigation" aria-label="Modulnavigation">
+        {% for item in composition.navigation %}<a href="{{ item.href }}">{{ item.label }}</a>{% endfor %}
+    </nav>
+    <div class="module-page-editorial">
+        <main class="module-page-content">
+            {% for widget in regions.content %}
+                <section class="module-page-widget" id="{{ widget.definition.key|replace({'.':'-'}) }}">
+                    <h2>{{ widget.definition.label }}</h2>
+                    {% include widget.definition.template with {definition: widget.definition, data: widget.payload, config: widget.config} only %}
+                </section>
+            {% endfor %}
+        </main>
+        <aside class="module-page-sidebar">
+            {% for widget in regions.sidebar %}
+                <section class="module-page-widget module-page-widget-sidebar">
+                    <h2>{{ widget.definition.label }}</h2>
+                    {% include widget.definition.template with {definition: widget.definition, data: widget.payload, config: widget.config} only %}
+                </section>
+            {% endfor %}
+        </aside>
+    </div>
+</div>

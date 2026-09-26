@@ -1,0 +1,19 @@
+{% if data.status == 'ready' %}
+<div class="module-widget-cards module-widget-cards-{{ definition.variant }} display-{{ config.display|default('grid') }}">
+    {% for item in data.items %}
+        <article class="module-widget-card">
+            <p class="module-widget-eyebrow">{{ item.eyebrow|default('') }}</p>
+            <h3><a href="{{ item.href }}">{{ item.title }}</a></h3>
+            {% if item.summary|default('') %}<p>{{ item.summary }}</p>{% endif %}
+            {% if item.date|default('') %}<time datetime="{{ item.date }}">{{ item.date|date('d.m.Y H:i') }}</time>{% endif %}
+            {% if item.badge|default('') %}<span class="module-widget-badge">{{ item.badge }}</span>{% endif %}
+        </article>
+    {% endfor %}
+</div>
+{% elseif data.status == 'empty' %}
+<p class="module-widget-state module-widget-state-empty">Noch keine sichtbaren Einträge.</p>
+{% elseif data.status == 'unavailable' %}
+<p class="module-widget-state module-widget-state-unavailable">Dieser Bereich ist derzeit nicht verfügbar.</p>
+{% else %}
+<p class="module-widget-state module-widget-state-error">Dieser Bereich konnte nicht geladen werden.</p>
+{% endif %}

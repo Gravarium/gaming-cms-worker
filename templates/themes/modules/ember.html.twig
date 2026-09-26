@@ -1,0 +1,26 @@
+<div class="module-page module-page-ember" data-module-structure="split">
+    <header class="module-page-live-header">
+        <nav class="module-page-navigation" aria-label="Live-Navigation">
+            {% for item in composition.navigation %}<a href="{{ item.href }}">{{ item.label }}</a>{% endfor %}
+        </nav>
+        <p class="module-page-kicker">LIVE · COMMUNITY · WETTBEWERB</p>
+    </header>
+    <div class="module-page-split">
+        <section class="module-page-live-column">
+            {% for widget in regions.content %}
+                <article class="module-page-widget module-page-widget-live">
+                    <h2>{{ widget.definition.label }}</h2>
+                    {% include widget.definition.template with {definition: widget.definition, data: widget.payload, config: widget.config} only %}
+                </article>
+            {% endfor %}
+        </section>
+        <aside class="module-page-radar">
+            {% for widget in regions.sidebar %}
+                <article class="module-page-widget module-page-widget-radar">
+                    <h2>{{ widget.definition.label }}</h2>
+                    {% include widget.definition.template with {definition: widget.definition, data: widget.payload, config: widget.config} only %}
+                </article>
+            {% endfor %}
+        </aside>
+    </div>
+</div>
