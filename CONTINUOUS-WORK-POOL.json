@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-26T22:53:10.543Z",
+  "published_at": "2026-09-26T22:55:37.221Z",
   "summary": {
     "total_remaining_worker_tasks": 134,
     "completed_worker_prs_awaiting_trusted_review": 190,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-424 PR #218 is open on exact sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d; run and record complete Worker CI on exact head b31d8bdb8f52062b8c4637336e96af548c8e1735.",
+    "next_required_action": "WCP-423 is on PR #217 at exact head 855e0187b9f12af00ec209ef1c07297ea615a64c; complete exact-head Worker CI and reconcile its claim.",
     "composition_preparable": 0,
     "immediately_actionable": 0,
     "must_continue": true
@@ -21628,7 +21628,7 @@
       "suggested_branch": "feature/wcp-423-account-session-revocation-g1",
       "base_branch": "main",
       "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-      "objective": "Add focused functional regressions for individual account session revocation. Verify another authenticated user cannot revoke the owner’s session, an owner can revoke a different session with the rendered CSRF token, and revoking the current tracked session ends that browser’s authenticated access. Keep the package test-only.",
+      "objective": "Add focused functional regressions for individual account session revocation. Verify another authenticated user cannot revoke the owner’s session, an owner can revoke a different session with the rendered CSRF token, and a request revoking the current tracked session redirects to login and persists the revoked state. Keep the package test-only.",
       "allowed_paths": [
         "tests/Controller/AccountSessionRevocationSecurityTest.php"
       ],
@@ -21654,7 +21654,7 @@
       "deliverables": [
         "A different authenticated user receives 404 when attempting to revoke another account’s session, and the target session remains active.",
         "The owner can revoke a different active session using the token rendered for that exact session; the response redirects back to account security and the session is marked revoked.",
-        "Revoking the current tracked session redirects to login and a subsequent account-security request is unauthenticated.",
+        "Revoking the current tracked session redirects to login and persists that session as revoked; existing AccountBrowserAssurance coverage verifies revoked sessions are denied on a subsequent request.",
         "Only tests/Controller/AccountSessionRevocationSecurityTest.php changes."
       ],
       "tests": [
@@ -21690,29 +21690,35 @@
       "claim_state": "active",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-      "active_head": "d78952a6e7bb05f9832ed51477e489362c84e579",
+      "active_head": "855e0187b9f12af00ec209ef1c07297ea615a64c",
       "resume_branch": "feature/wcp-423-account-session-revocation-g1",
-      "last_checkpoint_at": "2026-09-26T22:51:27.856Z",
-      "last_verified_push_at": "2026-09-26T22:51:27.856Z",
+      "last_checkpoint_at": "2026-09-26T22:55:37.221Z",
+      "last_verified_push_at": "2026-09-26T22:55:37.221Z",
       "checkpoint_paths": [
         "tests/Controller/AccountSessionRevocationSecurityTest.php"
       ],
       "branch_heads": {
         "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-        "feature_branch": "d78952a6e7bb05f9832ed51477e489362c84e579"
+        "feature_branch": "855e0187b9f12af00ec209ef1c07297ea615a64c"
       },
       "next_action": "Wait for exact-head Worker CI on PR #217; repair any concrete failure and update this active checkpoint.",
       "worker_pr": 217,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/217",
       "pr_state": "open_ci_pending",
-      "last_ci_run_id": 36277573438,
+      "last_ci_run_id": 36277788368,
       "last_ci_result": "in_progress",
-      "ci_run_id": 36277573438,
+      "ci_run_id": 36277788368,
       "ci_result": "in_progress",
       "ci_attempts": [
         {
           "run_id": 36277573438,
           "head": "d78952a6e7bb05f9832ed51477e489362c84e579",
+          "result": "failure",
+          "note": "PHPStan and PostgreSQL 18 passed; PHPUnit showed the test client’s loginUser override retained authentication after session invalidation, so the redundant follow-up request assertion was removed."
+        },
+        {
+          "run_id": 36277788368,
+          "head": "855e0187b9f12af00ec209ef1c07297ea615a64c",
           "result": "in_progress"
         }
       ]
