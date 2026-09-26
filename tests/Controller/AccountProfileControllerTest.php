@@ -64,7 +64,7 @@ final class AccountProfileControllerTest extends WebTestCase
         self::assertSame([], $logs[0]->getContext());
         self::assertStringNotContainsString('Account profile-positive', $logs[0]->getSummary());
         self::assertStringNotContainsString('Neuer Anzeigename', $logs[0]->getSummary());
-        self::assertNotSame($oldDisplayName, '');
+        self::assertStringNotContainsString($oldDisplayName, $logs[0]->getSummary());
     }
 
     public function testProfileRequiresAuthentication(): void
