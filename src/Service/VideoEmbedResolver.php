@@ -113,7 +113,7 @@ final readonly class VideoEmbedResolver
         if ($host === 'clips.twitch.tv' && preg_match('/\A[A-Za-z0-9_-]{1,100}\z/', $path) === 1) {
             return ['mode' => 'iframe', 'url' => 'https://clips.twitch.tv/embed?clip='.$path.'&parent='.rawurlencode($parent)];
         }
-        if (in_array($host, self::TWITCH_HOSTS, true) && preg_match('/\Avideos/(\d{1,20})\z/', $path, $match) === 1) {
+        if (in_array($host, self::TWITCH_HOSTS, true) && preg_match('~\Avideos/(\d{1,20})\z~', $path, $match) === 1) {
             return ['mode' => 'iframe', 'url' => 'https://player.twitch.tv/?video=v'.$match[1].'&parent='.rawurlencode($parent)];
         }
         if (in_array($host, self::TWITCH_HOSTS, true) && preg_match('/\A[A-Za-z0-9_]{1,100}\z/', $path) === 1) {
