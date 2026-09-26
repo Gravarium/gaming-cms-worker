@@ -9,6 +9,7 @@ use App\Entity\User;
 use App\Entity\UserSession;
 use App\Service\AccountTokenManager;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bundle\FrameworkBundle\Test\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
@@ -50,7 +51,7 @@ final class AccountSecurityManagementTest extends WebTestCase
         ]);
 
         self::assertResponseStatusCodeSame(422);
-        $this->assertSecurityStateUnchanged($entityManager, $hasher, $tokens, $account);
+        $this->assertSecurityStateUnchanged($client, $account);
 
         $crawler = $client->request('GET', '/account/security');
         self::assertResponseIsSuccessful();
@@ -62,7 +63,7 @@ final class AccountSecurityManagementTest extends WebTestCase
         $client->submit($form);
 
         self::assertResponseStatusCodeSame(422);
-        $this->assertSecurityStateUnchanged($entityManager, $hasher, $tokens, $account);
+        $this->assertSecurityStateUnchanged($client, $account);
     }
 
     public function testValidPasswordChangeUpdatesPasswordAndRevokesSessionsAndResetTokens(): void
@@ -86,21 +87,27 @@ final class AccountSecurityManagementTest extends WebTestCase
 
         self::assertResponseRedirects('/account/security');
 
-        $entityManager->refresh($account['user']);
-        $entityManager->refresh($account['session']);
+        $entityManager = $client->getContainer()->get(EntityManagerInterface::class);
+        $storedUser = $entityManager->find(User::class, $account['userId']);
+        $storedSession = $entityManager->find(UserSession::class, $account['sessionId']);
+        self::assertInstanceOf(User::class, $storedUser);
+        self::assertInstanceOf(UserSession::class, $storedSession);
 
-        self::assertNotSame($account['passwordHash'], $account['user']->getPassword());
-        self::assertFalse($hasher->isPasswordValid($account['user'], self::CURRENT_PASSWORD));
-        self::assertTrue($hasher->isPasswordValid($account['user'], self::NEW_PASSWORD));
-        self::assertSame($account['securityVersion'] + 1, $account['user']->getSecurityVersion());
-        self::assertTrue($account['session']->isRevoked());
+        $hasher = $client->getContainer()->get(UserPasswordHasherInterface::class);
+        $tokens = $client->getContainer()->get(AccountTokenManager::class);
+        self::assertNotSame($account['passwordHash'], $storedUser->getPassword());
+        self::assertFalse($hasher->isPasswordValid($storedUser, self::CURRENT_PASSWORD));
+        self::assertTrue($hasher->isPasswordValid($storedUser, self::NEW_PASSWORD));
+        self::assertSame($account['securityVersion'] + 1, $storedUser->getSecurityVersion());
+        self::assertTrue($storedSession->isRevoked());
         self::assertNull($tokens->resolve($account['resetToken'], AccountToken::PURPOSE_PASSWORD_RESET));
     }
 
     /**
      * @return array{
      *     user: User,
-     *     session: UserSession,
+     *     userId: int,
+     *     sessionId: int,
      *     resetToken: string,
      *     passwordHash: string,
      *     securityVersion: int
@@ -132,9 +139,16 @@ final class AccountSecurityManagementTest extends WebTestCase
         );
         $entityManager->flush();
 
+        $userId = $user->getId();
+        $sessionId = $session->getId();
+        if ($userId === null || $sessionId === null) {
+            throw new \LogicException('Persisted account fixtures must have identifiers.');
+        }
+
         return [
             'user' => $user,
-            'session' => $session,
+            'userId' => $userId,
+            'sessionId' => $sessionId,
             'resetToken' => $resetToken,
             'passwordHash' => $user->getPassword(),
             'securityVersion' => $user->getSecurityVersion(),
@@ -144,26 +158,29 @@ final class AccountSecurityManagementTest extends WebTestCase
     /**
      * @param array{
      *     user: User,
-     *     session: UserSession,
+     *     userId: int,
+     *     sessionId: int,
      *     resetToken: string,
      *     passwordHash: string,
      *     securityVersion: int
      * } $account
      */
-    private function assertSecurityStateUnchanged(
-        EntityManagerInterface $entityManager,
-        UserPasswordHasherInterface $hasher,
-        AccountTokenManager $tokens,
-        array $account,
-    ): void {
-        $entityManager->refresh($account['user']);
-        $entityManager->refresh($account['session']);
+    private function assertSecurityStateUnchanged(KernelBrowser $client, array $account): void
+    {
+        $container = $client->getContainer();
+        $entityManager = $container->get(EntityManagerInterface::class);
+        $storedUser = $entityManager->find(User::class, $account['userId']);
+        $storedSession = $entityManager->find(UserSession::class, $account['sessionId']);
+        self::assertInstanceOf(User::class, $storedUser);
+        self::assertInstanceOf(UserSession::class, $storedSession);
 
-        self::assertSame($account['passwordHash'], $account['user']->getPassword());
-        self::assertTrue($hasher->isPasswordValid($account['user'], self::CURRENT_PASSWORD));
-        self::assertFalse($hasher->isPasswordValid($account['user'], self::NEW_PASSWORD));
-        self::assertSame($account['securityVersion'], $account['user']->getSecurityVersion());
-        self::assertFalse($account['session']->isRevoked());
+        $hasher = $container->get(UserPasswordHasherInterface::class);
+        $tokens = $container->get(AccountTokenManager::class);
+        self::assertSame($account['passwordHash'], $storedUser->getPassword());
+        self::assertTrue($hasher->isPasswordValid($storedUser, self::CURRENT_PASSWORD));
+        self::assertFalse($hasher->isPasswordValid($storedUser, self::NEW_PASSWORD));
+        self::assertSame($account['securityVersion'], $storedUser->getSecurityVersion());
+        self::assertFalse($storedSession->isRevoked());
         self::assertNotNull($tokens->resolve($account['resetToken'], AccountToken::PURPOSE_PASSWORD_RESET));
     }
 }
