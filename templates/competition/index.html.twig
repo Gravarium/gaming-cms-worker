@@ -14,8 +14,15 @@
             <option value="completed"{% if status == 'completed' %} selected{% endif %}>Abgeschlossen</option>
             <option value="archived"{% if status == 'archived' %} selected{% endif %}>Archiviert</option>
         </select>
+        <label for="competition-game">Spiel</label>
+        <select id="competition-game" name="game">
+            <option value=""{% if gameSlug is null %} selected{% endif %}>Alle Spiele</option>
+            {% for gameOption in games %}
+                <option value="{{ gameOption.slug }}"{% if gameSlug == gameOption.slug %} selected{% endif %}>{{ gameOption.name }}</option>
+            {% endfor %}
+        </select>
         <button type="submit">Filtern</button>
-        {% if status is not null %}
+        {% if status is not null or gameSlug is not null %}
             <a href="{{ path('app_competition_index') }}">Filter zurücksetzen</a>
         {% endif %}
     </form>
