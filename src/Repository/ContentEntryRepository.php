@@ -130,6 +130,7 @@ final class ContentEntryRepository extends ServiceEntityRepository
     private function publishedBuilder(): QueryBuilder
     {
         return $this->createQueryBuilder('entry')->andWhere('entry.status = :status')->andWhere('entry.publishedAt <= :now')
+            ->andWhere('(entry.scheduledUnpublishAt IS NULL OR entry.scheduledUnpublishAt > :now)')
             ->setParameter('status', ContentEntry::STATUS_PUBLISHED)->setParameter('now', new \DateTimeImmutable());
     }
 }
