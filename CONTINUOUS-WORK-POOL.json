@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-26T14:27:58.616Z",
+  "published_at": "2026-09-26T14:30:07.265Z",
   "summary": {
     "total_remaining_worker_tasks": 118,
-    "completed_worker_prs_awaiting_trusted_review": 111,
+    "completed_worker_prs_awaiting_trusted_review": 112,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "Wait for exact-head Worker CI run 36248585068 on WCP-336 PR #130; preserve all foreign and locked claims.",
+    "next_required_action": "Continue autonomous work: re-evaluate blocked FCPs, preserve all claims, and publish a disjoint WCP if no FCP becomes dependency-safe.",
     "composition_preparable": 0,
     "immediately_actionable": 0,
     "must_continue": true
@@ -11568,7 +11568,7 @@
       "package_id": "WCP-336",
       "title": "Skip empty external health status flush",
       "risk": "low",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -11647,9 +11647,9 @@
         ]
       },
       "claimed_on": "2026-09-26T14:25:26.185Z",
-      "claim_state": "active_worker_claim",
-      "last_checkpoint_at": "2026-09-26T14:27:58.616Z",
-      "next_action": "Await exact-head Worker CI run 36248585068 for 601b12afb4584c36382fdafb00bd2f304c7a5c53; diagnose and repair any failure without weakening checks.",
+      "claim_state": "locked_until_trusted_resolution",
+      "last_checkpoint_at": "2026-09-26T14:30:07.265Z",
+      "next_action": "Await Trusted review with claim locked; continue with independent Worker-only work.",
       "checkpoint_paths": [
         "src/ExternalConnector/ExternalConnectorHealthRecorder.php",
         "tests/ExternalConnector/ExternalConnectorHealthRecorderTest.php"
@@ -11657,9 +11657,20 @@
       "last_verified_push_at": "2026-09-26T14:27:58.616Z",
       "worker_pr": 130,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/130",
-      "pr_state": "draft",
+      "pr_state": "ready_for_review",
       "ci_run_id": 36248585068,
-      "ci_result": "queued"
+      "ci_result": "success",
+      "final_head": "601b12afb4584c36382fdafb00bd2f304c7a5c53",
+      "final_changed_paths": [
+        "src/ExternalConnector/ExternalConnectorHealthRecorder.php",
+        "tests/ExternalConnector/ExternalConnectorHealthRecorderTest.php"
+      ],
+      "completed_on": "2026-09-26T14:30:07.265Z",
+      "test_evidence": [
+        "Focused regression test uses an empty not_configured media summary and requires no repository, persist or EntityManager flush activity.",
+        "Non-empty result processing remains unchanged.",
+        "Exact-head Worker CI run 36248585068 succeeded, including PHPStan/application tests and the complete PostgreSQL 18 migration chain."
+      ]
     },
     {
       "priority": 118,
