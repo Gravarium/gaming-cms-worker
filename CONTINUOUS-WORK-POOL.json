@@ -10,16 +10,16 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-26T11:48:47.681Z",
+  "published_at": "2026-09-26T11:51:56.149Z",
   "summary": {
-    "total_remaining_worker_tasks": 82,
+    "total_remaining_worker_tasks": 83,
     "completed_worker_prs_awaiting_trusted_review": 75,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "Continue WCP-127 independent Worker proposal work while preserving all foreign and completed claim locks; after exact-head green CI reconcile and continue.",
+    "next_required_action": "Continue WCP-128 on its exclusive persisted-layout preflight claim, stacked on exact green WCP-125, while preserving WCP-127/WCP-303 and all other active/completed locks; after exact-head green CI reconcile and continue.",
     "composition_preparable": 0,
-    "immediately_actionable": 4,
+    "immediately_actionable": 5,
     "must_continue": true
   },
   "rules": {
@@ -7832,6 +7832,96 @@
       "claimed_on": "2026-09-26T11:48:47.681Z",
       "claim_state": "active_worker_claim",
       "next_action": "Implement only the two allowlisted files, open a Worker PR, run exact-head full CI and retain the claim until Trusted resolution."
+    },
+    {
+      "priority": 83,
+      "package_id": "WCP-128",
+      "title": "Bound persisted layout preflight normalization",
+      "risk": "medium",
+      "execution_state": "worker_in_progress",
+      "dependencies": [
+        "WCP-125"
+      ],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-128-layout-store-preflight-boundary-g1",
+      "suggested_branch": "feature/wcp-128-layout-store-preflight-boundary-g1",
+      "base_branch": "feature/wcp-125-layout-settings-input-boundary-g1",
+      "base_sha": "d8871e900aaeed05487344cfcc85f3f7fb027b60",
+      "objective": "Bound LayoutStore's normalization of persisted layout widgets/config before LayoutValidator sees the document. Reject oversized/malformed widget lists, rows and config maps before iteration/copying; cap key/value and aggregate bytes, and route invalid persisted documents through the existing fail-closed defaults path while preserving dormant widget data inside the bounds.",
+      "allowed_paths": [
+        "src/Layout/LayoutStore.php",
+        "tests/Layout/LayoutStoreBoundaryTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/",
+        "src/Controller/",
+        "src/Entity/",
+        "src/Repository/",
+        "src/Form/",
+        "src/Layout/LayoutValidator.php",
+        "src/Layout/LayoutDocument.php",
+        "tests/Layout/LayoutContractTest.php",
+        "templates/",
+        "assets/",
+        "public/"
+      ],
+      "deliverables": [
+        "Require stored widgets to be a list of at most 60 rows before pre-normalization; check each row has at most five fields before inspecting it.",
+        "Cap pre-normalized config maps at 64 keys, key strings at 128 bytes, scalar string values at 16000 bytes and aggregate copied config bytes at 2 MB.",
+        "Treat over-limit, malformed or unsupported persisted shapes as invalid and return the existing safe layout defaults without partial preservation.",
+        "Preserve valid small dormant-widget config exactly and add regression tests for bounded and rejected stored records."
+      ],
+      "tests": [
+        "Targeted LayoutStoreBoundaryTest coverage for oversized widget/config collections, overlong scalar/key values, aggregate limits, fail-closed fallback and valid dormant config preservation.",
+        "PHPStan level 8.",
+        "Complete Worker CI on the exact final HEAD, stacked on the exact green WCP-125 head."
+      ],
+      "completion_report": [
+        "exact final Worker HEAD and WCP-125 base SHA",
+        "complete changed-path list and stacked Worker PR",
+        "targeted tests and complete exact-head Worker CI result",
+        "row/key/value/aggregate bounds and preserved dormant-widget behavior"
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "no-secrets-or-trusted-private-runtime-in-worker-source",
+        "preserve fail-closed stored-layout recovery and valid dormant widget data",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
+      ],
+      "proposal_base_branch": "feature/wcp-125-layout-settings-input-boundary-g1",
+      "proposal_base_sha": "d8871e900aaeed05487344cfcc85f3f7fb027b60",
+      "active_base_branch": "feature/wcp-125-layout-settings-input-boundary-g1",
+      "active_base_sha": "d8871e900aaeed05487344cfcc85f3f7fb027b60",
+      "active_head": "d8871e900aaeed05487344cfcc85f3f7fb027b60",
+      "resume_branch": "feature/wcp-128-layout-store-preflight-boundary-g1",
+      "proposal_kind": "worker_only",
+      "collision_check": {
+        "compared_against": "all current continuous/work-pool-v4 allowlists including completed WCP-125 plus active WCP-127 and WCP-303 claims; searched WCP-128/LayoutStore branches and open LayoutStore PRs",
+        "result": "disjoint from every current published allowlist and active claim; stacked only on exact green WCP-125 predecessor, with no schema, migration, controller, entity or repository paths",
+        "paths": [
+          "src/Layout/LayoutStore.php",
+          "tests/Layout/LayoutStoreBoundaryTest.php"
+        ]
+      },
+      "claimed_on": "2026-09-26T11:51:56.149Z",
+      "claim_state": "active_worker_claim",
+      "next_action": "Implement only the two allowlisted paths on the exact WCP-125 green base; open a stacked Worker PR, run exact-head full CI and retain the claim until Trusted resolution."
     }
   ],
   "recovery_queue": [],
