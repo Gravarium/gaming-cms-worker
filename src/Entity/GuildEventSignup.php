@@ -13,6 +13,9 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\UniqueConstraint(name: 'uniq_event_member_signup', columns: ['event_id', 'member_id'])]
 class GuildEventSignup
 {
+    private const MAX_ROLE_BYTES = 80;
+    private const MAX_ROLE_LENGTH = 20;
+
     public const GOING = 'going';
     public const MAYBE = 'maybe';
     public const DECLINED = 'declined';
@@ -93,7 +96,13 @@ class GuildEventSignup
     public function getResponse(): string { return $this->response; }
     public function setResponse(string $response): self { $this->response = $response; $this->updatedAt = new \DateTimeImmutable(); return $this; }
     public function getRole(): string { return $this->role; }
-    public function setRole(string $role): self { $this->role = $role; return $this; }
+    public function setRole(string $role): self
+    {
+        $this->assertRoleColumnBoundary($role);
+        $this->role = $role;
+
+        return $this;
+    }
     public function getNote(): ?string { return $this->note; }
     public function setNote(?string $note): self { $this->note = $note === null || trim($note) === '' ? null : trim($note); return $this; }
     public function getAttendance(): string { return $this->attendance; }
@@ -110,4 +119,16 @@ class GuildEventSignup
     public function getAttendanceCheckedBy(): ?User { return $this->attendanceCheckedBy; }
     public function getAttendanceCheckedAt(): ?\DateTimeImmutable { return $this->attendanceCheckedAt; }
     public function getUpdatedAt(): \DateTimeImmutable { return $this->updatedAt; }
+
+    private function assertRoleColumnBoundary(string $role): void
+    {
+        if (strlen($role) > self::MAX_ROLE_BYTES || !mb_check_encoding($role, 'UTF-8')) {
+            throw new \\InvalidArgumentException('Signup role is invalid or exceeds the allowed length.');
+        }
+
+        if (str_contains($role, "\\0") || mb_strlen($role, 'UTF-8') > self::MAX_ROLE_LENGTH) {
+            throw new \\InvalidArgumentException('Signup role is invalid or exceeds the allowed length.');
+        }
+    }
+
 }
