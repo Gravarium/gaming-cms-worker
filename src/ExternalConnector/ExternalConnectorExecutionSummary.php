@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\ExternalConnector;
 
+use App\Entity\ExternalConnectorTarget;
+
 final readonly class ExternalConnectorExecutionSummary
 {
     public const STATUS_NOT_CONFIGURED = 'not_configured';
@@ -11,11 +13,25 @@ final readonly class ExternalConnectorExecutionSummary
     public const STATUS_DEGRADED = 'degraded';
     public const STATUS_FAILED = 'failed';
 
+    private const MAX_RESULTS = 100;
+
     /** @param list<ExternalConnectorExecutionResult> $results */
     public function __construct(
         public string $capability,
         public array $results,
     ) {
+        if (!in_array($capability, ExternalConnectorTarget::CAPABILITIES, true)
+            || !array_is_list($results)
+            || count($results) > self::MAX_RESULTS
+        ) {
+            throw new \InvalidArgumentException('External connector execution summary is invalid.');
+        }
+
+        foreach ($results as $result) {
+            if (!$result instanceof ExternalConnectorExecutionResult) {
+                throw new \InvalidArgumentException('External connector execution summary is invalid.');
+            }
+        }
     }
 
     public function status(): string
