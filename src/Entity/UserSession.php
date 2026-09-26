@@ -12,6 +12,9 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\UniqueConstraint(name: 'uniq_user_session_hash', columns: ['session_hash'])]
 class UserSession
 {
+    private const MAX_IP_ADDRESS_BYTES = 180;
+    private const MAX_IP_ADDRESS_LENGTH = 45;
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -44,6 +47,8 @@ class UserSession
 
     public function __construct(User $user, string $sessionId, ?string $ipAddress, ?string $userAgent)
     {
+        $this->assertIpAddressColumnBoundary($ipAddress);
+
         $this->user = $user;
         $this->sessionHash = hash('sha256', $sessionId);
         $this->ipAddress = $ipAddress;
@@ -64,10 +69,28 @@ class UserSession
     public function isRevoked(): bool { return $this->revokedAt !== null; }
     public function touch(?string $ipAddress, ?string $userAgent): void
     {
+        $this->assertIpAddressColumnBoundary($ipAddress);
+
         $this->lastSeenAt = new \DateTimeImmutable();
         $this->ipAddress = $ipAddress;
         $this->userAgent = $userAgent === null ? null : mb_substr($userAgent, 0, 255);
     }
     public function revoke(): void { $this->revokedAt ??= new \DateTimeImmutable(); }
     public function syncSecurityVersion(): void { $this->securityVersion = $this->user->getSecurityVersion(); }
+
+    private function assertIpAddressColumnBoundary(?string $ipAddress): void
+    {
+        if ($ipAddress === null) {
+            return;
+        }
+
+        if (strlen($ipAddress) > self::MAX_IP_ADDRESS_BYTES || !mb_check_encoding($ipAddress, 'UTF-8')) {
+            throw new \InvalidArgumentException('Session IP address is invalid or exceeds the allowed length.');
+        }
+
+        if (str_contains($ipAddress, "\0") || mb_strlen($ipAddress, 'UTF-8') > self::MAX_IP_ADDRESS_LENGTH) {
+            throw new \InvalidArgumentException('Session IP address is invalid or exceeds the allowed length.');
+        }
+    }
+
 }
