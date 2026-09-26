@@ -12,14 +12,25 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\Length;
 
 /** @extends AbstractType<AccessRole> */
 final class AccessRoleType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        $builder->add('key', null, ['label' => 'Technischer Schlüssel', 'disabled' => $options['key_locked'], 'help' => 'Kleinbuchstaben, Zahlen, Bindestrich oder Unterstrich.'])
-            ->add('name', null, ['label' => 'Name'])
+        $builder->add('key', null, [
+            'label' => 'Technischer Schlüssel',
+            'disabled' => $options['key_locked'],
+            'help' => 'Kleinbuchstaben, Zahlen, Bindestrich oder Unterstrich.',
+            'constraints' => [new Length(max: 80)],
+            'attr' => ['maxlength' => 80],
+        ])
+            ->add('name', null, [
+                'label' => 'Name',
+                'constraints' => [new Length(max: 120)],
+                'attr' => ['maxlength' => 120],
+            ])
             ->add('description', TextareaType::class, ['label' => 'Beschreibung', 'required' => false])
             ->add('permissions', ChoiceType::class, ['label' => 'Enthaltene Berechtigungen', 'choices' => CmsPermission::ASSIGNABLE, 'multiple' => true, 'expanded' => true])
             ->add('active', CheckboxType::class, ['label' => 'Rolle aktiv', 'required' => false]);
