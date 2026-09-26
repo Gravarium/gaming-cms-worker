@@ -10,10 +10,10 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-26T14:59:25.479Z",
+  "published_at": "2026-09-26T14:59:55.808Z",
   "summary": {
     "total_remaining_worker_tasks": 121,
-    "completed_worker_prs_awaiting_trusted_review": 115,
+    "completed_worker_prs_awaiting_trusted_review": 116,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
@@ -11896,7 +11896,7 @@
       "package_id": "WCP-339",
       "title": "Protect editor-block media references",
       "risk": "medium",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -11977,17 +11977,31 @@
         ]
       },
       "claimed_on": "2026-09-26T14:44:03.487Z",
-      "claim_state": "active_worker_claim",
-      "last_checkpoint_at": "2026-09-26T14:57:24.690Z",
-      "next_action": "Complete exact-head Worker CI for 07a9935e85bc4b5ed1cf1f1abede3bde9bb49df2, then reconcile WCP-339 with PR and CI evidence.",
+      "claim_state": "locked_until_trusted_resolution",
+      "last_checkpoint_at": "2026-09-26T14:59:55.808Z",
+      "next_action": "Await Trusted review with the claim locked; continue only with the next independent Worker-only package.",
       "checkpoint_paths": [
         "src/Service/MediaAssetUsageResolver.php",
         "tests/Layout/LayoutMediaTest.php"
       ],
       "worker_pr": 133,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/133",
-      "pr_state": "draft",
-      "last_verified_push_at": "2026-09-26T14:57:24.690Z"
+      "pr_state": "ready_for_review",
+      "last_verified_push_at": "2026-09-26T14:59:55.808Z",
+      "final_head": "07a9935e85bc4b5ed1cf1f1abede3bde9bb49df2",
+      "ci_run_id": 36250230757,
+      "ci_result": "success",
+      "completed_on": "2026-09-26T14:59:55.808Z",
+      "final_changed_paths": [
+        "src/Service/MediaAssetUsageResolver.php",
+        "tests/Layout/LayoutMediaTest.php"
+      ],
+      "test_evidence": [
+        "Worker CI run 36250230757 succeeded on exact final HEAD 07a9935e85bc4b5ed1cf1f1abede3bde9bb49df2.",
+        "PHPStan analysis and complete Symfony application test suite passed: 430 tests and 1,864 assertions; one PHPUnit deprecation and one notice.",
+        "PostgreSQL 18 applied and verified all 39 migrations.",
+        "Regression coverage verifies real media-block references protect deletion, text-only JSON-looking decoys do not count, malformed exact-ID candidates fail closed, and existing layout deletion/reference behavior remains covered."
+      ]
     },
     {
       "priority": 121,
