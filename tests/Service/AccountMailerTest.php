@@ -23,7 +23,7 @@ final class AccountMailerTest extends TestCase
     {
         $user = (new User())
             ->setEmail('player@example.test')
-            ->setDisplayName(str_repeat('A', 100).'<');
+            ->setDisplayName('<'.str_repeat('A', 100));
         $urls = $this->createMock(UrlGeneratorInterface::class);
         $urls->expects(self::once())
             ->method('generate')
