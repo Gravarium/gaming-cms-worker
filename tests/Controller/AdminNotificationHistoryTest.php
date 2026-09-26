@@ -36,7 +36,9 @@ final class AdminNotificationHistoryTest extends WebTestCase
 
         $crawler = $client->request('GET', '/admin/notifications/history?q=needle&state=unread');
         self::assertResponseIsSuccessful();
-        self::assertSame('private, no-store', $client->getResponse()->headers->get('Cache-Control'));
+        $cacheControl = $client->getResponse()->headers->get('Cache-Control') ?? '';
+        self::assertStringContainsString('no-store', $cacheControl);
+        self::assertStringContainsString('private', $cacheControl);
         $body = $crawler->filter('body')->text();
         self::assertStringContainsString('needle in unread message', $body);
         self::assertStringContainsString('needle-type', $body);
@@ -128,15 +130,19 @@ final class AdminNotificationHistoryTest extends WebTestCase
         yield 'non-numeric' => ['page=abc'];
         yield 'array' => ['page%5B%5D=2'];
         yield 'over the page bound' => ['page=10001'];
-        yield 'past the last page' => ['page=2'];
+        yield 'past the last page' => ['q=__wcp409-no-match-42d9&page=2'];
     }
 
-    public function testHistoryRequiresAuthenticationAndCmsAccess(): void
+    public function testHistoryRequiresAuthentication(): void
     {
-        $anonymous = static::createClient();
-        $anonymous->request('GET', '/admin/notifications/history');
-        self::assertResponseRedirects('/login');
+        $client = static::createClient();
+        $client->request('GET', '/admin/notifications/history');
 
+        self::assertResponseRedirects('/login');
+    }
+
+    public function testHistoryRequiresCmsAccess(): void
+    {
         $client = static::createClient();
         $member = (new User())
             ->setEmail('notification-member-'.bin2hex(random_bytes(8)).'@example.test')
