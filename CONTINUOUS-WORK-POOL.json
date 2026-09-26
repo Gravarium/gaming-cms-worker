@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-26T14:19:46.823Z",
+  "published_at": "2026-09-26T14:19:52.675Z",
   "summary": {
-    "total_remaining_worker_tasks": 115,
-    "completed_worker_prs_awaiting_trusted_review": 105,
+    "total_remaining_worker_tasks": 116,
+    "completed_worker_prs_awaiting_trusted_review": 109,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "Wait for exact-head Worker CI run 36248119631 on WCP-334 PR #128; preserve WCP-333 foreign claim.",
+    "next_required_action": "Continue active independent Worker claims (WCP-334, WCP-335) on their exact branches; preserve foreign claims and re-evaluate dependency-safe work after each green CI.",
     "composition_preparable": 0,
     "immediately_actionable": 0,
     "must_continue": true
@@ -11441,6 +11441,97 @@
       "pr_state": "draft",
       "ci_run_id": 36248119631,
       "ci_result": "in_progress"
+    },
+    {
+      "priority": 116,
+      "package_id": "WCP-335",
+      "title": "Reject overflowing guild notification recipient IDs",
+      "risk": "medium",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-335-guild-recipient-id-range-g1",
+      "suggested_branch": "feature/wcp-335-guild-recipient-id-range-g1",
+      "base_branch": "main",
+      "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "objective": "Preserve the exact guild:<positive canonical decimal> recipient syntax while rejecting IDs that cannot be represented as a PHP integer before querying GuildRepository. Prevent overflow casts from silently mapping an out-of-range reference to PHP_INT_MAX. Preserve resolution and null behavior for in-range IDs, and do not change notification delivery, guild ownership, Discord configuration, or message semantics.",
+      "allowed_paths": [
+        "src/ExternalConnector/DoctrineGuildNotificationRecipientResolver.php",
+        "tests/ExternalConnector/DoctrineGuildNotificationRecipientResolverTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/",
+        "src/Controller/",
+        "src/Entity/",
+        "src/Form/",
+        "src/Repository/",
+        "src/Service/",
+        "templates/",
+        "assets/",
+        "public/"
+      ],
+      "deliverables": [
+        "Validate the captured canonical decimal ID as a platform integer before repository lookup.",
+        "Return null for overflow IDs and malformed recipient references without querying the repository.",
+        "Preserve existing exact lookup behavior for in-range guild IDs."
+      ],
+      "tests": [
+        "A focused PHPUnit test passes a canonical decimal larger than PHP_INT_MAX and proves the resolver returns null without attempting repository lookup.",
+        "Keep in-range integer and malformed-reference behavior unchanged.",
+        "PHPStan level 8.",
+        "Complete Worker CI on the exact final HEAD."
+      ],
+      "completion_report": [
+        "exact final Worker HEAD and sanitized main base SHA",
+        "complete changed-file list and Worker PR",
+        "focused recipient-ID range test and complete exact-head Worker CI result",
+        "overflow recipient references fail closed before repository lookup"
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "no-secrets-or-trusted-private-runtime-in-worker-source",
+        "preserve guild ownership and notification-recipient isolation",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_base_branch": "main",
+      "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "resume_branch": "feature/wcp-335-guild-recipient-id-range-g1",
+      "proposal_kind": "worker_only",
+      "collision_check": {
+        "compared_against": "all current continuous/work-pool-v4 task allowlists and active/locked claims through WCP-334; exact WCP-335 branch names, resolver path and new test path checked against sanitized main",
+        "result": "The resolver and its dedicated test path are absent from all published allowlists and claims. WCP-334 is limited to ConnectorTargetPlanner and AdminConnectorCatalogController, with no shared file, DI, migration, template or workflow path. This proposal only validates the guild recipient ID before GuildRepository lookup.",
+        "paths": [
+          "src/ExternalConnector/DoctrineGuildNotificationRecipientResolver.php",
+          "tests/ExternalConnector/DoctrineGuildNotificationRecipientResolverTest.php"
+        ]
+      },
+      "claimed_on": "2026-09-26T14:19:52.675Z",
+      "claim_state": "active_worker_claim",
+      "last_checkpoint_at": "2026-09-26T14:19:52.675Z",
+      "next_action": "Implement the integer-range guard and focused overflow test, then run complete exact-head Worker CI.",
+      "checkpoint_paths": [
+        "src/ExternalConnector/DoctrineGuildNotificationRecipientResolver.php",
+        "tests/ExternalConnector/DoctrineGuildNotificationRecipientResolverTest.php"
+      ]
     }
   ],
   "recovery_queue": [],
