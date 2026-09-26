@@ -3,6 +3,7 @@
 {% block body %}
 <header class="topbar"><a class="brand" href="{{ path('app_admin_dashboard') }}">Gaming CMS</a><a class="button-link button-secondary" href="{{ path('app_admin_gaming_index') }}">Zurück</a></header>
 <main class="dashboard"><p class="eyebrow">Gaming-Modul</p><h1>Beitrittsbewerbungen</h1>
+<div class="row-actions"><a class="button-link button-secondary" href="{{ path('app_admin_guild_application_inbox') }}">Bewerbungen durchsuchen &amp; filtern</a></div>
 {% for message in app.flashes('success') %}<div class="notice">{{ message }}</div>{% endfor %}
 <div class="application-list">{% for application in applications %}<article class="application-card">
 <div><p class="eyebrow">{{ application.guild.name }} · {{ application.createdAt|date('d.m.Y H:i') }}</p><h2>{{ application.applicantName }} als {{ application.characterName }}</h2><p class="muted">{{ application.email }}{% if application.characterClass %} · {{ application.characterClass }}{% endif %}</p></div>
