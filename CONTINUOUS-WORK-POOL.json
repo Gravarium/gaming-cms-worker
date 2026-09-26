@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-26T16:51:42.906Z",
+  "published_at": "2026-09-26T16:52:46.112Z",
   "summary": {
-    "total_remaining_worker_tasks": 131,
+    "total_remaining_worker_tasks": 132,
     "completed_worker_prs_awaiting_trusted_review": 132,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "Continue disjoint active WCP-356 and WCP-357 work; after exact-head CI, re-evaluate blocked FCP dependencies.",
+    "next_required_action": "Continue disjoint active WCP-357 and WCP-358 work; verify their exact heads and re-evaluate blocked FCP dependencies.",
     "composition_preparable": 0,
     "immediately_actionable": 0,
     "must_continue": true
@@ -13935,6 +13935,100 @@
       "worker_pr": 151,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/151",
       "pr_state": "draft"
+    },
+    {
+      "priority": 139,
+      "package_id": "WCP-358",
+      "title": "Expose content tag name limit in its form",
+      "risk": "low",
+      "execution_state": "worker_in_progress",
+      "dependencies": [
+        "WCP-303"
+      ],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-358-content-tag-name-form-boundary-g1",
+      "suggested_branch": "feature/wcp-358-content-tag-name-form-boundary-g1",
+      "base_branch": "feature/wcp-303-taxonomy-slug-boundary-g1",
+      "base_sha": "ac929985bfe1b82bbc5b063c37c4f16c8e6d929f",
+      "objective": "Using WCP-303's exact green entity boundary as the proposal base, add a field-level Length(max: 100) and maxlength=100 to ContentTagType.name. The predecessor now enforces the persisted ContentTag.name varchar(100), but the tag form gives no matching client guidance or explicit field-level limit. Preserve name trimming, slug generation, description behavior and all content/tag lifecycle behavior.",
+      "allowed_paths": [
+        "src/Form/ContentTagType.php",
+        "tests/Form/ContentTagTypeBoundaryTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/",
+        "src/Entity/Category.php",
+        "src/Entity/ContentTag.php",
+        "tests/Entity/ContentTaxonomyTest.php",
+        "src/Controller/",
+        "src/Repository/",
+        "templates/",
+        "assets/",
+        "public/"
+      ],
+      "deliverables": [
+        "Add a form-level Length(max: 100) constraint and matching maxlength=100 to the tag name field.",
+        "Reject 101-character names with field-level validation before the existing controller isValid guard persists or flushes.",
+        "Keep ContentTag entity, category/tag slug behavior, description limit, controller and schema unchanged."
+      ],
+      "tests": [
+        "Form regression accepts a name of exactly 100 characters and exposes maxlength=100.",
+        "Form regression rejects a 101-character name with a name-field error.",
+        "PHPStan level 8 and complete Worker CI on the exact final HEAD."
+      ],
+      "completion_report": [
+        "exact final Worker HEAD and WCP-303 exact green proposal base SHA",
+        "complete changed-file list and Worker PR",
+        "exact and over-limit form regressions, PHPStan level 8 and exact-head Worker CI",
+        "confirmation WCP-303 remains untrusted and locked, with no entity, controller or schema changes"
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "no-secrets-or-trusted-private-runtime-in-worker-source",
+        "preserve WCP-303 slug validation, uniqueness, normalization and fail-closed behavior",
+        "preserve authentication, CSRF and content/tag access boundaries",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
+      ],
+      "proposal_base_branch": "feature/wcp-303-taxonomy-slug-boundary-g1",
+      "proposal_base_sha": "ac929985bfe1b82bbc5b063c37c4f16c8e6d929f",
+      "active_base_branch": "feature/wcp-303-taxonomy-slug-boundary-g1",
+      "active_base_sha": "ac929985bfe1b82bbc5b063c37c4f16c8e6d929f",
+      "active_head": "ac929985bfe1b82bbc5b063c37c4f16c8e6d929f",
+      "resume_branch": "feature/wcp-358-content-tag-name-form-boundary-g1",
+      "proposal_kind": "worker_only",
+      "collision_check": {
+        "compared_against": "all current continuous/work-pool-v4 allowed-path scopes and active/locked claims through WCP-357; exact files checked against WCP-303 exact green HEAD ac929985bfe1b82bbc5b063c37c4f16c8e6d929f",
+        "result": "Neither exact path occurs in any current allowed-path scope. The only other active claim, WCP-357, uses GuildAnnouncementType.php and its own form test. WCP-303's locked predecessor changes ContentTag/Category entities and a taxonomy test only; the follow-on form paths are disjoint.",
+        "paths": [
+          "src/Form/ContentTagType.php",
+          "tests/Form/ContentTagTypeBoundaryTest.php"
+        ]
+      },
+      "claimed_on": "2026-09-26T16:52:46.112Z",
+      "claim_state": "active_worker_claim",
+      "last_checkpoint_at": "2026-09-26T16:52:46.112Z",
+      "next_action": "Create the exact claim and feature refs from WCP-303's exact green HEAD; add the 100-character field boundary and exact/over-limit form regressions, then run exact-head Worker CI against main.",
+      "checkpoint_paths": [
+        "src/Form/ContentTagType.php",
+        "tests/Form/ContentTagTypeBoundaryTest.php"
+      ],
+      "last_verified_push_at": "2026-09-26T16:52:46.112Z"
     }
   ],
   "recovery_queue": [],
