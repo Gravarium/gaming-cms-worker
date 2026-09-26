@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-26T13:53:15.234Z",
+  "published_at": "2026-09-26T13:54:08.963Z",
   "summary": {
-    "total_remaining_worker_tasks": 111,
+    "total_remaining_worker_tasks": 112,
     "completed_worker_prs_awaiting_trusted_review": 105,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "Implement WCP-330 on the exclusive UserSession IP boundary paths from exact sanitized main; run complete exact-head Worker CI, then continue while preserving existing claims.",
+    "next_required_action": "Implement WCP-331 on the exclusive CredentialRecord name-construction and boundary-test paths from exact sanitized main; run complete exact-head Worker CI, then continue while preserving existing claims.",
     "composition_preparable": 0,
     "immediately_actionable": 0,
     "must_continue": true
@@ -10998,6 +10998,96 @@
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/124",
       "ci_run_id": 36246634885,
       "ci_status": "in_progress"
+    },
+    {
+      "priority": 110,
+      "package_id": "WCP-331",
+      "title": "Normalize passkey display names at construction",
+      "risk": "medium",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-331-passkey-name-construction-g1",
+      "suggested_branch": "feature/wcp-331-passkey-name-construction-g1",
+      "base_branch": "main",
+      "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "objective": "Apply the existing trim-and-mb_substr-to-80-character behavior to CredentialRecord.name during construction as well as rename, closing the constructor path that currently bypasses the mapped varchar(80) boundary. Preserve the existing truncation semantics and leave credential identifiers, public-key material, user handle, authenticator counters, attestation/trust path, authentication, ownership, and deletion behavior unchanged.",
+      "allowed_paths": [
+        "src/Entity/CredentialRecord.php",
+        "tests/Entity/CredentialRecordNameBoundaryTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/",
+        "src/Controller/",
+        "src/Form/",
+        "src/Repository/",
+        "src/Service/",
+        "templates/",
+        "assets/",
+        "public/",
+        "src/Security/"
+      ],
+      "deliverables": [
+        "Normalize constructor-supplied passkey display names using the same trim and 80 UTF-8-character truncation already used by rename.",
+        "Keep stored names within the mapped 80-character/320-byte limit, including multibyte input, without splitting valid UTF-8 characters.",
+        "Preserve current rename behavior and all credential/authentication semantics."
+      ],
+      "tests": [
+        "Targeted PHPUnit tests for exact 80-character ASCII and multibyte boundaries, constructor overflow matching rename truncation, trimming, and valid UTF-8 character boundaries.",
+        "PHPStan level 8.",
+        "Complete Worker CI on the exact final HEAD."
+      ],
+      "completion_report": [
+        "exact final Worker HEAD and sanitized main base SHA",
+        "complete changed-file list and Worker PR",
+        "targeted CredentialRecord name boundary tests and complete exact-head Worker CI result",
+        "preserved trim-and-80-character truncation behavior at both construction and rename"
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "no-secrets-or-trusted-private-runtime-in-worker-source",
+        "preserve passkey credential identity, keys, counters, attestation, ownership, authentication and deletion behavior",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_base_branch": "main",
+      "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "resume_branch": "feature/wcp-331-passkey-name-construction-g1",
+      "proposal_kind": "worker_only",
+      "collision_check": {
+        "compared_against": "all current continuous/work-pool-v4 task allowlists and locked/active claims through WCP-330; exact WCP-331 branch/PR names and new test path checked against sanitized main",
+        "result": "CredentialRecord.php and its exact name-boundary test path are disjoint from every published allowlist and claim, including the active WCP-330 UserSession paths. Scope is limited to the passkey display-name persistence boundary; no controller, credential identity, key, user handle, counter, attestation, authentication, migration, DI, workflow or private path is included.",
+        "paths": [
+          "src/Entity/CredentialRecord.php",
+          "tests/Entity/CredentialRecordNameBoundaryTest.php"
+        ]
+      },
+      "claimed_on": "2026-09-26T13:54:08.963Z",
+      "claim_state": "active_worker_claim",
+      "last_checkpoint_at": "2026-09-26T13:54:08.963Z",
+      "next_action": "Apply only the existing trim-and-80-character name normalization during CredentialRecord construction and add focused tests in the two allowlisted paths, then record a remote checkpoint and run complete exact-head Worker CI.",
+      "checkpoint_paths": [
+        "src/Entity/CredentialRecord.php",
+        "tests/Entity/CredentialRecordNameBoundaryTest.php"
+      ]
     }
   ],
   "recovery_queue": [],
