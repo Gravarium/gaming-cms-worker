@@ -1,53 +1,59 @@
 # Gemeinsamer fortlaufender Worker-Auftragspool
 
-Verwende ausschließlich Branch `continuous/work-pool-v4`.
+Verwende ausschließlich den aktuellen Stand von Branch `continuous/work-pool-v4` und die dortige `CONTINUOUS-WORK-POOL.json`. Veraltete Aufgabenhinweise aus früheren Commits, Chats oder anderen Branches sind nicht maßgeblich.
 
 ## Wichtigste Regel
 
-**Bestehende eigene Arbeit kommt immer vor einem neuen Claim.** Ein Claim bleibt bei Fehlern, Limits, Chatverlust und Worker-Abschluss eine harte Sperre für jede zweite KI. Die besitzende Fortsetzung arbeitet denselben Branch weiter.
+**Bestehende eigene Arbeit kommt immer vor einem neuen Claim.** Ein Claim bleibt bei Fehlern, Limits, Chatverlust und Worker-Abschluss eine harte Sperre. Nach jeder Unterbrechung wird derselbe Feature-Branch vom letzten bestätigten Remote-HEAD fortgesetzt.
 
-## Neue Basisregel
+## GitHub-Zugriff
 
-- Neue unabhängige Arbeit startet ausschließlich vom veröffentlichten exakten `worker/main`-HEAD.
-- Nummerierte Account-Baselines sind außer Betrieb und dürfen nicht für neue Arbeit verwendet werden.
-- Eine Folgeaufgabe darf auf dem exakten grünen HEAD ihres abgeschlossenen Worker-Vorgängers gestapelt werden.
-- Diese Stapelung ist nur untrusted Worker-Vorschlagsarbeit. Sie bedeutet niemals Trusted-Integration, Merge- oder Deployment-Recht.
-- Bei mehreren Vorgängern ist ein ausdrücklich veröffentlichter Worker-only-Kompositions-HEAD mit vollständiger grüner CI erforderlich. Nichts blind zusammenführen und keine Basis erraten.
+GitHub-Schreibzugriff erfolgt über den verbundenen GitHub-Plugin/Connector. Ein fehlendes Terminal-Token oder ein fehlgeschlagenes `git push` bedeutet nicht, dass kein Schreibzugriff existiert.
 
-## Sofortige nächste Arbeit
+Für Schreibvorgänge die GitHub-Plugin-Funktionen verwenden, insbesondere Datei-, Blob-, Tree-, Commit-, Ref-, Branch-, Pull-Request- und Workflow-Funktionen. Keine Browser-Anmeldung verlangen, solange der Connector funktioniert. Den Nutzer nicht auffordern, Branches oder Pool-Dateien manuell anzulegen.
 
-Der Recovery-Stand ist vollständig abgeglichen. FCP-053, FCP-067 und FCP-071 besitzen fertige Worker-PRs mit grüner exakter HEAD-CI.
+## Aktive Arbeit
 
-Als nächstes ist `FCP-054` zulässig:
+Der aktuelle Pool-Eintrag ist die einzige Wahrheit. Wenn ein Paket als `worker_in_progress` markiert ist, seinen dort genannten `resume_branch`, `active_base_branch`, `active_base_sha` und `active_head` verwenden und es vollständig abschließen.
 
-- Claim: `claim/fcp-054-g1`
-- Feature-Branch: `feature/fcp-054-pool-g1`
-- exakte Vorschlagsbasis: `feature/fcp-053-pool-g1`
-- Basis-HEAD: `8ce1ea7d64ddf347ed5ab5ec322449ba0307a9e7`
-- Nachweis: PR #14, Worker-CI `36010756549` erfolgreich
+Aktuell wurde FCP-069 auf `feature/fcp-069-pool-g1` von der grün geprüften Composition-Basis `897d921d705894c3023fe8d700d7938ca91c8ba2` reserviert. Dies ist nur ein aktueller Hinweis; bei Abweichung gilt immer der neuere JSON-Pool.
 
-Erzeuge Claim und Feature-Branch atomar von genau diesem HEAD und arbeite FCP-054 vollständig ab.
+## Autonomer Dauerlauf
 
-## Fortlaufender Betrieb ohne Nachfragen
+Nach jedem vollständig grünen Worker-PR ohne Rückfrage sofort:
 
-Nach jedem vollständig grünen Worker-PR:
+1. Den eigenen Pool-Eintrag auf `worker_complete_awaiting_trusted_review` setzen und Worker-PR, finalen HEAD sowie Exact-Head-CI-Run eintragen.
+2. Den Claim als `locked_until_trusted_resolution` bestehen lassen.
+3. Alle unbeanspruchten Pakete in Prioritätsreihenfolge neu bewerten. Eine Abhängigkeit gilt für Worker-Vorschlagsarbeit als erfüllt, wenn sie Trusted-integriert ist oder ein exakter grüner Worker-PR-HEAD vorliegt.
+4. Den ersten dependency-sicheren Auftrag auswählen. Nicht darauf warten, dass der Nutzer eine FCP-Nummer nennt.
+5. Bei genau einem fertigen Vorgänger dessen exakten grünen HEAD als Vorschlagsbasis verwenden.
+6. Bei mehreren fertigen Vorgängern selbst eine Worker-only-Composition-Branch erstellen, ausschließlich die belegten exakten grünen HEADs konfliktfrei zusammenführen, einen Draft-PR gegen Worker-`main` öffnen und die vollständige Exact-Head-Worker-CI abwarten.
+7. Nur bei vollständig grüner Composition-CI deren exakten HEAD im Pool als Proposal-Basis veröffentlichen.
+8. Claim- und Feature-Branch atomar von genau dieser Basis erstellen, den Pool auf `worker_in_progress` setzen und sofort mit der Implementierung beginnen.
+9. Diesen Ablauf nach dem nächsten grünen PR wiederholen. Nicht nach jedem Paket stoppen und keine neue Nutzeranweisung verlangen.
 
-1. den eigenen Pool-Eintrag auf `worker_complete_awaiting_trusted_review` setzen und PR, finalen HEAD sowie CI-Run eintragen;
-2. den Claim als Sperre bestehen lassen;
-3. genau den ersten unbeanspruchten Folgeauftrag auswählen, dessen Abhängigkeiten entweder Trusted-integriert oder durch exakte grüne Worker-PR-HEADs belegt sind;
-4. für genau diesen nächsten Auftrag die eindeutige Vorschlagsbasis veröffentlichen;
-5. sofort claimen und weiterarbeiten, ohne auf Trusted-Prüfung oder eine neue Chat-Anweisung zu warten.
+Wenn der zuerst geprüfte Auftrag echte unerfüllte Abhängigkeiten besitzt, den nächsten Auftrag prüfen. Der gesamte Pool darf nicht pauschal beendet werden, solange irgendein Auftrag mit nachweisbaren grünen Abhängigkeiten vorbereitet werden kann.
 
-Die KI hält nur an, wenn echte Divergenz, ein unbekannter Schreiber, fehlende Berechtigung, ein Sicherheitskonflikt oder bei mehreren Abhängigkeiten keine eindeutig grün geprüfte Kompositionsbasis existiert. In diesem Fall überspringt sie den unsicheren Auftrag und prüft den nächsten eindeutig zulässigen Auftrag, statt pauschal den gesamten Pool zu beenden.
+## Zulässige Stop-Gründe
 
-## Allgemeine Regeln
+Nur stoppen bei:
 
-- Genau ein Feature-Branch wird gleichzeitig aktiv bearbeitet.
-- Innerhalb von 30 Minuten tatsächlicher Arbeit und vor Unterbrechungen einen sinnvollen Push erstellen.
-- Eigene lineare Folgecommits sind kein STOP.
-- Bei roter CI auf demselben Branch die Root Cause beheben; Schutz, Tests, PHPStan und CI niemals abschwächen.
-- Nur erlaubte Pfade bearbeiten.
+- echter nicht automatisch lösbarer Merge-Divergenz oder Konflikt,
+- unbekanntem fremdem Schreiber auf dem aktiven Branch,
+- tatsächlich fehlender GitHub-Connector-Berechtigung nach einem fehlgeschlagenen Plugin-Schreibaufruf,
+- roter CI, deren Ursache trotz konkreter Diagnose und Reparaturversuchen nicht behoben werden kann,
+- echtem Sicherheitskonflikt,
+- keinem einzigen Auftrag, dessen reale Abhängigkeiten erfüllt oder durch zulässige Vorarbeit erfüllbar sind.
+
+Ein fehlendes Terminal-Token, eine abgelaufene lokale Git-Anmeldung, eine veraltete Queue-Anzeige oder das Fehlen einer bereits vorbereiteten Composition-Basis sind allein keine Stop-Gründe.
+
+## Sicherheits- und Integrationsregeln
+
+- Genau ein Feature-Paket gleichzeitig aktiv bearbeiten.
+- Vor Unterbrechungen einen sinnvollen Remote-Checkpoint erstellen.
+- Bei roter CI die Ursache beheben; Tests, PHPStan, CI, Auth, CSRF, Validierung, Datenschutz, Recovery, Rollback und Uploadschutz niemals abschwächen.
+- Nur erlaubte Paketpfade bearbeiten; Pool-Selbstverwaltung ist auf die beiden Pool-Dateien und dafür nötige Worker-only-Composition-Metadaten beschränkt.
+- Worker-Code bleibt untrusted.
 - Nichts nach Trusted mergen und nichts deployen.
 - Keine künstlichen oder leeren Commits erzeugen.
-- Nach Werkzeug-, Modell-, Chat- oder Nachrichtenlimit denselben Branch am letzten bestätigten Remote-HEAD fortsetzen.
-- Fremde Claims, Feature-Branches, PRs und Pool-Einträge bleiben unangetastet.
+- Fremde aktive Claims und Feature-Branches nicht verändern.
