@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\\Tests\\Entity;
+namespace App\Tests\Entity;
 
-use App\\Entity\\AdminNotification;
-use PHPUnit\\Framework\\TestCase;
+use App\Entity\AdminNotification;
+use PHPUnit\Framework\TestCase;
 
 final class AdminNotificationBoundaryTest extends TestCase
 {
@@ -86,7 +86,7 @@ final class AdminNotificationBoundaryTest extends TestCase
         try {
             $notification->setMessage(str_repeat('x', 16001));
             self::fail('Oversized notification bytes were accepted.');
-        } catch (\\LengthException $exception) {
+        } catch (\LengthException $exception) {
             self::assertStringContainsString('byte limit', $exception->getMessage());
         }
 
@@ -98,17 +98,17 @@ final class AdminNotificationBoundaryTest extends TestCase
         $notification = (new AdminNotification())->setTitle('kept');
 
         try {
-            $notification->setTitle("\\xFF");
+            $notification->setTitle("\xFF");
             self::fail('Malformed UTF-8 was accepted.');
-        } catch (\\InvalidArgumentException) {
+        } catch (\InvalidArgumentException) {
             self::addToAssertionCount(1);
         }
         self::assertSame('kept', $notification->getTitle());
 
         try {
-            $notification->setMessage("unsafe\\0message");
+            $notification->setMessage("unsafe\0message");
             self::fail('A NUL byte was accepted.');
-        } catch (\\InvalidArgumentException) {
+        } catch (\InvalidArgumentException) {
             self::addToAssertionCount(1);
         }
         self::assertSame('', $notification->getMessage());
@@ -116,7 +116,7 @@ final class AdminNotificationBoundaryTest extends TestCase
         try {
             $notification->setLink('//external.example.invalid');
             self::fail('An external notification link was accepted.');
-        } catch (\\InvalidArgumentException) {
+        } catch (\InvalidArgumentException) {
             self::addToAssertionCount(1);
         }
         self::assertNull($notification->getLink());
@@ -127,7 +127,7 @@ final class AdminNotificationBoundaryTest extends TestCase
         try {
             $change();
             self::fail('An over-limit notification value was accepted.');
-        } catch (\\LengthException) {
+        } catch (\LengthException) {
             self::addToAssertionCount(1);
         }
 
