@@ -54,6 +54,7 @@ final class MediaStorageCleanupRepairerTest extends TestCase
     public function testNonPositiveRepairLimitDoesNotConsumeJournal(): void
     {
         $root = $this->root();
+        self::assertTrue(mkdir($root, 0777, true));
         $journal = new MediaStorageCleanupJournal($root);
         $journal->recordLocal('/uploads/media/content/file.txt');
 
@@ -70,8 +71,6 @@ final class MediaStorageCleanupRepairerTest extends TestCase
         $journal = new MediaStorageCleanupJournal($root);
         $repairer = $this->repairer($journal, $root);
         $method = new \ReflectionMethod(MediaStorageCleanupRepairer::class, 'localPath');
-        $method->setAccessible(true);
-
         $this->expectException(\RuntimeException::class);
         $method->invoke($repairer, "/uploads/media/content/\xC3\x28.txt");
     }
