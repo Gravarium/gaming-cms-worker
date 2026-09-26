@@ -42,9 +42,12 @@ final class AccountRecoveryController extends AbstractController
     {
         $form = $this->createForm(ForgotPasswordType::class)->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $limitKey = 'reset-'.($request->getClientIp() ?? 'unknown');
-            $accepted = $this->recoveryLimiter->create($limitKey)->consume()->isAccepted();
+            $ipLimitKey = 'reset-'.($request->getClientIp() ?? 'unknown');
+            $ipAccepted = $this->recoveryLimiter->create($ipLimitKey)->consume()->isAccepted();
             $email = mb_strtolower(trim((string) $form->get('email')->getData()));
+            $emailLimitKey = 'reset-email-'.hash('sha256', $email);
+            $emailAccepted = $this->recoveryLimiter->create($emailLimitKey)->consume()->isAccepted();
+            $accepted = $ipAccepted && $emailAccepted;
             $user = $accepted ? $this->users->findOneBy(['email' => $email, 'isActive' => true]) : null;
 
             if ($user instanceof User) {
