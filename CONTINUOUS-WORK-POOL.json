@@ -10,7 +10,7 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-26T21:41:01.441Z",
+  "published_at": "2026-09-26T21:41:10.221Z",
   "summary": {
     "total_remaining_worker_tasks": 134,
     "completed_worker_prs_awaiting_trusted_review": 180,
@@ -20079,7 +20079,7 @@
       "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-      "active_head": "99be72730d03974563ab1aeeaa5e3df8621e1772",
+      "active_head": "99433460f1989313e3812bf081da5bba0231db7c",
       "resume_branch": "feature/wcp-411-guild-application-inbox-g1",
       "proposal_kind": "worker_only",
       "collision_check": {
@@ -20095,15 +20095,19 @@
       },
       "claimed_on": "2026-09-26T21:29:08.842Z",
       "claim_state": "active",
-      "next_action": "Complete the permission-gated inbox controller, linked inbox interface and targeted feature/security tests within the five allowed paths; checkpoint each coherent push.",
+      "next_action": "Run targeted inbox tests, PHPStan level 8 and full Worker CI on a draft PR exact HEAD; diagnose and fix any red result on this same feature branch.",
       "branch_heads": {
         "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-        "feature_branch": "99be72730d03974563ab1aeeaa5e3df8621e1772"
+        "feature_branch": "99433460f1989313e3812bf081da5bba0231db7c"
       },
-      "last_checkpoint_at": "2026-09-26T21:37:28.471Z",
-      "last_verified_push_at": "2026-09-26T21:37:28.471Z",
+      "last_checkpoint_at": "2026-09-26T21:41:10.221Z",
+      "last_verified_push_at": "2026-09-26T21:41:10.221Z",
       "checkpoint_paths": [
-        "src/Repository/GuildApplicationRepository.php"
+        "src/Controller/AdminGuildApplicationInboxController.php",
+        "src/Repository/GuildApplicationRepository.php",
+        "templates/admin/gaming/application/index.html.twig",
+        "templates/admin/gaming/application/inbox.html.twig",
+        "tests/Controller/AdminGuildApplicationInboxTest.php"
       ]
     },
     {
