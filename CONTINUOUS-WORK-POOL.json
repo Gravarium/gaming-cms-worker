@@ -12,12 +12,12 @@
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
   "published_at": "2026-09-26T17:51:46.613Z",
   "summary": {
-    "total_remaining_worker_tasks": 132,
-    "completed_worker_prs_awaiting_trusted_review": 143,
+    "total_remaining_worker_tasks": 131,
+    "completed_worker_prs_awaiting_trusted_review": 144,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "Implement WCP-369 on its claimed branch, run the full exact-head Worker CI, and continue with the next safe independent proposal.",
+    "next_required_action": "Re-evaluate the five remaining FCP dependencies; select or derive the next safe disjoint Worker proposal while preserving foreign active claims.",
     "composition_preparable": 0,
     "immediately_actionable": 0,
     "must_continue": true
@@ -15043,7 +15043,7 @@
       "package_id": "WCP-368",
       "title": "Expose guild event title and location form limits",
       "risk": "low",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -15124,9 +15124,9 @@
         ]
       },
       "claimed_on": "2026-09-26T17:49:44.426Z",
-      "claim_state": "active_worker_claim",
-      "last_checkpoint_at": "2026-09-26T17:51:55.443Z",
-      "next_action": "Run and verify full Worker CI plus PHPStan on exact PR head 32e3d19af520a45293551f7495cf40b40fe2faa4; repair any failure only within the two allowed paths.",
+      "claim_state": "locked_until_trusted_resolution",
+      "last_checkpoint_at": "2026-09-26T17:54:04.714Z",
+      "next_action": "Await Trusted review; keep this claim locked and do not merge or deploy.",
       "checkpoint_paths": [
         "src/Form/GuildEventType.php",
         "tests/Form/GuildEventTypeBoundaryTest.php"
@@ -15134,7 +15134,23 @@
       "last_verified_push_at": "2026-09-26T17:51:55.443Z",
       "worker_pr": 162,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/162",
-      "pr_state": "draft"
+      "pr_state": "ready_for_review",
+      "final_head": "32e3d19af520a45293551f7495cf40b40fe2faa4",
+      "ci_run_id": 36260523710,
+      "ci_result": "success",
+      "completed_on": "2026-09-26T17:54:04.714Z",
+      "final_changed_paths": [
+        "src/Form/GuildEventType.php",
+        "tests/Form/GuildEventTypeBoundaryTest.php"
+      ],
+      "test_evidence": [
+        "Exact Unicode limits accepted: GuildEvent title 180 and optional location 140.",
+        "One-over Unicode values rejected by their corresponding form fields.",
+        "Rendered form view exposes maxlength 180 for title and 140 for location.",
+        "Blank optional location remains valid and normalizes to null.",
+        "PHPStan level 8 application type analysis passed in exact-head Worker CI run #468 (36260523710).",
+        "Full Worker CI run #468 (36260523710) succeeded, including 432 tests / 1,866 assertions and the complete PostgreSQL 18 migration chain."
+      ]
     },
     {
       "priority": 149,
