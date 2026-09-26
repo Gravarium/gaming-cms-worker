@@ -15,6 +15,13 @@
     {% if video.mediaAsset %}
         <div class="notice">Aktuelle Datei: <a href="{{ video.mediaAsset.location }}" target="_blank" rel="noopener noreferrer">{{ video.mediaAsset.originalName }}</a></div>
     {% endif %}
+    {% if video.id is not null %}
+        <div class="storage-hint">
+            <strong>Gespeicherte Vorschau</strong>
+            <span>Öffnet die zuletzt gespeicherte Fassung in einem neuen Tab.</span>
+            <a class="button-link button-secondary" href="{{ path('app_admin_video_preview', {id: video.id}) }}" target="_blank" rel="noopener noreferrer">Vorschau ansehen</a>
+        </div>
+    {% endif %}
     {{ form_start(form, {attr: {class: 'content-form'}}) }}
         {{ form_widget(form) }}
         <button type="submit">Video speichern</button>
