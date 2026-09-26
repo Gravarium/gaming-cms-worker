@@ -1,6 +1,6 @@
 {
   "schema_version": 5,
-  "mode": "shared-reservable-worker-pool",
+  "mode": "shared-autonomous-worker-proposal-pool",
   "source_queue": {
     "repository": "Gravarium/gaming-cms",
     "path": "docs/ai-work-queue.json",
@@ -10,21 +10,21 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-26T07:50:27.549Z",
+  "published_at": "2026-09-26T08:05:28.922Z",
   "summary": {
     "total_remaining_worker_tasks": 27,
     "completed_worker_prs_awaiting_trusted_review": 21,
     "recovery_tasks": 0,
     "unclaimed": 6,
     "immediately_claimable": 0,
-    "next_required_action": "Prepare FCP-077 worker-only composition from verified FCP-049 code and green FCP-054/056/062/065 proposal heads. Validate full composition CI before any FCP-077 claim. Existing FCP-069 claim remains locked.",
+    "next_required_action": "FCP-077 has verified predecessors and requires a green worker-only composition before claim. In parallel, other chats may publish and claim distinct, non-overlapping worker-only CMS proposals from the approved goal. FCP-069 remains complete and locked until Trusted resolution.",
     "composition_preparable": 1
   },
   "rules": {
-    "choose": "Resume any owned unfinished claim first. Otherwise choose exactly the first unclaimed task with an empty current blocked_by list and a published exact proposal_base_sha. A completed Worker proposal may satisfy proposal-only dependencies when its exact HEAD has green Worker CI.",
+    "choose": "Resume the current chat's unfinished claimed branch first. Otherwise atomically claim an eligible published task. If no published task is eligible, independently derive and publish a bounded worker-only CMS proposal from approved product goals and observed code gaps; do not ask the owner for the next FCP number.",
     "atomic_reservation": "Create the exact claim_branch and suggested feature branch from that task's published proposal_base_sha. If the claim already exists, treat it as a hard lock; the owning continuation resumes it and every other AI skips it.",
     "no_worker_numbers": "Worker numbers are not assignment identities. Any authorized Worker AI uses the same shared pool.",
-    "one_at_a_time": "Exactly one claimed feature branch may be actively edited. After its exact-head CI is green and its pool entry is reconciled, immediately publish and claim exactly one next dependency-safe package instead of waiting for Trusted review.",
+    "one_at_a_time": "Exactly one feature package per continuation chat may be actively edited. Different chats may work concurrently only with distinct exclusive claim branches, disjoint allowed paths and no unresolved shared migration, DI or template conflict. A shared GitHub login is not a global one-package lock.",
     "lease": "Reservation lasts seven hours after the last verified push; the task remains in the pool.",
     "dependencies": "For Worker proposal sequencing, a dependency is satisfied by either Trusted integration in worker/main or a completed Worker PR with green CI on its exact HEAD. This only authorizes stacked untrusted proposal work; it never marks the dependency integrated and never authorizes Trusted merge or deployment.",
     "final_authority": "Never merge to Trusted and never deploy.",
@@ -34,9 +34,10 @@
     "continue_after_interrupt": "On any recoverable tool/model/chat interruption, fetch the same feature branch and continue from the verified remote HEAD. Do not abandon or duplicate work.",
     "proposal_stacking": "A single completed dependency uses that dependency's exact green feature HEAD as proposal base. Multiple completed dependencies require an explicitly published Worker-only composition base with complete green CI before the next claim. Never guess or blind-merge a composition base.",
     "no_account_baselines": "New work uses worker/main or an explicitly published exact green predecessor/composition HEAD. Retired numbered account baselines are not assignment sources.",
-    "autonomous_continuation": "After every green exact-head Worker PR, self-reconcile, prepare and validate any required dependency-safe composition base, then atomically claim and start the next eligible package without asking the user for another instruction or FCP number.",
+    "autonomous_continuation": "After every green exact-head Worker PR, self-reconcile and continue to the next dependency-safe package. If the finite task list is exhausted or blocked, plan a new small worker-only proposal from the approved CMS scope, record scope, dependencies, base SHA, path collision checks, tests and Fortress/privacy impact in this pool, reserve an exclusive claim, then implement without another owner instruction. A proposal is never a Trusted FCP integration.",
     "connector_access": "Use the connected GitHub plugin for repository writes. Missing terminal credentials or failed command-line git push is not a blocker unless a GitHub plugin write also fails for authorization.",
-    "no_false_global_block": "Re-evaluate every unclaimed package and proven green dependency after each completion. Do not report the whole pool blocked merely because the first candidate is blocked or because a composition base has not yet been prepared."
+    "no_false_global_block": "Re-evaluate all unclaimed packages and exact green predecessors after each completion. If none can start, prepare a verified composition or self-publish a new independent worker-safe proposal. A finite or blocked list alone is not a reason to stop; report only a concrete security, scope, authorization, CI or unresolvable dependency conflict.",
+    "self_expand": "Owner-approved standing instruction: independently decompose the secure gaming CMS goal and existing documented gaps into bounded worker-visible proposals. Assign a unique WCP identifier and atomic claim branch, use only current sanitized worker main or a verified green composition base, state exact allowed/forbidden paths, acceptance checks, real dependencies and collision proof. Never remove existing FCP dependencies, edit another chat's claim, invent private components, set integrated or merge/deploy to Trusted. Trusted maps the proposal to the canonical queue before intake."
   },
   "tasks": [
     {
