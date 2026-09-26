@@ -10,16 +10,16 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-26T10:12:05.875Z",
+  "published_at": "2026-09-26T10:13:28.317Z",
   "summary": {
-    "total_remaining_worker_tasks": 51,
+    "total_remaining_worker_tasks": 52,
     "completed_worker_prs_awaiting_trusted_review": 45,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "Re-evaluate the remaining unclaimed Worker proposals and continue an independent package while preserving WCP-098 and all foreign claim-locked packages; do not modify WCP-097 or WCP-100.",
+    "next_required_action": "Continue WCP-102 on its exclusive execution-summary boundary claim while preserving WCP-098 and WCP-101 foreign claims plus all completed foreign claim locks; after exact-head green CI, reconcile and continue independently.",
     "composition_preparable": 0,
-    "immediately_actionable": 1,
+    "immediately_actionable": 2,
     "must_continue": true
   },
   "rules": {
@@ -4555,6 +4555,93 @@
         ]
       },
       "claimed_on": "2026-09-26T10:08:22.616Z"
+    },
+    {
+      "priority": 52,
+      "package_id": "WCP-102",
+      "title": "Bound external connector execution summaries",
+      "risk": "medium",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-102-execution-summary-boundary-g1",
+      "suggested_branch": "feature/wcp-102-execution-summary-boundary-g1",
+      "base_branch": "main",
+      "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "objective": "Harden the worker-visible ExternalConnectorExecutionSummary aggregate before health recorders and commands consume it: enforce a known bounded capability, a bounded list shape and typed ExternalConnectorExecutionResult entries while preserving existing status and successful-count semantics.",
+      "allowed_paths": [
+        "src/ExternalConnector/ExternalConnectorExecutionSummary.php",
+        "tests/ExternalConnector/ExternalConnectorExecutionSummaryTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/",
+        "src/Controller/",
+        "src/Entity/",
+        "src/ExternalConnector/ExternalConnectorTargetDefinition.php",
+        "tests/ExternalConnector/ExternalConnectorTargetDefinitionTest.php",
+        "src/ExternalConnector/ExternalMailMessage.php",
+        "tests/ExternalConnector/ExternalMailMessageTest.php",
+        "src/ExternalConnector/ExternalMediaObject.php",
+        "tests/ExternalConnector/ExternalMediaObjectTest.php",
+        "src/ExternalConnector/ExternalMediaUpload.php",
+        "tests/ExternalConnector/ExternalMediaUploadTest.php",
+        "src/Security/LocalRedirectTarget.php",
+        "tests/Security/LocalRedirectTargetTest.php"
+      ],
+      "deliverables": [
+        "fail-closed known-capability validation and bounded list/result typing for execution summaries",
+        "preserve not-configured, healthy, degraded, failed and successfulCount behavior for valid executor output",
+        "positive and negative summary regression coverage without schema, migration, controller or private-runtime changes"
+      ],
+      "tests": [
+        "targeted ExternalConnectorExecutionSummary PHPUnit tests",
+        "PHPStan level 8",
+        "complete Worker CI on the exact final HEAD"
+      ],
+      "completion_report": [
+        "exact final Worker HEAD and sanitized base SHA",
+        "complete changed-path list and Worker PR",
+        "targeted tests plus complete Worker CI result",
+        "typed result aggregation, status semantics and deferred Fortress connector-boundary risks"
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "no-secrets-or-trusted-private-runtime-in-worker-source",
+        "preserve existing connector, adapter, upload, MIME, notification and storage safeguards",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_base_branch": "main",
+      "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "resume_branch": "feature/wcp-102-execution-summary-boundary-g1",
+      "proposal_kind": "worker_only",
+      "collision_check": {
+        "compared_against": "current continuous/work-pool-v4 task allowlists and active branches at publication",
+        "result": "disjoint from all published task allowlists and foreign WCP-098, WCP-099 and WCP-101 claims",
+        "paths": [
+          "src/ExternalConnector/ExternalConnectorExecutionSummary.php",
+          "tests/ExternalConnector/ExternalConnectorExecutionSummaryTest.php"
+        ]
+      },
+      "claimed_on": "2026-09-26T10:13:28.317Z"
     }
   ],
   "recovery_queue": [],
