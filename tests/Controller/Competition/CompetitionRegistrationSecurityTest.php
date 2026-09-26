@@ -133,9 +133,12 @@ final class CompetitionRegistrationSecurityTest extends WebTestCase
         $entityManager->flush();
 
         $competitionId = $public->getId();
+        $privateId = $private->getId();
+        $draftId = $draft->getId();
+        $inProgressId = $inProgress->getId();
+        $disabledId = $disabled->getId();
         $userId = $user->getId();
-        $hiddenIds = [$private->getId(), $draft->getId(), $inProgress->getId(), $disabled->getId()];
-        if ($competitionId === null || $userId === null || in_array(null, $hiddenIds, true)) {
+        if ($competitionId === null || $privateId === null || $draftId === null || $inProgressId === null || $disabledId === null || $userId === null) {
             throw new \LogicException('Competition registration fixture did not receive database identifiers.');
         }
 
@@ -145,7 +148,7 @@ final class CompetitionRegistrationSecurityTest extends WebTestCase
             'userId' => $userId,
             'user' => $user,
             'suffix' => $suffix,
-            'hiddenIds' => $hiddenIds,
+            'hiddenIds' => [$privateId, $draftId, $inProgressId, $disabledId],
         ];
     }
 
