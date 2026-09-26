@@ -122,9 +122,10 @@ final class AccountRecoveryControllerTest extends WebTestCase
         $entityManager->persist($user);
         $entityManager->flush();
 
+        $ipPrefix = sprintf('10.%d.%d', random_int(0, 255), random_int(0, 255));
         $ipStart = random_int(1, 240);
         for ($attempt = 0; $attempt < 6; ++$attempt) {
-            $client->setServerParameter('REMOTE_ADDR', sprintf('198.51.100.%d', $ipStart + $attempt));
+            $client->setServerParameter('REMOTE_ADDR', sprintf('%s.%d', $ipPrefix, $ipStart + $attempt));
             $crawler = $client->request('GET', '/forgot-password');
             $submittedEmail = $attempt % 2 === 0 ? $email : mb_strtoupper($email);
             $client->submit($crawler->selectButton('Link anfordern')->form([
@@ -156,7 +157,7 @@ final class AccountRecoveryControllerTest extends WebTestCase
         }
         $entityManager->flush();
 
-        $client->setServerParameter('REMOTE_ADDR', sprintf('198.51.100.%d', random_int(1, 240)));
+        $client->setServerParameter('REMOTE_ADDR', sprintf('10.%d.%d.%d', random_int(0, 255), random_int(0, 255), random_int(1, 254)));
         foreach ($users as $user) {
             $crawler = $client->request('GET', '/forgot-password');
             $client->submit($crawler->selectButton('Link anfordern')->form([
