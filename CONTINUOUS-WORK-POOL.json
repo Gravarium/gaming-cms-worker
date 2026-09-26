@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-26T22:56:46.832Z",
+  "published_at": "2026-09-26T22:57:37.551Z",
   "summary": {
     "total_remaining_worker_tasks": 134,
-    "completed_worker_prs_awaiting_trusted_review": 190,
+    "completed_worker_prs_awaiting_trusted_review": 191,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-424 PR #218 is updated to exact HEAD cb23f2a548de2691f7b0075cff3559b925a7f2d6 after diagnosing the first test failure; run 36277849213 must finish green before completion.",
+    "next_required_action": "WCP-423 is complete on PR #217 at exact green head 855e0187b9f12af00ec209ef1c07297ea615a64c; its claim remains locked pending Trusted review. Continue with the next unclaimed dependency-safe task while preserving other active claims.",
     "composition_preparable": 0,
     "immediately_actionable": 0,
     "must_continue": true
@@ -21620,7 +21620,7 @@
       "package_id": "WCP-423",
       "title": "Guard individual account session revocation",
       "risk": "low",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -21687,13 +21687,13 @@
         ]
       },
       "claimed_on": "2026-09-26T22:48:20.584Z",
-      "claim_state": "active",
+      "claim_state": "locked_until_trusted_resolution",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
       "active_head": "855e0187b9f12af00ec209ef1c07297ea615a64c",
       "resume_branch": "feature/wcp-423-account-session-revocation-g1",
-      "last_checkpoint_at": "2026-09-26T22:55:37.221Z",
-      "last_verified_push_at": "2026-09-26T22:55:37.221Z",
+      "last_checkpoint_at": "2026-09-26T22:57:37.551Z",
+      "last_verified_push_at": "2026-09-26T22:57:37.551Z",
       "checkpoint_paths": [
         "tests/Controller/AccountSessionRevocationSecurityTest.php"
       ],
@@ -21701,14 +21701,14 @@
         "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
         "feature_branch": "855e0187b9f12af00ec209ef1c07297ea615a64c"
       },
-      "next_action": "Wait for exact-head Worker CI on PR #217; repair any concrete failure and update this active checkpoint.",
+      "next_action": "PR #217 is ready for Trusted review; keep this claim locked until Trusted explicitly integrates, cancels, or transfers it, then continue with an independent dependency-safe task.",
       "worker_pr": 217,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/217",
-      "pr_state": "open_ci_pending",
+      "pr_state": "open_ready_for_review_unmerged",
       "last_ci_run_id": 36277788368,
-      "last_ci_result": "in_progress",
+      "last_ci_result": "success",
       "ci_run_id": 36277788368,
-      "ci_result": "in_progress",
+      "ci_result": "success",
       "ci_attempts": [
         {
           "run_id": 36277573438,
@@ -21719,9 +21719,35 @@
         {
           "run_id": 36277788368,
           "head": "855e0187b9f12af00ec209ef1c07297ea615a64c",
-          "result": "in_progress"
+          "result": "success"
         }
-      ]
+      ],
+      "draft_pr": false,
+      "final_head": "855e0187b9f12af00ec209ef1c07297ea615a64c",
+      "final_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "final_changed_paths": [
+        "tests/Controller/AccountSessionRevocationSecurityTest.php"
+      ],
+      "changed_paths": [
+        "tests/Controller/AccountSessionRevocationSecurityTest.php"
+      ],
+      "completed_at": "2026-09-26T22:57:37.551Z",
+      "test_results": {
+        "phpunit": "432 tests, 1,872 assertions, 0 failures; one deprecation and one notice.",
+        "phpstan": "Level 8 passed with no errors.",
+        "php_symfony": "Worker PHP/Symfony validation job passed on exact final HEAD.",
+        "postgres18": "PostgreSQL 18.6 completed the full migration chain: 39 migrations executed, 0 unavailable.",
+        "exact_head_ci": {
+          "run_id": 36277788368,
+          "head": "855e0187b9f12af00ec209ef1c07297ea615a64c",
+          "result": "success"
+        }
+      },
+      "completion_summary": "Functional tests verify a different authenticated account receives 404 without revoking the target session, the owner can revoke another active session using its rendered CSRF token while retaining the current session, and revoking the current tracked session redirects to login and persists its revoked state. Existing AccountBrowserAssurance coverage verifies revoked sessions are denied on a subsequent request. Only the allowed test file changed.",
+      "open_limitations": [
+        "Awaiting Trusted review and Trusted integration CI."
+      ],
+      "trusted_follow_up": "Preserve account session ownership checks, per-session CSRF validation and current-session invalidation when porting to Trusted; run full Trusted CI."
     },
     {
       "priority": 204,
