@@ -201,7 +201,7 @@ final class AdminVideoController extends AbstractController
     {
         $form = $this->createForm(VideoCategoryType::class, $category)->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $category->setSlug($this->uniqueSlug($category->getName(), $category->getId(), fn (string $slug, ?int $id): bool => $this->categories->slugExists($slug, $id)));
+            $category->setSlug($this->uniqueSlug($category->getName(), $category->getId(), fn (string $slug, ?int $id): bool => $this->categories->slugExists($slug, $id), 140));
             if ($category->getId() === null) { $this->entityManager->persist($category); }
             $this->entityManager->flush();
             $this->addFlash('success', 'Die Videokategorie wurde gespeichert.');
@@ -216,7 +216,7 @@ final class AdminVideoController extends AbstractController
     {
         $form = $this->createForm(VideoPlaylistType::class, $playlist)->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $playlist->setSlug($this->uniqueSlug($playlist->getTitle(), $playlist->getId(), fn (string $slug, ?int $id): bool => $this->playlists->slugExists($slug, $id)));
+            $playlist->setSlug($this->uniqueSlug($playlist->getTitle(), $playlist->getId(), fn (string $slug, ?int $id): bool => $this->playlists->slugExists($slug, $id), 180));
             if ($playlist->getId() === null) { $this->entityManager->persist($playlist); }
             $this->entityManager->flush();
             $this->addFlash('success', 'Die Playlist wurde gespeichert.');
@@ -229,16 +229,37 @@ final class AdminVideoController extends AbstractController
 
     private function uniqueVideoSlug(string $title, ?int $exceptId): string
     {
-        return $this->uniqueSlug($title, $exceptId, fn (string $slug, ?int $id): bool => $this->videos->slugExists($slug, $id));
+        return $this->uniqueSlug($title, $exceptId, fn (string $slug, ?int $id): bool => $this->videos->slugExists($slug, $id), 200);
     }
 
     /** @param callable(string, ?int): bool $exists */
-    private function uniqueSlug(string $value, ?int $exceptId, callable $exists): string
+    private function uniqueSlug(string $value, ?int $exceptId, callable $exists, int $maxLength): string
     {
+        if ($maxLength < 1) {
+            throw new \InvalidArgumentException('The video slug storage limit must be positive.');
+        }
+
         $base = mb_strtolower($this->slugger->slug($value)->toString()) ?: 'video';
+        $base = rtrim(mb_substr($base, 0, $maxLength), '-');
+        if ($base === '') {
+            $base = mb_substr('video', 0, $maxLength);
+        }
+
         $slug = $base;
         $number = 2;
-        while ($exists($slug, $exceptId)) { $slug = $base.'-'.$number++; }
+        while ($exists($slug, $exceptId)) {
+            $tail = '-'.$number++;
+            $remaining = $maxLength - mb_strlen($tail);
+            if ($remaining < 1) {
+                throw new \RuntimeException('A unique video slug cannot fit within its storage limit.');
+            }
+
+            $prefix = rtrim(mb_substr($base, 0, $remaining), '-');
+            if ($prefix === '') {
+                $prefix = mb_substr('video', 0, $remaining);
+            }
+            $slug = $prefix.$tail;
+        }
 
         return $slug;
     }
