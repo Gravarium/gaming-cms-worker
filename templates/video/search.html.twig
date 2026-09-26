@@ -1,30 +1,29 @@
 {% extends 'base.html.twig' %}
 {% set site = site_settings() %}
-{% block title %}Videos | {{ site.siteName }}{% endblock %}
+{% block title %}Videosuche | {{ site.siteName }}{% endblock %}
 {% block body %}
 <header class="topbar">
     <a class="brand" href="{{ path('app_home') }}">{% if site.logoPath %}<img class="site-logo" src="{{ site.logoPath }}" alt="{{ site.siteName }}">{% else %}{{ site.siteName }}{% endif %}</a>
-    <nav class="top-actions"><a href="{{ path('app_news_index') }}">News</a>{% if cms_module_enabled('gaming') %}<a href="{{ path('app_gaming_index') }}">Gaming</a>{% endif %}</nav>
+    <a class="button-link button-secondary" href="{{ path('app_video_index') }}">Alle Videos</a>
 </header>
 <main class="public-shell video-library">
     <p class="eyebrow">Mediathek</p>
-    <h1>Videos</h1>
-    <p class="hero-copy">Streams, Guides, Highlights und Community-Videos an einem Ort.</p>
+    <h1>Videos durchsuchen</h1>
+
     <form action="{{ path('app_video_search') }}" method="get" role="search" class="content-form">
-        <label for="video-library-search">Videos durchsuchen
-            <input id="video-library-search" type="search" name="q" minlength="2" maxlength="100" required>
+        <label for="video-search-query">Suchbegriff
+            <input id="video-search-query" type="search" name="q" value="{{ query }}" minlength="2" maxlength="100" required>
         </label>
         <button type="submit">Suchen</button>
     </form>
 
-    <div class="video-filters">
-        <a class="status {{ not activeCategory and not activePlaylist ? 'status-ready' : '' }}" href="{{ path('app_video_index') }}">Alle Videos</a>
-        {% for category in categories %}<a class="status {{ activeCategory and activeCategory.id == category.id ? 'status-ready' : '' }}" href="{{ path('app_video_index', {category: category.slug}) }}">{{ category.name }}</a>{% endfor %}
-        {% for playlist in playlists %}<a class="status {{ activePlaylist and activePlaylist.id == playlist.id ? 'status-ready' : '' }}" href="{{ path('app_video_index', {playlist: playlist.slug}) }}">Playlist: {{ playlist.title }}</a>{% endfor %}
-    </div>
-
-    {% if activeCategory %}<div class="video-selection"><h2>{{ activeCategory.name }}</h2>{% if activeCategory.description %}<p>{{ activeCategory.description }}</p>{% endif %}</div>{% endif %}
-    {% if activePlaylist %}<div class="video-selection"><h2>{{ activePlaylist.title }}</h2>{% if activePlaylist.description %}<p>{{ activePlaylist.description }}</p>{% endif %}</div>{% endif %}
+    {% if submitted and not valid %}
+        <p class="notice" role="status">Bitte gib einen Suchbegriff mit 2 bis 100 Zeichen ein.</p>
+    {% elseif valid %}
+        <p class="muted" role="status">{{ videos|length }} Treffer für „{{ query }}“</p>
+    {% else %}
+        <p class="muted">Suche veröffentlichte Videos nach Titel oder Beschreibung.</p>
+    {% endif %}
 
     <section class="video-grid">
         {% for video in videos %}
@@ -42,7 +41,9 @@
                 </div>
             </article>
         {% else %}
-            <div class="panel"><h2>Noch keine Videos</h2><p>In diesem Bereich wurden noch keine veröffentlichten Videos gefunden.</p></div>
+            {% if valid %}
+                <div class="panel"><h2>Keine Videos gefunden</h2><p>Versuche einen anderen Suchbegriff.</p></div>
+            {% endif %}
         {% endfor %}
     </section>
 </main>
