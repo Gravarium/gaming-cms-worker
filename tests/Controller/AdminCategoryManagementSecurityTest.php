@@ -52,7 +52,7 @@ final class AdminCategoryManagementSecurityTest extends WebTestCase
 
         $client->request('POST', '/admin/categories/'.$id.'/delete');
         self::assertResponseStatusCodeSame(403);
-        self::assertInstanceOf(Category::class, $repository->find($id));
+        self::assertInstanceOf(Category::class, $client->getContainer()->get(CategoryRepository::class)->find($id));
 
         $crawler = $client->request('GET', '/admin/categories');
         $tokenField = $crawler->filter('form[action="/admin/categories/'.$id.'/delete"] input[name="_token"]');
@@ -64,7 +64,7 @@ final class AdminCategoryManagementSecurityTest extends WebTestCase
 
         self::assertResponseRedirects('/admin/categories');
         $this->entityManager($client)->clear();
-        self::assertNull($repository->find($id));
+        self::assertNull($client->getContainer()->get(CategoryRepository::class)->find($id));
     }
 
     public function testEditingCategoryToParentItselfIsRejectedWithoutChangingHierarchy(): void
