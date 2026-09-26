@@ -12,14 +12,14 @@
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
   "published_at": "2026-09-26T08:42:05.413Z",
   "summary": {
-    "total_remaining_worker_tasks": 30,
+    "total_remaining_worker_tasks": 31,
     "completed_worker_prs_awaiting_trusted_review": 24,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "Re-evaluate remaining unclaimed work and self-publish the next bounded independent Worker proposal while FCP-077 remains owned by another chat; WCP-080 is complete on its exact green head and awaits Trusted review.",
+    "next_required_action": "Continue WCP-081 on its existing claim while FCP-077 remains owned by another chat; WCP-078, WCP-079 and WCP-080 are complete on exact green heads and await Trusted review.",
     "composition_preparable": 0,
-    "immediately_actionable": 1,
+    "immediately_actionable": 2,
     "must_continue": true
   },
   "rules": {
@@ -2705,6 +2705,80 @@
       "claim_state": "locked_until_trusted_resolution",
       "completed_on": "2026-09-26T09:00:52.607Z",
       "next_action": "Remain claim-locked while awaiting Trusted review; do not merge or deploy from the Worker repository."
+    },
+    {
+      "priority": 31,
+      "package_id": "WCP-081",
+      "title": "Bound sensitive-data cipher inputs and payloads",
+      "risk": "high",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-081-sensitive-cipher-boundary-g1",
+      "suggested_branch": "feature/wcp-081-sensitive-cipher-boundary-g1",
+      "base_branch": "main",
+      "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "objective": "Harden the worker-visible SensitiveDataCipher boundary with explicit plaintext/ciphertext size limits, strict canonical Base64 validation and minimum authenticated payload framing. Preserve Sodium encryption/decryption for webhook and two-factor secrets without exporting keys or changing storage schema.",
+      "allowed_paths": [
+        "src/Service/SensitiveDataCipher.php",
+        "tests/Service/SensitiveDataCipherTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/"
+      ],
+      "deliverables": [
+        "bound plaintext and encoded ciphertext sizes before crypto work",
+        "reject non-canonical or undersized ciphertext and fail closed on authentication failure",
+        "preserve valid round trips for webhook URLs and two-factor secrets",
+        "positive and negative regression coverage without secrets or key-management changes"
+      ],
+      "tests": [
+        "targeted SensitiveDataCipher PHPUnit tests",
+        "PHPStan level 8",
+        "complete Worker CI on the exact final HEAD"
+      ],
+      "completion_report": [
+        "exact final Worker HEAD and sanitized base SHA",
+        "complete changed-path list and Worker PR",
+        "targeted tests plus complete Worker CI result",
+        "payload-bound, canonical-encoding and compatibility risks"
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "no-secrets-or-trusted-private-runtime-in-worker-source",
+        "preserve-existing-Sodium-authentication and encrypted-storage behavior",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_base_branch": "main",
+      "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "resume_branch": "feature/wcp-081-sensitive-cipher-boundary-g1",
+      "proposal_kind": "worker_only",
+      "collision_check": {
+        "compared_against": "current continuous/work-pool-v4 task allowlists and active branches",
+        "result": "disjoint from FCP-077, WCP-078, WCP-079, WCP-080 and all published FCP allowlists",
+        "paths": [
+          "src/Service/SensitiveDataCipher.php",
+          "tests/Service/SensitiveDataCipherTest.php"
+        ]
+      },
+      "claimed_on": "2026-09-26T09:01:55.535Z"
     }
   ],
   "recovery_queue": [],
