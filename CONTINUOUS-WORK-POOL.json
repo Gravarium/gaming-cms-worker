@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-26T12:28:46.817Z",
+  "published_at": "2026-09-26T12:30:24.998Z",
   "summary": {
     "total_remaining_worker_tasks": 88,
-    "completed_worker_prs_awaiting_trusted_review": 82,
+    "completed_worker_prs_awaiting_trusted_review": 83,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "Re-evaluate the current pool, preserve all foreign and completed claim locks, and continue one independent safe Worker-only proposal.",
+    "next_required_action": "Re-evaluate dependency-safe unclaimed work, preserve WCP-306 and all foreign/completed claim locks, and continue autonomously.",
     "composition_preparable": 0,
     "immediately_actionable": 4,
     "must_continue": true
@@ -8419,7 +8419,7 @@
       "package_id": "WCP-307",
       "title": "Bound member notification persistence inputs",
       "risk": "medium",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -8496,10 +8496,10 @@
         ]
       },
       "claimed_on": "2026-09-26T12:25:52.968Z",
-      "claim_state": "active_worker_claim",
-      "next_action": "Await complete Worker CI run 36242008533 on exact HEAD 743bc32326b42b9b4222361b75c29cbeff25c03d; repair any failures without weakening safeguards and retain the claim.",
+      "claim_state": "locked_until_trusted_resolution",
+      "next_action": "Await Trusted review; keep the claim locked and do not merge or deploy.",
       "last_verified_push_at": "2026-09-26T12:28:23.096Z",
-      "last_checkpoint_at": "2026-09-26T12:28:23.096Z",
+      "last_checkpoint_at": "2026-09-26T12:30:24.998Z",
       "checkpoint_paths": [
         "src/Entity/MemberNotification.php",
         "tests/Entity/MemberNotificationBoundaryTest.php"
@@ -8508,7 +8508,19 @@
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/101",
       "pr_state": "open",
       "ci_run_id": 36242008533,
-      "ci_result": "in_progress"
+      "ci_result": "success",
+      "final_head": "743bc32326b42b9b4222361b75c29cbeff25c03d",
+      "completed_on": "2026-09-26T12:30:24.998Z",
+      "final_changed_paths": [
+        "src/Entity/MemberNotification.php",
+        "tests/Entity/MemberNotificationBoundaryTest.php"
+      ],
+      "test_evidence": [
+        "Worker CI run 36242008533 succeeded on exact final HEAD 743bc32326b42b9b4222361b75c29cbeff25c03d.",
+        "PHP/Symfony job 108404166348 passed PHPStan level 8 and the complete worker-visible application test suite.",
+        "PostgreSQL 18 migration job 108404166463 succeeded.",
+        "The exact diff against sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d contains only the two WCP-307 allowlisted paths."
+      ]
     }
   ],
   "recovery_queue": [],
