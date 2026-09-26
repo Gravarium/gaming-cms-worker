@@ -20,17 +20,8 @@ final readonly class ExternalConnectorExecutionSummary
         public string $capability,
         public array $results,
     ) {
-        if (!in_array($capability, ExternalConnectorTarget::CAPABILITIES, true)
-            || !array_is_list($results)
-            || count($results) > self::MAX_RESULTS
-        ) {
+        if (!self::validResults($capability, $results)) {
             throw new \InvalidArgumentException('External connector execution summary is invalid.');
-        }
-
-        foreach ($results as $result) {
-            if (!$result instanceof ExternalConnectorExecutionResult) {
-                throw new \InvalidArgumentException('External connector execution summary is invalid.');
-            }
         }
     }
 
@@ -68,5 +59,24 @@ final readonly class ExternalConnectorExecutionSummary
             $this->results,
             static fn (ExternalConnectorExecutionResult $result): bool => $result->successful,
         ));
+    }
+
+    /** @param array<mixed> $results */
+    private static function validResults(string $capability, array $results): bool
+    {
+        if (!in_array($capability, ExternalConnectorTarget::CAPABILITIES, true)
+            || !array_is_list($results)
+            || count($results) > self::MAX_RESULTS
+        ) {
+            return false;
+        }
+
+        foreach ($results as $result) {
+            if (!$result instanceof ExternalConnectorExecutionResult) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }
