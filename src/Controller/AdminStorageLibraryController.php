@@ -65,7 +65,7 @@ final class AdminStorageLibraryController extends AbstractController
         $withoutFolder = $folderFilter === 'none';
 
         $pageValue = $request->query->get('page', '1');
-        if ((!is_string($pageValue) && !is_int($pageValue)) || !ctype_digit((string) $pageValue) || (int) $pageValue < 1) {
+        if (!ctype_digit($pageValue) || (int) $pageValue < 1) {
             throw new BadRequestHttpException('Die Seitennummer ist ungültig.');
         }
         $requestedPage = (int) $pageValue;
