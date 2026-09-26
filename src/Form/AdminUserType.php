@@ -37,7 +37,7 @@ final class AdminUserType extends AbstractType
         }
 
         $builder
-            ->add('displayName', TextType::class, ['label' => 'Anzeigename'])
+            ->add('displayName', TextType::class, ['label' => 'Anzeigename', 'attr' => ['maxlength' => 80]])
             ->add('email', EmailType::class, $emailOptions);
 
         if ($options['self_edit']) {
