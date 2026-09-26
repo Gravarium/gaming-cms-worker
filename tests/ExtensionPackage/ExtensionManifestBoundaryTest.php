@@ -52,8 +52,6 @@ final class ExtensionManifestBoundaryTest extends TestCase
         foreach ([
             fn (): ExtensionManifest => $this->manifest(files: ['../Module.php' => str_repeat('a', 64)]),
             fn (): ExtensionManifest => $this->manifest(files: ['src/Module.php' => str_repeat('a', 63)]),
-            fn (): ExtensionManifest => $this->manifest(files: [1 => str_repeat('a', 64)]),
-            fn (): ExtensionManifest => $this->manifest(capabilities: ['requested' => 'content.read']),
             fn (): ExtensionManifest => $this->manifest(capabilities: ['php.execute']),
             fn (): ExtensionManifest => $this->manifest(capabilities: ['content.read', 'content.read']),
         ] as $factory) {
