@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-26T22:13:19.887Z",
+  "published_at": "2026-09-26T22:14:24.478Z",
   "summary": {
     "total_remaining_worker_tasks": 134,
-    "completed_worker_prs_awaiting_trusted_review": 184,
+    "completed_worker_prs_awaiting_trusted_review": 185,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-416 PR #209 has a namespace syntax repair on exact HEAD d6f211be7e463dab0352f9f9e19bae48cb35d30e; monitor exact-head CI run 36275244784 and repair failures only within the allowed test path.",
+    "next_required_action": "WCP-416 PR #209 is worker-complete with exact-head CI success at d6f211be7e463dab0352f9f9e19bae48cb35d30e; reserve the next independent dependency-safe package without altering locked claims.",
     "composition_preparable": 0,
     "immediately_actionable": 0,
     "must_continue": true
@@ -20702,7 +20702,7 @@
       "package_id": "WCP-416",
       "title": "Verify public guild visibility boundaries",
       "risk": "low",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -20768,13 +20768,13 @@
         ]
       },
       "claimed_on": "2026-09-26T22:01:08.963Z",
-      "claim_state": "active",
+      "claim_state": "locked_until_trusted_resolution",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
       "active_head": "d6f211be7e463dab0352f9f9e19bae48cb35d30e",
       "resume_branch": "feature/wcp-416-public-guild-visibility-g1",
-      "last_checkpoint_at": "2026-09-26T22:09:16.271Z",
-      "last_verified_push_at": "2026-09-26T22:09:16.271Z",
+      "last_checkpoint_at": "2026-09-26T22:14:24.478Z",
+      "last_verified_push_at": "2026-09-26T22:14:24.478Z",
       "checkpoint_paths": [
         "tests/Controller/PublicGuildVisibilityTest.php"
       ],
@@ -20782,11 +20782,43 @@
         "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
         "feature_branch": "d6f211be7e463dab0352f9f9e19bae48cb35d30e"
       },
-      "next_action": "Monitor exact-head Worker CI run 36275244784 for HEAD d6f211be7e463dab0352f9f9e19bae48cb35d30e; repair any failures within the single allowed test path.",
+      "next_action": "PR #209 is ready for Trusted review at exact green HEAD d6f211be7e463dab0352f9f9e19bae48cb35d30e; keep this claim locked and continue with an independent safe package.",
       "worker_pr": 209,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/209",
       "last_ci_run_id": 36275244784,
-      "last_ci_result": "in_progress"
+      "last_ci_result": "success",
+      "ci_run_id": 36275244784,
+      "ci_result": "success",
+      "final_head": "d6f211be7e463dab0352f9f9e19bae48cb35d30e",
+      "final_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "final_changed_paths": [
+        "tests/Controller/PublicGuildVisibilityTest.php"
+      ],
+      "changed_paths": [
+        "tests/Controller/PublicGuildVisibilityTest.php"
+      ],
+      "pr_state": "open",
+      "completed_at": "2026-09-26T22:14:24.478Z",
+      "test_results": {
+        "phpstan": "success; no errors",
+        "phpunit": "431 tests; 1,866 assertions",
+        "postgresql_18": "success; 39 migrations executed and current"
+      },
+      "ci_attempts": [
+        {
+          "run_id": 36275036342,
+          "result": "failure",
+          "diagnosis": "Doubled namespace separators prevented PHPUnit loading; corrected and reran exact-head CI."
+        },
+        {
+          "run_id": 36275244784,
+          "result": "success",
+          "head": "d6f211be7e463dab0352f9f9e19bae48cb35d30e"
+        }
+      ],
+      "completion_summary": "Test-only public guild visibility coverage passed exact-head Worker CI. Enabled guilds on enabled games remain listed/viewable; disabled guilds and guilds on disabled games are hidden from the directory and return 404 on detail/application routes.",
+      "open_limitations": [],
+      "trusted_follow_up": "Review PR #209 and independently validate the exact-head Worker CI."
     },
     {
       "priority": 197,
