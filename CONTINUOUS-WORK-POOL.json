@@ -17680,6 +17680,110 @@
         "tests/Controller/Competition/CompetitionIndexFilterTest.php"
       ],
       "last_verified_push_at": "2026-09-26T19:55:49.360Z"
+    },
+    {
+      "priority": 172,
+      "package_id": "WCP-392",
+      "title": "Render the managed main navigation on public pages",
+      "risk": "medium",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-392-public-main-navigation-g1",
+      "suggested_branch": "feature/wcp-392-public-main-navigation-g1",
+      "base_branch": "main",
+      "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "objective": "Complete the existing site-menu workflow by rendering saved main-navigation items on public pages. Reuse the existing main_navigation() function; preserve administrator order and enabled state; render internal page links only while the linked page is published, listed, and not past its scheduled-unpublish deadline, and only while the content module is enabled; keep valid external links available if content is disabled. Render safe new-window attributes, omit the public menu from admin routes, and make stale hidden targets understandable in the admin list. No schema change.",
+      "allowed_paths": [
+        "src/Twig/SiteExtension.php",
+        "src/Repository/MenuItemRepository.php",
+        "templates/base.html.twig",
+        "templates/menu/main_navigation.html.twig",
+        "templates/admin/menu/index.html.twig",
+        "tests/Controller/PublicMenuRenderingTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/",
+        "src/Entity/",
+        "src/Controller/",
+        "src/Form/",
+        "src/Security/",
+        "src/EventSubscriber/",
+        "src/Repository/ContentEntryRepository.php",
+        "src/Form/MenuItemType.php",
+        "src/Controller/AdminMenuController.php",
+        "templates/content/",
+        "templates/account/",
+        "templates/video/",
+        "templates/competition/",
+        "assets/",
+        "public/"
+      ],
+      "deliverables": [
+        "Render an accessible main navigation from saved, enabled MenuItem records on public pages, in the existing position/id order.",
+        "Generate internal links to publicly listed page entries only; hide drafts, unlisted pages, wrong content types, future publications, and entries at/after scheduled unpublication.",
+        "Preserve content-module availability behavior: hide page links when content is disabled while keeping valid external links visible.",
+        "Render HTTP(S) external links with the configured target behavior and rel=noopener noreferrer for new windows.",
+        "Keep the public main navigation out of app_admin_* routes and show a clear admin-list status when an enabled item targets a page that is no longer public."
+      ],
+      "tests": [
+        "Functional public rendering test covers internal/external links, order, enabled state, new-window rel attributes, and admin-route suppression.",
+        "Visibility cases cover drafts, unlisted pages, future publications, due/future scheduled-unpublish values, and disabled content-module behavior.",
+        "PHPStan level 8 and complete Worker CI pass on exact final HEAD, including PostgreSQL 18 migration-chain checks."
+      ],
+      "completion_report": [
+        "Exact final Worker HEAD and sanitized main base SHA.",
+        "Complete changed-path list and Worker PR.",
+        "Public navigation rendering, ordering, internal/external link, new-window, hidden-target, and admin-suppression results.",
+        "Exact-head PHPStan, PHPUnit and full Worker CI results."
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "no-secrets-or-trusted-private-runtime-in-worker-source",
+        "preserve admin menu CMS_CONTENT_MANAGE authorization and existing CSRF-protected delete workflow",
+        "preserve listed-only content visibility, scheduled-unpublish boundary, external URL scheme/credential validation, and content-module gate",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_base_branch": "main",
+      "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "resume_branch": "feature/wcp-392-public-main-navigation-g1",
+      "proposal_kind": "worker_only",
+      "collision_check": {
+        "compared_against": "Fresh continuous/work-pool-v4 snapshot blob c87c3417ed9b60f0aab506b9b2c4ae5c638e3f28, every current active/locked allowlist, sanitized Worker main f1a246c64527ef3ad51f7490773d9bbf9d42be5d, and exact WCP-392 branch/PR lookups immediately before claim.",
+        "result": "No active or locked claim overlaps the six allowed paths. WCP-350's locked claim includes src/Form/MenuItemType.php, which is explicitly excluded. The only remaining overlap is FCP-072's broad templates/ scope; FCP-072 is unclaimed and dependency-blocked with no active writer. Other WCP-383/390/391 and locked claims are disjoint. No prepared unclaimed FCP has green/satisfied dependencies in this snapshot.",
+        "paths": [
+          "src/Twig/SiteExtension.php",
+          "src/Repository/MenuItemRepository.php",
+          "templates/base.html.twig",
+          "templates/menu/main_navigation.html.twig",
+          "templates/admin/menu/index.html.twig",
+          "tests/Controller/PublicMenuRenderingTest.php"
+        ]
+      },
+      "claimed_on": "2026-09-26T19:57:23.191Z",
+      "claim_state": "active",
+      "last_checkpoint_at": "2026-09-26T19:57:23.191Z",
+      "next_action": "Create the claim and feature refs from sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d, then implement the public navigation rendering and visibility behavior.",
+      "checkpoint_paths": []
     }
   ],
   "recovery_queue": [],
