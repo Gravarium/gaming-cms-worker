@@ -47,7 +47,21 @@ class MediaFolder
 
     public function getId(): ?int { return $this->id; }
     public function getName(): string { return $this->name; }
-    public function setName(string $name): self { $this->name = trim($name); return $this; }
+    public function setName(string $name): self
+    {
+        if (!mb_check_encoding($name, 'UTF-8') || str_contains($name, "\0")) {
+            throw new \InvalidArgumentException('Media folder name must be valid UTF-8 without NUL bytes.');
+        }
+
+        $normalizedName = trim($name);
+        if (strlen($normalizedName) > 480 || mb_strlen($normalizedName, 'UTF-8') > 120) {
+            throw new \InvalidArgumentException('Media folder name must fit its 120-character storage column.');
+        }
+
+        $this->name = $normalizedName;
+
+        return $this;
+    }
     public function getSlug(): string { return $this->slug; }
     public function setSlug(string $slug): self { $this->slug = trim($slug); return $this; }
     public function getParent(): ?self { return $this->parent; }
