@@ -48,7 +48,8 @@ final class CompetitionController extends AbstractController
         $query = $request->query->all();
         $rawStatus = $query['status'] ?? '';
         $rawGame = $query['game'] ?? '';
-        if (!is_string($rawStatus) || !is_string($rawGame)) {
+        $rawMode = $query['mode'] ?? '';
+        if (!is_string($rawStatus) || !is_string($rawGame) || !is_string($rawMode)) {
             throw $this->createNotFoundException();
         }
 
@@ -67,6 +68,11 @@ final class CompetitionController extends AbstractController
             throw $this->createNotFoundException();
         }
 
+        $mode = $rawMode === '' ? null : $rawMode;
+        if ($mode !== null && !in_array($mode, [Competition::MODE_SOLO, Competition::MODE_TEAM], true)) {
+            throw $this->createNotFoundException();
+        }
+
         $games = $this->competitions->publicCompetitionGames();
         $availableGameSlugs = array_map(static fn (Game $game): string => $game->getSlug(), $games);
         if ($gameSlug !== null && !in_array($gameSlug, $availableGameSlugs, true)) {
@@ -74,10 +80,11 @@ final class CompetitionController extends AbstractController
         }
 
         return $this->render('competition/index.html.twig', [
-            'competitions' => $this->competitions->publicCompetitions($status, $gameSlug),
+            'competitions' => $this->competitions->publicCompetitions($status, $gameSlug, $mode),
             'games' => $games,
             'status' => $status,
             'gameSlug' => $gameSlug,
+            'mode' => $mode,
         ]);
     }
 

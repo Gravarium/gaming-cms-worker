@@ -37,7 +37,7 @@ final class CompetitionRepository extends ServiceEntityRepository
     }
 
     /** @return list<Competition> */
-    public function publicCompetitions(?string $status = null, ?string $gameSlug = null): array
+    public function publicCompetitions(?string $status = null, ?string $gameSlug = null, ?string $mode = null): array
     {
         $builder = $this->createQueryBuilder('competition')
             ->join('competition.game', 'game')
@@ -53,6 +53,9 @@ final class CompetitionRepository extends ServiceEntityRepository
         }
         if ($gameSlug !== null) {
             $builder->andWhere('game.slug = :gameSlug')->setParameter('gameSlug', $gameSlug);
+        }
+        if ($mode !== null) {
+            $builder->andWhere('competition.mode = :mode')->setParameter('mode', $mode);
         }
 
         return $builder->orderBy('competition.startsAt', 'ASC')->getQuery()->getResult();
