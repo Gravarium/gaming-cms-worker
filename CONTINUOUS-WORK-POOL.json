@@ -10,7 +10,7 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-26T21:13:46.175Z",
+  "published_at": "2026-09-26T21:14:00.134Z",
   "summary": {
     "total_remaining_worker_tasks": 134,
     "completed_worker_prs_awaiting_trusted_review": 174,
@@ -19310,7 +19310,7 @@
       "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-      "active_head": "5b6e137b985aa9747d07f6232233bc760d1440a7",
+      "active_head": "608eab128b085ced45eacb0806f36427a905bdf5",
       "resume_branch": "feature/wcp-405-guild-character-profile-self-service-g1",
       "proposal_kind": "worker_only",
       "collision_check": {
@@ -19326,13 +19326,13 @@
       },
       "claimed_on": "2026-09-26T20:58:48.551Z",
       "claim_state": "active",
-      "next_action": "Run complete exact-head Worker CI on 5b6e137b985aa9747d07f6232233bc760d1440a7; diagnose and repair any remaining PHP/Symfony or test findings on this branch.",
+      "next_action": "Run complete exact-head Worker CI on 608eab128b085ced45eacb0806f36427a905bdf5; repair any remaining findings on this branch before marking the PR ready.",
       "branch_heads": {
         "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-        "feature_branch": "5b6e137b985aa9747d07f6232233bc760d1440a7"
+        "feature_branch": "608eab128b085ced45eacb0806f36427a905bdf5"
       },
-      "last_checkpoint_at": "2026-09-26T21:11:34.428Z",
-      "last_verified_push_at": "2026-09-26T21:11:34.428Z",
+      "last_checkpoint_at": "2026-09-26T21:14:00.134Z",
+      "last_verified_push_at": "2026-09-26T21:14:00.134Z",
       "checkpoint_paths": [
         "src/Controller/GuildCharacterProfileController.php",
         "src/Form/GuildCharacterProfileType.php",
@@ -19342,7 +19342,7 @@
       ],
       "worker_pr": 200,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/200",
-      "last_ci_run_id": 36271870508,
+      "last_ci_run_id": 36272063833,
       "last_ci_result": "failure",
       "ci_attempts": [
         {
@@ -19355,7 +19355,13 @@
           "run_id": 36271870508,
           "head": "5019c7e93237c08fc658ec308251c0458853bc15",
           "result": "failure",
-          "diagnosis": "PHPStan and PostgreSQL passed; two new browser tests failed because blank TextType data became null for a string setter and a Cache-Control assertion required an exact directive order. Both causes are fixed in the current head."
+          "diagnosis": "PHPStan and PostgreSQL passed; browser tests found blank text mapped as null and a brittle exact Cache-Control assertion. Both causes were repaired."
+        },
+        {
+          "run_id": 36272063833,
+          "head": "5b6e137b985aa9747d07f6232233bc760d1440a7",
+          "result": "failure",
+          "diagnosis": "PHPStan and PostgreSQL passed; one unchanged-state test fixture expected Protected character while it was created as Validated character. Fixture is corrected on current head."
         }
       ]
     },
