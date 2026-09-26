@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-26T14:42:17.019Z",
+  "published_at": "2026-09-26T14:44:03.487Z",
   "summary": {
-    "total_remaining_worker_tasks": 119,
+    "total_remaining_worker_tasks": 120,
     "completed_worker_prs_awaiting_trusted_review": 113,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "Implement active WCP-338 password-recovery per-email throttling, then run complete exact-head Worker CI.",
+    "next_required_action": "Continue WCP-339 on its exact branch; all remaining FCPs are dependency-blocked and foreign claims remain untouched.",
     "composition_preparable": 0,
     "immediately_actionable": 0,
     "must_continue": true
@@ -11877,6 +11877,100 @@
       "pr_state": "draft",
       "ci_run_id": 36249372999,
       "ci_result": "in_progress"
+    },
+    {
+      "priority": 120,
+      "package_id": "WCP-339",
+      "title": "Protect editor-block media references",
+      "risk": "medium",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-339-editor-media-usage-guard-g1",
+      "suggested_branch": "feature/wcp-339-editor-media-usage-guard-g1",
+      "base_branch": "main",
+      "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "objective": "Include normalized ContentEntry.editorDocument media-block assetId references in MediaAssetUsageResolver::usages/isUsed. Media deletion and pending-deletion repair must not treat an asset as unused while a content block still references it. Decode candidate documents through the existing ContentBlockDocument contract, match only an actual media block with the exact integer asset ID, and fail conservatively for malformed candidate documents. Do not modify structured references, editor parser, repository, controller, storage pipeline, or replacement semantics in this package.",
+      "allowed_paths": [
+        "src/Service/MediaAssetUsageResolver.php",
+        "tests/Layout/LayoutMediaTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/",
+        "src/ContentEditor/",
+        "src/Repository/ContentEntryRepository.php",
+        "src/Controller/AdminStorageController.php",
+        "src/Service/MediaStorageManager.php",
+        "src/Entity/",
+        "src/Form/",
+        "templates/",
+        "assets/",
+        "public/",
+        "src/Security/"
+      ],
+      "deliverables": [
+        "Find editor-document candidates for the exact stored media asset ID without modifying ContentBlockDocument or ContentEntryRepository.",
+        "Decode candidates and count only actual media blocks whose normalized integer assetId equals the requested asset.",
+        "Treat an unparseable candidate conservatively as still-used so deletion and repair fail closed.",
+        "Keep current guild, video, text-location, site-branding and layout usage behavior unchanged."
+      ],
+      "tests": [
+        "Kernel test persists a content entry with a canonical media block reference and proves usages/isUsed report it.",
+        "A text-only block containing a JSON-looking assetId decoy is not counted as a media reference.",
+        "Existing layout reference and deletion tests continue to pass.",
+        "PHPStan level 8 and complete exact-head Worker CI."
+      ],
+      "completion_report": [
+        "exact final Worker HEAD and sanitized main base SHA",
+        "complete changed-file list and Worker PR",
+        "editor media-reference protection tests and complete exact-head Worker CI",
+        "confirmation media deletion and pending-deletion repair recognize structured content references"
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "no-secrets-or-trusted-private-runtime-in-worker-source",
+        "preserve media ownership, deletion recovery, content privacy and URL safety",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_base_branch": "main",
+      "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "resume_branch": "feature/wcp-339-editor-media-usage-guard-g1",
+      "proposal_kind": "worker_only",
+      "collision_check": {
+        "compared_against": "all current continuous/work-pool-v4 allowlists and active/locked claims through WCP-338; exact service and existing layout-test paths checked against sanitized main",
+        "result": "MediaAssetUsageResolver.php and tests/Layout/LayoutMediaTest.php are not in any current allowlist or claim. WCP-200's ContentBlockDocument parser and WCP-090's ContentEntryRepository are read-only dependencies and explicitly untouched; WCP-337's Messenger recovery is also disjoint.",
+        "paths": [
+          "src/Service/MediaAssetUsageResolver.php",
+          "tests/Layout/LayoutMediaTest.php"
+        ]
+      },
+      "claimed_on": "2026-09-26T14:44:03.487Z",
+      "claim_state": "active_worker_claim",
+      "last_checkpoint_at": "2026-09-26T14:44:03.487Z",
+      "next_action": "Create exact claim and feature branches from sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d; add fail-closed editor media reference detection and focused kernel tests.",
+      "checkpoint_paths": [
+        "src/Service/MediaAssetUsageResolver.php",
+        "tests/Layout/LayoutMediaTest.php"
+      ]
     }
   ],
   "recovery_queue": [],
