@@ -10,10 +10,10 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-26T22:14:24.478Z",
+  "published_at": "2026-09-26T22:15:16.360Z",
   "summary": {
     "total_remaining_worker_tasks": 134,
-    "completed_worker_prs_awaiting_trusted_review": 185,
+    "completed_worker_prs_awaiting_trusted_review": 186,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
@@ -20565,7 +20565,7 @@
       "package_id": "WCP-415",
       "title": "Browse and find users assigned to an access role",
       "risk": "medium",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -20657,14 +20657,14 @@
         ]
       },
       "claimed_on": "2026-09-26T21:58:03.676Z",
-      "claim_state": "active",
-      "next_action": "Monitor exact-head Worker CI run 36275515188 for repaired HEAD 764be480db57c701a350bf7bac48c06ea543bd3e; repair any additional failure on this same branch.",
+      "claim_state": "locked_until_trusted_resolution",
+      "next_action": "PR #210 is ready for Trusted review at exact green HEAD 764be480db57c701a350bf7bac48c06ea543bd3e with CI run 36275515188. Keep this claim locked until Trusted explicitly integrates, cancels, or transfers it.",
       "branch_heads": {
         "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
         "feature_branch": "764be480db57c701a350bf7bac48c06ea543bd3e"
       },
-      "last_checkpoint_at": "2026-09-26T22:13:00.789Z",
-      "last_verified_push_at": "2026-09-26T22:13:00.789Z",
+      "last_checkpoint_at": "2026-09-26T22:15:16.360Z",
+      "last_verified_push_at": "2026-09-26T22:15:16.360Z",
       "checkpoint_paths": [
         "src/Controller/AdminAccessRoleMembersController.php",
         "src/Repository/AccessRoleRepository.php",
@@ -20674,28 +20674,49 @@
       ],
       "worker_pr": 210,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/210",
-      "pr_state": "open_draft",
+      "pr_state": "open_ready_for_review_unmerged",
       "last_ci_run_id": 36275515188,
-      "last_ci_result": "in_progress",
+      "last_ci_result": "success",
       "ci_attempts": [
         {
           "run_id": 36275205253,
           "head": "3f04f8ad8c64a3ece1b01c839db025ec0c795cc2",
           "result": "failure",
-          "diagnosis": "Doctrine DQL rejected the alias `member` as a reserved keyword. Renamed the query alias to `rosterUser`; no tests or security checks were weakened."
+          "diagnosis": "Doctrine rejected the reserved DQL alias `member`; changed to `rosterUser`."
         },
         {
           "run_id": 36275339122,
           "head": "742c3e8e14359f715eec701a6c0bb4e3659790c9",
           "result": "failure",
-          "diagnosis": "The reserved DQL alias was corrected, then Doctrine required the selected user entity to be the root alias. Reworked the query to root at User and join its accessRoles; no tests or checks were weakened."
+          "diagnosis": "Doctrine required the selected User entity to be the DQL root alias; query now roots at User and joins assigned roles."
         },
         {
           "run_id": 36275515188,
           "head": "764be480db57c701a350bf7bac48c06ea543bd3e",
-          "result": "in_progress"
+          "result": "success"
         }
-      ]
+      ],
+      "final_head": "764be480db57c701a350bf7bac48c06ea543bd3e",
+      "ci_run_id": 36275515188,
+      "ci_result": "success",
+      "last_ci_diagnosis": "Two Doctrine DQL construction issues were repaired on this branch. The complete Worker CI passed on final exact HEAD 764be480db57c701a350bf7bac48c06ea543bd3e.",
+      "completion_results": {
+        "exact_worker_base": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+        "final_feature_head": "764be480db57c701a350bf7bac48c06ea543bd3e",
+        "changed_files": [
+          "src/Controller/AdminAccessRoleMembersController.php",
+          "src/Repository/AccessRoleRepository.php",
+          "templates/admin/access_role/index.html.twig",
+          "templates/admin/access_role/members.html.twig",
+          "tests/Controller/AdminAccessRoleMembersTest.php"
+        ],
+        "tests": "439 PHPUnit tests, 1,922 assertions, zero failures/errors; one existing deprecation and one notice.",
+        "phpstan": "Level 8 passed.",
+        "worker_ci_run_id": 36275515188,
+        "postgres_migration_chain": "PostgreSQL 18 full migration chain applied and status verified.",
+        "open_limitations": "Roster is read-only; membership edits remain one user at a time through existing per-user edit flow.",
+        "trusted_follow_up": "Map CMS_USERS_MANAGE and role hierarchy through trusted subject/role policy; preserve existing per-user session invalidation, audit, CSRF and delegation checks."
+      }
     },
     {
       "priority": 196,
