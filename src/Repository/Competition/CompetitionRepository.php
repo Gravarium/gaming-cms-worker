@@ -14,18 +14,22 @@ final class CompetitionRepository extends ServiceEntityRepository
     public function __construct(ManagerRegistry $registry) { parent::__construct($registry, Competition::class); }
 
     /** @return list<Competition> */
-    public function publicCompetitions(): array
+    public function publicCompetitions(?string $status = null): array
     {
-        return $this->createQueryBuilder('competition')
+        $builder = $this->createQueryBuilder('competition')
             ->join('competition.game', 'game')
             ->andWhere('competition.visibility = :visibility')
             ->andWhere('competition.status <> :draft')
             ->andWhere('game.enabled = :enabled')
             ->setParameter('visibility', Competition::VISIBILITY_PUBLIC)
             ->setParameter('draft', Competition::STATUS_DRAFT)
-            ->setParameter('enabled', true)
-            ->orderBy('competition.startsAt', 'ASC')
-            ->getQuery()->getResult();
+            ->setParameter('enabled', true);
+
+        if ($status !== null) {
+            $builder->andWhere('competition.status = :status')->setParameter('status', $status);
+        }
+
+        return $builder->orderBy('competition.startsAt', 'ASC')->getQuery()->getResult();
     }
 
     /** @return list<Competition> */

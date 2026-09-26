@@ -40,10 +40,30 @@ final class CompetitionController extends AbstractController
     }
 
     #[Route('', name: 'app_competition_index', methods: ['GET'])]
-    public function index(): Response
+    public function index(Request $request): Response
     {
         $this->assertAvailable();
-        return $this->render('competition/index.html.twig', ['competitions' => $this->competitions->publicCompetitions()]);
+
+        $query = $request->query->all();
+        $rawStatus = $query['status'] ?? '';
+        if (!is_string($rawStatus)) {
+            throw $this->createNotFoundException();
+        }
+
+        $status = $rawStatus === '' ? null : $rawStatus;
+        if ($status !== null && !in_array($status, [
+            Competition::STATUS_OPEN,
+            Competition::STATUS_IN_PROGRESS,
+            Competition::STATUS_COMPLETED,
+            Competition::STATUS_ARCHIVED,
+        ], true)) {
+            throw $this->createNotFoundException();
+        }
+
+        return $this->render('competition/index.html.twig', [
+            'competitions' => $this->competitions->publicCompetitions($status),
+            'status' => $status,
+        ]);
     }
 
     #[Route('/{id}', name: 'app_competition_show', requirements: ['id' => '\\d+'], methods: ['GET'])]
