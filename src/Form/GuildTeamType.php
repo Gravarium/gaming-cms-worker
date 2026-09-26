@@ -23,7 +23,7 @@ final class GuildTeamType extends AbstractType
         $guild = $options['guild'];
         $members = static fn (EntityRepository $repository) => $repository->createQueryBuilder('member')->andWhere('member.guild = :guild')->setParameter('guild', $guild)->orderBy('member.characterName', 'ASC');
 
-        $builder->add('name', null, ['label' => 'Teamname'])
+        $builder->add('name', null, ['label' => 'Teamname', 'attr' => ['maxlength' => 120]])
             ->add('description', TextareaType::class, ['label' => 'Beschreibung', 'required' => false])
             ->add('color', null, ['label' => 'Farbe', 'required' => false, 'attr' => ['placeholder' => '#7c5cff']])
             ->add('leader', EntityType::class, ['class' => GuildMember::class, 'choice_label' => 'characterName', 'query_builder' => $members, 'placeholder' => 'Keine Teamleitung', 'required' => false])
