@@ -40,11 +40,16 @@ final class LayoutContractTest extends KernelTestCase
         $document = $validator->defaults('nebula')->toArray();
         $document['widgets'][0]['type'] = 'core.text';
         $document['widgets'][0]['region'] = 'main';
-        $document['widgets'][0]['config'] = ['text' => str_repeat('😀', 4000)];
+        $text = str_repeat('😀', 4000);
+        $document['widgets'][0]['config'] = ['text' => $text];
 
-        self::assertSame(16000, strlen($document['widgets'][0]['config']['text']));
+        self::assertSame(16000, strlen($text));
         $validated = $validator->validate($document);
-        self::assertSame(4000, mb_strlen($validated->widgets[0]['config']['text']));
+        $validatedText = $validated->widgets[0]['config']['text'] ?? null;
+        if (!is_string($validatedText)) {
+            self::fail('Validated text setting was not preserved as a string.');
+        }
+        self::assertSame(4000, mb_strlen($validatedText));
 
         $document['widgets'][0]['config']['text'] = str_repeat('x', 16001);
         $this->assertRejected($validator, $document);
