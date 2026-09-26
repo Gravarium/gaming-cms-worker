@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-26T23:22:33.417Z",
+  "published_at": "2026-09-26T23:23:48.091Z",
   "summary": {
     "total_remaining_worker_tasks": 134,
     "completed_worker_prs_awaiting_trusted_review": 197,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-431 is reserved on exact sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d; add focused CMS_STORAGE_MANAGE and form-CSRF coverage for per-module storage settings and run exact-head Worker CI.",
+    "next_required_action": "WCP-428 CI run 36279274693 is queued for exact head 22546c5bc24b77be98e0382e9253afcfadc3254b after fixing PHPStan's always-true page type check; wait for complete exact-head CI and resolve failures on this branch.",
     "composition_preparable": 0,
     "immediately_actionable": 0,
     "must_continue": true
@@ -22432,10 +22432,10 @@
       "claim_state": "active",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-      "active_head": "1d4ac37c001540f156e58bf01e1c17d4976243b6",
+      "active_head": "22546c5bc24b77be98e0382e9253afcfadc3254b",
       "resume_branch": "feature/wcp-428-content-browser-pagination-g1",
-      "last_checkpoint_at": "2026-09-26T23:21:12.722Z",
-      "last_verified_push_at": "2026-09-26T23:21:12.722Z",
+      "last_checkpoint_at": "2026-09-26T23:23:48.091Z",
+      "last_verified_push_at": "2026-09-26T23:23:48.091Z",
       "checkpoint_paths": [
         "src/Controller/AdminContentBrowserController.php",
         "src/Repository/AdminContentBrowserRepository.php",
@@ -22445,13 +22445,30 @@
       ],
       "branch_heads": {
         "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-        "feature_branch": "1d4ac37c001540f156e58bf01e1c17d4976243b6"
+        "feature_branch": "22546c5bc24b77be98e0382e9253afcfadc3254b"
       },
-      "next_action": "Run the targeted AdminContentBrowserPaginationTest and complete Worker CI on exact HEAD 1d4ac37c001540f156e58bf01e1c17d4976243b6; fix all failures on this branch and rerun the full checks.",
+      "next_action": "Worker CI run 36279274693 is queued for exact HEAD 22546c5bc24b77be98e0382e9253afcfadc3254b; diagnose and repair any failure on the same branch, then rerun full CI.",
       "worker_pr": 224,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/224",
       "pr_state": "open_draft_for_ci",
-      "draft_pr": true
+      "draft_pr": true,
+      "last_ci_run_id": 36279274693,
+      "last_ci_result": "queued",
+      "ci_run_id": 36279274693,
+      "ci_result": "queued",
+      "ci_attempts": [
+        {
+          "run_id": 36279145108,
+          "head": "1d4ac37c001540f156e58bf01e1c17d4976243b6",
+          "result": "failure",
+          "note": "PHPStan Level 8 found an always-true is_string check after Symfony's typed InputBag page getter; switched to getString while retaining strict numeric and range validation. PostgreSQL migration validation passed."
+        },
+        {
+          "run_id": 36279274693,
+          "head": "22546c5bc24b77be98e0382e9253afcfadc3254b",
+          "result": "queued"
+        }
+      ]
     },
     {
       "priority": 209,
