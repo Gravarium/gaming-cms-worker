@@ -16923,6 +16923,110 @@
       "last_checkpoint_at": "2026-09-26T19:23:05.127Z",
       "next_action": "Create the exact claim and feature branches from sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d, then implement the authorized private preview flow.",
       "checkpoint_paths": []
+    },
+    {
+      "priority": 166,
+      "package_id": "WCP-386",
+      "title": "Reject encoded traversal in owned media playback paths",
+      "risk": "high",
+      "execution_state": "worker_in_progress",
+      "dependencies": [
+        "WCP-079"
+      ],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-386-media-playback-encoded-path-g1",
+      "suggested_branch": "feature/wcp-386-media-playback-encoded-path-g1",
+      "base_branch": "feature/wcp-079-media-url-policy-g1",
+      "base_sha": "93419ce446f1c839653b03db03afd8b6084879ee",
+      "objective": "Follow on from WCP-079's exact green remote-address hardening. Reject percent-encoded local playback paths beneath /uploads/media/ so encoded dot segments and separators cannot bypass the owned-upload traversal check, while preserving generated plain upload paths. Keep URL policy syntactic: no DNS resolution, external requests or private runtime behavior.",
+      "allowed_paths": [
+        "src/Service/MediaUrlPolicy.php",
+        "tests/Service/MediaUrlPolicyOwnedPlaybackSecurityTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/",
+        "src/Controller/",
+        "src/Entity/",
+        "src/Repository/",
+        "templates/",
+        "assets/",
+        "public/"
+      ],
+      "deliverables": [
+        "Reject percent-encoded local upload paths, including encoded dot segments, encoded separators and double-encoded traversal forms.",
+        "Preserve safe generated /uploads/media paths with ordinary filename extensions.",
+        "Use a new focused test file; do not alter WCP-079's claim, branch, PR or existing test file.",
+        "Make no DNS lookups or network requests."
+      ],
+      "tests": [
+        "Targeted MediaUrlPolicyOwnedPlaybackSecurityTest PHPUnit tests pass.",
+        "Existing MediaUrlPolicyTest remote-address regressions remain green.",
+        "PHPStan level 8 passes.",
+        "Complete Worker CI passes on the exact final HEAD."
+      ],
+      "completion_report": [
+        "Exact WCP-079 green base SHA, predecessor PR and CI run",
+        "Exact final Worker HEAD, complete changed paths and Worker PR",
+        "Encoded-path rejection cases and positive plain upload path result",
+        "Targeted tests, PHPStan level 8 and exact-head Worker CI",
+        "Confirmation that no DNS or network behavior was added"
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "no-secrets-or-trusted-private-runtime-in-worker-source",
+        "preserve existing remote address checks and owned-media playback protection",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
+      ],
+      "proposal_base_branch": "feature/wcp-079-media-url-policy-g1",
+      "proposal_base_sha": "93419ce446f1c839653b03db03afd8b6084879ee",
+      "active_base_branch": "feature/wcp-079-media-url-policy-g1",
+      "active_base_sha": "93419ce446f1c839653b03db03afd8b6084879ee",
+      "active_head": "93419ce446f1c839653b03db03afd8b6084879ee",
+      "resume_branch": "feature/wcp-386-media-playback-encoded-path-g1",
+      "proposal_kind": "worker_only",
+      "dependency_evidence": [
+        {
+          "package_id": "WCP-079",
+          "branch": "feature/wcp-079-media-url-policy-g1",
+          "head": "93419ce446f1c839653b03db03afd8b6084879ee",
+          "worker_pr": 42,
+          "ci_run_id": 36231166042,
+          "ci_result": "success"
+        }
+      ],
+      "collision_check": {
+        "compared_against": "All current continuous/work-pool-v4 allowed scopes through WCP-385, including active WCP-381, WCP-383, WCP-384 and WCP-385, plus WCP-079's exact green HEAD 93419ce446f1c839653b03db03afd8b6084879ee.",
+        "result": "The only path overlap is the intentional follow-on to completed green WCP-079's MediaUrlPolicy source path; its claim, branch, PR and existing test path remain untouched. The new regression test path is absent on that exact base. No active foreign package has an overlapping path.",
+        "paths": [
+          "src/Service/MediaUrlPolicy.php",
+          "tests/Service/MediaUrlPolicyOwnedPlaybackSecurityTest.php"
+        ]
+      },
+      "claimed_on": "2026-09-26T19:24:21.363Z",
+      "claim_state": "active",
+      "last_checkpoint_at": "2026-09-26T19:24:21.363Z",
+      "next_action": "Reject percent-encoded paths in the owned /uploads/media playback branch and add regression cases for encoded and double-encoded traversal while preserving ordinary generated filenames; then run targeted tests and exact-head Worker CI.",
+      "checkpoint_paths": [
+        "src/Service/MediaUrlPolicy.php",
+        "tests/Service/MediaUrlPolicyOwnedPlaybackSecurityTest.php"
+      ],
+      "last_verified_push_at": "2026-09-26T19:24:21.363Z"
     }
   ],
   "recovery_queue": [],
