@@ -30,8 +30,8 @@ final class AdminContentBrowserController extends AbstractController
     #[Route('/all', name: 'app_admin_content_browser', methods: ['GET'])]
     public function index(Request $request): Response
     {
-        $rawPage = $request->query->get('page', '1');
-        if (!is_string($rawPage) || preg_match('/\A[0-9]{1,7}\z/D', $rawPage) !== 1 || (int) $rawPage < 1) {
+        $rawPage = $request->query->getString('page', '1');
+        if (preg_match('/\A[0-9]{1,7}\z/D', $rawPage) !== 1 || (int) $rawPage < 1) {
             throw new BadRequestHttpException('The page number must be a positive integer.');
         }
 
