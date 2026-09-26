@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-26T15:33:12Z",
+  "published_at": "2026-09-26T15:34:11.363Z",
   "summary": {
     "total_remaining_worker_tasks": 126,
-    "completed_worker_prs_awaiting_trusted_review": 120,
+    "completed_worker_prs_awaiting_trusted_review": 121,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "Continue the active WCP-345 guild event signup note boundary package.",
+    "next_required_action": "Re-evaluate remaining unclaimed dependencies and continue with an independent disjoint Worker-only package.",
     "composition_preparable": 0,
     "immediately_actionable": 0,
     "must_continue": true
@@ -12541,7 +12541,7 @@
       "package_id": "WCP-345",
       "title": "Enforce guild event signup note length",
       "risk": "medium",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -12617,17 +12617,32 @@
         ]
       },
       "claimed_on": "2026-09-26T15:26:39.984Z",
-      "claim_state": "active_worker_claim",
-      "last_checkpoint_at": "2026-09-26T15:31:44.093Z",
-      "next_action": "CI exposed Symfony InputBag rejecting non-scalar values through get(); read the raw request map safely, then rerun exact-head CI.",
+      "claim_state": "locked_until_trusted_resolution",
+      "last_checkpoint_at": "2026-09-26T15:34:11.363Z",
+      "next_action": "Await Trusted review with the claim locked; do not merge or deploy.",
       "checkpoint_paths": [
         "src/Controller/GuildPortalController.php",
         "tests/Controller/GuildPortalSignupBoundaryTest.php"
       ],
-      "last_verified_push_at": "2026-09-26T15:31:44.093Z",
+      "last_verified_push_at": "2026-09-26T15:34:11.363Z",
       "worker_pr": 139,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/139",
-      "pr_state": "draft"
+      "pr_state": "ready_for_review",
+      "final_head": "ad7d76ea20c7a41edf5d40b861836c5051383f9c",
+      "ci_run_id": 36252240795,
+      "ci_result": "success",
+      "completed_on": "2026-09-26T15:34:11.363Z",
+      "final_changed_paths": [
+        "src/Controller/GuildPortalController.php",
+        "tests/Controller/GuildPortalSignupBoundaryTest.php"
+      ],
+      "test_evidence": [
+        "Worker CI run 36252240795 (#436) succeeded on exact final HEAD ad7d76ea20c7a41edf5d40b861836c5051383f9c.",
+        "PHPStan level 8 passed with no errors; the complete Symfony suite passed: 432 tests and 1,880 assertions, with one PHPUnit deprecation and one notice.",
+        "PostgreSQL 18 applied and verified all 39 migrations; the migration status check passed.",
+        "PR #139 is open, ready for review and unmerged. Its exact changed-file list against sanitized main contains only the two allowed paths.",
+        "Functional regressions confirm 501-character and non-string note inputs leave an existing signup unchanged, while a 500-character note is saved."
+      ]
     }
   ],
   "recovery_queue": [],
