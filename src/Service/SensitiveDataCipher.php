@@ -57,7 +57,7 @@ final class SensitiveDataCipher
         $maximumLength = $minimumLength + self::MAX_PLAINTEXT_BYTES;
         if ($decoded === false
             || base64_encode($decoded) !== $cipherText
-            || strlen($decoded) < $minimumLength
+            || strlen($decoded) <= $minimumLength
             || strlen($decoded) > $maximumLength
         ) {
             throw new \RuntimeException('Der verschlüsselte Wert ist beschädigt.');
