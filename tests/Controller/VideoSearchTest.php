@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\\Tests\\Controller;
+namespace App\Tests\Controller;
 
-use App\\Entity\\Video;
-use Doctrine\\ORM\\EntityManagerInterface;
-use Symfony\\Bundle\\FrameworkBundle\\Test\\WebTestCase;
+use App\Entity\Video;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 final class VideoSearchTest extends WebTestCase
 {
@@ -34,7 +34,7 @@ final class VideoSearchTest extends WebTestCase
         $client = static::createClient();
         $suffix = bin2hex(random_bytes(5));
         $term = 'needle'.$suffix;
-        $now = new \\DateTimeImmutable();
+        $now = new \DateTimeImmutable();
 
         $manager = $client->getContainer()->get(EntityManagerInterface::class);
         $videos = [
@@ -92,7 +92,7 @@ final class VideoSearchTest extends WebTestCase
         self::assertSelectorTextContains('h2', 'Keine Videos gefunden');
     }
 
-    private function video(string $title, string $slug, string $description, bool $enabled, ?\\DateTimeImmutable $publishedAt): Video
+    private function video(string $title, string $slug, string $description, bool $enabled, ?\DateTimeImmutable $publishedAt): Video
     {
         return (new Video())
             ->setTitle($title)

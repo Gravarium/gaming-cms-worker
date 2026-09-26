@@ -55,7 +55,7 @@ final class VideoRepository extends ServiceEntityRepository
             ->andWhere('video.publishedAt IS NOT NULL')
             ->andWhere('video.publishedAt <= :now')
             ->andWhere('(LOWER(video.title) LIKE :query OR LOWER(video.description) LIKE :query)')
-            ->setParameter('now', new DateTimeImmutable())
+            ->setParameter('now', new \DateTimeImmutable())
             ->setParameter('query', '%'.mb_strtolower($query, 'UTF-8').'%')
             ->orderBy('video.featured', 'DESC')
             ->addOrderBy('video.publishedAt', 'DESC')
