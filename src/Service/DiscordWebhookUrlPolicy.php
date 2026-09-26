@@ -67,12 +67,12 @@ final class DiscordWebhookUrlPolicy
             throw new \DomainException('Die Webhook-Adresse muss zu einem freigegebenen Discord-Host gehören.');
         }
 
-        $authority = null;
         $matches = [];
-        if (preg_match('~^https://([^/?#]+)(?:/|$)~i', $url, $matches) === 1 && isset($matches[1]) && is_string($matches[1])) {
-            $authority = strtolower($matches[1]);
+        if (preg_match('~^https://([^/?#]+)(?:/|$)~i', $url, $matches) !== 1) {
+            throw new \DomainException('Die Discord-Webhook-Adresse besitzt keine kanonische Host- und Portdarstellung.');
         }
-        if ($authority === null || !in_array($authority, self::ALLOWED_AUTHORITIES, true)) {
+        $authority = strtolower($matches[1]);
+        if (!in_array($authority, self::ALLOWED_AUTHORITIES, true)) {
             throw new \DomainException('Die Discord-Webhook-Adresse besitzt keine kanonische Host- und Portdarstellung.');
         }
 
