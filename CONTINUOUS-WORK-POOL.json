@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-26T15:58:00.869Z",
+  "published_at": "2026-09-26T16:00:48.316Z",
   "summary": {
-    "total_remaining_worker_tasks": 129,
+    "total_remaining_worker_tasks": 130,
     "completed_worker_prs_awaiting_trusted_review": 124,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "Re-evaluate unclaimed FCP dependencies against exact green Worker heads and Trusted integration; if none can start, publish and claim the next independent Worker-only package.",
+    "next_required_action": "Continue the active WCP-349 media upload metadata boundary package.",
     "composition_preparable": 0,
     "immediately_actionable": 0,
     "must_continue": true
@@ -12974,6 +12974,98 @@
         "PR #142 is open, ready for review and unmerged. The exact changed-file list against sanitized main contains only the two allowed paths.",
         "Functional coverage confirms a 190-character search is preserved and a 191-character value is capped at 190 before it reaches repository search and filter rendering."
       ]
+    },
+    {
+      "priority": 130,
+      "package_id": "WCP-349",
+      "title": "Validate media upload title and alt-text boundaries",
+      "risk": "medium",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-349-media-upload-metadata-boundary-g1",
+      "suggested_branch": "feature/wcp-349-media-upload-metadata-boundary-g1",
+      "base_branch": "main",
+      "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "objective": "Enforce the upload form's existing 180-character title and 255-character alternative-text limits server-side. These array-backed fields otherwise bypass MediaAsset entity validation, so invalid metadata reaches file staging/storage before persistence fails. Reject out-of-range Unicode text in the form before any upload side effect while preserving existing file, MIME, storage and permission checks.",
+      "allowed_paths": [
+        "src/Form/MediaAssetUploadType.php",
+        "tests/Form/MediaAssetUploadTypeBoundaryTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/",
+        "templates/",
+        "assets/",
+        "public/",
+        "src/Controller/AdminStorageController.php",
+        "tests/Controller/MediaStorageSecurityTest.php",
+        "src/Entity/MediaAsset.php",
+        "src/Service/MediaStorageManager.php",
+        "src/Service/MediaUploadPolicy.php",
+        "src/ExternalConnector/"
+      ],
+      "deliverables": [
+        "Add server-side Unicode-aware Length constraints for optional upload title (180) and alt text (255), matching current UI and database column contracts.",
+        "Ensure invalid metadata makes the upload form invalid before the existing controller reaches file storage.",
+        "Leave caption policy, file-size/MIME rules, storage rollback, deletion state and authorization unchanged."
+      ],
+      "tests": [
+        "Form regression accepts exactly 180 title and 255 alt-text characters, including multibyte input.",
+        "Form regression rejects 181 title and 256 alt-text characters at the field level.",
+        "PHPStan level 8 and complete Worker CI on the exact final HEAD."
+      ],
+      "completion_report": [
+        "exact final Worker HEAD and sanitized main base SHA",
+        "complete changed-file list and Worker PR",
+        "exact-boundary and over-bound upload metadata form regressions, PHPStan level 8 and exact-head CI evidence",
+        "confirmation file validation, MIME/storage rollback, authorization and adjacent controller/entity/service paths remain unchanged"
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "no-secrets-or-trusted-private-runtime-in-worker-source",
+        "preserve upload MIME/size validation, storage rollback, authorization, deletion state and file integrity",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_base_branch": "main",
+      "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "resume_branch": "feature/wcp-349-media-upload-metadata-boundary-g1",
+      "proposal_kind": "worker_only",
+      "collision_check": {
+        "compared_against": "all current continuous/work-pool-v4 task allowlists and active/locked claims through WCP-348; exact files checked against sanitized main at f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+        "result": "Both exact paths are absent from all current allowlists; they are disjoint from WCP-342 media bulk-selection paths and adjacent media entities/services. No controller, template, schema, storage or private-runtime path is changed.",
+        "paths": [
+          "src/Form/MediaAssetUploadType.php",
+          "tests/Form/MediaAssetUploadTypeBoundaryTest.php"
+        ]
+      },
+      "claimed_on": "2026-09-26T16:00:48.316Z",
+      "claim_state": "active_worker_claim",
+      "last_checkpoint_at": "2026-09-26T16:00:48.316Z",
+      "next_action": "Add Unicode-aware Length constraints for upload title (180) and alt text (255); test exact and over-limit values before file storage; run exact-head Worker CI.",
+      "checkpoint_paths": [
+        "src/Form/MediaAssetUploadType.php",
+        "tests/Form/MediaAssetUploadTypeBoundaryTest.php"
+      ],
+      "last_verified_push_at": "2026-09-26T16:00:48.316Z"
     }
   ],
   "recovery_queue": [],
