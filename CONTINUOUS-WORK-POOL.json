@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-26T14:04:51.635Z",
+  "published_at": "2026-09-26T14:06:17.998Z",
   "summary": {
     "total_remaining_worker_tasks": 114,
-    "completed_worker_prs_awaiting_trusted_review": 107,
+    "completed_worker_prs_awaiting_trusted_review": 108,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "Continue the independent active WCP-332 and WCP-333 claims on their exact branches; run complete exact-head Worker CI and preserve all other claims.",
+    "next_required_action": "Continue independent Worker-only work; WCP-333 is a separate active claim owned by another chat. Re-evaluate blocked FCPs and publish/claim a disjoint bounded proposal.",
     "composition_preparable": 0,
     "immediately_actionable": 0,
     "must_continue": true
@@ -11127,7 +11127,7 @@
       "package_id": "WCP-332",
       "title": "Bound encrypted guild webhook storage",
       "risk": "medium",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -11205,9 +11205,9 @@
         ]
       },
       "claimed_on": "2026-09-26T14:00:32.312Z",
-      "claim_state": "active_worker_claim",
-      "last_checkpoint_at": "2026-09-26T14:02:05.433Z",
-      "next_action": "Wait for Worker CI run 36247122522 on exact HEAD 43de9960adaaf618234ede98b16bc4a147fd82bf; diagnose and repair any failure without weakening checks.",
+      "claim_state": "locked_until_trusted_resolution",
+      "last_checkpoint_at": "2026-09-26T14:06:17.998Z",
+      "next_action": "Await Trusted review with claim locked; continue independent Worker-only planning without modifying WCP-333 or other claims.",
       "checkpoint_paths": [
         "src/Entity/GuildDiscordIntegration.php",
         "tests/Entity/GuildDiscordIntegrationWebhookBoundaryTest.php"
@@ -11215,9 +11215,21 @@
       "last_verified_push_at": "2026-09-26T14:02:05.433Z",
       "worker_pr": 126,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/126",
-      "pr_state": "draft",
+      "pr_state": "ready_for_review",
       "ci_run_id": 36247122522,
-      "ci_result": "in_progress"
+      "ci_result": "success",
+      "final_head": "43de9960adaaf618234ede98b16bc4a147fd82bf",
+      "final_changed_paths": [
+        "src/Entity/GuildDiscordIntegration.php",
+        "tests/Entity/GuildDiscordIntegrationWebhookBoundaryTest.php"
+      ],
+      "completed_on": "2026-09-26T14:06:17.998Z",
+      "test_evidence": [
+        "Exact 8192-byte in-bound encrypted value preserved.",
+        "8193-byte overflow, malformed UTF-8 and NUL rejected before mutation.",
+        "Empty-string semantics preserved; rejected values leave ciphertext and updatedAt unchanged.",
+        "Worker CI run 36247122522 succeeded on exact final HEAD 43de9960adaaf618234ede98b16bc4a147fd82bf, including PHPStan level 8, application tests and PostgreSQL 18 migration chain."
+      ]
     },
     {
       "priority": 114,
