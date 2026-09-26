@@ -10,9 +10,9 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-26T12:57:34.077Z",
+  "published_at": "2026-09-26T12:59:12.200Z",
   "summary": {
-    "total_remaining_worker_tasks": 95,
+    "total_remaining_worker_tasks": 96,
     "completed_worker_prs_awaiting_trusted_review": 89,
     "recovery_tasks": 0,
     "unclaimed": 5,
@@ -9263,6 +9263,93 @@
       "pr_state": "open",
       "ci_run_id": 36243549547,
       "ci_result": "queued"
+    },
+    {
+      "priority": 96,
+      "package_id": "WCP-315",
+      "title": "Bound page layout context persistence identifier",
+      "risk": "medium",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-315-page-layout-context-boundary-g1",
+      "suggested_branch": "feature/wcp-315-page-layout-context-boundary-g1",
+      "base_branch": "main",
+      "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "objective": "Enforce PageLayout's mapped varchar(80) context-key boundary before assigning the primary key. Reject malformed UTF-8 and NUL while preserving every in-bound context value exactly and leaving route/context identity policy unchanged.",
+      "allowed_paths": [
+        "src/Entity/PageLayout.php",
+        "tests/Entity/PageLayoutBoundaryTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/",
+        "src/Controller/",
+        "src/Form/",
+        "src/Repository/",
+        "src/Service/",
+        "src/Layout/",
+        "templates/",
+        "assets/",
+        "public/"
+      ],
+      "deliverables": [
+        "Reject PageLayout contexts above 320 raw UTF-8 bytes or 80 characters before assignment.",
+        "Reject malformed UTF-8 and NUL-containing context keys.",
+        "Preserve exact in-bound context bytes and existing route, identity, layout, and optimistic-locking behavior.",
+        "Add constructor boundary tests for exact ASCII/multibyte limits and invalid input."
+      ],
+      "tests": [
+        "Targeted PageLayout context boundary PHPUnit tests for exact ASCII and multibyte limits, byte/character overflow, malformed UTF-8 and NUL rejection, and unchanged exact context values.",
+        "PHPStan level 8.",
+        "Complete Worker CI on the exact final HEAD."
+      ],
+      "completion_report": [
+        "exact final Worker HEAD and sanitized main base SHA",
+        "complete changed-path list and Worker PR",
+        "targeted PageLayout boundary tests and complete exact-head Worker CI result",
+        "80-character/320-byte persistence boundary with unchanged context identity semantics"
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "no-secrets-or-trusted-private-runtime-in-worker-source",
+        "preserve route context grammar, page lookup authorization, layout validation, and optimistic locking",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_base_branch": "main",
+      "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "resume_branch": "feature/wcp-315-page-layout-context-boundary-g1",
+      "proposal_kind": "worker_only",
+      "collision_check": {
+        "compared_against": "all current continuous/work-pool-v4 task allowlists and active/locked claims through WCP-314; exact WCP-315 branch/PR names and new test path were checked",
+        "result": "the PageLayout entity and focused boundary test are disjoint from every current task; no layout service, controller, validator, migration, config, DI or template path is included",
+        "paths": [
+          "src/Entity/PageLayout.php",
+          "tests/Entity/PageLayoutBoundaryTest.php"
+        ]
+      },
+      "claimed_on": "2026-09-26T12:59:12.200Z",
+      "claim_state": "active_worker_claim",
+      "last_checkpoint_at": "2026-09-26T12:59:12.200Z",
+      "next_action": "Create the claim and feature branches from exact sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d, then implement only the two allowlisted files and run exact-head Worker CI."
     }
   ],
   "recovery_queue": [],
