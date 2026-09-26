@@ -14931,7 +14931,7 @@
       "suggested_branch": "feature/wcp-367-guild-team-name-form-boundary-g1",
       "base_branch": "main",
       "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-      "objective": "Expose the existing GuildTeam.name maximum of 120 characters in GuildTeamType with maxlength=120. The entity persists varchar(120) and validates NotBlank and Length(max: 120). Add real-form regression coverage for exact-limit acceptance, a 121-character error on the name field, and the rendered maxlength. Preserve guild ownership, member/rank matching, color validation, ordering and authorization behavior.",
+      "objective": "Expose GuildTeam.name's existing 120-character bound in GuildTeamType with maxlength=120. The entity persists varchar(120) and validates NotBlank and Length(max: 120). While exercising the complete real form, fix the current invalid DQL alias 'member' in the member/leader choice query by renaming the alias only; preserve its guild filter and character-name ordering. Add full-form regression coverage for exact-limit acceptance, 121-character rejection and the rendered maxlength.",
       "allowed_paths": [
         "src/Form/GuildTeamType.php",
         "tests/Form/GuildTeamTypeBoundaryTest.php"
@@ -14962,14 +14962,14 @@
         "public/"
       ],
       "deliverables": [
-        "Add maxlength=120 to the GuildTeamType name field to match its persisted and server-validated bound.",
-        "Test an exactly 120-character name, a 121-character error surfaced on the name field, and the rendered maxlength using the real form and validator.",
-        "Leave the entity, schema, guild-member choices, cross-guild safeguards, controller, repository and authorization behavior unchanged."
+        "Add maxlength=120 to the GuildTeamType name field to match the existing persisted and server-validated bound.",
+        "Rename the reserved DQL query alias so member and leader choices can be submitted/rendered, leaving the guild filter and order unchanged.",
+        "Test full-form submission with exactly 120 characters, a 121-character error on the name field, and the rendered maxlength."
       ],
       "tests": [
-        "Form regression accepts an exactly 120-character team name with no name-field errors.",
-        "Form regression rejects a 121-character team name with the existing entity Length constraint surfaced on the name field.",
-        "Form view exposes maxlength=120.",
+        "Full form regression accepts an exactly 120-character team name with no name-field errors.",
+        "Full form regression rejects a 121-character team name with the existing entity Length constraint surfaced on the name field.",
+        "Form view exposes maxlength=120 while the member-choice query remains usable.",
         "PHPStan level 8 and complete Worker CI on the exact final HEAD."
       ],
       "completion_report": [
@@ -14983,7 +14983,7 @@
         "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
         "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
         "no-secrets-or-trusted-private-runtime-in-worker-source",
-        "preserve guild ownership, member assignment rules, authorization, CSRF and persistence invariants",
+        "preserve guild ownership, the member guild filter and ordering, rank matching, authorization, CSRF and persistence invariants",
         "red-ci-stops-integration",
         "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
       ],
@@ -15004,8 +15004,8 @@
       },
       "claimed_on": "2026-09-26T17:35:12.631Z",
       "claim_state": "active_worker_claim",
-      "last_checkpoint_at": "2026-09-26T17:36:11.168Z",
-      "next_action": "Open the Worker pull request and verify complete Worker CI on exact head 371f053bba7359f2b4fb87a644d152278e95eb93; repair any concrete CI failure without weakening entity validation or guild ownership safeguards.",
+      "last_checkpoint_at": "2026-09-26T17:39:33.620Z",
+      "next_action": "Rename the invalid DQL alias in the allowed GuildTeamType path without changing its guild filter or ordering, then rerun the full form tests and exact-head Worker CI.",
       "checkpoint_paths": [
         "src/Form/GuildTeamType.php",
         "tests/Form/GuildTeamTypeBoundaryTest.php"
