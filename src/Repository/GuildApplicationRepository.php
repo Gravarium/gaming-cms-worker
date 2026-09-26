@@ -42,10 +42,10 @@ final class GuildApplicationRepository extends ServiceEntityRepository
             $builder
                 ->leftJoin('application.guild', 'guild')
                 ->andWhere(
-                    'LOWER(application.applicantName) LIKE :query'
+                    '(LOWER(application.applicantName) LIKE :query'
                     .' OR LOWER(application.email) LIKE :query'
                     .' OR LOWER(application.characterName) LIKE :query'
-                    .' OR LOWER(guild.name) LIKE :query',
+                    .' OR LOWER(guild.name) LIKE :query)',
                 )
                 ->setParameter('query', '%'.mb_strtolower($query).'%');
         }
