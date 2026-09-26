@@ -34,10 +34,12 @@ final readonly class ExternalNotificationMessage
 
     private function normalizeType(string $type): string
     {
+        if (!$this->isSafeText($type, self::MAX_TYPE_LENGTH)) {
+            throw new \InvalidArgumentException('External notification type is invalid.');
+        }
+
         $type = strtolower(trim($type));
-        if (!$this->isSafeText($type, self::MAX_TYPE_LENGTH)
-            || preg_match('/^[a-z0-9][a-z0-9_.:-]*$/D', $type) !== 1
-        ) {
+        if ($type === '' || preg_match('/^[a-z0-9][a-z0-9_.:-]*$/D', $type) !== 1) {
             throw new \InvalidArgumentException('External notification type is invalid.');
         }
 
@@ -46,8 +48,12 @@ final readonly class ExternalNotificationMessage
 
     private function normalizeRequiredText(string $value, int $maxLength, string $field, bool $allowLineBreaks = false): string
     {
+        if (!$this->isSafeText($value, $maxLength, $allowLineBreaks)) {
+            throw new \InvalidArgumentException('External notification '.$field.' is invalid.');
+        }
+
         $value = trim($value);
-        if ($value === '' || !$this->isSafeText($value, $maxLength, $allowLineBreaks)) {
+        if ($value === '') {
             throw new \InvalidArgumentException('External notification '.$field.' is invalid.');
         }
 
@@ -59,13 +65,13 @@ final readonly class ExternalNotificationMessage
         if ($value === null) {
             return null;
         }
+        if (!$this->isSafeText($value, $maxLength)) {
+            throw new \InvalidArgumentException('External notification '.$field.' is invalid.');
+        }
 
         $value = trim($value);
         if ($value === '') {
             return null;
-        }
-        if (!$this->isSafeText($value, $maxLength)) {
-            throw new \InvalidArgumentException('External notification '.$field.' is invalid.');
         }
 
         return $value;
