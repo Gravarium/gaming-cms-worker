@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-26T18:43:54.730Z",
+  "published_at": "2026-09-26T18:48:30.672Z",
   "summary": {
     "total_remaining_worker_tasks": 131,
     "completed_worker_prs_awaiting_trusted_review": 153,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "Re-evaluate all five remaining FCP dependencies; if none can start, reserve the next independent WCP without touching locked claims.",
+    "next_required_action": "Continue WCP-378 on feature/wcp-378-news-widget-category-filter-g1 from its verified remote HEAD.",
     "composition_preparable": 0,
     "immediately_actionable": 0,
     "must_continue": true
@@ -16113,6 +16113,102 @@
         "src/Form/ResetPasswordType.php",
         "src/Form/AccountPasswordType.php",
         "tests/Form/PasswordPolicyFormBoundaryTest.php"
+      ]
+    },
+    {
+      "priority": 158,
+      "package_id": "WCP-378",
+      "title": "Filter the homepage news widget by category",
+      "risk": "medium",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-378-news-widget-category-filter-g1",
+      "suggested_branch": "feature/wcp-378-news-widget-category-filter-g1",
+      "base_branch": "main",
+      "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "objective": "Complete an existing content-module workflow by letting page editors scope the existing content.news widget to a selected news category. Keep the all-categories default. Render only currently published news in the selected category; an invalid or deleted category must produce an empty widget instead of falling back to all news.",
+      "allowed_paths": [
+        "src/Widget/BundledWidgetProvider.php",
+        "src/Controller/AdminLayoutController.php",
+        "assets/controllers/layout_editor_controller.js",
+        "tests/Controller/LayoutEditorTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/",
+        "src/Entity/",
+        "src/Repository/",
+        "src/Layout/",
+        "src/Security/",
+        "templates/",
+        "public/"
+      ],
+      "deliverables": [
+        "Add a bounded categoryId setting to the existing content.news widget while preserving its current all-news default and leaving other widget types unchanged.",
+        "Pass a bounded, ordered category choice list into the existing layout-editor state and render an accessible category selector, including a recoverable display for a saved category that no longer appears in the choices.",
+        "Apply the selected category through the existing published-news repository query; include the filter in request-cache identity and fail closed for malformed or deleted category IDs.",
+        "Add regressions for editor category choices, separate category results within one request, published-only filtering, all-news default behavior, and unknown-category empty results."
+      ],
+      "tests": [
+        "php bin/phpunit tests/Controller/LayoutEditorTest.php with the new category-selector and widget-filter cases.",
+        "Existing layout editor, widget availability, CSRF and authorization regressions remain green.",
+        "PHPStan level 8 and complete Worker CI on the exact final HEAD."
+      ],
+      "completion_report": [
+        "exact final Worker HEAD and sanitized main base SHA",
+        "complete changed-file list and Worker PR",
+        "targeted category-selector and filtered-widget test results",
+        "exact-head PHPStan and complete Worker CI results",
+        "open limitations and confirmation that public published-news visibility and layout authorization/CSRF behavior are unchanged"
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "no-private-runtime-or-secret-export",
+        "preserve public published-news visibility, module availability, layout validation, authorization and CSRF",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_base_branch": "main",
+      "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "resume_branch": "feature/wcp-378-news-widget-category-filter-g1",
+      "proposal_kind": "worker_only",
+      "collision_check": {
+        "compared_against": "all current continuous/work-pool-v4 allowed-path scopes through WCP-377 and the live claim refs before reservation, plus exact files on sanitized main at f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+        "result": "No exact-path or enclosing-directory task scope overlaps these four paths. Current WCP-377 is limited to password forms; completed WCP-375 and WCP-376 are limited to video filters and the Discord webhook form. FCP-072's broad templates scope is avoided. The existing content repository and Category entity are read-only; no migrations, templates, security files or locked layout services are changed.",
+        "paths": [
+          "src/Widget/BundledWidgetProvider.php",
+          "src/Controller/AdminLayoutController.php",
+          "assets/controllers/layout_editor_controller.js",
+          "tests/Controller/LayoutEditorTest.php"
+        ]
+      },
+      "claimed_on": "2026-09-26T18:48:30.672Z",
+      "claim_state": "active",
+      "last_checkpoint_at": "2026-09-26T18:48:30.672Z",
+      "next_action": "Implement the category selection in the existing layout editor and news widget, add targeted regressions, push a coherent checkpoint, then verify full exact-head Worker CI.",
+      "checkpoint_paths": [
+        "src/Widget/BundledWidgetProvider.php",
+        "src/Controller/AdminLayoutController.php",
+        "assets/controllers/layout_editor_controller.js",
+        "tests/Controller/LayoutEditorTest.php"
       ]
     }
   ],
