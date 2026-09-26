@@ -11,7 +11,6 @@ use App\Security\CmsPermission;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 
 final class AdminNotificationSecurityTest extends WebTestCase
 {
@@ -20,16 +19,28 @@ final class AdminNotificationSecurityTest extends WebTestCase
         $client = static::createClient();
         $firstId = $this->createNotification($client, 'restricted-first');
         $secondId = $this->createNotification($client, 'restricted-second');
-        $client->loginUser($this->createUser($client, 'restricted', []));
+        $limitedUser = $this->createUser($client, 'restricted', []);
+        $authorizedUser = $this->createUser($client, 'token-source', [CmsPermission::ACCESS]);
+        $client->loginUser($authorizedUser);
 
+        $crawler = $client->request('GET', '/admin/notifications');
+        self::assertResponseIsSuccessful();
+        $singleToken = (string) $crawler
+            ->filter('form[action="/admin/notifications/'.$firstId.'/read"] input[name="_token"]')
+            ->attr('value');
+        $allToken = (string) $crawler
+            ->filter('form[action="/admin/notifications/read-all"] input[name="_token"]')
+            ->attr('value');
+        self::assertNotSame('', $singleToken);
+        self::assertNotSame('', $allToken);
+
+        $client->loginUser($limitedUser);
         $client->request('GET', '/admin/notifications');
         self::assertResponseStatusCodeSame(403);
 
-        $singleToken = $this->csrf($client)->getToken('read-notification-'.$firstId)->getValue();
         $client->request('POST', '/admin/notifications/'.$firstId.'/read', ['_token' => $singleToken]);
         self::assertResponseStatusCodeSame(403);
 
-        $allToken = $this->csrf($client)->getToken('read-all-notifications')->getValue();
         $client->request('POST', '/admin/notifications/read-all', ['_token' => $allToken]);
         self::assertResponseStatusCodeSame(403);
 
@@ -143,10 +154,5 @@ final class AdminNotificationSecurityTest extends WebTestCase
     private function entityManager(KernelBrowser $client): EntityManagerInterface
     {
         return $client->getContainer()->get(EntityManagerInterface::class);
-    }
-
-    private function csrf(KernelBrowser $client): CsrfTokenManagerInterface
-    {
-        return $client->getContainer()->get(CsrfTokenManagerInterface::class);
     }
 }
