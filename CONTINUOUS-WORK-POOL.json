@@ -12,12 +12,12 @@
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
   "published_at": "2026-09-26T13:22:54.767Z",
   "summary": {
-    "total_remaining_worker_tasks": 104,
+    "total_remaining_worker_tasks": 105,
     "completed_worker_prs_awaiting_trusted_review": 98,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "Implement WCP-323 on the exclusive GuildEventSignup role setter and boundary-test paths from exact sanitized main; run complete exact-head Worker CI, then continue while preserving foreign claims.",
+    "next_required_action": "Implement WCP-324 on exclusive Guild server-name entity/test paths from exact sanitized main; run complete exact-head Worker CI and preserve foreign claims.",
     "composition_preparable": 0,
     "immediately_actionable": 0,
     "must_continue": true
@@ -10228,6 +10228,96 @@
         "src/Entity/GuildEventSignup.php",
         "tests/Entity/GuildEventSignupBoundaryTest.php"
       ]
+    },
+    {
+      "priority": 105,
+      "package_id": "WCP-324",
+      "title": "Bound guild server-name persistence input",
+      "risk": "low",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-324-guild-server-name-boundary-g1",
+      "suggested_branch": "feature/wcp-324-guild-server-name-boundary-g1",
+      "base_branch": "main",
+      "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "objective": "Bound Guild.serverName to its mapped varchar(120) in the entity setter. Preserve trim normalization and existing NotBlank/Length validation, reject malformed UTF-8/NUL, and reject normalized values above 120 UTF-8 characters/480 bytes before assignment; rejected input must leave the prior server name unchanged.",
+      "allowed_paths": [
+        "src/Entity/Guild.php",
+        "tests/Entity/GuildServerNameBoundaryTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/",
+        "src/Controller/",
+        "src/Form/",
+        "src/Repository/",
+        "src/Service/",
+        "templates/",
+        "assets/",
+        "public/"
+      ],
+      "deliverables": [
+        "Preserve existing server-name trimming and accept normalized values through the mapped 120-character/480-byte boundary.",
+        "Reject malformed UTF-8, NUL, and oversized normalized values before assignment without truncation.",
+        "Preserve the previous server name on rejection and keep NotBlank/Length validation unchanged.",
+        "Do not modify guild slug, name, region/faction, description, website URL, membership, or routing behavior."
+      ],
+      "tests": [
+        "Targeted Guild server-name PHPUnit tests for exact ASCII/multibyte limits, 121-character rejection, trim, malformed UTF-8/NUL, and prior-state preservation.",
+        "PHPStan level 8.",
+        "Complete Worker CI on the exact final HEAD."
+      ],
+      "completion_report": [
+        "exact final Worker HEAD and sanitized main base SHA",
+        "complete changed-file list and Worker PR",
+        "targeted Guild server-name tests and exact-head Worker CI result",
+        "120-character/480-byte ceiling with preserved trimming and validation"
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "no-secrets-or-trusted-private-runtime-in-worker-source",
+        "preserve guild identity, slug/routing, relationships and public metadata semantics",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_base_branch": "main",
+      "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "resume_branch": "feature/wcp-324-guild-server-name-boundary-g1",
+      "proposal_kind": "worker_only",
+      "collision_check": {
+        "compared_against": "all current continuous/work-pool-v4 task allowlists including active WCP-323 GuildEventSignup claim; exact WCP-324 branch/PR searches and test-path absence verified against sanitized main",
+        "result": "Guild.serverName and its boundary test are disjoint from every current allowlist; no slug, route, controller, form, repository, migration, DI, template or workflow path is included",
+        "paths": [
+          "src/Entity/Guild.php",
+          "tests/Entity/GuildServerNameBoundaryTest.php"
+        ]
+      },
+      "claimed_on": "2026-09-26T13:23:59.133Z",
+      "claim_state": "active_worker_claim",
+      "last_checkpoint_at": "2026-09-26T13:23:59.133Z",
+      "checkpoint_paths": [
+        "src/Entity/Guild.php",
+        "tests/Entity/GuildServerNameBoundaryTest.php"
+      ],
+      "next_action": "Create exact claim and feature branches from sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d, then implement only the two allowlisted files and run exact-head Worker CI."
     }
   ],
   "recovery_queue": [],
