@@ -13,7 +13,6 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
-#[Route('/admin/layout/pages', name: 'app_admin_layout_pages', methods: ['GET'])]
 #[IsGranted(CmsPermission::SETTINGS)]
 final class AdminLayoutPageDirectoryController extends AbstractController
 {
@@ -24,6 +23,7 @@ final class AdminLayoutPageDirectoryController extends AbstractController
     {
     }
 
+    #[Route('/admin/layout/pages', name: 'app_admin_layout_pages', methods: ['GET'])]
     public function index(Request $request): Response
     {
         $parameters = $request->query->all();
