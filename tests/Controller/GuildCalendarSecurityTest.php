@@ -10,7 +10,7 @@ use App\Entity\GuildEvent;
 use App\Entity\GuildMember;
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Test\KernelBrowser;
+use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 final class GuildCalendarSecurityTest extends WebTestCase
