@@ -8,6 +8,9 @@ use App\Widget\WidgetRegistry;
 
 final readonly class LayoutValidator
 {
+    private const MAX_LAYOUT_TEXT_BYTES = 16000;
+    private const MAX_LAYOUT_TEXT_CHARACTERS = 4000;
+
     public function __construct(private ThemeRegistry $themes, private WidgetRegistry $widgets) {}
 
     /** @return array<string, array{label:string,type:string,default:string|int|bool,choices?:list<string>,min?:int,max?:int}> */
@@ -50,16 +53,17 @@ final readonly class LayoutValidator
      */
     private function settings(array $input, array $schema): array
     {
-        if (array_diff(array_keys($input), array_keys($schema)) !== []) throw new \DomainException('Unbekannte Einstellung.');
+        if (count($input) > count($schema) || array_diff(array_keys($input), array_keys($schema)) !== []) throw new \DomainException('Unbekannte Einstellung.');
         $result = [];
         foreach ($schema as $key=>$field) {
             $value = $input[$key] ?? $field['default'];
+            $maximumTextCharacters = min($field['max'] ?? 120, self::MAX_LAYOUT_TEXT_CHARACTERS);
             $valid = match ($field['type']) {
-                'color'=>is_string($value) && ($value==='' || preg_match('/^#[0-9a-fA-F]{6}$/D',$value)===1),
+                'color'=>is_string($value) && strlen($value) <= 7 && ($value==='' || preg_match('/^#[0-9a-fA-F]{6}$/D',$value)===1),
                 'bool'=>is_bool($value),
                 'int'=>is_int($value) && $value >= ($field['min'] ?? 0) && $value <= ($field['max'] ?? 100),
-                'choice'=>is_string($value) && in_array($value, $field['choices'] ?? [], true),
-                'text'=>is_string($value) && mb_strlen($value) <= ($field['max'] ?? 120) && !str_contains($value, "\0"),
+                'choice'=>is_string($value) && strlen($value) <= 128 && in_array($value, $field['choices'] ?? [], true),
+                'text'=>is_string($value) && strlen($value) <= min($maximumTextCharacters * 4, self::MAX_LAYOUT_TEXT_BYTES) && mb_check_encoding($value, 'UTF-8') && mb_strlen($value) <= ($field['max'] ?? 120) && !str_contains($value, "\0"),
                 default=>false,
             };
             if (!$valid || (!is_string($value) && !is_int($value) && !is_bool($value))) throw new \DomainException('Ungültige Einstellung: '.$key);
@@ -70,18 +74,18 @@ final readonly class LayoutValidator
     /** @param array<string, mixed> $input */
     public function validate(array $input, ?LayoutDocument $previous = null, bool $themeChange = false): LayoutDocument
     {
-        if (array_diff(array_keys($input), ['schema','theme','options','widgets']) !== [] || ($input['schema'] ?? null) !== 1) throw new \DomainException('Unbekanntes Layout-Format.');
+        if (count($input) > 4 || array_diff(array_keys($input), ['schema','theme','options','widgets']) !== [] || ($input['schema'] ?? null) !== 1) throw new \DomainException('Unbekanntes Layout-Format.');
         $themeKey = $input['theme'] ?? null;
         if (!is_string($themeKey) || !$this->themes->has($themeKey)) throw new \DomainException('Unbekanntes Theme.');
         $theme = $this->themes->get($themeKey);
         $options = $input['options'] ?? [];
         $rows = $input['widgets'] ?? null;
-        if (!is_array($options) || !is_array($rows) || !array_is_list($rows) || count($rows)>60) throw new \DomainException('Ungültige Layout-Größe.');
+        if (!is_array($options) || !is_array($rows) || count($rows) > 60 || !array_is_list($rows)) throw new \DomainException('Ungültige Layout-Größe.');
         $options = $this->settings($options, $this->optionSchema());
         $old = []; foreach ($previous->widgets ?? [] as $row) $old[$row['id']] = $row;
         $widgets = []; $ids = []; $counts = []; $notices = [];
         foreach ($rows as $row) {
-            if (!is_array($row) || array_diff(array_keys($row), ['id','type','region','enabled','config']) !== []) throw new \DomainException('Ungültiges Widget.');
+            if (!is_array($row) || count($row) > 5 || array_diff(array_keys($row), ['id','type','region','enabled','config']) !== []) throw new \DomainException('Ungültiges Widget.');
             $id=$row['id']??null; $key=$row['type']??null; $region=$row['region']??null; $enabled=$row['enabled']??null; $config=$row['config']??null;
             if (!is_string($id) || preg_match('/^[a-z0-9-]{8,64}$/D',$id)!==1 || isset($ids[$id]) || !is_string($key) || !is_string($region) || !is_bool($enabled) || !is_array($config)) throw new \DomainException('Ungültige Widget-Instanz.');
             $ids[$id]=true;
