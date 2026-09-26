@@ -10,16 +10,16 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-26T10:15:28.037Z",
+  "published_at": "2026-09-26T10:18:30.246Z",
   "summary": {
     "total_remaining_worker_tasks": 52,
-    "completed_worker_prs_awaiting_trusted_review": 46,
+    "completed_worker_prs_awaiting_trusted_review": 47,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "Continue WCP-102 on its exclusive execution-summary boundary claim while preserving WCP-098 and WCP-101 completed foreign claim locks plus all other completed foreign claim locks; after exact-head green CI, reconcile and continue independently.",
+    "next_required_action": "Re-evaluate remaining unclaimed Worker proposals and continue an independent package while preserving all foreign active claims and completed claim locks; do not modify WCP-097, WCP-100 or WCP-102.",
     "composition_preparable": 0,
-    "immediately_actionable": 1,
+    "immediately_actionable": 0,
     "must_continue": true
   },
   "rules": {
@@ -4579,7 +4579,7 @@
       "package_id": "WCP-102",
       "title": "Bound external connector execution summaries",
       "risk": "medium",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -4648,7 +4648,7 @@
       "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "a6eb9ac12b682db438ccddc7ab0dc739c2854076",
       "resume_branch": "feature/wcp-102-execution-summary-boundary-g1",
       "proposal_kind": "worker_only",
       "collision_check": {
@@ -4659,7 +4659,14 @@
           "tests/ExternalConnector/ExternalConnectorExecutionSummaryTest.php"
         ]
       },
-      "claimed_on": "2026-09-26T10:13:28.317Z"
+      "claimed_on": "2026-09-26T10:13:28.317Z",
+      "worker_pr": 65,
+      "final_head": "a6eb9ac12b682db438ccddc7ab0dc739c2854076",
+      "ci_run_id": 36235286607,
+      "ci_result": "success",
+      "claim_state": "locked_until_trusted_resolution",
+      "completed_on": "2026-09-26T10:18:30.246Z",
+      "next_action": "Remain claim-locked while awaiting Trusted review; do not merge or deploy from the Worker repository."
     }
   ],
   "recovery_queue": [],
