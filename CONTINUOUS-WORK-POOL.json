@@ -10,7 +10,7 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-26T12:03:00.870Z",
+  "published_at": "2026-09-26T12:04:22.127Z",
   "summary": {
     "total_remaining_worker_tasks": 85,
     "completed_worker_prs_awaiting_trusted_review": 78,
@@ -8128,7 +8128,7 @@
       "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "203a274255cb9cbed257f0af08b224a6555fb72d",
       "resume_branch": "feature/wcp-304-content-redirect-boundary-g1",
       "proposal_kind": "worker_only",
       "collision_check": {
@@ -8141,7 +8141,12 @@
       },
       "claimed_on": "2026-09-26T12:02:19.327Z",
       "claim_state": "active_worker_claim",
-      "next_action": "Implement only the two allowlisted files, open a Worker PR, run exact-head full CI and retain the claim until Trusted resolution."
+      "next_action": "Open a draft Worker PR against main, run exact-head full Worker CI, repair failures within the allowlist and keep the claim locked until Trusted resolution.",
+      "last_checkpoint_at": "2026-09-26T12:04:22.127Z",
+      "checkpoint_paths": [
+        "src/Entity/ContentRedirect.php",
+        "tests/Entity/ContentRedirectBoundaryTest.php"
+      ]
     }
   ],
   "recovery_queue": [],
