@@ -10,16 +10,16 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-26T09:42:10.429Z",
+  "published_at": "2026-09-26T09:45:03.141Z",
   "summary": {
-    "total_remaining_worker_tasks": 41,
+    "total_remaining_worker_tasks": 42,
     "completed_worker_prs_awaiting_trusted_review": 34,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "Continue WCP-091 on its own exact feature branch while WCP-090 remains owned by another chat; existing green Worker PRs remain claim-locked awaiting Trusted review.",
+    "next_required_action": "Continue WCP-092 on its exclusive malware-scanner input boundary claim while preserving WCP-090 and WCP-091 foreign claims; after exact-head green CI, reconcile and continue independently.",
     "composition_preparable": 0,
-    "immediately_actionable": 2,
+    "immediately_actionable": 3,
     "must_continue": true
   },
   "rules": {
@@ -3683,6 +3683,82 @@
         ]
       },
       "claimed_on": "2026-09-26T09:42:10.429Z"
+    },
+    {
+      "priority": 42,
+      "package_id": "WCP-092",
+      "title": "Bound malware scanner executable and input paths",
+      "risk": "high",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-092-malware-scan-input-g1",
+      "suggested_branch": "feature/wcp-092-malware-scan-input-g1",
+      "base_branch": "main",
+      "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "objective": "Harden the worker-visible malware scanner process boundary: accept only a bounded absolute, valid UTF-8, readable regular file path that is not a symlink before invoking the configured scanner, preserve off/optional/required availability semantics and fail closed for invalid scanner configuration or scan input.",
+      "allowed_paths": [
+        "src/Service/MediaMalwareScanner.php",
+        "tests/Service/MediaMalwareScannerTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "src/Service/MediaUploadPolicy.php",
+        "tests/Service/MediaUploadPolicyTest.php"
+      ],
+      "deliverables": [
+        "strict bounded validation for scanner executable configuration and scan input paths before process execution",
+        "reject empty, relative, overlong, malformed UTF-8, control-character, unreadable, non-regular and symlinked scan paths without invoking a user-influenced command option",
+        "regression coverage for off/optional/required modes, valid execution handoff and fail-closed invalid inputs",
+        "preserve scanner timeout, exit-code semantics and upload-policy integration contract"
+      ],
+      "tests": [
+        "targeted MediaMalwareScannerTest PHPUnit tests",
+        "PHPStan level 8",
+        "complete Worker CI on the exact final HEAD"
+      ],
+      "completion_report": [
+        "exact final Worker HEAD and sanitized base SHA",
+        "complete changed-path list and Worker PR",
+        "targeted tests plus complete Worker CI result",
+        "scanner executable trust, temporary-upload path assumptions and deferred Fortress process-isolation ownership risks"
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "no-secrets-or-trusted-private-runtime-in-worker-source",
+        "preserve existing malware scan off/optional/required behavior, timeout and exit-code handling",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_base_branch": "main",
+      "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "resume_branch": "feature/wcp-092-malware-scan-input-g1",
+      "proposal_kind": "worker_only",
+      "collision_check": {
+        "compared_against": "current continuous/work-pool-v4 task allowlists and active branches at claim time",
+        "result": "disjoint from WCP-089 cleanup-repair, WCP-090 scheduled-unpublish, WCP-091 staged-replication claims, all other published allowlists and all searched WCP-092 branches",
+        "paths": [
+          "src/Service/MediaMalwareScanner.php",
+          "tests/Service/MediaMalwareScannerTest.php"
+        ]
+      },
+      "claimed_on": "2026-09-26T09:45:03.141Z"
     }
   ],
   "recovery_queue": [],
