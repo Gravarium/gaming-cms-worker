@@ -10,7 +10,7 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-26T21:06:04.364Z",
+  "published_at": "2026-09-26T21:09:10.198Z",
   "summary": {
     "total_remaining_worker_tasks": 134,
     "completed_worker_prs_awaiting_trusted_review": 174,
@@ -19538,6 +19538,89 @@
       "claimed_on": "2026-09-26T21:04:17.724Z",
       "claim_state": "active",
       "next_action": "Implement functional registration access, successful form submission, duplicate redirect, and CSRF rejection coverage; open a Worker PR for exact-head CI."
+    },
+    {
+      "priority": 188,
+      "package_id": "WCP-408",
+      "title": "Cover enabled video category and playlist filters",
+      "risk": "low",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-408-video-library-filters-g1",
+      "suggested_branch": "feature/wcp-408-video-library-filters-g1",
+      "base_branch": "main",
+      "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "objective": "Add focused functional regressions for the public video library's category and playlist filters. Verify only enabled filter options are linked, valid filters constrain cards to associated published videos, and disabled category or playlist slugs return 404. Test-only; do not change runtime behavior or schema.",
+      "allowed_paths": [
+        "tests/Controller/VideoLibraryFilterTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/",
+        "src/",
+        "templates/",
+        "assets/",
+        "public/"
+      ],
+      "deliverables": [
+        "Verify enabled categories and playlists are discoverable in the public library while disabled filters are omitted.",
+        "Verify a valid category filter returns associated published videos without unrelated cards.",
+        "Verify a valid playlist filter returns associated published videos without unrelated cards.",
+        "Verify direct category and playlist filters for disabled entries return 404.",
+        "Keep changes test-only in the single allowed file."
+      ],
+      "tests": [
+        "php bin/phpunit tests/Controller/VideoLibraryFilterTest.php",
+        "Existing VideoAccessTest, VideoPublicationVisibilityTest and VideoEmbedResolverTest remain green.",
+        "PHPStan level 8 and complete Worker CI on the exact final HEAD, including PostgreSQL 18 migration-chain checks."
+      ],
+      "completion_report": [
+        "Exact final Worker HEAD and sanitized main base SHA.",
+        "Complete changed-file list and Worker PR.",
+        "Enabled filter discovery, category/playlist result scoping, and disabled-filter denial results.",
+        "Exact-head PHPStan and complete Worker CI results.",
+        "Confirmation that only the test file changed; no runtime or schema changes."
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "preserve-enabled-video-filter-visibility-and-publication-boundaries",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_base_branch": "main",
+      "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "resume_branch": "feature/wcp-408-video-library-filters-g1",
+      "proposal_kind": "worker_only",
+      "collision_check": {
+        "compared_against": "Fresh continuous/work-pool-v4 blob b46379eaffeaaf5730a956d5060991de11305226, all active and claim-locked paths, and sanitized Worker main f1a246c64527ef3ad51f7490773d9bbf9d42be5d.",
+        "result": "No active or claim-locked task owns tests/Controller/VideoLibraryFilterTest.php. WCP-406 is limited to publication-state visibility in a different test file. WCP-306 covers admin video slug handling, WCP-407 covers competition registration, WCP-405 covers member character profiles, and WCP-401 covers game-catalogue administration; their paths are disjoint. Existing VideoAccessTest only checks admin authentication and that the public library loads; it has no category/playlist filtering or disabled-filter assertions. No immediately claimable FCP is available in the current pool.",
+        "paths": [
+          "tests/Controller/VideoLibraryFilterTest.php"
+        ]
+      },
+      "claimed_on": "2026-09-26T21:09:10.198Z",
+      "claim_state": "active",
+      "last_checkpoint_at": "2026-09-26T21:09:10.198Z",
+      "checkpoint_paths": [],
+      "next_action": "Create exclusive claim and feature branches from sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d; add category and playlist filter regressions in the allowed test file."
     }
   ],
   "recovery_queue": [],
