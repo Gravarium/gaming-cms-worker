@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-26T20:33:48.753Z",
+  "published_at": "2026-09-26T20:34:42.622Z",
   "summary": {
-    "total_remaining_worker_tasks": 133,
+    "total_remaining_worker_tasks": 134,
     "completed_worker_prs_awaiting_trusted_review": 170,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-399 PR #193 is open on exact HEAD 7816ac71f01a1a040cf648776da4a181b3b892a9; inspect complete exact-head CI and repair concrete failures.",
+    "next_required_action": "WCP-401 is reserved on exact green WCP-387 HEAD 79bf3d5f3d9d8a3d03b8b79d6ea2d98908bb1bb4; complete the admin-to-public Game Hub entry workflow.",
     "composition_preparable": 0,
     "immediately_actionable": 0,
     "must_continue": true
@@ -18703,6 +18703,122 @@
       "ci_run_id": null,
       "ci_result": null,
       "next_action": "Implement bounded search and 50-row pagination for the existing audit view, then prove access control, privacy, filtering, and page behavior with controller tests."
+    },
+    {
+      "priority": 181,
+      "package_id": "WCP-401",
+      "title": "Administer Game Hub entries for existing games",
+      "risk": "medium",
+      "execution_state": "worker_in_progress",
+      "dependencies": [
+        "WCP-387"
+      ],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-401-game-hub-admin-g1",
+      "suggested_branch": "feature/wcp-401-game-hub-admin-g1",
+      "base_branch": "feature/wcp-387-game-catalogue-filters-g1",
+      "base_sha": "79bf3d5f3d9d8a3d03b8b79d6ea2d98908bb1bb4",
+      "objective": "Complete the admin-to-public publishing workflow for Game Catalogue entries attached to existing games. Let gaming managers list catalogue coverage, create one Game Hub for a game that has no entry, edit summary/developer/publisher/genre metadata, and set catalogue visibility. Keep a game fixed on edit, prevent duplicate game entries, report validation/choice failures clearly, and expose public status with existing game/module gates. Do not manage releases, editions, platforms, or hub links in this package.",
+      "allowed_paths": [
+        "src/Controller/AdminGameCatalogue/AdminGameCatalogueController.php",
+        "src/Form/GameCatalogue/GameCatalogueEntryAdminType.php",
+        "templates/admin/gaming/index.html.twig",
+        "templates/admin/game_catalogue/index.html.twig",
+        "templates/admin/game_catalogue/form.html.twig",
+        "tests/Gaming/Catalogue/AdminGameCatalogueControllerTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/",
+        "src/Entity/",
+        "src/Controller/GameCatalogue/",
+        "src/Controller/AdminGamingController.php",
+        "src/Form/GameType.php",
+        "templates/game_catalogue/",
+        "assets/",
+        "public/",
+        "src/Controller/Competition/",
+        "src/Entity/Competition/",
+        "templates/competition/",
+        "src/Controller/MemberNotificationInboxController.php",
+        "templates/guild_portal/",
+        "tests/Command/PublishScheduledContentCommandTest.php",
+        "tests/Controller/GuildCalendarSecurityTest.php",
+        "tests/Controller/Competition/"
+      ],
+      "deliverables": [
+        "Discoverable Game Hubs administration linked from the existing gaming dashboard and guarded by CMS_GAMING_MANAGE.",
+        "Admin listing of existing Game Hub entries and games without entries, including public, hidden-game, hidden-entry, and gaming-module-off status.",
+        "Create and edit forms for existing games: summary, developer, optional existing publisher and genres, and entry visibility; cannot reassign a saved entry to another game.",
+        "Duplicate game selections are excluded from normal choices and fail with a useful form error; Symfony form CSRF remains enabled.",
+        "Public visibility continues to require an enabled entry, enabled underlying game, and enabled gaming module; no schema or migration changes.",
+        "Functional regression tests for permission denial, create/edit, duplicate prevention, public/hide behavior, module deactivation, and invalid form submission."
+      ],
+      "tests": [
+        "php bin/phpunit tests/Gaming/Catalogue/AdminGameCatalogueControllerTest.php",
+        "PHPStan level 8 and complete Worker CI on the exact final HEAD, including PostgreSQL 18 migration-chain checks."
+      ],
+      "completion_report": [
+        "Exact final worker HEAD and exact WCP-387 proposal base SHA.",
+        "Complete changed-path list and stacked Worker PR base.",
+        "Targeted tests plus complete exact-head Worker CI results.",
+        "Unresolved risks and intentionally deferred releases, editions, platforms, and GameHubLink administration."
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "preserve-existing-gaming-permissions-csrf-public-visibility-and-module-gates",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment",
+        "no-schema-or-migration-change",
+        "do-not-modify-the-locked-WCP-387-files",
+        "do-not-modify-the-main-CMS-repository"
+      ],
+      "proposal_base_branch": "feature/wcp-387-game-catalogue-filters-g1",
+      "proposal_base_sha": "79bf3d5f3d9d8a3d03b8b79d6ea2d98908bb1bb4",
+      "proposal_dependency_evidence": [
+        {
+          "package_id": "WCP-387",
+          "feature_branch": "feature/wcp-387-game-catalogue-filters-g1",
+          "worker_pr": 182,
+          "exact_head": "79bf3d5f3d9d8a3d03b8b79d6ea2d98908bb1bb4",
+          "ci_run_id": 36267032101,
+          "ci_result": "success"
+        }
+      ],
+      "active_base_branch": "feature/wcp-387-game-catalogue-filters-g1",
+      "active_base_sha": "79bf3d5f3d9d8a3d03b8b79d6ea2d98908bb1bb4",
+      "active_head": "79bf3d5f3d9d8a3d03b8b79d6ea2d98908bb1bb4",
+      "resume_branch": "feature/wcp-401-game-hub-admin-g1",
+      "proposal_kind": "worker_only",
+      "collision_check": {
+        "compared_against": "Fresh continuous/work-pool-v4 blob 6d2173d82e69a4896d9d4a30a529057cb76dc95a after exclusive WCP-401 branch creation; active and locked claims rechecked before publication.",
+        "result": "WCP-400 is now owned by a different chat and was left untouched. WCP-401 was absent before claim; its claim and feature branches were created exclusively from exact green WCP-387 HEAD 79bf3d5f3d9d8a3d03b8b79d6ea2d98908bb1bb4. No active or locked claim overlaps the six allowed paths. WCP-387's locked repository paths are inherited as the direct base but are not modified. FCP-072 is unclaimed and blocked by FCP-035/FCP-051; its broad templates/ allowlist includes these UI paths, so any later FCP-072 claimant must keep this now-claimed work disjoint. The WCP-387 predecessor remains open and unmerged; this proposal is stacked and untrusted.",
+        "paths": [
+          "src/Controller/AdminGameCatalogue/AdminGameCatalogueController.php",
+          "src/Form/GameCatalogue/GameCatalogueEntryAdminType.php",
+          "templates/admin/gaming/index.html.twig",
+          "templates/admin/game_catalogue/index.html.twig",
+          "templates/admin/game_catalogue/form.html.twig",
+          "tests/Gaming/Catalogue/AdminGameCatalogueControllerTest.php"
+        ]
+      },
+      "claimed_on": "2026-09-26T20:34:42.622Z",
+      "claim_state": "active",
+      "next_action": "Implement the admin listing and CSRF-protected create/edit flow, then exercise status, duplicate, permission, and module-off behavior."
     }
   ],
   "recovery_queue": [],
