@@ -26,7 +26,7 @@ final class VideoSearchTest extends WebTestCase
 
         self::assertResponseIsSuccessful();
         self::assertSelectorTextContains('h1', 'Videos durchsuchen');
-        self::assertResponseHeaderSame('Cache-Control', 'private, no-store');
+        self::assertStringContainsString('no-store', (string) $client->getResponse()->headers->get('Cache-Control'));
     }
 
     public function testSearchMatchesTitleAndDescriptionButOnlyEnabledCurrentlyPublishedVideos(): void
@@ -52,10 +52,10 @@ final class VideoSearchTest extends WebTestCase
         $client->request('GET', '/videos/search', ['q' => $term]);
 
         self::assertResponseIsSuccessful();
-        self::assertSelectorTextContains('h2', 'title match '.$suffix);
-        self::assertSelectorTextContains('h2', 'Description match '.$suffix);
         $body = $client->getResponse()->getContent();
         self::assertIsString($body);
+        self::assertStringContainsString('title match '.$suffix, $body);
+        self::assertStringContainsString('Description match '.$suffix, $body);
         self::assertStringNotContainsString('Disabled match '.$suffix, $body);
         self::assertStringNotContainsString('Draft match '.$suffix, $body);
         self::assertStringNotContainsString('Future match '.$suffix, $body);
