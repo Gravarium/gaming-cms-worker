@@ -10,16 +10,16 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-26T11:42:24.671Z",
+  "published_at": "2026-09-26T11:45:26.018Z",
   "summary": {
-    "total_remaining_worker_tasks": 80,
+    "total_remaining_worker_tasks": 81,
     "completed_worker_prs_awaiting_trusted_review": 73,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "Continue WCP-126 independent Worker proposal work while preserving all foreign and completed claim locks; after exact-head green CI reconcile and continue.",
+    "next_required_action": "Continue WCP-303 on its exclusive taxonomy slug claim while preserving WCP-125/WCP-126 and all completed claim locks; reconcile only after exact-head green CI.",
     "composition_preparable": 0,
-    "immediately_actionable": 3,
+    "immediately_actionable": 4,
     "must_continue": true
   },
   "rules": {
@@ -7615,6 +7615,91 @@
       "claimed_on": "2026-09-26T11:42:24.671Z",
       "claim_state": "active_worker_claim",
       "next_action": "Implement only the two allowlisted files, open a Worker PR, run exact-head full CI and retain the claim until Trusted resolution."
+    },
+    {
+      "priority": 81,
+      "package_id": "WCP-303",
+      "title": "Bound content taxonomy slug normalization",
+      "risk": "medium",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-303-taxonomy-slug-boundary-g1",
+      "suggested_branch": "feature/wcp-303-taxonomy-slug-boundary-g1",
+      "base_branch": "main",
+      "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "objective": "Bound category and content-tag slug input before lowercase normalization and enforce the existing 120-character database shape with a route-safe ASCII slug grammar.",
+      "allowed_paths": [
+        "src/Entity/Category.php",
+        "src/Entity/ContentTag.php",
+        "tests/Entity/ContentTaxonomyTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/",
+        "src/Controller/",
+        "src/Form/",
+        "src/Repository/",
+        "templates/",
+        "assets/"
+      ],
+      "deliverables": [
+        "Reject raw category and content-tag slug strings above a finite byte limit before mb_strtolower.",
+        "Require the normalized slug to be non-empty, at most 120 ASCII characters, and match the existing route-safe lowercase alphanumeric/hyphen convention.",
+        "Preserve controller-generated Slugger output and current case/whitespace normalization for valid slugs.",
+        "Add positive and negative taxonomy entity tests for normalization, malformed forms, and byte/character boundaries."
+      ],
+      "tests": [
+        "targeted ContentTaxonomy entity tests",
+        "PHPStan level 8",
+        "complete Worker CI on the exact final HEAD"
+      ],
+      "completion_report": [
+        "exact final Worker HEAD and sanitized base SHA",
+        "complete changed-path list and Worker PR",
+        "targeted category/tag slug tests and exact-head Worker CI result",
+        "byte cap, normalized length cap, and accepted slug grammar"
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "no-secrets-or-trusted-private-runtime-in-worker-source",
+        "preserve controller Slugger-generated taxonomy links, unique slug behavior and hierarchy semantics",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_base_branch": "main",
+      "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "resume_branch": "feature/wcp-303-taxonomy-slug-boundary-g1",
+      "proposal_kind": "worker_only",
+      "collision_check": {
+        "compared_against": "current continuous/work-pool-v4 task allowlists, active WCP-125/WCP-126 claims, and exact WCP-303 branch/PR searches",
+        "result": "category, content-tag and their focused taxonomy test paths are disjoint from all published allowed paths and active claims; no schema, migration, controller, form, repository or template paths are touched",
+        "paths": [
+          "src/Entity/Category.php",
+          "src/Entity/ContentTag.php",
+          "tests/Entity/ContentTaxonomyTest.php"
+        ]
+      },
+      "claimed_on": "2026-09-26T11:45:26.018Z",
+      "claim_state": "active_worker_claim",
+      "next_action": "Implement only the three allowlisted files, open a Worker PR, run exact-head full CI and retain the claim until Trusted resolution."
     }
   ],
   "recovery_queue": [],
