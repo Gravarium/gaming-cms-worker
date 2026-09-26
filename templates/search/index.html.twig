@@ -1,0 +1,33 @@
+{% extends 'base.html.twig' %}
+{% block title %}Globale Suche | {{ site.siteName }}{% endblock %}
+{% block body %}
+<header class="topbar"><a class="brand" href="{{ path('app_home') }}">{{ site.siteName }}</a><nav class="top-actions"><a href="{{ path('app_news_index') }}">News</a><a href="{{ path('app_search_global') }}">Suche</a></nav></header>
+<main class="dashboard">
+    <p class="eyebrow">Discovery</p>
+    <h1>Globale Suche</h1>
+    <form method="get" role="search" class="content-form" action="{{ path('app_search_global') }}">
+        <label>Suchbegriff <input name="q" value="{{ query }}" minlength="2" maxlength="100" autocomplete="off"></label>
+        <label>Modul
+            <select name="module">
+                <option value="">Alle Module</option>
+                <option value="content" {{ filters.moduleKey == 'content' ? 'selected' : '' }}>Inhalte</option>
+                <option value="gaming" {{ filters.moduleKey == 'gaming' ? 'selected' : '' }}>Gaming</option>
+                <option value="video" {{ filters.moduleKey == 'video' ? 'selected' : '' }}>Videos</option>
+            </select>
+        </label>
+        <label>Typ <input name="type" value="{{ filters.documentType ?? '' }}" maxlength="40"></label>
+        <button>Suchen</button>
+    </form>
+    {% if hasQuery %}<p class="muted">{{ results|length }} sichtbare Treffer für „{{ query }}“.</p>{% else %}<p class="muted">Empfehlungen aus den aktivierten und für dich sichtbaren Modulen.</p>{% endif %}
+    <section class="news-grid" aria-label="Suchergebnisse">
+        {% for result in results %}
+            {% set target = result.document.route ?: path('app_search_item', {id: result.document.id}) %}
+            <article class="card">
+                <p class="eyebrow">{{ result.document.moduleKey }} · {{ result.document.documentType }}{% if result.reasons %} · {{ result.reasons|join(', ') }}{% endif %}</p>
+                <h2><a href="{{ target }}">{{ result.document.title }}</a></h2>
+                {% if result.document.excerpt %}<p>{{ result.document.excerpt|striptags|slice(0, 240) }}</p>{% else %}<p>{{ result.document.body|striptags|slice(0, 240) }}{% if result.document.body|length > 240 %}…{% endif %}</p>{% endif %}
+            </article>
+        {% else %}<p class="muted">Keine sichtbaren Ergebnisse.</p>{% endfor %}
+    </section>
+</main>
+{% endblock %}
