@@ -21,6 +21,7 @@ class MemberNotification
     private const MAX_MESSAGE_BYTES = 16000;
     private const MAX_LINK_CHARACTERS = 500;
     private const MAX_LINK_BYTES = 2000;
+
     #[ORM\Id] #[ORM\GeneratedValue] #[ORM\Column]
     private ?int $id = null;
     #[ORM\ManyToOne] #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
