@@ -21,7 +21,7 @@ use Symfony\Component\Validator\Constraints\Length;
 final class GameCatalogueEntryAdminType extends AbstractType
 {
     /**
-     * @param FormBuilderInterface $builder
+     * @param FormBuilderInterface<GameCatalogueEntry> $builder
      * @param array<string, mixed> $options
      */
     public function buildForm(FormBuilderInterface $builder, array $options): void

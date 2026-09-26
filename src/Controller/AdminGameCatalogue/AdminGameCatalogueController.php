@@ -115,7 +115,7 @@ final class AdminGameCatalogueController extends AbstractController
             availableGames: [],
             includeGame: false,
             selectedGame: null,
-            selectedGenres: $entry->getGenres()->toArray(),
+            selectedGenres: array_values($entry->getGenres()->toArray()),
         ))->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -190,7 +190,7 @@ final class AdminGameCatalogueController extends AbstractController
         ];
     }
 
-    private function syncGenres(GameCatalogueEntry $entry, FormInterface $form): void
+    private function syncGenres(GameCatalogueEntry $entry, FormInterface<GameCatalogueEntry> $form): void
     {
         /** @var list<GameGenre> $genres */
         $genres = $form->get('genres')->getData() ?? [];
