@@ -10,9 +10,9 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-26T15:06:50.235Z",
+  "published_at": "2026-09-26T15:09:22.063Z",
   "summary": {
-    "total_remaining_worker_tasks": 122,
+    "total_remaining_worker_tasks": 123,
     "completed_worker_prs_awaiting_trusted_review": 116,
     "recovery_tasks": 0,
     "unclaimed": 5,
@@ -12205,6 +12205,95 @@
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/135",
       "pr_state": "draft",
       "last_verified_push_at": "2026-09-26T15:06:50.235Z"
+    },
+    {
+      "priority": 123,
+      "package_id": "WCP-342",
+      "title": "Bound media storage bulk selections",
+      "risk": "medium",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-342-media-bulk-selection-boundary-g1",
+      "suggested_branch": "feature/wcp-342-media-bulk-selection-boundary-g1",
+      "base_branch": "main",
+      "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "objective": "Reject media bulk selections with more than 200 raw asset IDs before filtering, de-duplication, integer conversion or media repository lookups. Show an explicit no-change error and return before any asset changes. Preserve in-limit move/delete behavior, authorization, CSRF and pending-deletion safeguards.",
+      "allowed_paths": [
+        "src/Controller/AdminStorageController.php",
+        "tests/Controller/MediaStorageSecurityTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/",
+        "src/Entity/",
+        "src/Repository/",
+        "src/Form/",
+        "templates/",
+        "assets/",
+        "public/"
+      ],
+      "deliverables": [
+        "Enforce a fixed maximum of 200 raw asset IDs immediately after CSRF validation and before normalization, deduplication, integer conversion or repository queries.",
+        "Reject the complete oversized selection with a visible no-change message.",
+        "Preserve existing behavior for valid bounded selections and all authorization, CSRF and deletion safeguards."
+      ],
+      "tests": [
+        "Functional regression posts 201 duplicate valid asset IDs with a valid CSRF token, sees the no-change message and verifies the asset folder is unchanged.",
+        "Existing positive and invalid-target bulk-move behavior remains intact.",
+        "PHPStan level 8.",
+        "Complete Worker CI on the exact final HEAD."
+      ],
+      "completion_report": [
+        "exact final Worker HEAD and sanitized main base SHA",
+        "complete changed-file list and Worker PR",
+        "oversized raw-selection regression, PHPStan level 8 and exact-head Worker CI results",
+        "confirmation that oversized input causes no asset changes and valid bounded selections remain supported"
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "no-secrets-or-trusted-private-runtime-in-worker-source",
+        "preserve storage authorization, CSRF validation, pending-deletion and rollback safeguards",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_base_branch": "main",
+      "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "resume_branch": "feature/wcp-342-media-bulk-selection-boundary-g1",
+      "proposal_kind": "worker_only",
+      "collision_check": {
+        "compared_against": "all published current work-pool-v4 task allowlists and active/locked claims through WCP-341; exact paths checked against sanitized main at f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+        "result": "Both paths are absent from every current allowlist and claim. WCP-341 is limited to tests/Service/MediaDeletionRepairerTest.php. No migration, DI, config, template, entity, repository, storage transport or private-runtime path is included.",
+        "paths": [
+          "src/Controller/AdminStorageController.php",
+          "tests/Controller/MediaStorageSecurityTest.php"
+        ]
+      },
+      "claimed_on": "2026-09-26T15:09:22.063Z",
+      "claim_state": "active_worker_claim",
+      "last_checkpoint_at": "2026-09-26T15:09:22.063Z",
+      "next_action": "Implement the raw selection boundary and functional regression on the exact sanitized main base; preserve existing permission and CSRF behavior.",
+      "checkpoint_paths": [
+        "src/Controller/AdminStorageController.php",
+        "tests/Controller/MediaStorageSecurityTest.php"
+      ]
     }
   ],
   "recovery_queue": [],
