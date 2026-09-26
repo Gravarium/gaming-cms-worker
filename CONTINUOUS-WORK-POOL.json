@@ -10,16 +10,16 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-26T11:12:01.194Z",
+  "published_at": "2026-09-26T11:13:46.942Z",
   "summary": {
-    "total_remaining_worker_tasks": 69,
+    "total_remaining_worker_tasks": 70,
     "completed_worker_prs_awaiting_trusted_review": 63,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "Re-evaluate remaining unclaimed tasks and continue an independent Worker proposal while preserving all foreign and completed claim locks; after each exact-head green CI, reconcile and continue. Do not merge or deploy.",
+    "next_required_action": "Continue WCP-300 on its exclusive content editor request-size claim while preserving WCP-118 and all completed claim locks; after exact-head green CI, reconcile and continue independently.",
     "composition_preparable": 0,
-    "immediately_actionable": 0,
+    "immediately_actionable": 1,
     "must_continue": true
   },
   "rules": {
@@ -6474,6 +6474,92 @@
       "claimed_on": "2026-09-26T11:09:06.615Z",
       "claim_state": "active_worker_claim",
       "next_action": "Implement only the two allowlisted files, open a Worker PR, run exact-head full CI and retain the claim until Trusted resolution."
+    },
+    {
+      "priority": 70,
+      "package_id": "WCP-300",
+      "title": "Bound content editor request envelopes",
+      "risk": "medium",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-300-editor-request-size-boundary-g1",
+      "suggested_branch": "feature/wcp-300-editor-request-size-boundary-g1",
+      "base_branch": "main",
+      "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "objective": "Bound the preview/autosave JSON request envelope before json_decode so oversized editor requests cannot trigger unbounded decoder memory amplification, while preserving authentication, permission, CSRF and document-validation ordering.",
+      "allowed_paths": [
+        "src/Controller/AdminContentController.php",
+        "tests/Controller/Content/ContentEditorControllerTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/",
+        "src/Entity/",
+        "src/Repository/",
+        "src/ContentEditor/",
+        "templates/",
+        "assets/"
+      ],
+      "deliverables": [
+        "reject editor request bodies above a documented finite byte limit before JSON decoding",
+        "preserve authentication, CMS permission, CSRF, autosave status and content validation checks",
+        "return the standard HTTP 413 response for oversized preview and autosave requests",
+        "add HTTP integration regression coverage for both endpoints using valid authorization and CSRF context"
+      ],
+      "tests": [
+        "targeted ContentEditorController HTTP tests",
+        "PHPStan level 8",
+        "complete Worker CI on the exact final HEAD"
+      ],
+      "completion_report": [
+        "exact final Worker HEAD and sanitized base SHA",
+        "complete changed-path list and Worker PR",
+        "targeted tests and exact-head Worker CI result",
+        "request byte limit and preserved authorization/CSRF behavior"
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "no-secrets-or-trusted-private-runtime-in-worker-source",
+        "preserve authentication, authorization, CSRF, autosave status checks and 60KB document validation",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_base_branch": "main",
+      "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "resume_branch": "feature/wcp-300-editor-request-size-boundary-g1",
+      "proposal_kind": "worker_only",
+      "collision_check": {
+        "compared_against": "latest continuous/work-pool-v4 allowed paths and active claims plus open AdminContentController pull-request search",
+        "result": "the AdminContentController and ContentEditorControllerTest paths are disjoint from every current task allowlist and active WCP-118 claim; no schema, migration or shared repository path is involved",
+        "paths": [
+          "src/Controller/AdminContentController.php",
+          "tests/Controller/Content/ContentEditorControllerTest.php"
+        ]
+      },
+      "claimed_on": "2026-09-26T11:13:46.942Z",
+      "last_checkpoint_at": "2026-09-26T11:13:46.942Z",
+      "checkpoint_paths": [
+        "src/Controller/AdminContentController.php",
+        "tests/Controller/Content/ContentEditorControllerTest.php"
+      ]
     }
   ],
   "recovery_queue": [],
