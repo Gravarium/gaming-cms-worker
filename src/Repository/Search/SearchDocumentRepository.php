@@ -24,6 +24,7 @@ final class SearchDocumentRepository extends ServiceEntityRepository
     }
 
     /** @param list<string> $sourceTypes */
+    /** @return list<SearchDocument> */
     public function findForIndex(array $sourceTypes): array
     {
         if ($sourceTypes === []) {

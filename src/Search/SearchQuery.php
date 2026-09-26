@@ -9,6 +9,7 @@ final readonly class SearchQuery
     /** @var list<string> */
     private array $terms;
 
+    /** @param list<string> $terms */
     private function __construct(public string $raw, array $terms)
     {
         $this->terms = $terms;
@@ -31,8 +32,10 @@ final readonly class SearchQuery
             throw new \InvalidArgumentException('Die Suche benötigt einen gültigen Begriff mit höchstens 8 Wörtern.');
         }
 
-        /** @var list<string> $terms */
-        return new self($normalized, array_values(array_unique($terms)));
+        /** @var list<string> $uniqueTerms */
+        $uniqueTerms = array_values(array_unique($terms));
+
+        return new self($normalized, $uniqueTerms);
     }
 
     /** @return list<string> */
