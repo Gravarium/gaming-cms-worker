@@ -18,7 +18,7 @@ final class MediaFolderType extends AbstractType
         /** @var MediaFolder|null $current */
         $current = $options['current_folder'];
 
-        $builder->add('name', null, ['label' => 'Ordnername'])
+        $builder->add('name', null, ['label' => 'Ordnername', 'attr' => ['maxlength' => 120]])
             ->add('parent', EntityType::class, [
                 'class' => MediaFolder::class,
                 'choice_label' => 'pathLabel',
