@@ -12,14 +12,14 @@
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
   "published_at": "2026-09-26T08:42:05.413Z",
   "summary": {
-    "total_remaining_worker_tasks": 33,
+    "total_remaining_worker_tasks": 34,
     "completed_worker_prs_awaiting_trusted_review": 26,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "Re-evaluate remaining unclaimed work and self-publish the next bounded independent Worker proposal while FCP-077 and WCP-082 remain owned by other chats; WCP-083 is complete on its exact green head and awaits Trusted review.",
+    "next_required_action": "Continue WCP-084 on its existing claim while FCP-077 and WCP-082 remain owned by other chats; WCP-083 is complete on its exact green head and awaits Trusted review.",
     "composition_preparable": 0,
-    "immediately_actionable": 1,
+    "immediately_actionable": 2,
     "must_continue": true
   },
   "rules": {
@@ -2979,6 +2979,80 @@
       "claim_state": "locked_until_trusted_resolution",
       "completed_on": "2026-09-26T09:11:45.960Z",
       "next_action": "Remain claim-locked while awaiting Trusted review; do not merge or deploy from the Worker repository."
+    },
+    {
+      "priority": 34,
+      "package_id": "WCP-084",
+      "title": "Harden video embed provider and parent boundaries",
+      "risk": "high",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-084-video-embed-boundary-g1",
+      "suggested_branch": "feature/wcp-084-video-embed-boundary-g1",
+      "base_branch": "main",
+      "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "objective": "Strengthen the worker-visible VideoEmbedResolver with canonical provider host allowlists, strict provider identifier handling and fail-closed Twitch parent-host validation. Preserve privacy-enhanced embeds and safe upload/external URL behavior without network calls or controller/template changes.",
+      "allowed_paths": [
+        "src/Service/VideoEmbedResolver.php",
+        "tests/Service/VideoEmbedResolverTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/"
+      ],
+      "deliverables": [
+        "accept only canonical YouTube, Vimeo and Twitch source hosts",
+        "reject malformed provider authorities, IDs and invalid parent host/port values before iframe construction",
+        "preserve valid privacy-enhanced YouTube, Vimeo, Twitch, uploaded and safe external outputs",
+        "positive and negative regression coverage without network access or provider credentials"
+      ],
+      "tests": [
+        "targeted VideoEmbedResolver PHPUnit tests",
+        "PHPStan level 8",
+        "complete Worker CI on the exact final HEAD"
+      ],
+      "completion_report": [
+        "exact final Worker HEAD and sanitized base SHA",
+        "complete changed-path list and Worker PR",
+        "targeted tests plus complete Worker CI result",
+        "provider-host, parent-host and deferred network risks"
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "no-secrets-or-trusted-private-runtime-in-worker-source",
+        "preserve-existing-video privacy, upload and external URL safety behavior",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_base_branch": "main",
+      "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "resume_branch": "feature/wcp-084-video-embed-boundary-g1",
+      "proposal_kind": "worker_only",
+      "collision_check": {
+        "compared_against": "current continuous/work-pool-v4 task allowlists and active branches",
+        "result": "disjoint from FCP-077, WCP-078 through WCP-083 and WCP-082 foreign claim",
+        "paths": [
+          "src/Service/VideoEmbedResolver.php",
+          "tests/Service/VideoEmbedResolverTest.php"
+        ]
+      },
+      "claimed_on": "2026-09-26T09:13:01.873Z"
     }
   ],
   "recovery_queue": [],
