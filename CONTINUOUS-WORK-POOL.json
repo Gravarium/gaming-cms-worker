@@ -10,16 +10,16 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-26T10:58:25.042Z",
+  "published_at": "2026-09-26T10:59:04.041Z",
   "summary": {
-    "total_remaining_worker_tasks": 65,
+    "total_remaining_worker_tasks": 66,
     "completed_worker_prs_awaiting_trusted_review": 59,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "Continue independent Worker proposal work while preserving all foreign and completed claim locks and WCP-114's Trusted-review lock; after each exact-head green CI, reconcile and continue.",
+    "next_required_action": "Continue WCP-200 on its exclusive ContentEditor claim while preserving all foreign and completed claim locks; after exact-head green CI, reconcile and continue independently.",
     "composition_preparable": 0,
-    "immediately_actionable": 1,
+    "immediately_actionable": 2,
     "must_continue": true
   },
   "rules": {
@@ -6047,6 +6047,92 @@
         ]
       },
       "claimed_on": "2026-09-26T10:56:44.560Z"
+    },
+    {
+      "priority": 66,
+      "package_id": "WCP-200",
+      "title": "Bound legacy content editor input",
+      "risk": "medium",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-114-content-editor-legacy-size-g1",
+      "suggested_branch": "feature/wcp-114-content-editor-legacy-size-g1",
+      "base_branch": "main",
+      "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "objective": "Apply the existing content-editor byte limit to legacy bodies before trimming or splitting them, and ensure oversized render fallbacks cannot echo an unbounded body.",
+      "allowed_paths": [
+        "src/ContentEditor/ContentBlockDocument.php",
+        "src/ContentEditor/ContentBlockRenderer.php",
+        "tests/ContentEditor/ContentBlockSecurityTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/",
+        "src/Controller/",
+        "src/ContentEditor/ContentBlockPolicy.php"
+      ],
+      "deliverables": [
+        "reject over-limit legacy and versioned editor bodies before parsing or block splitting",
+        "keep renderer fallback output bounded for oversized stored bodies without emitting their complete content",
+        "preserve valid legacy conversion, versioned validation and escaped fallback behavior within the existing byte limit",
+        "regression tests for oversized legacy rejection and renderer fallback bounds"
+      ],
+      "tests": [
+        "targeted ContentBlockSecurity PHPUnit tests",
+        "PHPStan level 8",
+        "complete Worker CI on the exact final HEAD"
+      ],
+      "completion_report": [
+        "exact final Worker HEAD and sanitized base SHA",
+        "complete changed-path list and Worker PR",
+        "targeted tests and exact-head Worker CI result",
+        "byte limit and preserved editor/rendering behavior"
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "no-secrets-or-trusted-private-runtime-in-worker-source",
+        "preserve HTML escaping, valid legacy conversion and bounded versioned editor behavior",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_base_branch": "main",
+      "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "resume_branch": "feature/wcp-114-content-editor-legacy-size-g1",
+      "proposal_kind": "worker_only",
+      "collision_check": {
+        "compared_against": "latest continuous/work-pool-v4 task allowlists, active-claim records and open ContentBlockDocument PR/branch searches",
+        "result": "content-editor paths are disjoint from all current task allowlists and active foreign claims. WCP-114 is owned by another chat and untouched. Existing exact branch refs were reserved from sanitized main immediately before that concurrent publication and are recorded here unchanged under this unique proposal id.",
+        "paths": [
+          "src/ContentEditor/ContentBlockDocument.php",
+          "src/ContentEditor/ContentBlockRenderer.php",
+          "tests/ContentEditor/ContentBlockSecurityTest.php"
+        ]
+      },
+      "claimed_on": "2026-09-26T10:59:04.041Z",
+      "last_checkpoint_at": "2026-09-26T10:59:04.041Z",
+      "checkpoint_paths": [
+        "src/ContentEditor/ContentBlockDocument.php",
+        "src/ContentEditor/ContentBlockRenderer.php",
+        "tests/ContentEditor/ContentBlockSecurityTest.php"
+      ]
     }
   ],
   "recovery_queue": [],
