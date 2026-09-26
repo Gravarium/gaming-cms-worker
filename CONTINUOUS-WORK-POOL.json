@@ -10,16 +10,16 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-26T10:37:03.175Z",
+  "published_at": "2026-09-26T10:37:56.293Z",
   "summary": {
-    "total_remaining_worker_tasks": 58,
+    "total_remaining_worker_tasks": 59,
     "completed_worker_prs_awaiting_trusted_review": 52,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "Continue WCP-108 (Bound external connector adapter registry keys) on their exclusive Worker claims while preserving all completed claim locks; after exact-head green CI, reconcile and continue independently.",
+    "next_required_action": "Continue WCP-109 on its exclusive execution-result claim while preserving WCP-108 and all completed foreign claim locks; after exact-head green CI, reconcile and continue independently.",
     "composition_preparable": 0,
-    "immediately_actionable": 1,
+    "immediately_actionable": 2,
     "must_continue": true
   },
   "rules": {
@@ -5301,6 +5301,103 @@
         ]
       },
       "claimed_on": "2026-09-26T10:30:50.763Z"
+    },
+    {
+      "priority": 59,
+      "package_id": "WCP-109",
+      "title": "Bound external connector execution result descriptors",
+      "risk": "medium",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-109-execution-result-boundary-g1",
+      "suggested_branch": "feature/wcp-109-execution-result-boundary-g1",
+      "base_branch": "main",
+      "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "objective": "Harden the worker-visible ExternalConnectorExecutionResult value boundary before execution summaries or health records consume provider outcomes: enforce bounded UTF-8/control-safe target and provider keys when result descriptors are created, preserve required and success semantics, and fail closed without changing adapter execution or summary aggregation.",
+      "allowed_paths": [
+        "src/ExternalConnector/ExternalConnectorExecutionResult.php",
+        "tests/ExternalConnector/ExternalConnectorExecutionResultTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/",
+        "src/Controller/",
+        "src/Entity/",
+        "src/ExternalConnector/ExternalConnectorAdapterRegistry.php",
+        "tests/ExternalConnector/ExternalConnectorAdapterRegistryTest.php",
+        "src/ExternalConnector/ExternalConnectorTargetDefinition.php",
+        "tests/ExternalConnector/ExternalConnectorTargetDefinitionTest.php",
+        "src/ExternalConnector/ExternalConnectorExecutionSummary.php",
+        "tests/ExternalConnector/ExternalConnectorExecutionSummaryTest.php",
+        "src/ExternalConnector/ExternalMediaObject.php",
+        "tests/ExternalConnector/ExternalMediaObjectTest.php",
+        "src/ExternalConnector/ExternalMediaUpload.php",
+        "tests/ExternalConnector/ExternalMediaUploadTest.php",
+        "src/ExternalConnector/ExternalMediaStoreResult.php",
+        "tests/ExternalConnector/ExternalMediaStoreResultTest.php",
+        "src/ExternalConnector/OffsiteBackupStatusReader.php",
+        "tests/ExternalConnector/OffsiteBackupStatusReaderTest.php",
+        "src/ExternalConnector/OffsiteBackupTargetStatus.php",
+        "tests/ExternalConnector/OffsiteBackupTargetStatusTest.php",
+        "src/Backup/LocalBackupInventory.php",
+        "tests/Backup/LocalBackupInventoryTest.php",
+        "src/ExtensionRuntime/ExtensionRuntimeState.php",
+        "tests/ExtensionRuntime/ExtensionRuntimeStateBoundaryTest.php"
+      ],
+      "deliverables": [
+        "fail-closed bounded UTF-8/control-safe targetKey and providerKey validation at success/failure descriptor creation",
+        "preserve required, successful, target identity and provider identity semantics for valid descriptors",
+        "positive and negative execution-result regression coverage without schema, migration, controller, adapter or private-runtime changes"
+      ],
+      "tests": [
+        "targeted ExternalConnectorExecutionResult PHPUnit tests",
+        "PHPStan level 8",
+        "complete Worker CI on the exact final HEAD"
+      ],
+      "completion_report": [
+        "exact final Worker HEAD and sanitized base SHA",
+        "complete changed-path list and Worker PR",
+        "target/provider key validation, preserved result semantics and deferred Fortress connector-boundary risks",
+        "targeted tests plus complete Worker CI result"
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "no-secrets-or-trusted-private-runtime-in-worker-source",
+        "preserve existing adapter routing, execution summary, provider isolation and backup/media/notification safeguards",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_base_branch": "main",
+      "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "resume_branch": "feature/wcp-109-execution-result-boundary-g1",
+      "proposal_kind": "worker_only",
+      "collision_check": {
+        "compared_against": "current continuous/work-pool-v4 task allowlists and active branches at publication",
+        "result": "disjoint from WCP-108 adapter-registry and WCP-107 backup-inventory claims, all other published allowlists and all searched WCP-109/execution-result branches",
+        "paths": [
+          "src/ExternalConnector/ExternalConnectorExecutionResult.php",
+          "tests/ExternalConnector/ExternalConnectorExecutionResultTest.php"
+        ]
+      },
+      "claimed_on": "2026-09-26T10:37:56.293Z"
     }
   ],
   "recovery_queue": [],
