@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace App\\Repository;
+namespace App\Repository;
 
-use App\\Entity\\Category;
-use App\\Entity\\ContentEntry;
-use App\\Entity\\ContentTag;
-use Doctrine\\Bundle\\DoctrineBundle\\Repository\\ServiceEntityRepository;
-use Doctrine\\Persistence\\ManagerRegistry;
+use App\Entity\Category;
+use App\Entity\ContentEntry;
+use App\Entity\ContentTag;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\Persistence\ManagerRegistry;
 
 /** @extends ServiceEntityRepository<ContentEntry> */
 final class AdminContentBrowserRepository extends ServiceEntityRepository
