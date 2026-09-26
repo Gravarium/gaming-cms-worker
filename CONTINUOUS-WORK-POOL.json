@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-26T13:40:20.673Z",
+  "published_at": "2026-09-26T13:41:04.062Z",
   "summary": {
     "total_remaining_worker_tasks": 108,
-    "completed_worker_prs_awaiting_trusted_review": 101,
+    "completed_worker_prs_awaiting_trusted_review": 102,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "Implement WCP-327 on the exclusive User display-name setter and boundary-test paths from exact sanitized main; run complete exact-head Worker CI, then continue while preserving existing claims.",
+    "next_required_action": "Re-evaluate all unclaimed tasks and, because their dependencies remain blocked, publish and claim another bounded independent Worker-only CMS proposal without modifying foreign claims.",
     "composition_preparable": 0,
     "immediately_actionable": 0,
     "must_continue": true
@@ -10470,7 +10470,7 @@
       "package_id": "WCP-326",
       "title": "Bound external connector target display names",
       "risk": "low",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -10548,9 +10548,9 @@
         ]
       },
       "claimed_on": "2026-09-26T13:36:08.003Z",
-      "claim_state": "active_worker_claim",
-      "last_checkpoint_at": "2026-09-26T13:38:33.367Z",
-      "next_action": "Wait for Worker CI run 36245826716 on exact HEAD efbbd2d0ec8110fa2319087bc05ec1aaf6814f4d; diagnose and repair any failure without weakening checks.",
+      "claim_state": "locked_until_trusted_resolution",
+      "last_checkpoint_at": "2026-09-26T13:41:04.062Z",
+      "next_action": "Await Trusted review; keep claim locked until Trusted explicitly integrates, cancels or transfers it.",
       "checkpoint_paths": [
         "src/Entity/ExternalConnectorTarget.php",
         "tests/Entity/ExternalConnectorTargetDisplayNameBoundaryTest.php"
@@ -10558,9 +10558,23 @@
       "last_verified_push_at": "2026-09-26T13:38:33.367Z",
       "worker_pr": 120,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/120",
-      "pr_state": "draft",
+      "pr_state": "ready_for_review",
       "ci_run_id": 36245826716,
-      "ci_result": "in_progress"
+      "ci_result": "success",
+      "final_head": "efbbd2d0ec8110fa2319087bc05ec1aaf6814f4d",
+      "completed_on": "2026-09-26T13:41:04.062Z",
+      "final_changed_paths": [
+        "src/Entity/ExternalConnectorTarget.php",
+        "tests/Entity/ExternalConnectorTargetDisplayNameBoundaryTest.php"
+      ],
+      "test_evidence": {
+        "targeted_tests": "Covered exact 120-character ASCII and 120-character/480-byte four-byte UTF-8 values; trimmed input at the bound; 121-character ASCII, two-byte and four-byte overflow; malformed UTF-8; leading/internal NUL; rejection preserving the previously stored display name.",
+        "worker_ci_run": 36245826716,
+        "worker_ci_result": "success",
+        "phpstan_level_8": "success",
+        "php_symfony_application_tests": "success",
+        "postgresql_18_migration_chain": "success"
+      }
     },
     {
       "priority": 106,
