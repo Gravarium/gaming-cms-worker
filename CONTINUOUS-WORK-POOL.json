@@ -20353,7 +20353,7 @@
       "proposal_dependency_evidence": [],
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-      "active_head": "6ad8eb3c0610579503ec317d527ca50b4fe11b09",
+      "active_head": "67ac4fb451b5ece305bd37cf2b0888b911af8355",
       "resume_branch": "feature/wcp-413-category-manager-security-g1",
       "collision_check": {
         "compared_against": "Fresh continuous/work-pool-v4 blob 04f3efa580e12ff77178482300675e580012593d, all active and claim-locked allowlists, and sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d.",
@@ -20364,23 +20364,39 @@
       },
       "claimed_on": "2026-09-26T21:48:25.054Z",
       "claim_state": "active",
-      "last_checkpoint_at": "2026-09-26T21:54:05.474Z",
+      "last_checkpoint_at": "2026-09-26T21:57:46.907Z",
       "checkpoint_paths": [
         "tests/Controller/AdminCategoryManagementSecurityTest.php"
       ],
-      "next_action": "Monitor exact-head Worker CI run 36274459621 on 6ad8eb3c0610579503ec317d527ca50b4fe11b09; diagnose actual failures and keep the claim active until all jobs pass.",
+      "next_action": "Verify exact-head Worker CI run 36274649040 on 67ac4fb451b5ece305bd37cf2b0888b911af8355; diagnose any remaining concrete failures and keep the claim active until both jobs pass.",
       "branch_heads": {
         "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-        "feature_branch": "6ad8eb3c0610579503ec317d527ca50b4fe11b09"
+        "feature_branch": "67ac4fb451b5ece305bd37cf2b0888b911af8355"
       },
-      "last_verified_push_at": "2026-09-26T21:54:05.474Z",
+      "last_verified_push_at": "2026-09-26T21:57:46.907Z",
       "worker_pr": 207,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/207",
       "draft_pr": true,
-      "last_ci_run_id": 36274459621,
+      "last_ci_run_id": 36274649040,
       "last_ci_result": "in_progress",
-      "ci_run_id": 36274459621,
-      "ci_result": "in_progress"
+      "ci_run_id": 36274649040,
+      "ci_result": "in_progress",
+      "ci_attempts": [
+        {
+          "run_id": 36274459621,
+          "head": "6ad8eb3c0610579503ec317d527ca50b4fe11b09",
+          "result": "failure",
+          "failed_test": "AdminCategoryManagementSecurityTest::testContentManagerCanCreateCategoryAndDeleteRequiresCsrf",
+          "diagnosis": "The post-delete assertion queried a repository service retained from before the Browser request; re-query through the current test container after the request.",
+          "remediated_in_head": "67ac4fb451b5ece305bd37cf2b0888b911af8355"
+        },
+        {
+          "run_id": 36274649040,
+          "head": "67ac4fb451b5ece305bd37cf2b0888b911af8355",
+          "result": "in_progress"
+        }
+      ],
+      "last_failure_diagnosis": "The initial full Worker CI run failed only on the post-delete existence assertion. The regression now fetches CategoryRepository from the current Browser container after deletion before asserting absence."
     },
     {
       "priority": 194,
