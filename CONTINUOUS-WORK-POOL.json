@@ -10,16 +10,16 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-26T10:19:31.614Z",
+  "published_at": "2026-09-26T10:20:43.874Z",
   "summary": {
-    "total_remaining_worker_tasks": 53,
+    "total_remaining_worker_tasks": 54,
     "completed_worker_prs_awaiting_trusted_review": 47,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "Continue WCP-103 on its exclusive offsite-status boundary claim while preserving WCP-102 and all completed foreign claim locks; after exact-head green CI, reconcile and continue independently.",
+    "next_required_action": "Continue WCP-104 on its exclusive media-store-result boundary claim while preserving WCP-103 and all other foreign claims; after exact-head green CI, reconcile and continue independently.",
     "composition_preparable": 0,
-    "immediately_actionable": 1,
+    "immediately_actionable": 2,
     "must_continue": true
   },
   "rules": {
@@ -4764,6 +4764,95 @@
         ]
       },
       "claimed_on": "2026-09-26T10:19:31.614Z"
+    },
+    {
+      "priority": 54,
+      "package_id": "WCP-104",
+      "title": "Bound external media store results",
+      "risk": "high",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-104-media-store-result-boundary-g1",
+      "suggested_branch": "feature/wcp-104-media-store-result-boundary-g1",
+      "base_branch": "main",
+      "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "objective": "Harden the worker-visible ExternalMediaStoreResult boundary before storage managers journal or persist provider outcomes: enforce bounded target-key maps, typed ExternalMediaObject entries and safe cleanup object keys while preserving summary identity and rollback evidence.",
+      "allowed_paths": [
+        "src/ExternalConnector/ExternalMediaStoreResult.php",
+        "tests/ExternalConnector/ExternalMediaStoreResultTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/",
+        "src/Controller/",
+        "src/Entity/",
+        "src/ExternalConnector/ExternalMediaUpload.php",
+        "tests/ExternalConnector/ExternalMediaUploadTest.php",
+        "src/ExternalConnector/ExternalMediaObject.php",
+        "tests/ExternalConnector/ExternalMediaObjectTest.php",
+        "src/ExternalConnector/ExternalMailMessage.php",
+        "tests/ExternalConnector/ExternalMailMessageTest.php",
+        "src/ExternalConnector/ExternalConnectorTargetDefinition.php",
+        "tests/ExternalConnector/ExternalConnectorTargetDefinitionTest.php",
+        "src/ExternalConnector/ExternalConnectorExecutionSummary.php",
+        "tests/ExternalConnector/ExternalConnectorExecutionSummaryTest.php",
+        "src/Security/LocalRedirectTarget.php",
+        "tests/Security/LocalRedirectTargetTest.php"
+      ],
+      "deliverables": [
+        "fail-closed bounded target-key maps with typed ExternalMediaObject values",
+        "fail-closed cleanup-key validation for nonempty UTF-8, control-safe, traversal-safe object keys and bounded map size",
+        "positive and negative store-result regression coverage without schema, migration, controller or private-runtime changes"
+      ],
+      "tests": [
+        "targeted ExternalMediaStoreResult PHPUnit tests",
+        "PHPStan level 8",
+        "complete Worker CI on the exact final HEAD"
+      ],
+      "completion_report": [
+        "exact final Worker HEAD and sanitized base SHA",
+        "complete changed-path list and Worker PR",
+        "targeted tests plus complete Worker CI result",
+        "rollback evidence, cleanup-journal handoff and deferred provider-result validation risks"
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "no-secrets-or-trusted-private-runtime-in-worker-source",
+        "preserve existing connector, adapter, upload, MIME, notification, cleanup and storage safeguards",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_base_branch": "main",
+      "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "resume_branch": "feature/wcp-104-media-store-result-boundary-g1",
+      "proposal_kind": "worker_only",
+      "collision_check": {
+        "compared_against": "current continuous/work-pool-v4 task allowlists and active branches at publication, including skipped WCP-103 offsite-status reservation",
+        "result": "disjoint from all published task allowlists and foreign WCP-098, WCP-101 and WCP-103 claims",
+        "paths": [
+          "src/ExternalConnector/ExternalMediaStoreResult.php",
+          "tests/ExternalConnector/ExternalMediaStoreResultTest.php"
+        ]
+      },
+      "claimed_on": "2026-09-26T10:20:43.874Z"
     }
   ],
   "recovery_queue": [],
