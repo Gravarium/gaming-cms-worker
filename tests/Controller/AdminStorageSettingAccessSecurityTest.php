@@ -54,7 +54,7 @@ final class AdminStorageSettingAccessSecurityTest extends WebTestCase
             $client->request('POST', '/admin/storage/downloads', [
                 'module_storage_setting' => $formData,
             ]);
-            self::assertResponseIsSuccessful();
+            self::assertResponseStatusCodeSame(422);
             $this->assertDownloadsSettingState($client, $original);
         }
     }
