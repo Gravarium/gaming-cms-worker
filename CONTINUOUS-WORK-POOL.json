@@ -10,16 +10,16 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-26T10:59:04.041Z",
+  "published_at": "2026-09-26T10:59:33.064Z",
   "summary": {
-    "total_remaining_worker_tasks": 66,
+    "total_remaining_worker_tasks": 67,
     "completed_worker_prs_awaiting_trusted_review": 59,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "Continue WCP-200 on its exclusive ContentEditor claim while preserving all foreign and completed claim locks; after exact-head green CI, reconcile and continue independently.",
+    "next_required_action": "Continue WCP-116 on its exclusive private-backup-status claim while preserving WCP-115 and all completed foreign claim locks; after exact-head green CI, reconcile and continue independently.",
     "composition_preparable": 0,
-    "immediately_actionable": 2,
+    "immediately_actionable": 3,
     "must_continue": true
   },
   "rules": {
@@ -6133,6 +6133,96 @@
         "src/ContentEditor/ContentBlockRenderer.php",
         "tests/ContentEditor/ContentBlockSecurityTest.php"
       ]
+    },
+    {
+      "priority": 67,
+      "package_id": "WCP-116",
+      "title": "Bound private backup status configuration",
+      "risk": "high",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-116-backup-private-status-boundary-g1",
+      "suggested_branch": "feature/wcp-116-backup-private-status-boundary-g1",
+      "base_branch": "main",
+      "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "objective": "Harden the worker-visible BackupPrivateConfigurationStatus file boundary before private backup readiness is exposed: validate bounded absolute UTF-8/control-safe paths, cap file/line/record inputs before parsing, reject malformed fields and duplicate references fail-closed, and preserve enabled/required/readiness semantics without returning private configuration values.",
+      "allowed_paths": [
+        "src/Backup/BackupPrivateConfigurationStatus.php",
+        "tests/Backup/BackupPrivateConfigurationStatusBoundaryTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/",
+        "src/Controller/",
+        "src/Entity/",
+        "src/Backup/LocalBackupInventory.php",
+        "tests/Backup/LocalBackupInventoryTest.php",
+        "src/Backup/LocalBackupVerifier.php",
+        "src/ExternalConnector/BackupTargetSelectionExporter.php",
+        "tests/ExternalConnector/BackupTargetSelectionExporterTest.php",
+        "src/ExternalConnector/BackupTargetOverview.php",
+        "tests/ExternalConnector/BackupTargetOverviewTest.php",
+        "src/ExternalConnector/OffsiteBackupStatusReader.php",
+        "tests/ExternalConnector/OffsiteBackupStatusReaderTest.php",
+        "src/ExtensionPackage/ExtensionPackageInventory.php",
+        "tests/ExtensionPackage/ExtensionPackageInventoryBoundaryTest.php"
+      ],
+      "deliverables": [
+        "fail-closed bounded absolute path validation before private status filesystem access, including malformed encoding/control and symlink/unreadable handling",
+        "bounded file bytes, line bytes and parsed record count before untrusted configuration parsing",
+        "strict safe reference/field validation, duplicate rejection and preserved enabled/required/ready semantics without exposing repository/password/config values",
+        "positive and negative parser regression coverage without schema, migration, controller or private-runtime changes"
+      ],
+      "tests": [
+        "targeted BackupPrivateConfigurationStatus boundary PHPUnit tests",
+        "existing backup configuration status tests",
+        "PHPStan level 8",
+        "complete Worker CI on the exact final HEAD"
+      ],
+      "completion_report": [
+        "exact final Worker HEAD and sanitized base SHA",
+        "complete changed-path list and Worker PR",
+        "targeted plus existing backup-status tests and complete Worker CI result",
+        "file/line/record bounds, private-field handling and deferred Fortress backup-configuration risks"
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "no-secrets-or-trusted-private-runtime-in-worker-source",
+        "preserve existing backup, recovery, privacy and private-configuration safeguards",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_base_branch": "main",
+      "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "resume_branch": "feature/wcp-116-backup-private-status-boundary-g1",
+      "proposal_kind": "worker_only",
+      "collision_check": {
+        "compared_against": "current continuous/work-pool-v4 task allowlists and searched foreign WCP-115 backup-selection claim",
+        "result": "disjoint from all published allowlists and foreign backup-selection, inventory and offsite-status claims; no shared schema, migration, DI or template paths",
+        "paths": [
+          "src/Backup/BackupPrivateConfigurationStatus.php",
+          "tests/Backup/BackupPrivateConfigurationStatusBoundaryTest.php"
+        ]
+      },
+      "claimed_on": "2026-09-26T10:59:33.064Z"
     }
   ],
   "recovery_queue": [],
