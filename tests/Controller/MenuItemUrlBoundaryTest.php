@@ -49,7 +49,7 @@ final class MenuItemUrlBoundaryTest extends WebTestCase
 
         $tooLongUrl = $validUrl.'x';
         $this->submitEdit($client, $id, $tooLongUrl);
-        self::assertResponseIsSuccessful();
+        self::assertResponseStatusCodeSame(422);
         self::assertSelectorTextContains('body', 'zu lang oder enthält ungültige Daten');
         self::assertSame($validUrl, $this->storedUrl($client, $id));
         self::assertSame($initialCount + 1, $items->count([]));
@@ -57,7 +57,7 @@ final class MenuItemUrlBoundaryTest extends WebTestCase
         $tooManyBytesUrl = $prefix.str_repeat('🛡', 500);
         self::assertGreaterThan(2000, strlen($tooManyBytesUrl));
         $this->submitEdit($client, $id, $tooManyBytesUrl);
-        self::assertResponseIsSuccessful();
+        self::assertResponseStatusCodeSame(422);
         self::assertSelectorTextContains('body', 'zu lang oder enthält ungültige Daten');
         self::assertSame($validUrl, $this->storedUrl($client, $id));
         self::assertSame($initialCount + 1, $items->count([]));
