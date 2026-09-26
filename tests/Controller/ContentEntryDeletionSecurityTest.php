@@ -110,6 +110,9 @@ final class ContentEntryDeletionSecurityTest extends WebTestCase
         $client = static::createClient();
         $user = $this->createUser($client, [CmsPermission::CONTENT]);
         $entryId = $this->createEntry($client, $user, true);
+        $entry = $this->findEntry($client, $entryId);
+        self::assertInstanceOf(ContentEntry::class, $entry);
+        $originalBody = $entry->getBody();
         $client->loginUser($user);
 
         $crawler = $client->request('GET', '/admin/content/'.$entryId.'/edit');
@@ -122,7 +125,7 @@ final class ContentEntryDeletionSecurityTest extends WebTestCase
         $restored = $this->findEntry($client, $entryId);
         self::assertInstanceOf(ContentEntry::class, $restored);
         self::assertSame(ContentEntry::STATUS_DRAFT, $restored->getStatus());
-        self::assertSame('Synthetic body '.$entryId, $restored->getBody());
+        self::assertSame($originalBody, $restored->getBody());
     }
 
     public function testPreviouslyRenderedPurgeTokenCannotDeleteEntryAfterItLeavesTrash(): void
