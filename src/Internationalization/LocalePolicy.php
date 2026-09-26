@@ -8,6 +8,9 @@ final class LocalePolicy
 {
     public const COOKIE = 'cms_locale';
 
+    private const MAX_ENABLED_LOCALE_ENTRIES = 64;
+    private const MAX_LOCALE_TAG_BYTES = 16;
+
     /** @var array<string, string> */
     public const SUPPORTED = [
         'de' => 'Deutsch',
@@ -30,20 +33,33 @@ final class LocalePolicy
         'zh' => '中文',
     ];
 
-    /** @param list<string> $enabled
+    /**
+     * @param array<array-key, mixed> $enabled
      * @return non-empty-list<string>
      */
     public function normalizeEnabled(array $enabled): array
     {
-        $enabled = array_values(array_unique(array_filter(
-            $enabled,
-            static fn (string $locale): bool => isset(self::SUPPORTED[$locale]),
-        )));
+        if (!array_is_list($enabled) || count($enabled) > self::MAX_ENABLED_LOCALE_ENTRIES) {
+            return ['de'];
+        }
 
-        return $enabled === [] ? ['de'] : $enabled;
+        $normalized = [];
+        foreach ($enabled as $locale) {
+            if (
+                !is_string($locale)
+                || strlen($locale) > self::MAX_LOCALE_TAG_BYTES
+                || !isset(self::SUPPORTED[$locale])
+            ) {
+                continue;
+            }
+
+            $normalized[$locale] = $locale;
+        }
+
+        return $normalized === [] ? ['de'] : array_values($normalized);
     }
 
-    /** @param list<string> $enabled */
+    /** @param array<array-key, mixed> $enabled */
     public function choose(string $candidate, array $enabled, string $fallback): string
     {
         $enabled = $this->normalizeEnabled($enabled);
