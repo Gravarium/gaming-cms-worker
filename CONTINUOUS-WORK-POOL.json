@@ -10,9 +10,9 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-26T13:13:34.002Z",
+  "published_at": "2026-09-26T13:14:42.800Z",
   "summary": {
-    "total_remaining_worker_tasks": 101,
+    "total_remaining_worker_tasks": 102,
     "completed_worker_prs_awaiting_trusted_review": 95,
     "recovery_tasks": 0,
     "unclaimed": 5,
@@ -9905,6 +9905,92 @@
       ],
       "next_action": "Open a draft Worker PR against main and run complete exact-head CI; preserve the active claim until Trusted resolution.",
       "last_verified_push_at": "2026-09-26T13:14:40.396Z"
+    },
+    {
+      "priority": 102,
+      "package_id": "WCP-321",
+      "title": "Bound guild application question label storage",
+      "risk": "medium",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-321-guild-application-label-boundary-g1",
+      "suggested_branch": "feature/wcp-321-guild-application-label-boundary-g1",
+      "base_branch": "main",
+      "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "objective": "Bound GuildApplicationQuestion.label to its mapped varchar(255) before trimming or assignment. Reject malformed UTF-8 and NUL while preserving current in-bound trimming and NotBlank/Length validation.",
+      "allowed_paths": [
+        "src/Entity/GuildApplicationQuestion.php",
+        "tests/Entity/GuildApplicationQuestionBoundaryTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/",
+        "src/Controller/",
+        "src/Form/",
+        "src/Repository/",
+        "src/Service/",
+        "templates/",
+        "assets/",
+        "public/"
+      ],
+      "deliverables": [
+        "Reject raw labels above 1,020 UTF-8 bytes or 255 characters before trim, matching the mapped varchar(255).",
+        "Reject malformed UTF-8 and NUL-containing labels before assignment.",
+        "Preserve the stored label on rejected input and retain current trim behavior for in-bound values.",
+        "Leave the existing NotBlank/Length constraints, helpText, question type, and guild application behavior unchanged."
+      ],
+      "tests": [
+        "Targeted GuildApplicationQuestion boundary PHPUnit tests for exact ASCII/multibyte limits, raw byte/character overflow before trimming, malformed UTF-8/NUL, state preservation, and trim/empty behavior.",
+        "PHPStan level 8.",
+        "Complete Worker CI on the exact final HEAD."
+      ],
+      "completion_report": [
+        "exact final Worker HEAD and sanitized main base SHA",
+        "complete changed-path list and Worker PR",
+        "targeted guild application question boundary tests and complete exact-head Worker CI result",
+        "255-character/1,020-byte label bound with preserved trim and validator semantics"
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "no-secrets-or-trusted-private-runtime-in-worker-source",
+        "preserve guild application question type, requiredness, position, and guild ownership behavior",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_base_branch": "main",
+      "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "resume_branch": "feature/wcp-321-guild-application-label-boundary-g1",
+      "proposal_kind": "worker_only",
+      "collision_check": {
+        "compared_against": "all current continuous/work-pool-v4 task allowlists and active/locked claims through WCP-320; exact WCP-321 branch/PR names and new test path were checked",
+        "result": "the GuildApplicationQuestion entity and focused boundary test are disjoint from every current task, including the separate GuildTeam, GuildMember, GuildEvent, and GuildAnnouncement claims",
+        "paths": [
+          "src/Entity/GuildApplicationQuestion.php",
+          "tests/Entity/GuildApplicationQuestionBoundaryTest.php"
+        ]
+      },
+      "claimed_on": "2026-09-26T13:14:42.800Z",
+      "claim_state": "active_worker_claim",
+      "last_checkpoint_at": "2026-09-26T13:14:42.800Z",
+      "next_action": "Create the claim and feature branches from exact sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d, then implement only the two allowlisted files and run exact-head Worker CI."
     }
   ],
   "recovery_queue": [],
