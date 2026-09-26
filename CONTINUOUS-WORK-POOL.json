@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-26T20:05:42.802Z",
+  "published_at": "2026-09-26T20:06:03.790Z",
   "summary": {
     "total_remaining_worker_tasks": 133,
     "completed_worker_prs_awaiting_trusted_review": 165,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-394 is active on feature/wcp-394-user-display-name-validation-g1 from sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d. Add direct User displayName NotBlank/80-character boundary regressions only; leave all foreign claims untouched.",
+    "next_required_action": "WCP-395 is active on feature/wcp-395-member-notification-inbox-g1 from sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d. Complete the paginated member notification inbox on its exclusive paths; leave WCP-392, WCP-393, WCP-394 and every other claim untouched.",
     "composition_preparable": 0,
     "immediately_actionable": 0,
     "must_continue": true
@@ -17991,6 +17991,101 @@
         "tests/Entity/UserDisplayNameValidationTest.php"
       ],
       "last_verified_push_at": "2026-09-26T20:05:57.198Z"
+    },
+    {
+      "priority": 175,
+      "package_id": "WCP-395",
+      "title": "Add a paginated member notification inbox",
+      "risk": "medium",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-395-member-notification-inbox-g1",
+      "suggested_branch": "feature/wcp-395-member-notification-inbox-g1",
+      "base_branch": "main",
+      "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "objective": "Complete the existing guild-member notification workflow with a discoverable, user-scoped inbox that exposes older notifications beyond the existing 50-item portal preview. Add deterministic newest-first pagination, safe navigation back to the portal, and inbox-specific read/read-all actions. Preserve authentication, ownership checks, CSRF, safe local redirects and private caching; add no schema changes.",
+      "allowed_paths": [
+        "src/Controller/MemberNotificationInboxController.php",
+        "src/Repository/MemberNotificationRepository.php",
+        "templates/guild_portal/index.html.twig",
+        "templates/guild_portal/notifications.html.twig",
+        "tests/Controller/MemberNotificationInboxTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/",
+        "src/Entity/",
+        "src/Security/",
+        "src/Controller/GuildPortalController.php",
+        "src/Repository/ContentEntryRepository.php",
+        "templates/base.html.twig",
+        "templates/guild_portal/show.html.twig"
+      ],
+      "deliverables": [
+        "Add an authenticated /guild-area/notifications page scoped to the current user, with bounded deterministic newest-first pagination and a clear empty state.",
+        "Link to the complete inbox from the existing guild portal even when its recent preview is empty; retain the existing 50-item preview.",
+        "Provide CSRF-protected inbox read and read-all actions; scope notification lookup and bulk updates to the current user and return users to a safe local destination.",
+        "Reject malformed, array, zero, negative, oversized and out-of-range page values without broadening visibility; prevent shared caching of personal notification data.",
+        "No schema or migration change; document Trusted porting and the module data ownership seam."
+      ],
+      "tests": [
+        "Functional tests for page navigation, ordering, full history beyond 50, empty state, and user isolation.",
+        "Negative tests for anonymous access, malformed/out-of-range page values, foreign notification IDs, missing CSRF, and unsafe persisted redirect values.",
+        "PHPStan level 8 and complete Worker CI on the exact final HEAD, including PostgreSQL 18 migration-chain checks."
+      ],
+      "completion_report": [
+        "Exact final Worker HEAD and sanitized main base SHA.",
+        "Complete changed-path list and Worker PR.",
+        "Inbox pagination, ordering, user isolation, CSRF, malformed-query and redirect-safety results.",
+        "Exact-head PHPStan, PHPUnit and full Worker CI results; limitations and Trusted integration follow-up."
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "no-secrets-or-trusted-private-runtime-export",
+        "preserve-member-authentication-owner-only access-CSRF-and-safe-local-redirects",
+        "preserve-current-notification and guild ownership semantics; no cross-user disclosure",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment",
+        "no-schema-change; module-owned notification data remains replaceable behind repository/controller boundaries"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_base_branch": "main",
+      "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "resume_branch": "feature/wcp-395-member-notification-inbox-g1",
+      "proposal_kind": "worker_only",
+      "collision_check": {
+        "compared_against": "Fresh continuous/work-pool-v4 blob 48a13dd6b31daa222020dbea864629d84d05319f, all active and locked claims, exact WCP-395 branch/PR searches, and sanitized Worker main f1a246c64527ef3ad51f7490773d9bbf9d42be5d.",
+        "result": "No active or locked claim overlaps the five allowed paths. WCP-392 public navigation and WCP-393 competition filters use disjoint paths. WCP-345's locked GuildPortalController is explicitly excluded. FCP-072 has a broad templates/ prefix but is unclaimed and dependency-blocked with no active writer. Unclaimed FCP tasks remain dependency-blocked. Parallel intake created four empty, no-commit refs `claim/wcp-393-member-notification-inbox-g1`, `feature/wcp-393-member-notification-inbox-g1`, `claim/wcp-394-member-notification-inbox-g1`, and `feature/wcp-394-member-notification-inbox-g1` before those numbers were claimed by other scopes; they are orphaned own refs, not used or modified by WCP-395. The connector exposes no branch-delete operation.",
+        "paths": [
+          "src/Controller/MemberNotificationInboxController.php",
+          "src/Repository/MemberNotificationRepository.php",
+          "templates/guild_portal/index.html.twig",
+          "templates/guild_portal/notifications.html.twig",
+          "tests/Controller/MemberNotificationInboxTest.php"
+        ]
+      },
+      "claimed_on": "2026-09-26T20:06:03.790Z",
+      "claim_state": "active",
+      "last_checkpoint_at": "2026-09-26T20:06:03.790Z",
+      "next_action": "Implement and test the user-scoped paginated notification inbox, safe inbox actions and portal entry point within the five reserved paths.",
+      "checkpoint_paths": []
     }
   ],
   "recovery_queue": [],
