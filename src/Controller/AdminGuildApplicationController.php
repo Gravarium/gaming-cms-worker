@@ -44,8 +44,17 @@ final class AdminGuildApplicationController extends AbstractController
             if (!$this->isCsrfTokenValid('review-application-'.$application->getId(), $request->request->getString('_token'))) { throw $this->createAccessDeniedException(); }
             $user = $this->getUser();
             if (!$user instanceof User) { throw $this->createAccessDeniedException(); }
+            $internalNotes = $request->request->getString('internal_notes');
+            if (mb_strlen($internalNotes, 'UTF-8') > 10000) {
+                return new Response(
+                    'Interne Notizen dürfen höchstens 10.000 Zeichen enthalten.',
+                    Response::HTTP_UNPROCESSABLE_ENTITY,
+                    ['Content-Type' => 'text/plain; charset=UTF-8'],
+                );
+            }
+
             $application->assignTo($request->request->getBoolean('release') ? null : $user)
-                ->setInternalNotes($request->request->getString('internal_notes'));
+                ->setInternalNotes($internalNotes);
             $this->audit->record('guild_application.review', $application, $application->getId(), 'Bewerbungsprüfung aktualisiert.', ['guild' => $application->getGuild()?->getName(), 'assigned' => $application->getAssignedTo()?->getEmail()]);
             $this->entityManager->flush();
             $this->addFlash('success', 'Bearbeitung und interne Notizen wurden gespeichert.');
