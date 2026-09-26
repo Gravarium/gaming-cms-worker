@@ -10,16 +10,16 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-26T11:03:21.990Z",
+  "published_at": "2026-09-26T11:04:22.675Z",
   "summary": {
     "total_remaining_worker_tasks": 67,
-    "completed_worker_prs_awaiting_trusted_review": 60,
+    "completed_worker_prs_awaiting_trusted_review": 61,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "Re-evaluate remaining unclaimed tasks and continue an independent Worker proposal while preserving WCP-114 and all completed foreign claim locks; after each exact-head green CI, reconcile and continue. Do not merge or deploy.",
+    "next_required_action": "Continue independent Worker proposal work while preserving all foreign and completed claim locks and WCP-116's Trusted-review lock; after each exact-head green CI, reconcile and continue.",
     "composition_preparable": 0,
-    "immediately_actionable": 2,
+    "immediately_actionable": 1,
     "must_continue": true
   },
   "rules": {
@@ -6164,7 +6164,7 @@
       "package_id": "WCP-116",
       "title": "Bound private backup status configuration",
       "risk": "high",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -6236,7 +6236,7 @@
       "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "a1b2610dfbb028e79796730413ae0bae5965b5a3",
       "resume_branch": "feature/wcp-116-backup-private-status-boundary-g1",
       "proposal_kind": "worker_only",
       "collision_check": {
@@ -6247,7 +6247,27 @@
           "tests/Backup/BackupPrivateConfigurationStatusBoundaryTest.php"
         ]
       },
-      "claimed_on": "2026-09-26T10:59:33.064Z"
+      "claimed_on": "2026-09-26T10:59:33.064Z",
+      "worker_pr": 79,
+      "final_head": "a1b2610dfbb028e79796730413ae0bae5965b5a3",
+      "ci_run_id": 36237593118,
+      "ci_result": "success",
+      "initial_ci_run_id": 36237515291,
+      "initial_ci_result": "phpstan_failed_redundant_fstat_type_checks_fixed",
+      "claim_state": "locked_until_trusted_resolution",
+      "completed_on": "2026-09-26T11:04:22.675Z",
+      "next_action": "Remain claim-locked while awaiting Trusted review; do not merge or deploy from the Worker repository.",
+      "final_changed_paths": [
+        "src/Backup/BackupPrivateConfigurationStatus.php",
+        "tests/Backup/BackupPrivateConfigurationStatusBoundaryTest.php"
+      ],
+      "test_evidence": [
+        "Targeted BackupPrivateConfigurationStatus boundary coverage passed for readiness preservation, unsafe paths/symlinks, oversized files/lines, malformed encoding/control, duplicate/invalid records and record-count bounds.",
+        "Existing backup configuration status tests passed.",
+        "Exact-head Worker CI run 36237593118 succeeded after the PHPStan-only correction.",
+        "PHP/Symfony validation and application-test job 108392091777 succeeded.",
+        "PostgreSQL migration chain job 108392091951 succeeded."
+      ]
     }
   ],
   "recovery_queue": [],
