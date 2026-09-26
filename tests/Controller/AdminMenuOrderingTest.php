@@ -20,20 +20,24 @@ final class AdminMenuOrderingTest extends WebTestCase
     /** @var list<int> */
     private array $menuItemIds = [];
 
+    private ?KernelBrowser $testClient = null;
+
     protected function tearDown(): void
     {
-        if (self::$kernel !== null) {
-            $entityManager = self::$kernel->getContainer()->get(EntityManagerInterface::class);
-            foreach ($this->menuItemIds as $id) {
-                $item = $entityManager->find(MenuItem::class, $id);
-                if ($item instanceof MenuItem) {
-                    $entityManager->remove($item);
+        try {
+            if ($this->testClient !== null && $this->menuItemIds !== []) {
+                $entityManager = $this->testClient->getContainer()->get(EntityManagerInterface::class);
+                foreach ($this->menuItemIds as $id) {
+                    $item = $entityManager->find(MenuItem::class, $id);
+                    if ($item instanceof MenuItem) {
+                        $entityManager->remove($item);
+                    }
                 }
+                $entityManager->flush();
             }
-            $entityManager->flush();
+        } finally {
+            parent::tearDown();
         }
-
-        parent::tearDown();
     }
 
     public function testManagerCanOpenTheLinkedReorderScreenAndMoveAnItem(): void
@@ -154,6 +158,7 @@ final class AdminMenuOrderingTest extends WebTestCase
      */
     private function fixture(KernelBrowser $client, array $permissions = [CmsPermission::CONTENT]): array
     {
+        $this->testClient = $client;
         $suffix = bin2hex(random_bytes(5));
         $entityManager = $this->em($client);
         $manager = (new User())
