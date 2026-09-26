@@ -40,7 +40,7 @@ final class PasswordPolicyFormBoundaryTest extends TypeTestCase
 
         self::assertTrue($form->isSynchronized());
         self::assertFalse($form->isValid());
-        self::assertNotCount(0, $form->get('password')->getErrors());
+        self::assertNotCount(0, $form->get('password')->getErrors(true, true));
     }
 
     public function testAccountPasswordFormAcceptsPolicyMaximumAndRendersBothLimits(): void
@@ -70,7 +70,7 @@ final class PasswordPolicyFormBoundaryTest extends TypeTestCase
 
         self::assertTrue($form->isSynchronized());
         self::assertFalse($form->isValid());
-        self::assertNotCount(0, $form->get('newPassword')->getErrors());
+        self::assertNotCount(0, $form->get('newPassword')->getErrors(true, true));
     }
 
     private function strongPasswordOfLength(int $length): string
