@@ -12,12 +12,12 @@
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
   "published_at": "2026-09-26T13:13:34.002Z",
   "summary": {
-    "total_remaining_worker_tasks": 100,
+    "total_remaining_worker_tasks": 101,
     "completed_worker_prs_awaiting_trusted_review": 95,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "Re-evaluate current claims and blocked FCPs; continue with another independent worker-only CMS proposal from verified code gaps.",
+    "next_required_action": "Implement WCP-320 on exclusive GuildMember entity/test paths from exact sanitized main; run complete exact-head Worker CI and preserve foreign claims.",
     "composition_preparable": 0,
     "immediately_actionable": 0,
     "must_continue": true
@@ -9814,6 +9814,96 @@
         "PostgreSQL 18 migration job succeeded with 39 migrations executed and no pending migrations.",
         "Exact comparison against sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d contains only the two WCP-319 allowlisted paths."
       ]
+    },
+    {
+      "priority": 101,
+      "package_id": "WCP-320",
+      "title": "Bound guild member character-name persistence",
+      "risk": "low",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-320-guild-member-character-name-boundary-g1",
+      "suggested_branch": "feature/wcp-320-guild-member-character-name-boundary-g1",
+      "base_branch": "main",
+      "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "objective": "Bound GuildMember.characterName to its mapped varchar(120) in the entity setter. Preserve existing trim normalization and NotBlank/Length validation, reject malformed UTF-8/NUL, and reject normalized names above 120 UTF-8 characters/480 bytes before assignment; rejected input must leave the prior name unchanged.",
+      "allowed_paths": [
+        "src/Entity/GuildMember.php",
+        "tests/Entity/GuildMemberCharacterNameBoundaryTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/",
+        "src/Controller/",
+        "src/Form/",
+        "src/Repository/",
+        "src/Service/",
+        "templates/",
+        "assets/",
+        "public/"
+      ],
+      "deliverables": [
+        "Preserve character-name trim behavior and accept normalized values through the mapped 120-character/480-byte boundary.",
+        "Reject malformed UTF-8, NUL, and oversized normalized values before assignment without truncation.",
+        "Preserve previously stored name after rejected input and retain NotBlank/Length constraints.",
+        "Do not change GuildMember relationships, rank snapshot, character class/level, player name, leadership, or active state."
+      ],
+      "tests": [
+        "Targeted GuildMember character-name PHPUnit tests for exact ASCII/multibyte limits, 121-character rejection, trimming, malformed UTF-8/NUL and prior-state preservation.",
+        "PHPStan level 8.",
+        "Complete Worker CI on the exact final HEAD."
+      ],
+      "completion_report": [
+        "exact final Worker HEAD and sanitized main base SHA",
+        "complete changed-file list and Worker PR",
+        "targeted character-name tests and complete exact-head Worker CI result",
+        "120-character/480-byte ceiling with preserved trim and validation semantics"
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "no-secrets-or-trusted-private-runtime-in-worker-source",
+        "preserve GuildMember guild/rank ownership, member lifecycle and profile-property semantics",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_base_branch": "main",
+      "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "resume_branch": "feature/wcp-320-guild-member-character-name-boundary-g1",
+      "proposal_kind": "worker_only",
+      "collision_check": {
+        "compared_against": "all current continuous/work-pool-v4 allowlists including active WCP-319 GuildRank claim; exact WCP-320 branch/PR searches and test-path absence verified against sanitized main",
+        "result": "GuildMember character-name setter and focused boundary test are disjoint from every current allowlist; no rank, membership, controller, form, repository, migration, DI, template or workflow paths are included",
+        "paths": [
+          "src/Entity/GuildMember.php",
+          "tests/Entity/GuildMemberCharacterNameBoundaryTest.php"
+        ]
+      },
+      "claimed_on": "2026-09-26T13:13:44.313Z",
+      "claim_state": "active_worker_claim",
+      "last_checkpoint_at": "2026-09-26T13:13:44.313Z",
+      "checkpoint_paths": [
+        "src/Entity/GuildMember.php",
+        "tests/Entity/GuildMemberCharacterNameBoundaryTest.php"
+      ],
+      "next_action": "Create exact claim and feature branches from sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d, then implement only the two allowlisted files and run exact-head Worker CI."
     }
   ],
   "recovery_queue": [],
