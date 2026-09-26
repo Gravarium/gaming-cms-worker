@@ -88,7 +88,21 @@ class Guild
     public function getSlug(): string { return $this->slug; }
     public function setSlug(string $slug): self { $this->slug = $slug; return $this; }
     public function getServerName(): string { return $this->serverName; }
-    public function setServerName(string $serverName): self { $this->serverName = trim($serverName); return $this; }
+    public function setServerName(string $serverName): self
+    {
+        if (!mb_check_encoding($serverName, 'UTF-8') || str_contains($serverName, "\0")) {
+            throw new \InvalidArgumentException('Guild server name must be valid UTF-8 without NUL bytes.');
+        }
+
+        $normalizedServerName = trim($serverName);
+        if (strlen($normalizedServerName) > 480 || mb_strlen($normalizedServerName, 'UTF-8') > 120) {
+            throw new \InvalidArgumentException('Guild server name must fit its 120-character storage column.');
+        }
+
+        $this->serverName = $normalizedServerName;
+
+        return $this;
+    }
     public function getRegion(): ?string { return $this->region; }
     public function setRegion(?string $region): self { $this->region = $this->optional($region); return $this; }
     public function getFaction(): ?string { return $this->faction; }
