@@ -10,7 +10,7 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-26T21:11:34.428Z",
+  "published_at": "2026-09-26T21:13:11.082Z",
   "summary": {
     "total_remaining_worker_tasks": 134,
     "completed_worker_prs_awaiting_trusted_review": 174,
@@ -19646,6 +19646,103 @@
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/201",
       "last_ci_run_id": 36272084379,
       "last_ci_result": "in_progress"
+    },
+    {
+      "priority": 189,
+      "package_id": "WCP-409",
+      "title": "Search and paginate administrative notification history",
+      "risk": "medium",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-409-admin-notification-history-g1",
+      "suggested_branch": "feature/wcp-409-admin-notification-history-g1",
+      "base_branch": "main",
+      "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5",
+      "objective": "Give administrators a way to find and act on older notifications. The current inbox displays only the newest 100 with no search or read-state filter. Add a separate, linked history browser with bounded search, unread/read filtering, deterministic pagination, and the existing authenticated read/open action. No schema change.",
+      "allowed_paths": [
+        "src/Controller/AdminNotificationHistoryController.php",
+        "src/Repository/AdminNotificationRepository.php",
+        "templates/admin/notification/index.html.twig",
+        "templates/admin/notification/history.html.twig",
+        "tests/Controller/AdminNotificationHistoryTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/",
+        "src/Entity/",
+        "assets/",
+        "public/"
+      ],
+      "deliverables": [
+        "Add a discoverable history link from the existing admin notification inbox.",
+        "Search notification title, message, and type with a bounded query; support all, unread, and read filters.",
+        "Paginate results at a fixed page size with createdAt and id tie-break ordering, retaining active filters in page links.",
+        "Keep the history route behind CMS_ACCESS and reuse the existing CSRF-protected notification read/open action.",
+        "Reject malformed or out-of-range page inputs without returning inconsistent pages; no schema or notification ownership changes."
+      ],
+      "tests": [
+        "php bin/phpunit tests/Controller/AdminNotificationHistoryTest.php",
+        "Verify the current inbox links to history, valid search/read filters return only matching notifications, and page links retain filters.",
+        "Verify records after the newest 100 are reachable and adjacent pages contain no duplicate or skipped tie-timestamp records.",
+        "Verify malformed scalar/array and out-of-range page requests fail closed.",
+        "Verify anonymous and non-CMS users cannot browse history; existing read action and CSRF protections remain intact.",
+        "PHPStan level 8 and complete Worker CI on the exact final HEAD, including PostgreSQL 18 migration-chain checks."
+      ],
+      "completion_report": [
+        "Exact final Worker HEAD and sanitized main base SHA.",
+        "Complete changed-file list, Worker PR and exact-head CI run.",
+        "Search, read-state filtering, stable pagination, authorization and invalid-page test results.",
+        "Open limits and later Trusted/Fortress permission-mapping follow-up."
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "preserve-CMS_ACCESS-authorization-and-existing-CSRF-protected-notification-actions",
+        "keep-notification-history-admin-only-and-use-parameterized-query-filters",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5",
+      "active_base_branch": "main",
+      "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5",
+      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5",
+      "resume_branch": "feature/wcp-409-admin-notification-history-g1",
+      "proposal_kind": "worker_only",
+      "collision_check": {
+        "compared_against": "Fresh continuous/work-pool-v4 branch tree and task allowlists immediately before reservation; exact sanitized Worker main f1a246c64527ef3ad51f7490773d9bbf9d42be5.",
+        "result": "No active or claim-locked task owns the new history controller, AdminNotificationRepository, admin notification templates, or the new history test. WCP-346 locks the existing AdminNotificationController redirect boundary; this package leaves that controller unchanged and reuses its read action. WCP-305 concerns entity persistence boundaries, WCP-400 is the separate audit-log browser, and WCP-395 is the member-owned inbox. WCP-407 competition tests and WCP-408 video filters are disjoint. FCP-072 is unclaimed and dependency-blocked with a broad templates/ allowlist; this package touches only templates/admin/notification. The existing admin inbox fetches only 100 records and exposes no history/search/filter path.",
+        "paths": [
+          "src/Controller/AdminNotificationHistoryController.php",
+          "src/Repository/AdminNotificationRepository.php",
+          "templates/admin/notification/index.html.twig",
+          "templates/admin/notification/history.html.twig",
+          "tests/Controller/AdminNotificationHistoryTest.php"
+        ]
+      },
+      "claimed_on": "2026-09-26T21:13:11.082Z",
+      "claim_state": "active",
+      "next_action": "Create the exclusive claim and feature branches from exact sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5; implement the notification history browser within the five allowlisted paths.",
+      "branch_heads": {
+        "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5",
+        "feature_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5"
+      },
+      "last_checkpoint_at": "2026-09-26T21:13:11.082Z",
+      "checkpoint_paths": []
     }
   ],
   "recovery_queue": [],
