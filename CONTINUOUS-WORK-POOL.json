@@ -12,12 +12,12 @@
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
   "published_at": "2026-09-26T17:12:46.540Z",
   "summary": {
-    "total_remaining_worker_tasks": 131,
+    "total_remaining_worker_tasks": 132,
     "completed_worker_prs_awaiting_trusted_review": 136,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "Continue disjoint active WCP-361 work; re-evaluate blocked FCP dependencies after exact-head CI.",
+    "next_required_action": "Continue disjoint active WCP-361 and WCP-362 work; re-evaluate FCP dependencies after their exact-head CI.",
     "composition_preparable": 0,
     "immediately_actionable": 0,
     "must_continue": true
@@ -14384,6 +14384,99 @@
       "worker_pr": 155,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/155",
       "pr_state": "draft"
+    },
+    {
+      "priority": 143,
+      "package_id": "WCP-362",
+      "title": "Expose media folder name limit in the form",
+      "risk": "low",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-362-media-folder-name-boundary-g1",
+      "suggested_branch": "feature/wcp-362-media-folder-name-boundary-g1",
+      "base_branch": "main",
+      "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "objective": "Expose the existing MediaFolder.name maximum of 120 characters in MediaFolderType with a matching maxlength. The entity already persists varchar(120) and applies Length(max: 120). Use the real form and validator to cover exact-limit acceptance, rejection at 121 characters, and the rendered attribute. Preserve folder parent mapping behavior, hierarchy and cycle checks, entity validation, authorization, media storage, controller persistence and upload protections.",
+      "allowed_paths": [
+        "src/Form/MediaFolderType.php",
+        "tests/Form/MediaFolderTypeBoundaryTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/",
+        "src/Entity/MediaFolder.php",
+        "src/Controller/",
+        "src/Repository/MediaFolderRepository.php",
+        "src/Service/MediaStorageManager.php",
+        "src/Form/MediaAssetUploadType.php",
+        "tests/Controller/",
+        "templates/",
+        "assets/",
+        "public/"
+      ],
+      "deliverables": [
+        "Add maxlength=120 to the MediaFolderType name field to match the existing persisted and server-validated bound.",
+        "Test exactly 120 characters, a 121-character title error on the name field, and the rendered maxlength using the real form and validator.",
+        "Leave the entity, schema, parent-folder behavior, controller, repository, media services, templates and upload rules unchanged."
+      ],
+      "tests": [
+        "Form regression accepts an exactly 120-character name with no name-field errors.",
+        "Form regression rejects a 121-character name with the existing entity Length constraint surfaced on the name field.",
+        "Form view exposes maxlength=120.",
+        "PHPStan level 8 and complete Worker CI on the exact final HEAD."
+      ],
+      "completion_report": [
+        "exact final Worker HEAD and sanitized main base SHA",
+        "complete changed-file list and Worker PR",
+        "exact/over-limit form results, PHPStan level 8 and exact-head Worker CI",
+        "confirmation folder hierarchy, parent handling, authorization, entity validation and media storage/upload behavior are unchanged"
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "no-secrets-or-trusted-private-runtime-in-worker-source",
+        "preserve folder hierarchy, parent restrictions, authorization, media cleanup and upload invariants",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_base_branch": "main",
+      "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "resume_branch": "feature/wcp-362-media-folder-name-boundary-g1",
+      "proposal_kind": "worker_only",
+      "collision_check": {
+        "compared_against": "all current continuous/work-pool-v4 allowed-path scopes, including active WCP-361 and locked claims; exact paths checked against sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+        "result": "Neither exact path nor any enclosing allowed-directory scope occurs in another current task. Active WCP-361 is limited to GuildRankType and its form test. This proposal touches only the MediaFolder name field and its regression test; no shared migration, DI, template, controller or upload path is involved.",
+        "paths": [
+          "src/Form/MediaFolderType.php",
+          "tests/Form/MediaFolderTypeBoundaryTest.php"
+        ]
+      },
+      "claimed_on": "2026-09-26T17:14:17.634Z",
+      "claim_state": "active_worker_claim",
+      "last_checkpoint_at": "2026-09-26T17:14:17.634Z",
+      "next_action": "Create the exact claim and feature refs from sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d; add maxlength=120 and real-form boundary coverage, then run complete exact-head Worker CI.",
+      "checkpoint_paths": [
+        "src/Form/MediaFolderType.php",
+        "tests/Form/MediaFolderTypeBoundaryTest.php"
+      ],
+      "last_verified_push_at": "2026-09-26T17:14:17.634Z"
     }
   ],
   "recovery_queue": [],
