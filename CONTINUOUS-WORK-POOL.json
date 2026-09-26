@@ -10,7 +10,7 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-26T20:21:26.113Z",
+  "published_at": "2026-09-26T20:23:45.574Z",
   "summary": {
     "total_remaining_worker_tasks": 132,
     "completed_worker_prs_awaiting_trusted_review": 169,
@@ -18085,7 +18085,7 @@
       "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-      "active_head": "b0af6d295f630d1911348635b02efd9a73397ed3",
+      "active_head": "f1293cd6b66f86c14d95447a542df4a2ac94a9bf",
       "resume_branch": "feature/wcp-395-member-notification-inbox-g1",
       "proposal_kind": "worker_only",
       "collision_check": {
@@ -18101,8 +18101,8 @@
       },
       "claimed_on": "2026-09-26T20:06:03.790Z",
       "claim_state": "active",
-      "last_checkpoint_at": "2026-09-26T20:21:26.113Z",
-      "next_action": "Inspect exact-head Worker CI run 36269178529 on b0af6d295f630d1911348635b02efd9a73397ed3; repair any genuine failure on this same branch and rerun all checks.",
+      "last_checkpoint_at": "2026-09-26T20:23:45.574Z",
+      "next_action": "Wait for full Worker CI on corrected exact HEAD f1293cd6b66f86c14d95447a542df4a2ac94a9bf; inspect all jobs and fix any remaining failure on this branch.",
       "checkpoint_paths": [
         "src/Controller/MemberNotificationInboxController.php",
         "src/Repository/MemberNotificationRepository.php",
@@ -18110,10 +18110,10 @@
         "templates/guild_portal/notifications.html.twig",
         "tests/Controller/MemberNotificationInboxTest.php"
       ],
-      "last_verified_push_at": "2026-09-26T20:20:56.792Z",
+      "last_verified_push_at": "2026-09-26T20:23:45.574Z",
       "worker_pr": 190,
-      "ci_run_id": 36269178529,
-      "ci_result": "in_progress",
+      "ci_run_id": null,
+      "ci_result": "pending",
       "ci_attempts": [
         {
           "run_id": 36268747275,
@@ -18125,17 +18125,18 @@
           "run_id": 36268995894,
           "head": "7b0d3d53c02eb8b2eaa7977bd07bcc57a7241794",
           "result": "failure",
-          "cause": "All CSRF session errors and cache assertion were fixed. One owner-scope test switched accounts in one BrowserKit client and received the expected login redirect instead of exercising the foreign-ID path. The controller now queries by current user before CSRF validation, preserving a uniform 404 for foreign or missing rows and requiring CSRF for owned writes; tests use separate clients."
-        },
-        {
-          "run_id": null,
-          "head": "b0af6d295f630d1911348635b02efd9a73397ed3",
-          "result": "pending"
+          "cause": "The CSRF/session and cache assertions were fixed; the foreign-ID test switched accounts in one BrowserKit client and got redirected to login. The controller was adjusted to query by current user before CSRF validation, preserving uniform 404 for foreign/missing rows and requiring CSRF for owned writes."
         },
         {
           "run_id": 36269178529,
           "head": "b0af6d295f630d1911348635b02efd9a73397ed3",
-          "result": "in_progress"
+          "result": "failure",
+          "cause": "All tests except one passed; the remaining test attempted to create a second WebTestCase client in one method, which Symfony rejects. The regression now uses one authenticated session and changes the row owner in the test DB between requests to test isolation."
+        },
+        {
+          "run_id": null,
+          "head": "f1293cd6b66f86c14d95447a542df4a2ac94a9bf",
+          "result": "pending"
         }
       ]
     },
