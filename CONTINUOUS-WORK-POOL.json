@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-26T18:01:11.900Z",
+  "published_at": "2026-09-26T18:04:16.993Z",
   "summary": {
     "total_remaining_worker_tasks": 131,
     "completed_worker_prs_awaiting_trusted_review": 146,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "Re-evaluate the five remaining FCP dependencies; select or derive the next safe disjoint Worker proposal while preserving foreign active claims.",
+    "next_required_action": "The five remaining FCP proposals are blocked by missing dependency evidence; continue active WCP-371 work and any other disjoint claims without changing foreign claims.",
     "composition_preparable": 0,
     "immediately_actionable": 0,
     "must_continue": true
@@ -15365,6 +15365,98 @@
         "PHPStan level 8 application type analysis passed in exact-head Worker CI run #470 (36260996464).",
         "Full Worker CI run #470 (36260996464) succeeded, including 432 tests / 1,882 assertions and the complete PostgreSQL 18 migration chain."
       ]
+    },
+    {
+      "priority": 151,
+      "package_id": "WCP-371",
+      "title": "Expose admin user display name limit in the form",
+      "risk": "low",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-371-admin-user-display-name-form-boundary-g1",
+      "suggested_branch": "feature/wcp-371-admin-user-display-name-form-boundary-g1",
+      "base_branch": "main",
+      "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "objective": "Expose User.displayName's existing 80-character storage and validation bound in AdminUserType with maxlength=80. Keep the entity's Length(max: 80) as the server-side enforcement point. Add real Symfony form regression coverage for an 80-character name, an 81-character name error on the displayName field, and the rendered maxlength. Preserve all account, role, permission, password, self-email, lockout and authorization behavior.",
+      "allowed_paths": [
+        "src/Form/AdminUserType.php",
+        "tests/Form/AdminUserTypeDisplayNameBoundaryTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/",
+        "src/Entity/User.php",
+        "src/Entity/AccessRole.php",
+        "src/Controller/",
+        "src/Security/",
+        "src/Service/",
+        "templates/",
+        "assets/",
+        "public/"
+      ],
+      "deliverables": [
+        "Add maxlength=80 to AdminUserType.displayName to match User's existing column and validation bound.",
+        "Add real-form tests for exact-limit acceptance, one-over rejection on displayName, and rendered maxlength=80.",
+        "Leave account validation, email changes, role/permission assignment, passwords, lockout, authorization, persistence and schema unchanged."
+      ],
+      "tests": [
+        "Kernel-backed AdminUserType accepts an 80-character display name without a displayName field error.",
+        "Kernel-backed AdminUserType reports the existing Length constraint on displayName for 81 characters.",
+        "Form view exposes maxlength=80.",
+        "PHPStan level 8 and complete Worker CI on the exact final HEAD."
+      ],
+      "completion_report": [
+        "exact final Worker HEAD and sanitized main base SHA",
+        "complete changed-file list and Worker PR",
+        "exact/over-limit real-form results, rendered maxlength, PHPStan level 8 and exact-head Worker CI",
+        "confirmation account authorization, self-email verification, role permissions, password and lockout behavior are unchanged"
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "no-secrets-or-trusted-private-runtime-in-worker-source",
+        "preserve account authorization, email verification, role and permission assignment, password handling, lockout, CSRF and persistence",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_base_branch": "main",
+      "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "resume_branch": "feature/wcp-371-admin-user-display-name-form-boundary-g1",
+      "proposal_kind": "worker_only",
+      "collision_check": {
+        "compared_against": "all current continuous/work-pool-v4 allowed-path scopes through the latest completed WCP-370 and exact files on sanitized main at f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+        "result": "Neither exact path nor an enclosing allowed-directory scope occurs in another current task. WCP-327 is limited to the User entity and its entity test; WCP-348 is limited to the admin user controller and controller test. This proposal changes only the display-name form attribute and its dedicated boundary test.",
+        "paths": [
+          "src/Form/AdminUserType.php",
+          "tests/Form/AdminUserTypeDisplayNameBoundaryTest.php"
+        ]
+      },
+      "claimed_on": "2026-09-26T18:04:16.993Z",
+      "claim_state": "active_worker_claim",
+      "last_checkpoint_at": "2026-09-26T18:04:16.993Z",
+      "next_action": "Add maxlength=80 to AdminUserType.displayName and kernel-backed exact/over boundary tests, preserving all account permissions and password behavior; then run exact-head Worker CI.",
+      "checkpoint_paths": [
+        "src/Form/AdminUserType.php",
+        "tests/Form/AdminUserTypeDisplayNameBoundaryTest.php"
+      ],
+      "last_verified_push_at": "2026-09-26T18:04:16.993Z"
     }
   ],
   "recovery_queue": [],
