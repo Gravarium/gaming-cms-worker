@@ -6,6 +6,7 @@ namespace App\Controller;
 
 use App\Repository\AdminLayoutPageDirectoryRepository;
 use App\Security\CmsPermission;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
@@ -14,7 +15,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/admin/layout/pages', name: 'app_admin_layout_pages', methods: ['GET'])]
 #[IsGranted(CmsPermission::SETTINGS)]
-final class AdminLayoutPageDirectoryController
+final class AdminLayoutPageDirectoryController extends AbstractController
 {
     private const PAGE_SIZE = 25;
     private const MAX_QUERY_LENGTH = 100;
@@ -44,19 +45,19 @@ final class AdminLayoutPageDirectoryController
         $total = $this->pages->countPages($search);
         $pageCount = max(1, (int) ceil($total / self::PAGE_SIZE));
         $currentPage = min((int) $rawPage, $pageCount);
+        $pages = $this->pages->findPages(
+            $search,
+            self::PAGE_SIZE,
+            ($currentPage - 1) * self::PAGE_SIZE,
+        );
 
-        $response = new Response();
-        $response->setContent('');
-        $response = new Response();
-        $response->headers->set('Cache-Control', 'private, no-store');
-        $response->headers->set('X-Robots-Tag', 'noindex, nofollow');
-
-        return $this->renderDirectory($search, $total, $pageCount, $currentPage);
-    }
-
-    private function renderDirectory(string $search, int $total, int $pageCount, int $currentPage): Response
-    {
-        $response = new Response();
+        $response = $this->render('admin/layout/pages.html.twig', [
+            'pages' => $pages,
+            'query' => $search,
+            'total' => $total,
+            'currentPage' => $currentPage,
+            'pageCount' => $pageCount,
+        ]);
         $response->headers->set('Cache-Control', 'private, no-store');
         $response->headers->set('X-Robots-Tag', 'noindex, nofollow');
 
