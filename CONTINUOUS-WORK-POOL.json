@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-26T22:46:00.244Z",
+  "published_at": "2026-09-26T22:46:11.672Z",
   "summary": {
     "total_remaining_worker_tasks": 134,
-    "completed_worker_prs_awaiting_trusted_review": 189,
+    "completed_worker_prs_awaiting_trusted_review": 190,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-421 checkpoint eb317bb30a9b6a1017814579607c01d35a57d45e includes the PHPStan repair; run and record the complete Worker CI result on this exact SHA.",
+    "next_required_action": "WCP-422 PR #216 is complete with green exact-head CI and remains claim-locked pending Trusted resolution; continue with an independent worker-only proposal because all five unclaimed FCPs remain dependency-blocked.",
     "composition_preparable": 0,
     "immediately_actionable": 0,
     "must_continue": true
@@ -21491,7 +21491,7 @@
       "package_id": "WCP-422",
       "title": "Protect website settings administration access",
       "risk": "low",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -21559,13 +21559,13 @@
         ]
       },
       "claimed_on": "2026-09-26T22:41:55.889Z",
-      "claim_state": "active",
+      "claim_state": "locked_until_trusted_resolution",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
       "active_head": "33dc6ccbc9caac68d9ab18b54fedc78495842b9f",
       "resume_branch": "feature/wcp-422-admin-settings-access-security-g1",
-      "last_checkpoint_at": "2026-09-26T22:44:21.323Z",
-      "last_verified_push_at": "2026-09-26T22:44:21.323Z",
+      "last_checkpoint_at": "2026-09-26T22:46:11.672Z",
+      "last_verified_push_at": "2026-09-26T22:46:11.672Z",
       "checkpoint_paths": [
         "tests/Controller/AdminSettingsAccessSecurityTest.php"
       ],
@@ -21573,7 +21573,7 @@
         "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
         "feature_branch": "33dc6ccbc9caac68d9ab18b54fedc78495842b9f"
       },
-      "next_action": "Wait for Worker CI run 36277210095 on exact HEAD 33dc6ccbc9caac68d9ab18b54fedc78495842b9f; diagnose and repair any failure, then record complete results.",
+      "next_action": "PR #216 has green exact-head Worker CI; keep this claim locked until Trusted explicitly integrates, cancels or transfers it, and continue with an independent package.",
       "worker_pr": 216,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/216",
       "draft_pr": false,
@@ -21591,9 +21591,29 @@
         {
           "run_id": 36277210095,
           "head": "33dc6ccbc9caac68d9ab18b54fedc78495842b9f",
-          "result": "queued"
+          "result": "success"
         }
-      ]
+      ],
+      "last_ci_result": "success",
+      "ci_run_id": 36277210095,
+      "ci_result": "success",
+      "completed_at": "2026-09-26T22:46:11.672Z",
+      "test_results": {
+        "phpunit": "431 tests, 1,862 assertions, 0 failures; one deprecation and one notice.",
+        "phpstan": "Level 8 passed with no errors.",
+        "php_symfony": "Worker PHP/Symfony validation job passed on exact final HEAD.",
+        "postgres18": "PostgreSQL 18 completed the full migration chain: 39 migrations executed, 0 unavailable.",
+        "exact_head_ci": {
+          "run_id": 36277210095,
+          "head": "33dc6ccbc9caac68d9ab18b54fedc78495842b9f",
+          "result": "success"
+        }
+      },
+      "completion_summary": "Functional regressions verify a logged-in content manager without CMS_SETTINGS_MANAGE receives 403 on website settings GET and forged POST, and the persisted site name remains unchanged. A settings manager can render the settings form. Only the allowed test file changed.",
+      "open_limitations": [
+        "Awaiting Trusted review and Trusted integration CI."
+      ],
+      "trusted_follow_up": "Preserve CMS_SETTINGS_MANAGE authorization for website settings reads and writes when porting or changing settings administration in Trusted; run full Trusted CI."
     }
   ],
   "recovery_queue": [],
