@@ -24,7 +24,7 @@ final readonly class ExternalMediaUpload
             || str_starts_with($objectKey, '/')
             || str_contains($objectKey, '\\')
             || preg_match('//u', $objectKey) !== 1
-            || preg_match('/[\\x00-\\x1F\\x7F]/', $objectKey) === 1
+            || preg_match('/[\x00-\x1F\x7F]/', $objectKey) === 1
         ) {
             return false;
         }
@@ -44,6 +44,6 @@ final readonly class ExternalMediaUpload
             && strlen($localPath) <= 500
             && str_starts_with($localPath, '/')
             && preg_match('//u', $localPath) === 1
-            && preg_match('/[\\x00-\\x1F\\x7F]/', $localPath) !== 1;
+            && preg_match('/[\x00-\x1F\x7F]/', $localPath) !== 1;
     }
 }
