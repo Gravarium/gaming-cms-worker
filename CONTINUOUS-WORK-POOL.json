@@ -10,10 +10,10 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-26T19:23:05.127Z",
+  "published_at": "2026-09-26T19:24:55.683Z",
   "summary": {
     "total_remaining_worker_tasks": 131,
-    "completed_worker_prs_awaiting_trusted_review": 157,
+    "completed_worker_prs_awaiting_trusted_review": 158,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
@@ -16438,7 +16438,7 @@
       "package_id": "WCP-381",
       "title": "Add published-video search to the public video library",
       "risk": "medium",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -16488,11 +16488,12 @@
         "PHPStan level 8 and complete Worker CI on the exact final HEAD, including PostgreSQL migration-chain checks."
       ],
       "completion_report": [
-        "exact final Worker HEAD and sanitized main base SHA",
-        "complete changed-file list and Worker PR",
-        "targeted search journey and negative-test results",
-        "exact-head PHPStan and complete Worker CI results",
-        "confirmation that only enabled, currently published videos are searchable and existing filters/visibility remain unchanged"
+        "Sanitized Worker main base: f1a246c64527ef3ad51f7490773d9bbf9d42be5d; exact final feature HEAD: ee326949e521c1d2dc4a672ecee1cc5971baac83.",
+        "Worker PR #176 is open and ready for review: https://github.com/Gravarium/gaming-cms-worker/pull/176.",
+        "Changed paths: src/Controller/VideoSearchController.php, src/Repository/VideoRepository.php, templates/video/index.html.twig, templates/video/search.html.twig, tests/Controller/VideoSearchTest.php.",
+        "Public /videos search form and /videos/search results page work for case-insensitive title/description search. New functional tests cover route precedence, reachable accessible form, valid title/description matches, enabled/currently-published visibility, malformed and out-of-range input, no-result state, and no-store caching.",
+        "Exact-head Worker CI run 36265621401 succeeded: PostgreSQL 18 migration chain and PHP/Symfony validation both passed, including PHPStan, Composer audit, Twig/container/AssetMapper/Doctrine checks and full PHPUnit (433 tests, 1,894 assertions; zero failures; one existing deprecation and one notice).",
+        "Open limitation: results are capped at 50 without pagination. Trusted follow-up: port the public search controller/query/templates/tests to a reviewed Trusted branch, preserve the visibility predicates and input bounds, then run full Trusted CI. No schema change is needed."
       ],
       "immutable_constraints": [
         "trusted-main-is-the-only-integration-and-deployment-source",
@@ -16522,9 +16523,9 @@
         ]
       },
       "claimed_on": "2026-09-26T19:08:18.159Z",
-      "claim_state": "active",
-      "last_checkpoint_at": "2026-09-26T19:19:15.273Z",
-      "next_action": "The first full CI run failed only two new test assertions (normalized Cache-Control header and repeated h2 selector). Both assertions are fixed; rerun complete Worker CI on exact HEAD ee326949e521c1d2dc4a672ecee1cc5971baac83.",
+      "claim_state": "locked_until_trusted_resolution",
+      "last_checkpoint_at": "2026-09-26T19:23:30Z",
+      "next_action": "Await Trusted review with this claim locked; continue only on a different free, independent claim. Do not merge or deploy.",
       "checkpoint_paths": [
         "src/Controller/VideoSearchController.php",
         "src/Repository/VideoRepository.php",
@@ -16535,9 +16536,27 @@
       "last_verified_push_at": "2026-09-26T19:19:15.273Z",
       "worker_pr": 176,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/176",
-      "pr_state": "open",
-      "last_ci_run_id": 36265460409,
-      "last_ci_result": "failure"
+      "pr_state": "open_ready_for_review",
+      "last_ci_run_id": 36265621401,
+      "last_ci_result": "success",
+      "final_head": "ee326949e521c1d2dc4a672ecee1cc5971baac83",
+      "ci_run_id": 36265621401,
+      "ci_result": "success",
+      "final_changed_paths": [
+        "src/Controller/VideoSearchController.php",
+        "src/Repository/VideoRepository.php",
+        "templates/video/index.html.twig",
+        "templates/video/search.html.twig",
+        "tests/Controller/VideoSearchTest.php"
+      ],
+      "follow_on_changed_paths": [
+        "src/Controller/VideoSearchController.php",
+        "src/Repository/VideoRepository.php",
+        "templates/video/index.html.twig",
+        "templates/video/search.html.twig",
+        "tests/Controller/VideoSearchTest.php"
+      ],
+      "completed_at": "2026-09-26T19:23:30Z"
     },
     {
       "priority": 162,
