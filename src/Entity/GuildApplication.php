@@ -101,7 +101,21 @@ class GuildApplication
     public function getCharacterClass(): ?string { return $this->characterClass; }
     public function setCharacterClass(?string $value): self { $value = $value === null ? null : trim($value); $this->characterClass = $value === '' ? null : $value; return $this; }
     public function getMessage(): string { return $this->message; }
-    public function setMessage(string $message): self { $this->message = trim($message); return $this; }
+    public function setMessage(string $message): self
+    {
+        if (!mb_check_encoding($message, 'UTF-8') || str_contains($message, "\0")) {
+            throw new \InvalidArgumentException('Guild application message must be valid UTF-8 without NUL bytes.');
+        }
+
+        $normalizedMessage = trim($message);
+        if (strlen($normalizedMessage) > 20000 || mb_strlen($normalizedMessage, 'UTF-8') > 5000) {
+            throw new \InvalidArgumentException('Guild application message must not exceed 5,000 characters.');
+        }
+
+        $this->message = $normalizedMessage;
+
+        return $this;
+    }
     /** @return list<array{question: string, answer: string}> */
     public function getAnswers(): array { return $this->answers; }
     /** @param list<array{question: string, answer: string}> $answers */
