@@ -12,12 +12,12 @@
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
   "published_at": "2026-09-26T12:53:11.312Z",
   "summary": {
-    "total_remaining_worker_tasks": 94,
+    "total_remaining_worker_tasks": 95,
     "completed_worker_prs_awaiting_trusted_review": 88,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "Re-evaluate live claims and blocked FCPs; publish and implement another independent worker-only CMS proposal from verified code gaps.",
+    "next_required_action": "Implement WCP-314 on its exclusive GuildEvent entity/test paths from the exact sanitized main SHA; run complete exact-head Worker CI and preserve foreign claims.",
     "composition_preparable": 0,
     "immediately_actionable": 3,
     "must_continue": true
@@ -9146,6 +9146,96 @@
       "claim_state": "active_worker_claim",
       "last_checkpoint_at": "2026-09-26T12:53:11.312Z",
       "next_action": "Create the claim and feature branches from exact sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d, then implement only the two allowlisted files and run exact-head Worker CI."
+    },
+    {
+      "priority": 95,
+      "package_id": "WCP-314",
+      "title": "Bound guild event location persistence input",
+      "risk": "medium",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-314-guild-event-location-boundary-g1",
+      "suggested_branch": "feature/wcp-314-guild-event-location-boundary-g1",
+      "base_branch": "main",
+      "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "objective": "Enforce GuildEvent.location's mapped nullable varchar(140) boundary in the entity setter. Preserve null/blank-to-null and trim normalization; reject malformed UTF-8/NUL and reject normalized nonempty values above 140 UTF-8 characters or 560 bytes before assignment, preserving the prior value on rejection.",
+      "allowed_paths": [
+        "src/Entity/GuildEvent.php",
+        "tests/Entity/GuildEventBoundaryTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/",
+        "src/Controller/",
+        "src/Form/",
+        "src/Repository/",
+        "src/Service/",
+        "templates/",
+        "assets/",
+        "public/"
+      ],
+      "deliverables": [
+        "Preserve null, empty-to-null, and trim behavior for optional locations.",
+        "Reject malformed UTF-8 and NUL, then validate normalized values against the 140-character/560-byte mapped column limit before assignment.",
+        "Reject oversized values without truncation and preserve the previous location on rejection.",
+        "Do not change event type/status validation, guild/team ownership, scheduling, publication, controller, or form behavior."
+      ],
+      "tests": [
+        "Targeted GuildEvent location PHPUnit boundary tests for exact ASCII and multibyte limits, 141-character rejection, malformed UTF-8/NUL, null/blank normalization, trimming, and prior-state preservation.",
+        "PHPStan level 8.",
+        "Complete Worker CI on the exact final HEAD."
+      ],
+      "completion_report": [
+        "exact final Worker HEAD and sanitized main base SHA",
+        "complete changed-file list and Worker PR",
+        "targeted guild-event location tests and complete exact-head Worker CI result",
+        "location character/byte ceilings with preserved null/trim behavior"
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "no-secrets-or-trusted-private-runtime-in-worker-source",
+        "preserve GuildEvent ownership, scheduling, type/status and optional-location normalization semantics",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_base_branch": "main",
+      "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "resume_branch": "feature/wcp-314-guild-event-location-boundary-g1",
+      "proposal_kind": "worker_only",
+      "collision_check": {
+        "compared_against": "all current continuous/work-pool-v4 allowlists including foreign WCP-313 active claim; exact WCP-314 branch/PR searches and test-path absence verified against sanitized main",
+        "result": "GuildEvent entity and focused location boundary test are disjoint from every current allowlist; no controller, form, repository, service, migration, DI, template or workflow paths are included",
+        "paths": [
+          "src/Entity/GuildEvent.php",
+          "tests/Entity/GuildEventBoundaryTest.php"
+        ]
+      },
+      "claimed_on": "2026-09-26T12:55:07.392Z",
+      "claim_state": "active_worker_claim",
+      "last_checkpoint_at": "2026-09-26T12:55:07.392Z",
+      "checkpoint_paths": [
+        "src/Entity/GuildEvent.php",
+        "tests/Entity/GuildEventBoundaryTest.php"
+      ],
+      "next_action": "Create exact claim and feature branches from sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d, then implement only the two allowlisted files and run exact-head Worker CI."
     }
   ],
   "recovery_queue": [],
