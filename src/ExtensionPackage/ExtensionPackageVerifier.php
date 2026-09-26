@@ -183,10 +183,20 @@ final readonly class ExtensionPackageVerifier
 
     private function read(string $path, int $maxBytes): string
     {
-        $contents = @file_get_contents($path, false, null, 0, $maxBytes + 1);
+        if ($maxBytes < 1) {
+            throw new \DomainException('Required extension package file bound is invalid.');
+        }
+
+        $size = filesize($path);
+        if ($size === false || $size < 1 || $size > $maxBytes) {
+            throw new \DomainException('Required extension package file is unreadable or too large.');
+        }
+
+        $contents = @file_get_contents($path, false, null, 0, $maxBytes);
         if (!is_string($contents) || $contents === '' || strlen($contents) > $maxBytes) {
             throw new \DomainException('Required extension package file is unreadable or too large.');
         }
+
         return $contents;
     }
 }
