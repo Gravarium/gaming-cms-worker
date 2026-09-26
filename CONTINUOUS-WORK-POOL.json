@@ -10,16 +10,16 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-26T10:40:30.368Z",
+  "published_at": "2026-09-26T10:41:10.967Z",
   "summary": {
-    "total_remaining_worker_tasks": 60,
+    "total_remaining_worker_tasks": 61,
     "completed_worker_prs_awaiting_trusted_review": 54,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "Continue independent Worker proposal work while preserving WCP-108's foreign active claim and WCP-109's Trusted-review lock; after each exact-head green CI, reconcile and continue.",
+    "next_required_action": "Continue WCP-111 on its exclusive target-lookup claim while preserving WCP-109 and all completed foreign claim locks; after exact-head green CI, reconcile and continue independently.",
     "composition_preparable": 0,
-    "immediately_actionable": 1,
+    "immediately_actionable": 2,
     "must_continue": true
   },
   "rules": {
@@ -5512,6 +5512,92 @@
         ]
       },
       "claimed_on": "2026-09-26T10:39:51.549Z"
+    },
+    {
+      "priority": 60,
+      "package_id": "WCP-111",
+      "title": "Bound external connector target lookup keys",
+      "risk": "medium",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-111-connector-target-lookup-g1",
+      "suggested_branch": "feature/wcp-111-connector-target-lookup-g1",
+      "base_branch": "main",
+      "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "objective": "Harden ExternalConnectorRegistry::target() at its public lookup boundary: validate a bounded UTF-8/control-safe target key before enumerating enabled targets, preserve case-insensitive trimming and valid target resolution, and fail closed with a generic error that does not echo malformed or attacker-controlled lookup input.",
+      "allowed_paths": [
+        "src/ExternalConnector/ExternalConnectorRegistry.php",
+        "tests/ExternalConnector/ExternalConnectorRegistryTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/",
+        "src/Controller/",
+        "src/Entity/",
+        "src/ExternalConnector/ExternalConnectorAdapterRegistry.php",
+        "tests/ExternalConnector/ExternalConnectorAdapterRegistryTest.php",
+        "src/ExternalConnector/ExternalConnectorExecutionResult.php",
+        "tests/ExternalConnector/ExternalConnectorExecutionResultTest.php",
+        "src/ExternalConnector/ExternalMailMessage.php",
+        "tests/ExternalConnector/ExternalMailMessageTest.php",
+        "src/ExternalConnector/ExternalNotificationMessage.php",
+        "tests/ExternalConnector/ExternalNotificationMessageTest.php"
+      ],
+      "deliverables": [
+        "bounded UTF-8/control-safe target-key normalization before enabled-target enumeration",
+        "preserve case-insensitive whitespace normalization and valid target resolution",
+        "generic fail-closed handling for malformed, overlong and unknown lookup keys without echoing attacker-controlled input",
+        "positive and negative registry tests without schema, migration, controller or private-runtime changes"
+      ],
+      "tests": [
+        "targeted ExternalConnectorRegistry PHPUnit tests",
+        "PHPStan level 8",
+        "complete Worker CI on the exact final HEAD"
+      ],
+      "completion_report": [
+        "exact final Worker HEAD and sanitized base SHA",
+        "complete changed-path list and Worker PR",
+        "targeted tests plus complete Worker CI result",
+        "lookup normalization, fail-closed behavior and deferred Fortress registry-boundary risks"
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "no-secrets-or-trusted-private-runtime-in-worker-source",
+        "preserve existing connector capability checks, enabled-target filtering and valid target lookup behavior",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_base_branch": "main",
+      "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "resume_branch": "feature/wcp-111-connector-target-lookup-g1",
+      "proposal_kind": "worker_only",
+      "collision_check": {
+        "compared_against": "current continuous/work-pool-v4 task allowlists and active branches at publication",
+        "result": "disjoint from WCP-109 external execution-result claim, foreign WCP-110 failed-message-header branches, all other published allowlists and all searched WCP-111/target-lookup branches",
+        "paths": [
+          "src/ExternalConnector/ExternalConnectorRegistry.php",
+          "tests/ExternalConnector/ExternalConnectorRegistryTest.php"
+        ]
+      },
+      "claimed_on": "2026-09-26T10:41:10.967Z"
     }
   ],
   "recovery_queue": [],
