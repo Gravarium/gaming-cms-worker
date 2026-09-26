@@ -10,7 +10,7 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-26T18:48:30.672Z",
+  "published_at": "2026-09-26T18:51:23.312Z",
   "summary": {
     "total_remaining_worker_tasks": 131,
     "completed_worker_prs_awaiting_trusted_review": 153,
@@ -16209,6 +16209,94 @@
         "src/Controller/AdminLayoutController.php",
         "assets/controllers/layout_editor_controller.js",
         "tests/Controller/LayoutEditorTest.php"
+      ]
+    },
+    {
+      "priority": 159,
+      "package_id": "WCP-379",
+      "title": "Add Discord webhook delivery security regressions",
+      "risk": "medium",
+      "execution_state": "worker_in_progress",
+      "dependencies": [
+        "WCP-082"
+      ],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-379-discord-webhook-delivery-tests-g1",
+      "suggested_branch": "feature/wcp-379-discord-webhook-delivery-tests-g1",
+      "base_branch": "feature/wcp-082-discord-webhook-url-g1",
+      "base_sha": "3afb059e097132dbe07adc730132cbda427a6202",
+      "objective": "Stack on WCP-082's exact green DiscordWebhookUrlPolicy head and add integration regression tests for DiscordWebhookNotifier. Prove an encrypted but unapproved webhook host is rejected before any HTTP request; successful allowed-host delivery disables mentions, keeps redirects disabled and the timeout bounded, and caps Discord content at 1,900 characters; disabled integrations and per-event flags do not send. Use only synthetic guild/integration data and MockHttpClient. Do not change production code or make real network requests.",
+      "allowed_paths": [
+        "tests/Service/DiscordWebhookNotifierSecurityTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/",
+        "src/",
+        "templates/",
+        "assets/",
+        "public/"
+      ],
+      "deliverables": [
+        "Add service-level regression tests for the notifier's outbound host policy, allowed-mentions payload, redirect/timeout settings and content-length cap.",
+        "Prove disabled integration and disabled event notifications short-circuit without an HTTP request.",
+        "Use synthetic persisted entities and a mocked HTTP client; make no external network call."
+      ],
+      "tests": [
+        "A validly encrypted webhook URL on a lookalike or otherwise unapproved host returns false and the mock HTTP client receives zero requests.",
+        "An allowed Discord webhook receives POST JSON with allowed_mentions.parse empty, max_redirects=0, timeout=4 and content width at most 1,900 characters.",
+        "Disabled integrations and disabled per-event notifications make no request.",
+        "PHPStan level 8 and complete Worker CI pass on the exact final HEAD."
+      ],
+      "completion_report": [
+        "exact final Worker HEAD and WCP-082 exact green proposal base SHA",
+        "complete changed-file list and Worker PR",
+        "egress-denial and no-request assertion",
+        "outbound mention, redirect, timeout and content-bound assertions",
+        "PHPStan level 8 and exact-head Worker CI",
+        "confirmation no production code or external network behavior changed"
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "no-secrets-or-trusted-private-runtime-in-worker-source",
+        "preserve Discord webhook host validation, mention suppression, redirect refusal, timeout and failure behavior",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
+      ],
+      "proposal_base_branch": "feature/wcp-082-discord-webhook-url-g1",
+      "proposal_base_sha": "3afb059e097132dbe07adc730132cbda427a6202",
+      "active_base_branch": "feature/wcp-082-discord-webhook-url-g1",
+      "active_base_sha": "3afb059e097132dbe07adc730132cbda427a6202",
+      "active_head": "3afb059e097132dbe07adc730132cbda427a6202",
+      "resume_branch": "feature/wcp-379-discord-webhook-delivery-tests-g1",
+      "proposal_kind": "worker_only",
+      "collision_check": {
+        "compared_against": "all current continuous/work-pool-v4 allowed-path scopes through WCP-378 and exact files on WCP-082's exact green HEAD 3afb059e097132dbe07adc730132cbda427a6202",
+        "result": "The new service-test path has no exact or enclosing-scope collision. WCP-082 owns only DiscordWebhookUrlPolicy.php and DiscordWebhookUrlPolicyTest.php; WCP-332 owns the encrypted integration entity test; WCP-376 owns the form type and form test; WCP-378 owns widget/layout-editor paths. The new test file does not exist on the WCP-082 base. This package changes no production path.",
+        "paths": [
+          "tests/Service/DiscordWebhookNotifierSecurityTest.php"
+        ]
+      },
+      "claimed_on": "2026-09-26T18:51:23.312Z",
+      "claim_state": "active",
+      "last_checkpoint_at": "2026-09-26T18:51:23.312Z",
+      "next_action": "Add mocked Discord webhook delivery regressions on the WCP-082 exact green base, then run targeted tests and exact-head full Worker CI.",
+      "checkpoint_paths": [
+        "tests/Service/DiscordWebhookNotifierSecurityTest.php"
       ]
     }
   ],
