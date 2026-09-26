@@ -10,14 +10,15 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-26T07:12:00Z",
+  "published_at": "2026-09-26T07:50:27.549Z",
   "summary": {
     "total_remaining_worker_tasks": 27,
     "completed_worker_prs_awaiting_trusted_review": 21,
     "recovery_tasks": 0,
     "unclaimed": 6,
     "immediately_claimable": 0,
-    "next_required_action": "FCP-069 is complete on feature/fcp-069-pool-g1 at exact green HEAD 0b243f72cd6813e76574840dcc9c542396ec270e and remains locked pending Trusted review; no unclaimed package currently has all real dependencies fulfilled (FCP-070 remains blocked by missing FCP-037), so re-evaluate after Trusted resolution."
+    "next_required_action": "Prepare FCP-077 worker-only composition from verified FCP-049 code and green FCP-054/056/062/065 proposal heads. Validate full composition CI before any FCP-077 claim. Existing FCP-069 claim remains locked.",
+    "composition_preparable": 1
   },
   "rules": {
     "choose": "Resume any owned unfinished claim first. Otherwise choose exactly the first unclaimed task with an empty current blocked_by list and a published exact proposal_base_sha. A completed Worker proposal may satisfy proposal-only dependencies when its exact HEAD has green Worker CI.",
@@ -2327,13 +2328,7 @@
         "FCP-065"
       ],
       "dependencies_integrated_at_publication": [],
-      "blocked_by_at_publication": [
-        "FCP-049",
-        "FCP-054",
-        "FCP-056",
-        "FCP-062",
-        "FCP-065"
-      ],
+      "blocked_by_at_publication": [],
       "claim_branch": "claim/fcp-077-g1",
       "suggested_branch": "feature/fcp-077-pool-g1",
       "base_branch": "main",
@@ -2394,8 +2389,52 @@
         "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment",
         "fortress-ready-replaceable-boundaries-no-private-runtime-reconstruction"
       ],
-      "proposal_base_branch": "main",
-      "proposal_base_sha": "62e1b6fec6ce6f9a4096c6c5a6912d74df36da5c"
+      "proposal_base_branch": null,
+      "proposal_base_sha": null,
+      "proposal_dependency_evidence": [
+        {
+          "package_id": "FCP-049",
+          "integration_state": "trusted_code_merged_live_acceptance_pending",
+          "trusted_main_sha": "5452dc89cd7c1018c2866712b46f06f405af3901",
+          "trusted_ci_run_id": 35851884202,
+          "worker_sync_run_id": 35851884258,
+          "authority": "worker-proposal-only"
+        },
+        {
+          "package_id": "FCP-054",
+          "feature_branch": "feature/fcp-054-pool-g1",
+          "worker_pr": 20,
+          "exact_head": "ea81a427d5921f4bd9e76f9d9a9cd057905e99b4",
+          "ci_run_id": 36049808987,
+          "ci_result": "success"
+        },
+        {
+          "package_id": "FCP-056",
+          "feature_branch": "feature/fcp-056-pool-g1",
+          "worker_pr": 15,
+          "exact_head": "ace25fcf5ab5f463bc04c75afcb2598dd726ff32",
+          "ci_run_id": 35986941400,
+          "ci_result": "success"
+        },
+        {
+          "package_id": "FCP-062",
+          "feature_branch": "feature/fcp-062-pool-g1",
+          "worker_pr": 25,
+          "exact_head": "0e1b01eeab371abcdb58753c8187cd6cb6856821",
+          "ci_run_id": 36056580821,
+          "ci_result": "success"
+        },
+        {
+          "package_id": "FCP-065",
+          "feature_branch": "feature/fcp-065-pool-g1",
+          "worker_pr": 27,
+          "exact_head": "0fe766be15b5bdd44bfb70007393fad94ae43b5a",
+          "ci_run_id": 36058814049,
+          "ci_result": "success"
+        }
+      ],
+      "composition_required": true,
+      "next_action": "Prepare worker-only composition of the verified exact predecessor heads on current sanitized worker main; run complete exact-head Worker CI. Only then publish its SHA as proposal base and claim FCP-077. Keep FCP-049 live acceptance separate."
     }
   ],
   "recovery_queue": [],
