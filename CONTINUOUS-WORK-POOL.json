@@ -12,12 +12,12 @@
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
   "published_at": "2026-09-26T20:02:06.879Z",
   "summary": {
-    "total_remaining_worker_tasks": 132,
+    "total_remaining_worker_tasks": 133,
     "completed_worker_prs_awaiting_trusted_review": 165,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-393 is active on feature/wcp-393-competition-game-filter-g1 from exact green predecessor HEAD 9988284a0536acb5b3ac0b5b91d3205bfd2019cb. Implement the game filter while preserving WCP-391 status and visibility behavior; leave WCP-392 and all other claims untouched.",
+    "next_required_action": "WCP-394 is active on feature/wcp-394-user-display-name-validation-g1 from sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d. Add direct User displayName NotBlank/80-character boundary regressions only; leave all foreign claims untouched.",
     "composition_preparable": 0,
     "immediately_actionable": 0,
     "must_continue": true
@@ -17905,6 +17905,86 @@
         "templates/competition/index.html.twig",
         "tests/Controller/Competition/CompetitionGameFilterTest.php"
       ]
+    },
+    {
+      "priority": 174,
+      "package_id": "WCP-394",
+      "title": "Protect User display-name validation boundaries",
+      "risk": "low",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-394-user-display-name-validation-g1",
+      "suggested_branch": "feature/wcp-394-user-display-name-validation-g1",
+      "base_branch": "main",
+      "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "objective": "Add direct entity-validation regressions for the existing User displayName NotBlank and 80-character constraints, including trimming and the exact valid/invalid length boundary. Do not change production code, persistence mapping, schema, or account behavior.",
+      "allowed_paths": [
+        "tests/Entity/UserDisplayNameValidationTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/",
+        "src/",
+        "templates/",
+        "assets/",
+        "public/"
+      ],
+      "deliverables": [
+        "Verify blank and whitespace-only display names violate the User entity's NotBlank constraint after its setter normalization.",
+        "Verify an 80-character display name is valid and an 81-character value violates the entity's Length(max: 80) constraint.",
+        "Keep the change test-only; no schema or runtime behavior changes."
+      ],
+      "tests": [
+        "php bin/phpunit tests/Entity/UserDisplayNameValidationTest.php",
+        "PHPStan level 8 and complete Worker CI on the exact final HEAD, including PostgreSQL 18 migration-chain checks."
+      ],
+      "completion_report": [
+        "Exact final Worker HEAD and sanitized main base SHA.",
+        "Complete changed-file list and Worker PR.",
+        "Blank, whitespace, 80-character and 81-character entity-validation results.",
+        "Exact-head PHPStan and Worker CI results.",
+        "Confirmation that only regression tests changed; no schema or product runtime code changed."
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "preserve-existing-User-validation-and-account-security-invariants",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_base_branch": "main",
+      "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "resume_branch": "feature/wcp-394-user-display-name-validation-g1",
+      "proposal_kind": "worker_only",
+      "collision_check": {
+        "compared_against": "Fresh pool blob b536674843f6c7cf4f058a6205ed4de24dc04d4e, all published task path scopes, main tree and exact sanitized Worker main f1a246c64527ef3ad51f7490773d9bbf9d42be5d.",
+        "result": "Fresh continuous/work-pool-v4 snapshot is rechecked at publication; sanitized Worker main is f1a246c64527ef3ad51f7490773d9bbf9d42be5d. No published active or claim-locked allowed path overlaps tests/Entity/UserDisplayNameValidationTest.php. WCP-392 main-menu paths and WCP-393 competition-filter paths are disjoint; WCP-393's unregistered notification branch is not modified. Published unclaimed FCPs remain dependency-blocked and no composition is prepared; this proposal is test-only against existing User entity metadata.",
+        "paths": [
+          "tests/Entity/UserDisplayNameValidationTest.php"
+        ]
+      },
+      "claimed_on": "2026-09-26T20:04:43.431Z",
+      "claim_state": "active",
+      "last_checkpoint_at": "2026-09-26T20:04:43.431Z",
+      "next_action": "Add focused direct User displayName constraint-boundary tests in the single allowed test path, then run targeted PHPUnit and complete exact-head Worker CI.",
+      "checkpoint_paths": []
     }
   ],
   "recovery_queue": [],
