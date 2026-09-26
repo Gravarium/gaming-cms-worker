@@ -22855,20 +22855,21 @@
         "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
         "feature_branch": "c5cf666a7b4640f13286f7fc30daf54bded39025"
       },
-      "next_action": "Wait for complete exact-head Worker CI run 36279761578; diagnose and repair concrete failures on this same feature branch, then update this checkpoint.",
+      "next_action": "On the same branch, expect HTTP 422 for forms rejected by missing or invalid CSRF, preserve the unchanged-database assertions, then rerun full exact-head CI.",
       "worker_pr": 225,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/225",
       "draft_pr": false,
       "pr_state": "open_ci_pending",
       "last_ci_run_id": 36279761578,
-      "last_ci_result": "in_progress",
+      "last_ci_result": "failure",
       "ci_run_id": 36279761578,
-      "ci_result": "in_progress",
+      "ci_result": "failure",
       "ci_attempts": [
         {
           "run_id": 36279761578,
           "head": "c5cf666a7b4640f13286f7fc30daf54bded39025",
-          "result": "in_progress"
+          "result": "failure",
+          "note": "PHPStan, PHP/Symfony checks and PostgreSQL migrations passed. PHPUnit found one assertion mismatch: a submitted storage form with missing/invalid CSRF returns HTTP 422; the test expected any successful response. Persisted-state checks remain the acceptance criterion."
         }
       ]
     },
