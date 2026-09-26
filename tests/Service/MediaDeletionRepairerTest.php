@@ -49,7 +49,9 @@ final class MediaDeletionRepairerTest extends KernelTestCase
 
             self::assertGreaterThanOrEqual(1, $result['failed']);
             $em->clear();
-            self::assertInstanceOf(MediaAsset::class, $em->find(MediaAsset::class, $assetId));
+            $protectedAsset = $em->find(MediaAsset::class, $assetId);
+            self::assertInstanceOf(MediaAsset::class, $protectedAsset);
+            self::assertTrue($protectedAsset->isDeletionPending());
         } finally {
             $em->clear();
             $storedVideo = $em->find(Video::class, $videoId);
