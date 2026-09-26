@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-26T15:24:36.551Z",
+  "published_at": "2026-09-26T15:26:39.984Z",
   "summary": {
-    "total_remaining_worker_tasks": 125,
+    "total_remaining_worker_tasks": 126,
     "completed_worker_prs_awaiting_trusted_review": 119,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "Re-evaluate remaining unclaimed dependencies and continue with an independent disjoint Worker-only package.",
+    "next_required_action": "Continue the active WCP-345 guild event signup note boundary package.",
     "composition_preparable": 0,
     "immediately_actionable": 0,
     "must_continue": true
@@ -12532,6 +12532,95 @@
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/138",
       "pr_state": "draft",
       "last_verified_push_at": "2026-09-26T15:24:36.551Z"
+    },
+    {
+      "priority": 126,
+      "package_id": "WCP-345",
+      "title": "Enforce guild event signup note length",
+      "risk": "medium",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-345-guild-event-signup-note-limit-g1",
+      "suggested_branch": "feature/wcp-345-guild-event-signup-note-limit-g1",
+      "base_branch": "main",
+      "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "objective": "Enforce the existing 500-character guild event signup note limit server-side. Reject non-string and over-limit note values before the signup transaction and preserve the entire existing signup unchanged with a visible no-change notice. Preserve authentication, CSRF, guild membership, event visibility, response and role validation, capacity locking and waitlist behavior.",
+      "allowed_paths": [
+        "src/Controller/GuildPortalController.php",
+        "tests/Controller/GuildPortalSignupBoundaryTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/",
+        "src/Entity/",
+        "src/Repository/",
+        "src/Form/",
+        "templates/",
+        "assets/",
+        "public/"
+      ],
+      "deliverables": [
+        "Validate raw signup note type and enforce a 500-character maximum in the controller before transaction work.",
+        "Show clear no-change feedback and leave existing signup state untouched when input is malformed or oversized.",
+        "Keep the rendered input's existing maxlength and valid signup behavior unchanged."
+      ],
+      "tests": [
+        "Functional regression submits a 501-character note with valid authentication, owned character and CSRF; verifies the visible no-change notice and existing signup fields remain unchanged.",
+        "Functional boundary coverage verifies a valid 500-character note is stored.",
+        "PHPStan level 8.",
+        "Complete Worker CI on the exact final HEAD."
+      ],
+      "completion_report": [
+        "exact final Worker HEAD and sanitized main base SHA",
+        "complete changed-file list and Worker PR",
+        "oversized and maximum-length signup tests, PHPStan level 8 and exact-head Worker CI results",
+        "confirmation no schema or event-capacity behavior changed"
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "no-secrets-or-trusted-private-runtime-in-worker-source",
+        "preserve guild ownership, event visibility, CSRF, transactional capacity and waitlist invariants",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_base_branch": "main",
+      "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "resume_branch": "feature/wcp-345-guild-event-signup-note-limit-g1",
+      "proposal_kind": "worker_only",
+      "collision_check": {
+        "compared_against": "all published current work-pool-v4 task allowlists and active/locked claims through WCP-344; exact paths checked against sanitized main at f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+        "result": "Both paths are absent from every current allowlist and claim. WCP-344 is confined to ExtensionRuntimeBroker and its dedicated boundary test. The existing guild signup input maxlength is 500; no template, entity, migration, DI or private-runtime path is needed.",
+        "paths": [
+          "src/Controller/GuildPortalController.php",
+          "tests/Controller/GuildPortalSignupBoundaryTest.php"
+        ]
+      },
+      "claimed_on": "2026-09-26T15:26:39.984Z",
+      "claim_state": "active_worker_claim",
+      "last_checkpoint_at": "2026-09-26T15:26:39.984Z",
+      "next_action": "Add the server-side 500-character note boundary and functional no-change/boundary regressions on exact sanitized main.",
+      "checkpoint_paths": [
+        "src/Controller/GuildPortalController.php",
+        "tests/Controller/GuildPortalSignupBoundaryTest.php"
+      ]
     }
   ],
   "recovery_queue": [],
