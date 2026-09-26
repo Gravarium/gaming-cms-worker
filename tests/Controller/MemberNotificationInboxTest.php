@@ -107,14 +107,9 @@ final class MemberNotificationInboxTest extends WebTestCase
         $id = $notification->getId();
         self::assertNotNull($id);
 
-        $client->loginUser($owner);
-        $crawler = $client->request('GET', '/guild-area/notifications');
-        $token = (string) $crawler
-            ->filter('form[action="/guild-area/notifications/'.$id.'/read"] input[name="_token"]')
-            ->attr('value');
-
-        $client->loginUser($otherUser);
-        $client->request('POST', '/guild-area/notifications/'.$id.'/read', ['_token' => $token]);
+        $attackerClient = static::createClient();
+        $attackerClient->loginUser($otherUser);
+        $attackerClient->request('POST', '/guild-area/notifications/'.$id.'/read');
         self::assertResponseStatusCodeSame(404);
         self::assertNull($notification->getReadAt());
 
