@@ -17,7 +17,7 @@
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-428 PR #224 is ready for Trusted review at exact green head 22546c5bc24b77be98e0382e9253afcfadc3254b; keep the claim locked and continue with an independent Worker package.",
+    "next_required_action": "WCP-432 is claimed on sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d; create its exclusive claim and feature branches and add test-only access-role deletion security regressions.",
     "composition_preparable": 0,
     "immediately_actionable": 0,
     "must_continue": true
@@ -22871,6 +22871,97 @@
           "result": "in_progress"
         }
       ]
+    },
+    {
+      "priority": 212,
+      "package_id": "WCP-432",
+      "title": "Protect access-role deletion authorization and assignment invariants",
+      "risk": "low",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-432-access-role-deletion-g1",
+      "suggested_branch": "feature/wcp-432-access-role-deletion-g1",
+      "base_branch": "main",
+      "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "objective": "Add test-only functional security regressions for deleting access roles. Without CMS_USERS_MANAGE the index and delete route are denied; invalid or missing CSRF cannot delete an eligible role; a valid rendered token can delete only an unassigned non-system role; system roles and roles assigned to users remain persisted even when a previously rendered valid token is submitted.",
+      "allowed_paths": [
+        "tests/Controller/AdminAccessRoleDeletionSecurityTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/",
+        "src/",
+        "templates/",
+        "assets/",
+        "public/"
+      ],
+      "deliverables": [
+        "Verify a user without CMS_USERS_MANAGE receives 403 for the role index and deletion route, with the role unchanged.",
+        "Verify missing and invalid CSRF tokens cannot delete an unassigned non-system role.",
+        "Verify the rendered delete token removes only the synthetic unassigned non-system role.",
+        "Verify a system role and a user-assigned role remain persisted and are not offered a delete form, including a valid token rendered before the protected state is applied.",
+        "Only tests/Controller/AdminAccessRoleDeletionSecurityTest.php changes."
+      ],
+      "tests": [
+        "php bin/phpunit tests/Controller/AdminAccessRoleDeletionSecurityTest.php",
+        "Relevant existing access-role and permission-delegation tests remain green.",
+        "PHPStan level 8 and complete Worker CI on exact final HEAD, including PostgreSQL 18 migration-chain checks."
+      ],
+      "completion_report": [
+        "Exact sanitized main base SHA and final Worker HEAD.",
+        "Complete changed-path list and Worker PR.",
+        "Permission denial, missing/invalid CSRF non-mutation, allowed deletion, protected role preservation, and synthetic fixture evidence.",
+        "Exact-head PHPStan and full Worker CI."
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "preserve-CMS_USERS_MANAGE-authorization-and-CSRF-validation-before-deletion",
+        "never-delete-system-or-user-assigned-roles",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "proposal_kind": "worker_only",
+      "proposal_dependency_evidence": [],
+      "collision_check": {
+        "compared_against": "Fresh continuous/work-pool-v4 blob a3f3d73062e56c345b268c60ca28044ca4dff69c, all active and claim-locked allowlists, and exact sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d.",
+        "result": "No active or claim-locked claim owns tests/Controller/AdminAccessRoleDeletionSecurityTest.php. Main's AdminAccessRoleController exposes a CMS_USERS_MANAGE-protected POST delete route with role-specific CSRF and guards against deleting system or assigned roles, but code search for app_admin_access_role_delete finds the controller and index template only, with no route-level functional test. The locked WCP-415 access-role member browser uses a separate test path; current active WCP claims also use disjoint test paths. The proposed change is test-only.",
+        "paths": [
+          "tests/Controller/AdminAccessRoleDeletionSecurityTest.php"
+        ]
+      },
+      "claimed_on": "2026-09-26T23:34:04.139Z",
+      "claim_state": "active",
+      "active_base_branch": "main",
+      "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "resume_branch": "feature/wcp-432-access-role-deletion-g1",
+      "last_checkpoint_at": "2026-09-26T23:34:04.139Z",
+      "last_verified_push_at": "2026-09-26T23:34:04.139Z",
+      "checkpoint_paths": [
+        "tests/Controller/AdminAccessRoleDeletionSecurityTest.php"
+      ],
+      "branch_heads": {
+        "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+        "feature_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d"
+      },
+      "next_action": "Create the exclusive claim and feature branches from sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d, then implement the allowed test-only regressions."
     }
   ],
   "recovery_queue": [],
