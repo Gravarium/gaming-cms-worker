@@ -1,0 +1,57 @@
+{% extends 'base.html.twig' %}
+{% block title %}Game Hubs verwalten | Gaming CMS{% endblock %}
+{% block body %}
+<header class="topbar">
+    <a class="brand" href="{{ path('app_admin_dashboard') }}">Gaming CMS</a>
+    <nav class="top-actions">
+        {% if gamesWithoutEntries %}<a class="button-link" href="{{ path('app_admin_game_catalogue_new') }}">Game Hub anlegen</a>{% endif %}
+        <a class="button-link button-secondary" href="{{ path('app_admin_gaming_index') }}">Gaming und Gilden</a>
+        <a class="button-link button-secondary" href="{{ path('app_admin_dashboard') }}">Übersicht</a>
+    </nav>
+</header>
+<main class="dashboard">
+    <p class="eyebrow">Gaming-Modul</p>
+    <h1>Game Hubs verwalten</h1>
+    <p>Erstelle für vorhandene Spiele einen öffentlichen Hub und pflege Kurzbeschreibung, Entwickler, Publisher und Genres.</p>
+    {% if not moduleEnabled %}<div class="alert" role="status">Das Gaming-Modul ist deaktiviert. Einträge bleiben gespeichert, sind aber öffentlich nicht erreichbar.</div>{% endif %}
+    {% for message in app.flashes('success') %}<div class="notice">{{ message }}</div>{% endfor %}
+    {% for message in app.flashes('error') %}<div class="alert">{{ message }}</div>{% endfor %}
+
+    <h2>Game Hubs</h2>
+    <div class="table-wrap"><table><thead><tr><th>Spiel</th><th>Status</th><th>Publisher</th><th>Entwickler</th><th>Aktionen</th></tr></thead><tbody>
+    {% for entry in entries %}
+        <tr>
+            <td>{{ entry.game.name }}</td>
+            <td>
+                {% if not moduleEnabled %}<span class="status status-disabled">Gaming-Modul deaktiviert</span>
+                {% elseif not entry.game.enabled %}<span class="status status-disabled">Spiel ausgeblendet</span>
+                {% elseif entry.enabled %}<span class="status status-ready">Öffentlich</span>
+                {% else %}<span class="status status-disabled">Im Katalog ausgeblendet</span>{% endif %}
+            </td>
+            <td>{{ entry.publisher ? entry.publisher.name : '—' }}</td>
+            <td>{{ entry.developer ?: '—' }}</td>
+            <td class="row-actions">
+                <a href="{{ path('app_admin_game_catalogue_edit', {id: entry.id}) }}">Bearbeiten</a>
+                {% if moduleEnabled and entry.isPublic %}<a href="{{ path('app_game_catalogue_show', {slug: entry.game.slug}) }}">Öffentlich ansehen</a>{% endif %}
+            </td>
+        </tr>
+    {% else %}<tr><td colspan="5">Noch keine Game Hubs vorhanden.</td></tr>{% endfor %}
+    </tbody></table></div>
+
+    <h2 class="section-heading">Spiele ohne Game Hub</h2>
+    <div class="table-wrap"><table><thead><tr><th>Spiel</th><th>Spielstatus</th><th>Aktion</th></tr></thead><tbody>
+    {% for game in gamesWithoutEntries %}
+        <tr>
+            <td>{{ game.name }}</td>
+            <td><span class="status {{ game.enabled ? 'status-ready' : 'status-disabled' }}">{{ game.enabled ? 'Sichtbar' : 'Ausgeblendet' }}</span></td>
+            <td><a href="{{ path('app_admin_game_catalogue_new', {game: game.id}) }}">Game Hub anlegen</a></td>
+        </tr>
+    {% else %}
+        <tr><td colspan="3">
+            {% if hasGames %}Jedes vorhandene Spiel hat bereits einen Game Hub. Ein ausgeblendeter Hub kann bearbeitet und wieder veröffentlicht werden.
+            {% else %}Es gibt noch keine Spiele. <a href="{{ path('app_admin_game_new') }}">Lege zuerst ein Spiel an.</a>{% endif %}
+        </td></tr>
+    {% endfor %}
+    </tbody></table></div>
+</main>
+{% endblock %}

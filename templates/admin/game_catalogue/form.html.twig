@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %}
+{% block title %}{{ heading }} | Gaming CMS{% endblock %}
+{% block body %}
+<header class="topbar">
+    <a class="brand" href="{{ path('app_admin_dashboard') }}">Gaming CMS</a>
+    <a class="button-link button-secondary" href="{{ path('app_admin_game_catalogue_index') }}">Zurück</a>
+</header>
+<main class="editor-shell">
+    <p class="eyebrow">Gaming-Modul</p>
+    <h1>{{ heading }}</h1>
+    {% if not moduleEnabled %}<div class="alert" role="status">Das Gaming-Modul ist deaktiviert. Gespeicherte öffentliche Hubs werden erst nach der Reaktivierung wieder angezeigt.</div>{% endif %}
+    {% if entry %}<p>Spiel: <strong>{{ entry.game.name }}</strong>. Dieses Spiel kann nach dem Anlegen des Hubs nicht geändert werden.</p>{% endif %}
+    {{ form_start(form, {attr: {class: 'content-form'}}) }}
+        {{ form_widget(form) }}
+        <button type="submit">{{ entry ? 'Änderungen speichern' : 'Game Hub speichern' }}</button>
+    {{ form_end(form) }}
+</main>
+{% endblock %}
