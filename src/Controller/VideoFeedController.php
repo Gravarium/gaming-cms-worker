@@ -28,7 +28,8 @@ final class VideoFeedController extends AbstractController
         $response->setPublic();
         $response->setMaxAge(300);
         $response->setSharedMaxAge(300);
-        $response->setEtag(hash('sha256', $response->getContent() ?? ''));
+        $rendered = $response->getContent();
+        $response->setEtag(hash('sha256', $rendered === false ? '' : $rendered));
         $response->isNotModified($request);
 
         return $response;
