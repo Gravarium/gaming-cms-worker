@@ -30,6 +30,8 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 #[IsGranted('ROLE_USER')]
 final class GuildPortalController extends AbstractController
 {
+    private const MAX_SIGNUP_NOTE_LENGTH = 500;
+
     public function __construct(
         private readonly GuildMemberRepository $members,
         private readonly GuildEventRepository $events,
@@ -128,7 +130,13 @@ final class GuildPortalController extends AbstractController
         }
         $role = (string) $request->request->get('role', 'other');
         if (!in_array($role, ['tank', 'heal', 'damage', 'support', 'other'], true)) { $role = 'other'; }
-        $note = (string) $request->request->get('note');
+        $rawNote = $request->request->get('note', '');
+        if (!is_string($rawNote) || mb_strlen($rawNote, 'UTF-8') > self::MAX_SIGNUP_NOTE_LENGTH) {
+            $this->addFlash('success', 'Die Notiz darf höchstens 500 Zeichen enthalten. Deine Anmeldung wurde nicht geändert.');
+
+            return $this->redirectToRoute('app_guild_portal_show', ['id' => $guild->getId()]);
+        }
+        $note = $rawNote;
         $actor = $this->currentUser();
 
         $response = $this->entityManager->wrapInTransaction(function (EntityManagerInterface $entityManager) use ($event, $characters, $member, $requestedResponse, $role, $note, $actor): string {
