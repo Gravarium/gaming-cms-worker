@@ -63,6 +63,13 @@ final class GuildApplicationTypeBoundaryTest extends KernelTestCase
         self::assertFalse($form->get('message')->isValid());
     }
 
+    public function testRejectsMessageBelowPersistedMinimumAtFieldLevel(): void
+    {
+        $form = $this->submitApplication(['message' => str_repeat('m', 19)]);
+
+        self::assertFalse($form->get('message')->isValid());
+    }
+
     public function testAllowsBlankOptionalCharacterClass(): void
     {
         $form = $this->submitApplication(['characterClass' => '']);
