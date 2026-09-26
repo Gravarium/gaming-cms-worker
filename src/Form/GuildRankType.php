@@ -11,6 +11,7 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\Length;
 
 /** @extends AbstractType<GuildRank> */
 final class GuildRankType extends AbstractType
@@ -18,7 +19,11 @@ final class GuildRankType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('name', null, ['label' => 'Rangname'])
+            ->add('name', null, [
+                'label' => 'Rangname',
+                'constraints' => [new Length(max: 100)],
+                'attr' => ['maxlength' => 100],
+            ])
             ->add('color', null, ['label' => 'Farbe (z. B. #8b5cf6)', 'required' => false])
             ->add('position', IntegerType::class, ['label' => 'Sortierung'])
             ->add('permissions', ChoiceType::class, [
