@@ -43,6 +43,10 @@ final class S3ObjectStorage
     ): string {
         $this->assertConfigured();
         $this->assertObjectKey($objectKey);
+        $resolvedContentType = $contentType === null || $contentType === ''
+            ? 'application/octet-stream'
+            : $contentType;
+        $this->assertContentType($resolvedContentType);
         if (!is_file($filePath) || !is_readable($filePath)) {
             throw new \RuntimeException('Die hochzuladende Datei ist nicht lesbar.');
         }
@@ -58,7 +62,7 @@ final class S3ObjectStorage
             throw new \RuntimeException('Die Prüfsumme der Datei konnte nicht erstellt werden.');
         }
         [$url, $headers, $encodedKey] = $this->signedRequest('PUT', $objectKey, $payloadHash);
-        $headers['Content-Type'] = $contentType ?: 'application/octet-stream';
+        $headers['Content-Type'] = $resolvedContentType;
 
         $stream = fopen($filePath, 'rb');
         if ($stream === false) {
@@ -168,6 +172,31 @@ final class S3ObjectStorage
             || mb_strlen($objectKey) > 500
             || str_starts_with($objectKey, '/')
             || str_contains($objectKey, '\\')
+            || preg_match('//u', $objectKey) !== 1
+            || preg_match('/[\x00-\x1F\x7F]/', $objectKey) === 1
+        ) {
+            throw new \DomainException('Der Storage-Objektschlüssel ist ungültig.');
+        }
+
+        foreach (explode('/', $objectKey) as $segment) {
+            if ($segment === '' || $segment === '.' || $segment === '..') {
+                throw new \DomainException('Der Storage-Objektschlüssel ist ungültig.');
+            }
+        }
+    }
+
+    private function assertContentType(string $contentType): void
+    {
+        if (strlen($contentType) > 255
+            || preg_match('/[^\x20-\x7E]/', $contentType) === 1
+            || preg_match(
+                '~\A[A-Za-z0-9!#    private function assertObjectKey(string $objectKey): void
+    {
+        if ($objectKey === ''
+            || $objectKey !== trim($objectKey)
+            || mb_strlen($objectKey) > 500
+            || str_starts_with($objectKey, '/')
+            || str_contains($objectKey, '\\')
             || preg_match('/[\x00-\x1F\x7F]/u', $objectKey) === 1
         ) {
             throw new \DomainException('Der Storage-Objektschlüssel ist ungültig.');
@@ -182,6 +211,131 @@ final class S3ObjectStorage
 
     private function assertPublicBaseUrl(string $url): void
     {
+        $parts = parse_url($url);
+        if (!is_array($parts)
+            || !isset($parts['scheme'], $parts['host'])
+            || !in_array(strtolower((string) $parts['scheme']), ['http', 'https'], true)
+            || isset($parts['user'])
+            || isset($parts['pass'])
+            || isset($parts['query'])
+            || isset($parts['fragment'])
+        ) {
+            throw new \DomainException('Die öffentliche Storage-Adresse ist ungültig.');
+        }
+    }
+^_.+-]+/[A-Za-z0-9!#    private function assertObjectKey(string $objectKey): void
+    {
+        if ($objectKey === ''
+            || $objectKey !== trim($objectKey)
+            || mb_strlen($objectKey) > 500
+            || str_starts_with($objectKey, '/')
+            || str_contains($objectKey, '\\')
+            || preg_match('/[\x00-\x1F\x7F]/u', $objectKey) === 1
+        ) {
+            throw new \DomainException('Der Storage-Objektschlüssel ist ungültig.');
+        }
+
+        foreach (explode('/', $objectKey) as $segment) {
+            if ($segment === '' || $segment === '.' || $segment === '..') {
+                throw new \DomainException('Der Storage-Objektschlüssel ist ungültig.');
+            }
+        }
+    }
+
+    private function assertPublicBaseUrl(string $url): void
+    {
+        $parts = parse_url($url);
+        if (!is_array($parts)
+            || !isset($parts['scheme'], $parts['host'])
+            || !in_array(strtolower((string) $parts['scheme']), ['http', 'https'], true)
+            || isset($parts['user'])
+            || isset($parts['pass'])
+            || isset($parts['query'])
+            || isset($parts['fragment'])
+        ) {
+            throw new \DomainException('Die öffentliche Storage-Adresse ist ungültig.');
+        }
+    }
+^_.+-]+(?: *; *[A-Za-z0-9!#    private function assertObjectKey(string $objectKey): void
+    {
+        if ($objectKey === ''
+            || $objectKey !== trim($objectKey)
+            || mb_strlen($objectKey) > 500
+            || str_starts_with($objectKey, '/')
+            || str_contains($objectKey, '\\')
+            || preg_match('/[\x00-\x1F\x7F]/u', $objectKey) === 1
+        ) {
+            throw new \DomainException('Der Storage-Objektschlüssel ist ungültig.');
+        }
+
+        foreach (explode('/', $objectKey) as $segment) {
+            if ($segment === '' || $segment === '.' || $segment === '..') {
+                throw new \DomainException('Der Storage-Objektschlüssel ist ungültig.');
+            }
+        }
+    }
+
+    private function assertPublicBaseUrl(string $url): void
+    {
+        $parts = parse_url($url);
+        if (!is_array($parts)
+            || !isset($parts['scheme'], $parts['host'])
+            || !in_array(strtolower((string) $parts['scheme']), ['http', 'https'], true)
+            || isset($parts['user'])
+            || isset($parts['pass'])
+            || isset($parts['query'])
+            || isset($parts['fragment'])
+        ) {
+            throw new \DomainException('Die öffentliche Storage-Adresse ist ungültig.');
+        }
+    }
+^_.+-]+ *= *(?:[A-Za-z0-9!#    private function assertObjectKey(string $objectKey): void
+    {
+        if ($objectKey === ''
+            || $objectKey !== trim($objectKey)
+            || mb_strlen($objectKey) > 500
+            || str_starts_with($objectKey, '/')
+            || str_contains($objectKey, '\\')
+            || preg_match('/[\x00-\x1F\x7F]/u', $objectKey) === 1
+        ) {
+            throw new \DomainException('Der Storage-Objektschlüssel ist ungültig.');
+        }
+
+        foreach (explode('/', $objectKey) as $segment) {
+            if ($segment === '' || $segment === '.' || $segment === '..') {
+                throw new \DomainException('Der Storage-Objektschlüssel ist ungültig.');
+            }
+        }
+    }
+
+    private function assertPublicBaseUrl(string $url): void
+    {
+        $parts = parse_url($url);
+        if (!is_array($parts)
+            || !isset($parts['scheme'], $parts['host'])
+            || !in_array(strtolower((string) $parts['scheme']), ['http', 'https'], true)
+            || isset($parts['user'])
+            || isset($parts['pass'])
+            || isset($parts['query'])
+            || isset($parts['fragment'])
+        ) {
+            throw new \DomainException('Die öffentliche Storage-Adresse ist ungültig.');
+        }
+    }
+^_.+-]+|"[^"]{0,127}"))*\z~',
+                $contentType,
+            ) !== 1
+        ) {
+            throw new \DomainException('Der Content-Type des S3-Uploads ist ungültig.');
+        }
+    }
+
+    private function assertPublicBaseUrl(string $url): void
+    {
+        if ($url === '' || strlen($url) > 500 || preg_match('/[\x00-\x20\x7F]/', $url) === 1) {
+            throw new \DomainException('Die öffentliche Storage-Adresse ist ungültig.');
+        }
+
         $parts = parse_url($url);
         if (!is_array($parts)
             || !isset($parts['scheme'], $parts['host'])
