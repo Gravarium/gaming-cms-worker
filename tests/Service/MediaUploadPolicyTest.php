@@ -49,6 +49,15 @@ final class MediaUploadPolicyTest extends TestCase
         }
     }
 
+    public function testRejectsMalformedOriginalNameEncoding(): void
+    {
+        $file = $this->upload("notes".chr(0xB1).".txt", 'safe text');
+
+        $this->expectException(\DomainException::class);
+        $this->expectExceptionMessage('ursprüngliche Dateiname');
+        $this->policy()->assertSafe($file, 'content');
+    }
+
     public function testRejectsInvalidModuleKeyBeforeStoragePathConstruction(): void
     {
         $this->expectException(\DomainException::class);
@@ -83,6 +92,25 @@ final class MediaUploadPolicyTest extends TestCase
         $this->policy()->assertSafe($file, 'content');
     }
 
+    public function testRejectsImageWithExcessiveDimensions(): void
+    {
+        $file = $this->upload('huge.png', $this->pngHeader(9000, 1));
+
+        $this->expectException(\DomainException::class);
+        $this->expectExceptionMessage('Bildabmessungen');
+        $this->policy()->assertSafe($file, 'content');
+    }
+
+    public function testRejectsDeepJsonBeforeUnboundedDecode(): void
+    {
+        $json = str_repeat('[', 33).'0'.str_repeat(']', 33);
+        $file = $this->upload('deep.json', $json);
+
+        $this->expectException(\DomainException::class);
+        $this->expectExceptionMessage('JSON-Datei');
+        $this->policy()->assertSafe($file, 'content');
+    }
+
     private function policy(): MediaUploadPolicy
     {
         return new MediaUploadPolicy(new MediaMalwareScanner('off', ''));
@@ -108,5 +136,18 @@ final class MediaUploadPolicyTest extends TestCase
                 return $this->untrustedOriginalName;
             }
         };
+    }
+
+    private function pngHeader(int $width, int $height): string
+    {
+        $ihdr = 'IHDR'.pack('N2', $width, $height)."\x08\x02\x00\x00\x00";
+
+        return "\x89PNG\r\n\x1A\n"
+            .pack('N', strlen($ihdr))
+            .$ihdr
+            .pack('N', crc32($ihdr))
+            .pack('N', 0)
+            .'IEND'
+            .pack('N', crc32('IEND'));
     }
 }
