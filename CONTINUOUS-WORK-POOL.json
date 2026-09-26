@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-26T14:27:12.384Z",
+  "published_at": "2026-09-26T14:27:51.696Z",
   "summary": {
-    "total_remaining_worker_tasks": 117,
+    "total_remaining_worker_tasks": 118,
     "completed_worker_prs_awaiting_trusted_review": 111,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "Continue WCP-336 on its exact branch; all remaining FCPs are dependency-blocked and existing claims remain locked.",
+    "next_required_action": "Continue active independent Worker claims (WCP-336, WCP-337) on their exact branches; preserve foreign claims and re-evaluate dependency-safe work after each green CI.",
     "composition_preparable": 0,
     "immediately_actionable": 0,
     "must_continue": true
@@ -11655,6 +11655,97 @@
         "tests/ExternalConnector/ExternalConnectorHealthRecorderTest.php"
       ],
       "last_verified_push_at": "2026-09-26T14:27:12.384Z"
+    },
+    {
+      "priority": 118,
+      "package_id": "WCP-337",
+      "title": "Reject failed-message IDs outside the PHP integer range",
+      "risk": "medium",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-337-failed-message-id-range-g1",
+      "suggested_branch": "feature/wcp-337-failed-message-id-range-g1",
+      "base_branch": "main",
+      "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "objective": "Preserve FailedMessageRecovery's canonical positive decimal ID format while rejecting values outside the platform PHP integer range before calling the failed transport receiver. Avoid passing an unrepresentable identifier into the transport lookup. Preserve behavior for in-range IDs and do not change retry stamps, dispatch/ack ordering, transport, controller authorization or CSRF behavior.",
+      "allowed_paths": [
+        "src/Messenger/FailedMessageRecovery.php",
+        "tests/Messenger/FailedMessageRecoveryTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/",
+        "src/Controller/",
+        "src/Entity/",
+        "src/Form/",
+        "src/Repository/",
+        "src/Service/",
+        "templates/",
+        "assets/",
+        "public/"
+      ],
+      "deliverables": [
+        "Validate the canonical positive decimal ID against PHP_INT_MAX before failedReceiver->find().",
+        "Return false without receiver lookup, dispatch or ack for out-of-range IDs.",
+        "Keep valid in-range ID lookup and retry semantics unchanged."
+      ],
+      "tests": [
+        "A focused test supplies (string) PHP_INT_MAX followed by an additional digit and proves retry() returns false without receiver lookup, dispatch or ack.",
+        "Keep invalid and missing ID behavior unchanged.",
+        "PHPStan level 8.",
+        "Complete Worker CI on the exact final HEAD."
+      ],
+      "completion_report": [
+        "exact final Worker HEAD and sanitized main base SHA",
+        "complete changed-file list and Worker PR",
+        "focused overflow-ID test and complete exact-head Worker CI result",
+        "out-of-range failed-message IDs are rejected before transport lookup"
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "no-secrets-or-trusted-private-runtime-in-worker-source",
+        "preserve at-least-once retry behavior, original failure retention on dispatch errors, and queue authorization",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_base_branch": "main",
+      "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "resume_branch": "feature/wcp-337-failed-message-id-range-g1",
+      "proposal_kind": "worker_only",
+      "collision_check": {
+        "compared_against": "all current continuous/work-pool-v4 task allowlists and active/locked claims through WCP-336; exact WCP-337 branch names and the recovery service/test paths checked against sanitized main",
+        "result": "FailedMessageRecovery.php and its focused existing test path are not included in any published allowlist or claim. The work is isolated from the active health-recorder, connector-planner, backup-verifier, guild-ID and queue-controller paths; no shared migration, DI, template or workflow files are included.",
+        "paths": [
+          "src/Messenger/FailedMessageRecovery.php",
+          "tests/Messenger/FailedMessageRecoveryTest.php"
+        ]
+      },
+      "claimed_on": "2026-09-26T14:27:51.696Z",
+      "claim_state": "active_worker_claim",
+      "last_checkpoint_at": "2026-09-26T14:27:51.696Z",
+      "next_action": "Implement the integer-range guard and focused overflow test, then run complete exact-head Worker CI.",
+      "checkpoint_paths": [
+        "src/Messenger/FailedMessageRecovery.php",
+        "tests/Messenger/FailedMessageRecoveryTest.php"
+      ]
     }
   ],
   "recovery_queue": [],
