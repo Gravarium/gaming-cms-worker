@@ -10,16 +10,16 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-26T13:01:26.720Z",
+  "published_at": "2026-09-26T13:03:43.038Z",
   "summary": {
     "total_remaining_worker_tasks": 97,
-    "completed_worker_prs_awaiting_trusted_review": 90,
+    "completed_worker_prs_awaiting_trusted_review": 91,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
     "next_required_action": "Monitor WCP-316 exact-head CI run 36243841317; reconcile only after complete green CI.",
     "composition_preparable": 0,
-    "immediately_actionable": 2,
+    "immediately_actionable": 1,
     "must_continue": true
   },
   "rules": {
@@ -9281,7 +9281,7 @@
       "package_id": "WCP-315",
       "title": "Bound page layout context persistence identifier",
       "risk": "medium",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -9359,9 +9359,9 @@
         ]
       },
       "claimed_on": "2026-09-26T12:59:12.200Z",
-      "claim_state": "active_worker_claim",
-      "last_checkpoint_at": "2026-09-26T13:01:11.626Z",
-      "next_action": "Complete Worker CI on exact HEAD 7838c81d642cb4d419325da81b75d437e75428f2; repair any failures only within the two allowlisted files, then reconcile exact-head evidence.",
+      "claim_state": "locked_until_trusted_resolution",
+      "last_checkpoint_at": "2026-09-26T13:03:43.038Z",
+      "next_action": "Worker PR #109 is ready for trusted review; retain this claim lock until Trusted resolution.",
       "last_verified_push_at": "2026-09-26T13:01:11.626Z",
       "checkpoint_paths": [
         "src/Entity/PageLayout.php",
@@ -9370,7 +9370,19 @@
       "worker_pr": 109,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/109",
       "ci_run_id": 36243767688,
-      "ci_status": "in_progress"
+      "final_head": "7838c81d642cb4d419325da81b75d437e75428f2",
+      "ci_result": "success",
+      "completed_on": "2026-09-26T13:03:43.038Z",
+      "final_changed_paths": [
+        "src/Entity/PageLayout.php",
+        "tests/Entity/PageLayoutBoundaryTest.php"
+      ],
+      "test_evidence": [
+        "Exact-head Worker CI run 36243767688 succeeded on 7838c81d642cb4d419325da81b75d437e75428f2.",
+        "PHPStan level 8 completed with no errors; PHPUnit completed 432 tests and 1,865 assertions (one deprecation and one notice reported).",
+        "PostgreSQL 18 migration job succeeded with 39 migrations executed and no pending migrations.",
+        "Exact comparison against sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d contains only the two WCP-315 allowlisted paths."
+      ]
     },
     {
       "priority": 97,
