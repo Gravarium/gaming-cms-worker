@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-26T19:28:11.711Z",
+  "published_at": "2026-09-26T19:30:03.137Z",
   "summary": {
     "total_remaining_worker_tasks": 131,
-    "completed_worker_prs_awaiting_trusted_review": 159,
+    "completed_worker_prs_awaiting_trusted_review": 160,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-385 PR #179 is open; inspect queued Worker CI run 36266142287 on exact HEAD e9d4db8605908667e936ba07ceb0dec7a7eaf894. Continue WCP-381, WCP-383 and WCP-384 on their separately owned branches.",
+    "next_required_action": "WCP-385 PR #179 is ready for Trusted review with green exact-head Worker CI run 36266142287; its claim remains locked. Continue independent Worker module work on other paths.",
     "composition_preparable": 0,
     "immediately_actionable": 0,
     "must_continue": true
@@ -16859,7 +16859,7 @@
       "package_id": "WCP-385",
       "title": "Preview unpublished videos from administration",
       "risk": "medium",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -16943,21 +16943,29 @@
         ]
       },
       "claimed_on": "2026-09-26T19:23:05.127Z",
-      "claim_state": "active",
-      "last_checkpoint_at": "2026-09-26T19:28:11.711Z",
-      "next_action": "Inspect Worker CI run 36266142287 on exact HEAD e9d4db8605908667e936ba07ceb0dec7a7eaf894; fix any failure on this branch, then finalize the PR and pool evidence.",
+      "claim_state": "locked_until_trusted_resolution",
+      "last_checkpoint_at": "2026-09-26T19:30:03.137Z",
+      "next_action": "Remain claim-locked while awaiting Trusted review; proceed with the next dependency-safe or independent Worker proposal. Do not merge or deploy.",
       "checkpoint_paths": [
         "src/Controller/AdminVideoPreviewController.php",
         "templates/admin/video/form.html.twig",
         "templates/admin/video/preview.html.twig",
         "tests/Controller/VideoDraftPreviewTest.php"
       ],
-      "last_verified_push_at": "2026-09-26T19:28:11.711Z",
+      "last_verified_push_at": "2026-09-26T19:30:03.137Z",
       "worker_pr": 179,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/179",
       "pr_state": "open",
       "ci_run_id": 36266142287,
-      "ci_result": "pending"
+      "ci_result": "success",
+      "final_head": "e9d4db8605908667e936ba07ceb0dec7a7eaf894",
+      "completed_at": "2026-09-26T19:30:03.137Z",
+      "final_changed_paths": [
+        "src/Controller/AdminVideoPreviewController.php",
+        "templates/admin/video/form.html.twig",
+        "templates/admin/video/preview.html.twig",
+        "tests/Controller/VideoDraftPreviewTest.php"
+      ]
     },
     {
       "priority": 166,
