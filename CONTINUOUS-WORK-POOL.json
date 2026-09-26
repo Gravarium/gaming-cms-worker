@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-26T17:24:23.841Z",
+  "published_at": "2026-09-26T17:25:57.796Z",
   "summary": {
-    "total_remaining_worker_tasks": 131,
+    "total_remaining_worker_tasks": 132,
     "completed_worker_prs_awaiting_trusted_review": 139,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "Continue disjoint active WCP-364 work; re-evaluate blocked FCP dependencies after exact-head CI.",
+    "next_required_action": "Continue disjoint active WCP-364 and WCP-365 work; re-evaluate blocked FCP dependencies after exact-head CI.",
     "composition_preparable": 0,
     "immediately_actionable": 0,
     "must_continue": true
@@ -14706,6 +14706,100 @@
         "tests/Form/ContentReleaseTypeBoundaryTest.php"
       ],
       "last_verified_push_at": "2026-09-26T17:24:07.222Z"
+    },
+    {
+      "priority": 145,
+      "package_id": "WCP-365",
+      "title": "Align guild member form with stored name limits",
+      "risk": "low",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-365-guild-member-form-field-boundaries-g1",
+      "suggested_branch": "feature/wcp-365-guild-member-form-field-boundaries-g1",
+      "base_branch": "main",
+      "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "objective": "Align the GuildMemberType string inputs with the existing GuildMember limits: characterName 120, playerName 120, rankName 100 and optional characterClass 100. Add server-side Length constraints and matching maxlength hints while preserving optional-to-null normalization, guild-scoped rank choices, member ownership and authorization.",
+      "allowed_paths": [
+        "src/Form/GuildMemberType.php",
+        "tests/Form/GuildMemberTypeBoundaryTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/",
+        "src/Entity/GuildMember.php",
+        "src/Controller/",
+        "src/Repository/GuildMemberRepository.php",
+        "src/Form/GuildRankType.php",
+        "src/Form/GuildTeamType.php",
+        "src/Service/",
+        "templates/",
+        "assets/",
+        "public/"
+      ],
+      "deliverables": [
+        "Add Length constraints and matching maxlength values for characterName (120), playerName (120), rankName (100) and optional characterClass (100).",
+        "Add exact and one-over Unicode boundary tests for all four fields, rendered maxlength assertions, and blank optional player/class normalization coverage.",
+        "Preserve user/rank EntityType choices, guild scoping, field requiredness, entity, controller and persistence behavior."
+      ],
+      "tests": [
+        "Targeted real-form tests accept exact persisted limits and reject one-over values at the corresponding fields.",
+        "Form view exposes maxlength=120/120/100/100.",
+        "Verify optional blank playerName and characterClass remain valid and normalize as before.",
+        "PHPStan level 8 and complete Worker CI on exact final HEAD."
+      ],
+      "completion_report": [
+        "exact final Worker HEAD and sanitized main base SHA",
+        "complete changed-file list and Worker PR",
+        "exact/over-limit Unicode, optional field and maxlength evidence",
+        "PHPStan level 8 and exact-head Worker CI results",
+        "confirmation guild/rank choices, ownership, authorization and persistence behavior are unchanged"
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "no-secrets-or-trusted-private-runtime-in-worker-source",
+        "preserve guild ownership, rank scoping, authorization, CSRF and optional-field normalization",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_base_branch": "main",
+      "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "resume_branch": "feature/wcp-365-guild-member-form-field-boundaries-g1",
+      "proposal_kind": "worker_only",
+      "collision_check": {
+        "compared_against": "all current continuous/work-pool-v4 allowed-path scopes through WCP-364; exact paths checked against sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+        "result": "Neither exact path occurs in any current allowlist. WCP-320 is limited to the GuildMember entity and its entity test; active WCP-364 is limited to ContentReleaseType and its test. WCP-362 is complete and limited to MediaFolderType; no guild member form/controller path overlaps. No entity, controller, repository, migration, template, authorization, schema or private-runtime path is changed.",
+        "paths": [
+          "src/Form/GuildMemberType.php",
+          "tests/Form/GuildMemberTypeBoundaryTest.php"
+        ]
+      },
+      "claimed_on": "2026-09-26T17:25:57.796Z",
+      "claim_state": "active_worker_claim",
+      "last_checkpoint_at": "2026-09-26T17:25:57.796Z",
+      "next_action": "Add field Length/maxlength boundaries for the four static name fields and exact/over-limit form tests with optional blanks; then run exact-head Worker CI.",
+      "checkpoint_paths": [
+        "src/Form/GuildMemberType.php",
+        "tests/Form/GuildMemberTypeBoundaryTest.php"
+      ],
+      "last_verified_push_at": "2026-09-26T17:25:57.796Z"
     }
   ],
   "recovery_queue": [],
