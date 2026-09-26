@@ -50,18 +50,30 @@ final class ExternalMediaUploadTest extends TestCase
         new ExternalMediaUpload('media/'.str_repeat('a', 495), '/srv/cms/file.png');
     }
 
-    public function testRejectsMalformedUtf8AndControlCharactersInLocalPath(): void
+    public function testRejectsMalformedUtf8InLocalPath(): void
     {
         $this->expectException(\InvalidArgumentException::class);
 
-        new ExternalMediaUpload('media/file.png', "/srv/cms/\xC3\x28\n.png");
+        new ExternalMediaUpload('media/file.png', "/srv/cms/\xC3\x28.png");
     }
 
-    public function testRejectsNonAbsoluteAndOversizedLocalPaths(): void
+    public function testRejectsControlCharactersInLocalPath(): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+
+        new ExternalMediaUpload('media/file.png', "/srv/cms/file\r\n.png");
+    }
+
+    public function testRejectsNonAbsoluteLocalPath(): void
     {
         $this->expectException(\InvalidArgumentException::class);
 
         new ExternalMediaUpload('media/file.png', 'relative/file.png');
+    }
+
+    public function testRejectsOversizedLocalPath(): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
 
         new ExternalMediaUpload('media/file.png', '/'.str_repeat('a', 500));
     }
