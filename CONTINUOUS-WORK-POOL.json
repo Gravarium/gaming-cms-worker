@@ -17,7 +17,7 @@
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-416 PR #209 is worker-complete with exact-head CI success at d6f211be7e463dab0352f9f9e19bae48cb35d30e; reserve the next independent dependency-safe package without altering locked claims.",
+    "next_required_action": "WCP-418 is reserved on exact sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d; test module listing/toggle authorization and CSRF no-mutation in its exclusive test file.",
     "composition_preparable": 0,
     "immediately_actionable": 0,
     "must_continue": true
@@ -20970,6 +20970,93 @@
         "Awaiting Trusted review and Trusted integration CI."
       ],
       "trusted_follow_up": "Preserve CMS_VIDEO_MANAGE and delete CSRF when porting or changing the video manager in Trusted; run full Trusted CI."
+    },
+    {
+      "priority": 198,
+      "package_id": "WCP-418",
+      "title": "Verify module administration authorization and toggle CSRF",
+      "risk": "low",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-418-admin-module-security-g1",
+      "suggested_branch": "feature/wcp-418-admin-module-security-g1",
+      "base_branch": "main",
+      "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "objective": "Add functional security regressions for CMS module administration. Anonymous visitors must be redirected, authenticated users without CMS_SETTINGS_MANAGE must be denied from both the listing and toggle action, and missing CSRF must leave the selected module's enabled state unchanged for an authorized settings manager. Test-only; no runtime or schema changes.",
+      "allowed_paths": [
+        "tests/Controller/AdminModuleManagementSecurityTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/",
+        "src/",
+        "templates/",
+        "assets/",
+        "public/"
+      ],
+      "deliverables": [
+        "Verify anonymous access to /admin/modules redirects to login.",
+        "Verify an authenticated user without CMS_SETTINGS_MANAGE receives 403 for module listing and toggle POST.",
+        "Verify an authorized settings manager can open the module list and the notifications toggle token is rendered.",
+        "Verify toggle POST without a token returns 403 and leaves the module enabled state unchanged.",
+        "Keep the change test-only in the single allowed file."
+      ],
+      "tests": [
+        "php bin/phpunit tests/Controller/AdminModuleManagementSecurityTest.php",
+        "Existing ModuleLifecyclePresentationTest and CmsModuleStateTest remain green.",
+        "PHPStan level 8 and complete Worker CI on exact final HEAD, including PostgreSQL 18 migration-chain checks."
+      ],
+      "completion_report": [
+        "Exact sanitized main base SHA and final Worker HEAD.",
+        "Complete changed-file list and Worker PR.",
+        "Anonymous/unauthorized/authorized access and missing-token no-mutation results.",
+        "Exact-head PHPStan and full Worker CI results; confirm test-only and no schema changes."
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "preserve-CMS_SETTINGS_MANAGE-authorization-and-module-lifecycle-dependency-gates",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "proposal_kind": "worker_only",
+      "proposal_dependency_evidence": [],
+      "active_base_branch": "main",
+      "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "resume_branch": "feature/wcp-418-admin-module-security-g1",
+      "collision_check": {
+        "compared_against": "Fresh continuous/work-pool-v4 blob 640cec5bc60483611d54cacae78eb9d578a6e47c; all active and claim-locked allowlists; sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d.",
+        "result": "No active or claim-locked task owns the exact new module-security test path. Current active WCP-383 command tests, WCP-401 game catalogue, WCP-414 menu ordering, and WCP-415 access-role members use disjoint paths; WCP-416 and WCP-417 have completed and remain locked on unrelated paths. No runtime, template, schema, or migration changes.",
+        "paths": [
+          "tests/Controller/AdminModuleManagementSecurityTest.php"
+        ]
+      },
+      "claimed_on": "2026-09-26T22:15:48.331Z",
+      "claim_state": "active",
+      "last_checkpoint_at": "2026-09-26T22:15:48.331Z",
+      "checkpoint_paths": [],
+      "next_action": "Create claim and feature branches from exact sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d; add module listing/toggle authorization and CSRF no-mutation coverage in the single allowed test path.",
+      "branch_heads": {
+        "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+        "feature_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d"
+      }
     }
   ],
   "recovery_queue": [],
