@@ -13,6 +13,7 @@ use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 
 final class CompetitionEvidenceInputTest extends WebTestCase
@@ -28,7 +29,7 @@ final class CompetitionEvidenceInputTest extends WebTestCase
         self::assertSame(500, mb_strlen($locator, 'UTF-8'));
 
         $path = $this->evidencePath($fixture['competitionId'], $fixture['matchId']);
-        $token = $this->csrfToken($client, $fixture['matchId']);
+        $token = $this->csrfToken($client, $fixture['competitionId'], $fixture['matchId']);
         $client->request('POST', $path, [
             '_token' => $token,
             'participant' => (string) $fixture['participantId'],
@@ -69,7 +70,7 @@ final class CompetitionEvidenceInputTest extends WebTestCase
         $client->loginUser($fixture['outsider']);
 
         $client->request('POST', $this->evidencePath($fixture['competitionId'], $fixture['matchId']), [
-            '_token' => $this->csrfToken($client, $fixture['matchId']),
+            '_token' => $this->csrfToken($client, $fixture['competitionId'], $fixture['matchId']),
             'participant' => (string) $fixture['participantId'],
             'locator' => 'https://example.test/'.str_repeat('a', 480),
             'type' => CompetitionMatchEvidence::TYPE_URL,
@@ -172,12 +173,27 @@ final class CompetitionEvidenceInputTest extends WebTestCase
         return '/competitions/'.$competitionId.'/match/'.$matchId.'/evidence';
     }
 
-    private function csrfToken(KernelBrowser $client, int $matchId): string
+    private function csrfToken(KernelBrowser $client, int $competitionId, int $matchId): string
     {
-        return $client->getContainer()
-            ->get(CsrfTokenManagerInterface::class)
-            ->getToken('competition-evidence-'.$matchId)
-            ->getValue();
+        $client->request('GET', '/competitions/'.$competitionId);
+        $request = $client->getRequest();
+        if (!$request->hasSession()) {
+            throw new \LogicException('Competition show request did not start a session.');
+        }
+
+        $requestStack = $client->getContainer()->get(RequestStack::class);
+        $requestStack->push($request);
+        try {
+            $token = $client->getContainer()
+                ->get(CsrfTokenManagerInterface::class)
+                ->getToken('competition-evidence-'.$matchId)
+                ->getValue();
+            $request->getSession()->save();
+
+            return $token;
+        } finally {
+            $requestStack->pop();
+        }
     }
 
     private function evidenceCount(KernelBrowser $client, int $matchId): int
