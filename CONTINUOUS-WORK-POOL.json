@@ -10,7 +10,7 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-26T20:58:48.551Z",
+  "published_at": "2026-09-26T21:00:29.714Z",
   "summary": {
     "total_remaining_worker_tasks": 134,
     "completed_worker_prs_awaiting_trusted_review": 173,
@@ -19331,6 +19331,88 @@
         "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
         "feature_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d"
       }
+    },
+    {
+      "priority": 186,
+      "package_id": "WCP-406",
+      "title": "Guard public video release visibility",
+      "risk": "low",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-406-video-publication-visibility-g1",
+      "suggested_branch": "feature/wcp-406-video-publication-visibility-g1",
+      "base_branch": "main",
+      "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "objective": "Add focused functional regressions proving public video discovery and direct detail routes expose only enabled videos with a publication timestamp that is not in the future. Verify disabled, unpublished and future-dated videos stay out of the library and direct requests return 404. Test-only; do not change runtime behavior or schema.",
+      "allowed_paths": [
+        "tests/Controller/VideoPublicationVisibilityTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/",
+        "src/",
+        "templates/",
+        "assets/",
+        "public/"
+      ],
+      "deliverables": [
+        "Seed one enabled, published video and verify the public library links to it and the detail route succeeds.",
+        "Seed disabled, unpublished and future-dated videos and verify none appear in public library results.",
+        "Verify direct requests for disabled, unpublished and future-dated video slugs return 404.",
+        "Keep changes test-only in the single allowed file."
+      ],
+      "tests": [
+        "php bin/phpunit tests/Controller/VideoPublicationVisibilityTest.php",
+        "Existing VideoAccessTest and VideoEmbedResolverTest remain green.",
+        "PHPStan level 8 and complete Worker CI on the exact final HEAD, including PostgreSQL 18 migration-chain checks."
+      ],
+      "completion_report": [
+        "Exact final Worker HEAD and sanitized main base SHA.",
+        "Complete changed-file list and Worker PR.",
+        "Public listing and direct-route visibility results for enabled/published, disabled, unpublished and future-dated videos.",
+        "Exact-head PHPStan and full Worker CI results.",
+        "Confirmation that only the test file changed; no runtime or schema changes."
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "preserve-public-video-publication-and-enabled-state-visibility",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_base_branch": "main",
+      "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "resume_branch": "feature/wcp-406-video-publication-visibility-g1",
+      "proposal_kind": "worker_only",
+      "collision_check": {
+        "compared_against": "Fresh continuous/work-pool-v4 blob 515cdff3e3416c7ef69084ca44b97ab4a234129e, all active and claim-locked paths, and sanitized Worker main f1a246c64527ef3ad51f7490773d9bbf9d42be5d.",
+        "result": "No active or claim-locked task owns tests/Controller/VideoPublicationVisibilityTest.php. WCP-306 covers admin video slug handling and video entity constraints, not this public controller regression. WCP-404 competition visibility and WCP-405 member character editing use disjoint paths. Existing VideoAccessTest only verifies admin authentication and that the public library loads; it does not assert publication-state filtering or direct-detail 404 behavior. The public VideoRepository already defines the enabled/published/future-time boundary; this test-only package protects that behavior.",
+        "paths": [
+          "tests/Controller/VideoPublicationVisibilityTest.php"
+        ]
+      },
+      "claimed_on": "2026-09-26T21:00:29.714Z",
+      "claim_state": "active",
+      "last_checkpoint_at": "2026-09-26T21:00:29.714Z",
+      "checkpoint_paths": [],
+      "next_action": "Create exclusive claim and feature branches from sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d; add the public video visibility regression in the allowed test file."
     }
   ],
   "recovery_queue": [],
