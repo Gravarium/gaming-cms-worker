@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-26T12:07:21.929Z",
+  "published_at": "2026-09-26T12:12:51.066Z",
   "summary": {
-    "total_remaining_worker_tasks": 85,
+    "total_remaining_worker_tasks": 86,
     "completed_worker_prs_awaiting_trusted_review": 80,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "Re-evaluate the current pool, preserve all foreign and completed claim locks, and continue one independent safe Worker-only proposal.",
+    "next_required_action": "Implement WCP-305 on its exact sanitized main base while preserving WCP-304 and all foreign/completed claim locks; reconcile after exact-head green CI and continue.",
     "composition_preparable": 0,
     "immediately_actionable": 4,
     "must_continue": true
@@ -8179,6 +8179,96 @@
         "Exact-head Worker CI run 36240789900 succeeded on 203a274255cb9cbed257f0af08b224a6555fb72d.",
         "PHP/Symfony validation and application-test job 108400764536 passed PHPStan with no errors and 433 tests with 1,871 assertions; one PHPUnit deprecation and one notice were reported.",
         "PostgreSQL 18 migration-chain job 108400764653 passed."
+      ]
+    },
+    {
+      "priority": 86,
+      "package_id": "WCP-305",
+      "title": "Bound administrative notification persistence inputs",
+      "risk": "medium",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-305-admin-notification-storage-boundary-g1",
+      "suggested_branch": "feature/wcp-305-admin-notification-storage-boundary-g1",
+      "base_branch": "main",
+      "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "objective": "Reject oversized or malformed administrative notification values before normalization and persistence. Align type/title/link character limits with their mapped varchar lengths and place a finite UTF-8 byte/character ceiling on notification text, while preserving trim behavior and the existing local-only redirect guard.",
+      "allowed_paths": [
+        "src/Entity/AdminNotification.php",
+        "tests/Entity/AdminNotificationBoundaryTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/",
+        "src/Controller/",
+        "src/Form/",
+        "src/Repository/",
+        "templates/",
+        "assets/",
+        "public/"
+      ],
+      "deliverables": [
+        "Bound type to 60 UTF-8 characters/240 bytes and title to 180 characters/720 bytes, matching database columns.",
+        "Bound local notification links to 500 UTF-8 characters/2000 bytes before applying LocalRedirectTarget::requireSafe.",
+        "Bound message text to 4000 UTF-8 characters/16000 bytes; reject malformed UTF-8 or NUL-containing values without truncation.",
+        "Preserve existing whitespace normalization and safe local-link semantics for in-bound values; add positive and negative entity boundary tests."
+      ],
+      "tests": [
+        "Targeted AdminNotification boundary PHPUnit tests for exact varchar limits, multibyte boundaries, byte/character overflows and safe-link rejection.",
+        "PHPStan level 8.",
+        "Complete Worker CI on the exact final HEAD."
+      ],
+      "completion_report": [
+        "exact final Worker HEAD and sanitized main base SHA",
+        "complete changed-path list and Worker PR",
+        "targeted boundary tests and complete exact-head Worker CI result",
+        "per-field byte/character limits and preserved redirect safety semantics"
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "no-secrets-or-trusted-private-runtime-in-worker-source",
+        "preserve local-only notification redirect protection",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_base_branch": "main",
+      "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "resume_branch": "feature/wcp-305-admin-notification-storage-boundary-g1",
+      "proposal_kind": "worker_only",
+      "collision_check": {
+        "compared_against": "all current continuous/work-pool-v4 published allowlists, including completed WCP-128/WCP-129 and the foreign active WCP-304 claim; verified the exact paths in the pool and checked for existing WCP-305 branches and PRs",
+        "result": "disjoint from every current published allowlist and active claim; no controller, form, repository, migration, config, template or routing changes",
+        "paths": [
+          "src/Entity/AdminNotification.php",
+          "tests/Entity/AdminNotificationBoundaryTest.php"
+        ]
+      },
+      "claimed_on": "2026-09-26T12:12:51.066Z",
+      "claim_state": "active_worker_claim",
+      "next_action": "Implement only the two allowlisted files from the exact sanitized main SHA, open a Worker PR, run complete exact-head CI, and retain the claim until Trusted resolution.",
+      "last_verified_push_at": "2026-09-26T12:12:51.066Z",
+      "last_checkpoint_at": "2026-09-26T12:12:51.066Z",
+      "checkpoint_paths": [
+        "src/Entity/AdminNotification.php",
+        "tests/Entity/AdminNotificationBoundaryTest.php"
       ]
     }
   ],
