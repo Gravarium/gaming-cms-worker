@@ -198,11 +198,13 @@ final class AdminLayoutPageDirectoryTest extends WebTestCase
             }
         }
 
+        $entityManager->flush();
+
         $user = $entityManager->find(User::class, $userId);
         if ($user !== null) {
             $entityManager->remove($user);
+            $entityManager->flush();
         }
-        $entityManager->flush();
     }
 
     private function assertPrivateDirectoryHeaders(KernelBrowser $client): void
