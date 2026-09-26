@@ -6,6 +6,7 @@ namespace App\Controller;
 
 use App\Entity\AdminNotification;
 use App\Repository\AdminNotificationRepository;
+use App\Security\LocalRedirectTarget;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -29,9 +30,13 @@ final class AdminNotificationController extends AbstractController
     public function read(AdminNotification $notification, Request $request): Response
     {
         if (!$this->isCsrfTokenValid('read-notification-'.$notification->getId(), (string) $request->request->get('_token'))) { throw $this->createAccessDeniedException(); }
+        $redirectTarget = LocalRedirectTarget::normalize($notification->getLink());
         $notification->markRead();
         $this->entityManager->flush();
-        return $notification->getLink() ? $this->redirect($notification->getLink()) : $this->redirectToRoute('app_admin_notification_index');
+
+        return $redirectTarget !== null
+            ? $this->redirect($redirectTarget)
+            : $this->redirectToRoute('app_admin_notification_index');
     }
 
     #[Route('/read-all', name: 'app_admin_notification_read_all', methods: ['POST'])]
