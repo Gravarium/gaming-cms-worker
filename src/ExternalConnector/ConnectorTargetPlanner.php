@@ -17,6 +17,11 @@ final readonly class ConnectorTargetPlanner
     ) {
     }
 
+    public function maximumChoiceCount(): int
+    {
+        return count($this->catalog->indexed());
+    }
+
     /** @param list<string> $choices
      *  @return array{created: int, skipped: int, keys: list<string>, rejected: bool}
      */
