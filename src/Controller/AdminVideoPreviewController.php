@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace App\\Controller;
+namespace App\Controller;
 
-use App\\Entity\\Video;
-use App\\Service\\VideoEmbedResolver;
-use Symfony\\Bundle\\FrameworkBundle\\Controller\\AbstractController;
-use Symfony\\Component\\HttpFoundation\\Request;
-use Symfony\\Component\\HttpFoundation\\Response;
-use Symfony\\Component\\Routing\\Attribute\\Route;
-use Symfony\\Component\\Security\\Http\\Attribute\\IsGranted;
+use App\Entity\Video;
+use App\Service\VideoEmbedResolver;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/admin/videos')]
 #[IsGranted('CMS_VIDEO_MANAGE')]
