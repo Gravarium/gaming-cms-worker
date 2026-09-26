@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-26T23:23:48.091Z",
+  "published_at": "2026-09-26T23:27:10.231Z",
   "summary": {
     "total_remaining_worker_tasks": 134,
-    "completed_worker_prs_awaiting_trusted_review": 197,
+    "completed_worker_prs_awaiting_trusted_review": 198,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-428 CI run 36279274693 is queued for exact head 22546c5bc24b77be98e0382e9253afcfadc3254b after fixing PHPStan's always-true page type check; wait for complete exact-head CI and resolve failures on this branch.",
+    "next_required_action": "WCP-428 PR #224 is ready for Trusted review at exact green head 22546c5bc24b77be98e0382e9253afcfadc3254b; keep the claim locked and continue with an independent Worker package.",
     "composition_preparable": 0,
     "immediately_actionable": 0,
     "must_continue": true
@@ -22347,7 +22347,7 @@
       "package_id": "WCP-428",
       "title": "Browse and paginate all administrative content",
       "risk": "medium",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -22429,13 +22429,13 @@
         ]
       },
       "claimed_on": "2026-09-26T23:11:40.947Z",
-      "claim_state": "active",
+      "claim_state": "locked_until_trusted_resolution",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
       "active_head": "22546c5bc24b77be98e0382e9253afcfadc3254b",
       "resume_branch": "feature/wcp-428-content-browser-pagination-g1",
-      "last_checkpoint_at": "2026-09-26T23:23:48.091Z",
-      "last_verified_push_at": "2026-09-26T23:23:48.091Z",
+      "last_checkpoint_at": "2026-09-26T23:27:10.231Z",
+      "last_verified_push_at": "2026-09-26T23:27:10.231Z",
       "checkpoint_paths": [
         "src/Controller/AdminContentBrowserController.php",
         "src/Repository/AdminContentBrowserRepository.php",
@@ -22450,25 +22450,59 @@
       "next_action": "Worker CI run 36279274693 is queued for exact HEAD 22546c5bc24b77be98e0382e9253afcfadc3254b; diagnose and repair any failure on the same branch, then rerun full CI.",
       "worker_pr": 224,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/224",
-      "pr_state": "open_draft_for_ci",
-      "draft_pr": true,
+      "pr_state": "open_ready_for_review_unmerged",
+      "draft_pr": false,
       "last_ci_run_id": 36279274693,
-      "last_ci_result": "queued",
+      "last_ci_result": "success",
       "ci_run_id": 36279274693,
-      "ci_result": "queued",
+      "ci_result": "success",
       "ci_attempts": [
         {
           "run_id": 36279145108,
           "head": "1d4ac37c001540f156e58bf01e1c17d4976243b6",
           "result": "failure",
-          "note": "PHPStan Level 8 found an always-true is_string check after Symfony's typed InputBag page getter; switched to getString while retaining strict numeric and range validation. PostgreSQL migration validation passed."
+          "note": "PHPStan Level 8 found an always-true is_string check on Symfony's typed InputBag page value; switched to getString while retaining strict numeric and range validation. PostgreSQL migration validation passed."
         },
         {
           "run_id": 36279274693,
           "head": "22546c5bc24b77be98e0382e9253afcfadc3254b",
-          "result": "queued"
+          "result": "success"
         }
-      ]
+      ],
+      "final_head": "22546c5bc24b77be98e0382e9253afcfadc3254b",
+      "final_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "final_changed_paths": [
+        "src/Controller/AdminContentBrowserController.php",
+        "src/Repository/AdminContentBrowserRepository.php",
+        "templates/admin/content/index.html.twig",
+        "templates/admin/content/browser.html.twig",
+        "tests/Controller/AdminContentBrowserPaginationTest.php"
+      ],
+      "changed_paths": [
+        "src/Controller/AdminContentBrowserController.php",
+        "src/Repository/AdminContentBrowserRepository.php",
+        "templates/admin/content/index.html.twig",
+        "templates/admin/content/browser.html.twig",
+        "tests/Controller/AdminContentBrowserPaginationTest.php"
+      ],
+      "completed_at": "2026-09-26T23:27:10.231Z",
+      "test_results": {
+        "phpunit": "435 tests, 2,365 assertions, 0 failures; one deprecation and one notice.",
+        "phpstan": "Level 8 passed with no errors.",
+        "php_symfony": "Worker PHP/Symfony validation passed; Twig lint, dependency container, AssetMapper compilation and Doctrine mapping validation all passed on the exact final HEAD.",
+        "postgres18": "PostgreSQL 18.6 completed the full migration chain: 39 migrations executed; migration status is current.",
+        "exact_head_ci": {
+          "run_id": 36279274693,
+          "head": "22546c5bc24b77be98e0382e9253afcfadc3254b",
+          "result": "success"
+        }
+      },
+      "completion_summary": "Added the permission-gated paginated admin content browser after confirming the existing searchAdmin query defaults to 200 records and the index had no page navigation. The new route reaches all statuses with stable updatedAt/ID ordering, counts, preserved search/status/type/category/tag filters and a link from the legacy index. Existing edit, preview, revision, trash recovery/purge and CSRF-protected bulk routes are reused. Malformed page values are rejected, out-of-range pages clamp to the last page, responses are private/no-store/noindex, and no schema or new mutation path was introduced.",
+      "open_limitations": [
+        "The legacy /admin/content index remains capped at 200; it links to the full paginated browser. Trusted can route the primary index through the paginated query after the WCP-300, WCP-090 and WCP-388 path locks are resolved.",
+        "Awaiting Trusted review and Trusted integration CI."
+      ],
+      "trusted_follow_up": "After the WCP-300, WCP-090 and WCP-388 path locks are resolved, route the primary /admin/content list through the new paginated browser while preserving CMS_CONTENT_MANAGE, search/status/type/category/tag filters, revision and publication behavior, and existing CSRF-protected trash and bulk actions. Run full Trusted CI."
     },
     {
       "priority": 209,
