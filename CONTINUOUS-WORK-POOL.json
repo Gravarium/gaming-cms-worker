@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-26T11:31:08.914Z",
+  "published_at": "2026-09-26T11:31:44.030Z",
   "summary": {
     "total_remaining_worker_tasks": 75,
-    "completed_worker_prs_awaiting_trusted_review": 67,
+    "completed_worker_prs_awaiting_trusted_review": 68,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "Continue WCP-122 on its exclusive media-tag boundary claim while preserving WCP-121, WCP-301 and all other active/completed claim locks; after exact-head green CI reconcile and continue.",
+    "next_required_action": "Continue independent Worker proposal work while preserving WCP-121 and all foreign/completed claim locks; after each exact-head green CI reconcile and continue.",
     "composition_preparable": 0,
     "immediately_actionable": 3,
     "must_continue": true
@@ -6906,7 +6906,7 @@
       "package_id": "WCP-121",
       "title": "Bound extension capability gate requests",
       "risk": "high",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -6973,7 +6973,7 @@
       "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "8f4ec926d1e6e1ecc302b57df5b767dfc2e3c41f",
       "resume_branch": "feature/wcp-121-capability-gate-boundary-g1",
       "proposal_kind": "worker_only",
       "collision_check": {
@@ -6985,8 +6985,24 @@
         ]
       },
       "claimed_on": "2026-09-26T11:28:00.451Z",
-      "claim_state": "active_worker_claim",
-      "next_action": "Implement only the two allowlisted files, open a Worker PR, run exact-head full CI and retain the claim until Trusted resolution."
+      "claim_state": "locked_until_trusted_resolution",
+      "next_action": "Remain claim-locked while awaiting Trusted review; do not merge or deploy from the Worker repository.",
+      "worker_pr": 87,
+      "final_head": "8f4ec926d1e6e1ecc302b57df5b767dfc2e3c41f",
+      "ci_run_id": 36238948846,
+      "ci_result": "success",
+      "completed_on": "2026-09-26T11:31:44.030Z",
+      "final_changed_paths": [
+        "src/ExtensionPackage/ExtensionCapabilityGate.php",
+        "tests/ExtensionPackage/ExtensionCapabilityGateBoundaryTest.php"
+      ],
+      "test_evidence": [
+        "Targeted ExtensionCapabilityGate boundary coverage passed for deny-by-default, approved grant/revoke behavior and malformed, oversized, control-safe, invalid UTF-8, unknown and forbidden requests.",
+        "Existing ExtensionCapabilitySandbox tests passed.",
+        "Exact-head Worker CI run 36238948846 succeeded.",
+        "PHP/Symfony validation and application-test job 108395762824 succeeded.",
+        "PostgreSQL migration chain job 108395762727 succeeded."
+      ]
     },
     {
       "priority": 75,
