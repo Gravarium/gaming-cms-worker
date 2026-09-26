@@ -27,4 +27,34 @@ final class SensitiveDataCipherTest extends TestCase
         $this->expectException(\RuntimeException::class);
         (new SensitiveDataCipher('second-secret'))->decrypt($encrypted);
     }
+
+    public function testEncryptionRejectsOversizedPlaintext(): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        (new SensitiveDataCipher('test-secret'))->encrypt(str_repeat('x', 4097));
+    }
+
+    public function testDecryptionRejectsNonCanonicalCiphertext(): void
+    {
+        $cipher = new SensitiveDataCipher('test-secret');
+        $encrypted = $cipher->encrypt('sensitive-value');
+
+        $this->expectException(\RuntimeException::class);
+        $cipher->decrypt(' '.$encrypted);
+    }
+
+    public function testDecryptionRejectsUndersizedOrOversizedCiphertext(): void
+    {
+        $cipher = new SensitiveDataCipher('test-secret');
+
+        try {
+            $cipher->decrypt(base64_encode(str_repeat('\\0', SODIUM_CRYPTO_SECRETBOX_NONCEBYTES)));
+            self::fail('An undersized authenticated payload was accepted.');
+        } catch (\RuntimeException) {
+            self::addToAssertionCount(1);
+        }
+
+        $this->expectException(\RuntimeException::class);
+        $cipher->decrypt(str_repeat('A', 8193));
+    }
 }
