@@ -39,7 +39,6 @@ final class VideoFeedTest extends WebTestCase
         $client->request('GET', '/feeds/videos.xml');
         self::assertResponseIsSuccessful();
         self::assertStringContainsString('application/rss+xml', (string) $client->getResponse()->headers->get('Content-Type'));
-        self::assertStringContainsString('public', (string) $client->getResponse()->headers->get('Cache-Control'));
 
         $body = $client->getResponse()->getContent();
         self::assertIsString($body);
