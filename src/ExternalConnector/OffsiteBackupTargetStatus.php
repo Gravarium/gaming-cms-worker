@@ -7,7 +7,7 @@ namespace App\ExternalConnector;
 final readonly class OffsiteBackupTargetStatus
 {
     private const MAX_TARGET_KEY_BYTES = 64;
-    private const MAX_BACKUP_ID_BYTES = 28;
+    private const MAX_BACKUP_ID_BYTES = 29;
     private const MAX_ATTEMPTS = 999_999_999;
 
     public function __construct(
