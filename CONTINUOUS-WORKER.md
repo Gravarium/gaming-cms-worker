@@ -16,7 +16,7 @@ Für Schreibvorgänge die GitHub-Plugin-Funktionen verwenden, insbesondere Datei
 
 Der aktuelle Pool-Eintrag ist die einzige Wahrheit. Wenn ein Paket als `worker_in_progress` markiert ist, seinen dort genannten `resume_branch`, `active_base_branch`, `active_base_sha` und `active_head` verwenden und es vollständig abschließen.
 
-Aktuell wurde FCP-069 auf `feature/fcp-069-pool-g1` von der grün geprüften Composition-Basis `897d921d705894c3023fe8d700d7938ca91c8ba2` reserviert. Dies ist nur ein aktueller Hinweis; bei Abweichung gilt immer der neuere JSON-Pool.
+FCP-069 ist auf grünem exaktem Worker-HEAD abgeschlossen und sein Claim bleibt gesperrt. Der aktuelle JSON-Pool weist FCP-077 als nächstes vorbereitbares Paket aus: erst die belegten Vorgänger-HEADs in einer Worker-only-Composition prüfen, danach bei grüner vollständiger CI die Vorschlagsbasis veröffentlichen und FCP-077 claimen. Die Live-Abnahme von FCP-049 bleibt als Betriebsnachweis offen; dessen Produktcode ist bereits geprüft und im Worker-Snapshot vorhanden. Bei Abweichung gilt immer der neuere JSON-Pool.
 
 ## Autonomer Dauerlauf
 
