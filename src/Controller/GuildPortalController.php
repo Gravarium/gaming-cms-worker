@@ -130,7 +130,7 @@ final class GuildPortalController extends AbstractController
         }
         $role = (string) $request->request->get('role', 'other');
         if (!in_array($role, ['tank', 'heal', 'damage', 'support', 'other'], true)) { $role = 'other'; }
-        $rawNote = $request->request->get('note', '');
+        $rawNote = $request->request->all()['note'] ?? '';
         if (!is_string($rawNote) || mb_strlen($rawNote, 'UTF-8') > self::MAX_SIGNUP_NOTE_LENGTH) {
             $this->addFlash('success', 'Die Notiz darf höchstens 500 Zeichen enthalten. Deine Anmeldung wurde nicht geändert.');
 
