@@ -10,16 +10,16 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-26T11:31:44.030Z",
+  "published_at": "2026-09-26T11:31:58.972Z",
   "summary": {
     "total_remaining_worker_tasks": 75,
-    "completed_worker_prs_awaiting_trusted_review": 68,
+    "completed_worker_prs_awaiting_trusted_review": 69,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "Continue independent Worker proposal work while preserving WCP-121 and all foreign/completed claim locks; after each exact-head green CI reconcile and continue.",
+    "next_required_action": "WCP-301 is complete with exact-head green CI and remains locked. Continue the current pool's independent Worker work while preserving WCP-121, WCP-122 and all other active/completed claim locks.",
     "composition_preparable": 0,
-    "immediately_actionable": 3,
+    "immediately_actionable": 2,
     "must_continue": true
   },
   "rules": {
@@ -6814,7 +6814,7 @@
       "package_id": "WCP-301",
       "title": "Reject cross-entry revision restores before capture",
       "risk": "medium",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -6889,16 +6889,28 @@
         ]
       },
       "claimed_on": "2026-09-26T11:25:27.156Z",
-      "claim_state": "active_worker_claim",
-      "next_action": "Await exact-head Worker CI run 36238936330; diagnose and repair any failing checks without changing allowed paths, then reconcile the exact final HEAD.",
+      "claim_state": "locked_until_trusted_resolution",
+      "next_action": "Remain claim-locked while awaiting Trusted review; do not merge or deploy from the Worker repository.",
       "worker_pr": 86,
       "pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/86",
       "ci_run_id": 36238936330,
-      "ci_status": "in_progress",
       "last_checkpoint_at": "2026-09-26T11:29:01.663Z",
       "checkpoint_paths": [
         "src/Service/ContentRevisionManager.php",
         "tests/Service/ContentRevisionManagerTest.php"
+      ],
+      "final_head": "528fddc85cf3b115e8d53ef71d9b57213535a63f",
+      "ci_result": "success",
+      "completed_on": "2026-09-26T11:31:58.972Z",
+      "final_changed_paths": [
+        "src/Service/ContentRevisionManager.php",
+        "tests/Service/ContentRevisionManagerTest.php"
+      ],
+      "test_evidence": [
+        "ContentRevisionManager integration regression passed: a cross-entry restore throws before target revision capture; a later flush leaves the target body unchanged and creates no target revision.",
+        "Exact-head Worker CI run 36238936330 succeeded on 528fddc85cf3b115e8d53ef71d9b57213535a63f.",
+        "PHP/Symfony validation and application-test job 108395730861 passed: 430 tests and 1,864 assertions; one PHPUnit deprecation and one notice also appeared in the preceding green Worker run.",
+        "PostgreSQL 18 migration-chain job 108395731160 passed."
       ]
     },
     {
