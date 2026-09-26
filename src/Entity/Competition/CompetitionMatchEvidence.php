@@ -83,7 +83,7 @@ class CompetitionMatchEvidence
     public function setLocator(string $locator): self
     {
         $locator = trim($locator);
-        if (mb_strlen($locator, 'UTF-8') > 500) { throw new \\InvalidArgumentException('Evidence locator must not exceed 500 characters.'); }
+        if (mb_strlen($locator, 'UTF-8') > 500) { throw new \InvalidArgumentException('Evidence locator must not exceed 500 characters.'); }
         $scheme = strtolower((string) parse_url($locator, PHP_URL_SCHEME));
         if (!filter_var($locator, FILTER_VALIDATE_URL) || !in_array($scheme, ['http', 'https'], true)) { throw new \InvalidArgumentException('Evidence locator must be an HTTP(S) URL.'); }
         $this->locator = $locator;
