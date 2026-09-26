@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-26T14:44:35.464Z",
+  "published_at": "2026-09-26T14:52:52.734Z",
   "summary": {
-    "total_remaining_worker_tasks": 120,
+    "total_remaining_worker_tasks": 121,
     "completed_worker_prs_awaiting_trusted_review": 114,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "Re-evaluate the remaining unclaimed dependencies and continue with an independent disjoint Worker-only package.",
+    "next_required_action": "Continue active WCP-339 and WCP-340 work; re-evaluate unclaimed dependencies after completion.",
     "composition_preparable": 0,
     "immediately_actionable": 0,
     "must_continue": true
@@ -11984,6 +11984,95 @@
         "src/Service/MediaAssetUsageResolver.php",
         "tests/Layout/LayoutMediaTest.php"
       ]
+    },
+    {
+      "priority": 121,
+      "package_id": "WCP-340",
+      "title": "Reject oversized backup provider selections",
+      "risk": "medium",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-340-backup-provider-selection-boundary-g1",
+      "suggested_branch": "feature/wcp-340-backup-provider-selection-boundary-g1",
+      "base_branch": "main",
+      "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "objective": "Bound the raw backup-provider selection to the number of entries in BackupProviderCatalog before filtering, normalization, repository lookups, persistence, audit or selection-file synchronization. Reject an oversized selection in full with an explicit no-change notice. Preserve within-limit normalization, de-duplication, unknown-choice handling, authorization, CSRF and disabled-by-default targets.",
+      "allowed_paths": [
+        "src/Backup/BackupTargetPlanner.php",
+        "src/Controller/AdminBackupProviderController.php",
+        "tests/Controller/AdminBackupProviderPlanningBoundaryTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/",
+        "src/Entity/",
+        "src/Form/",
+        "src/Repository/",
+        "src/Service/",
+        "templates/",
+        "assets/",
+        "public/"
+      ],
+      "deliverables": [
+        "Derive the maximum raw selection size from the current BackupProviderCatalog; do not hard-code its current size.",
+        "Reject the entire oversized raw array before filtering, normalization, target lookup, persistence, audit or selection export.",
+        "Show a visible no-change notice and do not report an oversized selection as successfully planned.",
+        "Preserve normal in-limit selection behavior, unknown-value handling, authorization, CSRF and disabled target defaults."
+      ],
+      "tests": [
+        "Focused functional test submits one more than the current catalog size with a valid CSRF token and proves no backup target is created and a clear no-change notice is shown.",
+        "Verify the controller handles the explicit rejected outcome without audit or selection-file synchronization.",
+        "Keep normal bounded planning semantics unchanged.",
+        "PHPStan level 8.",
+        "Complete Worker CI on the exact final HEAD."
+      ],
+      "completion_report": [
+        "exact final Worker HEAD and sanitized main base SHA",
+        "complete changed-file list and Worker PR",
+        "oversized-selection regression test, PHPStan level 8 and exact-head Worker CI results",
+        "confirmation oversized raw selections cause no database or selection-file changes and valid selections remain disabled by default"
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "no-secrets-or-trusted-private-runtime-in-worker-source",
+        "preserve connector authorization, CSRF, backup integrity and disabled-by-default transport isolation",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_base_branch": "main",
+      "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "resume_branch": "feature/wcp-340-backup-provider-selection-boundary-g1",
+      "proposal_kind": "worker_only",
+      "collision_check": {
+        "compared_against": "all current continuous/work-pool-v4 task allowlists and active/locked claims through WCP-339; exact WCP-340 branches/PR and proposed paths checked against sanitized main",
+        "result": "The planner, its dedicated admin controller and new functional-test path are absent from every published allowlist and claim. WCP-333 backup verification and WCP-334 general connector planning use disjoint exact paths; no migration, DI, config, template, transport or private files are included.",
+        "paths": [
+          "src/Backup/BackupTargetPlanner.php",
+          "src/Controller/AdminBackupProviderController.php",
+          "tests/Controller/AdminBackupProviderPlanningBoundaryTest.php"
+        ]
+      },
+      "claimed_on": "2026-09-26T14:52:52.734Z",
+      "claim_state": "active",
+      "next_action": "Create claim and feature refs from the exact proposal base, then add the catalog-derived bound, explicit rejection handling and focused functional coverage."
     }
   ],
   "recovery_queue": [],
