@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-26T13:44:48.881Z",
+  "published_at": "2026-09-26T13:45:01.797Z",
   "summary": {
-    "total_remaining_worker_tasks": 109,
+    "total_remaining_worker_tasks": 110,
     "completed_worker_prs_awaiting_trusted_review": 103,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "Implement WCP-328 on the exclusive ExternalConnectorHealthStatus identifier boundary paths from exact sanitized main; run complete exact-head Worker CI, then continue while preserving existing claims.",
+    "next_required_action": "Implement WCP-329 on the exclusive AuditLog action setter and boundary-test paths from exact sanitized main; run complete exact-head Worker CI, then continue while preserving existing claims.",
     "composition_preparable": 0,
     "immediately_actionable": 0,
     "must_continue": true
@@ -10773,6 +10773,96 @@
       "next_action": "Add focused boundary tests for the three identifier setters on the same branch, then checkpoint and run full exact-head Worker CI.",
       "checkpoint_paths": [
         "src/Entity/ExternalConnectorHealthStatus.php"
+      ]
+    },
+    {
+      "priority": 108,
+      "package_id": "WCP-329",
+      "title": "Bound audit action persistence",
+      "risk": "medium",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-329-audit-action-boundary-g1",
+      "suggested_branch": "feature/wcp-329-audit-action-boundary-g1",
+      "base_branch": "main",
+      "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "objective": "Enforce the AuditLog.action mapped varchar(80) storage boundary before assignment. Reject malformed UTF-8, NUL and values above 80 UTF-8 characters/320 bytes without truncation, preserving the previous action after rejection. Preserve existing exact in-bound setter semantics; do not trim, normalize, or change other audit fields or audit logging flow.",
+      "allowed_paths": [
+        "src/Entity/AuditLog.php",
+        "tests/Entity/AuditLogActionBoundaryTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/",
+        "src/Controller/",
+        "src/Form/",
+        "src/Repository/",
+        "src/Service/",
+        "templates/",
+        "assets/",
+        "public/"
+      ],
+      "deliverables": [
+        "Preserve exact in-bound AuditLog.action values, including whitespace.",
+        "Reject malformed UTF-8, NUL, and values above the mapped 80-character/320-byte limit before assignment, without truncation.",
+        "Preserve the prior action after rejected input.",
+        "Leave actor, subject, summary, context, IP address, and audit logging flow unchanged."
+      ],
+      "tests": [
+        "Targeted AuditLog action boundary PHPUnit tests for exact ASCII/multibyte limits, 81-character rejection, malformed UTF-8/NUL, state preservation, and exact value preservation.",
+        "PHPStan level 8.",
+        "Complete Worker CI on the exact final HEAD."
+      ],
+      "completion_report": [
+        "exact final Worker HEAD and sanitized main base SHA",
+        "complete changed-file list and Worker PR",
+        "targeted AuditLog action boundary tests and complete exact-head Worker CI result",
+        "80-character/320-byte bound with unchanged exact-value semantics"
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "no-secrets-or-trusted-private-runtime-in-worker-source",
+        "preserve audit event values, actor/subject attribution, context sanitization, and logging flow",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_base_branch": "main",
+      "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "resume_branch": "feature/wcp-329-audit-action-boundary-g1",
+      "proposal_kind": "worker_only",
+      "collision_check": {
+        "compared_against": "all current continuous/work-pool-v4 task allowlists and active/locked claims including foreign WCP-328; exact WCP-329 branch/PR names and new test path checked against sanitized main",
+        "result": "AuditLog.action and its exact boundary test path are disjoint from every published allowlist and claim, including the independent ExternalConnectorHealthStatus work. No AuditLogger/service, controller, form, repository, migration, DI, template, or workflow path is included.",
+        "paths": [
+          "src/Entity/AuditLog.php",
+          "tests/Entity/AuditLogActionBoundaryTest.php"
+        ]
+      },
+      "claimed_on": "2026-09-26T13:45:01.797Z",
+      "claim_state": "active_worker_claim",
+      "last_checkpoint_at": "2026-09-26T13:45:01.797Z",
+      "next_action": "Implement only the AuditLog.action storage boundary and focused tests in the two allowlisted paths, then record a remote checkpoint and run complete exact-head Worker CI.",
+      "checkpoint_paths": [
+        "src/Entity/AuditLog.php",
+        "tests/Entity/AuditLogActionBoundaryTest.php"
       ]
     }
   ],
