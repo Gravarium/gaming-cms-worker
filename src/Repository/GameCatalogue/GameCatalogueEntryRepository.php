@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace App\Repository\GameCatalogue;
 
 use App\Entity\GameCatalogue\GameCatalogueEntry;
-use App\Entity\GameCatalogue\GameGenre;
-use App\Entity\GameCatalogue\GamePlatform;
 use App\Entity\GameCatalogue\GameRelease;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Query\Expr\Join;
@@ -57,28 +55,40 @@ final class GameCatalogueEntryRepository extends ServiceEntityRepository
     }
 
     /**
-     * @return list<GameGenre>
+     * @return list<array{slug: string, name: string}>
      */
     public function publicGenres(): array
     {
-        return $this->createQueryBuilder('entry')
-            ->select('DISTINCT genre')
+        $rows = $this->createQueryBuilder('entry')
+            ->select('DISTINCT genre.slug AS slug')
+            ->addSelect('genre.name AS name')
             ->join('entry.game', 'game')
             ->join('entry.genres', 'genre')
             ->andWhere('entry.enabled = true')
             ->andWhere('game.enabled = true')
             ->orderBy('genre.name', 'ASC')
             ->getQuery()
-            ->getResult();
+            ->getScalarResult();
+
+        $genres = [];
+        foreach ($rows as $row) {
+            $genres[] = [
+                'slug' => (string) $row['slug'],
+                'name' => (string) $row['name'],
+            ];
+        }
+
+        return $genres;
     }
 
     /**
-     * @return list<GamePlatform>
+     * @return list<array{slug: string, name: string}>
      */
     public function publicPlatforms(): array
     {
-        return $this->createQueryBuilder('entry')
-            ->select('DISTINCT platform')
+        $rows = $this->createQueryBuilder('entry')
+            ->select('DISTINCT platform.slug AS slug')
+            ->addSelect('platform.name AS name')
             ->join('entry.game', 'game')
             ->innerJoin(GameRelease::class, 'release', Join::WITH, 'release.entry = entry')
             ->join('release.platform', 'platform')
@@ -88,7 +98,17 @@ final class GameCatalogueEntryRepository extends ServiceEntityRepository
             ->setParameter('cancelled', 'cancelled')
             ->orderBy('platform.name', 'ASC')
             ->getQuery()
-            ->getResult();
+            ->getScalarResult();
+
+        $platforms = [];
+        foreach ($rows as $row) {
+            $platforms[] = [
+                'slug' => (string) $row['slug'],
+                'name' => (string) $row['name'],
+            ];
+        }
+
+        return $platforms;
     }
 
     public function publicBySlug(string $slug): ?GameCatalogueEntry
