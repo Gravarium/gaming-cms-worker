@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-26T17:25:57.796Z",
+  "published_at": "2026-09-26T17:47:35.239Z",
   "summary": {
     "total_remaining_worker_tasks": 131,
-    "completed_worker_prs_awaiting_trusted_review": 142,
+    "completed_worker_prs_awaiting_trusted_review": 143,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "Re-evaluate current FCP dependency readiness; if none are actionable, derive and claim an independent disjoint WCP proposal while preserving foreign active claims.",
+    "next_required_action": "Re-evaluate current FCP dependency readiness; if none are actionable, derive and claim the next independent WCP proposal while preserving foreign active claims.",
     "composition_preparable": 0,
     "immediately_actionable": 0,
     "must_continue": true
@@ -14939,7 +14939,7 @@
       "package_id": "WCP-367",
       "title": "Expose guild team name limit in the form",
       "risk": "low",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -15019,14 +15019,24 @@
         ]
       },
       "claimed_on": "2026-09-26T17:35:12.631Z",
-      "claim_state": "active_worker_claim",
-      "last_checkpoint_at": "2026-09-26T17:43:44.087Z",
-      "next_action": "Verify full-form CI on exact head d53235f0b3edc6a1f94aa843c4ee2fc53e73a208 after the DQL alias and persisted-guild fixture corrections; repair any concrete remaining failure without weakening guild ownership or member filtering.",
+      "claim_state": "locked_until_trusted_resolution",
+      "last_checkpoint_at": "2026-09-26T17:47:35.239Z",
+      "next_action": "Await Trusted review with the claim locked; continue with the next dependency-safe independent Worker proposal. Do not merge or deploy.",
       "checkpoint_paths": [
         "src/Form/GuildTeamType.php",
         "tests/Form/GuildTeamTypeBoundaryTest.php"
       ],
-      "last_verified_push_at": "2026-09-26T17:43:44.087Z"
+      "last_verified_push_at": "2026-09-26T17:47:35.239Z",
+      "final_head": "d53235f0b3edc6a1f94aa843c4ee2fc53e73a208",
+      "worker_pr": 161,
+      "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/161",
+      "ci_run_id": 36260042550,
+      "ci_result": "success",
+      "completed_on": "2026-09-26T17:47:35.239Z",
+      "final_changed_paths": [
+        "src/Form/GuildTeamType.php",
+        "tests/Form/GuildTeamTypeBoundaryTest.php"
+      ]
     }
   ],
   "recovery_queue": [],
