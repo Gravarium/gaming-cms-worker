@@ -10,16 +10,16 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-26T11:15:23.868Z",
+  "published_at": "2026-09-26T11:16:37.610Z",
   "summary": {
-    "total_remaining_worker_tasks": 70,
+    "total_remaining_worker_tasks": 71,
     "completed_worker_prs_awaiting_trusted_review": 63,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "Continue WCP-300 on its exclusive content editor request-size claim while preserving WCP-118 and all completed claim locks; after exact-head green CI, reconcile and continue independently.",
+    "next_required_action": "Continue WCP-119 on its exclusive locale-policy claim while preserving WCP-118, WCP-300 and all completed claim locks; after exact-head green CI, reconcile and continue independently.",
     "composition_preparable": 0,
-    "immediately_actionable": 1,
+    "immediately_actionable": 2,
     "must_continue": true
   },
   "rules": {
@@ -6560,6 +6560,88 @@
         "src/Controller/AdminContentController.php",
         "tests/Controller/Content/ContentEditorControllerTest.php"
       ]
+    },
+    {
+      "priority": 71,
+      "package_id": "WCP-119",
+      "title": "Bound persisted locale whitelist normalization",
+      "risk": "medium",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-119-locale-list-boundary-g1",
+      "suggested_branch": "feature/wcp-119-locale-list-boundary-g1",
+      "base_branch": "main",
+      "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5",
+      "objective": "Harden LocalePolicy's request-time normalization of persisted enabled-locale arrays. Fail closed to the supported German locale for non-list or oversized collections; safely ignore non-string, overlong and unsupported candidates; preserve order and uniqueness for valid supported string tags so malformed stored JSON cannot raise TypeError on main requests.",
+      "allowed_paths": [
+        "src/Internationalization/LocalePolicy.php",
+        "tests/Internationalization/LocalePolicyTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/",
+        "src/Controller/",
+        "src/Entity/SiteSettings.php",
+        "src/EventSubscriber/LocaleSubscriber.php",
+        "src/Controller/LocaleController.php",
+        "translations/",
+        "templates/"
+      ],
+      "deliverables": [
+        "accept only list-shaped locale candidates with at most 64 entries",
+        "bound each string candidate to 16 bytes before whitelist lookup and ignore non-string or unsupported values without typed-callback failures",
+        "preserve supported locale order and uniqueness; return ['de'] when shape, collection size or remaining values are invalid/empty",
+        "preserve choose() guarantee that the result is an enabled supported locale"
+      ],
+      "tests": [
+        "targeted LocalePolicy tests for mixed persisted values, invalid list shape, excessive entries, order/deduplication and fallback",
+        "PHPStan level 8",
+        "complete Worker CI on the exact final HEAD"
+      ],
+      "completion_report": [
+        "exact final Worker HEAD and sanitized base SHA",
+        "complete changed-path list and Worker PR",
+        "targeted tests and complete exact-head Worker CI result",
+        "candidate count and tag byte bounds plus remaining persistence assumptions"
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "no-secrets-or-trusted-private-runtime-in-worker-source",
+        "preserve supported locales, locale-switch CSRF, local redirect safety and fallback behavior",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5",
+      "active_base_branch": "main",
+      "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5",
+      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5",
+      "resume_branch": "feature/wcp-119-locale-list-boundary-g1",
+      "proposal_kind": "worker_only",
+      "collision_check": {
+        "compared_against": "current continuous/work-pool-v4 task allowlists and searched foreign WCP-118 and WCP-300 claims",
+        "result": "disjoint from all published paths and active extension-outbound-policy/content-editor claims; no shared schema, migration, controller, entity or template paths",
+        "paths": [
+          "src/Internationalization/LocalePolicy.php",
+          "tests/Internationalization/LocalePolicyTest.php"
+        ]
+      },
+      "claimed_on": "2026-09-26T11:16:37.610Z"
     }
   ],
   "recovery_queue": [],
