@@ -12,12 +12,12 @@
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
   "published_at": "2026-09-26T23:46:48.636Z",
   "summary": {
-    "total_remaining_worker_tasks": 137,
-    "completed_worker_prs_awaiting_trusted_review": 201,
+    "total_remaining_worker_tasks": 136,
+    "completed_worker_prs_awaiting_trusted_review": 202,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-433 PR #227 runs exact-head Worker CI 36280542173 on HEAD 6efe5b2911770700ff48d3f8c61a84e6707cdb23; diagnose and repair failures on the same feature branch.",
+    "next_required_action": "WCP-433 PR #227 has green exact-head CI; keep its claim locked and continue with the next independent dependency-safe Worker package.",
     "composition_preparable": 0,
     "immediately_actionable": 0,
     "must_continue": true
@@ -23040,7 +23040,7 @@
       "package_id": "WCP-433",
       "title": "Guard access-role creation and edit authorization and CSRF",
       "risk": "low",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -23108,7 +23108,7 @@
         ]
       },
       "claimed_on": "2026-09-26T23:43:42.897Z",
-      "claim_state": "active",
+      "claim_state": "locked_until_trusted_resolution",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5",
       "active_head": "6efe5b2911770700ff48d3f8c61a84e6707cdb23",
@@ -23122,22 +23122,48 @@
         "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5",
         "feature_branch": "6efe5b2911770700ff48d3f8c61a84e6707cdb23"
       },
-      "next_action": "Wait for exact-head Worker CI run 36280542173 on PR #227; repair concrete failures on this feature branch and update the checkpoint.",
+      "next_action": "Keep this claim locked until Trusted explicitly integrates, cancels or transfers it; continue with an independent dependency-safe package.",
       "worker_pr": 227,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/227",
       "draft_pr": false,
-      "pr_state": "open_ci_pending",
+      "pr_state": "open_ready_for_review_unmerged",
       "last_ci_run_id": 36280542173,
-      "last_ci_result": "in_progress",
+      "last_ci_result": "success",
       "ci_run_id": 36280542173,
-      "ci_result": "in_progress",
+      "ci_result": "success",
       "ci_attempts": [
         {
           "run_id": 36280542173,
           "head": "6efe5b2911770700ff48d3f8c61a84e6707cdb23",
-          "result": "in_progress"
+          "result": "success",
+          "note": "Worker CI run 36280542173 passed: PHPStan Level 8, 432 tests / 1,873 assertions, PostgreSQL 18 with all 39 migrations."
         }
-      ]
+      ],
+      "final_head": "6efe5b2911770700ff48d3f8c61a84e6707cdb23",
+      "final_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5",
+      "final_changed_paths": [
+        "tests/Controller/AdminAccessRoleMutationSecurityTest.php"
+      ],
+      "changed_paths": [
+        "tests/Controller/AdminAccessRoleMutationSecurityTest.php"
+      ],
+      "completed_at": "2026-09-26T23:50:47.651Z",
+      "test_results": {
+        "phpunit": "432 tests, 1,873 assertions, 0 failures; one deprecation and one notice.",
+        "phpstan": "Level 8 passed with no errors.",
+        "php_symfony": "Worker PHP/Symfony validation job passed on exact final HEAD.",
+        "postgres18": "PostgreSQL 18 applied and verified the complete chain: 39 migrations executed, 0 unavailable.",
+        "exact_head_ci": {
+          "run_id": 36280542173,
+          "head": "6efe5b2911770700ff48d3f8c61a84e6707cdb23",
+          "result": "success"
+        }
+      },
+      "completion_summary": "Functional regressions prove that users without CMS_USERS_MANAGE cannot view or forge access-role creation; missing and invalid CSRF return 422 without creating a role or mutating an existing role's name, description or permissions. Only the allowed test file changed; WCP-432's deletion test remains untouched.",
+      "open_limitations": [
+        "Awaiting Trusted review and Trusted integration CI."
+      ],
+      "trusted_follow_up": "Preserve CMS_USERS_MANAGE, access-role form CSRF and PermissionDelegationPolicy during Trusted integration."
     },
     {
       "priority": 214,
