@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-26T16:20:12.884Z",
+  "published_at": "2026-09-26T16:20:54.471Z",
   "summary": {
-    "total_remaining_worker_tasks": 130,
+    "total_remaining_worker_tasks": 131,
     "completed_worker_prs_awaiting_trusted_review": 126,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "Re-evaluate unclaimed FCP dependencies and continue with the next safe independent Worker-only package.",
+    "next_required_action": "Continue independent active WCP-350 menu URL and WCP-351 connector target boundary packages on their disjoint claims.",
     "composition_preparable": 0,
     "immediately_actionable": 0,
     "must_continue": true
@@ -13195,6 +13195,95 @@
         "PR #144 is open, ready for review and unmerged. Its exact changed-file list against sanitized main contains only the two allowed paths.",
         "Functional regressions accepted and persisted an exactly 500-character URL, rejected 501-character and over-2,000-byte submissions with HTTP 422, and confirmed the existing stored URL and item count remained unchanged."
       ]
+    },
+    {
+      "priority": 132,
+      "package_id": "WCP-351",
+      "title": "Bound external connector target identifiers",
+      "risk": "medium",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-351-connector-target-field-boundaries-g1",
+      "suggested_branch": "feature/wcp-351-connector-target-field-boundaries-g1",
+      "base_branch": "main",
+      "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "objective": "Add field-level server-side length boundaries to ExternalConnectorTargetType for targetKey (64), providerKey (64), and the optional non-secret configurationReference (120), matching their persisted varchar columns. These fields currently have format/blank validation but no maximum, so overlong ASCII values can pass form validation and reach audit/flush, where PostgreSQL rejects the row instead of returning form feedback. Preserve existing normalization, regexes, non-secret configuration policy, permissions and persistence flow.",
+      "allowed_paths": [
+        "src/Form/ExternalConnectorTargetType.php",
+        "tests/Form/ExternalConnectorTargetBoundaryTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/",
+        "src/Entity/ExternalConnectorTarget.php",
+        "src/Controller/AdminConnectorController.php",
+        "src/Repository/ExternalConnectorTargetRepository.php",
+        "tests/Controller/ExternalConnectorSecurityTest.php",
+        "src/ExternalConnector/",
+        "templates/admin/connectors/"
+      ],
+      "deliverables": [
+        "Add server-side Length constraints and matching maxlength attributes for targetKey (64), providerKey (64), and configurationReference (120).",
+        "Ensure oversized values produce field-level form errors and the existing controller's isValid guard prevents persistence/audit/flush.",
+        "Preserve the target/provider/reference ASCII format checks, normalization, uniqueness checks and non-secret configuration contract."
+      ],
+      "tests": [
+        "Form regression accepts exact 64/64/120 ASCII boundaries using synthetic data.",
+        "Separate field-level regressions reject 65-character targetKey, 65-character providerKey and 121-character configurationReference.",
+        "PHPStan level 8 and complete Worker CI on exact final HEAD."
+      ],
+      "completion_report": [
+        "exact final Worker HEAD and sanitized main base SHA",
+        "complete changed-file list and Worker PR",
+        "exact and over-bound form regression, PHPStan level 8 and exact-head Worker CI results",
+        "confirmation no entity, controller, repository, authorization, uniqueness, format or secret-storage behavior changed"
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "no-secrets-or-trusted-private-runtime-in-worker-source",
+        "preserve permissions, CSRF, identifier format, uniqueness, normalization and non-secret configuration policy",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_base_branch": "main",
+      "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "resume_branch": "feature/wcp-351-connector-target-field-boundaries-g1",
+      "proposal_kind": "worker_only",
+      "collision_check": {
+        "compared_against": "all current continuous/work-pool-v4 allowed-path scopes and active/locked claims through WCP-350; exact files checked against sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+        "result": "Both exact files have no overlap with any current allowed-path scope or active/locked claim. WCP-350 is isolated to MenuItemType.php and its controller test. The connector entity, repository, controller, security test, templates, schema and private runtime remain unchanged.",
+        "paths": [
+          "src/Form/ExternalConnectorTargetType.php",
+          "tests/Form/ExternalConnectorTargetBoundaryTest.php"
+        ]
+      },
+      "claimed_on": "2026-09-26T16:20:54.471Z",
+      "claim_state": "active_worker_claim",
+      "last_checkpoint_at": "2026-09-26T16:20:54.471Z",
+      "next_action": "Add max Length constraints for the three persisted connector target fields and field-level tests for exact and over-limit values, then run exact-head Worker CI.",
+      "checkpoint_paths": [
+        "src/Form/ExternalConnectorTargetType.php",
+        "tests/Form/ExternalConnectorTargetBoundaryTest.php"
+      ],
+      "last_verified_push_at": "2026-09-26T16:20:54.471Z"
     }
   ],
   "recovery_queue": [],
