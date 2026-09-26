@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-26T13:34:39.969Z",
+  "published_at": "2026-09-26T13:36:08.003Z",
   "summary": {
-    "total_remaining_worker_tasks": 106,
+    "total_remaining_worker_tasks": 107,
     "completed_worker_prs_awaiting_trusted_review": 100,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "Implement WCP-325 on the exclusive AccessRole key setter and boundary-test paths from exact sanitized main; run complete exact-head Worker CI, then continue while preserving existing claims.",
+    "next_required_action": "Implement WCP-326 on the exclusive ExternalConnectorTarget display-name boundary paths from exact sanitized main; run complete exact-head Worker CI, then continue while preserving existing claims.",
     "composition_preparable": 0,
     "immediately_actionable": 0,
     "must_continue": true
@@ -10450,6 +10450,97 @@
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/119",
       "ci_run_id": 36245613505,
       "ci_status": "queued"
+    },
+    {
+      "priority": 106,
+      "package_id": "WCP-326",
+      "title": "Bound external connector target display names",
+      "risk": "low",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-326-external-connector-target-display-name-g1",
+      "suggested_branch": "feature/wcp-326-external-connector-target-display-name-g1",
+      "base_branch": "main",
+      "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "objective": "Enforce the ExternalConnectorTarget.displayName mapped varchar(120) boundary in its setter after the existing trim normalization. Reject malformed UTF-8 and NUL and reject normalized names above 120 UTF-8 characters/480 bytes before assignment, without truncation or replacing the previous value. Preserve existing display-name validation and leave connector capability, target/provider keys, configuration references, enablement, and transport/security behavior unchanged.",
+      "allowed_paths": [
+        "src/Entity/ExternalConnectorTarget.php",
+        "tests/Entity/ExternalConnectorTargetDisplayNameBoundaryTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/",
+        "src/Controller/",
+        "src/Form/",
+        "src/Repository/",
+        "src/Service/",
+        "templates/",
+        "assets/",
+        "public/",
+        "src/Security/"
+      ],
+      "deliverables": [
+        "Preserve trim normalization for in-bound display names.",
+        "Reject malformed UTF-8, NUL, and normalized values above the mapped 120-character/480-byte boundary before assignment, without truncation.",
+        "Preserve the previous display name after rejected input.",
+        "Leave NotBlank/Length validation, connector keys, configuration references and all enablement/security behavior unchanged."
+      ],
+      "tests": [
+        "Targeted PHPUnit tests for exact ASCII and four-byte UTF-8 limits, normalized values at the bound, overflow, malformed UTF-8/NUL, state preservation, and existing trim behavior.",
+        "PHPStan level 8.",
+        "Complete Worker CI on the exact final HEAD."
+      ],
+      "completion_report": [
+        "exact final Worker HEAD and sanitized main base SHA",
+        "complete changed-file list and Worker PR",
+        "targeted ExternalConnectorTarget display-name boundary tests and complete exact-head Worker CI result",
+        "120-character/480-byte bound with preserved trim and validation semantics"
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "no-secrets-or-trusted-private-runtime-in-worker-source",
+        "preserve external connector target keys, configuration references, transport behavior and security policy",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_base_branch": "main",
+      "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "resume_branch": "feature/wcp-326-external-connector-target-display-name-g1",
+      "proposal_kind": "worker_only",
+      "collision_check": {
+        "compared_against": "all current continuous/work-pool-v4 task allowlists and locked/active claims through WCP-325; exact WCP-326 branch/PR names and new test path checked against sanitized main",
+        "result": "ExternalConnectorTarget.displayName and its exact boundary-test path are disjoint from every published allowlist and claim, including the active WCP-325 AccessRole paths. No connector keys, configuration references, transport, authorization, controller, form, repository, migration, DI, template, workflow, or private path is included.",
+        "paths": [
+          "src/Entity/ExternalConnectorTarget.php",
+          "tests/Entity/ExternalConnectorTargetDisplayNameBoundaryTest.php"
+        ]
+      },
+      "claimed_on": "2026-09-26T13:36:08.003Z",
+      "claim_state": "active_worker_claim",
+      "last_checkpoint_at": "2026-09-26T13:36:08.003Z",
+      "next_action": "Implement only the display-name storage boundary and focused tests in the two allowlisted paths, then record a remote checkpoint and run complete exact-head Worker CI.",
+      "checkpoint_paths": [
+        "src/Entity/ExternalConnectorTarget.php",
+        "tests/Entity/ExternalConnectorTargetDisplayNameBoundaryTest.php"
+      ]
     }
   ],
   "recovery_queue": [],
