@@ -10,7 +10,7 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-26T21:13:11.082Z",
+  "published_at": "2026-09-26T21:13:46.175Z",
   "summary": {
     "total_remaining_worker_tasks": 134,
     "completed_worker_prs_awaiting_trusted_review": 174,
@@ -19659,7 +19659,7 @@
       "claim_branch": "claim/wcp-409-admin-notification-history-g1",
       "suggested_branch": "feature/wcp-409-admin-notification-history-g1",
       "base_branch": "main",
-      "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5",
+      "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
       "objective": "Give administrators a way to find and act on older notifications. The current inbox displays only the newest 100 with no search or read-state filter. Add a separate, linked history browser with bounded search, unread/read filtering, deterministic pagination, and the existing authenticated read/open action. No schema change.",
       "allowed_paths": [
         "src/Controller/AdminNotificationHistoryController.php",
@@ -19717,14 +19717,14 @@
         "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
       ],
       "proposal_base_branch": "main",
-      "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5",
+      "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
       "active_base_branch": "main",
-      "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5",
-      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5",
+      "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
       "resume_branch": "feature/wcp-409-admin-notification-history-g1",
       "proposal_kind": "worker_only",
       "collision_check": {
-        "compared_against": "Fresh continuous/work-pool-v4 branch tree and task allowlists immediately before reservation; exact sanitized Worker main f1a246c64527ef3ad51f7490773d9bbf9d42be5.",
+        "compared_against": "Fresh continuous/work-pool-v4 branch tree and task allowlists immediately before reservation; exact sanitized Worker main f1a246c64527ef3ad51f7490773d9bbf9d42be5d.",
         "result": "No active or claim-locked task owns the new history controller, AdminNotificationRepository, admin notification templates, or the new history test. WCP-346 locks the existing AdminNotificationController redirect boundary; this package leaves that controller unchanged and reuses its read action. WCP-305 concerns entity persistence boundaries, WCP-400 is the separate audit-log browser, and WCP-395 is the member-owned inbox. WCP-407 competition tests and WCP-408 video filters are disjoint. FCP-072 is unclaimed and dependency-blocked with a broad templates/ allowlist; this package touches only templates/admin/notification. The existing admin inbox fetches only 100 records and exposes no history/search/filter path.",
         "paths": [
           "src/Controller/AdminNotificationHistoryController.php",
@@ -19736,12 +19736,12 @@
       },
       "claimed_on": "2026-09-26T21:13:11.082Z",
       "claim_state": "active",
-      "next_action": "Create the exclusive claim and feature branches from exact sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5; implement the notification history browser within the five allowlisted paths.",
+      "next_action": "Create the exclusive claim and feature branches from exact sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d; implement the notification history browser within the five allowlisted paths.",
       "branch_heads": {
-        "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5",
-        "feature_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5"
+        "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+        "feature_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d"
       },
-      "last_checkpoint_at": "2026-09-26T21:13:11.082Z",
+      "last_checkpoint_at": "2026-09-26T21:13:46.175Z",
       "checkpoint_paths": []
     }
   ],
