@@ -124,7 +124,7 @@ final class MemberNotificationInboxTest extends WebTestCase
             ['user_id' => $otherUserId],
             ['id' => $id],
         );
-        $this->em($client)->refresh($notification);
+        $this->em($client)->clear();
 
         $client->request('POST', '/guild-area/notifications/'.$id.'/read', ['_token' => $token]);
         self::assertResponseStatusCodeSame(404);
