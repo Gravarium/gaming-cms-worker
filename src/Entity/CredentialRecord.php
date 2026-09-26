@@ -21,7 +21,7 @@ class CredentialRecord extends BaseCredentialRecord
     /** @param list<string> $transports @param array<string, mixed>|null $otherUI */
     public function __construct(string $publicKeyCredentialId, string $type, array $transports, string $attestationType, TrustPath $trustPath, Uuid $aaguid, string $credentialPublicKey, string $userHandle, int $counter, ?array $otherUI = null, ?bool $backupEligible = null, ?bool $backupStatus = null, ?bool $uvInitialized = null, string $name = 'Mein Passkey')
     {
-        $this->id = Uuid::v4()->toRfc4122(); $this->name = $name; $this->createdAt = new DateTimeImmutable();
+        $this->id = Uuid::v4()->toRfc4122(); $this->name = mb_substr(trim($name), 0, 80); $this->createdAt = new DateTimeImmutable();
         parent::__construct($publicKeyCredentialId, $type, $transports, $attestationType, $trustPath, $aaguid, $credentialPublicKey, $userHandle, $counter, $otherUI, $backupEligible, $backupStatus, $uvInitialized);
     }
     public static function fromCredentialRecord(BaseCredentialRecord $credential): self
