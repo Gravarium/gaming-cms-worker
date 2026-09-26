@@ -10,16 +10,16 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-26T12:48:17.108Z",
+  "published_at": "2026-09-26T12:51:08.820Z",
   "summary": {
     "total_remaining_worker_tasks": 93,
-    "completed_worker_prs_awaiting_trusted_review": 86,
+    "completed_worker_prs_awaiting_trusted_review": 87,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
     "next_required_action": "Monitor WCP-312 exact-head CI run 36243213500; reconcile only after complete green CI, then continue.",
     "composition_preparable": 0,
-    "immediately_actionable": 4,
+    "immediately_actionable": 3,
     "must_continue": true
   },
   "rules": {
@@ -8850,7 +8850,7 @@
       "package_id": "WCP-311",
       "title": "Bound module storage setting key and endpoint inputs",
       "risk": "medium",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -8928,9 +8928,9 @@
         ]
       },
       "claimed_on": "2026-09-26T12:43:00.727Z",
-      "claim_state": "active_worker_claim",
-      "last_checkpoint_at": "2026-09-26T12:47:59.985Z",
-      "next_action": "Complete Worker CI on exact HEAD c563daf65e1cee43c398ffd78726924beb034340; repair any failures only within the two allowlisted files, then reconcile exact-head evidence.",
+      "claim_state": "locked_until_trusted_resolution",
+      "last_checkpoint_at": "2026-09-26T12:51:08.820Z",
+      "next_action": "Worker PR #105 is ready for trusted review; retain this claim lock until Trusted resolution.",
       "last_verified_push_at": "2026-09-26T12:47:59.985Z",
       "checkpoint_paths": [
         "src/Entity/ModuleStorageSetting.php",
@@ -8939,7 +8939,19 @@
       "worker_pr": 105,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/105",
       "ci_run_id": 36243068206,
-      "ci_status": "in_progress"
+      "final_head": "c563daf65e1cee43c398ffd78726924beb034340",
+      "ci_result": "success",
+      "completed_on": "2026-09-26T12:51:08.820Z",
+      "final_changed_paths": [
+        "src/Entity/ModuleStorageSetting.php",
+        "tests/Entity/ModuleStorageSettingBoundaryTest.php"
+      ],
+      "test_evidence": [
+        "Exact-head Worker CI run 36243068206 succeeded on  c563daf65e1cee43c398ffd78726924beb034340.",
+        "PHPStan level 8 completed with no errors; PHPUnit completed 434 tests and 1,881 assertions (one deprecation and one notice reported).",
+        "PostgreSQL 18 migration job succeeded with 39 migrations executed and no pending migrations.",
+        "Exact comparison against sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d contains only the two WCP-311 allowlisted paths."
+      ]
     },
     {
       "priority": 93,
