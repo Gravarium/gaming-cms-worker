@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-26T16:13:55Z",
+  "published_at": "2026-09-26T16:14:57.319Z",
   "summary": {
     "total_remaining_worker_tasks": 130,
     "completed_worker_prs_awaiting_trusted_review": 125,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "Continue independent worker packages; WCP-350 menu URL form boundary is also active on a disjoint claim.",
+    "next_required_action": "Continue the independent active WCP-349 media upload and WCP-350 menu URL form boundary packages on their disjoint claims.",
     "composition_preparable": 0,
     "immediately_actionable": 0,
     "must_continue": true
@@ -13093,15 +13093,13 @@
       "title": "Validate menu URL length before entity mapping",
       "risk": "medium",
       "execution_state": "worker_in_progress",
-      "dependencies": [
-        "WCP-309"
-      ],
+      "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
       "claim_branch": "claim/wcp-350-menu-item-url-form-boundary-g1",
       "suggested_branch": "feature/wcp-350-menu-item-url-form-boundary-g1",
-      "base_branch": "feature/wcp-309-menu-item-storage-bounds-g1",
-      "base_sha": "50c64210e9f96d1a1c88e6aaf797dbfe99f15d34",
+      "base_branch": "main",
+      "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
       "objective": "Make over-limit or malformed external menu URLs submitted through the admin form produce visible validation errors before MenuItem entity mapping. Preserve the 500-character/2000-byte boundary and HTTP(S), host, credential, authentication and CSRF protections. Keep exactly-at-limit URLs usable and leave stored values unchanged on rejection.",
       "allowed_paths": [
         "src/Form/MenuItemType.php",
@@ -13155,16 +13153,16 @@
         "red-ci-stops-integration",
         "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
       ],
-      "proposal_base_branch": "feature/wcp-309-menu-item-storage-bounds-g1",
-      "proposal_base_sha": "50c64210e9f96d1a1c88e6aaf797dbfe99f15d34",
-      "active_base_branch": "feature/wcp-309-menu-item-storage-bounds-g1",
-      "active_base_sha": "50c64210e9f96d1a1c88e6aaf797dbfe99f15d34",
-      "active_head": "645988fa7b94c98d551cfa7a2ad05583567f9dc2",
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_base_branch": "main",
+      "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "6aebb0ef6b9de15839847c5d3ca79c856e129feb",
       "resume_branch": "feature/wcp-350-menu-item-url-form-boundary-g1",
       "proposal_kind": "worker_only",
       "collision_check": {
-        "compared_against": "all current continuous/work-pool-v4 allowlists and active/locked claims through priority 130, including WCP-349; exact paths checked against the green WCP-309 head 50c64210e9f96d1a1c88e6aaf797dbfe99f15d34 and sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-        "result": "The MenuItem form type and dedicated controller boundary test are absent from every current allowlist. WCP-309's entity and entity test remain untouched. This package uses its exact green feature HEAD as a stacked proposal base and does not change controllers, entities, templates, routes, migrations or private-boundary files.",
+        "compared_against": "all current continuous/work-pool-v4 allowlists and active/locked claims through priority 130, including the concurrent WCP-349 package; exact paths checked against sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+        "result": "The MenuItem form type and dedicated controller boundary test are absent from every current allowlist. They are disjoint from WCP-309's locked MenuItem entity/test and WCP-349's media upload form/test. No controller, entity, repository, template, route, migration or private-boundary path is changed.",
         "paths": [
           "src/Form/MenuItemType.php",
           "tests/Controller/MenuItemUrlBoundaryTest.php"
@@ -13172,8 +13170,8 @@
       },
       "claimed_on": "2026-09-26T16:07:03.888Z",
       "claim_state": "active_worker_claim",
-      "last_checkpoint_at": "2026-09-26T16:12:06.369Z",
-      "next_action": "Run complete Worker CI and PHPStan on exact PR HEAD 645988fa7b94c98d551cfa7a2ad05583567f9dc2; fix any findings before marking ready.",
+      "last_checkpoint_at": "2026-09-26T16:14:57.319Z",
+      "next_action": "Run complete Worker CI and PHPStan on exact PR HEAD 6aebb0ef6b9de15839847c5d3ca79c856e129feb; fix any findings before marking ready.",
       "checkpoint_paths": [
         "src/Form/MenuItemType.php",
         "tests/Controller/MenuItemUrlBoundaryTest.php"
@@ -13181,7 +13179,7 @@
       "worker_pr": 144,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/144",
       "pr_state": "draft",
-      "last_verified_push_at": "2026-09-26T16:12:06.369Z"
+      "last_verified_push_at": "2026-09-26T16:14:57.319Z"
     }
   ],
   "recovery_queue": [],
