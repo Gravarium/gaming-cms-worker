@@ -10,9 +10,9 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-26T12:51:08.820Z",
+  "published_at": "2026-09-26T12:53:11.312Z",
   "summary": {
-    "total_remaining_worker_tasks": 93,
+    "total_remaining_worker_tasks": 94,
     "completed_worker_prs_awaiting_trusted_review": 87,
     "recovery_tasks": 0,
     "unclaimed": 5,
@@ -9048,6 +9048,92 @@
       "pr_state": "open",
       "ci_run_id": 36243213500,
       "ci_result": "queued"
+    },
+    {
+      "priority": 94,
+      "package_id": "WCP-313",
+      "title": "Bound site home title persistence input",
+      "risk": "medium",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-313-home-title-column-boundary-g1",
+      "suggested_branch": "feature/wcp-313-home-title-column-boundary-g1",
+      "base_branch": "main",
+      "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "objective": "Bound SiteSettings.homeTitle inputs to the mapped varchar(180) before trimming or assignment, rejecting malformed UTF-8 and NUL while preserving existing valid title values, trimming and NotBlank validation semantics.",
+      "allowed_paths": [
+        "src/Entity/SiteSettings.php",
+        "tests/Entity/SiteSettingsBoundaryTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/",
+        "src/Controller/",
+        "src/Form/",
+        "src/Repository/",
+        "src/Service/",
+        "templates/",
+        "assets/",
+        "public/"
+      ],
+      "deliverables": [
+        "Reject raw home titles over 720 UTF-8 bytes or 180 characters before trimming, matching the mapped varchar(180).",
+        "Reject malformed UTF-8 and NUL-containing titles before assignment.",
+        "Leave the stored title unchanged when a new title is rejected.",
+        "Preserve current trim behavior and the existing NotBlank validator; do not change other SiteSettings fields or form/controller policy."
+      ],
+      "tests": [
+        "Targeted SiteSettings boundary PHPUnit tests for exact ASCII and multibyte limits, overlong byte/character inputs, malformed UTF-8/NUL, state preservation, trim behavior, and empty-title validator contract.",
+        "PHPStan level 8.",
+        "Complete Worker CI on the exact final HEAD."
+      ],
+      "completion_report": [
+        "exact final Worker HEAD and sanitized main base SHA",
+        "complete changed-path list and Worker PR",
+        "targeted home-title tests and complete exact-head Worker CI result",
+        "180-character/720-byte limits with preserved trimming and state-preserving rejection"
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "no-secrets-or-trusted-private-runtime-in-worker-source",
+        "preserve NotBlank validation and existing site settings behavior outside homeTitle storage boundaries",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_base_branch": "main",
+      "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "resume_branch": "feature/wcp-313-home-title-column-boundary-g1",
+      "proposal_kind": "worker_only",
+      "collision_check": {
+        "compared_against": "all current continuous/work-pool-v4 task allowlists and active/locked claims through WCP-312; exact WCP-313 branch/PR names and new test path were checked",
+        "result": "the SiteSettings entity and focused boundary test are disjoint from every current task; no other settings fields, forms, controllers, migrations, config, DI or template paths are included",
+        "paths": [
+          "src/Entity/SiteSettings.php",
+          "tests/Entity/SiteSettingsBoundaryTest.php"
+        ]
+      },
+      "claimed_on": "2026-09-26T12:53:11.312Z",
+      "claim_state": "active_worker_claim",
+      "last_checkpoint_at": "2026-09-26T12:53:11.312Z",
+      "next_action": "Create the claim and feature branches from exact sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d, then implement only the two allowlisted files and run exact-head Worker CI."
     }
   ],
   "recovery_queue": [],
