@@ -72,7 +72,7 @@ final class AdminLayoutPageDirectoryTest extends WebTestCase
                 $lastPageId = $expectedId;
             }
             if ($lastPageId === null) {
-                throw new \\LogicException('The final page result is missing.');
+                throw new \LogicException('The final page result is missing.');
             }
             $this->assertPrivateDirectoryHeaders($client);
 
