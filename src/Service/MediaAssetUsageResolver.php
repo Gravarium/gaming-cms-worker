@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Service;
 
+use App\ContentEditor\ContentBlockDocument;
 use App\Entity\Guild;
 use App\Entity\MediaAsset;
 use App\Entity\Video;
@@ -19,6 +20,7 @@ final class MediaAssetUsageResolver
         private readonly EntityManagerInterface $entityManager,
         private readonly SiteSettingsRepository $siteSettings,
         private readonly ContentEntryRepository $content,
+        private readonly ContentBlockDocument $contentBlocks,
     ) {
     }
 
@@ -34,6 +36,9 @@ final class MediaAssetUsageResolver
 
         $contentCount = count($this->content->findUsingMediaLocation($asset->getLocation()));
         if ($contentCount > 0) { $usages[] = 'Seiten/News ('.$contentCount.')'; }
+
+        $editorCount = $this->editorDocumentUsageCount($asset);
+        if ($editorCount > 0) { $usages[] = 'Seiten/News-Editor-Medien ('.$editorCount.')'; }
 
         $settings = $this->siteSettings->current();
         if ($settings->getLogoPath() === $asset->getLocation()) { $usages[] = 'Website-Logo'; }
@@ -86,6 +91,49 @@ final class MediaAssetUsageResolver
         }
         return $changed;
     }
+    private function editorDocumentUsageCount(MediaAsset $asset): int
+    {
+        $assetId = $asset->getId();
+        if ($assetId === null) {
+            return 0;
+        }
+
+        $documents = $this->content->createQueryBuilder('entry')
+            ->select('entry.editorDocument')
+            ->andWhere('entry.editorDocument LIKE :assetReference')
+            ->setParameter('assetReference', '%assetId%'.$assetId.'%')
+            ->getQuery()
+            ->getScalarResult();
+
+        $usageCount = 0;
+        foreach ($documents as $row) {
+            $document = $row['editorDocument'] ?? null;
+            if (!is_string($document)) {
+                continue;
+            }
+
+            try {
+                $blocks = $this->contentBlocks->decode($document)['blocks'];
+            } catch (\InvalidArgumentException) {
+                $pattern = '/"assetId"\\s*:\\s*'.preg_quote((string) $assetId, '/').'(?![0-9])/';
+                if (preg_match($pattern, $document) === 1) {
+                    ++$usageCount;
+                }
+
+                continue;
+            }
+
+            foreach ($blocks as $block) {
+                if (($block['type'] ?? null) === 'media' && ($block['assetId'] ?? null) === $assetId) {
+                    ++$usageCount;
+                    break;
+                }
+            }
+        }
+
+        return $usageCount;
+    }
+
     /** @return list<PageLayout> */
     private function layoutUsages(MediaAsset $asset): array
     {
