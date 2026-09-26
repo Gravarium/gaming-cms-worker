@@ -12,6 +12,11 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Table(name: 'menu_item')]
 class MenuItem
 {
+    private const MAX_LABEL_CHARACTERS = 100;
+    private const MAX_LABEL_BYTES = 400;
+    private const MAX_URL_CHARACTERS = 500;
+    private const MAX_URL_BYTES = 2000;
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -23,6 +28,7 @@ class MenuItem
     private string $label = '';
 
     #[ORM\Column(length: 500, nullable: true)]
+    #[Assert\Length(max: 500)]
     #[Assert\Url(protocols: ['http', 'https'], requireTld: true)]
     private ?string $url = null;
 
@@ -42,11 +48,18 @@ class MenuItem
 
     public function getId(): ?int { return $this->id; }
     public function getLabel(): string { return $this->label; }
-    public function setLabel(string $label): self { $this->label = trim($label); return $this; }
+    public function setLabel(string $label): self
+    {
+        $this->label = $this->normalize($label, self::MAX_LABEL_CHARACTERS, self::MAX_LABEL_BYTES, 'label');
+
+        return $this;
+    }
     public function getUrl(): ?string { return $this->url; }
     public function setUrl(?string $url): self
     {
-        $url = $url === null ? null : trim($url);
+        $url = $url === null
+            ? null
+            : $this->normalize($url, self::MAX_URL_CHARACTERS, self::MAX_URL_BYTES, 'url');
         if ($url === '') {
             $url = null;
         }
@@ -70,4 +83,21 @@ class MenuItem
     public function setEnabled(bool $enabled): self { $this->enabled = $enabled; return $this; }
     public function isOpenNewWindow(): bool { return $this->openNewWindow; }
     public function setOpenNewWindow(bool $openNewWindow): self { $this->openNewWindow = $openNewWindow; return $this; }
+
+    private function normalize(string $value, int $maxCharacters, int $maxBytes, string $field): string
+    {
+        if (strlen($value) > $maxBytes) {
+            throw new \LengthException('Menu item '.$field.' exceeds its UTF-8 byte limit.');
+        }
+        if (str_contains($value, "\0") || !mb_check_encoding($value, 'UTF-8')) {
+            throw new \InvalidArgumentException('Menu item '.$field.' must be valid UTF-8 without NUL bytes.');
+        }
+
+        $value = trim($value);
+        if (mb_strlen($value, 'UTF-8') > $maxCharacters) {
+            throw new \LengthException('Menu item '.$field.' exceeds its character limit.');
+        }
+
+        return $value;
+    }
 }
