@@ -55,18 +55,25 @@ final readonly class ExtensionManifest
 
     private static function safeVersion(string $value): bool
     {
-        return preg_match(
-            '/\A[0-9]{1,'.self::MAX_VERSION_COMPONENT_LENGTH,'}\.[0-9]{1,'.self::MAX_VERSION_COMPONENT_LENGTH,'}\.[0-9]{1,'.self::MAX_VERSION_COMPONENT_LENGTH,'}\z/D',
-            $value,
-        ) === 1;
+        $pattern = sprintf(
+            '/\A[0-9]{1,%d}\.[0-9]{1,%d}\.[0-9]{1,%d}\z/D',
+            self::MAX_VERSION_COMPONENT_LENGTH,
+            self::MAX_VERSION_COMPONENT_LENGTH,
+            self::MAX_VERSION_COMPONENT_LENGTH,
+        );
+
+        return preg_match($pattern, $value) === 1;
     }
 
     private static function safeConstraint(string $value): bool
     {
-        return preg_match(
-            '/\A\^[0-9]{1,'.self::MAX_VERSION_COMPONENT_LENGTH,'}\.[0-9]{1,'.self::MAX_VERSION_COMPONENT_LENGTH,'}\z/D',
-            $value,
-        ) === 1;
+        $pattern = sprintf(
+            '/\A\^[0-9]{1,%d}\.[0-9]{1,%d}\z/D',
+            self::MAX_VERSION_COMPONENT_LENGTH,
+            self::MAX_VERSION_COMPONENT_LENGTH,
+        );
+
+        return preg_match($pattern, $value) === 1;
     }
 
     /** @param array<mixed> $files */
