@@ -12,12 +12,12 @@
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
   "published_at": "2026-09-26T18:06:14.037Z",
   "summary": {
-    "total_remaining_worker_tasks": 131,
+    "total_remaining_worker_tasks": 132,
     "completed_worker_prs_awaiting_trusted_review": 146,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "The five remaining FCP proposals are blocked by missing dependency evidence; continue active WCP-371 work and any other disjoint claims without changing foreign claims.",
+    "next_required_action": "The five remaining FCP proposals are dependency-blocked; continue disjoint WCP-371 and WCP-372 while preserving all locked claims.",
     "composition_preparable": 0,
     "immediately_actionable": 0,
     "must_continue": true
@@ -15459,6 +15459,102 @@
       "last_verified_push_at": "2026-09-26T18:06:14.037Z",
       "worker_pr": 165,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/165"
+    },
+    {
+      "priority": 152,
+      "package_id": "WCP-372",
+      "title": "Expose access-role key and name limits in the form",
+      "risk": "low",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-372-access-role-form-boundaries-g1",
+      "suggested_branch": "feature/wcp-372-access-role-form-boundaries-g1",
+      "base_branch": "main",
+      "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "objective": "Align AccessRoleType text inputs with persisted boundaries: technical key 80 characters and role name 120 characters. Add server-side Length constraints and matching maxlength hints while preserving the key regex, key_locked disabled behavior, permission choices, role activation, authorization and persistence behavior.",
+      "allowed_paths": [
+        "src/Form/AccessRoleType.php",
+        "tests/Form/AccessRoleTypeBoundaryTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/",
+        "src/Entity/AccessRole.php",
+        "src/Entity/User.php",
+        "src/Security/",
+        "src/Controller/",
+        "src/Repository/",
+        "src/Form/AdminUserType.php",
+        "src/Service/",
+        "templates/",
+        "assets/",
+        "public/"
+      ],
+      "deliverables": [
+        "Add Length(max: 80) and maxlength=80 to the technical key field.",
+        "Add Length(max: 120) and maxlength=120 to the role name field.",
+        "Add real form tests for exact and one-over key/name values, rendered maxlength values, and unchanged requiredness.",
+        "Verify key_locked still disables the key field and permission-choice behavior remains unchanged."
+      ],
+      "tests": [
+        "Kernel-backed AccessRoleType accepts an 80-character valid key and 120-character Unicode role name.",
+        "Kernel-backed AccessRoleType reports corresponding field errors for an 81-character key and 121-character name.",
+        "Form view exposes maxlength=80 and maxlength=120.",
+        "Requiredness and key_locked disabled behavior remain unchanged; PHPStan level 8 and complete Worker CI pass on exact final HEAD."
+      ],
+      "completion_report": [
+        "exact final Worker HEAD and sanitized main base SHA",
+        "complete changed-file list and Worker PR",
+        "exact/over boundary and maxlength evidence plus key_locked regression evidence",
+        "PHPStan level 8 and exact-head Worker CI results",
+        "confirmation permission assignment, role activation, authorization and persistence behavior are unchanged"
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "no-secrets-or-trusted-private-runtime-in-worker-source",
+        "preserve access-role key regex, key_locked behavior, permission choices, role authorization, CSRF and persistence",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_base_branch": "main",
+      "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "resume_branch": "feature/wcp-372-access-role-form-boundaries-g1",
+      "proposal_kind": "worker_only",
+      "collision_check": {
+        "compared_against": "all current continuous/work-pool-v4 allowed-path scopes through WCP-371 and exact files on sanitized main at f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+        "result": "Neither allowed path nor any enclosing allowed-directory scope collides with a current task, and the test file is absent from sanitized main. WCP-371 is limited to AdminUserType and its test; this package does not touch User, AdminUserType, security, permission implementation, controllers, entity, migration or private-runtime paths.",
+        "paths": [
+          "src/Form/AccessRoleType.php",
+          "tests/Form/AccessRoleTypeBoundaryTest.php"
+        ]
+      },
+      "claimed_on": "2026-09-26T18:06:29.410Z",
+      "claim_state": "active_worker_claim",
+      "last_checkpoint_at": "2026-09-26T18:06:29.410Z",
+      "next_action": "Add Length/maxlength boundaries for AccessRole key (80) and name (120), exact/over form tests, and key_locked/requiredness regression evidence; then run exact-head Worker CI.",
+      "checkpoint_paths": [
+        "src/Form/AccessRoleType.php",
+        "tests/Form/AccessRoleTypeBoundaryTest.php"
+      ],
+      "last_verified_push_at": "2026-09-26T18:06:29.410Z"
     }
   ],
   "recovery_queue": [],
