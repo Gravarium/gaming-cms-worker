@@ -22772,7 +22772,7 @@
       "package_id": "WCP-431",
       "title": "Protect module storage settings permission and CSRF",
       "risk": "low",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -22841,7 +22841,7 @@
         ]
       },
       "claimed_on": "2026-09-26T23:22:33.417Z",
-      "claim_state": "active",
+      "claim_state": "locked_until_trusted_resolution",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
       "active_head": "e70b6446bf8e8f4624c2b0c095d821f81fba8d94",
@@ -22855,15 +22855,15 @@
         "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
         "feature_branch": "e70b6446bf8e8f4624c2b0c095d821f81fba8d94"
       },
-      "next_action": "Wait for complete exact-head Worker CI run 36279926345 on HEAD e70b6446bf8e8f4624c2b0c095d821f81fba8d94; repair concrete failures on this branch, then record the final result.",
+      "next_action": "Keep claim locked until Trusted explicitly integrates, cancels or transfers it; continue with an independent dependency-safe package.",
       "worker_pr": 225,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/225",
       "draft_pr": false,
-      "pr_state": "open_ci_pending",
+      "pr_state": "open_ready_for_review_unmerged",
       "last_ci_run_id": 36279926345,
-      "last_ci_result": "in_progress",
+      "last_ci_result": "success",
       "ci_run_id": 36279926345,
-      "ci_result": "in_progress",
+      "ci_result": "success",
       "ci_attempts": [
         {
           "run_id": 36279761578,
@@ -22874,10 +22874,35 @@
         {
           "run_id": 36279926345,
           "head": "e70b6446bf8e8f4624c2b0c095d821f81fba8d94",
-          "result": "in_progress",
-          "note": "Retest after aligning rejected-CSRF response assertion with HTTP 422."
+          "result": "success",
+          "note": "Exact final HEAD passed both Worker CI jobs; PHPStan Level 8 and all 432 application tests passed, PostgreSQL 18 applied all 39 migrations."
         }
-      ]
+      ],
+      "final_head": "e70b6446bf8e8f4624c2b0c095d821f81fba8d94",
+      "final_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "final_changed_paths": [
+        "tests/Controller/AdminStorageSettingAccessSecurityTest.php"
+      ],
+      "changed_paths": [
+        "tests/Controller/AdminStorageSettingAccessSecurityTest.php"
+      ],
+      "completed_at": "2026-09-26T23:39:25.620Z",
+      "test_results": {
+        "phpunit": "432 tests, 1,869 assertions, 0 failures; one deprecation and one notice.",
+        "phpstan": "Level 8 passed with no errors.",
+        "php_symfony": "Worker PHP/Symfony validation job passed on the exact final HEAD.",
+        "postgres18": "PostgreSQL 18 applied the complete migration chain: 39 migrations executed, 0 unavailable.",
+        "exact_head_ci": {
+          "run_id": 36279926345,
+          "head": "e70b6446bf8e8f4624c2b0c095d821f81fba8d94",
+          "result": "success"
+        }
+      },
+      "completion_summary": "Functional regressions verify that connector managers without CMS_STORAGE_MANAGE cannot view or forge changes to /admin/storage/downloads; missing and invalid form CSRF return 422 without changing persisted settings; and the rendered token saves a synthetic external URL. The original downloads setting or row absence is restored in finally. Only the allowed test file changed; no storage provider was contacted.",
+      "open_limitations": [
+        "Awaiting Trusted review and Trusted integration CI."
+      ],
+      "trusted_follow_up": "Keep CMS_STORAGE_MANAGE and form CSRF enforcement on per-module storage settings; confirm the valid form path never contacts external storage."
     },
     {
       "priority": 212,
