@@ -10,9 +10,9 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-26T13:09:02.927Z",
+  "published_at": "2026-09-26T13:10:12.059Z",
   "summary": {
-    "total_remaining_worker_tasks": 99,
+    "total_remaining_worker_tasks": 100,
     "completed_worker_prs_awaiting_trusted_review": 93,
     "recovery_tasks": 0,
     "unclaimed": 5,
@@ -9695,6 +9695,92 @@
       "pr_state": "open",
       "ci_run_id": 36244183905,
       "ci_result": "queued"
+    },
+    {
+      "priority": 100,
+      "package_id": "WCP-319",
+      "title": "Bound guild rank name persistence input",
+      "risk": "medium",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-319-guild-rank-name-boundary-g1",
+      "suggested_branch": "feature/wcp-319-guild-rank-name-boundary-g1",
+      "base_branch": "main",
+      "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "objective": "Bound GuildRank.name to its mapped varchar(100) before trimming or assignment. Reject malformed UTF-8 and NUL while preserving existing in-bound trimming, NotBlank/Length validation, and all guild permissions/rank behavior.",
+      "allowed_paths": [
+        "src/Entity/GuildRank.php",
+        "tests/Entity/GuildRankBoundaryTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/",
+        "src/Controller/",
+        "src/Form/",
+        "src/Repository/",
+        "src/Service/",
+        "templates/",
+        "assets/",
+        "public/"
+      ],
+      "deliverables": [
+        "Reject rank names above 400 raw UTF-8 bytes or 100 characters before trim, matching the mapped varchar(100).",
+        "Reject malformed UTF-8 and NUL-containing names before assignment.",
+        "Preserve the stored name after rejection and preserve current trim behavior for in-bound values.",
+        "Leave the existing NotBlank/Length constraints, rank permissions, ownership, default-rank, and guild behavior unchanged."
+      ],
+      "tests": [
+        "Targeted GuildRank boundary PHPUnit tests for exact ASCII/multibyte limits, raw byte/character overflow before trimming, malformed UTF-8/NUL, state preservation, and trim/empty behavior.",
+        "PHPStan level 8.",
+        "Complete Worker CI on the exact final HEAD."
+      ],
+      "completion_report": [
+        "exact final Worker HEAD and sanitized main base SHA",
+        "complete changed-path list and Worker PR",
+        "targeted GuildRank boundary tests and complete exact-head Worker CI result",
+        "100-character/400-byte rank-name bound with preserved trim and validator semantics"
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "no-secrets-or-trusted-private-runtime-in-worker-source",
+        "preserve rank permission and guild ownership behavior",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_base_branch": "main",
+      "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "resume_branch": "feature/wcp-319-guild-rank-name-boundary-g1",
+      "proposal_kind": "worker_only",
+      "collision_check": {
+        "compared_against": "all current continuous/work-pool-v4 task allowlists and active/locked claims through WCP-318; exact WCP-319 branch/PR names and new test path were checked",
+        "result": "the GuildRank entity and focused boundary test are disjoint from every current task, including the separate GuildTeam, GuildEvent, and GuildAnnouncement claims",
+        "paths": [
+          "src/Entity/GuildRank.php",
+          "tests/Entity/GuildRankBoundaryTest.php"
+        ]
+      },
+      "claimed_on": "2026-09-26T13:10:12.059Z",
+      "claim_state": "active_worker_claim",
+      "last_checkpoint_at": "2026-09-26T13:10:12.059Z",
+      "next_action": "Create the claim and feature branches from exact sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d, then implement only the two allowlisted files and run exact-head Worker CI."
     }
   ],
   "recovery_queue": [],
