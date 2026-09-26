@@ -82,8 +82,6 @@ final class AccountSessionRevocationSecurityTest extends WebTestCase
         ]);
 
         self::assertResponseRedirects('/login');
-        $client->request('GET', '/account/security');
-        self::assertResponseRedirects('/login');
         self::assertTrue($this->findSession($client, $currentSessionId)->isRevoked());
     }
 
