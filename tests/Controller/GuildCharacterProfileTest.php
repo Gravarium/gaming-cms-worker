@@ -145,7 +145,7 @@ final class GuildCharacterProfileTest extends WebTestCase
         $client = static::createClient();
         $owner = $this->user($client);
         $guild = $this->guild($client, 'validation');
-        $member = $this->member($client, $guild, $owner, 'Validated character');
+        $member = $this->member($client, $guild, $owner, 'Protected character');
         $guildId = $guild->getId();
         $memberId = $member->getId();
         self::assertNotNull($guildId);
