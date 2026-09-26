@@ -39,7 +39,7 @@ final class AdminLayoutPageDirectoryTest extends WebTestCase
                 $entry = (new ContentEntry())
                     ->setAuthor($auth['user'])
                     ->setType(ContentEntry::TYPE_PAGE)
-                    ->setTitle(sprintf('Layout directory %s %03d', $token, $index))
+                    ->setTitle('Layout directory fixture')
                     ->setSlug(sprintf('layout-directory-%s-%03d', $token, $index))
                     ->setBody('Directory test page');
                 $entityManager->persist($entry);
@@ -63,11 +63,17 @@ final class AdminLayoutPageDirectoryTest extends WebTestCase
             self::assertSelectorTextContains('[role="status"]', '205 Seiten');
             self::assertSelectorTextContains('[role="status"]', 'Seite 9 von 9');
             self::assertCount(5, $crawler->filter('tbody tr'));
-            self::assertStringContainsString('200', $crawler->filter('tbody tr')->eq(0)->text());
-            self::assertStringContainsString('204', $crawler->filter('tbody tr')->last()->text());
-
-            $lastPageId = $entryIds[204];
-            self::assertCount(1, $crawler->filter('a[href="/admin/layout/page-'.$lastPageId.'"]'));
+            $lastFiveIds = array_slice($entryIds, 200, 5);
+            self::assertCount(5, $lastFiveIds);
+            $lastPageId = null;
+            foreach ($lastFiveIds as $position => $expectedId) {
+                $link = $crawler->filter('tbody tr')->eq($position)->filter('a');
+                self::assertSame('/admin/layout/page-'.$expectedId, $link->attr('href'));
+                $lastPageId = $expectedId;
+            }
+            if ($lastPageId === null) {
+                throw new \\LogicException('The final page result is missing.');
+            }
             $this->assertPrivateDirectoryHeaders($client);
 
             $crawler = $client->request('GET', '/admin/layout/pages?'.http_build_query([
