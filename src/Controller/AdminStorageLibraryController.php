@@ -16,7 +16,7 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
-#[Route('/admin/storage/library')]
+#[Route('/admin/storage/library/all')]
 #[IsGranted('CMS_STORAGE_MANAGE')]
 final class AdminStorageLibraryController extends AbstractController
 {
