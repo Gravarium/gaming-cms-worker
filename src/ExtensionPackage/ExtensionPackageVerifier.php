@@ -6,6 +6,14 @@ namespace App\ExtensionPackage;
 
 final readonly class ExtensionPackageVerifier
 {
+    private const MAX_MANIFEST_BYTES = 1048576;
+    private const MAX_SIGNATURE_BYTES = 65536;
+    private const MAX_TRUSTED_KEYS_BYTES = 1048576;
+    private const MAX_DECLARED_FILES = 500;
+    private const MAX_PACKAGE_FILE_BYTES = 67108864;
+    private const MAX_PACKAGE_TOTAL_BYTES = 268435456;
+    private const MAX_PACKAGE_ENTRIES = 502;
+
     public const CMS_VERSION = '1.0.0';
 
     public function __construct(
@@ -23,8 +31,8 @@ final readonly class ExtensionPackageVerifier
 
         $manifestPath = $root.'/manifest.json';
         $signaturePath = $root.'/signature.json';
-        $raw = $this->read($manifestPath);
-        $signature = $this->decodeJson($this->read($signaturePath), 'signature');
+        $raw = $this->read($manifestPath, self::MAX_MANIFEST_BYTES);
+        $signature = $this->decodeJson($this->read($signaturePath, self::MAX_SIGNATURE_BYTES), 'signature');
         $trustedKeys = $this->trustedKeys();
 
         $signer = $signature['signer'] ?? null;
@@ -45,7 +53,7 @@ final readonly class ExtensionPackageVerifier
         $data = $this->decodeJson($raw, 'manifest');
         $allowedFields = ['schemaVersion', 'type', 'key', 'name', 'version', 'cmsConstraint', 'files', 'capabilities'];
         if (array_diff(array_keys($data), $allowedFields) !== [] || ($data['schemaVersion'] ?? null) !== 1) {
-            throw new \DomainException('Extension manifest schema is not supported.');
+            throw new \DomainException('Extension package schema is not supported.');
         }
 
         $type = $data['type'] ?? null;
@@ -61,12 +69,13 @@ final readonly class ExtensionPackageVerifier
             || !is_string($name) || trim($name) === '' || mb_strlen($name) > 120
             || !is_string($version) || preg_match('/^\d+\.\d+\.\d+$/', $version) !== 1
             || !is_string($constraint) || !$this->compatible($constraint)
-            || !is_array($files) || $files === []
+            || !is_array($files) || $files === [] || count($files) > self::MAX_DECLARED_FILES
         ) {
             throw new \DomainException('Extension manifest metadata is invalid or incompatible.');
         }
 
         $normalizedFiles = [];
+        $totalBytes = 0;
         foreach ($files as $path => $hash) {
             if (!is_string($path) || !$this->safeRelativePath($path)
                 || !is_string($hash) || preg_match('/^[a-f0-9]{64}$/', $hash) !== 1
@@ -77,6 +86,16 @@ final readonly class ExtensionPackageVerifier
             if (!is_file($fullPath) || is_link($fullPath) || !str_starts_with((string) realpath($fullPath), $root.'/')) {
                 throw new \DomainException('Extension package file is missing or unsafe.');
             }
+            $size = filesize($fullPath);
+            if (
+                $size === false
+                || $size > self::MAX_PACKAGE_FILE_BYTES
+                || $size > self::MAX_PACKAGE_TOTAL_BYTES - $totalBytes
+            ) {
+                throw new \DomainException('Extension package exceeds its bounded file size.');
+            }
+            $totalBytes += $size;
+
             $actualHash = hash_file('sha256', $fullPath);
             if ($actualHash === false || !hash_equals($hash, $actualHash)) {
                 throw new \DomainException('Extension package checksum mismatch.');
@@ -86,7 +105,12 @@ final readonly class ExtensionPackageVerifier
 
         $allowed = array_fill_keys(array_merge(['manifest.json', 'signature.json'], array_keys($normalizedFiles)), true);
         $iterator = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($root, \FilesystemIterator::SKIP_DOTS));
+        $entryCount = 0;
         foreach ($iterator as $item) {
+            ++$entryCount;
+            if ($entryCount > self::MAX_PACKAGE_ENTRIES) {
+                throw new \DomainException('Extension package contains too many filesystem entries.');
+            }
             if ($item->isLink()) {
                 throw new \DomainException('Extension packages may not contain symbolic links.');
             }
@@ -142,7 +166,7 @@ final readonly class ExtensionPackageVerifier
         if ($path === false || !is_file($path) || is_link($this->trustedKeysFile)) {
             throw new \DomainException('Trusted extension key registry is unavailable.');
         }
-        $raw = $this->decodeJson($this->read($path), 'trusted key registry');
+        $raw = $this->decodeJson($this->read($path, self::MAX_TRUSTED_KEYS_BYTES), 'trusted key registry');
         $keys = [];
         foreach ($raw as $id => $encoded) {
             if (preg_match('/^[a-zA-Z0-9._-]{1,80}$/', $id) !== 1 || !is_string($encoded)) {
@@ -157,11 +181,11 @@ final readonly class ExtensionPackageVerifier
         return $keys;
     }
 
-    private function read(string $path): string
+    private function read(string $path, int $maxBytes): string
     {
-        $contents = @file_get_contents($path);
-        if (!is_string($contents) || $contents === '') {
-            throw new \DomainException('Required extension package file is unreadable.');
+        $contents = @file_get_contents($path, false, null, 0, $maxBytes + 1);
+        if (!is_string($contents) || $contents === '' || strlen($contents) > $maxBytes) {
+            throw new \DomainException('Required extension package file is unreadable or too large.');
         }
         return $contents;
     }
