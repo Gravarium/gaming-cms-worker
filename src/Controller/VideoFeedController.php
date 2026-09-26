@@ -6,7 +6,6 @@ namespace App\Controller;
 
 use App\Repository\VideoRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
@@ -20,18 +19,11 @@ final class VideoFeedController extends AbstractController
     }
 
     #[Route('/videos.xml', name: 'app_video_feed_rss', methods: ['GET'])]
-    public function rss(Request $request): Response
+    public function rss(): Response
     {
         $videos = array_slice($this->videos->findPublished(), 0, self::ITEM_LIMIT);
         $response = $this->render('video/feed.xml.twig', ['videos' => $videos]);
         $response->headers->set('Content-Type', 'application/rss+xml; charset=UTF-8');
-        $response->setPublic();
-        $response->setMaxAge(300);
-        $response->setSharedMaxAge(300);
-        $rendered = $response->getContent();
-        $response->setEtag(hash('sha256', $rendered === false ? '' : $rendered));
-        $response->isNotModified($request);
-
         return $response;
     }
 }
