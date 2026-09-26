@@ -10,10 +10,10 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-26T20:53:21.282Z",
+  "published_at": "2026-09-26T20:55:17.768Z",
   "summary": {
     "total_remaining_worker_tasks": 134,
-    "completed_worker_prs_awaiting_trusted_review": 172,
+    "completed_worker_prs_awaiting_trusted_review": 173,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
@@ -18870,7 +18870,7 @@
       "package_id": "WCP-402",
       "title": "Publish a public archive for content releases",
       "risk": "medium",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -18922,11 +18922,12 @@
         "Run targeted PHPUnit, PHPStan level 8 and complete Worker CI on the exact final HEAD, including the PostgreSQL 18 migration-chain job."
       ],
       "completion_report": [
-        "Exact sanitized main base SHA, exact final Worker HEAD, Worker PR and exact-head CI run.",
-        "Changed paths and public archive/detail behavior, including publication visibility and pagination.",
-        "Negative results for unavailable release IDs, hidden associated entries, malformed pagination, and caching.",
-        "Targeted/full PHPUnit and PHPStan level 8 results plus PostgreSQL 18 migration-chain result.",
-        "Open limitations and exact Trusted main-CMS follow-up steps; no merge or deployment."
+        "Final Worker HEAD 4f60a8f47c75efd8a50414718299021f6508beba; base f1a246c64527ef3ad51f7490773d9bbf9d42be5d; PR #196 is open and ready for Trusted review.",
+        "The public archive is discoverable from News; release and associated-entry queries enforce current published/public visibility and stable pagination.",
+        "Negative tests cover hidden release IDs, hidden associated entries, malformed/array/over-limit paging, out-of-range pages, and no-store headers.",
+        "Exact-head CI run 36270962369 passed: 432 PHPUnit tests / 1,908 assertions, PHPStan level 8, Composer audit, Symfony/Twig/schema checks, and all 39 PostgreSQL 18 migrations.",
+        "First CI run 36270789321 exposed an invalid DQL root selection; it was corrected on the same feature branch and the full exact-head CI was rerun successfully.",
+        "Open limitations and Trusted follow-up are documented in PR #196. No merge or deployment."
       ],
       "immutable_constraints": [
         "trusted-main-is-the-only-integration-and-deployment-source",
@@ -18954,9 +18955,9 @@
         "active_locked_overlaps": []
       },
       "claimed_on": "2026-09-26T20:40:45.660Z",
-      "claim_state": "active",
-      "last_checkpoint_at": "2026-09-26T20:51:51.710Z",
-      "next_action": "Wait for exact-head Worker CI run 36270962369; confirm targeted/full tests, PHPStan and PostgreSQL 18 migration chain pass on the new head.",
+      "claim_state": "locked_until_trusted_resolution",
+      "last_checkpoint_at": "2026-09-26T20:55:17.768Z",
+      "next_action": "PR #196 is ready for Trusted review; keep this claim locked until Trusted explicitly integrates, cancels or transfers it. Continue with an independent claim only; do not merge or deploy.",
       "checkpoint_paths": [
         "src/Controller/PublicContentReleaseController.php",
         "src/Repository/ContentReleaseRepository.php",
@@ -18965,7 +18966,7 @@
         "templates/content/news.html.twig",
         "tests/Controller/PublicContentReleaseTest.php"
       ],
-      "last_verified_push_at": "2026-09-26T20:51:51.710Z",
+      "last_verified_push_at": "2026-09-26T20:55:17.768Z",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
       "active_head": "4f60a8f47c75efd8a50414718299021f6508beba",
@@ -18974,18 +18975,53 @@
       "fortress_boundary": "Keep public-release eligibility in the module repository/controller boundary and return only ContentRelease and ContentEntry records already eligible for public display. Do not expose admin/audit author relations or add a second authorization model; this leaves the module boundary clear for future Fortress policy enforcement.",
       "worker_pr": 196,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/196",
-      "pr_state": "open_draft",
+      "pr_state": "open_ready_for_review",
       "last_ci_run_id": 36270962369,
-      "last_ci_result": "queued",
+      "last_ci_result": "success",
       "ci_attempts": [
         {
           "run_id": 36270789321,
           "head": "39f3827f63d9e82feb917fdadcdc205e4b9c5e75",
           "result": "failure",
           "cause": "The release-detail functional test exposed invalid DQL: SELECT entry selected a joined entity without selecting a root alias. The repository query now roots the DQL in ContentEntry and explicitly joins the published release's entries collection."
+        },
+        {
+          "run_id": 36270962369,
+          "head": "4f60a8f47c75efd8a50414718299021f6508beba",
+          "result": "success",
+          "outcome": "PHP/Symfony job and PostgreSQL 18 migration-chain job both passed on the exact final HEAD."
         }
       ],
-      "last_failure_diagnosis": "Exact-head run 36270789321 passed PHPStan, Twig, container and PostgreSQL 18 migrations, then the detail functional test returned 500 because DQL selected only joined alias entry. Fixed on the same branch by making ContentEntry a root and joining the release relation; full CI is queued on 4f60a8f47c75efd8a50414718299021f6508beba."
+      "last_failure_diagnosis": "Exact-head run 36270789321 passed PHPStan, Twig, container and PostgreSQL 18 migrations, then the detail functional test returned 500 because DQL selected only joined alias entry. Fixed on the same branch by making ContentEntry a root and joining the release relation; full CI is queued on 4f60a8f47c75efd8a50414718299021f6508beba.",
+      "final_head": "4f60a8f47c75efd8a50414718299021f6508beba",
+      "final_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "final_changed_paths": [
+        "src/Controller/PublicContentReleaseController.php",
+        "src/Repository/ContentReleaseRepository.php",
+        "templates/content/news.html.twig",
+        "templates/content_release/index.html.twig",
+        "templates/content_release/show.html.twig",
+        "tests/Controller/PublicContentReleaseTest.php"
+      ],
+      "ci_run_id": 36270962369,
+      "ci_result": "success",
+      "test_results": {
+        "phpunit": "432 tests, 1,908 assertions, zero failures; one existing PHPUnit deprecation and one notice.",
+        "phpstan": "Level 8 passed with no errors.",
+        "composer_audit": "No security vulnerability advisories found.",
+        "php_symfony": "Twig lint, container validation, asset compilation and Doctrine schema validation passed.",
+        "postgres18": "All 39 worker-visible migrations applied and migration status confirmed.",
+        "exact_head_ci": {
+          "run_id": 36270962369,
+          "head": "4f60a8f47c75efd8a50414718299021f6508beba",
+          "result": "success"
+        }
+      },
+      "open_limitations": [
+        "Release detail URLs use numeric IDs; no release slug, search or feed is added.",
+        "The existing admin release workflow remains the only release authoring workflow."
+      ],
+      "completed_at": "2026-09-26T20:55:17.768Z"
     },
     {
       "priority": 183,
