@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-26T23:15:18.588Z",
+  "published_at": "2026-09-26T23:17:30.211Z",
   "summary": {
     "total_remaining_worker_tasks": 134,
-    "completed_worker_prs_awaiting_trusted_review": 196,
+    "completed_worker_prs_awaiting_trusted_review": 197,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-429 PR #222 is open on exact sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d; run and record complete Worker CI on exact head 8586826c01fbda47e0e803d3d8b92933a780342d.",
+    "next_required_action": "WCP-429 PR #222 is complete with green exact-head CI and remains claim-locked pending Trusted resolution; continue with an independent worker-only proposal because all five unclaimed FCPs remain dependency-blocked.",
     "composition_preparable": 0,
     "immediately_actionable": 0,
     "must_continue": true
@@ -22448,7 +22448,7 @@
       "package_id": "WCP-429",
       "title": "Guard connector-target deletion authorization and CSRF",
       "risk": "low",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -22517,13 +22517,13 @@
         ]
       },
       "claimed_on": "2026-09-26T23:12:43.996Z",
-      "claim_state": "active",
+      "claim_state": "locked_until_trusted_resolution",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
       "active_head": "8586826c01fbda47e0e803d3d8b92933a780342d",
       "resume_branch": "feature/wcp-429-admin-connector-delete-security-g1",
-      "last_checkpoint_at": "2026-09-26T23:15:18.588Z",
-      "last_verified_push_at": "2026-09-26T23:15:18.588Z",
+      "last_checkpoint_at": "2026-09-26T23:17:30.211Z",
+      "last_verified_push_at": "2026-09-26T23:17:30.211Z",
       "checkpoint_paths": [
         "tests/Controller/AdminConnectorMutationSecurityTest.php"
       ],
@@ -22531,7 +22531,7 @@
         "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
         "feature_branch": "8586826c01fbda47e0e803d3d8b92933a780342d"
       },
-      "next_action": "Wait for Worker CI run 36278826074 on exact HEAD 8586826c01fbda47e0e803d3d8b92933a780342d; diagnose and repair any failure before completion.",
+      "next_action": "PR #222 has green exact-head Worker CI; keep this claim locked until Trusted explicitly integrates, cancels or transfers it, and continue with an independent package.",
       "worker_pr": 222,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/222",
       "draft_pr": false,
@@ -22549,9 +22549,29 @@
         {
           "run_id": 36278826074,
           "head": "8586826c01fbda47e0e803d3d8b92933a780342d",
-          "result": "in_progress"
+          "result": "success"
         }
-      ]
+      ],
+      "last_ci_result": "success",
+      "ci_run_id": 36278826074,
+      "ci_result": "success",
+      "completed_at": "2026-09-26T23:17:30.211Z",
+      "test_results": {
+        "phpunit": "431 tests, 1,868 assertions, 0 failures; one deprecation and one notice.",
+        "phpstan": "Level 8 passed with no errors.",
+        "php_symfony": "Worker PHP/Symfony validation job passed on exact final HEAD.",
+        "postgres18": "PostgreSQL 18 completed the full migration chain: 39 migrations executed, 0 unavailable.",
+        "exact_head_ci": {
+          "run_id": 36278826074,
+          "head": "8586826c01fbda47e0e803d3d8b92933a780342d",
+          "result": "success"
+        }
+      },
+      "completion_summary": "Functional regressions verify content managers without CMS_CONNECTORS_MANAGE cannot view or delete connector targets, missing or invalid CSRF tokens preserve an authorized synthetic target, and its rendered token removes only the CMS target row. No external provider is called; only the allowed test file changed.",
+      "open_limitations": [
+        "Awaiting Trusted review and Trusted integration CI."
+      ],
+      "trusted_follow_up": "Preserve CMS_CONNECTORS_MANAGE authorization and connector deletion CSRF before removing target definitions; confirm that deleting a CMS target never deletes external provider data or credentials."
     }
   ],
   "recovery_queue": [],
