@@ -68,10 +68,6 @@ final class ExtensionOutboundUrlPolicy
 
         $pinned = [];
         foreach ($ips as $ip) {
-            if (!is_string($ip)) {
-                throw new DomainException('Extension outbound host returned an invalid address.');
-            }
-
             $this->assertPublicIp($ip);
             if (!in_array($ip, $pinned, true)) {
                 $pinned[] = $ip;
@@ -82,13 +78,10 @@ final class ExtensionOutboundUrlPolicy
             }
         }
 
-        if ($pinned === []) {
-            throw new DomainException('Extension outbound host cannot be resolved.');
-        }
-
         return ['url' => $url, 'host' => $host, 'ips' => $pinned];
     }
 
+    /** @param array<string, mixed> $parts */
     private function normalizeHost(array $parts): string
     {
         $rawHost = $parts['host'] ?? null;
@@ -146,6 +139,7 @@ final class ExtensionOutboundUrlPolicy
         return $host;
     }
 
+    /** @return list<string> */
     private function resolveForHost(string $host): array
     {
         try {
@@ -204,10 +198,6 @@ final class ExtensionOutboundUrlPolicy
 
         $ips = [];
         foreach ($records as $record) {
-            if (!is_array($record)) {
-                return [];
-            }
-
             foreach (['ip', 'ipv6'] as $key) {
                 if (!array_key_exists($key, $record)) {
                     continue;
