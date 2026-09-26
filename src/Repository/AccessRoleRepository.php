@@ -22,8 +22,8 @@ final class AccessRoleRepository extends ServiceEntityRepository
     public function searchMembersForRole(AccessRole $role, string $query, string $state, int $limit = 25, int $offset = 0): array
     {
         return $this->memberQueryBuilder($role, $query, $state)
-            ->orderBy('member.createdAt', 'DESC')
-            ->addOrderBy('member.id', 'DESC')
+            ->orderBy('rosterUser.createdAt', 'DESC')
+            ->addOrderBy('rosterUser.id', 'DESC')
             ->setFirstResult(max(0, $offset))
             ->setMaxResults(max(1, min(100, $limit)))
             ->getQuery()
@@ -33,7 +33,7 @@ final class AccessRoleRepository extends ServiceEntityRepository
     public function countMembersForRole(AccessRole $role, string $query, string $state): int
     {
         return (int) $this->memberQueryBuilder($role, $query, $state)
-            ->select('COUNT(member.id)')
+            ->select('COUNT(rosterUser.id)')
             ->getQuery()
             ->getSingleScalarResult();
     }
@@ -41,30 +41,30 @@ final class AccessRoleRepository extends ServiceEntityRepository
     private function memberQueryBuilder(AccessRole $role, string $query, string $state): QueryBuilder
     {
         $builder = $this->createQueryBuilder('accessRole')
-            ->select('member')
-            ->innerJoin('accessRole.users', 'member')
+            ->select('rosterUser')
+            ->innerJoin('accessRole.users', 'rosterUser')
             ->andWhere('accessRole = :role')
             ->setParameter('role', $role);
 
         $query = trim($query);
         if ($query !== '') {
             $builder
-                ->andWhere('(LOWER(member.displayName) LIKE :query OR LOWER(member.email) LIKE :query)')
+                ->andWhere('(LOWER(rosterUser.displayName) LIKE :query OR LOWER(rosterUser.email) LIKE :query)')
                 ->setParameter('query', '%'.mb_strtolower($query).'%');
         }
 
         $now = new \DateTimeImmutable();
         if ($state === 'active') {
             $builder
-                ->andWhere('member.isActive = true')
-                ->andWhere('(member.lockedUntil IS NULL OR member.lockedUntil <= :now)')
+                ->andWhere('rosterUser.isActive = true')
+                ->andWhere('(rosterUser.lockedUntil IS NULL OR rosterUser.lockedUntil <= :now)')
                 ->setParameter('now', $now);
         } elseif ($state === 'locked') {
             $builder
-                ->andWhere('member.lockedUntil > :now')
+                ->andWhere('rosterUser.lockedUntil > :now')
                 ->setParameter('now', $now);
         } elseif ($state === 'unverified') {
-            $builder->andWhere('member.emailVerifiedAt IS NULL');
+            $builder->andWhere('rosterUser.emailVerifiedAt IS NULL');
         }
 
         return $builder;
