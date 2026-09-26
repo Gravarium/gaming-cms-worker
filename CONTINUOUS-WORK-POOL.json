@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-26T15:51:08Z",
+  "published_at": "2026-09-26T15:52:35.400Z",
   "summary": {
-    "total_remaining_worker_tasks": 128,
+    "total_remaining_worker_tasks": 129,
     "completed_worker_prs_awaiting_trusted_review": 122,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "Continue the active WCP-347 guild application internal note boundary package.",
+    "next_required_action": "Continue the active WCP-348 admin user search query boundary package.",
     "composition_preparable": 0,
     "immediately_actionable": 0,
     "must_continue": true
@@ -12850,6 +12850,95 @@
       "worker_pr": 141,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/141",
       "pr_state": "draft"
+    },
+    {
+      "priority": 129,
+      "package_id": "WCP-348",
+      "title": "Bound admin user search query length",
+      "risk": "low",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-348-admin-user-search-query-boundary-g1",
+      "suggested_branch": "feature/wcp-348-admin-user-search-query-boundary-g1",
+      "base_branch": "main",
+      "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "objective": "Bound the admin user search query before passing it to the SQL LIKE search. Preserve state filters, result behavior and authorization. A 190-character cap retains all valid email addresses (the persisted email maximum is 180 characters) while keeping arbitrary oversized search strings out of query construction and filter rendering.",
+      "allowed_paths": [
+        "src/Controller/AdminUserController.php",
+        "tests/Controller/AdminUserSearchBoundaryTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/",
+        "src/Entity/",
+        "src/Repository/",
+        "src/Form/",
+        "templates/",
+        "assets/",
+        "public/"
+      ],
+      "deliverables": [
+        "Trim and cap the admin user search query to 190 characters in the controller before repository search and template rendering.",
+        "Keep state filtering, the existing 250-row result cap, account permissions and query matching behavior intact.",
+        "Add functional boundary coverage for exact-limit and oversized search values."
+      ],
+      "tests": [
+        "Authenticated functional request with a 191-character query returns successfully and echoes only the first 190 characters in the search field.",
+        "A 190-character query is preserved exactly; valid email addresses up to the stored 180-character maximum are not truncated.",
+        "PHPStan level 8.",
+        "Complete Worker CI on the exact final HEAD."
+      ],
+      "completion_report": [
+        "exact final Worker HEAD and sanitized main base SHA",
+        "complete changed-file list and Worker PR",
+        "exact-limit and oversized-query regression, PHPStan level 8 and exact-head Worker CI results",
+        "confirmation authorization, state filter and result cap are unchanged"
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "no-secrets-or-trusted-private-runtime-in-worker-source",
+        "preserve existing CMS permissions, search semantics and result limits",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_base_branch": "main",
+      "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "resume_branch": "feature/wcp-348-admin-user-search-query-boundary-g1",
+      "proposal_kind": "worker_only",
+      "collision_check": {
+        "compared_against": "all current continuous/work-pool-v4 allowlists and active/locked claims through WCP-347; exact paths checked against sanitized main at f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+        "result": "Both exact paths are absent from every current allowlist and claim. No repository, template, entity, form, configuration or schema path is modified; the open FCP-072 template work remains disjoint.",
+        "paths": [
+          "src/Controller/AdminUserController.php",
+          "tests/Controller/AdminUserSearchBoundaryTest.php"
+        ]
+      },
+      "claimed_on": "2026-09-26T15:52:35.400Z",
+      "claim_state": "active_worker_claim",
+      "last_checkpoint_at": "2026-09-26T15:52:35.400Z",
+      "next_action": "Create the claim and feature branches from exact sanitized main, then cap the query and add the functional regression.",
+      "checkpoint_paths": [
+        "src/Controller/AdminUserController.php",
+        "tests/Controller/AdminUserSearchBoundaryTest.php"
+      ]
     }
   ],
   "recovery_queue": [],
