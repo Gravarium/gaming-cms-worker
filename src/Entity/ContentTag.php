@@ -51,12 +51,12 @@ class ContentTag
     public function setSlug(string $slug): self
     {
         if (strlen($slug) > 512 || !mb_check_encoding($slug, 'UTF-8')) {
-            throw new \\InvalidArgumentException('Taxonomy slug input is invalid or too large.');
+            throw new \InvalidArgumentException('Taxonomy slug input is invalid or too large.');
         }
 
         $normalized = trim(mb_strtolower($slug));
-        if (strlen($normalized) > 120 || preg_match('/\\A[a-z0-9]+(?:-[a-z0-9]+)*\\z/', $normalized) !== 1) {
-            throw new \\InvalidArgumentException('Taxonomy slug must be a non-empty lowercase ASCII slug of at most 120 characters.');
+        if (strlen($normalized) > 120 || preg_match('/\A[a-z0-9]+(?:-[a-z0-9]+)*\z/', $normalized) !== 1) {
+            throw new \InvalidArgumentException('Taxonomy slug must be a non-empty lowercase ASCII slug of at most 120 characters.');
         }
 
         $this->slug = $normalized;
