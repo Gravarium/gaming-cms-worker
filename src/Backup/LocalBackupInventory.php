@@ -13,7 +13,7 @@ final readonly class LocalBackupInventory
     private const MAX_MANIFEST_BYTES = 16_384;
     private const MAX_MANIFEST_LINE_BYTES = 512;
     private const MAX_BACKUP_COMPONENT_BYTES = 4_294_967_296;
-    private const MAX_BACKUP_TOTAL_BYTES = 17_179_869_184;
+    private const MAX_BACKUP_TOTAL_BYTES = 12_000_000_000;
 
     /** @var list<string> */
     private const MANIFEST_KEYS = [
@@ -91,7 +91,6 @@ final readonly class LocalBackupInventory
                 $size = @filesize($path);
                 if (
                     !is_int($size)
-                    || $size < 0
                     || $size > self::MAX_BACKUP_COMPONENT_BYTES
                     || $bytes > self::MAX_BACKUP_TOTAL_BYTES - $size
                 ) {
@@ -163,9 +162,6 @@ final readonly class LocalBackupInventory
             /** @var array<string, string> $values */
             $values = [];
             foreach ($lines as $line) {
-                if (!is_string($line)) {
-                    return null;
-                }
                 if ($line === '') {
                     continue;
                 }
