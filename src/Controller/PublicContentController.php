@@ -10,6 +10,7 @@ use App\Entity\ContentTag;
 use App\Repository\CategoryRepository;
 use App\Repository\ContentEntryRepository;
 use App\Repository\ContentRedirectRepository;
+use App\Repository\SiteSettingsRepository;
 use App\Repository\ContentTagRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -22,7 +23,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 final class PublicContentController extends AbstractController
 {
     private const PAGE_SIZE = 20;
-    public function __construct(private readonly ContentEntryRepository $entries, private readonly CategoryRepository $categories, private readonly ContentTagRepository $tags, private readonly ContentRedirectRepository $redirects) {}
+    public function __construct(private readonly ContentEntryRepository $entries, private readonly CategoryRepository $categories, private readonly ContentTagRepository $tags, private readonly ContentRedirectRepository $redirects, private readonly SiteSettingsRepository $siteSettings) {}
 
     #[Route('/news', name: 'app_news_index', methods: ['GET'])]
     public function news(Request $request): Response
@@ -45,7 +46,7 @@ final class PublicContentController extends AbstractController
     public function search(Request $request): Response
     {
         $query = mb_substr(trim($request->query->getString('q')), 0, 100); $entries = $this->entries->searchPublished($query);
-        $response = $this->render('content/search.html.twig', ['query' => $query, 'entries' => $entries]);
+        $response = $this->render('content/search.html.twig', ['query' => $query, 'entries' => $entries, 'site' => $this->siteSettings->current()]);
         return $this->cache($request, $response, hash('sha256', $query.'|'.$this->fingerprint($entries)), 60, null, $entries);
     }
     #[Route('/news/{slug}', name: 'app_news_show', priority: -10, methods: ['GET'])]
@@ -55,7 +56,7 @@ final class PublicContentController extends AbstractController
     #[Route('/feeds/news.xml', name: 'app_news_feed_rss', methods: ['GET'])]
     public function rss(Request $request): Response
     {
-        $entries = $this->entries->findPublishedNews(50); $response = $this->render('content/feed.xml.twig', ['entries' => $entries]);
+        $entries = $this->entries->findPublishedNews(50); $response = $this->render('content/feed.xml.twig', ['entries' => $entries, 'site' => $this->siteSettings->current()]);
         $response->headers->set('Content-Type', 'application/rss+xml; charset=UTF-8');
         return $this->cache($request, $response, $this->fingerprint($entries), 300, null, $entries);
     }
@@ -77,7 +78,7 @@ final class PublicContentController extends AbstractController
     #[Route('/sitemap.xml', name: 'app_content_sitemap', methods: ['GET'])]
     public function sitemap(Request $request): Response
     {
-        $entries = $this->entries->findPublishedAll(); $response = $this->render('content/sitemap.xml.twig', ['entries' => $entries]);
+        $entries = $this->entries->findPublishedAll(); $response = $this->render('content/sitemap.xml.twig', ['entries' => $entries, 'site' => $this->siteSettings->current()]);
         $response->headers->set('Content-Type', 'application/xml; charset=UTF-8');
         return $this->cache($request, $response, $this->fingerprint($entries), 900, null, $entries);
     }
@@ -88,7 +89,7 @@ final class PublicContentController extends AbstractController
         if ($page > $pages && $total > 0) { throw $this->createNotFoundException(); }
         $entries = $this->entries->findPublishedNews(self::PAGE_SIZE, ($page - 1) * self::PAGE_SIZE, $category, $tag);
         $featured = $page === 1 && $category === null && $tag === null ? $this->entries->findFeaturedNews() : [];
-        $response = $this->render('content/news.html.twig', ['entries' => $entries, 'featured' => $featured, 'category' => $category, 'tag' => $tag, 'page' => $page, 'pages' => $pages, 'total' => $total]);
+        $response = $this->render('content/news.html.twig', ['entries' => $entries, 'featured' => $featured, 'category' => $category, 'tag' => $tag, 'page' => $page, 'pages' => $pages, 'total' => $total, 'site' => $this->siteSettings->current()]);
         $visibleEntries = array_merge($featured, $entries);
         return $this->cache($request, $response, hash('sha256', $page.'|'.($category?->getSlug() ?? '').'|'.($tag?->getSlug() ?? '').'|'.$this->fingerprint($visibleEntries)), 60, null, $visibleEntries);
     }
@@ -104,7 +105,7 @@ final class PublicContentController extends AbstractController
             throw $this->createNotFoundException();
         }
         $related = $this->entries->findRelated($entry);
-        $response = $this->render('content/show.html.twig', ['entry' => $entry, 'related' => $related, 'preview' => false]);
+        $response = $this->render('content/show.html.twig', ['entry' => $entry, 'related' => $related, 'preview' => false, 'site' => $this->siteSettings->current()]);
         if ($type === ContentEntry::TYPE_PAGE) { $response->headers->set('Cache-Control', 'private, no-store'); return $response; }
         return $this->cache($request, $response, hash('sha256', $entry->getId().'|'.$entry->getUpdatedAt()->format('U.u')), 300, $entry->getUpdatedAt(), [$entry, ...$related]);
     }
