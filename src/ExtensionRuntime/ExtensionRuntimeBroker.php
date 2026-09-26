@@ -9,10 +9,13 @@ use App\ExternalConnector\ExternalNotificationDispatcher;
 use App\ExternalConnector\ExternalNotificationMessage;
 use App\Repository\ContentEntryRepository;
 use App\Repository\MediaAssetRepository;
+use Symfony\Contracts\HttpClient\ChunkInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 final readonly class ExtensionRuntimeBroker
 {
+    private const MAX_JSON_RESPONSE_BYTES = 262144;
+
     public function __construct(
         private ExtensionCapabilityGate $capabilities,
         private ExtensionRuntimeState $state,
@@ -83,17 +86,35 @@ final readonly class ExtensionRuntimeBroker
                 'timeout' => 5,
                 'max_duration' => 8,
                 'max_redirects' => 0,
+                'buffer' => false,
                 'headers' => ['Accept' => 'application/json', 'User-Agent' => 'GamingCMS-Extension/1.0'],
                 'resolve' => [$approved['host'] => $approved['ips'][0]],
             ]);
-            $body = $response->getContent(false);
-            if (strlen($body) > 262144) {
-                throw new \DomainException('Extension HTTP response exceeds 256 KiB.');
-            }
-            $contentType = strtolower((string) ($response->getHeaders(false)['content-type'][0] ?? ''));
+            $headers = $response->getHeaders(false);
+            $contentType = strtolower((string) ($headers['content-type'][0] ?? ''));
             if (!str_starts_with($contentType, 'application/json')) {
+                $response->cancel();
                 throw new \DomainException('Extension HTTP response is not JSON.');
             }
+
+            $body = '';
+            foreach ($this->http->stream($response) as $chunk) {
+                if ($chunk->isTimeout()) {
+                    $response->cancel();
+                    throw new \DomainException('Extension HTTP response timed out.');
+                }
+                if ($chunk->isFirst() || $chunk->isLast()) {
+                    continue;
+                }
+
+                $content = $chunk->getContent();
+                if (strlen($body) + strlen($content) > self::MAX_JSON_RESPONSE_BYTES) {
+                    $response->cancel();
+                    throw new \DomainException('Extension HTTP response exceeds 256 KiB.');
+                }
+                $body .= $content;
+            }
+
             json_decode($body, true, 32, JSON_THROW_ON_ERROR);
             return ['status' => $response->getStatusCode(), 'contentType' => $contentType, 'body' => $body];
         });
