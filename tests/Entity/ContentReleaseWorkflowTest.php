@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Tests\Entity;
 use App\Entity\ContentEntry;
 use App\Entity\ContentRelease;
+use App\Entity\User;
 use PHPUnit\Framework\TestCase;
 final class ContentReleaseWorkflowTest extends TestCase
 {
@@ -46,13 +47,13 @@ final class ContentReleaseWorkflowTest extends TestCase
         self::assertSame(1, $release->publish($publishedAt));
 
         $mutations = [
-            static fn () => $release->setName('Changed release'),
-            static fn () => $release->setDescription('Changed description'),
-            static fn () => $release->setScheduledAt(new \DateTimeImmutable('+1 hour')),
-            static fn () => $release->setCreatedBy(new User()),
-            static fn () => $release->setStatus(ContentRelease::STATUS_CANCELLED),
-            static fn () => $release->addEntry($otherEntry),
-            static fn () => $release->removeEntry($entry),
+            fn () => $release->setName('Changed release'),
+            fn () => $release->setDescription('Changed description'),
+            fn () => $release->setScheduledAt(new \DateTimeImmutable('+1 hour')),
+            fn () => $release->setCreatedBy(new User()),
+            fn () => $release->setStatus(ContentRelease::STATUS_CANCELLED),
+            fn () => $release->addEntry($otherEntry),
+            fn () => $release->removeEntry($entry),
         ];
 
         foreach ($mutations as $mutation) {
