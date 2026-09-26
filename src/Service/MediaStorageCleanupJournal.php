@@ -12,6 +12,8 @@ final readonly class MediaStorageCleanupJournal
     public const KIND_LEGACY_S3 = 'legacy_s3';
     public const KIND_LOCAL = 'local';
 
+    private const MAX_ENTRY_BYTES = 16 * 1024;
+
     public function __construct(
         #[Autowire('%kernel.project_dir%')]
         private string $projectDir,
@@ -21,7 +23,11 @@ final readonly class MediaStorageCleanupJournal
     public function recordConnector(string $targetKey, string $objectKey): void
     {
         $targetKey = strtolower(trim($targetKey));
-        if (preg_match('/^[a-z0-9][a-z0-9_.-]*$/', $targetKey) !== 1) {
+        if (
+            !mb_check_encoding($targetKey, 'UTF-8')
+            || mb_strlen($targetKey) > 100
+            || preg_match('/^[a-z0-9][a-z0-9_.-]*$/', $targetKey) !== 1
+        ) {
             throw new \InvalidArgumentException('Invalid media cleanup target.');
         }
 
@@ -57,8 +63,17 @@ final readonly class MediaStorageCleanupJournal
                 continue;
             }
 
+            $fileSize = filesize($file);
+            if ($fileSize === false || $fileSize > self::MAX_ENTRY_BYTES) {
+                continue;
+            }
+            $payload = file_get_contents($file);
+            if ($payload === false || strlen($payload) > self::MAX_ENTRY_BYTES) {
+                continue;
+            }
+
             try {
-                $decoded = json_decode((string) file_get_contents($file), true, 32, JSON_THROW_ON_ERROR);
+                $decoded = json_decode($payload, true, 32, JSON_THROW_ON_ERROR);
             } catch (\JsonException) {
                 continue;
             }
@@ -71,7 +86,12 @@ final readonly class MediaStorageCleanupJournal
             $value = (string) ($decoded['value'] ?? '');
             try {
                 if ($kind === self::KIND_CONNECTOR) {
-                    if ($targetKey === null || preg_match('/^[a-z0-9][a-z0-9_.-]*$/', $targetKey) !== 1) {
+                    if (
+                        $targetKey === null
+                        || !mb_check_encoding($targetKey, 'UTF-8')
+                        || mb_strlen($targetKey) > 100
+                        || preg_match('/^[a-z0-9][a-z0-9_.-]*$/', $targetKey) !== 1
+                    ) {
                         continue;
                     }
                     $value = $this->safeObjectKey($value);
@@ -156,11 +176,13 @@ final readonly class MediaStorageCleanupJournal
     private function safeLocalLocation(string $location): string
     {
         $location = trim($location);
-        if (!str_starts_with($location, '/uploads/media/')
+        if (
+            !mb_check_encoding($location, 'UTF-8')
+            || !str_starts_with($location, '/uploads/media/')
             || mb_strlen($location) > 500
             || str_contains($location, '..')
             || str_contains($location, '\\')
-            || preg_match('/[\x00-\x1F\x7F]/u', $location) === 1
+            || preg_match('/[\x00-\x1F\x7F]/u', $location) !== 0
         ) {
             throw new \InvalidArgumentException('Invalid local media cleanup location.');
         }
@@ -171,11 +193,13 @@ final readonly class MediaStorageCleanupJournal
     private function safeObjectKey(string $objectKey): string
     {
         $objectKey = trim($objectKey);
-        if ($objectKey === ''
+        if (
+            !mb_check_encoding($objectKey, 'UTF-8')
+            || $objectKey === ''
             || mb_strlen($objectKey) > 500
             || str_starts_with($objectKey, '/')
             || str_contains($objectKey, '\\')
-            || preg_match('/[\x00-\x1F\x7F]/u', $objectKey) === 1
+            || preg_match('/[\x00-\x1F\x7F]/u', $objectKey) !== 0
         ) {
             throw new \InvalidArgumentException('Invalid media cleanup object key.');
         }
