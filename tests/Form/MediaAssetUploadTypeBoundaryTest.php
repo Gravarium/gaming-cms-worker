@@ -18,7 +18,7 @@ final class MediaAssetUploadTypeBoundaryTest extends KernelTestCase
     {
         $form = $this->submitUploadForm(str_repeat('é', 180), str_repeat('é', 255));
 
-        self::assertTrue($form->isValid());
+        self::assertTrue($form->isValid(), $this->describeErrors($form));
         self::assertTrue($form->get('title')->isValid());
         self::assertTrue($form->get('altText')->isValid());
     }
@@ -49,6 +49,17 @@ final class MediaAssetUploadTypeBoundaryTest extends KernelTestCase
         }
 
         parent::tearDown();
+    }
+
+    private function describeErrors(FormInterface $form): string
+    {
+        $messages = [];
+        foreach ($form->getErrors(true, true) as $error) {
+            $origin = $error->getOrigin();
+            $messages[] = ($origin !== null ? $origin->getName().': ' : '').$error->getMessage();
+        }
+
+        return implode('; ', $messages);
     }
 
     private function submitUploadForm(string $title, string $altText): FormInterface
