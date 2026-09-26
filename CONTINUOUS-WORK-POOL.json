@@ -13,11 +13,11 @@
   "published_at": "2026-09-26T23:27:10.231Z",
   "summary": {
     "total_remaining_worker_tasks": 134,
-    "completed_worker_prs_awaiting_trusted_review": 199,
+    "completed_worker_prs_awaiting_trusted_review": 200,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-432 draft PR #226 is open on exact HEAD 61ef1c679bb6a431b5247198a5bab8533c7757b5; complete targeted tests and Worker CI run 36280057628 and repair failures on this branch.",
+    "next_required_action": "WCP-432 PR #226 is complete on exact green HEAD 61ef1c679bb6a431b5247198a5bab8533c7757b5; keep its claim locked for Trusted review and continue with an independent package.",
     "composition_preparable": 0,
     "immediately_actionable": 0,
     "must_continue": true
@@ -22909,7 +22909,7 @@
       "package_id": "WCP-432",
       "title": "Protect access-role deletion authorization and assignment invariants",
       "risk": "low",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -22979,13 +22979,13 @@
         ]
       },
       "claimed_on": "2026-09-26T23:34:04.139Z",
-      "claim_state": "active",
+      "claim_state": "locked_until_trusted_resolution",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
       "active_head": "61ef1c679bb6a431b5247198a5bab8533c7757b5",
       "resume_branch": "feature/wcp-432-access-role-deletion-g1",
-      "last_checkpoint_at": "2026-09-26T23:38:48.842Z",
-      "last_verified_push_at": "2026-09-26T23:38:48.842Z",
+      "last_checkpoint_at": "2026-09-26T23:41:12.839Z",
+      "last_verified_push_at": "2026-09-26T23:41:12.839Z",
       "checkpoint_paths": [
         "tests/Controller/AdminAccessRoleDeletionSecurityTest.php"
       ],
@@ -22993,22 +22993,47 @@
         "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
         "feature_branch": "61ef1c679bb6a431b5247198a5bab8533c7757b5"
       },
-      "next_action": "Draft PR #226 is open; run 36280057628 is executing on exact HEAD 61ef1c679bb6a431b5247198a5bab8533c7757b5. Confirm the targeted tests and complete Worker CI, then fix any concrete failure on this branch.",
+      "next_action": "PR #226 has green exact-head Worker CI and is ready for Trusted review; keep this claim locked until Trusted explicitly integrates, cancels or transfers it, and continue with an independent package.",
       "worker_pr": 226,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/226",
-      "pr_state": "open_draft_for_ci",
-      "draft_pr": true,
+      "pr_state": "open_ready_for_review_unmerged",
+      "draft_pr": false,
       "last_ci_run_id": 36280057628,
-      "last_ci_result": "in_progress",
+      "last_ci_result": "success",
       "ci_run_id": 36280057628,
-      "ci_result": "in_progress",
+      "ci_result": "success",
       "ci_attempts": [
         {
           "run_id": 36280057628,
           "head": "61ef1c679bb6a431b5247198a5bab8533c7757b5",
-          "result": "in_progress"
+          "result": "success"
         }
-      ]
+      ],
+      "final_head": "61ef1c679bb6a431b5247198a5bab8533c7757b5",
+      "final_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "final_changed_paths": [
+        "tests/Controller/AdminAccessRoleDeletionSecurityTest.php"
+      ],
+      "changed_paths": [
+        "tests/Controller/AdminAccessRoleDeletionSecurityTest.php"
+      ],
+      "completed_at": "2026-09-26T23:41:12.839Z",
+      "test_results": {
+        "phpunit": "434 tests, 1,883 assertions, 0 failures; one deprecation and one notice.",
+        "phpstan": "Level 8 passed with no errors.",
+        "php_symfony": "Worker PHP/Symfony validation job passed on exact final HEAD.",
+        "postgres18": "PostgreSQL 18 completed the full migration chain: 39 migrations executed, 0 unavailable.",
+        "exact_head_ci": {
+          "run_id": 36280057628,
+          "head": "61ef1c679bb6a431b5247198a5bab8533c7757b5",
+          "result": "success"
+        }
+      },
+      "completion_summary": "Functional regressions verify CMS_USERS_MANAGE authorization, missing/invalid CSRF non-mutation, valid rendered-token deletion of an unassigned non-system role, preservation of an unrelated role, and protection of system and assigned roles even with a valid token rendered before protection. Only the allowed test file changed.",
+      "open_limitations": [
+        "Awaiting Trusted review and Trusted integration CI."
+      ],
+      "trusted_follow_up": "Preserve CMS_USERS_MANAGE authorization, role-specific CSRF validation, and the invariant that system or user-assigned access roles cannot be deleted."
     }
   ],
   "recovery_queue": [],
