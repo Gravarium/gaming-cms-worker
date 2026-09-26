@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-26T22:36:42.298Z",
+  "published_at": "2026-09-26T22:37:39.236Z",
   "summary": {
     "total_remaining_worker_tasks": 134,
-    "completed_worker_prs_awaiting_trusted_review": 187,
+    "completed_worker_prs_awaiting_trusted_review": 188,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-419 is on PR #213 at exact head 34c915bbe25651cddfb70d0ca363455d61827a05; complete exact-head Worker CI and reconcile its locked claim.",
+    "next_required_action": "WCP-420 PR #214 is complete with green exact-head CI and remains claim-locked pending Trusted resolution; continue with an independent worker-only proposal because all five unclaimed FCPs remain dependency-blocked.",
     "composition_preparable": 0,
     "immediately_actionable": 0,
     "must_continue": true
@@ -21230,7 +21230,7 @@
       "package_id": "WCP-420",
       "title": "Protect admin failed-queue retry actions",
       "risk": "low",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -21297,13 +21297,13 @@
         ]
       },
       "claimed_on": "2026-09-26T22:31:38.103Z",
-      "claim_state": "active",
+      "claim_state": "locked_until_trusted_resolution",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
       "active_head": "9f37a344fc524b89265325e27d09df00bed88e12",
       "resume_branch": "feature/wcp-420-admin-queue-retry-security-g1",
-      "last_checkpoint_at": "2026-09-26T22:35:16.841Z",
-      "last_verified_push_at": "2026-09-26T22:35:16.841Z",
+      "last_checkpoint_at": "2026-09-26T22:37:39.236Z",
+      "last_verified_push_at": "2026-09-26T22:37:39.236Z",
       "checkpoint_paths": [
         "tests/Controller/AdminQueueRetrySecurityTest.php"
       ],
@@ -21311,7 +21311,7 @@
         "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
         "feature_branch": "9f37a344fc524b89265325e27d09df00bed88e12"
       },
-      "next_action": "Wait for Worker CI run 36276718659 on exact HEAD 9f37a344fc524b89265325e27d09df00bed88e12; diagnose and repair any failure, then record complete results.",
+      "next_action": "PR #214 has green exact-head Worker CI; keep this claim locked until Trusted explicitly integrates, cancels or transfers it, and continue with an independent package.",
       "worker_pr": 214,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/214",
       "draft_pr": false,
@@ -21329,9 +21329,29 @@
         {
           "run_id": 36276718659,
           "head": "9f37a344fc524b89265325e27d09df00bed88e12",
-          "result": "in_progress"
+          "result": "success"
         }
-      ]
+      ],
+      "last_ci_result": "success",
+      "ci_run_id": 36276718659,
+      "ci_result": "success",
+      "completed_at": "2026-09-26T22:37:39.236Z",
+      "test_results": {
+        "phpunit": "432 tests, 1,861 assertions, 0 failures; one deprecation and one notice.",
+        "phpstan": "Level 8 passed with no errors.",
+        "php_symfony": "Worker PHP/Symfony validation job passed on exact final HEAD.",
+        "postgres18": "PostgreSQL 18 completed the full migration chain: 39 migrations executed, 0 unavailable.",
+        "exact_head_ci": {
+          "run_id": 36276718659,
+          "head": "9f37a344fc524b89265325e27d09df00bed88e12",
+          "result": "success"
+        }
+      },
+      "completion_summary": "Functional regressions verify users without CMS_SETTINGS_MANAGE cannot invoke either failed-queue retry POST action, while a settings manager is rejected for missing or invalid CSRF tokens on both retry-all and individual retry. Negative cases do not dispatch or acknowledge queue messages. Only the allowed test file changed.",
+      "open_limitations": [
+        "Awaiting Trusted review and Trusted integration CI."
+      ],
+      "trusted_follow_up": "Preserve CMS_SETTINGS_MANAGE authorization and CSRF validation before failed-message recovery when porting or changing admin queue retry actions in Trusted; run full Trusted CI."
     },
     {
       "priority": 201,
