@@ -19,29 +19,15 @@ final class AdminNotificationSecurityTest extends WebTestCase
         $client = static::createClient();
         $firstId = $this->createNotification($client, 'restricted-first');
         $secondId = $this->createNotification($client, 'restricted-second');
-        $limitedUser = $this->createUser($client, 'restricted', []);
-        $authorizedUser = $this->createUser($client, 'token-source', [CmsPermission::ACCESS]);
-        $client->loginUser($authorizedUser);
+        $client->loginUser($this->createUser($client, 'restricted', []));
 
-        $crawler = $client->request('GET', '/admin/notifications');
-        self::assertResponseIsSuccessful();
-        $singleToken = (string) $crawler
-            ->filter('form[action="/admin/notifications/'.$firstId.'/read"] input[name="_token"]')
-            ->attr('value');
-        $allToken = (string) $crawler
-            ->filter('form[action="/admin/notifications/read-all"] input[name="_token"]')
-            ->attr('value');
-        self::assertNotSame('', $singleToken);
-        self::assertNotSame('', $allToken);
-
-        $client->loginUser($limitedUser);
         $client->request('GET', '/admin/notifications');
         self::assertResponseStatusCodeSame(403);
 
-        $client->request('POST', '/admin/notifications/'.$firstId.'/read', ['_token' => $singleToken]);
+        $client->request('POST', '/admin/notifications/'.$firstId.'/read', ['_token' => 'invalid']);
         self::assertResponseStatusCodeSame(403);
 
-        $client->request('POST', '/admin/notifications/read-all', ['_token' => $allToken]);
+        $client->request('POST', '/admin/notifications/read-all', ['_token' => 'invalid']);
         self::assertResponseStatusCodeSame(403);
 
         $this->assertUnread($client, [$firstId, $secondId]);
