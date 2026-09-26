@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-26T23:21:12.722Z",
+  "published_at": "2026-09-26T23:22:33.417Z",
   "summary": {
     "total_remaining_worker_tasks": 134,
     "completed_worker_prs_awaiting_trusted_review": 197,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-428 draft PR #224 is open on exact head 1d4ac37c001540f156e58bf01e1c17d4976243b6; run its targeted tests and complete Worker CI, fixing any failures on the same branch.",
+    "next_required_action": "WCP-431 is reserved on exact sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d; add focused CMS_STORAGE_MANAGE and form-CSRF coverage for per-module storage settings and run exact-head Worker CI.",
     "composition_preparable": 0,
     "immediately_actionable": 0,
     "must_continue": true
@@ -22685,6 +22685,94 @@
           "result": "in_progress"
         }
       ]
+    },
+    {
+      "priority": 211,
+      "package_id": "WCP-431",
+      "title": "Protect module storage settings permission and CSRF",
+      "risk": "low",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-431-module-storage-settings-security-g1",
+      "suggested_branch": "feature/wcp-431-module-storage-settings-security-g1",
+      "base_branch": "main",
+      "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5",
+      "objective": "Add test-only functional security coverage for per-module storage settings. An authenticated connector manager without CMS_STORAGE_MANAGE cannot view or submit a storage change; a storage manager's missing CSRF token cannot change persisted downloads storage settings; the rendered valid form can change the setting. Restore the original database state in finally.",
+      "allowed_paths": [
+        "tests/Controller/AdminStorageSettingAccessSecurityTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/",
+        "src/",
+        "templates/",
+        "assets/",
+        "public/"
+      ],
+      "deliverables": [
+        "Verify a CMS_CONNECTORS_MANAGE user without CMS_STORAGE_MANAGE receives 403 for GET and forged POST /admin/storage/downloads.",
+        "Verify an authorized storage manager's submitted form without a CSRF token leaves persisted downloads storage settings unchanged.",
+        "Verify the rendered form token saves an external test URL, then restore the original setting or absence in finally.",
+        "Keep work test-only and do not upload or access any external storage provider."
+      ],
+      "tests": [
+        "php bin/phpunit tests/Controller/AdminStorageSettingAccessSecurityTest.php",
+        "Existing MediaStorageSecurityTest remains green.",
+        "PHPStan level 8 and complete Worker CI on exact final HEAD, including PostgreSQL 18 migration-chain checks."
+      ],
+      "completion_report": [
+        "Exact sanitized main base SHA and final Worker HEAD.",
+        "Complete changed-path list and Worker PR.",
+        "Role denial, missing-CSRF no-mutation, valid rendered form behavior, and state restoration.",
+        "Exact-head PHPStan and full Worker CI; confirm only test data changed."
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "preserve-CMS_STORAGE_MANAGE-authorization-and-form-CSRF-protection",
+        "never contact external storage or put credentials in CMS records",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5",
+      "proposal_kind": "worker_only",
+      "proposal_dependency_evidence": [],
+      "collision_check": {
+        "compared_against": "Fresh continuous/work-pool-v4 blob b868eb15e818c129185d8f10ee52ab8da93e6abd, all active and claim-locked allowlists, and exact sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5.",
+        "result": "No active or claim-locked task owns tests/Controller/AdminStorageSettingAccessSecurityTest.php. Existing MediaStorageSecurityTest covers media upload, deletion, folders and storage permission for media routes, but not the per-module storage destination form /admin/storage/{moduleKey}. WCP-428 content browser and WCP-430 release deletion paths are disjoint; the locked WCP-421 media library proposal does not claim this test path.",
+        "paths": [
+          "tests/Controller/AdminStorageSettingAccessSecurityTest.php"
+        ]
+      },
+      "claimed_on": "2026-09-26T23:22:33.417Z",
+      "claim_state": "active",
+      "active_base_branch": "main",
+      "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5",
+      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5",
+      "resume_branch": "feature/wcp-431-module-storage-settings-security-g1",
+      "last_checkpoint_at": "2026-09-26T23:22:33.417Z",
+      "last_verified_push_at": "2026-09-26T23:22:33.417Z",
+      "checkpoint_paths": [],
+      "branch_heads": {
+        "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5",
+        "feature_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5"
+      },
+      "next_action": "Add permission, missing-CSRF and rendered-token storage-setting regressions with guaranteed state restoration, then open a Worker PR."
     }
   ],
   "recovery_queue": [],
