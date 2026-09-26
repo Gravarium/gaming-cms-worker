@@ -17,7 +17,7 @@ final readonly class BackupTargetPlanner
     ) {
     }
 
-    /** @param list<mixed> $providerKeys
+    /** @param array<array-key, mixed> $providerKeys
      *  @return array{created: int, skipped: int, keys: list<string>, rejected: bool}
      */
     public function plan(array $providerKeys): array
