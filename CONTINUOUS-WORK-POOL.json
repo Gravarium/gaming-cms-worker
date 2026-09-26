@@ -10,7 +10,7 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-26T20:18:15.402Z",
+  "published_at": "2026-09-26T20:20:56.792Z",
   "summary": {
     "total_remaining_worker_tasks": 132,
     "completed_worker_prs_awaiting_trusted_review": 169,
@@ -18085,7 +18085,7 @@
       "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-      "active_head": "7b0d3d53c02eb8b2eaa7977bd07bcc57a7241794",
+      "active_head": "b0af6d295f630d1911348635b02efd9a73397ed3",
       "resume_branch": "feature/wcp-395-member-notification-inbox-g1",
       "proposal_kind": "worker_only",
       "collision_check": {
@@ -18101,8 +18101,8 @@
       },
       "claimed_on": "2026-09-26T20:06:03.790Z",
       "claim_state": "active",
-      "last_checkpoint_at": "2026-09-26T20:17:39.989Z",
-      "next_action": "Wait for exact-head CI 36268995894 on the corrected session-backed CSRF tests; repair any remaining genuine failures and rerun full CI.",
+      "last_checkpoint_at": "2026-09-26T20:20:56.792Z",
+      "next_action": "Wait for Worker CI to start on exact HEAD b0af6d295f630d1911348635b02efd9a73397ed3; inspect full run and repair any genuine failure on this branch.",
       "checkpoint_paths": [
         "src/Controller/MemberNotificationInboxController.php",
         "src/Repository/MemberNotificationRepository.php",
@@ -18110,20 +18110,26 @@
         "templates/guild_portal/notifications.html.twig",
         "tests/Controller/MemberNotificationInboxTest.php"
       ],
-      "last_verified_push_at": "2026-09-26T20:17:39.989Z",
+      "last_verified_push_at": "2026-09-26T20:20:56.792Z",
       "worker_pr": 190,
-      "ci_run_id": 36268995894,
+      "ci_run_id": null,
       "ci_result": "pending",
       "ci_attempts": [
         {
           "run_id": 36268747275,
           "head": "1fa2c962c779a92971b7b1540def8a8159519a81",
           "result": "failure",
-          "cause": "Three SessionNotFound errors from requesting CSRF tokens outside an active request plus a brittle exact Cache-Control assertion. PHPStan and PostgreSQL migration validation passed; tests now read tokens rendered in live inbox forms and assert private/no-store semantics."
+          "cause": "Three SessionNotFound errors from test code generating CSRF tokens outside an active request and one brittle exact Cache-Control assertion; PHPStan and PostgreSQL migration validation passed."
         },
         {
           "run_id": 36268995894,
           "head": "7b0d3d53c02eb8b2eaa7977bd07bcc57a7241794",
+          "result": "failure",
+          "cause": "All CSRF session errors and cache assertion were fixed. One owner-scope test switched accounts in one BrowserKit client and received the expected login redirect instead of exercising the foreign-ID path. The controller now queries by current user before CSRF validation, preserving a uniform 404 for foreign or missing rows and requiring CSRF for owned writes; tests use separate clients."
+        },
+        {
+          "run_id": null,
+          "head": "b0af6d295f630d1911348635b02efd9a73397ed3",
           "result": "pending"
         }
       ]
