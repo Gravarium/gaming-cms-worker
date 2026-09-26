@@ -2,14 +2,13 @@
 
 This repository is a sanitized development workspace. It is intentionally not a production distribution.
 
-## Branch model
+## Branch and continuous-work model
 
 - `main` is the generated sanitized baseline from the trusted repository.
-- `worker/account-N` branches are also generated baselines and may be force-refreshed automatically after trusted `main` changes.
-- Never commit directly to `main` or `worker/account-N`.
-- Create a feature branch from your assigned `worker/account-N` branch and work only there.
-- A worker PR back to `worker/account-N` is a review/integration handoff. Do not treat the worker repository as the production source of truth.
-- Automatic baseline refreshes never reset worker-owned feature branches. Reconcile conflicts in the feature branch instead of weakening the baseline policy.
+- `continuous/work-pool-v4` and its current `CONTINUOUS-WORK-POOL.json` govern Worker proposal selection and goal-driven continuation. The approved goal is to finish the secure gaming CMS; the owner does not supply every next ticket.
+- A chat resumes its own unfinished claim first. If no published task is eligible, it derives, records and claims a bounded independent Worker-only CMS proposal under the current pool rules. Another chat may work on a different, disjoint claim.
+- Historical `worker/account-N` branches are not assignable baselines. Never commit product code to `main`, a pool branch, or an account baseline. Use a separate feature branch from the current sanitized main or a verified green proposal composition.
+- A Worker PR is an untrusted proposal and review handoff. Trusted selects and validates changes independently. Automatic baseline refresh must never reset a feature branch.
 
 ## Security and private boundary
 
