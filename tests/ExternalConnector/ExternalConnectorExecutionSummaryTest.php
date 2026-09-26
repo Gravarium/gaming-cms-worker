@@ -35,7 +35,7 @@ final class ExternalConnectorExecutionSummaryTest extends TestCase
         self::assertSame(2, $summary->successfulCount());
     }
 
-    public function testOptionalFailureIsDegradedAndRequiredFailureIsFailed(): void
+    public function testFailureWithoutSuccessIsFailedForOptionalAndRequiredTargets(): void
     {
         $optionalFailure = new ExternalConnectorExecutionSummary(
             ExternalConnectorTarget::CAPABILITY_MAIL,
