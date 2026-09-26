@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-26T16:53:47.340Z",
+  "published_at": "2026-09-26T16:55:33.696Z",
   "summary": {
-    "total_remaining_worker_tasks": 132,
-    "completed_worker_prs_awaiting_trusted_review": 132,
+    "total_remaining_worker_tasks": 131,
+    "completed_worker_prs_awaiting_trusted_review": 133,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "Verify WCP-357 and WCP-358 on exact heads; then re-evaluate the blocked FCP dependencies.",
+    "next_required_action": "Continue disjoint active WCP-358 work; re-evaluate blocked FCP dependencies after exact-head CI.",
     "composition_preparable": 0,
     "immediately_actionable": 0,
     "must_continue": true
@@ -13849,7 +13849,7 @@
       "package_id": "WCP-357",
       "title": "Guild announcement title form boundary",
       "risk": "low",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -13924,17 +13924,32 @@
         ]
       },
       "claimed_on": "2026-09-26T16:48:58.936Z",
-      "claim_state": "active_worker_claim",
-      "last_checkpoint_at": "2026-09-26T16:51:42.906Z",
-      "next_action": "Run and verify complete Worker CI on exact HEAD d5c1be9a26b4d0923a2ed66057592dbf536d3637; fix only failures within WCP-357 allowed paths.",
+      "claim_state": "locked_until_trusted_resolution",
+      "last_checkpoint_at": "2026-09-26T16:55:33.696Z",
+      "next_action": "Await Trusted review with the claim locked; do not merge or deploy.",
       "checkpoint_paths": [
         "src/Form/GuildAnnouncementType.php",
         "tests/Form/GuildAnnouncementTypeBoundaryTest.php"
       ],
-      "last_verified_push_at": "2026-09-26T16:51:42.906Z",
+      "last_verified_push_at": "2026-09-26T16:55:33.696Z",
       "worker_pr": 151,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/151",
-      "pr_state": "draft"
+      "pr_state": "ready_for_review",
+      "final_head": "d5c1be9a26b4d0923a2ed66057592dbf536d3637",
+      "ci_run_id": 36256968983,
+      "ci_result": "success",
+      "completed_on": "2026-09-26T16:55:33.696Z",
+      "final_changed_paths": [
+        "src/Form/GuildAnnouncementType.php",
+        "tests/Form/GuildAnnouncementTypeBoundaryTest.php"
+      ],
+      "test_evidence": [
+        "Worker CI run 36256968983 (#451) succeeded on exact final HEAD d5c1be9a26b4d0923a2ed66057592dbf536d3637.",
+        "PHPStan reported no errors; complete PHPUnit suite passed with 432 tests and 1,863 assertions (one PHPUnit deprecation and one notice).",
+        "PostgreSQL 18 migration validation applied and confirmed all 39 migrations.",
+        "Regression tests accept exactly 180 Unicode title characters, reject 181 at the title field, and confirm rendered maxlength=180.",
+        "PR #151 is open, ready for review, unmerged, and changes only the two allowed paths."
+      ]
     },
     {
       "priority": 139,
