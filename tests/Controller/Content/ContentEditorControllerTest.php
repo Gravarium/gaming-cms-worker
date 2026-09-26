@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Controller\Content;
 
+use App\Controller\AdminContentController;
 use App\ContentEditor\ContentBlockDocument;
 use App\Entity\ContentEntry;
 use App\Entity\ContentRevision;
@@ -33,6 +34,38 @@ final class ContentEditorControllerTest extends WebTestCase
         );
 
         self::assertResponseStatusCodeSame(403);
+    }
+
+    public function testEditorEndpointsRejectOversizedRequestBeforeJsonDecoding(): void
+    {
+        $client = static::createClient();
+        [$user, $entry] = $this->persistEntry($client);
+        $client->loginUser($user);
+        [$token] = $this->editorState($client, $entry);
+        $body = json_encode(
+            ['document' => str_repeat('x', AdminContentController::MAX_EDITOR_PAYLOAD_BYTES)],
+            JSON_THROW_ON_ERROR,
+        );
+        self::assertGreaterThan(AdminContentController::MAX_EDITOR_PAYLOAD_BYTES, strlen($body));
+
+        foreach (['preview', 'autosave'] as $operation) {
+            $client->request(
+                'POST',
+                '/admin/content/'.$entry->getId().'/editor/'.$operation,
+                [],
+                [],
+                ['CONTENT_TYPE' => 'application/json', 'HTTP_X_CSRF_TOKEN' => $token],
+                $body,
+            );
+            self::assertResponseStatusCodeSame(413);
+        }
+
+        $em = $client->getContainer()->get(EntityManagerInterface::class);
+        $em->clear();
+        $saved = $em->find(ContentEntry::class, $entry->getId());
+        self::assertInstanceOf(ContentEntry::class, $saved);
+        self::assertSame('Legacy original', $saved->getBody());
+        self::assertCount(0, $em->getRepository(ContentRevision::class)->findBy(['entry' => $saved]));
     }
 
     public function testPreviewEscapesXssAndDoesNotWrite(): void
