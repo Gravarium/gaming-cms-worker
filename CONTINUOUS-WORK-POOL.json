@@ -10,16 +10,16 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-26T10:53:20.538Z",
+  "published_at": "2026-09-26T10:54:27.564Z",
   "summary": {
-    "total_remaining_worker_tasks": 63,
+    "total_remaining_worker_tasks": 64,
     "completed_worker_prs_awaiting_trusted_review": 58,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "Continue independent Worker proposal work while preserving foreign active claims and WCP-113's Trusted-review lock; after each exact-head green CI, reconcile and continue.",
+    "next_required_action": "Continue WCP-114 on its exclusive extension-inventory claim while preserving all foreign and completed claim locks; after exact-head green CI, reconcile and continue independently.",
     "composition_preparable": 0,
-    "immediately_actionable": 0,
+    "immediately_actionable": 1,
     "must_continue": true
   },
   "rules": {
@@ -5855,6 +5855,97 @@
         "PHP/Symfony validation and application-test job 108390584072 succeeded.",
         "PostgreSQL migration chain job 108390584276 succeeded."
       ]
+    },
+    {
+      "priority": 64,
+      "package_id": "WCP-114",
+      "title": "Bound extension package inventory enumeration",
+      "risk": "high",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-114-extension-inventory-boundary-g1",
+      "suggested_branch": "feature/wcp-114-extension-inventory-boundary-g1",
+      "base_branch": "main",
+      "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "objective": "Harden the worker-visible ExtensionPackageInventory filesystem boundary before admin inventory output consumes installed extension state: validate the absolute install root, enumerate module/theme directories lazily with a finite cap and symlink rejection, fail closed on unsafe enumeration, and preserve verified/invalid status, permission summaries, runtime status and deterministic ordering.",
+      "allowed_paths": [
+        "src/ExtensionPackage/ExtensionPackageInventory.php",
+        "tests/ExtensionPackage/ExtensionPackageInventoryBoundaryTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/",
+        "src/Controller/",
+        "src/Entity/",
+        "src/ExtensionPackage/ExtensionManifest.php",
+        "tests/ExtensionPackage/ExtensionManifestBoundaryTest.php",
+        "src/ExtensionPackage/ExtensionPackageVerifier.php",
+        "src/ExtensionPackage/ExtensionPackageInstaller.php",
+        "src/ExtensionPackage/ExtensionPermissionStore.php",
+        "tests/ExtensionPackage/ExtensionPermissionStoreBoundaryTest.php",
+        "src/ExtensionRuntime/ExtensionRuntimeState.php",
+        "tests/ExtensionRuntime/ExtensionRuntimeStateBoundaryTest.php",
+        "src/Messenger/FailedMessageOverview.php",
+        "tests/Messenger/FailedMessageOverviewTest.php",
+        "src/ExternalConnector/ExternalConnectorRegistry.php",
+        "tests/ExternalConnector/ExternalConnectorRegistryTest.php"
+      ],
+      "deliverables": [
+        "bounded absolute install-root validation with fail-closed missing, unreadable, non-directory and symlink handling",
+        "lazy module/theme directory enumeration with a finite total package cap and symlink/non-regular entry rejection",
+        "preserve verified/invalid inventory records, permission/runtime summaries and deterministic type/key ordering",
+        "positive and negative filesystem/output boundary coverage without package verifier, installer, manifest, schema, migration, controller or private-runtime changes"
+      ],
+      "tests": [
+        "targeted ExtensionPackageInventory boundary PHPUnit tests",
+        "existing extension capability and package security tests",
+        "PHPStan level 8",
+        "complete Worker CI on the exact final HEAD"
+      ],
+      "completion_report": [
+        "exact final Worker HEAD and sanitized base SHA",
+        "complete changed-path list and Worker PR",
+        "targeted plus existing extension/package-security tests and complete Worker CI result",
+        "install-root bounds, enumeration cap, symlink behavior and deferred Fortress inventory risks"
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "no-secrets-or-trusted-private-runtime-in-worker-source",
+        "preserve existing extension signature, manifest, installer, permission, runtime and upload safeguards",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_base_branch": "main",
+      "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "resume_branch": "feature/wcp-114-extension-inventory-boundary-g1",
+      "proposal_kind": "worker_only",
+      "collision_check": {
+        "compared_against": "current continuous/work-pool-v4 task allowlists and searched foreign active claims",
+        "result": "disjoint from all published allowlists and active/locked extension, messenger and connector claims; no shared schema, migration, DI or template paths",
+        "paths": [
+          "src/ExtensionPackage/ExtensionPackageInventory.php",
+          "tests/ExtensionPackage/ExtensionPackageInventoryBoundaryTest.php"
+        ]
+      },
+      "claimed_on": "2026-09-26T10:54:27.564Z"
     }
   ],
   "recovery_queue": [],
