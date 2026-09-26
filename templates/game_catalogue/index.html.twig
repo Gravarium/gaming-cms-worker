@@ -8,6 +8,34 @@
         <p>Spiele, Plattformen, Genres und Veröffentlichungen an einem Ort.</p>
         <a class="button-link" href="{{ path('app_game_catalogue_releases') }}">Release-Kalender</a>
     </header>
+
+    <form action="{{ path('app_game_catalogue_index') }}" method="get" class="content-form" aria-label="Spiele filtern">
+        <label for="game-catalogue-genre">Genre
+            <select id="game-catalogue-genre" name="genre">
+                <option value="">Alle Genres</option>
+                {% for genre in genres %}
+                    <option value="{{ genre.slug }}" {{ selectedGenre == genre.slug ? 'selected' : '' }}>{{ genre.name }}</option>
+                {% endfor %}
+            </select>
+        </label>
+        <label for="game-catalogue-platform">Plattform
+            <select id="game-catalogue-platform" name="platform">
+                <option value="">Alle Plattformen</option>
+                {% for platform in platforms %}
+                    <option value="{{ platform.slug }}" {{ selectedPlatform == platform.slug ? 'selected' : '' }}>{{ platform.name }}</option>
+                {% endfor %}
+            </select>
+        </label>
+        <button type="submit">Filter anwenden</button>
+        <a class="button-link button-secondary" href="{{ path('app_game_catalogue_index') }}">Alle Spiele</a>
+    </form>
+
+    {% if invalidFilter %}
+        <p class="notice" role="status">Mindestens ein ausgewählter Filter ist nicht verfügbar. Setze die Filter zurück, um alle Spiele zu sehen.</p>
+    {% elseif hasFilters %}
+        <p class="muted" role="status">{{ entries|length }} Spiele mit diesen Filtern.</p>
+    {% endif %}
+
     <section class="portal-cards" aria-label="Spiele">
         {% for entry in entries %}
             <article class="portal-card">
@@ -18,7 +46,13 @@
                 {% if entry.genres|length %}<p>{% for genre in entry.genres %}<span class="portal-tag">{{ genre.name }}</span> {% endfor %}</p>{% endif %}
             </article>
         {% else %}
-            <p>Aktuell sind keine Spiele im Katalog veröffentlicht.</p>
+            {% if not invalidFilter %}
+                {% if hasFilters %}
+                    <p role="status">Keine Spiele passen zu den gewählten Filtern.</p>
+                {% else %}
+                    <p>Aktuell sind keine Spiele im Katalog veröffentlicht.</p>
+                {% endif %}
+            {% endif %}
         {% endfor %}
     </section>
 </main>
