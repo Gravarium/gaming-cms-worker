@@ -99,7 +99,7 @@ final class MediaAssetUsageResolver
         }
 
         $documents = $this->content->createQueryBuilder('entry')
-            ->select('entry.editorDocument')
+            ->select('entry.editorDocument AS editorDocument')
             ->andWhere('entry.editorDocument LIKE :assetReference')
             ->setParameter('assetReference', '%assetId%'.$assetId.'%')
             ->getQuery()
