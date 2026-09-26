@@ -1,0 +1,17 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Einladung erstellt | Gaming CMS{% endblock %}
+
+{% block body %}
+<main class="dashboard">
+    <p class="eyebrow">Benutzer · Einladungen</p>
+    <h1>Einladung erstellt</h1>
+    <p>Der Registrierungslink wird aus Sicherheitsgründen nur in dieser Antwort vollständig angezeigt.</p>
+    <p><a href="{{ path('app_invitation_register', {token: rawToken}) }}">{{ url('app_invitation_register', {token: rawToken}) }}</a></p>
+    <p>Gültig bis {{ invitation.expiresAt|date('d.m.Y H:i') }}.</p>
+    <form method="post" action="{{ path('app_admin_invitation_revoke', {id: invitation.id}) }}">
+        <input type="hidden" name="_token" value="{{ csrf_token('revoke-member-invitation-' ~ invitation.id) }}">
+        <button type="submit" class="text-danger">Einladung widerrufen</button>
+    </form>
+</main>
+{% endblock %}
