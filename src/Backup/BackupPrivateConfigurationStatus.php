@@ -108,10 +108,12 @@ final readonly class BackupPrivateConfigurationStatus
 
     private function safeField(string $value): bool
     {
-        return $value !== ''
-            && strlen($value) <= self::MAX_STATUS_LINE_BYTES
-            && mb_check_encoding($value, 'UTF-8')
-            && preg_match('/[\x00-\x1F\x7F]/', $value) !== 1;
+        return $value === ''
+            || (
+                strlen($value) <= self::MAX_STATUS_LINE_BYTES
+                && mb_check_encoding($value, 'UTF-8')
+                && preg_match('/[\x00-\x1F\x7F]/', $value) !== 1
+            );
     }
 
     /** @param resource $handle */
