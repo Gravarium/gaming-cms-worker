@@ -10,7 +10,7 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-26T22:15:16.360Z",
+  "published_at": "2026-09-26T22:16:44.163Z",
   "summary": {
     "total_remaining_worker_tasks": 134,
     "completed_worker_prs_awaiting_trusted_review": 186,
@@ -20506,7 +20506,7 @@
       "proposal_dependency_evidence": [],
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-      "active_head": "f65cc096d8df8c508479ce05397fc2024d7ed419",
+      "active_head": "f582f194292986d820652d4fef914bbc8e437a15",
       "resume_branch": "feature/wcp-414-admin-menu-reordering-g1",
       "collision_check": {
         "compared_against": "Fresh continuous/work-pool-v4 HEAD d6e2c86fcd27a834f43f20245c29a81c35d7ae1f, sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d, every active and claim-locked allowlist.",
@@ -20520,9 +20520,9 @@
       },
       "claimed_on": "2026-09-26T21:51:36.354Z",
       "claim_state": "active",
-      "next_action": "Monitor exact-head Worker CI run 36275505474 on f65cc096d8df8c508479ce05397fc2024d7ed419; repair any remaining failure on this branch.",
-      "last_checkpoint_at": "2026-09-26T22:13:19.887Z",
-      "last_verified_push_at": "2026-09-26T22:13:19.887Z",
+      "next_action": "Monitor exact-head Worker CI run 36275706273 on f582f194292986d820652d4fef914bbc8e437a15; repair any remaining failure on this branch.",
+      "last_checkpoint_at": "2026-09-26T22:16:44.163Z",
+      "last_verified_push_at": "2026-09-26T22:16:44.163Z",
       "checkpoint_paths": [
         "src/Controller/AdminMenuOrderController.php",
         "templates/admin/menu/form.html.twig",
@@ -20531,15 +20531,15 @@
       ],
       "branch_heads": {
         "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5",
-        "feature_branch": "f65cc096d8df8c508479ce05397fc2024d7ed419"
+        "feature_branch": "f582f194292986d820652d4fef914bbc8e437a15"
       },
       "worker_pr": 208,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/208",
       "draft_pr": true,
       "pr_state": "open_draft_unmerged",
-      "ci_run_id": 36275505474,
+      "ci_run_id": 36275706273,
       "ci_result": "in_progress",
-      "last_ci_run_id": 36275505474,
+      "last_ci_run_id": 36275706273,
       "last_ci_result": "in_progress",
       "ci_attempts": [
         {
@@ -20557,6 +20557,14 @@
           "failed_step": "Run worker-visible application tests with coverage visibility",
           "diagnosis": "Full suite: 434 tests, 1,892 assertions, 4 errors. The first error came from retrieving EntityManagerInterface from the base kernel container in tearDown; the exception skipped parent::tearDown(), leaving subsequent tests unable to boot a new kernel. PHPStan, static/config validations and PostgreSQL migration checks passed.",
           "remediated_in_head": "f65cc096d8df8c508479ce05397fc2024d7ed419"
+        },
+        {
+          "run_id": 36275505474,
+          "head": "f65cc096d8df8c508479ce05397fc2024d7ed419",
+          "result": "failure",
+          "failed_step": "Run worker-visible application tests with coverage visibility",
+          "diagnosis": "Full suite: 434 tests, 1,919 assertions, 1 error. The remaining error was the unknown-item CSRF test requesting a nonexistent `session` service from the test container. All other tests passed; PHPStan, static/config validations and PostgreSQL migration checks passed.",
+          "remediated_in_head": "f582f194292986d820652d4fef914bbc8e437a15"
         }
       ]
     },
