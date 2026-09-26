@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-26T22:24:27.192Z",
+  "published_at": "2026-09-26T22:31:38.103Z",
   "summary": {
     "total_remaining_worker_tasks": 134,
     "completed_worker_prs_awaiting_trusted_review": 187,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-419 is reserved on exact sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d; add focused account password-change/session invalidation tests in its exclusive path and run exact-head Worker CI.",
+    "next_required_action": "WCP-420 is reserved on exact sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d; add focused CMS_SETTINGS_MANAGE and CSRF regressions for both admin failed-queue retry POST actions in its exclusive test path and run exact-head Worker CI.",
     "composition_preparable": 0,
     "immediately_actionable": 0,
     "must_continue": true
@@ -21202,6 +21202,92 @@
         "feature_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d"
       },
       "next_action": "Add authenticated account password-change regressions for invalid CSRF, wrong current password, and successful session/reset-token invalidation in the single allowed file; then open a Worker PR."
+    },
+    {
+      "priority": 200,
+      "package_id": "WCP-420",
+      "title": "Protect admin failed-queue retry actions",
+      "risk": "low",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-420-admin-queue-retry-security-g1",
+      "suggested_branch": "feature/wcp-420-admin-queue-retry-security-g1",
+      "base_branch": "main",
+      "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "objective": "Add test-only functional security regressions for the failed-message queue retry endpoints. Verify users without CMS_SETTINGS_MANAGE cannot POST retry-all or individual retry, and settings managers cannot invoke either retry action without a valid CSRF token. Keep all work in the single allowed test path; do not dispatch or acknowledge queue messages in these negative cases.",
+      "allowed_paths": [
+        "tests/Controller/AdminQueueRetrySecurityTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/",
+        "src/",
+        "templates/",
+        "assets/",
+        "public/"
+      ],
+      "deliverables": [
+        "Prove users without CMS_SETTINGS_MANAGE receive 403 on POST /admin/queue/retry-all and POST /admin/queue/{id}/retry.",
+        "Prove an authorized settings manager receives 403 when either retry endpoint is posted without a valid CSRF token.",
+        "Keep the change test-only in tests/Controller/AdminQueueRetrySecurityTest.php; do not enqueue, dispatch, or acknowledge messages."
+      ],
+      "tests": [
+        "php bin/phpunit tests/Controller/AdminQueueRetrySecurityTest.php",
+        "Existing CriticalSecurityJourneyTest queue permission coverage and FailedMessageRecoveryTest remain green.",
+        "PHPStan level 8 and complete Worker CI on exact final HEAD, including PostgreSQL 18 migration-chain checks."
+      ],
+      "completion_report": [
+        "Exact sanitized main base SHA and final Worker HEAD.",
+        "Complete changed-path list and Worker PR.",
+        "Results for permission denial and missing-CSRF protection on both retry endpoints.",
+        "Exact-head PHPStan and full Worker CI results; confirm test-only and no queue side effects."
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "preserve-CMS_SETTINGS_MANAGE-authorization-and-CSRF-validation-before-failed-message-recovery",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "proposal_kind": "worker_only",
+      "proposal_dependency_evidence": [],
+      "collision_check": {
+        "compared_against": "Fresh continuous/work-pool-v4 blob 60d794a91adc23ac3cfd89d855cb4c9598c69997, all active and claim-locked allowlists, and sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d.",
+        "result": "No active or claim-locked task owns tests/Controller/AdminQueueRetrySecurityTest.php. Existing CriticalSecurityJourneyTest already verifies the queue GET permission boundary, and FailedMessageRecoveryTest covers recovery dispatch/ack behavior; the new test is limited to the two controller retry POST authorization and CSRF boundaries. No messages will be dispatched or acknowledged.",
+        "paths": [
+          "tests/Controller/AdminQueueRetrySecurityTest.php"
+        ]
+      },
+      "claimed_on": "2026-09-26T22:31:38.103Z",
+      "claim_state": "active",
+      "active_base_branch": "main",
+      "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "resume_branch": "feature/wcp-420-admin-queue-retry-security-g1",
+      "last_checkpoint_at": "2026-09-26T22:31:38.103Z",
+      "last_verified_push_at": "2026-09-26T22:31:38.103Z",
+      "checkpoint_paths": [],
+      "branch_heads": {
+        "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+        "feature_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d"
+      },
+      "next_action": "Add focused functional tests for authorization and CSRF denial on retry-all and single-message POST actions, then open a Worker PR."
     }
   ],
   "recovery_queue": [],
