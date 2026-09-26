@@ -18,11 +18,15 @@ final readonly class ConnectorTargetPlanner
     }
 
     /** @param list<string> $choices
-     *  @return array{created: int, skipped: int, keys: list<string>}
+     *  @return array{created: int, skipped: int, keys: list<string>, rejected: bool}
      */
     public function plan(array $choices): array
     {
         $catalog = $this->catalog->indexed();
+        if (count($choices) > count($catalog)) {
+            return ['created' => 0, 'skipped' => 0, 'keys' => [], 'rejected' => true];
+        }
+
         $selected = [];
         foreach ($choices as $choice) {
             $choice = strtolower(trim($choice));
@@ -59,6 +63,6 @@ final readonly class ConnectorTargetPlanner
             $this->entityManager->flush();
         }
 
-        return ['created' => $created, 'skipped' => $skipped, 'keys' => $keys];
+        return ['created' => $created, 'skipped' => $skipped, 'keys' => $keys, 'rejected' => false];
     }
 }
