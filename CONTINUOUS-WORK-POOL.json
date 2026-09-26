@@ -10,7 +10,7 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-26T21:15:43.990Z",
+  "published_at": "2026-09-26T21:17:45.812Z",
   "summary": {
     "total_remaining_worker_tasks": 134,
     "completed_worker_prs_awaiting_trusted_review": 175,
@@ -19778,6 +19778,89 @@
       "last_checkpoint_at": "2026-09-26T21:15:43.990Z",
       "checkpoint_paths": [],
       "last_verified_push_at": "2026-09-26T21:15:43.990Z"
+    },
+    {
+      "priority": 190,
+      "package_id": "WCP-410",
+      "title": "Guard admin menu management access and mutations",
+      "risk": "medium",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-410-admin-menu-security-g1",
+      "suggested_branch": "feature/wcp-410-admin-menu-security-g1",
+      "base_branch": "main",
+      "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "objective": "Add functional browser regressions for the existing CMS menu manager. Verify anonymous and unauthorized users cannot access it, a content manager can create a valid external menu item, an empty target is rejected without persistence, and deleting a menu item requires a valid CSRF token. Test-only; no runtime or schema changes.",
+      "allowed_paths": [
+        "tests/Controller/AdminMenuManagementSecurityTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/",
+        "src/",
+        "templates/",
+        "assets/",
+        "public/"
+      ],
+      "deliverables": [
+        "Verify unauthenticated menu access redirects to login and an authenticated user without CMS_CONTENT_MANAGE receives 403.",
+        "Verify a user with CMS_CONTENT_MANAGE can create and persist an HTTP(S) external menu item through the CSRF-protected form.",
+        "Verify submission with no page or external URL is rejected and does not persist an item.",
+        "Verify menu deletion rejects missing CSRF and succeeds only with the rendered valid token.",
+        "Keep changes test-only in the single allowed file."
+      ],
+      "tests": [
+        "php bin/phpunit tests/Controller/AdminMenuManagementSecurityTest.php",
+        "Existing AccessRoleSecurityTest and MenuItemSecurityTest remain green.",
+        "PHPStan level 8 and complete Worker CI on the exact final HEAD, including PostgreSQL 18 migration-chain checks."
+      ],
+      "completion_report": [
+        "Exact final Worker HEAD and sanitized main base SHA.",
+        "Complete changed-file list and Worker PR.",
+        "Menu permission, valid create, empty-target rejection, deletion and CSRF results.",
+        "Exact-head PHPStan and complete Worker CI results.",
+        "Confirmation that only the test file changed; no runtime or schema changes."
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "preserve-CMS_CONTENT_MANAGE-authorization-and-CSRF-protection",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_base_branch": "main",
+      "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "resume_branch": "feature/wcp-410-admin-menu-security-g1",
+      "proposal_kind": "worker_only",
+      "collision_check": {
+        "compared_against": "Fresh continuous/work-pool-v4 blob f7c01b77236808be3dd99ebd2d76edeb4c62d3a4, all active and claim-locked scopes, and sanitized Worker main f1a246c64527ef3ad51f7490773d9bbf9d42be5d.",
+        "result": "No active or claim-locked task owns tests/Controller/AdminMenuManagementSecurityTest.php. WCP-309 is limited to MenuItem entity bounds and its entity test; WCP-392 covers public menu rendering/navigation, not these admin controller flows. WCP-409 administrative notification history, WCP-407 competition registration and other current claims use disjoint paths. Existing MenuItemSecurityTest checks URL entity policy but no functional admin permissions, create form or CSRF-protected delete behavior. No immediately claimable FCP is available.",
+        "paths": [
+          "tests/Controller/AdminMenuManagementSecurityTest.php"
+        ]
+      },
+      "claimed_on": "2026-09-26T21:17:45.812Z",
+      "claim_state": "active",
+      "last_checkpoint_at": "2026-09-26T21:17:45.812Z",
+      "checkpoint_paths": [],
+      "next_action": "Create exclusive claim and feature branches from sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d; add functional admin menu authorization, create, validation and CSRF regressions in the allowed test file."
     }
   ],
   "recovery_queue": [],
