@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-26T11:46:45.286Z",
+  "published_at": "2026-09-26T11:47:13.745Z",
   "summary": {
     "total_remaining_worker_tasks": 81,
-    "completed_worker_prs_awaiting_trusted_review": 74,
+    "completed_worker_prs_awaiting_trusted_review": 75,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "Continue WCP-303 on its exclusive taxonomy slug claim while preserving WCP-125/WCP-126 and all completed claim locks; reconcile only after exact-head green CI.",
+    "next_required_action": "Continue independent Worker proposal work while preserving WCP-126 and all foreign/completed claim locks; after each exact-head green CI reconcile and continue.",
     "composition_preparable": 0,
     "immediately_actionable": 4,
     "must_continue": true
@@ -7547,7 +7547,7 @@
       "package_id": "WCP-126",
       "title": "Bound signed extension package verifier inputs",
       "risk": "critical",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -7617,7 +7617,7 @@
       "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "d6037caffe68171f5c7282a39a44a138976f39e8",
       "resume_branch": "feature/wcp-126-extension-verifier-boundary-g1",
       "proposal_kind": "worker_only",
       "collision_check": {
@@ -7629,8 +7629,26 @@
         ]
       },
       "claimed_on": "2026-09-26T11:42:24.671Z",
-      "claim_state": "active_worker_claim",
-      "next_action": "Implement only the two allowlisted files, open a Worker PR, run exact-head full CI and retain the claim until Trusted resolution."
+      "claim_state": "locked_until_trusted_resolution",
+      "next_action": "Remain claim-locked while awaiting Trusted review; do not merge or deploy from the Worker repository.",
+      "worker_pr": 92,
+      "final_head": "d6037caffe68171f5c7282a39a44a138976f39e8",
+      "ci_run_id": 36239807272,
+      "ci_result": "success",
+      "initial_ci_run_id": 36239742967,
+      "initial_ci_result": "phpstan_failed_file_get_contents_length_type_fixed",
+      "completed_on": "2026-09-26T11:47:13.745Z",
+      "final_changed_paths": [
+        "src/ExtensionPackage/ExtensionPackageVerifier.php",
+        "tests/ExtensionPackage/ExtensionPackageVerifierBoundaryTest.php"
+      ],
+      "test_evidence": [
+        "Targeted ExtensionPackageVerifier boundary coverage passed for valid signed packages, oversized manifest/signature/key registry reads and declared-file-count bounds.",
+        "Existing ExtensionPackageSecurity tests passed, including signature, traversal, symlink and atomic installer coverage.",
+        "Exact-head Worker CI run 36239807272 succeeded after the PHPStan-only bounded-read correction.",
+        "PHP/Symfony validation and application-test job 108398067724 succeeded.",
+        "PostgreSQL migration chain job 108398067555 succeeded."
+      ]
     },
     {
       "priority": 81,
