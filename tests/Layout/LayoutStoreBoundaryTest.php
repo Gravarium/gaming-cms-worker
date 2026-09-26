@@ -31,6 +31,10 @@ final class LayoutStoreBoundaryTest extends KernelTestCase
         );
         $document = $this->document([array_merge($row, ['config' => $config])]);
         $this->assertDefaults($this->loadStoredDocument($document));
+
+        $oversizedKeyConfig = [str_repeat('k', 129) => 'value'];
+        $document = $this->document([array_merge($row, ['config' => $oversizedKeyConfig])]);
+        $this->assertDefaults($this->loadStoredDocument($document));
     }
 
     public function testOversizedPersistedValuesAndAggregateConfigFallBackToDefaults(): void
