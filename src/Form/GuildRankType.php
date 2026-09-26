@@ -21,6 +21,7 @@ final class GuildRankType extends AbstractType
         $builder
             ->add('name', null, [
                 'label' => 'Rangname',
+                'empty_data' => '',
                 'constraints' => [new Length(max: 100)],
                 'attr' => ['maxlength' => 100],
             ])
