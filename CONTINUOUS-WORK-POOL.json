@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-26T23:09:12.906Z",
+  "published_at": "2026-09-26T23:09:42.810Z",
   "summary": {
     "total_remaining_worker_tasks": 134,
-    "completed_worker_prs_awaiting_trusted_review": 194,
+    "completed_worker_prs_awaiting_trusted_review": 195,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-427 is reserved on exact sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d; test content-tag authorization, deletion CSRF and reference integrity in its exclusive path.",
+    "next_required_action": "WCP-426 PR #220 is complete with green exact-head CI and remains claim-locked pending Trusted resolution; continue with an independent worker-only proposal because all five unclaimed FCPs remain dependency-blocked.",
     "composition_preparable": 0,
     "immediately_actionable": 0,
     "must_continue": true
@@ -22089,7 +22089,7 @@
       "package_id": "WCP-426",
       "title": "Protect backup inventory permissions",
       "risk": "low",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -22157,13 +22157,13 @@
         ]
       },
       "claimed_on": "2026-09-26T23:05:31.052Z",
-      "claim_state": "active",
+      "claim_state": "locked_until_trusted_resolution",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
       "active_head": "216df34ac05de0629fc2c5d6c94844d9d6a4640e",
       "resume_branch": "feature/wcp-426-admin-backup-access-security-g1",
-      "last_checkpoint_at": "2026-09-26T23:07:46.584Z",
-      "last_verified_push_at": "2026-09-26T23:07:46.584Z",
+      "last_checkpoint_at": "2026-09-26T23:09:42.810Z",
+      "last_verified_push_at": "2026-09-26T23:09:42.810Z",
       "checkpoint_paths": [
         "tests/Controller/AdminBackupAccessSecurityTest.php"
       ],
@@ -22171,7 +22171,7 @@
         "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
         "feature_branch": "216df34ac05de0629fc2c5d6c94844d9d6a4640e"
       },
-      "next_action": "Wait for Worker CI run 36278431656 on exact HEAD 216df34ac05de0629fc2c5d6c94844d9d6a4640e; diagnose and repair any failure before completion.",
+      "next_action": "PR #220 has green exact-head Worker CI; keep this claim locked until Trusted explicitly integrates, cancels or transfers it, and continue with an independent package.",
       "worker_pr": 220,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/220",
       "draft_pr": false,
@@ -22189,9 +22189,29 @@
         {
           "run_id": 36278431656,
           "head": "216df34ac05de0629fc2c5d6c94844d9d6a4640e",
-          "result": "in_progress"
+          "result": "success"
         }
-      ]
+      ],
+      "last_ci_result": "success",
+      "ci_run_id": 36278431656,
+      "ci_result": "success",
+      "completed_at": "2026-09-26T23:09:42.810Z",
+      "test_results": {
+        "phpunit": "431 tests, 1,861 assertions, 0 failures; one deprecation and one notice.",
+        "phpstan": "Level 8 passed with no errors.",
+        "php_symfony": "Worker PHP/Symfony validation job passed on exact final HEAD.",
+        "postgres18": "PostgreSQL 18 completed the full migration chain: 39 migrations executed, 0 unavailable.",
+        "exact_head_ci": {
+          "run_id": 36278431656,
+          "head": "216df34ac05de0629fc2c5d6c94844d9d6a4640e",
+          "result": "success"
+        }
+      },
+      "completion_summary": "Functional regressions verify a logged-in content manager without CMS_CONNECTORS_MANAGE receives 403 for backup inventory, while a connector manager renders the read-only inventory page. Tests do not create, delete, or restore backup data; only the allowed test file changed.",
+      "open_limitations": [
+        "Awaiting Trusted review and Trusted integration CI."
+      ],
+      "trusted_follow_up": "Preserve CMS_CONNECTORS_MANAGE authorization and the read-only backup inventory boundary when porting or changing backup administration in Trusted; run full Trusted CI."
     },
     {
       "priority": 207,
