@@ -13,11 +13,11 @@
   "published_at": "2026-09-26T12:43:00.727Z",
   "summary": {
     "total_remaining_worker_tasks": 92,
-    "completed_worker_prs_awaiting_trusted_review": 85,
+    "completed_worker_prs_awaiting_trusted_review": 86,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "Monitor WCP-310 exact-head CI run 36242819406; reconcile only after complete green CI, then continue.",
+    "next_required_action": "Publish an independent bounded Worker proposal from a verified worker-visible CMS gap, collision-check and claim it, then continue without modifying locked claims.",
     "composition_preparable": 0,
     "immediately_actionable": 4,
     "must_continue": true
@@ -8742,7 +8742,7 @@
       "package_id": "WCP-310",
       "title": "Validate account-token purpose and digest contracts",
       "risk": "high",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -8819,8 +8819,8 @@
         ]
       },
       "claimed_on": "2026-09-26T12:40:19.374Z",
-      "claim_state": "active_worker_claim",
-      "next_action": "Monitor exact-head Worker CI run 36242819406; repair any failure without changing protected workflows, then reconcile green evidence.",
+      "claim_state": "locked_until_trusted_resolution",
+      "next_action": "Await Trusted review; keep the claim locked and do not merge or deploy.",
       "last_verified_push_at": "2026-09-26T12:43:14.584Z",
       "last_checkpoint_at": "2026-09-26T12:43:47.717Z",
       "checkpoint_paths": [
@@ -8829,9 +8829,21 @@
       ],
       "worker_pr": 104,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/104",
-      "pr_state": "open",
+      "pr_state": "open_ready_for_review",
       "ci_run_id": 36242819406,
-      "ci_result": "queued"
+      "ci_result": "success",
+      "final_head": "f10b654104eb467ee9b41da8ee3c1e9299db84df",
+      "completed_on": "2026-09-26T12:46:29.509Z",
+      "final_changed_paths": [
+        "src/Entity/AccountToken.php",
+        "tests/Entity/AccountTokenBoundaryTest.php"
+      ],
+      "test_evidence": [
+        "Worker CI run 36242819406 succeeded on exact final HEAD f10b654104eb467ee9b41da8ee3c1e9299db84df.",
+        "PHP/Symfony job 108406421360 passed PHPStan level 8 and the complete worker-visible application test suite.",
+        "PostgreSQL 18 job 108406421242 applied and verified the complete worker-visible migration chain.",
+        "Exact diff against sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d contains only src/Entity/AccountToken.php and tests/Entity/AccountTokenBoundaryTest.php."
+      ]
     },
     {
       "priority": 92,
