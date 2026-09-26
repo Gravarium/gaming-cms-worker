@@ -39,13 +39,47 @@ class ExternalConnectorHealthStatus
 
     public function getId(): ?int { return $this->id; }
     public function getCapability(): string { return $this->capability; }
-    public function setCapability(string $capability): self { $this->capability = trim($capability); return $this; }
+    public function setCapability(string $capability): self
+    {
+        $this->capability = $this->normalizeBoundedIdentifier($capability, 40, 160);
+
+        return $this;
+    }
     public function getTargetKey(): string { return $this->targetKey; }
-    public function setTargetKey(string $targetKey): self { $this->targetKey = strtolower(trim($targetKey)); return $this; }
+    public function setTargetKey(string $targetKey): self
+    {
+        $this->targetKey = $this->normalizeBoundedIdentifier($targetKey, 64, 256, true);
+
+        return $this;
+    }
     public function getProviderKey(): string { return $this->providerKey; }
-    public function setProviderKey(string $providerKey): self { $this->providerKey = strtolower(trim($providerKey)); return $this; }
+    public function setProviderKey(string $providerKey): self
+    {
+        $this->providerKey = $this->normalizeBoundedIdentifier($providerKey, 64, 256, true);
+
+        return $this;
+    }
     public function isSuccessful(): bool { return $this->successful; }
     public function setSuccessful(bool $successful): self { $this->successful = $successful; return $this; }
     public function getCheckedAt(): \DateTimeImmutable { return $this->checkedAt; }
     public function setCheckedAt(\DateTimeImmutable $checkedAt): self { $this->checkedAt = $checkedAt; return $this; }
+
+    private function normalizeBoundedIdentifier(string $value, int $maxLength, int $maxBytes, bool $lowercase = false): string
+    {
+        if (!mb_check_encoding($value, 'UTF-8') || str_contains($value, "\0")) {
+            throw new \InvalidArgumentException('External connector health identifier is invalid or exceeds its storage boundary.');
+        }
+
+        $normalized = trim($value);
+        if ($lowercase) {
+            $normalized = strtolower($normalized);
+        }
+
+        if (mb_strlen($normalized, 'UTF-8') > $maxLength || strlen($normalized) > $maxBytes) {
+            throw new \InvalidArgumentException('External connector health identifier is invalid or exceeds its storage boundary.');
+        }
+
+        return $normalized;
+    }
+
 }
