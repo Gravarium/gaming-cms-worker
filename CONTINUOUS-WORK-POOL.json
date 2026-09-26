@@ -10,9 +10,9 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-26T13:03:43.038Z",
+  "published_at": "2026-09-26T13:05:22.327Z",
   "summary": {
-    "total_remaining_worker_tasks": 97,
+    "total_remaining_worker_tasks": 98,
     "completed_worker_prs_awaiting_trusted_review": 92,
     "recovery_tasks": 0,
     "unclaimed": 5,
@@ -9491,6 +9491,93 @@
         "PostgreSQL 18 job 108409222285 applied and verified the complete worker-visible migration chain.",
         "Exact diff against sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d contains only src/Entity/MediaFolder.php and tests/Entity/MediaFolderBoundaryTest.php."
       ]
+    },
+    {
+      "priority": 98,
+      "package_id": "WCP-317",
+      "title": "Bound game slug to its persistence column",
+      "risk": "medium",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-317-game-slug-column-boundary-g1",
+      "suggested_branch": "feature/wcp-317-game-slug-column-boundary-g1",
+      "base_branch": "main",
+      "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "objective": "Bound Game.slug to its mapped varchar(140) before assignment so generated or direct slug values cannot exceed the persistence column. Reject malformed UTF-8 and NUL while preserving valid values, current slug generation, and uniqueness behavior.",
+      "allowed_paths": [
+        "src/Entity/Game.php",
+        "tests/Entity/GameSlugBoundaryTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/",
+        "src/Controller/",
+        "src/Form/",
+        "src/Repository/",
+        "src/Service/",
+        "src/Gaming/",
+        "templates/",
+        "assets/",
+        "public/"
+      ],
+      "deliverables": [
+        "Reject slugs above 560 raw UTF-8 bytes or 140 characters before assignment.",
+        "Reject malformed UTF-8 and NUL-containing slug values.",
+        "Preserve the exact prior slug after rejected assignment and do not normalize or truncate valid values.",
+        "Leave Game name validation, AdminGamingController slug generation, and unique-slug behavior unchanged."
+      ],
+      "tests": [
+        "Targeted Game slug boundary PHPUnit tests for exact ASCII/multibyte limits, byte/character overflow, malformed UTF-8/NUL, state preservation, and exact valid value preservation.",
+        "PHPStan level 8.",
+        "Complete Worker CI on the exact final HEAD."
+      ],
+      "completion_report": [
+        "exact final Worker HEAD and sanitized main base SHA",
+        "complete changed-path list and Worker PR",
+        "targeted game slug boundary tests and complete exact-head Worker CI result",
+        "140-character/560-byte slug bound and preserved generated-slug/uniqueness behavior"
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "no-secrets-or-trusted-private-runtime-in-worker-source",
+        "preserve current slug values, generation, URL identity, and uniqueness semantics within the mapped limit",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_base_branch": "main",
+      "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "resume_branch": "feature/wcp-317-game-slug-column-boundary-g1",
+      "proposal_kind": "worker_only",
+      "collision_check": {
+        "compared_against": "all current continuous/work-pool-v4 task allowlists and active/locked claims through WCP-316; exact WCP-317 branch/PR names and the new test path were checked",
+        "result": "the Game entity and focused slug-boundary test are disjoint from every current task; no controller, form, repository, route, migration, config or template changes are included",
+        "paths": [
+          "src/Entity/Game.php",
+          "tests/Entity/GameSlugBoundaryTest.php"
+        ]
+      },
+      "claimed_on": "2026-09-26T13:05:22.327Z",
+      "claim_state": "active_worker_claim",
+      "last_checkpoint_at": "2026-09-26T13:05:22.327Z",
+      "next_action": "Create the claim and feature branches from exact sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d, then implement only the two allowlisted files and run exact-head Worker CI."
     }
   ],
   "recovery_queue": [],
