@@ -15,6 +15,9 @@ use Symfony\Component\Validator\Context\ExecutionContextInterface;
 #[ORM\Table(name: 'site_settings')]
 class SiteSettings
 {
+    private const MAX_HOME_TITLE_BYTES = 720;
+    private const MAX_HOME_TITLE_LENGTH = 180;
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -73,7 +76,14 @@ class SiteSettings
     public function getDescription(): ?string { return $this->description; }
     public function setDescription(?string $description): self { $this->description = $description === null ? null : trim($description); return $this; }
     public function getHomeTitle(): string { return $this->homeTitle; }
-    public function setHomeTitle(string $homeTitle): self { $this->homeTitle = trim($homeTitle); return $this; }
+    public function setHomeTitle(string $homeTitle): self
+    {
+        $this->assertHomeTitleColumnBoundary($homeTitle);
+
+        $this->homeTitle = trim($homeTitle);
+
+        return $this;
+    }
     public function getHomeText(): string { return $this->homeText; }
     public function setHomeText(string $homeText): self { $this->homeText = trim($homeText); return $this; }
     public function getPrimaryColor(): string { return $this->primaryColor; }
