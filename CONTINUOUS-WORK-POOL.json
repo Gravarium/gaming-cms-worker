@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-26T17:18:31.993Z",
+  "published_at": "2026-09-26T17:20:21.190Z",
   "summary": {
-    "total_remaining_worker_tasks": 130,
+    "total_remaining_worker_tasks": 131,
     "completed_worker_prs_awaiting_trusted_review": 138,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "Re-evaluate remaining FCP dependency readiness, then continue with the next independent safe Worker proposal; preserve any foreign active claims.",
+    "next_required_action": "Continue disjoint active WCP-363 work; re-evaluate blocked FCP dependencies after exact-head CI.",
     "composition_preparable": 0,
     "immediately_actionable": 0,
     "must_continue": true
@@ -14505,6 +14505,97 @@
         "src/Form/MediaFolderType.php",
         "tests/Form/MediaFolderTypeBoundaryTest.php"
       ]
+    },
+    {
+      "priority": 144,
+      "package_id": "WCP-363",
+      "title": "Expose application question label limit in form",
+      "risk": "low",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-363-guild-application-question-label-form-boundary-g1",
+      "suggested_branch": "feature/wcp-363-guild-application-question-label-form-boundary-g1",
+      "base_branch": "main",
+      "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "objective": "Expose the existing GuildApplicationQuestion.label maximum of 255 Unicode characters in its form with a server-side Length constraint and matching maxlength. Map blank labels as an empty string so the existing NotBlank rule reports a normal field error rather than a null-to-string setter TypeError. Preserve question type, ordering, required/enabled settings, guild authorization and persistence.",
+      "allowed_paths": [
+        "src/Form/GuildApplicationQuestionType.php",
+        "tests/Form/GuildApplicationQuestionTypeBoundaryTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/",
+        "src/Entity/GuildApplicationQuestion.php",
+        "src/Controller/",
+        "src/Repository/GuildApplicationQuestionRepository.php",
+        "src/Form/GuildApplicationType.php",
+        "templates/",
+        "assets/",
+        "public/"
+      ],
+      "deliverables": [
+        "Add Length(max: 255), maxlength=255 and empty_data='' to the required question label field.",
+        "Test acceptance at 255 Unicode characters, field-level rejection at 256, maxlength rendering and blank-label rejection through existing NotBlank without mapper TypeError.",
+        "Leave type choices, help text, order, required/enabled state, entity, controller, authorization and persistence unchanged."
+      ],
+      "tests": [
+        "Targeted real-form PHPUnit tests accept exactly 255 Unicode characters and reject 256 at the label field.",
+        "Assert rendered maxlength=255 and blank input is field-invalid without a setter TypeError.",
+        "PHPStan level 8 and complete Worker CI on exact final HEAD."
+      ],
+      "completion_report": [
+        "exact final Worker HEAD and sanitized main base SHA",
+        "complete changed-file list and Worker PR",
+        "exact/over-limit Unicode, blank-label handling and maxlength test evidence",
+        "PHPStan level 8 and exact-head Worker CI results",
+        "confirmation question type/order/required/enabled, authorization and persistence behavior are unchanged"
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "no-secrets-or-trusted-private-runtime-in-worker-source",
+        "preserve guild authorization CSRF question configuration and persistence behavior",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_base_branch": "main",
+      "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "resume_branch": "feature/wcp-363-guild-application-question-label-form-boundary-g1",
+      "proposal_kind": "worker_only",
+      "collision_check": {
+        "compared_against": "all current continuous/work-pool-v4 allowed-path scopes through WCP-362; exact paths checked against sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+        "result": "Neither exact path occurs in any current allowlist. WCP-321 is limited to the GuildApplicationQuestion entity and its entity test; active WCP-362 is limited to MediaFolderType and its form test. FCP-053 scopes the nested src/Form/Guild/ subtree, not this flat form file. No controller, entity, repository, migration, privacy, authorization, template or private-runtime path is changed.",
+        "paths": [
+          "src/Form/GuildApplicationQuestionType.php",
+          "tests/Form/GuildApplicationQuestionTypeBoundaryTest.php"
+        ]
+      },
+      "claimed_on": "2026-09-26T17:20:21.190Z",
+      "claim_state": "active_worker_claim",
+      "last_checkpoint_at": "2026-09-26T17:20:21.190Z",
+      "next_action": "Add Length(255), maxlength=255 and empty_data='' for the label; test exact/over-limit and blank validation, then run exact-head Worker CI.",
+      "checkpoint_paths": [
+        "src/Form/GuildApplicationQuestionType.php",
+        "tests/Form/GuildApplicationQuestionTypeBoundaryTest.php"
+      ],
+      "last_verified_push_at": "2026-09-26T17:20:21.190Z"
     }
   ],
   "recovery_queue": [],
