@@ -22,11 +22,32 @@ final class GuildApplicationType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('applicantName', null, ['label' => 'Dein Name'])
-            ->add('email', EmailType::class, ['label' => 'E-Mail-Adresse'])
-            ->add('characterName', null, ['label' => 'Charaktername'])
-            ->add('characterClass', null, ['label' => 'Klasse oder Rolle', 'required' => false])
-            ->add('message', TextareaType::class, ['label' => 'Deine Bewerbung', 'attr' => ['rows' => 9]]);
+            ->add('applicantName', null, [
+                'label' => 'Dein Name',
+                'constraints' => [new Length(max: 120)],
+                'attr' => ['maxlength' => 120],
+            ])
+            ->add('email', EmailType::class, [
+                'label' => 'E-Mail-Adresse',
+                'constraints' => [new Length(max: 180)],
+                'attr' => ['maxlength' => 180],
+            ])
+            ->add('characterName', null, [
+                'label' => 'Charaktername',
+                'constraints' => [new Length(max: 120)],
+                'attr' => ['maxlength' => 120],
+            ])
+            ->add('characterClass', null, [
+                'label' => 'Klasse oder Rolle',
+                'required' => false,
+                'constraints' => [new Length(max: 100)],
+                'attr' => ['maxlength' => 100],
+            ])
+            ->add('message', TextareaType::class, [
+                'label' => 'Deine Bewerbung',
+                'attr' => ['rows' => 9, 'minlength' => 20, 'maxlength' => 5000],
+                'constraints' => [new Length(min: 20, max: 5000)],
+            ]);
 
         foreach ($options['questions'] as $question) {
             $type = match ($question->getType()) {
