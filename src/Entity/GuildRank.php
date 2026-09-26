@@ -12,6 +12,9 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Table(name: 'guild_rank')]
 class GuildRank
 {
+    private const MAX_NAME_BYTES = 400;
+    private const MAX_NAME_LENGTH = 100;
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -47,7 +50,14 @@ class GuildRank
     public function getGuild(): ?Guild { return $this->guild; }
     public function setGuild(Guild $guild): self { $this->guild = $guild; return $this; }
     public function getName(): string { return $this->name; }
-    public function setName(string $name): self { $this->name = trim($name); return $this; }
+    public function setName(string $name): self
+    {
+        $this->assertNameColumnBoundary($name);
+
+        $this->name = trim($name);
+
+        return $this;
+    }
     public function getColor(): ?string { return $this->color; }
     public function setColor(?string $color): self { $this->color = $color === null || trim($color) === '' ? null : trim($color); return $this; }
     public function getPosition(): int { return $this->position; }
@@ -61,4 +71,16 @@ class GuildRank
     public function isEnabled(): bool { return $this->enabled; }
     public function setEnabled(bool $enabled): self { $this->enabled = $enabled; return $this; }
     public function __toString(): string { return $this->name; }
+
+    private function assertNameColumnBoundary(string $name): void
+    {
+        if (strlen($name) > self::MAX_NAME_BYTES || !mb_check_encoding($name, 'UTF-8')) {
+            throw new \InvalidArgumentException('Der Gildenrangname ist ungültig oder überschreitet die zulässige Länge.');
+        }
+
+        if (str_contains($name, "\0") || mb_strlen($name, 'UTF-8') > self::MAX_NAME_LENGTH) {
+            throw new \InvalidArgumentException('Der Gildenrangname ist ungültig oder überschreitet die zulässige Länge.');
+        }
+    }
+
 }
