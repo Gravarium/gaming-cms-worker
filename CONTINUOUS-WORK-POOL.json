@@ -12,12 +12,12 @@
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
   "published_at": "2026-09-26T17:47:35.239Z",
   "summary": {
-    "total_remaining_worker_tasks": 131,
+    "total_remaining_worker_tasks": 132,
     "completed_worker_prs_awaiting_trusted_review": 143,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "Re-evaluate current FCP dependency readiness; if none are actionable, derive and claim the next independent WCP proposal while preserving foreign active claims.",
+    "next_required_action": "Implement WCP-368 on its exact sanitized-main base; all five published FCP proposals remain blocked by unmet dependencies, and prior WCP claims stay locked pending Trusted resolution.",
     "composition_preparable": 0,
     "immediately_actionable": 0,
     "must_continue": true
@@ -15037,6 +15037,101 @@
         "src/Form/GuildTeamType.php",
         "tests/Form/GuildTeamTypeBoundaryTest.php"
       ]
+    },
+    {
+      "priority": 148,
+      "package_id": "WCP-368",
+      "title": "Expose guild event title and location form limits",
+      "risk": "low",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-368-guild-event-form-name-boundaries-g1",
+      "suggested_branch": "feature/wcp-368-guild-event-form-name-boundaries-g1",
+      "base_branch": "main",
+      "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "objective": "Align GuildEventType title and optional location inputs with the existing GuildEvent storage limits: title 180 characters and location 140 characters. Add server-side Length constraints and matching maxlength hints while preserving optional-to-null normalization, guild-scoped active team choices, ownership, scheduling, status and persistence behavior.",
+      "allowed_paths": [
+        "src/Form/GuildEventType.php",
+        "tests/Form/GuildEventTypeBoundaryTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/",
+        "src/Entity/GuildEvent.php",
+        "src/Controller/",
+        "src/Repository/GuildEventRepository.php",
+        "src/Form/GuildTeamType.php",
+        "src/Form/GuildMemberType.php",
+        "src/Service/",
+        "templates/",
+        "assets/",
+        "public/"
+      ],
+      "deliverables": [
+        "Add Length constraints and maxlength values for title (180) and optional location (140).",
+        "Add exact and one-over Unicode form-boundary tests for both fields and assert rendered maxlength values.",
+        "Verify a blank optional location remains valid and normalizes to null.",
+        "Preserve the guild-scoped active team query, requiredness, event ownership, scheduling, status and persistence behavior."
+      ],
+      "tests": [
+        "Targeted real GuildEventType form tests accept exact stored limits and reject one-over values at the corresponding fields.",
+        "Form view exposes maxlength=180 and maxlength=140.",
+        "Blank optional location remains valid and normalizes to null.",
+        "PHPStan level 8 and complete Worker CI on exact final HEAD."
+      ],
+      "completion_report": [
+        "exact final Worker HEAD and sanitized main base SHA",
+        "complete changed-file list and Worker PR",
+        "exact/over-limit Unicode, optional location and maxlength evidence",
+        "PHPStan level 8 and exact-head Worker CI results",
+        "confirmation guild/team choices, ownership, scheduling, status and persistence behavior are unchanged"
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "no-secrets-or-trusted-private-runtime-in-worker-source",
+        "preserve guild ownership, active-team scoping, authorization, CSRF, scheduling, status and optional-to-null normalization",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_base_branch": "main",
+      "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "resume_branch": "feature/wcp-368-guild-event-form-name-boundaries-g1",
+      "proposal_kind": "worker_only",
+      "collision_check": {
+        "compared_against": "all current continuous/work-pool-v4 allowed-path scopes through WCP-367 and exact files on sanitized main at f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+        "result": "Neither allowed path occurs in any current pool allowlist. WCP-367 is limited to GuildTeamType and its boundary test; earlier guild event signup work is limited to the portal controller. No entity, controller, repository, migration, template, authorization, scheduling, status, schema or private-runtime path is changed.",
+        "paths": [
+          "src/Form/GuildEventType.php",
+          "tests/Form/GuildEventTypeBoundaryTest.php"
+        ]
+      },
+      "claimed_on": "2026-09-26T17:49:44.426Z",
+      "claim_state": "active_worker_claim",
+      "last_checkpoint_at": "2026-09-26T17:49:44.426Z",
+      "next_action": "Add Length/maxlength boundaries for GuildEvent title (180) and optional location (140), with exact/over Unicode tests and blank-location normalization; then run exact-head Worker CI.",
+      "checkpoint_paths": [
+        "src/Form/GuildEventType.php",
+        "tests/Form/GuildEventTypeBoundaryTest.php"
+      ],
+      "last_verified_push_at": "2026-09-26T17:49:44.426Z"
     }
   ],
   "recovery_queue": [],
