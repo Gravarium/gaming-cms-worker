@@ -130,5 +130,17 @@ class SiteSettings
             $context->buildViolation('Die Standardsprache muss auch aktiviert sein.')->atPath('defaultLocale')->addViolation();
         }
     }
+
+    private function assertHomeTitleColumnBoundary(string $homeTitle): void
+    {
+        if (strlen($homeTitle) > self::MAX_HOME_TITLE_BYTES || !mb_check_encoding($homeTitle, 'UTF-8')) {
+            throw new \InvalidArgumentException('Der Seitentitel ist ungültig oder überschreitet die zulässige Länge.');
+        }
+
+        if (str_contains($homeTitle, "\0") || mb_strlen($homeTitle, 'UTF-8') > self::MAX_HOME_TITLE_LENGTH) {
+            throw new \InvalidArgumentException('Der Seitentitel ist ungültig oder überschreitet die zulässige Länge.');
+        }
+    }
+
 }
 
