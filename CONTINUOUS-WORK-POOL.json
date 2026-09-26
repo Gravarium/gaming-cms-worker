@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-26T14:02:05.433Z",
+  "published_at": "2026-09-26T14:04:51.635Z",
   "summary": {
-    "total_remaining_worker_tasks": 113,
+    "total_remaining_worker_tasks": 114,
     "completed_worker_prs_awaiting_trusted_review": 107,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "Implement WCP-332 on the exclusive GuildDiscordIntegration encrypted-webhook boundary paths from exact sanitized main; run complete exact-head Worker CI, then continue while preserving existing claims.",
+    "next_required_action": "Continue the independent active WCP-332 and WCP-333 claims on their exact branches; run complete exact-head Worker CI and preserve all other claims.",
     "composition_preparable": 0,
     "immediately_actionable": 0,
     "must_continue": true
@@ -11218,6 +11218,98 @@
       "pr_state": "draft",
       "ci_run_id": 36247122522,
       "ci_result": "in_progress"
+    },
+    {
+      "priority": 114,
+      "package_id": "WCP-333",
+      "title": "Require valid inventory membership before local backup verification",
+      "risk": "medium",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-333-backup-verification-inventory-g1",
+      "suggested_branch": "feature/wcp-333-backup-verification-inventory-g1",
+      "base_branch": "main",
+      "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "objective": "Before launching the backup verification process or persisting a verification status, require the requested backup ID to be present in the current available LocalBackupInventory snapshot. Reject unavailable inventories and IDs absent from the complete valid inventory without running the process or mutating status storage. Preserve existing syntactic ID validation, process arguments, timeout, environment, and status behavior for listed backups; do not change inventory parsing, verification scripts, command/UI flows, status schema, or backup contents.",
+      "allowed_paths": [
+        "src/Backup/LocalBackupVerifier.php",
+        "tests/Backup/LocalBackupVerifierTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/",
+        "src/Command/",
+        "src/Controller/",
+        "src/Entity/",
+        "src/Form/",
+        "src/Repository/",
+        "src/Service/",
+        "templates/",
+        "assets/",
+        "public/"
+      ],
+      "deliverables": [
+        "Keep LocalBackupInventory::directory() format validation and obtain one fresh LocalBackupInventory::read() snapshot before constructing or running Process.",
+        "Reject an unavailable inventory or a backup ID not exactly present in the valid inventory before the external verifier or status persistence can run.",
+        "Preserve the existing process argv, working directory, environment, timeout, and result/status updates for IDs present in the valid inventory."
+      ],
+      "tests": [
+        "Focused PHPUnit coverage proves a syntactically valid but absent backup ID is rejected before the verifier process and without persisting a status.",
+        "Focused PHPUnit coverage proves symlinked/non-inventoried backup directories are rejected before the verifier process; skip only where symlinks are unavailable.",
+        "PHPStan level 8.",
+        "Complete Worker CI on the exact final HEAD."
+      ],
+      "completion_report": [
+        "exact final Worker HEAD and sanitized main base SHA",
+        "complete changed-file list and Worker PR",
+        "focused backup inventory-membership tests and complete exact-head Worker CI result",
+        "confirmation unknown or unavailable inventory entries cannot reach verifier execution or status writes"
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "no-secrets-or-trusted-private-runtime-in-worker-source",
+        "preserve backup integrity, verification, recovery, rollback and private-storage protections",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_base_branch": "main",
+      "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "resume_branch": "feature/wcp-333-backup-verification-inventory-g1",
+      "proposal_kind": "worker_only",
+      "collision_check": {
+        "compared_against": "all current continuous/work-pool-v4 task allowlists and active/locked claims through WCP-332; exact WCP-333 branch names and the service/test paths checked against sanitized main",
+        "result": "LocalBackupVerifier.php and the new focused test path are absent from all published allowlists and claims. The work only adds an inventory-membership guard before process construction; it does not modify the WCP-107 inventory implementation, command, verifier script, controller, status entity/repository, migrations, DI, templates, workflows or private paths.",
+        "paths": [
+          "src/Backup/LocalBackupVerifier.php",
+          "tests/Backup/LocalBackupVerifierTest.php"
+        ]
+      },
+      "claimed_on": "2026-09-26T14:04:51.635Z",
+      "claim_state": "active_worker_claim",
+      "last_checkpoint_at": "2026-09-26T14:04:51.635Z",
+      "next_action": "Implement and test the inventory-membership guard, then run complete exact-head Worker CI.",
+      "checkpoint_paths": [
+        "src/Backup/LocalBackupVerifier.php",
+        "tests/Backup/LocalBackupVerifierTest.php"
+      ]
     }
   ],
   "recovery_queue": [],
