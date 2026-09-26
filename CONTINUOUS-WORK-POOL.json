@@ -10,16 +10,16 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-26T10:24:13.686Z",
+  "published_at": "2026-09-26T10:25:22.713Z",
   "summary": {
-    "total_remaining_worker_tasks": 55,
+    "total_remaining_worker_tasks": 56,
     "completed_worker_prs_awaiting_trusted_review": 49,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "Re-evaluate remaining unclaimed Worker proposals and continue an independent package while preserving all foreign active claims and completed claim locks; do not modify WCP-097, WCP-100 or WCP-104.",
+    "next_required_action": "Continue WCP-106 on its exclusive offsite-status-model claim while preserving WCP-105 and all completed foreign claim locks; after exact-head green CI, reconcile and continue independently.",
     "composition_preparable": 0,
-    "immediately_actionable": 1,
+    "immediately_actionable": 2,
     "must_continue": true
   },
   "rules": {
@@ -4957,6 +4957,105 @@
         ]
       },
       "claimed_on": "2026-09-26T10:22:41.155Z"
+    },
+    {
+      "priority": 56,
+      "package_id": "WCP-106",
+      "title": "Bound offsite backup target status descriptors",
+      "risk": "medium",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-106-offsite-status-model-g1",
+      "suggested_branch": "feature/wcp-106-offsite-status-model-g1",
+      "base_branch": "main",
+      "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "objective": "Harden the worker-visible OffsiteBackupTargetStatus value object at construction: enforce the same bounded UTF-8/control-safe target and backup identifiers plus positive attempts range used by backup status consumers, while preserving typed timestamp, success and required semantics without changing the reader or overview.",
+      "allowed_paths": [
+        "src/ExternalConnector/OffsiteBackupTargetStatus.php",
+        "tests/ExternalConnector/OffsiteBackupTargetStatusTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/",
+        "src/Controller/",
+        "src/Entity/",
+        "src/ExternalConnector/OffsiteBackupStatusReader.php",
+        "tests/ExternalConnector/OffsiteBackupStatusReaderTest.php",
+        "src/ExternalConnector/BackupTargetOverview.php",
+        "tests/ExternalConnector/BackupTargetOverviewTest.php",
+        "src/ExternalConnector/ExternalMediaStoreResult.php",
+        "tests/ExternalConnector/ExternalMediaStoreResultTest.php",
+        "src/ExtensionRuntime/ExtensionRuntimeState.php",
+        "tests/ExtensionRuntime/ExtensionRuntimeStateBoundaryTest.php",
+        "src/ExternalConnector/ExternalConnectorExecutionSummary.php",
+        "tests/ExternalConnector/ExternalConnectorExecutionSummaryTest.php",
+        "src/ExternalConnector/ExternalConnectorTargetDefinition.php",
+        "tests/ExternalConnector/ExternalConnectorTargetDefinitionTest.php",
+        "src/ExternalConnector/ExternalMailMessage.php",
+        "tests/ExternalConnector/ExternalMailMessageTest.php",
+        "src/ExternalConnector/ExternalMediaObject.php",
+        "tests/ExternalConnector/ExternalMediaObjectTest.php",
+        "src/ExternalConnector/ExternalMediaUpload.php",
+        "tests/ExternalConnector/ExternalMediaUploadTest.php",
+        "src/ExternalConnector/ExternalNotificationMessage.php",
+        "tests/ExternalConnector/ExternalNotificationMessageTest.php",
+        "src/Security/LocalRedirectTarget.php",
+        "tests/Security/LocalRedirectTargetTest.php"
+      ],
+      "deliverables": [
+        "fail-closed bounded UTF-8/control-safe target-key and backup-id constructor validation",
+        "bounded positive attempts validation while preserving typed timestamp, successful and required values",
+        "positive and negative value-object regression coverage without reader, overview, schema, migration or private-runtime changes"
+      ],
+      "tests": [
+        "targeted OffsiteBackupTargetStatus PHPUnit tests",
+        "PHPStan level 8",
+        "complete Worker CI on the exact final HEAD"
+      ],
+      "completion_report": [
+        "exact final Worker HEAD and sanitized base SHA",
+        "complete changed-path list and Worker PR",
+        "targeted tests plus complete Worker CI result",
+        "status identifier, attempts and deferred backup/Fortress boundary risks"
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "no-secrets-or-trusted-private-runtime-in-worker-source",
+        "preserve existing offsite status reader, overview aggregation and typed backup semantics",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_base_branch": "main",
+      "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "resume_branch": "feature/wcp-106-offsite-status-model-g1",
+      "proposal_kind": "worker_only",
+      "collision_check": {
+        "compared_against": "current continuous/work-pool-v4 task allowlists and active branches at publication",
+        "result": "disjoint from WCP-103 reader, WCP-104 media-store-result and WCP-105 extension-runtime claims, all other published allowlists and all searched WCP-106/offsite-status-model branches",
+        "paths": [
+          "src/ExternalConnector/OffsiteBackupTargetStatus.php",
+          "tests/ExternalConnector/OffsiteBackupTargetStatusTest.php"
+        ]
+      },
+      "claimed_on": "2026-09-26T10:25:22.713Z"
     }
   ],
   "recovery_queue": [],
