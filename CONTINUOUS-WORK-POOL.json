@@ -10,7 +10,7 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-26T20:16:19.002Z",
+  "published_at": "2026-09-26T20:17:39.989Z",
   "summary": {
     "total_remaining_worker_tasks": 132,
     "completed_worker_prs_awaiting_trusted_review": 168,
@@ -18084,7 +18084,7 @@
       "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-      "active_head": "1fa2c962c779a92971b7b1540def8a8159519a81",
+      "active_head": "7b0d3d53c02eb8b2eaa7977bd07bcc57a7241794",
       "resume_branch": "feature/wcp-395-member-notification-inbox-g1",
       "proposal_kind": "worker_only",
       "collision_check": {
@@ -18100,8 +18100,8 @@
       },
       "claimed_on": "2026-09-26T20:06:03.790Z",
       "claim_state": "active",
-      "last_checkpoint_at": "2026-09-26T20:13:32.141Z",
-      "next_action": "Inspect exact-head Worker CI run 36268747275; repair any genuine test, PHPStan or migration failure on this feature branch and rerun full CI after the final commit.",
+      "last_checkpoint_at": "2026-09-26T20:17:39.989Z",
+      "next_action": "Wait for exact-head CI 36268995894 on the corrected session-backed CSRF tests; repair any remaining genuine failures and rerun full CI.",
       "checkpoint_paths": [
         "src/Controller/MemberNotificationInboxController.php",
         "src/Repository/MemberNotificationRepository.php",
@@ -18109,10 +18109,23 @@
         "templates/guild_portal/notifications.html.twig",
         "tests/Controller/MemberNotificationInboxTest.php"
       ],
-      "last_verified_push_at": "2026-09-26T20:13:32.141Z",
+      "last_verified_push_at": "2026-09-26T20:17:39.989Z",
       "worker_pr": 190,
-      "ci_run_id": 36268747275,
-      "ci_result": "in_progress"
+      "ci_run_id": 36268995894,
+      "ci_result": "pending",
+      "ci_attempts": [
+        {
+          "run_id": 36268747275,
+          "head": "1fa2c962c779a92971b7b1540def8a8159519a81",
+          "result": "failure",
+          "cause": "Three SessionNotFound errors from requesting CSRF tokens outside an active request plus a brittle exact Cache-Control assertion. PHPStan and PostgreSQL migration validation passed; tests now read tokens rendered in live inbox forms and assert private/no-store semantics."
+        },
+        {
+          "run_id": 36268995894,
+          "head": "7b0d3d53c02eb8b2eaa7977bd07bcc57a7241794",
+          "result": "pending"
+        }
+      ]
     },
     {
       "priority": 176,
