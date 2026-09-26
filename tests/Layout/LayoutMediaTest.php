@@ -40,26 +40,32 @@ final class LayoutMediaTest extends KernelTestCase
         $suffix=bin2hex(random_bytes(6));
         $asset=(new MediaAsset())->setModuleKey('content')->setMimeType('image/png')->setLocation('/uploads/editor-reference-'.$suffix.'.png')->setOriginalName('reference.png');
         $decoy=(new MediaAsset())->setModuleKey('content')->setMimeType('image/png')->setLocation('/uploads/editor-decoy-'.$suffix.'.png')->setOriginalName('decoy.png');
+        $malformed=(new MediaAsset())->setModuleKey('content')->setMimeType('image/png')->setLocation('/uploads/editor-malformed-'.$suffix.'.png')->setOriginalName('malformed.png');
         $author=(new User())->setEmail('wcp339-'.$suffix.'@example.test')->setDisplayName('WCP 339 test');
         $referencedEntry=null;
         $decoyEntry=null;
+        $malformedEntry=null;
 
         try {
             $em->persist($asset);
             $em->persist($decoy);
+            $em->persist($malformed);
             $em->persist($author);
             $em->flush();
 
             $assetId=$asset->getId();
             $decoyId=$decoy->getId();
+            $malformedId=$malformed->getId();
             self::assertNotNull($assetId);
             self::assertNotNull($decoyId);
+            self::assertNotNull($malformedId);
             $mediaDocument=$blocks->normalizeForStorage(
                 ContentBlockDocument::PREFIX.'{"version":1,"blocks":[{"type":"media","assetId":'.$assetId.',"alt":"","caption":""}]}'
             );
             $decoyDocument=$blocks->normalizeForStorage(
                 ContentBlockDocument::PREFIX.'{"version":1,"blocks":[{"type":"text","text":"The literal \"assetId\":'.$decoyId.', is not an actual media block."}]}'
             );
+            $malformedDocument=ContentBlockDocument::PREFIX.'{"version":1,"blocks":[{"type":"media","assetId":'.$malformedId;
             $referencedEntry=(new ContentEntry())
                 ->setType(ContentEntry::TYPE_PAGE)
                 ->setTitle('Editor media reference')
@@ -76,16 +82,27 @@ final class LayoutMediaTest extends KernelTestCase
                 ->setAuthor($author);
             $em->persist($referencedEntry);
             $em->persist($decoyEntry);
+            $malformedEntry=(new ContentEntry())
+                ->setType(ContentEntry::TYPE_PAGE)
+                ->setTitle('Malformed editor media reference')
+                ->setSlug('wcp-339-malformed-'.$suffix)
+                ->setBody('Body without a media URL')
+                ->setEditorDocument($malformedDocument)
+                ->setAuthor($author);
+            $em->persist($malformedEntry);
             $em->flush();
 
             self::assertContains('Seiten/News-Editor-Medien (1)',$usage->usages($asset));
             self::assertTrue($usage->isUsed($asset));
             self::assertNotContains('Seiten/News-Editor-Medien (1)',$usage->usages($decoy));
             self::assertFalse($usage->isUsed($decoy));
+            self::assertContains('Seiten/News-Editor-Medien (1)',$usage->usages($malformed));
+            self::assertTrue($usage->isUsed($malformed));
         } finally {
             if ($referencedEntry instanceof ContentEntry && $em->contains($referencedEntry)) { $em->remove($referencedEntry); }
             if ($decoyEntry instanceof ContentEntry && $em->contains($decoyEntry)) { $em->remove($decoyEntry); }
-            foreach ([$author,$asset,$decoy] as $entity) {
+            if ($malformedEntry instanceof ContentEntry && $em->contains($malformedEntry)) { $em->remove($malformedEntry); }
+            foreach ([$author,$asset,$decoy,$malformed] as $entity) {
                 if ($em->contains($entity)) { $em->remove($entity); }
             }
             $em->flush();
