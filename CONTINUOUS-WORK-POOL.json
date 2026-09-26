@@ -12,14 +12,14 @@
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
   "published_at": "2026-09-26T08:42:05.413Z",
   "summary": {
-    "total_remaining_worker_tasks": 34,
+    "total_remaining_worker_tasks": 35,
     "completed_worker_prs_awaiting_trusted_review": 26,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "Continue an independent Worker proposal while WCP-081 remains owned by another chat; WCP-082 is complete on its exact green head and remains claim-locked pending Trusted review.",
+    "next_required_action": "Implement WCP-085 on feature/wcp-085-upload-structure-boundary-g1 from main @ f1a246c64527ef3ad51f7490773d9bbf9d42be5d; WCP-084 remains owned by another chat.",
     "composition_preparable": 0,
-    "immediately_actionable": 1,
+    "immediately_actionable": 2,
     "must_continue": true
   },
   "rules": {
@@ -3074,6 +3074,81 @@
         ]
       },
       "claimed_on": "2026-09-26T09:13:01.873Z"
+    },
+    {
+      "priority": 35,
+      "package_id": "WCP-085",
+      "title": "Bound uploaded media structure and filename encoding",
+      "risk": "high",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-085-upload-structure-boundary-g1",
+      "suggested_branch": "feature/wcp-085-upload-structure-boundary-g1",
+      "base_branch": "main",
+      "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "objective": "Harden the worker-visible MediaUploadPolicy against malformed client filename encodings and resource-amplifying media structures. Fail closed on invalid UTF-8 names, bound decoded image dimensions/pixel area and JSON byte/depth work, and preserve existing MIME/extension checks, malware scanning and upload storage behavior without controller, schema or private-runtime changes.",
+      "allowed_paths": [
+        "src/Service/MediaUploadPolicy.php",
+        "tests/Service/MediaUploadPolicyTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/"
+      ],
+      "deliverables": [
+        "fail closed on malformed/non-UTF-8 original filenames instead of allowing a regex error to pass",
+        "enforce explicit image width, height and pixel-area bounds before image use",
+        "bound JSON upload bytes and decode depth before recursive parsing",
+        "preserve valid text/media uploads, MIME-extension matching, malware scanning and existing executable-upload rejection",
+        "positive and negative regression coverage without controller, storage, schema, migration or connector changes"
+      ],
+      "tests": [
+        "targeted MediaUploadPolicy PHPUnit tests",
+        "PHPStan level 8",
+        "complete Worker CI on the exact final HEAD"
+      ],
+      "completion_report": [
+        "exact final Worker HEAD and sanitized base SHA",
+        "complete changed-path list and Worker PR",
+        "targeted tests plus complete Worker CI result",
+        "filename encoding, media dimensions, JSON bounds and deferred decompression risks"
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "no-secrets-or-trusted-private-runtime-in-worker-source",
+        "preserve-existing-upload MIME, malware-scan, executable-rejection and storage behavior",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_base_branch": "main",
+      "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "resume_branch": "feature/wcp-085-upload-structure-boundary-g1",
+      "proposal_kind": "worker_only",
+      "collision_check": {
+        "compared_against": "current continuous/work-pool-v4 task allowlists and active branches",
+        "result": "disjoint from WCP-084 and all WCP-078 through WCP-083 claims and published FCP allowlists",
+        "paths": [
+          "src/Service/MediaUploadPolicy.php",
+          "tests/Service/MediaUploadPolicyTest.php"
+        ]
+      },
+      "claimed_on": "2026-09-26T09:15:36.068Z"
     }
   ],
   "recovery_queue": [],
