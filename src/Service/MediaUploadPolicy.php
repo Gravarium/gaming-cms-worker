@@ -130,8 +130,8 @@ final readonly class MediaUploadPolicy
                 throw new \DomainException('Die Bilddatei ist beschädigt oder unvollständig.');
             }
 
-            $width = (int) ($imageInfo[0] ?? 0);
-            $height = (int) ($imageInfo[1] ?? 0);
+            $width = (int) $imageInfo[0];
+            $height = (int) $imageInfo[1];
             if (
                 $width < 1
                 || $height < 1
