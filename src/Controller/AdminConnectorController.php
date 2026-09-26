@@ -27,6 +27,8 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 #[IsGranted('CMS_CONNECTORS_MANAGE')]
 final class AdminConnectorController extends AbstractController
 {
+    private const MAX_SETTINGS_TARGETS = 200;
+
     public function __construct(
         private readonly ExternalConnectorTargetRepository $targets,
         private readonly OffsiteBackupStatusReader $backupStatuses,
@@ -89,6 +91,11 @@ final class AdminConnectorController extends AbstractController
         }
 
         $priorities = $request->request->all('priority');
+        if (count($priorities) > self::MAX_SETTINGS_TARGETS) {
+            $this->addFlash('success', 'Zu viele externe Ziele ausgewählt. Es wurden keine Änderungen vorgenommen.');
+
+            return $this->redirectToRoute('app_admin_connector_index');
+        }
         $required = $request->request->all('required');
         $changed = 0;
 
