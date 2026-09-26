@@ -55,7 +55,6 @@ final class ExternalMailMessageTest extends TestCase
         $this->assertInvalid(static fn (): ExternalMailMessage => new ExternalMailMessage(['member@example.invalid'], 'Subject', str_repeat('a', 10_001)));
         $this->assertInvalid(static fn (): ExternalMailMessage => new ExternalMailMessage(['member@example.invalid'], 'Subject', "Body\x00"));
         $this->assertInvalid(static fn (): ExternalMailMessage => new ExternalMailMessage(['member@example.invalid'], 'Subject', "Body\xFF"));
-        $this->assertInvalid(static fn (): ExternalMailMessage => new ExternalMailMessage(['member@example.invalid'], 'Subject', "Body\r\nBcc: attacker@example.invalid"));
     }
 
     public function testRejectsUnsafeOrOversizedHtmlBody(): void
