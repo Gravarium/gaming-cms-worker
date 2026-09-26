@@ -69,7 +69,7 @@ final class DiscordWebhookUrlPolicy
 
         $authority = null;
         $matches = [];
-        if (preg_match('#^https://([^/?#]+)(?:/|$)#i', $url, $matches) === 1 && isset($matches[1]) && is_string($matches[1])) {
+        if (preg_match('~^https://([^/?#]+)(?:/|$)~i', $url, $matches) === 1 && isset($matches[1]) && is_string($matches[1])) {
             $authority = strtolower($matches[1]);
         }
         if ($authority === null || !in_array($authority, self::ALLOWED_AUTHORITIES, true)) {
