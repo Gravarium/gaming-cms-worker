@@ -32,6 +32,9 @@ final class VideoFeedTest extends WebTestCase
         self::assertResponseIsSuccessful();
         self::assertSame(1, $crawler->filter('a[href="/feeds/videos.xml"]')->count());
         self::assertSame(1, $crawler->filter('link[rel="alternate"][type="application/rss+xml"]')->count());
+        $alternateHref = $crawler->filter('link[rel="alternate"][type="application/rss+xml"]')->attr('href');
+        self::assertNotNull($alternateHref);
+        self::assertStringStartsWith('http://', $alternateHref);
 
         $client->request('GET', '/feeds/videos.xml');
         self::assertResponseIsSuccessful();
@@ -44,17 +47,24 @@ final class VideoFeedTest extends WebTestCase
         self::assertTrue($xml->loadXML($body));
         $items = $xml->getElementsByTagName('item');
         $titles = [];
+        $links = [];
         foreach ($items as $item) {
             if (!$item instanceof \DOMElement) {
                 continue;
             }
             $title = $item->getElementsByTagName('title')->item(0);
-            if ($title instanceof \DOMElement) {
+            $link = $item->getElementsByTagName('link')->item(0);
+            if ($title instanceof \DOMElement && $link instanceof \DOMElement) {
                 $titles[] = $title->textContent;
+                $links[$title->textContent] = $link->textContent;
             }
         }
 
         self::assertContains($published->getTitle(), $titles);
+        self::assertStringContainsString('RSS &amp; video ', $body);
+        self::assertArrayHasKey($published->getTitle(), $links);
+        self::assertStringStartsWith('http://', $links[$published->getTitle()]);
+        self::assertStringEndsWith('/videos/'.$published->getSlug(), $links[$published->getTitle()]);
         self::assertNotContains($disabled->getTitle(), $titles);
         self::assertNotContains($draft->getTitle(), $titles);
         self::assertNotContains($future->getTitle(), $titles);
