@@ -10,7 +10,7 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-26T11:36:56.711Z",
+  "published_at": "2026-09-26T11:39:46.976Z",
   "summary": {
     "total_remaining_worker_tasks": 78,
     "completed_worker_prs_awaiting_trusted_review": 71,
@@ -7296,7 +7296,7 @@
       "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "f87b2e8ee9e22344958d4cf99f37a572f8818a0c",
       "resume_branch": "feature/wcp-302-content-release-immutability-g1",
       "proposal_kind": "worker_only",
       "collision_check": {
@@ -7309,7 +7309,16 @@
       },
       "claimed_on": "2026-09-26T11:35:58.527Z",
       "claim_state": "active_worker_claim",
-      "next_action": "Implement only the two allowlisted files, open a Worker PR, run exact-head full CI and retain the claim until Trusted resolution."
+      "next_action": "Await exact-head Worker CI run 36239493686; diagnose and repair any failing checks without changing allowed paths, then reconcile the exact final HEAD.",
+      "worker_pr": 91,
+      "pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/91",
+      "ci_run_id": 36239493686,
+      "ci_status": "in_progress",
+      "last_checkpoint_at": "2026-09-26T11:39:46.976Z",
+      "checkpoint_paths": [
+        "src/Entity/ContentRelease.php",
+        "tests/Entity/ContentReleaseWorkflowTest.php"
+      ]
     },
     {
       "priority": 78,
