@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Entity\AdminNotification;
-use App\Entity\Game;
 use App\Entity\Guild;
 use App\Entity\GuildApplication;
 use App\Form\GuildApplicationType;
