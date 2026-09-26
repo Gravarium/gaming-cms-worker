@@ -27,6 +27,7 @@ final class ModuleStorageSettingType extends AbstractType
             ->add('externalBaseUrl', UrlType::class, [
                 'label' => 'Öffentliche Basisadresse für dieses Modul',
                 'required' => false,
+                'attr' => ['maxlength' => 500],
                 'help' => 'Optional. Überschreibt die zentrale öffentliche S3-Adresse, z. B. https://media.example.de/gaming.',
             ]);
     }
