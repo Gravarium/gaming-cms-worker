@@ -38,13 +38,13 @@ final class GameCatalogueController extends AbstractController
         /** @var array<string, true> $genreSlugs */
         $genreSlugs = [];
         foreach ($genres as $genre) {
-            $genreSlugs[$genre->getSlug()] = true;
+            $genreSlugs[$genre['slug']] = true;
         }
 
         /** @var array<string, true> $platformSlugs */
         $platformSlugs = [];
         foreach ($platforms as $platform) {
-            $platformSlugs[$platform->getSlug()] = true;
+            $platformSlugs[$platform['slug']] = true;
         }
 
         $invalidFilter = false;
