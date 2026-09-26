@@ -15,6 +15,7 @@ use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\Length;
 
 /** @extends AbstractType<GuildMember> */
 final class GuildMemberType extends AbstractType
@@ -24,8 +25,17 @@ final class GuildMemberType extends AbstractType
         $guild = $options['guild'];
         $builder
             ->add('user', EntityType::class, ['class' => User::class, 'choice_label' => 'email', 'label' => 'CMS-Benutzerkonto', 'placeholder' => 'Kein Konto verknüpfen', 'required' => false])
-            ->add('characterName', null, ['label' => 'Charaktername'])
-            ->add('playerName', null, ['label' => 'Spielername', 'required' => false])
+            ->add('characterName', null, [
+                'label' => 'Charaktername',
+                'constraints' => [new Length(max: 120)],
+                'attr' => ['maxlength' => 120],
+            ])
+            ->add('playerName', null, [
+                'label' => 'Spielername',
+                'required' => false,
+                'constraints' => [new Length(max: 120)],
+                'attr' => ['maxlength' => 120],
+            ])
             ->add('rank', EntityType::class, [
                 'class' => GuildRank::class,
                 'choice_label' => 'name',
@@ -34,8 +44,19 @@ final class GuildMemberType extends AbstractType
                 'required' => false,
                 'query_builder' => static fn (EntityRepository $repository) => $repository->createQueryBuilder('rank')->andWhere('rank.guild = :guild')->setParameter('guild', $guild)->orderBy('rank.position', 'ASC'),
             ])
-            ->add('rankName', null, ['label' => 'Freier Rangname (Fallback)', 'required' => false])
-            ->add('characterClass', null, ['label' => 'Klasse oder Rolle', 'required' => false])
+            ->add('rankName', null, [
+                'label' => 'Freier Rangname (Fallback)',
+                'required' => false,
+                'empty_data' => '',
+                'constraints' => [new Length(max: 100)],
+                'attr' => ['maxlength' => 100],
+            ])
+            ->add('characterClass', null, [
+                'label' => 'Klasse oder Rolle',
+                'required' => false,
+                'constraints' => [new Length(max: 100)],
+                'attr' => ['maxlength' => 100],
+            ])
             ->add('characterLevel', IntegerType::class, ['label' => 'Stufe', 'required' => false])
             ->add('position', IntegerType::class, ['label' => 'Sortierung'])
             ->add('leader', CheckboxType::class, ['label' => 'Gildenleitung', 'required' => false])
