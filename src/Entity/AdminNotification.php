@@ -13,6 +13,14 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Table(name: 'admin_notification')]
 class AdminNotification
 {
+    private const MAX_TYPE_CHARACTERS = 60;
+    private const MAX_TYPE_BYTES = 240;
+    private const MAX_TITLE_CHARACTERS = 180;
+    private const MAX_TITLE_BYTES = 720;
+    private const MAX_MESSAGE_CHARACTERS = 4000;
+    private const MAX_MESSAGE_BYTES = 16000;
+    private const MAX_LINK_CHARACTERS = 500;
+    private const MAX_LINK_BYTES = 2000;
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -39,15 +47,54 @@ class AdminNotification
     public function __construct() { $this->createdAt = new \DateTimeImmutable(); }
     public function getId(): ?int { return $this->id; }
     public function getType(): string { return $this->type; }
-    public function setType(string $type): self { $this->type = trim($type); return $this; }
+    public function setType(string $type): self
+    {
+        $this->type = $this->normalize($type, self::MAX_TYPE_CHARACTERS, self::MAX_TYPE_BYTES, 'type');
+
+        return $this;
+    }
     public function getTitle(): string { return $this->title; }
-    public function setTitle(string $title): self { $this->title = trim($title); return $this; }
+    public function setTitle(string $title): self
+    {
+        $this->title = $this->normalize($title, self::MAX_TITLE_CHARACTERS, self::MAX_TITLE_BYTES, 'title');
+
+        return $this;
+    }
     public function getMessage(): string { return $this->message; }
-    public function setMessage(string $message): self { $this->message = trim($message); return $this; }
+    public function setMessage(string $message): self
+    {
+        $this->message = $this->normalize($message, self::MAX_MESSAGE_CHARACTERS, self::MAX_MESSAGE_BYTES, 'message');
+
+        return $this;
+    }
     public function getLink(): ?string { return $this->link; }
-    public function setLink(?string $link): self { $this->link = LocalRedirectTarget::requireSafe($link); return $this; }
+    public function setLink(?string $link): self
+    {
+        $this->link = $link === null
+            ? null
+            : LocalRedirectTarget::requireSafe($this->normalize($link, self::MAX_LINK_CHARACTERS, self::MAX_LINK_BYTES, 'link'));
+
+        return $this;
+    }
     public function getCreatedAt(): \DateTimeImmutable { return $this->createdAt; }
     public function getReadAt(): ?\DateTimeImmutable { return $this->readAt; }
     public function isRead(): bool { return $this->readAt !== null; }
     public function markRead(): self { $this->readAt ??= new \DateTimeImmutable(); return $this; }
+
+    private function normalize(string $value, int $maxCharacters, int $maxBytes, string $field): string
+    {
+        if (strlen($value) > $maxBytes) {
+            throw new \\LengthException('Notification '.$field.' exceeds its UTF-8 byte limit.');
+        }
+        if (str_contains($value, "\\0") || !mb_check_encoding($value, 'UTF-8')) {
+            throw new \\InvalidArgumentException('Notification '.$field.' must be valid UTF-8 without NUL bytes.');
+        }
+
+        $value = trim($value);
+        if (mb_strlen($value, 'UTF-8') > $maxCharacters) {
+            throw new \\LengthException('Notification '.$field.' exceeds its character limit.');
+        }
+
+        return $value;
+    }
 }
