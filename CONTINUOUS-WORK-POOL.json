@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-26T11:52:41.458Z",
+  "published_at": "2026-09-26T11:53:41.369Z",
   "summary": {
-    "total_remaining_worker_tasks": 83,
+    "total_remaining_worker_tasks": 84,
     "completed_worker_prs_awaiting_trusted_review": 77,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "Continue independent Worker proposal work while preserving WCP-127 and all foreign/completed claim locks; after each exact-head green CI reconcile and continue.",
+    "next_required_action": "Continue WCP-129 independent Worker proposal work while preserving all foreign and completed claim locks; after exact-head green CI reconcile and continue.",
     "composition_preparable": 0,
     "immediately_actionable": 4,
     "must_continue": true
@@ -7951,6 +7951,91 @@
       "claimed_on": "2026-09-26T11:51:56.149Z",
       "claim_state": "active_worker_claim",
       "next_action": "Implement only the two allowlisted paths on the exact WCP-125 green base; open a stacked Worker PR, run exact-head full CI and retain the claim until Trusted resolution."
+    },
+    {
+      "priority": 84,
+      "package_id": "WCP-129",
+      "title": "Bound extension package staging fanout",
+      "risk": "high",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-129-extension-installer-boundary-g1",
+      "suggested_branch": "feature/wcp-129-extension-installer-boundary-g1",
+      "base_branch": "main",
+      "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "objective": "Harden the worker-visible extension package installer staging copy with bounded filesystem entry count and byte volume before further activation work, preserving verification, symlink rejection, atomic replacement and rollback cleanup.",
+      "allowed_paths": [
+        "src/ExtensionPackage/ExtensionPackageInstaller.php",
+        "tests/ExtensionPackage/ExtensionPackageInstallerBoundaryTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/",
+        "src/Controller/",
+        "src/Entity/",
+        "src/Repository/",
+        "src/ExtensionPackage/ExtensionPackageVerifier.php",
+        "tests/ExtensionPackage/ExtensionPackageVerifierBoundaryTest.php",
+        "tests/ExtensionPackage/ExtensionPackageSecurityTest.php"
+      ],
+      "deliverables": [
+        "bounded staged filesystem entries, regular-file count and copied-byte volume before copying untrusted package content",
+        "fail-closed rejection without weakening signature verification, relative-path, symlink, atomic activation or rollback cleanup",
+        "preserved valid small-package installation behavior and deterministic boundary tests",
+        "no installer schema, controller, migration, private-runtime or deployment changes"
+      ],
+      "tests": [
+        "targeted ExtensionPackageInstaller boundary PHPUnit tests",
+        "existing ExtensionPackageSecurity tests",
+        "PHPStan level 8",
+        "complete Worker CI on the exact final HEAD"
+      ],
+      "completion_report": [
+        "exact final Worker HEAD and sanitized base SHA",
+        "complete changed-path list and Worker PR",
+        "targeted plus existing installer tests and complete exact-head Worker CI result",
+        "staging entry/byte bounds, cleanup behavior and deferred trusted package retention risks"
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "no-secrets-or-trusted-private-runtime-in-worker-source",
+        "preserve existing extension signature, package, path, symlink, activation and rollback safeguards",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_base_branch": "main",
+      "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "resume_branch": "feature/wcp-129-extension-installer-boundary-g1",
+      "proposal_kind": "worker_only",
+      "collision_check": {
+        "compared_against": "current continuous/work-pool-v4 task allowlists and searched WCP-129 branches; exact source/test files are disjoint from verifier, manifest, installer and active content/layout claims",
+        "result": "disjoint from all published allowlists and foreign claims; no shared schema, migration, DI, controller or template paths",
+        "paths": [
+          "src/ExtensionPackage/ExtensionPackageInstaller.php",
+          "tests/ExtensionPackage/ExtensionPackageInstallerBoundaryTest.php"
+        ]
+      },
+      "claimed_on": "2026-09-26T11:53:41.369Z",
+      "claim_state": "active_worker_claim",
+      "next_action": "Implement only the two allowlisted files, open a Worker PR, run exact-head full CI and retain the claim until Trusted resolution."
     }
   ],
   "recovery_queue": [],
