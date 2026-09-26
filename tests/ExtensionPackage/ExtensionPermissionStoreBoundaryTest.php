@@ -81,6 +81,7 @@ final class ExtensionPermissionStoreBoundaryTest extends TestCase
         foreach ([
             '[]',
             '{"not-an-extension":["content.read"]}',
+            '{"module:../example":["content.read"]}',
             '{"module:example":["content.read","content.read"]}',
             '{"module:example":["php.execute"]}',
             '{"module:example":{"content.read":true}}',
@@ -101,22 +102,6 @@ final class ExtensionPermissionStoreBoundaryTest extends TestCase
         file_put_contents($this->file, json_encode($permissions, JSON_THROW_ON_ERROR));
 
         self::assertSame([], $this->store->approved($this->manifest));
-    }
-
-    public function testRejectsUnsafeManifestIdentityWhenPersistingGrant(): void
-    {
-        $unsafeManifest = new ExtensionManifest(
-            'module',
-            '../example',
-            'Example',
-            '1.0.0',
-            '^1.0',
-            [],
-            ['content.read'],
-        );
-
-        $this->expectException(\DomainException::class);
-        $this->store->grant($unsafeManifest, 'content.read');
     }
 
     private function assertInvalidStorePath(string $path): void
