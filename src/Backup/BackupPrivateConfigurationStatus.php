@@ -42,8 +42,8 @@ final readonly class BackupPrivateConfigurationStatus
             if ($stat === false) {
                 return [];
             }
-            $size = $stat['size'] ?? null;
-            if (!is_int($size) || $size > self::MAX_STATUS_FILE_BYTES) {
+            $size = $stat['size'];
+            if ($size > self::MAX_STATUS_FILE_BYTES) {
                 return [];
             }
 
