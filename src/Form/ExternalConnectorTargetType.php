@@ -12,6 +12,7 @@ use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\Length;
 
 /** @extends AbstractType<ExternalConnectorTarget> */
 final class ExternalConnectorTargetType extends AbstractType
@@ -34,10 +35,14 @@ final class ExternalConnectorTargetType extends AbstractType
             ->add('targetKey', TextType::class, [
                 'label' => 'Eindeutige Zielkennung',
                 'help' => 'Zum Beispiel google-drive-1 oder backup-pcloud. Nach externer Einrichtung nicht mehr ändern.',
+                'attr' => ['maxlength' => 64],
+                'constraints' => [new Length(max: 64)],
             ])
             ->add('providerKey', TextType::class, [
                 'label' => 'Anbieterkennung',
                 'help' => 'Freie, erweiterbare Kennung wie google-drive, pcloud, sftp oder eigener-server.',
+                'attr' => ['maxlength' => 64],
+                'constraints' => [new Length(max: 64)],
             ])
             ->add('displayName', TextType::class, ['label' => 'Anzeigename'])
             ->add('priority', IntegerType::class, [
@@ -58,6 +63,8 @@ final class ExternalConnectorTargetType extends AbstractType
                 'label' => 'Server-Konfigurationsverweis',
                 'required' => false,
                 'help' => 'Nur eine nicht geheime Referenz, niemals Passwort, Token, URL oder Schlüssel eintragen.',
+                'attr' => ['maxlength' => 120],
+                'constraints' => [new Length(max: 120)],
             ]);
     }
 
