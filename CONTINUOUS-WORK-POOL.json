@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-26T16:44:54.611Z",
+  "published_at": "2026-09-26T16:47:36.796Z",
   "summary": {
-    "total_remaining_worker_tasks": 131,
-    "completed_worker_prs_awaiting_trusted_review": 131,
+    "total_remaining_worker_tasks": 130,
+    "completed_worker_prs_awaiting_trusted_review": 132,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "Verify disjoint active WCP-355 and WCP-356 on their exact heads, then re-evaluate blocked FCP dependencies.",
+    "next_required_action": "Re-evaluate the blocked FCP dependencies; skip foreign active claims and continue with the next independent safe Worker package.",
     "composition_preparable": 0,
     "immediately_actionable": 0,
     "must_continue": true
@@ -13739,7 +13739,7 @@
       "package_id": "WCP-356",
       "title": "Align game form fields with stored length limits",
       "risk": "low",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -13817,14 +13817,32 @@
         ]
       },
       "claimed_on": "2026-09-26T16:43:49.471Z",
-      "claim_state": "active_worker_claim",
-      "last_checkpoint_at": "2026-09-26T16:44:54.611Z",
-      "next_action": "Open the Worker PR from the exact feature head, then complete PHPStan and full exact-head Worker CI; keep the claim locked for Trusted resolution.",
+      "claim_state": "locked_until_trusted_resolution",
+      "last_checkpoint_at": "2026-09-26T16:47:36.796Z",
+      "next_action": "Await Trusted review with the claim locked; do not merge or deploy.",
       "checkpoint_paths": [
         "src/Form/GameType.php",
         "tests/Form/GameTypeBoundaryTest.php"
       ],
-      "last_verified_push_at": "2026-09-26T16:44:54.611Z"
+      "last_verified_push_at": "2026-09-26T16:44:54.611Z",
+      "worker_pr": 150,
+      "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/150",
+      "pr_state": "ready_for_review",
+      "final_head": "8ca441932593a0e4294ce71cd536618ed0d01dd1",
+      "ci_run_id": 36256567290,
+      "ci_result": "success",
+      "completed_on": "2026-09-26T16:47:36.796Z",
+      "final_changed_paths": [
+        "src/Form/GameType.php",
+        "tests/Form/GameTypeBoundaryTest.php"
+      ],
+      "test_evidence": [
+        "Worker CI run 36256567290 (#450) succeeded on exact final HEAD 8ca441932593a0e4294ce71cd536618ed0d01dd1.",
+        "PHPStan level 8 passed with no errors; the complete application suite passed with 433 tests and 1,872 assertions, one PHPUnit deprecation and five notices.",
+        "PostgreSQL 18 applied and verified all 39 migrations; the migration status check reported no pending migrations.",
+        "PR #150 is open, ready for review and unmerged. Exact comparison against sanitized main contains only the two allowed paths.",
+        "Form regressions accepted exact 120/1,000/500 field boundaries, rejected 121/1,001/501, and confirmed matching maxlength attributes."
+      ]
     }
   ],
   "recovery_queue": [],
