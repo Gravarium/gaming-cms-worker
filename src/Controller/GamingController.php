@@ -88,7 +88,7 @@ final class GamingController extends AbstractController
         if ($form->isSubmitted()) {
             $key = 'guild-'.$guild->getId().'-'.($request->getClientIp() ?? 'unknown');
             if (!$this->applicationLimiter->create($key)->consume(1)->isAccepted()) {
-                $form->addError(new \\Symfony\\Component\\Form\\FormError('Zu viele Bewerbungsversuche. Bitte versuche es später erneut.'));
+                $form->addError(new \Symfony\Component\Form\FormError('Zu viele Bewerbungsversuche. Bitte versuche es später erneut.'));
                 $rateLimited = true;
             }
         }
