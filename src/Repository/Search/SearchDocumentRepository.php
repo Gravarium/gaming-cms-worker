@@ -23,8 +23,10 @@ final class SearchDocumentRepository extends ServiceEntityRepository
         return $this->findOneBy(['sourceType' => $sourceType, 'sourceId' => $sourceId]);
     }
 
-    /** @param list<string> $sourceTypes */
-    /** @return list<SearchDocument> */
+    /**
+     * @param list<string> $sourceTypes
+     * @return list<SearchDocument>
+     */
     public function findForIndex(array $sourceTypes): array
     {
         if ($sourceTypes === []) {
