@@ -10,10 +10,10 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-26T21:46:09.598Z",
+  "published_at": "2026-09-26T21:49:30.570Z",
   "summary": {
     "total_remaining_worker_tasks": 134,
-    "completed_worker_prs_awaiting_trusted_review": 181,
+    "completed_worker_prs_awaiting_trusted_review": 182,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
@@ -20005,7 +20005,7 @@
       "package_id": "WCP-411",
       "title": "Search and paginate the guild application inbox",
       "risk": "medium",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -20094,14 +20094,14 @@
         ]
       },
       "claimed_on": "2026-09-26T21:29:08.842Z",
-      "claim_state": "active",
-      "next_action": "Monitor exact-head Worker CI run 36274025968 for repaired HEAD 68f68abcb33cefffb273d51968f50d2942809164; repair any remaining red check on this same branch.",
+      "claim_state": "locked_until_trusted_resolution",
+      "next_action": "PR #206 is ready for Trusted review at exact green HEAD 68f68abcb33cefffb273d51968f50d2942809164 with CI run 36274025968. Keep this claim locked until Trusted explicitly integrates, cancels, or transfers it.",
       "branch_heads": {
         "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
         "feature_branch": "68f68abcb33cefffb273d51968f50d2942809164"
       },
-      "last_checkpoint_at": "2026-09-26T21:46:09.598Z",
-      "last_verified_push_at": "2026-09-26T21:46:09.598Z",
+      "last_checkpoint_at": "2026-09-26T21:49:30.570Z",
+      "last_verified_push_at": "2026-09-26T21:49:30.570Z",
       "checkpoint_paths": [
         "src/Controller/AdminGuildApplicationInboxController.php",
         "src/Repository/GuildApplicationRepository.php",
@@ -20112,21 +20112,42 @@
       "worker_pr": 206,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/206",
       "last_ci_run_id": 36274025968,
-      "last_ci_result": "in_progress",
+      "last_ci_result": "success",
       "ci_attempts": [
         {
           "run_id": 36273876801,
           "head": "99433460f1989313e3812bf081da5bba0231db7c",
           "result": "failure",
-          "diagnosis": "PHPUnit's permission test created a second KernelBrowser before shutting down the first kernel. Added ensureKernelShutdown() between anonymous and unauthorized requests; PHPStan and PostgreSQL migration checks were green."
+          "diagnosis": "Only the permission test kernel lifecycle setup failed; corrected with ensureKernelShutdown() between clients."
         },
         {
           "run_id": 36274025968,
           "head": "68f68abcb33cefffb273d51968f50d2942809164",
-          "result": "in_progress"
+          "result": "success"
         }
       ],
-      "pr_state": "open_draft"
+      "pr_state": "open_ready_for_review_unmerged",
+      "final_head": "68f68abcb33cefffb273d51968f50d2942809164",
+      "ci_run_id": 36274025968,
+      "ci_result": "success",
+      "last_ci_diagnosis": "The first run exposed a Symfony test setup issue; fixed on the same branch. The repaired exact HEAD passed the complete Worker CI and PostgreSQL 18 migration chain.",
+      "completion_results": {
+        "exact_worker_base": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+        "final_feature_head": "68f68abcb33cefffb273d51968f50d2942809164",
+        "changed_files": [
+          "src/Controller/AdminGuildApplicationInboxController.php",
+          "src/Repository/GuildApplicationRepository.php",
+          "templates/admin/gaming/application/index.html.twig",
+          "templates/admin/gaming/application/inbox.html.twig",
+          "tests/Controller/AdminGuildApplicationInboxTest.php"
+        ],
+        "tests": "437 PHPUnit tests, 1,932 assertions, zero failures/errors; one existing deprecation and one notice.",
+        "phpstan": "Level 8 passed.",
+        "worker_ci_run_id": 36274025968,
+        "postgres_migration_chain": "PostgreSQL 18 full migration chain applied and status verified.",
+        "open_limitations": "The existing overview controller and decision workflow remain unchanged; its legacy list still loads the full collection.",
+        "trusted_follow_up": "Map CMS_GAMING_MANAGE through trusted subject/role policy; consider making the inbox the primary/redirected entry after the overlapping controller claim is resolved; keep applicant PII private."
+      }
     },
     {
       "priority": 192,
