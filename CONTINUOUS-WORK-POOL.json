@@ -12,12 +12,12 @@
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
   "published_at": "2026-09-26T17:25:57.796Z",
   "summary": {
-    "total_remaining_worker_tasks": 132,
-    "completed_worker_prs_awaiting_trusted_review": 140,
+    "total_remaining_worker_tasks": 131,
+    "completed_worker_prs_awaiting_trusted_review": 141,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "Continue disjoint active WCP-365 and WCP-366 work; re-evaluate FCP dependencies after exact-head CI.",
+    "next_required_action": "Re-evaluate remaining FCP dependency readiness, then continue with the next independent safe Worker proposal; preserve foreign active claims.",
     "composition_preparable": 0,
     "immediately_actionable": 0,
     "must_continue": true
@@ -14819,7 +14819,7 @@
       "package_id": "WCP-366",
       "title": "Expose media asset title limit in metadata form",
       "risk": "low",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -14899,14 +14899,24 @@
         ]
       },
       "claimed_on": "2026-09-26T17:29:58.318Z",
-      "claim_state": "active_worker_claim",
-      "last_checkpoint_at": "2026-09-26T17:30:43.410Z",
-      "next_action": "Open the Worker pull request and verify complete Worker CI on exact head 6f8f35d5e2e74ada47b8b449ffba943e802650d4; repair any concrete CI failure without weakening entity validation or media protections.",
+      "claim_state": "locked_until_trusted_resolution",
+      "last_checkpoint_at": "2026-09-26T17:33:29.588Z",
+      "next_action": "Worker PR #159 is ready for Trusted review; keep the claim locked and continue with the next dependency-safe independent proposal.",
       "checkpoint_paths": [
         "src/Form/MediaAssetMetadataType.php",
         "tests/Form/MediaAssetMetadataTypeTitleBoundaryTest.php"
       ],
-      "last_verified_push_at": "2026-09-26T17:30:43.410Z"
+      "last_verified_push_at": "2026-09-26T17:33:29.588Z",
+      "worker_pr": 159,
+      "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/159",
+      "final_head": "6f8f35d5e2e74ada47b8b449ffba943e802650d4",
+      "ci_run_id": 36259298701,
+      "ci_result": "success",
+      "completed_on": "2026-09-26T17:33:29.588Z",
+      "final_changed_paths": [
+        "src/Form/MediaAssetMetadataType.php",
+        "tests/Form/MediaAssetMetadataTypeTitleBoundaryTest.php"
+      ]
     }
   ],
   "recovery_queue": [],
