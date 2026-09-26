@@ -12,12 +12,12 @@
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
   "published_at": "2026-09-26T23:27:10.231Z",
   "summary": {
-    "total_remaining_worker_tasks": 134,
+    "total_remaining_worker_tasks": 135,
     "completed_worker_prs_awaiting_trusted_review": 200,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-432 PR #226 is complete on exact green HEAD 61ef1c679bb6a431b5247198a5bab8533c7757b5; keep its claim locked for Trusted review and continue with an independent package.",
+    "next_required_action": "WCP-433 is reserved from exact sanitized main; create its exclusive branches and implement the independent access-role create/edit CSRF regressions.",
     "composition_preparable": 0,
     "immediately_actionable": 0,
     "must_continue": true
@@ -23034,6 +23034,93 @@
         "Awaiting Trusted review and Trusted integration CI."
       ],
       "trusted_follow_up": "Preserve CMS_USERS_MANAGE authorization, role-specific CSRF validation, and the invariant that system or user-assigned access roles cannot be deleted."
+    },
+    {
+      "priority": 213,
+      "package_id": "WCP-433",
+      "title": "Guard access-role creation and edit authorization and CSRF",
+      "risk": "low",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-433-access-role-mutation-security-g1",
+      "suggested_branch": "feature/wcp-433-access-role-mutation-security-g1",
+      "base_branch": "main",
+      "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "objective": "Add test-only functional security coverage for access-role creation and editing. A user without CMS_USERS_MANAGE cannot view the role manager or create a role via forged POST. An authorized role manager's missing or invalid form CSRF cannot create or edit a role; persisted records remain unchanged.",
+      "allowed_paths": [
+        "tests/Controller/AdminAccessRoleMutationSecurityTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/",
+        "src/",
+        "templates/",
+        "assets/",
+        "public/"
+      ],
+      "deliverables": [
+        "Verify a user without CMS_USERS_MANAGE receives 403 for GET /admin/access-roles and a forged create POST, with no role persisted.",
+        "Verify an authorized manager's create form with missing and invalid CSRF returns 422 and creates no role.",
+        "Verify an authorized manager's edit form with missing and invalid CSRF returns 422 and preserves the existing role name and permissions.",
+        "Keep the package test-only and avoid changing audit or permission-delegation behavior."
+      ],
+      "tests": [
+        "php bin/phpunit tests/Controller/AdminAccessRoleMutationSecurityTest.php",
+        "Existing access-role and PermissionDelegationPolicy tests remain green.",
+        "PHPStan level 8 and complete Worker CI on exact final HEAD, including PostgreSQL 18 migration-chain checks."
+      ],
+      "completion_report": [
+        "Exact sanitized main base SHA and final Worker HEAD.",
+        "Complete changed-file list and Worker PR.",
+        "Authorization denial, create/edit CSRF rejection, and database non-mutation results.",
+        "Exact-head PHPStan and full Worker CI results; confirm only the allowed test path changed."
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "preserve-CMS_USERS_MANAGE-authorization-form-CSRF-and-PermissionDelegationPolicy",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "proposal_kind": "worker_only",
+      "proposal_dependency_evidence": [],
+      "collision_check": {
+        "compared_against": "Fresh continuous/work-pool-v4 blob a6d037425087c0ef77f1829d335832832163596f, all active and claim-locked allowlists, and exact sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d.",
+        "result": "No active or claim-locked claim owns tests/Controller/AdminAccessRoleMutationSecurityTest.php. WCP-432 owns only tests/Controller/AdminAccessRoleDeletionSecurityTest.php; WCP-415 owns access-role membership coverage, and WCP-372 covers form input boundaries. This package tests create/edit authorization and CSRF in a separate test file.",
+        "paths": [
+          "tests/Controller/AdminAccessRoleMutationSecurityTest.php"
+        ]
+      },
+      "claimed_on": "2026-09-26T23:43:42.897Z",
+      "claim_state": "active",
+      "active_base_branch": "main",
+      "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "resume_branch": "feature/wcp-433-access-role-mutation-security-g1",
+      "last_checkpoint_at": "2026-09-26T23:43:42.897Z",
+      "last_verified_push_at": "2026-09-26T23:43:42.897Z",
+      "checkpoint_paths": [],
+      "branch_heads": {
+        "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+        "feature_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d"
+      },
+      "next_action": "Create both exclusive branches from the exact sanitized main SHA, then add the authorized and unauthorized create/edit CSRF regressions."
     }
   ],
   "recovery_queue": [],
