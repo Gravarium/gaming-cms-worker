@@ -41,4 +41,10 @@ final class MediaReplicationTaskTest extends TestCase
         $this->expectException(\InvalidArgumentException::class);
         (new MediaReplicationTask())->setObjectKey('media/../secret');
     }
+
+    public function testRejectsMalformedUtf8ObjectKey(): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        (new MediaReplicationTask())->setObjectKey("media/\xC3\x28.bin");
+    }
 }
