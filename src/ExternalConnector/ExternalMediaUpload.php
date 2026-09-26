@@ -11,10 +11,7 @@ final readonly class ExternalMediaUpload
         public string $localPath,
         public ?string $mimeType = null,
     ) {
-        if (!$this->safeObjectKey($objectKey)
-            || !str_starts_with($localPath, '/')
-            || str_contains($localPath, "\0")
-        ) {
+        if (!$this->safeObjectKey($objectKey) || !$this->safeLocalPath($localPath)) {
             throw new \InvalidArgumentException('External media requires a safe object key and absolute local path.');
         }
     }
@@ -22,10 +19,12 @@ final readonly class ExternalMediaUpload
     private function safeObjectKey(string $objectKey): bool
     {
         if ($objectKey === ''
+            || strlen($objectKey) > 500
             || $objectKey !== trim($objectKey)
             || str_starts_with($objectKey, '/')
             || str_contains($objectKey, '\\')
-            || preg_match('/[\x00-\x1F\x7F]/u', $objectKey) === 1
+            || preg_match('//u', $objectKey) !== 1
+            || preg_match('/[\x00-\x1F\x7F]/', $objectKey) === 1
         ) {
             return false;
         }
@@ -37,5 +36,14 @@ final readonly class ExternalMediaUpload
         }
 
         return true;
+    }
+
+    private function safeLocalPath(string $localPath): bool
+    {
+        return $localPath !== ''
+            && strlen($localPath) <= 500
+            && str_starts_with($localPath, '/')
+            && preg_match('//u', $localPath) === 1
+            && preg_match('/[\x00-\x1F\x7F]/', $localPath) !== 1;
     }
 }
