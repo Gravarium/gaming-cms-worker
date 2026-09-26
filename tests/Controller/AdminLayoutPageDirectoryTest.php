@@ -68,6 +68,7 @@ final class AdminLayoutPageDirectoryTest extends WebTestCase
 
             $lastPageId = $entryIds[204];
             self::assertCount(1, $crawler->filter('a[href="/admin/layout/page-'.$lastPageId.'"]'));
+            $this->assertPrivateDirectoryHeaders($client);
 
             $crawler = $client->request('GET', '/admin/layout/pages?'.http_build_query([
                 'q' => $token,
@@ -81,7 +82,6 @@ final class AdminLayoutPageDirectoryTest extends WebTestCase
             self::assertResponseIsSuccessful();
             self::assertSelectorExists('.editor-contexts a[href="/admin/layout/pages"]');
             self::assertSame('private, no-store', $client->getResponse()->headers->get('Cache-Control'));
-            self::assertSame('noindex, nofollow', $client->getResponse()->headers->get('X-Robots-Tag'));
         } finally {
             $this->cleanup($client, $entryIds, $auth['userId']);
         }
