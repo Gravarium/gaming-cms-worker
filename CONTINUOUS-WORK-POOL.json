@@ -10,16 +10,16 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-26T11:22:18.097Z",
+  "published_at": "2026-09-26T11:25:27.156Z",
   "summary": {
-    "total_remaining_worker_tasks": 72,
+    "total_remaining_worker_tasks": 73,
     "completed_worker_prs_awaiting_trusted_review": 66,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "Continue WCP-120 on its exclusive claim; preserve all other foreign/completed claims and continue independent worker-only proposals after re-evaluation.",
+    "next_required_action": "Continue WCP-301 on its exclusive revision-manager claim while preserving WCP-119, WCP-120 and all completed claim locks; reconcile only after exact-head green CI.",
     "composition_preparable": 0,
-    "immediately_actionable": 1,
+    "immediately_actionable": 2,
     "must_continue": true
   },
   "rules": {
@@ -6790,6 +6790,89 @@
         ]
       },
       "claimed_on": "2026-09-26T11:22:18.097Z",
+      "claim_state": "active_worker_claim",
+      "next_action": "Implement only the two allowlisted files, open a Worker PR, run exact-head full CI and retain the claim until Trusted resolution."
+    },
+    {
+      "priority": 73,
+      "package_id": "WCP-301",
+      "title": "Reject cross-entry revision restores before capture",
+      "risk": "medium",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-301-content-revision-scope-g1",
+      "suggested_branch": "feature/wcp-301-content-revision-scope-g1",
+      "base_branch": "main",
+      "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "objective": "Enforce revision-to-entry ownership at the revision manager boundary before it captures a new snapshot, so an invalid restore fails without leaving a pending revision that a later flush could persist.",
+      "allowed_paths": [
+        "src/Service/ContentRevisionManager.php",
+        "tests/Service/ContentRevisionManagerTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/",
+        "src/Controller/",
+        "src/Entity/",
+        "src/Repository/",
+        "templates/",
+        "assets/"
+      ],
+      "deliverables": [
+        "Reject a revision that belongs to a different ContentEntry before capturing or persisting any new revision.",
+        "Preserve the entity-level ownership guard and the existing same-entry restore behavior.",
+        "Add service-level regression coverage proving a failed cross-entry restore leaves no new target revision even if the caller flushes afterward.",
+        "Keep changes within ContentRevisionManager and its focused service test."
+      ],
+      "tests": [
+        "targeted ContentRevisionManager service regression test",
+        "PHPStan level 8",
+        "complete Worker CI on the exact final HEAD"
+      ],
+      "completion_report": [
+        "exact final Worker HEAD and sanitized base SHA",
+        "complete changed-path list and Worker PR",
+        "targeted service regression and exact-head Worker CI result",
+        "cross-entry rejection timing and confirmation that valid same-entry restores remain unchanged"
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "no-secrets-or-trusted-private-runtime-in-worker-source",
+        "preserve content-entry ownership, revision history and transactional restore behavior",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_base_branch": "main",
+      "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "resume_branch": "feature/wcp-301-content-revision-scope-g1",
+      "proposal_kind": "worker_only",
+      "collision_check": {
+        "compared_against": "current continuous/work-pool-v4 task allowlists, active WCP-119 and WCP-120 claims, and exact WCP-301 branch/PR searches",
+        "result": "both exact service paths are disjoint from every published allowlist and active claim; no shared schema, migration, controller, entity, repository or template paths",
+        "paths": [
+          "src/Service/ContentRevisionManager.php",
+          "tests/Service/ContentRevisionManagerTest.php"
+        ]
+      },
+      "claimed_on": "2026-09-26T11:25:27.156Z",
       "claim_state": "active_worker_claim",
       "next_action": "Implement only the two allowlisted files, open a Worker PR, run exact-head full CI and retain the claim until Trusted resolution."
     }
