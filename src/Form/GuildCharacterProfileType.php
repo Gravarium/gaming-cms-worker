@@ -19,6 +19,7 @@ final class GuildCharacterProfileType extends AbstractType
         $builder
             ->add('characterName', TextType::class, [
                 'label' => 'Charaktername',
+                'empty_data' => '',
                 'attr' => ['maxlength' => 120],
             ])
             ->add('characterClass', TextType::class, [
