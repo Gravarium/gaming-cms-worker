@@ -11,13 +11,19 @@ use App\Widget\Module\ModuleWidgetPayload;
 final class ModuleLayoutComposer
 {
     /**
-     * @param array<string, array{definition:ModuleWidgetDefinition, payload:ModuleWidgetPayload, config:array<string, string|int|bool}> $rendered
+     * @phpstan-type RenderedWidget array{
+     *     definition: ModuleWidgetDefinition,
+     *     payload: ModuleWidgetPayload,
+     *     config: array<string, string|int|bool>
+     * }
+     *
+     * @param array<string, RenderedWidget> $rendered
      * @return array{
-     *     template:string,
-     *     composition:ModuleThemeComposition,
-     *     regions:array{
-     *         content:list<array{definition:ModuleWidgetDefinition, payload:ModuleWidgetPayload, config:array<string, string|int|bool}>},
-     *         sidebar:list<array{definition:ModuleWidgetDefinition, payload:ModuleWidgetPayload, config:array<string, string|int|bool}>
+     *     template: string,
+     *     composition: ModuleThemeComposition,
+     *     regions: array{
+     *         content: list<RenderedWidget>,
+     *         sidebar: list<RenderedWidget>
      *     }
      * }
      */
@@ -34,9 +40,15 @@ final class ModuleLayoutComposer
     }
 
     /**
+     * @phpstan-type RenderedWidget array{
+     *     definition: ModuleWidgetDefinition,
+     *     payload: ModuleWidgetPayload,
+     *     config: array<string, string|int|bool>
+     * }
+     *
      * @param list<string> $keys
-     * @param array<string, array{definition:ModuleWidgetDefinition, payload:ModuleWidgetPayload, config:array<string, string|int|bool}> $rendered
-     * @return list<array{definition:ModuleWidgetDefinition, payload:ModuleWidgetPayload, config:array<string, string|int|bool}>
+     * @param array<string, RenderedWidget> $rendered
+     * @return list<RenderedWidget>
      */
     private function select(array $keys, array $rendered): array
     {

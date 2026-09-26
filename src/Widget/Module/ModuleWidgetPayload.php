@@ -12,33 +12,56 @@ final readonly class ModuleWidgetPayload
     public const STATUS_ERROR = 'error';
 
     /**
-     * @param list<array<string, string|int|bool|null>> $items
-     * @param array<string, string|int|bool> $meta
+     * @var list<array<string, string|int|bool|null>>
+     */
+    public array $items;
+
+    /**
+     * @var array<string, string|int|bool>
+     */
+    public array $meta;
+
+    /**
+     * @param list<array<string, mixed>> $items
+     * @param array<string, mixed> $meta
      */
     public function __construct(
         public string $status,
-        public array $items = [],
+        array $items = [],
         public string $reason = '',
-        public array $meta = [],
+        array $meta = [],
     ) {
         if (!in_array($this->status, [self::STATUS_READY, self::STATUS_EMPTY, self::STATUS_UNAVAILABLE, self::STATUS_ERROR], true)) {
             throw new \InvalidArgumentException('Unknown module widget payload status.');
         }
-        if (count($this->items) > 12) {
+        if (count($items) > 12) {
             throw new \InvalidArgumentException('Module widget payload is too large.');
         }
-        foreach ($this->items as $item) {
-            foreach ($item as $value) {
-                if ($value !== null && !is_scalar($value)) {
+
+        $normalizedItems = [];
+        foreach ($items as $item) {
+            $normalized = [];
+            foreach ($item as $key => $value) {
+                if ($value !== null && !is_string($value) && !is_int($value) && !is_bool($value)) {
                     throw new \InvalidArgumentException('Module widget payload must contain scalar values only.');
                 }
+                $normalized[$key] = $value;
             }
+            $normalizedItems[] = $normalized;
         }
-        foreach ($this->meta as $value) {
-            if (!is_scalar($value)) {
+
+        $normalizedMeta = [];
+        foreach ($meta as $key => $value) {
+            if (!is_string($value) && !is_int($value) && !is_bool($value)) {
                 throw new \InvalidArgumentException('Module widget metadata must contain scalar values only.');
             }
+            $normalizedMeta[$key] = $value;
         }
+
+        /** @var list<array<string, string|int|bool|null>> $normalizedItems */
+        $this->items = $normalizedItems;
+        /** @var array<string, string|int|bool> $normalizedMeta */
+        $this->meta = $normalizedMeta;
     }
 
     /**

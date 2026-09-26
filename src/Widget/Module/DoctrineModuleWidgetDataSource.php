@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Widget\Module;
 
 use App\Entity\ContentEntry;
-use App\Entity\Guild;
 use App\Entity\GuildEvent;
 use App\Entity\Video;
 use App\Repository\ContentEntryRepository;
@@ -42,7 +41,7 @@ final readonly class DoctrineModuleWidgetDataSource implements ModuleWidgetDataS
     {
         $items = [];
         foreach ($this->content->findPublishedAll(min(48, max(12, $limit * 4))) as $entry) {
-            if (!$entry instanceof ContentEntry || $entry->getType() !== ContentEntry::TYPE_PAGE) {
+            if ($entry->getType() !== ContentEntry::TYPE_PAGE) {
                 continue;
             }
             $items[] = [
@@ -63,9 +62,6 @@ final readonly class DoctrineModuleWidgetDataSource implements ModuleWidgetDataS
     {
         $items = [];
         foreach (array_slice($this->videos->findPublished(), 0, $limit) as $video) {
-            if (!$video instanceof Video) {
-                continue;
-            }
             $items[] = [
                 'title' => $video->getTitle(),
                 'summary' => $video->getDescription(),
@@ -81,7 +77,7 @@ final readonly class DoctrineModuleWidgetDataSource implements ModuleWidgetDataS
     {
         $items = [];
         foreach (array_slice($this->guilds->findPublicGuilds(), 0, $limit) as $guild) {
-            if (!$guild instanceof Guild || $guild->getId() === null) {
+            if ($guild->getId() === null) {
                 continue;
             }
             $game = $guild->getGame();
