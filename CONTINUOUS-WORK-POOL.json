@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-26T18:58:40.533Z",
+  "published_at": "2026-09-26T19:02:35.877Z",
   "summary": {
     "total_remaining_worker_tasks": 131,
-    "completed_worker_prs_awaiting_trusted_review": 153,
+    "completed_worker_prs_awaiting_trusted_review": 154,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "Complete WCP-378 PR #173 at exact HEAD b4c6d3d1b858510a71caf7ad7a5d75b2c1da7f9c; inspect its full Worker CI and keep the claim locked.",
+    "next_required_action": "Re-evaluate the five remaining unclaimed FCP dependencies; if none can start, reserve the next independent WCP without touching locked claims.",
     "composition_preparable": 0,
     "immediately_actionable": 0,
     "must_continue": true
@@ -16120,7 +16120,7 @@
       "package_id": "WCP-378",
       "title": "Filter the homepage news widget by category",
       "risk": "medium",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -16201,9 +16201,9 @@
         ]
       },
       "claimed_on": "2026-09-26T18:48:30.672Z",
-      "claim_state": "active",
-      "last_checkpoint_at": "2026-09-26T18:58:27.391Z",
-      "next_action": "Inspect Worker CI run 36264393263 on exact HEAD b4c6d3d1b858510a71caf7ad7a5d75b2c1da7f9c; resolve any failures on this branch.",
+      "claim_state": "locked_until_trusted_resolution",
+      "last_checkpoint_at": "2026-09-26T19:02:35.877Z",
+      "next_action": "Await Trusted review with the claim locked; proceed with the next dependency-safe or independent Worker proposal. Do not merge or deploy.",
       "checkpoint_paths": [
         "src/Widget/BundledWidgetProvider.php",
         "src/Controller/AdminLayoutController.php",
@@ -16212,9 +16212,17 @@
       ],
       "worker_pr": 173,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/173",
-      "last_verified_push_at": "2026-09-26T18:58:27.391Z",
+      "last_verified_push_at": "2026-09-26T19:02:35.877Z",
       "ci_run_id": 36264393263,
-      "ci_result": "in_progress"
+      "ci_result": "success",
+      "final_head": "b4c6d3d1b858510a71caf7ad7a5d75b2c1da7f9c",
+      "completed_on": "2026-09-26T19:02:35.877Z",
+      "final_changed_paths": [
+        "src/Widget/BundledWidgetProvider.php",
+        "src/Controller/AdminLayoutController.php",
+        "assets/controllers/layout_editor_controller.js",
+        "tests/Controller/LayoutEditorTest.php"
+      ]
     },
     {
       "priority": 159,
