@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Einladung annehmen | Gaming CMS{% endblock %}
+
+{% block body %}
+<main class="editor-shell">
+    <p class="eyebrow">Mitglied werden</p>
+    <h1>Einladung annehmen</h1>
+    <p>Einladung für {{ invitation.email }}</p>
+    {{ form_start(form) }}
+        {{ form_widget(form) }}
+        <button type="submit">Konto erstellen</button>
+    {{ form_end(form) }}
+</main>
+{% endblock %}
