@@ -10,16 +10,16 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-26T10:06:49.259Z",
+  "published_at": "2026-09-26T10:07:21.181Z",
   "summary": {
-    "total_remaining_worker_tasks": 49,
+    "total_remaining_worker_tasks": 50,
     "completed_worker_prs_awaiting_trusted_review": 43,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "Re-evaluate remaining unclaimed work and continue independent Worker-only work while WCP-097 and WCP-098 remain owned by other chats; WCP-099 is complete on its exact green head and awaits Trusted review.",
+    "next_required_action": "Continue WCP-100 on its exclusive external-target-definition boundary claim while preserving WCP-095, WCP-097, WCP-098 and WCP-099 foreign claims; after exact-head green CI, reconcile and continue independently.",
     "composition_preparable": 0,
-    "immediately_actionable": 1,
+    "immediately_actionable": 2,
     "must_continue": true
   },
   "rules": {
@@ -4379,6 +4379,91 @@
         "PostgreSQL migration job 108384126425 succeeded.",
         "PHP/Symfony validation and application-test job 108384126349 succeeded."
       ]
+    },
+    {
+      "priority": 50,
+      "package_id": "WCP-100",
+      "title": "Bound external connector target definitions",
+      "risk": "high",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-100-external-target-boundary-g1",
+      "suggested_branch": "feature/wcp-100-external-target-boundary-g1",
+      "base_branch": "main",
+      "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "objective": "Harden the worker-visible ExternalConnectorTargetDefinition boundary before provider adapters receive connector configuration: enforce bounded UTF-8/control-safe capability, target/provider, display and configuration-reference values plus a nonnegative priority range, while preserving enabled/configured entity gating and adapter capability behavior.",
+      "allowed_paths": [
+        "src/ExternalConnector/ExternalConnectorTargetDefinition.php",
+        "tests/ExternalConnector/ExternalConnectorTargetDefinitionTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/",
+        "src/Controller/",
+        "src/Entity/",
+        "src/ExternalConnector/ExternalMediaUpload.php",
+        "tests/ExternalConnector/ExternalMediaUploadTest.php",
+        "src/ExternalConnector/ExternalMediaObject.php",
+        "tests/ExternalConnector/ExternalMediaObjectTest.php",
+        "src/ExternalConnector/ExternalNotificationMessage.php",
+        "tests/ExternalConnector/ExternalNotificationMessageTest.php",
+        "src/Security/LocalRedirectTarget.php",
+        "tests/Security/LocalRedirectTargetTest.php"
+      ],
+      "deliverables": [
+        "fail-closed bounded validation for capability, target/provider keys, display name, configuration reference and priority before adapters",
+        "preserve ExternalConnectorTarget::fromEntity enabled/configured gating and existing provider capability dispatch",
+        "positive and negative runtime-definition regression coverage without schema, migration, controller or private-runtime changes"
+      ],
+      "tests": [
+        "targeted ExternalConnectorTargetDefinition PHPUnit tests",
+        "PHPStan level 8",
+        "complete Worker CI on the exact final HEAD"
+      ],
+      "completion_report": [
+        "exact final Worker HEAD and sanitized base SHA",
+        "complete changed-path list and Worker PR",
+        "targeted tests plus complete Worker CI result",
+        "adapter configuration-reference, provider capability and deferred Fortress connector-boundary risks"
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "no-secrets-or-trusted-private-runtime-in-worker-source",
+        "preserve existing connector, adapter, upload, MIME, notification and storage safeguards",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_base_branch": "main",
+      "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "resume_branch": "feature/wcp-100-external-target-boundary-g1",
+      "proposal_kind": "worker_only",
+      "collision_check": {
+        "compared_against": "current continuous/work-pool-v4 task allowlists and active branches at publication",
+        "result": "disjoint from all published task allowlists and foreign WCP-095, WCP-098 and WCP-099 claims",
+        "paths": [
+          "src/ExternalConnector/ExternalConnectorTargetDefinition.php",
+          "tests/ExternalConnector/ExternalConnectorTargetDefinitionTest.php"
+        ]
+      },
+      "claimed_on": "2026-09-26T10:07:21.181Z"
     }
   ],
   "recovery_queue": [],
