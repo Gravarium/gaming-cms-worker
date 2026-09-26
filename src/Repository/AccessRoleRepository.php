@@ -40,11 +40,12 @@ final class AccessRoleRepository extends ServiceEntityRepository
 
     private function memberQueryBuilder(AccessRole $role, string $query, string $state): QueryBuilder
     {
-        $builder = $this->createQueryBuilder('accessRole')
+        $builder = $this->getEntityManager()->createQueryBuilder()
             ->select('rosterUser')
-            ->innerJoin('accessRole.users', 'rosterUser')
-            ->andWhere('accessRole = :role')
-            ->setParameter('role', $role);
+            ->from(User::class, 'rosterUser')
+            ->innerJoin('rosterUser.accessRoles', 'assignedRole')
+            ->andWhere('assignedRole = :selectedRole')
+            ->setParameter('selectedRole', $role);
 
         $query = trim($query);
         if ($query !== '') {
