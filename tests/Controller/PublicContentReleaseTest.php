@@ -81,7 +81,11 @@ final class PublicContentReleaseTest extends WebTestCase
             $user = $this->user($entityManager, $suffix);
             $entries = [];
             for ($number = 1; $number <= 21; ++$number) {
-                $entries[] = $this->entry($user, 'visible-'.$suffix.'-'.$number);
+                $entries[] = $this->entry(
+                    $user,
+                    'visible-'.$suffix.'-'.$number,
+                    $number === 21 ? ContentEntry::TYPE_PAGE : ContentEntry::TYPE_NEWS,
+                );
             }
 
             $unlisted = $this->entry($user, 'unlisted-'.$suffix);
@@ -121,6 +125,14 @@ final class PublicContentReleaseTest extends WebTestCase
             self::assertSame(
                 'Release entry visible-'.$suffix.'-21',
                 trim($crawler->filter('main .news-grid article h3')->first()->text()),
+            );
+            self::assertSame(
+                '/page/release-entry-visible-'.$suffix.'-21',
+                $crawler->filter('main .news-grid article h3 a')->first()->attr('href'),
+            );
+            self::assertSame(
+                '/news/release-entry-visible-'.$suffix.'-20',
+                $crawler->filter('main .news-grid article h3 a')->eq(1)->attr('href'),
             );
 
             $body = $client->getResponse()->getContent() ?: '';
@@ -178,9 +190,9 @@ final class PublicContentReleaseTest extends WebTestCase
                 ->setName('Current release '.$suffix)
                 ->setCreatedBy($user)
                 ->addEntry($publicEntry);
-            $public->publish(new \DateTimeImmutable('-5 minutes'));
+            $public->publish(new \DateTimeImmutable());
 
-            foreach ([$draft, $scheduled, $cancelled, $future] as $release) {
+            foreach ([$draft, $scheduled, $cancelled] as $release) {
                 $entityManager->persist($release);
             }
             foreach ([$futureEntry, $publicEntry, $future, $public] as $record) {
@@ -231,11 +243,11 @@ final class PublicContentReleaseTest extends WebTestCase
         return $user;
     }
 
-    private function entry(User $author, string $slug): ContentEntry
+    private function entry(User $author, string $slug, string $type = ContentEntry::TYPE_NEWS): ContentEntry
     {
         return (new ContentEntry())
             ->setAuthor($author)
-            ->setType(ContentEntry::TYPE_NEWS)
+            ->setType($type)
             ->setTitle('Release entry '.$slug)
             ->setSlug('release-entry-'.$slug)
             ->setExcerpt('Release summary '.$slug)
