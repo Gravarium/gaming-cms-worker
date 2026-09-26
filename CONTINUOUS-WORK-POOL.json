@@ -10,7 +10,7 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-26T17:12:46.540Z",
+  "published_at": "2026-09-26T17:15:59.836Z",
   "summary": {
     "total_remaining_worker_tasks": 132,
     "completed_worker_prs_awaiting_trusted_review": 136,
@@ -14305,7 +14305,7 @@
       "suggested_branch": "feature/wcp-361-guild-rank-form-name-boundary-g1",
       "base_branch": "main",
       "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-      "objective": "Expose the existing GuildRank.name maximum of 100 Unicode characters in GuildRankType with a server-side Length constraint and matching maxlength, so valid rank names are guided and overlong input is rejected at the field before controller persistence. Preserve nonblank validation, color validation, rank permissions, ordering, defaults and guild authorization.",
+      "objective": "Expose the existing GuildRank.name maximum of 100 Unicode characters in GuildRankType with a server-side Length constraint and matching maxlength, so valid rank names are guided and overlong input is rejected at the field before controller persistence. Preserve nonblank validation, color validation, rank permissions, ordering, defaults and guild authorization. Ensure an empty submitted name maps as an empty string so the existing NotBlank rule produces a normal field error rather than a null-to-string TypeError.",
       "allowed_paths": [
         "src/Form/GuildRankType.php",
         "tests/Form/GuildRankTypeBoundaryTest.php"
@@ -14335,18 +14335,21 @@
       "deliverables": [
         "Add Length(max: 100) and maxlength=100 to the GuildRankType name field, matching the existing entity constraint and varchar(100).",
         "Add real-form tests for exactly 100 Unicode characters, 101-character field rejection and rendered maxlength.",
-        "Leave all other form fields, validation, authorization, controller and persistence behavior unchanged."
+        "Leave all other form fields, validation, authorization, controller and persistence behavior unchanged.",
+        "Set empty_data to an empty string for the required name field and verify a blank submission remains invalid without a mapper TypeError."
       ],
       "tests": [
         "Targeted PHPUnit form-boundary tests accept exactly 100 Unicode characters, reject 101 at the name field, and assert maxlength=100.",
-        "PHPStan level 8 and complete Worker CI on the exact final HEAD."
+        "PHPStan level 8 and complete Worker CI on the exact final HEAD.",
+        "Blank name regression remains invalid at the name field without a PropertyAccess/TypeError."
       ],
       "completion_report": [
         "exact final Worker HEAD and sanitized main base SHA",
         "complete changed-file list and Worker PR",
         "exact/over-limit Unicode and maxlength regression evidence",
         "PHPStan level 8 and exact-head Worker CI results",
-        "confirmation guild rank authorization, permissions, color rules and persistence behavior are unchanged"
+        "confirmation guild rank authorization, permissions, color rules and persistence behavior are unchanged",
+        "confirmation blank-name submissions reach existing NotBlank validation safely"
       ],
       "immutable_constraints": [
         "trusted-main-is-the-only-integration-and-deployment-source",
@@ -14361,7 +14364,7 @@
       "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-      "active_head": "c9393141025971f8e54f452501ac3dcdb11071b0",
+      "active_head": "57dfc7aad160adc3b5fdd713831ae46941bc38f1",
       "resume_branch": "feature/wcp-361-guild-rank-form-name-boundary-g1",
       "proposal_kind": "worker_only",
       "collision_check": {
@@ -14374,13 +14377,13 @@
       },
       "claimed_on": "2026-09-26T17:11:06.598Z",
       "claim_state": "active_worker_claim",
-      "last_checkpoint_at": "2026-09-26T17:12:46.540Z",
-      "next_action": "Run and verify complete Worker CI on exact HEAD c9393141025971f8e54f452501ac3dcdb11071b0; fix only failures within WCP-361 allowed paths.",
+      "last_checkpoint_at": "2026-09-26T17:15:59.836Z",
+      "next_action": "Rerun complete Worker CI on the updated exact HEAD; fix only failures within WCP-361 allowed paths.",
       "checkpoint_paths": [
         "src/Form/GuildRankType.php",
         "tests/Form/GuildRankTypeBoundaryTest.php"
       ],
-      "last_verified_push_at": "2026-09-26T17:12:46.540Z",
+      "last_verified_push_at": "2026-09-26T17:15:59.836Z",
       "worker_pr": 155,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/155",
       "pr_state": "draft"
