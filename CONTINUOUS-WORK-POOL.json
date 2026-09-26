@@ -12,14 +12,14 @@
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
   "published_at": "2026-09-26T08:42:05.413Z",
   "summary": {
-    "total_remaining_worker_tasks": 28,
+    "total_remaining_worker_tasks": 29,
     "completed_worker_prs_awaiting_trusted_review": 22,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "Re-evaluate remaining unclaimed work and self-publish the next bounded independent Worker proposal while FCP-077 remains owned by another chat; WCP-078 is complete on its exact green head and awaits Trusted review.",
+    "next_required_action": "Continue WCP-079 on its existing claim while FCP-077 remains owned by another chat; WCP-078 is complete on its exact green head and awaits Trusted review.",
     "composition_preparable": 0,
-    "immediately_actionable": 1,
+    "immediately_actionable": 2,
     "must_continue": true
   },
   "rules": {
@@ -2543,6 +2543,80 @@
       "claim_state": "locked_until_trusted_resolution",
       "completed_on": "2026-09-26T08:48:53.175Z",
       "next_action": "Remain claim-locked while awaiting Trusted review; do not merge or deploy from the Worker repository."
+    },
+    {
+      "priority": 29,
+      "package_id": "WCP-079",
+      "title": "Harden remote media URL address validation",
+      "risk": "high",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-079-media-url-policy-g1",
+      "suggested_branch": "feature/wcp-079-media-url-policy-g1",
+      "base_branch": "main",
+      "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "objective": "Strengthen the worker-visible MediaUrlPolicy against parser ambiguity and legacy numeric IP encodings that could bypass private/reserved address checks, while preserving public HTTP(S) media and owned upload playback behavior. Keep the change syntactic and worker-safe; do not add DNS, provider credentials or private runtime behavior.",
+      "allowed_paths": [
+        "src/Service/MediaUrlPolicy.php",
+        "tests/Service/MediaUrlPolicyTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/"
+      ],
+      "deliverables": [
+        "reject legacy decimal, hexadecimal, octal and short-form IPv4 spellings that resolve to private or reserved address space",
+        "reject private/reserved IPv4-mapped IPv6 forms and malformed ambiguous hosts without weakening existing public URL checks",
+        "preserve public HTTP(S) media and owned /uploads/media playback behavior",
+        "positive and negative regression coverage with no DNS resolution or secret/runtime changes"
+      ],
+      "tests": [
+        "targeted MediaUrlPolicy PHPUnit tests",
+        "PHPStan level 8",
+        "complete Worker CI on the exact final HEAD"
+      ],
+      "completion_report": [
+        "exact final Worker HEAD and sanitized base SHA",
+        "complete changed-path list and Worker PR",
+        "targeted tests plus complete Worker CI result",
+        "address-normalization risks, DNS-resolution boundary and deferred behavior"
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "no-secrets-or-trusted-private-runtime-in-worker-source",
+        "preserve-existing-media-upload and remote URL safety behavior",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_base_branch": "main",
+      "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "resume_branch": "feature/wcp-079-media-url-policy-g1",
+      "proposal_kind": "worker_only",
+      "collision_check": {
+        "compared_against": "current continuous/work-pool-v4 task allowlists and active branches",
+        "result": "disjoint from FCP-077, WCP-078 and all published FCP allowlists",
+        "paths": [
+          "src/Service/MediaUrlPolicy.php",
+          "tests/Service/MediaUrlPolicyTest.php"
+        ]
+      },
+      "claimed_on": "2026-09-26T08:50:49.990Z"
     }
   ],
   "recovery_queue": [],
