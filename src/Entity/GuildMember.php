@@ -82,7 +82,21 @@ class GuildMember
         return $this;
     }
     public function getCharacterName(): string { return $this->characterName; }
-    public function setCharacterName(string $characterName): self { $this->characterName = trim($characterName); return $this; }
+    public function setCharacterName(string $characterName): self
+    {
+        if (!mb_check_encoding($characterName, 'UTF-8') || str_contains($characterName, "\0")) {
+            throw new \InvalidArgumentException('Guild member character name must be valid UTF-8 without NUL bytes.');
+        }
+
+        $normalizedName = trim($characterName);
+        if (strlen($normalizedName) > 480 || mb_strlen($normalizedName, 'UTF-8') > 120) {
+            throw new \InvalidArgumentException('Guild member character name must fit its 120-character storage column.');
+        }
+
+        $this->characterName = $normalizedName;
+
+        return $this;
+    }
     public function getRankName(): string { return $this->rankName; }
     public function getDisplayRank(): string { return $this->rank?->getName() ?? ($this->rankName !== '' ? $this->rankName : 'Mitglied'); }
     public function setRankName(string $rankName): self { $this->rankName = trim($rankName); return $this; }
