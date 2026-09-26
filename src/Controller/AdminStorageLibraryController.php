@@ -59,7 +59,7 @@ final class AdminStorageLibraryController extends AbstractController
         }
 
         $folder = ctype_digit($folderFilter) ? $this->folders->find((int) $folderFilter) : null;
-        if (ctype_digit($folderFilter) && !$folder instanceof MediaFolder) {
+        if (ctype_digit($folderFilter) && $folder === null) {
             throw $this->createNotFoundException('Der Medienordner existiert nicht.');
         }
         $withoutFolder = $folderFilter === 'none';
