@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-26T19:42:50.173Z",
+  "published_at": "2026-09-26T19:43:44.447Z",
   "summary": {
     "total_remaining_worker_tasks": 131,
     "completed_worker_prs_awaiting_trusted_review": 162,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-387 CI run 36266833604 found three /games HTTP 500 failures from DISTINCT non-root entity hydration in facet queries. The fix is on its own branch; rerun the full workflow on the next exact HEAD. Do not alter other claims.",
+    "next_required_action": "WCP-387 facet queries now return scalar slug/name rows; Worker CI run 36267032101 is pending on exact HEAD 79bf3d5f3d9d8a3d03b8b79d6ea2d98908bb1bb4. Check the full results and repair any real failure on the same branch.",
     "composition_preparable": 0,
     "immediately_actionable": 0,
     "must_continue": true
@@ -17165,7 +17165,7 @@
       "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-      "active_head": "89b510bde4c9260ae987f595db6222c1eda0aeec",
+      "active_head": "79bf3d5f3d9d8a3d03b8b79d6ea2d98908bb1bb4",
       "resume_branch": "feature/wcp-387-game-catalogue-filters-g1",
       "proposal_kind": "worker_only",
       "collision_check": {
@@ -17180,20 +17180,20 @@
       },
       "claimed_on": "2026-09-26T19:31:33.162Z",
       "claim_state": "active",
-      "last_checkpoint_at": "2026-09-26T19:42:50.173Z",
-      "next_action": "Fix the three new /games request failures on exact HEAD 89b510bde4c9260ae987f595db6222c1eda0aeec: Doctrine rejects DISTINCT genre/platform entity hydration without selecting a root alias. Return scalar facet slug/name rows, then rerun complete Worker CI on the new exact HEAD.",
+      "last_checkpoint_at": "2026-09-26T19:43:44.447Z",
+      "next_action": "Inspect Worker CI run 36267032101 on exact HEAD 79bf3d5f3d9d8a3d03b8b79d6ea2d98908bb1bb4; confirm the scalar facet queries pass functional tests and full validation, repair any real failure on this branch, and rerun on any new exact HEAD.",
       "checkpoint_paths": [
         "src/Controller/GameCatalogue/GameCatalogueController.php",
         "src/Repository/GameCatalogue/GameCatalogueEntryRepository.php",
         "templates/game_catalogue/index.html.twig",
         "tests/Gaming/Catalogue/GameCatalogueControllerTest.php"
       ],
-      "last_verified_push_at": "2026-09-26T19:40:21.301Z",
+      "last_verified_push_at": "2026-09-26T19:43:44.447Z",
       "worker_pr": 182,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/182",
       "pr_state": "open_draft",
-      "last_ci_run_id": 36266833604,
-      "last_ci_result": "failure"
+      "last_ci_run_id": 36267032101,
+      "last_ci_result": "pending"
     },
     {
       "priority": 168,
