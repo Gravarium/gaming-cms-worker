@@ -10,10 +10,10 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-26T20:24:59.214Z",
+  "published_at": "2026-09-26T20:27:38.901Z",
   "summary": {
     "total_remaining_worker_tasks": 132,
-    "completed_worker_prs_awaiting_trusted_review": 169,
+    "completed_worker_prs_awaiting_trusted_review": 170,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
@@ -18015,7 +18015,7 @@
       "package_id": "WCP-395",
       "title": "Add a paginated member notification inbox",
       "risk": "medium",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -18100,9 +18100,9 @@
         ]
       },
       "claimed_on": "2026-09-26T20:06:03.790Z",
-      "claim_state": "active",
-      "last_checkpoint_at": "2026-09-26T20:24:13.012Z",
-      "next_action": "Inspect exact-head Worker CI run 36269354691 on f1293cd6b66f86c14d95447a542df4a2ac94a9bf; fix any genuine failure on the same branch and rerun full CI.",
+      "claim_state": "locked_until_trusted_resolution",
+      "last_checkpoint_at": "2026-09-26T20:27:38.901Z",
+      "next_action": "PR #190 is ready for Trusted review; keep this claim locked until Trusted explicitly integrates, cancels or transfers it. Continue only with a different independent claim; do not merge or deploy.",
       "checkpoint_paths": [
         "src/Controller/MemberNotificationInboxController.php",
         "src/Repository/MemberNotificationRepository.php",
@@ -18110,10 +18110,10 @@
         "templates/guild_portal/notifications.html.twig",
         "tests/Controller/MemberNotificationInboxTest.php"
       ],
-      "last_verified_push_at": "2026-09-26T20:23:45.574Z",
+      "last_verified_push_at": "2026-09-26T20:27:38.901Z",
       "worker_pr": 190,
       "ci_run_id": 36269354691,
-      "ci_result": "in_progress",
+      "ci_result": "success",
       "ci_attempts": [
         {
           "run_id": 36268747275,
@@ -18134,16 +18134,39 @@
           "cause": "All tests except one passed; the remaining test attempted to create a second WebTestCase client in one method, which Symfony rejects. The regression now uses one authenticated session and changes the row owner in the test DB between requests to test isolation."
         },
         {
-          "run_id": null,
-          "head": "f1293cd6b66f86c14d95447a542df4a2ac94a9bf",
-          "result": "pending"
-        },
-        {
           "run_id": 36269354691,
           "head": "f1293cd6b66f86c14d95447a542df4a2ac94a9bf",
-          "result": "in_progress"
+          "result": "success"
         }
-      ]
+      ],
+      "final_head": "f1293cd6b66f86c14d95447a542df4a2ac94a9bf",
+      "final_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "completed_at": "2026-09-26T20:27:38.901Z",
+      "test_results": {
+        "phpunit": "436 tests, 1917 assertions, 0 failures; one existing PHPUnit deprecation and one notice.",
+        "phpstan": "Level 8 passed with no errors.",
+        "composer_audit": "No security advisories found.",
+        "php_symfony": "Container lint and database schema validation passed.",
+        "postgres18": "Worker-visible PostgreSQL 18 migration-chain job passed.",
+        "exact_head_ci": {
+          "run_id": 36269354691,
+          "head": "f1293cd6b66f86c14d95447a542df4a2ac94a9bf",
+          "result": "success"
+        }
+      },
+      "changed_paths": [
+        "src/Controller/MemberNotificationInboxController.php",
+        "src/Repository/MemberNotificationRepository.php",
+        "templates/guild_portal/index.html.twig",
+        "templates/guild_portal/notifications.html.twig",
+        "tests/Controller/MemberNotificationInboxTest.php"
+      ],
+      "open_limitations": [
+        "The inbox exposes existing stored notifications and read/read-all actions; it adds no dismissal/deletion, retention, delivery preferences, or notification producers.",
+        "The guild portal's recent preview remains capped at 50; older rows are accessible through the paginated inbox."
+      ],
+      "trusted_follow_up": "Port the route, owner-scoped repository queries, templates, and functional coverage to a fresh Trusted branch and run full Trusted CI. Preserve safe redirect fallback, owner-only access, CSRF and no-store behavior.",
+      "fortress_boundary": "Notification rows remain owned through the existing User and Guild relations; keep authorization at the controller/repository boundary so a future Fortress subject mapping can replace Symfony role checks without widening row access."
     },
     {
       "priority": 176,
