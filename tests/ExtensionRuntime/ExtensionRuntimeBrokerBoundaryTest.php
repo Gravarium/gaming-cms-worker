@@ -55,13 +55,20 @@ final class ExtensionRuntimeBrokerBoundaryTest extends KernelTestCase
             ['response_headers' => ['content-type' => ['application/json']]],
         );
         $requestOptions = null;
-        $client = new MockHttpClient(static function (string $method, string $url, array $options) use ($response, &$requestOptions): MockResponse {
+        $client = new class(static function (string $method, string $url, array $options) use ($response, &$requestOptions): MockResponse {
             self::assertSame('GET', $method);
             self::assertSame('https://8.8.8.8/data', $url);
             $requestOptions = $options;
 
             return $response;
-        });
+        }) extends MockHttpClient {
+            public ?\Symfony\Contracts\HttpClient\ResponseInterface $lastResponse = null;
+
+            public function request(string $method, string $url, array $options = []): \Symfony\Contracts\HttpClient\ResponseInterface
+            {
+                return $this->lastResponse = parent::request($method, $url, $options);
+            }
+        };
 
         try {
             $this->broker($client)->fetchJson($this->context(), 'https://8.8.8.8/data');
@@ -72,7 +79,7 @@ final class ExtensionRuntimeBrokerBoundaryTest extends KernelTestCase
 
         self::assertIsArray($requestOptions);
         self::assertFalse($requestOptions['buffer'] ?? true);
-        self::assertTrue($response->getInfo('canceled') === true);
+        self::assertTrue($client->lastResponse?->getInfo('canceled') === true);
     }
 
     public function testSmallJsonResponseKeepsTheExistingReturnContract(): void
