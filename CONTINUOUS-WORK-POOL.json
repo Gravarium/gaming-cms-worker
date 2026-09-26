@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-26T11:51:56.149Z",
+  "published_at": "2026-09-26T11:52:13.062Z",
   "summary": {
     "total_remaining_worker_tasks": 83,
-    "completed_worker_prs_awaiting_trusted_review": 75,
+    "completed_worker_prs_awaiting_trusted_review": 76,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "Continue WCP-128 on its exclusive persisted-layout preflight claim, stacked on exact green WCP-125, while preserving WCP-127/WCP-303 and all other active/completed locks; after exact-head green CI reconcile and continue.",
+    "next_required_action": "Continue independent Worker proposal work while preserving WCP-127 and all foreign/completed claim locks; after each exact-head green CI reconcile and continue.",
     "composition_preparable": 0,
     "immediately_actionable": 5,
     "must_continue": true
@@ -7750,7 +7750,7 @@
       "package_id": "WCP-127",
       "title": "Bound external connector execution fanout",
       "risk": "high",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -7818,7 +7818,7 @@
       "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "cca0782c2fb18053e1b4baef7c36e012728e8102",
       "resume_branch": "feature/wcp-127-connector-executor-fanout-g1",
       "proposal_kind": "worker_only",
       "collision_check": {
@@ -7830,8 +7830,24 @@
         ]
       },
       "claimed_on": "2026-09-26T11:48:47.681Z",
-      "claim_state": "active_worker_claim",
-      "next_action": "Implement only the two allowlisted files, open a Worker PR, run exact-head full CI and retain the claim until Trusted resolution."
+      "claim_state": "locked_until_trusted_resolution",
+      "next_action": "Remain claim-locked while awaiting Trusted review; do not merge or deploy from the Worker repository.",
+      "worker_pr": 95,
+      "final_head": "cca0782c2fb18053e1b4baef7c36e012728e8102",
+      "ci_run_id": 36240031115,
+      "ci_result": "success",
+      "completed_on": "2026-09-26T11:52:13.062Z",
+      "final_changed_paths": [
+        "src/ExternalConnector/ExternalConnectorExecutor.php",
+        "tests/ExternalConnector/ExternalConnectorExecutorBoundaryTest.php"
+      ],
+      "test_evidence": [
+        "Targeted ExternalConnectorExecutor boundary coverage passed for bounded successful fanout, isolated provider failures and pre-invocation rejection of 65 targets.",
+        "Existing external capability contract tests passed.",
+        "Exact-head Worker CI run 36240031115 succeeded.",
+        "PHP/Symfony validation and application-test job 108398680323 succeeded.",
+        "PostgreSQL migration chain job 108398680470 succeeded."
+      ]
     },
     {
       "priority": 83,
