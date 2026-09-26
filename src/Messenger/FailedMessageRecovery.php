@@ -31,6 +31,11 @@ final readonly class FailedMessageRecovery
             return false;
         }
 
+        $numericId = filter_var($id, FILTER_VALIDATE_INT);
+        if (!is_int($numericId) || $numericId < 1) {
+            return false;
+        }
+
         $envelope = $this->failedReceiver->find($id);
         if ($envelope === null) {
             return false;
