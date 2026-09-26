@@ -21,7 +21,11 @@
                     <td>{{ item.position }}</td>
                     <td>{{ item.label }}</td>
                     <td>{{ item.page ? item.page.title : item.url }}</td>
-                    <td><span class="status {{ item.enabled ? 'status-ready' : 'status-disabled' }}">{{ item.enabled ? 'Sichtbar' : 'Ausgeblendet' }}</span></td>
+                    {% set itemVisible = menu_item_visible(item) %}
+                    <td>
+                        <span class="status {{ itemVisible ? 'status-ready' : 'status-disabled' }}">{{ itemVisible ? 'Sichtbar' : 'Ausgeblendet' }}</span>
+                        {% if item.enabled and not itemVisible %}<p class="muted">Ziel ist nicht öffentlich verfügbar.</p>{% endif %}
+                    </td>
                     <td class="row-actions">
                         <a href="{{ path('app_admin_menu_edit', {id: item.id}) }}">Bearbeiten</a>
                         <form method="post" action="{{ path('app_admin_menu_delete', {id: item.id}) }}" onsubmit="return confirm('Menüpunkt wirklich löschen?');">
