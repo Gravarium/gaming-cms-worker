@@ -10,16 +10,16 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-26T09:33:43.036Z",
+  "published_at": "2026-09-26T09:37:32.484Z",
   "summary": {
-    "total_remaining_worker_tasks": 39,
+    "total_remaining_worker_tasks": 40,
     "completed_worker_prs_awaiting_trusted_review": 32,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
     "next_required_action": "Continue WCP-089 on its own exact feature branch while WCP-077, WCP-087 and the WCP-088 branch reservation remain owned by other chats; existing green Worker PRs remain claim-locked awaiting Trusted review.",
     "composition_preparable": 0,
-    "immediately_actionable": 2,
+    "immediately_actionable": 3,
     "must_continue": true
   },
   "rules": {
@@ -3500,6 +3500,88 @@
         ]
       },
       "claimed_on": "2026-09-26T09:33:43.036Z"
+    },
+    {
+      "priority": 40,
+      "package_id": "WCP-090",
+      "title": "Bound public content visibility at scheduled unpublish time",
+      "risk": "high",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-090-scheduled-unpublish-g1",
+      "suggested_branch": "feature/wcp-090-scheduled-unpublish-g1",
+      "base_branch": "main",
+      "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "objective": "Make scheduled unpublication effective at its exact deadline even if the background command is delayed: expire published predicates and every public repository projection at the boundary, and cap shared response-cache lifetime at the earliest scheduled unpublish deadline in its content. Preserve admin/preview behavior and the existing unpublish command.",
+      "allowed_paths": [
+        "src/Entity/ContentEntry.php",
+        "src/Repository/ContentEntryRepository.php",
+        "src/Controller/PublicContentController.php",
+        "tests/Entity/ContentEntryWorkflowTest.php",
+        "tests/Controller/Content/ContentPublicationAssuranceTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "migrations/",
+        "config/",
+        "AGENTS.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/"
+      ],
+      "deliverables": [
+        "ContentEntry published and public-list predicates fail closed at or after scheduledUnpublishAt without changing the asynchronous archive transition.",
+        "All public content repository queries exclude due scheduled-unpublish entries, including slug, list, search, featured, sitemap and related projections; admin and due-unpublication queries remain available.",
+        "Public news, search, sitemap and feed responses do not retain a shared cache lifetime beyond the earliest included entry's unpublish deadline.",
+        "Boundary regression tests cover due versus future entries, public detail/listing visibility and cache expiry; existing publication CSRF and scheduling validation remain intact."
+      ],
+      "tests": [
+        "targeted ContentEntryWorkflowTest and ContentPublicationAssuranceTest",
+        "PHPStan level 8",
+        "complete Worker CI on the exact final HEAD"
+      ],
+      "completion_report": [
+        "exact final Worker HEAD and exact sanitized base SHA",
+        "complete changed-file list and Worker PR",
+        "targeted tests and complete Worker CI results",
+        "scheduled-unpublish boundary, shared-cache behavior, current command/persistence seam, deferred Fortress cache-invalidation ownership and legacy database impact"
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "no-secrets-or-trusted-private-runtime-in-worker-source",
+        "preserve-content-admin-authorization-publication-validation-and-CSRF-protection",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_base_branch": "main",
+      "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "resume_branch": "feature/wcp-090-scheduled-unpublish-g1",
+      "proposal_kind": "worker_only",
+      "collision_check": {
+        "compared_against": "current continuous/work-pool-v4 task allowlists and active branches",
+        "result": "disjoint from all current claims, including WCP-086 through WCP-089, and all published FCP allowlists",
+        "paths": [
+          "src/Entity/ContentEntry.php",
+          "src/Repository/ContentEntryRepository.php",
+          "src/Controller/PublicContentController.php",
+          "tests/Entity/ContentEntryWorkflowTest.php",
+          "tests/Controller/Content/ContentPublicationAssuranceTest.php"
+        ]
+      },
+      "claimed_on": "2026-09-26T09:37:32.484Z"
     }
   ],
   "recovery_queue": [],
