@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-26T13:28:30.277Z",
+  "published_at": "2026-09-26T13:30:31.499Z",
   "summary": {
-    "total_remaining_worker_tasks": 105,
+    "total_remaining_worker_tasks": 106,
     "completed_worker_prs_awaiting_trusted_review": 100,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "Re-evaluate current claims and blocked FCPs; continue with another independent worker-only CMS proposal from verified code gaps.",
+    "next_required_action": "Implement WCP-325 on the exclusive AccessRole key setter and boundary-test paths from exact sanitized main; run complete exact-head Worker CI, then continue while preserving existing claims.",
     "composition_preparable": 0,
     "immediately_actionable": 0,
     "must_continue": true
@@ -10353,6 +10353,97 @@
         "PHP/Symfony job 108412715863 passed PHPStan level 8 and the complete worker-visible application test suite.",
         "PostgreSQL 18 job 108412715990 applied and verified the complete worker-visible migration chain.",
         "Exact diff against sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d contains only src/Entity/Guild.php and tests/Entity/GuildServerNameBoundaryTest.php."
+      ]
+    },
+    {
+      "priority": 105,
+      "package_id": "WCP-325",
+      "title": "Bound CMS access role key persistence",
+      "risk": "medium",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-325-access-role-key-boundary-g1",
+      "suggested_branch": "feature/wcp-325-access-role-key-boundary-g1",
+      "base_branch": "main",
+      "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "objective": "Enforce the AccessRole.key mapped varchar(80) storage boundary after its existing lowercase-and-trim normalization. Reject malformed UTF-8 and NUL and reject normalized keys above 80 UTF-8 characters/320 bytes before assignment, without truncation or replacing the previous key. Preserve existing normalization and the existing role-key Regex validation semantics; do not change permissions, role membership, or system-role behavior.",
+      "allowed_paths": [
+        "src/Entity/AccessRole.php",
+        "tests/Entity/AccessRoleKeyBoundaryTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/",
+        "src/Controller/",
+        "src/Form/",
+        "src/Repository/",
+        "src/Service/",
+        "templates/",
+        "assets/",
+        "public/",
+        "src/Security/"
+      ],
+      "deliverables": [
+        "Preserve existing lower-case and trim normalization for in-bound role keys.",
+        "Reject malformed UTF-8, NUL, and normalized values above the mapped 80-character/320-byte boundary before assignment, without truncation.",
+        "Preserve the prior key after rejected input.",
+        "Leave Regex validation, permission membership, users, active/system role state, and authorization behavior unchanged."
+      ],
+      "tests": [
+        "Targeted AccessRole key boundary PHPUnit tests for exact ASCII and multibyte limits, normalized values at the bound, overflow, malformed UTF-8/NUL, state preservation, and existing lowercase/trim behavior.",
+        "PHPStan level 8.",
+        "Complete Worker CI on the exact final HEAD."
+      ],
+      "completion_report": [
+        "exact final Worker HEAD and sanitized main base SHA",
+        "complete changed-file list and Worker PR",
+        "targeted AccessRole key boundary tests and complete exact-head Worker CI result",
+        "80-character/320-byte bound with preserved normalization and Regex semantics"
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "no-secrets-or-trusted-private-runtime-in-worker-source",
+        "preserve role-key Regex semantics, CMS permissions, membership and system-role behavior",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_base_branch": "main",
+      "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "resume_branch": "feature/wcp-325-access-role-key-boundary-g1",
+      "proposal_kind": "worker_only",
+      "collision_check": {
+        "compared_against": "all current continuous/work-pool-v4 task allowlists and active/locked claims through WCP-324; exact WCP-325 branch/PR names and new test path checked against sanitized main",
+        "result": "AccessRole.php and its exact key boundary test path are disjoint from every published allowlist and claim. No authorization voter, controller, form, repository, migration, DI, template, or workflow path is included.",
+        "paths": [
+          "src/Entity/AccessRole.php",
+          "tests/Entity/AccessRoleKeyBoundaryTest.php"
+        ]
+      },
+      "claimed_on": "2026-09-26T13:30:31.499Z",
+      "claim_state": "active_worker_claim",
+      "last_checkpoint_at": "2026-09-26T13:30:31.499Z",
+      "next_action": "Implement only the role-key storage boundary and focused tests in the two allowlisted paths, then record a remote checkpoint and run complete exact-head Worker CI.",
+      "checkpoint_paths": [
+        "src/Entity/AccessRole.php",
+        "tests/Entity/AccessRoleKeyBoundaryTest.php"
       ]
     }
   ],
