@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-26T15:40:16.178Z",
+  "published_at": "2026-09-26T15:47:29.268Z",
   "summary": {
-    "total_remaining_worker_tasks": 127,
+    "total_remaining_worker_tasks": 128,
     "completed_worker_prs_awaiting_trusted_review": 122,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "Re-evaluate unclaimed FCP dependencies against exact green Worker heads and Trusted integration; if none can start, publish and claim the next independent worker-only package.",
+    "next_required_action": "Continue the active WCP-347 guild application internal note boundary package.",
     "composition_preparable": 0,
     "immediately_actionable": 0,
     "must_continue": true
@@ -12752,6 +12752,101 @@
         "PR #140 is open, ready for review and unmerged. Its exact changed-file list against sanitized main contains only the two allowed paths.",
         "Functional regressions confirm a corrupted persisted external notification link redirects to /admin/notifications, a safe local target is preserved, and the notification is marked read."
       ]
+    },
+    {
+      "priority": 128,
+      "package_id": "WCP-347",
+      "title": "Bound guild application internal review notes",
+      "risk": "medium",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-347-guild-application-note-boundary-g1",
+      "suggested_branch": "feature/wcp-347-guild-application-note-boundary-g1",
+      "base_branch": "main",
+      "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "objective": "Enforce the existing 10,000-character review-note limit at the guild application POST boundary. Reject longer notes before changing assignment/status, persisting data or recording audit events; preserve valid notes, CSRF and review semantics.",
+      "allowed_paths": [
+        "src/Controller/AdminGuildApplicationController.php",
+        "tests/Controller/GuildApplicationInternalNotesBoundaryTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/",
+        "templates/",
+        "assets/",
+        "public/",
+        "src/Entity/GuildApplication.php",
+        "src/Repository/",
+        "src/Form/",
+        "src/Security/",
+        "src/ExternalConnector/",
+        "src/Service/",
+        "src/Controller/AdminNotificationController.php",
+        "tests/Entity/",
+        "tests/Controller/AdminNotificationRedirectBoundaryTest.php"
+      ],
+      "deliverables": [
+        "Enforce the review textarea's current 10,000-character contract server-side using Unicode-aware length checking.",
+        "Reject over-limit values with an actionable 422 response before assignment, internal-note mutation, audit recording or flush.",
+        "Preserve current CSRF, scalar input handling, assignment/release behavior and valid review-note normalization."
+      ],
+      "tests": [
+        "Functional POST regression sends 10,001 Unicode characters and a valid CSRF token; it receives 422 and leaves assignment, status, stored notes and audit state unchanged.",
+        "A note exactly 10,000 characters remains accepted and follows the existing review behavior.",
+        "PHPStan level 8 and complete Worker CI on the exact final HEAD."
+      ],
+      "completion_report": [
+        "exact final Worker HEAD and sanitized main base SHA",
+        "complete changed-file list and Worker PR",
+        "10,001-character rejection, 10,000-character acceptance, PHPStan level 8 and exact-head CI evidence",
+        "confirmation CSRF, assignment, status, audit and persistence behavior remain unchanged for valid submissions"
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "no-secrets-or-trusted-private-runtime-in-worker-source",
+        "preserve authorization, CSRF, existing guild-application review state transitions, audit and validation behavior",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_base_branch": "main",
+      "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "resume_branch": "feature/wcp-347-guild-application-note-boundary-g1",
+      "proposal_kind": "worker_only",
+      "collision_check": {
+        "compared_against": "all current continuous/work-pool-v4 allowlists and active/locked claims through WCP-346; exact files checked against sanitized main at f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+        "result": "Both exact paths are absent from every current task allowlist. The form already declares maxlength=10000, while the only POST caller persists getString('internal_notes') without a server-side bound. No entity, template, FCP path or foreign claim is changed.",
+        "paths": [
+          "src/Controller/AdminGuildApplicationController.php",
+          "tests/Controller/GuildApplicationInternalNotesBoundaryTest.php"
+        ]
+      },
+      "claimed_on": "2026-09-26T15:47:29.268Z",
+      "claim_state": "active_worker_claim",
+      "last_checkpoint_at": "2026-09-26T15:47:29.268Z",
+      "next_action": "Implement the server-side 10,000-character guard before assignment/audit/flush and add functional boundary regressions; run exact-head Worker CI.",
+      "checkpoint_paths": [
+        "src/Controller/AdminGuildApplicationController.php",
+        "tests/Controller/GuildApplicationInternalNotesBoundaryTest.php"
+      ],
+      "last_verified_push_at": "2026-09-26T15:47:29.268Z"
     }
   ],
   "recovery_queue": [],
