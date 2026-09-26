@@ -11,7 +11,7 @@
 </head><body>
 {% if site.enabledLocaleLabels|length > 1 %}<form method="post" action="{{ path('app_locale_switch', {locale: app.request.locale}) }}" class="locale-switcher" data-locale-switcher><input type="hidden" name="_token" value="{{ csrf_token('locale-switch') }}"><input type="hidden" name="_target" value="{{ app.request.requestUri }}"><label><span class="sr-only">Sprache</span><select name="locale" onchange="this.form.action='{{ path('app_locale_switch', {locale: '__locale__'}) }}'.replace('__locale__', this.value); this.form.submit()">{% for code,label in site.enabledLocaleLabels %}<option value="{{ code }}" {{ app.request.locale == code ? 'selected' : '' }}>{{ label }}</option>{% endfor %}</select></label></form>{% endif %}
 {% set currentRoute = app.request.attributes.get('_route')|default('') %}
-{% if not (currentRoute starts with 'app_admin_') %}
+{% if not (currentRoute starts with 'app_admin_') and portal is not defined %}
     {% set navigationItems = main_navigation() %}
     {% if navigationItems|length > 0 %}
         {% include 'menu/main_navigation.html.twig' with {items: navigationItems} only %}
