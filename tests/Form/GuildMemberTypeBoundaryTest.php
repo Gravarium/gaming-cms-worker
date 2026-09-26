@@ -10,6 +10,7 @@ use App\Form\GuildMemberType;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormInterface;
+use Symfony\Component\Form\FormView;
 
 final class GuildMemberTypeBoundaryTest extends KernelTestCase
 {
@@ -31,7 +32,7 @@ final class GuildMemberTypeBoundaryTest extends KernelTestCase
         self::assertTrue($form->isSynchronized());
         self::assertTrue($form->isValid());
         foreach ($limits as $field => $limit) {
-            self::assertSame($limit, $form->get($field)->createView()->vars['attr']['maxlength']);
+            self::assertSame($limit, $form->get($field)->createView(new FormView())->vars['attr']['maxlength']);
         }
     }
 
