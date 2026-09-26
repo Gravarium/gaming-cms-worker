@@ -9,7 +9,6 @@ use App\ExternalConnector\ExternalNotificationDispatcher;
 use App\ExternalConnector\ExternalNotificationMessage;
 use App\Repository\ContentEntryRepository;
 use App\Repository\MediaAssetRepository;
-use Symfony\Contracts\HttpClient\ChunkInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 final readonly class ExtensionRuntimeBroker
