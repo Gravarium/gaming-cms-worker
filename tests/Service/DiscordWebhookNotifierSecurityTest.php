@@ -140,6 +140,32 @@ final class DiscordWebhookNotifierSecurityTest extends WebTestCase
         self::assertSame(0, $requests[0]['options']['max_redirects'] ?? null);
     }
 
+    public function testCorruptedStoredCiphertextIsRejectedBeforeTheHttpClientIsCalled(): void
+    {
+        $client = static::createClient();
+        [$guild, $integration] = $this->guildWithIntegration(
+            $client,
+            'https://discord.com/api/webhooks/123456/synthetic-token',
+        );
+        $integration->setEncryptedWebhookUrl('not-valid-base64');
+        $this->entityManager($client)->flush();
+
+        /** @var list<array{method: string, url: string, options: array<string, mixed>}> $requests */
+        $requests = [];
+        $httpClient = new MockHttpClient(
+            static function (string $method, string $url, array $options) use (&$requests): MockResponse {
+                $requests[] = ['method' => $method, 'url' => $url, 'options' => $options];
+
+                return new MockResponse('', ['http_code' => 204]);
+            },
+        );
+
+        $success = $this->notifier($client, $httpClient)->notify($guild, 'guild_event', 'Event', 'Message');
+
+        self::assertFalse($success);
+        self::assertSame([], $requests);
+    }
+
     /**
      * @return array{Guild, GuildDiscordIntegration}
      */
