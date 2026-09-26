@@ -10,15 +10,17 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-26T08:05:28.922Z",
+  "published_at": "2026-09-26T08:26:00Z",
   "summary": {
     "total_remaining_worker_tasks": 27,
     "completed_worker_prs_awaiting_trusted_review": 21,
     "recovery_tasks": 0,
     "unclaimed": 6,
     "immediately_claimable": 0,
-    "next_required_action": "FCP-077 has verified predecessors and requires a green worker-only composition before claim. In parallel, other chats may publish and claim distinct, non-overlapping worker-only CMS proposals from the approved goal. FCP-069 remains complete and locked until Trusted resolution.",
-    "composition_preparable": 1
+    "next_required_action": "Start the FCP-077 worker-only composition now. This preparation is actionable Worker work and does not wait for Trusted review. If it cannot proceed, derive and claim the next bounded independent worker-visible CMS proposal.",
+    "composition_preparable": 1,
+    "immediately_actionable": 1,
+    "must_continue": true
   },
   "rules": {
     "choose": "Resume the current chat's unfinished claimed branch first. Otherwise atomically claim an eligible published task. If no published task is eligible, independently derive and publish a bounded worker-only CMS proposal from approved product goals and observed code gaps; do not ask the owner for the next FCP number.",
@@ -37,7 +39,9 @@
     "autonomous_continuation": "After every green exact-head Worker PR, self-reconcile and continue to the next dependency-safe package. If the finite task list is exhausted or blocked, plan a new small worker-only proposal from the approved CMS scope, record scope, dependencies, base SHA, path collision checks, tests and Fortress/privacy impact in this pool, reserve an exclusive claim, then implement without another owner instruction. A proposal is never a Trusted FCP integration.",
     "connector_access": "Use the connected GitHub plugin for repository writes. Missing terminal credentials or failed command-line git push is not a blocker unless a GitHub plugin write also fails for authorization.",
     "no_false_global_block": "Re-evaluate all unclaimed packages and exact green predecessors after each completion. If none can start, prepare a verified composition or self-publish a new independent worker-safe proposal. A finite or blocked list alone is not a reason to stop; report only a concrete security, scope, authorization, CI or unresolvable dependency conflict.",
-    "self_expand": "Owner-approved standing instruction: independently decompose the secure gaming CMS goal and existing documented gaps into bounded worker-visible proposals. Assign a unique WCP identifier and atomic claim branch, use only current sanitized worker main or a verified green composition base, state exact allowed/forbidden paths, acceptance checks, real dependencies and collision proof. Never remove existing FCP dependencies, edit another chat's claim, invent private components, set integrated or merge/deploy to Trusted. Trusted maps the proposal to the canonical queue before intake."
+    "self_expand": "Owner-approved standing instruction: independently decompose the secure gaming CMS goal and existing documented gaps into bounded worker-visible proposals. Assign a unique WCP identifier and atomic claim branch, use only current sanitized worker main or a verified green composition base, state exact allowed/forbidden paths, acceptance checks, real dependencies and collision proof. Never remove existing FCP dependencies, edit another chat's claim, invent private components, set integrated or merge/deploy to Trusted. Trusted maps the proposal to the canonical queue before intake.",
+    "trusted_review_not_scheduler": "Trusted review is the later integration gate, not a prerequisite for further Worker proposal development. A completed green Worker PR remains untrusted and claim-locked, but it does not globally block independent Worker-visible CMS work.",
+    "empty_pool_behavior": "Never report an empty or blocked finite pool as the end of work. Inspect the worker-visible code and approved CMS goal, publish a bounded non-conflicting WCP proposal, claim it atomically and continue implementation."
   },
   "tasks": [
     {
@@ -2435,7 +2439,7 @@
         }
       ],
       "composition_required": true,
-      "next_action": "Prepare worker-only composition of the verified exact predecessor heads on current sanitized worker main; run complete exact-head Worker CI. Only then publish its SHA as proposal base and claim FCP-077. Keep FCP-049 live acceptance separate."
+      "next_action": "Immediately prepare the worker-only composition from the verified exact predecessor heads, run complete exact-head Worker CI when capacity permits, publish the green composition SHA and claim FCP-077. Trusted review is a later integration gate and is not a reason to wait. If CI capacity itself is unavailable, preserve this preparation checkpoint and derive a disjoint worker-visible WCP that can progress without it."
     }
   ],
   "recovery_queue": [],
