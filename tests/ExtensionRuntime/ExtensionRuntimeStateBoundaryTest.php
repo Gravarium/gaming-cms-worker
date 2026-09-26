@@ -121,4 +121,18 @@ final class ExtensionRuntimeStateBoundaryTest extends TestCase
             'requestsThisMinute' => 1,
         ], $state->sanitizedStatus('theme:fantasy'));
     }
+    public function testLegacyEmptyArrayStateRemainsUsable(): void
+    {
+        file_put_contents($this->file, '[]');
+        $state = new ExtensionRuntimeState($this->file);
+
+        $state->consume('module:example', 'content.read');
+
+        self::assertSame([
+            'circuit' => 'closed',
+            'failures' => 0,
+            'requestsThisMinute' => 1,
+        ], $state->sanitizedStatus('module:example'));
+    }
+
 }
