@@ -16,6 +16,10 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\HasLifecycleCallbacks]
 class MediaAsset
 {
+    private const MAX_TAG_TEXT_BYTES = 4096;
+    private const MAX_TAG_CANDIDATES = 120;
+    private const MAX_TAG_CANDIDATE_BYTES = 1024;
+
     public const DELETION_ACTIVE = 'active';
     public const DELETION_PENDING = 'pending';
     #[ORM\Id]
@@ -101,19 +105,51 @@ class MediaAsset
     public function setCaption(?string $caption): self { $caption = $caption === null ? null : trim($caption); $this->caption = $caption === '' ? null : $caption; return $this; }
     /** @return list<string> */
     public function getTags(): array { return $this->tags; }
-    /** @param list<string> $tags */
+    /** @param array<array-key, mixed> $tags */
     public function setTags(array $tags): self
     {
+        if (count($tags) > self::MAX_TAG_CANDIDATES || !array_is_list($tags)) {
+            return $this;
+        }
+
         $normalized = [];
         foreach ($tags as $tag) {
-            $tag = mb_strtolower(trim((string) $tag));
-            if ($tag !== '' && mb_strlen($tag) <= 40) { $normalized[$tag] = true; }
+            if (
+                !is_string($tag)
+                || strlen($tag) > self::MAX_TAG_CANDIDATE_BYTES
+                || !mb_check_encoding($tag, 'UTF-8')
+            ) {
+                continue;
+            }
+
+            $tag = mb_strtolower(trim($tag));
+            if ($tag !== '' && mb_strlen($tag) <= 40) {
+                $normalized[$tag] = true;
+            }
         }
+
         $this->tags = array_slice(array_keys($normalized), 0, 30);
+
         return $this;
     }
     public function getTagsText(): string { return implode(', ', $this->tags); }
-    public function setTagsText(?string $tags): self { return $this->setTags(preg_split('/[,;]+/', (string) $tags) ?: []); }
+    public function setTagsText(?string $tags): self
+    {
+        if ($tags === null) {
+            return $this->setTags([]);
+        }
+
+        if (strlen($tags) > self::MAX_TAG_TEXT_BYTES) {
+            return $this;
+        }
+
+        $candidates = preg_split('/[,;]+/', $tags, self::MAX_TAG_CANDIDATES + 1);
+        if ($candidates === false || count($candidates) > self::MAX_TAG_CANDIDATES) {
+            return $this;
+        }
+
+        return $this->setTags($candidates);
+    }
     public function getFolder(): ?MediaFolder { return $this->folder; }
     public function setFolder(?MediaFolder $folder): self { $this->folder = $folder; return $this; }
     public function getMimeType(): ?string { return $this->mimeType; }
