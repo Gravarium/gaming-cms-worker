@@ -54,7 +54,7 @@ final class ExtensionOutboundUrlPolicy
 
         $host = $this->normalizeHost($parts);
         $path = $parts['path'] ?? '';
-        if (!is_string($path) || strlen($path) > self::MAX_PATH_LENGTH || !$this->isSafeText($path)) {
+        if (strlen($path) > self::MAX_PATH_LENGTH || !$this->isSafeText($path)) {
             throw new DomainException('Extension outbound URL path is malformed or too large.');
         }
 
