@@ -13,13 +13,13 @@
   "published_at": "2026-09-26T08:42:05.413Z",
   "summary": {
     "total_remaining_worker_tasks": 35,
-    "completed_worker_prs_awaiting_trusted_review": 27,
+    "completed_worker_prs_awaiting_trusted_review": 30,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "Re-evaluate remaining unclaimed work and self-publish the next bounded independent Worker proposal while FCP-077 and WCP-082 remain owned by other chats; WCP-084 is complete on its exact green head and awaits Trusted review.",
+    "next_required_action": "Continue the next independent Worker proposal while preserving any foreign active claim; WCP-085 is complete on its exact green head and remains claim-locked pending Trusted review.",
     "composition_preparable": 0,
-    "immediately_actionable": 1,
+    "immediately_actionable": 0,
     "must_continue": true
   },
   "rules": {
@@ -3087,7 +3087,7 @@
       "package_id": "WCP-085",
       "title": "Bound uploaded media structure and filename encoding",
       "risk": "high",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -3126,10 +3126,11 @@
         "complete Worker CI on the exact final HEAD"
       ],
       "completion_report": [
-        "exact final Worker HEAD and sanitized base SHA",
-        "complete changed-path list and Worker PR",
-        "targeted tests plus complete Worker CI result",
-        "filename encoding, media dimensions, JSON bounds and deferred decompression risks"
+        "exact final Worker HEAD ea362f589729bdbbe8ab05ed6ce86c4cf7596eba",
+        "exact sanitized base main @ f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+        "complete changed-file list recorded in final_changed_paths",
+        "targeted MediaUploadPolicyTest and complete Worker CI run 36232542056 are green",
+        "malformed filename, image dimensions/pixel area and JSON byte/depth bounds are fail-closed; no controller, storage, schema, secret, private runtime, merge or deployment changes"
       ],
       "immutable_constraints": [
         "trusted-main-is-the-only-integration-and-deployment-source",
@@ -3144,7 +3145,7 @@
       "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "ea362f589729bdbbe8ab05ed6ce86c4cf7596eba",
       "resume_branch": "feature/wcp-085-upload-structure-boundary-g1",
       "proposal_kind": "worker_only",
       "collision_check": {
@@ -3155,7 +3156,27 @@
           "tests/Service/MediaUploadPolicyTest.php"
         ]
       },
-      "claimed_on": "2026-09-26T09:15:36.068Z"
+      "claimed_on": "2026-09-26T09:15:36.068Z",
+      "worker_pr": 48,
+      "final_head": "ea362f589729bdbbe8ab05ed6ce86c4cf7596eba",
+      "ci_run_id": 36232542056,
+      "ci_result": "success",
+      "claim_state": "locked_until_trusted_resolution",
+      "completed_on": "2026-09-26T09:24:33.320Z",
+      "next_action": "Remain claim-locked while awaiting Trusted review; do not merge or deploy from the Worker repository.",
+      "final_changed_paths": [
+        "src/Service/MediaUploadPolicy.php",
+        "tests/Service/MediaUploadPolicyTest.php"
+      ],
+      "test_evidence": {
+        "targeted_tests": "MediaUploadPolicyTest",
+        "complete_worker_ci_run_id": 36232542056,
+        "complete_worker_ci_result": "success",
+        "postgres_migration_job": 108378280966,
+        "postgres_migration_result": "success",
+        "php_symfony_job": 108378281094,
+        "php_symfony_result": "success"
+      }
     }
   ],
   "recovery_queue": [],
