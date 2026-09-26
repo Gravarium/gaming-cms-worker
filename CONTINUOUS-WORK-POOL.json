@@ -10,16 +10,16 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-26T11:02:06.445Z",
+  "published_at": "2026-09-26T11:03:21.990Z",
   "summary": {
     "total_remaining_worker_tasks": 67,
-    "completed_worker_prs_awaiting_trusted_review": 59,
+    "completed_worker_prs_awaiting_trusted_review": 60,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "Continue WCP-116 on its exclusive private-backup-status claim while preserving WCP-115 and all completed foreign claim locks; after exact-head green CI, reconcile and continue independently.",
+    "next_required_action": "Re-evaluate remaining unclaimed tasks and continue an independent Worker proposal while preserving WCP-114 and all completed foreign claim locks; after each exact-head green CI, reconcile and continue. Do not merge or deploy.",
     "composition_preparable": 0,
-    "immediately_actionable": 3,
+    "immediately_actionable": 2,
     "must_continue": true
   },
   "rules": {
@@ -5970,7 +5970,7 @@
       "package_id": "WCP-115",
       "title": "Bound backup selection export fields",
       "risk": "high",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -6051,8 +6051,23 @@
       "worker_pr": 78,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/78",
       "ci_run_id": 36237476948,
-      "ci_result": "in_progress",
-      "pr_state": "draft"
+      "ci_result": "success",
+      "pr_state": "draft",
+      "final_head": "d2094ad373e2183c1bf75054b61eba68f2b1a888",
+      "claim_state": "locked_until_trusted_resolution",
+      "completed_on": "2026-09-26T11:03:21.990Z",
+      "next_action": "Remain claim-locked while awaiting Trusted review; do not merge or deploy from the Worker repository.",
+      "final_changed_paths": [
+        "src/ExternalConnector/BackupTargetSelectionExporter.php",
+        "tests/ExternalConnector/BackupTargetSelectionExporterTest.php"
+      ],
+      "test_evidence": [
+        "Preserved valid ordered export, required flags, empty-selection rejection and header-only synchronization output.",
+        "Added rejection coverage for pipe/newline/control/malformed-byte and oversized target/configuration fields, with a generic non-echoing exception.",
+        "Exact-head Worker CI run 36237476948 succeeded on d2094ad373e2183c1bf75054b61eba68f2b1a888.",
+        "PHP/Symfony validation and application-test job 108391780073 succeeded.",
+        "PostgreSQL 18 migration-chain job 108391779895 succeeded."
+      ]
     },
     {
       "priority": 66,
