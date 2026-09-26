@@ -10,7 +10,7 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-26T22:06:10.275Z",
+  "published_at": "2026-09-26T22:07:09.449Z",
   "summary": {
     "total_remaining_worker_tasks": 134,
     "completed_worker_prs_awaiting_trusted_review": 183,
@@ -20506,7 +20506,7 @@
       "proposal_dependency_evidence": [],
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-      "active_head": "ab56f52f99d842e765fc881e84ee73c74ce43bdd",
+      "active_head": "2afbce8591ff28c32a3d6026244f9da3846b6d8c",
       "resume_branch": "feature/wcp-414-admin-menu-reordering-g1",
       "collision_check": {
         "compared_against": "Fresh continuous/work-pool-v4 HEAD d6e2c86fcd27a834f43f20245c29a81c35d7ae1f, sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d, every active and claim-locked allowlist.",
@@ -20520,9 +20520,9 @@
       },
       "claimed_on": "2026-09-26T21:51:36.354Z",
       "claim_state": "active",
-      "next_action": "Draft PR #208 is open on exact HEAD ab56f52f99d842e765fc881e84ee73c74ce43bdd; wait for exact-head Worker CI run 36274868525, diagnose any failure, then resolve it on this branch.",
-      "last_checkpoint_at": "2026-09-26T22:00:32.535Z",
-      "last_verified_push_at": "2026-09-26T22:00:32.535Z",
+      "next_action": "Monitor exact-head Worker CI run 36275188014 on 2afbce8591ff28c32a3d6026244f9da3846b6d8c; diagnose and fix any remaining failures on this branch.",
+      "last_checkpoint_at": "2026-09-26T22:07:09.449Z",
+      "last_verified_push_at": "2026-09-26T22:07:09.449Z",
       "checkpoint_paths": [
         "src/Controller/AdminMenuOrderController.php",
         "templates/admin/menu/form.html.twig",
@@ -20530,17 +20530,27 @@
         "tests/Controller/AdminMenuOrderingTest.php"
       ],
       "branch_heads": {
-        "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-        "feature_branch": "ab56f52f99d842e765fc881e84ee73c74ce43bdd"
+        "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5",
+        "feature_branch": "2afbce8591ff28c32a3d6026244f9da3846b6d8c"
       },
       "worker_pr": 208,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/208",
       "draft_pr": true,
       "pr_state": "open_draft_unmerged",
-      "ci_run_id": 36274868525,
+      "ci_run_id": 36275188014,
       "ci_result": "in_progress",
-      "last_ci_run_id": 36274868525,
-      "last_ci_result": "in_progress"
+      "last_ci_run_id": 36275188014,
+      "last_ci_result": "in_progress",
+      "ci_attempts": [
+        {
+          "run_id": 36274868525,
+          "head": "ab56f52f99d842e765fc881e84ee73c74ce43bdd",
+          "result": "failure",
+          "failed_step": "Run worker-visible application tests with coverage visibility",
+          "diagnosis": "Full suite: 434 tests, 1,919 assertions, 1 error, 2 failures. CSRF negative test generated a session-backed token with an empty RequestStack; ordering tests included menu rows left by earlier tests. PHPStan, Twig, container, Doctrine mapping, and PostgreSQL migration checks passed.",
+          "remediated_in_head": "2afbce8591ff28c32a3d6026244f9da3846b6d8c"
+        }
+      ]
     },
     {
       "priority": 195,
