@@ -16,6 +16,10 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[UniqueEntity(fields: ['slug'])]
 class VideoCategory
 {
+    private const MAX_RAW_SLUG_BYTES = 512;
+    private const MAX_SLUG_LENGTH = 140;
+    private const SLUG_PATTERN = '/\A[a-z0-9]+(?:-[a-z0-9]+)*\z/';
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -23,6 +27,7 @@ class VideoCategory
 
     #[ORM\Column(length: 120)]
     #[Assert\NotBlank]
+    #[Assert\Length(max: 120)]
     private string $name = '';
 
     #[ORM\Column(length: 140)]
@@ -39,10 +44,32 @@ class VideoCategory
     public function getName(): string { return $this->name; }
     public function setName(string $name): self { $this->name = trim($name); return $this; }
     public function getSlug(): string { return $this->slug; }
-    public function setSlug(string $slug): self { $this->slug = $slug; return $this; }
+    public function setSlug(string $slug): self
+    {
+        $this->slug = $this->normalizeSlug($slug);
+
+        return $this;
+    }
     public function getDescription(): ?string { return $this->description; }
     public function setDescription(?string $description): self { $this->description = $description === null || trim($description) === '' ? null : trim($description); return $this; }
     public function isEnabled(): bool { return $this->enabled; }
     public function setEnabled(bool $enabled): self { $this->enabled = $enabled; return $this; }
     public function __toString(): string { return $this->name; }
+
+    private function normalizeSlug(string $slug): string
+    {
+        if (strlen($slug) > self::MAX_RAW_SLUG_BYTES || !mb_check_encoding($slug, 'UTF-8')) {
+            throw new \InvalidArgumentException('Der Videokategorie-Slug ist ungültig oder überschreitet die zulässige Länge.');
+        }
+
+        $normalized = trim(mb_strtolower($slug, 'UTF-8'));
+        if ($normalized === ''
+            || strlen($normalized) > self::MAX_SLUG_LENGTH
+            || preg_match(self::SLUG_PATTERN, $normalized) !== 1
+        ) {
+            throw new \InvalidArgumentException('Der Videokategorie-Slug ist ungültig oder überschreitet die zulässige Länge.');
+        }
+
+        return $normalized;
+    }
 }
