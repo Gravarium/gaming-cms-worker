@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<rss version="2.0"><channel>
+    <title>Discovery</title>
+    <link>{{ request.getSchemeAndHttpHost() }}{{ path('app_search_global') }}</link>
+    <description>Sichtbare Discovery-Ergebnisse</description>
+    {% for result in results %}
+        <item>
+            <title>{{ result.document.title|e('xml') }}</title>
+            <link>{% if result.document.route %}{{ request.getSchemeAndHttpHost() }}{{ result.document.route }}{% else %}{{ url('app_search_item', {id: result.document.id}) }}{% endif %}</link>
+            <guid isPermaLink="false">{{ result.document.sourceType }}:{{ result.document.sourceId }}</guid>
+            <description>{{ (result.document.excerpt ?: result.document.body)|striptags|slice(0, 320)|e('xml') }}</description>
+            <pubDate>{{ result.document.sourceUpdatedAt|date('r') }}</pubDate>
+        </item>
+    {% endfor %}
+</channel></rss>
