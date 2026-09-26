@@ -1,0 +1,30 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Profil bearbeiten | Gaming CMS{% endblock %}
+
+{% block body %}
+<main class="editor-shell">
+    <p class="eyebrow">Konto · Profil</p>
+    <h1>Profil bearbeiten</h1>
+    {% for message in app.flashes('success') %}<div class="notice">{{ message }}</div>{% endfor %}
+    {{ form_start(form) }}
+        {{ form_errors(form) }}
+        {{ form_row(form.bio) }}
+        <fieldset>
+            <legend>Medien</legend>
+            <p class="muted">Nur sichere Bild-Medien aus dem Benutzer-Modul können als Avatar oder Banner verwendet werden.</p>
+            {{ form_row(form.avatarAssetId) }}
+            {{ form_row(form.bannerAssetId) }}
+        </fieldset>
+        <fieldset>
+            <legend>Sichtbarkeit je Feld</legend>
+            {{ form_row(form.displayNameVisibility) }}
+            {{ form_row(form.bioVisibility) }}
+            {{ form_row(form.avatarVisibility) }}
+            {{ form_row(form.bannerVisibility) }}
+        </fieldset>
+        <button type="submit">Profil speichern</button>
+    {{ form_end(form) }}
+    <p><a href="{{ path('app_profile_data_rights') }}">Datenexport und Kontolöschung</a></p>
+</main>
+{% endblock %}
