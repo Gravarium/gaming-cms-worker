@@ -17,7 +17,7 @@
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-435 is claimed from sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d; create its exclusive branches and add test-only content-entry trash, restore, and purge security regressions.",
+    "next_required_action": "WCP-433 PR #227 runs exact-head Worker CI 36280542173 on HEAD 6efe5b2911770700ff48d3f8c61a84e6707cdb23; diagnose and repair failures on the same feature branch.",
     "composition_preparable": 0,
     "immediately_actionable": 0,
     "must_continue": true
@@ -23122,7 +23122,22 @@
         "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5",
         "feature_branch": "6efe5b2911770700ff48d3f8c61a84e6707cdb23"
       },
-      "next_action": "Open Worker PR from exact HEAD 6efe5b2911770700ff48d3f8c61a84e6707cdb23, then run complete exact-head CI and repair any concrete failure on this feature branch."
+      "next_action": "Wait for exact-head Worker CI run 36280542173 on PR #227; repair concrete failures on this feature branch and update the checkpoint.",
+      "worker_pr": 227,
+      "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/227",
+      "draft_pr": false,
+      "pr_state": "open_ci_pending",
+      "last_ci_run_id": 36280542173,
+      "last_ci_result": "in_progress",
+      "ci_run_id": 36280542173,
+      "ci_result": "in_progress",
+      "ci_attempts": [
+        {
+          "run_id": 36280542173,
+          "head": "6efe5b2911770700ff48d3f8c61a84e6707cdb23",
+          "result": "in_progress"
+        }
+      ]
     },
     {
       "priority": 214,
