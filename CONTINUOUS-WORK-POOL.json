@@ -12,12 +12,12 @@
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
   "published_at": "2026-09-26T17:21:47.553Z",
   "summary": {
-    "total_remaining_worker_tasks": 131,
+    "total_remaining_worker_tasks": 132,
     "completed_worker_prs_awaiting_trusted_review": 138,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "Continue disjoint active WCP-363 work; re-evaluate blocked FCP dependencies after exact-head CI.",
+    "next_required_action": "Continue disjoint active WCP-363 and WCP-364 work; re-evaluate FCP dependencies after exact-head CI.",
     "composition_preparable": 0,
     "immediately_actionable": 0,
     "must_continue": true
@@ -14599,6 +14599,98 @@
       "worker_pr": 157,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/157",
       "pr_state": "draft"
+    },
+    {
+      "priority": 144,
+      "package_id": "WCP-364",
+      "title": "Expose content release name limit in the form",
+      "risk": "low",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-364-content-release-name-form-boundary-g1",
+      "suggested_branch": "feature/wcp-364-content-release-name-form-boundary-g1",
+      "base_branch": "main",
+      "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "objective": "Expose the existing ContentRelease.name maximum of 160 characters in ContentReleaseType with maxlength=160. The entity already persists varchar(160) and validates Length(max: 160). Add real-form regression coverage for an exact-limit name, a 161-character name error on the name field, and the rendered maxlength. Preserve the release status, scheduling and publication rules and content-entry associations.",
+      "allowed_paths": [
+        "src/Form/ContentReleaseType.php",
+        "tests/Form/ContentReleaseTypeBoundaryTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/",
+        "src/Entity/ContentRelease.php",
+        "src/Controller/",
+        "src/Repository/ContentReleaseRepository.php",
+        "src/Form/ContentEntryType.php",
+        "tests/Entity/",
+        "templates/",
+        "assets/",
+        "public/"
+      ],
+      "deliverables": [
+        "Add maxlength=160 to the ContentReleaseType name field to match the entity's persisted and server-validated bound.",
+        "Test exactly 160 characters, a 161-character error surfaced on the name field, and the rendered maxlength using the real form and validator.",
+        "Leave the entity, schema, release scheduling, publication, entry associations and controller behavior unchanged."
+      ],
+      "tests": [
+        "Form regression accepts an exactly 160-character name with no name-field errors.",
+        "Form regression rejects a 161-character name with the existing entity Length constraint surfaced on the name field.",
+        "Form view exposes maxlength=160.",
+        "PHPStan level 8 and complete Worker CI on the exact final HEAD."
+      ],
+      "completion_report": [
+        "exact final Worker HEAD and sanitized main base SHA",
+        "complete changed-file list and Worker PR",
+        "exact/over-limit form results, PHPStan level 8 and exact-head Worker CI",
+        "confirmation release scheduling, status transitions, entry associations, entity validation and persistence behavior are unchanged"
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "no-secrets-or-trusted-private-runtime-in-worker-source",
+        "preserve release authorization, CSRF, scheduling, publication and persistence invariants",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_base_branch": "main",
+      "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "resume_branch": "feature/wcp-364-content-release-name-form-boundary-g1",
+      "proposal_kind": "worker_only",
+      "collision_check": {
+        "compared_against": "all current continuous/work-pool-v4 allowed-path scopes including active WCP-363 and locked claims; exact paths checked against sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+        "result": "Neither exact path nor any enclosing allowed-directory scope occurs in another current task. Active WCP-363 is limited to GuildApplicationQuestionType and its test. This proposal changes only the ContentRelease name input attribute and its form regression test; it does not touch release entity, controller, migration, DI, templates or delivery paths.",
+        "paths": [
+          "src/Form/ContentReleaseType.php",
+          "tests/Form/ContentReleaseTypeBoundaryTest.php"
+        ]
+      },
+      "claimed_on": "2026-09-26T17:23:17.852Z",
+      "claim_state": "active_worker_claim",
+      "last_checkpoint_at": "2026-09-26T17:23:17.852Z",
+      "next_action": "Create the exact claim and feature refs from sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d; add maxlength=160 and real-form boundary coverage, then run complete exact-head Worker CI.",
+      "checkpoint_paths": [
+        "src/Form/ContentReleaseType.php",
+        "tests/Form/ContentReleaseTypeBoundaryTest.php"
+      ],
+      "last_verified_push_at": "2026-09-26T17:23:17.852Z"
     }
   ],
   "recovery_queue": [],
