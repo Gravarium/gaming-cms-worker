@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-26T18:08:17.815Z",
+  "published_at": "2026-09-26T18:11:47.388Z",
   "summary": {
     "total_remaining_worker_tasks": 131,
     "completed_worker_prs_awaiting_trusted_review": 148,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "Re-evaluate the five remaining FCP dependencies; select or derive the next safe disjoint Worker proposal while preserving foreign active claims.",
+    "next_required_action": "All five unclaimed FCP proposals remain dependency-blocked; implement active WCP-373 and continue with the next independent proposal without touching foreign claims.",
     "composition_preparable": 0,
     "immediately_actionable": 0,
     "must_continue": true
@@ -15582,6 +15582,102 @@
         "PHPStan level 8 application type analysis passed in exact-head Worker CI run #472 (36261475317).",
         "Full Worker CI run #472 (36261475317) succeeded, including 432 tests / 1,866 assertions and the complete PostgreSQL 18 migration chain."
       ]
+    },
+    {
+      "priority": 153,
+      "package_id": "WCP-373",
+      "title": "Expose module storage URL limit in its form",
+      "risk": "low",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-373-module-storage-url-form-boundary-g1",
+      "suggested_branch": "feature/wcp-373-module-storage-url-form-boundary-g1",
+      "base_branch": "main",
+      "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "objective": "Expose ModuleStorageSetting.externalBaseUrl's existing 500-character column and Length constraint in ModuleStorageSettingType with maxlength=500. Preserve optionality, HTTP/HTTPS and TLD validation, setter normalization, and all storage and URL security policies. Add real Symfony form regression coverage for an exact 500-character valid URL, a 501-character field error, rendered maxlength, and blank optional input normalizing to null.",
+      "allowed_paths": [
+        "src/Form/ModuleStorageSettingType.php",
+        "tests/Form/ModuleStorageSettingTypeBoundaryTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/",
+        "src/Entity/ModuleStorageSetting.php",
+        "src/Repository/ModuleStorageSettingRepository.php",
+        "src/Controller/",
+        "src/Service/",
+        "src/Security/",
+        "src/Storage/",
+        "templates/",
+        "assets/",
+        "public/"
+      ],
+      "deliverables": [
+        "Add maxlength=500 to the optional externalBaseUrl field, matching the existing entity column and Length constraint.",
+        "Test a valid 500-character URL, reject a 501-character URL on the field, and assert the rendered maxlength.",
+        "Test that blank optional input remains valid and normalizes to null.",
+        "Do not change the entity, URL constraints, storage mode, URL policy, persistence, or schema."
+      ],
+      "tests": [
+        "Kernel-backed form accepts a 500-character HTTPS URL with no externalBaseUrl field errors.",
+        "Kernel-backed form rejects a 501-character HTTPS URL with the existing Length violation on externalBaseUrl.",
+        "Rendered externalBaseUrl exposes maxlength=500.",
+        "Blank optional URL remains valid and the entity value is null.",
+        "PHPStan level 8 and complete Worker CI on the exact final HEAD."
+      ],
+      "completion_report": [
+        "exact final Worker HEAD and sanitized main base SHA",
+        "complete changed-file list and Worker PR",
+        "exact/over-limit URL, blank normalization and rendered maxlength results",
+        "PHPStan level 8 and exact-head Worker CI",
+        "confirmation HTTPS/HTTP/TLD validation, optionality, URL policies, storage and persistence behavior are unchanged"
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "no-secrets-or-trusted-private-runtime-in-worker-source",
+        "preserve external URL protocols, TLD checks, length validation, blank-to-null normalization, storage isolation and outbound URL security",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_base_branch": "main",
+      "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "resume_branch": "feature/wcp-373-module-storage-url-form-boundary-g1",
+      "proposal_kind": "worker_only",
+      "collision_check": {
+        "compared_against": "all current continuous/work-pool-v4 allowed-path scopes through WCP-372 and exact files on sanitized main at f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+        "result": "Neither exact path nor an enclosing allowed-directory scope occurs in another current task. WCP-311 is limited to the ModuleStorageSetting entity and its entity test; WCP-372 is limited to AccessRoleType and its form test. This proposal changes only the module storage form maxlength and its dedicated form regression tests.",
+        "paths": [
+          "src/Form/ModuleStorageSettingType.php",
+          "tests/Form/ModuleStorageSettingTypeBoundaryTest.php"
+        ]
+      },
+      "claimed_on": "2026-09-26T18:11:47.388Z",
+      "claim_state": "active_worker_claim",
+      "last_checkpoint_at": "2026-09-26T18:11:47.388Z",
+      "next_action": "Add maxlength=500 to the optional externalBaseUrl field and kernel-backed exact/over boundary plus blank normalization tests; preserve existing URL/security rules, then run exact-head Worker CI.",
+      "checkpoint_paths": [
+        "src/Form/ModuleStorageSettingType.php",
+        "tests/Form/ModuleStorageSettingTypeBoundaryTest.php"
+      ],
+      "last_verified_push_at": "2026-09-26T18:11:47.388Z"
     }
   ],
   "recovery_queue": [],
