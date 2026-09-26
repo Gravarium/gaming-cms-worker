@@ -10,7 +10,7 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-26T21:43:19.234Z",
+  "published_at": "2026-09-26T21:45:49.045Z",
   "summary": {
     "total_remaining_worker_tasks": 134,
     "completed_worker_prs_awaiting_trusted_review": 181,
@@ -20079,7 +20079,7 @@
       "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-      "active_head": "99433460f1989313e3812bf081da5bba0231db7c",
+      "active_head": "68f68abcb33cefffb273d51968f50d2942809164",
       "resume_branch": "feature/wcp-411-guild-application-inbox-g1",
       "proposal_kind": "worker_only",
       "collision_check": {
@@ -20095,13 +20095,13 @@
       },
       "claimed_on": "2026-09-26T21:29:08.842Z",
       "claim_state": "active",
-      "next_action": "Monitor exact-head Worker CI run 36273876801 for HEAD 99433460f1989313e3812bf081da5bba0231db7c; diagnose and fix any red checks on this same branch, then rerun full CI on the repaired exact HEAD.",
+      "next_action": "Re-run exact-head Worker CI for repaired HEAD 68f68abcb33cefffb273d51968f50d2942809164; record result and repair any additional failures on this same branch.",
       "branch_heads": {
         "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-        "feature_branch": "99433460f1989313e3812bf081da5bba0231db7c"
+        "feature_branch": "68f68abcb33cefffb273d51968f50d2942809164"
       },
-      "last_checkpoint_at": "2026-09-26T21:43:19.234Z",
-      "last_verified_push_at": "2026-09-26T21:43:19.234Z",
+      "last_checkpoint_at": "2026-09-26T21:45:49.045Z",
+      "last_verified_push_at": "2026-09-26T21:45:49.045Z",
       "checkpoint_paths": [
         "src/Controller/AdminGuildApplicationInboxController.php",
         "src/Repository/GuildApplicationRepository.php",
@@ -20112,12 +20112,13 @@
       "worker_pr": 206,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/206",
       "last_ci_run_id": 36273876801,
-      "last_ci_result": "in_progress",
+      "last_ci_result": "failure",
       "ci_attempts": [
         {
           "run_id": 36273876801,
           "head": "99433460f1989313e3812bf081da5bba0231db7c",
-          "result": "in_progress"
+          "result": "failure",
+          "diagnosis": "PHPUnit's permission test created a second KernelBrowser before shutting down the first kernel. Added ensureKernelShutdown() between anonymous and unauthorized requests; PHPStan and PostgreSQL migration checks were green."
         }
       ],
       "pr_state": "open_draft"
