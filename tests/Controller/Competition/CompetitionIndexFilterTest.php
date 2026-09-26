@@ -71,6 +71,7 @@ final class CompetitionIndexFilterTest extends WebTestCase
         $client = static::createClient();
         $entityManager = $this->em($client);
         $original = $entityManager->find(CmsModuleState::class, 'gaming');
+        $hadOriginalState = $original !== null;
         $wasEnabled = $original?->isEnabled() ?? true;
         $state = $original ?? (new CmsModuleState())->setModuleKey('gaming')->updateVersion('1.0.0');
 
@@ -82,12 +83,16 @@ final class CompetitionIndexFilterTest extends WebTestCase
             $client->request('GET', '/competitions?status=open');
             self::assertResponseStatusCodeSame(404);
         } finally {
-            if ($original === null) {
-                $entityManager->remove($state);
-            } else {
-                $original->setEnabled($wasEnabled);
+            $restoreManager = $this->em($client);
+            $currentState = $restoreManager->find(CmsModuleState::class, 'gaming');
+            if (!$hadOriginalState) {
+                if ($currentState instanceof CmsModuleState) {
+                    $restoreManager->remove($currentState);
+                }
+            } elseif ($currentState instanceof CmsModuleState) {
+                $currentState->setEnabled($wasEnabled);
             }
-            $entityManager->flush();
+            $restoreManager->flush();
         }
     }
 
