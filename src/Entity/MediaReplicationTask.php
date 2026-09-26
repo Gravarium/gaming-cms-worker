@@ -77,7 +77,13 @@ class MediaReplicationTask
     public function setObjectKey(string $value): self
     {
         $value = trim($value);
-        if ($value === '' || mb_strlen($value) > 500 || str_starts_with($value, '/') || str_contains($value, '\\') || preg_match('/[\x00-\x1F\x7F]/u', $value) === 1) {
+        if ($value === ''
+            || mb_strlen($value) > 500
+            || str_starts_with($value, '/')
+            || str_contains($value, '\\')
+            || preg_match('//u', $value) !== 1
+            || preg_match('/[\x00-\x1F\x7F]/', $value) === 1
+        ) {
             throw new \InvalidArgumentException('Invalid replication object key.');
         }
         foreach (explode('/', $value) as $segment) {
