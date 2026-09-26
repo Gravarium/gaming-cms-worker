@@ -97,7 +97,7 @@ class GuildEvent
     public function setEndsAt(?\DateTimeImmutable $endsAt): self { $this->endsAt = $endsAt; return $this; }
     public function getMaxParticipants(): ?int { return $this->maxParticipants; }
     public function setMaxParticipants(?int $max): self { $this->maxParticipants = $max; return $this; }
-    /** @return array<string, int> */ 
+    /** @return array<string, int> */
     public function getRoleLimits(): array { return $this->roleLimits; }
     /** @param array<string, int> $limits */
     public function setRoleLimits(array $limits): self { $this->roleLimits = $limits; return $this; }
