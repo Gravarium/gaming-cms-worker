@@ -17,7 +17,6 @@ final readonly class SocialRelationshipService
 {
     public function __construct(
         private SocialModuleAvailability $availability,
-        private SocialAccessPolicy $access,
         private SocialRateLimitPolicy $rateLimits,
         private SocialRelationshipRepository $relationships,
         private SocialBlockRepository $blocks,

@@ -50,8 +50,7 @@ final readonly class SocialAccessPolicy
 
     public function canAccessMessage(User $actor, SocialMessage $message): bool
     {
-        return $message->getConversation() instanceof SocialConversation
-            && $this->canReadConversation($actor, $message->getConversation());
+        return $this->canReadConversation($actor, $message->getConversation());
     }
 
     public function canAccessAttachment(User $actor, SocialAttachment $attachment): bool

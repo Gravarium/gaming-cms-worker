@@ -13,6 +13,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Choice;
 use Symfony\Component\Validator\Constraints\Positive;
 
+/** @extends AbstractType<array<string, mixed>> */
 final class SocialRelationshipType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void

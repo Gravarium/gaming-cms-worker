@@ -12,6 +12,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\Positive;
 
+/** @extends AbstractType<array<string, mixed>> */
 final class SocialConversationType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
