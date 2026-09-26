@@ -169,6 +169,14 @@ final class MemberNotificationInboxTest extends WebTestCase
             $this->em($client)->persist($notification);
         }
         $this->em($client)->flush();
+        $firstId = $first->getId();
+        $secondId = $second->getId();
+        $alreadyReadId = $alreadyRead->getId();
+        $foreignId = $foreign->getId();
+        self::assertNotNull($firstId);
+        self::assertNotNull($secondId);
+        self::assertNotNull($alreadyReadId);
+        self::assertNotNull($foreignId);
         $client->loginUser($user);
 
         $client->request('POST', '/guild-area/notifications/mark-all-read');
@@ -180,10 +188,19 @@ final class MemberNotificationInboxTest extends WebTestCase
         ]);
         self::assertResponseRedirects('/guild-area/notifications');
 
-        self::assertNotNull($first->getReadAt());
-        self::assertNotNull($second->getReadAt());
-        self::assertNotNull($alreadyRead->getReadAt());
-        self::assertNull($foreign->getReadAt());
+        $entityManager = $this->em($client);
+        $firstStored = $entityManager->getRepository(MemberNotification::class)->find($firstId);
+        $secondStored = $entityManager->getRepository(MemberNotification::class)->find($secondId);
+        $alreadyReadStored = $entityManager->getRepository(MemberNotification::class)->find($alreadyReadId);
+        $foreignStored = $entityManager->getRepository(MemberNotification::class)->find($foreignId);
+        self::assertInstanceOf(MemberNotification::class, $firstStored);
+        self::assertInstanceOf(MemberNotification::class, $secondStored);
+        self::assertInstanceOf(MemberNotification::class, $alreadyReadStored);
+        self::assertInstanceOf(MemberNotification::class, $foreignStored);
+        self::assertNotNull($firstStored->getReadAt());
+        self::assertNotNull($secondStored->getReadAt());
+        self::assertNotNull($alreadyReadStored->getReadAt());
+        self::assertNull($foreignStored->getReadAt());
     }
 
     private function user(KernelBrowser $client, string $prefix): User
