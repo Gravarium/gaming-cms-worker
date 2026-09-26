@@ -17415,6 +17415,105 @@
         "tests/Controller/VideoFeedTest.php"
       ],
       "last_verified_push_at": "2026-09-26T19:40:34.685Z"
+    },
+    {
+      "priority": 170,
+      "package_id": "WCP-390",
+      "title": "Allow members to edit their own display name",
+      "risk": "medium",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-390-account-profile-display-name-g1",
+      "suggested_branch": "feature/wcp-390-account-profile-display-name-g1",
+      "base_branch": "main",
+      "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "objective": "Complete the existing account settings workflow by letting an authenticated member edit only their own display name. Reuse the User entity's NotBlank/80-character validation, protect updates with Symfony form CSRF, record a generic audit event without logging the name, and leave email, roles, permissions, password, sessions and security state unchanged.",
+      "allowed_paths": [
+        "src/Controller/AccountController.php",
+        "src/Form/AccountProfileType.php",
+        "templates/account/profile.html.twig",
+        "templates/account/security.html.twig",
+        "tests/Controller/AccountProfileControllerTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/",
+        "src/Entity/",
+        "src/Security/",
+        "templates/admin/",
+        "assets/",
+        "public/"
+      ],
+      "deliverables": [
+        "Add an authenticated /account/profile form bound only to the current User's displayName and a reachable link from account security settings.",
+        "Enforce the existing nonblank and 80-character server-side display-name rules; return an unprocessable response for invalid form submissions.",
+        "Use Symfony form CSRF validation and record a generic display-name-changed audit action without storing the old or new name in audit details.",
+        "Keep email, roles, permissions, password, account lock/active state and sessions outside the editable form.",
+        "Add browser-level positive, unauthenticated, CSRF, overlong-value and forged-extra-field regressions."
+      ],
+      "tests": [
+        "php bin/phpunit tests/Controller/AccountProfileControllerTest.php",
+        "Existing account security, recovery and user-management regressions remain green.",
+        "PHPStan level 8 and complete Worker CI on the exact final HEAD, including PostgreSQL 18 migration-chain checks."
+      ],
+      "completion_report": [
+        "Exact final Worker HEAD and sanitized main base SHA.",
+        "Complete changed-file list and Worker PR.",
+        "Profile-link, self-update, CSRF, validation and forged-field test results.",
+        "Exact-head PHPStan and Worker CI results.",
+        "Confirmation that no schema or identity/security state changed; note later Trusted port and validation follow-up."
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "no-private-runtime-or-secret-export",
+        "preserve-account-authentication-authorization-session-and-password-protections",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_base_branch": "main",
+      "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "resume_branch": "feature/wcp-390-account-profile-display-name-g1",
+      "proposal_kind": "worker_only",
+      "collision_check": {
+        "compared_against": "All continuous/work-pool-v4 task scopes at 2026-09-26T19:40:21.301Z and exact sanitized Worker main f1a246c64527ef3ad51f7490773d9bbf9d42be5d.",
+        "result": "No overlap with active or claim-locked work. The only broad matches are FCP-072's unclaimed, dependency-blocked templates/ scope for the two account templates. Active WCP-387 game-catalogue, WCP-388 public-content search, WCP-389 video RSS, and WCP-383 scheduled-publishing tests use separate paths; the completed locked WCP-384 guild work is also disjoint.",
+        "paths": [
+          "src/Controller/AccountController.php",
+          "src/Form/AccountProfileType.php",
+          "templates/account/profile.html.twig",
+          "templates/account/security.html.twig",
+          "tests/Controller/AccountProfileControllerTest.php"
+        ]
+      },
+      "claimed_on": "2026-09-26T19:40:52.421Z",
+      "claim_state": "active",
+      "last_checkpoint_at": "2026-09-26T19:40:52.421Z",
+      "next_action": "Create the exact claim and feature branches from sanitized main, then implement the authenticated self-profile form, reachable link, audit event and positive/negative browser tests.",
+      "checkpoint_paths": [
+        "src/Controller/AccountController.php",
+        "src/Form/AccountProfileType.php",
+        "templates/account/profile.html.twig",
+        "templates/account/security.html.twig",
+        "tests/Controller/AccountProfileControllerTest.php"
+      ]
     }
   ],
   "recovery_queue": [],
