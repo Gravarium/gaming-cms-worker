@@ -10,6 +10,7 @@ use App\Entity\ContentTag;
 use App\Repository\CategoryRepository;
 use App\Repository\ContentEntryRepository;
 use App\Repository\ContentRedirectRepository;
+use App\Repository\SiteSettingsRepository;
 use App\Repository\ContentTagRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -22,7 +23,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 final class PublicContentController extends AbstractController
 {
     private const PAGE_SIZE = 20;
-    public function __construct(private readonly ContentEntryRepository $entries, private readonly CategoryRepository $categories, private readonly ContentTagRepository $tags, private readonly ContentRedirectRepository $redirects) {}
+    public function __construct(private readonly ContentEntryRepository $entries, private readonly CategoryRepository $categories, private readonly ContentTagRepository $tags, private readonly ContentRedirectRepository $redirects, private readonly SiteSettingsRepository $siteSettings) {}
 
     #[Route('/news', name: 'app_news_index', methods: ['GET'])]
     public function news(Request $request): Response
@@ -45,8 +46,8 @@ final class PublicContentController extends AbstractController
     public function search(Request $request): Response
     {
         $query = mb_substr(trim($request->query->getString('q')), 0, 100); $entries = $this->entries->searchPublished($query);
-        $response = $this->render('content/search.html.twig', ['query' => $query, 'entries' => $entries]);
-        return $this->cache($request, $response, hash('sha256', $query.'|'.$this->fingerprint($entries)), 60);
+        $response = $this->render('content/search.html.twig', ['query' => $query, 'entries' => $entries, 'site' => $this->siteSettings->current()]);
+        return $this->cache($request, $response, hash('sha256', $query.'|'.$this->fingerprint($entries)), 60, null, $entries);
     }
     #[Route('/news/{slug}', name: 'app_news_show', priority: -10, methods: ['GET'])]
     public function showNews(string $slug, Request $request): Response { return $this->show($slug, ContentEntry::TYPE_NEWS, $request); }
@@ -55,9 +56,9 @@ final class PublicContentController extends AbstractController
     #[Route('/feeds/news.xml', name: 'app_news_feed_rss', methods: ['GET'])]
     public function rss(Request $request): Response
     {
-        $entries = $this->entries->findPublishedNews(50); $response = $this->render('content/feed.xml.twig', ['entries' => $entries]);
+        $entries = $this->entries->findPublishedNews(50); $response = $this->render('content/feed.xml.twig', ['entries' => $entries, 'site' => $this->siteSettings->current()]);
         $response->headers->set('Content-Type', 'application/rss+xml; charset=UTF-8');
-        return $this->cache($request, $response, $this->fingerprint($entries), 300);
+        return $this->cache($request, $response, $this->fingerprint($entries), 300, null, $entries);
     }
     #[Route('/feeds/news.json', name: 'app_news_feed_json', methods: ['GET'])]
     public function jsonFeed(Request $request): JsonResponse
@@ -70,15 +71,16 @@ final class PublicContentController extends AbstractController
             'tags' => array_values(array_map(static fn (ContentTag $tag): string => $tag->getName(), $entry->getTags()->toArray())),
         ], $entries);
         $response = new JsonResponse(['version' => 'https://jsonfeed.org/version/1.1', 'title' => 'News', 'items' => $items]);
-        $response->setPublic(); $response->setMaxAge(300); $response->setSharedMaxAge(300); $response->setEtag($this->fingerprint($entries)); $response->isNotModified($request);
+        $cacheLifetime = $this->cacheLifetime($entries, 300);
+        $response->setPublic(); $response->setMaxAge($cacheLifetime); $response->setSharedMaxAge($cacheLifetime); $response->setEtag($this->fingerprint($entries)); $response->isNotModified($request);
         return $response;
     }
     #[Route('/sitemap.xml', name: 'app_content_sitemap', methods: ['GET'])]
     public function sitemap(Request $request): Response
     {
-        $entries = $this->entries->findPublishedAll(); $response = $this->render('content/sitemap.xml.twig', ['entries' => $entries]);
+        $entries = $this->entries->findPublishedAll(); $response = $this->render('content/sitemap.xml.twig', ['entries' => $entries, 'site' => $this->siteSettings->current()]);
         $response->headers->set('Content-Type', 'application/xml; charset=UTF-8');
-        return $this->cache($request, $response, $this->fingerprint($entries), 900);
+        return $this->cache($request, $response, $this->fingerprint($entries), 900, null, $entries);
     }
 
     private function renderNewsList(Request $request, ?Category $category, ?ContentTag $tag): Response
@@ -87,8 +89,9 @@ final class PublicContentController extends AbstractController
         if ($page > $pages && $total > 0) { throw $this->createNotFoundException(); }
         $entries = $this->entries->findPublishedNews(self::PAGE_SIZE, ($page - 1) * self::PAGE_SIZE, $category, $tag);
         $featured = $page === 1 && $category === null && $tag === null ? $this->entries->findFeaturedNews() : [];
-        $response = $this->render('content/news.html.twig', ['entries' => $entries, 'featured' => $featured, 'category' => $category, 'tag' => $tag, 'page' => $page, 'pages' => $pages, 'total' => $total]);
-        return $this->cache($request, $response, hash('sha256', $page.'|'.($category?->getSlug() ?? '').'|'.($tag?->getSlug() ?? '').'|'.$this->fingerprint(array_merge($featured, $entries))), 60);
+        $response = $this->render('content/news.html.twig', ['entries' => $entries, 'featured' => $featured, 'category' => $category, 'tag' => $tag, 'page' => $page, 'pages' => $pages, 'total' => $total, 'site' => $this->siteSettings->current()]);
+        $visibleEntries = array_merge($featured, $entries);
+        return $this->cache($request, $response, hash('sha256', $page.'|'.($category?->getSlug() ?? '').'|'.($tag?->getSlug() ?? '').'|'.$this->fingerprint($visibleEntries)), 60, null, $visibleEntries);
     }
     private function show(string $slug, string $type, Request $request): Response
     {
@@ -101,9 +104,10 @@ final class PublicContentController extends AbstractController
             }
             throw $this->createNotFoundException();
         }
-        $response = $this->render('content/show.html.twig', ['entry' => $entry, 'related' => $this->entries->findRelated($entry), 'preview' => false]);
+        $related = $this->entries->findRelated($entry);
+        $response = $this->render('content/show.html.twig', ['entry' => $entry, 'related' => $related, 'preview' => false, 'site' => $this->siteSettings->current()]);
         if ($type === ContentEntry::TYPE_PAGE) { $response->headers->set('Cache-Control', 'private, no-store'); return $response; }
-        return $this->cache($request, $response, hash('sha256', $entry->getId().'|'.$entry->getUpdatedAt()->format('U.u')), 300, $entry->getUpdatedAt());
+        return $this->cache($request, $response, hash('sha256', $entry->getId().'|'.$entry->getUpdatedAt()->format('U.u')), 300, $entry->getUpdatedAt(), [$entry, ...$related]);
     }
     private function resolveCategory(string $slug): ?Category
     {
@@ -115,8 +119,32 @@ final class PublicContentController extends AbstractController
     }
     /** @param list<ContentEntry> $entries */
     private function fingerprint(array $entries): string { return hash('sha256', implode('|', array_map(static fn (ContentEntry $entry): string => $entry->getId().':'.$entry->getUpdatedAt()->format('U.u'), $entries))); }
-    private function cache(Request $request, Response $response, string $etag, int $seconds, ?\DateTimeImmutable $lastModified = null): Response
+    /** @param list<ContentEntry> $entries */
+    private function cache(Request $request, Response $response, string $etag, int $seconds, ?\DateTimeImmutable $lastModified = null, array $entries = []): Response
     {
+        $seconds = $this->cacheLifetime($entries, $seconds);
         $response->setPublic(); $response->setMaxAge($seconds); $response->setSharedMaxAge($seconds); $response->setEtag($etag); if ($lastModified !== null) { $response->setLastModified($lastModified); } $response->isNotModified($request); return $response;
+    }
+
+    /** @param list<ContentEntry> $entries */
+    private function cacheLifetime(array $entries, int $maximum): int
+    {
+        $now = new \DateTimeImmutable();
+        $lifetime = $maximum;
+
+        foreach ($entries as $entry) {
+            $deadline = $entry->getScheduledUnpublishAt();
+            if ($deadline === null) {
+                continue;
+            }
+
+            $remaining = $deadline->getTimestamp() - $now->getTimestamp();
+            if ((int) $deadline->format('u') < (int) $now->format('u')) {
+                --$remaining;
+            }
+            $lifetime = min($lifetime, max(0, $remaining));
+        }
+
+        return $lifetime;
     }
 }

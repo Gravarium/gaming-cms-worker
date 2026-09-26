@@ -8,6 +8,7 @@ use App\Entity\ContentEntry;
 use App\Entity\ContentRelease;
 use App\Entity\ContentRevision;
 use App\Entity\User;
+use App\Repository\ContentEntryRepository;
 use App\Repository\ContentRevisionRepository;
 use App\Security\CmsPermission;
 use App\Service\ContentRevisionManager;
@@ -137,6 +138,75 @@ final class ContentPublicationAssuranceTest extends WebTestCase
         self::assertFalse($entry->unpublishIfDue($scheduledEnd->modify('-1 second')));
         self::assertTrue($entry->unpublishIfDue($scheduledEnd));
         self::assertSame(ContentEntry::STATUS_ARCHIVED, $entry->getStatus());
+    }
+
+    public function testDueUnpublicationHidesPublicContentBeforeArchiveCommandAndBoundsSharedCache(): void
+    {
+        $client = static::createClient();
+        $author = $this->user($client, []);
+        $repository = $client->getContainer()->get(ContentEntryRepository::class);
+        $publishedBefore = $repository->countPublishedNews();
+        $suffix = bin2hex(random_bytes(6));
+        $expired = $this->entry($client, $author, ContentEntry::STATUS_PUBLISHED)
+            ->setTitle('Expired deadline '.$suffix)
+            ->setBody('deadline-search-'.$suffix)
+            ->setFeatured(true)
+            ->setScheduledUnpublishAt(new \DateTimeImmutable('-1 minute'));
+        $future = $this->entry($client, $author, ContentEntry::STATUS_PUBLISHED)
+            ->setTitle('Future deadline '.$suffix)
+            ->setBody('deadline-search-'.$suffix)
+            ->setFeatured(true)
+            ->setScheduledUnpublishAt(new \DateTimeImmutable('+2 minutes'));
+        $this->em($client)->flush();
+
+        $expiredId = $expired->getId();
+        $futureId = $future->getId();
+        self::assertNotNull($expiredId);
+        self::assertNotNull($futureId);
+        self::assertFalse($expired->isPublished());
+        self::assertFalse($expired->isPubliclyListed());
+        self::assertTrue($future->isPublished());
+
+        self::assertNull($repository->findPublishedBySlug($expired->getSlug(), ContentEntry::TYPE_NEWS));
+        self::assertSame($futureId, $repository->findPublishedBySlug($future->getSlug(), ContentEntry::TYPE_NEWS)?->getId());
+        self::assertSame($publishedBefore + 1, $repository->countPublishedNews());
+        foreach ([
+            $repository->findPublishedNews(100),
+            $repository->findPublishedAll(5000),
+            $repository->findFeaturedNews(20),
+            $repository->searchPublished('deadline-search-'.$suffix, 100),
+        ] as $rows) {
+            $ids = array_map(static fn (ContentEntry $entry): ?int => $entry->getId(), $rows);
+            self::assertNotContains($expiredId, $ids);
+            self::assertContains($futureId, $ids);
+        }
+        $dueRows = $repository->findDueForUnpublication(new \DateTimeImmutable(), 500);
+        self::assertContains($expiredId, array_map(static fn (ContentEntry $entry): ?int => $entry->getId(), $dueRows));
+
+        $client->request('GET', '/news/'.$expired->getSlug());
+        self::assertResponseStatusCodeSame(404);
+
+        foreach ([
+            '/news/'.$future->getSlug(),
+            '/news',
+            '/search?q=deadline-search-'.$suffix,
+            '/feeds/news.xml',
+            '/sitemap.xml',
+        ] as $path) {
+            $client->request('GET', $path);
+            self::assertResponseIsSuccessful();
+            self::assertLessThanOrEqual(120, $this->sharedMaxAge($client));
+            self::assertStringContainsString($future->getSlug(), (string) $client->getResponse()->getContent());
+            self::assertStringNotContainsString($expired->getSlug(), (string) $client->getResponse()->getContent());
+        }
+
+        $client->request('GET', '/feeds/news.json');
+        self::assertResponseIsSuccessful();
+        self::assertLessThanOrEqual(120, $this->sharedMaxAge($client));
+        $feed = json_decode((string) $client->getResponse()->getContent(), true, 512, JSON_THROW_ON_ERROR);
+        $titles = array_column($feed['items'] ?? [], 'title');
+        self::assertContains('Future deadline '.$suffix, $titles);
+        self::assertNotContains('Expired deadline '.$suffix, $titles);
     }
 
     public function testReleasePublishRequiresCsrfAndBecomesFinalAfterSuccessfulPublication(): void
@@ -290,6 +360,16 @@ final class ContentPublicationAssuranceTest extends WebTestCase
         $this->em($client)->flush();
 
         return $entry;
+    }
+
+    private function sharedMaxAge(KernelBrowser $client): int
+    {
+        $header = (string) $client->getResponse()->headers->get('Cache-Control');
+        if (preg_match('/(?:^|,)\s*s-maxage=(\d+)/i', $header, $matches) !== 1) {
+            self::fail('Public content responses must expose a shared cache lifetime.');
+        }
+
+        return (int) $matches[1];
     }
 
     private function em(KernelBrowser $client): EntityManagerInterface
