@@ -13,6 +13,9 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Table(name: 'guild_application_question')]
 class GuildApplicationQuestion
 {
+    private const MAX_LABEL_BYTES = 1020;
+    private const MAX_LABEL_LENGTH = 255;
+
     public const TYPE_TEXT = 'text';
     public const TYPE_TEXTAREA = 'textarea';
     public const TYPE_CHECKBOX = 'checkbox';
@@ -51,7 +54,14 @@ class GuildApplicationQuestion
     public function getGuild(): ?Guild { return $this->guild; }
     public function setGuild(Guild $guild): self { $this->guild = $guild; return $this; }
     public function getLabel(): string { return $this->label; }
-    public function setLabel(string $label): self { $this->label = trim($label); return $this; }
+    public function setLabel(string $label): self
+    {
+        $this->assertLabelColumnBoundary($label);
+
+        $this->label = trim($label);
+
+        return $this;
+    }
     public function getHelpText(): ?string { return $this->helpText; }
     public function setHelpText(?string $text): self { $this->helpText = $text === null || trim($text) === '' ? null : trim($text); return $this; }
     public function getType(): string { return $this->type; }
@@ -62,4 +72,16 @@ class GuildApplicationQuestion
     public function setPosition(int $position): self { $this->position = $position; return $this; }
     public function isEnabled(): bool { return $this->enabled; }
     public function setEnabled(bool $enabled): self { $this->enabled = $enabled; return $this; }
+
+    private function assertLabelColumnBoundary(string $label): void
+    {
+        if (strlen($label) > self::MAX_LABEL_BYTES || !mb_check_encoding($label, 'UTF-8')) {
+            throw new \InvalidArgumentException('Die Fragebezeichnung ist ungültig oder überschreitet die zulässige Länge.');
+        }
+
+        if (str_contains($label, "\0") || mb_strlen($label, 'UTF-8') > self::MAX_LABEL_LENGTH) {
+            throw new \InvalidArgumentException('Die Fragebezeichnung ist ungültig oder überschreitet die zulässige Länge.');
+        }
+    }
+
 }
