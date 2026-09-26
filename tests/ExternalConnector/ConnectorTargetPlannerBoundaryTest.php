@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace App\\Tests\\ExternalConnector;
+namespace App\Tests\ExternalConnector;
 
-use App\\ExternalConnector\\ConnectorProviderCatalog;
-use App\\ExternalConnector\\ConnectorTargetPlanner;
-use App\\Repository\\ExternalConnectorTargetRepository;
-use Doctrine\\ORM\\EntityManagerInterface;
-use PHPUnit\\Framework\\TestCase;
+use App\ExternalConnector\ConnectorProviderCatalog;
+use App\ExternalConnector\ConnectorTargetPlanner;
+use App\Repository\ExternalConnectorTargetRepository;
+use Doctrine\ORM\EntityManagerInterface;
+use PHPUnit\Framework\TestCase;
 use ReflectionClass;
 
 final class ConnectorTargetPlannerBoundaryTest extends TestCase
