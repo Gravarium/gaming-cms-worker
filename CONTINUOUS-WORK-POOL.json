@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-26T11:25:27.156Z",
+  "published_at": "2026-09-26T11:26:23.688Z",
   "summary": {
     "total_remaining_worker_tasks": 73,
-    "completed_worker_prs_awaiting_trusted_review": 66,
+    "completed_worker_prs_awaiting_trusted_review": 67,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "Continue WCP-301 on its exclusive revision-manager claim while preserving WCP-119, WCP-120 and all completed claim locks; reconcile only after exact-head green CI.",
+    "next_required_action": "Continue independent Worker proposal work while preserving WCP-120 and all foreign/completed claim locks; after each exact-head green CI reconcile and continue.",
     "composition_preparable": 0,
     "immediately_actionable": 2,
     "must_continue": true
@@ -6710,7 +6710,7 @@
       "package_id": "WCP-120",
       "title": "Bound extension runtime audit persistence",
       "risk": "high",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -6778,7 +6778,7 @@
       "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "a6cb64991d89bd70c1f7304862eaf58eefa5bb7d",
       "resume_branch": "feature/wcp-120-runtime-audit-boundary-g1",
       "proposal_kind": "worker_only",
       "collision_check": {
@@ -6790,8 +6790,24 @@
         ]
       },
       "claimed_on": "2026-09-26T11:22:18.097Z",
-      "claim_state": "active_worker_claim",
-      "next_action": "Implement only the two allowlisted files, open a Worker PR, run exact-head full CI and retain the claim until Trusted resolution."
+      "claim_state": "locked_until_trusted_resolution",
+      "next_action": "Remain claim-locked while awaiting Trusted review; do not merge or deploy from the Worker repository.",
+      "worker_pr": 85,
+      "final_head": "a6cb64991d89bd70c1f7304862eaf58eefa5bb7d",
+      "ci_run_id": 36238700065,
+      "ci_result": "success",
+      "completed_on": "2026-09-26T11:26:23.688Z",
+      "final_changed_paths": [
+        "src/ExtensionRuntime/ExtensionRuntimeAudit.php",
+        "tests/ExtensionRuntime/ExtensionRuntimeAuditBoundaryTest.php"
+      ],
+      "test_evidence": [
+        "Targeted ExtensionRuntimeAudit boundary coverage passed for bounded valid records, append preservation, malformed/oversized/control-safe event fields, unsafe paths and bounded audit-file growth.",
+        "Existing ExtensionRuntimeSecurity audit tests passed, including symlink rejection and no-payload/no-secret field assertions.",
+        "Exact-head Worker CI run 36238700065 succeeded.",
+        "PHP/Symfony validation and application-test job 108395094136 succeeded.",
+        "PostgreSQL migration chain job 108395094078 succeeded."
+      ]
     },
     {
       "priority": 73,
