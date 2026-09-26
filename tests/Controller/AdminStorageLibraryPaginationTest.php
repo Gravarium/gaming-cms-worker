@@ -82,7 +82,9 @@ final class AdminStorageLibraryPaginationTest extends WebTestCase
         self::assertNotNull($folderId);
 
         $this->persistAssets($client, $needle, 25, $folder, 'content', 'internal', 'text/plain');
-        $this->asset($needle.'-outside-folder', null);
+        $outsideFolder = $this->asset($needle.'-outside-folder', null);
+        $this->em($client)->persist($outsideFolder);
+        $this->em($client)->flush();
 
         $client->loginUser($this->user($client, [CmsPermission::STORAGE]));
         $query = [
