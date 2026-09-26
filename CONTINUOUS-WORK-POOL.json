@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-26T11:20:05.652Z",
+  "published_at": "2026-09-26T11:20:31.905Z",
   "summary": {
     "total_remaining_worker_tasks": 71,
-    "completed_worker_prs_awaiting_trusted_review": 64,
+    "completed_worker_prs_awaiting_trusted_review": 65,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-300 is complete with exact-head green CI and remains locked. Continue independent work from the current pool while preserving the active WCP-118 and WCP-119 claims and all completed claim locks.",
+    "next_required_action": "Continue independent Worker proposal work while preserving WCP-118 and all foreign/completed claim locks; after each exact-head green CI reconcile and continue.",
     "composition_preparable": 0,
     "immediately_actionable": 1,
     "must_continue": true
@@ -6394,7 +6394,7 @@
       "package_id": "WCP-118",
       "title": "Bound extension outbound HTTPS URL policy",
       "risk": "critical",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -6460,7 +6460,7 @@
       "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "bb1b596b1d87aa603ffce8383af5f7773c8080ea",
       "resume_branch": "feature/wcp-118-extension-outbound-url-boundary-g1",
       "proposal_kind": "worker_only",
       "collision_check": {
@@ -6472,8 +6472,28 @@
         ]
       },
       "claimed_on": "2026-09-26T11:09:06.615Z",
-      "claim_state": "active_worker_claim",
-      "next_action": "Implement only the two allowlisted files, open a Worker PR, run exact-head full CI and retain the claim until Trusted resolution."
+      "claim_state": "locked_until_trusted_resolution",
+      "next_action": "Remain claim-locked while awaiting Trusted review; do not merge or deploy from the Worker repository.",
+      "worker_pr": 82,
+      "final_head": "bb1b596b1d87aa603ffce8383af5f7773c8080ea",
+      "ci_run_id": 36238362932,
+      "ci_result": "success",
+      "initial_ci_run_id": 36238200955,
+      "initial_ci_result": "phpstan_failed_redundant_and_missing_type_checks_fixed",
+      "corrective_ci_run_id": 36238321232,
+      "corrective_ci_result": "phpstan_failed_redundant_path_type_check_fixed",
+      "completed_on": "2026-09-26T11:20:31.905Z",
+      "final_changed_paths": [
+        "src/ExtensionRuntime/ExtensionOutboundUrlPolicy.php",
+        "tests/ExtensionRuntime/ExtensionOutboundUrlPolicyBoundaryTest.php"
+      ],
+      "test_evidence": [
+        "Targeted ExtensionOutboundUrlPolicy boundary coverage passed for public literal and injected DNS pinning, duplicate collapse, malformed URL/host/path/UTF-8 rejection, protected resolved addresses and DNS/address bounds.",
+        "Existing ExtensionRuntimeSecurity tests passed, including protected networks and public literal approval.",
+        "Exact-head Worker CI run 36238362932 succeeded after two PHPStan-only structural corrections.",
+        "PHP/Symfony validation and application-test job 108394192450 succeeded.",
+        "PostgreSQL migration chain job 108394192359 succeeded."
+      ]
     },
     {
       "priority": 70,
