@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-26T22:18:37.023Z",
+  "published_at": "2026-09-26T22:24:27.192Z",
   "summary": {
     "total_remaining_worker_tasks": 134,
     "completed_worker_prs_awaiting_trusted_review": 187,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-418 is reserved on exact sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d; test module-manager permission denial and a valid-token toggle with state restoration in its exclusive test file.",
+    "next_required_action": "WCP-419 is reserved on exact sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d; add focused account password-change/session invalidation tests in its exclusive path and run exact-head Worker CI.",
     "composition_preparable": 0,
     "immediately_actionable": 0,
     "must_continue": true
@@ -21116,6 +21116,92 @@
         "Awaiting Trusted review and Trusted integration CI."
       ],
       "trusted_follow_up": "Preserve CMS_SETTINGS_MANAGE authorization and CSRF validation for module mutations when porting or changing module administration in Trusted; run full Trusted CI."
+    },
+    {
+      "priority": 199,
+      "package_id": "WCP-419",
+      "title": "Guard account password changes and session revocation",
+      "risk": "low",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-419-account-security-g1",
+      "suggested_branch": "feature/wcp-419-account-security-g1",
+      "base_branch": "main",
+      "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "objective": "Add focused functional security coverage for the authenticated account password-change flow. Prove invalid CSRF and an incorrect current password cannot change the password or revoke sessions/reset tokens, and a valid change updates the credential, revokes active sessions and invalidates outstanding password-reset tokens. Keep the package test-only.",
+      "allowed_paths": [
+        "tests/Controller/AccountSecurityManagementTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/",
+        "src/",
+        "templates/",
+        "assets/",
+        "public/"
+      ],
+      "deliverables": [
+        "Unauthenticated account security access redirects to login.",
+        "Invalid CSRF and incorrect current password leave stored credentials, session revocation state, and reset tokens unchanged.",
+        "Valid current password change updates the hash, revokes active sessions, and invalidates reset tokens.",
+        "Only tests/Controller/AccountSecurityManagementTest.php changes."
+      ],
+      "tests": [
+        "php bin/phpunit tests/Controller/AccountSecurityManagementTest.php",
+        "PHPStan level 8 and complete Worker CI on the exact final HEAD, including PostgreSQL 18 migration-chain checks."
+      ],
+      "completion_report": [
+        "Exact final Worker HEAD and sanitized main base SHA.",
+        "Complete changed-file list and Worker PR.",
+        "Invalid-current-password, CSRF and successful password-change/session/token results.",
+        "Exact-head PHPStan and complete Worker CI results.",
+        "Confirmation that only the allowed test path changed."
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "preserve-account-authentication-CSRF-session-revocation-and-reset-token protections",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "proposal_kind": "worker_only",
+      "collision_check": {
+        "compared_against": "Latest pool blob 0690284d5d8f8c286a0afee20d99897e368beb01, every active and claim-locked allowlist, and exact sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d.",
+        "result": "No active or locked claim owns tests/Controller/AccountSecurityManagementTest.php. The existing AccountRecoveryControllerTest covers public password-reset and verification token flows, but not the authenticated /account/security password-change path that checks the current password, invalidates sessions, revokes reset tokens, and rotates the requesting session. Static SecurityArchitectureTest checks passkey/controller structure, not this user password-change behavior. The target test file is absent on main; recent WCP-416 public guild visibility and WCP-417/418 administration-security claims use disjoint paths.",
+        "paths": [
+          "tests/Controller/AccountSecurityManagementTest.php"
+        ]
+      },
+      "claimed_on": "2026-09-26T22:24:27.192Z",
+      "claim_state": "active",
+      "active_base_branch": "main",
+      "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "resume_branch": "feature/wcp-419-account-security-g1",
+      "last_checkpoint_at": "2026-09-26T22:24:27.192Z",
+      "last_verified_push_at": "2026-09-26T22:24:27.192Z",
+      "checkpoint_paths": [],
+      "branch_heads": {
+        "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+        "feature_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d"
+      },
+      "next_action": "Add authenticated account password-change regressions for invalid CSRF, wrong current password, and successful session/reset-token invalidation in the single allowed file; then open a Worker PR."
     }
   ],
   "recovery_queue": [],
