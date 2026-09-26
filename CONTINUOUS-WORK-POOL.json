@@ -10,7 +10,7 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-26T18:58:27.391Z",
+  "published_at": "2026-09-26T18:58:40.533Z",
   "summary": {
     "total_remaining_worker_tasks": 131,
     "completed_worker_prs_awaiting_trusted_review": 153,
@@ -16306,6 +16306,100 @@
       "last_verified_push_at": "2026-09-26T18:56:21.965Z",
       "worker_pr": 172,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/172"
+    },
+    {
+      "priority": 160,
+      "package_id": "WCP-380",
+      "title": "Keep generated taxonomy slugs bounded and unique",
+      "risk": "medium",
+      "execution_state": "worker_in_progress",
+      "dependencies": [
+        "WCP-303"
+      ],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-380-taxonomy-slug-uniqueness-g1",
+      "suggested_branch": "feature/wcp-380-taxonomy-slug-uniqueness-g1",
+      "base_branch": "feature/wcp-303-taxonomy-slug-boundary-g1",
+      "base_sha": "ac929985bfe1b82bbc5b063c37c4f16c8e6d929f",
+      "objective": "Complete the WCP-303 taxonomy slug boundary by making category and content-tag creation/editing generate a bounded slug before uniqueness lookup. Long valid names whose transliteration expands must not become a 500, and duplicate bounded slugs must retain a suffix within the existing 120-character limit.",
+      "allowed_paths": [
+        "src/Controller/AdminCategoryController.php",
+        "src/Controller/AdminContentTagController.php",
+        "tests/Controller/TaxonomySlugUniquenessTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/",
+        "src/Entity/",
+        "src/Repository/",
+        "src/Form/",
+        "templates/",
+        "public/",
+        "assets/"
+      ],
+      "deliverables": [
+        "Cap transliterated category and tag slug bases to the existing 120-character database/entity boundary before repository uniqueness checks.",
+        "When a candidate collides, reserve enough base width for its numeric suffix so every lookup and persisted slug remains valid and at most 120 characters.",
+        "Add functional regressions for both admin creation routes using a valid 100-character name whose transliteration expands; repeated names produce distinct bounded slugs without changing authorization, CSRF or validation."
+      ],
+      "tests": [
+        "php bin/phpunit tests/Controller/TaxonomySlugUniquenessTest.php.",
+        "PHPStan level 8.",
+        "Complete Worker CI on the exact final HEAD, including database migration-chain checks."
+      ],
+      "completion_report": [
+        "exact final Worker HEAD and WCP-303 exact green proposal base SHA",
+        "complete changed-file list and Worker PR",
+        "category and tag long-name plus duplicate-slug regression results",
+        "exact-head PHPStan and complete Worker CI results",
+        "confirmation authorization, CSRF, input validation and taxonomy entity policy are unchanged"
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "no-private-runtime-or-secret-export",
+        "preserve CMS_CONTENT_MANAGE authorization, CSRF, form/entity validation and WCP-303's strict slug boundary",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
+      ],
+      "proposal_base_branch": "feature/wcp-303-taxonomy-slug-boundary-g1",
+      "proposal_base_sha": "ac929985bfe1b82bbc5b063c37c4f16c8e6d929f",
+      "active_base_branch": "feature/wcp-303-taxonomy-slug-boundary-g1",
+      "active_base_sha": "ac929985bfe1b82bbc5b063c37c4f16c8e6d929f",
+      "active_head": "ac929985bfe1b82bbc5b063c37c4f16c8e6d929f",
+      "resume_branch": "feature/wcp-380-taxonomy-slug-uniqueness-g1",
+      "proposal_kind": "worker_only",
+      "collision_check": {
+        "compared_against": "all current continuous/work-pool-v4 allowed-path scopes through WCP-379 and exact files on the exact green WCP-303 HEAD ac929985bfe1b82bbc5b063c37c4f16c8e6d929f",
+        "result": "No exact-path or enclosing-scope collision. WCP-303 changes only Category/ContentTag entities and tests/Entity/ContentTaxonomyTest.php; this package is limited to the two admin controller paths and one new Controller test, absent from its exact base. No migrations, repositories, forms, templates, security, or runtime policy are changed.",
+        "paths": [
+          "src/Controller/AdminCategoryController.php",
+          "src/Controller/AdminContentTagController.php",
+          "tests/Controller/TaxonomySlugUniquenessTest.php"
+        ]
+      },
+      "claimed_on": "2026-09-26T18:58:40.533Z",
+      "claim_state": "active",
+      "last_checkpoint_at": "2026-09-26T18:58:40.533Z",
+      "next_action": "Implement suffix-aware 120-character slug generation in both controllers, add functional long-transliteration and duplicate regressions, then run targeted tests and exact-head Worker CI.",
+      "checkpoint_paths": [
+        "src/Controller/AdminCategoryController.php",
+        "src/Controller/AdminContentTagController.php",
+        "tests/Controller/TaxonomySlugUniquenessTest.php"
+      ]
     }
   ],
   "recovery_queue": [],
