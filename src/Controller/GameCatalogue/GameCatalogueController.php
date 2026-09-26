@@ -5,9 +5,7 @@ declare(strict_types=1);
 namespace App\Controller\GameCatalogue;
 
 use App\Entity\GameCatalogue\GameCatalogueEntry;
-use App\Entity\GameCatalogue\GameGenre;
 use App\Entity\GameCatalogue\GameHubLink;
-use App\Entity\GameCatalogue\GamePlatform;
 use App\Module\CmsModuleManager;
 use App\Repository\GameCatalogue\GameCatalogueEntryRepository;
 use App\Repository\GameCatalogue\GameReleaseRepository;
