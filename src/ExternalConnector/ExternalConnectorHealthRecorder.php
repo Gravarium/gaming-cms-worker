@@ -18,6 +18,10 @@ final readonly class ExternalConnectorHealthRecorder
 
     public function record(ExternalConnectorExecutionSummary $summary): void
     {
+        if ($summary->results === []) {
+            return;
+        }
+
         $checkedAt = new \DateTimeImmutable();
         foreach ($summary->results as $result) {
             $status = $this->statuses->findOneBy([
