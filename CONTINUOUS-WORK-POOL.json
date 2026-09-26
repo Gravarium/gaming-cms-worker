@@ -10,16 +10,16 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-26T10:13:28.317Z",
+  "published_at": "2026-09-26T10:15:28.037Z",
   "summary": {
     "total_remaining_worker_tasks": 52,
-    "completed_worker_prs_awaiting_trusted_review": 45,
+    "completed_worker_prs_awaiting_trusted_review": 46,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "Continue WCP-102 on its exclusive execution-summary boundary claim while preserving WCP-098 and WCP-101 foreign claims plus all completed foreign claim locks; after exact-head green CI, reconcile and continue independently.",
+    "next_required_action": "Continue WCP-102 on its exclusive execution-summary boundary claim while preserving WCP-098 and WCP-101 completed foreign claim locks plus all other completed foreign claim locks; after exact-head green CI, reconcile and continue independently.",
     "composition_preparable": 0,
-    "immediately_actionable": 2,
+    "immediately_actionable": 1,
     "must_continue": true
   },
   "rules": {
@@ -4484,7 +4484,7 @@
       "package_id": "WCP-101",
       "title": "Bound external mail message inputs",
       "risk": "high",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -4525,10 +4525,11 @@
         "complete Worker CI on the exact final HEAD"
       ],
       "completion_report": [
-        "exact final Worker HEAD and sanitized base SHA",
-        "complete changed-path list and Worker PR",
-        "targeted tests plus complete Worker CI result",
-        "mail-header safety, payload-size and deferred Fortress connector-boundary risks"
+        "exact final Worker HEAD 3ca29f0317b538bec9910c6ff039463978eb334f on sanitized base f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+        "changed paths: src/ExternalConnector/ExternalMailMessage.php; tests/ExternalConnector/ExternalMailMessageTest.php",
+        "targeted ExternalMailMessage tests plus exact-head Worker CI run 36235077082 passed",
+        "preserved external mail adapter routing, AccountMailer payload compatibility, valid multiline text and optional HTML semantics",
+        "remaining risk: provider-specific mail-header semantics and private/Fortress connector ownership remain outside this Worker package"
       ],
       "immutable_constraints": [
         "trusted-main-is-the-only-integration-and-deployment-source",
@@ -4543,7 +4544,7 @@
       "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "3ca29f0317b538bec9910c6ff039463978eb334f",
       "resume_branch": "feature/wcp-101-mail-message-boundary-g1",
       "proposal_kind": "worker_only",
       "collision_check": {
@@ -4554,7 +4555,24 @@
           "tests/ExternalConnector/ExternalMailMessageTest.php"
         ]
       },
-      "claimed_on": "2026-09-26T10:08:22.616Z"
+      "claimed_on": "2026-09-26T10:08:22.616Z",
+      "worker_pr": 64,
+      "final_head": "3ca29f0317b538bec9910c6ff039463978eb334f",
+      "ci_run_id": 36235077082,
+      "ci_result": "success",
+      "claim_state": "locked_until_trusted_resolution",
+      "completed_on": "2026-09-26T10:15:28.037Z",
+      "next_action": "Remain claim-locked while awaiting Trusted review; do not merge or deploy from the Worker repository.",
+      "final_changed_paths": [
+        "src/ExternalConnector/ExternalMailMessage.php",
+        "tests/ExternalConnector/ExternalMailMessageTest.php"
+      ],
+      "test_evidence": [
+        "Targeted ExternalMailMessage PHPUnit coverage passed for recipient normalization/deduplication, optional HTML, multiline text, malformed UTF-8, control/header injection and size-bound rejection.",
+        "Exact-head Worker CI run 36235077082 succeeded.",
+        "PostgreSQL migration chain job 108385274671 succeeded.",
+        "PHP/Symfony validation and application-test job 108385274797 succeeded."
+      ]
     },
     {
       "priority": 52,
