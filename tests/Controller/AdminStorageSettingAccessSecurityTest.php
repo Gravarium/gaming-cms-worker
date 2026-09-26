@@ -42,6 +42,7 @@ final class AdminStorageSettingAccessSecurityTest extends WebTestCase
         $client->loginUser($this->createUser($client, 'storage-csrf', [CmsPermission::STORAGE]));
 
         foreach ([null, 'forged-token'] as $token) {
+            /** @var array<string, string> $formData */
             $formData = [
                 'storageMode' => ModuleStorageSetting::MODE_EXTERNAL,
                 'externalBaseUrl' => 'https://forged.example.test/downloads',
