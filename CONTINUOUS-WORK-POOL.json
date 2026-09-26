@@ -10,10 +10,10 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-26T13:36:08.003Z",
+  "published_at": "2026-09-26T13:36:50.088Z",
   "summary": {
     "total_remaining_worker_tasks": 107,
-    "completed_worker_prs_awaiting_trusted_review": 100,
+    "completed_worker_prs_awaiting_trusted_review": 101,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
@@ -10360,7 +10360,7 @@
       "package_id": "WCP-325",
       "title": "Bound CMS access role key persistence",
       "risk": "medium",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -10438,9 +10438,9 @@
         ]
       },
       "claimed_on": "2026-09-26T13:30:31.499Z",
-      "claim_state": "active_worker_claim",
-      "last_checkpoint_at": "2026-09-26T13:34:39.969Z",
-      "next_action": "Complete Worker CI run 36245613505 on exact HEAD f6229b64a986cdd10c372ca78ac6a19d453e5d95; repair failures only within the two allowed paths, then reconcile exact-head evidence.",
+      "claim_state": "locked_until_trusted_resolution",
+      "last_checkpoint_at": "2026-09-26T13:36:50.088Z",
+      "next_action": "Await Trusted review; keep the claim locked and do not merge or deploy.",
       "checkpoint_paths": [
         "src/Entity/AccessRole.php",
         "tests/Entity/AccessRoleKeyBoundaryTest.php"
@@ -10449,7 +10449,21 @@
       "worker_pr": 119,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/119",
       "ci_run_id": 36245613505,
-      "ci_status": "queued"
+      "pr_state": "open_ready_for_review",
+      "final_head": "f6229b64a986cdd10c372ca78ac6a19d453e5d95",
+      "ci_result": "success",
+      "completed_on": "2026-09-26T13:36:50.088Z",
+      "final_changed_paths": [
+        "src/Entity/AccessRole.php",
+        "tests/Entity/AccessRoleKeyBoundaryTest.php"
+      ],
+      "test_evidence": [
+        "Worker CI run 36245613505 (#412) succeeded on exact final HEAD f6229b64a986cdd10c372ca78ac6a19d453e5d95.",
+        "PHP/Symfony job 108414134721 passed PHPStan level 8 and the complete worker-visible application suite: 432 tests and 1,872 assertions; one PHPUnit deprecation and one notice were reported.",
+        "PostgreSQL 18 job 108414134893 applied and verified all 39 migrations with no pending migrations.",
+        "The first CI attempt exposed an incorrect test byte-count assumption for é (two bytes); the test now uses a four-byte character and the corrected exact-head run is green. No product-code change was needed for that correction.",
+        "PR #119 is open and ready for review. Exact comparison against sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d contains only src/Entity/AccessRole.php and tests/Entity/AccessRoleKeyBoundaryTest.php."
+      ]
     },
     {
       "priority": 106,
