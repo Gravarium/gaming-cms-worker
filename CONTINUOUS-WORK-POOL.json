@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-26T20:56:02.864Z",
+  "published_at": "2026-09-26T20:58:48.551Z",
   "summary": {
     "total_remaining_worker_tasks": 134,
     "completed_worker_prs_awaiting_trusted_review": 173,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-404 PR #198 is complete on exact green HEAD 2d66654dd19bf1bee4f6bae5f72f3c2e5020d1b5 (CI 36271039257); claim remains locked. Re-evaluate the latest pool and continue with the next dependency-safe Worker proposal.",
+    "next_required_action": "WCP-405 is reserved on sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d; implement the member-owned guild character profile edit flow in its five allowlisted paths.",
     "composition_preparable": 0,
     "immediately_actionable": 0,
     "must_continue": true
@@ -19234,6 +19234,103 @@
       "final_head": "2d66654dd19bf1bee4f6bae5f72f3c2e5020d1b5",
       "ci_run_id": 36271039257,
       "ci_result": "success"
+    },
+    {
+      "priority": 185,
+      "package_id": "WCP-405",
+      "title": "Let members edit their own guild character profiles",
+      "risk": "medium",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-405-guild-character-profile-self-service-g1",
+      "suggested_branch": "feature/wcp-405-guild-character-profile-self-service-g1",
+      "base_branch": "main",
+      "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "objective": "Complete the missing self-service path from the guild portal’s own-character list to editing a member’s character name and class. Keep rank, player name, level, leader, active state, guild and account ownership outside the editable form. Require an active member row owned by the authenticated user in the route guild; use CSRF-protected form validation and return 404 for foreign, cross-guild or inactive rows. Record only a generic audit summary without character values. No schema change.",
+      "allowed_paths": [
+        "src/Controller/GuildCharacterProfileController.php",
+        "src/Form/GuildCharacterProfileType.php",
+        "templates/guild_portal/show.html.twig",
+        "templates/guild_portal/character_edit.html.twig",
+        "tests/Controller/GuildCharacterProfileTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "src/Entity/",
+        "src/Repository/",
+        "config/",
+        "assets/",
+        "public/"
+      ],
+      "deliverables": [
+        "Add an edit link for each of the authenticated member’s own active characters in the guild portal.",
+        "Add an authenticated character-profile editor limited to character name and optional class, with server-side NotBlank/Length validation and visible HTML maxlength values.",
+        "Require the character to be active and owned by the current user in the route guild; return 404 for foreign-user, cross-guild and inactive membership IDs.",
+        "Use the Symfony form’s CSRF protection; invalid, missing or forged privileged form fields must not persist changes.",
+        "Audit successful profile updates with a generic summary that contains neither old nor new character values.",
+        "Keep privileged character attributes and schema unchanged."
+      ],
+      "tests": [
+        "php bin/phpunit tests/Controller/GuildCharacterProfileTest.php",
+        "Verify the portal link, authenticated owner GET, valid update persistence and return navigation.",
+        "Verify anonymous, other-user, cross-guild and inactive-member requests are denied without mutation.",
+        "Verify missing/invalid CSRF, blank and over-limit Unicode inputs, and forged rank/level/player/leader/active/ownership fields fail without changing the row.",
+        "Verify only name/class are rendered and the audit summary omits character values.",
+        "PHPStan level 8 and complete Worker CI on the exact final HEAD, including PostgreSQL 18 migration-chain checks."
+      ],
+      "completion_report": [
+        "Exact sanitized Worker main base and final feature HEAD.",
+        "Complete changed-file list, Worker PR and exact-head CI run.",
+        "Owner and cross-guild authorization, CSRF, validation and forged-field regression results.",
+        "Open scope limits and Trusted/Fortress follow-up for ownership policy mapping."
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "preserve-guild-member-ownership-active-membership-and-CSRF-protection",
+        "keep-rank-and-administrative-character-fields-out-of-member-self-service",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_base_branch": "main",
+      "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "resume_branch": "feature/wcp-405-guild-character-profile-self-service-g1",
+      "proposal_kind": "worker_only",
+      "collision_check": {
+        "compared_against": "Fresh continuous/work-pool-v4 blob 51136b91267bd01e9c22cd6409986732f9cc640a, all active and claim-locked allowlists, and exact sanitized Worker main f1a246c64527ef3ad51f7490773d9bbf9d42be5d.",
+        "result": "No active or claim-locked task owns the five exact paths. WCP-395 edits guild_portal/index.html.twig, while this proposal touches show.html.twig and a new character edit template; WCP-398 is a separate calendar-security test, and active WCP-401/402/403/404 use disjoint paths. FCP-072 has an unclaimed, dependency-blocked templates/ wildcard, but no active branch or claim; this package makes only the named guild portal templates changes. No migration, shared DI or schema work is included.",
+        "paths": [
+          "src/Controller/GuildCharacterProfileController.php",
+          "src/Form/GuildCharacterProfileType.php",
+          "templates/guild_portal/show.html.twig",
+          "templates/guild_portal/character_edit.html.twig",
+          "tests/Controller/GuildCharacterProfileTest.php"
+        ]
+      },
+      "claimed_on": "2026-09-26T20:58:48.551Z",
+      "claim_state": "active",
+      "next_action": "Implement the owner-scoped character editor and guild portal link within the five allowed paths; checkpoint a coherent commit before continuing.",
+      "branch_heads": {
+        "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+        "feature_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d"
+      }
     }
   ],
   "recovery_queue": [],
