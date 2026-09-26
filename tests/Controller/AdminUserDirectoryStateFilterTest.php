@@ -6,9 +6,10 @@ namespace App\Tests\Controller;
 
 use App\Entity\User;
 use App\Security\CmsPermission;
+use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\DomCrawler\Crawler;
 
 final class AdminUserDirectoryStateFilterTest extends WebTestCase
@@ -21,12 +22,12 @@ final class AdminUserDirectoryStateFilterTest extends WebTestCase
         $manager = $this->createUser($client, $scope, 'manager', [CmsPermission::USERS]);
         $enabled = $this->createUser($client, $scope, 'enabled');
         $currentlyLocked = $this->createUser($client, $scope, 'currently-locked')
-            ->setLockedUntil(new \\DateTimeImmutable('+1 day'));
+            ->setLockedUntil(new DateTimeImmutable('+1 day'));
         $disabledWithExpiredLock = $this->createUser($client, $scope, 'disabled-expired-lock')
             ->setActive(false)
-            ->setLockedUntil(new \\DateTimeImmutable('-1 day'));
+            ->setLockedUntil(new DateTimeImmutable('-1 day'));
         $enabledWithExpiredLock = $this->createUser($client, $scope, 'enabled-expired-lock')
-            ->setLockedUntil(new \\DateTimeImmutable('-1 day'));
+            ->setLockedUntil(new DateTimeImmutable('-1 day'));
         $this->entityManager($client)->flush();
 
         $client->loginUser($manager);
