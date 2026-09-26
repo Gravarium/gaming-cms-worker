@@ -42,7 +42,7 @@ final class AdminNotificationRepository extends ServiceEntityRepository
         $query = trim($query);
         if ($query !== '') {
             $builder
-                ->andWhere('LOWER(notification.title) LIKE :query OR LOWER(notification.message) LIKE :query OR LOWER(notification.type) LIKE :query')
+                ->andWhere('(LOWER(notification.title) LIKE :query OR LOWER(notification.message) LIKE :query OR LOWER(notification.type) LIKE :query)')
                 ->setParameter('query', '%'.mb_strtolower($query).'%');
         }
 
