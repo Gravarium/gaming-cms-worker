@@ -10,10 +10,10 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-26T13:41:04.062Z",
+  "published_at": "2026-09-26T13:42:25.416Z",
   "summary": {
     "total_remaining_worker_tasks": 108,
-    "completed_worker_prs_awaiting_trusted_review": 102,
+    "completed_worker_prs_awaiting_trusted_review": 103,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
@@ -10581,7 +10581,7 @@
       "package_id": "WCP-327",
       "title": "Bound user display-name persistence",
       "risk": "medium",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -10658,9 +10658,9 @@
         ]
       },
       "claimed_on": "2026-09-26T13:38:45.457Z",
-      "claim_state": "active_worker_claim",
-      "last_checkpoint_at": "2026-09-26T13:40:20.673Z",
-      "next_action": "Complete Worker CI run 36245928907 on exact HEAD eb451ceaf8bb695ed08afc6d593b031bc8cedf55; repair failures only within the two allowed paths, then reconcile exact-head evidence.",
+      "claim_state": "locked_until_trusted_resolution",
+      "last_checkpoint_at": "2026-09-26T13:42:25.416Z",
+      "next_action": "Await Trusted review; keep the claim locked and do not merge or deploy.",
       "checkpoint_paths": [
         "src/Entity/User.php",
         "tests/Entity/UserDisplayNameBoundaryTest.php"
@@ -10669,7 +10669,20 @@
       "worker_pr": 121,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/121",
       "ci_run_id": 36245928907,
-      "ci_status": "queued"
+      "pr_state": "open_ready_for_review",
+      "final_head": "eb451ceaf8bb695ed08afc6d593b031bc8cedf55",
+      "ci_result": "success",
+      "completed_on": "2026-09-26T13:42:25.416Z",
+      "final_changed_paths": [
+        "src/Entity/User.php",
+        "tests/Entity/UserDisplayNameBoundaryTest.php"
+      ],
+      "test_evidence": [
+        "Worker CI run 36245928907 (#414) succeeded on exact final HEAD eb451ceaf8bb695ed08afc6d593b031bc8cedf55.",
+        "PHP/Symfony job 108414996963 passed PHPStan level 8 and the complete worker-visible application suite: 432 tests and 1,873 assertions; one PHPUnit deprecation and one notice were reported.",
+        "PostgreSQL 18 job 108414996773 applied and verified all 39 migrations with no pending migrations.",
+        "PR #121 is open and ready for review. Exact comparison against sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d contains only src/Entity/User.php and tests/Entity/UserDisplayNameBoundaryTest.php."
+      ]
     }
   ],
   "recovery_queue": [],
