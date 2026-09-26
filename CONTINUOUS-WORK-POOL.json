@@ -10,16 +10,16 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-26T13:06:37.642Z",
+  "published_at": "2026-09-26T13:09:02.927Z",
   "summary": {
     "total_remaining_worker_tasks": 99,
-    "completed_worker_prs_awaiting_trusted_review": 92,
+    "completed_worker_prs_awaiting_trusted_review": 93,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
     "next_required_action": "Monitor WCP-318 exact-head CI run 36244183905; reconcile only after complete green CI.",
     "composition_preparable": 0,
-    "immediately_actionable": 1,
+    "immediately_actionable": 0,
     "must_continue": true
   },
   "rules": {
@@ -9497,7 +9497,7 @@
       "package_id": "WCP-317",
       "title": "Bound game slug to its persistence column",
       "risk": "medium",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -9575,9 +9575,9 @@
         ]
       },
       "claimed_on": "2026-09-26T13:05:22.327Z",
-      "claim_state": "active_worker_claim",
-      "last_checkpoint_at": "2026-09-26T13:06:22.757Z",
-      "next_action": "Complete Worker CI on exact HEAD 7a7f931bd6a13cec5789253aae54264dc98305c3; repair any failures only within the two allowlisted files, then reconcile exact-head evidence.",
+      "claim_state": "locked_until_trusted_resolution",
+      "last_checkpoint_at": "2026-09-26T13:09:02.927Z",
+      "next_action": "Worker PR #111 is ready for trusted review; retain this claim lock until Trusted resolution.",
       "last_verified_push_at": "2026-09-26T13:06:22.757Z",
       "checkpoint_paths": [
         "src/Entity/Game.php",
@@ -9586,7 +9586,19 @@
       "worker_pr": 111,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/111",
       "ci_run_id": 36244055717,
-      "ci_status": "in_progress"
+      "final_head": "7a7f931bd6a13cec5789253aae54264dc98305c3",
+      "ci_result": "success",
+      "completed_on": "2026-09-26T13:09:02.927Z",
+      "final_changed_paths": [
+        "src/Entity/Game.php",
+        "tests/Entity/GameSlugBoundaryTest.php"
+      ],
+      "test_evidence": [
+        "Exact-head Worker CI run 36244055717 succeeded on 7a7f931bd6a13cec5789253aae54264dc98305c3.",
+        "PHPStan level 8 completed with no errors; PHPUnit completed 432 tests and 1,869 assertions (one deprecation and one notice reported).",
+        "PostgreSQL 18 migration job succeeded with 39 migrations executed and no pending migrations.",
+        "Exact comparison against sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d contains only the two WCP-317 allowlisted paths."
+      ]
     },
     {
       "priority": 99,
