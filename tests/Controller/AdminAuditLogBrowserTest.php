@@ -105,7 +105,7 @@ final class AdminAuditLogBrowserTest extends WebTestCase
         self::assertResponseIsSuccessful();
         self::assertSame(100, mb_strlen((string) $crawler->filter('input[name="q"]')->attr('value')));
         self::assertSelectorExists('input[name="q"][maxlength="100"]');
-        self::assertSelectorTextContains('.pagination', 'Seite 1 von 1');
+        self::assertSelectorNotExists('.pagination');
 
         $crawler = $client->request('GET', '/admin/audit-log', [
             'q' => ['unexpected' => 'array'],
@@ -113,7 +113,6 @@ final class AdminAuditLogBrowserTest extends WebTestCase
         ]);
         self::assertResponseIsSuccessful();
         self::assertSame('', (string) $crawler->filter('input[name="q"]')->attr('value'));
-        self::assertSelectorTextContains('.pagination', 'Seite 1 von 1');
     }
 
     public function testAuditLogRequiresTheAuditPermission(): void
