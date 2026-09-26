@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-26T20:50:12.004Z",
+  "published_at": "2026-09-26T20:51:51.710Z",
   "summary": {
     "total_remaining_worker_tasks": 134,
     "completed_worker_prs_awaiting_trusted_review": 171,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-404 is reserved on sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d; add the focused competition detail visibility regression and run exact-head Worker CI.",
+    "next_required_action": "WCP-402 PR #196 is at 4f60a8f47c75efd8a50414718299021f6508beba; exact-head CI run 36270962369 is queued after fixing the DQL root-selection failure.",
     "composition_preparable": 0,
     "immediately_actionable": 0,
     "must_continue": true
@@ -18955,8 +18955,8 @@
       },
       "claimed_on": "2026-09-26T20:40:45.660Z",
       "claim_state": "active",
-      "last_checkpoint_at": "2026-09-26T20:48:52.091Z",
-      "next_action": "Monitor exact-head Worker CI run 36270789321; inspect failures and repair them on the same feature branch without weakening tests, PHPStan, security or migrations.",
+      "last_checkpoint_at": "2026-09-26T20:51:51.710Z",
+      "next_action": "Wait for exact-head Worker CI run 36270962369; confirm targeted/full tests, PHPStan and PostgreSQL 18 migration chain pass on the new head.",
       "checkpoint_paths": [
         "src/Controller/PublicContentReleaseController.php",
         "src/Repository/ContentReleaseRepository.php",
@@ -18965,18 +18965,27 @@
         "templates/content/news.html.twig",
         "tests/Controller/PublicContentReleaseTest.php"
       ],
-      "last_verified_push_at": "2026-09-26T20:48:13.531Z",
+      "last_verified_push_at": "2026-09-26T20:51:51.710Z",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-      "active_head": "39f3827f63d9e82feb917fdadcdc205e4b9c5e75",
+      "active_head": "4f60a8f47c75efd8a50414718299021f6508beba",
       "resume_branch": "feature/wcp-402-public-content-release-archive-g1",
       "trusted_follow_up": "Transfer the route, repository visibility predicates, templates, news-list link and functional tests into a fresh Trusted feature branch. Preserve the same release/entry visibility predicates, no-store policy and CMS public route boundaries; run full Trusted CI.",
       "fortress_boundary": "Keep public-release eligibility in the module repository/controller boundary and return only ContentRelease and ContentEntry records already eligible for public display. Do not expose admin/audit author relations or add a second authorization model; this leaves the module boundary clear for future Fortress policy enforcement.",
       "worker_pr": 196,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/196",
       "pr_state": "open_draft",
-      "last_ci_run_id": 36270789321,
-      "last_ci_result": "in_progress"
+      "last_ci_run_id": 36270962369,
+      "last_ci_result": "queued",
+      "ci_attempts": [
+        {
+          "run_id": 36270789321,
+          "head": "39f3827f63d9e82feb917fdadcdc205e4b9c5e75",
+          "result": "failure",
+          "cause": "The release-detail functional test exposed invalid DQL: SELECT entry selected a joined entity without selecting a root alias. The repository query now roots the DQL in ContentEntry and explicitly joins the published release's entries collection."
+        }
+      ],
+      "last_failure_diagnosis": "Exact-head run 36270789321 passed PHPStan, Twig, container and PostgreSQL 18 migrations, then the detail functional test returned 500 because DQL selected only joined alias entry. Fixed on the same branch by making ContentEntry a root and joining the release relation; full CI is queued on 4f60a8f47c75efd8a50414718299021f6508beba."
     },
     {
       "priority": 183,
