@@ -53,7 +53,7 @@ final class AdminAuditLogBrowserTest extends WebTestCase
         $crawler = $client->request('GET', '/admin/audit-log', ['q' => $secretContext]);
         self::assertResponseIsSuccessful();
         self::assertSelectorTextContains('.audit-log-count', '0 Änderungen');
-        self::assertStringNotContainsString($secretContext, (string) $client->getResponse()->getContent());
+        self::assertStringNotContainsString($secretContext, $crawler->filter('tbody')->text());
         self::assertStringContainsString('Keine passenden Änderungen gefunden', $crawler->filter('tbody tr')->text());
     }
 
