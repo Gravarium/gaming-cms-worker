@@ -79,7 +79,7 @@ final class PublicContentController extends AbstractController
         return $this->cache(
             $request,
             $response,
-            hash('sha256', json_encode($etagState, JSON_THROW_ON_ERROR)),
+            hash('sha256', serialize($etagState)),
             60,
             null,
             $entries,
