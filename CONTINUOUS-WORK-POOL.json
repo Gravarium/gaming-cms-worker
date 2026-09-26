@@ -12,12 +12,12 @@
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
   "published_at": "2026-09-26T20:10:15.410Z",
   "summary": {
-    "total_remaining_worker_tasks": 132,
+    "total_remaining_worker_tasks": 133,
     "completed_worker_prs_awaiting_trusted_review": 166,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-383 remains active on feature/wcp-383-scheduled-publication-command-tests-g1; leave its claim untouched and continue with the next independent dependency-safe Worker proposal.",
+    "next_required_action": "WCP-396 is active on feature/wcp-396-public-home-accessibility-g1 from sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d. Add the single public-home accessibility regression only; leave all foreign claims untouched.",
     "composition_preparable": 0,
     "immediately_actionable": 0,
     "must_continue": true
@@ -18108,6 +18108,87 @@
         "templates/guild_portal/notifications.html.twig"
       ],
       "last_verified_push_at": "2026-09-26T20:10:15.410Z"
+    },
+    {
+      "priority": 176,
+      "package_id": "WCP-396",
+      "title": "Guard the public portal skip-link landmark",
+      "risk": "low",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-396-public-home-accessibility-g1",
+      "suggested_branch": "feature/wcp-396-public-home-accessibility-g1",
+      "base_branch": "main",
+      "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "objective": "Add a focused browser regression proving the public home portal's keyboard skip link points to exactly one main landmark. No application, template, style, navigation or schema changes.",
+      "allowed_paths": [
+        "tests/Controller/HomePortalAccessibilityTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/",
+        "src/",
+        "templates/",
+        "assets/",
+        "public/"
+      ],
+      "deliverables": [
+        "Request the public home page and verify it succeeds.",
+        "Verify exactly one 'Zum Inhalt' skip link points to #portal-content and exactly one main#portal-content target exists.",
+        "Keep all changes test-only in the single allowed file."
+      ],
+      "tests": [
+        "php bin/phpunit tests/Controller/HomePortalAccessibilityTest.php",
+        "Existing layout editor, public portal, and full Worker CI regressions remain green.",
+        "PHPStan level 8 and complete Worker CI on the exact final HEAD, including PostgreSQL 18 migration-chain checks."
+      ],
+      "completion_report": [
+        "Exact final Worker HEAD and sanitized main base SHA.",
+        "Complete changed-file list and Worker PR.",
+        "Public home skip-link/unique main-landmark test result.",
+        "Exact-head PHPStan and complete Worker CI results.",
+        "Confirmation that no runtime, template, style or schema changes were made."
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "preserve-public-route-and-keyboard-accessibility-invariants",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_base_branch": "main",
+      "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "resume_branch": "feature/wcp-396-public-home-accessibility-g1",
+      "proposal_kind": "worker_only",
+      "collision_check": {
+        "compared_against": "Fresh pool blob a38f41c937215d9bded3dfdd4471ec7bd3d850b9, every published task scope, main tree, and exact Worker main f1a246c64527ef3ad51f7490773d9bbf9d42be5d.",
+        "result": "No active or claim-locked path overlaps this one test file. WCP-392 public-menu, WCP-393 competition, WCP-395 member-inbox, and WCP-383 scheduled-publishing scopes are disjoint. FCP-072 is unclaimed and dependency-blocked; its test paths do not include tests/Controller/HomePortalAccessibilityTest.php. Existing LayoutEditorTest verifies rendered home content but does not assert this skip-link/landmark contract.",
+        "paths": [
+          "tests/Controller/HomePortalAccessibilityTest.php"
+        ]
+      },
+      "claimed_on": "2026-09-26T20:11:27.929Z",
+      "claim_state": "active",
+      "last_checkpoint_at": "2026-09-26T20:11:27.929Z",
+      "next_action": "Add one browser regression for the public home skip-link and its unique main target; then run the targeted test and complete exact-head Worker CI.",
+      "checkpoint_paths": []
     }
   ],
   "recovery_queue": [],
