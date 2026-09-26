@@ -17188,6 +17188,121 @@
         "templates/game_catalogue/index.html.twig",
         "tests/Gaming/Catalogue/GameCatalogueControllerTest.php"
       ]
+    },
+    {
+      "priority": 168,
+      "package_id": "WCP-388",
+      "title": "Filter public content search by type and category",
+      "risk": "medium",
+      "execution_state": "worker_in_progress",
+      "dependencies": [
+        "WCP-090"
+      ],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-388-public-content-search-filters-g1",
+      "suggested_branch": "feature/wcp-388-public-content-search-filters-g1",
+      "base_branch": "feature/wcp-090-scheduled-unpublish-g1",
+      "base_sha": "f4f394b9a7d5d6f5cd9495d8d1527370cfb2dc18",
+      "objective": "Follow on from WCP-090's exact green public-visibility and scheduled-unpublish work. Add optional type (news/page) and category filters to public /search, preserve accessible filter state, reject malformed or unknown filters, and vary the response ETag by active filters. Keep every result behind the existing published, listed, scheduled-unpublish-aware repository predicate.",
+      "allowed_paths": [
+        "src/Controller/PublicContentController.php",
+        "src/Repository/ContentEntryRepository.php",
+        "templates/content/search.html.twig",
+        "tests/Controller/PublicContentSearchFilterTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/",
+        "src/Entity/",
+        "src/Security/",
+        "src/EventSubscriber/",
+        "src/Controller/AdminContentController.php",
+        "templates/admin/",
+        "templates/video/",
+        "templates/gaming/",
+        "assets/",
+        "public/"
+      ],
+      "deliverables": [
+        "Add accessible GET selectors for content type and category to the public search form, with a clear all-content reset.",
+        "Combine validated type and category filters with the existing public text search.",
+        "Reject unknown types/categories and overlong category slugs without returning an unfiltered result.",
+        "Keep drafts, unlisted entries and entries at/after their scheduled unpublication deadline out of results.",
+        "Include query and active filters in ETag generation so distinct filter states cannot reuse the same representation validator."
+      ],
+      "tests": [
+        "Targeted PublicContentSearchFilterTest functional tests pass.",
+        "Positive news/page/category and combined-filter cases return only matching public entries.",
+        "Draft, unlisted and due-for-unpublication entries remain hidden under filtered search.",
+        "Malformed/unknown filters fail closed and filter-specific ETags differ when result sets are empty.",
+        "PHPStan level 8 and complete Worker CI pass on exact final HEAD."
+      ],
+      "completion_report": [
+        "Exact WCP-090 green base HEAD, predecessor PR and CI run",
+        "Exact final Worker HEAD and complete changed-path list",
+        "Filter selection, combined filter, fail-closed and public visibility test results",
+        "Exact-head PHPStan, PHPUnit and Worker CI evidence",
+        "Confirmation that scheduled-unpublish and unlisted visibility predicates remain intact"
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "no-secrets-or-trusted-private-runtime-in-worker-source",
+        "preserve WCP-090 scheduled-unpublish boundary, listed-only content visibility and public search behavior",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
+      ],
+      "proposal_base_branch": "feature/wcp-090-scheduled-unpublish-g1",
+      "proposal_base_sha": "f4f394b9a7d5d6f5cd9495d8d1527370cfb2dc18",
+      "active_base_branch": "feature/wcp-090-scheduled-unpublish-g1",
+      "active_base_sha": "f4f394b9a7d5d6f5cd9495d8d1527370cfb2dc18",
+      "active_head": "f4f394b9a7d5d6f5cd9495d8d1527370cfb2dc18",
+      "resume_branch": "feature/wcp-388-public-content-search-filters-g1",
+      "proposal_kind": "worker_only",
+      "dependency_evidence": [
+        {
+          "package_id": "WCP-090",
+          "branch": "feature/wcp-090-scheduled-unpublish-g1",
+          "head": "f4f394b9a7d5d6f5cd9495d8d1527370cfb2dc18",
+          "worker_pr": 56,
+          "ci_run_id": 36234077054,
+          "ci_result": "success"
+        }
+      ],
+      "collision_check": {
+        "compared_against": "All current continuous/work-pool-v4 allowlists through WCP-387 and WCP-090's exact green HEAD f4f394b9a7d5d6f5cd9495d8d1527370cfb2dc18.",
+        "result": "The controller and repository paths intentionally follow WCP-090 from its exact green HEAD; WCP-090's branch, PR and existing tests remain unchanged. The new functional test path is absent from that base. The template path only intersects FCP-072's broad unclaimed, dependency-blocked templates/ scope, which has no active writer. Active WCP-381/383/384/385/387 and completed WCP-386 paths are disjoint; no migration, DI or entity path is shared.",
+        "paths": [
+          "src/Controller/PublicContentController.php",
+          "src/Repository/ContentEntryRepository.php",
+          "templates/content/search.html.twig",
+          "tests/Controller/PublicContentSearchFilterTest.php"
+        ]
+      },
+      "claimed_on": "2026-09-26T19:34:07.998Z",
+      "claim_state": "active",
+      "last_checkpoint_at": "2026-09-26T19:34:07.998Z",
+      "next_action": "Implement bounded type/category query validation and filtering in public search, accessible selected-state controls, and filter-aware ETags; add public-visibility and fail-closed controller tests, then run exact-head Worker CI.",
+      "checkpoint_paths": [
+        "src/Controller/PublicContentController.php",
+        "src/Repository/ContentEntryRepository.php",
+        "templates/content/search.html.twig",
+        "tests/Controller/PublicContentSearchFilterTest.php"
+      ],
+      "last_verified_push_at": "2026-09-26T19:34:07.998Z"
     }
   ],
   "recovery_queue": [],
