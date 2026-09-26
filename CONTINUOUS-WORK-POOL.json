@@ -13,7 +13,7 @@
   "published_at": "2026-09-26T19:40:21.301Z",
   "summary": {
     "total_remaining_worker_tasks": 131,
-    "completed_worker_prs_awaiting_trusted_review": 161,
+    "completed_worker_prs_awaiting_trusted_review": 162,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
@@ -17200,7 +17200,7 @@
       "package_id": "WCP-388",
       "title": "Filter public content search by type and category",
       "risk": "medium",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [
         "WCP-090"
       ],
@@ -17301,18 +17301,37 @@
         ]
       },
       "claimed_on": "2026-09-26T19:34:07.998Z",
-      "claim_state": "active",
-      "last_checkpoint_at": "2026-09-26T19:39:38.939Z",
-      "next_action": "Inspect exact-head Worker CI for PR #181 at b476b2b28076639c414ccb96750722d88e0e110b; fix any diagnosed failures without weakening public visibility, filters or tests.",
+      "claim_state": "locked_until_trusted_resolution",
+      "last_checkpoint_at": "2026-09-26T19:42:08.030Z",
+      "next_action": "Await Trusted review with the claim locked; proceed with the next dependency-safe or independent Worker proposal. Do not merge or deploy.",
       "checkpoint_paths": [
         "src/Controller/PublicContentController.php",
         "src/Repository/ContentEntryRepository.php",
         "templates/content/search.html.twig",
         "tests/Controller/PublicContentSearchFilterTest.php"
       ],
-      "last_verified_push_at": "2026-09-26T19:39:21.244Z",
+      "last_verified_push_at": "2026-09-26T19:42:08.030Z",
       "worker_pr": 181,
-      "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/181"
+      "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/181",
+      "final_head": "b476b2b28076639c414ccb96750722d88e0e110b",
+      "ci_run_id": 36266817932,
+      "ci_result": "success",
+      "final_changed_paths": [
+        "src/Controller/PublicContentController.php",
+        "src/Entity/ContentEntry.php",
+        "src/Repository/ContentEntryRepository.php",
+        "templates/content/search.html.twig",
+        "tests/Controller/Content/ContentPublicationAssuranceTest.php",
+        "tests/Controller/PublicContentSearchFilterTest.php",
+        "tests/Entity/ContentEntryWorkflowTest.php"
+      ],
+      "follow_on_changed_paths": [
+        "src/Controller/PublicContentController.php",
+        "src/Repository/ContentEntryRepository.php",
+        "templates/content/search.html.twig",
+        "tests/Controller/PublicContentSearchFilterTest.php"
+      ],
+      "completed_at": "2026-09-26T19:42:08.030Z"
     },
     {
       "priority": 169,
