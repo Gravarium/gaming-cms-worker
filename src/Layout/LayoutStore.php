@@ -44,7 +44,7 @@ final readonly class LayoutStore
     }
 
     /**
-     * @param array<string, mixed> $raw
+     * @param array<array-key, mixed> $raw
      * @return list<array{id:string,type:string,region:string,enabled:bool,config:array<string,string|int|bool>}>
      */
     private function previousWidgets(array $raw): array
