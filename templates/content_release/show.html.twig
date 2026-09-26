@@ -1,0 +1,51 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ release.name }} | Release-Notizen | {{ site.siteName }}{% endblock %}
+
+{% block body %}
+<header class="topbar">
+    <a class="brand" href="{{ path('app_home') }}">{{ site.siteName }}</a>
+    <nav class="top-actions" aria-label="Release-Navigation">
+        <a href="{{ path('app_public_content_release_index') }}">Alle Releases</a>
+        <a href="{{ path('app_news_index') }}">News</a>
+    </nav>
+</header>
+<main class="dashboard">
+    <p class="eyebrow">Release-Notizen</p>
+    <p class="news-date">{{ release.publishedAt|date('d.m.Y H:i') }}</p>
+    <h1>{{ release.name }}</h1>
+    {% if release.description %}<p class="article-lead">{{ release.description }}</p>{% endif %}
+    <section aria-labelledby="release-entries-heading">
+        <h2 id="release-entries-heading">Enthaltene Inhalte</h2>
+        <p class="muted">{{ total }} öffentliche Inhalte</p>
+        <div class="news-grid">
+            {% for entry in entries %}
+                <article class="card">
+                    <p class="news-date">
+                        {{ entry.publishedAt|date('d.m.Y H:i') }} · {{ entry.type == 'news' ? 'News' : 'Seite' }}
+                    </p>
+                    <h3>
+                        <a href="{{ entry.type == 'news' ? path('app_news_show', {slug: entry.slug}) : path('app_page_show', {slug: entry.slug}) }}">
+                            {{ entry.title }}
+                        </a>
+                    </h3>
+                    {% if entry.excerpt %}<p>{{ entry.excerpt }}</p>{% endif %}
+                </article>
+            {% else %}
+                <p>Für diesen Release sind derzeit keine öffentlich gelisteten Inhalte verfügbar.</p>
+            {% endfor %}
+        </div>
+    </section>
+    {% if pages > 1 %}
+        <nav class="pagination" aria-label="Seitennavigation">
+            {% if page > 1 %}
+                <a href="{{ path('app_public_content_release_show', {id: release.id, page: page - 1}) }}">← Neuer</a>
+            {% endif %}
+            <span>Seite {{ page }} von {{ pages }}</span>
+            {% if page < pages %}
+                <a href="{{ path('app_public_content_release_show', {id: release.id, page: page + 1}) }}">Älter →</a>
+            {% endif %}
+        </nav>
+    {% endif %}
+</main>
+{% endblock %}
