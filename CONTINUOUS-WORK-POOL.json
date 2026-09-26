@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-26T21:00:29.714Z",
+  "published_at": "2026-09-26T21:04:17.724Z",
   "summary": {
     "total_remaining_worker_tasks": 134,
     "completed_worker_prs_awaiting_trusted_review": 173,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-405 is reserved on sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d; implement the member-owned guild character profile edit flow in its five allowlisted paths.",
+    "next_required_action": "WCP-407 is reserved on exact sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5; add functional registration visibility, CSRF, and duplicate-submission coverage, then run exact-head Worker CI.",
     "composition_preparable": 0,
     "immediately_actionable": 0,
     "must_continue": true
@@ -19420,6 +19420,87 @@
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/199",
       "last_ci_run_id": 36271602711,
       "last_ci_result": "in_progress"
+    },
+    {
+      "priority": 187,
+      "package_id": "WCP-407",
+      "title": "Test competition registration access and duplicate submissions",
+      "risk": "low",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-407-competition-registration-security-g1",
+      "suggested_branch": "feature/wcp-407-competition-registration-security-g1",
+      "base_branch": "main",
+      "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5",
+      "objective": "Add focused functional security coverage for competition registration. Confirm an authenticated user can register once for an open public competition on an enabled game and a duplicate registration attempt does not create another participant. Confirm private, draft, in-progress, and disabled-game registrations fail closed. Exercise form CSRF validation without changing runtime behavior or schema.",
+      "allowed_paths": [
+        "tests/Controller/Competition/CompetitionRegistrationSecurityTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "src/",
+        "config/",
+        "migrations/",
+        "templates/",
+        "assets/",
+        "public/",
+        "tests/Gaming/Competition/"
+      ],
+      "deliverables": [
+        "Authenticated functional test for successful public solo registration and one-row persistence.",
+        "Duplicate registration route is safely redirected without an additional participant row.",
+        "Private, draft, in-progress, and disabled-game registration resources return 404.",
+        "Invalid form CSRF token cannot create a participant.",
+        "Keep changes test-only in the single declared path."
+      ],
+      "tests": [
+        "php bin/phpunit tests/Controller/Competition/CompetitionRegistrationSecurityTest.php",
+        "PHPStan level 8 and complete Worker CI on the exact final HEAD, including PostgreSQL 18 migration-chain checks."
+      ],
+      "completion_report": [
+        "Exact final Worker HEAD and sanitized main base SHA.",
+        "Complete changed-path list and Worker PR.",
+        "Valid registration, duplicate, visibility, and CSRF regression results.",
+        "Exact-head PHPStan and complete Worker CI results.",
+        "Confirmation that only the allowed test path changed."
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "preserve-registration-authorization-visibility-CSRF-and-participant-uniqueness-protections",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5",
+      "active_base_branch": "main",
+      "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5",
+      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5",
+      "resume_branch": "feature/wcp-407-competition-registration-security-g1",
+      "proposal_kind": "worker_only",
+      "collision_check": {
+        "compared_against": "Live continuous/work-pool-v4 blob dcdeb7f4241272333458db782d6ad369b4c17ea5, all current active/locked allowlists, and exact sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5.",
+        "result": "No active or locked claim owns tests/Controller/Competition/CompetitionRegistrationSecurityTest.php. FCP-061 competition domain tests are under tests/Gaming/Competition/; WCP-391/393/397/399/404 use separate exact test paths. Foreign active WCP-383, WCP-401, WCP-405, and WCP-406 allowlists are disjoint. This proposal is test-only with no runtime, template, migration, DI, or schema changes.",
+        "paths": [
+          "tests/Controller/Competition/CompetitionRegistrationSecurityTest.php"
+        ]
+      },
+      "claimed_on": "2026-09-26T21:04:17.724Z",
+      "claim_state": "active",
+      "next_action": "Implement functional registration access, successful form submission, duplicate redirect, and CSRF rejection coverage; open a Worker PR for exact-head CI."
     }
   ],
   "recovery_queue": [],
