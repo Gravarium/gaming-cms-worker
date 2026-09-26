@@ -17,18 +17,21 @@ final class CompetitionRepository extends ServiceEntityRepository
     /** @return list<Game> */
     public function publicCompetitionGames(): array
     {
-        /** @var list<Game> $games */
-        $games = $this->createQueryBuilder('competition')
+        $builder = $this->getEntityManager()->createQueryBuilder()
             ->select('DISTINCT game')
-            ->join('competition.game', 'game')
+            ->from(Game::class, 'game')
+            ->from(Competition::class, 'competition')
+            ->where('competition.game = game')
             ->andWhere('competition.visibility = :visibility')
             ->andWhere('competition.status <> :draft')
             ->andWhere('game.enabled = :enabled')
             ->setParameter('visibility', Competition::VISIBILITY_PUBLIC)
             ->setParameter('draft', Competition::STATUS_DRAFT)
             ->setParameter('enabled', true)
-            ->orderBy('game.name', 'ASC')
-            ->getQuery()->getResult();
+            ->orderBy('game.name', 'ASC');
+
+        /** @var list<Game> $games */
+        $games = $builder->getQuery()->getResult();
 
         return $games;
     }
