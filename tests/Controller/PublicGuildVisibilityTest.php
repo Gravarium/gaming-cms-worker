@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace App\\Tests\\Controller;
+namespace App\Tests\Controller;
 
-use App\\Entity\\Game;
-use App\\Entity\\Guild;
-use Doctrine\\ORM\\EntityManagerInterface;
-use Symfony\\Bundle\\FrameworkBundle\\KernelBrowser;
-use Symfony\\Bundle\\FrameworkBundle\\Test\\WebTestCase;
+use App\Entity\Game;
+use App\Entity\Guild;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bundle\FrameworkBundle\KernelBrowser;
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 final class PublicGuildVisibilityTest extends WebTestCase
 {
