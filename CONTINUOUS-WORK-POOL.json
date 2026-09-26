@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-26T16:41:54Z",
+  "published_at": "2026-09-26T16:43:49.471Z",
   "summary": {
-    "total_remaining_worker_tasks": 130,
+    "total_remaining_worker_tasks": 131,
     "completed_worker_prs_awaiting_trusted_review": 131,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "Re-evaluate unclaimed dependencies and continue with the next dependency-safe Worker package.",
+    "next_required_action": "Continue disjoint active WCP-355 and WCP-356 work; after exact-head CI, re-evaluate blocked FCP dependencies.",
     "composition_preparable": 0,
     "immediately_actionable": 0,
     "must_continue": true
@@ -13733,6 +13733,98 @@
         "Form regressions accept exactly 180 Unicode home-title characters and reject 181 at the homeTitle field.",
         "PR #149 is open, ready for review and unmerged. Diff from sanitized main contains only the two allowed paths."
       ]
+    },
+    {
+      "priority": 137,
+      "package_id": "WCP-356",
+      "title": "Align game form fields with stored length limits",
+      "risk": "low",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-356-game-form-input-boundaries-g1",
+      "suggested_branch": "feature/wcp-356-game-form-input-boundaries-g1",
+      "base_branch": "main",
+      "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "objective": "Expose the existing Game field limits in GameType for name (120), description (1000), and websiteUrl (500) with matching Length constraints and maxlength attributes. The entity already enforces these maxima, but the form has no matching maxlength hints and relies only on entity validation after mapping. Preserve nullable description/URL behavior and the existing website URL validity policy.",
+      "allowed_paths": [
+        "src/Form/GameType.php",
+        "tests/Form/GameTypeBoundaryTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/",
+        "src/Entity/Game.php",
+        "src/Controller/",
+        "src/Repository/GameRepository.php",
+        "src/Form/VideoType.php",
+        "src/Form/SiteSettingsType.php",
+        "templates/",
+        "assets/",
+        "public/"
+      ],
+      "deliverables": [
+        "Add Length constraints matching the existing Game entity maxima: name 120, description 1000, websiteUrl 500.",
+        "Render maxlength attributes with the same values so boundary guidance is visible in the browser.",
+        "Do not change the entity's URL policy, nullability, controller, repository, persistence or schema."
+      ],
+      "tests": [
+        "Form regression accepts exact 120/1000/500 values for name, description and websiteUrl.",
+        "Separate field regressions reject 121/1001/501 values on the corresponding field.",
+        "Form view exposes maxlength 120/1000/500.",
+        "PHPStan level 8 and complete Worker CI on the exact final HEAD."
+      ],
+      "completion_report": [
+        "exact final Worker HEAD and sanitized main base SHA",
+        "complete changed-file list and Worker PR",
+        "exact and over-limit form regression, PHPStan level 8 and exact-head Worker CI",
+        "confirmation existing entity constraints, URL policy, nullability and persistence flow were preserved"
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "no-secrets-or-trusted-private-runtime-in-worker-source",
+        "preserve existing Game entity limits, URL policy, nullability, authorization, CSRF and persistence behavior",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_base_branch": "main",
+      "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "resume_branch": "feature/wcp-356-game-form-input-boundaries-g1",
+      "proposal_kind": "worker_only",
+      "collision_check": {
+        "compared_against": "all current continuous/work-pool-v4 allowed-path scopes and active/locked claims through WCP-355; exact files checked against sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+        "result": "Neither exact path occurs in any current allowed-path scope. Active WCP-355 is limited to SiteSettingsType.php and its test. WCP-352 through WCP-354 and all earlier locked claims use distinct files. No entity, controller, repository, schema, migration, authentication or private-boundary path is changed.",
+        "paths": [
+          "src/Form/GameType.php",
+          "tests/Form/GameTypeBoundaryTest.php"
+        ]
+      },
+      "claimed_on": "2026-09-26T16:43:49.471Z",
+      "claim_state": "active_worker_claim",
+      "last_checkpoint_at": "2026-09-26T16:43:49.471Z",
+      "next_action": "Create the exact claim and feature refs from sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d; add matching boundaries for name, description and websiteUrl with exact/over-limit tests, then run exact-head Worker CI.",
+      "checkpoint_paths": [
+        "src/Form/GameType.php",
+        "tests/Form/GameTypeBoundaryTest.php"
+      ],
+      "last_verified_push_at": "2026-09-26T16:43:49.471Z"
     }
   ],
   "recovery_queue": [],
