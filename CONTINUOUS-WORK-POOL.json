@@ -13,11 +13,11 @@
   "published_at": "2026-09-26T11:22:18.097Z",
   "summary": {
     "total_remaining_worker_tasks": 72,
-    "completed_worker_prs_awaiting_trusted_review": 65,
+    "completed_worker_prs_awaiting_trusted_review": 66,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "Continue WCP-120 independent Worker proposal work while preserving all foreign and completed claim locks; after exact-head green CI reconcile and continue.",
+    "next_required_action": "Continue WCP-120 on its exclusive claim; preserve all other foreign/completed claims and continue independent worker-only proposals after re-evaluation.",
     "composition_preparable": 0,
     "immediately_actionable": 1,
     "must_continue": true
@@ -6604,7 +6604,7 @@
       "package_id": "WCP-119",
       "title": "Bound persisted locale whitelist normalization",
       "risk": "medium",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -6685,6 +6685,24 @@
       "checkpoint_paths": [
         "src/Internationalization/LocalePolicy.php",
         "tests/Internationalization/LocalePolicyTest.php"
+      ],
+      "worker_pr": 84,
+      "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/84",
+      "ci_run_id": 36238535346,
+      "ci_result": "success",
+      "pr_state": "open",
+      "final_head": "20803f7b7367563249e196fe61fc462142d28916",
+      "claim_state": "locked_until_trusted_resolution",
+      "completed_on": "2026-09-26T11:24:50.567Z",
+      "next_action": "Await Trusted review; keep claim locked, do not merge or deploy.",
+      "final_changed_paths": [
+        "src/Internationalization/LocalePolicy.php",
+        "tests/Internationalization/LocalePolicyTest.php"
+      ],
+      "test_evidence": [
+        "Worker CI run 36238535346 succeeded on exact final HEAD 20803f7b7367563249e196fe61fc462142d28916.",
+        "PHP/Symfony job 108394653595 passed PHPStan level 8 and the complete worker-visible application test suite.",
+        "PostgreSQL 18 migration job 108394653683 succeeded."
       ]
     },
     {
