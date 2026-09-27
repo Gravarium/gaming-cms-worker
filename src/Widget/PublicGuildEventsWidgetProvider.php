@@ -28,7 +28,7 @@ final readonly class PublicGuildEventsWidgetProvider implements WidgetProvider
             'widget/public_guild_events.html.twig',
             [],
             true,
-            ['count' => ['label' => 'Anzahl der Termine', 'type' => 'int', 'default' => 6, 'min' => 1, 'max' => PublicGuildEventsQuery::MAX_RESULTS]],
+            ['event_limit' => ['label' => 'Anzahl der Termine', 'type' => 'int', 'default' => 6, 'min' => 1, 'max' => PublicGuildEventsQuery::MAX_RESULTS]],
         )];
     }
 
@@ -49,7 +49,7 @@ final readonly class PublicGuildEventsWidgetProvider implements WidgetProvider
             $request?->attributes->set(self::CACHE_KEY, $events);
         }
 
-        $count = $config['count'] ?? 6;
+        $count = $config['event_limit'] ?? 6;
         $count = is_int($count) ? max(1, min(PublicGuildEventsQuery::MAX_RESULTS, $count)) : 6;
 
         return ['events' => array_slice($events, 0, $count)];
