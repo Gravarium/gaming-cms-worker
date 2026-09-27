@@ -15,9 +15,9 @@
     "total_remaining_worker_tasks": 139,
     "completed_worker_prs_awaiting_trusted_review": 228,
     "recovery_tasks": 0,
-    "unclaimed": 6,
-    "immediately_claimable": 1,
-    "next_required_action": "WCP-460 is published and ready for its exclusive worker claim; preserve all existing active and Trusted-review locks.",
+    "unclaimed": 5,
+    "immediately_claimable": 0,
+    "next_required_action": "WCP-460 is exclusively claimed on its own feature branch from sanitized main; implement and preserve all other active and Trusted-review claims.",
     "composition_preparable": 0,
     "immediately_actionable": 3,
     "must_continue": true
@@ -26886,8 +26886,8 @@
       "package_id": "WCP-460",
       "title": "Browse and inspect automatic content redirects",
       "risk": "medium",
-      "execution_state": "unclaimed",
-      "claim_state": "unclaimed",
+      "execution_state": "worker_in_progress",
+      "claim_state": "active",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -26971,7 +26971,20 @@
           "templates/admin/dashboard.html.twig",
           "tests/Controller/AdminContentRedirectBrowserTest.php"
         ]
-      }
+      },
+      "claimed_on": "2026-09-27T03:24:29.766Z",
+      "active_base_branch": "main",
+      "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "resume_branch": "feature/wcp-460-content-redirect-browser-g1",
+      "last_checkpoint_at": "2026-09-27T03:24:29.766Z",
+      "last_verified_push_at": "2026-09-27T03:24:29.766Z",
+      "checkpoint_paths": [],
+      "branch_heads": {
+        "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+        "feature_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d"
+      },
+      "next_action": "Implement the bounded read-only redirect inventory and its permission-gated dashboard entry; checkpoint after tests and validate on exact HEAD."
     }
   ],
   "recovery_queue": [],
