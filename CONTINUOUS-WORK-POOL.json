@@ -10,16 +10,16 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T10:12:02.498Z",
+  "published_at": "2026-09-27T10:12:10.306Z",
   "summary": {
-    "total_remaining_worker_tasks": 162,
+    "total_remaining_worker_tasks": 163,
     "completed_worker_prs_awaiting_trusted_review": 269,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-508 has a draft Worker PR and exact-head CI is running; finish validation and reconcile the pool before moving on.",
+    "next_required_action": "WCP-510 is active on its exclusive feature branch; complete the direct media-action module gate and continue after green exact-head CI.",
     "composition_preparable": 0,
-    "immediately_actionable": 17,
+    "immediately_actionable": 18,
     "must_continue": true
   },
   "rules": {
@@ -34620,6 +34620,104 @@
       "checkpoint_paths": [],
       "next_action": "Implement the competition calendar landing page, safe iCalendar feed, home-page entry point and focused visibility/format tests within the four reserved files; checkpoint before full exact-head Worker CI.",
       "last_verified_push_at": "2026-09-27T10:10:45.441Z"
+    },
+    {
+      "priority": 510,
+      "package_id": "WCP-510",
+      "title": "Keep direct media actions behind the Media module",
+      "risk": "low",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-510-media-module-gate-g1",
+      "suggested_branch": "feature/wcp-510-media-module-gate-g1",
+      "base_branch": "main",
+      "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "objective": "Complete the existing Media module's deactivation boundary for AdminStorageController. Its app_admin_storage routes are Media-owned, but the direct app_admin_media_upload, edit, replace, bulk, delete and folder action route family is not registered to a CMS module; with Media disabled, those actions remain routable to CMS_STORAGE_MANAGE users. Add a narrow Media route-family event listener so every direct media action fails closed while Media is disabled, while preserving the controller's existing permission, CSRF, validation, pending-deletion and storage behavior. No controller, schema or template changes.",
+      "allowed_paths": [
+        "src/EventSubscriber/MediaStorageModuleSubscriber.php",
+        "tests/Controller/MediaStorageModuleGateTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/",
+        "src/Module/CmsModuleCatalog.php",
+        "src/EventSubscriber/DisabledModuleSubscriber.php",
+        "src/Controller/AdminStorageController.php",
+        "src/Controller/",
+        "src/Entity/",
+        "src/Repository/",
+        "src/Form/",
+        "templates/",
+        "assets/",
+        "public/"
+      ],
+      "deliverables": [
+        "The app_admin_media route family is treated as Media-owned by a dedicated request listener, so upload, edit, replace, bulk, delete and folder actions return 404 when Media is disabled.",
+        "Focused functional coverage proves an authorized storage manager cannot reach direct media upload while Media is disabled and can still reach the normal upload form when Media is enabled.",
+        "The existing CMS_STORAGE_MANAGE permission, controller CSRF/validation, pending-deletion and storage behavior remain unchanged; no controller, catalog, schema, migration, template or private-runtime change."
+      ],
+      "tests": [
+        "Focused PHPUnit functional coverage for disabled-module 404 behavior, enabled upload-form reachability, authorization and fixture cleanup.",
+        "PHPStan level 8.",
+        "Complete Worker CI on the exact final HEAD, including PostgreSQL 18 migration-chain validation."
+      ],
+      "completion_report": [
+        "Exact sanitized main/base SHA and final feature HEAD.",
+        "Complete changed-path list and Worker PR link.",
+        "Direct media action module-gate behavior, enabled-module behavior, permission/CSRF preservation, focused tests and exact-head CI.",
+        "Unresolved assumptions and Trusted integration follow-up."
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "preserve-CMS_STORAGE_MANAGE-and-controller-CSRF-validation",
+        "disabled-Media-must-fail-closed-before-direct-media-action-controller-behavior",
+        "preserve-enabled-media-upload-edit-replace-bulk-delete-and-folder behavior",
+        "no-controller-catalog-schema-template-migration-or-private-runtime-change",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "red-CI-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "proposal_kind": "worker_only",
+      "proposal_dependency_evidence": [],
+      "collision_check": {
+        "compared_against": "Fresh continuous/work-pool-v4 commit c81b0598c408d5cb61c75110bf9895986d20ea0b; all active and claim-locked allowlists; exact sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d; and the reserved claim/feature refs checked immediately before publication.",
+        "result": "No active or claim-locked package owns either proposed path. WCP-342 locks the existing AdminStorageController and its MediaStorageSecurityTest, so this package uses a new event listener and a distinct module-gate test. WCP-505 locks the central DisabledModuleSubscriber, WCP-499 locks CmsModuleCatalog, and WCP-504/506/507/508/509 use unrelated widget, guild, page and competition paths. The observed gap is direct app_admin_media_* module deactivation; no controller, entity, repository, form, template, migration, Trusted-only or foreign claimed path is changed.",
+        "paths": [
+          "src/EventSubscriber/MediaStorageModuleSubscriber.php",
+          "tests/Controller/MediaStorageModuleGateTest.php"
+        ]
+      },
+      "published_at": "2026-09-27T10:12:10.306Z",
+      "claimed_on": "2026-09-27T10:12:10.306Z",
+      "claim_state": "active",
+      "active_base_branch": "main",
+      "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "resume_branch": "feature/wcp-510-media-module-gate-g1",
+      "branch_heads": {
+        "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+        "feature_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d"
+      },
+      "last_observed_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "checkpoint_paths": [],
+      "next_action": "Implement the bounded direct-media route-family listener and focused workflow test within the two allowed paths; push a checkpoint before full exact-head Worker CI."
     }
   ],
   "recovery_queue": [],
