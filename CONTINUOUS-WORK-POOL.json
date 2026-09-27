@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T14:28:45.075Z",
+  "published_at": "2026-09-27T14:30:41.165Z",
   "summary": {
     "total_remaining_worker_tasks": 167,
-    "completed_worker_prs_awaiting_trusted_review": 291,
+    "completed_worker_prs_awaiting_trusted_review": 292,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "Worker CI run #840 / 36326000973 is in progress on exact HEAD ebb240a005c0b63818dbb21fa28d05c06bf10e1f; inspect both jobs and repair any failure.",
+    "next_required_action": "PR #336 is ready for review with exact-head Worker CI #840 green; keep the claim locked until Trusted resolution, then continue with the next independent module gap.",
     "composition_preparable": 0,
     "immediately_actionable": 28,
     "must_continue": true
@@ -40115,7 +40115,7 @@
       "package_id": "WCP-543",
       "title": "Search and paginate newsletter subscribers",
       "risk": "medium",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [
         "WCP-522"
       ],
@@ -40227,7 +40227,7 @@
       },
       "published_at": "2026-09-27T14:11:31.643Z",
       "claimed_on": "2026-09-27T14:11:31.643Z",
-      "claim_state": "active",
+      "claim_state": "locked_until_trusted_resolution",
       "active_base_branch": "feature/wcp-522-public-newsletter-signup-g1",
       "active_base_sha": "b1cecaeadc1b8378cf8626f52aa48396a569d8cb",
       "active_head": "ebb240a005c0b63818dbb21fa28d05c06bf10e1f",
@@ -40246,11 +40246,11 @@
         "templates/admin/newsletter/preview.html.twig",
         "tests/Controller/AdminNewsletterSubscriptionDirectoryTest.php"
       ],
-      "next_action": "Worker CI run #840 / 36326000973 is in progress on exact HEAD ebb240a005c0b63818dbb21fa28d05c06bf10e1f; inspect both jobs and repair any failure.",
+      "next_action": "PR #336 is ready for review with exact-head Worker CI #840 green; keep the claim locked until Trusted resolution, then continue with the next independent module gap.",
       "worker_pr_state": "open",
       "last_verified_push_at": "2026-09-27T14:28:11.005Z",
-      "ci_result": "pending",
-      "last_ci_result": "in_progress",
+      "ci_result": "success",
+      "last_ci_result": "success",
       "ci_attempts": [
         {
           "run_id": 36325553002,
@@ -40285,7 +40285,14 @@
           "run_number": 840,
           "head": "ebb240a005c0b63818dbb21fa28d05c06bf10e1f",
           "base": "b510875e7b0741b9b19f09429d2204a95df51198",
-          "result": "in_progress"
+          "result": "success",
+          "conclusion": "success",
+          "phpunit_tests": 547,
+          "assertions": 2369,
+          "phpstan": "passed",
+          "postgresql_18_migrations": "passed",
+          "migrations_executed": 54,
+          "sql_queries": 750
         }
       ],
       "worker_pr": 336,
@@ -40300,10 +40307,12 @@
       ],
       "worker_pr_base_branch": "main",
       "pr_state": "open",
-      "draft_pr": true,
+      "draft_pr": false,
       "worker_pr_base_sha": "b510875e7b0741b9b19f09429d2204a95df51198",
       "ci_run_id": 36326000973,
-      "last_ci_run_id": 36326000973
+      "last_ci_run_id": 36326000973,
+      "final_head": "ebb240a005c0b63818dbb21fa28d05c06bf10e1f",
+      "completed_at": "2026-09-27T14:30:41.165Z"
     },
     {
       "priority": 544,
