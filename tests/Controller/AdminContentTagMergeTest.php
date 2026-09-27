@@ -107,7 +107,7 @@ final class AdminContentTagMergeTest extends WebTestCase
             self::assertResponseRedirects('/admin/content/tags');
             $client->followRedirect();
             self::assertResponseIsSuccessful();
-            self::assertSelectorTextContains('body', '3 Inhalte wurden dem Ziel-Tag zugeordnet.');
+            self::assertSelectorTextContains('body', '3 Inhalte wurden dem Ziel-Tag zugeordnet');
 
             $entityManager = $this->entityManager($client);
             $entityManager->clear();
