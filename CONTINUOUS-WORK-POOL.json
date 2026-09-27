@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T01:51:12.714Z",
+  "published_at": "2026-09-27T02:05:27.111Z",
   "summary": {
     "total_remaining_worker_tasks": 141,
     "completed_worker_prs_awaiting_trusted_review": 218,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-451 is reserved on exact sanitized main; implement the site-settings locale integrity regression on its exclusive feature branch.",
+    "next_required_action": "WCP-452 is reserved on exact sanitized main for failed-message queue pagination; create and verify its exclusive refs, then implement.",
     "composition_preparable": 0,
     "immediately_actionable": 6,
     "must_continue": true
@@ -25723,6 +25723,109 @@
       ],
       "last_ci_run_id": 36287383308,
       "ci_result": "queued"
+    },
+    {
+      "priority": 452,
+      "package_id": "WCP-452",
+      "title": "Browse all failed messages with queue pagination",
+      "risk": "medium",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-452-admin-queue-pagination-g1",
+      "suggested_branch": "feature/wcp-452-admin-queue-pagination-g1",
+      "base_branch": "main",
+      "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "objective": "Complete the existing CMS_SETTINGS_MANAGE-protected failed-message queue for installations with more than 100 failures. The current overview reads only the newest 100 records and the page has no navigation. Add a read-only 25-row page reader with stable ID-descending order, page counts, validated canonical page input and a visible current-page retry flow. Preserve authorization, CSRF, retry recovery, and the existing safe metadata boundary; never display message bodies, recipients, tokens or technical errors.",
+      "allowed_paths": [
+        "src/Controller/AdminQueueController.php",
+        "src/Messenger/FailedMessagePaginator.php",
+        "templates/admin/queue/index.html.twig",
+        "tests/Controller/AdminQueuePaginationTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/",
+        "src/Messenger/FailedMessageOverview.php",
+        "src/Messenger/FailedMessageRecovery.php",
+        "tests/Messenger/FailedMessageOverviewTest.php",
+        "tests/Messenger/FailedMessageRecoveryTest.php",
+        "tests/Controller/AdminQueueRetrySecurityTest.php",
+        "src/Entity/",
+        "src/ExternalConnector/"
+      ],
+      "deliverables": [
+        "Add a paged read service that returns at most 25 failed-queue summaries ordered by ID DESC and total/page counts; reuse the existing sanitized message-type parser and never return body/header contents.",
+        "Validate page query values as canonical bounded positive integers; reject arrays, zero, leading-zero, malformed and overflowing values with a client error, and clamp valid pages past the last page.",
+        "Render previous/next navigation and result counts on the existing queue screen, preserving the requested page on row retry and applying retry-all only to the visible page.",
+        "Keep the existing CMS_SETTINGS_MANAGE authorization and CSRF token checks on both retry actions. Do not change failed transport recovery semantics or database schema."
+      ],
+      "tests": [
+        "Functional test denies users without CMS_SETTINGS_MANAGE and confirms authorized queue pages render.",
+        "Insert more than two pages of synthetic failed-transport rows and verify stable ID-descending navigation, no duplicates/gaps, page counts, last-page clamping, and current-page retry action targets.",
+        "Reject malformed query arrays/scalars, zero, leading-zero and overflow pages with a client error without echoing input or changing the failed queue.",
+        "Verify message bodies, serialized headers and technical error details never appear in the listing.",
+        "Run the focused test, PHPStan level 8 and complete Worker CI on the exact final HEAD, including PostgreSQL 18 migration-chain checks."
+      ],
+      "completion_report": [
+        "Exact sanitized main base SHA and final Worker HEAD SHA.",
+        "Complete changed paths and Worker PR.",
+        "Failed-queue pagination bounds/order, authorization, malformed-input behavior, and preserved CSRF/retry behavior.",
+        "Exact-head PHPUnit, PHPStan and full Worker CI results.",
+        "Remaining Trusted integration follow-up."
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "preserve-CMS_SETTINGS_MANAGE-and-both-existing-queue-retry-CSRF-boundaries",
+        "never-display-failed-message-body-or-raw-headers",
+        "preserve-FailedMessageRecovery-acknowledgment-and-requeue-semantics",
+        "no-schema-migration-or-failure-transport-change",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "proposal_kind": "worker_only",
+      "proposal_dependency_evidence": [],
+      "collision_check": {
+        "compared_against": "Fresh continuous/work-pool-v4 branch and blob; every current active and claim-locked allowlist; exact sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d.",
+        "result": "All four exact paths are disjoint from current active and claim-locked claims. Queue-related locked claims WCP-110, WCP-337 and WCP-420 own the existing overview/recovery service or a different security-test file; those protected paths remain unchanged. Current active work in scheduled content, Game Hub, content duplication, guild membership and settings uses disjoint files.",
+        "paths": [
+          "src/Controller/AdminQueueController.php",
+          "src/Messenger/FailedMessagePaginator.php",
+          "templates/admin/queue/index.html.twig",
+          "tests/Controller/AdminQueuePaginationTest.php"
+        ]
+      },
+      "claimed_on": "2026-09-27T02:05:27.111Z",
+      "claim_state": "active",
+      "active_base_branch": "main",
+      "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "resume_branch": "feature/wcp-452-admin-queue-pagination-g1",
+      "last_checkpoint_at": "2026-09-27T02:05:27.111Z",
+      "last_verified_push_at": "2026-09-27T02:05:27.111Z",
+      "checkpoint_paths": [],
+      "branch_heads": {
+        "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+        "feature_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d"
+      },
+      "next_action": "Create and verify both exact claim and feature refs from the recorded sanitized-main base, then implement. Push a coherent checkpoint within 30 minutes."
     }
   ],
   "recovery_queue": [],
