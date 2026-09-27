@@ -10,7 +10,7 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T15:48:13.288Z",
+  "published_at": "2026-09-27T15:49:05.851Z",
   "summary": {
     "total_remaining_worker_tasks": 167,
     "completed_worker_prs_awaiting_trusted_review": 290,
@@ -42027,9 +42027,16 @@
           "run_id": 36330373153,
           "result": "failure",
           "reason": "Pull request merge ref used Worker main commit 6988e871cbda8c27801ee0bcc02e8c5c2b0cd909, whose tree lacks the exact FCP-061 CompetitionMatchRepository dependency; failure occurred during Composer auto-script cache clear before tests."
+        },
+        {
+          "head": "469887b3c18758e7013152cafd19e22e176bc62e",
+          "run_id": 36330890672,
+          "result": "in_progress",
+          "target_branch": "worker/account-wcp-550-validation",
+          "target_sha": "ec6bb200affc3e5a46d416e98f7a1b0621c38ded"
         }
       ],
-      "next_action": "Run complete exact-head Worker CI against the owned CI-target branch at the exact green FCP-061 predecessor; repair all code failures.",
+      "next_action": "Monitor exact-head Worker CI run 36330890672 across both jobs; fix any code failures without weakening checks.",
       "worker_pr": 343,
       "ci_target_branch": "worker/account-wcp-550-validation",
       "ci_target_sha": "ec6bb200affc3e5a46d416e98f7a1b0621c38ded",
