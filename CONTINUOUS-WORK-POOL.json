@@ -12,12 +12,12 @@
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
   "published_at": "2026-09-27T12:42:17.233Z",
   "summary": {
-    "total_remaining_worker_tasks": 164,
+    "total_remaining_worker_tasks": 165,
     "completed_worker_prs_awaiting_trusted_review": 287,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "Await Trusted resolution; keep this claim locked. Re-evaluate dependency-safe work and select the next independent CMS module gap.",
+    "next_required_action": "Implement and test the CMS_STORAGE_MANAGE admin package catalogue/create/edit flow within the six reserved paths; then run the complete exact-head Worker CI.",
     "composition_preparable": 0,
     "immediately_actionable": 26,
     "must_continue": true
@@ -38350,6 +38350,140 @@
       "ci_result": "not_started",
       "last_ci_result": "not_started",
       "ci_attempts": []
+    },
+    {
+      "priority": 534,
+      "package_id": "WCP-534",
+      "title": "Administer controlled download packages",
+      "risk": "medium",
+      "execution_state": "worker_in_progress",
+      "dependencies": [
+        "FCP-063"
+      ],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-534-download-package-admin-g1",
+      "suggested_branch": "feature/wcp-534-download-package-admin-g1",
+      "base_branch": "feature/fcp-063-pool-g1",
+      "base_sha": "a12735aa9b5aed93cfaca4455a6e58b86446a0d7",
+      "objective": "Complete the existing controlled-download module's package administration workflow. Its green FCP-063 implementation provides version upload/rescan routes but no admin package list or package creation form, so packages are currently only supplied by code/fixtures. Add a CMS_STORAGE_MANAGE admin catalogue to list packages, create packages with unique slug/type/visibility/enabled state, and edit visibility/enabled state for existing packages. Package identity fields are immutable after creation in the existing entity; present them read-only on edit. Keep the Downloads module gate and existing upload/scanning/delivery behavior.",
+      "allowed_paths": [
+        "src/Controller/AdminDownloadCatalogueController.php",
+        "src/Form/DownloadCatalogue/DownloadPackageInput.php",
+        "src/Form/DownloadCatalogue/DownloadPackageType.php",
+        "templates/admin/download_catalogue/index.html.twig",
+        "templates/admin/download_catalogue/form.html.twig",
+        "tests/Controller/AdminDownloadCatalogueControllerTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "src/Downloads/",
+        "src/Controller/AdminDownload/",
+        "src/Controller/Download/",
+        "src/Entity/Download/",
+        "src/Form/Download/",
+        "src/Repository/Download/",
+        "templates/admin/download/",
+        "templates/download/",
+        "migrations/",
+        "tests/Downloads/",
+        "config/services.yaml",
+        "src/Module/CmsModuleCatalog.php"
+      ],
+      "deliverables": [
+        "Add a CMS_STORAGE_MANAGE-protected admin catalogue at /admin/downloads with a clear empty state and links to create/edit package settings.",
+        "Create packages with validated title, route-safe unique slug, type, visibility and enabled state, reporting duplicate/invalid input clearly.",
+        "Allow admins to edit visibility and enabled state while displaying immutable title, slug and type; preserve existing authorization policy.",
+        "Return 404 when the Downloads module is disabled; use Symfony Form CSRF protection and preserve existing upload, malware scan and private delivery flows.",
+        "Do not change the download entity/repository, upload controller, schema or Trusted-only/private files."
+      ],
+      "tests": [
+        "Authorized storage manager can list, create and edit package settings; valid creation appears in the catalogue.",
+        "Duplicate and malformed slugs and invalid types return a clear validation error without creating a package.",
+        "A user without CMS_STORAGE_MANAGE receives 403; missing/invalid CSRF cannot mutate data.",
+        "The admin catalogue returns 404 when Downloads is disabled and restores module state after the test.",
+        "Exact-head Worker CI including PHPStan and PostgreSQL 18 migration validation."
+      ],
+      "completion_report": [
+        "Exact FCP-063 proposal base SHA and final Worker HEAD SHA.",
+        "Changed paths and Worker PR URL/base branch.",
+        "Admin list/create/edit behavior, permission, CSRF, validation and disabled-module evidence.",
+        "Focused tests and exact-head full Worker CI result.",
+        "Remaining limitations, including immutable package identity fields."
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "preserve-CMS_STORAGE_MANAGE-and-download-module-gating",
+        "Symfony-form-CSRF-and-validation-remain-enabled",
+        "download-package-identity-is-immutable-on-edit",
+        "no-changes-to-upload-scan-delivery-entity-repository-or-schema-paths",
+        "no-security-test-phpstan-CI-auth-CSRF-validation-recovery-rollback-or-upload-protection-weakening",
+        "no-private-runtime-or-sensitive-data",
+        "no-direct-trusted-integration-or-deployment"
+      ],
+      "completion_report_actual": null,
+      "proposal_base_branch": "feature/fcp-063-pool-g1",
+      "proposal_base_sha": "a12735aa9b5aed93cfaca4455a6e58b86446a0d7",
+      "proposal_kind": "worker_only",
+      "proposal_dependency_evidence": [
+        {
+          "package_id": "FCP-063",
+          "feature_branch": "feature/fcp-063-pool-g1",
+          "worker_pr": 16,
+          "exact_head": "a12735aa9b5aed93cfaca4455a6e58b86446a0d7",
+          "ci_run_id": 36066563329,
+          "ci_run_number": 259,
+          "ci_result": "success"
+        }
+      ],
+      "collision_check": {
+        "compared_against": "Fresh continuous/work-pool-v4 blob f57e4c41fe9e53efa1ad66d5dbfca091d3648007; active and claim-locked allowed/checkpoint paths; exact WCP-534 and download-package-admin branch/PR searches; FCP-063 PR #16 green exact HEAD a12735aa9b5aed93cfaca4455a6e58b86446a0d7.",
+        "result": "The prepared FCP queue still has zero immediately claimable entries. No active or claim-locked path intersects the six new admin catalogue files. FCP-063's protected Downloads implementation paths remain excluded. Exact WCP-534 refs are the claim and feature branches created for this package; no matching PR exists.",
+        "paths": [
+          "src/Controller/AdminDownloadCatalogueController.php",
+          "src/Form/DownloadCatalogue/DownloadPackageInput.php",
+          "src/Form/DownloadCatalogue/DownloadPackageType.php",
+          "templates/admin/download_catalogue/index.html.twig",
+          "templates/admin/download_catalogue/form.html.twig",
+          "tests/Controller/AdminDownloadCatalogueControllerTest.php"
+        ]
+      },
+      "published_at": "2026-09-27T12:44:34.437Z",
+      "claimed_on": "2026-09-27T12:44:34.437Z",
+      "claim_state": "active",
+      "active_base_branch": "feature/fcp-063-pool-g1",
+      "active_base_sha": "a12735aa9b5aed93cfaca4455a6e58b86446a0d7",
+      "active_head": "a12735aa9b5aed93cfaca4455a6e58b86446a0d7",
+      "resume_branch": "feature/wcp-534-download-package-admin-g1",
+      "branch_heads": {
+        "claim_branch": "a12735aa9b5aed93cfaca4455a6e58b86446a0d7",
+        "feature_branch": "a12735aa9b5aed93cfaca4455a6e58b86446a0d7"
+      },
+      "last_observed_head": "a12735aa9b5aed93cfaca4455a6e58b86446a0d7",
+      "last_checkpoint_at": "2026-09-27T12:44:34.437Z",
+      "checkpoint_paths": [
+        "src/Controller/AdminDownloadCatalogueController.php",
+        "src/Form/DownloadCatalogue/DownloadPackageInput.php",
+        "src/Form/DownloadCatalogue/DownloadPackageType.php",
+        "templates/admin/download_catalogue/index.html.twig",
+        "templates/admin/download_catalogue/form.html.twig",
+        "tests/Controller/AdminDownloadCatalogueControllerTest.php"
+      ],
+      "next_action": "Implement and test the CMS_STORAGE_MANAGE admin package catalogue/create/edit flow within the six reserved paths; then run the complete exact-head Worker CI.",
+      "ci_attempts": [],
+      "worker_pr_state": null
     }
   ],
   "recovery_queue": [],
