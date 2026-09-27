@@ -18,11 +18,12 @@ final class AdminMenuWriteSecurityTest extends WebTestCase
     {
         $client = static::createClient();
         $user = $this->createUser($client, 'menu-denied', [CmsPermission::GAMING]);
-        $item = $this->createMenuItem($client, 'Denied menu item '.bin2hex(random_bytes(4)));
+        $itemLabel = 'Denied menu item '.bin2hex(random_bytes(4));
+        $item = $this->createMenuItem($client, $itemLabel);
         $itemId = $item->getId();
-        self::assertNotNull($itemId);
 
         try {
+            self::assertNotNull($itemId);
             $client->loginUser($user);
 
             $client->request('GET', '/admin/menu');
@@ -46,7 +47,7 @@ final class AdminMenuWriteSecurityTest extends WebTestCase
             self::assertInstanceOf(MenuItem::class, $stored);
             self::assertSame($item->getLabel(), $stored->getLabel());
         } finally {
-            $this->cleanup($client, $user, [$itemId]);
+            $this->cleanup($client, $user, $itemId === null ? [] : [$itemId], $itemId === null ? [$itemLabel] : []);
         }
     }
 
@@ -89,11 +90,12 @@ final class AdminMenuWriteSecurityTest extends WebTestCase
     {
         $client = static::createClient();
         $user = $this->createUser($client, 'menu-delete', [CmsPermission::CONTENT]);
-        $item = $this->createMenuItem($client, 'Delete menu '.bin2hex(random_bytes(5)));
+        $itemLabel = 'Delete menu '.bin2hex(random_bytes(5));
+        $item = $this->createMenuItem($client, $itemLabel);
         $itemId = $item->getId();
-        self::assertNotNull($itemId);
 
         try {
+            self::assertNotNull($itemId);
             $client->loginUser($user);
 
             foreach ([[], ['_token' => 'invalid']] as $parameters) {
@@ -117,7 +119,7 @@ final class AdminMenuWriteSecurityTest extends WebTestCase
             self::assertResponseRedirects('/admin/menu');
             self::assertNull($this->findItem($client, $itemId));
         } finally {
-            $this->cleanup($client, $user, [$itemId]);
+            $this->cleanup($client, $user, $itemId === null ? [] : [$itemId], $itemId === null ? [$itemLabel] : []);
         }
     }
 
@@ -188,6 +190,10 @@ final class AdminMenuWriteSecurityTest extends WebTestCase
         return $item instanceof MenuItem ? $item : null;
     }
 
+    /**
+     * @param list<int> $itemIds
+     * @param list<string> $labels
+     */
     private function cleanup(KernelBrowser $client, User $user, array $itemIds, array $labels = []): void
     {
         $entityManager = $this->entityManager($client);
