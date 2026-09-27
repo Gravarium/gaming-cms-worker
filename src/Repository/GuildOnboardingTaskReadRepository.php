@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Repository;
 
 use App\Entity\Guild;
-use App\Entity\GuildOnboardingTask;
+use App\Entity\Guild\GuildOnboardingTask;
 use Doctrine\ORM\EntityManagerInterface;
 
 final readonly class GuildOnboardingTaskReadRepository
