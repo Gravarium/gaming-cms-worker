@@ -6,7 +6,7 @@ namespace App\Widget;
 
 final class VideoSearchWidgetProvider implements WidgetProvider
 {
-    private const KEY = 'video.search';
+    public const KEY = 'video.search';
 
     /** @return list<WidgetDefinition> */
     public function definitions(): array
