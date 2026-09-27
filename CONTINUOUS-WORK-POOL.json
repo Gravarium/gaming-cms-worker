@@ -10,16 +10,16 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T17:06:29.926Z",
+  "published_at": "2026-09-27T17:10:06.277Z",
   "summary": {
-    "total_remaining_worker_tasks": 167,
+    "total_remaining_worker_tasks": 168,
     "completed_worker_prs_awaiting_trusted_review": 292,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "Implement the feature-local public genre query, paginated directory/detail controller, accessible widget and focused integration tests on this exact main base.",
+    "next_required_action": "Implement WCP-559 permission-aware global search pagination on feature/wcp-559-global-search-pagination-g1 from main @ 7b2ca79405fc12d34bce1386157e929e4668f31a.",
     "composition_preparable": 0,
-    "immediately_actionable": 28,
+    "immediately_actionable": 29,
     "must_continue": true
   },
   "rules": {
@@ -44101,6 +44101,162 @@
       ],
       "ci_run_id": 36335840605,
       "last_ci_run_id": 36335840605
+    },
+    {
+      "priority": 559,
+      "package_id": "WCP-559",
+      "title": "Paginate permission-aware global search results",
+      "risk": "medium",
+      "execution_state": "worker_in_progress",
+      "dependencies": [
+        "FCP-069"
+      ],
+      "dependencies_integrated_at_publication": [
+        "FCP-069"
+      ],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-559-global-search-pagination-g1",
+      "suggested_branch": "feature/wcp-559-global-search-pagination-g1",
+      "base_branch": "main",
+      "base_sha": "7b2ca79405fc12d34bce1386157e929e4668f31a",
+      "objective": "Complete the existing permission-aware global search journey with bounded, stable pagination for query results and discovery. Preserve module/type filters across pages and calculate page totals only after the existing viewer visibility boundary. Keep search feeds unchanged and avoid schema or migration changes.",
+      "allowed_paths": [
+        "src/Controller/Search/SearchController.php",
+        "src/Search/SearchService.php",
+        "src/Search/SearchResultsPage.php",
+        "src/Search/Templates/search/paginated_index.html.twig",
+        "config/packages/search_pagination.yaml",
+        "tests/Controller/SearchPaginationTest.php",
+        "tests/Search/SearchResultsPageTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "CONTINUOUS-WORKER.md",
+        "CONTINUOUS-WORK-POOL.json",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "src/Entity/",
+        "src/Repository/Search/",
+        "src/Module/",
+        "src/Widget/WidgetRegistry.php",
+        "src/Widget/BundledWidgetProvider.php",
+        "templates/"
+      ],
+      "deliverables": [
+        "Provide page-based global search and discovery results with a fixed page size and a hard maximum over the already bounded search result window; preserve score/date/id deterministic ordering across pages.",
+        "Add accessible previous/next controls that retain q, module, and type filters and report only viewer-visible result counts.",
+        "Validate page input as a positive bounded integer and clamp requests beyond the last visible page without integer overflow or hidden-result disclosure.",
+        "Keep global JSON/RSS discovery feeds and their current result limits unchanged.",
+        "Use a feature-local Twig template and dedicated package config so no shared templates/ path is claimed or modified; do not add schema or migrations."
+      ],
+      "tests": [
+        "Functional tests cover search and discovery pagination, stable boundaries with tied ranking, filter retention, empty/out-of-range pages, and invalid/oversized page values.",
+        "Negative visibility tests prove hidden documents do not affect returned rows or visible total counts, and pagination cannot bypass the existing viewer boundary.",
+        "Verify JSON/RSS feeds remain unchanged and the complete Worker CI passes on the exact final HEAD."
+      ],
+      "completion_report": [
+        "Exact sanitized main base and final feature HEAD; changed paths and Worker PR.",
+        "Visible-count, deterministic order, page-bound, and feed-preservation behavior.",
+        "Functional and negative visibility tests plus exact-head full CI results.",
+        "Unresolved limits and Trusted/Fortress follow-up."
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-Trusted-review-and-exact-head-CI",
+        "preserve-search-viewer-visibility-boundary-and-no-store-feed-behavior",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "no-schema-or-migration-change",
+        "no-private-runtime-or-sensitive-data",
+        "no-path-overlap-with-active-or-claim-locked-packages"
+      ],
+      "completion_report_required": true,
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "7b2ca79405fc12d34bce1386157e929e4668f31a",
+      "proposal_kind": "worker_only",
+      "proposal_dependency_evidence": [
+        {
+          "package_id": "FCP-069",
+          "worker_pr": 38,
+          "exact_head": "0b243f72cd6813e76574840dcc9c542396ec270e",
+          "ci_run_id": 36227368671,
+          "ci_result": "success",
+          "status": "trusted_integrated",
+          "claim_state": "released_after_trusted_integration"
+        }
+      ],
+      "collision_check": {
+        "compared_against": "Fresh continuous/work-pool-v4 @ 00712304efe54a673acb9a0ae0946a1277a39ce2; current sanitized main @ 7b2ca79405fc12d34bce1386157e929e4668f31a; active and claim-locked paths before reservation.",
+        "result": "No allowed-path overlap with active or claim-locked packages. FCP-069 is trusted-integrated with green CI. The unclaimed blocked FCP-072 has a broad templates/ path, so this proposal uses src/Search/Templates plus dedicated config and does not touch templates/. The active WCP-549 global-search widget has disjoint Widget/config/test paths.",
+        "paths": [
+          "src/Controller/Search/SearchController.php",
+          "src/Search/SearchService.php",
+          "src/Search/SearchResultsPage.php",
+          "src/Search/Templates/search/paginated_index.html.twig",
+          "config/packages/search_pagination.yaml",
+          "tests/Controller/SearchPaginationTest.php",
+          "tests/Search/SearchResultsPageTest.php"
+        ],
+        "observed_nonblocking_path_hits": [
+          {
+            "id": "FCP-069",
+            "title": "Permission-aware global search discovery and feeds",
+            "state": "trusted_integrated",
+            "paths": [
+              "src/Search/",
+              "src/Controller/Search/",
+              "tests/Search/"
+            ],
+            "note": "Trusted integrated; dependency evidence is exact and green."
+          },
+          {
+            "id": "FCP-072",
+            "title": "Translations accessibility mobile editing and optional PWA",
+            "state": "unclaimed",
+            "paths": [
+              "templates/"
+            ],
+            "note": "Unclaimed and dependency-blocked; no overlap because the new view is under src/Search/Templates/."
+          }
+        ]
+      },
+      "claimed_on": "2026-09-27T17:10:06.277Z",
+      "claim_state": "active",
+      "active_base_branch": "main",
+      "active_base_sha": "7b2ca79405fc12d34bce1386157e929e4668f31a",
+      "active_head": "7b2ca79405fc12d34bce1386157e929e4668f31a",
+      "resume_branch": "feature/wcp-559-global-search-pagination-g1",
+      "branch_heads": {
+        "claim_branch": "7b2ca79405fc12d34bce1386157e929e4668f31a",
+        "feature_branch": "7b2ca79405fc12d34bce1386157e929e4668f31a"
+      },
+      "last_observed_head": "7b2ca79405fc12d34bce1386157e929e4668f31a",
+      "last_checkpoint_at": "2026-09-27T17:10:06.277Z",
+      "last_verified_push_at": "2026-09-27T17:10:06.277Z",
+      "checkpoint_paths": [
+        "src/Controller/Search/SearchController.php",
+        "src/Search/SearchService.php",
+        "src/Search/SearchResultsPage.php",
+        "src/Search/Templates/search/paginated_index.html.twig",
+        "config/packages/search_pagination.yaml",
+        "tests/Controller/SearchPaginationTest.php",
+        "tests/Search/SearchResultsPageTest.php"
+      ],
+      "next_action": "Implement the bounded SearchResultsPage service flow, dedicated accessible Twig page, strict page parsing, and permission-aware pagination/feed regression tests on the published feature branch.",
+      "worker_pr": null,
+      "worker_pr_state": "not_created",
+      "worker_pr_changed_paths": [],
+      "ci_result": "not_run",
+      "ci_attempts": []
     }
   ],
   "recovery_queue": [],
