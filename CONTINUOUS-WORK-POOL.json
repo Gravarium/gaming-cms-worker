@@ -17,7 +17,7 @@
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-519 session-token and SQLite fixture adjustments are on exact HEAD 9f33ccc27f973276d6990d6e21bb25c8ab9edbc2; Worker CI run 36314830842 is in progress.",
+    "next_required_action": "WCP-518 fixture collision fix is pushed at bc4ee9da587590096c28c827f73a68fc45fff423; corrected exact-head Worker CI run 36314831542 is in progress. Inspect results and keep this claim locked through Trusted resolution.",
     "composition_preparable": 0,
     "immediately_actionable": 21,
     "must_continue": true
@@ -35913,22 +35913,22 @@
       "claimed_on": "2026-09-27T10:58:06.085Z",
       "active_base_branch": "main",
       "active_base_sha": "b510875e7b0741b9b19f09429d2204a95df51198",
-      "active_head": "cb44af6e64b607e45b82764588db7fc93f6e4b0e",
+      "active_head": "bc4ee9da587590096c28c827f73a68fc45fff423",
       "resume_branch": "feature/wcp-518-upcoming-game-release-widget-g1",
       "branch_heads": {
         "claim_branch": "b510875e7b0741b9b19f09429d2204a95df51198",
-        "feature_branch": "cb44af6e64b607e45b82764588db7fc93f6e4b0e"
+        "feature_branch": "bc4ee9da587590096c28c827f73a68fc45fff423"
       },
-      "last_observed_head": "cb44af6e64b607e45b82764588db7fc93f6e4b0e",
+      "last_observed_head": "bc4ee9da587590096c28c827f73a68fc45fff423",
       "checkpoint_paths": [
         "src/Widget/GameRelease/UpcomingReleaseQuery.php",
         "src/Widget/UpcomingGameReleaseWidgetProvider.php",
         "templates/widget/upcoming_game_releases.html.twig",
         "tests/Widget/UpcomingGameReleaseWidgetProviderTest.php"
       ],
-      "next_action": "Repair the new test fixture on the same feature branch: use unique game slugs and guard cleanup when a failed flush closes the EntityManager. Push a new exact HEAD and rerun complete Worker CI.",
-      "last_checkpoint_at": "2026-09-27T11:04:15.622Z",
-      "last_verified_push_at": "2026-09-27T11:04:15.622Z",
+      "next_action": "Monitor corrected exact-head Worker CI run 36314831542 for bc4ee9da587590096c28c827f73a68fc45fff423; the prior run failed only on a colliding game slug and cleanup after the failed flush. If a further check is red, inspect its logs and fix on this branch.",
+      "last_checkpoint_at": "2026-09-27T11:10:25.791Z",
+      "last_verified_push_at": "2026-09-27T11:10:25.791Z",
       "worker_pr": 310,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/310",
       "draft_pr": true,
@@ -35940,16 +35940,21 @@
         "templates/widget/upcoming_game_releases.html.twig",
         "tests/Widget/UpcomingGameReleaseWidgetProviderTest.php"
       ],
-      "ci_run_id": 36314564707,
-      "last_ci_run_id": 36314564707,
-      "ci_result": "failure",
-      "last_ci_result": "failure",
+      "ci_run_id": 36314831542,
+      "last_ci_run_id": 36314831542,
+      "ci_result": "in_progress",
+      "last_ci_result": "in_progress",
       "ci_attempts": [
         {
           "run_id": 36314564707,
           "head": "cb44af6e64b607e45b82764588db7fc93f6e4b0e",
           "result": "failure",
           "summary": "PHPStan, PHP/Symfony, Twig/container/Doctrine checks and PostgreSQL 18 migration chain passed. PHPUnit found one unique game.slug collision because the test used release-game, which already exists in GameCatalogueControllerTest; its finally cleanup then touched the EntityManager closed by the failed flush. Fix only the new test with per-run unique slugs and guarded cleanup, then rerun full exact-head CI."
+        },
+        {
+          "run_id": 36314831542,
+          "head": "bc4ee9da587590096c28c827f73a68fc45fff423",
+          "result": "in_progress"
         }
       ]
     },
