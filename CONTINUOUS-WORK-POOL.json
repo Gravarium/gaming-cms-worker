@@ -10,7 +10,7 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T01:23:15.924Z",
+  "published_at": "2026-09-27T01:24:07.786Z",
   "summary": {
     "total_remaining_worker_tasks": 141,
     "completed_worker_prs_awaiting_trusted_review": 213,
@@ -24908,29 +24908,35 @@
       "claim_state": "active",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-      "active_head": "6d69971d572e30c64514a2bd7d0444c43c07c7c5",
+      "active_head": "16fa748d115f36ece52d71d04c18ed5ec77ec720",
       "resume_branch": "feature/wcp-446-site-settings-security-g1",
-      "last_checkpoint_at": "2026-09-27T01:22:19.234Z",
+      "last_checkpoint_at": "2026-09-27T01:24:07.786Z",
       "checkpoint_paths": [
         "tests/Controller/AdminSettingsSecurityTest.php"
       ],
       "branch_heads": {
         "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-        "feature_branch": "6d69971d572e30c64514a2bd7d0444c43c07c7c5"
+        "feature_branch": "16fa748d115f36ece52d71d04c18ed5ec77ec720"
       },
-      "next_action": "Inspect Worker CI run 36285309077 on exact HEAD 6d69971d572e30c64514a2bd7d0444c43c07c7c5; repair concrete failures if present.",
-      "last_verified_push_at": "2026-09-27T01:21:43.823Z",
+      "next_action": "Run exact-head Worker CI on 16fa748d115f36ece52d71d04c18ed5ec77ec720; the prior failure was only the expected 422 response assertion for invalid form CSRF.",
+      "last_verified_push_at": "2026-09-27T01:24:07.786Z",
       "worker_pr": 239,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/239",
       "pr_state": "open_draft_unmerged",
       "draft_pr": true,
       "last_ci_run_id": 36285309077,
-      "ci_result": "queued",
+      "ci_result": "failure",
       "ci_attempts": [
         {
           "run_id": 36285309077,
           "head": "6d69971d572e30c64514a2bd7d0444c43c07c7c5",
           "result": "queued"
+        },
+        {
+          "run_id": 36285309077,
+          "head": "6d69971d572e30c64514a2bd7d0444c43c07c7c5",
+          "result": "failure",
+          "reason": "The settings form correctly returns HTTP 422 with a CSRF validation message; the test expected a generic successful response. It now asserts the 422 and token error before checking that persisted settings are unchanged."
         }
       ]
     },
