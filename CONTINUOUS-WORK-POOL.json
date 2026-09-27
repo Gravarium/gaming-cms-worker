@@ -26440,7 +26440,7 @@
       "package_id": "WCP-456",
       "title": "Search and paginate every administrative content release",
       "risk": "medium",
-      "execution_state": "worker_complete_awaiting_trusted_review",
+      "execution_state": "trusted_integrated",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -26526,7 +26526,7 @@
         ]
       },
       "claimed_on": "2026-09-27T02:45:54.916Z",
-      "claim_state": "locked_until_trusted_resolution",
+      "claim_state": "released_after_trusted_integration",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
       "active_head": "6c9f97e233d15cb508a09a58949528be4044c65b",
@@ -26548,7 +26548,7 @@
       "worker_pr": 253,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/253",
       "draft_pr": false,
-      "pr_state": "open_ready_for_review_unmerged",
+      "pr_state": "closed",
       "final_head": "6c9f97e233d15cb508a09a58949528be4044c65b",
       "final_changed_paths": [
         "src/Controller/AdminContentReleaseController.php",
@@ -26603,6 +26603,19 @@
         "php_symfony_job": "success: 437 tests, 1947 assertions; PHPStan level 8 no errors; Composer audit, PHP/YAML/Twig/container/asset/Doctrine checks passed; one PHPUnit deprecation and one notice.",
         "postgresql_job": "success: PostgreSQL 18 ran and verified all 39 migrations through Version20260925070000.",
         "trusted_follow_up": "Review and transfer approved changes into a fresh Trusted branch, then run full Trusted CI. No Worker merge or deployment."
+      },
+      "worker_pr_state": "closed",
+      "trusted_resolution": {
+        "status": "integrated",
+        "worker_pr": 253,
+        "worker_head": "6c9f97e233d15cb508a09a58949528be4044c65b",
+        "trusted_pr": 163,
+        "trusted_merge_sha": "3545f17d364450418588efb935fc3e8a270561fb",
+        "final_trusted_main_sha": "3545f17d364450418588efb935fc3e8a270561fb",
+        "final_trusted_main_ci_run_id": 36334670476,
+        "sanitized_worker_sync_sha": "b3eca4cfb21549fa10c67fb9c8e5b31af4cc41e1",
+        "worker_ci_run_id": 36334682289,
+        "resolved_at": "2026-09-27T16:55:00.709Z"
       }
     },
     {
@@ -26744,7 +26757,7 @@
       "package_id": "WCP-458",
       "title": "Show category hierarchy and public archive entry points",
       "risk": "medium",
-      "execution_state": "worker_complete_awaiting_trusted_review",
+      "execution_state": "trusted_integrated",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -26817,7 +26830,7 @@
         ]
       },
       "published_at": "2026-09-27T02:57:53.142Z",
-      "claim_state": "locked_until_trusted_resolution",
+      "claim_state": "released_after_trusted_integration",
       "claimed_on": "2026-09-27T02:58:18.241Z",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
@@ -26839,7 +26852,22 @@
       "last_observed_head": "f500378f1d17b383300d025e40fbefc0b671af0a",
       "ci_run_id": 36290192242,
       "ci_result": "success",
-      "completed_at": "2026-09-27T03:04:32.875Z"
+      "completed_at": "2026-09-27T03:04:32.875Z",
+      "pr_state": "closed",
+      "worker_pr_state": "closed",
+      "trusted_resolution": {
+        "status": "deduplicated",
+        "worker_pr": 251,
+        "worker_head": "f500378f1d17b383300d025e40fbefc0b671af0a",
+        "trusted_pr": 163,
+        "trusted_merge_sha": "3545f17d364450418588efb935fc3e8a270561fb",
+        "final_trusted_main_sha": "3545f17d364450418588efb935fc3e8a270561fb",
+        "final_trusted_main_ci_run_id": 36334670476,
+        "sanitized_worker_sync_sha": "b3eca4cfb21549fa10c67fb9c8e5b31af4cc41e1",
+        "worker_ci_run_id": 36334682289,
+        "resolved_at": "2026-09-27T16:55:00.709Z",
+        "integrated_via_worker_pr": 274
+      }
     },
     {
       "priority": 459,
@@ -26978,8 +27006,8 @@
       "package_id": "WCP-460",
       "title": "Browse and inspect automatic content redirects",
       "risk": "medium",
-      "execution_state": "worker_complete_awaiting_trusted_review",
-      "claim_state": "locked_until_trusted_resolution",
+      "execution_state": "trusted_integrated",
+      "claim_state": "released_after_trusted_integration",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -27085,7 +27113,7 @@
       "next_action": "Await Trusted review; keep this claim locked until Trusted explicitly integrates, cancels or transfers it with checkpoint evidence.",
       "worker_pr": 254,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/254",
-      "pr_state": "open_ready_for_review_unmerged",
+      "pr_state": "closed",
       "draft_pr": false,
       "ci_run_id": 36291890547,
       "last_ci_run_id": 36291890547,
@@ -27144,7 +27172,20 @@
         "The inventory is intentionally read-only; manual redirect creation and retiring an existing redirect remain outside this proposal.",
         "Awaiting Trusted review and transfer to a fresh Trusted branch with full Trusted CI."
       ],
-      "trusted_follow_up": "On transfer, verify CMS_CONTENT_MANAGE authorization, dashboard content-module gating, unpublished-target link restrictions, and unchanged automatic slug-change redirect creation/public 301 resolution. Run the complete Trusted CI at the exact Trusted HEAD before integration or deployment."
+      "trusted_follow_up": "On transfer, verify CMS_CONTENT_MANAGE authorization, dashboard content-module gating, unpublished-target link restrictions, and unchanged automatic slug-change redirect creation/public 301 resolution. Run the complete Trusted CI at the exact Trusted HEAD before integration or deployment.",
+      "worker_pr_state": "closed",
+      "trusted_resolution": {
+        "status": "integrated",
+        "worker_pr": 254,
+        "worker_head": "58d70fec12c3397f96bb2cb05f2ee7e050e56696",
+        "trusted_pr": 163,
+        "trusted_merge_sha": "3545f17d364450418588efb935fc3e8a270561fb",
+        "final_trusted_main_sha": "3545f17d364450418588efb935fc3e8a270561fb",
+        "final_trusted_main_ci_run_id": 36334670476,
+        "sanitized_worker_sync_sha": "b3eca4cfb21549fa10c67fb9c8e5b31af4cc41e1",
+        "worker_ci_run_id": 36334682289,
+        "resolved_at": "2026-09-27T16:55:00.709Z"
+      }
     },
     {
       "priority": 461,
@@ -28518,7 +28559,7 @@
       "package_id": "WCP-470",
       "title": "Protect content tag creation and deletion with authorization and CSRF",
       "risk": "medium",
-      "execution_state": "worker_complete_awaiting_trusted_review",
+      "execution_state": "trusted_integrated",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -28593,7 +28634,7 @@
       },
       "published_at": "2026-09-27T05:04:51.529Z",
       "claimed_on": "2026-09-27T05:04:51.529Z",
-      "claim_state": "locked_until_trusted_resolution",
+      "claim_state": "released_after_trusted_integration",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
       "active_head": "95f9ba7d9b77315f97ec59420d099cd73349aada",
@@ -28612,7 +28653,7 @@
       "worker_pr": 263,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/263",
       "draft_pr": false,
-      "pr_state": "open_ready_unmerged",
+      "pr_state": "closed",
       "ci_run_id": 36296362373,
       "last_ci_run_id": 36296362373,
       "ci_result": "success",
@@ -28668,7 +28709,20 @@
       "open_limitations": [
         "Awaiting Trusted review and Trusted integration CI."
       ],
-      "trusted_follow_up": "Preserve CMS_CONTENT_MANAGE and content-tag form/delete-route CSRF checks before mutations; run full Trusted CI."
+      "trusted_follow_up": "Preserve CMS_CONTENT_MANAGE and content-tag form/delete-route CSRF checks before mutations; run full Trusted CI.",
+      "worker_pr_state": "closed",
+      "trusted_resolution": {
+        "status": "integrated",
+        "worker_pr": 263,
+        "worker_head": "95f9ba7d9b77315f97ec59420d099cd73349aada",
+        "trusted_pr": 163,
+        "trusted_merge_sha": "3545f17d364450418588efb935fc3e8a270561fb",
+        "final_trusted_main_sha": "3545f17d364450418588efb935fc3e8a270561fb",
+        "final_trusted_main_ci_run_id": 36334670476,
+        "sanitized_worker_sync_sha": "b3eca4cfb21549fa10c67fb9c8e5b31af4cc41e1",
+        "worker_ci_run_id": 36334682289,
+        "resolved_at": "2026-09-27T16:55:00.709Z"
+      }
     },
     {
       "priority": 471,
@@ -30286,7 +30340,7 @@
       "package_id": "WCP-480",
       "title": "Move content before retiring a category",
       "risk": "medium",
-      "execution_state": "worker_complete_awaiting_trusted_review",
+      "execution_state": "trusted_integrated",
       "dependencies": [
         "WCP-458"
       ],
@@ -30381,7 +30435,7 @@
       },
       "published_at": "2026-09-27T06:54:51.325Z",
       "claimed_on": "2026-09-27T06:54:51.325Z",
-      "claim_state": "locked_until_trusted_resolution",
+      "claim_state": "released_after_trusted_integration",
       "active_base_branch": "feature/wcp-458-category-hierarchy-operator-g1",
       "active_base_sha": "f500378f1d17b383300d025e40fbefc0b671af0a",
       "active_head": "763ef6bbef5c54e7ad36c7bc5a15fd576291d206",
@@ -30427,7 +30481,7 @@
       "worker_pr": 274,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/274",
       "draft_pr": false,
-      "pr_state": "open",
+      "pr_state": "closed",
       "ci_run_id": 36302379923,
       "last_ci_run_id": 36302379923,
       "final_head": "763ef6bbef5c54e7ad36c7bc5a15fd576291d206",
@@ -30494,7 +30548,20 @@
       "open_limitations": [
         "Awaiting Trusted review and Trusted integration CI; cumulative PR carries the WCP-458 predecessor."
       ],
-      "trusted_follow_up": "Map this worker proposal together with WCP-458 into the canonical Trusted queue, review the stacked category move workflow, and run full Trusted CI while preserving the atomic audit boundary, entry metadata/status, source category and hierarchy."
+      "trusted_follow_up": "Map this worker proposal together with WCP-458 into the canonical Trusted queue, review the stacked category move workflow, and run full Trusted CI while preserving the atomic audit boundary, entry metadata/status, source category and hierarchy.",
+      "worker_pr_state": "closed",
+      "trusted_resolution": {
+        "status": "integrated",
+        "worker_pr": 274,
+        "worker_head": "763ef6bbef5c54e7ad36c7bc5a15fd576291d206",
+        "trusted_pr": 163,
+        "trusted_merge_sha": "3545f17d364450418588efb935fc3e8a270561fb",
+        "final_trusted_main_sha": "3545f17d364450418588efb935fc3e8a270561fb",
+        "final_trusted_main_ci_run_id": 36334670476,
+        "sanitized_worker_sync_sha": "b3eca4cfb21549fa10c67fb9c8e5b31af4cc41e1",
+        "worker_ci_run_id": 36334682289,
+        "resolved_at": "2026-09-27T16:55:00.709Z"
+      }
     },
     {
       "priority": 481,
@@ -30844,7 +30911,7 @@
       "package_id": "WCP-483",
       "title": "Merge duplicate content tags without losing assigned entries",
       "risk": "medium",
-      "execution_state": "worker_complete_awaiting_trusted_review",
+      "execution_state": "trusted_integrated",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -30932,7 +30999,7 @@
       },
       "published_at": "2026-09-27T07:29:07.532Z",
       "next_action": "Await Trusted review and integration CI; keep the claim locked until Trusted explicitly resolves it.",
-      "claim_state": "locked_until_trusted_resolution",
+      "claim_state": "released_after_trusted_integration",
       "claimed_on": "2026-09-27T07:30:00.468Z",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
@@ -30966,7 +31033,7 @@
       "ci_result": "success",
       "last_ci_result": "success",
       "draft_pr": false,
-      "pr_state": "open",
+      "pr_state": "closed",
       "ci_attempts": [
         {
           "run_id": 36303901139,
@@ -31043,7 +31110,20 @@
       "open_limitations": [
         "Awaiting Trusted review and Trusted integration CI."
       ],
-      "trusted_follow_up": "Map this Worker proposal into the canonical Trusted queue, review the merge transaction and source/target semantics, then run full Trusted CI while preserving audit evidence, entry associations, content/publication state and target metadata."
+      "trusted_follow_up": "Map this Worker proposal into the canonical Trusted queue, review the merge transaction and source/target semantics, then run full Trusted CI while preserving audit evidence, entry associations, content/publication state and target metadata.",
+      "worker_pr_state": "closed",
+      "trusted_resolution": {
+        "status": "integrated",
+        "worker_pr": 276,
+        "worker_head": "0eec4a4289abe6d5850f5eac98c522892a1facf5",
+        "trusted_pr": 163,
+        "trusted_merge_sha": "3545f17d364450418588efb935fc3e8a270561fb",
+        "final_trusted_main_sha": "3545f17d364450418588efb935fc3e8a270561fb",
+        "final_trusted_main_ci_run_id": 36334670476,
+        "sanitized_worker_sync_sha": "b3eca4cfb21549fa10c67fb9c8e5b31af4cc41e1",
+        "worker_ci_run_id": 36334682289,
+        "resolved_at": "2026-09-27T16:55:00.709Z"
+      }
     },
     {
       "priority": 484,
@@ -31178,7 +31258,7 @@
       "package_id": "WCP-485",
       "title": "Browse public content by tag across news and pages",
       "risk": "medium",
-      "execution_state": "worker_complete_awaiting_trusted_review",
+      "execution_state": "trusted_integrated",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -31264,7 +31344,7 @@
       },
       "published_at": "2026-09-27T08:09:53.362Z",
       "claimed_on": "2026-09-27T08:10:50.393Z",
-      "claim_state": "locked_until_trusted_resolution",
+      "claim_state": "released_after_trusted_integration",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5",
       "active_head": "c2ef72d063a1de02379ba07baf45d5774b604e52",
@@ -31294,7 +31374,7 @@
         "tests/Controller/PublicContentTagArchiveTest.php"
       ],
       "draft_pr": false,
-      "pr_state": "open",
+      "pr_state": "closed",
       "ci_run_id": 36306206063,
       "last_ci_run_id": 36306206063,
       "ci_result": "success",
@@ -31375,7 +31455,20 @@
       "open_limitations": [
         "News-index tag links still target the legacy news-only archive because WCP-402 owns templates/content/news.html.twig under a locked claim; coordinate any shared-archive link change after WCP-402 is Trusted-resolved."
       ],
-      "trusted_follow_up": "Map WCP-485 into the canonical Trusted queue, review the published/listed query and route/template changes, then run full Trusted CI on a fresh Trusted feature branch. Revalidate WCP-402's news-index template ownership before changing those links; revalidate FCP-072's broad templates/ scope before any future claim."
+      "trusted_follow_up": "Map WCP-485 into the canonical Trusted queue, review the published/listed query and route/template changes, then run full Trusted CI on a fresh Trusted feature branch. Revalidate WCP-402's news-index template ownership before changing those links; revalidate FCP-072's broad templates/ scope before any future claim.",
+      "worker_pr_state": "closed",
+      "trusted_resolution": {
+        "status": "integrated",
+        "worker_pr": 278,
+        "worker_head": "c2ef72d063a1de02379ba07baf45d5774b604e52",
+        "trusted_pr": 163,
+        "trusted_merge_sha": "3545f17d364450418588efb935fc3e8a270561fb",
+        "final_trusted_main_sha": "3545f17d364450418588efb935fc3e8a270561fb",
+        "final_trusted_main_ci_run_id": 36334670476,
+        "sanitized_worker_sync_sha": "b3eca4cfb21549fa10c67fb9c8e5b31af4cc41e1",
+        "worker_ci_run_id": 36334682289,
+        "resolved_at": "2026-09-27T16:55:00.709Z"
+      }
     },
     {
       "priority": 486,
@@ -32635,7 +32728,7 @@
       "package_id": "WCP-494",
       "title": "Keep scheduled content out of public news and page surfaces",
       "risk": "medium",
-      "execution_state": "worker_complete_awaiting_trusted_review",
+      "execution_state": "trusted_integrated",
       "dependencies": [
         "WCP-090"
       ],
@@ -32722,7 +32815,7 @@
       },
       "published_at": "2026-09-27T09:27:59.291Z",
       "claimed_on": "2026-09-27T09:27:59.291Z",
-      "claim_state": "locked_until_trusted_resolution",
+      "claim_state": "released_after_trusted_integration",
       "active_base_branch": "feature/wcp-090-scheduled-unpublish-g1",
       "active_base_sha": "f4f394b9a7d5d6f5cd9495d8d1527370cfb2dc18",
       "active_head": "d7b75a5c0bb9a35b6e50a6dc1c62006294450ca5",
@@ -32741,7 +32834,7 @@
       "worker_pr": 287,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/287",
       "draft_pr": false,
-      "pr_state": "open",
+      "pr_state": "closed",
       "ci_run_id": 36310425453,
       "last_ci_run_id": 36310425453,
       "ci_result": "success",
@@ -32784,7 +32877,20 @@
       "final_changed_paths": [
         "tests/Controller/PublicScheduledContentVisibilityTest.php"
       ],
-      "completed_at": "2026-09-27T09:49:40.780Z"
+      "completed_at": "2026-09-27T09:49:40.780Z",
+      "worker_pr_state": "closed",
+      "trusted_resolution": {
+        "status": "integrated",
+        "worker_pr": 287,
+        "worker_head": "d7b75a5c0bb9a35b6e50a6dc1c62006294450ca5",
+        "trusted_pr": 163,
+        "trusted_merge_sha": "3545f17d364450418588efb935fc3e8a270561fb",
+        "final_trusted_main_sha": "3545f17d364450418588efb935fc3e8a270561fb",
+        "final_trusted_main_ci_run_id": 36334670476,
+        "sanitized_worker_sync_sha": "b3eca4cfb21549fa10c67fb9c8e5b31af4cc41e1",
+        "worker_ci_run_id": 36334682289,
+        "resolved_at": "2026-09-27T16:55:00.709Z"
+      }
     },
     {
       "priority": 495,
@@ -33513,7 +33619,7 @@
       "package_id": "WCP-500",
       "title": "Expose the public content category directory",
       "risk": "low",
-      "execution_state": "worker_complete_awaiting_trusted_review",
+      "execution_state": "trusted_integrated",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -33601,7 +33707,7 @@
       },
       "published_at": "2026-09-27T09:52:59.275Z",
       "claimed_on": "2026-09-27T09:52:59.275Z",
-      "claim_state": "locked_until_trusted_resolution",
+      "claim_state": "released_after_trusted_integration",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
       "active_head": "95aae6029159fe93e40336ab5a9c765d94011e0c",
@@ -33622,7 +33728,7 @@
       "worker_pr": 294,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/294",
       "draft_pr": false,
-      "pr_state": "open",
+      "pr_state": "closed",
       "worker_pr_changed_paths": [
         "src/Controller/PublicCategoryDirectoryController.php",
         "templates/category/index.html.twig",
@@ -33630,14 +33736,27 @@
       ],
       "final_head": "95aae6029159fe93e40336ab5a9c765d94011e0c",
       "ci_run_id": 36310933594,
-      "ci_result": "success"
+      "ci_result": "success",
+      "worker_pr_state": "closed",
+      "trusted_resolution": {
+        "status": "integrated",
+        "worker_pr": 294,
+        "worker_head": "95aae6029159fe93e40336ab5a9c765d94011e0c",
+        "trusted_pr": 163,
+        "trusted_merge_sha": "3545f17d364450418588efb935fc3e8a270561fb",
+        "final_trusted_main_sha": "3545f17d364450418588efb935fc3e8a270561fb",
+        "final_trusted_main_ci_run_id": 36334670476,
+        "sanitized_worker_sync_sha": "b3eca4cfb21549fa10c67fb9c8e5b31af4cc41e1",
+        "worker_ci_run_id": 36334682289,
+        "resolved_at": "2026-09-27T16:55:00.709Z"
+      }
     },
     {
       "priority": 501,
       "package_id": "WCP-501",
       "title": "Prevent public redirects to unpublished content",
       "risk": "medium",
-      "execution_state": "worker_complete_awaiting_trusted_review",
+      "execution_state": "trusted_integrated",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -33711,7 +33830,7 @@
       },
       "published_at": "2026-09-27T09:53:43.006Z",
       "claimed_on": "2026-09-27T09:53:43.006Z",
-      "claim_state": "locked_until_trusted_resolution",
+      "claim_state": "released_after_trusted_integration",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
       "active_head": "6357499a85cd9f3eb85b8db0e00f7e662c6dcc34",
@@ -33730,7 +33849,7 @@
       "worker_pr": 293,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/293",
       "draft_pr": false,
-      "pr_state": "open",
+      "pr_state": "closed",
       "ci_run_id": 36310898430,
       "last_ci_run_id": 36310898430,
       "ci_result": "success",
@@ -33750,7 +33869,20 @@
       "final_changed_paths": [
         "tests/Controller/PublicContentRedirectVisibilityTest.php"
       ],
-      "completed_at": "2026-09-27T10:00:22.287Z"
+      "completed_at": "2026-09-27T10:00:22.287Z",
+      "worker_pr_state": "closed",
+      "trusted_resolution": {
+        "status": "integrated",
+        "worker_pr": 293,
+        "worker_head": "6357499a85cd9f3eb85b8db0e00f7e662c6dcc34",
+        "trusted_pr": 163,
+        "trusted_merge_sha": "3545f17d364450418588efb935fc3e8a270561fb",
+        "final_trusted_main_sha": "3545f17d364450418588efb935fc3e8a270561fb",
+        "final_trusted_main_ci_run_id": 36334670476,
+        "sanitized_worker_sync_sha": "b3eca4cfb21549fa10c67fb9c8e5b31af4cc41e1",
+        "worker_ci_run_id": 36334682289,
+        "resolved_at": "2026-09-27T16:55:00.709Z"
+      }
     },
     {
       "priority": 502,
@@ -34418,7 +34550,7 @@
       "package_id": "WCP-507",
       "title": "Expose a public directory of published pages",
       "risk": "low",
-      "execution_state": "worker_complete_awaiting_trusted_review",
+      "execution_state": "trusted_integrated",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -34500,7 +34632,7 @@
       },
       "published_at": "2026-09-27T10:04:19.189Z",
       "claimed_on": "2026-09-27T10:04:19.189Z",
-      "claim_state": "locked_until_trusted_resolution",
+      "claim_state": "released_after_trusted_integration",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
       "active_head": "a7d4fd835a134dd1b17d5e515e5a549a4ed7fd3a",
@@ -34539,7 +34671,21 @@
       "final_head": "a7d4fd835a134dd1b17d5e515e5a549a4ed7fd3a",
       "ci_run_id": 36311725866,
       "ci_result": "success",
-      "completed_on": "2026-09-27T10:13:57.732Z"
+      "completed_on": "2026-09-27T10:13:57.732Z",
+      "pr_state": "closed",
+      "worker_pr_state": "closed",
+      "trusted_resolution": {
+        "status": "integrated",
+        "worker_pr": 300,
+        "worker_head": "a7d4fd835a134dd1b17d5e515e5a549a4ed7fd3a",
+        "trusted_pr": 163,
+        "trusted_merge_sha": "3545f17d364450418588efb935fc3e8a270561fb",
+        "final_trusted_main_sha": "3545f17d364450418588efb935fc3e8a270561fb",
+        "final_trusted_main_ci_run_id": 36334670476,
+        "sanitized_worker_sync_sha": "b3eca4cfb21549fa10c67fb9c8e5b31af4cc41e1",
+        "worker_ci_run_id": 36334682289,
+        "resolved_at": "2026-09-27T16:55:00.709Z"
+      }
     },
     {
       "priority": 508,
@@ -35557,7 +35703,7 @@
       "package_id": "WCP-515",
       "title": "Protect scheduled content from editor autosave",
       "risk": "low",
-      "execution_state": "worker_complete_awaiting_trusted_review",
+      "execution_state": "trusted_integrated",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -35629,7 +35775,7 @@
       },
       "published_at": "2026-09-27T10:45:22.486Z",
       "claimed_on": "2026-09-27T10:45:22.486Z",
-      "claim_state": "locked_until_trusted_resolution",
+      "claim_state": "released_after_trusted_integration",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
       "active_head": "0c484fe148c2b90ecf09c45ff8b352737b00f62c",
@@ -35648,8 +35794,8 @@
       "worker_pr": 308,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/308",
       "draft_pr": false,
-      "pr_state": "open",
-      "worker_pr_state": "ready",
+      "pr_state": "closed",
+      "worker_pr_state": "closed",
       "worker_pr_changed_paths": [
         "tests/Controller/Content/ScheduledContentAutosaveBoundaryTest.php"
       ],
@@ -35675,7 +35821,19 @@
       "final_changed_paths": [
         "tests/Controller/Content/ScheduledContentAutosaveBoundaryTest.php"
       ],
-      "completed_at": "2026-09-27T10:55:28.447Z"
+      "completed_at": "2026-09-27T10:55:28.447Z",
+      "trusted_resolution": {
+        "status": "integrated",
+        "worker_pr": 308,
+        "worker_head": "0c484fe148c2b90ecf09c45ff8b352737b00f62c",
+        "trusted_pr": 163,
+        "trusted_merge_sha": "3545f17d364450418588efb935fc3e8a270561fb",
+        "final_trusted_main_sha": "3545f17d364450418588efb935fc3e8a270561fb",
+        "final_trusted_main_ci_run_id": 36334670476,
+        "sanitized_worker_sync_sha": "b3eca4cfb21549fa10c67fb9c8e5b31af4cc41e1",
+        "worker_ci_run_id": 36334682289,
+        "resolved_at": "2026-09-27T16:55:00.709Z"
+      }
     },
     {
       "priority": 516,
@@ -35880,7 +36038,7 @@
       "package_id": "WCP-517",
       "title": "Compare content revisions before restoring",
       "risk": "medium",
-      "execution_state": "worker_complete_awaiting_trusted_review",
+      "execution_state": "trusted_integrated",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -35966,7 +36124,7 @@
       },
       "published_at": "2026-09-27T10:52:42.182Z",
       "claimed_on": "2026-09-27T10:52:42.182Z",
-      "claim_state": "locked_until_trusted_resolution",
+      "claim_state": "released_after_trusted_integration",
       "active_base_branch": "main",
       "active_base_sha": "b510875e7b0741b9b19f09429d2204a95df51198",
       "active_head": "9be8173d0d215418d0401a44edb62a297d35f815",
@@ -35987,7 +36145,21 @@
       "worker_pr": 312,
       "ci_run_id": 36315003569,
       "ci_result": "success",
-      "completed_at": "2026-09-27T11:16:35.557Z"
+      "completed_at": "2026-09-27T11:16:35.557Z",
+      "pr_state": "closed",
+      "worker_pr_state": "closed",
+      "trusted_resolution": {
+        "status": "integrated",
+        "worker_pr": 312,
+        "worker_head": "9be8173d0d215418d0401a44edb62a297d35f815",
+        "trusted_pr": 163,
+        "trusted_merge_sha": "3545f17d364450418588efb935fc3e8a270561fb",
+        "final_trusted_main_sha": "3545f17d364450418588efb935fc3e8a270561fb",
+        "final_trusted_main_ci_run_id": 36334670476,
+        "sanitized_worker_sync_sha": "b3eca4cfb21549fa10c67fb9c8e5b31af4cc41e1",
+        "worker_ci_run_id": 36334682289,
+        "resolved_at": "2026-09-27T16:55:00.709Z"
+      }
     },
     {
       "priority": 518,
@@ -37216,7 +37388,7 @@
       "package_id": "WCP-525",
       "title": "Keep unpublished and unlisted content out of public discovery feeds",
       "risk": "medium",
-      "execution_state": "worker_complete_awaiting_trusted_review",
+      "execution_state": "trusted_integrated",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -37292,7 +37464,7 @@
       },
       "published_at": "2026-09-27T11:45:00.021Z",
       "claimed_on": "2026-09-27T11:45:00.021Z",
-      "claim_state": "locked_until_trusted_resolution",
+      "claim_state": "released_after_trusted_integration",
       "active_base_branch": "main",
       "active_base_sha": "b510875e7b0741b9b19f09429d2204a95df51198",
       "active_head": "3c1bab1dc29f8f4441add3fbeecf17cc3c82f4b3",
@@ -37315,8 +37487,8 @@
         "tests/Controller/Content/PublicContentDiscoveryVisibilityTest.php"
       ],
       "draft_pr": false,
-      "pr_state": "open",
-      "worker_pr_state": "ready_for_review",
+      "pr_state": "closed",
+      "worker_pr_state": "closed",
       "last_verified_push_at": "2026-09-27T11:55:05.312Z",
       "ci_run_id": 36317226668,
       "last_ci_run_id": 36317226668,
@@ -37338,7 +37510,19 @@
         }
       ],
       "final_head": "3c1bab1dc29f8f4441add3fbeecf17cc3c82f4b3",
-      "completed_at": "2026-09-27T11:57:21.289Z"
+      "completed_at": "2026-09-27T11:57:21.289Z",
+      "trusted_resolution": {
+        "status": "integrated",
+        "worker_pr": 316,
+        "worker_head": "3c1bab1dc29f8f4441add3fbeecf17cc3c82f4b3",
+        "trusted_pr": 163,
+        "trusted_merge_sha": "3545f17d364450418588efb935fc3e8a270561fb",
+        "final_trusted_main_sha": "3545f17d364450418588efb935fc3e8a270561fb",
+        "final_trusted_main_ci_run_id": 36334670476,
+        "sanitized_worker_sync_sha": "b3eca4cfb21549fa10c67fb9c8e5b31af4cc41e1",
+        "worker_ci_run_id": 36334682289,
+        "resolved_at": "2026-09-27T16:55:00.709Z"
+      }
     },
     {
       "priority": 526,
@@ -42125,7 +42309,7 @@
       "package_id": "WCP-551",
       "title": "Browse published CMS pages by category",
       "risk": "medium",
-      "execution_state": "worker_complete_awaiting_trusted_review",
+      "execution_state": "trusted_integrated",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -42244,7 +42428,7 @@
       },
       "published_at": "2026-09-27T15:25:12.599Z",
       "claimed_on": "2026-09-27T15:11:39.261Z",
-      "claim_state": "locked_until_trusted_resolution",
+      "claim_state": "released_after_trusted_integration",
       "active_base_branch": "main",
       "active_base_sha": "6988e871cbda8c27801ee0bcc02e8c5c2b0cd909",
       "active_head": "e85f66f054febce514e22dbc130c585880ef71ad",
@@ -42267,7 +42451,7 @@
         "tests/Widget/PublicPageCategoryArchiveWidgetTest.php"
       ],
       "next_action": "WCP-551 is complete as a Worker proposal. Keep claim branches locked until Trusted resolution. Refresh continuous/work-pool-v4, then choose and immediately claim the first free dependency-safe functional module package with disjoint paths; do not wait for Trusted review.",
-      "worker_pr_state": "ready_for_review",
+      "worker_pr_state": "closed",
       "worker_pr_changed_paths": [
         "src/Controller/PublicPageCategoryArchiveController.php",
         "src/PageCategoryArchive/PublicPageCategoryArchiveQuery.php",
@@ -42281,7 +42465,7 @@
       ],
       "worker_pr_base_branch": "main",
       "draft_pr": false,
-      "pr_state": "open",
+      "pr_state": "closed",
       "ci_result": "success",
       "last_ci_result": "success",
       "ci_attempts": [
@@ -42362,6 +42546,18 @@
           "Consumes existing page categories; category create/edit administration remains in its existing workflow.",
           "Worker output remains untrusted pending Trusted review and integration."
         ]
+      },
+      "trusted_resolution": {
+        "status": "integrated",
+        "worker_pr": 342,
+        "worker_head": "e85f66f054febce514e22dbc130c585880ef71ad",
+        "trusted_pr": 163,
+        "trusted_merge_sha": "3545f17d364450418588efb935fc3e8a270561fb",
+        "final_trusted_main_sha": "3545f17d364450418588efb935fc3e8a270561fb",
+        "final_trusted_main_ci_run_id": 36334670476,
+        "sanitized_worker_sync_sha": "b3eca4cfb21549fa10c67fb9c8e5b31af4cc41e1",
+        "worker_ci_run_id": 36334682289,
+        "resolved_at": "2026-09-27T16:55:00.709Z"
       }
     },
     {
