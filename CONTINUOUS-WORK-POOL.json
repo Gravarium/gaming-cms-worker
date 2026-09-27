@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T11:33:53.325Z",
+  "published_at": "2026-09-27T11:35:06.465Z",
   "summary": {
-    "total_remaining_worker_tasks": 166,
-    "completed_worker_prs_awaiting_trusted_review": 278,
+    "total_remaining_worker_tasks": 165,
+    "completed_worker_prs_awaiting_trusted_review": 279,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-522 is claimed on the exact sanitized main SHA; continue the public newsletter signup implementation on its exclusive feature branch. Other active claims remain with their owners.",
+    "next_required_action": "Re-evaluate the fresh pool in priority order and continue with the first dependency-safe unclaimed task or derive a bounded worker-only CMS proposal.",
     "composition_preparable": 0,
     "immediately_actionable": 21,
     "must_continue": true
@@ -36342,7 +36342,7 @@
       "package_id": "WCP-521",
       "title": "Verify private video watchlists stay hidden at the public route",
       "risk": "medium",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -36416,7 +36416,7 @@
       },
       "published_at": "2026-09-27T11:21:44.364Z",
       "claimed_on": "2026-09-27T11:21:44.364Z",
-      "claim_state": "active",
+      "claim_state": "locked_until_trusted_resolution",
       "active_base_branch": "main",
       "active_base_sha": "b510875e7b0741b9b19f09429d2204a95df51198",
       "active_head": "404420ce940dcf00b2f753596f09de385dff1993",
@@ -36425,7 +36425,7 @@
         "claim_branch": "b510875e7b0741b9b19f09429d2204a95df51198",
         "feature_branch": "404420ce940dcf00b2f753596f09de385dff1993"
       },
-      "next_action": "Monitor exact-head Worker CI run 36316017303 for HEAD 404420ce940dcf00b2f753596f09de385dff1993; repair only concrete failures within the dedicated video watchlist privacy test.",
+      "next_action": "Worker PR #313 is complete on exact green HEAD 404420ce940dcf00b2f753596f09de385dff1993; claim remains locked until trusted resolution.",
       "checkpoint_paths": [
         "tests/Controller/VideoDiscovery/VideoDiscoveryWatchlistPrivacyTest.php"
       ],
@@ -36434,16 +36434,16 @@
       "last_verified_push_at": "2026-09-27T11:32:21.047Z",
       "worker_pr": 313,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/313",
-      "draft_pr": true,
+      "draft_pr": false,
       "pr_state": "open",
-      "worker_pr_state": "draft",
+      "worker_pr_state": "ready_for_review",
       "worker_pr_changed_paths": [
         "tests/Controller/VideoDiscovery/VideoDiscoveryWatchlistPrivacyTest.php"
       ],
       "ci_run_id": 36316017303,
       "last_ci_run_id": 36316017303,
-      "ci_result": "in_progress",
-      "last_ci_result": "in_progress",
+      "ci_result": "success",
+      "last_ci_result": "success",
       "ci_attempts": [
         {
           "run_id": 36315691377,
@@ -36455,9 +36455,11 @@
         {
           "run_id": 36316017303,
           "head": "404420ce940dcf00b2f753596f09de385dff1993",
-          "result": "in_progress"
+          "result": "success",
+          "conclusion": "success"
         }
-      ]
+      ],
+      "completed_at": "2026-09-27T11:35:06.465Z"
     },
     {
       "priority": 522,
