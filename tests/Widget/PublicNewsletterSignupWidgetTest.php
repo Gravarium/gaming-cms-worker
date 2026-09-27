@@ -95,6 +95,40 @@ final class PublicNewsletterSignupWidgetTest extends WebTestCase
                 'notifications.newsletter-signup',
                 array_column($disabledDocument['widgets'], 'type'),
             );
+
+            $disabledToken = $disabledEditorCrawler->filter('[data-layout-editor-token-value]')->attr('data-layout-editor-token-value');
+            self::assertIsString($disabledToken);
+            $attemptedDocument = $disabledDocument;
+            $attemptedDocument['widgets'][] = [
+                'id' => 'disabled-newsletter-widget',
+                'type' => 'notifications.newsletter-signup',
+                'region' => 'main',
+                'enabled' => true,
+                'config' => [],
+            ];
+
+            $client->request(
+                'POST',
+                '/admin/layout/home/save',
+                [],
+                [],
+                ['CONTENT_TYPE' => 'application/json', 'HTTP_X_CSRF_TOKEN' => $disabledToken],
+                json_encode(['version' => $disabledEditor['version'], 'document' => $attemptedDocument], JSON_THROW_ON_ERROR),
+            );
+
+            self::assertResponseStatusCodeSame(422);
+            $errorBody = $client->getResponse()->getContent();
+            self::assertIsString($errorBody);
+            $error = json_decode($errorBody, true, 512, JSON_THROW_ON_ERROR);
+            self::assertIsArray($error);
+            self::assertSame(
+                'Nicht verfügbares Widget kann nicht neu angelegt oder verändert werden.',
+                $error['error'] ?? null,
+            );
+
+            $storedLayout = $entityManager->find(PageLayout::class, 'home');
+            self::assertInstanceOf(PageLayout::class, $storedLayout);
+            self::assertSame($disabledDocument, $storedLayout->getDocument());
         } finally {
             $currentLayout = $entityManager->find(PageLayout::class, 'home');
             if ($currentLayout instanceof PageLayout) {
