@@ -24,11 +24,13 @@ final class GuildRoleNeedType extends AbstractType
                 ->add('roleKey', TextType::class, [
                     'label' => 'Rolle',
                     'attr' => ['maxlength' => 40],
+                    'empty_data' => '',
                     'constraints' => [new NotBlank(message: 'Bitte gib eine Rolle an.'), new Length(max: 40)],
                 ])
                 ->add('classKey', TextType::class, [
                     'label' => 'Klasse',
                     'attr' => ['maxlength' => 100],
+                    'empty_data' => '',
                     'constraints' => [new NotBlank(message: 'Bitte gib eine Klasse an.'), new Length(max: 100)],
                 ]);
         }

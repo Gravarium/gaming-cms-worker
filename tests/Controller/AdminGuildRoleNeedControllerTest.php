@@ -38,7 +38,7 @@ final class AdminGuildRoleNeedControllerTest extends WebTestCase
         self::assertInstanceOf(GuildRoleNeed::class, $need);
         self::assertSame(2, $need->getDesiredCount());
         self::assertTrue($need->isActive());
-        self::assertSame($guild->getGame(), $need->getGame(), 'A role need always uses its owning guild game.');
+        self::assertSame($guild->getGame()?->getId(), $need->getGame()->getId(), 'A role need always uses its owning guild game.');
         self::assertSame(1, $this->em($client)->getRepository(AuditLog::class)->count(['action' => 'guild_role_need.created']));
 
         $row = $this->em($client)->getRepository(GuildRoleNeed::class)->createQueryBuilder('need')
@@ -152,9 +152,11 @@ final class AdminGuildRoleNeedControllerTest extends WebTestCase
         self::assertResponseStatusCodeSame(422);
         self::assertSame(0, $this->em($client)->getRepository(GuildRoleNeed::class)->count(['guild' => $guild]));
 
-        $game = $guild->getGame();
+        $managedGuild = $this->em($client)->find(Guild::class, $guild->getId());
+        self::assertInstanceOf(Guild::class, $managedGuild);
+        $game = $managedGuild->getGame();
         self::assertInstanceOf(Game::class, $game);
-        $need = new GuildRoleNeed($guild, $game, 'Barde', 'Support');
+        $need = new GuildRoleNeed($managedGuild, $game, 'Barde', 'Support');
         $this->em($client)->persist($need);
         $this->em($client)->flush();
         $id = $this->em($client)->getClassMetadata(GuildRoleNeed::class)->getIdentifierValues($need)['id'];
