@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T12:08:21.300Z",
+  "published_at": "2026-09-27T12:12:20.757Z",
   "summary": {
     "total_remaining_worker_tasks": 165,
     "completed_worker_prs_awaiting_trusted_review": 284,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-528 has been claimed from sanitized worker/main b510875e7b0741b9b19f09429d2204a95df51198; continue the newsletter delivery report on feature/wcp-528-newsletter-delivery-report-g1.",
+    "next_required_action": "WCP-528 core files are checkpointed on 9e9dfa1cec9e14ffa0e8327e60e8bab48f964b1b; add its functional tests and then run full Worker CI.",
     "composition_preparable": 0,
     "immediately_actionable": 26,
     "must_continue": true
@@ -37511,13 +37511,13 @@
       "claim_state": "active",
       "active_base_branch": "main",
       "active_base_sha": "b510875e7b0741b9b19f09429d2204a95df51198",
-      "active_head": "b510875e7b0741b9b19f09429d2204a95df51198",
+      "active_head": "9e9dfa1cec9e14ffa0e8327e60e8bab48f964b1b",
       "resume_branch": "feature/wcp-528-newsletter-delivery-report-g1",
       "branch_heads": {
         "claim_branch": "b510875e7b0741b9b19f09429d2204a95df51198",
-        "feature_branch": "b510875e7b0741b9b19f09429d2204a95df51198"
+        "feature_branch": "9e9dfa1cec9e14ffa0e8327e60e8bab48f964b1b"
       },
-      "next_action": "Create both WCP-528 branches from the exact published worker/main base, then implement the read-only newsletter delivery report.",
+      "next_action": "Add functional coverage for aggregate counts, access denial, no-store/noindex, non-mutation, and Notifications-module disablement.",
       "checkpoint_paths": [
         "src/Controller/AdminNewsletterDeliveryReportController.php",
         "src/NewsletterDeliveryReport/NewsletterDeliveryReportQuery.php",
@@ -37525,7 +37525,7 @@
         "config/packages/newsletter_delivery_report.yaml",
         "tests/Controller/AdminNewsletterDeliveryReportTest.php"
       ],
-      "last_observed_head": "b510875e7b0741b9b19f09429d2204a95df51198",
+      "last_observed_head": "9e9dfa1cec9e14ffa0e8327e60e8bab48f964b1b",
       "ci_attempts": [],
       "worker_pr": null,
       "worker_pr_url": null,
@@ -37535,7 +37535,9 @@
       "ci_run_id": null,
       "last_ci_run_id": null,
       "ci_result": "not_started",
-      "last_ci_result": "not_started"
+      "last_ci_result": "not_started",
+      "last_checkpoint_at": "2026-09-27T12:12:20.757Z",
+      "last_verified_push_at": "2026-09-27T12:12:20.757Z"
     },
     {
       "priority": 529,
