@@ -31,7 +31,11 @@ final class PublicNewsletterSignupController extends AbstractController
         }
 
         if (!$this->isCsrfTokenValid('public-newsletter-signup', $request->request->getString('_token'))) {
-            throw $this->createAccessDeniedException('Ungültige Sicherheitsprüfung.');
+            return $this->page(
+                ['form' => 'Die Sicherheitsprüfung ist fehlgeschlagen. Bitte lade die Seite neu.'],
+                '',
+                Response::HTTP_FORBIDDEN,
+            );
         }
 
         $email = mb_strtolower(trim($request->request->getString('email')));
