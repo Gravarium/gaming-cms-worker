@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T19:05:13.042Z",
+  "published_at": "2026-09-27T19:06:22.005Z",
   "summary": {
     "total_remaining_worker_tasks": 173,
     "completed_worker_prs_awaiting_trusted_review": 301,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-571 is claimed on main@7b2ca79405fc12d34bce1386157e929e4668f31a; add output-escaping regression coverage for public game search metadata and run exact-head CI.",
+    "next_required_action": "Wait for exact-head Worker CI for PR #365; repair any failure before marking ready.",
     "composition_preparable": 0,
     "immediately_actionable": 29,
     "must_continue": true
@@ -46061,16 +46061,31 @@
       "claim_state": "active",
       "active_base_branch": "main",
       "active_base_sha": "7b2ca79405fc12d34bce1386157e929e4668f31a",
-      "active_head": "7b2ca79405fc12d34bce1386157e929e4668f31a",
+      "active_head": "7cfd663bfe3beedd907a230b0fe9ad12bd6bbf74",
       "resume_branch": "feature/wcp-571-public-game-search-metadata-escaping-g1",
       "branch_heads": {
         "claim_branch": "7b2ca79405fc12d34bce1386157e929e4668f31a",
-        "feature_branch": "7b2ca79405fc12d34bce1386157e929e4668f31a"
+        "feature_branch": "7cfd663bfe3beedd907a230b0fe9ad12bd6bbf74"
       },
-      "last_observed_head": "7b2ca79405fc12d34bce1386157e929e4668f31a",
-      "last_checkpoint_at": "2026-09-27T19:05:13.042Z",
-      "checkpoint_paths": [],
-      "next_action": "Add one focused test with stored HTML in publisher, developer and summary fields; assert escaped response and inert result text without editing production paths."
+      "last_observed_head": "7cfd663bfe3beedd907a230b0fe9ad12bd6bbf74",
+      "last_checkpoint_at": "2026-09-27T19:06:22.005Z",
+      "checkpoint_paths": [
+        "tests/Controller/PublicGameCatalogueSearchTest.php"
+      ],
+      "next_action": "Wait for exact-head Worker CI for PR #365; repair any failure before marking ready.",
+      "last_verified_push_at": "2026-09-27T19:06:22.005Z",
+      "worker_pr": 365,
+      "worker_pr_state": "draft",
+      "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/365",
+      "worker_pr_changed_paths": [
+        "tests/Controller/PublicGameCatalogueSearchTest.php"
+      ],
+      "pr_state": "open",
+      "draft_pr": true,
+      "worker_pr_base_branch": "main",
+      "worker_pr_base_sha": "7b2ca79405fc12d34bce1386157e929e4668f31a",
+      "ci_result": "pending",
+      "ci_attempts": []
     }
   ],
   "recovery_queue": [],
