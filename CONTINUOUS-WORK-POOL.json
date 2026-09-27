@@ -10,7 +10,7 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T01:05:01.777Z",
+  "published_at": "2026-09-27T01:05:28.566Z",
   "summary": {
     "total_remaining_worker_tasks": 139,
     "completed_worker_prs_awaiting_trusted_review": 211,
@@ -24533,7 +24533,7 @@
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
       "active_head": "0d67c7933e9a33ba78d9a6803cdb8c280277243e",
       "resume_branch": "feature/wcp-443-video-deletion-security-g1",
-      "last_checkpoint_at": "2026-09-27T01:05:01.777Z",
+      "last_checkpoint_at": "2026-09-27T01:05:28.566Z",
       "checkpoint_paths": [
         "tests/Controller/AdminVideoDeletionSecurityTest.php"
       ],
@@ -24541,14 +24541,14 @@
         "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
         "feature_branch": "0d67c7933e9a33ba78d9a6803cdb8c280277243e"
       },
-      "next_action": "Run exact-head Worker CI on 0d67c7933e9a33ba78d9a6803cdb8c280277243e; the permission test no longer generates a CSRF token outside an active request.",
+      "next_action": "Inspect Worker CI run 36284434248 on exact HEAD 0d67c7933e9a33ba78d9a6803cdb8c280277243e; repair concrete failures if present.",
       "last_verified_push_at": "2026-09-27T01:05:01.777Z",
       "worker_pr": 237,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/237",
       "pr_state": "open_draft_unmerged",
       "draft_pr": true,
-      "last_ci_run_id": 36284280905,
-      "ci_result": "failure",
+      "last_ci_run_id": 36284434248,
+      "ci_result": "in_progress",
       "ci_attempts": [
         {
           "run_id": 36284117010,
@@ -24561,6 +24561,11 @@
           "head": "f51a4a84f3d2dbbd865f3c614d4b786fcfb80b5d",
           "result": "failure",
           "reason": "CsrfTokenManagerInterface still had no session after the denied request. The permission regression now asserts the protected admin GET directly; mutation CSRF checks remain isolated with an authorized actor."
+        },
+        {
+          "run_id": 36284434248,
+          "head": "0d67c7933e9a33ba78d9a6803cdb8c280277243e",
+          "result": "in_progress"
         }
       ]
     }
