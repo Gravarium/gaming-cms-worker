@@ -12,14 +12,14 @@
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
   "published_at": "2026-09-27T02:05:27.111Z",
   "summary": {
-    "total_remaining_worker_tasks": 141,
-    "completed_worker_prs_awaiting_trusted_review": 218,
+    "total_remaining_worker_tasks": 140,
+    "completed_worker_prs_awaiting_trusted_review": 219,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-452 is reserved on exact sanitized main for failed-message queue pagination; create and verify its exclusive refs, then implement.",
+    "next_required_action": "Re-evaluate the dependency-blocked FCP queue and select the next safe, independent Worker-only task; do not alter foreign WCP-450 claim.",
     "composition_preparable": 0,
-    "immediately_actionable": 6,
+    "immediately_actionable": 5,
     "must_continue": true
   },
   "rules": {
@@ -25624,7 +25624,7 @@
       "package_id": "WCP-451",
       "title": "Reject inconsistent website locale settings",
       "risk": "medium",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -25695,12 +25695,12 @@
         ]
       },
       "claimed_on": "2026-09-27T02:01:55.307Z",
-      "claim_state": "active",
+      "claim_state": "locked_until_trusted_resolution",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
       "active_head": "4a269a9ab0cc43c824349dbe2499649cf362ebf5",
       "resume_branch": "feature/wcp-451-site-settings-locale-g1",
-      "last_checkpoint_at": "2026-09-27T02:04:37.385Z",
+      "last_checkpoint_at": "2026-09-27T02:06:16.602Z",
       "checkpoint_paths": [
         "tests/Controller/AdminSettingsLocaleValidationTest.php"
       ],
@@ -25708,21 +25708,47 @@
         "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
         "feature_branch": "4a269a9ab0cc43c824349dbe2499649cf362ebf5"
       },
-      "next_action": "Inspect exact-head Worker CI run 36287383308; repair concrete failures before completion.",
-      "last_verified_push_at": "2026-09-27T02:04:37.385Z",
+      "next_action": "PR #244 is ready for Trusted review with green exact-head Worker CI; keep this claim locked until Trusted explicitly integrates, cancels or transfers it, then continue with an independent task.",
+      "last_verified_push_at": "2026-09-27T02:06:16.602Z",
       "worker_pr": 244,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/244",
-      "draft_pr": true,
-      "pr_state": "open_draft_unmerged",
+      "draft_pr": false,
+      "pr_state": "open_ready_for_review_unmerged",
       "ci_attempts": [
         {
           "run_id": 36287383308,
           "head": "4a269a9ab0cc43c824349dbe2499649cf362ebf5",
-          "result": "queued"
+          "result": "success"
         }
       ],
       "last_ci_run_id": 36287383308,
-      "ci_result": "queued"
+      "ci_result": "success",
+      "final_head": "4a269a9ab0cc43c824349dbe2499649cf362ebf5",
+      "final_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "changed_paths": [
+        "tests/Controller/AdminSettingsLocaleValidationTest.php"
+      ],
+      "final_changed_paths": [
+        "tests/Controller/AdminSettingsLocaleValidationTest.php"
+      ],
+      "completed_at": "2026-09-27T02:06:16.602Z",
+      "ci_run_id": 36287383308,
+      "test_results": {
+        "phpunit": "430 tests, 1,862 assertions, 0 failures; one deprecation and one notice.",
+        "phpstan": "Level 8 passed with no errors.",
+        "php_symfony": "Worker PHP/Symfony validation job passed on exact final HEAD.",
+        "postgres18": "PostgreSQL 18 applied and verified all 39 migrations.",
+        "exact_head_ci": {
+          "run_id": 36287383308,
+          "head": "4a269a9ab0cc43c824349dbe2499649cf362ebf5",
+          "result": "success"
+        }
+      },
+      "completion_summary": "A CMS_SETTINGS_MANAGE user submits the supported but inconsistent locale pair defaultLocale=en and enabledLocales=[de] through the rendered form with its valid CSRF token. The controller returns HTTP 422 with the locale consistency validation message and a fresh Doctrine read confirms settings did not change. Synthetic user and test-created settings are cleaned up; only the allowlisted test file changed.",
+      "open_limitations": [
+        "Awaiting Trusted review and Trusted integration CI."
+      ],
+      "trusted_follow_up": "Preserve the SiteSettings invariant that defaultLocale must be supported and enabledLocales must include it; invalid locale combinations must remain rejected before persistence."
     },
     {
       "priority": 452,
