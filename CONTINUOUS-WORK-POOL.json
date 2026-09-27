@@ -26975,16 +26975,22 @@
       "claimed_on": "2026-09-27T03:24:29.766Z",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "8e27c0a978f7f67b13b18026e12e82fba7a0327f",
       "resume_branch": "feature/wcp-460-content-redirect-browser-g1",
-      "last_checkpoint_at": "2026-09-27T03:24:29.766Z",
-      "last_verified_push_at": "2026-09-27T03:24:29.766Z",
-      "checkpoint_paths": [],
+      "last_checkpoint_at": "2026-09-27T03:31:39.642Z",
+      "last_verified_push_at": "2026-09-27T03:31:39.642Z",
+      "checkpoint_paths": [
+        "src/Controller/AdminContentRedirectController.php",
+        "src/Repository/ContentRedirectRepository.php",
+        "templates/admin/content_redirect/index.html.twig",
+        "templates/admin/dashboard.html.twig",
+        "tests/Controller/AdminContentRedirectBrowserTest.php"
+      ],
       "branch_heads": {
         "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-        "feature_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d"
+        "feature_branch": "8e27c0a978f7f67b13b18026e12e82fba7a0327f"
       },
-      "next_action": "Implement the bounded read-only redirect inventory and its permission-gated dashboard entry; checkpoint after tests and validate on exact HEAD."
+      "next_action": "Review the draft diff, run the AdminContentRedirectBrowserTest and full Worker CI on the exact final HEAD; fix any red result on this branch."
     }
   ],
   "recovery_queue": [],
