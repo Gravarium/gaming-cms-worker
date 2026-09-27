@@ -1,0 +1,30 @@
+{% extends 'base.html.twig' %}
+{% block title %}{{ guide.title }}{% endblock %}
+{% block body %}
+<main class="public-shell">
+    <p class="eyebrow"><a href="{{ path('app_gaming_guide_index') }}">Gaming-Guides</a> · {{ guide.game_name }}</p>
+    <h1>{{ guide.title }}</h1>
+    <p>{{ guide.guide_type == 'tier_list' ? 'Tier-Liste' : 'Build' }} · Version {{ guide.game_version }} · {{ guide.season }}</p>
+    <p>Gültig ab {{ guide.valid_from }}{% if guide.valid_until %} bis {{ guide.valid_until }}{% endif %}</p>
+    {% if guide.is_outdated %}<p class="status status-disabled">Dieser Guide liegt außerhalb seines angegebenen Gültigkeitszeitraums.</p>{% endif %}
+    {% if guide.components %}
+        <section><h2>Build-Komponenten</h2>
+            <ol>{% for component in guide.components %}
+                <li><strong>{{ component.type }}</strong> · {{ component.key }}
+                    {% if component.alternatives %}<span>Alternativen: {{ component.alternatives|join(', ') }}</span>{% endif %}
+                </li>
+            {% endfor %}</ol>
+        </section>
+    {% endif %}
+    {% if guide.tiers %}
+        <section><h2>Tier-Liste</h2>
+            <p><strong>Kriterien:</strong> {{ guide.tiers[0].criteria }}</p>
+            <p><strong>Herkunft:</strong> {{ guide.tiers[0].provenance }}</p>
+            <table><thead><tr><th>Tier</th><th>Eintrag</th><th>Begründung</th></tr></thead>
+                <tbody>{% for entry in guide.tiers %}<tr><td>{{ entry.tier }}</td><td>{{ entry.key }}</td><td>{{ entry.reason }}</td></tr>{% endfor %}</tbody>
+            </table>
+        </section>
+    {% endif %}
+    <p><a href="{{ path('app_gaming_guide_index', {game: guide.game_slug}) }}">Weitere Guides für {{ guide.game_name }}</a></p>
+</main>
+{% endblock %}
