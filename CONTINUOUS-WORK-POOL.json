@@ -42856,7 +42856,7 @@
         "tests/Controller/PublicMemberDirectoryControllerTest.php",
         "tests/Widget/PublicMemberDirectoryWidgetProviderTest.php"
       ],
-      "next_action": "Wait for the PR synchronize CI run on exact HEAD beb90728dc932f58329c97bb37f3cf7a7591a92d, then record its run ID and repair any failure.",
+      "next_action": "Monitor Worker CI run #870 / 36332909153 on exact repair HEAD beb90728dc932f58329c97bb37f3cf7a7591a92d; repair any failures on the same feature branch.",
       "worker_pr_state": "draft",
       "worker_pr_changed_paths": [
         "src/Controller/PublicMemberDirectoryController.php",
@@ -42871,8 +42871,8 @@
       "worker_pr_base_branch": "main",
       "draft_pr": true,
       "pr_state": "open",
-      "ci_result": "not_started",
-      "last_ci_result": "not_started",
+      "ci_result": "queued",
+      "last_ci_result": "queued",
       "ci_attempts": [
         {
           "run_id": 36332484371,
@@ -42882,14 +42882,30 @@
           "result": "failure",
           "conclusion": "failure",
           "failure_summary": "PHPUnit had one failure in the widget test: pre-existing valid public profile fixtures sorted before the test's names. PHPStan, Twig/container/config, Doctrine and PostgreSQL migration-chain checks passed."
+        },
+        {
+          "run_id": 36332909098,
+          "run_number": 869,
+          "head": "beb90728dc932f58329c97bb37f3cf7a7591a92d",
+          "base": "540b4c64aeb2edc35067eb15eb75fe371aaa29bc",
+          "result": "cancelled",
+          "conclusion": "cancelled"
+        },
+        {
+          "run_id": 36332909153,
+          "run_number": 870,
+          "head": "beb90728dc932f58329c97bb37f3cf7a7591a92d",
+          "base": "540b4c64aeb2edc35067eb15eb75fe371aaa29bc",
+          "result": "queued",
+          "conclusion": null
         }
       ],
       "last_verified_push_at": "2026-09-27T16:20:58.194Z",
       "worker_pr": 346,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/346",
       "worker_pr_base_sha": "540b4c64aeb2edc35067eb15eb75fe371aaa29bc",
-      "ci_run_id": 36332484371,
-      "last_ci_run_id": 36332484371
+      "ci_run_id": 36332909153,
+      "last_ci_run_id": 36332909153
     }
   ],
   "recovery_queue": [],
