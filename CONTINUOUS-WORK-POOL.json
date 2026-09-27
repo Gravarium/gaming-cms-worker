@@ -10,16 +10,16 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T09:41:38.202Z",
+  "published_at": "2026-09-27T09:42:08.032Z",
   "summary": {
-    "total_remaining_worker_tasks": 150,
+    "total_remaining_worker_tasks": 151,
     "completed_worker_prs_awaiting_trusted_review": 260,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-495 has exact checkpoint fb0d91ed96ac0a4babedd214e82f6cfb59230e05 after repairing detached-fixture cleanup; monitor focused/full Worker CI and keep all foreign claims untouched.",
+    "next_required_action": "WCP-498 is actively claimed from exact sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d; implement the permission-protected connector health report and run full exact-head Worker CI. Keep all foreign claims untouched.",
     "composition_preparable": 0,
-    "immediately_actionable": 10,
+    "immediately_actionable": 11,
     "must_continue": true
   },
   "rules": {
@@ -32996,6 +32996,109 @@
       "last_checkpoint_at": "2026-09-27T09:40:38.009Z",
       "checkpoint_paths": [],
       "next_action": "Implement only the portal navigation link and focused functional test, push a checkpoint, then run full exact-head Worker CI.",
+      "last_verified_push_at": null
+    },
+    {
+      "priority": 498,
+      "package_id": "WCP-498",
+      "title": "Expose a permission-protected connector health report",
+      "risk": "medium",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-498-connector-health-report-g1",
+      "suggested_branch": "feature/wcp-498-connector-health-report-g1",
+      "base_branch": "main",
+      "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "objective": "Complete the existing integrations module with a read-only JSON health report for operators. The report must combine the latest persisted connector health and sanitized offsite-backup results, expose deterministic capability/status filters and make missing observations explicit as pending without exposing private configuration or backup identifiers.",
+      "allowed_paths": [
+        "src/Controller/AdminConnectorHealthReportController.php",
+        "src/ExternalConnector/ConnectorHealthReport.php",
+        "tests/Controller/AdminConnectorHealthReportTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/",
+        "templates/",
+        "assets/",
+        "public/",
+        "src/Entity/",
+        "src/Repository/",
+        "src/Controller/AdminConnectorController.php",
+        "src/ExternalConnector/ExternalConnectorHealthRecorder.php",
+        "src/Service/AuditLogger.php"
+      ],
+      "deliverables": [
+        "GET /admin/connectors/health/report named app_admin_connector_health_report and owned by the existing integrations route prefix.",
+        "A deterministic report for all configured targets with healthy, failed, or pending status; persisted connector health is used for connector capabilities and the existing sanitized offsite status reader is used for backup targets.",
+        "Validated capability and status query filters with readable 400 JSON errors for unknown values or array-shaped input.",
+        "Only non-secret target metadata and status fields are returned; no private endpoint, credential, configuration value, backup ID, or failure detail is exported.",
+        "CMS_CONNECTORS_MANAGE protects the route and the existing disabled-module subscriber keeps the integrations route unavailable when the module is disabled."
+      ],
+      "tests": [
+        "Focused WebTestCase coverage for authorized JSON output, status/capability filtering, pending and failed observations, invalid filters and non-leakage.",
+        "Negative coverage for anonymous/unprivileged access and the disabled integrations module, with synthetic fixtures cleaned up.",
+        "PHPStan level 8, complete Worker CI on the exact final HEAD and PostgreSQL 18 migration-chain validation."
+      ],
+      "completion_report": [
+        "Exact sanitized main/base SHA and final Worker HEAD SHA.",
+        "Complete changed-path list and Worker PR.",
+        "Focused test, PHPStan, PostgreSQL migration and exact-head CI results.",
+        "Remaining limitations and Trusted integration follow-up."
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "preserve-CMS_CONNECTORS_MANAGE-and-existing-integrations-module-route-gate",
+        "report-only-sanitized-target-metadata-and-status-no-private-runtime-or-sensitive-data",
+        "fail-closed-on-unknown-capability-status-or-array-shaped-query-filters",
+        "preserve-existing-health-recording-backup-reading-and-connector-execution-behavior",
+        "no-schema-migration-or-private-runtime-reconstruction",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "proposal_kind": "worker_only",
+      "proposal_dependency_evidence": [],
+      "collision_check": {
+        "compared_against": "Fresh continuous/work-pool-v4 blob b7d9bbc6020d1f19e4d589445fd2dc1df610c191; all active and claim-locked allowed paths; sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d; and current branch/PR/CI state immediately before reservation.",
+        "result": "No active or claim-locked package owns or encloses the three proposed paths. Existing connector controller, health entity/repository and recorder paths remain untouched; the package adds only a new read projection, route and focused integration test. WCP-495/496/497 own separate video and guild paths. FCP-072 is unclaimed and dependency-blocked with a broad templates/ scope, while this package deliberately has no template or shared UI change. No migration, entity, repository, private runtime or CI file is shared.",
+        "paths": [
+          "src/Controller/AdminConnectorHealthReportController.php",
+          "src/ExternalConnector/ConnectorHealthReport.php",
+          "tests/Controller/AdminConnectorHealthReportTest.php"
+        ]
+      },
+      "published_at": "2026-09-27T09:42:08.032Z",
+      "claimed_on": "2026-09-27T09:42:08.032Z",
+      "claim_state": "active",
+      "active_base_branch": "main",
+      "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "resume_branch": "feature/wcp-498-connector-health-report-g1",
+      "branch_heads": {
+        "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+        "feature_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d"
+      },
+      "last_observed_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "last_checkpoint_at": "2026-09-27T09:42:08.032Z",
+      "checkpoint_paths": [],
+      "next_action": "Implement the permission-protected connector health report and focused functional coverage within the three allowed paths, then run focused tests and complete exact-head Worker CI.",
       "last_verified_push_at": null
     }
   ],
