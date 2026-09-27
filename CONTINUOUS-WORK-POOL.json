@@ -44799,7 +44799,7 @@
       "package_id": "WCP-562",
       "title": "Strict public video-library page parameters",
       "risk": "low",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -44897,7 +44897,7 @@
       },
       "published_at": "2026-09-27T17:45:52.067Z",
       "claimed_on": "2026-09-27T17:45:52.067Z",
-      "claim_state": "active",
+      "claim_state": "locked_until_trusted_resolution",
       "active_base_branch": "main",
       "active_base_sha": "7b2ca79405fc12d34bce1386157e929e4668f31a",
       "active_head": "0eaebb7b8bf4dc66729d910a625c09d4db070d2b",
@@ -44907,38 +44907,42 @@
         "feature_branch": "0eaebb7b8bf4dc66729d910a625c09d4db070d2b"
       },
       "last_observed_head": "0eaebb7b8bf4dc66729d910a625c09d4db070d2b",
-      "last_checkpoint_at": "2026-09-27T17:47:09.426Z",
-      "last_verified_push_at": "2026-09-27T17:47:09.426Z",
+      "last_checkpoint_at": "2026-09-27T17:51:05.129Z",
+      "last_verified_push_at": "2026-09-27T17:51:05.129Z",
       "checkpoint_paths": [
         "src/Controller/PublicVideoLibraryController.php",
         "tests/Controller/PublicVideoLibraryControllerTest.php"
       ],
-      "next_action": "Monitor exact-head Worker CI run #907 / 36338245821 on 0eaebb7b8bf4dc66729d910a625c09d4db070d2b; diagnose any failures and repair on this feature branch.",
+      "next_action": "Await Trusted review and independent validation of PR #356; do not merge or deploy from the Worker repository.",
       "worker_pr": 356,
-      "worker_pr_state": "draft",
+      "worker_pr_state": "ready_for_review",
       "worker_pr_changed_paths": [
         "src/Controller/PublicVideoLibraryController.php",
         "tests/Controller/PublicVideoLibraryControllerTest.php"
       ],
-      "ci_result": "in_progress",
+      "ci_result": "success",
       "ci_attempts": [
         {
           "run_id": 36338245821,
           "run_number": 907,
           "head": "0eaebb7b8bf4dc66729d910a625c09d4db070d2b",
           "base": "7b2ca79405fc12d34bce1386157e929e4668f31a",
-          "result": "in_progress",
-          "validation_pr": 356
+          "result": "success",
+          "validation_pr": 356,
+          "conclusion": "success"
         }
       ],
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/356",
-      "pr_state": "open_draft",
-      "draft_pr": true,
+      "pr_state": "open",
+      "draft_pr": false,
       "worker_pr_base_branch": "main",
       "worker_pr_base_sha": "7b2ca79405fc12d34bce1386157e929e4668f31a",
       "ci_run_id": 36338245821,
       "last_ci_run_id": 36338245821,
-      "last_ci_result": "in_progress"
+      "last_ci_result": "success",
+      "ci_validation_pr": 356,
+      "completed_at": "2026-09-27T17:51:05.129Z",
+      "worker_completion_summary": "Exact-head Worker CI #907 / 36338245821 passed on 0eaebb7b8bf4dc66729d910a625c09d4db070d2b: 737 tests, 4,633 assertions, 0 failures/errors (1 deprecation, 3 notices); PHPStan, dependency audit, YAML/Twig/container/AssetMapper/Doctrine checks passed; PostgreSQL 18 applied 57 migrations and is current. PR #356 is open, ready for review, mergeable, based on main@7b2ca79405fc12d34bce1386157e929e4668f31a, with exactly two allowlisted paths."
     }
   ],
   "recovery_queue": [],
