@@ -10,7 +10,7 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T13:33:45.432Z",
+  "published_at": "2026-09-27T13:36:35.964Z",
   "summary": {
     "total_remaining_worker_tasks": 166,
     "completed_worker_prs_awaiting_trusted_review": 290,
@@ -39214,24 +39214,31 @@
       "claim_state": "active",
       "active_base_branch": "feature/fcp-052-pool-g1",
       "active_base_sha": "f2e0ceea07b5152a30d78797a9427c9aebfe4e40",
-      "active_head": "c270ebfaed15d87d0fbf0fc494b51f064e55dc4b",
+      "active_head": "ab2a604ceda955856125ec3d10b57efb1679ff87",
       "resume_branch": "feature/wcp-538-public-content-community-flow-g1",
       "branch_heads": {
         "claim_branch": "f2e0ceea07b5152a30d78797a9427c9aebfe4e40",
-        "feature_branch": "c270ebfaed15d87d0fbf0fc494b51f064e55dc4b"
+        "feature_branch": "ab2a604ceda955856125ec3d10b57efb1679ff87"
       },
-      "last_observed_head": "c270ebfaed15d87d0fbf0fc494b51f064e55dc4b",
-      "last_checkpoint_at": "2026-09-27T13:24:23.432Z",
+      "last_observed_head": "ab2a604ceda955856125ec3d10b57efb1679ff87",
+      "last_checkpoint_at": "2026-09-27T13:36:35.964Z",
       "checkpoint_paths": [
         "src/CommunityInteraction/ContentInteractionQuery.php",
         "src/Form/PublicContentCommentType.php",
         "src/Form/PublicContentReportType.php",
-        "src/Form/ContentModerationDecisionType.php"
+        "src/Form/ContentModerationDecisionType.php",
+        "src/Controller/ContentDiscussionController.php",
+        "src/Controller/AdminContentModerationController.php",
+        "src/Widget/ContentDiscussionWidgetProvider.php",
+        "src/CommunityInteraction/Templates/discussion.html.twig",
+        "src/CommunityInteraction/Templates/admin/moderation.html.twig",
+        "src/CommunityInteraction/Templates/widget/content_discussions.html.twig",
+        "config/packages/community_interactions.yaml"
       ],
-      "next_action": "Add the public discussion controller, Page Builder provider, moderation controller, Twig/configuration and functional tests in the remaining reserved paths; then run complete exact-head Worker CI.",
+      "next_action": "Complete the public discussion and moderation workflows, add the reserved functional tests, then run full exact-head Worker CI.",
       "ci_attempts": [],
       "worker_pr_state": "not_created",
-      "last_verified_push_at": "2026-09-27T13:24:23.432Z",
+      "last_verified_push_at": "2026-09-27T13:36:35.964Z",
       "worker_pr": null,
       "worker_pr_url": null,
       "pr_state": "not_created",
