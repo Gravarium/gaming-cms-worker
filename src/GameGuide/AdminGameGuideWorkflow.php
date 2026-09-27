@@ -128,7 +128,7 @@ final readonly class AdminGameGuideWorkflow
 
         return $this->connection->transactional(function (Connection $connection) use ($id, $authorId, $data): bool {
             $row = $connection->fetchAssociative(
-                'SELECT author_id, review_status FROM game_guide WHERE id = :id FOR UPDATE',
+                'SELECT author_id, review_status FROM game_guide WHERE id = :id',
                 ['id' => $id],
             );
             if ($row === false || (int) $row['author_id'] !== $authorId || $row['review_status'] !== 'draft') {
@@ -136,7 +136,7 @@ final readonly class AdminGameGuideWorkflow
             }
             $this->assertEnabledGame($connection, $data['game_id']);
 
-            $connection->executeStatement(
+            $updated = $connection->executeStatement(
                 "UPDATE game_guide
                  SET game_id = :game, title = :title, guide_type = :type, game_version = :version, season = :season,
                      valid_from = :valid_from, valid_until = :valid_until
@@ -153,6 +153,9 @@ final readonly class AdminGameGuideWorkflow
                     'author' => $authorId,
                 ],
             );
+            if ($updated !== 1) {
+                return false;
+            }
             $this->storeStructure($connection, $id, $data);
 
             return true;
@@ -199,8 +202,7 @@ final readonly class AdminGameGuideWorkflow
             $row = $connection->fetchAssociative(
                 "SELECT author_id, review_status
                  FROM game_guide
-                 WHERE id = :id
-                 FOR UPDATE",
+                 WHERE id = :id",
                 ['id' => $id],
             );
             if ($row === false || $row['review_status'] !== 'review' || $row['author_id'] === null) {
