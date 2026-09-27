@@ -10,7 +10,7 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T13:46:32.983Z",
+  "published_at": "2026-09-27T13:46:42.006Z",
   "summary": {
     "total_remaining_worker_tasks": 167,
     "completed_worker_prs_awaiting_trusted_review": 290,
@@ -39706,6 +39706,110 @@
       ],
       "worker_pr_base_branch": "main",
       "pr_state": "not_created"
+    },
+    {
+      "priority": 542,
+      "package_id": "WCP-542",
+      "title": "Hide Page Builder media image choices when Media is disabled",
+      "risk": "low",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-542-layout-media-choice-gate-g1",
+      "suggested_branch": "feature/wcp-542-layout-media-choice-gate-g1",
+      "base_branch": "main",
+      "base_sha": "b510875e7b0741b9b19f09429d2204a95df51198",
+      "objective": "Make the Page Builder image selector respect the Media module gate. When Media is disabled, LayoutImages::choices() must return no selectable media assets, matching the existing render-time gate in resolve(); when enabled, safe image choices remain available. Cover both states in a transactional regression test.",
+      "allowed_paths": [
+        "src/Layout/LayoutImages.php",
+        "tests/Layout/LayoutImagesModuleGateTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/",
+        "src/Entity/",
+        "src/Form/",
+        "src/Repository/",
+        "templates/",
+        "assets/",
+        "public/"
+      ],
+      "deliverables": [
+        "Return an empty choice list immediately when Media is disabled, so editors cannot select image assets that will not render.",
+        "Preserve current safe-image filtering, ordering, result limit and choice shape when Media is enabled.",
+        "Add a kernel regression test proving a persisted safe image appears while Media is enabled and disappears from choices while disabled, with test database changes rolled back."
+      ],
+      "tests": [
+        "Transactional KernelTestCase toggles CmsModuleState for Media and verifies a persisted safe image is selectable only while the module is enabled; rollback all database changes.",
+        "Run focused layout tests and full exact-head Worker CI, including PHPStan and PostgreSQL 18 migration-chain validation."
+      ],
+      "completion_report": [
+        "Exact sanitized main/base SHA and final Worker HEAD SHA.",
+        "Exact changed paths and Worker PR URL.",
+        "Evidence that choices are available with Media enabled and empty with Media disabled while existing safe-image checks remain intact.",
+        "Focused tests plus exact-head PHPStan, PHPUnit, PostgreSQL migration and full Worker CI results."
+      ],
+      "immutable_constraints": [
+        "Page-Builder-image-choice-availability-follows-the-existing-Media-module-gate",
+        "existing-safe-image-URL-MIME-type-deletion-and-rendering-checks-remain-unchanged",
+        "no-schema-or-migration-change",
+        "no-security-test-phpstan-CI-auth-CSRF-validation-recovery-rollback-or-upload-protection-weakening",
+        "worker-code-is-untrusted-no-direct-Trusted-integration-or-deployment",
+        "no-private-runtime-or-sensitive-data"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "b510875e7b0741b9b19f09429d2204a95df51198",
+      "proposal_kind": "worker_only",
+      "proposal_dependency_evidence": [],
+      "collision_check": {
+        "compared_against": "Latest continuous/work-pool-v4 commit f6945f4484110c25790a689e6ca598e80c8928d1, pool blob 1c04d3e13e0cb34276665d42ac946eccd568ff46; sanitized Worker main b510875e7b0741b9b19f09429d2204a95df51198; all 322 task allowed/checkpoint paths; WCP-542 branch and PR searches.",
+        "result": "Neither src/Layout/LayoutImages.php nor tests/Layout/LayoutImagesModuleGateTest.php intersects any active, claim-locked or unclaimed task scope. All five unclaimed FCPs remain dependency-blocked; no WCP-542 task, branch or PR existed immediately before this CAS reservation. No migration, shared configuration, template or asset path is needed.",
+        "paths": [
+          "src/Layout/LayoutImages.php",
+          "tests/Layout/LayoutImagesModuleGateTest.php"
+        ]
+      },
+      "published_at": "2026-09-27T13:46:42.006Z",
+      "claimed_on": "2026-09-27T13:46:42.006Z",
+      "claim_state": "active",
+      "active_base_branch": "main",
+      "active_base_sha": "b510875e7b0741b9b19f09429d2204a95df51198",
+      "active_head": "b510875e7b0741b9b19f09429d2204a95df51198",
+      "resume_branch": "feature/wcp-542-layout-media-choice-gate-g1",
+      "branch_heads": {
+        "claim_branch": "b510875e7b0741b9b19f09429d2204a95df51198",
+        "feature_branch": "b510875e7b0741b9b19f09429d2204a95df51198"
+      },
+      "last_observed_head": "b510875e7b0741b9b19f09429d2204a95df51198",
+      "last_checkpoint_at": "2026-09-27T13:46:42.006Z",
+      "checkpoint_paths": [
+        "src/Layout/LayoutImages.php",
+        "tests/Layout/LayoutImagesModuleGateTest.php"
+      ],
+      "next_action": "Create the claim and feature refs from exact main HEAD b510875e7b0741b9b19f09429d2204a95df51198, then add the Media module gate to LayoutImages::choices() and its transactional regression test.",
+      "ci_attempts": [],
+      "worker_pr_state": "not_created",
+      "last_ci_result": "not_run",
+      "worker_pr_changed_paths": [
+        "src/Layout/LayoutImages.php",
+        "tests/Layout/LayoutImagesModuleGateTest.php"
+      ],
+      "worker_pr_base_branch": "main",
+      "worker_pr": null,
+      "worker_pr_url": null
     }
   ],
   "recovery_queue": [],
