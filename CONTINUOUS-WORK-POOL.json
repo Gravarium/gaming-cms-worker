@@ -10,7 +10,7 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T13:53:45.203Z",
+  "published_at": "2026-09-27T13:54:46.444Z",
   "summary": {
     "total_remaining_worker_tasks": 167,
     "completed_worker_prs_awaiting_trusted_review": 290,
@@ -39725,7 +39725,7 @@
       "package_id": "WCP-542",
       "title": "Hide Page Builder media image choices when Media is disabled",
       "risk": "low",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -39797,7 +39797,7 @@
       },
       "published_at": "2026-09-27T13:46:42.006Z",
       "claimed_on": "2026-09-27T13:46:42.006Z",
-      "claim_state": "active",
+      "claim_state": "locked_until_trusted_resolution",
       "active_base_branch": "main",
       "active_base_sha": "b510875e7b0741b9b19f09429d2204a95df51198",
       "active_head": "95ba0a3dbde574a03b94de68cd9325fe82f3ce78",
@@ -39807,12 +39807,12 @@
         "feature_branch": "95ba0a3dbde574a03b94de68cd9325fe82f3ce78"
       },
       "last_observed_head": "95ba0a3dbde574a03b94de68cd9325fe82f3ce78",
-      "last_checkpoint_at": "2026-09-27T13:51:35.516Z",
+      "last_checkpoint_at": "2026-09-27T13:54:46.444Z",
       "checkpoint_paths": [
         "src/Layout/LayoutImages.php",
         "tests/Layout/LayoutImagesModuleGateTest.php"
       ],
-      "next_action": "Wait for exact-head Worker CI run #820 / 36323858121 on 95ba0a3dbde574a03b94de68cd9325fe82f3ce78; diagnose and repair any concrete failure.",
+      "next_action": "Worker PR #332 is complete on exact green HEAD 95ba0a3dbde574a03b94de68cd9325fe82f3ce78; Worker CI run #820 / 36323858121 passed both jobs. Keep the claim locked until Trusted explicitly integrates, cancels or transfers it, and continue the autonomous Worker loop without merge or deployment.",
       "ci_attempts": [
         {
           "run_id": 36323726051,
@@ -39821,19 +39821,23 @@
           "base": "b510875e7b0741b9b19f09429d2204a95df51198",
           "result": "failure",
           "conclusion": "failure",
-          "summary": "Test namespace escaping was doubled in the initial draft; corrected on the next commit."
+          "summary": "The initial test commit contained doubled namespace separators; corrected in the next commit."
         },
         {
           "run_id": 36323858121,
           "run_number": 820,
           "head": "95ba0a3dbde574a03b94de68cd9325fe82f3ce78",
           "base": "b510875e7b0741b9b19f09429d2204a95df51198",
-          "result": "in_progress",
-          "conclusion": null
+          "result": "success",
+          "conclusion": "success",
+          "php_symfony_job": "success",
+          "phpstan": "success",
+          "phpunit": "success",
+          "postgresql_18_migrations": "success"
         }
       ],
-      "worker_pr_state": "draft",
-      "last_ci_result": "in_progress",
+      "worker_pr_state": "ready_for_review",
+      "last_ci_result": "success",
       "worker_pr_changed_paths": [
         "src/Layout/LayoutImages.php",
         "tests/Layout/LayoutImagesModuleGateTest.php"
@@ -39841,11 +39845,23 @@
       "worker_pr_base_branch": "main",
       "worker_pr": 332,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/332",
-      "last_verified_push_at": "2026-09-27T13:51:35.516Z",
+      "last_verified_push_at": "2026-09-27T13:50:56Z",
       "pr_state": "open",
-      "draft_pr": true,
+      "draft_pr": false,
       "ci_run_id": 36323858121,
-      "last_ci_run_id": 36323858121
+      "last_ci_run_id": 36323858121,
+      "ci_result": "success",
+      "final_head": "95ba0a3dbde574a03b94de68cd9325fe82f3ce78",
+      "completed_at": "2026-09-27T13:54:46.444Z",
+      "completion_evidence": [
+        "Base main b510875e7b0741b9b19f09429d2204a95df51198; final Worker HEAD 95ba0a3dbde574a03b94de68cd9325fe82f3ce78.",
+        "Changed paths: src/Layout/LayoutImages.php and tests/Layout/LayoutImagesModuleGateTest.php.",
+        "LayoutImages::choices() now returns no choices while Media is disabled; when enabled, it retains existing safe-image filtering and choice data.",
+        "The transactional kernel regression test verifies the persisted image is selectable with Media enabled and absent when disabled; all test database changes are rolled back.",
+        "Worker PR #332 is open and ready for Trusted review; it remains unmerged and undeployed.",
+        "Exact-head Worker CI run #820 / 36323858121 succeeded on final HEAD: PHP/Symfony job (including PHPStan and PHPUnit) and PostgreSQL 18 migration-chain job both passed.",
+        "Earlier draft CI run #819 failed on the test namespace escaping; the defect was fixed and the final exact-head run passed."
+      ]
     }
   ],
   "recovery_queue": [],
