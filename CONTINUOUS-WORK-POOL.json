@@ -13,11 +13,11 @@
   "published_at": "2026-09-27T03:15:59.948Z",
   "summary": {
     "total_remaining_worker_tasks": 139,
-    "completed_worker_prs_awaiting_trusted_review": 234,
+    "completed_worker_prs_awaiting_trusted_review": 235,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-468 is complete on green exact-head Worker PR #261; WCP-469 is claimed on sanitized main for the failed-message queue read boundary. Preserve all other claims.",
+    "next_required_action": "WCP-464 is complete on green exact-head Worker PR #259 at 1efbfb4ffd83ece13f138babe9184e89bbeed829; its claim remains locked. Five unclaimed FCP assignments remain dependency-blocked and WCP-469 is active, so select and publish the next independent Worker-only proposal while preserving all other claims.",
     "composition_preparable": 0,
     "immediately_actionable": 3,
     "must_continue": true
@@ -27483,8 +27483,8 @@
       "package_id": "WCP-464",
       "title": "Review and manage capabilities for signed external packages",
       "risk": "high",
-      "execution_state": "worker_in_progress",
-      "claim_state": "active",
+      "execution_state": "worker_complete_awaiting_trusted_review",
+      "claim_state": "locked_until_trusted_resolution",
       "dependencies": [
         "WCP-113"
       ],
@@ -27594,17 +27594,25 @@
       "active_base_sha": "f6247efb947195b61d9688b758ee59d0f0fd6f06",
       "active_head": "1efbfb4ffd83ece13f138babe9184e89bbeed829",
       "resume_branch": "feature/wcp-464-signed-extension-permission-admin-g1",
-      "last_checkpoint_at": "2026-09-27T04:56:29.967Z",
-      "last_verified_push_at": "2026-09-27T04:56:29.967Z",
+      "last_checkpoint_at": "2026-09-27T05:00:53.920Z",
+      "last_verified_push_at": "2026-09-27T05:00:53.920Z",
       "checkpoint_paths": [
+        "src/Controller/AdminExtensionCapabilityController.php",
+        "src/ExtensionPackage/ExtensionCapabilityAdministration.php",
+        "templates/admin/modules/index.html.twig",
+        "templates/admin/modules/extension_permissions.html.twig",
         "tests/Controller/AdminExtensionCapabilityControllerTest.php"
       ],
       "branch_heads": {
         "claim_branch": "f6247efb947195b61d9688b758ee59d0f0fd6f06",
         "suggested_branch": "1efbfb4ffd83ece13f138babe9184e89bbeed829"
       },
-      "next_action": "Review Worker CI run #657 (36295745906) on exact HEAD 1efbfb4ffd83ece13f138babe9184e89bbeed829; inspect the valid-session CSRF regression and complete full Worker checks, repairing any failure on this same feature branch.",
-      "last_observed_head": "1efbfb4ffd83ece13f138babe9184e89bbeed829"
+      "next_action": "Await Trusted integration, cancellation or transfer with checkpoint evidence; keep this claim locked. Continue only on an independent proposal.",
+      "last_observed_head": "1efbfb4ffd83ece13f138babe9184e89bbeed829",
+      "worker_pr": 259,
+      "final_head": "1efbfb4ffd83ece13f138babe9184e89bbeed829",
+      "ci_run_id": 36295745906,
+      "ci_result": "success"
     },
     {
       "priority": 465,
