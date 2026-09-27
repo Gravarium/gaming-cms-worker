@@ -15,6 +15,8 @@ final class LoginThrottlingSecurityTest extends WebTestCase
     public function testRepeatedInvalidPasswordsReachTheConfiguredLoginThrottle(): void
     {
         $client = static::createClient();
+        $client->disableReboot();
+        $client->setServerParameter('REMOTE_ADDR', '192.0.2.'.random_int(1, 254));
         $user = $this->user($client);
         $userId = $user->getId();
         $email = $user->getEmail();
@@ -38,9 +40,15 @@ final class LoginThrottlingSecurityTest extends WebTestCase
                 }
 
                 self::assertResponseRedirects('/login');
+                $client->followRedirect();
+                self::assertResponseIsSuccessful();
+                self::assertSelectorTextContains('.alert', 'E-Mail-Adresse oder Passwort ist falsch.');
             }
 
             self::assertTrue($blocked, 'Repeated invalid credentials should reach the configured login throttle.');
+
+            $client->request('GET', '/account');
+            self::assertResponseRedirects('/login');
         } finally {
             $this->removeUser($client, $userId);
         }
