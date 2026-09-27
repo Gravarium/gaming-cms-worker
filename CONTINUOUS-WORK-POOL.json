@@ -17,9 +17,9 @@
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-470 is complete on green exact-head Worker PR #263; continue autonomously with the next dependency-safe package or a bounded independent Worker-only proposal.",
+    "next_required_action": "WCP-471 is claimed on sanitized main for public game release discovery with disjoint paths; continue its implementation while preserving WCP-470 and all other active claims.",
     "composition_preparable": 0,
-    "immediately_actionable": 3,
+    "immediately_actionable": 4,
     "must_continue": true
   },
   "rules": {
@@ -28523,6 +28523,103 @@
         "Awaiting Trusted review and Trusted integration CI."
       ],
       "trusted_follow_up": "Preserve CMS_CONTENT_MANAGE and content-tag form/delete-route CSRF checks before mutations; run full Trusted CI."
+    },
+    {
+      "priority": 471,
+      "package_id": "WCP-471",
+      "title": "Search and paginate the public game release calendar",
+      "risk": "medium",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-471-public-game-release-calendar-g1",
+      "suggested_branch": "feature/wcp-471-public-game-release-calendar-g1",
+      "base_branch": "main",
+      "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "objective": "Complete the public Game Catalogue release calendar with a reachable search and filter view. Let readers narrow upcoming releases by game name, platform, region, status, and year, and page through bounded results while only showing releases for enabled catalogue entries and enabled games.",
+      "allowed_paths": [
+        "src/Controller/GameCatalogue/GameReleaseCalendarController.php",
+        "src/Repository/GameCatalogue/GameReleaseRepository.php",
+        "templates/game_catalogue/releases.html.twig",
+        "templates/game_catalogue/release_calendar.html.twig",
+        "tests/Gaming/Catalogue/GameReleaseCalendarControllerTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "src/Controller/GameCatalogue/GameCatalogueController.php",
+        "src/Repository/GameCatalogue/GameCatalogueEntryRepository.php",
+        "tests/Gaming/Catalogue/GameCatalogueControllerTest.php",
+        "public/uploads/"
+      ],
+      "deliverables": [
+        "A new GET release-discovery route reachable from the existing release-calendar page without editing another claimed controller or template.",
+        "Bounded case-insensitive game search, validated platform/region/status/year filters, stable newest/oldest ordering, and page navigation that preserves selected filters.",
+        "Only upcoming, non-cancelled releases attached to enabled Game Catalogue entries and enabled games appear; disabled modules fail closed.",
+        "Accessible labels, empty state, reset path, game links, and truthful result counts."
+      ],
+      "tests": [
+        "Focused functional coverage for filter combinations, pagination and preserved query values, invalid/oversized filters, hidden/disabled catalogue records, cancelled releases, disabled gaming module, reachable calendar link and empty results.",
+        "PHPStan level 8 and complete Worker CI on the exact final HEAD.",
+        "PostgreSQL 18 complete migration-chain validation."
+      ],
+      "completion_report": [
+        "Exact sanitized main base SHA and final Worker HEAD SHA.",
+        "Complete changed-path list and Worker PR.",
+        "Focused tests, complete Worker CI, PHPStan, and migration results on exact final HEAD.",
+        "Unresolved risks, assumptions, and Trusted integration follow-up."
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "preserve-public-game-catalogue-visibility-and-module-gating",
+        "bind-all-filter-values-and-bound-result-count-and-page-offset",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment",
+        "no-private-runtime-or-sensitive-data"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "proposal_kind": "worker_only",
+      "proposal_dependency_evidence": [],
+      "collision_check": {
+        "compared_against": "Fresh continuous/work-pool-v4 at e52257d85a8f7a9518113970d2975bcd256b8547, all active and claim-locked allowed-path scopes, and exact sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d.",
+        "result": "No active or claim-locked package owns or encloses any of the five allowed paths. WCP-401 is limited to administrative Game Hub CRUD paths under AdminGameCatalogue and templates/admin/game_catalogue; this package adds a separate public release-discovery route. WCP-387 owns the existing game-list controller/repository, index view, and its test; this package uses a new controller and test, the existing GameReleaseRepository, and only the unclaimed release-listing template for a link plus a new result template. No database, write, or migration paths are touched.",
+        "paths": [
+          "src/Controller/GameCatalogue/GameReleaseCalendarController.php",
+          "src/Repository/GameCatalogue/GameReleaseRepository.php",
+          "templates/game_catalogue/releases.html.twig",
+          "templates/game_catalogue/release_calendar.html.twig",
+          "tests/Gaming/Catalogue/GameReleaseCalendarControllerTest.php"
+        ]
+      },
+      "published_at": "2026-09-27T05:17:01.068Z",
+      "claimed_on": "2026-09-27T05:17:01.068Z",
+      "claim_state": "active",
+      "active_base_branch": "main",
+      "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "resume_branch": "feature/wcp-471-public-game-release-calendar-g1",
+      "last_checkpoint_at": "2026-09-27T05:17:01.068Z",
+      "checkpoint_paths": [],
+      "branch_heads": {
+        "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+        "feature_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d"
+      },
+      "next_action": "Implement the new read-only filtered calendar on the claimed feature branch, then open a draft Worker PR for exact-head CI."
     }
   ],
   "recovery_queue": [],
