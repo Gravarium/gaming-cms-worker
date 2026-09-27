@@ -10,16 +10,16 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T03:03:52.670Z",
+  "published_at": "2026-09-27T03:04:32.875Z",
   "summary": {
-    "total_remaining_worker_tasks": 141,
-    "completed_worker_prs_awaiting_trusted_review": 225,
+    "total_remaining_worker_tasks": 140,
+    "completed_worker_prs_awaiting_trusted_review": 226,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-459 is reserved at exact HEAD 238b1fdabf381713cb1bc2ad34d93449a0fb967d; inspect exact-head Worker CI run 36290280807 and repair concrete failures.",
+    "next_required_action": "WCP-458 is complete and locked pending Trusted review; independently select the next free existing-module completion task or publish and claim a bounded independent WCP.",
     "composition_preparable": 0,
-    "immediately_actionable": 4,
+    "immediately_actionable": 3,
     "must_continue": true
   },
   "rules": {
@@ -26587,7 +26587,7 @@
       "package_id": "WCP-458",
       "title": "Show category hierarchy and public archive entry points",
       "risk": "medium",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -26660,7 +26660,7 @@
         ]
       },
       "published_at": "2026-09-27T02:57:53.142Z",
-      "claim_state": "active",
+      "claim_state": "locked_until_trusted_resolution",
       "claimed_on": "2026-09-27T02:58:18.241Z",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
@@ -26675,9 +26675,14 @@
         "feature_branch": "f500378f1d17b383300d025e40fbefc0b671af0a"
       },
       "last_checkpoint_at": "2026-09-27T03:01:01.815Z",
-      "last_verified_push_at": "2026-09-27T03:01:01.815Z",
-      "next_action": "Inspect Worker CI run 36290192242 on exact HEAD f500378f1d17b383300d025e40fbefc0b671af0a. Diagnose and fix any concrete failing test or analyzer on this branch, then rerun complete CI.",
-      "worker_pr": 251
+      "last_verified_push_at": "2026-09-27T03:04:32.875Z",
+      "next_action": "Keep this claim locked until Trusted explicitly integrates, cancels or transfers it. During Trusted transfer confirm the public archive still applies its existing visibility filters.",
+      "worker_pr": 251,
+      "final_head": "f500378f1d17b383300d025e40fbefc0b671af0a",
+      "last_observed_head": "f500378f1d17b383300d025e40fbefc0b671af0a",
+      "ci_run_id": 36290192242,
+      "ci_result": "success",
+      "completed_at": "2026-09-27T03:04:32.875Z"
     },
     {
       "priority": 459,
