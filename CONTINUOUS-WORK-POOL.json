@@ -38892,6 +38892,163 @@
       ],
       "ci_run_id": 36321638397,
       "last_ci_run_id": 36321638397
+    },
+    {
+      "priority": 537,
+      "package_id": "WCP-537",
+      "title": "Place public guild event schedules in the Page Builder",
+      "risk": "medium",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-537-public-guild-events-widget-g1",
+      "suggested_branch": "feature/wcp-537-public-guild-events-widget-g1",
+      "base_branch": "main",
+      "base_sha": "b510875e7b0741b9b19f09429d2204a95df51198",
+      "objective": "Complete the existing public Guild Events workflow by making upcoming guild-wide events placeable on Page Builder pages. Add a bounded public-only query and auto-discovered Gaming widget that shows planned events for enabled guilds and enabled games, excludes team-restricted events, and links to the public guild page. Do not expose signup, waitlist, character, or attendance data. Hide the widget when Gaming is disabled. Do not change event writes, existing routes/controllers/repositories, schema or migrations.",
+      "allowed_paths": [
+        "src/Widget/PublicGuildEventsWidgetProvider.php",
+        "src/Widget/PublicGuildEventsQuery.php",
+        "src/PublicGuildEventsWidget/Templates/widget/public_guild_events.html.twig",
+        "config/packages/public_guild_events_widget.yaml",
+        "tests/Widget/PublicGuildEventsWidgetProviderTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "templates/",
+        "src/Widget/WidgetRegistry.php",
+        "src/Widget/BundledWidgetProvider.php",
+        "src/Widget/GuildEvent/UpcomingGuildEventsQuery.php",
+        "src/Widget/UpcomingGuildEventsWidgetProvider.php",
+        "src/GuildEventWidget/Templates/widget/upcoming_guild_events.html.twig",
+        "src/EventSubscriber/GuildEventWidgetCacheSubscriber.php",
+        "config/packages/guild_event_widget.yaml",
+        "tests/Widget/UpcomingGuildEventsWidgetProviderTest.php",
+        "src/Controller/PublicGuildEventController.php",
+        "templates/gaming/events.html.twig",
+        "tests/Controller/PublicGuildEventTest.php",
+        "src/Controller/GuildPortalController.php",
+        "src/Controller/AdminGuildCollaborationController.php",
+        "src/Repository/GuildEventRepository.php",
+        "src/Entity/GuildEvent.php",
+        "src/Entity/GuildEventSignup.php"
+      ],
+      "deliverables": [
+        "Auto-discovered gaming.public-guild-events Page Builder widget with a bounded count setting and an isolated Twig template path outside templates/.",
+        "Deterministic query of at most 12 upcoming planned guild-wide events for enabled guilds and enabled games, excluding team-restricted events.",
+        "Public event title, date, description, optional location/participant limit and public guild link; no signup, waitlist, character or attendance data.",
+        "Gaming-module availability suppresses widget discovery and data; no event writes, schema or migration changes."
+      ],
+      "tests": [
+        "Functional Page Builder registry/render coverage for placement, event display, empty state and the guild detail links.",
+        "Include only planned not-ended events belonging to enabled guilds and enabled games; exclude team-restricted, cancelled, completed, and stale events.",
+        "Verify stable start-time/id ordering, caller count clamping and a hard maximum of 12 results.",
+        "Verify no signup, waitlist, character, note or attendance data is queried or rendered and disabled Gaming suppresses the widget.",
+        "PHPStan level 8 and complete Worker CI on exact final HEAD, including PostgreSQL 18 migration-chain validation."
+      ],
+      "completion_report": [
+        "Exact sanitized main/base SHA and final Worker HEAD SHA.",
+        "Changed-path list and Worker PR URL/state.",
+        "Page Builder discovery/placement, public event visibility, bounded query, safe guild links, and disabled-Gaming behavior.",
+        "Focused tests and exact-head full Worker CI results.",
+        "Open limitations and Trusted follow-up."
+      ],
+      "immutable_constraints": [
+        "only-planned-upcoming-guild-wide-events-for-enabled-public-guilds-and-games",
+        "team-restricted-events-are-never-in-public-widget",
+        "no-member-signup-waitlist-character-note-or-attendance-data",
+        "bounded-deterministic-read-only-query-max-12",
+        "disabled-gaming-hides-widget-data",
+        "no-schema-or-migration-change",
+        "no-modification-of-existing-locked-or-active-WCP-506-or-WCP-532-paths",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "red-CI-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "b510875e7b0741b9b19f09429d2204a95df51198",
+      "proposal_kind": "worker_only",
+      "proposal_dependency_evidence": [],
+      "collision_check": {
+        "compared_against": "Fresh continuous/work-pool-v4 blob e1c60dfc50131cf41cbdc3c61d92344718e923f2; current Worker main b510875e7b0741b9b19f09429d2204a95df51198; exact WCP-537 branch/PR searches; all active and claim-locked paths.",
+        "result": "No active or claim-locked package owns or encloses the five exact paths. WCP-532 is an active member-scoped upcoming-events widget using different provider/query/Twig/config/test paths; this proposal is anonymous and excludes team events. WCP-506 is the completed public per-guild schedule route and remains locked; this adds Page Builder placement in new paths and changes none of it. FCP-072's broad templates/ allowance is avoided with an isolated src/ template path and package config. The prior WCP-536 identity-column task is owned by another worker and was skipped. No source file was changed before reservation.",
+        "paths": [
+          "src/Widget/PublicGuildEventsWidgetProvider.php",
+          "src/Widget/PublicGuildEventsQuery.php",
+          "src/PublicGuildEventsWidget/Templates/widget/public_guild_events.html.twig",
+          "config/packages/public_guild_events_widget.yaml",
+          "tests/Widget/PublicGuildEventsWidgetProviderTest.php"
+        ],
+        "observed_nonblocking_path_hits": [
+          {
+            "id": "WCP-532",
+            "title": "Add a member-scoped upcoming guild events Page Builder widget",
+            "state": "worker_in_progress",
+            "paths": [
+              "src/Widget/GuildEvent/UpcomingGuildEventsQuery.php",
+              "src/Widget/UpcomingGuildEventsWidgetProvider.php",
+              "src/GuildEventWidget/Templates/widget/upcoming_guild_events.html.twig",
+              "src/EventSubscriber/GuildEventWidgetCacheSubscriber.php",
+              "config/packages/guild_event_widget.yaml",
+              "tests/Widget/UpcomingGuildEventsWidgetProviderTest.php"
+            ]
+          },
+          {
+            "id": "WCP-506",
+            "title": "Expose the public guild event schedule",
+            "state": "worker_complete_awaiting_trusted_review",
+            "paths": [
+              "src/Controller/PublicGuildEventController.php",
+              "templates/gaming/events.html.twig",
+              "tests/Controller/PublicGuildEventTest.php"
+            ]
+          }
+        ]
+      },
+      "published_at": "2026-09-27T13:15:35.838Z",
+      "claimed_on": "2026-09-27T13:15:35.838Z",
+      "claim_state": "active",
+      "active_base_branch": "main",
+      "active_base_sha": "b510875e7b0741b9b19f09429d2204a95df51198",
+      "active_head": "b510875e7b0741b9b19f09429d2204a95df51198",
+      "resume_branch": "feature/wcp-537-public-guild-events-widget-g1",
+      "branch_heads": {
+        "claim_branch": "b510875e7b0741b9b19f09429d2204a95df51198",
+        "feature_branch": "b510875e7b0741b9b19f09429d2204a95df51198"
+      },
+      "last_observed_head": "b510875e7b0741b9b19f09429d2204a95df51198",
+      "last_checkpoint_at": "2026-09-27T13:15:35.838Z",
+      "last_verified_push_at": "2026-09-27T13:15:35.838Z",
+      "checkpoint_paths": [
+        "src/Widget/PublicGuildEventsWidgetProvider.php",
+        "src/Widget/PublicGuildEventsQuery.php",
+        "src/PublicGuildEventsWidget/Templates/widget/public_guild_events.html.twig",
+        "config/packages/public_guild_events_widget.yaml",
+        "tests/Widget/PublicGuildEventsWidgetProviderTest.php"
+      ],
+      "next_action": "Implement the anonymous public guild events widget inside the five reserved paths; then run the complete relevant checks on exact HEAD.",
+      "worker_pr": null,
+      "worker_pr_url": null,
+      "draft_pr": false,
+      "pr_state": "not_created",
+      "worker_pr_state": "not_created",
+      "worker_pr_changed_paths": [],
+      "ci_result": "not_started",
+      "last_ci_result": "not_started",
+      "ci_attempts": []
     }
   ],
   "recovery_queue": [],
