@@ -10,7 +10,7 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T17:03:14.152Z",
+  "published_at": "2026-09-27T17:06:29.926Z",
   "summary": {
     "total_remaining_worker_tasks": 167,
     "completed_worker_prs_awaiting_trusted_review": 292,
@@ -43687,7 +43687,7 @@
       "package_id": "WCP-557",
       "title": "Public game genre directory and Page Builder widget",
       "risk": "medium",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -43831,7 +43831,7 @@
       },
       "published_at": "2026-09-27T16:46:09.410Z",
       "claimed_on": "2026-09-27T16:46:09.410Z",
-      "claim_state": "active",
+      "claim_state": "locked_until_trusted_resolution",
       "active_base_branch": "main",
       "active_base_sha": "d05a736b0e02c7382213772c3b1d6e99f2fd60d7",
       "active_head": "b6188d22db5b6266d7b3fda49bcbc0e1382e3f3b",
@@ -43867,16 +43867,19 @@
           "run_number": 889,
           "head": "b6188d22db5b6266d7b3fda49bcbc0e1382e3f3b",
           "base": "b3eca4cfb21549fa10c67fb9c8e5b31af4cc41e1",
-          "result": "in_progress",
-          "conclusion": null
+          "result": "success",
+          "conclusion": "success",
+          "php_symfony_job": "success",
+          "postgresql_18_migrations": "success",
+          "summary": "Full Worker CI passed on exact final feature HEAD: PHPStan, YAML/Twig/container/Doctrine/AssetMapper checks passed; PHPUnit 740 tests, 4669 assertions, 0 failures/errors (1 deprecation, 3 notices); PostgreSQL 18 executed all 57 available migrations with 0 unavailable."
         }
       ],
       "resume_branch": "feature/wcp-557-public-game-genre-directory-g1",
-      "next_action": "Monitor Worker CI run #889 / 36335398176 on exact HEAD b6188d22db5b6266d7b3fda49bcbc0e1382e3f3b; repair any remaining failures and rerun full Worker CI on the repaired feature head.",
+      "next_action": "Keep PR #351 and this claim locked through Trusted resolution; do not merge or deploy.",
       "worker_pr": 351,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/351",
-      "worker_pr_state": "draft",
-      "draft_pr": true,
+      "worker_pr_state": "ready_for_review",
+      "draft_pr": false,
       "pr_state": "open",
       "worker_pr_base_branch": "main",
       "worker_pr_base_sha": "b3eca4cfb21549fa10c67fb9c8e5b31af4cc41e1",
@@ -43893,8 +43896,9 @@
       ],
       "ci_run_id": 36335398176,
       "last_ci_run_id": 36335398176,
-      "ci_result": "in_progress",
-      "last_ci_result": "in_progress"
+      "ci_result": "success",
+      "last_ci_result": "success",
+      "last_completed_at": "2026-09-27T17:06:29.926Z"
     },
     {
       "priority": 558,
