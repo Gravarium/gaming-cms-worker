@@ -10,16 +10,16 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T10:55:14.083Z",
+  "published_at": "2026-09-27T10:55:28.447Z",
   "summary": {
-    "total_remaining_worker_tasks": 165,
-    "completed_worker_prs_awaiting_trusted_review": 275,
+    "total_remaining_worker_tasks": 164,
+    "completed_worker_prs_awaiting_trusted_review": 276,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-517 is claimed on feature/wcp-517-content-revision-compare-g1 from current sanitized main b510875e7b0741b9b19f09429d2204a95df51198; implement the read-only content revision comparison and verify full exact-head Worker CI.",
+    "next_required_action": "WCP-515 is complete on exact green HEAD 0c484fe148c2b90ecf09c45ff8b352737b00f62c, PR #308 is ready for Trusted review, and its claim remains locked. Continue to the next free independent module gap.",
     "composition_preparable": 0,
-    "immediately_actionable": 21,
+    "immediately_actionable": 20,
     "must_continue": true
   },
   "rules": {
@@ -35433,7 +35433,7 @@
       "package_id": "WCP-515",
       "title": "Protect scheduled content from editor autosave",
       "risk": "low",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -35505,7 +35505,7 @@
       },
       "published_at": "2026-09-27T10:45:22.486Z",
       "claimed_on": "2026-09-27T10:45:22.486Z",
-      "claim_state": "active",
+      "claim_state": "locked_until_trusted_resolution",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
       "active_head": "0c484fe148c2b90ecf09c45ff8b352737b00f62c",
@@ -35514,25 +35514,25 @@
         "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
         "feature_branch": "0c484fe148c2b90ecf09c45ff8b352737b00f62c"
       },
-      "next_action": "Monitor exact-head Worker CI run 36313839679 for HEAD 0c484fe148c2b90ecf09c45ff8b352737b00f62c. Repair only a concrete failure within the dedicated test file.",
+      "next_action": "Claim remains locked for Trusted resolution. Continue the autonomous Worker loop with the next independent, path-disjoint package; do not merge or deploy.",
       "checkpoint_paths": [
         "tests/Controller/Content/ScheduledContentAutosaveBoundaryTest.php"
       ],
       "last_observed_head": "0c484fe148c2b90ecf09c45ff8b352737b00f62c",
-      "last_checkpoint_at": "2026-09-27T10:51:31.508Z",
-      "last_verified_push_at": "2026-09-27T10:51:31.508Z",
+      "last_checkpoint_at": "2026-09-27T10:55:28.447Z",
+      "last_verified_push_at": "2026-09-27T10:55:28.447Z",
       "worker_pr": 308,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/308",
-      "draft_pr": true,
+      "draft_pr": false,
       "pr_state": "open",
-      "worker_pr_state": "draft",
+      "worker_pr_state": "ready",
       "worker_pr_changed_paths": [
         "tests/Controller/Content/ScheduledContentAutosaveBoundaryTest.php"
       ],
       "ci_run_id": 36313839679,
       "last_ci_run_id": 36313839679,
-      "ci_result": "in_progress",
-      "last_ci_result": "in_progress",
+      "ci_result": "success",
+      "last_ci_result": "success",
       "ci_attempts": [
         {
           "run_id": 36313715827,
@@ -35543,9 +35543,15 @@
         {
           "run_id": 36313839679,
           "head": "0c484fe148c2b90ecf09c45ff8b352737b00f62c",
-          "result": "in_progress"
+          "result": "success",
+          "summary": "537 tests / 2,239 assertions, zero failures; PHPStan no errors; PostgreSQL 18 migration chain: 54 migrations and 750 SQL queries."
         }
-      ]
+      ],
+      "final_head": "0c484fe148c2b90ecf09c45ff8b352737b00f62c",
+      "final_changed_paths": [
+        "tests/Controller/Content/ScheduledContentAutosaveBoundaryTest.php"
+      ],
+      "completed_at": "2026-09-27T10:55:28.447Z"
     },
     {
       "priority": 516,
