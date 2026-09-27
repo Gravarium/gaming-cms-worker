@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T08:08:42.364Z",
+  "published_at": "2026-09-27T08:09:53.362Z",
   "summary": {
     "total_remaining_worker_tasks": 141,
     "completed_worker_prs_awaiting_trusted_review": 251,
     "recovery_tasks": 0,
-    "unclaimed": 5,
-    "immediately_claimable": 0,
-    "next_required_action": "WCP-484 is complete on green exact HEAD c0f6b95629bbfe7f40712d1fca6ecc205fac0d00 (PR #277; CI 36305000689); its claim remains locked. Re-evaluate the current unclaimed FCPs against trusted integration and exact green worker predecessor heads; if none is dependency-safe, publish and claim the next bounded independent worker-only CMS proposal.",
+    "unclaimed": 6,
+    "immediately_claimable": 1,
+    "next_required_action": "Claim WCP-485 from exact sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d, then complete the generic public tag archive on its isolated paths. WCP-484 remains owned by its active worker; resume only on that worker's branch.",
     "composition_preparable": 0,
     "immediately_actionable": 4,
     "must_continue": true
@@ -31026,6 +31026,97 @@
           "result": "success"
         }
       ]
+    },
+    {
+      "priority": 485,
+      "package_id": "WCP-485",
+      "title": "Browse public content by tag across news and pages",
+      "risk": "medium",
+      "execution_state": "unclaimed",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-485-public-content-tag-archive-g1",
+      "suggested_branch": "feature/wcp-485-public-content-tag-archive-g1",
+      "base_branch": "main",
+      "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "objective": "Complete public tag browsing in the existing content module. Tag links on public news and page detail pages open one archive that lists every matching published, publicly listed news entry or page. Keep the existing /news/tag/{slug} route and the tag links in the news index on their current news-only behavior. Add stable 20-item pagination.",
+      "allowed_paths": [
+        "src/Controller/PublicContentTagArchiveController.php",
+        "src/Repository/PublicContentTagArchiveRepository.php",
+        "templates/content/show.html.twig",
+        "templates/content_tag/archive.html.twig",
+        "tests/Controller/PublicContentTagArchiveTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/",
+        "src/Entity/",
+        "src/Repository/ContentEntryRepository.php",
+        "src/Repository/ContentTagRepository.php",
+        "src/Controller/PublicContentController.php",
+        "templates/base.html.twig",
+        "templates/content/news.html.twig",
+        "tests/Controller/Content/"
+      ],
+      "deliverables": [
+        "A generic public tag archive route resolves an existing ContentTag and lists both TYPE_NEWS and TYPE_PAGE entries assigned to it.",
+        "Archive queries fail closed to STATUS_PUBLISHED entries with publishedAt at or before now and unlisted=false; deterministic publishedAt/id ordering is used.",
+        "Pagination uses 20 entries per page, reports total/page counts, treats an empty first page consistently, and returns 404 for missing tags and non-empty out-of-range pages.",
+        "Tag links on both news and page detail pages use the generic archive; the existing /news/tag/{slug} route and the news index tag links remain news-only.",
+        "No schema, migration, shared repository, shared public controller, service configuration or security-control changes."
+      ],
+      "tests": [
+        "Functional test shows one tag archive containing both a tagged published news entry and tagged published page.",
+        "Negative visibility tests exclude draft, scheduled, future-dated published, archived, trashed and unlisted entries and verify their unique markers are absent.",
+        "Tests cover generic tag links on page detail and news detail, preserved news-only route behavior, pagination and stable ordering, empty tags, missing tags, and out-of-range pages.",
+        "Synthetic content, tags and users are cleaned up even when assertions fail.",
+        "PHPUnit, PHPStan level 8, full Worker CI on exact final HEAD, and PostgreSQL 18 migration validation."
+      ],
+      "completion_report": [
+        "Exact sanitized main SHA, proposal base and final HEAD.",
+        "Complete changed-file list and Worker PR link.",
+        "Targeted test, PHPStan and exact-head CI results, including PostgreSQL migration job.",
+        "Open assumptions, remaining gaps, and Trusted integration follow-up for the public routes/templates."
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "public archives expose only published and listed content",
+        "preserve-existing-news-tag-route-semantics",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment",
+        "fortress-ready-replaceable-query-boundary-no-private-runtime-reconstruction"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "proposal_kind": "worker_only",
+      "proposal_dependency_evidence": [],
+      "collision_check": {
+        "compared_against": "Fresh continuous/work-pool-v4 pool blob 89cef116735b49be73ad3a913da18425fb75e77a, every active and claim-locked allowed path, and sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d.",
+        "result": "No active or claim-locked package owns or encloses these five exact paths. WCP-402 owns templates/content/news.html.twig; this package does not change that file or the shared PublicContentController. FCP-072 is currently unclaimed and dependency-blocked by FCP-035 but declares the broad templates/ scope; its future claimant must revalidate and narrow that scope before claiming if this package remains active. No shared migration, service wiring, route configuration or entity path is touched.",
+        "paths": [
+          "src/Controller/PublicContentTagArchiveController.php",
+          "src/Repository/PublicContentTagArchiveRepository.php",
+          "templates/content/show.html.twig",
+          "templates/content_tag/archive.html.twig",
+          "tests/Controller/PublicContentTagArchiveTest.php"
+        ]
+      },
+      "published_at": "2026-09-27T08:09:53.362Z"
     }
   ],
   "recovery_queue": [],
