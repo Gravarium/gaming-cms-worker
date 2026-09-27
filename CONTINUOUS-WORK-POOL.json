@@ -10,10 +10,10 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T07:32:55.816Z",
+  "published_at": "2026-09-27T07:36:08.446Z",
   "summary": {
     "total_remaining_worker_tasks": 141,
-    "completed_worker_prs_awaiting_trusted_review": 248,
+    "completed_worker_prs_awaiting_trusted_review": 249,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
@@ -30530,7 +30530,7 @@
       "package_id": "WCP-482",
       "title": "Preserve page layouts after rejected content-type edits",
       "risk": "medium",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -30603,7 +30603,7 @@
       },
       "published_at": "2026-09-27T07:17:44.859Z",
       "claimed_on": "2026-09-27T07:17:44.859Z",
-      "claim_state": "active",
+      "claim_state": "locked_until_trusted_resolution",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
       "active_head": "1d200f2b66eeefc28e8ad224974c1f4de462458d",
@@ -30612,41 +30612,86 @@
         "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
         "feature_branch": "1d200f2b66eeefc28e8ad224974c1f4de462458d"
       },
-      "next_action": "Monitor exact-head Worker CI run 36303407921; resolve any remaining test-only failure.",
+      "next_action": "Await Trusted review and integration CI; keep the claim locked until Trusted explicitly resolves it.",
       "last_observed_head": "1d200f2b66eeefc28e8ad224974c1f4de462458d",
-      "last_checkpoint_at": "2026-09-27T07:32:55.816Z",
+      "last_checkpoint_at": "2026-09-27T07:36:08.446Z",
       "checkpoint_paths": [
         "tests/Controller/ContentLayoutMutationBoundaryTest.php"
       ],
-      "worker_pr_changed_paths": [],
+      "worker_pr_changed_paths": [
+        "tests/Controller/ContentLayoutMutationBoundaryTest.php"
+      ],
       "worker_pr": 275,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/275",
-      "draft_pr": true,
+      "draft_pr": false,
       "pr_state": "open",
       "ci_run_id": 36303407921,
       "last_ci_run_id": 36303407921,
-      "ci_result": "in_progress",
-      "last_ci_result": "in_progress",
+      "ci_result": "success",
+      "last_ci_result": "success",
       "ci_attempts": [
         {
           "run_id": 36302859254,
           "head": "b9bc6ae408ced2ab6f219ce149ee558bc8ee90ca",
           "result": "failure",
-          "note": "Invalid token alone remained accepted because configured stateless CSRF uses same-origin request metadata."
+          "note": "Invalid form token alone was accepted under stateless CSRF because request metadata was same-origin."
         },
         {
           "run_id": 36303226183,
           "head": "cc549ef94703dc6279bd48397be5f1104cc14324",
           "result": "failure",
-          "note": "Explicit cross-site metadata rejected the form with HTTP 422; test originally expected HTTP 200."
+          "note": "Cross-site metadata rejected the form with HTTP 422; assertion initially expected HTTP 200."
         },
         {
           "run_id": 36303407921,
           "head": "1d200f2b66eeefc28e8ad224974c1f4de462458d",
-          "result": "in_progress",
-          "note": "Assertion now expects observed HTTP 422; persisted page/layout invariants execute afterward."
+          "result": "success"
         }
-      ]
+      ],
+      "final_head": "1d200f2b66eeefc28e8ad224974c1f4de462458d",
+      "final_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "final_sanitized_main_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "final_changed_paths": [
+        "tests/Controller/ContentLayoutMutationBoundaryTest.php"
+      ],
+      "changed_paths": [
+        "tests/Controller/ContentLayoutMutationBoundaryTest.php"
+      ],
+      "completed_at": "2026-09-27T07:36:08.446Z",
+      "test_results": {
+        "phpunit": "430 tests, 1865 assertions, 0 failures; one PHPUnit deprecation and one notice.",
+        "phpstan": "Level 8 passed with no errors.",
+        "php_symfony": "Worker PHP/Symfony validation job passed on exact final HEAD.",
+        "postgres18": "PostgreSQL 18 completed all 39 migrations; 0 unavailable.",
+        "exact_head_ci": {
+          "run_id": 36303407921,
+          "head": "1d200f2b66eeefc28e8ad224974c1f4de462458d",
+          "result": "success"
+        }
+      },
+      "completion_evidence": {
+        "exact_sanitized_main_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+        "exact_proposal_base_branch": "main",
+        "exact_proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+        "final_head_sha": "1d200f2b66eeefc28e8ad224974c1f4de462458d",
+        "changed_paths": [
+          "tests/Controller/ContentLayoutMutationBoundaryTest.php"
+        ],
+        "cumulative_pr_paths": [
+          "tests/Controller/ContentLayoutMutationBoundaryTest.php"
+        ],
+        "worker_pr": 275,
+        "ci_run_id": 36303407921,
+        "ci_result": "success",
+        "php_symfony_job": "success: 430 tests, 1865 assertions; PHPStan level 8 no errors",
+        "postgresql_job": "success: 39 migrations, 0 unavailable",
+        "csrf_layout_boundary": "Explicit cross-site Sec-Fetch-Site and Origin metadata makes stateless form CSRF reject the rendered edit form with HTTP 422; persisted page type and layout document remain unchanged."
+      },
+      "completion_summary": "Added functional coverage proving a cross-site form submission cannot change a page to news or remove its layout; the configured stateless CSRF check rejects it and persisted content/layout remain unchanged.",
+      "open_limitations": [
+        "Awaiting Trusted review and Trusted integration CI."
+      ],
+      "trusted_follow_up": "Verify the stateless form-CSRF rejection and persisted page-layout preservation on fresh Trusted CI; preserve current Origin/Sec-Fetch-Site checks and page-layout cleanup semantics."
     },
     {
       "priority": 483,
