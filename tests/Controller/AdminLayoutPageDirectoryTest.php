@@ -87,7 +87,7 @@ final class AdminLayoutPageDirectoryTest extends WebTestCase
             $client->request('GET', '/admin/layout/page-'.$lastPageId);
             self::assertResponseIsSuccessful();
             self::assertSelectorExists('.editor-contexts a[href="/admin/layout/pages"]');
-            self::assertSame('private, no-store', $client->getResponse()->headers->get('Cache-Control'));
+            $this->assertPrivateNoStore($client);
         } finally {
             $this->cleanup($client, $entryIds, $auth['userId']);
         }
@@ -215,10 +215,15 @@ final class AdminLayoutPageDirectoryTest extends WebTestCase
 
     private function assertPrivateDirectoryHeaders(KernelBrowser $client): void
     {
+        $this->assertPrivateNoStore($client);
+        self::assertSame('noindex, nofollow', $client->getResponse()->headers->get('X-Robots-Tag'));
+    }
+
+    private function assertPrivateNoStore(KernelBrowser $client): void
+    {
         $cacheControl = strtolower((string) $client->getResponse()->headers->get('Cache-Control'));
         $directives = array_map('trim', explode(',', $cacheControl));
         self::assertContains('private', $directives);
         self::assertContains('no-store', $directives);
-        self::assertSame('noindex, nofollow', $client->getResponse()->headers->get('X-Robots-Tag'));
     }
 }
