@@ -1,3 +1,8 @@
 {% extends 'base.html.twig' %}
 {% block title %}{{ site.siteName }}{% endblock %}
-{% block body %}{% include 'layout/portal.html.twig' with {portal: portal} %}{% endblock %}
+{% block body %}
+{% include 'layout/portal.html.twig' with {portal: portal} %}
+{% if cms_module_enabled('gaming') %}
+    <p class="competition-calendar-entry"><a class="button-link" href="{{ path('app_competition_calendar') }}">Wettbewerbskalender entdecken</a></p>
+{% endif %}
+{% endblock %}
