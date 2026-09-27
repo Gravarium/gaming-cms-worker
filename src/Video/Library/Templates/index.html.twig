@@ -1,0 +1,70 @@
+{% extends 'base.html.twig' %}
+{% set site = site_settings() %}
+{% block title %}Videothek{% if activeCategory %}: {{ activeCategory.name }}{% endif %}{% if activePlaylist %}: {{ activePlaylist.title }}{% endif %} | {{ site.siteName }}{% endblock %}
+{% block body %}
+<header class="topbar">
+    <a class="brand" href="{{ path('app_home') }}">{% if site.logoPath %}<img class="site-logo" src="{{ site.logoPath }}" alt="{{ site.siteName }}">{% else %}{{ site.siteName }}{% endif %}</a>
+    <nav class="top-actions">
+        <a href="{{ path('app_video_index') }}">Videos</a>
+        <a href="{{ path('app_news_index') }}">News</a>
+    </nav>
+</header>
+<main class="public-shell video-library">
+    <p class="eyebrow">Mediathek</p>
+    <h1>Videothek</h1>
+    <p class="hero-copy">Finde Streams, Guides und Highlights nach Kategorie oder Playlist.</p>
+
+    <div class="video-filters" aria-label="Videokategorien">
+        <a class="status {{ not activeCategory ? 'status-ready' : '' }}" href="{{ path('app_video_library', {playlist: activePlaylist ? activePlaylist.slug : null}) }}">Alle Kategorien</a>
+        {% for category in categories %}
+            <a class="status {{ activeCategory and activeCategory.id == category.id ? 'status-ready' : '' }}" href="{{ path('app_video_library', {category: category.slug, playlist: activePlaylist ? activePlaylist.slug : null}) }}">{{ category.name }}</a>
+        {% endfor %}
+    </div>
+    <div class="video-filters" aria-label="Playlists">
+        <a class="status {{ not activePlaylist ? 'status-ready' : '' }}" href="{{ path('app_video_library', {category: activeCategory ? activeCategory.slug : null}) }}">Alle Playlists</a>
+        {% for playlist in playlists %}
+            <a class="status {{ activePlaylist and activePlaylist.id == playlist.id ? 'status-ready' : '' }}" href="{{ path('app_video_library', {category: activeCategory ? activeCategory.slug : null, playlist: playlist.slug}) }}">Playlist: {{ playlist.title }}</a>
+        {% endfor %}
+    </div>
+
+    {% if activeCategory or activePlaylist %}
+        <div class="video-selection">
+            {% if activeCategory %}<h2>{{ activeCategory.name }}</h2>{% if activeCategory.description %}<p>{{ activeCategory.description }}</p>{% endif %}{% endif %}
+            {% if activePlaylist %}<h2>{{ activePlaylist.title }}</h2>{% if activePlaylist.description %}<p>{{ activePlaylist.description }}</p>{% endif %}{% endif %}
+        </div>
+    {% endif %}
+
+    <p class="muted">{{ total }} veröffentlichte Videos{% if pages > 1 %} · Seite {{ page }} von {{ pages }}{% endif %}</p>
+    <section class="video-grid" aria-label="Veröffentlichte Videos">
+        {% for video in videos %}
+            <article class="video-card {{ video.featured ? 'video-card-featured' : '' }}">
+                <a class="video-thumbnail" href="{{ path('app_video_show', {slug: video.slug}) }}">
+                    {% if video.thumbnailUrl %}<img src="{{ video.thumbnailUrl }}" alt="{{ video.title }}" loading="lazy">
+                    {% else %}<span class="video-play-symbol" aria-hidden="true">▶</span>{% endif %}
+                    {% if video.durationLabel %}<span class="video-duration">{{ video.durationLabel }}</span>{% endif %}
+                </a>
+                <div class="video-card-body">
+                    <p class="eyebrow">{{ video.category and video.category.enabled ? video.category.name : video.sourceType|capitalize }}</p>
+                    <h2><a href="{{ path('app_video_show', {slug: video.slug}) }}">{{ video.title }}</a></h2>
+                    <p>{{ video.description|striptags|slice(0, 180) }}{% if video.description|length > 180 %}…{% endif %}</p>
+                    <span class="video-date">{{ video.publishedAt|date('d.m.Y H:i') }} Uhr</span>
+                </div>
+            </article>
+        {% else %}
+            <div class="panel"><h2>Noch keine Videos</h2><p>Für diese Auswahl wurden keine veröffentlichten Videos gefunden.</p></div>
+        {% endfor %}
+    </section>
+
+    {% if pages > 1 %}
+        <nav class="pagination" aria-label="Seitennavigation">
+            {% if page > 1 %}
+                <a rel="prev" href="{{ path('app_video_library', {category: activeCategory ? activeCategory.slug : null, playlist: activePlaylist ? activePlaylist.slug : null, page: page - 1}) }}">← Neuere</a>
+            {% endif %}
+            <span>Seite {{ page }} von {{ pages }}</span>
+            {% if page < pages %}
+                <a rel="next" href="{{ path('app_video_library', {category: activeCategory ? activeCategory.slug : null, playlist: activePlaylist ? activePlaylist.slug : null, page: page + 1}) }}">Ältere →</a>
+            {% endif %}
+        </nav>
+    {% endif %}
+</main>
+{% endblock %}
