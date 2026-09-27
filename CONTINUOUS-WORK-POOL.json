@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T07:44:51.683Z",
+  "published_at": "2026-09-27T07:45:38.433Z",
   "summary": {
     "total_remaining_worker_tasks": 141,
     "completed_worker_prs_awaiting_trusted_review": 249,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-484 implementation ba33c3a3f0626737d86bd079b16420a559f03b1c is a verified single-file test commit on sanitized main; open a draft PR and run exact-head CI. WCP-483 remains another worker's active content-tag merge claim.",
+    "next_required_action": "WCP-484 draft PR #277 is open at exact HEAD ba33c3a3f0626737d86bd079b16420a559f03b1c; exact-head Worker CI run 36304073650 is queued. Await and resolve CI.",
     "composition_preparable": 0,
     "immediately_actionable": 4,
     "must_continue": true
@@ -30922,13 +30922,28 @@
         "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
         "feature_branch": "ba33c3a3f0626737d86bd079b16420a559f03b1c"
       },
-      "next_action": "Open a draft Worker PR from the verified single-file test commit and run exact-head CI, including PHPStan and PostgreSQL 18 migration validation.",
+      "next_action": "Await exact-head Worker CI run 36304073650; diagnose and repair any test-only failure within the allowlisted file.",
       "last_observed_head": "ba33c3a3f0626737d86bd079b16420a559f03b1c",
-      "last_checkpoint_at": "2026-09-27T07:44:51.683Z",
+      "last_checkpoint_at": "2026-09-27T07:45:38.433Z",
       "checkpoint_paths": [
         "tests/Controller/AdminContentPreviewSecurityTest.php"
       ],
-      "worker_pr_changed_paths": []
+      "worker_pr_changed_paths": [],
+      "worker_pr": 277,
+      "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/277",
+      "draft_pr": true,
+      "pr_state": "open",
+      "ci_run_id": 36304073650,
+      "last_ci_run_id": 36304073650,
+      "ci_result": "queued",
+      "last_ci_result": "queued",
+      "ci_attempts": [
+        {
+          "run_id": 36304073650,
+          "head": "ba33c3a3f0626737d86bd079b16420a559f03b1c",
+          "result": "queued"
+        }
+      ]
     }
   ],
   "recovery_queue": [],
