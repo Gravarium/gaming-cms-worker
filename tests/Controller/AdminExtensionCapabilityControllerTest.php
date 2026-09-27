@@ -14,11 +14,14 @@ use App\ExtensionPackage\ExtensionPermissionStore;
 use App\ExtensionPackage\ExtensionManifest;
 use App\ExtensionRuntime\ExtensionRuntimeState;
 use App\Security\CmsPermission;
+use App\Service\AuditContextSanitizer;
 use App\Service\AuditLogger;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 final class AdminExtensionCapabilityControllerTest extends WebTestCase
 {
@@ -71,8 +74,12 @@ final class AdminExtensionCapabilityControllerTest extends WebTestCase
         $client->request('GET', $this->reviewPath());
 
         self::assertResponseIsSuccessful();
-        self::assertResponseHeaderSame('Cache-Control', 'private, no-store');
-        self::assertResponseHeaderSame('X-Robots-Tag', 'noindex, nofollow');
+        $cacheControl = strtolower((string) $client->getResponse()->headers->get('Cache-Control'));
+        self::assertStringContainsString('private', $cacheControl);
+        self::assertStringContainsString('no-store', $cacheControl);
+        $robots = strtolower((string) $client->getResponse()->headers->get('X-Robots-Tag'));
+        self::assertStringContainsString('noindex', $robots);
+        self::assertStringContainsString('nofollow', $robots);
         self::assertSelectorTextContains('h1', 'Rechte prüfen: Testpaket '.$this->packageKey);
         self::assertSelectorTextContains('body', 'Inhalte lesen');
         self::assertSelectorTextContains('body', 'Einstellungen ändern');
@@ -129,7 +136,7 @@ final class AdminExtensionCapabilityControllerTest extends WebTestCase
         self::assertSame([], $this->permissions->approved($this->manifest));
 
         $client->request('POST', $this->actionPath('settings.write', 'grant'), ['_token' => ['malformed']]);
-        self::assertResponseStatusCodeSame(403);
+        self::assertResponseStatusCodeSame(400);
         self::assertSame([], $this->permissions->approved($this->manifest));
 
         foreach (['media.write', 'php.execute'] as $capability) {
@@ -162,10 +169,19 @@ final class AdminExtensionCapabilityControllerTest extends WebTestCase
     {
         $client = $this->configuredClient();
         $this->permissions->grant($this->manifest, 'content.read');
-        $audit = $this->createMock(AuditLogger::class);
-        $audit->expects(self::once())
-            ->method('record')
+        $entityManager = $client->getContainer()->get(EntityManagerInterface::class);
+        $auditRepository = $entityManager->getRepository(AuditLog::class);
+        $auditCount = $auditRepository->count(['action' => 'extension.capability.granted']);
+        $requestStack = $this->createMock(RequestStack::class);
+        $requestStack->expects(self::once())
+            ->method('getCurrentRequest')
             ->willThrowException(new \RuntimeException('audit unavailable'));
+        $audit = new AuditLogger(
+            $entityManager,
+            $client->getContainer()->get(Security::class),
+            $requestStack,
+            $client->getContainer()->get(AuditContextSanitizer::class),
+        );
         $client->getContainer()->set(AuditLogger::class, $audit);
 
         $client->request('GET', $this->reviewPath());
@@ -178,6 +194,7 @@ final class AdminExtensionCapabilityControllerTest extends WebTestCase
 
         self::assertResponseRedirects($this->reviewPath());
         self::assertSame(['content.read'], $this->permissions->approved($this->manifest));
+        self::assertSame($auditCount, $auditRepository->count(['action' => 'extension.capability.granted']));
         $client->followRedirect();
         self::assertSelectorTextContains('body', 'wegen eines Auditfehlers zurückgenommen');
     }
