@@ -147,7 +147,7 @@ final class AdminGuildOnboardingWorkflowTest extends WebTestCase
             $firstCompletedAt = $first['completedAt'];
 
             $client->request('POST', $completeUrl, [
-                '_token' => $this->csrfToken($client, 'complete-onboarding-task-'.$guildId.'-'.$taskId),
+                '_token' => $completeToken,
             ]);
             self::assertResponseRedirects('/admin/gaming/guild/'.$guildId.'/onboarding');
             $client->followRedirect();
