@@ -10,7 +10,7 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T14:31:59.430Z",
+  "published_at": "2026-09-27T14:34:48.706Z",
   "summary": {
     "total_remaining_worker_tasks": 167,
     "completed_worker_prs_awaiting_trusted_review": 293,
@@ -40613,6 +40613,120 @@
       "worker_pr_base_branch": "main",
       "pr_state": "not_created",
       "draft_pr": true
+    },
+    {
+      "priority": 546,
+      "package_id": "WCP-546",
+      "title": "Add a content search widget to the Page Builder",
+      "risk": "low",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-546-content-search-widget-g1",
+      "suggested_branch": "feature/wcp-546-content-search-widget-g1",
+      "base_branch": "main",
+      "base_sha": "b510875e7b0741b9b19f09429d2204a95df51198",
+      "objective": "Make the existing public content search reachable as a single-use Page Builder widget. Render an accessible GET form targeting the existing app_content_search route with the q parameter and a 100-character limit matching the controller. Auto-discover it under the Content module so WidgetRegistry hides it from editors and public layouts when Content is disabled. Do not change the existing search controller, repository, results template, route or shared widget registry.",
+      "allowed_paths": [
+        "src/Widget/PublicContentSearchWidgetProvider.php",
+        "templates/widget/content_search.html.twig",
+        "tests/Widget/PublicContentSearchWidgetTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/",
+        "src/Entity/",
+        "src/Form/",
+        "src/Repository/",
+        "src/Controller/",
+        "templates/base.html.twig",
+        "templates/layout/",
+        "templates/admin/",
+        "templates/content/search.html.twig",
+        "assets/",
+        "public/"
+      ],
+      "deliverables": [
+        "Auto-discover a single-use content.search widget assigned to the Content module.",
+        "Render a visible, labeled search input as a GET form to the existing content search route with name q and maxlength 100.",
+        "Use existing WidgetRegistry module gating and make no changes to search behavior or shared service configuration."
+      ],
+      "tests": [
+        "Kernel test proves provider discovery, Content module assignment, accessible search form action/method/input name and 100-character limit, and disabled-module suppression; rollback module-state changes.",
+        "Run full exact-head Worker CI including PHPStan, PHPUnit and PostgreSQL 18 migration-chain validation."
+      ],
+      "completion_report": [
+        "Exact sanitized main/base SHA and final Worker HEAD SHA.",
+        "Exact changed paths and Worker PR URL.",
+        "Widget discovery, existing search-route targeting, form method/parameter/length and disabled Content evidence.",
+        "Exact-head PHPStan, PHPUnit, PostgreSQL migration and full Worker CI results."
+      ],
+      "immutable_constraints": [
+        "search-form-targets-the-existing-public-content-search-route-and-q-parameter",
+        "search-input-limit-remains-aligned-with-the-existing-100-character-controller-bound",
+        "Content-module-disable-hides-widget-through-existing-WidgetRegistry-gate",
+        "search-controller-query-filters-results-and-route-security-remain-unchanged",
+        "no-schema-or-migration-change",
+        "no-security-test-phpstan-CI-auth-CSRF-validation-recovery-rollback-or-upload-protection-weakening",
+        "worker-code-is-untrusted-no-direct-Trusted-integration-or-deployment",
+        "no-private-runtime-or-sensitive-data"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "b510875e7b0741b9b19f09429d2204a95df51198",
+      "proposal_kind": "worker_only",
+      "proposal_dependency_evidence": [],
+      "collision_check": {
+        "compared_against": "Latest continuous/work-pool-v4 commit a0b54cf5ed2c2d28dcd2b829e736299d8300375f, pool blob 02df7f108c32edbce2437b4011f574bf123a59ba; sanitized Worker main b510875e7b0741b9b19f09429d2204a95df51198; all 326 task allowed/checkpoint paths; WCP-546 branch and PR searches.",
+        "result": "None of the three proposed paths intersects active, claim-locked or unclaimed task scopes. WCP-388 owns existing search implementation paths, WCP-516 owns Video search paths, and WCP-531 owns Game Catalogue search paths; all are disjoint from these new content widget paths. All five unclaimed FCPs remain dependency-blocked, and no WCP-546 task, branch or PR existed immediately before this CAS reservation.",
+        "paths": [
+          "src/Widget/PublicContentSearchWidgetProvider.php",
+          "templates/widget/content_search.html.twig",
+          "tests/Widget/PublicContentSearchWidgetTest.php"
+        ]
+      },
+      "published_at": "2026-09-27T14:34:48.706Z",
+      "claimed_on": "2026-09-27T14:34:48.706Z",
+      "claim_state": "active",
+      "active_base_branch": "main",
+      "active_base_sha": "b510875e7b0741b9b19f09429d2204a95df51198",
+      "active_head": "b510875e7b0741b9b19f09429d2204a95df51198",
+      "resume_branch": "feature/wcp-546-content-search-widget-g1",
+      "branch_heads": {
+        "claim_branch": "b510875e7b0741b9b19f09429d2204a95df51198",
+        "feature_branch": "b510875e7b0741b9b19f09429d2204a95df51198"
+      },
+      "last_observed_head": "b510875e7b0741b9b19f09429d2204a95df51198",
+      "last_checkpoint_at": "2026-09-27T14:34:48.706Z",
+      "checkpoint_paths": [
+        "src/Widget/PublicContentSearchWidgetProvider.php",
+        "templates/widget/content_search.html.twig",
+        "tests/Widget/PublicContentSearchWidgetTest.php"
+      ],
+      "next_action": "Create claim and feature refs from exact main HEAD b510875e7b0741b9b19f09429d2204a95df51198, then add the content search widget, accessible form template and regression test.",
+      "ci_attempts": [],
+      "worker_pr_state": "not_created",
+      "last_ci_result": "not_run",
+      "worker_pr_changed_paths": [
+        "src/Widget/PublicContentSearchWidgetProvider.php",
+        "templates/widget/content_search.html.twig",
+        "tests/Widget/PublicContentSearchWidgetTest.php"
+      ],
+      "worker_pr_base_branch": "main",
+      "worker_pr": null,
+      "worker_pr_url": null
     }
   ],
   "recovery_queue": [],
