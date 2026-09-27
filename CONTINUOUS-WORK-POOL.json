@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T08:28:31.299Z",
+  "published_at": "2026-09-27T08:29:59.153Z",
   "summary": {
     "total_remaining_worker_tasks": 141,
     "completed_worker_prs_awaiting_trusted_review": 251,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-486 has a test-only checkpoint at a1543dea32c1164ca0ba5844d5322459dfad9eb9 on its isolated feature branch; verify the single changed path, open a draft Worker PR, then run full exact-head CI. WCP-485 remains on its owner's active branch.",
+    "next_required_action": "WCP-486 PR #279 is running full Worker CI 36306353946 on exact head a1543dea32c1164ca0ba5844d5322459dfad9eb9; inspect both jobs and repair only the allowlisted test if red. WCP-485 remains owned by its active worker.",
     "composition_preparable": 0,
     "immediately_actionable": 4,
     "must_continue": true
@@ -31254,7 +31254,7 @@
         "feature_branch": "a1543dea32c1164ca0ba5844d5322459dfad9eb9"
       },
       "last_observed_head": "a1543dea32c1164ca0ba5844d5322459dfad9eb9",
-      "last_checkpoint_at": "2026-09-27T08:28:31.299Z",
+      "last_checkpoint_at": "2026-09-27T08:29:59.153Z",
       "last_verified_push_at": "2026-09-27T08:28:31.299Z",
       "checkpoint_paths": [
         "tests/Controller/PublicVideoPublicationBoundaryTest.php"
@@ -31262,7 +31262,22 @@
       "worker_pr_changed_paths": [
         "tests/Controller/PublicVideoPublicationBoundaryTest.php"
       ],
-      "next_action": "Remote test checkpoint a1543dea32c1164ca0ba5844d5322459dfad9eb9 is committed on the reserved feature branch and changes only the allowed test file. Inspect the exact file, open a draft Worker PR against sanitized main, and run full exact-head Worker CI."
+      "next_action": "Draft Worker PR #279 is open on exact head a1543dea32c1164ca0ba5844d5322459dfad9eb9. Full Worker CI run 36306353946 is in_progress; inspect the exact-head result and repair within the single allowed test file if needed.",
+      "worker_pr": 279,
+      "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/279",
+      "draft_pr": true,
+      "pr_state": "open_draft_ci_pending",
+      "ci_run_id": 36306353946,
+      "last_ci_run_id": 36306353946,
+      "ci_result": "in_progress",
+      "last_ci_result": "in_progress",
+      "ci_attempts": [
+        {
+          "run_id": 36306353946,
+          "head": "a1543dea32c1164ca0ba5844d5322459dfad9eb9",
+          "result": "in_progress"
+        }
+      ]
     }
   ],
   "recovery_queue": [],
