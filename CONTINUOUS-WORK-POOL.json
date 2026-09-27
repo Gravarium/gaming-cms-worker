@@ -17,7 +17,7 @@
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-440 draft PR #234 validates exact HEAD ea64c90e274f6ac2c41898b97424b817fd1a8456 in Worker CI run 36282747904; complete Worker CI and repair any concrete failure.",
+    "next_required_action": "WCP-440 draft PR #234 validates exact HEAD a44416a60ea7d1eb9e802a2cf240870d636abc58 in Worker CI run 36282974283; complete full Worker CI and repair any concrete failure.",
     "composition_preparable": 0,
     "immediately_actionable": 2,
     "must_continue": true
@@ -23962,7 +23962,7 @@
       "suggested_branch": "feature/wcp-440-guild-team-deletion-security-g1",
       "base_branch": "main",
       "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-      "objective": "Add test-only functional coverage proving a user without CMS_GAMING_MANAGE cannot delete a guild team (the observed denial redirects to /login); missing and invalid CSRF tokens are rejected without mutation; a rendered valid token cannot delete a team through a different parent guild; and a valid same-guild token deletes only its selected synthetic team.",
+      "objective": "Add test-only functional coverage proving an authenticated user without CMS_GAMING_MANAGE receives 403 and cannot delete a guild team; missing and invalid CSRF tokens are rejected without mutation; a rendered valid token cannot delete a team through a different parent guild; and a valid same-guild token deletes only its selected synthetic team.",
       "allowed_paths": [
         "tests/Controller/AdminGuildStructureSecurityTest.php"
       ],
@@ -23986,7 +23986,7 @@
         "public/"
       ],
       "deliverables": [
-        "An authenticated actor without CMS_GAMING_MANAGE receives the observed /login denial redirect and both synthetic teams remain unchanged.",
+        "An authenticated actor without CMS_GAMING_MANAGE receives 403 and the synthetic team remains unchanged.",
         "An authorized actor's missing and invalid CSRF submissions receive 403 and preserve the selected team.",
         "A CSRF token rendered for the selected team cannot delete it through a different guild parent; the request returns 404 and the team remains.",
         "The rendered valid token on the owning guild deletes only the selected team; a sibling synthetic team remains.",
@@ -24026,25 +24026,25 @@
       "claim_state": "active",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-      "active_head": "ea64c90e274f6ac2c41898b97424b817fd1a8456",
+      "active_head": "a44416a60ea7d1eb9e802a2cf240870d636abc58",
       "resume_branch": "feature/wcp-440-guild-team-deletion-security-g1",
-      "last_checkpoint_at": "2026-09-27T00:31:54.414Z",
-      "last_verified_push_at": "2026-09-27T00:31:54.414Z",
+      "last_checkpoint_at": "2026-09-27T00:36:22.859Z",
+      "last_verified_push_at": "2026-09-27T00:36:22.859Z",
       "checkpoint_paths": [
         "tests/Controller/AdminGuildStructureSecurityTest.php"
       ],
       "branch_heads": {
         "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-        "feature_branch": "ea64c90e274f6ac2c41898b97424b817fd1a8456"
+        "feature_branch": "a44416a60ea7d1eb9e802a2cf240870d636abc58"
       },
-      "next_action": "Draft PR #234 validates exact HEAD ea64c90e274f6ac2c41898b97424b817fd1a8456 in Worker CI run 36282747904; inspect full suite, PHPStan and PostgreSQL results and fix any concrete remaining failure.",
+      "next_action": "Draft PR #234 validates isolated auth and mutation tests on exact HEAD a44416a60ea7d1eb9e802a2cf240870d636abc58 in Worker CI run 36282974283; inspect the full suite and repair any concrete remaining failures.",
       "worker_pr": 234,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/234",
       "pr_state": "open_draft_unmerged",
       "draft_pr": true,
-      "last_ci_run_id": 36282747904,
-      "ci_run_id": 36282747904,
-      "ci_result": "in_progress",
+      "last_ci_run_id": 36282974283,
+      "ci_run_id": 36282974283,
+      "ci_result": "queued",
       "ci_attempts": [
         {
           "run_id": 36282370450,
@@ -24056,18 +24056,24 @@
           "run_id": 36282445412,
           "head": "faef7ff09ff7cfed7120f49d1cbef7b11d21b130",
           "result": "failure",
-          "reason": "An empty-permission actor was redirected to login before exercising the intended boundary; changed fixture to CMS_CONTENT_MANAGE without CMS_GAMING_MANAGE."
+          "reason": "The denied fixture had no CMS permission and was redirected to login; changed it to an authenticated CMS_CONTENT_MANAGE user."
         },
         {
           "run_id": 36282545245,
           "head": "86007dce1942933c22318737232e5ae5ac1a5ae6",
           "result": "failure",
-          "reason": "For an authenticated actor lacking CMS_GAMING_MANAGE, the POST is denied with a /login redirect rather than HTTP 403; updated the assertion to match the observed safe denial response and preserve the no-mutation check."
+          "reason": "Switching users in one BrowserKit session led to a login redirect on the following missing-CSRF POST; split permission and mutation/CSRF checks into separate tests."
         },
         {
           "run_id": 36282747904,
           "head": "ea64c90e274f6ac2c41898b97424b817fd1a8456",
-          "result": "in_progress"
+          "result": "failure",
+          "reason": "The authenticated CMS_CONTENT_MANAGE actor was correctly denied with 403, while the test expected a login redirect; restored the 403 assertion and isolated the authorization test."
+        },
+        {
+          "run_id": 36282974283,
+          "head": "a44416a60ea7d1eb9e802a2cf240870d636abc58",
+          "result": "queued"
         }
       ]
     },
