@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T08:49:06.188Z",
+  "published_at": "2026-09-27T08:52:35.962Z",
   "summary": {
     "total_remaining_worker_tasks": 142,
-    "completed_worker_prs_awaiting_trusted_review": 253,
+    "completed_worker_prs_awaiting_trusted_review": 254,
     "recovery_tasks": 0,
     "unclaimed": 4,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-487 is actively claimed from exact sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d; implement and run full exact-head Worker CI. The other unclaimed FCPs remain blocked by missing or unverified predecessors. Keep all foreign claims untouched.",
+    "next_required_action": "WCP-487 is complete on exact green HEAD e4f57f77c417048c911bb467ca6c79e665d69b74 (PR #280, CI 36307374043); the claim remains locked. Re-evaluate the current unclaimed FCPs against Trusted integration and exact green Worker predecessor heads; if none is dependency-safe, publish and claim the next bounded independent worker-only proposal. Do not change foreign active claims.",
     "composition_preparable": 0,
     "immediately_actionable": 4,
     "must_continue": true
@@ -31349,7 +31349,7 @@
       "package_id": "WCP-487",
       "title": "Verify the least-privilege gaming administration workflow",
       "risk": "medium",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -31423,7 +31423,7 @@
       },
       "published_at": "2026-09-27T08:43:14.636Z",
       "claimed_on": "2026-09-27T08:43:14.636Z",
-      "claim_state": "active",
+      "claim_state": "locked_until_trusted_resolution",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
       "active_head": "e4f57f77c417048c911bb467ca6c79e665d69b74",
@@ -31433,12 +31433,12 @@
         "feature_branch": "e4f57f77c417048c911bb467ca6c79e665d69b74"
       },
       "last_observed_head": "e4f57f77c417048c911bb467ca6c79e665d69b74",
-      "last_checkpoint_at": "2026-09-27T08:49:06.188Z",
+      "last_checkpoint_at": "2026-09-27T08:52:35.962Z",
       "checkpoint_paths": [
         "tests/Controller/AdminGamingPermissionWorkflowTest.php"
       ],
-      "next_action": "Rerun focused PHPUnit and full Worker CI on the corrected exact HEAD; investigate any remaining failure without changing paths.",
-      "last_verified_push_at": "2026-09-27T08:49:06.188Z",
+      "next_action": "Worker PR #280 is ready for Trusted review and remains unmerged. Exact final HEAD e4f57f77c417048c911bb467ca6c79e665d69b74 passed Worker CI run 36307374043: 430 tests and 1,868 assertions with zero failures; PHPStan reported no errors; PostgreSQL 18 executed all 39 migrations. Keep the claim locked until Trusted resolves it.",
+      "last_verified_push_at": "2026-09-27T08:52:35.962Z",
       "ci_attempts": [
         {
           "head": "a79b2230c1c8d92cd42e577d8d05676b62f587d6",
@@ -31447,12 +31447,68 @@
           "failed_step": "Run worker-visible application tests",
           "diagnosis": "PHP syntax error from doubled namespace separators in new test file; PHPStan and PostgreSQL migration job passed.",
           "remediated_in_head": "e4f57f77c417048c911bb467ca6c79e665d69b74"
+        },
+        {
+          "head": "e4f57f77c417048c911bb467ca6c79e665d69b74",
+          "ci_run_id": 36307374043,
+          "ci_result": "success"
         }
       ],
-      "ci_run_id": 36307256048,
-      "last_ci_run_id": 36307256048,
-      "ci_result": "failure",
-      "last_ci_result": "failure"
+      "ci_run_id": 36307374043,
+      "last_ci_run_id": 36307374043,
+      "ci_result": "success",
+      "last_ci_result": "success",
+      "worker_pr": 280,
+      "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/280",
+      "worker_pr_changed_paths": [
+        "tests/Controller/AdminGamingPermissionWorkflowTest.php"
+      ],
+      "draft_pr": false,
+      "pr_state": "open",
+      "final_head": "e4f57f77c417048c911bb467ca6c79e665d69b74",
+      "final_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "final_sanitized_main_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "changed_paths": [
+        "tests/Controller/AdminGamingPermissionWorkflowTest.php"
+      ],
+      "final_changed_paths": [
+        "tests/Controller/AdminGamingPermissionWorkflowTest.php"
+      ],
+      "completed_at": "2026-09-27T08:52:35.962Z",
+      "test_results": {
+        "phpunit": "430 tests, 1,868 assertions, zero failures; one PHPUnit deprecation and one notice.",
+        "phpstan": "Level 8 passed with no errors.",
+        "php_symfony": "Worker PHP/Symfony validation job passed on exact final HEAD.",
+        "postgres18": "PostgreSQL 18 completed all 39 migrations and 470 SQL queries; 0 unavailable.",
+        "exact_head_ci": {
+          "run_id": 36307374043,
+          "head": "e4f57f77c417048c911bb467ca6c79e665d69b74",
+          "result": "success"
+        }
+      },
+      "completion_evidence": {
+        "exact_sanitized_main_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+        "exact_proposal_base_branch": "main",
+        "exact_proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+        "final_head_sha": "e4f57f77c417048c911bb467ca6c79e665d69b74",
+        "changed_paths": [
+          "tests/Controller/AdminGamingPermissionWorkflowTest.php"
+        ],
+        "cumulative_pr_paths": [
+          "tests/Controller/AdminGamingPermissionWorkflowTest.php"
+        ],
+        "worker_pr": 280,
+        "ci_run_id": 36307374043,
+        "ci_result": "success",
+        "php_symfony_job": "success: 430 tests, 1,868 assertions, 0 failures; PHPStan level 8 no errors.",
+        "postgresql_job": "success: 39 migrations, 470 SQL queries, 0 unavailable.",
+        "least_privilege_gaming_workflow": "A user with CMS_GAMING_MANAGE and no ROLE_ADMIN can load the dashboard, receive the rendered game form's CSRF token, create an enabled synthetic game, and persist its deterministic unique slug; fixtures are removed in finally."
+      },
+      "completion_summary": "Added test-only functional coverage proving a non-administrator with CMS_GAMING_MANAGE can use the gaming dashboard and create a game through the rendered CSRF-protected form. The test verifies the persisted enabled game and generated slug, and cleans up the synthetic user and game.",
+      "open_limitations": [
+        "Awaiting Trusted review and Trusted integration CI; no product source or configuration was changed."
+      ],
+      "trusted_follow_up": "Run the least-privilege dashboard and game-creation workflow on a fresh Trusted feature branch and full Trusted CI; preserve the CMS_GAMING_MANAGE boundary and rendered form CSRF behavior."
     }
   ],
   "recovery_queue": [],
