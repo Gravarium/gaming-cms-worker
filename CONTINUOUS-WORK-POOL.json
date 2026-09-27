@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T07:29:39.663Z",
+  "published_at": "2026-09-27T07:30:00.468Z",
   "summary": {
     "total_remaining_worker_tasks": 141,
     "completed_worker_prs_awaiting_trusted_review": 248,
     "recovery_tasks": 0,
-    "unclaimed": 6,
-    "immediately_claimable": 1,
-    "next_required_action": "WCP-482 corrected exact HEAD cc549ef94703dc6279bd48397be5f1104cc14324 is running Worker CI 36303226183; monitor both jobs and repair only the allowlisted test if needed.",
+    "unclaimed": 5,
+    "immediately_claimable": 0,
+    "next_required_action": "WCP-483 is claimed on exact sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d; implement the audited tag-merge workflow on feature/wcp-483-content-tag-merge-g1. Do not change other claims.",
     "composition_preparable": 0,
     "immediately_actionable": 4,
     "must_continue": true
@@ -30647,7 +30647,7 @@
       "package_id": "WCP-483",
       "title": "Merge duplicate content tags without losing assigned entries",
       "risk": "medium",
-      "execution_state": "unclaimed",
+      "execution_state": "worker_in_progress",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -30734,7 +30734,19 @@
         ]
       },
       "published_at": "2026-09-27T07:29:07.532Z",
-      "next_action": "Create the exact claim and feature branches from main f1a246c64527ef3ad51f7490773d9bbf9d42be5d before modifying source files."
+      "next_action": "Implement the tag-index entry point, target form, atomic deduplicating reassignment and audit, with negative authorization/CSRF/destination tests on the claimed feature branch.",
+      "claim_state": "active",
+      "claimed_on": "2026-09-27T07:30:00.468Z",
+      "active_base_branch": "main",
+      "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "resume_branch": "feature/wcp-483-content-tag-merge-g1",
+      "branch_heads": {
+        "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+        "feature_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d"
+      },
+      "last_observed_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "last_checkpoint_at": "2026-09-27T07:30:00.468Z"
     }
   ],
   "recovery_queue": [],
