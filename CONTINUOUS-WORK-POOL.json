@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T11:51:08.045Z",
+  "published_at": "2026-09-27T11:53:29.932Z",
   "summary": {
     "total_remaining_worker_tasks": 166,
     "completed_worker_prs_awaiting_trusted_review": 280,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "Repair WCP-525 RSS test fixture missing the site Twig global and rerun exact-head Worker CI.",
+    "next_required_action": "Fix the WCP-525 RSS template's undefined site variable using the existing Twig helper, then rerun full exact-head CI.",
     "composition_preparable": 0,
     "immediately_actionable": 24,
     "must_continue": true
@@ -36955,8 +36955,9 @@
       "suggested_branch": "feature/wcp-525-public-content-discovery-visibility-g1",
       "base_branch": "main",
       "base_sha": "b510875e7b0741b9b19f09429d2204a95df51198",
-      "objective": "Add a controller-level functional regression test for the public news RSS/JSON feeds, search results and sitemap. Prove draft and unlisted content stay out of public discovery surfaces while listed published content remains present; prove noindex content is omitted from the sitemap. Do not change runtime behavior.",
+      "objective": "Fix the RSS template's missing site settings binding using the existing site_settings() Twig function and add a controller-level functional regression test for public news RSS/JSON feeds, search and sitemap. Prove draft and unlisted content stay out of public discovery surfaces while listed published content remains present; prove noindex content is omitted from the sitemap.",
       "allowed_paths": [
+        "templates/content/feed.xml.twig",
         "tests/Controller/Content/PublicContentDiscoveryVisibilityTest.php"
       ],
       "forbidden_paths": [
@@ -36975,15 +36976,15 @@
         "migrations/",
         "config/",
         "src/",
-        "templates/",
         "assets/",
         "public/"
       ],
       "deliverables": [
+        "Ensure the RSS template reads site metadata through the existing site_settings() Twig function so the feed route renders without relying on an undefined global.",
         "Create isolated synthetic published, unlisted, draft and noindex news entries.",
         "Verify only listed published entries appear in RSS, JSON feed and search results; verify draft and unlisted markers do not leak.",
         "Verify sitemap includes indexable listed published entries and excludes noindex, unlisted and unpublished entries.",
-        "Change only the dedicated controller integration-test file; do not change controllers, repositories, templates, entities or schema."
+        "Change only the RSS template and the dedicated controller integration-test file; do not change controllers, repositories, entities or schema."
       ],
       "tests": [
         "Run the focused PHPUnit test for PublicContentDiscoveryVisibilityTest.",
@@ -37001,20 +37002,22 @@
         "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
         "only-published-and-listed-content-appears-in-public-discovery-surfaces",
         "noindex-content-is-omitted-from-sitemap",
-        "test-only-no-runtime-or-schema-change",
         "no-security-test-phpstan-or-CI-weakening",
         "red-CI-stops-integration",
         "no-direct-trusted-integration-or-deployment",
-        "no-private-runtime-or-sensitive-data"
+        "no-private-runtime-or-sensitive-data",
+        "rss-template-uses-existing-site-settings-function",
+        "no-schema-migration"
       ],
       "proposal_base_branch": "main",
       "proposal_base_sha": "b510875e7b0741b9b19f09429d2204a95df51198",
       "proposal_kind": "worker_only",
       "proposal_dependency_evidence": [],
       "collision_check": {
-        "compared_against": "Fresh continuous/work-pool-v4 pool blob 48ae81d5e76eb114b679b39501ef096964c43b64; sanitized Worker main b510875e7b0741b9b19f09429d2204a95df51198; all active and claim-locked allowed-path scopes; WCP-525 claim/feature branch searches; main test-file lookup; and current WCP-520/522/523/524 claims.",
-        "result": "No active or claim-locked task owns or encloses the dedicated Content test path. The current public content query methods already exclude unpublished and unlisted records; no route-level regression test for RSS, JSON feed, search and sitemap exists in the main Content test directory. WCP-520 covers a separate widget and WCP-524 a game-catalogue widget.",
+        "compared_against": "Fresh continuous/work-pool-v4 blob 7b3dfe02a98b5a56c1f92a5249f38a07660e7e2e; sanitized Worker main b510875e7b0741b9b19f09429d2204a95df51198; all active and claim-locked allowed-path scopes; WCP-520/522/523/524; and current feature branch WCP-525.",
+        "result": "The RSS route currently renders a Twig RuntimeError because content/feed.xml.twig references an undefined site variable. SiteExtension already exposes site_settings(), used by existing public templates. Neither the feed template nor dedicated test path is owned or enclosed by another active or claim-locked task; WCP-520 and WCP-524 use separate widget paths.",
         "paths": [
+          "templates/content/feed.xml.twig",
           "tests/Controller/Content/PublicContentDiscoveryVisibilityTest.php"
         ]
       },
@@ -37032,9 +37035,10 @@
       "last_observed_head": "b795d591f866862b7fff900a8d003253238e75d5",
       "last_checkpoint_at": "2026-09-27T11:47:28.989Z",
       "checkpoint_paths": [
+        "templates/content/feed.xml.twig",
         "tests/Controller/Content/PublicContentDiscoveryVisibilityTest.php"
       ],
-      "next_action": "Seed the supported site configuration for the RSS template in the functional-test fixture without changing runtime files, then rerun exact-head Worker CI.",
+      "next_action": "Use the existing site_settings() Twig function in content/feed.xml.twig, rerun WCP-525 route tests and full exact-head Worker CI.",
       "worker_pr": 316,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/316",
       "worker_pr_changed_paths": [
