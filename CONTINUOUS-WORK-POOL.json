@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T01:38:12.865Z",
+  "published_at": "2026-09-27T01:51:12.714Z",
   "summary": {
     "total_remaining_worker_tasks": 141,
-    "completed_worker_prs_awaiting_trusted_review": 215,
+    "completed_worker_prs_awaiting_trusted_review": 216,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-449 is claimed on exact sanitized main; implement the authorized settings persistence regression on its feature branch and continue through exact-head Worker CI.",
+    "next_required_action": "WCP-447 is complete on green exact HEAD 01c5a46ea113c90cef39019a802f7ace4519fa41 with PR #242 ready and claim locked. Select and claim the next dependency-safe independent Worker task.",
     "composition_preparable": 0,
     "immediately_actionable": 6,
     "must_continue": true
@@ -25074,8 +25074,8 @@
       "package_id": "WCP-447",
       "title": "Upload multiple images and documents to the media library",
       "risk": "medium",
-      "execution_state": "worker_in_progress",
-      "claim_state": "active",
+      "execution_state": "worker_complete_awaiting_trusted_review",
+      "claim_state": "locked_until_trusted_resolution",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -25178,23 +25178,39 @@
         "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
         "feature_branch": "01c5a46ea113c90cef39019a802f7ace4519fa41"
       },
-      "next_action": "Inspect Worker CI run 36286581771 on exact HEAD 01c5a46ea113c90cef39019a802f7ace4519fa41; repair concrete failures on this branch and rerun the complete checks on each new exact HEAD.",
-      "last_checkpoint_at": "2026-09-27T01:48:14.198Z",
-      "last_verified_push_at": "2026-09-27T01:48:14.198Z",
+      "next_action": "Await Trusted review with the claim locked; do not merge or deploy. Continue with the next independent Worker-only task.",
+      "last_checkpoint_at": "2026-09-27T01:51:12.714Z",
+      "last_verified_push_at": "2026-09-27T01:51:12.714Z",
       "worker_pr": 242,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/242",
-      "pr_state": "open_draft_unmerged",
-      "draft_pr": true,
+      "pr_state": "ready_for_review",
+      "draft_pr": false,
       "ci_run_id": 36286581771,
       "last_ci_run_id": 36286581771,
-      "ci_result": "in_progress",
-      "last_ci_result": "in_progress",
+      "ci_result": "success",
+      "last_ci_result": "success",
       "ci_attempts": [
         {
           "run_id": 36286581771,
           "head": "01c5a46ea113c90cef39019a802f7ace4519fa41",
-          "result": "in_progress"
+          "result": "success"
         }
+      ],
+      "final_head": "01c5a46ea113c90cef39019a802f7ace4519fa41",
+      "final_changed_paths": [
+        "src/Controller/AdminMediaBatchUploadController.php",
+        "src/Form/MediaAssetBatchUploadType.php",
+        "templates/admin/storage/upload.html.twig",
+        "templates/admin/storage/batch_upload.html.twig",
+        "tests/Controller/AdminMediaBatchUploadTest.php"
+      ],
+      "completed_on": "2026-09-27T01:51:12.714Z",
+      "test_evidence": [
+        "Exact-head Worker CI run 36286581771 (#619) succeeded on 01c5a46ea113c90cef39019a802f7ace4519fa41.",
+        "PHPUnit passed: 437 tests and 1,918 assertions; one PHPUnit deprecation and one notice were reported.",
+        "PHPStan level 8, Symfony/Twig/container/Doctrine validation, and the complete PostgreSQL 18 migration chain passed; all 39 migrations were applied and verified.",
+        "Functional tests cover CMS_STORAGE_MANAGE authorization, discoverability and private/no-store/noindex headers, two-file image/document upload with module/folder assignment, missing/invalid CSRF, empty/over-10/over-25MB/unsupported SVG input, existing/same-batch duplicates, and later-file cleanup with no partial database insert.",
+        "PR #242 is open, ready for Trusted review, unmerged, and changes only the five WCP-447 allowlisted paths."
       ]
     },
     {
