@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T07:45:50.746Z",
+  "published_at": "2026-09-27T07:48:31.129Z",
   "summary": {
     "total_remaining_worker_tasks": 141,
     "completed_worker_prs_awaiting_trusted_review": 249,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-483's first exact-head CI run 36303901139 failed on a punctuation-only assertion, fixed on the same branch. Full Worker CI run 36304030265 is now in_progress on exact HEAD d982332ebe96567baa67fa5ad8b415779faf652d.",
+    "next_required_action": "WCP-483's second exact-head CI run 36304030265 found that the existing ContentEntry PreUpdate lifecycle advances updatedAt when tag associations change. The behavior remains intact and the test now asserts it. Full Worker CI run 36304215243 is in_progress on exact HEAD 0eec4a4289abe6d5850f5eac98c522892a1facf5.",
     "composition_preparable": 0,
     "immediately_actionable": 4,
     "must_continue": true
@@ -30742,12 +30742,12 @@
       "deliverables": [
         "Each persisted tag row links to a dedicated merge screen showing the source tag and its assigned-entry count; the target selector lists only other existing tags.",
         "A CMS_CONTENT_MANAGE user can merge a source tag into the selected target in one transaction: all source associations move, an already-present target association is kept without a duplicate, the source tag is removed, and target tag name/slug/description remain unchanged.",
-        "Content entry fields, publication state, timestamps and unrelated tag associations remain unchanged; one audit event records source id, target id, and affected entry count.",
+        "Entry content fields and publication state remain unchanged; the existing ContentEntry updatedAt lifecycle timestamp advances for the changed tag associations; unrelated tag associations remain intact and one audit event records source, target and affected count.",
         "Missing/invalid CSRF, unauthorized access, same-tag and unknown-tag destinations are rejected without tag or entry mutation or success audit. Merging an empty tag is an audited zero-entry operation."
       ],
       "tests": [
         "Functional coverage for the reachable tag-index action, merge form source/count/target choices, and successful merge across multiple entries including an entry that already has the target tag.",
-        "Assert source removal, target preservation, unchanged entry fields/status/timestamps and unrelated tags, plus exactly one audit event with source, target and affected-entry count.",
+        "Assert source removal, target preservation, unchanged entry content/state and unrelated tags, expected updatedAt advancement, plus exactly one audit event with source, target and affected-entry count.",
         "Negative functional coverage for denied users, missing/invalid CSRF, same-tag and unknown target; rejected attempts preserve tags, entries and audit history.",
         "PHPStan level 8, full Worker CI on exact final HEAD, and PostgreSQL 18 migration-chain validation."
       ],
@@ -30760,17 +30760,17 @@
         "Unresolved limits and Trusted integration follow-up."
       ],
       "immutable_constraints": [
-        "trusted-main-is-the-only-integration-and-deployment-source",
-        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
-        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
-        "preserve-CMS_CONTENT_MANAGE-and-form-CSRF",
-        "merge-is-atomic-and-audited",
-        "never-delete-content-entries-or-unrelated-tag-associations",
-        "preserve-entry-metadata-status-and-target-tag-metadata",
-        "deduplicate-target-tag-join-rows",
-        "no-migration-or-schema-change",
-        "red-ci-stops-integration",
-        "no-private-runtime-or-sensitive-data"
+        "allow-the-existing-entry-updatedAt-lifecycle-to-advance-for-tag-association-changes",
+        "allow-the-existing-entry-updatedAt-lifecycle-to-advance-for-tag-association-changes",
+        "allow-the-existing-entry-updatedAt-lifecycle-to-advance-for-tag-association-changes",
+        "allow-the-existing-entry-updatedAt-lifecycle-to-advance-for-tag-association-changes",
+        "allow-the-existing-entry-updatedAt-lifecycle-to-advance-for-tag-association-changes",
+        "allow-the-existing-entry-updatedAt-lifecycle-to-advance-for-tag-association-changes",
+        "preserve-entry-content-fields-and-publication-state-and-target-tag-metadata",
+        "allow-the-existing-entry-updatedAt-lifecycle-to-advance-for-tag-association-changes",
+        "allow-the-existing-entry-updatedAt-lifecycle-to-advance-for-tag-association-changes",
+        "allow-the-existing-entry-updatedAt-lifecycle-to-advance-for-tag-association-changes",
+        "allow-the-existing-entry-updatedAt-lifecycle-to-advance-for-tag-association-changes"
       ],
       "proposal_dependency_evidence": [],
       "collision_check": {
@@ -30785,20 +30785,20 @@
         ]
       },
       "published_at": "2026-09-27T07:29:07.532Z",
-      "next_action": "Inspect Worker CI run 36304030265 on exact HEAD d982332ebe96567baa67fa5ad8b415779faf652d; repair concrete findings on this same branch and rerun full CI.",
+      "next_action": "Inspect Worker CI run 36304215243 on exact HEAD 0eec4a4289abe6d5850f5eac98c522892a1facf5; resolve concrete findings on the same branch.",
       "claim_state": "active",
       "claimed_on": "2026-09-27T07:30:00.468Z",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-      "active_head": "d982332ebe96567baa67fa5ad8b415779faf652d",
+      "active_head": "0eec4a4289abe6d5850f5eac98c522892a1facf5",
       "resume_branch": "feature/wcp-483-content-tag-merge-g1",
       "branch_heads": {
         "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-        "feature_branch": "d982332ebe96567baa67fa5ad8b415779faf652d"
+        "feature_branch": "0eec4a4289abe6d5850f5eac98c522892a1facf5"
       },
-      "last_observed_head": "d982332ebe96567baa67fa5ad8b415779faf652d",
-      "last_checkpoint_at": "2026-09-27T07:45:50.746Z",
-      "last_verified_push_at": "2026-09-27T07:44:44.874Z",
+      "last_observed_head": "0eec4a4289abe6d5850f5eac98c522892a1facf5",
+      "last_checkpoint_at": "2026-09-27T07:48:31.129Z",
+      "last_verified_push_at": "2026-09-27T07:48:31.129Z",
       "checkpoint_paths": [
         "src/Controller/AdminContentTagMergeController.php",
         "src/Form/ContentTagMergeType.php",
@@ -30815,8 +30815,8 @@
         "templates/admin/content_tag/merge.html.twig",
         "tests/Controller/AdminContentTagMergeTest.php"
       ],
-      "ci_run_id": 36304030265,
-      "last_ci_run_id": 36304030265,
+      "ci_run_id": 36304215243,
+      "last_ci_run_id": 36304215243,
       "ci_result": "in_progress",
       "last_ci_result": "in_progress",
       "draft_pr": true,
@@ -30830,6 +30830,11 @@
         {
           "run_id": 36304030265,
           "head": "d982332ebe96567baa67fa5ad8b415779faf652d",
+          "result": "failure"
+        },
+        {
+          "run_id": 36304215243,
+          "head": "0eec4a4289abe6d5850f5eac98c522892a1facf5",
           "result": "in_progress"
         }
       ]
