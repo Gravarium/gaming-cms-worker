@@ -37159,7 +37159,7 @@
       "package_id": "WCP-526",
       "title": "Show exact content and layout uses for media assets",
       "risk": "medium",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -37211,11 +37211,12 @@
         "PHPStan level 8 and complete Worker CI on the exact final HEAD, including PostgreSQL 18 migration-chain validation."
       ],
       "completion_report": [
-        "Exact sanitized main/base SHA and final Worker HEAD SHA.",
-        "Complete changed-path list and Worker PR.",
-        "Usage browser, page entry point, permission filtering, module gating and result-bound test evidence.",
-        "Focused tests, PHPStan and exact-head complete Worker CI.",
-        "Open limitations and Trusted follow-up."
+        "Exact sanitized base: main @ b510875e7b0741b9b19f09429d2204a95df51198; final Worker HEAD: a484dabe7bdc32f7ee433a38267cc88dc9f3a3f2.",
+        "Changed paths: src/Media/MediaAssetUsageBrowser.php; src/Controller/AdminMediaUsageController.php; templates/admin/storage/media_edit.html.twig; templates/admin/storage/media_usage.html.twig; tests/Controller/AdminMediaUsageBrowserTest.php. Worker PR #323 is open and ready for review.",
+        "Added a bounded read-only media usage page reachable from the edit screen; content and layout matches, permission/module gating, safe editor links, private/no-store response, and no stored path disclosure.",
+        "Coverage includes exact body/excerpt/editor/layout references, 50-result bounds, escaping, permission and disabled-module cases, unknown assets, POST rejection and no mutation.",
+        "Full exact-head Worker CI run 36319939992 succeeded: 546 PHPUnit tests, 2,464 assertions, PHPStan/Symfony/Twig/Doctrine checks and PostgreSQL 18 migration chain. Local JavaScript tests: 11 passed; staged diff whitespace check clean.",
+        "Open limitation: references outside stored body/excerpt, structured editor assetId or layout imageId fields are not discoverable. Trusted must port/review against its current boundaries and run full Trusted CI; Worker result is not merged or deployed."
       ],
       "immutable_constraints": [
         "read-only-media-usage-view-no-storage-mutation",
@@ -37263,7 +37264,7 @@
         ]
       },
       "published_at": "2026-09-27T11:47:00.836Z",
-      "claim_state": "active",
+      "claim_state": "locked_until_trusted_resolution",
       "claimed_on": "2026-09-27T11:49:42.443Z",
       "active_base_branch": "main",
       "active_base_sha": "b510875e7b0741b9b19f09429d2204a95df51198",
@@ -37274,8 +37275,8 @@
         "feature_branch": "a484dabe7bdc32f7ee433a38267cc88dc9f3a3f2"
       },
       "last_observed_head": "a484dabe7bdc32f7ee433a38267cc88dc9f3a3f2",
-      "last_checkpoint_at": "2026-09-27T12:44:16.055Z",
-      "last_verified_push_at": "2026-09-27T12:44:16.055Z",
+      "last_checkpoint_at": "2026-09-27T12:49:16.088Z",
+      "last_verified_push_at": "2026-09-27T12:49:16.088Z",
       "checkpoint_paths": [
         "src/Media/MediaAssetUsageBrowser.php",
         "src/Controller/AdminMediaUsageController.php",
@@ -37283,12 +37284,12 @@
         "templates/admin/storage/media_usage.html.twig",
         "tests/Controller/AdminMediaUsageBrowserTest.php"
       ],
-      "next_action": "Monitor Worker CI run 36319939992 on exact HEAD. If red, diagnose and fix on this feature branch, then rerun complete relevant CI on the new exact HEAD. After green, update PR #323 with final evidence and mark it ready.",
+      "next_action": "Worker PR #323 is complete on exact green HEAD a484dabe7bdc32f7ee433a38267cc88dc9f3a3f2; claim remains locked until Trusted explicitly integrates, cancels or transfers it. Continue only with a separately claimed independent package; do not merge or deploy.",
       "worker_pr": 323,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/323",
-      "draft_pr": true,
-      "pr_state": "open_draft",
-      "worker_pr_state": "draft",
+      "draft_pr": false,
+      "pr_state": "open",
+      "worker_pr_state": "ready_for_review",
       "worker_pr_changed_paths": [
         "src/Controller/AdminMediaUsageController.php",
         "src/Media/MediaAssetUsageBrowser.php",
@@ -37296,8 +37297,8 @@
         "templates/admin/storage/media_usage.html.twig",
         "tests/Controller/AdminMediaUsageBrowserTest.php"
       ],
-      "ci_result": "in_progress",
-      "last_ci_result": "in_progress",
+      "ci_result": "success",
+      "last_ci_result": "success",
       "ci_attempts": [
         {
           "run_id": 36318742525,
@@ -37327,10 +37328,15 @@
         {
           "run_id": 36319939992,
           "head": "a484dabe7bdc32f7ee433a38267cc88dc9f3a3f2",
-          "result": "in_progress",
-          "summary": "Full Worker CI is running on the exact checkpoint after the selector correction."
+          "result": "success",
+          "summary": "Full Worker CI passed on the exact final HEAD: PHPStan/Symfony/container/Twig/Doctrine checks, all 546 PHPUnit tests (2,464 assertions), PostgreSQL 18 migration-chain validation. PHPUnit recorded one deprecation and one notice; the workflow remained green.",
+          "conclusion": "success"
         }
-      ]
+      ],
+      "ci_run_id": 36319939992,
+      "last_ci_run_id": 36319939992,
+      "final_head": "a484dabe7bdc32f7ee433a38267cc88dc9f3a3f2",
+      "completed_at": "2026-09-27T12:49:16.088Z"
     },
     {
       "priority": 527,
