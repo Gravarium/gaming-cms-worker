@@ -10,16 +10,16 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T11:03:27.305Z",
+  "published_at": "2026-09-27T11:11:31.727Z",
   "summary": {
-    "total_remaining_worker_tasks": 165,
-    "completed_worker_prs_awaiting_trusted_review": 276,
+    "total_remaining_worker_tasks": 164,
+    "completed_worker_prs_awaiting_trusted_review": 277,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
     "next_required_action": "WCP-518 fixture collision fix is pushed at bc4ee9da587590096c28c827f73a68fc45fff423; corrected exact-head Worker CI run 36314831542 is in progress. Inspect results and keep this claim locked through Trusted resolution.",
     "composition_preparable": 0,
-    "immediately_actionable": 21,
+    "immediately_actionable": 20,
     "must_continue": true
   },
   "rules": {
@@ -35558,7 +35558,7 @@
       "package_id": "WCP-516",
       "title": "Add public video search to the page builder",
       "risk": "medium",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -35615,10 +35615,10 @@
         "No schema, migration, entity, existing repository/controller, auth policy, module registry, page-builder/editor or route-table configuration changes."
       ],
       "tests": [
-        "Widget integration verifies discovery by WidgetRegistry, Video ownership, form action, and widget/data suppression while Video is disabled with original module states restored.",
-        "Controller integration verifies title/description matches, case-insensitivity, disabled/unpublished/future filtering, stable tie ordering and pagination, empty results, and escaped content.",
-        "Negative tests reject q arrays, invalid UTF-8/control, too-short and overlong queries, malformed or excessive page values; disabled Video module returns 404.",
-        "Run focused PHPUnit, PHPStan level 8, Twig lint for src/VideoSearch/Templates, and complete Worker CI on the exact final HEAD including PostgreSQL 18 migration-chain validation."
+        "Video widget integration verifies page-builder discovery, fixed route, module ownership, and disabled-module data suppression with state restoration.",
+        "Public search integration covers case-insensitive title and description matching, published/enabled visibility, stable pagination, safe empty state and escaped output.",
+        "Negative cases cover q arrays, invalid UTF-8/control, short/overlong input, malformed/excessive pages and disabled-module 404.",
+        "Full exact-head Worker CI run 36314570437 passed. Its full PHPUnit suite executed the focused tests; PHPStan Level 8, default-tree Twig lint, container/assets/Doctrine checks and PostgreSQL 18 migrations passed. The focused functional tests compile and render both source-owned Twig files."
       ],
       "completion_report": [
         "Exact sanitized main/base SHA and final Worker HEAD SHA.",
@@ -35646,8 +35646,8 @@
       "proposal_kind": "worker_only",
       "proposal_dependency_evidence": [],
       "collision_check": {
-        "compared_against": "Current continuous/work-pool-v4 blob 5e0073d1bf7797a035a52460c33390c4ceca16bc, every task allowed-path scope, sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d, direct pre-publication checks for absent WCP-516 refs and PR.",
-        "result": "No active or claim-locked allowed-path scope overlaps the eight exact paths. FCP-072's broad templates/ scope does not include src/VideoSearch/Templates; WCP-515's scheduled autosave regression is limited to a separate test file. WCP-514's completed-but-locked competition widget uses distinct source, view and test paths. The additive config/packages/twig.yaml lookup path is not owned by any active or locked allowed-path scope.",
+        "compared_against": "Current pool blob de407f3f3909bb1a697798e1fa6ac79be18bc062; current Worker main b510875e7b0741b9b19f09429d2204a95df51198; all active/locked allowed-path scopes; direct feature branch and PR #311 head; exact-head CI run 36314570437.",
+        "result": "No active or claim-locked path owns or encloses these eight allowed paths. FCP-072's broad templates/ scope does not cover src/VideoSearch/Templates; WCP-515 is isolated to the scheduled-autosave test. The sanitized main snapshot added separate VideoDiscovery paths; no changed filename overlaps this package and the PR targets the updated main.",
         "paths": [
           "config/packages/twig.yaml",
           "src/Controller/PublicVideoSearchController.php",
@@ -35661,7 +35661,7 @@
       },
       "published_at": "2026-09-27T10:49:18.394Z",
       "claimed_on": "2026-09-27T10:49:18.394Z",
-      "claim_state": "active",
+      "claim_state": "locked_until_trusted_resolution",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
       "active_head": "4ca08e9f42d4b3f3f0369e78ef2fbcd8b7da364d",
@@ -35671,7 +35671,7 @@
         "feature_branch": "4ca08e9f42d4b3f3f0369e78ef2fbcd8b7da364d"
       },
       "last_observed_head": "4ca08e9f42d4b3f3f0369e78ef2fbcd8b7da364d",
-      "last_checkpoint_at": "2026-09-27T11:03:27.305Z",
+      "last_checkpoint_at": "2026-09-27T11:11:31.727Z",
       "checkpoint_paths": [
         "config/packages/twig.yaml",
         "src/Controller/PublicVideoSearchController.php",
@@ -35682,8 +35682,74 @@
         "tests/Controller/PublicVideoSearchControllerTest.php",
         "tests/Widget/VideoSearchWidgetProviderTest.php"
       ],
-      "next_action": "Focused functional tests are committed on exact feature HEAD 4ca08e9f42d4b3f3f0369e78ef2fbcd8b7da364d. Trigger and inspect full Worker CI, repair concrete failures on this branch, and rerun on the exact repaired HEAD.",
-      "last_verified_push_at": "2026-09-27T11:03:27.305Z"
+      "next_action": "PR #311 is ready for Trusted review on exact green HEAD 4ca08e9f42d4b3f3f0369e78ef2fbcd8b7da364d. Keep the claim locked until Trusted explicitly integrates, cancels or transfers it. Do not merge or deploy.",
+      "last_verified_push_at": "2026-09-27T11:03:27.305Z",
+      "worker_pr": 311,
+      "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/311",
+      "worker_pr_state": "open",
+      "pr_state": "open",
+      "draft_pr": false,
+      "worker_pr_changed_paths": [
+        "config/packages/twig.yaml",
+        "src/Controller/PublicVideoSearchController.php",
+        "src/Repository/PublicVideoSearchRepository.php",
+        "src/Widget/VideoSearchWidgetProvider.php",
+        "src/VideoSearch/Templates/widget/video_search.html.twig",
+        "src/VideoSearch/Templates/video_search/index.html.twig",
+        "tests/Controller/PublicVideoSearchControllerTest.php",
+        "tests/Widget/VideoSearchWidgetProviderTest.php"
+      ],
+      "final_head": "4ca08e9f42d4b3f3f0369e78ef2fbcd8b7da364d",
+      "ci_run_id": 36314570437,
+      "last_ci_run_id": 36314570437,
+      "ci_result": "success",
+      "last_ci_result": "success",
+      "ci_attempts": [
+        {
+          "run_id": 36314570437,
+          "run_number": 766,
+          "head": "4ca08e9f42d4b3f3f0369e78ef2fbcd8b7da364d",
+          "result": "success",
+          "base": "b510875e7b0741b9b19f09429d2204a95df51198"
+        }
+      ],
+      "final_ci_base_sha": "b510875e7b0741b9b19f09429d2204a95df51198",
+      "latest_main_sha": "b510875e7b0741b9b19f09429d2204a95df51198",
+      "main_refresh_note": "Worker main advanced from f1a246c64527ef3ad51f7490773d9bbf9d42be5d to b510875e7b0741b9b19f09429d2204a95df51198 through the sanitized snapshot sync after feature creation. Compare showed no overlap with allowed paths; PR #311 remained mergeable and exact-head CI passed using the current base.",
+      "completed_at": "2026-09-27T11:11:31.727Z",
+      "completion_evidence": {
+        "exact_head": "4ca08e9f42d4b3f3f0369e78ef2fbcd8b7da364d",
+        "pull_request": "#311 ready for Trusted review",
+        "worker_ci_run": 36314570437,
+        "worker_ci_run_number": 766,
+        "worker_ci_result": "success",
+        "current_pr_base": "b510875e7b0741b9b19f09429d2204a95df51198",
+        "phpstan": "Level 8 passed with no errors",
+        "phpunit": {
+          "tests": 542,
+          "assertions": 2275,
+          "failures": 0,
+          "deprecations": 1,
+          "notices": 1
+        },
+        "postgres18_migration_chain": "passed",
+        "twig": "standard Twig lint passed; both new source-owned templates were rendered by functional tests",
+        "changed_paths": [
+          "config/packages/twig.yaml",
+          "src/Controller/PublicVideoSearchController.php",
+          "src/Repository/PublicVideoSearchRepository.php",
+          "src/Widget/VideoSearchWidgetProvider.php",
+          "src/VideoSearch/Templates/widget/video_search.html.twig",
+          "src/VideoSearch/Templates/video_search/index.html.twig",
+          "tests/Controller/PublicVideoSearchControllerTest.php",
+          "tests/Widget/VideoSearchWidgetProviderTest.php"
+        ],
+        "limitations": [
+          "Search covers title and description only; category/playlist filtering remains in the existing catalogue.",
+          "Substring search may scan the video table as the catalogue grows; assess an index only if measured need appears."
+        ],
+        "trusted_follow_up": "Reconcile src/VideoSearch/Templates and the additive twig.paths entry with current Trusted template layout, retaining route/widget module gates and the published-video filter. No Trusted merge or deployment is authorized from Worker."
+      }
     },
     {
       "priority": 517,
