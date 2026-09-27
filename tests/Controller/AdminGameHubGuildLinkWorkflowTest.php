@@ -12,6 +12,7 @@ use App\Entity\Guild;
 use App\Entity\User;
 use App\Security\CmsPermission;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 final class AdminGameHubGuildLinkWorkflowTest extends WebTestCase
@@ -31,19 +32,26 @@ final class AdminGameHubGuildLinkWorkflowTest extends WebTestCase
         $game = $this->game('Linked game '.$suffix, $gameSlug);
         $otherGame = $this->game('Other linked game '.$suffix, $otherGameSlug);
         $entry = new GameCatalogueEntry($game);
+        $otherEntry = new GameCatalogueEntry($otherGame);
         $guild = $this->guild($game, 'Linked guild '.$suffix, $guildSlug);
         $otherGameGuild = $this->guild($otherGame, 'Other game guild '.$suffix, $otherGuildSlug);
         $disabledGuild = $this->guild($game, 'Disabled guild '.$suffix, $disabledGuildSlug, false);
         $manager = $this->user($userEmail, [CmsPermission::GAMING]);
-        foreach ([$game, $otherGame, $entry, $guild, $otherGameGuild, $disabledGuild, $manager] as $entity) {
+        foreach ([$game, $otherGame, $entry, $otherEntry, $guild, $otherGameGuild, $disabledGuild, $manager] as $entity) {
             $entityManager->persist($entity);
         }
         $entityManager->flush();
 
         $entryId = $entry->getId();
+        $otherEntryId = $otherEntry->getId();
         $guildId = $guild->getId();
+        $otherGuildId = $otherGameGuild->getId();
+        $disabledGuildId = $disabledGuild->getId();
         self::assertNotNull($entryId);
+        self::assertNotNull($otherEntryId);
         self::assertNotNull($guildId);
+        self::assertNotNull($otherGuildId);
+        self::assertNotNull($disabledGuildId);
         $managerPath = '/admin/gaming/game-hubs/'.$entryId.'/guild-links';
 
         try {
@@ -57,11 +65,11 @@ final class AdminGameHubGuildLinkWorkflowTest extends WebTestCase
             $formName = (string) $crawler->filter('form')->first()->attr('name');
             $token = (string) $crawler->filter('form input[name$="[_token]"]')->attr('value');
             self::assertSame(1, $crawler->filter('select[name="'.$formName.'[guild]"] option[value="'.$guildId.'"]')->count());
-            self::assertSame(0, $crawler->filter('select[name="'.$formName.'[guild]"] option[value="'.$otherGameGuild->getId().'"]')->count());
-            self::assertSame(0, $crawler->filter('select[name="'.$formName.'[guild]"] option[value="'.$disabledGuild->getId().'"]')->count());
+            self::assertSame(0, $crawler->filter('select[name="'.$formName.'[guild]"] option[value="'.$otherGuildId.'"]')->count());
+            self::assertSame(0, $crawler->filter('select[name="'.$formName.'[guild]"] option[value="'.$disabledGuildId.'"]')->count());
 
             $client->request('POST', $managerPath, [
-                $formName => ['_token' => $token, 'guild' => (string) $otherGameGuild->getId()],
+                $formName => ['_token' => $token, 'guild' => (string) $otherGuildId],
             ]);
             self::assertResponseStatusCodeSame(422);
             self::assertSelectorTextContains('body', 'Diese Gilde ist für diesen Game Hub nicht verfügbar.');
@@ -73,6 +81,19 @@ final class AdminGameHubGuildLinkWorkflowTest extends WebTestCase
                 $formName => ['_token' => $token, 'guild' => (string) $guildId],
             ]);
             self::assertResponseRedirects($managerPath);
+
+            $crawler = $client->request('GET', $managerPath);
+            $formName = (string) $crawler->filter('form')->first()->attr('name');
+            $token = (string) $crawler->filter('form input[name$="[_token]"]')->attr('value');
+            $client->request('POST', $managerPath, [
+                $formName => ['_token' => $token, 'guild' => (string) $guildId],
+            ]);
+            self::assertResponseStatusCodeSame(422);
+            self::assertSelectorTextContains('body', 'Diese Gilde ist bereits mit dem Game Hub verknüpft.');
+
+            $crossEntryDeletePath = '/admin/gaming/game-hubs/'.$otherEntryId.'/guild-links/'.$guildId.'/delete';
+            $client->request('POST', $crossEntryDeletePath);
+            self::assertResponseStatusCodeSame(404);
 
             $crawler = $client->request('GET', '/games/'.$gameSlug);
             self::assertResponseIsSuccessful();
@@ -107,29 +128,37 @@ final class AdminGameHubGuildLinkWorkflowTest extends WebTestCase
         $suffix = bin2hex(random_bytes(5));
         $gameSlug = 'public-links-game-'.$suffix;
         $otherGameSlug = 'private-links-game-'.$suffix;
+        $disabledGameSlug = 'disabled-links-game-'.$suffix;
         $guildSlug = 'public-linked-guild-'.$suffix;
         $disabledGuildSlug = 'hidden-linked-guild-'.$suffix;
         $otherGuildSlug = 'cross-game-linked-guild-'.$suffix;
+        $disabledGameGuildSlug = 'disabled-game-linked-guild-'.$suffix;
 
         $game = $this->game('Public links game '.$suffix, $gameSlug);
         $otherGame = $this->game('Private links game '.$suffix, $otherGameSlug);
+        $disabledGame = $this->game('Disabled links game '.$suffix, $disabledGameSlug, false);
         $entry = new GameCatalogueEntry($game);
         $guild = $this->guild($game, 'Public linked guild '.$suffix, $guildSlug);
         $disabledGuild = $this->guild($game, 'Hidden linked guild '.$suffix, $disabledGuildSlug, false);
         $otherGuild = $this->guild($otherGame, 'Cross-game guild '.$suffix, $otherGuildSlug);
+        $disabledGameGuild = $this->guild($disabledGame, 'Disabled-game guild '.$suffix, $disabledGameGuildSlug);
         $entityManager->persist($game);
         $entityManager->persist($otherGame);
+        $entityManager->persist($disabledGame);
         $entityManager->persist($entry);
         $entityManager->persist($guild);
         $entityManager->persist($disabledGuild);
         $entityManager->persist($otherGuild);
+        $entityManager->persist($disabledGameGuild);
         $entityManager->flush();
 
         foreach ([
             new GameHubLink($entry, 'guild', (int) $guild->getId(), 'Current guild label'),
             new GameHubLink($entry, 'guild', (int) $disabledGuild->getId(), 'Hidden guild label'),
             new GameHubLink($entry, 'guild', (int) $otherGuild->getId(), 'Cross-game guild label'),
+            new GameHubLink($entry, 'guild', (int) $disabledGameGuild->getId(), 'Disabled-game guild label'),
             new GameHubLink($entry, 'guild', 2147483647, 'Missing guild label'),
+            new GameHubLink($entry, 'video', 4, 'Linked video metadata'),
         ] as $link) {
             $entityManager->persist($link);
         }
@@ -145,9 +174,12 @@ final class AdminGameHubGuildLinkWorkflowTest extends WebTestCase
             self::assertStringNotContainsString('Hidden linked guild '.$suffix, $response);
             self::assertStringNotContainsString('Cross-game guild label', $response);
             self::assertStringNotContainsString('Cross-game guild '.$suffix, $response);
+            self::assertStringNotContainsString('Disabled-game guild label', $response);
+            self::assertStringNotContainsString('Disabled-game guild '.$suffix, $response);
             self::assertStringNotContainsString('Missing guild label', $response);
+            self::assertStringContainsString('Video: Linked video metadata', $response);
         } finally {
-            $this->restoreFixtures($client, [$gameSlug, $otherGameSlug], [$guildSlug, $disabledGuildSlug, $otherGuildSlug], []);
+            $this->restoreFixtures($client, [$gameSlug, $otherGameSlug, $disabledGameSlug], [$guildSlug, $disabledGuildSlug, $otherGuildSlug, $disabledGameGuildSlug], []);
         }
     }
 
@@ -178,7 +210,7 @@ final class AdminGameHubGuildLinkWorkflowTest extends WebTestCase
         $managerPath = '/admin/gaming/game-hubs/'.$entryId.'/guild-links';
 
         $state = $entityManager->find(CmsModuleState::class, 'gaming');
-        $createdState = !$state instanceof CmsModuleState;
+        $createdState = !($state instanceof CmsModuleState);
         $originalEnabled = $state instanceof CmsModuleState ? $state->isEnabled() : null;
         if (!$state instanceof CmsModuleState) {
             $state = (new CmsModuleState())->setModuleKey('gaming')->updateVersion('1.0.0');
@@ -267,7 +299,7 @@ final class AdminGameHubGuildLinkWorkflowTest extends WebTestCase
      * @param list<string> $guildSlugs
      * @param list<string> $userEmails
      */
-    private function restoreFixtures($client, array $gameSlugs, array $guildSlugs, array $userEmails): void
+    private function restoreFixtures(KernelBrowser $client, array $gameSlugs, array $guildSlugs, array $userEmails): void
     {
         $entityManager = $client->getContainer()->get(EntityManagerInterface::class);
         $games = [];
