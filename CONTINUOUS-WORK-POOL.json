@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T10:13:57.732Z",
+  "published_at": "2026-09-27T10:15:04.964Z",
   "summary": {
     "total_remaining_worker_tasks": 164,
     "completed_worker_prs_awaiting_trusted_review": 270,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-507 is complete on exact green HEAD a7d4fd835a134dd1b17d5e515e5a549a4ed7fd3a and locked for Trusted review. Re-evaluate remaining dependency-safe work and continue with the next independent Worker-only task; keep this claim untouched.",
+    "next_required_action": "WCP-508 is rerunning full exact-head Worker CI after a concrete PHPUnit risky-test finding; finish and reconcile before moving on.",
     "composition_preparable": 0,
     "immediately_actionable": 18,
     "must_continue": true
@@ -34487,35 +34487,41 @@
       "claim_state": "active",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-      "active_head": "8d7d5e02f491bc639216311f0687262de9eca446",
+      "active_head": "0f514f0a20dd5ffd50a3b7dc035e3db0ac67eb20",
       "resume_branch": "feature/wcp-508-faq-widget-g1",
       "branch_heads": {
         "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-        "feature_branch": "8d7d5e02f491bc639216311f0687262de9eca446"
+        "feature_branch": "0f514f0a20dd5ffd50a3b7dc035e3db0ac67eb20"
       },
-      "last_observed_head": "8d7d5e02f491bc639216311f0687262de9eca446",
-      "last_checkpoint_at": "2026-09-27T10:12:02.498Z",
+      "last_observed_head": "0f514f0a20dd5ffd50a3b7dc035e3db0ac67eb20",
+      "last_checkpoint_at": "2026-09-27T10:15:04.964Z",
       "checkpoint_paths": [
         "src/Widget/FaqWidgetProvider.php",
         "templates/widget/faq.html.twig",
         "tests/Widget/FaqWidgetProviderTest.php"
       ],
-      "next_action": "Draft Worker PR #301 is open at exact HEAD 8d7d5e02f491bc639216311f0687262de9eca446; wait for run 36311739079, repair any concrete failure on this branch, and rerun full exact-head CI.",
-      "last_verified_push_at": "2026-09-27T10:12:02.498Z",
+      "next_action": "Await exact-head Worker CI run 36311902681 on 0f514f0a20dd5ffd50a3b7dc035e3db0ac67eb20; then update the PR and pool from the verified result.",
+      "last_verified_push_at": "2026-09-27T10:15:04.964Z",
       "worker_pr": 301,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/301",
       "draft_pr": true,
       "pr_state": "open",
-      "ci_run_id": 36311739079,
-      "last_ci_run_id": 36311739079,
+      "ci_run_id": 36311902681,
+      "last_ci_run_id": 36311902681,
       "ci_result": "in_progress",
       "last_ci_result": "in_progress",
       "ci_attempts": [
         {
           "run_id": 36311739079,
           "head": "8d7d5e02f491bc639216311f0687262de9eca446",
+          "result": "success",
+          "diagnosis": "Both CI jobs succeeded, but PHPUnit reported one risky test with no assertions: the limits test's exception-only catch path was not counted. Split into explicit expectException tests and rerun the full exact-head CI."
+        },
+        {
+          "run_id": 36311902681,
+          "head": "0f514f0a20dd5ffd50a3b7dc035e3db0ac67eb20",
           "result": "in_progress",
-          "summary": "Exact-head Worker CI is running; await PHP/Symfony tests, PHPStan and PostgreSQL 18 migration-chain validation."
+          "summary": "Full Worker CI is rerunning after replacing the no-assertion length loop with explicit PHPUnit expected-exception tests."
         }
       ],
       "worker_pr_changed_paths": [
