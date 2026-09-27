@@ -10,7 +10,7 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T14:27:16.174Z",
+  "published_at": "2026-09-27T14:28:06.103Z",
   "summary": {
     "total_remaining_worker_tasks": 167,
     "completed_worker_prs_awaiting_trusted_review": 291,
@@ -40295,7 +40295,7 @@
       "package_id": "WCP-544",
       "title": "Place published CMS pages through the Page Builder",
       "risk": "low",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -40374,7 +40374,7 @@
       },
       "published_at": "2026-09-27T14:15:59.512Z",
       "claimed_on": "2026-09-27T14:15:59.512Z",
-      "claim_state": "active",
+      "claim_state": "locked_until_trusted_resolution",
       "active_base_branch": "main",
       "active_base_sha": "b510875e7b0741b9b19f09429d2204a95df51198",
       "active_head": "6724a40f58205cbb0df78d4115690a6585b78c76",
@@ -40384,13 +40384,13 @@
         "feature_branch": "6724a40f58205cbb0df78d4115690a6585b78c76"
       },
       "last_observed_head": "6724a40f58205cbb0df78d4115690a6585b78c76",
-      "last_checkpoint_at": "2026-09-27T14:23:31.165Z",
+      "last_checkpoint_at": "2026-09-27T14:28:06.103Z",
       "checkpoint_paths": [
         "src/Widget/PublicPageDirectoryWidgetProvider.php",
         "templates/widget/public_pages.html.twig",
         "tests/Widget/PublicPageDirectoryWidgetProviderTest.php"
       ],
-      "next_action": "Wait for exact-head Worker CI run #837 / 36325741990 on 6724a40f58205cbb0df78d4115690a6585b78c76; diagnose and repair any concrete failure.",
+      "next_action": "Worker PR #335 is complete on exact green HEAD 6724a40f58205cbb0df78d4115690a6585b78c76; Worker CI run #837 / 36325741990 passed both jobs. Keep the claim locked until Trusted explicitly integrates, cancels or transfers it; continue the autonomous Worker loop without merging or deploying.",
       "ci_attempts": [
         {
           "run_id": 36325502531,
@@ -40408,12 +40408,21 @@
           "run_number": 837,
           "head": "6724a40f58205cbb0df78d4115690a6585b78c76",
           "base": "b510875e7b0741b9b19f09429d2204a95df51198",
-          "result": "in_progress",
-          "conclusion": null
+          "result": "success",
+          "conclusion": "success",
+          "phpstan": "success",
+          "phpunit": "success",
+          "phpunit_tests": 537,
+          "assertions": 2239,
+          "phpunit_deprecations": 1,
+          "phpunit_notices": 1,
+          "postgresql_18_migrations": "success",
+          "migrations_executed": 54,
+          "sql_queries": 750
         }
       ],
-      "worker_pr_state": "draft",
-      "last_ci_result": "in_progress",
+      "worker_pr_state": "ready_for_review",
+      "last_ci_result": "success",
       "worker_pr_changed_paths": [
         "src/Widget/PublicPageDirectoryWidgetProvider.php",
         "templates/widget/public_pages.html.twig",
@@ -40422,11 +40431,24 @@
       "worker_pr_base_branch": "main",
       "worker_pr": 335,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/335",
-      "last_verified_push_at": "2026-09-27T14:23:31.165Z",
-      "draft_pr": true,
+      "last_verified_push_at": "2026-09-27T14:28:06.103Z",
+      "draft_pr": false,
       "pr_state": "open",
       "ci_run_id": 36325741990,
-      "last_ci_run_id": 36325741990
+      "last_ci_run_id": 36325741990,
+      "ci_result": "success",
+      "final_head": "6724a40f58205cbb0df78d4115690a6585b78c76",
+      "completed_at": "2026-09-27T14:28:06.103Z",
+      "completion_evidence": [
+        "Base main b510875e7b0741b9b19f09429d2204a95df51198; final Worker HEAD 6724a40f58205cbb0df78d4115690a6585b78c76.",
+        "Changed paths: src/Widget/PublicPageDirectoryWidgetProvider.php, templates/widget/public_pages.html.twig, and tests/Widget/PublicPageDirectoryWidgetProviderTest.php.",
+        "The content.pages widget is auto-discovered, lists only published listed pages, excludes drafts, unlisted entries and news, sorts newest-first with an ID tie-break, and caps its query at 12.",
+        "The widget template links to the existing public page route, renders optional excerpts, and has an empty state; WidgetRegistry suppresses it when Content is disabled.",
+        "The transactional kernel regression test verifies filtering, deterministic ties, widget discovery and disabled-module behavior; test data is rolled back.",
+        "Worker PR #335 is open and ready for Trusted review, unmerged and undeployed.",
+        "Exact-head Worker CI run #837 / 36325741990 succeeded on final HEAD: PHPStan passed; PHPUnit passed with 537 tests and 2,239 assertions (one existing deprecation and one notice); PostgreSQL 18 passed with 54 migrations and 750 SQL queries.",
+        "Earlier run #832 failed because test fixtures omitted the required page author; the fixture was repaired and final exact-head CI passed."
+      ]
     }
   ],
   "recovery_queue": [],
