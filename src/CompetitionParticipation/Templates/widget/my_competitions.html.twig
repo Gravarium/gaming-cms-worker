@@ -1,0 +1,19 @@
+<section class="portal-card" aria-labelledby="my-competition-entries-title">
+    <h2 id="my-competition-entries-title">Meine Competitions</h2>
+    {% if not authenticated %}
+        <p><a href="{{ path('app_login') }}">Melde dich an, um deine Competition-Anmeldungen zu sehen.</a></p>
+    {% elseif entries is empty %}
+        <p>Du hast noch keine Competition-Anmeldungen.</p>
+        <a href="{{ path('app_competition_index') }}">Competitions ansehen</a>
+    {% else %}
+        <p>Aktive Anmeldungen: {{ activeCount }}</p>
+        <ul>
+            {% for participant in entries %}
+                {% if participant.active %}
+                    <li><a href="{{ path('app_competition_show', {id: participant.competition.id}) }}">{{ participant.competition.name }}</a> · {{ participant.name }}</li>
+                {% endif %}
+            {% endfor %}
+        </ul>
+        <a href="{{ path('app_competition_participation_dashboard') }}">Anmeldungen verwalten</a>
+    {% endif %}
+</section>
