@@ -8,7 +8,7 @@ use App\PageCategoryArchive\PublicPageCategoryArchiveQuery;
 
 final readonly class PublicPageCategoryArchiveWidgetProvider implements WidgetProvider
 {
-    public const KEY = 'content.page_categories';
+    public const KEY = 'content.page-categories';
     public const MAX_ITEMS = 12;
 
     public function __construct(

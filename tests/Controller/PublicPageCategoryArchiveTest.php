@@ -36,7 +36,7 @@ final class PublicPageCategoryArchiveTest extends WebTestCase
                 ->setName('WCP551 Page guides '.$suffix)
                 ->setSlug($categorySlugs[0]);
             $category = (new Category())
-                ->setName('Builds & Walkthroughs')
+                ->setName('Builds & Walkthroughs <script>')
                 ->setSlug($categorySlugs[1])
                 ->setDescription('Published page category & description.')
                 ->setParent($parent);
@@ -69,7 +69,7 @@ final class PublicPageCategoryArchiveTest extends WebTestCase
             $client->request('GET', '/pages/categories');
             self::assertResponseIsSuccessful();
             $directory = (string) $client->getResponse()->getContent();
-            self::assertStringContainsString('Builds &amp; Walkthroughs', $directory);
+            self::assertStringContainsString('Builds &amp; Walkthroughs &lt;script&gt;', $directory);
             self::assertStringContainsString('2 veröffentlichte Seiten', $directory);
             self::assertStringNotContainsString('Hidden category '.$suffix, $directory);
             self::assertStringNotContainsString('<script>', $directory);

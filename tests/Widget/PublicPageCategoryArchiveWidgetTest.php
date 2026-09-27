@@ -44,7 +44,7 @@ final class PublicPageCategoryArchiveWidgetTest extends WebTestCase
                 $categorySlugs[] = $categorySlug;
                 $entrySlugs[] = $pageSlug;
                 $category = (new Category())
-                    ->setName(sprintf('WCP551 Category %02d %s', $number, $suffix))
+                    ->setName($number === 1 ? 'WCP551 Category 01 <script> '.$suffix : sprintf('WCP551 Category %02d %s', $number, $suffix))
                     ->setSlug($categorySlug);
                 $page = (new ContentEntry())
                     ->setType(ContentEntry::TYPE_PAGE)
@@ -84,14 +84,17 @@ final class PublicPageCategoryArchiveWidgetTest extends WebTestCase
             self::assertTrue($registry->available(PublicPageCategoryArchiveWidgetProvider::KEY));
 
             $data = $registry->data(PublicPageCategoryArchiveWidgetProvider::KEY, ['count' => 500]);
-            self::assertCount(PublicPageCategoryArchiveWidgetProvider::MAX_ITEMS, $data['categories']);
+            self::assertIsArray($data['categories'] ?? null);
+            /** @var list<array{category: Category, pageCount: int}> $widgetCategories */
+            $widgetCategories = $data['categories'];
+            self::assertCount(PublicPageCategoryArchiveWidgetProvider::MAX_ITEMS, $widgetCategories);
             self::assertSame(
                 'WCP551 Category 01 '.$suffix,
-                $data['categories'][0]['category']->getName(),
+                $widgetCategories[0]['category']->getName(),
             );
             self::assertSame(
                 'WCP551 Category 12 '.$suffix,
-                $data['categories'][11]['category']->getName(),
+                $widgetCategories[11]['category']->getName(),
             );
 
             $query = $client->getContainer()->get(PublicPageCategoryArchiveQuery::class);
@@ -108,9 +111,10 @@ final class PublicPageCategoryArchiveWidgetTest extends WebTestCase
             $this->saveHomeLayout($client, 12);
             $client->request('GET', '/');
             self::assertResponseIsSuccessful();
-            self::assertSelectorExists('.widget-content-page_categories');
+            self::assertSelectorExists('.widget-content-page-categories');
             $html = (string) $client->getResponse()->getContent();
-            self::assertStringContainsString('WCP551 Category 01 '.$suffix, $html);
+            self::assertStringContainsString('WCP551 Category 01 &lt;script&gt; '.$suffix, $html);
+            self::assertStringNotContainsString('<script>', $html);
             self::assertStringContainsString('WCP551 Category 12 '.$suffix, $html);
             self::assertStringNotContainsString('WCP551 Category 13 '.$suffix, $html);
             self::assertStringNotContainsString('WCP551 Hidden category '.$suffix, $html);
@@ -128,7 +132,7 @@ final class PublicPageCategoryArchiveWidgetTest extends WebTestCase
             self::assertResponseStatusCodeSame(404);
             $client->request('GET', '/');
             self::assertResponseIsSuccessful();
-            self::assertSelectorNotExists('.widget-content-page_categories');
+            self::assertSelectorNotExists('.widget-content-page-categories');
         } finally {
             $this->restore($client, $snapshot, $entrySlugs, $categorySlugs, $authorEmail);
         }
