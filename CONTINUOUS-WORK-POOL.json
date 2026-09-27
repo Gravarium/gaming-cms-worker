@@ -37267,15 +37267,15 @@
       "claimed_on": "2026-09-27T11:49:42.443Z",
       "active_base_branch": "main",
       "active_base_sha": "b510875e7b0741b9b19f09429d2204a95df51198",
-      "active_head": "f8e87dfada870ca7e3cf374a4ec252cc65ff6fa6",
+      "active_head": "1147d672237777c176067a720b9434ee3d3e3ccb",
       "resume_branch": "feature/wcp-526-media-usage-browser-g1",
       "branch_heads": {
         "claim_branch": "b510875e7b0741b9b19f09429d2204a95df51198",
-        "feature_branch": "f8e87dfada870ca7e3cf374a4ec252cc65ff6fa6"
+        "feature_branch": "1147d672237777c176067a720b9434ee3d3e3ccb"
       },
-      "last_observed_head": "f8e87dfada870ca7e3cf374a4ec252cc65ff6fa6",
-      "last_checkpoint_at": "2026-09-27T12:21:29.000Z",
-      "last_verified_push_at": "2026-09-27T12:21:29.000Z",
+      "last_observed_head": "1147d672237777c176067a720b9434ee3d3e3ccb",
+      "last_checkpoint_at": "2026-09-27T12:26:38.000Z",
+      "last_verified_push_at": "2026-09-27T12:26:38.000Z",
       "checkpoint_paths": [
         "src/Media/MediaAssetUsageBrowser.php",
         "src/Controller/AdminMediaUsageController.php",
@@ -37283,7 +37283,7 @@
         "templates/admin/storage/media_usage.html.twig",
         "tests/Controller/AdminMediaUsageBrowserTest.php"
       ],
-      "next_action": "Monitor Worker CI run 36318742525 on exact HEAD; inspect any failure, fix it on this branch and rerun the complete CI.",
+      "next_action": "Monitor Worker CI run 36318949345 on the corrected exact HEAD; diagnose and fix any failure on this same branch.",
       "worker_pr": 323,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/323",
       "draft_pr": true,
@@ -37302,8 +37302,14 @@
         {
           "run_id": 36318742525,
           "head": "f8e87dfada870ca7e3cf374a4ec252cc65ff6fa6",
+          "result": "failure",
+          "summary": "PHPStan level 8 stopped before tests: empty condition array check was statically unreachable, Doctrine QueryBuilder::setParameters requires an ArrayCollection, and DBAL 4 AbstractPlatform has no getName(). PostgreSQL 18 migration chain passed. These API/type issues are fixed on the same feature branch."
+        },
+        {
+          "run_id": 36318949345,
+          "head": "1147d672237777c176067a720b9434ee3d3e3ccb",
           "result": "in_progress",
-          "summary": "Draft PR opened; Worker CI run 36318742525 started on this exact HEAD."
+          "summary": "Full Worker CI restarted on corrected exact HEAD."
         }
       ]
     },
