@@ -12,14 +12,14 @@
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
   "published_at": "2026-09-27T10:34:03.192Z",
   "summary": {
-    "total_remaining_worker_tasks": 163,
-    "completed_worker_prs_awaiting_trusted_review": 274,
+    "total_remaining_worker_tasks": 162,
+    "completed_worker_prs_awaiting_trusted_review": 275,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-509 is complete on exact green HEAD 65112b9ddff3589cf5b47f770c3dc85ce79ee95e, PR #305 is ready for Trusted review, and the claim remains locked. Continue to the next free independent module gap.",
+    "next_required_action": "WCP-513 is complete with green exact-head CI and locked for Trusted review; continue with the next independent functional module gap without touching foreign claims.",
     "composition_preparable": 0,
-    "immediately_actionable": 19,
+    "immediately_actionable": 18,
     "must_continue": true
   },
   "rules": {
@@ -35065,7 +35065,7 @@
       "package_id": "WCP-513",
       "title": "Browse public news by publication month",
       "risk": "medium",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -35155,7 +35155,7 @@
       },
       "published_at": "2026-09-27T10:23:04.700Z",
       "claimed_on": "2026-09-27T10:23:04.700Z",
-      "claim_state": "active",
+      "claim_state": "locked_until_trusted_resolution",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
       "active_head": "b7e903a638bd44f60fd7c823ab42a8ca5419a5f9",
@@ -35172,11 +35172,11 @@
         "templates/content/news_archive.html.twig",
         "tests/Controller/PublicNewsArchiveTest.php"
       ],
-      "next_action": "Run focused and full exact-head Worker CI on the portable archive implementation; repair any concrete remaining failure.",
+      "next_action": "Await Trusted review and integration CI; keep the claim locked until Trusted explicitly resolves it.",
       "last_verified_push_at": "2026-09-27T10:40:42.487Z",
       "worker_pr": 306,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/306",
-      "draft_pr": true,
+      "draft_pr": false,
       "pr_state": "open",
       "worker_pr_changed_paths": [
         "src/Controller/PublicNewsArchiveController.php",
@@ -35189,29 +35189,80 @@
           "run_id": 36312913864,
           "head": "022100c5101af2a890b3737e1b2627a53989b8d1",
           "result": "failure",
-          "summary": "PHPStan required array_values() to preserve list return type."
-        },
-        {
-          "run_id": 36313079459,
-          "head": "4b1f6d704c7bf9c52453798a0357d72bed75b87f",
-          "result": "in_progress"
+          "summary": "PHPStan return type required array_values() to guarantee a list."
         },
         {
           "run_id": 36313079459,
           "head": "4b1f6d704c7bf9c52453798a0357d72bed75b87f",
           "result": "failure",
-          "summary": "Month index used unregistered Doctrine DQL YEAR(); replaced with portable timestamp streaming."
+          "summary": "Doctrine DQL did not have YEAR() registered; period aggregation now streams publication timestamps."
         },
         {
           "run_id": 36313291931,
           "head": "b7e903a638bd44f60fd7c823ab42a8ca5419a5f9",
-          "result": "in_progress"
+          "result": "success"
         }
       ],
       "ci_run_id": 36313291931,
       "last_ci_run_id": 36313291931,
-      "last_ci_result": "in_progress",
-      "ci_result": "in_progress"
+      "last_ci_result": "success",
+      "ci_result": "success",
+      "changed_paths": [
+        "src/Controller/PublicNewsArchiveController.php",
+        "src/Repository/PublicNewsArchiveRepository.php",
+        "templates/content/news_archive.html.twig",
+        "tests/Controller/PublicNewsArchiveTest.php"
+      ],
+      "final_changed_paths": [
+        "src/Controller/PublicNewsArchiveController.php",
+        "src/Repository/PublicNewsArchiveRepository.php",
+        "templates/content/news_archive.html.twig",
+        "tests/Controller/PublicNewsArchiveTest.php"
+      ],
+      "final_head": "b7e903a638bd44f60fd7c823ab42a8ca5419a5f9",
+      "final_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "final_sanitized_main_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "completed_at": "2026-09-27T10:45:00.506Z",
+      "test_results": {
+        "phpunit": "432 tests, 1,893 assertions, zero failures (one deprecation and one notice).",
+        "phpstan": "Level 8 passed with no errors.",
+        "php_symfony": "Worker PHP/Symfony validation passed, including Composer audit, PHP/config/Twig/container, AssetMapper and Doctrine mapping/schema checks.",
+        "postgres18": "All 39 migrations executed, 470 SQL queries, 0 unavailable.",
+        "exact_head_ci": {
+          "run_id": 36313291931,
+          "head": "b7e903a638bd44f60fd7c823ab42a8ca5419a5f9",
+          "result": "success"
+        }
+      },
+      "completion_evidence": {
+        "exact_sanitized_main_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+        "exact_proposal_base_branch": "main",
+        "exact_proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+        "final_head_sha": "b7e903a638bd44f60fd7c823ab42a8ca5419a5f9",
+        "changed_paths": [
+          "src/Controller/PublicNewsArchiveController.php",
+          "src/Repository/PublicNewsArchiveRepository.php",
+          "templates/content/news_archive.html.twig",
+          "tests/Controller/PublicNewsArchiveTest.php"
+        ],
+        "cumulative_pr_paths": [
+          "src/Controller/PublicNewsArchiveController.php",
+          "src/Repository/PublicNewsArchiveRepository.php",
+          "templates/content/news_archive.html.twig",
+          "tests/Controller/PublicNewsArchiveTest.php"
+        ],
+        "worker_pr": 306,
+        "ci_run_id": 36313291931,
+        "ci_result": "success",
+        "php_symfony_job": "success: 432 tests, 1,893 assertions, 0 failures; PHPStan level 8 no errors",
+        "postgresql_job": "success: 39 migrations, 470 SQL queries, 0 unavailable",
+        "workflow": "Full Worker CI passed on exact final HEAD."
+      },
+      "completion_summary": "Added a public month index and per-month news view with stable pagination. The archive includes only currently published, listed news and hides future or scheduled-unpublish-expired entries. Added tests for ordering, pagination, visibility, invalid periods, module disable and fixture cleanup.",
+      "open_limitations": [
+        "The existing news list, search and portal templates are owned by active or claim-locked packages, so the standalone /news/archive route has no default link from those screens. Add one in a later non-overlapping package after those claims resolve."
+      ],
+      "trusted_follow_up": "Review the visibility query, month grouping, route gating and pagination on a fresh Trusted branch; once the news-template claims resolve, add a discoverable archive link and run full Trusted CI. This Worker PR remains untrusted and is not integrated or deployed."
     },
     {
       "priority": 514,
