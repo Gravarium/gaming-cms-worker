@@ -16,7 +16,7 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 final class ForumWorkflowControllerTest extends WebTestCase
 {
-    public function testPublicVisibilityCsrfThreadCreationAndRoomAdministration(): void
+    public function testPublicVisibilityCsrfAndThreadCreation(): void
     {
         $client = static::createClient();
         $container = $client->getContainer();
@@ -59,6 +59,26 @@ final class ForumWorkflowControllerTest extends WebTestCase
             self::assertSelectorTextContains('body', 'A usable question '.$suffix);
             self::assertSelectorTextContains('body', 'First forum post.');
 
+        } finally {
+            foreach ($roomIds as $roomId) {
+                $connection->delete('forum_room', ['id' => $roomId]);
+            }
+            $this->removeUsers($entityManager, $userIds);
+        }
+    }
+
+    public function testGamingAdministratorCanCreateAndEditRooms(): void
+    {
+        $client = static::createClient();
+        $container = $client->getContainer();
+        $entityManager = $container->get(EntityManagerInterface::class);
+        $connection = $container->get(Connection::class);
+        $this->ensureForumTables($connection);
+        $suffix = bin2hex(random_bytes(5));
+        $roomIds = [];
+        $userIds = [];
+
+        try {
             $admin = $this->user($entityManager, 'forum-admin-'.$suffix, [CmsPermission::GAMING]);
             $userIds[] = $admin->getId();
             $client->loginUser($admin);
