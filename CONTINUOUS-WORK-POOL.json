@@ -10,7 +10,7 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T15:25:12.599Z",
+  "published_at": "2026-09-27T15:25:22.990Z",
   "summary": {
     "total_remaining_worker_tasks": 167,
     "completed_worker_prs_awaiting_trusted_review": 294,
@@ -41315,7 +41315,7 @@
         "feature_branch": "951a0237f1e6f259e812deec86b9cc7f4e8b71b8"
       },
       "last_observed_head": "951a0237f1e6f259e812deec86b9cc7f4e8b71b8",
-      "last_checkpoint_at": "2026-09-27T15:10:24.734Z",
+      "last_checkpoint_at": "2026-09-27T15:25:22.990Z",
       "checkpoint_paths": [
         "src/Widget/PublicGlobalSearchWidgetProvider.php",
         "src/GlobalSearchWidget/Templates/widget/global_search.html.twig",
@@ -41323,20 +41323,23 @@
         "tests/Widget/PublicGlobalSearchWidgetProviderTest.php"
       ],
       "resume_branch": "feature/wcp-549-global-search-widget-g1",
-      "next_action": "Verify Worker CI run #848 / 36328486772 on exact HEAD 951a0237f1e6f259e812deec86b9cc7f4e8b71b8. The PR is open as a draft against main and includes the exact green FCP-069 dependency stack; repair any failures only on this feature branch.",
+      "next_action": "Prepare a conflict-checked Worker-only composition based on current main e4be797b, restoring only required exact-green competition predecessor files and layering exact-green FCP-069 plus WCP-549; run full CI on the composition, then continue WCP-549 from that exact green base.",
       "worker_pr_state": "draft",
       "last_verified_push_at": "2026-09-27T15:08:28.294Z",
-      "ci_result": "in_progress",
-      "last_ci_result": "in_progress",
+      "ci_result": "failure",
+      "last_ci_result": "failure",
       "ci_attempts": [
         {
           "run_id": 36328486772,
           "run_number": 848,
           "head": "951a0237f1e6f259e812deec86b9cc7f4e8b71b8",
           "base": "e4be797b44948824e31843b88363d6ea1335c163",
-          "result": "in_progress",
-          "conclusion": null,
-          "pr": 341
+          "result": "failure",
+          "conclusion": "failure",
+          "pr": 341,
+          "php_symfony_job": "failure",
+          "postgresql_18_migrations": "failure",
+          "summary": "Both jobs stopped during Composer post-install cache:clear before static analysis, migrations or PHPUnit. The merge with current main e4be797b autowires FCP-069 GamingSearchIndexAdapter, which requires App\\Repository\\Competition\\CompetitionRepository; that class exists on the exact green predecessor branch but is absent from refreshed main."
         }
       ],
       "worker_pr_changed_paths": [
