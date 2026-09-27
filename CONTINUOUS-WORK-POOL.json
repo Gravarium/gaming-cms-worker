@@ -17,7 +17,7 @@
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-471 is complete on green exact-head Worker PR #264 at c1ed65d0810ae0756f5898e6598e1b9bc3c8666d and remains claim-locked. WCP-472 is separately active on its checkpointed authorization/CSRF test; preserve both claims and choose only an independent next package.",
+    "next_required_action": "WCP-471 and WCP-472 are complete on green exact-head Worker PRs and remain claim-locked. This chat has claimed disjoint WCP-473 from WCP-347's exact green HEAD for guild application review/decision security coverage.",
     "composition_preparable": 0,
     "immediately_actionable": 4,
     "must_continue": true
@@ -28895,6 +28895,108 @@
         "Awaiting Trusted review and Trusted integration CI; this stacked PR includes the WCP-340 predecessor changes."
       ],
       "trusted_follow_up": "Preserve CMS_CONNECTORS_MANAGE and backup-provider-plan CSRF validation before planning, audit writes or selection synchronization; run full Trusted CI."
+    },
+    {
+      "priority": 473,
+      "package_id": "WCP-473",
+      "title": "Protect guild application review decisions with authorization and route-specific CSRF",
+      "risk": "medium",
+      "execution_state": "worker_in_progress",
+      "dependencies": [
+        "WCP-347"
+      ],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-473-guild-application-decision-security-g1",
+      "suggested_branch": "feature/wcp-473-guild-application-decision-security-g1",
+      "base_branch": "feature/wcp-347-guild-application-note-boundary-g1",
+      "base_sha": "b7fcd30d4275a6de6398523593e3f48c0addab3b",
+      "objective": "Add test-only functional security regressions for the existing guild application admin workflow, stacked on WCP-347's exact green HEAD. Verify CMS_GAMING_MANAGE protects application listing, review and decisions; the review and accept/reject endpoints each reject missing, invalid and wrong-purpose CSRF tokens without changing assignment, notes, application status, membership conversion or audit records. Prove rendered decision tokens accept and reject the intended synthetic applications, with exact cleanup of all synthetic entities and audit rows.",
+      "allowed_paths": [
+        "tests/Controller/AdminGuildApplicationDecisionSecurityTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "src/",
+        "templates/",
+        "migrations/",
+        "config/",
+        "public/uploads/"
+      ],
+      "deliverables": [
+        "A user without CMS_GAMING_MANAGE is denied application list, review and decision routes; no application or audit state changes.",
+        "Review POST rejects missing, invalid and decision-purpose tokens without changing internal notes, assignment, status or audit records.",
+        "Accept and reject POST each reject missing, invalid and review-purpose tokens without status, member-conversion or audit changes.",
+        "Rendered route-specific tokens successfully accept and reject synthetic applications; acceptance creates one guild member and rejection creates none.",
+        "Only this new test file changes in WCP-473; all synthetic users, games, guilds, applications, members and audit rows are cleaned up."
+      ],
+      "tests": [
+        "Focused AdminGuildApplicationDecisionSecurityTest functional PHPUnit coverage.",
+        "PHPStan level 8 and complete Worker CI on exact final HEAD.",
+        "PostgreSQL 18 complete migration-chain validation."
+      ],
+      "completion_report": [
+        "Exact sanitized main SHA and exact green WCP-347 proposal-base SHA.",
+        "Final HEAD, incremental changed paths, cumulative Worker PR paths and Worker PR.",
+        "Authorization and route-specific CSRF evidence including unchanged state after denial and valid rendered-token accept/reject behavior.",
+        "Focused and complete test, PHPStan and migration results.",
+        "Trusted integration follow-up and unresolved assumptions."
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "preserve-CMS_GAMING_MANAGE-and-per-application-review/decision-CSRF-boundaries",
+        "denied-or-invalid-actions-must-not-change-application-assignment-notes-status-membership-or-audit",
+        "preserve-transactional-decision-and-single-conversion-invariants",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment",
+        "no-private-runtime-or-sensitive-data"
+      ],
+      "proposal_base_branch": "feature/wcp-347-guild-application-note-boundary-g1",
+      "proposal_base_sha": "b7fcd30d4275a6de6398523593e3f48c0addab3b",
+      "proposal_kind": "worker_only",
+      "proposal_dependency_evidence": [
+        {
+          "package_id": "WCP-347",
+          "exact_green_head": "b7fcd30d4275a6de6398523593e3f48c0addab3b",
+          "worker_pr": 141,
+          "ci_run_id": 36253376446,
+          "ci_result": "success"
+        }
+      ],
+      "collision_check": {
+        "compared_against": "Fresh continuous/work-pool-v4 at 6ad50fbefae2a2549c90d37ea46a7d12f7136db9, all active and claim-locked allowed-path scopes, sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d, and WCP-347 exact green HEAD b7fcd30d4275a6de6398523593e3f48c0addab3b.",
+        "result": "No active or claim-locked task owns or encloses tests/Controller/AdminGuildApplicationDecisionSecurityTest.php. WCP-347 owns the controller and a distinct internal-note boundary test; WCP-411 owns the separate application inbox controller/repository/template/test; FCP-053's guild tests use tests/Gaming/Guild. WCP-473 adds a new decision-security test only.",
+        "paths": [
+          "tests/Controller/AdminGuildApplicationDecisionSecurityTest.php"
+        ]
+      },
+      "published_at": "2026-09-27T05:45:10.621Z",
+      "claimed_on": "2026-09-27T05:45:10.621Z",
+      "claim_state": "active",
+      "active_base_branch": "feature/wcp-347-guild-application-note-boundary-g1",
+      "active_base_sha": "b7fcd30d4275a6de6398523593e3f48c0addab3b",
+      "active_head": "b7fcd30d4275a6de6398523593e3f48c0addab3b",
+      "resume_branch": "feature/wcp-473-guild-application-decision-security-g1",
+      "last_checkpoint_at": "2026-09-27T05:45:10.621Z",
+      "checkpoint_paths": [],
+      "branch_heads": {
+        "claim_branch": "b7fcd30d4275a6de6398523593e3f48c0addab3b",
+        "feature_branch": "b7fcd30d4275a6de6398523593e3f48c0addab3b"
+      },
+      "next_action": "Implement the focused authorization and per-application CSRF functional test in the sole allowed file, checkpoint it, then open a draft Worker PR for exact-head CI."
     }
   ],
   "recovery_queue": [],
