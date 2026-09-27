@@ -27,6 +27,9 @@ final class SearchPaginationTest extends WebTestCase
         try {
             for ($index = 1; $index <= 23; ++$index) {
                 $title = sprintf('WCP559 public %s %02d', $token, $index);
+                if ($index === 1) {
+                    $title .= ' & <script>alert("rss")</script>';
+                }
                 $titles[] = $title;
                 $entityManager->persist(new SearchDocument($this->record(
                     $sourceType,
@@ -113,8 +116,18 @@ final class SearchPaginationTest extends WebTestCase
             $client->request('GET', '/feeds/discovery.xml?q=shared&module=content&type=news&page=2');
             self::assertResponseIsSuccessful();
             self::assertSame('application/rss+xml; charset=UTF-8', $client->getResponse()->headers->get('Content-Type'));
-            self::assertSame(23, substr_count((string) $client->getResponse()->getContent(), '<item>'));
-            self::assertStringNotContainsString('WCP559 hidden '.$token, (string) $client->getResponse()->getContent());
+            $xmlBody = (string) $client->getResponse()->getContent();
+            self::assertSame(23, substr_count($xmlBody, '<item>'));
+            self::assertStringNotContainsString('WCP559 hidden '.$token, $xmlBody);
+            self::assertStringContainsString('&lt;script&gt;alert(&quot;rss&quot;)&lt;/script&gt;', $xmlBody);
+            self::assertStringNotContainsString('<script>', $xmlBody);
+
+            $xml = new \\DOMDocument();
+            self::assertTrue($xml->loadXML($xmlBody, LIBXML_NONET));
+            $xpath = new \\DOMXPath($xml);
+            $escapedTitle = $xpath->query('/rss/channel/item[guid="'.$sourceType.':1"]/title')?->item(0);
+            self::assertInstanceOf(\\DOMElement::class, $escapedTitle);
+            self::assertSame($titles[0], $escapedTitle->textContent);
         } finally {
             $connection->executeStatement('DELETE FROM search_document WHERE source_type = :source', ['source' => $sourceType]);
         }
