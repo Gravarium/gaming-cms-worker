@@ -17,7 +17,7 @@
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-576 is claimed on main@7b2ca79405fc12d34bce1386157e929e4668f31a; add a test-only public content-detail HTML/JSON-LD escaping regression, then run exact-head CI.",
+    "next_required_action": "WCP-576 test source is on 1dcda14dca17a877db6b185cbc55a13359d8c507; run targeted regression and exact-head Worker CI.",
     "composition_preparable": 0,
     "immediately_actionable": 29,
     "must_continue": true
@@ -46680,16 +46680,18 @@
       "claim_state": "active",
       "active_base_branch": "main",
       "active_base_sha": "7b2ca79405fc12d34bce1386157e929e4668f31a",
-      "active_head": "7b2ca79405fc12d34bce1386157e929e4668f31a",
+      "active_head": "1dcda14dca17a877db6b185cbc55a13359d8c507",
       "resume_branch": "feature/wcp-576-public-content-html-safety-g1",
       "branch_heads": {
         "claim_branch": "7b2ca79405fc12d34bce1386157e929e4668f31a",
-        "feature_branch": "7b2ca79405fc12d34bce1386157e929e4668f31a"
+        "feature_branch": "1dcda14dca17a877db6b185cbc55a13359d8c507"
       },
-      "last_observed_head": "7b2ca79405fc12d34bce1386157e929e4668f31a",
-      "last_checkpoint_at": "2026-09-27T19:39:07.587Z",
-      "checkpoint_paths": [],
-      "next_action": "Create exact claim and feature branches from main@7b2ca79405fc12d34bce1386157e929e4668f31a; add the isolated functional escaping regression, then run exact-head CI."
+      "last_observed_head": "1dcda14dca17a877db6b185cbc55a13359d8c507",
+      "last_checkpoint_at": "2026-09-27T19:41:53.370Z",
+      "checkpoint_paths": [
+        "tests/Controller/PublicContentRenderingTest.php"
+      ],
+      "next_action": "Run targeted PublicContentRenderingTest and complete exact-head Worker CI on 1dcda14dca17a877db6b185cbc55a13359d8c507; then open PR, finalize CI evidence, and continue."
     }
   ],
   "recovery_queue": [],
