@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Entity\Guild;
-use App\Entity\GuildRoleNeed;
+use App\Entity\Guild\GuildRoleNeed;
 use App\Form\GuildRoleNeedInput;
 use App\Form\GuildRoleNeedType;
 use App\Module\CmsModuleManager;
@@ -157,6 +157,7 @@ final class AdminGuildRoleNeedController extends AbstractController
         return $this->redirectToRoute('app_admin_guild_role_need_index', ['guild' => $guild->getId()]);
     }
 
+    /** @param array{id:int, roleKey:string, classKey:string, desiredCount:int, active:bool}|null $editNeed */
     private function manager(
         Guild $guild,
         ?FormView $createForm = null,

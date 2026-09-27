@@ -7,7 +7,7 @@ namespace App\Tests\Controller;
 use App\Entity\CmsModuleState;
 use App\Entity\Game;
 use App\Entity\Guild;
-use App\Entity\GuildRoleNeed;
+use App\Entity\Guild\GuildRoleNeed;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;

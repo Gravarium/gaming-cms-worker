@@ -6,7 +6,7 @@ namespace App\Repository;
 
 use App\Entity\Game;
 use App\Entity\Guild;
-use App\Entity\GuildRoleNeed;
+use App\Entity\Guild\GuildRoleNeed;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -21,7 +21,7 @@ final class GuildRoleNeedRepository extends ServiceEntityRepository
     /** @return list<array{id:int, roleKey:string, classKey:string, desiredCount:int, active:bool}> */
     public function findAdminRows(Guild $guild): array
     {
-        return $this->createQueryBuilder('need')
+        $rows = $this->createQueryBuilder('need')
             ->select('need.id AS id', 'need.roleKey AS roleKey', 'need.classKey AS classKey', 'need.desiredCount AS desiredCount', 'need.active AS active')
             ->andWhere('need.guild = :guild')
             ->setParameter('guild', $guild)
@@ -29,6 +29,15 @@ final class GuildRoleNeedRepository extends ServiceEntityRepository
             ->addOrderBy('need.classKey', 'ASC')
             ->getQuery()
             ->getArrayResult();
+        /** @var list<array{id:mixed, roleKey:mixed, classKey:mixed, desiredCount:mixed, active:mixed}> $rows */
+
+        return array_map(static fn (array $row): array => [
+            'id' => (int) $row['id'],
+            'roleKey' => (string) $row['roleKey'],
+            'classKey' => (string) $row['classKey'],
+            'desiredCount' => (int) $row['desiredCount'],
+            'active' => (bool) $row['active'],
+        ], $rows);
     }
 
     /** @return array{id:int, roleKey:string, classKey:string, desiredCount:int, active:bool}|null */
@@ -40,8 +49,19 @@ final class GuildRoleNeedRepository extends ServiceEntityRepository
             ->setParameter('id', $id)
             ->getQuery()
             ->getOneOrNullResult();
+        /** @var array{id:mixed, roleKey:mixed, classKey:mixed, desiredCount:mixed, active:mixed}|null $row */
 
-        return is_array($row) ? $row : null;
+        if ($row === null) {
+            return null;
+        }
+
+        return [
+            'id' => (int) $row['id'],
+            'roleKey' => (string) $row['roleKey'],
+            'classKey' => (string) $row['classKey'],
+            'desiredCount' => (int) $row['desiredCount'],
+            'active' => (bool) $row['active'],
+        ];
     }
 
     public function identityExists(Guild $guild, Game $game, string $roleKey, string $classKey): bool

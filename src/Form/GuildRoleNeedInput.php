@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Form;
 
-use App\Entity\GuildRoleNeed;
+use App\Entity\Guild\GuildRoleNeed;
 
 final class GuildRoleNeedInput
 {

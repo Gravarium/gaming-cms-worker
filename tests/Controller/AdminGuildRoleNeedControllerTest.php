@@ -9,7 +9,7 @@ use App\Entity\CmsModuleState;
 use App\Entity\Game;
 use App\Entity\Guild;
 use App\Entity\GuildApplication;
-use App\Entity\GuildRoleNeed;
+use App\Entity\Guild\GuildRoleNeed;
 use App\Entity\User;
 use App\Security\CmsPermission;
 use Doctrine\ORM\EntityManagerInterface;

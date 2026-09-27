@@ -19,7 +19,7 @@ final readonly class PublicGuildRoleNeedQuery
     ) {
     }
 
-    /** @return list<\App\Entity\GuildRoleNeed> */
+    /** @return list<\App\Entity\Guild\GuildRoleNeed> */
     public function forGuild(Guild $guild): array
     {
         if (
