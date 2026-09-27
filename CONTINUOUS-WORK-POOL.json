@@ -42719,7 +42719,7 @@
       "package_id": "WCP-554",
       "title": "Browse public member profiles by visibility",
       "risk": "medium",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [
         "FCP-071"
       ],
@@ -42835,7 +42835,7 @@
       },
       "published_at": "2026-09-27T16:01:51.086Z",
       "claimed_on": "2026-09-27T16:01:51.086Z",
-      "claim_state": "active",
+      "claim_state": "locked_until_trusted_resolution",
       "active_base_branch": "main",
       "active_base_sha": "540b4c64aeb2edc35067eb15eb75fe371aaa29bc",
       "active_head": "beb90728dc932f58329c97bb37f3cf7a7591a92d",
@@ -42845,7 +42845,7 @@
         "feature_branch": "beb90728dc932f58329c97bb37f3cf7a7591a92d"
       },
       "last_observed_head": "beb90728dc932f58329c97bb37f3cf7a7591a92d",
-      "last_checkpoint_at": "2026-09-27T16:20:58.194Z",
+      "last_checkpoint_at": "2026-09-27T16:27:13.559Z",
       "checkpoint_paths": [
         "src/Controller/PublicMemberDirectoryController.php",
         "src/ProfileDirectory/PublicMemberDirectoryQuery.php",
@@ -42856,8 +42856,8 @@
         "tests/Controller/PublicMemberDirectoryControllerTest.php",
         "tests/Widget/PublicMemberDirectoryWidgetProviderTest.php"
       ],
-      "next_action": "Monitor Worker CI run #870 / 36332909153 on exact repair HEAD beb90728dc932f58329c97bb37f3cf7a7591a92d; repair any failures on the same feature branch.",
-      "worker_pr_state": "draft",
+      "next_action": "WCP-554 is complete; keep its claim locked until Trusted resolution and immediately select/claim the next free dependency-safe functional package.",
+      "worker_pr_state": "ready_for_review",
       "worker_pr_changed_paths": [
         "src/Controller/PublicMemberDirectoryController.php",
         "src/ProfileDirectory/PublicMemberDirectoryQuery.php",
@@ -42869,10 +42869,10 @@
         "tests/Widget/PublicMemberDirectoryWidgetProviderTest.php"
       ],
       "worker_pr_base_branch": "main",
-      "draft_pr": true,
+      "draft_pr": false,
       "pr_state": "open",
-      "ci_result": "queued",
-      "last_ci_result": "queued",
+      "ci_result": "success",
+      "last_ci_result": "success",
       "ci_attempts": [
         {
           "run_id": 36332484371,
@@ -42896,8 +42896,9 @@
           "run_number": 870,
           "head": "beb90728dc932f58329c97bb37f3cf7a7591a92d",
           "base": "540b4c64aeb2edc35067eb15eb75fe371aaa29bc",
-          "result": "queued",
-          "conclusion": null
+          "result": "success",
+          "conclusion": "success",
+          "phpunit": "634 tests, 3,051 assertions; 1 deprecation, 3 notices."
         }
       ],
       "last_verified_push_at": "2026-09-27T16:20:58.194Z",
@@ -42905,7 +42906,18 @@
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/346",
       "worker_pr_base_sha": "540b4c64aeb2edc35067eb15eb75fe371aaa29bc",
       "ci_run_id": 36332909153,
-      "last_ci_run_id": 36332909153
+      "last_ci_run_id": 36332909153,
+      "final_head": "beb90728dc932f58329c97bb37f3cf7a7591a92d",
+      "completion_head": "beb90728dc932f58329c97bb37f3cf7a7591a92d",
+      "completed_at": "2026-09-27T16:27:13.559Z",
+      "completion_evidence": [
+        "Worker PR #346 is ready for review and remains open/unmerged: https://github.com/Gravarium/gaming-cms-worker/pull/346",
+        "Exact final HEAD beb90728dc932f58329c97bb37f3cf7a7591a92d includes current Worker main 540b4c64aeb2edc35067eb15eb75fe371aaa29bc; exactly 8 allowed paths changed.",
+        "Exact-head Worker CI #870 / run 36332909153 completed successfully on that HEAD and base; PHPStan, PHPUnit, Twig/config/container/Doctrine checks and PostgreSQL 18 migration-chain validation passed.",
+        "PHPUnit: 634 tests, 3,051 assertions; 1 deprecation and 3 notices.",
+        "Public /members directory and users.public-members widget list only active accounts with an existing profile and explicitly public display-name visibility; only display name and profile link are exposed. Users module gate, pagination, empty/error states and widget cap of 12 are covered.",
+        "FCP-071 is untrusted proposal basis only: Worker PR #19 closed unmerged; Trusted integration is not asserted."
+      ]
     },
     {
       "priority": 555,
