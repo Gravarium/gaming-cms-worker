@@ -36852,7 +36852,7 @@
       "package_id": "WCP-524",
       "title": "Promote public Game Catalogue entries through the page builder",
       "risk": "low",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -36950,7 +36950,7 @@
       },
       "published_at": "2026-09-27T11:41:27.807Z",
       "claimed_on": "2026-09-27T11:41:27.807Z",
-      "claim_state": "active",
+      "claim_state": "locked_until_trusted_resolution",
       "active_base_branch": "main",
       "active_base_sha": "b510875e7b0741b9b19f09429d2204a95df51198",
       "active_head": "81ac6da1789753cc70c8c81999a39fb51ce45fc8",
@@ -36960,15 +36960,70 @@
         "feature_branch": "81ac6da1789753cc70c8c81999a39fb51ce45fc8"
       },
       "last_observed_head": "81ac6da1789753cc70c8c81999a39fb51ce45fc8",
-      "last_checkpoint_at": "2026-09-27T11:52:15.827Z",
+      "last_checkpoint_at": "2026-09-27T11:58:47.388Z",
       "checkpoint_paths": [
         "src/Widget/GameCatalogue/PublicGameCatalogueQuery.php",
         "src/Widget/PublicGameCatalogueWidgetProvider.php",
         "templates/widget/public_game_catalogue.html.twig",
         "tests/Widget/PublicGameCatalogueWidgetProviderTest.php"
       ],
-      "next_action": "Run the focused Game Catalogue widget test and full exact-head Worker CI; fix only concrete failures in the four allowed paths.",
-      "last_verified_push_at": "2026-09-27T11:52:15.827Z"
+      "next_action": "Worker PR #318 is complete on exact green HEAD 81ac6da1789753cc70c8c81999a39fb51ce45fc8; claim remains locked until Trusted explicitly integrates, cancels or transfers it. Do not merge or deploy.",
+      "last_verified_push_at": "2026-09-27T11:52:15.827Z",
+      "worker_pr": 318,
+      "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/318",
+      "worker_pr_state": "open",
+      "pr_state": "open",
+      "draft_pr": false,
+      "worker_pr_changed_paths": [
+        "src/Widget/GameCatalogue/PublicGameCatalogueQuery.php",
+        "src/Widget/PublicGameCatalogueWidgetProvider.php",
+        "templates/widget/public_game_catalogue.html.twig",
+        "tests/Widget/PublicGameCatalogueWidgetProviderTest.php"
+      ],
+      "final_head": "81ac6da1789753cc70c8c81999a39fb51ce45fc8",
+      "ci_run_id": 36317149573,
+      "last_ci_run_id": 36317149573,
+      "ci_result": "success",
+      "last_ci_result": "success",
+      "ci_attempts": [
+        {
+          "run_id": 36317149573,
+          "run_number": 785,
+          "head": "81ac6da1789753cc70c8c81999a39fb51ce45fc8",
+          "result": "success",
+          "base": "b510875e7b0741b9b19f09429d2204a95df51198"
+        }
+      ],
+      "final_ci_base_sha": "b510875e7b0741b9b19f09429d2204a95df51198",
+      "latest_main_sha": "b510875e7b0741b9b19f09429d2204a95df51198",
+      "completed_at": "2026-09-27T11:58:47.388Z",
+      "completion_evidence": {
+        "exact_head": "81ac6da1789753cc70c8c81999a39fb51ce45fc8",
+        "pull_request": "#318 ready for Trusted review",
+        "worker_ci_run": 36317149573,
+        "worker_ci_run_number": 785,
+        "worker_ci_result": "success",
+        "current_pr_base": "b510875e7b0741b9b19f09429d2204a95df51198",
+        "latest_worker_main": "b510875e7b0741b9b19f09429d2204a95df51198",
+        "phpstan": "Level 8 passed with no errors",
+        "phpunit": {
+          "tests": 539,
+          "assertions": 2252,
+          "failures": 0,
+          "phpunit_deprecations": 1,
+          "phpunit_notices": 1,
+          "scope": "Complete configured PHPUnit suite, including PublicGameCatalogueWidgetProviderTest"
+        },
+        "postgres18_migration_chain": "passed; 54 migrations executed",
+        "changed_paths": [
+          "src/Widget/GameCatalogue/PublicGameCatalogueQuery.php",
+          "src/Widget/PublicGameCatalogueWidgetProvider.php",
+          "templates/widget/public_game_catalogue.html.twig",
+          "tests/Widget/PublicGameCatalogueWidgetProviderTest.php"
+        ],
+        "limitations": [],
+        "trusted_follow_up": "Review and port the four widget/query/test paths into Gravarium/gaming-cms, then verify Page Builder placement and rendering against current Trusted integration state. No Worker merge or deployment."
+      }
     },
     {
       "priority": 525,
