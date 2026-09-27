@@ -17,7 +17,7 @@
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-577 is complete on exact-head CI; inspect current pool and worker-visible CMS for the next independent safe proposal, reserve one path-disjoint WCP, and continue.",
+    "next_required_action": "WCP-578 is claimed on main@7b2ca79405fc12d34bce1386157e929e4668f31a; add a test-only RSS/XML and JSON news feed safety regression and run exact-head CI.",
     "composition_preparable": 0,
     "immediately_actionable": 29,
     "must_continue": true
@@ -46848,6 +46848,96 @@
       "last_ci_result": "success",
       "completed_at": "2026-09-27T19:55:54.120Z",
       "worker_completion_summary": "Exact-head Worker CI #923 / 36345970930 passed on dca170c8be06935a5e8b8ef22622adf9d3958e62: 737 tests, 4,642 assertions, 0 failures/errors (1 PHPUnit deprecation, 3 notices); PHPStan reported no errors; PostgreSQL 18 applied 57 migrations with 878 SQL queries. PR #371 is open and ready for Trusted review from main@7b2ca79405fc12d34bce1386157e929e4668f31a; exactly one allowlisted test path changed, with no source or template changes."
+    },
+    {
+      "priority": 578,
+      "package_id": "WCP-578",
+      "title": "Test XML and JSON safety of public news feeds",
+      "risk": "low",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-578-public-content-feed-safety-g1",
+      "suggested_branch": "feature/wcp-578-public-content-feed-safety-g1",
+      "base_branch": "main",
+      "base_sha": "7b2ca79405fc12d34bce1386157e929e4668f31a",
+      "objective": "Add a test-only functional regression proving stored news title, excerpt and tag name values remain data in the public RSS XML and JSON feeds. Parse RSS as XML to verify hostile script/event-handler payloads do not create child elements, and decode JSON to verify the original text values round-trip. Do not change source, templates, or runtime code.",
+      "allowed_paths": [
+        "tests/Controller/PublicContentFeedSafetyTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "CONTINUOUS-WORKER.md",
+        "CONTINUOUS-WORK-POOL.json",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/",
+        "src/",
+        "templates/"
+      ],
+      "deliverables": [
+        "Functional test persists a published news entry and tag with script-like title and event-handler excerpt/tag-name payloads.",
+        "RSS assertions parse a well-formed XML document and confirm title, description and category payloads round-trip as text without attacker-created elements.",
+        "JSON feed assertions decode the response and confirm title, summary and tag values remain exact data.",
+        "Test-only change; no production source, template, schema or migration modification."
+      ],
+      "tests": [
+        "Targeted PublicContentFeedSafetyTest.",
+        "Complete exact-head Worker CI including PHPStan, full PHPUnit, template/config checks, and PostgreSQL 18 migration chain."
+      ],
+      "completion_report": [
+        "Exact sanitized base and final HEAD; changed path and Worker PR state.",
+        "RSS XML parse and JSON feed round-trip evidence for the stored payloads.",
+        "Targeted regression and exact-head full Worker CI results.",
+        "Test-only package; no runtime changes."
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-Trusted-review-and-exact-head-CI",
+        "preserve-all-security-permissions-CSRF-validation-recovery-rollback-and-upload-controls",
+        "no-private-runtime-or-sensitive-data",
+        "no-source-or-template-changes",
+        "no-edit-to-active-or-claim-locked-paths",
+        "no-direct-Trusted-integration-or-deployment"
+      ],
+      "proposal_kind": "worker_only",
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "7b2ca79405fc12d34bce1386157e929e4668f31a",
+      "proposal_dependency_evidence": [],
+      "collision_check": {
+        "compared_against": "Fresh continuous/work-pool-v4 blob @ 13d8cbcb3fc5e79a100dfbe882a6a1dd54093c15; latest sanitized main @ 7b2ca79405fc12d34bce1386157e929e4668f31a; every unclaimed, active, and claim-locked task.",
+        "result": "No overlap with any active or claim-locked allowed path. The dedicated PublicContentFeedSafetyTest.php path is absent from the tree and current pool. The completed video RSS safety package WCP-572 uses a separate feed and test path; this proposal changes only the new news-feed test.",
+        "paths": [
+          "tests/Controller/PublicContentFeedSafetyTest.php"
+        ],
+        "observed_nonblocking_path_hits": []
+      },
+      "published_at": "2026-09-27T19:58:12.137Z",
+      "claimed_on": "2026-09-27T19:58:12.137Z",
+      "claim_state": "active",
+      "active_base_branch": "main",
+      "active_base_sha": "7b2ca79405fc12d34bce1386157e929e4668f31a",
+      "active_head": "7b2ca79405fc12d34bce1386157e929e4668f31a",
+      "resume_branch": "feature/wcp-578-public-content-feed-safety-g1",
+      "branch_heads": {
+        "claim_branch": "7b2ca79405fc12d34bce1386157e929e4668f31a",
+        "feature_branch": "7b2ca79405fc12d34bce1386157e929e4668f31a"
+      },
+      "last_observed_head": "7b2ca79405fc12d34bce1386157e929e4668f31a",
+      "last_checkpoint_at": "2026-09-27T19:58:12.137Z",
+      "checkpoint_paths": [],
+      "next_action": "Create the exact claim and feature branches from main@7b2ca79405fc12d34bce1386157e929e4668f31a; implement the isolated RSS/XML and JSON feed regression, then run exact-head CI."
     }
   ],
   "recovery_queue": [],
