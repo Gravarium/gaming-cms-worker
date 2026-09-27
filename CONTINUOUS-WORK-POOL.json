@@ -17,7 +17,7 @@
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "Monitor WCP-559 draft PR #354 exact-head CI #898 / 36336914454 on HEAD 5b107288b846a88e6be8d7a808f38aeea33ef55f; diagnose any failures and rerun the complete workflow on the repaired exact HEAD.",
+    "next_required_action": "Poll WCP-559 draft PR #354 full exact-head CI #900 / 36337212357 on HEAD e385dcfe94210d547343cf2eb7c8152bfd290129; repair any failures on the same branch and rerun the complete workflow on each repaired exact HEAD.",
     "composition_preparable": 0,
     "immediately_actionable": 29,
     "must_continue": true
@@ -44312,15 +44312,15 @@
       "claim_state": "active",
       "active_base_branch": "main",
       "active_base_sha": "7b2ca79405fc12d34bce1386157e929e4668f31a",
-      "active_head": "5b107288b846a88e6be8d7a808f38aeea33ef55f",
+      "active_head": "e385dcfe94210d547343cf2eb7c8152bfd290129",
       "resume_branch": "feature/wcp-559-global-search-pagination-g1",
       "branch_heads": {
         "claim_branch": "7b2ca79405fc12d34bce1386157e929e4668f31a",
-        "feature_branch": "5b107288b846a88e6be8d7a808f38aeea33ef55f"
+        "feature_branch": "e385dcfe94210d547343cf2eb7c8152bfd290129"
       },
-      "last_observed_head": "5b107288b846a88e6be8d7a808f38aeea33ef55f",
-      "last_checkpoint_at": "2026-09-27T17:26:32.057Z",
-      "last_verified_push_at": "2026-09-27T17:26:32.057Z",
+      "last_observed_head": "e385dcfe94210d547343cf2eb7c8152bfd290129",
+      "last_checkpoint_at": "2026-09-27T17:33:20.294Z",
+      "last_verified_push_at": "2026-09-27T17:33:20.294Z",
       "checkpoint_paths": [
         "src/Controller/Search/SearchController.php",
         "src/Search/SearchService.php",
@@ -44330,7 +44330,7 @@
         "tests/Controller/SearchPaginationTest.php",
         "tests/Search/SearchResultsPageTest.php"
       ],
-      "next_action": "Monitor Worker CI #898 / run 36336914454 on exact HEAD 5b107288b846a88e6be8d7a808f38aeea33ef55f in draft PR #354; diagnose any red checks and repair on this same feature branch.",
+      "next_action": "Full exact-head Worker CI #900 / run 36337212357 is running on HEAD e385dcfe94210d547343cf2eb7c8152bfd290129 in draft PR #354. Run #898 failed one PHPUnit assertion because Symfony adds max-age=0 and must-revalidate around the existing private/no-store feed directives; the test now checks private and no-store without weakening behavior. Poll #900, fix any failure on this branch, and rerun full CI on each repaired exact HEAD.",
       "worker_pr": 354,
       "worker_pr_state": "draft",
       "worker_pr_changed_paths": [
@@ -44359,6 +44359,16 @@
           "run_number": 898,
           "head": "5b107288b846a88e6be8d7a808f38aeea33ef55f",
           "base": "7b2ca79405fc12d34bce1386157e929e4668f31a",
+          "result": "failure",
+          "validation_pr": 354,
+          "conclusion": "failure",
+          "diagnosis": "PHPStan passed. PHPUnit had one failure in SearchPaginationTest: it expected the literal Cache-Control value 'private, no-store', while Symfony returned 'max-age=0, must-revalidate, no-store, private'. Updated only the assertion to verify both private and no-store directives, preserving the existing cache protections."
+        },
+        {
+          "run_id": 36337212357,
+          "run_number": 900,
+          "head": "e385dcfe94210d547343cf2eb7c8152bfd290129",
+          "base": "7b2ca79405fc12d34bce1386157e929e4668f31a",
           "result": "in_progress",
           "validation_pr": 354
         }
@@ -44367,9 +44377,10 @@
       "pr_state": "open",
       "draft_pr": true,
       "worker_pr_base_sha": "7b2ca79405fc12d34bce1386157e929e4668f31a",
-      "ci_run_id": 36336914454,
-      "last_ci_run_id": 36336914454,
-      "ci_validation_pr": 354
+      "ci_run_id": 36337212357,
+      "last_ci_run_id": 36337212357,
+      "ci_validation_pr": 354,
+      "last_ci_result": "in_progress"
     },
     {
       "priority": 560,
