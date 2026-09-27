@@ -43505,7 +43505,7 @@
       "package_id": "WCP-556",
       "title": "Make Forum rooms, Q&A threads, and moderation usable",
       "risk": "high",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -43609,7 +43609,7 @@
       },
       "published_at": "2026-09-27T16:24:47.564Z",
       "claimed_on": "2026-09-27T16:24:47.564Z",
-      "claim_state": "active",
+      "claim_state": "locked_until_trusted_resolution",
       "active_base_branch": "main",
       "active_base_sha": "540b4c64aeb2edc35067eb15eb75fe371aaa29bc",
       "active_head": "dc0a5661bade33c0e63532fbef645d134469c9c1",
@@ -43618,8 +43618,8 @@
         "claim_branch": "540b4c64aeb2edc35067eb15eb75fe371aaa29bc",
         "feature_branch": "dc0a5661bade33c0e63532fbef645d134469c9c1"
       },
-      "last_checkpoint_at": "2026-09-27T17:02:41.171Z",
-      "last_verified_push_at": "2026-09-27T17:02:41.171Z",
+      "last_checkpoint_at": "2026-09-27T17:06:46.705Z",
+      "last_verified_push_at": "2026-09-27T17:06:46.705Z",
       "checkpoint_paths": [
         "src/ForumWorkflow/ForumWorkflowGateway.php",
         "src/Controller/PublicForumWorkflowController.php",
@@ -43637,26 +43637,44 @@
         {
           "run_id": 36334239694,
           "head": "be4eeaf0bbf945e18dc6e51a29555cde5409f000",
-          "result": "failure"
+          "result": "failure",
+          "reason": "PHP/Symfony checks and PostgreSQL migrations passed; two Forum DBAL tests failed because the SQLite test schema is generated from ORM mappings and omits the migration-only Forum tables. Added platform-aware Forum table fixtures inside the two allowed test files."
         },
         {
           "run_id": 36334898417,
           "head": "b1bb3bb1675ee17055302779ab1b2bea1e365070",
-          "result": "failure"
+          "result": "failure",
+          "reason": "All checks passed except one Forum controller test; direct CSRF token-manager access had no session outside request handling. The test now obtains the CSRF value from its rendered form."
         },
         {
           "run_id": 36335134153,
           "head": "e928803a620f9a9fded1e6e71eb15e81a169e691",
-          "result": "failure"
+          "result": "failure",
+          "reason": "All checks passed except admin access after switching from poster to administrator in one BrowserKit session redirected to login. Split room administration into a separate test/browser session."
         },
         {
           "run_id": 36335414765,
           "head": "dc0a5661bade33c0e63532fbef645d134469c9c1",
-          "result": "in_progress"
+          "result": "success",
+          "run_number": 890,
+          "conclusion": "success",
+          "pr": 350,
+          "jobs": [
+            {
+              "name": "Validate worker-visible PHP and Symfony",
+              "conclusion": "success"
+            },
+            {
+              "name": "Validate worker-visible PostgreSQL 18 migration chain",
+              "conclusion": "success"
+            }
+          ],
+          "summary": "PHPUnit 632 tests, 3062 assertions; both exact-head CI jobs succeeded.",
+          "reason": "Exact final HEAD passed PHP/Symfony validation (632 tests, 3,062 assertions) and PostgreSQL 18 migration-chain validation."
         }
       ],
-      "next_action": "Wait for exact-head Worker CI run 36335414765; diagnose any failing job without weakening protections and rerun the full workflow on the repaired head.",
-      "worker_pr_state": "draft",
+      "next_action": "Keep PR #350 and this claim locked through Trusted resolution; do not merge or deploy.",
+      "worker_pr_state": "ready_for_review",
       "worker_pr_changed_paths": [
         "src/Controller/PublicForumWorkflowController.php",
         "src/Controller/AdminForumWorkflowController.php",
@@ -43671,10 +43689,10 @@
         "tests/ForumWorkflow/ForumWorkflowGatewayTest.php"
       ],
       "worker_pr_base_branch": "worker/account-wcp-556-validation",
-      "draft_pr": true,
-      "pr_state": "open_draft",
-      "ci_result": "in_progress",
-      "last_ci_result": "in_progress",
+      "draft_pr": false,
+      "pr_state": "open",
+      "ci_result": "success",
+      "last_ci_result": "success",
       "worker_pr": 350,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/350",
       "worker_pr_base_sha": "540b4c64aeb2edc35067eb15eb75fe371aaa29bc",
