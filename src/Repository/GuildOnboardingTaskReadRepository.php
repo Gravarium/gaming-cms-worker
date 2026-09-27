@@ -21,13 +21,13 @@ final readonly class GuildOnboardingTaskReadRepository
             ->select(
                 'task.id AS id',
                 'task.label AS label',
-                'member.characterName AS characterName',
+                'guildMember.characterName AS characterName',
                 'task.completed AS completed',
                 'actor.displayName AS completedBy',
                 'task.completedAt AS completedAt',
             )
             ->from(GuildOnboardingTask::class, 'task')
-            ->innerJoin('task.member', 'member')
+            ->innerJoin('task.member', 'guildMember')
             ->leftJoin('task.completedBy', 'actor')
             ->andWhere('task.guild = :guild')
             ->setParameter('guild', $guild)
