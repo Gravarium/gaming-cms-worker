@@ -17,7 +17,7 @@
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-576 PR #370 is open on 79b7be45d8381857d6b6704c6bd5515d21278033; exact-head Worker CI #921 is queued.",
+    "next_required_action": "WCP-576 exact-head CI #921 failed only because the test expected one total script tag; correct this test-only assertion and rerun.",
     "composition_preparable": 0,
     "immediately_actionable": 29,
     "must_continue": true
@@ -46687,11 +46687,11 @@
         "feature_branch": "79b7be45d8381857d6b6704c6bd5515d21278033"
       },
       "last_observed_head": "79b7be45d8381857d6b6704c6bd5515d21278033",
-      "last_checkpoint_at": "2026-09-27T19:42:52.505Z",
+      "last_checkpoint_at": "2026-09-27T19:45:25.187Z",
       "checkpoint_paths": [
         "tests/Controller/PublicContentRenderingTest.php"
       ],
-      "next_action": "Await exact-head Worker CI #921 / 36345340465 on 79b7be45d8381857d6b6704c6bd5515d21278033; then reconcile test results and continue.",
+      "next_action": "CI #921 found a brittle assertion expecting one total script tag; remove that assumption while retaining the JSON-LD and hostile-markup assertions, then rerun exact-head CI.",
       "worker_pr": 370,
       "worker_pr_state": "draft",
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/370",
@@ -46702,22 +46702,22 @@
       "draft_pr": true,
       "worker_pr_base_branch": "main",
       "worker_pr_base_sha": "7b2ca79405fc12d34bce1386157e929e4668f31a",
-      "ci_result": "queued",
+      "ci_result": "failure",
       "ci_attempts": [
         {
           "run_id": 36345340465,
           "run_number": 921,
           "head": "79b7be45d8381857d6b6704c6bd5515d21278033",
           "base": "7b2ca79405fc12d34bce1386157e929e4668f31a",
-          "result": "queued",
+          "result": "failure",
           "validation_pr": 370,
-          "conclusion": null
+          "conclusion": "failure"
         }
       ],
       "ci_run_id": 36345340465,
       "last_ci_run_id": 36345340465,
       "ci_validation_pr": 370,
-      "last_ci_result": "queued"
+      "last_ci_result": "failure"
     }
   ],
   "recovery_queue": [],
