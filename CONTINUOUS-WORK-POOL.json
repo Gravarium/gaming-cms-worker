@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T15:02:22.265Z",
+  "published_at": "2026-09-27T15:02:55.289Z",
   "summary": {
     "total_remaining_worker_tasks": 167,
     "completed_worker_prs_awaiting_trusted_review": 293,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "Inspect Worker CI run #846 / 36328033568 on exact HEAD 5adb410edf08220a9b8abbb000d2c3679a9725b4. Diagnose and repair any failure on this branch. After green, retarget draft PR #340 to exact predecessor WCP-541 head 991a1ec5ae42be72b3e36de12bb47bd3848683ca so its final diff contains only the five WCP-548 paths.",
+    "next_required_action": "Implement WCP-549 on feature/wcp-549-global-search-widget-g1 from exact green predecessor HEAD 0b243f72cd6813e76574840dcc9c542396ec270e, using only its four reserved paths.",
     "composition_preparable": 0,
     "immediately_actionable": 28,
     "must_continue": true
@@ -41148,6 +41148,135 @@
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/340",
       "ci_run_id": 36328033568,
       "last_ci_run_id": 36328033568
+    },
+    {
+      "priority": 549,
+      "package_id": "WCP-549",
+      "title": "Add a global search widget to the Page Builder",
+      "risk": "low",
+      "execution_state": "worker_in_progress",
+      "dependencies": [
+        "FCP-069"
+      ],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-549-global-search-widget-g1",
+      "suggested_branch": "feature/wcp-549-global-search-widget-g1",
+      "objective": "Expose the existing permission-aware global search as a single-use Page Builder widget. Render a clearly labeled GET form targeting app_search_global with the q parameter and a 2–100 character input limit matching the existing global-search page. Assign the widget to the always-available core module. Reuse FCP-069 search discovery and visibility behavior without changing its index, filters, viewer rules, route, results or feeds.",
+      "allowed_paths": [
+        "src/Widget/PublicGlobalSearchWidgetProvider.php",
+        "src/GlobalSearchWidget/Templates/widget/global_search.html.twig",
+        "config/packages/global_search_widget.yaml",
+        "tests/Widget/PublicGlobalSearchWidgetProviderTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "src/Search/",
+        "src/Controller/Search/",
+        "templates/search/",
+        "src/Widget/WidgetRegistry.php",
+        "src/Widget/BundledWidgetProvider.php",
+        "config/services.yaml",
+        "templates/base.html.twig",
+        "templates/layout/",
+        "src/Widget/PublicContentSearchWidgetProvider.php",
+        "templates/widget/content_search.html.twig",
+        "tests/Widget/PublicContentSearchWidgetTest.php"
+      ],
+      "deliverables": [
+        "Auto-discover a single-use search.global widget assigned to core.",
+        "Render an accessible GET form to the existing app_search_global route using q with minlength 2 and maxlength 100.",
+        "Keep the global search's viewer-aware results, module gates and discovery behavior unchanged; make no shared registry or DI edits."
+      ],
+      "tests": [
+        "Kernel test proves provider auto-discovery, core module assignment, single-use behavior, route action/method, accessible label, q input bounds and Page Builder availability.",
+        "Run complete exact-head Worker CI including PHPStan, PHPUnit and PostgreSQL 18 migration-chain validation."
+      ],
+      "completion_report": [
+        "Exact green FCP-069 proposal-base HEAD and final Worker HEAD.",
+        "Exact changed paths and Worker PR URL/base.",
+        "Widget discovery and rendered global-search form evidence.",
+        "Exact-head PHPStan, PHPUnit, PostgreSQL migration and full Worker CI results."
+      ],
+      "immutable_constraints": [
+        "search-widget-submits-only-to-the-existing-permission-aware-global-search-route",
+        "do-not-bypass-search-viewer-authorization-module-availability-or-result-visibility",
+        "q-input-limits-match-existing-global-search-form",
+        "do-not-change-FCP-069-indexing-filters-ranking-routes-results-or-feed-behavior",
+        "no-schema-or-migration-change",
+        "no-security-test-phpstan-CI-auth-CSRF-validation-recovery-rollback-or-upload-protection-weakening",
+        "worker-code-is-untrusted-no-direct-Trusted-integration-or-deployment",
+        "no-private-runtime-or-sensitive-data"
+      ],
+      "base_branch": "feature/fcp-069-pool-g1",
+      "base_sha": "0b243f72cd6813e76574840dcc9c542396ec270e",
+      "proposal_base_branch": "feature/fcp-069-pool-g1",
+      "proposal_base_sha": "0b243f72cd6813e76574840dcc9c542396ec270e",
+      "proposal_kind": "worker_only",
+      "proposal_dependency_evidence": [
+        {
+          "package_id": "FCP-069",
+          "feature_branch": "feature/fcp-069-pool-g1",
+          "worker_pr": 38,
+          "exact_head": "0b243f72cd6813e76574840dcc9c542396ec270e",
+          "ci_run_id": 36227368671,
+          "ci_result": "success",
+          "authority": "worker-proposal-only"
+        }
+      ],
+      "collision_check": {
+        "compared_against": "Latest continuous/work-pool-v4 blob 4131af9cbec33e1d6baf3f400780947ad63dd73c; sanitized Worker main HEAD e4be797b44948824e31843b88363d6ea1335c163; all active, claim-locked and unclaimed task path scopes; WCP-549 branch and PR searches immediately before CAS.",
+        "result": "No overlapping allowed paths. WCP-549 did not exist in the current pool and no WCP-549 branch or PR was found. WCP-548's public guild recruitment widget uses separate provider, feature-local template, configuration and test paths. FCP-069 is a completed exact-green Worker predecessor; this widget adds only a Page Builder entry point and leaves all search authorization and result logic untouched.",
+        "paths": [
+          "src/Widget/PublicGlobalSearchWidgetProvider.php",
+          "src/GlobalSearchWidget/Templates/widget/global_search.html.twig",
+          "config/packages/global_search_widget.yaml",
+          "tests/Widget/PublicGlobalSearchWidgetProviderTest.php"
+        ]
+      },
+      "published_at": "2026-09-27T15:02:55.289Z",
+      "claimed_on": "2026-09-27T15:02:55.289Z",
+      "claim_state": "active",
+      "active_base_branch": "feature/fcp-069-pool-g1",
+      "active_base_sha": "0b243f72cd6813e76574840dcc9c542396ec270e",
+      "active_head": "0b243f72cd6813e76574840dcc9c542396ec270e",
+      "branch_heads": {
+        "claim_branch": "0b243f72cd6813e76574840dcc9c542396ec270e",
+        "feature_branch": "0b243f72cd6813e76574840dcc9c542396ec270e"
+      },
+      "last_observed_head": "0b243f72cd6813e76574840dcc9c542396ec270e",
+      "last_checkpoint_at": "2026-09-27T15:02:55.289Z",
+      "checkpoint_paths": [],
+      "resume_branch": "feature/wcp-549-global-search-widget-g1",
+      "next_action": "Implement the accessible single-use global-search widget using only the four reserved paths, based on exact green FCP-069 HEAD 0b243f72cd6813e76574840dcc9c542396ec270e.",
+      "worker_pr_state": "not_created",
+      "last_verified_push_at": "2026-09-27T15:02:55.289Z",
+      "ci_result": "not_started",
+      "last_ci_result": "not_run",
+      "ci_attempts": [],
+      "worker_pr_changed_paths": [
+        "src/Widget/PublicGlobalSearchWidgetProvider.php",
+        "src/GlobalSearchWidget/Templates/widget/global_search.html.twig",
+        "config/packages/global_search_widget.yaml",
+        "tests/Widget/PublicGlobalSearchWidgetProviderTest.php"
+      ],
+      "worker_pr_base_branch": "feature/fcp-069-pool-g1",
+      "pr_state": "not_created",
+      "draft_pr": true,
+      "worker_pr": null,
+      "worker_pr_url": null
     }
   ],
   "recovery_queue": [],
