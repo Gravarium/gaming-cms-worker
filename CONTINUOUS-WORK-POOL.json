@@ -12,14 +12,14 @@
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
   "published_at": "2026-09-27T03:15:59.948Z",
   "summary": {
-    "total_remaining_worker_tasks": 138,
+    "total_remaining_worker_tasks": 139,
     "completed_worker_prs_awaiting_trusted_review": 228,
     "recovery_tasks": 0,
-    "unclaimed": 5,
-    "immediately_claimable": 0,
-    "next_required_action": "WCP-456 is complete on green exact-head Worker PR #253. Re-evaluate all unclaimed work; all five FCP assignments remain dependency-blocked, so continue with an independent existing-module WCP task or derive and claim one.",
+    "unclaimed": 6,
+    "immediately_claimable": 1,
+    "next_required_action": "WCP-460 is published and ready for its exclusive worker claim; preserve all existing active and Trusted-review locks.",
     "composition_preparable": 0,
-    "immediately_actionable": 2,
+    "immediately_actionable": 3,
     "must_continue": true
   },
   "rules": {
@@ -26879,6 +26879,98 @@
         "php_symfony_job": "success: 432 tests, 2125 assertions; PHPStan level 8 no errors",
         "postgresql_job": "success: 39 migrations",
         "disclosure_behavior": "wrong password and unknown email both redirect to /login and display the same generic message; account remains unauthenticated"
+      }
+    },
+    {
+      "priority": 460,
+      "package_id": "WCP-460",
+      "title": "Browse and inspect automatic content redirects",
+      "risk": "medium",
+      "execution_state": "unclaimed",
+      "claim_state": "unclaimed",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-460-content-redirect-browser-g1",
+      "suggested_branch": "feature/wcp-460-content-redirect-browser-g1",
+      "base_branch": "main",
+      "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "objective": "Complete the existing content slug-redirect workflow for editors. Slug changes already create historical ContentRedirect records and the public controller serves permanent redirects, but operators have no CMS page to find and inspect them. Add a permissioned, searchable, paginated redirect inventory and a dashboard entry point. Keep redirect creation and public resolution unchanged, make no schema changes, and perform no redirect mutations.",
+      "allowed_paths": [
+        "src/Controller/AdminContentRedirectController.php",
+        "src/Repository/ContentRedirectRepository.php",
+        "templates/admin/content_redirect/index.html.twig",
+        "templates/admin/dashboard.html.twig",
+        "tests/Controller/AdminContentRedirectBrowserTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/",
+        "src/Entity/ContentRedirect.php",
+        "src/Controller/AdminContentController.php",
+        "src/Controller/PublicContentController.php",
+        "templates/admin/content/index.html.twig",
+        "templates/base.html.twig",
+        "templates/admin/content_release/"
+      ],
+      "deliverables": [
+        "Add an /admin/content/redirects GET screen guarded by CMS_CONTENT_MANAGE and render a link on the admin dashboard only when that permission and the content module are enabled.",
+        "Show each historical source slug, content type, creation time, current target title and status. Link to a public target only when it is published; otherwise link to the existing admin edit route and clearly show that the public redirect is inactive.",
+        "Add bounded case-insensitive source-slug/target-title search, news/page type filtering and stable 25-row pagination ordered by createdAt DESC then id DESC. Show counts, an empty state and filter-preserving previous/next links; clamp valid pages beyond the last page.",
+        "Reject query arrays, malformed UTF-8/control bytes, overlong search, unknown type values and invalid or overflowing page values with HTTP 400. Keep administrative responses private/no-store and noindex.",
+        "Do not change the existing slug-change redirect writer, public 301 resolver, ContentRedirect entity, schema, content editor/list routes or redirect rows."
+      ],
+      "tests": [
+        "Functional test: anonymous users are redirected to login and authenticated users without CMS_CONTENT_MANAGE receive 403.",
+        "Create more than two pages of synthetic redirects and prove stable ordering, page boundaries without duplicates, title/source search, both content types, preserved filter navigation, empty results and out-of-range clamping.",
+        "Verify target links disclose only published public routes; unpublished targets link only to the authorized admin editor and are labeled inactive.",
+        "Reject malformed query arrays/scalars, invalid UTF-8, control bytes, overlong terms, unknown types, zero/negative/overflowing pages; assert 400 and no-store/noindex headers.",
+        "Verify the dashboard card appears only for an authorized content manager while the content module is enabled.",
+        "Run the targeted controller test, PHPStan level 8 and full Worker CI at the exact final HEAD, including PostgreSQL 18 migration-chain checks."
+      ],
+      "completion_report": [
+        "Exact sanitized main base SHA and final Worker HEAD SHA.",
+        "Worker PR and complete changed-file list.",
+        "Redirect inventory search/filter/pagination, target-visibility handling, dashboard entry, permission gate, validation and response headers.",
+        "Exact-head PHPUnit, PHPStan and full Worker CI results.",
+        "Remaining Trusted transfer/review work; confirm automatic redirect creation and public 301 resolution remain unchanged."
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "preserve-CMS_CONTENT_MANAGE-on-content-redirect-administration",
+        "redirect-inventory-is-read-only-and-does-not-change-content-or-redirect-records",
+        "unpublished-content-targets-are-never-linked-to-public-routes",
+        "no-schema-or-migration-change",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "proposal_kind": "worker_only",
+      "proposal_dependency_evidence": [],
+      "collision_check": {
+        "compared_against": "Fresh continuous/work-pool-v4 blob 5c6562e9e58c88e2473e7870714933130c4a758c, all 231 active/claim-locked allowlists, direct open PR files and exact sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d.",
+        "result": "No active or claim-locked task owns any proposed path. WCP-304 is limited to ContentRedirect entity boundary tests; WCP-300 to the existing content editor request envelope; WCP-428 to the content list browser; WCP-441 to the content media picker; WCP-456 to release screens. The dashboard template and redirect repository are unclaimed. Existing active PR file lists do not touch the proposed paths. All five currently unclaimed FCP packages have unresolved declared dependencies.",
+        "paths": [
+          "src/Controller/AdminContentRedirectController.php",
+          "src/Repository/ContentRedirectRepository.php",
+          "templates/admin/content_redirect/index.html.twig",
+          "templates/admin/dashboard.html.twig",
+          "tests/Controller/AdminContentRedirectBrowserTest.php"
+        ]
       }
     }
   ],
