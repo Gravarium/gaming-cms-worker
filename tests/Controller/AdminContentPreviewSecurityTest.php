@@ -70,7 +70,8 @@ final class AdminContentPreviewSecurityTest extends WebTestCase
             ->setType(ContentEntry::TYPE_PAGE)
             ->setTitle('Draft preview '.$suffix)
             ->setSlug($marker)
-            ->setBody($marker);
+            ->setBody($marker)
+            ->setSeoDescription('Private draft preview '.$suffix);
 
         $entityManager = $this->entityManager($client);
         $entityManager->persist($user);
