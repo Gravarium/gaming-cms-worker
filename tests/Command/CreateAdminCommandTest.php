@@ -97,7 +97,7 @@ final class CreateAdminCommandTest extends KernelTestCase
         self::assertInstanceOf(CreateAdminCommand::class, $command);
 
         $application = new Application();
-        $application->add($command);
+        $application->addCommand($command);
 
         return new CommandTester($application->find('app:user:create-admin'));
     }
