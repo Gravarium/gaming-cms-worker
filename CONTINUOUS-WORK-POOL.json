@@ -13,11 +13,11 @@
   "published_at": "2026-09-27T03:15:59.948Z",
   "summary": {
     "total_remaining_worker_tasks": 139,
-    "completed_worker_prs_awaiting_trusted_review": 229,
+    "completed_worker_prs_awaiting_trusted_review": 230,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-462 removed an unnecessary follow-redirect assertion after confirming deactivation safely redirects to /login; rerun complete CI on 5819a2caf18da71416161f379e7c0f2b5fde8380.",
+    "next_required_action": "WCP-462 is complete on green exact-head Worker PR #256; all five unclaimed FCP assignments remain dependency-blocked. Continue with the next independent Worker-only proposal while preserving every other claim.",
     "composition_preparable": 0,
     "immediately_actionable": 3,
     "must_continue": true
@@ -27210,7 +27210,7 @@
       "package_id": "WCP-462",
       "title": "Protect the admin dashboard from inactive and unprivileged accounts",
       "risk": "medium",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -27283,12 +27283,12 @@
       },
       "published_at": "2026-09-27T03:52:28.158Z",
       "claimed_on": "2026-09-27T03:52:28.158Z",
-      "claim_state": "active",
+      "claim_state": "locked_until_trusted_resolution",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
       "active_head": "5819a2caf18da71416161f379e7c0f2b5fde8380",
       "resume_branch": "feature/wcp-462-admin-dashboard-access-g1",
-      "last_checkpoint_at": "2026-09-27T04:00:52.330Z",
+      "last_checkpoint_at": "2026-09-27T04:02:45.391Z",
       "checkpoint_paths": [
         "tests/Controller/AdminDashboardAccessSecurityTest.php"
       ],
@@ -27296,16 +27296,16 @@
         "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
         "feature_branch": "5819a2caf18da71416161f379e7c0f2b5fde8380"
       },
-      "next_action": "Inspect exact-head Worker CI run 36293013565 and repair any concrete failure on this branch.",
+      "next_action": "Await Trusted review and integration validation; keep this claim locked until Trusted explicitly integrates, cancels or transfers it.",
       "last_observed_head": "5819a2caf18da71416161f379e7c0f2b5fde8380",
-      "last_verified_push_at": "2026-09-27T04:00:52.330Z",
+      "last_verified_push_at": "2026-09-27T04:02:45.391Z",
       "worker_pr": 256,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/256",
-      "draft_pr": true,
-      "pr_state": "open_draft_unmerged",
+      "draft_pr": false,
+      "pr_state": "open_ready_unmerged",
       "ci_run_id": 36293013565,
       "last_ci_run_id": 36293013565,
-      "ci_result": "in_progress",
+      "ci_result": "success",
       "ci_attempts": [
         {
           "run_id": 36292742675,
@@ -27322,9 +27322,49 @@
         {
           "run_id": 36293013565,
           "head": "5819a2caf18da71416161f379e7c0f2b5fde8380",
-          "result": "in_progress"
+          "result": "success"
         }
-      ]
+      ],
+      "final_head": "5819a2caf18da71416161f379e7c0f2b5fde8380",
+      "final_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "final_changed_paths": [
+        "tests/Controller/AdminDashboardAccessSecurityTest.php"
+      ],
+      "changed_paths": [
+        "tests/Controller/AdminDashboardAccessSecurityTest.php"
+      ],
+      "last_ci_result": "success",
+      "completed_at": "2026-09-27T04:02:45.391Z",
+      "test_results": {
+        "phpunit": "431 tests, 1859 assertions, 0 failures; one deprecation and one notice.",
+        "phpstan": "Level 8 passed with no errors.",
+        "php_symfony": "Worker PHP/Symfony validation job passed on exact final HEAD.",
+        "postgres18": "PostgreSQL 18 completed all 39 migrations; 0 unavailable.",
+        "exact_head_ci": {
+          "run_id": 36293013565,
+          "head": "5819a2caf18da71416161f379e7c0f2b5fde8380",
+          "result": "success"
+        }
+      },
+      "completion_evidence": {
+        "exact_base_branch": "main",
+        "exact_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+        "final_head_sha": "5819a2caf18da71416161f379e7c0f2b5fde8380",
+        "changed_paths": [
+          "tests/Controller/AdminDashboardAccessSecurityTest.php"
+        ],
+        "worker_pr": 256,
+        "ci_run_id": 36293013565,
+        "ci_result": "success",
+        "php_symfony_job": "success: 431 tests, 1,859 assertions; PHPStan level 8 no errors",
+        "postgresql_job": "success: 39 migrations, 0 unavailable",
+        "access_coverage": "An authenticated account with no CMS permissions receives 403; a previously authenticated administrator can access the dashboard while active and is redirected to /login after same-session deactivation; synthetic users are removed."
+      },
+      "completion_summary": "Test-only functional security coverage for the admin dashboard's CMS_ACCESS boundary: no-permission users are denied, and a previously authenticated administrator loses access after deactivation. One test file changed.",
+      "open_limitations": [
+        "Awaiting Trusted review and Trusted integration CI."
+      ],
+      "trusted_follow_up": "Preserve CMS_ACCESS and inactive-account checks when importing or changing dashboard authorization; run full Trusted CI."
     },
     {
       "priority": 463,
