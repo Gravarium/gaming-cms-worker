@@ -41,6 +41,7 @@ final class AdminContentReleaseBrowserTest extends WebTestCase
     {
         $client = static::createClient();
         $admin = $this->user($client, true);
+        $client->loginUser($admin);
         for ($number = 1; $number <= 53; ++$number) {
             $this->release($client, $admin, sprintf('draft-%02d', $number));
         }
@@ -94,6 +95,7 @@ final class AdminContentReleaseBrowserTest extends WebTestCase
     {
         $client = static::createClient();
         $admin = $this->user($client, true);
+        $client->loginUser($admin);
         for ($number = 1; $number <= 27; ++$number) {
             $this->release($client, $admin, sprintf('form-%02d', $number));
         }
