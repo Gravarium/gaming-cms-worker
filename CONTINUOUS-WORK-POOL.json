@@ -13,11 +13,11 @@
   "published_at": "2026-09-27T03:15:59.948Z",
   "summary": {
     "total_remaining_worker_tasks": 139,
-    "completed_worker_prs_awaiting_trusted_review": 233,
+    "completed_worker_prs_awaiting_trusted_review": 234,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-467 is complete on green exact-head Worker PR #260; WCP-468 is claimed on sanitized main for category authorization and CSRF coverage. Preserve all other active claims.",
+    "next_required_action": "WCP-468 is complete on green exact-head Worker PR #261. Continue with the next independent Worker-only proposal while preserving all other active claims and blocked FCP dependencies.",
     "composition_preparable": 0,
     "immediately_actionable": 3,
     "must_continue": true
@@ -28065,7 +28065,7 @@
       "package_id": "WCP-468",
       "title": "Protect category creation and deletion with authorization and CSRF",
       "risk": "medium",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -28140,12 +28140,12 @@
       },
       "published_at": "2026-09-27T04:47:21.622Z",
       "claimed_on": "2026-09-27T04:47:21.622Z",
-      "claim_state": "active",
+      "claim_state": "locked_until_trusted_resolution",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
       "active_head": "abfd649b510151a403ab97f728d0f045a7be6f88",
       "resume_branch": "feature/wcp-468-admin-category-write-security-g1",
-      "last_checkpoint_at": "2026-09-27T04:49:49.813Z",
+      "last_checkpoint_at": "2026-09-27T04:53:39.773Z",
       "checkpoint_paths": [
         "tests/Controller/AdminCategoryWriteSecurityTest.php"
       ],
@@ -28153,17 +28153,63 @@
         "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
         "feature_branch": "abfd649b510151a403ab97f728d0f045a7be6f88"
       },
-      "next_action": "Wait for Worker CI run 36295457879 on exact HEAD abfd649b510151a403ab97f728d0f045a7be6f88; diagnose and repair any failing check without changing the one-path scope.",
+      "next_action": "Await Trusted review and integration validation; keep this claim locked until Trusted explicitly integrates, cancels or transfers it.",
       "last_observed_head": "abfd649b510151a403ab97f728d0f045a7be6f88",
-      "last_verified_push_at": "2026-09-27T04:49:49.813Z",
+      "last_verified_push_at": "2026-09-27T04:53:39.773Z",
       "worker_pr": 261,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/261",
-      "draft_pr": true,
-      "pr_state": "open_draft_unmerged",
+      "draft_pr": false,
+      "pr_state": "open_ready_unmerged",
       "ci_run_id": 36295457879,
       "last_ci_run_id": 36295457879,
-      "ci_result": "queued",
-      "last_ci_result": "queued"
+      "ci_result": "success",
+      "last_ci_result": "success",
+      "ci_attempts": [
+        {
+          "run_id": 36295457879,
+          "head": "abfd649b510151a403ab97f728d0f045a7be6f88",
+          "result": "success"
+        }
+      ],
+      "final_head": "abfd649b510151a403ab97f728d0f045a7be6f88",
+      "final_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "final_changed_paths": [
+        "tests/Controller/AdminCategoryWriteSecurityTest.php"
+      ],
+      "changed_paths": [
+        "tests/Controller/AdminCategoryWriteSecurityTest.php"
+      ],
+      "completed_at": "2026-09-27T04:53:39.773Z",
+      "test_results": {
+        "phpunit": "431 tests, 1918 assertions, 0 failures; one deprecation and one notice.",
+        "phpstan": "Level 8 passed with no errors.",
+        "php_symfony": "Worker PHP/Symfony validation job passed on exact final HEAD.",
+        "postgres18": "PostgreSQL 18 completed all 39 migrations; 0 unavailable.",
+        "exact_head_ci": {
+          "run_id": 36295457879,
+          "head": "abfd649b510151a403ab97f728d0f045a7be6f88",
+          "result": "success"
+        }
+      },
+      "completion_evidence": {
+        "exact_base_branch": "main",
+        "exact_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+        "final_head_sha": "abfd649b510151a403ab97f728d0f045a7be6f88",
+        "changed_paths": [
+          "tests/Controller/AdminCategoryWriteSecurityTest.php"
+        ],
+        "worker_pr": 261,
+        "ci_run_id": 36295457879,
+        "ci_result": "success",
+        "php_symfony_job": "success: 431 tests, 1,918 assertions; PHPStan level 8 no errors",
+        "postgresql_job": "success: 39 migrations, 0 unavailable",
+        "category_security_coverage": "CMS_CONTENT_MANAGE denial on category GET/create/delete; missing and invalid form CSRF return 422 without category or save-audit persistence; rendered form token creates a normalized unique slug; missing/invalid route-specific delete tokens preserve the unused leaf category, rendered delete token removes it and records the audit; test state is cleaned up."
+      },
+      "completion_summary": "Test-only functional security coverage for category authorization, create-form CSRF, and route-specific delete CSRF with successful rendered-token create/delete. One test file changed.",
+      "open_limitations": [
+        "Awaiting Trusted review and Trusted integration CI."
+      ],
+      "trusted_follow_up": "Preserve CMS_CONTENT_MANAGE and category form/delete-route CSRF checks before mutations; keep non-empty-category deletion protection; run full Trusted CI."
     }
   ],
   "recovery_queue": [],
