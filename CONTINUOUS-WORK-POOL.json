@@ -10,7 +10,7 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T09:09:07.960Z",
+  "published_at": "2026-09-27T09:10:58.034Z",
   "summary": {
     "total_remaining_worker_tasks": 145,
     "completed_worker_prs_awaiting_trusted_review": 256,
@@ -31943,7 +31943,7 @@
       "proposal_dependency_evidence": [],
       "collision_check": {
         "compared_against": "Fresh continuous/work-pool-v4 blob 6fad5e3093302ca12d4179065635e86771235bdd, all active and claim-locked allowed paths, and sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d.",
-        "result": "No active or claim-locked package owns or encloses tests/Controller/PublicGuildVisibilityBoundaryTest.php. WCP-489 owns theme-preview settings paths; WCP-401 owns catalogue paths; FCP-053 uses tests/Gaming/Guild and does not include this controller test file. Existing GamingGuildSecurityTest covers permission, member/event ownership, application validation and rate limiting but no public guild detail/index visibility. Code search for app_guild_show under tests returned zero matches. This package changes no production controller, repository, template, configuration or migration.",
+        "result": "Follow-up semantic audit found WCP-416 / PR #209 with essentially the same public guild listing, detail and application visibility objective in tests/Controller/PublicGuildVisibilityTest.php. Its file path is distinct, so no file collision occurred, but this package is a semantic duplicate. This was discovered after WCP-490 passed exact-head CI. Leave WCP-416 and PR #209 untouched; Trusted should compare both proposals and reconcile before integration.",
         "paths": [
           "tests/Controller/PublicGuildVisibilityBoundaryTest.php"
         ]
@@ -31960,11 +31960,11 @@
         "feature_branch": "b74438f0315a006f13d641c1a751fe27ab29d54d"
       },
       "last_observed_head": "b74438f0315a006f13d641c1a751fe27ab29d54d",
-      "last_checkpoint_at": "2026-09-27T09:09:07.960Z",
+      "last_checkpoint_at": "2026-09-27T09:10:58.034Z",
       "checkpoint_paths": [
         "tests/Controller/PublicGuildVisibilityBoundaryTest.php"
       ],
-      "next_action": "Worker PR #284 is ready for Trusted review and remains unmerged. Exact final HEAD b74438f0315a006f13d641c1a751fe27ab29d54d passed Worker CI run 36308324050: 430 tests, 1,871 assertions, zero failures; PHPStan reported no errors; PostgreSQL 18 executed all 39 migrations. Keep the claim locked until Trusted resolves it.",
+      "next_action": "Await Trusted review and reconciliation with WCP-416 / PR #209; keep this claim locked until Trusted explicitly resolves it.",
       "last_verified_push_at": "2026-09-27T09:09:07.960Z",
       "worker_pr": 284,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/284",
@@ -32025,9 +32025,10 @@
       },
       "completion_summary": "Added test-only functional coverage confirming that only enabled guilds on enabled games appear publicly. Hidden guilds and guilds on disabled games return 404 on details/applications without exposing markers; all synthetic fixtures are cleaned up.",
       "open_limitations": [
+        "WCP-416 PR #209 covers essentially the same public guild visibility behavior on a different test path; Trusted review should reconcile the duplicate proposals.",
         "Awaiting Trusted review and Trusted integration CI; no product source or configuration was changed."
       ],
-      "trusted_follow_up": "Verify public guild index/detail/application visibility on a fresh Trusted feature branch and full Trusted CI; preserve both guild and game enabled checks."
+      "trusted_follow_up": "Compare WCP-490 PR #284 with WCP-416 PR #209 and keep only one equivalent public guild visibility regression suite during Trusted integration. Preserve both enabled flags and fail-closed detail/application routes."
     }
   ],
   "recovery_queue": [],
