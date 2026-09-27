@@ -6,6 +6,7 @@ namespace App\Tests\Controller;
 
 use App\Entity\Game;
 use App\Entity\Guild;
+use App\Entity\Guild;
 use App\Entity\GuildTeam;
 use App\Entity\User;
 use App\Repository\GuildTeamRepository;
