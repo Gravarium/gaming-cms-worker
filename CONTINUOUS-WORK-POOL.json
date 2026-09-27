@@ -10,7 +10,7 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T10:02:32.498Z",
+  "published_at": "2026-09-27T10:02:40.989Z",
   "summary": {
     "total_remaining_worker_tasks": 158,
     "completed_worker_prs_awaiting_trusted_review": 266,
@@ -33695,16 +33695,25 @@
       "claim_state": "active",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "1afee9a6fafabce5a421d19ee30f825235aeba29",
       "resume_branch": "feature/wcp-503-gamehub-guild-links-g1",
       "branch_heads": {
         "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-        "feature_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d"
+        "feature_branch": "1afee9a6fafabce5a421d19ee30f825235aeba29"
       },
-      "last_observed_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-      "last_checkpoint_at": "2026-09-27T09:56:19.571Z",
-      "checkpoint_paths": [],
-      "next_action": "Implement the permission-protected same-game guild-link manager, public guild-link resolution and focused workflow coverage within the listed paths; push a checkpoint before full exact-head Worker CI."
+      "last_observed_head": "1afee9a6fafabce5a421d19ee30f825235aeba29",
+      "last_checkpoint_at": "2026-09-27T10:02:40.989Z",
+      "checkpoint_paths": [
+        "src/Controller/AdminGameHubGuildLinkController.php",
+        "src/Form/GameCatalogue/GameHubGuildLinkType.php",
+        "src/Twig/GameHubGuildLinkExtension.php",
+        "templates/admin/game_catalogue/guild_links.html.twig",
+        "templates/game_catalogue/show.html.twig",
+        "tests/Controller/AdminGameHubGuildLinkWorkflowTest.php"
+      ],
+      "next_action": "Review the six-path diff, open a draft Worker PR and run complete exact-head Worker CI; repair any failures within these paths.",
+      "final_head": "1afee9a6fafabce5a421d19ee30f825235aeba29",
+      "last_verified_push_at": "2026-09-27T10:02:40.989Z"
     },
     {
       "priority": 502,
