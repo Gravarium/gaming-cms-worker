@@ -12,12 +12,12 @@
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
   "published_at": "2026-09-27T03:15:59.948Z",
   "summary": {
-    "total_remaining_worker_tasks": 139,
-    "completed_worker_prs_awaiting_trusted_review": 227,
+    "total_remaining_worker_tasks": 138,
+    "completed_worker_prs_awaiting_trusted_review": 228,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-459 is complete on green exact-head Worker PR #252. All five unclaimed FCP assignments remain dependency-blocked; derive the next independent worker-only proposal and claim it.",
+    "next_required_action": "WCP-456 is complete on green exact-head Worker PR #253. Re-evaluate all unclaimed work; all five FCP assignments remain dependency-blocked, so continue with an independent existing-module WCP task or derive and claim one.",
     "composition_preparable": 0,
     "immediately_actionable": 2,
     "must_continue": true
@@ -26348,7 +26348,7 @@
       "package_id": "WCP-456",
       "title": "Search and paginate every administrative content release",
       "risk": "medium",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -26434,7 +26434,7 @@
         ]
       },
       "claimed_on": "2026-09-27T02:45:54.916Z",
-      "claim_state": "active",
+      "claim_state": "locked_until_trusted_resolution",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
       "active_head": "6c9f97e233d15cb508a09a58949528be4044c65b",
@@ -26450,9 +26450,68 @@
         "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
         "feature_branch": "6c9f97e233d15cb508a09a58949528be4044c65b"
       },
-      "last_checkpoint_at": "2026-09-27T03:17:38.445Z",
-      "last_verified_push_at": "2026-09-27T03:17:38.445Z",
-      "next_action": "Run the complete Worker CI for draft PR #253 at exact HEAD 6c9f97e233d15cb508a09a58949528be4044c65b; inspect and fix all findings on this branch."
+      "last_checkpoint_at": "2026-09-27T03:22:59.944Z",
+      "last_verified_push_at": "2026-09-27T03:22:59.944Z",
+      "next_action": "PR #253 is ready for Trusted review; keep the claim locked and continue with an independent module task. Do not merge or deploy.",
+      "worker_pr": 253,
+      "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/253",
+      "draft_pr": false,
+      "pr_state": "open_ready_for_review_unmerged",
+      "final_head": "6c9f97e233d15cb508a09a58949528be4044c65b",
+      "final_changed_paths": [
+        "src/Controller/AdminContentReleaseController.php",
+        "src/ContentRelease/AdminContentReleaseBrowser.php",
+        "templates/admin/content_release/index.html.twig",
+        "templates/admin/content_release/form.html.twig",
+        "tests/Controller/AdminContentReleaseBrowserTest.php"
+      ],
+      "last_ci_run_id": 36290965962,
+      "ci_run_id": 36290965962,
+      "ci_result": "success",
+      "ci_attempts": [
+        {
+          "run_id": 36290614381,
+          "head": "faaf1a18b3af8bf4a6baf82636d324e135529b41",
+          "result": "failure",
+          "reason": "PHPStan rejected an untyped FormInterface data generic; switched to rendering FormView."
+        },
+        {
+          "run_id": 36290695454,
+          "head": "cb52a5612455a699b18aa5d67771b07da4daf950",
+          "result": "failure",
+          "reason": "PHPStan identified the FormInterface generic type requirement; fixed with FormView."
+        },
+        {
+          "run_id": 36290801743,
+          "head": "beeeef4319ec18f0a27afc9e283b2b36eb72d64f",
+          "result": "failure",
+          "reason": "BrowserCrawler extract returned scalar IDs, and cleanup rebooted the kernel; fixed extraction and reused the captured DB connection."
+        },
+        {
+          "run_id": 36290965962,
+          "head": "6c9f97e233d15cb508a09a58949528be4044c65b",
+          "result": "success"
+        }
+      ],
+      "completed_on": "2026-09-27T03:22:59.944Z",
+      "completion_evidence": {
+        "exact_base_branch": "main",
+        "exact_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+        "final_head_sha": "6c9f97e233d15cb508a09a58949528be4044c65b",
+        "changed_paths": [
+          "src/Controller/AdminContentReleaseController.php",
+          "src/ContentRelease/AdminContentReleaseBrowser.php",
+          "templates/admin/content_release/index.html.twig",
+          "templates/admin/content_release/form.html.twig",
+          "tests/Controller/AdminContentReleaseBrowserTest.php"
+        ],
+        "worker_pr": 253,
+        "ci_run_id": 36290965962,
+        "ci_result": "success",
+        "php_symfony_job": "success: 437 tests, 1947 assertions; PHPStan level 8 no errors; Composer audit, PHP/YAML/Twig/container/asset/Doctrine checks passed; one PHPUnit deprecation and one notice.",
+        "postgresql_job": "success: PostgreSQL 18 ran and verified all 39 migrations through Version20260925070000.",
+        "trusted_follow_up": "Review and transfer approved changes into a fresh Trusted branch, then run full Trusted CI. No Worker merge or deployment."
+      }
     },
     {
       "priority": 457,
