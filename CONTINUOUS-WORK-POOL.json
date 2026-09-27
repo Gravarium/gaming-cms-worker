@@ -12,14 +12,14 @@
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
   "published_at": "2026-09-27T12:17:16.565Z",
   "summary": {
-    "total_remaining_worker_tasks": 166,
-    "completed_worker_prs_awaiting_trusted_review": 284,
+    "total_remaining_worker_tasks": 165,
+    "completed_worker_prs_awaiting_trusted_review": 285,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
     "next_required_action": "WCP-528 PHPStan correction is running full exact-head CI run 36318461522 on 964c3f64e568da9dfc3c5573598964eabc67b2e4; continue repair if needed.",
     "composition_preparable": 0,
-    "immediately_actionable": 27,
+    "immediately_actionable": 26,
     "must_continue": true
   },
   "rules": {
@@ -37562,7 +37562,7 @@
       "package_id": "WCP-529",
       "title": "Surface public news categories in the page builder",
       "risk": "medium",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -37668,7 +37668,7 @@
       },
       "published_at": "2026-09-27T12:11:48.259Z",
       "claimed_on": "2026-09-27T12:11:48.259Z",
-      "claim_state": "active",
+      "claim_state": "locked_until_trusted_resolution",
       "active_base_branch": "main",
       "active_base_sha": "b510875e7b0741b9b19f09429d2204a95df51198",
       "active_head": "00ef901888e8071ec7ff9f4881ba986fd2df8cfb",
@@ -37678,26 +37678,26 @@
         "feature_branch": "00ef901888e8071ec7ff9f4881ba986fd2df8cfb"
       },
       "last_observed_head": "00ef901888e8071ec7ff9f4881ba986fd2df8cfb",
-      "last_checkpoint_at": "2026-09-27T12:18:53.722Z",
+      "last_checkpoint_at": "2026-09-27T12:22:09.712Z",
       "checkpoint_paths": [
         "src/Widget/Content/PublicContentCategoryQuery.php",
         "src/Widget/PublicContentCategoryWidgetProvider.php",
         "templates/widget/public_content_categories.html.twig",
         "tests/Widget/PublicContentCategoryWidgetProviderTest.php"
       ],
-      "next_action": "PR #321 is running exact-head Worker CI run #791. Inspect the focused test and full jobs; repair only concrete failures in the four reserved paths.",
+      "next_action": "Worker PR #321 is complete on exact green HEAD 00ef901888e8071ec7ff9f4881ba986fd2df8cfb; keep this claim locked until Trusted explicitly integrates, cancels or transfers it. Do not merge or deploy.",
       "ci_attempts": [
         {
           "run_id": 36318542021,
           "run_number": 791,
           "head": "00ef901888e8071ec7ff9f4881ba986fd2df8cfb",
-          "result": "in_progress",
+          "result": "success",
           "base": "b510875e7b0741b9b19f09429d2204a95df51198"
         }
       ],
       "worker_pr": 321,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/321",
-      "draft_pr": true,
+      "draft_pr": false,
       "pr_state": "open",
       "worker_pr_changed_paths": [
         "src/Widget/Content/PublicContentCategoryQuery.php",
@@ -37707,10 +37707,43 @@
       ],
       "ci_run_id": 36318542021,
       "last_ci_run_id": 36318542021,
-      "ci_result": "in_progress",
-      "last_ci_result": "in_progress",
+      "ci_result": "success",
+      "last_ci_result": "success",
       "last_verified_push_at": "2026-09-27T12:17:33.043Z",
-      "worker_pr_state": "open"
+      "worker_pr_state": "open",
+      "final_head": "00ef901888e8071ec7ff9f4881ba986fd2df8cfb",
+      "final_ci_base_sha": "b510875e7b0741b9b19f09429d2204a95df51198",
+      "latest_main_sha": "b510875e7b0741b9b19f09429d2204a95df51198",
+      "completed_at": "2026-09-27T12:22:09.712Z",
+      "completion_evidence": {
+        "exact_head": "00ef901888e8071ec7ff9f4881ba986fd2df8cfb",
+        "pull_request": "#321 ready for Trusted review",
+        "worker_ci_run": 36318542021,
+        "worker_ci_run_number": 791,
+        "worker_ci_result": "success",
+        "current_pr_base": "b510875e7b0741b9b19f09429d2204a95df51198",
+        "latest_worker_main": "b510875e7b0741b9b19f09429d2204a95df51198",
+        "phpstan": "Level 8 passed with no errors",
+        "phpunit": {
+          "tests": 539,
+          "assertions": 2250,
+          "failures": 0,
+          "phpunit_deprecations": 1,
+          "phpunit_notices": 1,
+          "scope": "Complete configured PHPUnit suite, including PublicContentCategoryWidgetProviderTest"
+        },
+        "postgres18_migration_chain": "passed; 54 migrations executed",
+        "changed_paths": [
+          "src/Widget/Content/PublicContentCategoryQuery.php",
+          "src/Widget/PublicContentCategoryWidgetProvider.php",
+          "templates/widget/public_content_categories.html.twig",
+          "tests/Widget/PublicContentCategoryWidgetProviderTest.php"
+        ],
+        "limitations": [
+          "Categories without currently public, listed news are intentionally omitted."
+        ],
+        "trusted_follow_up": "Review and port the four widget/query/template/test paths into Gravarium/gaming-cms, reconcile the category-directory integration, preserve public-content filtering and the Content module gate, then run complete Trusted checks. No Trusted merge or deployment from Worker."
+      }
     },
     {
       "priority": 530,
