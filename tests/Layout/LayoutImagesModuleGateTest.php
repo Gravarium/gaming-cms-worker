@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace App\\Tests\\Layout;
+namespace App\Tests\Layout;
 
-use App\\Entity\\CmsModuleState;
-use App\\Entity\\MediaAsset;
-use App\\Layout\\LayoutImages;
-use Doctrine\\ORM\\EntityManagerInterface;
-use Symfony\\Bundle\\FrameworkBundle\\Test\\KernelTestCase;
+use App\Entity\CmsModuleState;
+use App\Entity\MediaAsset;
+use App\Layout\LayoutImages;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 final class LayoutImagesModuleGateTest extends KernelTestCase
 {
