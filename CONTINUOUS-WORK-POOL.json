@@ -12,8 +12,8 @@
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
   "published_at": "2026-09-27T12:45:45.312Z",
   "summary": {
-    "total_remaining_worker_tasks": 166,
-    "completed_worker_prs_awaiting_trusted_review": 287,
+    "total_remaining_worker_tasks": 165,
+    "completed_worker_prs_awaiting_trusted_review": 288,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
@@ -38519,7 +38519,7 @@
       "package_id": "WCP-535",
       "title": "Bound game and guild slugs to persisted column length",
       "risk": "medium",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -38592,7 +38592,7 @@
       },
       "published_at": "2026-09-27T12:47:34.923Z",
       "claimed_on": "2026-09-27T12:47:34.923Z",
-      "claim_state": "active",
+      "claim_state": "locked_until_trusted_resolution",
       "active_base_branch": "main",
       "active_base_sha": "b510875e7b0741b9b19f09429d2204a95df51198",
       "active_head": "a1a7f2b00d7830e8817e427c47ea291336358463",
@@ -38602,34 +38602,42 @@
         "feature_branch": "a1a7f2b00d7830e8817e427c47ea291336358463"
       },
       "last_observed_head": "a1a7f2b00d7830e8817e427c47ea291336358463",
-      "last_checkpoint_at": "2026-09-27T12:53:58.450Z",
-      "last_verified_push_at": "2026-09-27T12:53:58.450Z",
+      "last_checkpoint_at": "2026-09-27T12:56:25.415Z",
+      "last_verified_push_at": "2026-09-27T12:56:25.415Z",
       "checkpoint_paths": [
         "src/Controller/AdminGamingController.php",
         "tests/Controller/AdminGamingSlugBoundaryTest.php"
       ],
-      "next_action": "Monitor exact-head Worker CI run #804 / 36320485480 on a1a7f2b00d7830e8817e427c47ea291336358463; diagnose and fix concrete failures only in the two allowed paths.",
+      "next_action": "Worker PR #325 is complete on exact green HEAD a1a7f2b00d7830e8817e427c47ea291336358463; keep the claim locked until Trusted resolution.",
       "worker_pr": 325,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/325",
-      "draft_pr": true,
+      "draft_pr": false,
       "pr_state": "open",
-      "worker_pr_state": "draft",
+      "worker_pr_state": "ready_for_review",
       "worker_pr_changed_paths": [
         "src/Controller/AdminGamingController.php",
         "tests/Controller/AdminGamingSlugBoundaryTest.php"
       ],
-      "ci_result": "in_progress",
-      "last_ci_result": "in_progress",
+      "ci_result": "success",
+      "last_ci_result": "success",
       "ci_attempts": [
         {
           "run_id": 36320485480,
           "head": "a1a7f2b00d7830e8817e427c47ea291336358463",
-          "result": "in_progress",
-          "conclusion": null
+          "result": "success",
+          "conclusion": "success"
         }
       ],
       "ci_run_id": 36320485480,
-      "last_ci_run_id": 36320485480
+      "last_ci_run_id": 36320485480,
+      "final_head": "a1a7f2b00d7830e8817e427c47ea291336358463",
+      "completed_at": "2026-09-27T12:56:25.415Z",
+      "completion_evidence": [
+        "Base b510875e7b0741b9b19f09429d2204a95df51198; final Worker HEAD a1a7f2b00d7830e8817e427c47ea291336358463.",
+        "Changed paths: src/Controller/AdminGamingController.php and tests/Controller/AdminGamingSlugBoundaryTest.php.",
+        "The test confirmed the raw Unicode slug exceeded 140 characters; saved Game and Guild slugs remained within 140, and duplicates received distinct -2 suffixes.",
+        "Worker PR #325: https://github.com/Gravarium/gaming-cms-worker/pull/325. Exact-head Worker CI run #804 / 36320485480 passed; PHPStan had no errors; PHPUnit 537 tests / 2,256 assertions (1 deprecation, 1 notice); PostgreSQL 18 validated 54 migrations and 750 SQL queries."
+      ]
     }
   ],
   "recovery_queue": [],
