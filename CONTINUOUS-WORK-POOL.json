@@ -17,7 +17,7 @@
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-515 is complete on exact green HEAD 0c484fe148c2b90ecf09c45ff8b352737b00f62c, PR #308 is ready for Trusted review, and its claim remains locked. Continue to the next free independent module gap.",
+    "next_required_action": "WCP-518 worker-only proposal published from current sanitized main b510875e7b0741b9b19f09429d2204a95df51198; create its exact claim and feature refs, then activate the claim before changing package files. Leave WCP-515 through WCP-517 and all other claims untouched.",
     "composition_preparable": 0,
     "immediately_actionable": 20,
     "must_continue": true
@@ -35787,6 +35787,121 @@
       "last_checkpoint_at": "2026-09-27T10:52:42.182Z",
       "checkpoint_paths": [],
       "next_action": "Implement the read-only revision comparison in the four allowed paths, verify the existing content permission and module-disable paths, then checkpoint and open a draft Worker PR."
+    },
+    {
+      "priority": 518,
+      "package_id": "WCP-518",
+      "title": "Promote upcoming game releases through the page builder",
+      "risk": "low",
+      "execution_state": "unclaimed",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-518-upcoming-game-release-widget-g1",
+      "suggested_branch": "feature/wcp-518-upcoming-game-release-widget-g1",
+      "base_branch": "main",
+      "base_sha": "b510875e7b0741b9b19f09429d2204a95df51198",
+      "objective": "Complete the existing Gaming/Game Catalogue and page-builder workflow with a reusable upcoming-release widget. Editors can place a bounded list of upcoming game releases on the home page or another CMS page. Render the release date, game, edition when present, platform and region, with links to the existing Game Hub and release centre. Include only future non-cancelled releases attached to enabled catalogue entries and games; order deterministically by release time and ID and cap at 12. The existing widget registry must hide the block and data when Gaming is disabled. Do not change shared widget wiring, controllers, existing repositories, entities, routes, schema or migrations.",
+      "allowed_paths": [
+        "src/Widget/GameRelease/UpcomingReleaseQuery.php",
+        "src/Widget/UpcomingGameReleaseWidgetProvider.php",
+        "templates/widget/upcoming_game_releases.html.twig",
+        "tests/Widget/UpcomingGameReleaseWidgetProviderTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/",
+        "src/Controller/",
+        "src/Entity/",
+        "src/Repository/",
+        "src/Layout/",
+        "src/Module/",
+        "src/Theme/",
+        "src/Widget/BundledWidgetProvider.php",
+        "src/Widget/WidgetDefinition.php",
+        "src/Widget/WidgetRegistry.php",
+        "templates/base.html.twig",
+        "templates/home/",
+        "templates/layout/",
+        "templates/admin/",
+        "templates/game_catalogue/",
+        "templates/competition/",
+        "templates/video/",
+        "templates/widget/upcoming_competitions.html.twig",
+        "templates/widget/call_to_action.html.twig",
+        "templates/widget/faq.html.twig",
+        "tests/Gaming/Catalogue/",
+        "tests/Layout/",
+        "tests/Controller/",
+        "tests/Widget/BundledWidgetProviderTest.php"
+      ],
+      "deliverables": [
+        "Register gaming.upcoming-releases as an auto-discovered WidgetProvider owned by Gaming, using the page builder's existing bounded count setting.",
+        "A dedicated read query returns only future non-cancelled releases belonging to enabled catalogue entries and enabled games, orders by release time then ID, and caps results at 12.",
+        "Render a release card with game, date, optional edition, platform and region; link to the existing Game Hub and release centre and show a clear empty state.",
+        "The existing WidgetRegistry hides the widget and suppresses its data when Gaming is disabled; leave shared registry/provider/service configuration and schema unchanged."
+      ],
+      "tests": [
+        "Focused integration coverage for page-builder provider discovery, placement, count selection and disabled-Gaming gating.",
+        "Positive/negative release cases verify future, non-cancelled releases for enabled catalogue entries and games; past, cancelled, disabled-entry and disabled-game releases are excluded.",
+        "Verify stable date/ID ordering, the 12-item cap, internal links, escaped text and empty state.",
+        "PHPStan level 8 and complete Worker CI on the exact final HEAD, including PostgreSQL 18 migration-chain validation."
+      ],
+      "completion_report": [
+        "Exact sanitized main/base SHA and exact final Worker HEAD SHA.",
+        "Complete changed-path list and Worker PR.",
+        "Widget discovery, placement, visibility, order, cap, module gate, links and empty-state test results.",
+        "Focused tests, PHPStan, PostgreSQL migration and exact-head full Worker CI evidence.",
+        "Open limitations and Trusted follow-up."
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "gaming-disabled-means-widget-hidden-and-no-data",
+        "never-render-past-cancelled-disabled-entry-or-disabled-game-releases",
+        "reuse-existing-game-hub-and-release-centre-routes",
+        "bounded-deterministic-read-only-widget-no-schema-or-migration-change",
+        "preserve-existing-page-builder-validation-permissions-and-rendering",
+        "no-private-runtime-or-sensitive-data",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "red-CI-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "b510875e7b0741b9b19f09429d2204a95df51198",
+      "proposal_kind": "worker_only",
+      "proposal_dependency_evidence": [],
+      "collision_check": {
+        "compared_against": "Fresh continuous/work-pool-v4 head af1d7493a0650361cecda1445c9a2ceff5782723, blob 7335c4870c9a45178cc668c424238d446340e45e; current sanitized main b510875e7b0741b9b19f09429d2204a95df51198; all active/claim-locked task paths; and GitHub claim/feature refs and PR search for WCP-518 immediately before publication.",
+        "result": "No active or claim-locked package owns or encloses these four exact paths. WCP-514's completed, locked competition widget uses a separate provider/template/test; WCP-516's active video-search workflow uses a separate provider, VideoSearch templates and tests; WCP-517's content revision workflow uses admin history/compare templates and tests; WCP-515 owns only a content autosave test. FCP-056's broad Game Catalogue paths are avoided by placing the read query under the new Widget/GameRelease namespace and not changing catalogue repositories, controllers, entities or templates. FCP-072 is unclaimed and dependency-blocked with a broad templates/ allowance; this proposal uses one exact new templates/widget file, which any future FCP-072 claimant must revalidate and narrow. No active claim or PR overlaps this package; existing home, release-centre, Game Hub, page-builder, shared provider/registry and service wiring paths remain untouched.",
+        "paths": [
+          "src/Widget/GameRelease/UpcomingReleaseQuery.php",
+          "src/Widget/UpcomingGameReleaseWidgetProvider.php",
+          "templates/widget/upcoming_game_releases.html.twig",
+          "tests/Widget/UpcomingGameReleaseWidgetProviderTest.php"
+        ],
+        "observed_nonblocking_path_hits": [
+          {
+            "id": "FCP-072",
+            "title": "Translations accessibility mobile editing and optional PWA",
+            "state": "unclaimed",
+            "path": "templates/"
+          }
+        ]
+      },
+      "published_at": "2026-09-27T10:57:18.371Z"
     }
   ],
   "recovery_queue": [],
