@@ -10,7 +10,7 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T20:16:34.089Z",
+  "published_at": "2026-09-27T20:21:20.590Z",
   "summary": {
     "total_remaining_worker_tasks": 173,
     "completed_worker_prs_awaiting_trusted_review": 311,
@@ -38534,7 +38534,7 @@
       "package_id": "WCP-532",
       "title": "Add a member-scoped upcoming guild events Page Builder widget",
       "risk": "medium",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -38619,7 +38619,7 @@
       },
       "published_at": "2026-09-27T12:31:11.731Z",
       "claimed_on": "2026-09-27T12:31:11.731Z",
-      "claim_state": "active",
+      "claim_state": "locked_until_trusted_resolution",
       "active_base_branch": "main",
       "active_base_sha": "b510875e7b0741b9b19f09429d2204a95df51198",
       "active_head": "97dc213892f01f1b46836f10f05cd3206980f4a8",
@@ -38629,7 +38629,7 @@
         "feature_branch": "97dc213892f01f1b46836f10f05cd3206980f4a8"
       },
       "last_observed_head": "97dc213892f01f1b46836f10f05cd3206980f4a8",
-      "last_checkpoint_at": "2026-09-27T20:16:34.089Z",
+      "last_checkpoint_at": "2026-09-27T20:21:20.590Z",
       "last_verified_push_at": "2026-09-27T20:16:34.089Z",
       "checkpoint_paths": [
         "src/Widget/GuildEvent/UpcomingGuildEventsQuery.php",
@@ -38639,12 +38639,12 @@
         "config/packages/guild_event_widget.yaml",
         "tests/Widget/UpcomingGuildEventsWidgetProviderTest.php"
       ],
-      "next_action": "Await exact-head Worker CI #930 / 36347350876 on 97dc213892f01f1b46836f10f05cd3206980f4a8; diagnose any failing test and complete PR #373 only after all jobs pass.",
+      "next_action": "Keep the WCP-532 claim locked until Trusted explicitly resolves it; continue autonomous Worker scheduling with a disjoint package.",
       "worker_pr": 373,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/373",
-      "draft_pr": true,
+      "draft_pr": false,
       "pr_state": "open",
-      "worker_pr_state": "draft",
+      "worker_pr_state": "ready_for_review",
       "worker_pr_changed_paths": [
         "config/packages/guild_event_widget.yaml",
         "src/EventSubscriber/GuildEventWidgetCacheSubscriber.php",
@@ -38653,8 +38653,8 @@
         "src/Widget/UpcomingGuildEventsWidgetProvider.php",
         "tests/Widget/UpcomingGuildEventsWidgetProviderTest.php"
       ],
-      "ci_result": "in_progress",
-      "last_ci_result": "in_progress",
+      "ci_result": "success",
+      "last_ci_result": "success",
       "ci_attempts": [
         {
           "run_id": 36346745076,
@@ -38681,15 +38681,54 @@
           "run_number": 930,
           "head": "97dc213892f01f1b46836f10f05cd3206980f4a8",
           "base": "7b2ca79405fc12d34bce1386157e929e4668f31a",
-          "result": "in_progress",
-          "validation_pr": 373
+          "result": "success",
+          "validation_pr": 373,
+          "status": "completed",
+          "conclusion": "success",
+          "php_symfony_job": "success",
+          "phpstan": "success",
+          "phpunit": "success",
+          "phpunit_tests": 740,
+          "assertions": 4663,
+          "postgresql_18_migrations": "success",
+          "migrations_executed": 57,
+          "sql_queries": 878
         }
       ],
       "worker_pr_base_branch": "main",
       "worker_pr_base_sha": "7b2ca79405fc12d34bce1386157e929e4668f31a",
       "ci_run_id": 36347350876,
       "last_ci_run_id": 36347350876,
-      "last_ci_run_number": 930
+      "last_ci_run_number": 930,
+      "final_head": "97dc213892f01f1b46836f10f05cd3206980f4a8",
+      "final_base_sha": "b510875e7b0741b9b19f09429d2204a95df51198",
+      "completion_head": "97dc213892f01f1b46836f10f05cd3206980f4a8",
+      "completed_at": "2026-09-27T20:21:20.590Z",
+      "test_results": {
+        "phpunit": "740 tests, 4,663 assertions, zero failures or errors; one deprecation and three notices.",
+        "phpstan": "Level 8 passed with no errors.",
+        "php_symfony": "Twig/YAML lint, dependency-container validation, AssetMapper compilation, and Doctrine mapping checks passed.",
+        "postgres18": "All 57 migrations applied; 878 SQL queries.",
+        "exact_head_ci": {
+          "run_id": 36347350876,
+          "run_number": 930,
+          "head": "97dc213892f01f1b46836f10f05cd3206980f4a8",
+          "result": "success"
+        }
+      },
+      "completion_evidence": [
+        "WCP-532 proposal base main@b510875e7b0741b9b19f09429d2204a95df51198; final feature HEAD 97dc213892f01f1b46836f10f05cd3206980f4a8.",
+        "PR #373 is open, ready for Trusted review, and based on Worker main@7b2ca79405fc12d34bce1386157e929e4668f31a; it contains exactly the six reserved paths.",
+        "The gaming.upcoming-guild-events widget shows future planned events for active members of enabled guilds/games, enforces team membership, links into the existing guild portal, returns no event records to guests, and is suppressed when Gaming is disabled.",
+        "Personalized member responses, including the authenticated empty state, carry private/no-store cache directives. Rendered fields are limited to title, start time, guild and team; signup notes, descriptions, and locations are omitted.",
+        "Exact-head Worker CI #930 / 36347350876 passed: 740 PHPUnit tests / 4,663 assertions, PHPStan level 8, Symfony/Twig/YAML/container/AssetMapper/Doctrine checks, and PostgreSQL 18 with 57 migrations / 878 SQL queries.",
+        "Earlier runs #925 and #928 exposed test-only assumptions; the corrections passed on final exact HEAD #930."
+      ],
+      "worker_completion_summary": "WCP-532 is complete on exact green Worker HEAD 97dc213892f01f1b46836f10f05cd3206980f4a8 with PR #373 ready for Trusted review; exact-head CI #930 / 36347350876 passed.",
+      "trusted_follow_up": "Review the six reserved paths in Gravarium/gaming-cms and run that repository's exact integration CI before any trusted integration. Keep the widget read-only and preserve active guild/team membership filtering and private/no-store caching.",
+      "open_limitations": [
+        "The widget is read-only; members use the existing guild portal link to RSVP, inspect full event details, and export calendars."
+      ]
     },
     {
       "priority": 533,
