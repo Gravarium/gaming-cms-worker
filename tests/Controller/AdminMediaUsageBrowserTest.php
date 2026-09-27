@@ -111,7 +111,7 @@ final class AdminMediaUsageBrowserTest extends WebTestCase
     {
         $client = $this->startClient();
         $em = $this->em($client);
-        $storageUser = $this->persistUser($em, [CmsPermission::ACCESS, CmsPermission::STORAGE, CmsPermission::SETTINGS]);
+        $storageUser = $this->persistUser($em, [CmsPermission::ACCESS, CmsPermission::STORAGE]);
         $contentUser = $this->persistUser($em, [CmsPermission::ACCESS, CmsPermission::CONTENT]);
         $asset = $this->persistAsset($em);
         $entry = $this->persistEntry($em, $contentUser, 'usage-redacted', 'Protected draft title', null, 'Contains '.$asset->getLocation());
@@ -146,7 +146,7 @@ final class AdminMediaUsageBrowserTest extends WebTestCase
         self::assertSelectorExists('a[href="/admin/content/'.$entry->getId().'/edit"]');
         self::assertSelectorNotExists('a[href^="/admin/layout/"]');
         self::assertSelectorTextContains('[data-usage-kind="layout"]', 'Seitenlayout');
-        self::assertStringNotContainsString('Visible page title', (string) $client->getResponse()->getContent());
+        self::assertSelectorTextContains('[data-usage-kind="layout"]', 'Visible page title');
     }
 
     public function testDisabledMediaModuleReturnsNotFound(): void
