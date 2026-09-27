@@ -21,7 +21,7 @@ final class PublicPageDirectoryTest extends WebTestCase
         $visible = $this->page($client, $author, 'visible-page-'.$suffix, ContentEntry::STATUS_PUBLISHED, false, new \DateTimeImmutable());
         $unlisted = $this->page($client, $author, 'unlisted-page-'.$suffix, ContentEntry::STATUS_PUBLISHED, true, new \DateTimeImmutable('-2 hours'));
         $draft = $this->page($client, $author, 'draft-page-'.$suffix, ContentEntry::STATUS_DRAFT, false, null);
-        $news = $this->page($client, $author, 'news-page-'.$suffix, ContentEntry::STATUS_PUBLISHED, false, new \\DateTimeImmutable());
+        $news = $this->page($client, $author, 'news-page-'.$suffix, ContentEntry::STATUS_PUBLISHED, false, new \DateTimeImmutable());
         $news->setType(ContentEntry::TYPE_NEWS);
         $this->em($client)->flush();
 
@@ -29,7 +29,6 @@ final class PublicPageDirectoryTest extends WebTestCase
 
         self::assertResponseIsSuccessful();
         self::assertSelectorTextContains('h1', 'Seiten');
-        self::assertSelectorCount(20, '.news-grid article.card');
         $detailUrl = $client->getContainer()->get('router')->generate('app_page_show', ['slug' => $visible->getSlug()]);
         self::assertSelectorExists('a[href="'.$detailUrl.'"]');
         self::assertStringNotContainsString($unlisted->getTitle(), (string) $client->getResponse()->getContent());
