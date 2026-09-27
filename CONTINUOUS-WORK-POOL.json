@@ -10,7 +10,7 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T14:23:31.165Z",
+  "published_at": "2026-09-27T14:23:49.244Z",
   "summary": {
     "total_remaining_worker_tasks": 167,
     "completed_worker_prs_awaiting_trusted_review": 291,
@@ -39043,15 +39043,15 @@
       "claim_state": "active",
       "active_base_branch": "main",
       "active_base_sha": "b510875e7b0741b9b19f09429d2204a95df51198",
-      "active_head": "167f30a418f86c4a190ac14c6d075416c37a9568",
+      "active_head": "cfb548c6584035f5b1286cd7288601ce2deddea8",
       "resume_branch": "feature/wcp-537-public-guild-events-widget-g1",
       "branch_heads": {
         "claim_branch": "b510875e7b0741b9b19f09429d2204a95df51198",
-        "feature_branch": "167f30a418f86c4a190ac14c6d075416c37a9568"
+        "feature_branch": "cfb548c6584035f5b1286cd7288601ce2deddea8"
       },
-      "last_observed_head": "167f30a418f86c4a190ac14c6d075416c37a9568",
-      "last_checkpoint_at": "2026-09-27T13:31:49.722Z",
-      "last_verified_push_at": "2026-09-27T13:31:49.722Z",
+      "last_observed_head": "cfb548c6584035f5b1286cd7288601ce2deddea8",
+      "last_checkpoint_at": "2026-09-27T14:23:49.244Z",
+      "last_verified_push_at": "2026-09-27T14:23:49.244Z",
       "checkpoint_paths": [
         "src/Widget/PublicGuildEventsWidgetProvider.php",
         "src/Widget/PublicGuildEventsQuery.php",
@@ -39059,7 +39059,7 @@
         "config/packages/public_guild_events_widget.yaml",
         "tests/Widget/PublicGuildEventsWidgetProviderTest.php"
       ],
-      "next_action": "Inspect Worker CI #817 on exact HEAD 167f30a418f86c4a190ac14c6d075416c37a9568; repair any failures on this feature branch and rerun complete CI on the new exact HEAD.",
+      "next_action": "Inspect Worker CI run #836 / 36325673906 on exact HEAD cfb548c6584035f5b1286cd7288601ce2deddea8; diagnose any failure and rerun complete CI on the resulting exact head.",
       "worker_pr": 330,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/330",
       "draft_pr": true,
@@ -39072,7 +39072,7 @@
         "src/Widget/PublicGuildEventsWidgetProvider.php",
         "tests/Widget/PublicGuildEventsWidgetProviderTest.php"
       ],
-      "ci_result": "in_progress",
+      "ci_result": "pending",
       "last_ci_result": "in_progress",
       "ci_attempts": [
         {
@@ -39080,12 +39080,22 @@
           "run_number": 817,
           "head": "167f30a418f86c4a190ac14c6d075416c37a9568",
           "base": "b510875e7b0741b9b19f09429d2204a95df51198",
-          "result": "in_progress"
+          "result": "failure",
+          "conclusion": "failure",
+          "failure_summary": "PostgreSQL 18 migration validation passed. PHP/Symfony failed because widget setting `count` collided with a reserved Page Builder field; widget tests also leaked persisted fixtures. Both issues are fixed on the active branch."
+        },
+        {
+          "run_id": 36325673906,
+          "run_number": 836,
+          "head": "cfb548c6584035f5b1286cd7288601ce2deddea8",
+          "base": "b510875e7b0741b9b19f09429d2204a95df51198",
+          "result": "in_progress",
+          "conclusion": null
         }
       ],
       "worker_pr_base_branch": "main",
-      "ci_run_id": 36322738637,
-      "last_ci_run_id": 36322738637
+      "ci_run_id": 36325673906,
+      "last_ci_run_id": 36325673906
     },
     {
       "priority": 538,
