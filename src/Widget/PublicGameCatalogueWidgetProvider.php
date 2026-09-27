@@ -9,7 +9,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 
 final readonly class PublicGameCatalogueWidgetProvider implements WidgetProvider
 {
-    private const KEY = 'gaming.game-catalogue';
+    public const KEY = 'gaming.game-catalogue';
 
     public function __construct(
         private PublicGameCatalogueQuery $catalogue,
