@@ -93,8 +93,10 @@ final class AdminGameGuideControllerTest extends WebTestCase
             self::assertResponseStatusCodeSame(403);
             self::assertSame('review', $connection->fetchOne('SELECT review_status FROM game_guide WHERE id = :id', ['id' => $id]));
 
+            $client->getCookieJar()->clear();
             $client->loginUser($reviewer);
             $crawler = $client->request('GET', $reviewUrl);
+            self::assertResponseIsSuccessful();
             $form = $crawler->selectButton('Veröffentlichen')->form(['reason' => 'Reviewed and approved']);
             $client->submit($form);
             self::assertResponseRedirects('/admin/gaming/guides');
@@ -179,10 +181,26 @@ final class AdminGameGuideControllerTest extends WebTestCase
             self::assertSame('Synthetic review fixture', $entry['provenance']);
 
             $crawler = $client->request('GET', '/admin/gaming/guides/'.$id.'/edit');
+            self::assertResponseIsSuccessful();
             self::assertStringContainsString('arcane-barrage', (string) $client->getResponse()->getContent());
-            $editForm = $crawler->selectButton('Entwurf speichern')->form(['title' => $title.' revised']);
+            $invalidEditForm = $crawler->selectButton('Entwurf speichern')->form(['tier_entries_json' => 'not-json']);
+            $crawler = $client->submit($invalidEditForm);
+            self::assertResponseStatusCodeSame(422);
+            self::assertSelectorExists('form[action="/admin/gaming/guides/'.$id.'/edit"]');
+            self::assertSame($title, $connection->fetchOne('SELECT title FROM game_guide WHERE id = :id', ['id' => $id]));
+            self::assertSame('draft', $connection->fetchOne('SELECT review_status FROM game_guide WHERE id = :id', ['id' => $id]));
+            self::assertSame(1, (int) $connection->fetchOne(
+                'SELECT COUNT(*) FROM game_guide_tier_entry WHERE guide_id = :id AND entry_key = :key',
+                ['id' => $id, 'key' => 'arcane-barrage'],
+            ));
+
+            $editForm = $crawler->selectButton('Entwurf speichern')->form([
+                'title' => $title.' revised',
+                'tier_entries_json' => $fields['tier_entries_json'],
+            ]);
             $client->submit($editForm);
             self::assertResponseRedirects('/admin/gaming/guides');
+            self::assertSame($title.' revised', $connection->fetchOne('SELECT title FROM game_guide WHERE id = :id', ['id' => $id]));
             self::assertSame(1, (int) $connection->fetchOne(
                 'SELECT COUNT(*) FROM game_guide_tier_entry WHERE guide_id = :id AND entry_key = :key',
                 ['id' => $id, 'key' => 'arcane-barrage'],
@@ -193,8 +211,10 @@ final class AdminGameGuideControllerTest extends WebTestCase
             $client->submit($submitForm);
             self::assertResponseRedirects('/admin/gaming/guides');
 
+            $client->getCookieJar()->clear();
             $client->loginUser($reviewer);
             $crawler = $client->request('GET', '/admin/gaming/guides/'.$id.'/review');
+            self::assertResponseIsSuccessful();
             self::assertSelectorTextContains('main', 'Solo ranked viability');
             self::assertSelectorTextContains('main', 'arcane-barrage');
             $reviewForm = $crawler->selectButton('Veröffentlichen')->form(['reason' => 'Tier-list data reviewed.']);
@@ -368,6 +388,7 @@ final class AdminGameGuideControllerTest extends WebTestCase
             $client->request('GET', '/admin/gaming/guides/new');
             self::assertResponseStatusCodeSame(403);
 
+            $client->getCookieJar()->clear();
             $client->loginUser($author);
             $fields = [
                 'title' => 'Invalid build code',
