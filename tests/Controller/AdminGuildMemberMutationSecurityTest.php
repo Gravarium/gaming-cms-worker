@@ -170,6 +170,7 @@ final class AdminGuildMemberMutationSecurityTest extends WebTestCase
         self::assertNotSame('', (string) $formValues['_token']);
         $formValues['characterName'] = $characterName;
         $formValues['position'] = '0';
+        $formValues['rankName'] = 'Member';
 
         if ($csrfMode === 'missing') {
             unset($formValues['_token']);
