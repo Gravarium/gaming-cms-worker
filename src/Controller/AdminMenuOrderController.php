@@ -45,7 +45,8 @@ final class AdminMenuOrderController extends AbstractController
         }
 
         $moved = false;
-        $this->entityManager->wrapInTransaction(function (EntityManagerInterface $entityManager) use ($id, $direction, &$moved): void {
+        $notFound = false;
+        $this->entityManager->wrapInTransaction(function (EntityManagerInterface $entityManager) use ($id, $direction, &$moved, &$notFound): void {
             $items = $this->orderedItems($entityManager, true);
             $index = null;
 
@@ -57,7 +58,9 @@ final class AdminMenuOrderController extends AbstractController
             }
 
             if ($index === null) {
-                throw $this->createNotFoundException();
+                $notFound = true;
+
+                return;
             }
 
             $neighborIndex = $index + ($direction === 'up' ? -1 : 1);
@@ -76,6 +79,10 @@ final class AdminMenuOrderController extends AbstractController
             $entityManager->flush();
             $moved = true;
         });
+
+        if ($notFound) {
+            throw $this->createNotFoundException();
+        }
 
         if ($moved) {
             $this->addFlash('success', 'Die Menüreihenfolge wurde gespeichert.');

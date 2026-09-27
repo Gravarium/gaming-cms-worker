@@ -7,6 +7,7 @@ namespace App\Tests\Controller;
 use App\Entity\MenuItem;
 use App\Entity\User;
 use App\Security\CmsPermission;
+use Doctrine\DBAL\Connection;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
@@ -20,22 +21,18 @@ final class AdminMenuOrderingTest extends WebTestCase
     /** @var list<int> */
     private array $menuItemIds = [];
 
-    private ?KernelBrowser $testClient = null;
+    private ?Connection $connection = null;
 
     protected function tearDown(): void
     {
         try {
-            if ($this->testClient !== null && $this->menuItemIds !== []) {
-                $entityManager = $this->testClient->getContainer()->get(EntityManagerInterface::class);
+            if ($this->connection !== null) {
                 foreach ($this->menuItemIds as $id) {
-                    $item = $entityManager->find(MenuItem::class, $id);
-                    if ($item instanceof MenuItem) {
-                        $entityManager->remove($item);
-                    }
+                    $this->connection->executeStatement('DELETE FROM menu_item WHERE id = ?', [$id]);
                 }
-                $entityManager->flush();
             }
         } finally {
+            $this->connection = null;
             parent::tearDown();
         }
     }
@@ -158,9 +155,9 @@ final class AdminMenuOrderingTest extends WebTestCase
      */
     private function fixture(KernelBrowser $client, array $permissions = [CmsPermission::CONTENT]): array
     {
-        $this->testClient = $client;
         $suffix = bin2hex(random_bytes(5));
         $entityManager = $this->em($client);
+        $this->connection = $entityManager->getConnection();
         $manager = (new User())
             ->setEmail('menu-order-'.$suffix.'@example.test')
             ->setDisplayName('Menu manager')
