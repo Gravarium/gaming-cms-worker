@@ -13,11 +13,11 @@
   "published_at": "2026-09-27T00:52:11.194Z",
   "summary": {
     "total_remaining_worker_tasks": 138,
-    "completed_worker_prs_awaiting_trusted_review": 210,
+    "completed_worker_prs_awaiting_trusted_review": 211,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-441 is validating exact HEAD cf0774220ea0f6ead9b061a6a251a47605c954bd in Worker CI run 36283576919 after fixing the Node protocol test import and live-region selector; inspect the jobs and continue on this branch.",
+    "next_required_action": "Re-evaluate the five unclaimed FCP tasks against current Trusted integration evidence; they remain blocked by missing prerequisites. With no dependency-safe completion task available, select and claim a fresh bounded functional module package after checking current active claims, PRs, branches, CI, and path collisions.",
     "composition_preparable": 0,
     "immediately_actionable": 2,
     "must_continue": true
@@ -24152,7 +24152,7 @@
       "package_id": "WCP-441",
       "title": "Select content-owned images from the content editor",
       "risk": "low",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -24246,7 +24246,7 @@
       "active_head": "cf0774220ea0f6ead9b061a6a251a47605c954bd",
       "resume_branch": "feature/wcp-441-content-editor-media-picker-g1",
       "claimed_on": "2026-09-27T00:26:50.616Z",
-      "claim_state": "active",
+      "claim_state": "locked_until_trusted_resolution",
       "last_checkpoint_at": "2026-09-27T00:48:24.153Z",
       "last_verified_push_at": "2026-09-27T00:48:24.153Z",
       "checkpoint_paths": [
@@ -24263,15 +24263,15 @@
         "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
         "feature_branch": "cf0774220ea0f6ead9b061a6a251a47605c954bd"
       },
-      "next_action": "CI run 36283576919 is in progress on exact HEAD cf0774220ea0f6ead9b061a6a251a47605c954bd. Inspect both jobs and repair any concrete failure on this same branch.",
+      "next_action": "PR #235 is open and ready for Trusted review with green exact-head Worker CI; keep this claim locked until Trusted explicitly integrates, cancels or transfers it, then continue with an independent dependency-safe module package.",
       "worker_pr": 235,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/235",
-      "draft_pr": true,
-      "pr_state": "open_draft_awaiting_exact_head_ci",
+      "draft_pr": false,
+      "pr_state": "open_ready_for_review_unmerged",
       "last_ci_run_id": 36283576919,
       "ci_run_id": 36283576919,
-      "last_ci_result": "in_progress",
-      "ci_result": "in_progress",
+      "last_ci_result": "success",
+      "ci_result": "success",
       "ci_attempts": [
         {
           "run_id": 36283388284,
@@ -24281,10 +24281,51 @@
         {
           "run_id": 36283576919,
           "head": "cf0774220ea0f6ead9b061a6a251a47605c954bd",
-          "result": "in_progress"
+          "result": "success"
         }
       ],
-      "last_ci_diagnosis": "CI run 36283388284 passed PHPStan, PHP/Symfony validations, JavaScript tests, and PostgreSQL 18 migration checks. PHPUnit had two failures: the existing ContentEditorJavaScriptProtocolTest evaluates the controller in a node --input-type=module eval and could not resolve a new static relative import; the new editor markup test asserted aria-live on the results container instead of its status region. The helper now loads dynamically only when needed, and the browser test checks the real status live region."
+      "last_ci_diagnosis": "Run 36283388284 exposed two test failures: a static relative JS helper import broke the existing node --input-type=module protocol test, and the rendered editor test targeted the result list instead of the aria-live status region. The helper is dynamically imported at use sites and the assertion now targets the status region. Full exact-head run 36283576919 passed.",
+      "final_head": "cf0774220ea0f6ead9b061a6a251a47605c954bd",
+      "final_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "changed_paths": [
+        "src/Controller/AdminContentMediaPickerController.php",
+        "src/Repository/ContentMediaPickerRepository.php",
+        "templates/admin/content/form.html.twig",
+        "assets/controllers/content_editor_controller.js",
+        "assets/content_media_picker.js",
+        "tests/Controller/ContentEditorMediaPickerTest.php",
+        "tests/JavaScript/content_media_picker.test.mjs",
+        "assets/styles/content-editor.css"
+      ],
+      "final_changed_paths": [
+        "src/Controller/AdminContentMediaPickerController.php",
+        "src/Repository/ContentMediaPickerRepository.php",
+        "templates/admin/content/form.html.twig",
+        "assets/controllers/content_editor_controller.js",
+        "assets/content_media_picker.js",
+        "tests/Controller/ContentEditorMediaPickerTest.php",
+        "tests/JavaScript/content_media_picker.test.mjs",
+        "assets/styles/content-editor.css"
+      ],
+      "completed_at": "2026-09-27T00:53:14.368Z",
+      "test_results": {
+        "phpunit": "435 tests, 1,915 assertions, 0 failures; one deprecation and one notice.",
+        "phpstan": "Level 8 passed with no errors.",
+        "php_symfony": "Worker PHP/Symfony validation job passed on exact final HEAD.",
+        "javascript": "Content media picker Node tests and existing content-editor JavaScript protocol tests passed.",
+        "postgres18": "PostgreSQL 18 applied and verified all 39 migrations; 0 unavailable.",
+        "exact_head_ci": {
+          "run_id": 36283576919,
+          "head": "cf0774220ea0f6ead9b061a6a251a47605c954bd",
+          "result": "success"
+        }
+      },
+      "completion_summary": "The content editor now offers an in-place searchable and paginated picker for active Content-owned images accepted by the existing media reference gateway. Editors can select a result to fill the media block asset ID and default alt text without typing IDs or URLs. Browser and Node tests cover permissions, filtering, search, pagination, malformed inputs, privacy headers, read-only behavior, accessible controls and safe selection. Existing save, preview and autosave validation remains authoritative; no schema, entity, upload or content write route changed.",
+      "open_limitations": [
+        "Awaiting Trusted review and Trusted integration CI.",
+        "The picker selects existing Content-owned images; uploads and asset management remain in the current storage workflow."
+      ],
+      "trusted_follow_up": "Review the picker and run full Trusted CI from a fresh Trusted branch. Preserve CMS_CONTENT_MANAGE, the existing OwnedMediaReferenceGateway/ContentBlockPolicy checks, and the read-only picker boundary; upload integration remains a separate future module change."
     },
     {
       "priority": 222,
