@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T11:48:27.305Z",
+  "published_at": "2026-09-27T11:49:42.443Z",
   "summary": {
     "total_remaining_worker_tasks": 167,
     "completed_worker_prs_awaiting_trusted_review": 279,
     "recovery_tasks": 0,
-    "unclaimed": 6,
-    "immediately_claimable": 1,
-    "next_required_action": "WCP-526 is published as an unclaimed, dependency-free Media Library usage-browser proposal on main @ b510875e7b0741b9b19f09429d2204a95df51198; create its exact claim and feature branches before editing source.",
+    "unclaimed": 5,
+    "immediately_claimable": 0,
+    "next_required_action": "WCP-526 is claimed on feature/wcp-526-media-usage-browser-g1 @ b510875e7b0741b9b19f09429d2204a95df51198; implement the Media Library usage-browser feature on its exclusive branch.",
     "composition_preparable": 0,
     "immediately_actionable": 24,
     "must_continue": true
@@ -37016,7 +37016,7 @@
       "package_id": "WCP-526",
       "title": "Show exact content and layout uses for media assets",
       "risk": "medium",
-      "execution_state": "unclaimed",
+      "execution_state": "worker_in_progress",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -37119,7 +37119,37 @@
           }
         ]
       },
-      "published_at": "2026-09-27T11:47:00.836Z"
+      "published_at": "2026-09-27T11:47:00.836Z",
+      "claim_state": "active",
+      "claimed_on": "2026-09-27T11:49:42.443Z",
+      "active_base_branch": "main",
+      "active_base_sha": "b510875e7b0741b9b19f09429d2204a95df51198",
+      "active_head": "b510875e7b0741b9b19f09429d2204a95df51198",
+      "resume_branch": "feature/wcp-526-media-usage-browser-g1",
+      "branch_heads": {
+        "claim_branch": "b510875e7b0741b9b19f09429d2204a95df51198",
+        "feature_branch": "b510875e7b0741b9b19f09429d2204a95df51198"
+      },
+      "last_observed_head": "b510875e7b0741b9b19f09429d2204a95df51198",
+      "last_checkpoint_at": "2026-09-27T11:49:42.443Z",
+      "last_verified_push_at": "2026-09-27T11:49:42.443Z",
+      "checkpoint_paths": [
+        "src/Media/MediaAssetUsageBrowser.php",
+        "src/Controller/AdminMediaUsageController.php",
+        "templates/admin/storage/media_edit.html.twig",
+        "templates/admin/storage/media_usage.html.twig",
+        "tests/Controller/AdminMediaUsageBrowserTest.php"
+      ],
+      "next_action": "Claim reserved on exact published main base. Implement the bounded, permission-aware read-only media usage page only within the five allowed paths.",
+      "worker_pr": null,
+      "worker_pr_url": null,
+      "draft_pr": false,
+      "pr_state": "not_created",
+      "worker_pr_state": "not_created",
+      "worker_pr_changed_paths": [],
+      "ci_result": "not_started",
+      "last_ci_result": "not_started",
+      "ci_attempts": []
     }
   ],
   "recovery_queue": [],
