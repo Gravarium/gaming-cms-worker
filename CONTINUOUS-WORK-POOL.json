@@ -10,7 +10,7 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T12:42:17.233Z",
+  "published_at": "2026-09-27T12:45:45.312Z",
   "summary": {
     "total_remaining_worker_tasks": 165,
     "completed_worker_prs_awaiting_trusted_review": 287,
@@ -37954,7 +37954,7 @@
       "package_id": "WCP-531",
       "title": "Add public Game Catalogue search and a Page Builder entry point",
       "risk": "medium",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -38053,7 +38053,7 @@
       },
       "published_at": "2026-09-27T12:27:33.547Z",
       "claimed_on": "2026-09-27T12:27:33.547Z",
-      "claim_state": "active",
+      "claim_state": "locked_until_trusted_resolution",
       "active_base_branch": "main",
       "active_base_sha": "b510875e7b0741b9b19f09429d2204a95df51198",
       "active_head": "21d23ea93e33834e8a9594d55b47124bc2f11ad1",
@@ -38063,7 +38063,7 @@
         "feature_branch": "21d23ea93e33834e8a9594d55b47124bc2f11ad1"
       },
       "last_observed_head": "21d23ea93e33834e8a9594d55b47124bc2f11ad1",
-      "last_checkpoint_at": "2026-09-27T12:42:17.233Z",
+      "last_checkpoint_at": "2026-09-27T12:45:45.312Z",
       "checkpoint_paths": [
         "src/Controller/PublicGameCatalogueSearchController.php",
         "src/Repository/PublicGameCatalogueSearchRepository.php",
@@ -38073,7 +38073,7 @@
         "tests/Controller/PublicGameCatalogueSearchTest.php",
         "tests/Widget/PublicGameCatalogueSearchWidgetProviderTest.php"
       ],
-      "next_action": "Monitor exact-head CI run 36319857442; repair concrete failures only.",
+      "next_action": "Await Trusted review or explicit resolution; keep claim and allowed paths locked.",
       "ci_attempts": [
         {
           "head": "716b3394b88be1aded0b3dc438db75d285861c6f",
@@ -38086,11 +38086,17 @@
           "run_id": 36319704251,
           "result": "failure",
           "detail": "Only the escaping assertion failed because it inspected a later search response that contained a different result; now re-requests the marked title before asserting escaping."
+        },
+        {
+          "head": "21d23ea93e33834e8a9594d55b47124bc2f11ad1",
+          "run_id": 36319857442,
+          "result": "success",
+          "detail": "Exact-head Worker CI succeeded; both jobs passed. PHPUnit 541 tests, 2292 assertions, 0 failures; PHPStan level 8 and PostgreSQL 18 migration validation passed."
         }
       ],
       "worker_pr": 324,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/324",
-      "draft_pr": true,
+      "draft_pr": false,
       "pr_state": "open",
       "worker_pr_changed_paths": [
         "src/Controller/PublicGameCatalogueSearchController.php",
@@ -38102,10 +38108,13 @@
         "tests/Widget/PublicGameCatalogueSearchWidgetProviderTest.php"
       ],
       "ci_run_id": 36319857442,
-      "last_ci_run_id": 36319704251,
-      "ci_result": "in_progress",
-      "last_ci_result": "failure",
-      "last_verified_push_at": "2026-09-27T12:42:17.233Z"
+      "last_ci_run_id": 36319857442,
+      "ci_result": "success",
+      "last_ci_result": "success",
+      "last_verified_push_at": "2026-09-27T12:45:45.312Z",
+      "final_head": "21d23ea93e33834e8a9594d55b47124bc2f11ad1",
+      "completed_on": "2026-09-27T12:45:45.312Z",
+      "completion_summary": "Adds bounded public Game Catalogue search at /game-search and a Gaming Page Builder search widget. The route matches name, description, summary, developer, publisher and genre; only enabled catalogue entries for enabled Games are visible; results link to existing Game Hubs."
     },
     {
       "priority": 532,
