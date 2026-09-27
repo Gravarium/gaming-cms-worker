@@ -13,11 +13,11 @@
   "published_at": "2026-09-27T03:15:59.948Z",
   "summary": {
     "total_remaining_worker_tasks": 139,
-    "completed_worker_prs_awaiting_trusted_review": 238,
+    "completed_worker_prs_awaiting_trusted_review": 239,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-472 is complete on green exact-head Worker PR #265; WCP-471 remains another worker's public game release calendar claim. Continue autonomously with the next dependency-safe package or a new disjoint Worker-only proposal.",
+    "next_required_action": "WCP-471 is complete on green exact-head Worker PR #264 at c1ed65d0810ae0756f5898e6598e1b9bc3c8666d and remains claim-locked. WCP-472 is separately active on its checkpointed authorization/CSRF test; preserve both claims and choose only an independent next package.",
     "composition_preparable": 0,
     "immediately_actionable": 4,
     "must_continue": true
@@ -28529,7 +28529,7 @@
       "package_id": "WCP-471",
       "title": "Search and paginate the public game release calendar",
       "risk": "medium",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -28608,12 +28608,12 @@
       },
       "published_at": "2026-09-27T05:17:01.068Z",
       "claimed_on": "2026-09-27T05:17:01.068Z",
-      "claim_state": "active",
+      "claim_state": "locked_until_trusted_resolution",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
       "active_head": "c1ed65d0810ae0756f5898e6598e1b9bc3c8666d",
       "resume_branch": "feature/wcp-471-public-game-release-calendar-g1",
-      "last_checkpoint_at": "2026-09-27T05:34:20.011Z",
+      "last_checkpoint_at": "2026-09-27T05:39:09.453Z",
       "checkpoint_paths": [
         "src/Controller/GameCatalogue/GameReleaseCalendarController.php",
         "src/Repository/GameCatalogue/GameReleaseRepository.php",
@@ -28625,17 +28625,17 @@
         "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
         "feature_branch": "c1ed65d0810ae0756f5898e6598e1b9bc3c8666d"
       },
-      "next_action": "Await run #665 on the current exact head; repair only concrete full-CI findings and rerun.",
+      "next_action": "Await Trusted review and integration validation; keep this claim locked until Trusted explicitly integrates, cancels or transfers it.",
       "last_observed_head": "c1ed65d0810ae0756f5898e6598e1b9bc3c8666d",
-      "last_verified_push_at": "2026-09-27T05:34:20.011Z",
+      "last_verified_push_at": "2026-09-27T05:39:09.453Z",
       "worker_pr": 264,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/264",
-      "draft_pr": true,
-      "pr_state": "open_draft",
+      "draft_pr": false,
+      "pr_state": "open_ready_unmerged",
       "ci_run_id": 36297547173,
       "last_ci_run_id": 36297547173,
-      "ci_result": "in_progress",
-      "last_ci_result": "in_progress",
+      "ci_result": "success",
+      "last_ci_result": "success",
       "ci_attempts": [
         {
           "run_id": 36297141308,
@@ -28655,9 +28655,63 @@
         {
           "run_id": 36297547173,
           "head": "c1ed65d0810ae0756f5898e6598e1b9bc3c8666d",
-          "result": "in_progress"
+          "result": "success"
         }
-      ]
+      ],
+      "final_head": "c1ed65d0810ae0756f5898e6598e1b9bc3c8666d",
+      "final_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "completed_at": "2026-09-27T05:39:09.453Z",
+      "changed_paths": [
+        "src/Controller/GameCatalogue/GameReleaseCalendarController.php",
+        "src/Repository/GameCatalogue/GameReleaseRepository.php",
+        "templates/game_catalogue/releases.html.twig",
+        "templates/game_catalogue/release_calendar.html.twig",
+        "tests/Gaming/Catalogue/GameReleaseCalendarControllerTest.php"
+      ],
+      "final_changed_paths": [
+        "src/Controller/GameCatalogue/GameReleaseCalendarController.php",
+        "src/Repository/GameCatalogue/GameReleaseRepository.php",
+        "templates/game_catalogue/releases.html.twig",
+        "templates/game_catalogue/release_calendar.html.twig",
+        "tests/Gaming/Catalogue/GameReleaseCalendarControllerTest.php"
+      ],
+      "test_results": {
+        "phpunit": "434 tests, 1,887 assertions, 0 failures/errors; one existing deprecation and one notice.",
+        "phpstan": "Level 8 passed with no errors.",
+        "php_symfony": "Worker PHP/Symfony, Twig, container, AssetMapper, and Doctrine mapping checks passed on exact final HEAD.",
+        "postgres18": "PostgreSQL 18 completed 39 migrations and 470 SQL queries; 0 unavailable migrations.",
+        "exact_head_ci": {
+          "run_id": 36297547173,
+          "head": "c1ed65d0810ae0756f5898e6598e1b9bc3c8666d",
+          "result": "success"
+        }
+      },
+      "completion_evidence": {
+        "exact_base_branch": "main",
+        "exact_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+        "final_head_sha": "c1ed65d0810ae0756f5898e6598e1b9bc3c8666d",
+        "changed_paths": [
+          "src/Controller/GameCatalogue/GameReleaseCalendarController.php",
+          "src/Repository/GameCatalogue/GameReleaseRepository.php",
+          "templates/game_catalogue/releases.html.twig",
+          "templates/game_catalogue/release_calendar.html.twig",
+          "tests/Gaming/Catalogue/GameReleaseCalendarControllerTest.php"
+        ],
+        "worker_pr": 264,
+        "ci_run_id": 36297547173,
+        "ci_result": "success",
+        "php_symfony_job": "Success: 434 tests, 1,887 assertions, 0 failures/errors; PHPStan level 8 no errors; Symfony/Twig/container/AssetMapper/Doctrine checks passed.",
+        "postgresql_job": "Success: PostgreSQL 18, 39 migrations, 470 SQL queries, 0 unavailable.",
+        "feature_coverage": "Public release discovery is linked from the existing release overview; game-name, platform, region, status, and year filters work with stable 20-row pages preserving filters. Tests cover enabled public data, disabled entry/game/module denial, cancelled releases, malformed/oversized filters, pagination and empty results."
+      },
+      "completion_summary": "Searchable public game release discovery for the existing Game Catalogue. Five changed paths; no schema or write path.",
+      "open_limitations": [
+        "Search matches game names only; page size is fixed at 20.",
+        "Default date window is 18 months; selectable years run from current year through four years ahead.",
+        "Cancelled releases remain excluded.",
+        "Awaiting Trusted review and fresh Trusted integration CI."
+      ],
+      "trusted_follow_up": "On a fresh Trusted branch, port and review the public query, preserve module gating and enabled-entry/game visibility, verify filter bounds, pagination and the link from the release overview, then run full Trusted CI. Keep repository, controller and template boundaries replaceable for Fortress."
     },
     {
       "priority": 472,
