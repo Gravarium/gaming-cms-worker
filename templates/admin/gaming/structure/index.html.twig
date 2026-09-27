@@ -25,7 +25,29 @@
             <td>{% if rank.color %}<span style="color: {{ rank.color }}">●</span>{% endif %} {{ rank.name }}</td>
             <td>{{ rank.permissions ? rank.permissions|join(', ') : 'Keine besonderen Rechte' }}</td>
             <td>{{ rank.defaultRank ? 'Ja' : 'Nein' }}</td><td>{{ rank.enabled ? 'Aktiv' : 'Inaktiv' }}</td>
-            <td class="row-actions"><a href="{{ path('app_admin_guild_rank_edit', {guild: guild.id, rank: rank.id}) }}">Bearbeiten</a><form method="post" action="{{ path('app_admin_guild_rank_delete', {guild: guild.id, rank: rank.id}) }}" onsubmit="return confirm('Rang löschen?');"><input type="hidden" name="_token" value="{{ csrf_token('delete-rank-' ~ rank.id) }}"><button class="text-danger">Löschen</button></form></td>
+            <td class="row-actions">
+                {% if not loop.first %}
+                    <form method="post" action="{{ path('app_admin_guild_rank_move', {guild: guild.id, rank: rank.id, direction: 'up'}) }}" data-order-type="rank" data-order-id="{{ rank.id }}" data-direction="up">
+                        <input type="hidden" name="_token" value="{{ csrf_token('guild-rank-move-' ~ rank.id) }}">
+                        <button type="submit" aria-label="Rang {{ rank.name }} nach oben" title="Nach oben">↑</button>
+                    </form>
+                {% else %}
+                    <button type="button" disabled aria-label="Rang {{ rank.name }} ist bereits an erster Stelle" title="Bereits an erster Stelle">↑</button>
+                {% endif %}
+                {% if not loop.last %}
+                    <form method="post" action="{{ path('app_admin_guild_rank_move', {guild: guild.id, rank: rank.id, direction: 'down'}) }}" data-order-type="rank" data-order-id="{{ rank.id }}" data-direction="down">
+                        <input type="hidden" name="_token" value="{{ csrf_token('guild-rank-move-' ~ rank.id) }}">
+                        <button type="submit" aria-label="Rang {{ rank.name }} nach unten" title="Nach unten">↓</button>
+                    </form>
+                {% else %}
+                    <button type="button" disabled aria-label="Rang {{ rank.name }} ist bereits an letzter Stelle" title="Bereits an letzter Stelle">↓</button>
+                {% endif %}
+                <a href="{{ path('app_admin_guild_rank_edit', {guild: guild.id, rank: rank.id}) }}">Bearbeiten</a>
+                <form method="post" action="{{ path('app_admin_guild_rank_delete', {guild: guild.id, rank: rank.id}) }}" onsubmit="return confirm('Rang löschen?');">
+                    <input type="hidden" name="_token" value="{{ csrf_token('delete-rank-' ~ rank.id) }}">
+                    <button class="text-danger">Löschen</button>
+                </form>
+            </td>
         </tr>{% else %}<tr><td colspan="5">Noch keine eigenen Ränge vorhanden.</td></tr>{% endfor %}</tbody>
     </table></div>
 
