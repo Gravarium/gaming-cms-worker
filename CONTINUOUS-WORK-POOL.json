@@ -10,7 +10,7 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T14:24:25.482Z",
+  "published_at": "2026-09-27T14:24:44.411Z",
   "summary": {
     "total_remaining_worker_tasks": 167,
     "completed_worker_prs_awaiting_trusted_review": 291,
@@ -40374,7 +40374,7 @@
         "templates/widget/public_pages.html.twig",
         "tests/Widget/PublicPageDirectoryWidgetProviderTest.php"
       ],
-      "next_action": "Wait for exact-head Worker CI on repaired HEAD 6724a40f58205cbb0df78d4115690a6585b78c76; inspect both jobs and repair any concrete failures.",
+      "next_action": "Wait for exact-head Worker CI run #837 / 36325741990 on 6724a40f58205cbb0df78d4115690a6585b78c76; diagnose and repair any concrete failure.",
       "ci_attempts": [
         {
           "run_id": 36325502531,
@@ -40385,11 +40385,19 @@
           "conclusion": "failure",
           "phpstan": "success",
           "postgresql_18_migrations": "success",
-          "diagnosis": "The regression fixture persisted ContentEntry without its required author_id; fixed by persisting and assigning a test author."
+          "diagnosis": "The regression fixture omitted the required ContentEntry author; fixed by persisting and assigning a test author."
+        },
+        {
+          "run_id": 36325741990,
+          "run_number": 837,
+          "head": "6724a40f58205cbb0df78d4115690a6585b78c76",
+          "base": "b510875e7b0741b9b19f09429d2204a95df51198",
+          "result": "in_progress",
+          "conclusion": null
         }
       ],
       "worker_pr_state": "draft",
-      "last_ci_result": "failure",
+      "last_ci_result": "in_progress",
       "worker_pr_changed_paths": [
         "src/Widget/PublicPageDirectoryWidgetProvider.php",
         "templates/widget/public_pages.html.twig",
@@ -40401,8 +40409,8 @@
       "last_verified_push_at": "2026-09-27T14:23:31.165Z",
       "draft_pr": true,
       "pr_state": "open",
-      "ci_run_id": 36325502531,
-      "last_ci_run_id": 36325502531
+      "ci_run_id": 36325741990,
+      "last_ci_run_id": 36325741990
     }
   ],
   "recovery_queue": [],
