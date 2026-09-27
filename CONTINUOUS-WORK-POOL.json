@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T09:25:23.368Z",
+  "published_at": "2026-09-27T09:27:05.141Z",
   "summary": {
-    "total_remaining_worker_tasks": 147,
-    "completed_worker_prs_awaiting_trusted_review": 258,
+    "total_remaining_worker_tasks": 146,
+    "completed_worker_prs_awaiting_trusted_review": 259,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-493 is actively claimed from exact sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d; implement and run full exact-head Worker CI. Keep all foreign claims untouched.",
+    "next_required_action": "WCP-492 has green exact-head CI and is awaiting Trusted review with its claim locked; re-evaluate unclaimed tasks and claim the first dependency-safe package.",
     "composition_preparable": 0,
     "immediately_actionable": 6,
     "must_continue": true
@@ -32254,7 +32254,7 @@
       "package_id": "WCP-492",
       "title": "Publish shareable public pages for video playlists",
       "risk": "medium",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -32339,7 +32339,7 @@
       },
       "published_at": "2026-09-27T09:17:11.608Z",
       "claimed_on": "2026-09-27T09:17:11.608Z",
-      "claim_state": "active",
+      "claim_state": "locked_until_trusted_resolution",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
       "active_head": "ddc53ae5cbc7834f56175e653d33e83918d0f75d",
@@ -32349,7 +32349,7 @@
         "feature_branch": "ddc53ae5cbc7834f56175e653d33e83918d0f75d"
       },
       "last_observed_head": "ddc53ae5cbc7834f56175e653d33e83918d0f75d",
-      "last_checkpoint_at": "2026-09-27T09:25:23.368Z",
+      "last_checkpoint_at": "2026-09-27T09:27:05.141Z",
       "checkpoint_paths": [
         "src/Controller/VideoPlaylistController.php",
         "templates/video_playlist/index.html.twig",
@@ -32357,12 +32357,13 @@
         "templates/admin/video/simple_form.html.twig",
         "tests/Controller/VideoPlaylistPublicWorkflowTest.php"
       ],
-      "next_action": "Monitor exact-head Worker CI run 36309234506 on ddc53ae5cbc7834f56175e653d33e83918d0f75d; repair any failures on this branch before marking PR #286 ready.",
+      "next_action": "Keep the claim locked until Trusted resolution; the worker proposal remains untrusted.",
       "worker_pr": 286,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/286",
-      "last_verified_push_at": "2026-09-27T09:25:23.368Z",
+      "last_verified_push_at": "2026-09-27T09:27:05.141Z",
       "ci_run_id": 36309234506,
-      "ci_result": "in_progress"
+      "ci_result": "success",
+      "final_head": "ddc53ae5cbc7834f56175e653d33e83918d0f75d"
     },
     {
       "priority": 493,
