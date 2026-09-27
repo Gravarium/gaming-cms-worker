@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T00:06:24.463Z",
+  "published_at": "2026-09-27T00:08:45.905Z",
   "summary": {
     "total_remaining_worker_tasks": 138,
     "completed_worker_prs_awaiting_trusted_review": 205,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-439 is claimed from sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d; create its exclusive branches and add test-only content-duplication authorization, CSRF, and safe-state regressions.",
+    "next_required_action": "WCP-434 repaired the cache-header test assumptions; full Worker CI run 36281530798 is in progress on exact HEAD c45220b6dbd526ebc6a5c536435bab3bd331f20c.",
     "composition_preparable": 0,
     "immediately_actionable": 0,
     "must_continue": true
@@ -23238,7 +23238,7 @@
       "proposal_dependency_evidence": [],
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-      "active_head": "be0fca340e4ffe822cbf4843d0086b1d9d1df09f",
+      "active_head": "c45220b6dbd526ebc6a5c536435bab3bd331f20c",
       "resume_branch": "feature/wcp-434-layout-page-directory-g1",
       "collision_check": {
         "compared_against": "Fresh continuous/work-pool-v4 blob 693cfffc170dba611a219892aa137f0f0bb4715b, all active and claim-locked allowlists, and exact sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d.",
@@ -23253,8 +23253,8 @@
       },
       "claimed_on": "2026-09-26T23:46:48.636Z",
       "claim_state": "active",
-      "last_checkpoint_at": "2026-09-27T00:04:58.409Z",
-      "last_verified_push_at": "2026-09-27T00:04:58.409Z",
+      "last_checkpoint_at": "2026-09-27T00:08:45.905Z",
+      "last_verified_push_at": "2026-09-27T00:08:45.905Z",
       "checkpoint_paths": [
         "src/Controller/AdminLayoutPageDirectoryController.php",
         "src/Repository/AdminLayoutPageDirectoryRepository.php",
@@ -23264,29 +23264,18 @@
       ],
       "branch_heads": {
         "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-        "feature_branch": "be0fca340e4ffe822cbf4843d0086b1d9d1df09f"
+        "feature_branch": "c45220b6dbd526ebc6a5c536435bab3bd331f20c"
       },
       "worker_pr": 230,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/230",
       "draft_pr": true,
       "pr_state": "open_draft_awaiting_exact_head_ci",
-      "last_ci_run_id": 36281349515,
-      "ci_run_id": 36281349515,
+      "last_ci_run_id": 36281530798,
+      "ci_run_id": 36281530798,
       "last_ci_result": "in_progress",
-      "ci_attempts": [
-        {
-          "run_id": 36281195962,
-          "head": "3becc3a6fdcba414a40dca90529704c57e0d6135",
-          "result": "failure"
-        },
-        {
-          "run_id": 36281349515,
-          "head": "be0fca340e4ffe822cbf4843d0086b1d9d1df09f",
-          "result": "in_progress"
-        }
-      ],
-      "last_ci_diagnosis": "CI run 36281195962 failed only two new-test assertions because Symfony added max-age=0 and must-revalidate to the private,no-store Cache-Control header. The response still included private and no-store; the test now checks those directives separately and preserves the noindex assertion.",
-      "next_action": "Worker CI run 36281349515 is in progress on exact HEAD be0fca340e4ffe822cbf4843d0086b1d9d1df09f; inspect all jobs and repair any red result on this branch."
+      "ci_attempts": [{"run_id":36281195962,"head":"3becc3a6fdcba414a40dca90529704c57e0d6135","result":"failure"},{"run_id":36281349515,"head":"be0fca340e4ffe822cbf4843d0086b1d9d1df09f","result":"failure"},{"run_id":36281530798,"head":"c45220b6dbd526ebc6a5c536435bab3bd331f20c","result":"in_progress"}],
+      "last_ci_diagnosis": "CI run 36281195962 had two cache-header exact-string failures and run 36281349515 had one remaining exact-string assertion on the existing editor. Those test expectations were replaced with directive checks requiring both private and no-store; the noindex assertion remains.",
+      "next_action": "Worker CI run 36281530798 is in progress on exact HEAD c45220b6dbd526ebc6a5c536435bab3bd331f20c; inspect all jobs and repair any further failure on this branch."
     },
     {
       "priority": 215,
