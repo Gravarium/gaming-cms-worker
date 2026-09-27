@@ -29,34 +29,41 @@ final class PublicGuildEventsWidgetProviderTest extends WebTestCase
         $this->enableGaming($client);
 
         $em = $this->em($client);
-        $now = new \DateTimeImmutable();
-        $suffix = bin2hex(random_bytes(5));
-        $game = $this->game($em, $suffix);
-        $guild = $this->guild($em, $game, $suffix);
-        $included = $this->event($guild, 'Visible <em>raid</em>', $now->modify('+1 hour'));
-        $em->persist($included);
-        $team = (new GuildTeam())->setGuild($guild)->setName('Private team '.$suffix);
-        $em->persist($team);
-        $em->persist($this->event($guild, 'Private team event', $now->modify('+2 hours'))->setTeam($team));
-        $em->persist($this->event($guild, 'Cancelled event', $now->modify('+3 hours'))->setStatus(GuildEvent::STATUS_CANCELLED));
-        $em->persist($this->event($guild, 'Completed event', $now->modify('+4 hours'))->setStatus(GuildEvent::STATUS_DONE));
-        $em->persist($this->event($guild, 'Stale event', $now->modify('-3 hours')));
-
-        $disabledGuild = $this->guild($em, $game, $suffix.'-disabled-guild')->setEnabled(false);
-        $em->persist($this->event($disabledGuild, 'Disabled guild event', $now->modify('+5 hours')));
-        $disabledGame = $this->game($em, $suffix.'-disabled-game')->setEnabled(false);
-        $disabledGameGuild = $this->guild($em, $disabledGame, $suffix.'-disabled-game')->setEnabled(true);
-        $em->persist($this->event($disabledGameGuild, 'Disabled game event', $now->modify('+6 hours')));
-        $em->flush();
-
+        $fixtures = [];
         try {
-            $registry = $client->getContainer()->get(WidgetRegistry::class);
+            $now = new \DateTimeImmutable();
+            $suffix = bin2hex(random_bytes(5));
+            $game = $this->game($em, $suffix);
+            $fixtures[] = $game;
+            $guild = $this->guild($em, $game, $suffix);
+            $fixtures[] = $guild;
+            $included = $this->event($guild, 'Visible <em>raid</em>', $now->modify('+1 hour'));
+            $this->trackEvent($em, $fixtures, $included);
+            $team = (new GuildTeam())->setGuild($guild)->setName('Private team '.$suffix);
+            $em->persist($team);
+            $fixtures[] = $team;
+            $this->trackEvent($em, $fixtures, $this->event($guild, 'Private team event', $now->modify('+2 hours'))->setTeam($team));
+            $this->trackEvent($em, $fixtures, $this->event($guild, 'Cancelled event', $now->modify('+3 hours'))->setStatus(GuildEvent::STATUS_CANCELLED));
+            $this->trackEvent($em, $fixtures, $this->event($guild, 'Completed event', $now->modify('+4 hours'))->setStatus(GuildEvent::STATUS_DONE));
+            $this->trackEvent($em, $fixtures, $this->event($guild, 'Stale event', $now->modify('-3 hours')));
+    
+            $disabledGuild = $this->guild($em, $game, $suffix.'-disabled-guild')->setEnabled(false);
+            $fixtures[] = $disabledGuild;
+            $this->trackEvent($em, $fixtures, $this->event($disabledGuild, 'Disabled guild event', $now->modify('+5 hours')));
+            $disabledGame = $this->game($em, $suffix.'-disabled-game')->setEnabled(false);
+            $fixtures[] = $disabledGame;
+            $disabledGameGuild = $this->guild($em, $disabledGame, $suffix.'-disabled-game')->setEnabled(true);
+            $fixtures[] = $disabledGameGuild;
+            $this->trackEvent($em, $fixtures, $this->event($disabledGameGuild, 'Disabled game event', $now->modify('+6 hours')));
+            $em->flush();
+    
+                $registry = $client->getContainer()->get(WidgetRegistry::class);
             $definition = $registry->get(self::WIDGET_KEY);
             self::assertNotNull($definition);
             self::assertSame('gaming', $definition->module);
             self::assertTrue($registry->available(self::WIDGET_KEY));
 
-            $data = $registry->data(self::WIDGET_KEY, ['count' => 6]);
+            $data = $registry->data(self::WIDGET_KEY, ['event_limit' => 6]);
             self::assertSame(['events'], array_keys($data));
             $renderedEvents = $data['events'] ?? null;
             self::assertIsArray($renderedEvents);
@@ -75,6 +82,7 @@ final class PublicGuildEventsWidgetProviderTest extends WebTestCase
             self::assertStringNotContainsString('Warteliste', $html);
             self::assertStringNotContainsString('Anmeldung', $html);
         } finally {
+            $this->cleanupFixtures($em, $fixtures);
             $this->resetModuleStates($client);
         }
     }
@@ -85,14 +93,19 @@ final class PublicGuildEventsWidgetProviderTest extends WebTestCase
         $this->resetModuleStates($client);
         $this->enableGaming($client);
 
+        $em = $this->em($client);
+        $fixtures = [];
+
         try {
-            $em = $this->em($client);
             $now = new \DateTimeImmutable();
             $suffix = bin2hex(random_bytes(5));
-            $guild = $this->guild($em, $this->game($em, $suffix), $suffix);
+            $game = $this->game($em, $suffix);
+            $fixtures[] = $game;
+            $guild = $this->guild($em, $game, $suffix);
+            $fixtures[] = $guild;
             $start = $now->modify('+1 day');
             for ($i = 0; $i < 15; ++$i) {
-                $em->persist($this->event($guild, 'Event '.$i, $start));
+                $this->trackEvent($em, $fixtures, $this->event($guild, 'Event '.$i, $start));
             }
             $em->flush();
 
@@ -104,11 +117,12 @@ final class PublicGuildEventsWidgetProviderTest extends WebTestCase
             sort($sortedIds);
             self::assertSame($sortedIds, $ids);
 
-            $data = $client->getContainer()->get(WidgetRegistry::class)->data(self::WIDGET_KEY, ['count' => 999]);
+            $data = $client->getContainer()->get(WidgetRegistry::class)->data(self::WIDGET_KEY, ['event_limit' => 999]);
             $widgetEvents = $data['events'] ?? null;
             self::assertIsArray($widgetEvents);
             self::assertCount(12, $widgetEvents);
         } finally {
+            $this->cleanupFixtures($em, $fixtures);
             $this->resetModuleStates($client);
         }
     }
@@ -123,7 +137,7 @@ final class PublicGuildEventsWidgetProviderTest extends WebTestCase
             $registry = $client->getContainer()->get(WidgetRegistry::class);
             $definition = $registry->get(self::WIDGET_KEY);
             self::assertNotNull($definition);
-            $data = $registry->data(self::WIDGET_KEY, ['count' => 6]);
+            $data = $registry->data(self::WIDGET_KEY, ['event_limit' => 6]);
 
             $html = $client->getContainer()->get(Environment::class)->render($definition->template, $data);
             self::assertStringContainsString('Zurzeit sind keine öffentlichen Gildentermine geplant.', $html);
@@ -142,7 +156,7 @@ final class PublicGuildEventsWidgetProviderTest extends WebTestCase
         try {
             $registry = $client->getContainer()->get(WidgetRegistry::class);
             self::assertFalse($registry->available(self::WIDGET_KEY));
-            self::assertSame([], $registry->data(self::WIDGET_KEY, ['count' => 6]));
+            self::assertSame([], $registry->data(self::WIDGET_KEY, ['event_limit' => 6]));
             self::assertNotContains(self::WIDGET_KEY, array_map(static fn (WidgetDefinition $definition): string => $definition->key, $registry->availableDefinitions()));
         } finally {
             $this->resetModuleStates($client);
@@ -178,6 +192,25 @@ final class PublicGuildEventsWidgetProviderTest extends WebTestCase
             }
         }
         $em->flush();
+        $em->clear();
+    }
+
+    /** @param list<object> $fixtures */
+    private function trackEvent(EntityManagerInterface $em, array &$fixtures, GuildEvent $event): void
+    {
+        $em->persist($event);
+        $fixtures[] = $event;
+    }
+
+    /** @param list<object> $fixtures */
+    private function cleanupFixtures(EntityManagerInterface $em, array $fixtures): void
+    {
+        foreach (array_reverse($fixtures) as $fixture) {
+            $em->remove($fixture);
+        }
+        if ($fixtures !== []) {
+            $em->flush();
+        }
         $em->clear();
     }
 
