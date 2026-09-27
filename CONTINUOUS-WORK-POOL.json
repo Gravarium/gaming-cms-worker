@@ -10,16 +10,16 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T01:13:46.331Z",
+  "published_at": "2026-09-27T01:14:30.870Z",
   "summary": {
     "total_remaining_worker_tasks": 139,
     "completed_worker_prs_awaiting_trusted_review": 213,
     "recovery_tasks": 0,
-    "unclaimed": 6,
-    "immediately_claimable": 1,
+    "unclaimed": 5,
+    "immediately_claimable": 0,
     "next_required_action": "WCP-444 is complete with exact-head Worker CI and awaits Trusted review; re-evaluate the remaining unclaimed FCP dependencies, then continue an independent bounded Worker proposal.",
     "composition_preparable": 0,
-    "immediately_actionable": 2,
+    "immediately_actionable": 3,
     "must_continue": true
   },
   "rules": {
@@ -24722,7 +24722,7 @@
       "package_id": "WCP-445",
       "title": "Browse and paginate every administrative user",
       "risk": "medium",
-      "execution_state": "unclaimed",
+      "execution_state": "worker_in_progress",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -24808,7 +24808,21 @@
           "templates/admin/user/directory.html.twig",
           "tests/Controller/AdminUserDirectoryTest.php"
         ]
-      }
+      },
+      "claim_state": "active",
+      "claimed_on": "2026-09-27T01:14:30.870Z",
+      "active_base_branch": "main",
+      "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "resume_branch": "feature/wcp-445-admin-user-directory-pagination-g1",
+      "last_checkpoint_at": "2026-09-27T01:14:30.870Z",
+      "last_verified_push_at": "2026-09-27T01:14:30.870Z",
+      "checkpoint_paths": [],
+      "branch_heads": {
+        "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+        "feature_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d"
+      },
+      "next_action": "Implement the protected read-only paginated directory on the reserved feature branch; checkpoint the complete behavior and negative tests before full CI."
     }
   ],
   "recovery_queue": [],
