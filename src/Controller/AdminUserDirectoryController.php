@@ -2,17 +2,17 @@
 
 declare(strict_types=1);
 
-namespace App\\Controller;
+namespace App\Controller;
 
-use App\\Repository\\AdminUserDirectoryRepository;
-use App\\Security\\CmsPermission;
+use App\Repository\AdminUserDirectoryRepository;
+use App\Security\CmsPermission;
 use DateTimeImmutable;
-use Symfony\\Bundle\\FrameworkBundle\\Controller\\AbstractController;
-use Symfony\\Component\\HttpFoundation\\Request;
-use Symfony\\Component\\HttpFoundation\\Response;
-use Symfony\\Component\\HttpKernel\\Exception\\BadRequestHttpException;
-use Symfony\\Component\\Routing\\Attribute\\Route;
-use Symfony\\Component\\Security\\Http\\Attribute\\IsGranted;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[IsGranted(CmsPermission::USERS)]
 final class AdminUserDirectoryController extends AbstractController
@@ -36,7 +36,7 @@ final class AdminUserDirectoryController extends AbstractController
             !is_string($rawQuery)
             || !mb_check_encoding($rawQuery, 'UTF-8')
             || mb_strlen($rawQuery) > self::MAX_QUERY_LENGTH
-            || preg_match('/[\\x00-\\x1F\\x7F]/', $rawQuery) === 1
+            || preg_match('/[\x00-\x1F\x7F]/', $rawQuery) === 1
             || !is_string($rawState)
             || !in_array($rawState, ['', 'active', 'locked', 'unverified'], true)
             || !is_string($rawPage)

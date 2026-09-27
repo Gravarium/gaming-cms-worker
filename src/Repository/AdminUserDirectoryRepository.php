@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace App\\Repository;
+namespace App\Repository;
 
-use App\\Entity\\User;
+use App\Entity\User;
 use DateTimeImmutable;
-use Doctrine\\Bundle\\DoctrineBundle\\Repository\\ServiceEntityRepository;
-use Doctrine\\ORM\\QueryBuilder;
-use Doctrine\\Persistence\\ManagerRegistry;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\QueryBuilder;
+use Doctrine\Persistence\ManagerRegistry;
 
 /**
  * @extends ServiceEntityRepository<User>

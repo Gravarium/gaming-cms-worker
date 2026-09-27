@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace App\\Tests\\Controller;
+namespace App\Tests\Controller;
 
-use App\\Entity\\User;
-use App\\Security\\CmsPermission;
+use App\Entity\User;
+use App\Security\CmsPermission;
 use DateTimeImmutable;
-use Doctrine\\ORM\\EntityManagerInterface;
-use Symfony\\Bundle\\FrameworkBundle\\KernelBrowser;
-use Symfony\\Bundle\\FrameworkBundle\\Test\\WebTestCase;
-use Symfony\\Component\\DomCrawler\\Crawler;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bundle\FrameworkBundle\KernelBrowser;
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\DomCrawler\Crawler;
 
 final class AdminUserDirectoryTest extends WebTestCase
 {
