@@ -38780,7 +38780,7 @@
       "package_id": "WCP-536",
       "title": "Validate create-admin identity column bounds",
       "risk": "low",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -38854,7 +38854,7 @@
       },
       "published_at": "2026-09-27T13:10:04.054Z",
       "claimed_on": "2026-09-27T13:10:04.054Z",
-      "claim_state": "active",
+      "claim_state": "locked_until_trusted_resolution",
       "active_base_branch": "main",
       "active_base_sha": "b510875e7b0741b9b19f09429d2204a95df51198",
       "active_head": "496595aa0d63e26856df95a2e621d494b6e8d9f0",
@@ -38864,24 +38864,24 @@
         "feature_branch": "496595aa0d63e26856df95a2e621d494b6e8d9f0"
       },
       "last_observed_head": "496595aa0d63e26856df95a2e621d494b6e8d9f0",
-      "last_checkpoint_at": "2026-09-27T13:21:46.162Z",
-      "last_verified_push_at": "2026-09-27T13:21:46.162Z",
+      "last_checkpoint_at": "2026-09-27T13:26:03.626Z",
+      "last_verified_push_at": "2026-09-27T13:26:03.626Z",
       "checkpoint_paths": [
         "src/Command/CreateAdminCommand.php",
         "tests/Command/CreateAdminCommandTest.php"
       ],
-      "next_action": "Inspect exact-head Worker CI run #814 / 36322080654 on 496595aa0d63e26856df95a2e621d494b6e8d9f0. The prior run #813 confirmed all tests pass but failed because Symfony Application::add() is deprecated; the test now uses addCommand(). Repair any new concrete failure, then mark PR #328 ready only after all checks pass.",
+      "next_action": "Worker PR #328 is complete on exact green HEAD 496595aa0d63e26856df95a2e621d494b6e8d9f0; CI run #814 / 36322080654 passed. Keep the claim locked until Trusted explicitly integrates, cancels or transfers it. Continue the autonomous Worker loop without merging or deploying.",
       "worker_pr": 328,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/328",
-      "draft_pr": true,
+      "draft_pr": false,
       "pr_state": "open",
-      "worker_pr_state": "draft",
+      "worker_pr_state": "ready_for_review",
       "worker_pr_changed_paths": [
         "src/Command/CreateAdminCommand.php",
         "tests/Command/CreateAdminCommandTest.php"
       ],
-      "ci_result": "in_progress",
-      "last_ci_result": "in_progress",
+      "ci_result": "success",
+      "last_ci_result": "success",
       "ci_attempts": [
         {
           "run_id": 36321638397,
@@ -38898,12 +38898,20 @@
         {
           "run_id": 36322080654,
           "head": "496595aa0d63e26856df95a2e621d494b6e8d9f0",
-          "result": "in_progress",
-          "conclusion": null
+          "result": "success",
+          "conclusion": "success"
         }
       ],
       "ci_run_id": 36322080654,
-      "last_ci_run_id": 36322080654
+      "last_ci_run_id": 36322080654,
+      "final_head": "496595aa0d63e26856df95a2e621d494b6e8d9f0",
+      "completed_at": "2026-09-27T13:26:03.626Z",
+      "completion_evidence": [
+        "Base main b510875e7b0741b9b19f09429d2204a95df51198; final Worker HEAD 496595aa0d63e26856df95a2e621d494b6e8d9f0.",
+        "Changed paths: src/Command/CreateAdminCommand.php and tests/Command/CreateAdminCommandTest.php.",
+        "Over-180-character syntactically valid emails and 81-character display names are rejected before password prompting; a valid 180-character email and 80-character display name persist successfully in a rolled-back transaction.",
+        "Worker PR #328: https://github.com/Gravarium/gaming-cms-worker/pull/328. Exact-head Worker CI run #814 / 36322080654 succeeded. PHPStan: no errors; PHPUnit: 539 tests / 2,243 assertions (1 PHPUnit deprecation and 1 notice, no failures); PostgreSQL 18: 54 migrations and 750 SQL queries."
+      ]
     },
     {
       "priority": 537,
