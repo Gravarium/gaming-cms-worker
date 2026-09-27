@@ -15,7 +15,7 @@ class GameGuideReviewAudit
 {
     public function __construct()
     {
-        $this->occurredAt = new \\DateTimeImmutable();
+        $this->occurredAt = new \DateTimeImmutable();
     }
 
     #[ORM\Id]
