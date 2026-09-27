@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T10:16:10.292Z",
+  "published_at": "2026-09-27T10:17:24.656Z",
   "summary": {
     "total_remaining_worker_tasks": 163,
     "completed_worker_prs_awaiting_trusted_review": 271,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-508 is rerunning full exact-head Worker CI after a concrete PHPUnit risky-test finding; finish and reconcile before moving on.",
+    "next_required_action": "WCP-508 is rerunning full exact-head Worker CI after correcting the test syntax; finish validation and pool reconciliation before moving on.",
     "composition_preparable": 0,
     "immediately_actionable": 17,
     "must_continue": true
@@ -34524,27 +34524,27 @@
       "claim_state": "active",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-      "active_head": "0f514f0a20dd5ffd50a3b7dc035e3db0ac67eb20",
+      "active_head": "73d048c8011d69eb5f017735fe5a91f075860c77",
       "resume_branch": "feature/wcp-508-faq-widget-g1",
       "branch_heads": {
         "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-        "feature_branch": "0f514f0a20dd5ffd50a3b7dc035e3db0ac67eb20"
+        "feature_branch": "73d048c8011d69eb5f017735fe5a91f075860c77"
       },
-      "last_observed_head": "0f514f0a20dd5ffd50a3b7dc035e3db0ac67eb20",
-      "last_checkpoint_at": "2026-09-27T10:15:04.964Z",
+      "last_observed_head": "73d048c8011d69eb5f017735fe5a91f075860c77",
+      "last_checkpoint_at": "2026-09-27T10:17:24.656Z",
       "checkpoint_paths": [
         "src/Widget/FaqWidgetProvider.php",
         "templates/widget/faq.html.twig",
         "tests/Widget/FaqWidgetProviderTest.php"
       ],
-      "next_action": "Await exact-head Worker CI run 36311902681 on 0f514f0a20dd5ffd50a3b7dc035e3db0ac67eb20; then update the PR and pool from the verified result.",
-      "last_verified_push_at": "2026-09-27T10:15:04.964Z",
+      "next_action": "Await exact-head Worker CI run 36311995617 on 73d048c8011d69eb5f017735fe5a91f075860c77; repair any concrete issue and reconcile the pool from the final verified head.",
+      "last_verified_push_at": "2026-09-27T10:17:24.656Z",
       "worker_pr": 301,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/301",
       "draft_pr": true,
       "pr_state": "open",
-      "ci_run_id": 36311902681,
-      "last_ci_run_id": 36311902681,
+      "ci_run_id": 36311995617,
+      "last_ci_run_id": 36311995617,
       "ci_result": "in_progress",
       "last_ci_result": "in_progress",
       "ci_attempts": [
@@ -34552,13 +34552,19 @@
           "run_id": 36311739079,
           "head": "8d7d5e02f491bc639216311f0687262de9eca446",
           "result": "success",
-          "diagnosis": "Both CI jobs succeeded, but PHPUnit reported one risky test with no assertions: the limits test's exception-only catch path was not counted. Split into explicit expectException tests and rerun the full exact-head CI."
+          "diagnosis": "Both CI jobs exited successfully, but PHPUnit reported one risky test with no assertions in the exception-only length loop. Replaced it with two explicit expected-exception tests."
         },
         {
           "run_id": 36311902681,
           "head": "0f514f0a20dd5ffd50a3b7dc035e3db0ac67eb20",
+          "result": "failure",
+          "diagnosis": "PHP/Symfony job stopped before running tests: unexpected backslash syntax in the fully qualified DomainException class references. Corrected both references."
+        },
+        {
+          "run_id": 36311995617,
+          "head": "73d048c8011d69eb5f017735fe5a91f075860c77",
           "result": "in_progress",
-          "summary": "Full Worker CI is rerunning after replacing the no-assertion length loop with explicit PHPUnit expected-exception tests."
+          "summary": "Full Worker CI is rerunning after the PHP syntax correction."
         }
       ],
       "worker_pr_changed_paths": [
