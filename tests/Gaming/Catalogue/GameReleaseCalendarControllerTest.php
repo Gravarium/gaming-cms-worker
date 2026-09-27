@@ -10,7 +10,7 @@ use App\Entity\GameCatalogue\GameCatalogueEntry;
 use App\Entity\GameCatalogue\GamePlatform;
 use App\Entity\GameCatalogue\GameRelease;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Test\KernelBrowser;
+use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 final class GameReleaseCalendarControllerTest extends WebTestCase
@@ -38,12 +38,18 @@ final class GameReleaseCalendarControllerTest extends WebTestCase
     {
         $client = static::createClient();
         $client->disableReboot();
+        $em = $this->entityManager($client);
+        $moduleState = $this->setGamingEnabled($em, true);
 
-        $client->request('GET', '/games/releases');
+        try {
+            $client->request('GET', '/games/releases');
 
-        self::assertResponseIsSuccessful();
-        self::assertSelectorExists('a[href="/games/releases/calendar"]');
-        self::assertSelectorTextContains('header.page-header', 'Release-Kalender durchsuchen und filtern');
+            self::assertResponseIsSuccessful();
+            self::assertSelectorExists('a[href="/games/releases/calendar"]');
+            self::assertSelectorTextContains('header.page-header', 'Release-Kalender durchsuchen und filtern');
+        } finally {
+            $this->restoreGamingState($em, $moduleState);
+        }
     }
 
     public function testSearchFiltersAndPaginatesUpcomingPublicReleases(): void
@@ -51,36 +57,41 @@ final class GameReleaseCalendarControllerTest extends WebTestCase
         $client = static::createClient();
         $client->disableReboot();
         $em = $this->entityManager($client);
+        $moduleState = $this->setGamingEnabled($em, true);
         $token = bin2hex(random_bytes(6));
         $year = (int) (new \DateTimeImmutable('today'))->format('Y') + 1;
         $region = 'EU-'.$token;
         $fixture = $this->createFixture($em, 'Calendar Game '.$token, $token, $region, $year, 21);
 
-        $client->request('GET', '/games/releases/calendar', [
-            'q' => 'calendar game '.$token,
-            'platform' => (string) $fixture['platform']->getId(),
-            'region' => $region,
-            'status' => 'announced',
-            'year' => (string) $year,
-            'page' => '2',
-        ]);
+        try {
+            $client->request('GET', '/games/releases/calendar', [
+                'q' => 'calendar game '.$token,
+                'platform' => (string) $fixture['platform']->getId(),
+                'region' => $region,
+                'status' => 'announced',
+                'year' => (string) $year,
+                'page' => '2',
+            ]);
 
-        self::assertResponseIsSuccessful();
-        self::assertSelectorTextContains('h1', 'Release-Kalender entdecken');
-        self::assertSelectorTextContains('p[role="status"]', '21 Veröffentlichungen gefunden.');
-        self::assertSelectorTextContains('nav.pagination', 'Seite 2 von 2');
-        self::assertSelectorCount(1, 'tr.release-row');
+            self::assertResponseIsSuccessful();
+            self::assertSelectorTextContains('h1', 'Release-Kalender entdecken');
+            self::assertSelectorTextContains('p[role="status"]', '21 Veröffentlichungen gefunden.');
+            self::assertSelectorTextContains('nav.pagination', 'Seite 2 von 2');
+            self::assertSelectorCount(1, 'tr.release-row');
 
-        $href = $client->getCrawler()->filter('nav.pagination a')->first()->attr('href');
-        self::assertIsString($href);
-        $query = (string) parse_url($href, PHP_URL_QUERY);
-        parse_str($query, $parameters);
-        self::assertSame('calendar game '.$token, $parameters['q'] ?? null);
-        self::assertSame((string) $fixture['platform']->getId(), (string) ($parameters['platform'] ?? ''));
-        self::assertSame($region, $parameters['region'] ?? null);
-        self::assertSame('announced', $parameters['status'] ?? null);
-        self::assertSame((string) $year, (string) ($parameters['year'] ?? ''));
-        self::assertSame('1', (string) ($parameters['page'] ?? ''));
+            $href = $client->getCrawler()->filter('nav.pagination a')->first()->attr('href');
+            self::assertIsString($href);
+            $query = (string) parse_url($href, PHP_URL_QUERY);
+            parse_str($query, $parameters);
+            self::assertSame('calendar game '.$token, $parameters['q'] ?? null);
+            self::assertSame((string) $fixture['platform']->getId(), (string) ($parameters['platform'] ?? ''));
+            self::assertSame($region, $parameters['region'] ?? null);
+            self::assertSame('announced', $parameters['status'] ?? null);
+            self::assertSame((string) $year, (string) ($parameters['year'] ?? ''));
+            self::assertSame('1', (string) ($parameters['page'] ?? ''));
+        } finally {
+            $this->restoreGamingState($em, $moduleState);
+        }
     }
 
     public function testDisabledEntriesGamesAndCancelledReleasesAreNotPubliclyListed(): void
@@ -88,40 +99,52 @@ final class GameReleaseCalendarControllerTest extends WebTestCase
         $client = static::createClient();
         $client->disableReboot();
         $em = $this->entityManager($client);
+        $moduleState = $this->setGamingEnabled($em, true);
         $token = bin2hex(random_bytes(6));
         $year = (int) (new \DateTimeImmutable('today'))->format('Y') + 1;
 
-        $public = $this->createFixture($em, 'Visibility '.$token.' Public', 'visible-'.$token, 'EU-'.$token, $year, 1);
-        $disabledGame = $this->createFixture($em, 'Visibility '.$token.' DisabledGame', 'disabled-game-'.$token, 'EU-'.$token, $year, 1, false);
-        $disabledEntry = $this->createFixture($em, 'Visibility '.$token.' DisabledEntry', 'disabled-entry-'.$token, 'EU-'.$token, $year, 1, true, false);
-        $cancelled = $this->createFixture($em, 'Visibility '.$token.' Cancelled', 'cancelled-'.$token, 'EU-'.$token, $year, 1, true, true, 'cancelled');
+        $this->createFixture($em, 'Visibility '.$token.' Public', 'visible-'.$token, 'EU-'.$token, $year, 1);
+        $this->createFixture($em, 'Visibility '.$token.' DisabledGame', 'disabled-game-'.$token, 'EU-'.$token, $year, 1, false);
+        $this->createFixture($em, 'Visibility '.$token.' DisabledEntry', 'disabled-entry-'.$token, 'EU-'.$token, $year, 1, true, false);
+        $this->createFixture($em, 'Visibility '.$token.' Cancelled', 'cancelled-'.$token, 'EU-'.$token, $year, 1, true, true, 'cancelled');
 
-        $client->request('GET', '/games/releases/calendar', ['q' => 'Visibility '.$token, 'year' => (string) $year]);
+        try {
+            $client->request('GET', '/games/releases/calendar', ['q' => 'Visibility '.$token, 'year' => (string) $year]);
 
-        self::assertResponseIsSuccessful();
-        self::assertSelectorTextContains('p[role="status"]', '1 Veröffentlichung gefunden.');
-        self::assertSelectorTextContains('tr.release-row', 'Visibility '.$token.' Public');
-        self::assertSelectorTextNotContains('body', 'DisabledGame');
-        self::assertSelectorTextNotContains('body', 'DisabledEntry');
-        self::assertSelectorTextNotContains('body', 'Cancelled');
+            self::assertResponseIsSuccessful();
+            self::assertSelectorTextContains('p[role="status"]', '1 Veröffentlichung gefunden.');
+            self::assertSelectorTextContains('tr.release-row', 'Visibility '.$token.' Public');
+            $body = $client->getCrawler()->filter('body')->text();
+            self::assertStringNotContainsString('DisabledGame', $body);
+            self::assertStringNotContainsString('DisabledEntry', $body);
+            self::assertStringNotContainsString('Cancelled', $body);
+        } finally {
+            $this->restoreGamingState($em, $moduleState);
+        }
     }
 
     public function testInvalidAndOversizedFiltersAreRejected(): void
     {
         $client = static::createClient();
         $client->disableReboot();
+        $em = $this->entityManager($client);
+        $moduleState = $this->setGamingEnabled($em, true);
 
-        $client->request('GET', '/games/releases/calendar', ['status' => 'private']);
-        self::assertResponseStatusCodeSame(422);
+        try {
+            $client->request('GET', '/games/releases/calendar', ['status' => 'private']);
+            self::assertResponseStatusCodeSame(422);
 
-        $client->request('GET', '/games/releases/calendar', ['platform' => '2147483648']);
-        self::assertResponseStatusCodeSame(422);
+            $client->request('GET', '/games/releases/calendar', ['platform' => '2147483648']);
+            self::assertResponseStatusCodeSame(422);
 
-        $client->request('GET', '/games/releases/calendar', ['q' => str_repeat('x', 101)]);
-        self::assertResponseStatusCodeSame(422);
+            $client->request('GET', '/games/releases/calendar', ['q' => str_repeat('x', 101)]);
+            self::assertResponseStatusCodeSame(422);
 
-        $client->request('GET', '/games/releases/calendar?q%5B%5D=not-a-string');
-        self::assertResponseStatusCodeSame(422);
+            $client->request('GET', '/games/releases/calendar?q%5B%5D=not-a-string');
+            self::assertResponseStatusCodeSame(422);
+        } finally {
+            $this->restoreGamingState($em, $moduleState);
+        }
     }
 
     public function testDisabledGamingModuleFailsClosed(): void
@@ -129,28 +152,14 @@ final class GameReleaseCalendarControllerTest extends WebTestCase
         $client = static::createClient();
         $client->disableReboot();
         $em = $this->entityManager($client);
-        $states = $em->getRepository(CmsModuleState::class);
-        $state = $states->findOneBy(['moduleKey' => 'gaming']);
-        $created = !$state instanceof CmsModuleState;
-        $wasEnabled = $state instanceof CmsModuleState ? $state->isEnabled() : true;
-
-        if (!$state instanceof CmsModuleState) {
-            $state = (new CmsModuleState())->setModuleKey('gaming')->updateVersion('1.0.0');
-            $em->persist($state);
-            $this->cleanupEntities[] = $state;
-        }
-        $state->setEnabled(false);
-        $em->flush();
+        $moduleState = $this->setGamingEnabled($em, false);
 
         try {
             $client->request('GET', '/games/releases/calendar');
 
             self::assertResponseStatusCodeSame(404);
         } finally {
-            if (!$created) {
-                $state->setEnabled($wasEnabled);
-                $em->flush();
-            }
+            $this->restoreGamingState($em, $moduleState);
         }
     }
 
@@ -192,6 +201,44 @@ final class GameReleaseCalendarControllerTest extends WebTestCase
         $em->flush();
 
         return ['game' => $game, 'entry' => $entry, 'platform' => $platform, 'releases' => $releases];
+    }
+
+    /**
+     * @return array{state: CmsModuleState, previousEnabled: bool, created: bool}
+     */
+    private function setGamingEnabled(EntityManagerInterface $em, bool $enabled): array
+    {
+        $state = $em->getRepository(CmsModuleState::class)->findOneBy(['moduleKey' => 'gaming']);
+        $created = !$state instanceof CmsModuleState;
+        if (!$state instanceof CmsModuleState) {
+            $state = (new CmsModuleState())->setModuleKey('gaming')->updateVersion('1.0.0');
+            $em->persist($state);
+            $this->cleanupEntities[] = $state;
+        }
+
+        $previousEnabled = $state->isEnabled();
+        $state->setEnabled($enabled);
+        $em->flush();
+
+        return ['state' => $state, 'previousEnabled' => $previousEnabled, 'created' => $created];
+    }
+
+    /**
+     * @param array{state: CmsModuleState, previousEnabled: bool, created: bool} $snapshot
+     */
+    private function restoreGamingState(EntityManagerInterface $em, array $snapshot): void
+    {
+        if ($snapshot['created']) {
+            if ($em->contains($snapshot['state'])) {
+                $em->remove($snapshot['state']);
+                $em->flush();
+            }
+
+            return;
+        }
+
+        $snapshot['state']->setEnabled($snapshot['previousEnabled']);
+        $em->flush();
     }
 
     private function entityManager(KernelBrowser $client): EntityManagerInterface
