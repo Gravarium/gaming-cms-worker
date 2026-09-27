@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T08:52:35.962Z",
+  "published_at": "2026-09-27T08:56:05.245Z",
   "summary": {
-    "total_remaining_worker_tasks": 142,
+    "total_remaining_worker_tasks": 143,
     "completed_worker_prs_awaiting_trusted_review": 254,
     "recovery_tasks": 0,
-    "unclaimed": 4,
+    "unclaimed": 3,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-487 is complete on exact green HEAD e4f57f77c417048c911bb467ca6c79e665d69b74 (PR #280, CI 36307374043); the claim remains locked. Re-evaluate the current unclaimed FCPs against Trusted integration and exact green Worker predecessor heads; if none is dependency-safe, publish and claim the next bounded independent worker-only proposal. Do not change foreign active claims.",
+    "next_required_action": "WCP-488 is actively claimed from exact sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d; implement and run full exact-head Worker CI. The remaining unclaimed FCPs lack required predecessor evidence. Keep all foreign claims untouched.",
     "composition_preparable": 0,
     "immediately_actionable": 4,
     "must_continue": true
@@ -31509,6 +31509,98 @@
         "Awaiting Trusted review and Trusted integration CI; no product source or configuration was changed."
       ],
       "trusted_follow_up": "Run the least-privilege dashboard and game-creation workflow on a fresh Trusted feature branch and full Trusted CI; preserve the CMS_GAMING_MANAGE boundary and rendered form CSRF behavior."
+    },
+    {
+      "priority": 488,
+      "package_id": "WCP-488",
+      "title": "Protect game deletion with rendered CSRF and persistence checks",
+      "risk": "medium",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-488-game-delete-csrf-g1",
+      "suggested_branch": "feature/wcp-488-game-delete-csrf-g1",
+      "base_branch": "main",
+      "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "objective": "Add test-only functional security coverage for AdminGamingController's game deletion route. Prove a POST without the per-game CSRF token is rejected and leaves the synthetic game persisted, while the token rendered in the dashboard form authorizes deletion. Use a synthetic CMS_GAMING_MANAGE user and game, and clean up both even on assertion failure. Do not alter product code.",
+      "allowed_paths": [
+        "tests/Controller/AdminGamingGameDeletionSecurityTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/",
+        "src/",
+        "templates/",
+        "assets/",
+        "public/"
+      ],
+      "deliverables": [
+        "A synthetic game and non-administrator CMS_GAMING_MANAGE user are created for the functional test.",
+        "POST /admin/gaming/game/{id}/delete without its resource-specific CSRF token returns 403 and the persisted game remains.",
+        "The test obtains the CSRF token from the rendered dashboard delete form, submits it, follows the success redirect and confirms the game is deleted.",
+        "Cleanup removes the synthetic user and any remaining game in finally; only tests/Controller/AdminGamingGameDeletionSecurityTest.php changes."
+      ],
+      "tests": [
+        "Focused PHPUnit functional coverage for missing-token rejection, unchanged state, and rendered-token deletion.",
+        "PHPStan level 8 and complete Worker CI on the exact final HEAD.",
+        "PostgreSQL 18 complete migration-chain validation."
+      ],
+      "completion_report": [
+        "Exact sanitized main SHA and exact final HEAD.",
+        "Complete changed-file list and Worker PR.",
+        "HTTP result and persisted game state before and after the token-authorized delete.",
+        "Exact-head PHPUnit, PHPStan, full Worker CI and PostgreSQL migration results.",
+        "Unresolved assumptions and Trusted integration follow-up."
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "preserve-per-game-CSRF-delete-token-and-game-persistence-on-rejection",
+        "synthetic-fixtures-only-and-cleaned-up",
+        "test-only-scope-no-product-source-or-configuration-changes",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment",
+        "no-private-runtime-or-sensitive-data"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "proposal_kind": "worker_only",
+      "proposal_dependency_evidence": [],
+      "collision_check": {
+        "compared_against": "Fresh continuous/work-pool-v4 at 1a8ceae86ded045f9e4d9375c3012f5fea70728e, all active and claim-locked allowed paths, and sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d.",
+        "result": "No active or claim-locked package owns or encloses tests/Controller/AdminGamingGameDeletionSecurityTest.php. WCP-487 uses a different positive game-create permission workflow test file; WCP-401 changes the game catalogue controller/UI and a separate tests/Gaming/Catalogue file. Repository code search finds the game delete route and delete-game CSRF identifier only in AdminGamingController and its template, with no existing test covering this route. This package changes no controller, form, template, configuration, migration or shared dependency.",
+        "paths": [
+          "tests/Controller/AdminGamingGameDeletionSecurityTest.php"
+        ]
+      },
+      "published_at": "2026-09-27T08:56:05.245Z",
+      "claimed_on": "2026-09-27T08:56:05.245Z",
+      "claim_state": "active",
+      "active_base_branch": "main",
+      "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "resume_branch": "feature/wcp-488-game-delete-csrf-g1",
+      "branch_heads": {
+        "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+        "feature_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d"
+      },
+      "last_observed_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "last_checkpoint_at": "2026-09-27T08:56:05.245Z",
+      "checkpoint_paths": [],
+      "next_action": "Implement missing-token rejection and rendered-token deletion coverage in the single allowed test file; run focused PHPUnit and exact-head Worker CI."
     }
   ],
   "recovery_queue": [],
