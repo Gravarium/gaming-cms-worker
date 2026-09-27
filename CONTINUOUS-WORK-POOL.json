@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T13:18:27.651Z",
+  "published_at": "2026-09-27T13:23:00.400Z",
   "summary": {
     "total_remaining_worker_tasks": 166,
     "completed_worker_prs_awaiting_trusted_review": 289,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "Implement the claimed WCP-538 public content discussion, Page Builder and moderation workflow on the exact green FCP-052 proposal base.",
+    "next_required_action": "Create the claim and feature refs from exact WCP-528 HEAD 7b9ed0ef7b9cc3ec9ccefb7457ecd052a0b98c0e, then add and test the dashboard-to-report navigation.",
     "composition_preparable": 0,
     "immediately_actionable": 27,
     "must_continue": true
@@ -39207,6 +39207,128 @@
       "pr_state": "not_created",
       "ci_result": "not_started",
       "last_ci_result": "not_started"
+    },
+    {
+      "priority": 539,
+      "package_id": "WCP-539",
+      "title": "Connect the newsletter dashboard to delivery reporting",
+      "risk": "medium",
+      "execution_state": "worker_in_progress",
+      "dependencies": [
+        "WCP-528"
+      ],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-539-newsletter-report-entrypoint-g1",
+      "suggested_branch": "feature/wcp-539-newsletter-report-entrypoint-g1",
+      "base_branch": "feature/wcp-528-newsletter-delivery-report-g1",
+      "base_sha": "7b9ed0ef7b9cc3ec9ccefb7457ecd052a0b98c0e",
+      "objective": "Finish the newsletter delivery report's admin workflow by adding a clear link from the existing newsletter campaign dashboard to the WCP-528 report. This makes the report reachable through normal CMS navigation, including when there are no campaigns. The report remains read-only and retains its CMS_CONTENT_MANAGE permission and existing notification-module gate.",
+      "allowed_paths": [
+        "templates/admin/newsletter/index.html.twig",
+        "tests/Controller/NewsletterDeliveryReportNavigationTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "src/Controller/AdminNewsletter/",
+        "src/Controller/AdminNewsletterDeliveryReportController.php",
+        "src/NewsletterDeliveryReport/",
+        "config/packages/newsletter_delivery_report.yaml",
+        "src/Entity/Newsletter/",
+        "src/Repository/Newsletter/",
+        "migrations/"
+      ],
+      "deliverables": [
+        "Add a visible Auslieferungsbericht link to the newsletter admin dashboard, targeting app_admin_notification_newsletter_delivery_report.",
+        "Keep the link visible when the campaign list is empty, so administrators can reach the report before the first campaign.",
+        "Add a functional test proving an authorized content manager can follow the dashboard link to the report and see a known campaign.",
+        "Do not alter the report implementation, permissions, delivery behavior, recipient privacy, database or Trusted-only files."
+      ],
+      "tests": [
+        "WebTestCase loads /admin/newsletter as CMS_CONTENT_MANAGE, verifies the delivery-report link exists, follows it and verifies the report renders the test campaign.",
+        "Run full exact-head Worker CI, including PHPStan and PostgreSQL 18 migration validation."
+      ],
+      "completion_report": [
+        "Exact WCP-528 proposal base SHA and final Worker HEAD SHA.",
+        "Changed paths and Worker PR URL/base branch.",
+        "Dashboard link behavior and end-to-end report navigation evidence.",
+        "Exact-head test totals, PHPStan and PostgreSQL 18 migration results.",
+        "Remaining limitations and proof that WCP-528 remains an untrusted Worker dependency."
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "WCP-528-is-a-green-worker-predecessor-not-Trusted-integration",
+        "preserve-CMS_CONTENT_MANAGE-and-notifications-module-gate",
+        "delivery-report-remains-read-only-and-excludes-recipient-data",
+        "no-database-or-migration-change",
+        "no-security-test-phpstan-CI-auth-CSRF-validation-or-recipient-privacy-weakening",
+        "no-private-runtime-or-sensitive-data",
+        "no-direct-trusted-integration-or-deployment"
+      ],
+      "proposal_base_branch": "feature/wcp-528-newsletter-delivery-report-g1",
+      "proposal_base_sha": "7b9ed0ef7b9cc3ec9ccefb7457ecd052a0b98c0e",
+      "proposal_kind": "worker_only",
+      "proposal_dependency_evidence": [
+        {
+          "package_id": "WCP-528",
+          "feature_branch": "feature/wcp-528-newsletter-delivery-report-g1",
+          "worker_pr": 320,
+          "exact_head": "7b9ed0ef7b9cc3ec9ccefb7457ecd052a0b98c0e",
+          "ci_run_id": 36318865432,
+          "ci_run_number": 795,
+          "ci_result": "success",
+          "status": "worker_complete_awaiting_trusted_review",
+          "claim_state": "locked_until_trusted_resolution"
+        }
+      ],
+      "collision_check": {
+        "compared_against": "Fresh pool branch commit 7e76dfd78f97e3c6641ffd998b4e072b5c1cd0cf, pool blob 22a89214fd200853b465fc5d7903860e34768854; all active and claim-locked paths; WCP-539 branch/PR searches; exact green WCP-528 branch and PR #320.",
+        "result": "Neither allowed path intersects another active or claim-locked path. WCP-539 had no pool entry, branch or PR at reservation. WCP-528 remains open, unmerged, claim-locked and green on both CI jobs.",
+        "paths": [
+          "templates/admin/newsletter/index.html.twig",
+          "tests/Controller/NewsletterDeliveryReportNavigationTest.php"
+        ]
+      },
+      "published_at": "2026-09-27T13:23:00.400Z",
+      "claimed_on": "2026-09-27T13:23:00.400Z",
+      "claim_state": "active",
+      "active_base_branch": "feature/wcp-528-newsletter-delivery-report-g1",
+      "active_base_sha": "7b9ed0ef7b9cc3ec9ccefb7457ecd052a0b98c0e",
+      "active_head": "7b9ed0ef7b9cc3ec9ccefb7457ecd052a0b98c0e",
+      "resume_branch": "feature/wcp-539-newsletter-report-entrypoint-g1",
+      "branch_heads": {
+        "claim_branch": "7b9ed0ef7b9cc3ec9ccefb7457ecd052a0b98c0e",
+        "feature_branch": "7b9ed0ef7b9cc3ec9ccefb7457ecd052a0b98c0e"
+      },
+      "last_observed_head": "7b9ed0ef7b9cc3ec9ccefb7457ecd052a0b98c0e",
+      "last_checkpoint_at": "2026-09-27T13:23:00.400Z",
+      "checkpoint_paths": [
+        "templates/admin/newsletter/index.html.twig",
+        "tests/Controller/NewsletterDeliveryReportNavigationTest.php"
+      ],
+      "next_action": "Create the claim and feature refs from exact WCP-528 HEAD 7b9ed0ef7b9cc3ec9ccefb7457ecd052a0b98c0e, then add and test the dashboard-to-report navigation.",
+      "ci_attempts": [],
+      "worker_pr_state": "not_created",
+      "last_ci_result": "not_run",
+      "worker_pr_changed_paths": [
+        "templates/admin/newsletter/index.html.twig",
+        "tests/Controller/NewsletterDeliveryReportNavigationTest.php"
+      ],
+      "worker_pr_base_branch": "main",
+      "worker_pr": null,
+      "worker_pr_url": null
     }
   ],
   "recovery_queue": [],
