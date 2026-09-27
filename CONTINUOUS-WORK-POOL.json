@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T07:05:42.437Z",
+  "published_at": "2026-09-27T07:06:43.924Z",
   "summary": {
     "total_remaining_worker_tasks": 141,
     "completed_worker_prs_awaiting_trusted_review": 246,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-481 has a verified single-file test commit at 9b113f4bec19cf47a6e7d894b978affafa19f1cb atop exact green WCP-479 HEAD; open the draft PR and complete exact-head CI. WCP-480 is another worker's active category claim; preserve foreign claims.",
+    "next_required_action": "WCP-481 draft PR #273 is open at exact HEAD 9b113f4bec19cf47a6e7d894b978affafa19f1cb; exact-head Worker CI run 36302068286 is queued. Await and resolve CI.",
     "composition_preparable": 0,
     "immediately_actionable": 4,
     "must_continue": true
@@ -30347,15 +30347,18 @@
         "claim_branch": "0dcba428821d44ad9081f04725aa01a58c2dfed7",
         "feature_branch": "9b113f4bec19cf47a6e7d894b978affafa19f1cb"
       },
-      "next_action": "Open a draft Worker PR from the verified single-file test commit and run exact-head Worker CI, including PHPStan and PostgreSQL 18 migration validation.",
+      "next_action": "Await exact-head Worker CI run 36302068286; diagnose and repair any test-only failure within the allowlisted file.",
       "last_observed_head": "9b113f4bec19cf47a6e7d894b978affafa19f1cb",
-      "last_checkpoint_at": "2026-09-27T07:05:42.437Z",
+      "last_checkpoint_at": "2026-09-27T07:06:43.924Z",
       "checkpoint_paths": [
         "tests/Controller/AdminGuildRankDefaultSelectionTest.php"
       ],
       "worker_pr_changed_paths": [
         "tests/Controller/AdminGuildRankDefaultSelectionTest.php"
-      ]
+      ],
+      "worker_pr": 273,
+      "ci_run_id": 36302068286,
+      "ci_result": "queued"
     }
   ],
   "recovery_queue": [],
