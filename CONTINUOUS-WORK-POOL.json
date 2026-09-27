@@ -10,7 +10,7 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T00:44:35.178Z",
+  "published_at": "2026-09-27T00:45:13.343Z",
   "summary": {
     "total_remaining_worker_tasks": 139,
     "completed_worker_prs_awaiting_trusted_review": 208,
@@ -20506,7 +20506,7 @@
       "proposal_dependency_evidence": [],
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-      "active_head": "c5cde8237cbe50296c00ad504fbc4ca6d5bed9d3",
+      "active_head": "4d79f4cf7986879d440952658a3d0e5c131472bd",
       "resume_branch": "feature/wcp-414-admin-menu-reordering-g1",
       "collision_check": {
         "compared_against": "Fresh continuous/work-pool-v4 HEAD d6e2c86fcd27a834f43f20245c29a81c35d7ae1f, sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d, every active and claim-locked allowlist.",
@@ -20520,9 +20520,9 @@
       },
       "claimed_on": "2026-09-26T21:51:36.354Z",
       "claim_state": "active",
-      "next_action": "Monitor exact-head Worker CI run 36275829715 on c5cde8237cbe50296c00ad504fbc4ca6d5bed9d3; repair any remaining failure on this branch.",
-      "last_checkpoint_at": "2026-09-26T22:18:37.023Z",
-      "last_verified_push_at": "2026-09-26T22:18:37.023Z",
+      "next_action": "Monitor exact-head Worker CI run 36283423269 on 4d79f4cf7986879d440952658a3d0e5c131472bd; repair any remaining failure on this branch.",
+      "last_checkpoint_at": "2026-09-27T00:45:13.343Z",
+      "last_verified_push_at": "2026-09-27T00:45:13.343Z",
       "checkpoint_paths": [
         "src/Controller/AdminMenuOrderController.php",
         "templates/admin/menu/form.html.twig",
@@ -20531,15 +20531,15 @@
       ],
       "branch_heads": {
         "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5",
-        "feature_branch": "c5cde8237cbe50296c00ad504fbc4ca6d5bed9d3"
+        "feature_branch": "4d79f4cf7986879d440952658a3d0e5c131472bd"
       },
       "worker_pr": 208,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/208",
       "draft_pr": true,
       "pr_state": "open_draft_unmerged",
-      "ci_run_id": 36275829715,
+      "ci_run_id": 36283423269,
       "ci_result": "in_progress",
-      "last_ci_run_id": 36275829715,
+      "last_ci_run_id": 36283423269,
       "last_ci_result": "in_progress",
       "ci_attempts": [
         {
@@ -20573,6 +20573,14 @@
           "failed_step": "Run worker-visible application tests with coverage visibility",
           "diagnosis": "Full suite: 434 tests, 1,921 assertions, 1 error. The remaining unknown-item CSRF helper failed because the browser request had no session attached; the next patch retrieves the configured test container before accessing the token manager and uses the browser session where available. All other tests passed; PHPStan, static/config validations and PostgreSQL migration checks passed.",
           "remediated_in_head": "c5cde8237cbe50296c00ad504fbc4ca6d5bed9d3"
+        },
+        {
+          "run_id": 36275829715,
+          "head": "c5cde8237cbe50296c00ad504fbc4ca6d5bed9d3",
+          "result": "failure",
+          "failed_step": "Run worker-visible application tests with coverage visibility",
+          "diagnosis": "Full suite: 434 tests, 1,923 assertions, 1 error and 1 failure. A valid-CSRF unknown-item request threw 404 inside EntityManager::wrapInTransaction, which closed Doctrine's manager; teardown then failed while deleting fixtures, and the following boundary-order assertion included those stale fixtures. The 404 now occurs after the transaction completes; fixture cleanup uses the captured DBAL connection.",
+          "remediated_in_head": "4d79f4cf7986879d440952658a3d0e5c131472bd"
         }
       ]
     },
