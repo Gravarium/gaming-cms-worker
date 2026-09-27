@@ -10,16 +10,16 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T09:32:33.645Z",
+  "published_at": "2026-09-27T09:33:42.801Z",
   "summary": {
-    "total_remaining_worker_tasks": 147,
+    "total_remaining_worker_tasks": 148,
     "completed_worker_prs_awaiting_trusted_review": 259,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-494 is actively claimed from exact sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d; add test-only public scheduled/future-dated content visibility coverage and run full exact-head Worker CI. Keep all foreign claims untouched.",
+    "next_required_action": "WCP-495 is actively claimed from exact sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d; implement shareable public video-category directory/detail pages and run full exact-head Worker CI. Keep all foreign claims untouched.",
     "composition_preparable": 0,
-    "immediately_actionable": 7,
+    "immediately_actionable": 8,
     "must_continue": true
   },
   "rules": {
@@ -32594,6 +32594,114 @@
           "result": "queued"
         }
       ]
+    },
+    {
+      "priority": 495,
+      "package_id": "WCP-495",
+      "title": "Publish shareable public pages for video categories",
+      "risk": "medium",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-495-video-category-pages-g1",
+      "suggested_branch": "feature/wcp-495-video-category-pages-g1",
+      "base_branch": "main",
+      "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "objective": "Complete the public side of the existing video-category module. Video categories are already manageable in administration and usable as an index filter, but they have no dedicated public directory or shareable category detail page. Add GET-only category directory and detail routes that expose only enabled categories and currently published, enabled videos belonging to the selected category. Do not change the existing video CRUD, category CRUD, schema, migration chain, or shared video index.",
+      "allowed_paths": [
+        "src/Controller/VideoCategoryController.php",
+        "templates/video_category/index.html.twig",
+        "templates/video_category/show.html.twig",
+        "tests/Controller/VideoCategoryPublicWorkflowTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/",
+        "src/Entity/",
+        "src/Form/",
+        "src/Repository/",
+        "src/Controller/VideoController.php",
+        "src/Controller/AdminVideoController.php",
+        "templates/video/",
+        "templates/admin/video/",
+        "assets/",
+        "public/"
+      ],
+      "deliverables": [
+        "A public video-category directory lists enabled categories, links to each detail page, and has a useful empty state.",
+        "Each enabled category has a shareable detail URL with its name, optional description, and links to its current public videos.",
+        "Draft, future-scheduled, disabled, uncategorized, and foreign-category videos are absent from the selected category page.",
+        "Missing or disabled categories and every category route while the video module is disabled return 404 without leaking category contents.",
+        "The existing administrative category CRUD remains the only write path; no schema, migration, entity, repository, global navigation, or shared video-index change is needed.",
+        "The new pages provide a stable public entry point for category links without changing current video visibility semantics."
+      ],
+      "tests": [
+        "Focused functional PHPUnit coverage for anonymous directory/detail access, enabled/disabled/missing categories, category-scoped published-video visibility, empty states, and disabled-module fail-closed behavior.",
+        "Synthetic categories, games-independent videos, and media-free external fixtures are cleaned up in finally blocks.",
+        "PHPStan level 8 and complete Worker CI on the exact final HEAD.",
+        "PostgreSQL 18 complete migration-chain validation."
+      ],
+      "completion_report": [
+        "Exact sanitized main/base SHA and final Worker HEAD SHA.",
+        "Complete changed-path list and Worker PR.",
+        "Public directory/detail behavior, publication and module-disable boundaries, focused tests and exact-head CI run.",
+        "Unresolved assumptions and Trusted integration follow-up."
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "public-category-pages-show-only-enabled-categories-and-published-enabled-videos",
+        "disabled-video-module-keeps-all-video-category-routes-unavailable",
+        "existing-admin-category-and-video-write-boundaries-remain-unchanged",
+        "no-schema-or-migration-change",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "red-CI-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment",
+        "no-private-runtime-or-sensitive-data"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "proposal_kind": "worker_only",
+      "proposal_dependency_evidence": [],
+      "collision_check": {
+        "compared_against": "Fresh continuous/work-pool-v4 blob f6fb25c36aeb15061f01bf03d1278d0629c126a8; all active and claim-locked allowed paths; sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d; active branches and PR/CI state.",
+        "result": "No active or claim-locked package owns or encloses the four proposed paths. WCP-492 owns the separate public playlist controller/templates and WCP-381 owns the existing video-index/search paths; neither owns these new category paths. Existing video-category entity, repository, form and admin-controller claims are left untouched. FCP-072 has an unclaimed broad templates/ allowance and remains dependency-blocked; any later claimant must revalidate and narrow its scope while WCP-495 is active. No shared entity, repository, route configuration, migration, global navigation or existing public video template is modified.",
+        "paths": [
+          "src/Controller/VideoCategoryController.php",
+          "templates/video_category/index.html.twig",
+          "templates/video_category/show.html.twig",
+          "tests/Controller/VideoCategoryPublicWorkflowTest.php"
+        ]
+      },
+      "published_at": "2026-09-27T09:33:42.801Z",
+      "claimed_on": "2026-09-27T09:33:42.801Z",
+      "claim_state": "active",
+      "active_base_branch": "main",
+      "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "resume_branch": "feature/wcp-495-video-category-pages-g1",
+      "branch_heads": {
+        "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+        "feature_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d"
+      },
+      "last_observed_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "last_checkpoint_at": "2026-09-27T09:33:42.801Z",
+      "checkpoint_paths": [],
+      "next_action": "Implement the four allowed paths only, add the public category directory/detail flow and focused functional coverage, checkpoint the feature branch, then run targeted PHPUnit and full exact-head Worker CI.",
+      "last_verified_push_at": null
     }
   ],
   "recovery_queue": [],
