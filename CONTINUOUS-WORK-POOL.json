@@ -42577,14 +42577,50 @@
         "src/Entity/GameGuide/GameGuideTierEntry.php",
         "src/Entity/GameGuide/GameGuideReviewAudit.php"
       ],
-      "next_action": "Create a draft Worker PR against feature/fcp-058-pool-g1 to run the complete workflow on the exact feature-branch HEAD; diagnose and repair any red CI without changing this claim.",
-      "worker_pr_state": "not_created",
-      "worker_pr_changed_paths": [],
+      "next_action": "Monitor Worker CI #872 / run 36333525451 on exact HEAD e1eec9f140a902c17c75076391cff9940d785e63 through temporary validation PR #348; repair any failures on this feature branch, rerun complete CI on the new exact HEAD, then close #348 and finalize stacked PR #347.",
+      "worker_pr_state": "draft",
+      "worker_pr_changed_paths": [
+        "src/Controller/AdminGameGuideController.php",
+        "src/Controller/PublicGameGuideController.php",
+        "src/GameGuide/AdminGameGuideWorkflow.php",
+        "src/GameGuide/PublicGameGuideQuery.php",
+        "src/GameGuide/Templates/admin/index.html.twig",
+        "src/GameGuide/Templates/admin/form.html.twig",
+        "src/GameGuide/Templates/admin/review.html.twig",
+        "src/GameGuide/Templates/public/index.html.twig",
+        "src/GameGuide/Templates/public/show.html.twig",
+        "src/GameGuide/Templates/widget/public_guides.html.twig",
+        "src/Widget/PublicGameGuideWidgetProvider.php",
+        "src/Widget/GameGuide/PublicGameGuideWidgetQuery.php",
+        "config/packages/game_guide.yaml",
+        "tests/Controller/AdminGameGuideControllerTest.php",
+        "tests/Controller/PublicGameGuideControllerTest.php",
+        "tests/Widget/PublicGameGuideWidgetProviderTest.php",
+        "src/Entity/GameGuide/GameGuide.php",
+        "src/Entity/GameGuide/GameGuideComponent.php",
+        "src/Entity/GameGuide/GameGuideTierEntry.php",
+        "src/Entity/GameGuide/GameGuideReviewAudit.php"
+      ],
       "worker_pr_base_branch": "feature/fcp-058-pool-g1",
       "draft_pr": true,
-      "pr_state": "not_created",
-      "ci_result": "not_run",
-      "ci_attempts": []
+      "pr_state": "open",
+      "ci_result": "in_progress",
+      "ci_attempts": [
+        {
+          "run_id": 36333525451,
+          "run_number": 872,
+          "head": "e1eec9f140a902c17c75076391cff9940d785e63",
+          "base": "ad876fea62817d705ad997175e03f2253ca0e445",
+          "result": "in_progress",
+          "validation_pr": 348
+        }
+      ],
+      "worker_pr": 347,
+      "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/347",
+      "worker_pr_base_sha": "4cd14680657e1b038f2037de07160e54aa86b809",
+      "ci_run_id": 36333525451,
+      "last_ci_run_id": 36333525451,
+      "ci_validation_pr": 348
     },
     {
       "priority": 553,
