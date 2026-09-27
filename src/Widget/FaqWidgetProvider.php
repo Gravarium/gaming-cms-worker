@@ -6,7 +6,7 @@ namespace App\Widget;
 
 final class FaqWidgetProvider implements WidgetProvider
 {
-    private const int MAX_ITEMS = 4;
+    private const MAX_ITEMS = 4;
 
     /** @return list<WidgetDefinition> */
     public function definitions(): array
