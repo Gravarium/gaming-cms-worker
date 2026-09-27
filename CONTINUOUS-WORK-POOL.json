@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T09:17:11.608Z",
+  "published_at": "2026-09-27T09:21:02.424Z",
   "summary": {
     "total_remaining_worker_tasks": 146,
     "completed_worker_prs_awaiting_trusted_review": 258,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-492 is actively claimed from exact sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d; implement public playlist pages, admin discovery and full exact-head Worker CI. Keep all foreign claims untouched.",
+    "next_required_action": "WCP-492 PR #286 is open on exact HEAD 345716272a86716923dfc66bfb983a60ade0d93d; complete and verify full exact-head Worker CI before marking it ready. Keep all foreign claims untouched.",
     "composition_preparable": 0,
     "immediately_actionable": 5,
     "must_continue": true
@@ -32342,16 +32342,27 @@
       "claim_state": "active",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "345716272a86716923dfc66bfb983a60ade0d93d",
       "resume_branch": "feature/wcp-492-public-video-playlists-g1",
       "branch_heads": {
         "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-        "feature_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d"
+        "feature_branch": "345716272a86716923dfc66bfb983a60ade0d93d"
       },
-      "last_observed_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-      "last_checkpoint_at": "2026-09-27T09:17:11.608Z",
-      "checkpoint_paths": [],
-      "next_action": "Implement the public playlist directory/detail routes, visible admin discovery link and functional coverage within the listed paths; then run focused PHPUnit and complete exact-head Worker CI."
+      "last_observed_head": "345716272a86716923dfc66bfb983a60ade0d93d",
+      "last_checkpoint_at": "2026-09-27T09:21:02.424Z",
+      "checkpoint_paths": [
+        "src/Controller/VideoPlaylistController.php",
+        "templates/video_playlist/index.html.twig",
+        "templates/video_playlist/show.html.twig",
+        "templates/admin/video/simple_form.html.twig",
+        "tests/Controller/VideoPlaylistPublicWorkflowTest.php"
+      ],
+      "next_action": "Monitor exact-head Worker CI run 36309065089; repair any failures on this branch before marking PR #286 ready.",
+      "worker_pr": 286,
+      "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/286",
+      "last_verified_push_at": "2026-09-27T09:21:02.424Z",
+      "ci_run_id": 36309065089,
+      "ci_result": "in_progress"
     }
   ],
   "recovery_queue": [],
