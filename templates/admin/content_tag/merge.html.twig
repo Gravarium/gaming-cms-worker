@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Content-Tags zusammenführen | Gaming CMS{% endblock %}
+
+{% block body %}
+<header class="topbar">
+    <a class="brand" href="{{ path('app_admin_content_tag_index') }}">Tags</a>
+</header>
+<main class="editor-shell">
+    <h1>Content-Tags zusammenführen</h1>
+    <p>Quell-Tag: <strong>{{ sourceTag.name }}</strong> ({{ sourceTag.slug }})</p>
+    <p id="source-entry-count" data-entry-count="{{ entryCount }}">
+        {{ entryCount }} Inhalte verwenden den Quell-Tag.
+    </p>
+    <p>Der ausgewählte Ziel-Tag behält Name, Slug und Beschreibung. Die Inhalte und ihre Veröffentlichungsdaten bleiben erhalten; der Quell-Tag wird nach dem Zusammenführen entfernt.</p>
+
+    {% if targetCount > 0 %}
+        {{ form_start(form, { attr: { class: 'content-form' } }) }}
+            {{ form_row(form.target) }}
+            <button type="submit">Zusammenführen</button>
+        {{ form_end(form) }}
+    {% else %}
+        <p role="status">Es gibt keinen anderen Tag als Ziel. Lege zuerst einen weiteren Tag an.</p>
+    {% endif %}
+</main>
+{% endblock %}
