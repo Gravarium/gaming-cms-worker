@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T13:57:25.617Z",
+  "published_at": "2026-09-27T13:58:58.849Z",
   "summary": {
     "total_remaining_worker_tasks": 167,
     "completed_worker_prs_awaiting_trusted_review": 290,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "Wait for Worker CI on exact WCP-540 HEAD d59f0ac3e4457500485c8bd909c6697b7d9f1691; inspect all jobs, repair any failures and verify the final exact head.",
+    "next_required_action": "Worker CI run #822 / 36324235153 is running on exact HEAD d59f0ac3e4457500485c8bd909c6697b7d9f1691; inspect both jobs and repair any failure.",
     "composition_preparable": 0,
     "immediately_actionable": 28,
     "must_continue": true
@@ -39547,7 +39547,7 @@
         "templates/widget/public_newsletter_signup.html.twig",
         "tests/Widget/PublicNewsletterSignupWidgetTest.php"
       ],
-      "next_action": "Wait for Worker CI on exact WCP-540 HEAD d59f0ac3e4457500485c8bd909c6697b7d9f1691; inspect all jobs, repair any failures and verify the final exact head.",
+      "next_action": "Worker CI run #822 / 36324235153 is running on exact HEAD d59f0ac3e4457500485c8bd909c6697b7d9f1691; inspect both jobs and repair any failure.",
       "ci_attempts": [
         {
           "run_id": 36323918199,
@@ -39561,10 +39561,17 @@
           "phpstan": "passed",
           "postgresql_18_migrations": "passed",
           "summary": "PostgreSQL migration job passed; PHPUnit had one test error because the expected 422 response closed the test EntityManager and teardown reused it. Reset the EntityManager after the rejected write before asserting persisted state and restoring fixtures."
+        },
+        {
+          "run_id": 36324235153,
+          "run_number": 822,
+          "head": "d59f0ac3e4457500485c8bd909c6697b7d9f1691",
+          "base": "b510875e7b0741b9b19f09429d2204a95df51198",
+          "result": "in_progress"
         }
       ],
       "worker_pr_state": "open",
-      "last_ci_result": "failure",
+      "last_ci_result": "in_progress",
       "worker_pr_changed_paths": [
         "src/Widget/PublicNewsletterSignupWidgetProvider.php",
         "templates/widget/public_newsletter_signup.html.twig",
@@ -39576,8 +39583,8 @@
       "last_verified_push_at": "2026-09-27T13:57:25.617Z",
       "pr_state": "open",
       "draft_pr": true,
-      "ci_run_id": null,
-      "last_ci_run_id": 36323918199,
+      "ci_run_id": 36324235153,
+      "last_ci_run_id": 36324235153,
       "ci_result": "pending"
     },
     {
