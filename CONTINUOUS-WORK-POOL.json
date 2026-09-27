@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T13:54:53.916Z",
+  "published_at": "2026-09-27T13:55:41.279Z",
   "summary": {
     "total_remaining_worker_tasks": 167,
     "completed_worker_prs_awaiting_trusted_review": 290,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "Worker CI run #821 / 36323918199 is in progress on exact HEAD b4d9cec31506d7ea8b6390d8d65d8c1263300370; inspect both jobs, fix any failure and verify the resulting exact HEAD.",
+    "next_required_action": "Fix the WCP-540 test fixture after its expected rejected write by resetting Doctrine's closed EntityManager before checking persisted layout and restoring state; push a new head and rerun full exact-head Worker CI.",
     "composition_preparable": 0,
     "immediately_actionable": 28,
     "must_continue": true
@@ -39547,18 +39547,24 @@
         "templates/widget/public_newsletter_signup.html.twig",
         "tests/Widget/PublicNewsletterSignupWidgetTest.php"
       ],
-      "next_action": "Worker CI run #821 / 36323918199 is in progress on exact HEAD b4d9cec31506d7ea8b6390d8d65d8c1263300370; inspect both jobs, fix any failure and verify the resulting exact HEAD.",
+      "next_action": "Fix the WCP-540 test fixture after its expected rejected write by resetting Doctrine's closed EntityManager before checking persisted layout and restoring state; push a new head and rerun full exact-head Worker CI.",
       "ci_attempts": [
         {
           "run_id": 36323918199,
           "run_number": 821,
           "head": "b4d9cec31506d7ea8b6390d8d65d8c1263300370",
           "base": "b510875e7b0741b9b19f09429d2204a95df51198",
-          "result": "in_progress"
+          "result": "failure",
+          "conclusion": "failure",
+          "phpunit_tests": 544,
+          "assertions": 2360,
+          "phpstan": "passed",
+          "postgresql_18_migrations": "passed",
+          "summary": "PostgreSQL migration job passed; PHPUnit had one test error because the expected 422 response closed the test EntityManager and teardown reused it. Reset the EntityManager after the rejected write before asserting persisted state and restoring fixtures."
         }
       ],
       "worker_pr_state": "open",
-      "last_ci_result": "in_progress",
+      "last_ci_result": "failure",
       "worker_pr_changed_paths": [
         "src/Widget/PublicNewsletterSignupWidgetProvider.php",
         "templates/widget/public_newsletter_signup.html.twig",
@@ -39572,7 +39578,7 @@
       "draft_pr": true,
       "ci_run_id": 36323918199,
       "last_ci_run_id": 36323918199,
-      "ci_result": "pending"
+      "ci_result": "failure"
     },
     {
       "priority": 541,
