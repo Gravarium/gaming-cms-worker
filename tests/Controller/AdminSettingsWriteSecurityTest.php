@@ -113,7 +113,7 @@ final class AdminSettingsWriteSecurityTest extends WebTestCase
     {
         $entityManager = $this->entityManager($client);
         $existing = $entityManager->getRepository(SiteSettings::class)->findOneBy([]);
-        $created = !$existing instanceof SiteSettings;
+        $created = !($existing instanceof SiteSettings);
         $settings = $existing instanceof SiteSettings ? $existing : new SiteSettings();
         $snapshot = $this->snapshot($settings);
 
