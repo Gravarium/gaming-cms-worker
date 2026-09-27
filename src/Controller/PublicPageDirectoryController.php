@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Entity\ContentEntry;
-use App\Repository\ContentEntryRepository;
+use App\PageDirectory\PublicPageDirectoryQuery;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -25,7 +25,7 @@ final class PublicPageDirectoryController extends AbstractController
             throw $this->createNotFoundException();
         }
 
-        $now = new \\DateTimeImmutable();
+        $now = new \DateTimeImmutable();
         $total = $this->pages->countPublicPages($now);
         $pageCount = min(
             PublicPageDirectoryQuery::MAX_PAGES,
