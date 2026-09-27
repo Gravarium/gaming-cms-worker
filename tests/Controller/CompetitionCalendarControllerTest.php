@@ -132,6 +132,8 @@ final class CompetitionCalendarControllerTest extends WebTestCase
         $client = static::createClient();
         $client->disableReboot();
         $previousGamingState = $this->setGamingEnabled($client, true);
+        $previousTimezone = date_default_timezone_get();
+        date_default_timezone_set('Europe/Berlin');
         $entities = [];
 
         try {
@@ -193,6 +195,7 @@ final class CompetitionCalendarControllerTest extends WebTestCase
         } finally {
             $this->removeEntities($client, $entities);
             $this->restoreGamingState($client, $previousGamingState);
+            date_default_timezone_set($previousTimezone);
         }
     }
 
