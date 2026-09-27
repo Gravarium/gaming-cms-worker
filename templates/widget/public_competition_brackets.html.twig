@@ -1,5 +1,5 @@
 <div class="public-competition-brackets">
-    {% for competition in competitions %}
+    {% for competition in data.competitions|default([]) %}
         <article class="public-competition-bracket-card">
             <h3>{{ competition.name }}</h3>
             {% if competition.game %}
