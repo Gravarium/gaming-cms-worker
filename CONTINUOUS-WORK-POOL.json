@@ -17,7 +17,7 @@
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-578 is complete on exact-head CI; inspect current pool and worker-visible CMS for the next independent safe proposal, reserve one path-disjoint WCP, and continue.",
+    "next_required_action": "WCP-579 is claimed on main@7b2ca79405fc12d34bce1386157e929e4668f31a; add test-only public content search query/result escaping coverage and run exact-head CI.",
     "composition_preparable": 0,
     "immediately_actionable": 29,
     "must_continue": true
@@ -46968,6 +46968,95 @@
       "last_ci_result": "success",
       "completed_at": "2026-09-27T20:02:54.128Z",
       "worker_completion_summary": "Exact-head Worker CI #924 / 36346365884 passed on 9f4cc94a5e30cddda830328a8bcd0b52f076ec13: 737 tests, 4,643 assertions, 0 failures/errors (1 PHPUnit deprecation, 3 notices); PHPStan reported no errors; PostgreSQL 18 applied 57 migrations with 878 SQL queries. PR #372 is open and ready for Trusted review from main@7b2ca79405fc12d34bce1386157e929e4668f31a; exactly one allowlisted test path changed, with no runtime or template changes."
+    },
+    {
+      "priority": 579,
+      "package_id": "WCP-579",
+      "title": "Test escaping in public content search query and results",
+      "risk": "low",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-579-public-content-search-safety-g1",
+      "suggested_branch": "feature/wcp-579-public-content-search-safety-g1",
+      "base_branch": "main",
+      "base_sha": "7b2ca79405fc12d34bce1386157e929e4668f31a",
+      "objective": "Add a test-only functional regression proving a hostile public content search query remains inert in the reflected search field/summary and that matching stored result title and excerpt render as text. Assert no attacker script or event-handler markup is created. Do not change source, templates, or runtime code.",
+      "allowed_paths": [
+        "tests/Controller/PublicContentSearchSafetyTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "CONTINUOUS-WORKER.md",
+        "CONTINUOUS-WORK-POOL.json",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/",
+        "src/",
+        "templates/"
+      ],
+      "deliverables": [
+        "Functional test persists one published news entry whose title matches a script-like query and whose excerpt contains an event-handler payload, then requests /search?q=....",
+        "Assertions verify the reflected input value and result text remain exact inert data, raw hostile markup is absent, and attacker-created script/image/SVG nodes do not appear in the result area.",
+        "Test-only change; no controller, template, entity, schema, or migration modification."
+      ],
+      "tests": [
+        "Targeted PublicContentSearchSafetyTest.",
+        "Complete exact-head Worker CI including PHPStan, full PHPUnit, template/config checks, and PostgreSQL 18 migration chain."
+      ],
+      "completion_report": [
+        "Exact sanitized base and final HEAD; changed path and Worker PR state.",
+        "Reflected query and matching stored result title/excerpt payload assertions.",
+        "Targeted regression and exact-head full Worker CI results.",
+        "Test-only package; no runtime changes."
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-Trusted-review-and-exact-head-CI",
+        "preserve-all-security-permissions-CSRF-validation-recovery-rollback-and-upload-controls",
+        "no-private-runtime-or-sensitive-data",
+        "no-source-or-template-changes",
+        "no-edit-to-active-or-claim-locked-paths",
+        "no-direct-Trusted-integration-or-deployment"
+      ],
+      "proposal_kind": "worker_only",
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "7b2ca79405fc12d34bce1386157e929e4668f31a",
+      "proposal_dependency_evidence": [],
+      "collision_check": {
+        "compared_against": "Fresh continuous/work-pool-v4 blob @ 90a3659dbad429342cdfea04dead589e8a22c7a0; latest sanitized main @ 7b2ca79405fc12d34bce1386157e929e4668f31a; every unclaimed, active, and claim-locked task.",
+        "result": "No overlap with any active or claim-locked allowed path. The dedicated PublicContentSearchSafetyTest.php path is absent from the current tree and pool. Existing game catalogue search and global search pagination work use separate paths and search features; this package changes only the new content-search test.",
+        "paths": [
+          "tests/Controller/PublicContentSearchSafetyTest.php"
+        ],
+        "observed_nonblocking_path_hits": []
+      },
+      "published_at": "2026-09-27T20:04:18.269Z",
+      "claimed_on": "2026-09-27T20:04:18.269Z",
+      "claim_state": "active",
+      "active_base_branch": "main",
+      "active_base_sha": "7b2ca79405fc12d34bce1386157e929e4668f31a",
+      "active_head": "7b2ca79405fc12d34bce1386157e929e4668f31a",
+      "resume_branch": "feature/wcp-579-public-content-search-safety-g1",
+      "branch_heads": {
+        "claim_branch": "7b2ca79405fc12d34bce1386157e929e4668f31a",
+        "feature_branch": "7b2ca79405fc12d34bce1386157e929e4668f31a"
+      },
+      "last_observed_head": "7b2ca79405fc12d34bce1386157e929e4668f31a",
+      "last_checkpoint_at": "2026-09-27T20:04:18.269Z",
+      "checkpoint_paths": [],
+      "next_action": "Create exact claim and feature branches from main@7b2ca79405fc12d34bce1386157e929e4668f31a; add the isolated public content search regression, then run exact-head CI."
     }
   ],
   "recovery_queue": [],
