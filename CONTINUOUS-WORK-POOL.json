@@ -10,7 +10,7 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T20:06:48.616Z",
+  "published_at": "2026-09-27T20:11:41.642Z",
   "summary": {
     "total_remaining_worker_tasks": 173,
     "completed_worker_prs_awaiting_trusted_review": 309,
@@ -38622,15 +38622,15 @@
       "claim_state": "active",
       "active_base_branch": "main",
       "active_base_sha": "b510875e7b0741b9b19f09429d2204a95df51198",
-      "active_head": "68209d9dcc3e2ee8f41dbeb6403541ee4668f754",
+      "active_head": "68c630e7920c7ca7cbfc34638a788a5798e2ecd3",
       "resume_branch": "feature/wcp-532-upcoming-guild-events-widget-g1",
       "branch_heads": {
         "claim_branch": "b510875e7b0741b9b19f09429d2204a95df51198",
-        "feature_branch": "68209d9dcc3e2ee8f41dbeb6403541ee4668f754"
+        "feature_branch": "68c630e7920c7ca7cbfc34638a788a5798e2ecd3"
       },
-      "last_observed_head": "68209d9dcc3e2ee8f41dbeb6403541ee4668f754",
-      "last_checkpoint_at": "2026-09-27T20:05:09.783Z",
-      "last_verified_push_at": "2026-09-27T20:05:09.783Z",
+      "last_observed_head": "68c630e7920c7ca7cbfc34638a788a5798e2ecd3",
+      "last_checkpoint_at": "2026-09-27T20:11:41.642Z",
+      "last_verified_push_at": "2026-09-27T20:11:41.642Z",
       "checkpoint_paths": [
         "src/Widget/GuildEvent/UpcomingGuildEventsQuery.php",
         "src/Widget/UpcomingGuildEventsWidgetProvider.php",
@@ -38639,7 +38639,7 @@
         "config/packages/guild_event_widget.yaml",
         "tests/Widget/UpcomingGuildEventsWidgetProviderTest.php"
       ],
-      "next_action": "Await exact-head Worker CI #925 / 36346745076 on 68209d9dcc3e2ee8f41dbeb6403541ee4668f754; repair any failures without changing the reserved paths or weakening checks.",
+      "next_action": "Await exact-head Worker CI #928 / 36347049668 on 68c630e7920c7ca7cbfc34638a788a5798e2ecd3; diagnose and repair any failure, then complete PR #373 only after all jobs pass.",
       "worker_pr": 373,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/373",
       "draft_pr": true,
@@ -38661,15 +38661,25 @@
           "run_number": 925,
           "head": "68209d9dcc3e2ee8f41dbeb6403541ee4668f754",
           "base": "7b2ca79405fc12d34bce1386157e929e4668f31a",
+          "result": "failure",
+          "validation_pr": 373,
+          "conclusion": "failure",
+          "summary": "All static checks and PostgreSQL 18 migrations passed. PHPUnit had one failure because Symfony normalized Cache-Control directive ordering and added must-revalidate; the assertion now checks the required private/no-store/max-age=0 directives individually."
+        },
+        {
+          "run_id": 36347049668,
+          "run_number": 928,
+          "head": "68c630e7920c7ca7cbfc34638a788a5798e2ecd3",
+          "base": "7b2ca79405fc12d34bce1386157e929e4668f31a",
           "result": "in_progress",
           "validation_pr": 373
         }
       ],
       "worker_pr_base_branch": "main",
       "worker_pr_base_sha": "7b2ca79405fc12d34bce1386157e929e4668f31a",
-      "ci_run_id": 36346745076,
-      "last_ci_run_id": 36346745076,
-      "last_ci_run_number": 925
+      "ci_run_id": 36347049668,
+      "last_ci_run_id": 36347049668,
+      "last_ci_run_number": 928
     },
     {
       "priority": 533,
