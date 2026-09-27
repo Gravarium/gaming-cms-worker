@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T15:23:39.396Z",
+  "published_at": "2026-09-27T15:25:12.599Z",
   "summary": {
     "total_remaining_worker_tasks": 167,
     "completed_worker_prs_awaiting_trusted_review": 294,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "Open a draft Worker PR for WCP-551 from feature/wcp-551-public-page-category-archive-g1 at exact HEAD 98738b0909cb4ff407e9cb45e722c80cf42ab854; run complete exact-head CI and repair any failures.",
+    "next_required_action": "Monitor WCP-551 draft PR #342 exact-head CI #851 / 36329413892 on HEAD 98738b0909cb4ff407e9cb45e722c80cf42ab854; fix any failures and rerun the complete workflow on the repaired exact HEAD.",
     "composition_preparable": 0,
     "immediately_actionable": 28,
     "must_continue": true
@@ -41743,7 +41743,7 @@
           }
         ]
       },
-      "published_at": "2026-09-27T15:23:39.396Z",
+      "published_at": "2026-09-27T15:25:12.599Z",
       "claimed_on": "2026-09-27T15:11:39.261Z",
       "claim_state": "active",
       "active_base_branch": "main",
@@ -41755,7 +41755,7 @@
         "feature_branch": "98738b0909cb4ff407e9cb45e722c80cf42ab854"
       },
       "last_observed_head": "98738b0909cb4ff407e9cb45e722c80cf42ab854",
-      "last_checkpoint_at": "2026-09-27T15:23:39.396Z",
+      "last_checkpoint_at": "2026-09-27T15:25:12.599Z",
       "checkpoint_paths": [
         "src/Controller/PublicPageCategoryArchiveController.php",
         "src/PageCategoryArchive/PublicPageCategoryArchiveQuery.php",
@@ -41767,8 +41767,8 @@
         "tests/Controller/PublicPageCategoryArchiveTest.php",
         "tests/Widget/PublicPageCategoryArchiveWidgetTest.php"
       ],
-      "next_action": "Create a draft Worker PR against main to run complete exact-head CI. Diagnose and repair any test, PHPStan, Twig, container, or migration failure without widening the reserved scope.",
-      "worker_pr_state": "not_created",
+      "next_action": "Monitor Worker CI run #851 / 36329413892 on exact HEAD 98738b0909cb4ff407e9cb45e722c80cf42ab854; diagnose any failures and repair the same feature branch before updating the PR.",
+      "worker_pr_state": "draft",
       "worker_pr_changed_paths": [
         "src/Controller/PublicPageCategoryArchiveController.php",
         "src/PageCategoryArchive/PublicPageCategoryArchiveQuery.php",
@@ -41782,11 +41782,25 @@
       ],
       "worker_pr_base_branch": "main",
       "draft_pr": true,
-      "pr_state": "not_created",
-      "ci_result": "not_started",
-      "last_ci_result": "not_started",
-      "ci_attempts": [],
-      "last_verified_push_at": "2026-09-27T15:23:39.396Z"
+      "pr_state": "open",
+      "ci_result": "in_progress",
+      "last_ci_result": "in_progress",
+      "ci_attempts": [
+        {
+          "run_id": 36329413892,
+          "run_number": 851,
+          "head": "98738b0909cb4ff407e9cb45e722c80cf42ab854",
+          "base": "0516dc9372671ee0cf71af23edb0b8751ff2c911",
+          "result": "in_progress",
+          "conclusion": null
+        }
+      ],
+      "last_verified_push_at": "2026-09-27T15:25:12.599Z",
+      "worker_pr": 342,
+      "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/342",
+      "worker_pr_base_sha": "0516dc9372671ee0cf71af23edb0b8751ff2c911",
+      "ci_run_id": 36329413892,
+      "last_ci_run_id": 36329413892
     }
   ],
   "recovery_queue": [],
