@@ -228,7 +228,7 @@ final class PublicNewsletterSignupWidgetTest extends WebTestCase
         $registry->resetManager();
         $manager = $registry->getManager();
         if (!$manager instanceof EntityManagerInterface) {
-            throw new \\LogicException('Doctrine did not reset the EntityManager.');
+            throw new \LogicException('Doctrine did not reset the EntityManager.');
         }
 
         return $manager;
