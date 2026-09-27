@@ -250,6 +250,10 @@ final class ContentDiscussionController extends AbstractController
         );
     }
 
+    /**
+     * @param FormInterface<array{body?: string, parentId?: string}>|null $commentForm
+     * @param FormInterface<array{reason?: string, details?: string}>|null $reportForm
+     */
     private function renderDiscussion(
         ContentEntry $entry,
         Request $request,
@@ -259,7 +263,7 @@ final class ContentDiscussionController extends AbstractController
         int $status = Response::HTTP_OK,
     ): Response {
         $pageValue = $request->query->get('page', '1');
-        if (!is_string($pageValue) || !ctype_digit($pageValue) || (int) $pageValue < 1) {
+        if (!ctype_digit($pageValue) || (int) $pageValue < 1) {
             throw $this->createNotFoundException();
         }
 
@@ -273,7 +277,7 @@ final class ContentDiscussionController extends AbstractController
         $replyTo = null;
         $replyId = $request->query->get('reply_to');
         if ($replyId !== null) {
-            if (!is_string($replyId) || !ctype_digit($replyId) || (int) $replyId < 1) {
+            if (!ctype_digit((string) $replyId) || (int) $replyId < 1) {
                 throw $this->createNotFoundException();
             }
             $replyTo = $this->interactions->publicComment((int) $replyId, (int) $entry->getId());
