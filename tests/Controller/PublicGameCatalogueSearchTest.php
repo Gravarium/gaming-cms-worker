@@ -106,6 +106,10 @@ final class PublicGameCatalogueSearchTest extends WebTestCase
             self::assertSelectorTextContains('.game-search-result h2', 'Visible WCP531 '.$token);
             self::assertSelectorExists('.game-search-result a[href^="/games/"]');
 
+            $client->request('GET', '/game-search?q='.rawurlencode('title-'.$token));
+            self::assertResponseIsSuccessful();
+            self::assertSelectorCount(1, '.game-search-result');
+
             $content = (string) $client->getResponse()->getContent();
             self::assertStringNotContainsString('<script>'.$token.'</script>', $content);
             self::assertStringContainsString('&lt;script&gt;'.$token.'&lt;/script&gt;', $content);
