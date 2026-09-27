@@ -12,8 +12,8 @@
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
   "published_at": "2026-09-27T00:00:21.295Z",
   "summary": {
-    "total_remaining_worker_tasks": 137,
-    "completed_worker_prs_awaiting_trusted_review": 203,
+    "total_remaining_worker_tasks": 136,
+    "completed_worker_prs_awaiting_trusted_review": 204,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
@@ -23409,7 +23409,7 @@
       "package_id": "WCP-436",
       "title": "Prevent delegated user managers from crossing privilege boundaries",
       "risk": "low",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -23477,7 +23477,7 @@
         ]
       },
       "claimed_on": "2026-09-26T23:55:48.964Z",
-      "claim_state": "active",
+      "claim_state": "locked_until_trusted_resolution",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
       "active_head": "bf53e50c794f227aeaf41b1239573cf90a974251",
@@ -23491,22 +23491,48 @@
         "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
         "feature_branch": "bf53e50c794f227aeaf41b1239573cf90a974251"
       },
-      "next_action": "Wait for complete exact-head Worker CI run 36281047108 on PR #229; repair concrete failures on this feature branch and update the checkpoint.",
+      "next_action": "Keep this claim locked until Trusted explicitly integrates, cancels or transfers it; continue with an independent dependency-safe package.",
       "worker_pr": 229,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/229",
       "draft_pr": false,
-      "pr_state": "open_ci_pending",
+      "pr_state": "open_ready_for_review_unmerged",
       "last_ci_run_id": 36281047108,
-      "last_ci_result": "in_progress",
+      "last_ci_result": "success",
       "ci_run_id": 36281047108,
-      "ci_result": "in_progress",
+      "ci_result": "success",
       "ci_attempts": [
         {
           "run_id": 36281047108,
           "head": "bf53e50c794f227aeaf41b1239573cf90a974251",
-          "result": "in_progress"
+          "result": "success",
+          "note": "Exact-head Worker CI passed: PHPStan Level 8; 430 tests / 1,865 assertions; PostgreSQL 18 applied all 39 migrations."
         }
-      ]
+      ],
+      "final_head": "bf53e50c794f227aeaf41b1239573cf90a974251",
+      "final_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5",
+      "final_changed_paths": [
+        "tests/Controller/AdminUserTargetPrivilegeSecurityTest.php"
+      ],
+      "changed_paths": [
+        "tests/Controller/AdminUserTargetPrivilegeSecurityTest.php"
+      ],
+      "completed_at": "2026-09-27T00:00:57.682Z",
+      "test_results": {
+        "phpunit": "430 tests, 1,865 assertions, 0 failures; one deprecation and one notice.",
+        "phpstan": "Level 8 passed with no errors.",
+        "php_symfony": "Worker PHP/Symfony validation job passed on exact final HEAD.",
+        "postgres18": "PostgreSQL 18 applied the complete migration chain: 39 migrations executed, 0 unavailable.",
+        "exact_head_ci": {
+          "run_id": 36281047108,
+          "head": "bf53e50c794f227aeaf41b1239573cf90a974251",
+          "result": "success"
+        }
+      },
+      "completion_summary": "Functional regression verifies that a user manager without CMS_VIDEO_MANAGE cannot view a higher-privilege user's edit or session routes or forge an edit; the target record remains unchanged. The synthetic user is removed in finally. Only the allowed test file changed.",
+      "open_limitations": [
+        "Awaiting Trusted review and Trusted integration CI."
+      ],
+      "trusted_follow_up": "Preserve CMS_USERS_MANAGE and PermissionDelegationPolicy target isolation during Trusted integration."
     }
   ],
   "recovery_queue": [],
