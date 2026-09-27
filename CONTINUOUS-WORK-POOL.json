@@ -10,16 +10,16 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T02:40:55.750Z",
+  "published_at": "2026-09-27T02:44:44.637Z",
   "summary": {
-    "total_remaining_worker_tasks": 140,
-    "completed_worker_prs_awaiting_trusted_review": 223,
+    "total_remaining_worker_tasks": 139,
+    "completed_worker_prs_awaiting_trusted_review": 224,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-455 is complete on green exact-head Worker PR #249; all five remaining FCP assignments are dependency-blocked. Select an independent existing-module gap and publish a collision-checked WCP proposal.",
+    "next_required_action": "WCP-454 is complete on green exact-head Worker PR #247. All five unclaimed FCP assignments remain dependency-blocked; derive an independent existing-module WCP and claim it.",
     "composition_preparable": 0,
-    "immediately_actionable": 5,
+    "immediately_actionable": 2,
     "must_continue": true
   },
   "rules": {
@@ -26096,7 +26096,7 @@
       "package_id": "WCP-454",
       "title": "Verify login throttling after repeated invalid passwords",
       "risk": "medium",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -26168,12 +26168,12 @@
         ]
       },
       "claimed_on": "2026-09-27T02:18:41.986Z",
-      "claim_state": "active",
+      "claim_state": "locked_until_trusted_resolution",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
       "active_head": "66e5007255323b2475f7d7ef5ca794ed0850706e",
       "resume_branch": "feature/wcp-454-login-throttling-g1",
-      "last_checkpoint_at": "2026-09-27T02:39:47.927Z",
+      "last_checkpoint_at": "2026-09-27T02:44:44.637Z",
       "checkpoint_paths": [
         "tests/Controller/LoginThrottlingSecurityTest.php"
       ],
@@ -26181,35 +26181,50 @@
         "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
         "feature_branch": "66e5007255323b2475f7d7ef5ca794ed0850706e"
       },
-      "next_action": "Inspect exact-head Worker CI run 36289122381 on 66e5007255323b2475f7d7ef5ca794ed0850706e; repair any concrete failure before completion.",
-      "last_verified_push_at": "2026-09-27T02:39:47.927Z",
+      "next_action": "Await Trusted review with the claim locked; exact final HEAD 66e5007255323b2475f7d7ef5ca794ed0850706e passed complete Worker CI run 36289122381.",
+      "last_verified_push_at": "2026-09-27T02:44:44.637Z",
       "worker_pr": 247,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/247",
-      "draft_pr": true,
-      "pr_state": "open_draft_unmerged",
+      "draft_pr": false,
+      "pr_state": "open_ready_unmerged",
       "ci_attempts": [
         {
           "run_id": 36288211226,
           "head": "0b2f0f6e6615251c5cec584641887cc37d41455d",
-          "result": "failure"
+          "result": "failure",
+          "diagnosis": "The test incorrectly required an HTTP 429 response, while Symfony's default authentication failure handler redirects."
         },
         {
           "run_id": 36288747908,
           "head": "f81fc6f5f166aab001e77622eb36052d8c7ba9f4",
           "result": "failure",
-          "diagnosis": "The test correctly observed generic invalid-credential redirects, but Symfony's default login failure handler also redirects after throttling; requiring HTTP 429 contradicted the framework behavior.",
+          "diagnosis": "The test confirmed generic authentication failures but still incorrectly expected HTTP 429; Symfony's default handler redirects on throttling.",
           "remediated_in_head": "66e5007255323b2475f7d7ef5ca794ed0850706e"
         },
         {
           "run_id": 36289122381,
           "head": "66e5007255323b2475f7d7ef5ca794ed0850706e",
-          "result": "in_progress"
+          "result": "success"
         }
       ],
-      "ci_result": "in_progress",
+      "ci_result": "success",
       "last_ci_run_id": 36289122381,
       "ci_run_id": 36289122381,
-      "published_at": "2026-09-27T02:39:47.927Z"
+      "published_at": "2026-09-27T02:39:47.927Z",
+      "final_head": "66e5007255323b2475f7d7ef5ca794ed0850706e",
+      "completion_evidence": {
+        "exact_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+        "final_head_sha": "66e5007255323b2475f7d7ef5ca794ed0850706e",
+        "changed_paths": [
+          "tests/Controller/LoginThrottlingSecurityTest.php"
+        ],
+        "worker_pr": 247,
+        "ci_run_id": 36289122381,
+        "ci_result": "success",
+        "php_symfony_job": "success: 430 tests, 1903 assertions; PHPStan level 8 no errors",
+        "postgresql_job": "success: 39 migrations",
+        "throttling_behavior": "TooManyLoginAttemptsAuthenticationException with the default /login failure redirect; user remains unauthenticated"
+      }
     },
     {
       "priority": 455,
