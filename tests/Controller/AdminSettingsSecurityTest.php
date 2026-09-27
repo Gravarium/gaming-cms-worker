@@ -62,7 +62,8 @@ final class AdminSettingsSecurityTest extends WebTestCase
                     'site_settings' => $payload,
                 ]);
 
-                self::assertResponseIsSuccessful();
+                self::assertResponseStatusCodeSame(422);
+                self::assertSelectorTextContains('#site_settings_error1', 'Der CSRF-Token ist ungültig.');
                 $this->assertSettingsUnchanged($client, $originalId, $originalState);
             }
         } finally {
