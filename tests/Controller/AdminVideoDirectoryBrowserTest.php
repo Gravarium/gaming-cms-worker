@@ -94,7 +94,7 @@ final class AdminVideoDirectoryBrowserTest extends WebTestCase
         ]);
         $crawler = $client->request('GET', $url);
         self::assertResponseIsSuccessful();
-        self::assertSelectorCount('#video-inventory .video-title', 1);
+        self::assertSelectorCount(1, '#video-inventory .video-title');
         self::assertSelectorTextContains('#video-inventory', $published->getTitle());
         self::assertStringNotContainsString($scheduled->getTitle(), (string) $client->getResponse()->getContent());
         self::assertStringContainsString('no-store', (string) $client->getResponse()->headers->get('Cache-Control'));
@@ -134,13 +134,13 @@ final class AdminVideoDirectoryBrowserTest extends WebTestCase
             ]);
             $client->request('GET', $stateUrl);
             self::assertResponseIsSuccessful();
-            self::assertSelectorCount('#video-inventory .video-title', 1);
+            self::assertSelectorCount(1, '#video-inventory .video-title');
             self::assertSelectorTextContains('#video-inventory', $expected->getTitle());
         }
 
         $client->request('GET', '/admin/videos?'.http_build_query(['search' => $prefix, 'category' => $alpha->getId()]));
         self::assertResponseIsSuccessful();
-        self::assertSelectorCount('#video-inventory .video-title', 3);
+        self::assertSelectorCount(3, '#video-inventory .video-title');
         self::assertStringNotContainsString($scheduled->getTitle(), (string) $client->getResponse()->getContent());
     }
 
@@ -156,7 +156,7 @@ final class AdminVideoDirectoryBrowserTest extends WebTestCase
 
         $firstPage = $client->request('GET', '/admin/videos?'.http_build_query(['search' => 'pager']));
         self::assertResponseIsSuccessful();
-        self::assertSelectorCount('#video-inventory tbody > tr', 25);
+        self::assertSelectorCount(25, '#video-inventory tbody > tr');
         self::assertSelectorTextContains('#video-inventory', '27 Videos');
         self::assertSelectorTextContains('#video-inventory', 'Seite 1 von 2');
         self::assertSelectorTextContains('#video-inventory', $videos[26]->getTitle());
@@ -168,7 +168,7 @@ final class AdminVideoDirectoryBrowserTest extends WebTestCase
 
         $secondPage = $client->request('GET', $nextHref);
         self::assertResponseIsSuccessful();
-        self::assertSelectorCount('#video-inventory tbody > tr', 2);
+        self::assertSelectorCount(2, '#video-inventory tbody > tr');
         self::assertSelectorTextContains('#video-inventory', 'Seite 2 von 2');
         self::assertSelectorTextContains('#video-inventory', $videos[0]->getTitle());
         self::assertSelectorTextContains('#video-inventory', $videos[1]->getTitle());
@@ -177,7 +177,7 @@ final class AdminVideoDirectoryBrowserTest extends WebTestCase
         $client->request('GET', '/admin/videos?'.http_build_query(['search' => 'pager', 'page' => 999]));
         self::assertResponseIsSuccessful();
         self::assertSelectorTextContains('#video-inventory', 'Seite 2 von 2');
-        self::assertSelectorCount('#video-inventory tbody > tr', 2);
+        self::assertSelectorCount(2, '#video-inventory tbody > tr');
     }
 
     public function testMalformedFiltersReturnPrivateBadRequestsWithoutChangingVideos(): void
