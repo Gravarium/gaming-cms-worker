@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T18:39:24.233Z",
+  "published_at": "2026-09-27T18:41:45.156Z",
   "summary": {
-    "total_remaining_worker_tasks": 171,
+    "total_remaining_worker_tasks": 172,
     "completed_worker_prs_awaiting_trusted_review": 298,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-567 PR #361 is ready for Trusted review with exact-head CI #912 / 36341255771 green. Re-evaluate unclaimed dependencies and continue with an independent worker-only proposal if none is eligible.",
+    "next_required_action": "WCP-568 is claimed on main@7b2ca79405fc12d34bce1386157e929e4668f31a; add public guild description XSS regression coverage and run exact-head Worker CI.",
     "composition_preparable": 0,
     "immediately_actionable": 29,
     "must_continue": true
@@ -45586,6 +45586,91 @@
       "ci_validation_pr": 361,
       "completed_at": "2026-09-27T18:39:24.233Z",
       "worker_completion_summary": "Exact-head Worker CI #912 / 36341255771 passed on b0bfac5167a5c0824cf498f68683169aa05dc7c4: 736 tests, 4,627 assertions, 0 failures/errors (1 deprecation, 3 notices); PHPStan reported no errors; PostgreSQL 18 applied 57 migrations with 878 SQL queries. PR #361 is open and ready for Trusted review, based on main@7b2ca79405fc12d34bce1386157e929e4668f31a, with one allowlisted test path and no runtime changes."
+    },
+    {
+      "priority": 568,
+      "package_id": "WCP-568",
+      "title": "Guard public guild descriptions against stored HTML injection",
+      "risk": "low",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-568-guild-description-xss-test-g1",
+      "suggested_branch": "feature/wcp-568-guild-description-xss-test-g1",
+      "base_branch": "main",
+      "base_sha": "7b2ca79405fc12d34bce1386157e929e4668f31a",
+      "objective": "Add a focused functional security regression proving that user-controlled Guild.description content rendered on the public guild profile remains escaped, including script-element and event-handler image payloads. Confirm the raw markup is absent and escaped text is present. Test-only package; do not change templates or runtime code.",
+      "allowed_paths": [
+        "tests/Controller/GamingGuildSecurityTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "CONTINUOUS-WORKER.md",
+        "CONTINUOUS-WORK-POOL.json",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "templates/",
+        "src/",
+        "migrations/",
+        "config/"
+      ],
+      "deliverables": [
+        "Public guild profile functional test supplies stored HTML payloads in the guild description and asserts they are escaped in the returned page.",
+        "Existing gaming authorization, recruitment, module, and guild-isolation tests remain intact.",
+        "No production or template change."
+      ],
+      "tests": [
+        "Targeted GamingGuildSecurityTest.",
+        "Complete exact-head Worker CI including full PHPUnit, PHPStan, template/config checks and PostgreSQL 18 migration chain."
+      ],
+      "completion_report": [
+        "Exact sanitized base and final HEAD; changed path and Worker PR state.",
+        "Payloads and raw/escaped HTML assertions.",
+        "Targeted regression and exact-head Worker CI results.",
+        "Test-only package; no runtime changes."
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-Trusted-review-and-exact-head-CI",
+        "preserve-all-security-permissions-CSRF-validation-recovery-rollback-and-upload-controls",
+        "no-private-runtime-or-sensitive-data",
+        "no-template-or-production-code-changes",
+        "no-edit-to-active-or-claim-locked-paths",
+        "no-direct-Trusted-integration-or-deployment"
+      ],
+      "proposal_kind": "worker_only",
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "7b2ca79405fc12d34bce1386157e929e4668f31a",
+      "proposal_dependency_evidence": [],
+      "collision_check": {
+        "compared_against": "Fresh continuous/work-pool-v4 file blob @ 9b6b0d68ebbd6ca9cd8016999d4a5a051c35b131; current sanitized main @ 7b2ca79405fc12d34bce1386157e929e4668f31a; every unclaimed, active, and claim-locked task.",
+        "result": "No exact or directory-prefix overlap for tests/Controller/GamingGuildSecurityTest.php with any unclaimed, active, or claim-locked task path. This regression changes no template or runtime source.",
+        "paths": [
+          "tests/Controller/GamingGuildSecurityTest.php"
+        ]
+      },
+      "published_at": "2026-09-27T18:41:45.156Z",
+      "claimed_on": "2026-09-27T18:41:45.156Z",
+      "claim_state": "active",
+      "active_base_branch": "main",
+      "active_base_sha": "7b2ca79405fc12d34bce1386157e929e4668f31a",
+      "active_head": "7b2ca79405fc12d34bce1386157e929e4668f31a",
+      "resume_branch": "feature/wcp-568-guild-description-xss-test-g1",
+      "branch_heads": {},
+      "last_observed_head": "7b2ca79405fc12d34bce1386157e929e4668f31a",
+      "last_checkpoint_at": "2026-09-27T18:41:45.156Z",
+      "checkpoint_paths": [],
+      "next_action": "Create exclusive claim and feature branches from this exact base, then add the guild profile stored-XSS test to the security test suite."
     }
   ],
   "recovery_queue": [],
