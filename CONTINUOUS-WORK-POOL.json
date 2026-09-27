@@ -12,14 +12,14 @@
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
   "published_at": "2026-09-27T02:05:27.111Z",
   "summary": {
-    "total_remaining_worker_tasks": 141,
-    "completed_worker_prs_awaiting_trusted_review": 219,
+    "total_remaining_worker_tasks": 140,
+    "completed_worker_prs_awaiting_trusted_review": 220,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-453 is reserved on exact sanitized main; implement the locale-switch CSRF, allowlist and redirect regression on its exclusive branch.",
+    "next_required_action": "Re-evaluate all remaining unclaimed FCPs against dependency evidence; if none is ready, publish and claim another independent worker-only task while leaving foreign active claims untouched.",
     "composition_preparable": 0,
-    "immediately_actionable": 6,
+    "immediately_actionable": 5,
     "must_continue": true
   },
   "rules": {
@@ -25885,7 +25885,7 @@
       "package_id": "WCP-453",
       "title": "Protect the locale switch from CSRF and unsafe redirects",
       "risk": "medium",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -25957,12 +25957,12 @@
         ]
       },
       "claimed_on": "2026-09-27T02:09:43.149Z",
-      "claim_state": "active",
+      "claim_state": "locked_until_trusted_resolution",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
       "active_head": "01a5ce90b9f471f14233b06397768e7030ae2fcd",
       "resume_branch": "feature/wcp-453-locale-switch-security-g1",
-      "last_checkpoint_at": "2026-09-27T02:12:02.055Z",
+      "last_checkpoint_at": "2026-09-27T02:14:29.224Z",
       "checkpoint_paths": [
         "tests/Controller/LocaleSwitchSecurityTest.php"
       ],
@@ -25970,21 +25970,47 @@
         "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
         "feature_branch": "01a5ce90b9f471f14233b06397768e7030ae2fcd"
       },
-      "next_action": "Inspect exact-head Worker CI run 36287819282; repair concrete failures before completion.",
-      "last_verified_push_at": "2026-09-27T02:12:02.055Z",
+      "next_action": "PR #246 is ready for Trusted review with green exact-head Worker CI; keep this claim locked until Trusted explicitly integrates, cancels or transfers it, then continue with an independent task.",
+      "last_verified_push_at": "2026-09-27T02:14:29.224Z",
       "worker_pr": 246,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/246",
-      "draft_pr": true,
-      "pr_state": "open_draft_unmerged",
+      "draft_pr": false,
+      "pr_state": "open_ready_for_review_unmerged",
       "ci_attempts": [
         {
           "run_id": 36287819282,
           "head": "01a5ce90b9f471f14233b06397768e7030ae2fcd",
-          "result": "queued"
+          "result": "success"
         }
       ],
-      "ci_result": "queued",
-      "last_ci_run_id": 36287819282
+      "ci_result": "success",
+      "last_ci_run_id": 36287819282,
+      "final_head": "01a5ce90b9f471f14233b06397768e7030ae2fcd",
+      "final_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "changed_paths": [
+        "tests/Controller/LocaleSwitchSecurityTest.php"
+      ],
+      "final_changed_paths": [
+        "tests/Controller/LocaleSwitchSecurityTest.php"
+      ],
+      "completed_at": "2026-09-27T02:14:29.224Z",
+      "ci_run_id": 36287819282,
+      "test_results": {
+        "phpunit": "430 tests, 1,867 assertions, 0 failures; one deprecation and one notice.",
+        "phpstan": "Level 8 passed with no errors.",
+        "php_symfony": "Worker PHP/Symfony validation job passed on exact final HEAD.",
+        "postgres18": "PostgreSQL 18 applied and verified all 39 migrations.",
+        "exact_head_ci": {
+          "run_id": 36287819282,
+          "head": "01a5ce90b9f471f14233b06397768e7030ae2fcd",
+          "result": "success"
+        }
+      },
+      "completion_summary": "Functional security coverage proves missing and invalid locale-switch CSRF tokens return 403, disabled supported locales return 404, and these failures do not set the locale cookie. An enabled locale request with an external redirect target falls back to / and sets an HttpOnly SameSite=Lax cookie. Test locale settings are restored or removed; only the allowlisted test file changed.",
+      "open_limitations": [
+        "Awaiting Trusted review and Trusted integration CI."
+      ],
+      "trusted_follow_up": "Preserve the locale-switch CSRF token, enabled-locale allowlist, LocalRedirectTarget fallback, and HttpOnly SameSite=Lax locale cookie."
     }
   ],
   "recovery_queue": [],
