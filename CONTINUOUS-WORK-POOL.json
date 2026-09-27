@@ -17,7 +17,7 @@
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-515 is reserved from sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d. Add the dedicated scheduled-content autosave regression test, then validate its exact final Worker HEAD; keep the proposal untrusted and claim-locked.",
+    "next_required_action": "WCP-515 is open as draft PR #308 on exact HEAD bd90a0027384ad18b1f0ad406bd85bab12d551f2; Worker CI run 36313715827 is in progress. Continue by validating the exact head and repair only the dedicated test file if CI reports a concrete issue.",
     "composition_preparable": 0,
     "immediately_actionable": 19,
     "must_continue": true
@@ -35514,13 +35514,32 @@
         "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
         "feature_branch": "bd90a0027384ad18b1f0ad406bd85bab12d551f2"
       },
-      "next_action": "Open a draft Worker PR from the verified feature HEAD and inspect its exact-head full CI; repair concrete failures only within the dedicated test path.",
+      "next_action": "Monitor exact-head Worker CI run 36313715827 for HEAD bd90a0027384ad18b1f0ad406bd85bab12d551f2. Diagnose and repair a concrete failure only within tests/Controller/Content/ScheduledContentAutosaveBoundaryTest.php.",
       "checkpoint_paths": [
         "tests/Controller/Content/ScheduledContentAutosaveBoundaryTest.php"
       ],
       "last_observed_head": "bd90a0027384ad18b1f0ad406bd85bab12d551f2",
-      "last_checkpoint_at": "2026-09-27T10:48:06.753Z",
-      "last_verified_push_at": "2026-09-27T10:48:06.753Z"
+      "last_checkpoint_at": "2026-09-27T10:49:12.729Z",
+      "last_verified_push_at": "2026-09-27T10:49:12.729Z",
+      "worker_pr": 308,
+      "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/308",
+      "draft_pr": true,
+      "pr_state": "open",
+      "worker_pr_state": "draft",
+      "worker_pr_changed_paths": [
+        "tests/Controller/Content/ScheduledContentAutosaveBoundaryTest.php"
+      ],
+      "ci_run_id": 36313715827,
+      "last_ci_run_id": 36313715827,
+      "ci_result": "in_progress",
+      "last_ci_result": "in_progress",
+      "ci_attempts": [
+        {
+          "run_id": 36313715827,
+          "head": "bd90a0027384ad18b1f0ad406bd85bab12d551f2",
+          "result": "in_progress"
+        }
+      ]
     }
   ],
   "recovery_queue": [],
