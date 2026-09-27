@@ -36581,6 +36581,130 @@
       "last_observed_head": "b510875e7b0741b9b19f09429d2204a95df51198",
       "last_checkpoint_at": "2026-09-27T11:33:07.402Z",
       "last_verified_push_at": "2026-09-27T11:33:07.402Z"
+    },
+    {
+      "priority": 523,
+      "package_id": "WCP-523",
+      "title": "Promote public video playlists through the page builder",
+      "risk": "low",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-523-public-video-playlists-widget-g1",
+      "suggested_branch": "feature/wcp-523-public-video-playlists-widget-g1",
+      "base_branch": "main",
+      "base_sha": "b510875e7b0741b9b19f09429d2204a95df51198",
+      "objective": "Complete the existing Video module and page-builder workflow with a reusable public-playlists widget. Editors can place a bounded playlist directory on the home page or another CMS page. Render enabled playlists that contain at least one enabled, already-published video, link each playlist to the existing public video filter, and show a clear empty state. The Video module gate must hide both the widget and its data. Do not change shared widget wiring, controllers, repositories, entities, routes, schema, or migrations.",
+      "allowed_paths": [
+        "src/Widget/VideoPlaylist/PublicVideoPlaylistQuery.php",
+        "src/Widget/PublicVideoPlaylistWidgetProvider.php",
+        "templates/widget/public_video_playlists.html.twig",
+        "tests/Widget/PublicVideoPlaylistWidgetProviderTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/",
+        "src/Controller/",
+        "src/Entity/",
+        "src/Repository/",
+        "src/Layout/",
+        "src/Module/",
+        "src/Theme/",
+        "src/Widget/BundledWidgetProvider.php",
+        "src/Widget/WidgetDefinition.php",
+        "src/Widget/WidgetProvider.php",
+        "src/Widget/WidgetRegistry.php",
+        "templates/base.html.twig",
+        "templates/home/",
+        "templates/admin/",
+        "templates/video/",
+        "templates/video_playlist/",
+        "tests/Controller/",
+        "tests/Layout/",
+        "tests/Widget/BundledWidgetProviderTest.php"
+      ],
+      "deliverables": [
+        "Add a dedicated read query for enabled playlists with at least one enabled video whose publishedAt is not null and not in the future; order deterministically by playlist title and ID and cap at 12.",
+        "Auto-discover video.public-playlists as a WidgetProvider owned by the Video module, using the existing bounded page-builder count setting.",
+        "Render playlist title, optional description and an internal app_video_index playlist-filter link; escape text and display a useful empty state.",
+        "Use the existing WidgetRegistry Video-module gate so a disabled Video module hides the widget and returns no widget data; do not change shared provider wiring or schema."
+      ],
+      "tests": [
+        "Functional coverage verifies provider discovery and placement, count selection, deterministic ordering and the 12-item query cap.",
+        "Query tests include enabled playlists with published videos and exclude disabled playlists, empty playlists, disabled videos and unpublished or future videos.",
+        "Verify internal filter links, escaped title/description, empty state and disabled-Video suppression through the existing WidgetRegistry.",
+        "Run focused PHPUnit, PHPStan level 8 and complete Worker CI on the exact final HEAD, including PostgreSQL 18 migration-chain checks; no schema change."
+      ],
+      "completion_report": [
+        "Exact sanitized main/base SHA and final Worker HEAD SHA.",
+        "Changed-path list and Worker PR.",
+        "Page-builder discovery/placement, bounded public playlist filtering, internal links, empty state and Video-module disable results.",
+        "Focused tests, PHPStan, PostgreSQL migration and exact-head Worker CI evidence.",
+        "Remaining limitations and Trusted follow-up."
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "video-disabled-means-widget-hidden-and-no-data",
+        "only-enabled-playlists-with-enabled-already-published-videos-are-publicly-promoted",
+        "reuse-existing-app-video-index-playlist-filter-route",
+        "bounded-deterministic-read-only-widget-no-schema-or-migration-change",
+        "preserve-existing-page-builder-validation-permissions-and-widget-registry-module-gate",
+        "no-private-runtime-or-sensitive-data",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "red-CI-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "b510875e7b0741b9b19f09429d2204a95df51198",
+      "proposal_kind": "worker_only",
+      "proposal_dependency_evidence": [],
+      "collision_check": {
+        "compared_against": "Fresh continuous/work-pool-v4 commit f19d7ee7e89b68b37c6f38c35e64232d7dd50eea and pool blob 31d86d34034af52b02a76b15c00ed373e459b5e5; sanitized main b510875e7b0741b9b19f09429d2204a95df51198; all active/claim-locked paths; and current exact branch/PR/CI observations for WCP-518, WCP-520, WCP-521 and WCP-522.",
+        "result": "No active or claim-locked task overlaps the four exact paths. WCP-518 game-release widget, WCP-520 news-archive widget, WCP-521 watchlist privacy test and WCP-522 newsletter signup use distinct paths and remain untouched. WCP-516's locked video-search workflow also uses separate provider/template paths. The pool root base_sha remains f1a246c64527ef3ad51f7490773d9bbf9d42be5d; this worker task uses verified sanitized main b510875e7b0741b9b19f09429d2204a95df51198 without rebasing foreign work. FCP-072 is unclaimed and dependency-blocked with broad templates/ scope; this exact new widget template is a nonblocking future narrow-scope hit.",
+        "paths": [
+          "src/Widget/VideoPlaylist/PublicVideoPlaylistQuery.php",
+          "src/Widget/PublicVideoPlaylistWidgetProvider.php",
+          "templates/widget/public_video_playlists.html.twig",
+          "tests/Widget/PublicVideoPlaylistWidgetProviderTest.php"
+        ],
+        "observed_nonblocking_path_hits": [
+          {
+            "id": "FCP-072",
+            "title": "Translations accessibility mobile editing and optional PWA",
+            "state": "unclaimed",
+            "path": "templates/"
+          }
+        ]
+      },
+      "published_at": "2026-09-27T11:35:35.271Z",
+      "claimed_on": "2026-09-27T11:35:35.271Z",
+      "claim_state": "active",
+      "active_base_branch": "main",
+      "active_base_sha": "b510875e7b0741b9b19f09429d2204a95df51198",
+      "active_head": "b510875e7b0741b9b19f09429d2204a95df51198",
+      "resume_branch": "feature/wcp-523-public-video-playlists-widget-g1",
+      "branch_heads": {
+        "claim_branch": "b510875e7b0741b9b19f09429d2204a95df51198",
+        "feature_branch": "b510875e7b0741b9b19f09429d2204a95df51198"
+      },
+      "last_observed_head": "b510875e7b0741b9b19f09429d2204a95df51198",
+      "last_checkpoint_at": "2026-09-27T11:35:35.271Z",
+      "checkpoint_paths": [],
+      "next_action": "Implement the public-playlist query, Video-owned page-builder provider, template and focused tests only in the four allowed paths; push a coherent checkpoint and run exact-head Worker CI."
     }
   ],
   "recovery_queue": [],
