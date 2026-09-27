@@ -16,7 +16,52 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 final class AdminGuildStructureSecurityTest extends WebTestCase
 {
-    public function testGuildTeamDeletionEnforcesPermissionCsrfParentIsolationAndTargetScope(): void
+    public function testAuthenticatedUserWithoutGamingPermissionCannotDeleteTeam(): void
+    {
+        $client = static::createClient();
+        $suffix = bin2hex(random_bytes(6));
+        $game = (new Game())
+            ->setName('Security test game '.$suffix)
+            ->setSlug('guild-security-'.$suffix);
+        $guild = (new Guild())
+            ->setGame($game)
+            ->setName('Owner guild '.$suffix)
+            ->setSlug('owner-guild-'.$suffix)
+            ->setServerName('Test server')
+            ->setDescription('Synthetic security fixture');
+        $team = (new GuildTeam())
+            ->setGuild($guild)
+            ->setName('Protected team '.$suffix);
+        $actor = $this->createUser('guild-team-denied-'.$suffix, [CmsPermission::CONTENT]);
+
+        $entityManager = $this->entityManager($client);
+        foreach ([$game, $guild, $team, $actor] as $entity) {
+            $entityManager->persist($entity);
+        }
+        $entityManager->flush();
+
+        $gameId = $game->getId();
+        $guildId = $guild->getId();
+        $teamId = $team->getId();
+        $actorId = $actor->getId();
+        self::assertNotNull($gameId);
+        self::assertNotNull($guildId);
+        self::assertNotNull($teamId);
+        self::assertNotNull($actorId);
+
+        try {
+            $client->loginUser($actor);
+            $client->request('POST', sprintf('/admin/gaming/guild/%d/structure/team/%d/delete', $guildId, $teamId));
+
+            self::assertResponseStatusCodeSame(403);
+            $this->entityManager($client)->clear();
+            self::assertInstanceOf(GuildTeam::class, $this->teams($client)->find($teamId));
+        } finally {
+            $this->cleanupFixtures($client, $teamId, null, $guildId, null, $gameId, $actorId);
+        }
+    }
+
+    public function testTeamDeletionRequiresCsrfAndParentOwnershipAndDeletesOnlySelectedTeam(): void
     {
         $client = static::createClient();
         $suffix = bin2hex(random_bytes(6));
@@ -41,11 +86,10 @@ final class AdminGuildStructureSecurityTest extends WebTestCase
         $siblingTeam = (new GuildTeam())
             ->setGuild($ownerGuild)
             ->setName('Sibling team '.$suffix);
-        $unauthorized = $this->createUser('guild-team-denied-'.$suffix, [CmsPermission::CONTENT]);
         $manager = $this->createUser('guild-team-manager-'.$suffix, [CmsPermission::GAMING]);
 
         $entityManager = $this->entityManager($client);
-        foreach ([$game, $ownerGuild, $otherGuild, $targetTeam, $siblingTeam, $unauthorized, $manager] as $entity) {
+        foreach ([$game, $ownerGuild, $otherGuild, $targetTeam, $siblingTeam, $manager] as $entity) {
             $entityManager->persist($entity);
         }
         $entityManager->flush();
@@ -55,24 +99,18 @@ final class AdminGuildStructureSecurityTest extends WebTestCase
         $otherGuildId = $otherGuild->getId();
         $targetTeamId = $targetTeam->getId();
         $siblingTeamId = $siblingTeam->getId();
-        $unauthorizedId = $unauthorized->getId();
         $managerId = $manager->getId();
         self::assertNotNull($gameId);
         self::assertNotNull($ownerGuildId);
         self::assertNotNull($otherGuildId);
         self::assertNotNull($targetTeamId);
         self::assertNotNull($siblingTeamId);
-        self::assertNotNull($unauthorizedId);
         self::assertNotNull($managerId);
 
         try {
-            $targetUrl = sprintf('/admin/gaming/guild/%d/structure/team/%d/delete', $ownerGuildId, $targetTeamId);
-            $client->loginUser($unauthorized);
-            $client->request('POST', $targetUrl);
-            self::assertResponseRedirects('/login');
-            self::assertInstanceOf(GuildTeam::class, $this->teams($client)->find($targetTeamId));
-
             $client->loginUser($manager);
+            $targetUrl = sprintf('/admin/gaming/guild/%d/structure/team/%d/delete', $ownerGuildId, $targetTeamId);
+
             $client->request('POST', $targetUrl);
             self::assertResponseStatusCodeSame(403);
             self::assertInstanceOf(GuildTeam::class, $this->teams($client)->find($targetTeamId));
@@ -101,16 +139,7 @@ final class AdminGuildStructureSecurityTest extends WebTestCase
             self::assertNull($this->teams($client)->find($targetTeamId));
             self::assertInstanceOf(GuildTeam::class, $this->teams($client)->find($siblingTeamId));
         } finally {
-            $this->cleanupFixtures(
-                $client,
-                $targetTeamId,
-                $siblingTeamId,
-                $ownerGuildId,
-                $otherGuildId,
-                $gameId,
-                $unauthorizedId,
-                $managerId,
-            );
+            $this->cleanupFixtures($client, $targetTeamId, $siblingTeamId, $ownerGuildId, $otherGuildId, $gameId, $managerId);
         }
     }
 
@@ -121,7 +150,8 @@ final class AdminGuildStructureSecurityTest extends WebTestCase
             ->setEmail($label.'-'.bin2hex(random_bytes(6)).'@example.test')
             ->setDisplayName('Synthetic '.$label)
             ->setPermissions($permissions)
-            ->setPassword('unused-test-hash');
+            ->setPassword('unused-test-hash')
+            ->verifyEmail();
     }
 
     private function cleanupFixtures(
@@ -131,8 +161,7 @@ final class AdminGuildStructureSecurityTest extends WebTestCase
         ?int $ownerGuildId,
         ?int $otherGuildId,
         ?int $gameId,
-        ?int $unauthorizedId,
-        ?int $managerId,
+        ?int $userId,
     ): void {
         $entityManager = $this->entityManager($client);
         $entityManager->clear();
@@ -162,12 +191,10 @@ final class AdminGuildStructureSecurityTest extends WebTestCase
             }
         }
 
-        foreach ([$unauthorizedId, $managerId] as $userId) {
-            if ($userId !== null) {
-                $user = $entityManager->find(User::class, $userId);
-                if ($user instanceof User) {
-                    $entityManager->remove($user);
-                }
+        if ($userId !== null) {
+            $user = $entityManager->find(User::class, $userId);
+            if ($user instanceof User) {
+                $entityManager->remove($user);
             }
         }
 
