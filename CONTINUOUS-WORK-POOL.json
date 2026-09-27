@@ -37267,15 +37267,15 @@
       "claimed_on": "2026-09-27T11:49:42.443Z",
       "active_base_branch": "main",
       "active_base_sha": "b510875e7b0741b9b19f09429d2204a95df51198",
-      "active_head": "4b90b3e0a80b240767a12a524ab4ecf569c204e5",
+      "active_head": "03e216e77cdc0b32acba35079f32bb72ff7cc592",
       "resume_branch": "feature/wcp-526-media-usage-browser-g1",
       "branch_heads": {
         "claim_branch": "b510875e7b0741b9b19f09429d2204a95df51198",
-        "feature_branch": "4b90b3e0a80b240767a12a524ab4ecf569c204e5"
+        "feature_branch": "03e216e77cdc0b32acba35079f32bb72ff7cc592"
       },
-      "last_observed_head": "4b90b3e0a80b240767a12a524ab4ecf569c204e5",
-      "last_checkpoint_at": "2026-09-27T12:32:38.000Z",
-      "last_verified_push_at": "2026-09-27T12:32:38.000Z",
+      "last_observed_head": "03e216e77cdc0b32acba35079f32bb72ff7cc592",
+      "last_checkpoint_at": "2026-09-27T12:37:04.000Z",
+      "last_verified_push_at": "2026-09-27T12:37:04.000Z",
       "checkpoint_paths": [
         "src/Media/MediaAssetUsageBrowser.php",
         "src/Controller/AdminMediaUsageController.php",
@@ -37283,7 +37283,7 @@
         "templates/admin/storage/media_usage.html.twig",
         "tests/Controller/AdminMediaUsageBrowserTest.php"
       ],
-      "next_action": "Monitor Worker CI run 36319257286 on exact HEAD; inspect failures and make any correction on this same branch.",
+      "next_action": "Monitor Worker CI run 36319423657 on exact HEAD. After full success, update the PR evidence and mark the draft ready.",
       "worker_pr": 323,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/323",
       "draft_pr": true,
@@ -37314,8 +37314,14 @@
         {
           "run_id": 36319257286,
           "head": "4b90b3e0a80b240767a12a524ab4ecf569c204e5",
+          "result": "failure",
+          "summary": "PHPStan and all Symfony/container/Twig/Doctrine checks plus PostgreSQL 18 migrations passed. PHPUnit passed 546 tests except the Cache-Control assertion, which expected exact directive ordering instead of verifying both private and no-store. The run also exposed a DBAL quoteIdentifier deprecation; both are fixed on the same branch."
+        },
+        {
+          "run_id": 36319423657,
+          "head": "03e216e77cdc0b32acba35079f32bb72ff7cc592",
           "result": "queued",
-          "summary": "Full Worker CI queued on the corrected query binding and isolated negative-test HEAD."
+          "summary": "Full Worker CI queued after correcting the cache policy assertion and deprecated DBAL identifier quoting."
         }
       ]
     },
