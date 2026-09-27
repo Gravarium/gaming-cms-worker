@@ -12,6 +12,7 @@ use DateTimeImmutable;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Routing\Attribute\Route;
 
 final class PublicContentTagArchiveController extends AbstractController
@@ -33,7 +34,15 @@ final class PublicContentTagArchiveController extends AbstractController
             throw $this->createNotFoundException();
         }
 
-        $page = max(1, min(self::MAX_PAGE, $request->query->getInt('page', 1)));
+        $pageValue = $request->query->getString('page', '1');
+        if (preg_match('/\\\\A[1-9][0-9]{0,4}\\\\z/', $pageValue) !== 1) {
+            throw new BadRequestHttpException('The page parameter must be a positive integer.');
+        }
+
+        $page = (int) $pageValue;
+        if ($page > self::MAX_PAGE) {
+            throw $this->createNotFoundException();
+        }
         $now = new DateTimeImmutable();
         $total = $this->entries->countPublicEntriesForTag($tag, $now);
         $pages = max(1, (int) ceil($total / self::PAGE_SIZE));
