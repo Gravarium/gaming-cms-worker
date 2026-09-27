@@ -10,7 +10,7 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T10:08:58.156Z",
+  "published_at": "2026-09-27T10:10:21.081Z",
   "summary": {
     "total_remaining_worker_tasks": 161,
     "completed_worker_prs_awaiting_trusted_review": 267,
@@ -33881,7 +33881,7 @@
     {
       "priority": 504,
       "package_id": "WCP-504",
-      "title": "Add a configurable internal call-to-action widget to the page builder",
+      "title": "Add module-aware internal call-to-action widgets to the page builder",
       "risk": "low",
       "execution_state": "worker_in_progress",
       "dependencies": [],
@@ -33891,7 +33891,7 @@
       "suggested_branch": "feature/wcp-504-internal-cta-widget-g1",
       "base_branch": "main",
       "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-      "objective": "Complete the existing layout/widget module with a reusable internal call-to-action block. The hero widget has fixed navigation links and the text widget is plain text, so editors cannot add a configurable destination button to another page region. Register a new core.call-to-action widget through the existing tagged WidgetProvider contract. Let editors configure button text and choose only existing internal news, guild and video directory routes; render no button when the selected target module is disabled. Do not accept arbitrary URLs or alter the layout editor, registry, schema or route definitions.",
+      "objective": "Complete the existing layout/widget module with reusable internal call-to-action blocks. The hero widget has fixed navigation links and the text widget is plain text, so editors cannot add a configurable destination button to another page region. Register three variants through the existing auto-tagged WidgetProvider contract: content.call-to-action for news, gaming.call-to-action for guilds, and video.call-to-action for videos. Editors choose a destination by selecting the matching palette widget. Each variant has one server-owned internal route and its owning module, so the existing registry omits the whole CTA block, including its heading, while that module is disabled. Do not accept arbitrary URLs or alter the layout editor, registry, schema or route definitions.",
       "allowed_paths": [
         "src/Widget/CallToActionWidgetProvider.php",
         "templates/widget/call_to_action.html.twig",
@@ -33924,16 +33924,17 @@
         "public/"
       ],
       "deliverables": [
-        "The layout editor discovers a new core.call-to-action widget from the existing auto-tagged WidgetProvider registry without changing the editor.",
-        "The widget reuses the existing title/text settings and adds a bounded button label plus a fixed destination choice for public news, gaming/guilds or videos.",
-        "The server maps each destination to a static internal route and its owning module; arbitrary URLs, route names and external schemes are never accepted.",
-        "The widget renders escaped copy and a useful internal link only while the target module is enabled; disabled-module targets render no call-to-action content.",
-        "Only the new provider, its dedicated public widget template and focused widget workflow tests change; no schema, migration, route or shared navigation changes."
+        "The layout editor discovers content.call-to-action, gaming.call-to-action and video.call-to-action from the existing tagged WidgetProvider registry without changing the editor; each palette choice has one fixed internal destination.",
+        "Each variant reuses the existing title/text settings and adds a bounded buttonLabel; all route names and destination modules are static server-side mappings.",
+        "WidgetDefinition assigns each CTA to its target module so a disabled or unavailable module hides the widget and its region heading through the existing registry and renderer.",
+        "Arbitrary URLs, route names, external schemes and unknown CTA config keys are rejected; editor-provided title, text and button label remain escaped.",
+        "Only the new sibling provider, its dedicated widget template and focused functional tests change; no schema, migration, route, editor, registry or shared navigation changes."
       ],
       "tests": [
-        "Focused functional coverage proves the widget appears in the layout editor palette and its fields are configured through the existing WidgetDefinition schema.",
-        "Preview workflow tests render each fixed internal destination, verify escaped heading/button text and reject arbitrary or malformed destinations.",
-        "A target-module-disabled regression proves the CTA is omitted while the layout remains valid.",
+        "Functional coverage proves all three CTA variants and their bounded buttonLabel schema are discovered in the layout editor palette.",
+        "Preview workflow tests render the static news, gaming and video internal destinations and verify escaped heading, body and button text.",
+        "Negative preview coverage rejects an arbitrary URL, route name or unknown config key.",
+        "A disabled target-module regression proves that the full CTA widget, including its outer heading, disappears while the layout remains valid.",
         "PHPStan level 8 and complete Worker CI on the exact final HEAD, including PostgreSQL 18 migration-chain validation."
       ],
       "completion_report": [
@@ -33945,8 +33946,8 @@
       "immutable_constraints": [
         "trusted-main-is-the-only-integration-and-deployment-source",
         "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
-        "only-static-internal-route-destinations-are-rendered",
-        "disabled-target-modules-fail-closed-with-no-stale-cta-output",
+        "each-cta-variant-has-only-its-static-internal-route",
+        "disabled-target-modules-hide-the-entire-cta-widget",
         "escape-all-editor-provided-text",
         "no-schema-migration-controller-editor-registry-shared-navigation-or-private-runtime-change",
         "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
@@ -33959,8 +33960,8 @@
       "proposal_kind": "worker_only",
       "proposal_dependency_evidence": [],
       "collision_check": {
-        "compared_against": "Fresh continuous/work-pool-v4 blob 611fc39c9c4c033ea7680ffc6d71251753000802; all active and claim-locked path allowlists; sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d; active branches, PRs and CI revalidated immediately before reservation.",
-        "result": "No active or claim-locked package owns or encloses the three new paths. WCP-378 is limited to the existing BundledWidgetProvider and its test; this package adds a sibling provider, dedicated template and distinct test. WCP-434's layout directory/editor files and WCP-497's portal navigation files remain untouched; the editor already discovers auto-tagged WidgetProvider services. WCP-500/501/503 own separate content, redirect-test and Game Hub paths. No controller, editor, registry, schema, migration, route, shared navigation or private-runtime path is changed.",
+        "compared_against": "Fresh continuous/work-pool-v4 blob 737380009621c10e9cfdffc8863813c98c6eaa8d, active and claim-locked path allowlists, current main, and directly verified WCP-504 branch/PR state.",
+        "result": "No other active or claim-locked package owns or encloses the three new paths. WCP-378 remains limited to BundledWidgetProvider; this package adds a sibling provider, one template and a distinct test. WCP-434 layout/editor and WCP-497 portal navigation paths remain untouched. Active WCP-505/506/507/508 scopes are disjoint. Main and both WCP-504 branches are at f1a246c64527ef3ad51f7490773d9bbf9d42be5d; no WCP-504 PR exists.",
         "paths": [
           "src/Widget/CallToActionWidgetProvider.php",
           "templates/widget/call_to_action.html.twig",
@@ -33981,7 +33982,7 @@
       "last_observed_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
       "last_checkpoint_at": "2026-09-27T10:00:17.122Z",
       "checkpoint_paths": [],
-      "next_action": "Implement the new call-to-action provider and its dedicated template, then add functional coverage through the existing layout editor preview. Push a coherent checkpoint and run full exact-head Worker CI.",
+      "next_action": "Implement the three module-owned static CTA variants and shared template, then add layout-editor preview, safe-setting and disabled-module functional coverage. Push a coherent checkpoint and run full exact-head Worker CI.",
       "last_verified_push_at": "2026-09-27T10:00:17.122Z"
     },
     {
