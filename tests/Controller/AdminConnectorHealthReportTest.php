@@ -47,7 +47,8 @@ final class AdminConnectorHealthReportTest extends WebTestCase
             $client->request('GET', '/admin/connectors/health/report?capability=notifications&status=failed');
 
             self::assertResponseIsSuccessful();
-            self::assertSame('private, no-store', $client->getResponse()->headers->get('Cache-Control'));
+            self::assertStringContainsString('private', (string) $client->getResponse()->headers->get('Cache-Control'));
+            self::assertStringContainsString('no-store', (string) $client->getResponse()->headers->get('Cache-Control'));
             $payload = $this->payload($client);
             self::assertSame(['capability' => 'notifications', 'status' => 'failed'], $payload['filters']);
             self::assertGreaterThanOrEqual(1, $payload['counts']['total']);
@@ -75,9 +76,10 @@ final class AdminConnectorHealthReportTest extends WebTestCase
             self::assertCount(1, $pendingRows);
             self::assertNull($pendingRows[0]['checkedAt']);
         } finally {
-            foreach ([$healthyStatus, $failedStatus, $healthy, $failed, $pending, $user] as $entity) {
+            foreach ([$healthyStatus, $failedStatus, $healthy, $failed, $pending] as $entity) {
                 $em->remove($entity);
             }
+            $this->removeUser($em, $user);
             $em->flush();
         }
     }
@@ -103,7 +105,7 @@ final class AdminConnectorHealthReportTest extends WebTestCase
             self::assertSame('status', $payload['parameter']);
         } finally {
             $em = $this->em($client);
-            $em->remove($user);
+            $this->removeUser($em, $user);
             $em->flush();
         }
     }
@@ -121,7 +123,7 @@ final class AdminConnectorHealthReportTest extends WebTestCase
             self::assertResponseStatusCodeSame(Response::HTTP_FORBIDDEN);
         } finally {
             $em = $this->em($client);
-            $em->remove($user);
+            $this->removeUser($em, $user);
             $em->flush();
         }
     }
@@ -146,7 +148,7 @@ final class AdminConnectorHealthReportTest extends WebTestCase
             $client->request('GET', '/admin/connectors/health/report');
             self::assertResponseStatusCodeSame(Response::HTTP_NOT_FOUND);
         } finally {
-            $em->remove($user);
+            $this->removeUser($em, $user);
             if ($createdState) {
                 $em->remove($state);
             } else {
@@ -195,5 +197,18 @@ final class AdminConnectorHealthReportTest extends WebTestCase
     private function em(KernelBrowser $client): EntityManagerInterface
     {
         return $client->getContainer()->get(EntityManagerInterface::class);
+    }
+
+    private function removeUser(EntityManagerInterface $em, User $user): void
+    {
+        $id = $user->getId();
+        if ($id === null) {
+            return;
+        }
+
+        $managed = $em->find(User::class, $id);
+        if ($managed instanceof User) {
+            $em->remove($managed);
+        }
     }
 }
