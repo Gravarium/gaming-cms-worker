@@ -30,6 +30,7 @@ use Symfony\Component\String\Slugger\SluggerInterface;
 final class AdminGamingController extends AbstractController
 {
     private const MODULE_KEY = 'gaming';
+    private const MAX_SLUG_LENGTH = 140;
 
     public function __construct(
         private readonly GameRepository $games,
@@ -184,14 +185,23 @@ final class AdminGamingController extends AbstractController
 
     private function uniqueSlug(string $name, ?int $exceptId, bool $game): string
     {
-        $base = mb_strtolower($this->slugger->slug($name)->toString()) ?: ($game ? 'spiel' : 'gilde');
+        $fallback = $game ? 'spiel' : 'gilde';
+        $base = mb_strtolower($this->slugger->slug($name)->toString());
+        $base = $base !== '' ? $base : $fallback;
+        $base = rtrim(mb_substr($base, 0, self::MAX_SLUG_LENGTH), '-');
+        if ($base === '') {
+            $base = $fallback;
+        }
+
         $slug = $base;
         $number = 2;
         $exists = fn (string $candidate): bool => $game
             ? $this->games->slugExists($candidate, $exceptId)
             : $this->guilds->slugExists($candidate, $exceptId);
         while ($exists($slug)) {
-            $slug = $base.'-'.$number++;
+            $suffix = '-'.$number++;
+            $prefixLength = self::MAX_SLUG_LENGTH - mb_strlen($suffix);
+            $slug = rtrim(mb_substr($base, 0, $prefixLength), '-').$suffix;
         }
 
         return $slug;
