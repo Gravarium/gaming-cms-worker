@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T10:17:31.382Z",
+  "published_at": "2026-09-27T10:19:02.967Z",
   "summary": {
     "total_remaining_worker_tasks": 164,
-    "completed_worker_prs_awaiting_trusted_review": 271,
+    "completed_worker_prs_awaiting_trusted_review": 272,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-512 is active on its exclusive feature branch; implement the public competition standings/results board and continue after green exact-head CI.",
+    "next_required_action": "WCP-508 is complete with green exact-head Worker CI and locked for Trusted review; re-evaluate current unclaimed dependencies, then continue with the next safe Worker package.",
     "composition_preparable": 0,
     "immediately_actionable": 18,
     "must_continue": true
@@ -34432,7 +34432,7 @@
       "package_id": "WCP-508",
       "title": "Add an accessible FAQ widget to the page builder",
       "risk": "low",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -34487,10 +34487,12 @@
         "PostgreSQL 18 complete migration-chain validation."
       ],
       "completion_report": [
-        "Exact sanitized main/base SHA and final Worker HEAD SHA.",
-        "Complete changed-path list and Worker PR.",
-        "Widget registry discovery, settings validation, disclosure rendering and escaping results.",
-        "PHPStan, PHPUnit, exact-head Worker CI and PostgreSQL migration evidence; remaining Trusted integration follow-up."
+        "Proposal base: sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5; final exact Worker HEAD 73d048c8011d69eb5f017735fe5a91f075860c77.",
+        "Worker PR #301 is ready for Trusted review and remains open/unmerged; only src/Widget/FaqWidgetProvider.php, templates/widget/faq.html.twig, and tests/Widget/FaqWidgetProviderTest.php changed.",
+        "Exact-head Worker CI run 36311995617 passed: 432 tests, 1,874 assertions, zero failures and zero risky tests (one deprecation and one notice); PHPStan no errors; PostgreSQL 18 applied all 39 migrations and executed 470 SQL queries.",
+        "The registered core.faq widget validates four bounded Q/A pairs, omits incomplete pairs, renders native details/summary disclosures without JavaScript, and Twig-escapes editor text.",
+        "Two earlier exact-head attempts were corrected: one exposed a PHPUnit risky test without assertions; the next exposed a PHP syntax error in the exception class name. The final exact-head run is clean.",
+        "Worker proposal remains untrusted; no Trusted merge or deployment performed."
       ],
       "immutable_constraints": [
         "trusted-main-is-the-only-integration-and-deployment-source",
@@ -34521,57 +34523,64 @@
       },
       "published_at": "2026-09-27T10:08:05.178Z",
       "claimed_on": "2026-09-27T10:08:05.178Z",
-      "claim_state": "active",
+      "claim_state": "locked_until_trusted_resolution",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
       "active_head": "73d048c8011d69eb5f017735fe5a91f075860c77",
       "resume_branch": "feature/wcp-508-faq-widget-g1",
       "branch_heads": {
-        "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+        "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5",
         "feature_branch": "73d048c8011d69eb5f017735fe5a91f075860c77"
       },
       "last_observed_head": "73d048c8011d69eb5f017735fe5a91f075860c77",
-      "last_checkpoint_at": "2026-09-27T10:17:24.656Z",
+      "last_checkpoint_at": "2026-09-27T10:19:02.967Z",
       "checkpoint_paths": [
         "src/Widget/FaqWidgetProvider.php",
         "templates/widget/faq.html.twig",
         "tests/Widget/FaqWidgetProviderTest.php"
       ],
-      "next_action": "Await exact-head Worker CI run 36311995617 on 73d048c8011d69eb5f017735fe5a91f075860c77; repair any concrete issue and reconcile the pool from the final verified head.",
-      "last_verified_push_at": "2026-09-27T10:17:24.656Z",
+      "next_action": "PR #301 is ready for Trusted review at exact green HEAD 73d048c8011d69eb5f017735fe5a91f075860c77. Keep the WCP-508 claim locked until Trusted explicitly resolves it.",
+      "last_verified_push_at": "2026-09-27T10:19:02.967Z",
       "worker_pr": 301,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/301",
-      "draft_pr": true,
+      "draft_pr": false,
       "pr_state": "open",
       "ci_run_id": 36311995617,
       "last_ci_run_id": 36311995617,
-      "ci_result": "in_progress",
-      "last_ci_result": "in_progress",
+      "ci_result": "success",
+      "last_ci_result": "success",
       "ci_attempts": [
         {
           "run_id": 36311739079,
           "head": "8d7d5e02f491bc639216311f0687262de9eca446",
           "result": "success",
-          "diagnosis": "Both CI jobs exited successfully, but PHPUnit reported one risky test with no assertions in the exception-only length loop. Replaced it with two explicit expected-exception tests."
+          "diagnosis": "CI jobs exited successfully, but PHPUnit reported one risky test with no assertions in the exception-only length loop; replaced it with explicit expected-exception tests."
         },
         {
           "run_id": 36311902681,
           "head": "0f514f0a20dd5ffd50a3b7dc035e3db0ac67eb20",
           "result": "failure",
-          "diagnosis": "PHP/Symfony job stopped before running tests: unexpected backslash syntax in the fully qualified DomainException class references. Corrected both references."
+          "diagnosis": "PHPUnit stopped at a syntax error caused by an extra backslash in two DomainException class references; both were fixed."
         },
         {
           "run_id": 36311995617,
           "head": "73d048c8011d69eb5f017735fe5a91f075860c77",
-          "result": "in_progress",
-          "summary": "Full Worker CI is rerunning after the PHP syntax correction."
+          "result": "success",
+          "summary": "Exact-head Worker CI passed: 432 tests, 1,874 assertions, zero failures or risky tests (1 deprecation, 1 notice); PHPStan no errors; PostgreSQL 18 executed 39 migrations and 470 SQL queries."
         }
       ],
       "worker_pr_changed_paths": [
         "src/Widget/FaqWidgetProvider.php",
         "templates/widget/faq.html.twig",
         "tests/Widget/FaqWidgetProviderTest.php"
-      ]
+      ],
+      "final_head": "73d048c8011d69eb5f017735fe5a91f075860c77",
+      "final_changed_paths": [
+        "src/Widget/FaqWidgetProvider.php",
+        "templates/widget/faq.html.twig",
+        "tests/Widget/FaqWidgetProviderTest.php"
+      ],
+      "completed_at": "2026-09-27T10:19:02.967Z"
     },
     {
       "priority": 509,
