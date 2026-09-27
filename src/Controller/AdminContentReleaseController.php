@@ -12,7 +12,7 @@ use App\Service\AuditLogger;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormError;
-use Symfony\Component\Form\FormInterface;
+use Symfony\Component\Form\FormView;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -146,7 +146,7 @@ final class AdminContentReleaseController extends AbstractController
             } catch (\DomainException $exception) {
                 $form->addError(new FormError($exception->getMessage()));
 
-                return $this->renderForm($form, $heading, $release, $listParameters, $action);
+                return $this->renderForm($form->createView(), $heading, $release, $listParameters, $action);
             }
 
             if ($release->getId() === null) {
@@ -159,11 +159,11 @@ final class AdminContentReleaseController extends AbstractController
             return $this->redirectToRoute('app_admin_content_release_index', $listParameters);
         }
 
-        return $this->renderForm($form, $heading, $release, $listParameters, $action);
+        return $this->renderForm($form->createView(), $heading, $release, $listParameters, $action);
     }
 
     /** @param array<string, mixed> $listParameters */
-    private function renderForm(FormInterface $form, string $heading, ContentRelease $release, array $listParameters, string $action): Response
+    private function renderForm(FormView $form, string $heading, ContentRelease $release, array $listParameters, string $action): Response
     {
         return $this->render('admin/content_release/form.html.twig', [
             'form' => $form,
