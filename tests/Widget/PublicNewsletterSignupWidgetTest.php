@@ -28,15 +28,14 @@ final class PublicNewsletterSignupWidgetTest extends WebTestCase
         $originalLayout = $entityManager->find(PageLayout::class, 'home');
         $originalDocument = $originalLayout instanceof PageLayout ? $originalLayout->getDocument() : null;
 
-        if ($originalLayout instanceof PageLayout) {
-            $entityManager->remove($originalLayout);
-            $entityManager->flush();
-        }
-
         $admin = $this->user($client);
         $client->loginUser($admin);
 
         try {
+            if ($originalLayout instanceof PageLayout) {
+                $entityManager->remove($originalLayout);
+                $entityManager->flush();
+            }
             $this->setNotificationsEnabled($client, true);
 
             $editorCrawler = $client->request('GET', '/admin/layout/home');
@@ -90,9 +89,11 @@ final class PublicNewsletterSignupWidgetTest extends WebTestCase
             $disabledEditor = $this->editorState($disabledEditorCrawler);
             $disabledKeys = array_column($disabledEditor['widgets'], 'key');
             self::assertNotContains('notifications.newsletter-signup', $disabledKeys);
+            $disabledDocument = $disabledEditor['document'];
+            self::assertIsArray($disabledDocument['widgets'] ?? null);
             self::assertContains(
                 'notifications.newsletter-signup',
-                array_column($disabledEditor['document']['widgets'], 'type'),
+                array_column($disabledDocument['widgets'], 'type'),
             );
         } finally {
             $currentLayout = $entityManager->find(PageLayout::class, 'home');
@@ -161,7 +162,7 @@ final class PublicNewsletterSignupWidgetTest extends WebTestCase
         $entityManager = $this->entityManager($client);
         $state = $entityManager->find(CmsModuleState::class, 'notifications');
         if (!$state instanceof CmsModuleState) {
-            $state = (new CmsModuleState())->setModuleKey('notifications')->updateVersion('1.0.0');
+            $state = (new CmsModuleState())->setModuleKey('notifications');
             $entityManager->persist($state);
         } elseif (!$state->isInstalled()) {
             $state->install($state->getInstalledVersion() ?? '1.0.0');
