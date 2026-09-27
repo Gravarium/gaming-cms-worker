@@ -1,0 +1,15 @@
+<div class="portal-cards public-page-directory">
+    {% for item in data.items %}
+        <article class="portal-card">
+            <div class="portal-card-art art-{{ loop.index % 3 }}" aria-hidden="true"><span>SEITE</span></div>
+            <div class="portal-card-copy">
+                <p class="portal-kicker">{{ item.publishedAt ? item.publishedAt|date('d.m.Y') : '' }}</p>
+                <h3><a href="{{ path('app_page_show', {slug: item.slug}) }}">{{ item.title }}</a></h3>
+                {% if item.excerpt %}<p>{{ item.excerpt }}</p>{% endif %}
+                <a class="portal-read" href="{{ path('app_page_show', {slug: item.slug}) }}">Seite öffnen <span aria-hidden="true">↗</span></a>
+            </div>
+        </article>
+    {% else %}
+        <p class="portal-empty">Keine veröffentlichten Seiten.</p>
+    {% endfor %}
+</div>
