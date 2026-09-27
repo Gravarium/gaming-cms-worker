@@ -42543,6 +42543,118 @@
       "pr_state": "not_created",
       "ci_result": "not_run",
       "ci_attempts": []
+    },
+    {
+      "priority": 553,
+      "package_id": "WCP-553",
+      "title": "Publish a module-aware XML sitemap for public videos",
+      "risk": "medium",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-553-public-video-sitemap-g1",
+      "suggested_branch": "feature/wcp-553-public-video-sitemap-g1",
+      "base_branch": "main",
+      "base_sha": "6988e871cbda8c27801ee0bcc02e8c5c2b0cd909",
+      "objective": "Expose eligible public video detail routes through a valid XML sitemap and provide a module-aware sitemap index. Include only existing GET routes for enabled, published videos; keep output bounded and deterministic.",
+      "allowed_paths": [
+        "src/Controller/PublicVideoSitemapController.php",
+        "src/VideoSitemap/PublicVideoSitemapQuery.php",
+        "src/VideoSitemap/Templates/video_sitemap.xml.twig",
+        "src/VideoSitemap/Templates/sitemap_index.xml.twig",
+        "config/packages/video_sitemap.yaml",
+        "tests/Controller/PublicVideoSitemapControllerTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "templates/",
+        "src/Controller/PublicContentController.php",
+        "src/Controller/VideoController.php",
+        "src/Repository/VideoRepository.php",
+        "src/Entity/Video.php",
+        "src/Module/"
+      ],
+      "deliverables": [
+        "GET /sitemap-videos.xml with valid XML, absolute links through app_video_show, a deterministic publishedAt/id order, and a hard 50,000 URL ceiling.",
+        "GET /sitemap-index.xml listing the existing content sitemap only while Content is enabled and the video sitemap only while Video is enabled.",
+        "Feature-local Twig path configuration; video sitemap route uses the existing app_video route-prefix module gate.",
+        "Host-aware ETag caching and no schema, entity, shared repository, shared controller, or root-template changes."
+      ],
+      "tests": [
+        "Parse sitemap and index responses as XML and verify absolute video route links.",
+        "Verify only enabled, published videos with publishedAt not in the future are included; drafts, disabled and future videos are excluded.",
+        "Verify disabled Video and Content modules are not exposed through the sitemap route/index.",
+        "Verify non-GET mutation requests are rejected and output respects the URL ceiling.",
+        "Run complete Worker CI on the exact final HEAD, including PHPStan, PHPUnit, Twig/container validation and PostgreSQL migration-chain validation."
+      ],
+      "completion_report": [
+        "Exact Worker base and final HEAD SHAs.",
+        "Complete changed-path list and Worker PR state.",
+        "Sitemap URL eligibility, module gates, XML validity, ETag and URL ceiling evidence.",
+        "Focused tests and exact-head full CI results.",
+        "Remaining limitations and Trusted follow-up."
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-Trusted-review-and-exact-head-CI",
+        "preserve-all-security-permissions-CSRF-validation-recovery-rollback-and-upload-controls",
+        "no-private-runtime-or-sensitive-data",
+        "no-schema-migration-or-entity-change",
+        "no-edit-to-active-or-claim-locked-paths",
+        "no-direct-Trusted-integration-or-deployment"
+      ],
+      "proposal_kind": "worker_only",
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "6988e871cbda8c27801ee0bcc02e8c5c2b0cd909",
+      "proposal_dependency_evidence": [],
+      "collision_check": {
+        "compared_against": "Fresh continuous/work-pool-v4 @ 8eb1be571185621251ea73cdee51f047fd3c0271; current Worker main @ 6988e871cbda8c27801ee0bcc02e8c5c2b0cd909; every active and claim-locked task path; current main and WCP-549 green proposal tree.",
+        "result": "All six allowed paths are new and have no exact or prefix overlap with any active or claim-locked package. Existing video route, VideoRepository, Video entity, and module route gate are reused read-only. No schema, migrations, shared controller, shared repository, or root templates are changed. No published FCP is dependency-safe at claim time.",
+        "paths": [
+          "src/Controller/PublicVideoSitemapController.php",
+          "src/VideoSitemap/PublicVideoSitemapQuery.php",
+          "src/VideoSitemap/Templates/video_sitemap.xml.twig",
+          "src/VideoSitemap/Templates/sitemap_index.xml.twig",
+          "config/packages/video_sitemap.yaml",
+          "tests/Controller/PublicVideoSitemapControllerTest.php"
+        ],
+        "evidence": {
+          "existing_video_route": "app_video_show",
+          "route_module_prefix": "app_video",
+          "module_catalog": "video route prefix is guarded; VideoFeedTest already verifies disabled Video module behavior",
+          "video_source": "VideoRepository::findPublished requires enabled=true, publishedAt set and <= now",
+          "current_main_sitemap": "/sitemap.xml exists and is referenced by the new sitemap index when Content is enabled"
+        }
+      },
+      "published_at": "2026-09-27T15:59:21.116Z",
+      "claimed_on": "2026-09-27T15:59:21.116Z",
+      "claim_state": "active",
+      "active_base_branch": "main",
+      "active_base_sha": "6988e871cbda8c27801ee0bcc02e8c5c2b0cd909",
+      "active_head": "6988e871cbda8c27801ee0bcc02e8c5c2b0cd909",
+      "resume_branch": "feature/wcp-553-public-video-sitemap-g1",
+      "branch_heads": {
+        "claim_branch": "6988e871cbda8c27801ee0bcc02e8c5c2b0cd909",
+        "feature_branch": "6988e871cbda8c27801ee0bcc02e8c5c2b0cd909"
+      },
+      "last_checkpoint_at": "2026-09-27T15:59:21.116Z",
+      "last_verified_push_at": "2026-09-27T15:59:21.116Z",
+      "checkpoint_paths": [],
+      "ci_attempts": [],
+      "next_action": "Implement the feature-local video sitemap query, controller routes, templates and module-aware index on the exact main base; test XML, visibility, module state, method limits and URL ceiling."
     }
   ],
   "recovery_queue": [],
