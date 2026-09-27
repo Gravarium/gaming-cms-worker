@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T18:16:05.965Z",
+  "published_at": "2026-09-27T18:18:03.070Z",
   "summary": {
     "total_remaining_worker_tasks": 169,
     "completed_worker_prs_awaiting_trusted_review": 295,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-565 is claimed on main@7b2ca79405fc12d34bce1386157e929e4668f31a; implement strict page-category pagination validation and exact-head CI.",
+    "next_required_action": "WCP-565 checkpoint c7136f0f07fa744bcdbd0f986e39e6d0e6fd9d81 is ready for draft PR and exact-head Worker CI.",
     "composition_preparable": 0,
     "immediately_actionable": 29,
     "must_continue": true
@@ -45301,16 +45301,20 @@
       "claim_state": "active",
       "active_base_branch": "main",
       "active_base_sha": "7b2ca79405fc12d34bce1386157e929e4668f31a",
-      "active_head": "7b2ca79405fc12d34bce1386157e929e4668f31a",
+      "active_head": "c7136f0f07fa744bcdbd0f986e39e6d0e6fd9d81",
       "resume_branch": "feature/wcp-565-page-category-archive-page-validation-g1",
       "branch_heads": {
         "claim_branch": "7b2ca79405fc12d34bce1386157e929e4668f31a",
-        "feature_branch": "7b2ca79405fc12d34bce1386157e929e4668f31a"
+        "feature_branch": "c7136f0f07fa744bcdbd0f986e39e6d0e6fd9d81"
       },
-      "last_observed_head": "7b2ca79405fc12d34bce1386157e929e4668f31a",
-      "last_checkpoint_at": "2026-09-27T18:16:05.965Z",
-      "checkpoint_paths": [],
-      "next_action": "Implement one strict page-number parser for the page-category directory and archive, then add malformed-input coverage for both routes."
+      "last_observed_head": "c7136f0f07fa744bcdbd0f986e39e6d0e6fd9d81",
+      "last_checkpoint_at": "2026-09-27T18:18:03.070Z",
+      "checkpoint_paths": [
+        "src/Controller/PublicPageCategoryArchiveController.php",
+        "tests/Controller/PublicPageCategoryArchiveTest.php"
+      ],
+      "next_action": "Open a draft Worker PR from the verified remote HEAD and run complete exact-head Worker CI.",
+      "last_verified_push_at": "2026-09-27T18:18:03.070Z"
     }
   ],
   "recovery_queue": [],
