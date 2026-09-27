@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T00:08:45.905Z",
+  "published_at": "2026-09-27T00:16:40.682Z",
   "summary": {
     "total_remaining_worker_tasks": 138,
-    "completed_worker_prs_awaiting_trusted_review": 205,
+    "completed_worker_prs_awaiting_trusted_review": 207,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-439 test-only change is checkpointed at exact HEAD bef3a80ec9289647799830d50d8e323f087999d6; open its draft Worker PR, run targeted tests and complete Worker CI, fixing failures.",
+    "next_required_action": "WCP-434 is complete on exact HEAD c45220b6dbd526ebc6a5c536435bab3bd331f20c with ready PR #230 and green CI run 36281530798; its claim stays locked. Re-evaluate the five unclaimed FCPs against their latest dependency evidence, then continue with the first dependency-safe task or publish and claim a bounded independent WCP if none is ready.",
     "composition_preparable": 0,
     "immediately_actionable": 0,
     "must_continue": true
@@ -23170,7 +23170,7 @@
       "package_id": "WCP-434",
       "title": "Find and open every page layout",
       "risk": "low",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -23252,9 +23252,9 @@
         ]
       },
       "claimed_on": "2026-09-26T23:46:48.636Z",
-      "claim_state": "active",
-      "last_checkpoint_at": "2026-09-27T00:08:45.905Z",
-      "last_verified_push_at": "2026-09-27T00:08:45.905Z",
+      "claim_state": "locked_until_trusted_resolution",
+      "last_checkpoint_at": "2026-09-27T00:16:40.682Z",
+      "last_verified_push_at": "2026-09-27T00:16:40.682Z",
       "checkpoint_paths": [
         "src/Controller/AdminLayoutPageDirectoryController.php",
         "src/Repository/AdminLayoutPageDirectoryRepository.php",
@@ -23268,11 +23268,11 @@
       },
       "worker_pr": 230,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/230",
-      "draft_pr": true,
-      "pr_state": "open_draft_awaiting_exact_head_ci",
+      "draft_pr": false,
+      "pr_state": "open_ready_for_review_unmerged",
       "last_ci_run_id": 36281530798,
       "ci_run_id": 36281530798,
-      "last_ci_result": "in_progress",
+      "last_ci_result": "success",
       "ci_attempts": [
         {
           "run_id": 36281195962,
@@ -23287,11 +23287,46 @@
         {
           "run_id": 36281530798,
           "head": "c45220b6dbd526ebc6a5c536435bab3bd331f20c",
-          "result": "in_progress"
+          "result": "success"
         }
       ],
-      "last_ci_diagnosis": "CI run 36281195962 had two cache-header exact-string failures and run 36281349515 had one remaining exact-string assertion on the existing editor. Those test expectations were replaced with directive checks requiring both private and no-store; the noindex assertion remains.",
-      "next_action": "Worker CI run 36281530798 is in progress on exact HEAD c45220b6dbd526ebc6a5c536435bab3bd331f20c; inspect all jobs and repair any further failure on this branch."
+      "last_ci_diagnosis": "Runs 36281195962 and 36281349515 exposed overly exact cache-header assertions (Symfony adds default Cache-Control directives). The test helpers were corrected to require private and no-store directives semantically while retaining the noindex assertion. Full CI run 36281530798 passed on exact final HEAD.",
+      "next_action": "Worker PR #230 is open and ready for Trusted review on exact HEAD c45220b6dbd526ebc6a5c536435bab3bd331f20c; keep this claim locked until Trusted explicitly integrates, cancels, or transfers it, and continue with an independent dependency-safe package.",
+      "final_head": "c45220b6dbd526ebc6a5c536435bab3bd331f20c",
+      "final_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "final_changed_paths": [
+        "src/Controller/AdminLayoutPageDirectoryController.php",
+        "src/Repository/AdminLayoutPageDirectoryRepository.php",
+        "templates/admin/layout/edit.html.twig",
+        "templates/admin/layout/pages.html.twig",
+        "tests/Controller/AdminLayoutPageDirectoryTest.php"
+      ],
+      "changed_paths": [
+        "src/Controller/AdminLayoutPageDirectoryController.php",
+        "src/Repository/AdminLayoutPageDirectoryRepository.php",
+        "templates/admin/layout/edit.html.twig",
+        "templates/admin/layout/pages.html.twig",
+        "tests/Controller/AdminLayoutPageDirectoryTest.php"
+      ],
+      "ci_result": "success",
+      "completed_at": "2026-09-27T00:16:40.682Z",
+      "test_results": {
+        "phpunit": "433 tests, 1,907 assertions, 0 failures; one deprecation and one notice.",
+        "phpstan": "Level 8 passed with no errors.",
+        "php_symfony": "Worker PHP/Symfony validation job passed on exact final HEAD.",
+        "postgres18": "PostgreSQL 18 completed the full migration chain: 39 migrations executed, 0 unavailable; migration status passed.",
+        "exact_head_ci": {
+          "run_id": 36281530798,
+          "head": "c45220b6dbd526ebc6a5c536435bab3bd331f20c",
+          "result": "success"
+        }
+      },
+      "completion_summary": "A CMS_SETTINGS_MANAGE-protected read-only page directory now supports title/slug search and stable 25-row pagination, links every result to the existing page layout context, and is reachable from the layout editor. Tests cover authorization denial, 205-page pagination, search, ordering, invalid query parameters, clamping, cache/privacy headers, and navigation. Existing layout writes, preview, CSRF, schema, entities, and persistence are unchanged.",
+      "open_limitations": [
+        "Awaiting Trusted review and full Trusted integration CI.",
+        "The inline layout picker still displays at most 200 pages; the linked directory reaches every page. Trusted can consider routing the primary picker through the directory after the existing layout-editor path lock is resolved."
+      ],
+      "trusted_follow_up": "In a fresh Trusted feature branch, review the worker diff and run full Trusted CI; preserve CMS_SETTINGS_MANAGE and existing layout write/preview/CSRF protections. Consider routing the primary picker through the new directory after the path lock resolves."
     },
     {
       "priority": 215,
