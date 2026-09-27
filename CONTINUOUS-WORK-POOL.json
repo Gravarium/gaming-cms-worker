@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T18:02:41.240Z",
+  "published_at": "2026-09-27T18:07:35.906Z",
   "summary": {
-    "total_remaining_worker_tasks": 167,
+    "total_remaining_worker_tasks": 168,
     "completed_worker_prs_awaiting_trusted_review": 294,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-563 PR #357 is ready for Trusted review with exact-head CI #908 / 36338941762 green. Re-evaluate the five unclaimed dependency-blocked packages; if none is eligible, publish and claim the next independent worker-only CMS proposal.",
+    "next_required_action": "WCP-564 is claimed on main@7b2ca79405fc12d34bce1386157e929e4668f31a; implement strict public tag-archive page parsing and run exact-head Worker CI.",
     "composition_preparable": 0,
     "immediately_actionable": 29,
     "must_continue": true
@@ -45098,6 +45098,93 @@
       "ci_validation_pr": 357,
       "completed_at": "2026-09-27T18:02:41.240Z",
       "worker_completion_summary": "Exact-head Worker CI #908 / 36338941762 passed on 0bdb6261d30e1111f90dc2a12e2e848285cf5381: 736 tests, 4,625 assertions, 0 failures/errors (1 deprecation, 3 notices); PHPStan reported no errors, YAML/Twig/container/AssetMapper/Doctrine checks passed; PostgreSQL 18 applied 57 migrations and is current. PR #357 is open, ready for review, mergeable, based on main@7b2ca79405fc12d34bce1386157e929e4668f31a, with exactly three allowlisted paths."
+    },
+    {
+      "priority": 564,
+      "package_id": "WCP-564",
+      "title": "Reject malformed pages in public tag archives",
+      "risk": "medium",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-564-public-tag-archive-page-validation-g1",
+      "suggested_branch": "feature/wcp-564-public-tag-archive-page-validation-g1",
+      "base_branch": "main",
+      "base_sha": "7b2ca79405fc12d34bce1386157e929e4668f31a",
+      "objective": "Parse the public content-tag archive page query as a positive decimal integer and reject malformed, zero, negative, empty, fractional, array, and over-cap values explicitly. Preserve the default page 1, current maximum page cap, public visibility filters, page size, stable ordering, cache headers, ETag behavior and existing 404 for a valid page beyond the result set.",
+      "allowed_paths": [
+        "src/Controller/PublicContentTagArchiveController.php",
+        "tests/Controller/PublicContentTagArchiveTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "CONTINUOUS-WORKER.md",
+        "CONTINUOUS-WORK-POOL.json",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "templates/",
+        "src/Entity/",
+        "src/Repository/"
+      ],
+      "deliverables": [
+        "Strict positive-decimal page parsing on GET /content/tag/{slug}; malformed input returns 400 and a valid page beyond the current supported cap returns 404.",
+        "Regression tests prove default and valid pagination behavior is retained and malformed values are rejected.",
+        "No persistence, visibility, cache, ETag, template or schema changes."
+      ],
+      "tests": [
+        "Targeted PublicContentTagArchiveTest covers malformed page inputs and over-cap behavior, plus existing pagination and archive visibility cases.",
+        "Complete exact-head Worker CI including PHPStan, full PHPUnit, configuration/template checks, Doctrine and PostgreSQL 18 migration chain."
+      ],
+      "completion_report": [
+        "Exact sanitized base and final HEAD; changed paths and Worker PR state.",
+        "Accepted/rejected page parameter behavior and preserved archive semantics.",
+        "Targeted regression and exact-head CI results.",
+        "No schema changes; Trusted review follow-up."
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-Trusted-review-and-exact-head-CI",
+        "preserve-all-security-permissions-CSRF-validation-recovery-rollback-and-upload-controls",
+        "no-private-runtime-or-sensitive-data",
+        "no-schema-migration-or-entity-change",
+        "no-edit-to-active-or-claim-locked-paths",
+        "no-direct-Trusted-integration-or-deployment"
+      ],
+      "proposal_kind": "worker_only",
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "7b2ca79405fc12d34bce1386157e929e4668f31a",
+      "proposal_dependency_evidence": [],
+      "collision_check": {
+        "compared_against": "Fresh continuous/work-pool-v4 file blob @ e9b88bc1b11ad2c5ddbc3c47008f962fc318fecb; current sanitized main @ 7b2ca79405fc12d34bce1386157e929e4668f31a; every unclaimed, active, and claim-locked task.",
+        "result": "No exact or directory-prefix overlap for either allowed path with any unclaimed, active, or claim-locked task. Similar pagination work in WCP-562 touches only the public video-library controller/test; WCP-511 tag-directory paths are also disjoint.",
+        "paths": [
+          "src/Controller/PublicContentTagArchiveController.php",
+          "tests/Controller/PublicContentTagArchiveTest.php"
+        ]
+      },
+      "published_at": "2026-09-27T18:07:35.906Z",
+      "claimed_on": "2026-09-27T18:07:35.906Z",
+      "claim_state": "active",
+      "active_base_branch": "main",
+      "active_base_sha": "7b2ca79405fc12d34bce1386157e929e4668f31a",
+      "active_head": "7b2ca79405fc12d34bce1386157e929e4668f31a",
+      "resume_branch": "feature/wcp-564-public-tag-archive-page-validation-g1",
+      "branch_heads": {},
+      "last_observed_head": "7b2ca79405fc12d34bce1386157e929e4668f31a",
+      "last_checkpoint_at": "2026-09-27T18:07:35.906Z",
+      "checkpoint_paths": [],
+      "next_action": "Create both exclusive claim and feature branches from the published sanitized base, then implement strict page validation and regression coverage."
     }
   ],
   "recovery_queue": [],
