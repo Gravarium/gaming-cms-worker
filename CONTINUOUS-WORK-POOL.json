@@ -10,16 +10,16 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T11:11:31.727Z",
+  "published_at": "2026-09-27T11:17:12.663Z",
   "summary": {
-    "total_remaining_worker_tasks": 164,
-    "completed_worker_prs_awaiting_trusted_review": 277,
+    "total_remaining_worker_tasks": 163,
+    "completed_worker_prs_awaiting_trusted_review": 278,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-519's rendered-CSRF and table-fixture revision is on exact HEAD 005802d0be3ecd695e0a354824d45b86b646f69f; Worker CI run 36315014881 is in progress.",
+    "next_required_action": "WCP-519 is complete on exact green HEAD 005802d0be3ecd695e0a354824d45b86b646f69f, PR #309 is ready for Trusted review, and its claim remains locked. Continue to the next free independent module gap.",
     "composition_preparable": 0,
-    "immediately_actionable": 20,
+    "immediately_actionable": 19,
     "must_continue": true
   },
   "rules": {
@@ -36044,7 +36044,7 @@
       "package_id": "WCP-519",
       "title": "Keep notification topics scoped to the signed-in account",
       "risk": "low",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -36117,7 +36117,7 @@
       },
       "published_at": "2026-09-27T11:01:40.719Z",
       "claimed_on": "2026-09-27T11:01:40.719Z",
-      "claim_state": "active",
+      "claim_state": "locked_until_trusted_resolution",
       "active_base_branch": "main",
       "active_base_sha": "b510875e7b0741b9b19f09429d2204a95df51198",
       "active_head": "005802d0be3ecd695e0a354824d45b86b646f69f",
@@ -36126,25 +36126,25 @@
         "claim_branch": "b510875e7b0741b9b19f09429d2204a95df51198",
         "feature_branch": "005802d0be3ecd695e0a354824d45b86b646f69f"
       },
-      "next_action": "Monitor exact-head Worker CI run 36315014881 for HEAD 005802d0be3ecd695e0a354824d45b86b646f69f; repair only a concrete failure within the dedicated test file.",
+      "next_action": "Claim remains locked for Trusted resolution. Continue the autonomous Worker loop with the next independent, path-disjoint package; do not merge or deploy.",
       "checkpoint_paths": [
         "tests/Controller/NotificationPreferences/NotificationSubscriptionOwnershipTest.php"
       ],
       "last_observed_head": "005802d0be3ecd695e0a354824d45b86b646f69f",
-      "last_checkpoint_at": "2026-09-27T11:13:40.116Z",
-      "last_verified_push_at": "2026-09-27T11:13:40.116Z",
+      "last_checkpoint_at": "2026-09-27T11:17:12.663Z",
+      "last_verified_push_at": "2026-09-27T11:17:12.663Z",
       "worker_pr": 309,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/309",
-      "draft_pr": true,
+      "draft_pr": false,
       "pr_state": "open",
-      "worker_pr_state": "draft",
+      "worker_pr_state": "ready",
       "worker_pr_changed_paths": [
         "tests/Controller/NotificationPreferences/NotificationSubscriptionOwnershipTest.php"
       ],
       "ci_run_id": 36315014881,
       "last_ci_run_id": 36315014881,
-      "ci_result": "in_progress",
-      "last_ci_result": "in_progress",
+      "ci_result": "success",
+      "last_ci_result": "success",
       "ci_attempts": [
         {
           "run_id": 36314471204,
@@ -36167,9 +36167,15 @@
         {
           "run_id": 36315014881,
           "head": "005802d0be3ecd695e0a354824d45b86b646f69f",
-          "result": "in_progress"
+          "result": "success",
+          "summary": "537 tests / 2,238 assertions, zero failures; PHPStan no errors; PostgreSQL 18: 54 migrations and 750 SQL queries."
         }
-      ]
+      ],
+      "final_head": "005802d0be3ecd695e0a354824d45b86b646f69f",
+      "final_changed_paths": [
+        "tests/Controller/NotificationPreferences/NotificationSubscriptionOwnershipTest.php"
+      ],
+      "completed_at": "2026-09-27T11:17:12.663Z"
     }
   ],
   "recovery_queue": [],
