@@ -27288,7 +27288,7 @@
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
       "active_head": "5819a2caf18da71416161f379e7c0f2b5fde8380",
       "resume_branch": "feature/wcp-462-admin-dashboard-access-g1",
-      "last_checkpoint_at": "2026-09-27T04:00:18.556Z",
+      "last_checkpoint_at": "2026-09-27T04:00:52.330Z",
       "checkpoint_paths": [
         "tests/Controller/AdminDashboardAccessSecurityTest.php"
       ],
@@ -27296,16 +27296,16 @@
         "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
         "feature_branch": "5819a2caf18da71416161f379e7c0f2b5fde8380"
       },
-      "next_action": "Rerun full exact-head Worker CI on 5819a2caf18da71416161f379e7c0f2b5fde8380; verify the same-session deactivation redirect assertion.",
+      "next_action": "Inspect exact-head Worker CI run 36293013565 and repair any concrete failure on this branch.",
       "last_observed_head": "5819a2caf18da71416161f379e7c0f2b5fde8380",
-      "last_verified_push_at": "2026-09-27T04:00:18.556Z",
+      "last_verified_push_at": "2026-09-27T04:00:52.330Z",
       "worker_pr": 256,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/256",
       "draft_pr": true,
       "pr_state": "open_draft_unmerged",
-      "ci_run_id": 36292900132,
-      "last_ci_run_id": 36292900132,
-      "ci_result": "pending",
+      "ci_run_id": 36293013565,
+      "last_ci_run_id": 36293013565,
+      "ci_result": "in_progress",
       "ci_attempts": [
         {
           "run_id": 36292742675,
@@ -27318,6 +27318,11 @@
           "head": "be70e23155854281ff30867b06cb093195f521fd",
           "result": "failure",
           "diagnosis": "The deactivated session was correctly redirected to /login (302); following that response in the test harness produced another redirect. Removed the unnecessary follow-redirect success assertion while retaining the access-denial redirect assertion."
+        },
+        {
+          "run_id": 36293013565,
+          "head": "5819a2caf18da71416161f379e7c0f2b5fde8380",
+          "result": "in_progress"
         }
       ]
     },
