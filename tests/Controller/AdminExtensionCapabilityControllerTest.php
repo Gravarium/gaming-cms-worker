@@ -20,8 +20,9 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Bundle\SecurityBundle\Security;
-use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 
 final class AdminExtensionCapabilityControllerTest extends WebTestCase
 {
@@ -139,10 +140,12 @@ final class AdminExtensionCapabilityControllerTest extends WebTestCase
         self::assertResponseStatusCodeSame(400);
         self::assertSame([], $this->permissions->approved($this->manifest));
 
+        $client->request('GET', $this->reviewPath());
+        self::assertResponseIsSuccessful();
         foreach (['media.write', 'php.execute'] as $capability) {
             $path = $this->actionPath($capability, 'grant');
             $tokenId = 'extension-capability-grant-module-'.$this->packageKey.'-'.$capability;
-            $token = $client->getContainer()->get(CsrfTokenManagerInterface::class)->getToken($tokenId)->getValue();
+            $token = $this->csrfToken($client, $tokenId);
             $client->request('POST', $path, ['_token' => $token]);
 
             self::assertResponseStatusCodeSame(404);
@@ -340,5 +343,21 @@ final class AdminExtensionCapabilityControllerTest extends WebTestCase
     private function actionPath(string $capability, string $action): string
     {
         return $this->reviewPath().'/'.$capability.'/'.$action;
+    }
+
+    private function csrfToken(KernelBrowser $client, string $tokenId): string
+    {
+        $request = $client->getRequest();
+        if (!$request instanceof Request || !$request->hasSession()) {
+            throw new \RuntimeException('A current request session is required to create a CSRF token.');
+        }
+
+        $requestStack = $client->getContainer()->get(RequestStack::class);
+        $requestStack->push($request);
+        try {
+            return $client->getContainer()->get(CsrfTokenManagerInterface::class)->getToken($tokenId)->getValue();
+        } finally {
+            $requestStack->pop();
+        }
     }
 }
