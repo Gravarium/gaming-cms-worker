@@ -26,15 +26,6 @@ final readonly class PublicPageCategoryArchiveWidgetProvider implements WidgetPr
                 'widget/page_categories.html.twig',
                 [],
                 true,
-                [
-                    'count' => [
-                        'label' => 'Anzahl',
-                        'type' => 'int',
-                        'default' => 6,
-                        'min' => 1,
-                        'max' => self::MAX_ITEMS,
-                    ],
-                ],
             ),
         ];
     }

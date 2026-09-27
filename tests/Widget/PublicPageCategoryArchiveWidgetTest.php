@@ -89,7 +89,7 @@ final class PublicPageCategoryArchiveWidgetTest extends WebTestCase
             $widgetCategories = $data['categories'];
             self::assertCount(PublicPageCategoryArchiveWidgetProvider::MAX_ITEMS, $widgetCategories);
             self::assertSame(
-                'WCP551 Category 01 '.$suffix,
+                'WCP551 Category 01 <script> '.$suffix,
                 $widgetCategories[0]['category']->getName(),
             );
             self::assertSame(
