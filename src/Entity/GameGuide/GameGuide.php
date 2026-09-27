@@ -16,7 +16,7 @@ class GameGuide
 {
     public function __construct()
     {
-        $this->validFrom = new \\DateTimeImmutable();
+        $this->validFrom = new \DateTimeImmutable();
     }
 
     #[ORM\Id]
