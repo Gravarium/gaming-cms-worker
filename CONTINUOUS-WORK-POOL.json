@@ -10,10 +10,10 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T15:11:39.261Z",
+  "published_at": "2026-09-27T15:15:18.428Z",
   "summary": {
     "total_remaining_worker_tasks": 167,
-    "completed_worker_prs_awaiting_trusted_review": 293,
+    "completed_worker_prs_awaiting_trusted_review": 294,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
@@ -40974,7 +40974,7 @@
       "package_id": "WCP-548",
       "title": "Place public guild recruitment needs in the Page Builder",
       "risk": "medium",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [
         "WCP-541"
       ],
@@ -41127,7 +41127,7 @@
       },
       "published_at": "2026-09-27T14:53:42.927Z",
       "claimed_on": "2026-09-27T14:53:42.927Z",
-      "claim_state": "active",
+      "claim_state": "locked_until_trusted_resolution",
       "active_base_branch": "feature/wcp-541-guild-role-needs-g1",
       "active_base_sha": "991a1ec5ae42be72b3e36de12bb47bd3848683ca",
       "active_head": "91948c45a290782ba389a96b19bfe5793633d8b1",
@@ -41137,7 +41137,7 @@
         "feature_branch": "91948c45a290782ba389a96b19bfe5793633d8b1"
       },
       "last_observed_head": "91948c45a290782ba389a96b19bfe5793633d8b1",
-      "last_checkpoint_at": "2026-09-27T15:04:41.139Z",
+      "last_checkpoint_at": "2026-09-27T15:15:18.428Z",
       "checkpoint_paths": [
         "src/Widget/PublicGuildRoleNeedsWidgetProvider.php",
         "src/Widget/GuildRoleNeeds/PublicGuildRoleNeedsWidgetQuery.php",
@@ -41145,14 +41145,20 @@
         "config/packages/guild_role_needs_widget.yaml",
         "tests/Widget/PublicGuildRoleNeedsWidgetProviderTest.php"
       ],
-      "next_action": "Inspect Worker CI run #847 / 36328199724 on exact HEAD 91948c45a290782ba389a96b19bfe5793633d8b1. Diagnose any failure on this branch; after green, retarget draft PR #340 to exact WCP-541 base 991a1ec5ae42be72b3e36de12bb47bd3848683ca so its final diff contains only the five WCP-548 paths.",
+      "next_action": "Keep claim locked through Trusted resolution; WCP-548 is complete and its PR remains an untrusted review proposal.",
       "worker_pr_state": "open",
-      "worker_pr_changed_paths": [],
-      "worker_pr_base_branch": "main",
-      "draft_pr": true,
+      "worker_pr_changed_paths": [
+        "config/packages/guild_role_needs_widget.yaml",
+        "src/GuildRoleNeedsWidget/Templates/widget/public_guild_role_needs.html.twig",
+        "src/Widget/GuildRoleNeeds/PublicGuildRoleNeedsWidgetQuery.php",
+        "src/Widget/PublicGuildRoleNeedsWidgetProvider.php",
+        "tests/Widget/PublicGuildRoleNeedsWidgetProviderTest.php"
+      ],
+      "worker_pr_base_branch": "feature/wcp-541-guild-role-needs-g1",
+      "draft_pr": false,
       "pr_state": "open",
-      "ci_result": "pending",
-      "last_ci_result": "in_progress",
+      "ci_result": "success",
+      "last_ci_result": "success",
       "ci_attempts": [
         {
           "run_id": 36328033568,
@@ -41161,22 +41167,45 @@
           "base": "e4be797b44948824e31843b88363d6ea1335c163",
           "result": "failure",
           "conclusion": "failure",
-          "failure_summary": "PostgreSQL 18 migration validation passed. PHP/Symfony completed PHPStan, YAML/Twig lint and container validation; 2 PHPUnit errors came from the isolated template path being registered under a Twig namespace while WidgetDefinition uses the required default `widget/...` name. Config now registers the isolated path in Twig's default namespace."
+          "failure_summary": "Two PHPUnit errors: isolated widget Twig template loaded under a named namespace, while WidgetDefinition resolves the required widget/... template in the default namespace. Corrected Twig path registration to the default namespace."
         },
         {
           "run_id": 36328199724,
           "run_number": 847,
           "head": "91948c45a290782ba389a96b19bfe5793633d8b1",
           "base": "e4be797b44948824e31843b88363d6ea1335c163",
-          "result": "in_progress",
-          "conclusion": null
+          "result": "success",
+          "conclusion": "success",
+          "php_symfony_job": "success",
+          "phpstan": "success",
+          "phpunit": "success",
+          "phpunit_tests": 565,
+          "assertions": 2460,
+          "phpunit_deprecations": 1,
+          "phpunit_notices": 1,
+          "postgresql_18_migrations": "success",
+          "migrations_executed": 54,
+          "sql_queries": 750
         }
       ],
       "last_verified_push_at": "2026-09-27T15:04:41.139Z",
       "worker_pr": 340,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/340",
       "ci_run_id": 36328199724,
-      "last_ci_run_id": 36328199724
+      "last_ci_run_id": 36328199724,
+      "last_ci_run_number": 847,
+      "final_head": "91948c45a290782ba389a96b19bfe5793633d8b1",
+      "completion_head": "91948c45a290782ba389a96b19bfe5793633d8b1",
+      "completed_at": "2026-09-27T15:15:18.428Z",
+      "completion_evidence": [
+        "Exact predecessor: WCP-541 PR #334, green Worker CI #833 (36325503468), head 991a1ec5ae42be72b3e36de12bb47bd3848683ca; predecessor claim remains locked.",
+        "WCP-548 final feature HEAD 91948c45a290782ba389a96b19bfe5793633d8b1; Worker PR #340 is open, ready for review, and targets feature/wcp-541-guild-role-needs-g1.",
+        "Changed paths are exactly config/packages/guild_role_needs_widget.yaml; src/GuildRoleNeedsWidget/Templates/widget/public_guild_role_needs.html.twig; src/Widget/GuildRoleNeeds/PublicGuildRoleNeedsWidgetQuery.php; src/Widget/PublicGuildRoleNeedsWidgetProvider.php; tests/Widget/PublicGuildRoleNeedsWidgetProviderTest.php.",
+        "Widget returns only active positive-count needs for enabled guilds with open recruitment and an enabled matching game, with deterministic ordering and a hard limit of 12. Gaming module disablement hides discovery/data; public application links and Twig escaping are covered; no applicant/member information, writes, entities, schema or migrations.",
+        "Focused behavior is covered by the full exact-head Worker CI #847 (36328199724): PHP/Symfony and PHPStan success, 565 tests / 2,460 assertions (one deprecation and one notice); PostgreSQL 18 applied 54 migrations and 750 SQL queries.",
+        "Earlier Worker CI #846 (36328033568) failed on two tests because Twig loaded the source template under a named namespace while WidgetDefinition requires the default widget namespace. The isolated Twig path now uses the default namespace; #847 passed on the exact final HEAD.",
+        "Remaining main-CMS work: review/integrate WCP-541 first, then transfer/review these five paths in Gravarium/gaming-cms and run its integration CI. Localized game-specific role/class labels remain deferred. No Trusted merge or deployment."
+      ]
     },
     {
       "priority": 549,
