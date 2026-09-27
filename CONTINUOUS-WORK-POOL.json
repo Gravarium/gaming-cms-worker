@@ -17,7 +17,7 @@
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-478 is claimed and active on exact green WCP-440 HEAD a44416a60ea7d1eb9e802a2cf240870d636abc58; create both branches and add tests/Controller/AdminGuildRankDeletionSecurityTest.php. WCP-365 owns src/Form/GuildMemberType.php, so defer the blank rankName fix until that claim resolves. Preserve WCP-474 and all other foreign claims.",
+    "next_required_action": "WCP-478 is checkpointed at 9d47cc610702f8af891d70af90acc6a831c1a885; its only incremental path is tests/Controller/AdminGuildRankDeletionSecurityTest.php. Open a draft PR and run complete exact-head CI. WCP-365's GuildMemberType path remains claim-locked; do not alter any foreign claim.",
     "composition_preparable": 0,
     "immediately_actionable": 4,
     "must_continue": true
@@ -29879,14 +29879,19 @@
       "claim_state": "active",
       "active_base_branch": "feature/wcp-440-guild-team-deletion-security-g1",
       "active_base_sha": "a44416a60ea7d1eb9e802a2cf240870d636abc58",
-      "active_head": "a44416a60ea7d1eb9e802a2cf240870d636abc58",
+      "active_head": "9d47cc610702f8af891d70af90acc6a831c1a885",
       "resume_branch": "feature/wcp-478-guild-rank-deletion-security-g1",
       "branch_heads": {
         "claim_branch": "a44416a60ea7d1eb9e802a2cf240870d636abc58",
-        "feature_branch": "a44416a60ea7d1eb9e802a2cf240870d636abc58"
+        "feature_branch": "9d47cc610702f8af891d70af90acc6a831c1a885"
       },
-      "next_action": "Create the exclusive claim and feature branches from the verified WCP-440 exact green HEAD, then add the new test-only rank-deletion security coverage.",
-      "last_observed_head": "a44416a60ea7d1eb9e802a2cf240870d636abc58"
+      "next_action": "Open a draft Worker PR against worker main and run complete exact-head CI.",
+      "last_observed_head": "9d47cc610702f8af891d70af90acc6a831c1a885",
+      "last_checkpoint_at": "2026-09-27T06:42:55.491Z",
+      "checkpoint_paths": [
+        "tests/Controller/AdminGuildRankDeletionSecurityTest.php"
+      ],
+      "last_verified_push_at": "2026-09-27T06:42:55.491Z"
     }
   ],
   "recovery_queue": [],
