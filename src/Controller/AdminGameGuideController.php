@@ -85,9 +85,9 @@ final class AdminGameGuideController extends AbstractController
                 throw $this->createNotFoundException();
             }
         } catch (\InvalidArgumentException|\DomainException|\JsonException $exception) {
-            return $this->form($values, $exception->getMessage(), Response::HTTP_UNPROCESSABLE_ENTITY);
+            return $this->form($values + ['id' => $id], $exception->getMessage(), Response::HTTP_UNPROCESSABLE_ENTITY);
         } catch (DbalException $exception) {
-            return $this->form($values, 'The guide could not be saved. Check the selected game and guide data.', Response::HTTP_UNPROCESSABLE_ENTITY);
+            return $this->form($values + ['id' => $id], 'The guide could not be saved. Check the selected game and guide data.', Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
         $this->addFlash('success', 'Draft saved.');
