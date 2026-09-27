@@ -10,16 +10,16 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T09:27:05.141Z",
+  "published_at": "2026-09-27T09:27:59.291Z",
   "summary": {
-    "total_remaining_worker_tasks": 146,
+    "total_remaining_worker_tasks": 147,
     "completed_worker_prs_awaiting_trusted_review": 259,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-492 has green exact-head CI and is awaiting Trusted review with its claim locked; re-evaluate unclaimed tasks and claim the first dependency-safe package.",
+    "next_required_action": "WCP-494 is actively claimed from exact sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d; add test-only public scheduled/future-dated content visibility coverage and run full exact-head Worker CI. Keep all foreign claims untouched.",
     "composition_preparable": 0,
-    "immediately_actionable": 6,
+    "immediately_actionable": 7,
     "must_continue": true
   },
   "rules": {
@@ -32468,6 +32468,100 @@
       ],
       "next_action": "Add accessible up/down controls to the guild structure view, then add functional auth, rendered-CSRF, ordering and cross-guild tests.",
       "last_verified_push_at": "2026-09-27T09:27:29.893Z"
+    },
+    {
+      "priority": 494,
+      "package_id": "WCP-494",
+      "title": "Keep scheduled content out of public news and page surfaces",
+      "risk": "medium",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-494-public-scheduled-content-g1",
+      "suggested_branch": "feature/wcp-494-public-scheduled-content-g1",
+      "base_branch": "main",
+      "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "objective": "Add test-only functional regressions for public content publication timing. A previously published control remains visible, while scheduled entries and entries marked published with a future publishedAt stay out of public news listings, direct news/page routes, RSS, JSON Feed, and sitemap. Do not change controllers, repositories, templates, entities, routes, configuration, or schema.",
+      "allowed_paths": [
+        "tests/Controller/PublicScheduledContentVisibilityTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/",
+        "src/",
+        "templates/",
+        "assets/",
+        "public/"
+      ],
+      "deliverables": [
+        "One focused functional test creates synthetic published, scheduled, and future-dated-published news/page records with unique markers and a visible published control.",
+        "Public /news excludes every scheduled and future-dated marker; direct /news/{slug} and /page/{slug} requests return 404 for hidden entries.",
+        "RSS XML, JSON Feed, and sitemap omit the synthetic scheduled and future-dated news markers while the published control remains discoverable where applicable.",
+        "All synthetic content and author records are removed in finally, including after assertion failures.",
+        "Only tests/Controller/PublicScheduledContentVisibilityTest.php changes; no product or security behavior is altered."
+      ],
+      "tests": [
+        "Focused PHPUnit functional test for scheduled and future-dated content visibility on listing, direct routes, RSS, JSON Feed, and sitemap.",
+        "PHPStan level 8 and complete Worker CI on the exact final HEAD.",
+        "PostgreSQL 18 complete migration-chain validation."
+      ],
+      "completion_report": [
+        "Exact sanitized main SHA and final Worker HEAD SHA.",
+        "Complete changed-path list and Worker PR.",
+        "Focused tests, PHPStan, exact-head CI run, PostgreSQL migration results, and cleanup evidence.",
+        "Any limitations and Trusted integration follow-up."
+      ],
+      "immutable_constraints": [
+        "test-only-no-product-runtime-or-schema-changes",
+        "public-content-must-not-expose-scheduled-or-future-published-records",
+        "synthetic-fixtures-only-and-cleaned-up",
+        "preserve-existing-publication-authorization-cache-and-visibility-controls",
+        "no-security-test-phpstan-or-CI-weakening",
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "red-CI-stops-integration",
+        "no-private-runtime-or-sensitive-data"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "proposal_kind": "worker_only",
+      "proposal_dependency_evidence": [],
+      "collision_check": {
+        "compared_against": "Fresh continuous/work-pool-v4 blob b3b249c070f331a8bf2975991821eec9cbd76741; all active and claim-locked allowed paths; sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d; active branches and PR/CI state.",
+        "result": "The only allowed path is a new test file absent from sanitized main and the latest pool. No active or claim-locked package owns or encloses it. WCP-090 covers scheduled unpublication deadlines in ContentEntry, ContentEntryRepository, PublicContentController, and ContentPublicationAssuranceTest; this package covers future publication visibility in a distinct new test. WCP-485 covers tagged archives, WCP-402 covers release pages, and WCP-492 covers video playlists; none owns this path or the news/page/feed visibility cases here.",
+        "paths": [
+          "tests/Controller/PublicScheduledContentVisibilityTest.php"
+        ]
+      },
+      "published_at": "2026-09-27T09:27:59.291Z",
+      "claimed_on": "2026-09-27T09:27:59.291Z",
+      "claim_state": "active",
+      "active_base_branch": "main",
+      "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "resume_branch": "feature/wcp-494-public-scheduled-content-g1",
+      "branch_heads": {
+        "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+        "feature_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d"
+      },
+      "last_observed_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "last_checkpoint_at": "2026-09-27T09:27:59.291Z",
+      "checkpoint_paths": [],
+      "next_action": "Implement the focused functional coverage only on the feature branch, checkpoint it, then run targeted PHPUnit and full exact-head Worker CI.",
+      "last_verified_push_at": null
     }
   ],
   "recovery_queue": [],
