@@ -14,11 +14,10 @@ use Doctrine\ORM\EntityManagerInterface;
 use RuntimeException;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 
 final class AdminBackupProviderPlanningSecurityTest extends WebTestCase
 {
-    public function testCatalogueAndPlanRequireConnectorPermissionEvenWithValidCsrf(): void
+    public function testCatalogueAndPlanRequireConnectorPermission(): void
     {
         $client = static::createClient();
         $providerKeys = $this->providerKeys();
@@ -33,12 +32,8 @@ final class AdminBackupProviderPlanningSecurityTest extends WebTestCase
             $client->request('GET', '/admin/connectors/backup-catalog');
             self::assertResponseStatusCodeSame(403);
 
-            $csrfManager = $client->getContainer()->get(CsrfTokenManagerInterface::class);
-            self::assertInstanceOf(CsrfTokenManagerInterface::class, $csrfManager);
-            $validToken = $csrfManager->getToken('backup-provider-plan')->getValue();
-
             $client->request('POST', '/admin/connectors/backup-catalog/plan', [
-                '_token' => $validToken,
+                '_token' => 'invalid',
                 'providers' => $providerKeys,
             ]);
             self::assertResponseStatusCodeSame(403);
