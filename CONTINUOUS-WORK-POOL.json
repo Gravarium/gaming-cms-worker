@@ -10,16 +10,16 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T09:55:44.327Z",
+  "published_at": "2026-09-27T09:56:19.571Z",
   "summary": {
-    "total_remaining_worker_tasks": 154,
+    "total_remaining_worker_tasks": 155,
     "completed_worker_prs_awaiting_trusted_review": 263,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-500 is actively claimed on exact feature HEAD 95aae6029159fe93e40336ab5a9c765d94011e0c; run focused and complete exact-head Worker CI for the public content category directory. Keep all foreign claims untouched.",
+    "next_required_action": "WCP-503 is actively claimed from exact sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d; complete the Game Hub-to-guild link manager and full exact-head Worker CI. Keep all foreign claims untouched.",
     "composition_preparable": 0,
-    "immediately_actionable": 14,
+    "immediately_actionable": 15,
     "must_continue": true
   },
   "rules": {
@@ -33528,6 +33528,117 @@
       ],
       "next_action": "Open a draft Worker PR from this exact checkpoint, run the focused PHPUnit test and complete exact-head Worker CI, and repair any concrete failure on this branch.",
       "last_verified_push_at": "2026-09-27T09:55:07.669Z"
+    },
+    {
+      "priority": 503,
+      "package_id": "WCP-503",
+      "title": "Manage public guild links from Game Hubs",
+      "risk": "medium",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-503-gamehub-guild-links-g1",
+      "suggested_branch": "feature/wcp-503-gamehub-guild-links-g1",
+      "base_branch": "main",
+      "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "objective": "Complete the existing Gaming module's Game Hub connection to guild pages. Give users with CMS_GAMING_MANAGE a discoverable link manager from each public Game Hub. Managers can associate and remove enabled public guilds for the same game; the public Game Hub resolves valid guild links to existing guild pages and hides stale, disabled, cross-game or missing targets. Reuse the existing GameHubLink storage and game/module visibility rules; do not change schema or migrations.",
+      "allowed_paths": [
+        "src/Controller/AdminGameHubGuildLinkController.php",
+        "src/Form/GameCatalogue/GameHubGuildLinkType.php",
+        "src/Twig/GameHubGuildLinkExtension.php",
+        "templates/admin/game_catalogue/guild_links.html.twig",
+        "templates/game_catalogue/show.html.twig",
+        "tests/Controller/AdminGameHubGuildLinkWorkflowTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/",
+        "src/Entity/",
+        "src/Repository/",
+        "src/Controller/GameCatalogue/GameCatalogueController.php",
+        "src/Controller/AdminGameCatalogue/",
+        "src/Form/GameCatalogue/GameCatalogueEntryAdminType.php",
+        "templates/admin/gaming/index.html.twig",
+        "templates/admin/game_catalogue/index.html.twig",
+        "templates/admin/game_catalogue/form.html.twig",
+        "templates/game_catalogue/index.html.twig",
+        "templates/layout/",
+        "tests/Gaming/Catalogue/GameCatalogueControllerTest.php"
+      ],
+      "deliverables": [
+        "A CMS_GAMING_MANAGE-protected admin screen is reachable from the public Game Hub by authorized editors and supports adding/removing guild links with CSRF protection.",
+        "Only enabled guilds attached to the same enabled game can be selected; duplicate links are rejected with a readable form error.",
+        "Public Game Hub pages render same-game enabled guilds as links to existing public guild pages, while missing, disabled, cross-game and non-guild targets do not disclose or link to private records.",
+        "The existing gaming module route gate, non-guild GameHubLink display, catalogue/release behavior and schema remain unchanged."
+      ],
+      "tests": [
+        "Focused functional coverage for authorized link create/delete, cross-game and disabled guild exclusion, anonymous/unprivileged denial, CSRF and ownership checks.",
+        "Public Game Hub coverage verifies a valid guild link resolves to app_guild_show and stale/disabled/cross-game targets stay hidden.",
+        "Disabling the gaming module keeps both public and admin routes unavailable; fixtures are restored in finally blocks.",
+        "PHPStan level 8 and full Worker CI on the exact final HEAD, including PostgreSQL 18 migration-chain validation."
+      ],
+      "completion_report": [
+        "Exact sanitized main/base SHA and final feature HEAD SHA.",
+        "Exact changed paths and Worker PR.",
+        "Create/delete, public link resolution, visibility, permission, CSRF and disabled-module test results.",
+        "PHPStan, PHPUnit, PostgreSQL migration and exact-head CI evidence; remaining integration follow-up."
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "preserve-CMS_GAMING_MANAGE-permission-CSRF-and-content-visibility",
+        "only-resolve-enabled-same-game-guild-targets",
+        "public-game-hub-links-do-not-disclose-disabled-or-cross-game-guilds",
+        "reuse-existing-GameHubLink-storage-no-schema-or-migration-change",
+        "preserve-existing-security-validation-and-worker-isolation-controls",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "red-CI-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "proposal_kind": "worker_only",
+      "proposal_dependency_evidence": [],
+      "collision_check": {
+        "compared_against": "Fresh continuous/work-pool-v4 blob 7c1f3d93096dc26b1b45ae262c6c34c21015ff10, all active and claim-locked paths, sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d, and current branch/PR reservation state immediately before creating the WCP-503 claim.",
+        "result": "No active or claim-locked task owns or encloses these six paths. WCP-387 owns the public Game Catalogue controller, repository, index template and its existing test; those paths remain untouched. WCP-401 owns separate Game Catalogue admin controller/form/index/form/test paths; this proposal uses a new controller, form, admin template and focused test. WCP-500 and WCP-501 own public content-category and content-redirect paths, respectively, and do not overlap this Game Hub/guild workflow. No entity, repository, migration, shared layout or CI path is modified.",
+        "paths": [
+          "src/Controller/AdminGameHubGuildLinkController.php",
+          "src/Form/GameCatalogue/GameHubGuildLinkType.php",
+          "src/Twig/GameHubGuildLinkExtension.php",
+          "templates/admin/game_catalogue/guild_links.html.twig",
+          "templates/game_catalogue/show.html.twig",
+          "tests/Controller/AdminGameHubGuildLinkWorkflowTest.php"
+        ]
+      },
+      "published_at": "2026-09-27T09:56:19.571Z",
+      "claimed_on": "2026-09-27T09:56:19.571Z",
+      "claim_state": "active",
+      "active_base_branch": "main",
+      "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "resume_branch": "feature/wcp-503-gamehub-guild-links-g1",
+      "branch_heads": {
+        "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+        "feature_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d"
+      },
+      "last_observed_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "last_checkpoint_at": "2026-09-27T09:56:19.571Z",
+      "checkpoint_paths": [],
+      "next_action": "Implement the permission-protected same-game guild-link manager, public guild-link resolution and focused workflow coverage within the listed paths; push a checkpoint before full exact-head Worker CI."
     }
   ],
   "recovery_queue": [],
