@@ -10,7 +10,7 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T10:04:19.189Z",
+  "published_at": "2026-09-27T10:04:42.344Z",
   "summary": {
     "total_remaining_worker_tasks": 160,
     "completed_worker_prs_awaiting_trusted_review": 266,
@@ -33695,14 +33695,14 @@
       "claim_state": "active",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-      "active_head": "1afee9a6fafabce5a421d19ee30f825235aeba29",
+      "active_head": "b198490e38f09dfaee119a5695f996c1af07c939",
       "resume_branch": "feature/wcp-503-gamehub-guild-links-g1",
       "branch_heads": {
         "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-        "feature_branch": "1afee9a6fafabce5a421d19ee30f825235aeba29"
+        "feature_branch": "b198490e38f09dfaee119a5695f996c1af07c939"
       },
-      "last_observed_head": "1afee9a6fafabce5a421d19ee30f825235aeba29",
-      "last_checkpoint_at": "2026-09-27T10:03:25.231Z",
+      "last_observed_head": "b198490e38f09dfaee119a5695f996c1af07c939",
+      "last_checkpoint_at": "2026-09-27T10:04:42.344Z",
       "checkpoint_paths": [
         "src/Controller/AdminGameHubGuildLinkController.php",
         "src/Form/GameCatalogue/GameHubGuildLinkType.php",
@@ -33711,13 +33711,21 @@
         "templates/game_catalogue/show.html.twig",
         "tests/Controller/AdminGameHubGuildLinkWorkflowTest.php"
       ],
-      "next_action": "Run and inspect full exact-head Worker CI #731; repair failures within the six allowed paths, then update the PR after final green CI.",
-      "final_head": "1afee9a6fafabce5a421d19ee30f825235aeba29",
-      "last_verified_push_at": "2026-09-27T10:03:25.231Z",
+      "next_action": "The first run failed only at PHPStan because the form type omitted AbstractType's generic; that annotation is fixed on this checkpoint. Run the complete exact-head CI again and repair further failures within the allowed paths.",
+      "final_head": "b198490e38f09dfaee119a5695f996c1af07c939",
+      "last_verified_push_at": "2026-09-27T10:04:42.344Z",
       "worker_pr": 296,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/296",
-      "ci_run_id": 36311288167,
-      "ci_result": "in_progress"
+      "ci_run_id": null,
+      "ci_result": "queued",
+      "ci_attempts": [
+        {
+          "head": "1afee9a6fafabce5a421d19ee30f825235aeba29",
+          "run_id": 36311288167,
+          "result": "failure",
+          "reason": "PHPStan required the unbound form type to declare its data generic; corrected in the current head."
+        }
+      ]
     },
     {
       "priority": 502,
