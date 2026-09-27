@@ -12,6 +12,9 @@ use Symfony\Component\Security\Http\SecurityRequestAttributes;
 
 final class LoginThrottlingGlobalIpSecurityTest extends WebTestCase
 {
+    private const GLOBAL_ATTEMPT_LIMIT = 25;
+    private const ATTEMPTS_TO_REACH_BLOCK = self::GLOBAL_ATTEMPT_LIMIT + 1;
+
     public function testGlobalThrottleStopsAttemptsAcrossDistinctUsernames(): void
     {
         $client = static::createClient();
@@ -20,7 +23,7 @@ final class LoginThrottlingGlobalIpSecurityTest extends WebTestCase
         $nonce = bin2hex(random_bytes(8));
         $throttled = false;
 
-        for ($attempt = 0; $attempt < 26; ++$attempt) {
+        for ($attempt = 0; $attempt < self::ATTEMPTS_TO_REACH_BLOCK; ++$attempt) {
             $email = 'unknown-throttle-'.$nonce.'-'.$attempt.'@example.test';
             $crawler = $client->request('GET', '/login');
             self::assertResponseIsSuccessful();
@@ -37,7 +40,7 @@ final class LoginThrottlingGlobalIpSecurityTest extends WebTestCase
             $authenticationError = $session->get(SecurityRequestAttributes::AUTHENTICATION_ERROR);
 
             if ($authenticationError instanceof TooManyLoginAttemptsAuthenticationException) {
-                self::assertSame(25, $attempt, 'The global limit should allow the configured 25 attempts.');
+                self::assertSame(self::GLOBAL_ATTEMPT_LIMIT, $attempt, sprintf('The global limit should allow the configured %d attempts.', self::GLOBAL_ATTEMPT_LIMIT));
                 $throttled = true;
                 break;
             }
