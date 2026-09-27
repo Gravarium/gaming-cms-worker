@@ -10,16 +10,16 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T03:04:32.875Z",
+  "published_at": "2026-09-27T03:15:59.948Z",
   "summary": {
-    "total_remaining_worker_tasks": 140,
-    "completed_worker_prs_awaiting_trusted_review": 226,
+    "total_remaining_worker_tasks": 139,
+    "completed_worker_prs_awaiting_trusted_review": 227,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-458 is complete and locked pending Trusted review; independently select the next free existing-module completion task or publish and claim a bounded independent WCP.",
+    "next_required_action": "WCP-459 is complete on green exact-head Worker PR #252. All five unclaimed FCP assignments remain dependency-blocked; derive the next independent worker-only proposal and claim it.",
     "composition_preparable": 0,
-    "immediately_actionable": 3,
+    "immediately_actionable": 2,
     "must_continue": true
   },
   "rules": {
@@ -26695,7 +26695,7 @@
       "package_id": "WCP-459",
       "title": "Keep login failures indistinguishable for unknown accounts",
       "risk": "medium",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [
         "WCP-457"
       ],
@@ -26777,12 +26777,12 @@
         ]
       },
       "claimed_on": "2026-09-27T03:01:56.704Z",
-      "claim_state": "active",
+      "claim_state": "locked_until_trusted_resolution",
       "active_base_branch": "feature/wcp-457-login-throttling-global-ip-g1",
       "active_base_sha": "94da6297e417b886d101dae6cc4ec2170538549c",
       "active_head": "238b1fdabf381713cb1bc2ad34d93449a0fb967d",
       "resume_branch": "feature/wcp-459-login-failure-disclosure-g1",
-      "last_checkpoint_at": "2026-09-27T03:03:52.670Z",
+      "last_checkpoint_at": "2026-09-27T03:15:59.948Z",
       "checkpoint_paths": [
         "tests/Controller/LoginFailureDisclosureSecurityTest.php"
       ],
@@ -26790,22 +26790,37 @@
         "claim_branch": "94da6297e417b886d101dae6cc4ec2170538549c",
         "feature_branch": "238b1fdabf381713cb1bc2ad34d93449a0fb967d"
       },
-      "last_verified_push_at": "2026-09-27T03:03:52.670Z",
-      "next_action": "Inspect exact-head Worker CI run 36290280807 on 238b1fdabf381713cb1bc2ad34d93449a0fb967d; diagnose and repair any concrete failure before completion.",
+      "last_verified_push_at": "2026-09-27T03:15:59.948Z",
+      "next_action": "Await Trusted review with the claim locked; exact final HEAD 238b1fdabf381713cb1bc2ad34d93449a0fb967d passed complete Worker CI run 36290280807.",
       "worker_pr": 252,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/252",
-      "draft_pr": true,
-      "pr_state": "open_draft_unmerged",
+      "draft_pr": false,
+      "pr_state": "open_ready_unmerged",
       "ci_attempts": [
         {
           "run_id": 36290280807,
           "head": "238b1fdabf381713cb1bc2ad34d93449a0fb967d",
-          "result": "in_progress"
+          "result": "success"
         }
       ],
-      "ci_result": "in_progress",
+      "ci_result": "success",
       "last_ci_run_id": 36290280807,
-      "ci_run_id": 36290280807
+      "ci_run_id": 36290280807,
+      "final_head": "238b1fdabf381713cb1bc2ad34d93449a0fb967d",
+      "completion_evidence": {
+        "exact_base_branch": "feature/wcp-457-login-throttling-global-ip-g1",
+        "exact_base_sha": "94da6297e417b886d101dae6cc4ec2170538549c",
+        "final_head_sha": "238b1fdabf381713cb1bc2ad34d93449a0fb967d",
+        "changed_paths": [
+          "tests/Controller/LoginFailureDisclosureSecurityTest.php"
+        ],
+        "worker_pr": 252,
+        "ci_run_id": 36290280807,
+        "ci_result": "success",
+        "php_symfony_job": "success: 432 tests, 2125 assertions; PHPStan level 8 no errors",
+        "postgresql_job": "success: 39 migrations",
+        "disclosure_behavior": "wrong password and unknown email both redirect to /login and display the same generic message; account remains unauthenticated"
+      }
     }
   ],
   "recovery_queue": [],
