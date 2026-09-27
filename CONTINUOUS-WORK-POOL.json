@@ -44387,7 +44387,7 @@
       "package_id": "WCP-560",
       "title": "Public game catalogue sitemap",
       "risk": "medium",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -44512,7 +44512,7 @@
       },
       "published_at": "2026-09-27T17:16:01.547Z",
       "claimed_on": "2026-09-27T17:16:01.547Z",
-      "claim_state": "active",
+      "claim_state": "locked_until_trusted_resolution",
       "active_base_branch": "main",
       "active_base_sha": "7b2ca79405fc12d34bce1386157e929e4668f31a",
       "active_head": "fde670469e422416506c099284f6f414331b25e3",
@@ -44521,8 +44521,8 @@
         "feature_branch": "fde670469e422416506c099284f6f414331b25e3"
       },
       "last_observed_head": "fde670469e422416506c099284f6f414331b25e3",
-      "last_checkpoint_at": "2026-09-27T17:33:33.039Z",
-      "last_verified_push_at": "2026-09-27T17:33:33.039Z",
+      "last_checkpoint_at": "2026-09-27T17:37:58.716Z",
+      "last_verified_push_at": "2026-09-27T17:37:58.716Z",
       "checkpoint_paths": [
         "src/Controller/PublicGameCatalogueSitemapController.php",
         "src/GameCatalogueSitemap/PublicGameCatalogueSitemapQuery.php",
@@ -44556,14 +44556,15 @@
           "run_number": 901,
           "head": "fde670469e422416506c099284f6f414331b25e3",
           "base": "7b2ca79405fc12d34bce1386157e929e4668f31a",
-          "result": "queued",
-          "validation_pr": 353
+          "result": "success",
+          "validation_pr": 353,
+          "conclusion": "success"
         }
       ],
-      "next_action": "Monitor exact-head Worker CI run #901 / 36337371199 on fde670469e422416506c099284f6f414331b25e3; diagnose any remaining failures and rerun after repairs.",
+      "next_action": "Await Trusted review and independent validation of PR #353; do not merge or deploy from the Worker repository.",
       "resume_branch": "feature/wcp-560-public-game-catalogue-sitemap-g1",
       "worker_pr": 353,
-      "worker_pr_state": "draft",
+      "worker_pr_state": "ready_for_review",
       "worker_pr_changed_paths": [
         "config/packages/public_game_catalogue_sitemap.yaml",
         "src/Controller/PublicGameCatalogueSitemapController.php",
@@ -44572,16 +44573,18 @@
         "src/GameCatalogueSitemap/Templates/sitemap/games_page.xml.twig",
         "tests/Controller/PublicGameCatalogueSitemapControllerTest.php"
       ],
-      "ci_result": "in_progress",
-      "last_ci_result": "in_progress",
+      "ci_result": "success",
+      "last_ci_result": "success",
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/353",
-      "draft_pr": true,
-      "pr_state": "open_draft",
+      "draft_pr": false,
+      "pr_state": "open",
       "worker_pr_base_branch": "main",
       "worker_pr_base_sha": "7b2ca79405fc12d34bce1386157e929e4668f31a",
       "ci_run_id": 36337371199,
       "last_ci_run_id": 36337371199,
-      "ci_validation_pr": 353
+      "ci_validation_pr": 353,
+      "completed_at": "2026-09-27T17:37:58.716Z",
+      "worker_completion_summary": "Exact-head Worker CI #901 / 36337371199 passed on fde670469e422416506c099284f6f414331b25e3: 738 tests, 4,647 assertions, 0 failures/errors (1 deprecation, 3 notices); PHPStan, dependency audit, YAML/Twig/container/AssetMapper/Doctrine checks passed; PostgreSQL 18 applied 57 migrations and is current. PR #353 is open, ready for review, mergeable, based on main@7b2ca79405fc12d34bce1386157e929e4668f31a, with exactly the six allowlisted paths."
     },
     {
       "priority": 561,
