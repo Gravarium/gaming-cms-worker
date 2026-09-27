@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T19:14:21.312Z",
+  "published_at": "2026-09-27T19:16:25.721Z",
   "summary": {
     "total_remaining_worker_tasks": 173,
     "completed_worker_prs_awaiting_trusted_review": 303,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-572 is complete with exact-head green CI and PR #366; re-evaluate the blocked queue and continue autonomous Worker proposals.",
+    "next_required_action": "WCP-573 is claimed on main@7b2ca79405fc12d34bce1386157e929e4668f31a; test escaping of malformed newsletter email reflected in the form and run exact-head CI.",
     "composition_preparable": 0,
     "immediately_actionable": 29,
     "must_continue": true
@@ -46228,6 +46228,102 @@
       "last_ci_result": "success",
       "completed_at": "2026-09-27T19:14:21.312Z",
       "worker_completion_summary": "Exact-head Worker CI #917 / 36343404053 passed on b4fb1a3189ca48d7cb066c69f50d68dc9c5dfc65: 737 tests, 4,636 assertions, 0 failures/errors (1 PHPUnit deprecation, 3 notices); PHPStan reported no errors; PostgreSQL 18 applied 57 migrations with 878 SQL queries. PR #366 is open and ready for Trusted review from main@7b2ca79405fc12d34bce1386157e929e4668f31a; exactly one allowlisted test path changed, with no template or runtime changes."
+    },
+    {
+      "priority": 573,
+      "package_id": "WCP-573",
+      "title": "Test escaping of invalid email reflected in the public newsletter form",
+      "risk": "low",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-573-newsletter-email-reflected-xss-g1",
+      "suggested_branch": "feature/wcp-573-newsletter-email-reflected-xss-g1",
+      "base_branch": "main",
+      "base_sha": "7b2ca79405fc12d34bce1386157e929e4668f31a",
+      "objective": "Add a focused test-only regression proving that an invalid user-supplied email containing an attribute-breakout and script payload is safely escaped when reflected into the public newsletter form. Assert the payload is preserved only as the email input's inert value, no injected attributes or elements appear, and invalid input creates neither a subscription nor outbound mail.",
+      "allowed_paths": [
+        "tests/Controller/PublicNewsletterSignupControllerTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "CONTINUOUS-WORKER.md",
+        "CONTINUOUS-WORK-POOL.json",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/",
+        "src/",
+        "templates/"
+      ],
+      "deliverables": [
+        "Functional POST with a valid CSRF token and malformed HTML-bearing email returns 422.",
+        "Response encodes the attribute breakout and script markup; the parsed email input retains the value without added event-handler attributes/elements.",
+        "No subscription or mail is created, and existing CSRF/rate-limit/consent coverage remains unchanged.",
+        "Test-only change; no production source or template modification."
+      ],
+      "tests": [
+        "Targeted PublicNewsletterSignupControllerTest.",
+        "Complete exact-head Worker CI including PHPStan, full PHPUnit, template/config checks, and PostgreSQL 18 migration chain."
+      ],
+      "completion_report": [
+        "Exact sanitized base and final HEAD; changed path and Worker PR state.",
+        "Attribute-context XSS payload and no-side-effect assertions.",
+        "Targeted regression and exact-head full Worker CI results.",
+        "Test-only package; no runtime changes."
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-Trusted-review-and-exact-head-CI",
+        "preserve-all-security-permissions-CSRF-validation-recovery-rollback-and-upload-controls",
+        "no-private-runtime-or-sensitive-data",
+        "no-template-or-runtime-code-changes",
+        "no-edit-to-active-or-claim-locked-paths",
+        "no-direct-Trusted-integration-or-deployment"
+      ],
+      "proposal_kind": "worker_only",
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "7b2ca79405fc12d34bce1386157e929e4668f31a",
+      "proposal_dependency_evidence": [],
+      "collision_check": {
+        "compared_against": "Fresh continuous/work-pool-v4 file blob @ 896ad20518645ad4a42f2426d695d8a558429b98; current sanitized main @ 7b2ca79405fc12d34bce1386157e929e4668f31a; every unclaimed, active, and claim-locked task.",
+        "result": "No overlap with any active or claim-locked path. The only historical exact-path hit is WCP-522, trusted_integrated with claim released; no active writer. The change adds only a regression test to the existing controller suite; no production or template paths are included.",
+        "paths": [
+          "tests/Controller/PublicNewsletterSignupControllerTest.php"
+        ],
+        "observed_nonblocking_path_hits": [
+          {
+            "id": "WCP-522",
+            "state": "trusted_integrated",
+            "claim": "released_after_trusted_integration"
+          }
+        ]
+      },
+      "published_at": "2026-09-27T19:16:25.721Z",
+      "claimed_on": "2026-09-27T19:16:25.721Z",
+      "claim_state": "active",
+      "active_base_branch": "main",
+      "active_base_sha": "7b2ca79405fc12d34bce1386157e929e4668f31a",
+      "active_head": "7b2ca79405fc12d34bce1386157e929e4668f31a",
+      "resume_branch": "feature/wcp-573-newsletter-email-reflected-xss-g1",
+      "branch_heads": {
+        "claim_branch": "7b2ca79405fc12d34bce1386157e929e4668f31a",
+        "feature_branch": "7b2ca79405fc12d34bce1386157e929e4668f31a"
+      },
+      "last_observed_head": "7b2ca79405fc12d34bce1386157e929e4668f31a",
+      "last_checkpoint_at": "2026-09-27T19:16:25.721Z",
+      "checkpoint_paths": [],
+      "next_action": "Add the malformed-email attribute-breakout regression, assert escaped input value and no side effects, then run exact-head Worker CI."
     }
   ],
   "recovery_queue": [],
