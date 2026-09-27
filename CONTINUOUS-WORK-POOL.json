@@ -10,7 +10,7 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T13:23:00.400Z",
+  "published_at": "2026-09-27T13:24:23.432Z",
   "summary": {
     "total_remaining_worker_tasks": 166,
     "completed_worker_prs_awaiting_trusted_review": 289,
@@ -39189,19 +39189,24 @@
       "claim_state": "active",
       "active_base_branch": "feature/fcp-052-pool-g1",
       "active_base_sha": "f2e0ceea07b5152a30d78797a9427c9aebfe4e40",
-      "active_head": "f2e0ceea07b5152a30d78797a9427c9aebfe4e40",
+      "active_head": "c270ebfaed15d87d0fbf0fc494b51f064e55dc4b",
       "resume_branch": "feature/wcp-538-public-content-community-flow-g1",
       "branch_heads": {
         "claim_branch": "f2e0ceea07b5152a30d78797a9427c9aebfe4e40",
-        "feature_branch": "f2e0ceea07b5152a30d78797a9427c9aebfe4e40"
+        "feature_branch": "c270ebfaed15d87d0fbf0fc494b51f064e55dc4b"
       },
-      "last_observed_head": "f2e0ceea07b5152a30d78797a9427c9aebfe4e40",
-      "last_checkpoint_at": "2026-09-27T13:18:27.651Z",
-      "checkpoint_paths": [],
-      "next_action": "Implement the public content discussion thread, Page Builder entry point and moderation queue only in the 14 reserved paths; push meaningful checkpoints, then run complete exact-head Worker CI.",
+      "last_observed_head": "c270ebfaed15d87d0fbf0fc494b51f064e55dc4b",
+      "last_checkpoint_at": "2026-09-27T13:24:23.432Z",
+      "checkpoint_paths": [
+        "src/CommunityInteraction/ContentInteractionQuery.php",
+        "src/Form/PublicContentCommentType.php",
+        "src/Form/PublicContentReportType.php",
+        "src/Form/ContentModerationDecisionType.php"
+      ],
+      "next_action": "Add the public discussion controller, Page Builder provider, moderation controller, Twig/configuration and functional tests in the remaining reserved paths; then run complete exact-head Worker CI.",
       "ci_attempts": [],
       "worker_pr_state": "not_created",
-      "last_verified_push_at": "2026-09-27T13:18:27.651Z",
+      "last_verified_push_at": "2026-09-27T13:24:23.432Z",
       "worker_pr": null,
       "worker_pr_url": null,
       "pr_state": "not_created",
