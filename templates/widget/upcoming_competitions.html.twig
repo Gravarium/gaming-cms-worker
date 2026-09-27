@@ -1,0 +1,14 @@
+<section class="portal-cards upcoming-competition-widget" aria-label="Nächste Competitions">
+    {% for competition in data.items %}
+        <article class="portal-card">
+            <div class="portal-card-copy">
+                <p class="portal-kicker">{{ competition.game.name }} · {{ competition.startsAt|date('d.m.Y H:i') }} Uhr</p>
+                <h3><a href="{{ path('app_competition_show', {id: competition.id}) }}">{{ competition.name }}</a></h3>
+                <p>{{ competition.mode == 'team' ? 'Teamwettbewerb' : 'Einzelwettbewerb' }} · Anmeldung offen</p>
+                <a class="portal-read" href="{{ path('app_competition_show', {id: competition.id}) }}">Details und Anmeldung <span aria-hidden="true">↗</span></a>
+            </div>
+        </article>
+    {% else %}
+        <p class="portal-empty">Aktuell sind keine öffentlichen Competitions zur Anmeldung geöffnet.</p>
+    {% endfor %}
+</section>

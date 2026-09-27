@@ -1,0 +1,47 @@
+{% extends 'base.html.twig' %}
+{% block title %}{{ competition.name }} – Ergebnisse{% endblock %}
+{% block body %}
+<main class="container">
+    <p><a href="{{ path('app_competition_show', {id: competition.id}) }}">← Zur Competition</a></p>
+    <h1>{{ competition.name }} – Ergebnisse</h1>
+    <p>{{ competition.game.name }} · {{ competition.format }} · {{ competition.mode }}</p>
+
+    <section aria-labelledby="standings-heading">
+        <h2 id="standings-heading">Rangliste</h2>
+        <p class="muted">3 Punkte für einen Sieg, 1 Punkt für ein Unentschieden. Es zählen nur bestätigte Ergebnisse.</p>
+        {% if standings %}
+            <div class="table-wrap"><table>
+                <thead><tr><th>Rang</th><th>Teilnehmer</th><th>Spiele</th><th>Siege</th><th>Unentschieden</th><th>Niederlagen</th><th>Differenz</th><th>Punkte</th></tr></thead>
+                <tbody>
+                {% for standing in standings %}
+                    <tr>
+                        <td>{{ loop.index }}</td>
+                        <td>{{ standing.participant.name }}</td>
+                        <td>{{ standing.played }}</td>
+                        <td>{{ standing.wins }}</td>
+                        <td>{{ standing.draws }}</td>
+                        <td>{{ standing.losses }}</td>
+                        <td>{% if standing.difference > 0 %}+{% endif %}{{ standing.difference }}</td>
+                        <td><strong>{{ standing.points }}</strong></td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table></div>
+        {% else %}
+            <p class="muted">Noch keine aktiven Teilnehmer für die Rangliste.</p>
+        {% endif %}
+    </section>
+
+    <section aria-labelledby="results-heading">
+        <h2 id="results-heading">Bestätigte Ergebnisse</h2>
+        {% for result in results %}
+            <article class="panel">
+                <p class="eyebrow">Runde {{ result.round }} · {{ result.bracket }} · Match {{ result.sequence }}</p>
+                <p><strong>{{ result.participantA }}</strong> {{ result.scoreA }} : {{ result.scoreB }} <strong>{{ result.participantB }}</strong></p>
+            </article>
+        {% else %}
+            <p class="muted">Noch keine bestätigten Ergebnisse.</p>
+        {% endfor %}
+    </section>
+</main>
+{% endblock %}
