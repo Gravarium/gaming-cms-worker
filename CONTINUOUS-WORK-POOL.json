@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T14:05:28.098Z",
+  "published_at": "2026-09-27T14:11:31.643Z",
   "summary": {
     "total_remaining_worker_tasks": 167,
     "completed_worker_prs_awaiting_trusted_review": 291,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "PR #331 is ready for review with exact-head Worker CI #822 green; keep the claim locked until Trusted resolution, then continue with the next independent module gap.",
+    "next_required_action": "Create claim/wcp-543-newsletter-subscriber-directory-g1 and feature/wcp-543-newsletter-subscriber-directory-g1 from exact WCP-522 HEAD b1cecaeadc1b8378cf8626f52aa48396a569d8cb, then implement the subscriber directory only in the six reserved paths and push reviewable checkpoints.",
     "composition_preparable": 0,
     "immediately_actionable": 28,
     "must_continue": true
@@ -39965,6 +39965,161 @@
         "Exact-head Worker CI run #820 / 36323858121 succeeded on final HEAD: PHP/Symfony job (including PHPStan and PHPUnit) and PostgreSQL 18 migration-chain job both passed.",
         "Earlier draft CI run #819 failed on the test namespace escaping; the defect was fixed and the final exact-head run passed."
       ]
+    },
+    {
+      "priority": 543,
+      "package_id": "WCP-543",
+      "title": "Search and paginate newsletter subscribers",
+      "risk": "medium",
+      "execution_state": "worker_in_progress",
+      "dependencies": [
+        "WCP-522"
+      ],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-543-newsletter-subscriber-directory-g1",
+      "suggested_branch": "feature/wcp-543-newsletter-subscriber-directory-g1",
+      "base_branch": "feature/wcp-522-public-newsletter-signup-g1",
+      "base_sha": "b1cecaeadc1b8378cf8626f52aa48396a569d8cb",
+      "objective": "Complete the existing Newsletter administration workflow by replacing the first-100-only subscriber view with a searchable, status-filtered, paginated directory, so editors can locate subscriptions created through the WCP-522 double-opt-in flow.",
+      "allowed_paths": [
+        "src/Controller/AdminNewsletter/AdminNewsletterController.php",
+        "src/Newsletter/NewsletterSubscriptionDirectory.php",
+        "templates/admin/newsletter/subscriptions.html.twig",
+        "templates/admin/newsletter/form.html.twig",
+        "templates/admin/newsletter/preview.html.twig",
+        "tests/Controller/AdminNewsletterSubscriptionDirectoryTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "Gravarium/gaming-cms",
+        "templates/admin/newsletter/index.html.twig",
+        "src/Entity/Newsletter/",
+        "src/Repository/Newsletter/",
+        "migrations/",
+        "src/Controller/PublicNewsletterSignupController.php",
+        "src/Service/PublicNewsletterSignupService.php",
+        "src/Controller/AdminNewsletterDeliveryReportController.php",
+        "src/NewsletterDeliveryReport/",
+        "tests/Controller/AdminNewsletterDeliveryReportTest.php",
+        "tests/Controller/NewsletterDeliveryReportNavigationTest.php",
+        "src/Widget/PublicNewsletterSignupWidgetProvider.php",
+        "templates/widget/public_newsletter_signup.html.twig",
+        "tests/Widget/PublicNewsletterSignupWidgetTest.php",
+        "templates/layout/portal.html.twig",
+        "templates/base.html.twig"
+      ],
+      "deliverables": [
+        "Add an authorized GET /admin/newsletter/subscriptions directory with case-insensitive email search, status filters for pending/active/unsubscribed/suppressed, stable newest-first ordering and 50-row pages.",
+        "Show a useful empty state and keep active search/status parameters when paging; clamp out-of-range pages without exposing confirmation or unsubscribe token hashes or suppression reasons.",
+        "Link to the directory from the existing campaign form and preview pages, and provide a return link to the newsletter dashboard. Do not edit the WCP-539-locked dashboard index template.",
+        "Use the existing CMS_CONTENT_MANAGE permission and Notifications module route gate. Keep subscription rows read-only; existing suppression and double-opt-in behavior remain unchanged.",
+        "Make no entity, repository, schema, migration, delivery, consent, confirmation or unsubscribe changes."
+      ],
+      "tests": [
+        "Functional test proves case-insensitive email search, each allowed status filter, combined filters, stable pagination across more than 50 rows, preserved query parameters and a clear no-results state.",
+        "Negative tests prove missing CMS_CONTENT_MANAGE is forbidden and disabled Notifications hides the route; test both form and preview navigation links.",
+        "Assert the directory renders no raw token hashes or suppression reason.",
+        "Run complete exact-head Worker CI including PHPUnit, PHPStan and PostgreSQL 18 migrations."
+      ],
+      "completion_report": [
+        "Exact WCP-522 base and final Worker HEAD.",
+        "All changed paths and Worker PR URL/base.",
+        "Admin search/filter/pagination behavior and permission/module-gate evidence.",
+        "Exact-head PHPUnit, PHPStan and PostgreSQL 18 results.",
+        "Remaining limits and confirmation that WCP-522 remains an untrusted dependency."
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-Trusted-review-and-exact-head-CI",
+        "WCP-522-is-a-green-worker-predecessor-not-Trusted-integration",
+        "preserve-newsletter-consent-double-opt-in-CSRF-rate-limits-delivery-confirmation-and-unsubscribe-behavior",
+        "only-CMS_CONTENT_MANAGE-can-view-subscriber-email-and-status",
+        "keep-Notifications-module-gate-on-admin-route",
+        "do-not-render-raw-token-hashes-or-suppression-reasons",
+        "no-schema-entity-repository-or-campaign-delivery-changes",
+        "no-security-test-PHPStan-CI-auth-CSRF-validation-recovery-rollback-or-upload-protection-weakening",
+        "no-private-runtime-or-sensitive-data",
+        "no-direct-Trusted-integration-or-deployment"
+      ],
+      "proposal_base_branch": "feature/wcp-522-public-newsletter-signup-g1",
+      "proposal_base_sha": "b1cecaeadc1b8378cf8626f52aa48396a569d8cb",
+      "proposal_kind": "worker_only",
+      "proposal_dependency_evidence": [
+        {
+          "package_id": "WCP-522",
+          "feature_branch": "feature/wcp-522-public-newsletter-signup-g1",
+          "worker_pr": 315,
+          "exact_head": "b1cecaeadc1b8378cf8626f52aa48396a569d8cb",
+          "ci_run_id": 36317146986,
+          "ci_run_number": 784,
+          "ci_result": "success",
+          "status": "worker_complete_awaiting_trusted_review",
+          "claim_state": "locked_until_trusted_resolution"
+        }
+      ],
+      "collision_check": {
+        "compared_against": "Fresh continuous/work-pool-v4 blob fa3950084777d67a80f7155c11fd99a7a31ce336; all active/claim-locked allowed and checkpoint paths; WCP-543 task/branch/PR searches; exact WCP-522 PR #315 and Worker CI #784.",
+        "result": "All six allowed paths are disjoint from active and claim-locked work. The WCP-539 dashboard index, WCP-528 delivery report, WCP-522 signup implementation and WCP-540 Page Builder widget are explicitly excluded. No WCP-543 task, claim/feature branch or matching PR existed immediately before this atomic pool claim. WCP-522 remains open, unmerged and green on both exact-head CI jobs.",
+        "paths": [
+          "src/Controller/AdminNewsletter/AdminNewsletterController.php",
+          "src/Newsletter/NewsletterSubscriptionDirectory.php",
+          "templates/admin/newsletter/subscriptions.html.twig",
+          "templates/admin/newsletter/form.html.twig",
+          "templates/admin/newsletter/preview.html.twig",
+          "tests/Controller/AdminNewsletterSubscriptionDirectoryTest.php"
+        ]
+      },
+      "published_at": "2026-09-27T14:11:31.643Z",
+      "claimed_on": "2026-09-27T14:11:31.643Z",
+      "claim_state": "active",
+      "active_base_branch": "feature/wcp-522-public-newsletter-signup-g1",
+      "active_base_sha": "b1cecaeadc1b8378cf8626f52aa48396a569d8cb",
+      "active_head": "b1cecaeadc1b8378cf8626f52aa48396a569d8cb",
+      "resume_branch": "feature/wcp-543-newsletter-subscriber-directory-g1",
+      "branch_heads": {
+        "claim_branch": "b1cecaeadc1b8378cf8626f52aa48396a569d8cb",
+        "feature_branch": "b1cecaeadc1b8378cf8626f52aa48396a569d8cb"
+      },
+      "last_observed_head": "b1cecaeadc1b8378cf8626f52aa48396a569d8cb",
+      "last_checkpoint_at": "2026-09-27T14:11:31.643Z",
+      "checkpoint_paths": [
+        "src/Controller/AdminNewsletter/AdminNewsletterController.php",
+        "src/Newsletter/NewsletterSubscriptionDirectory.php",
+        "templates/admin/newsletter/subscriptions.html.twig",
+        "templates/admin/newsletter/form.html.twig",
+        "templates/admin/newsletter/preview.html.twig",
+        "tests/Controller/AdminNewsletterSubscriptionDirectoryTest.php"
+      ],
+      "next_action": "Create claim/wcp-543-newsletter-subscriber-directory-g1 and feature/wcp-543-newsletter-subscriber-directory-g1 from exact WCP-522 HEAD b1cecaeadc1b8378cf8626f52aa48396a569d8cb, then implement the subscriber directory only in the six reserved paths and push reviewable checkpoints.",
+      "worker_pr_state": "not_created",
+      "last_verified_push_at": "2026-09-27T14:11:31.643Z",
+      "ci_result": "not_started",
+      "last_ci_result": "not_run",
+      "ci_attempts": [],
+      "worker_pr": null,
+      "worker_pr_url": null,
+      "worker_pr_changed_paths": [
+        "src/Controller/AdminNewsletter/AdminNewsletterController.php",
+        "src/Newsletter/NewsletterSubscriptionDirectory.php",
+        "templates/admin/newsletter/subscriptions.html.twig",
+        "templates/admin/newsletter/form.html.twig",
+        "templates/admin/newsletter/preview.html.twig",
+        "tests/Controller/AdminNewsletterSubscriptionDirectoryTest.php"
+      ],
+      "worker_pr_base_branch": "main",
+      "pr_state": "not_created"
     }
   ],
   "recovery_queue": [],
