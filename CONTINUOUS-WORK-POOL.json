@@ -39822,14 +39822,14 @@
       "claim_state": "active",
       "active_base_branch": "main",
       "active_base_sha": "b510875e7b0741b9b19f09429d2204a95df51198",
-      "active_head": "2cb3c805bd1590ab3098634d9277d8ad41488f65",
+      "active_head": "991a1ec5ae42be72b3e36de12bb47bd3848683ca",
       "resume_branch": "feature/wcp-541-guild-role-needs-g1",
       "branch_heads": {
         "claim_branch": "b510875e7b0741b9b19f09429d2204a95df51198",
-        "feature_branch": "2cb3c805bd1590ab3098634d9277d8ad41488f65"
+        "feature_branch": "991a1ec5ae42be72b3e36de12bb47bd3848683ca"
       },
-      "last_observed_head": "2cb3c805bd1590ab3098634d9277d8ad41488f65",
-      "last_checkpoint_at": "2026-09-27T14:18:17.548Z",
+      "last_observed_head": "991a1ec5ae42be72b3e36de12bb47bd3848683ca",
+      "last_checkpoint_at": "2026-09-27T14:20:33.055Z",
       "checkpoint_paths": [
         "src/Controller/AdminGuildRoleNeedController.php",
         "src/Form/GuildRoleNeedInput.php",
@@ -39843,9 +39843,9 @@
         "tests/Controller/AdminGuildRoleNeedControllerTest.php",
         "tests/Controller/PublicGuildRoleNeedDisplayTest.php"
       ],
-      "next_action": "Inspect Worker CI #831 / 36325358213 on exact HEAD 2cb3c805bd1590ab3098634d9277d8ad41488f65. Fix any remaining failure on the same branch, then rerun complete exact-head CI.",
+      "next_action": "Inspect Worker CI #833 / 36325503468 on exact HEAD 991a1ec5ae42be72b3e36de12bb47bd3848683ca. Repair any remaining suite failures on the same branch; require both CI jobs green before releasing the draft PR.",
       "worker_pr_state": "draft",
-      "last_verified_push_at": "2026-09-27T14:18:17.548Z",
+      "last_verified_push_at": "2026-09-27T14:20:33.055Z",
       "ci_result": "in_progress",
       "last_ci_result": "in_progress",
       "ci_attempts": [
@@ -39889,6 +39889,18 @@
           "run_number": 831,
           "head": "2cb3c805bd1590ab3098634d9277d8ad41488f65",
           "base": "b510875e7b0741b9b19f09429d2204a95df51198",
+          "result": "failure",
+          "conclusion": "failure",
+          "phpstan": "success",
+          "phpunit": "failure",
+          "postgresql_18_migrations": "success",
+          "summary": "PHPStan and PostgreSQL 18 migrations passed. PHPUnit completed 545 tests with one error because the disabled-guild/game test created a second KernelBrowser within one test method; moved client creation outside the scenario loop."
+        },
+        {
+          "run_id": 36325503468,
+          "run_number": 833,
+          "head": "991a1ec5ae42be72b3e36de12bb47bd3848683ca",
+          "base": "b510875e7b0741b9b19f09429d2204a95df51198",
           "result": "in_progress"
         }
       ],
@@ -39910,8 +39922,8 @@
       "worker_pr_base_branch": "main",
       "pr_state": "open_draft",
       "draft_pr": true,
-      "ci_run_id": 36325358213,
-      "last_ci_run_id": 36325358213
+      "ci_run_id": 36325503468,
+      "last_ci_run_id": 36325503468
     },
     {
       "priority": 542,
