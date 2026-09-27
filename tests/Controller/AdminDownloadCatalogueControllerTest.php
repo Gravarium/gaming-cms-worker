@@ -72,13 +72,19 @@ final class AdminDownloadCatalogueControllerTest extends WebTestCase
         $this->ensureDownloadsEnabled($client);
         $client->loginUser($this->user($client, [CmsPermission::STORAGE]));
 
-        $client->request('GET', '/admin/downloads/new');
-        $client->submitForm('Paket anlegen', [
-            'download_package[title]' => 'Invalid package',
-            'download_package[slug]' => 'Invalid slug',
-            'download_package[type]' => 'unexpected',
-            'download_package[visibility]' => 'public',
-            'download_package[enabled]' => '1',
+        $crawler = $client->request('GET', '/admin/downloads/new');
+        $csrfToken = $crawler->filter('input[name="download_package[_token]"]')->attr('value');
+        self::assertIsString($csrfToken);
+
+        $client->request('POST', '/admin/downloads/new', [
+            'download_package' => [
+                'title' => 'Invalid package',
+                'slug' => 'Invalid slug',
+                'type' => 'unexpected',
+                'visibility' => 'public',
+                'enabled' => '1',
+                '_token' => $csrfToken,
+            ],
         ]);
 
         self::assertResponseStatusCodeSame(422);
@@ -106,7 +112,7 @@ final class AdminDownloadCatalogueControllerTest extends WebTestCase
 
         self::assertResponseStatusCodeSame(422);
         self::assertSelectorTextContains('body', 'A package with this slug already exists.');
-        self::assertSame(1, $this->packages($client)->count([]));
+        self::assertCount(1, $this->packages($client)->findBy(['slug' => 'shared-download']));
     }
 
     public function testMissingAndForgedCsrfTokensCannotCreatePackages(): void
@@ -132,7 +138,7 @@ final class AdminDownloadCatalogueControllerTest extends WebTestCase
             $client->request('POST', '/admin/downloads/new', ['download_package' => $payload]);
 
             self::assertResponseStatusCodeSame(422);
-            self::assertSame(0, $this->packages($client)->count([]));
+            self::assertCount(0, $this->packages($client)->findBy(['slug' => 'csrf-package']));
         }
     }
 
