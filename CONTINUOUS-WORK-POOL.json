@@ -17,7 +17,7 @@
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-519 repaired the SQLite fixture after run 36314471204 exposed the migration-managed notification_subscription table; validate exact HEAD 81808a56444b97c5d699079593ceae313b4aec62.",
+    "next_required_action": "WCP-519 fixture repair is on exact HEAD 81808a56444b97c5d699079593ceae313b4aec62; Worker CI run 36314647178 is in progress.",
     "composition_preparable": 0,
     "immediately_actionable": 21,
     "must_continue": true
@@ -36034,13 +36034,13 @@
         "claim_branch": "b510875e7b0741b9b19f09429d2204a95df51198",
         "feature_branch": "81808a56444b97c5d699079593ceae313b4aec62"
       },
-      "next_action": "The initial run failed because the SQLite test schema omitted the migration-managed subscription table. The test now creates a temporary table only when absent and drops it in finally. Validate the new exact HEAD.",
+      "next_action": "Monitor exact-head Worker CI run 36314647178 for HEAD 81808a56444b97c5d699079593ceae313b4aec62; repair only a concrete failure within the dedicated test file.",
       "checkpoint_paths": [
         "tests/Controller/NotificationPreferences/NotificationSubscriptionOwnershipTest.php"
       ],
       "last_observed_head": "81808a56444b97c5d699079593ceae313b4aec62",
-      "last_checkpoint_at": "2026-09-27T11:06:18.513Z",
-      "last_verified_push_at": "2026-09-27T11:06:18.513Z",
+      "last_checkpoint_at": "2026-09-27T11:06:42.190Z",
+      "last_verified_push_at": "2026-09-27T11:06:42.190Z",
       "worker_pr": 309,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/309",
       "draft_pr": true,
@@ -36049,16 +36049,21 @@
       "worker_pr_changed_paths": [
         "tests/Controller/NotificationPreferences/NotificationSubscriptionOwnershipTest.php"
       ],
-      "ci_run_id": 36314471204,
-      "last_ci_run_id": 36314471204,
-      "ci_result": "failure",
-      "last_ci_result": "failure",
+      "ci_run_id": 36314647178,
+      "last_ci_run_id": 36314647178,
+      "ci_result": "in_progress",
+      "last_ci_result": "in_progress",
       "ci_attempts": [
         {
           "run_id": 36314471204,
           "head": "12b17d208ea55044d4e2a24155b724d00ea5d6c5",
           "result": "failure",
           "summary": "The SQLite test database is built from ORM entities, but notification_subscription is migration-managed; the test now creates a portable temporary table when absent and drops it in finally."
+        },
+        {
+          "run_id": 36314647178,
+          "head": "81808a56444b97c5d699079593ceae313b4aec62",
+          "result": "in_progress"
         }
       ]
     }
