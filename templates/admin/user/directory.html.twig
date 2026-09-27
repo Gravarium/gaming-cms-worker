@@ -1,0 +1,82 @@
+{% extends 'base.html.twig' %}
+{% block title %}Benutzerverzeichnis | Gaming CMS{% endblock %}
+
+{% block body %}
+<header class="topbar">
+    <a class="brand" href="{{ path('app_admin_dashboard') }}">Gaming CMS</a>
+    <nav class="top-actions" aria-label="Benutzerverwaltung">
+        <a class="button-link button-secondary" href="{{ path('app_admin_user_index') }}">Zur Benutzerliste</a>
+        <a class="button-link" href="{{ path('app_admin_user_new') }}">Neuer Benutzer</a>
+        <a class="button-link button-secondary" href="{{ path('app_admin_dashboard') }}">Übersicht</a>
+    </nav>
+</header>
+
+<main class="dashboard">
+    <p class="eyebrow">Administration</p>
+    <h1>Vollständiges Benutzerverzeichnis</h1>
+    <p class="muted">Durchsuche alle Benutzerkonten und öffne vorhandene Verwaltungsseiten.</p>
+
+    <form method="get" action="{{ path('app_admin_user_directory') }}" class="media-filters" role="search">
+        <label for="user-directory-search"><span>Suche</span><input id="user-directory-search" type="search" name="q" value="{{ query }}" maxlength="180" placeholder="Name oder E-Mail"></label>
+        <label for="user-directory-state">
+            <span>Status</span>
+            <select id="user-directory-state" name="state">
+                <option value="" {{ state is null ? 'selected' }}>Alle</option>
+                <option value="active" {{ state == 'active' ? 'selected' }}>Aktiv</option>
+                <option value="locked" {{ state == 'locked' ? 'selected' }}>Gesperrt</option>
+                <option value="unverified" {{ state == 'unverified' ? 'selected' }}>E-Mail offen</option>
+            </select>
+        </label>
+        <input type="hidden" name="page" value="1">
+        <button type="submit">Filtern</button>
+        <a class="button-link button-secondary" href="{{ path('app_admin_user_directory') }}">Zurücksetzen</a>
+    </form>
+
+    <p class="muted" role="status" aria-live="polite">
+        {{ total }} {{ total == 1 ? 'Benutzerkonto' : 'Benutzerkonten' }} · Seite {{ currentPage }} von {{ pageCount }}
+    </p>
+
+    {% if users is empty %}
+        <p class="notice">Keine passenden Benutzerkonten gefunden.</p>
+    {% else %}
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr><th>Name</th><th>E-Mail</th><th>Zugriff</th><th>Sicherheit</th><th>Aktivität</th><th>Aktion</th></tr>
+                </thead>
+                <tbody>
+                    {% for user in users %}
+                        <tr data-user-id="{{ user.id }}">
+                            <td>{{ user.displayName }}{% if app.user == user %} <span class="muted">(du)</span>{% endif %}</td>
+                            <td>{{ user.email }}<br><span class="status {{ user.emailVerified ? 'status-ready' : 'status-disabled' }}">{{ user.emailVerified ? 'Bestätigt' : 'Offen' }}</span></td>
+                            <td>{% if user.admin %}<strong>Volladministrator</strong>{% else %}{% for role in user.accessRoles %}<span class="status">{{ role.name }}</span> {% endfor %}{% if user.permissions %}<small>+ {{ user.permissions|length }} Einzelrecht(e)</small>{% endif %}{% if user.accessRoles is empty and user.permissions is empty %}Gildenmitglied{% endif %}{% endif %}</td>
+                            <td><span class="status {{ user.twoFactorEnabled ? 'status-ready' : 'status-disabled' }}">2FA {{ user.twoFactorEnabled ? 'aktiv' : 'aus' }}</span>{% if user.locked %}<br><span class="status status-disabled">Gesperrt bis {{ user.lockedUntil|date('d.m.Y H:i') }} Uhr</span>{% endif %}</td>
+                            <td><span class="status {{ user.active and not user.locked ? 'status-ready' : 'status-disabled' }}">{{ user.active ? (user.locked ? 'Zeitweise gesperrt' : 'Aktiv') : 'Deaktiviert' }}</span><br><small>{{ user.lastSeenAt ? 'Zuletzt ' ~ user.lastSeenAt|date('d.m.Y H:i') ~ ' Uhr' : 'Noch keine Aktivität' }}</small></td>
+                            <td class="row-actions">
+                                {% if canManageAdmins or not user.admin %}
+                                    <a href="{{ path('app_admin_user_edit', {id: user.id}) }}">Bearbeiten</a>
+                                    <a href="{{ path('app_admin_user_sessions', {id: user.id}) }}">Sitzungen</a>
+                                {% else %}
+                                    <span class="muted">Nur Volladministrator</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% endif %}
+
+    {% if pageCount > 1 %}
+        <nav class="top-actions" aria-label="Seitennavigation">
+            {% if currentPage > 1 %}
+                <a rel="prev" href="{{ path('app_admin_user_directory', {q: query, state: state, page: currentPage - 1}) }}">Vorherige Seite</a>
+            {% endif %}
+            <span aria-current="page">Seite {{ currentPage }} von {{ pageCount }}</span>
+            {% if currentPage < pageCount %}
+                <a rel="next" href="{{ path('app_admin_user_directory', {q: query, state: state, page: currentPage + 1}) }}">Nächste Seite</a>
+            {% endif %}
+        </nav>
+    {% endif %}
+</main>
+{% endblock %}
