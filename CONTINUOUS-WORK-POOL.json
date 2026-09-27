@@ -10,7 +10,7 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T02:05:27.111Z",
+  "published_at": "2026-09-27T02:22:42.469Z",
   "summary": {
     "total_remaining_worker_tasks": 140,
     "completed_worker_prs_awaiting_trusted_review": 221,
@@ -25901,16 +25901,21 @@
       "claim_state": "active",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "66898d430ff01dbaf596b08e564dad482d66d0ed",
       "resume_branch": "feature/wcp-452-admin-queue-pagination-g1",
-      "last_checkpoint_at": "2026-09-27T02:05:27.111Z",
-      "last_verified_push_at": "2026-09-27T02:05:27.111Z",
-      "checkpoint_paths": [],
+      "last_checkpoint_at": "2026-09-27T02:22:42.469Z",
+      "last_verified_push_at": "2026-09-27T02:22:42.469Z",
+      "checkpoint_paths": [
+        "src/Controller/AdminQueueController.php",
+        "src/Messenger/FailedMessagePaginator.php",
+        "templates/admin/queue/index.html.twig",
+        "tests/Controller/AdminQueuePaginationTest.php"
+      ],
       "branch_heads": {
         "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-        "feature_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d"
+        "feature_branch": "66898d430ff01dbaf596b08e564dad482d66d0ed"
       },
-      "next_action": "Create and verify both exact claim and feature refs from the recorded sanitized-main base, then implement. Push a coherent checkpoint within 30 minutes."
+      "next_action": "Open a draft Worker PR to run complete exact-head CI, inspect any red job, and fix findings on this feature branch."
     },
     {
       "priority": 453,
