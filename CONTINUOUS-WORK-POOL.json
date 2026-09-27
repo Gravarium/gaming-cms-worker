@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T10:11:22.805Z",
+  "published_at": "2026-09-27T10:12:02.498Z",
   "summary": {
     "total_remaining_worker_tasks": 162,
     "completed_worker_prs_awaiting_trusted_review": 269,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-509 is actively claimed on its exclusive feature branch; implement the public competition calendar and continue through exact-head Worker CI.",
+    "next_required_action": "WCP-508 has a draft Worker PR and exact-head CI is running; finish validation and reconcile the pool before moving on.",
     "composition_preparable": 0,
     "immediately_actionable": 17,
     "must_continue": true
@@ -34474,16 +34474,42 @@
       "claim_state": "active",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "8d7d5e02f491bc639216311f0687262de9eca446",
       "resume_branch": "feature/wcp-508-faq-widget-g1",
       "branch_heads": {
         "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-        "feature_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d"
+        "feature_branch": "8d7d5e02f491bc639216311f0687262de9eca446"
       },
-      "last_observed_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-      "last_checkpoint_at": "2026-09-27T10:08:05.178Z",
-      "checkpoint_paths": [],
-      "next_action": "Implement the bounded core.faq provider and safe native disclosure template, then add focused kernel/Twig coverage within the three allowed paths and checkpoint the remote feature branch before full exact-head Worker CI."
+      "last_observed_head": "8d7d5e02f491bc639216311f0687262de9eca446",
+      "last_checkpoint_at": "2026-09-27T10:12:02.498Z",
+      "checkpoint_paths": [
+        "src/Widget/FaqWidgetProvider.php",
+        "templates/widget/faq.html.twig",
+        "tests/Widget/FaqWidgetProviderTest.php"
+      ],
+      "next_action": "Draft Worker PR #301 is open at exact HEAD 8d7d5e02f491bc639216311f0687262de9eca446; wait for run 36311739079, repair any concrete failure on this branch, and rerun full exact-head CI.",
+      "last_verified_push_at": "2026-09-27T10:12:02.498Z",
+      "worker_pr": 301,
+      "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/301",
+      "draft_pr": true,
+      "pr_state": "open",
+      "ci_run_id": 36311739079,
+      "last_ci_run_id": 36311739079,
+      "ci_result": "in_progress",
+      "last_ci_result": "in_progress",
+      "ci_attempts": [
+        {
+          "run_id": 36311739079,
+          "head": "8d7d5e02f491bc639216311f0687262de9eca446",
+          "result": "in_progress",
+          "summary": "Exact-head Worker CI is running; await PHP/Symfony tests, PHPStan and PostgreSQL 18 migration-chain validation."
+        }
+      ],
+      "worker_pr_changed_paths": [
+        "src/Widget/FaqWidgetProvider.php",
+        "templates/widget/faq.html.twig",
+        "tests/Widget/FaqWidgetProviderTest.php"
+      ]
     },
     {
       "priority": 509,
