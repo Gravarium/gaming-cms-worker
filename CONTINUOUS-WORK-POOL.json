@@ -10,7 +10,7 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T02:49:22.204Z",
+  "published_at": "2026-09-27T02:49:48.657Z",
   "summary": {
     "total_remaining_worker_tasks": 140,
     "completed_worker_prs_awaiting_trusted_review": 224,
@@ -26356,7 +26356,7 @@
       "suggested_branch": "feature/wcp-456-admin-content-release-browser-g1",
       "base_branch": "main",
       "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-      "objective": "Complete the existing CMS_CONTENT_MANAGE-protected Content-Releases screen for libraries with long release histories. The current index loads every release without search or navigation. Add bounded name search, a validated status filter, stable 25-row pagination and state-preserving edit/publish/delete navigation. Keep the existing release entity, form, repository, schema, CSRF checks and finalized-release rules unchanged.",
+      "objective": "Complete the existing CMS_CONTENT_MANAGE-protected Content-Releases screen for long release histories. The current index loads every release without search or navigation and offers a publish action for cancelled releases. Add bounded name search, a validated status filter, stable 25-row pagination and state-preserving edit/publish/delete navigation. Do not offer an impossible publish action for cancelled releases; report a domain-rejected empty-release publication without changing release state. Keep the existing release entity, form, repository, schema, CSRF checks and finalized-release rules unchanged.",
       "allowed_paths": [
         "src/Controller/AdminContentReleaseController.php",
         "src/ContentRelease/AdminContentReleaseBrowser.php",
@@ -26388,13 +26388,15 @@
         "Add a module-scoped read service that projects only release ID, name, status, entry count and schedule/publication times; support a trimmed name search of at most 100 characters and one allowlisted status among draft, scheduled, published and cancelled.",
         "Return at most 25 releases ordered by createdAt DESC then ID DESC, with total/page counts and result bounds; validate canonical bounded positive page input, reject malformed query arrays/scalars/overflow with a generic 400 response that does not echo input, and clamp valid past-end pages.",
         "Render search/status controls, result counts, previous/next links and per-release actions while preserving current search, status and page through edit, publish, delete and their redirects.",
+        "Do not show a publish action for cancelled releases. When publishing fails because the release has no publishable entries, show the existing domain error and preserve the release's current state.",
         "Keep CMS_CONTENT_MANAGE authorization, existing publish/delete CSRF tokens, ContentRelease workflow semantics and finalized release protections. Do not change schema, entities, form type or ContentReleaseRepository."
       ],
       "tests": [
         "Functional tests verify users without CMS_CONTENT_MANAGE are denied and authorized editors can browse the release list.",
         "Create more than two pages of releases and assert stable ordering, no missing/duplicate IDs, correct page counts, last-page clamping, search and status filtering, and preservation of filters in navigation and row actions.",
         "Reject malformed page/status/search arrays and scalars, zero, leading zero, overlong search and overflowing page values with a client error that does not echo the supplied text and does not mutate releases.",
-        "Exercise edit form context and a CSRF-protected release action; assert the query context returns to the same listing and invalid CSRF leaves release state unchanged.",
+        "Exercise edit form context, invalid-CSRF and valid delete/publish boundaries; assert filters return to the same listing and rejected or invalid publish leaves release state unchanged.",
+        "Assert cancelled releases have no publish action and that publishing an empty release reports a user-safe domain error instead of a server error.",
         "Run the focused test, PHPStan level 8 and complete Worker CI on the exact final HEAD, including PostgreSQL 18 migration-chain checks."
       ],
       "completion_report": [
@@ -26413,7 +26415,8 @@
         "do-not-edit-ContentReleaseRepository-locked-by-WCP-402",
         "no-schema-migration-or-failure-transport-change",
         "red-ci-stops-integration",
-        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment",
+        "preserve-release-status-when-publish-is-domain-rejected"
       ],
       "proposal_base_branch": "main",
       "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
@@ -26443,7 +26446,7 @@
       },
       "last_checkpoint_at": "2026-09-27T02:45:54.916Z",
       "last_verified_push_at": "2026-09-27T02:45:54.916Z",
-      "next_action": "Implement the read-only Admin Content Release browser, validated search/status filters and stable pagination; preserve listing context through actions and push the first coherent checkpoint within 30 minutes."
+      "next_action": "Implement the read-only Admin Content Release browser, validated search/status filters and stable pagination; preserve action context and release state, then push a coherent checkpoint within 30 minutes."
     },
     {
       "priority": 457,
