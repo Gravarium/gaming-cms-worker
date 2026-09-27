@@ -184,7 +184,9 @@ final class AdminGameGuideControllerTest extends WebTestCase
             self::assertResponseIsSuccessful();
             self::assertStringContainsString('arcane-barrage', (string) $client->getResponse()->getContent());
             $invalidEditForm = $crawler->selectButton('Entwurf speichern')->form(['tier_entries_json' => 'not-json']);
-            $crawler = $client->submit($invalidEditForm);
+            $invalidEditValues = $invalidEditForm->getValues();
+            $invalidEditValues['id'] = '999';
+            $crawler = $client->request('POST', '/admin/gaming/guides/'.$id.'/edit', $invalidEditValues);
             self::assertResponseStatusCodeSame(422);
             self::assertSelectorExists('form[action="/admin/gaming/guides/'.$id.'/edit"]');
             self::assertSame($title, $connection->fetchOne('SELECT title FROM game_guide WHERE id = :id', ['id' => $id]));
@@ -408,6 +410,15 @@ final class AdminGameGuideControllerTest extends WebTestCase
             $form = $crawler->selectButton('Entwurf speichern')->form($fields);
             $client->submit($form);
             self::assertResponseStatusCodeSame(422);
+            self::assertSame(0, (int) $connection->fetchOne('SELECT COUNT(*) FROM game_guide WHERE title = :title', ['title' => $fields['title']]));
+
+            $crawler = $client->request('GET', '/admin/gaming/guides/new');
+            $form = $crawler->selectButton('Entwurf speichern')->form($fields);
+            $forgedIdValues = $form->getValues();
+            $forgedIdValues['id'] = '999';
+            $client->request('POST', '/admin/gaming/guides/new', $forgedIdValues);
+            self::assertResponseStatusCodeSame(422);
+            self::assertSelectorExists('form[action="/admin/gaming/guides/new"]');
             self::assertSame(0, (int) $connection->fetchOne('SELECT COUNT(*) FROM game_guide WHERE title = :title', ['title' => $fields['title']]));
         } finally {
             $this->cleanup($client, $guideIds, [$readerId, $authorId], [$gameId]);
