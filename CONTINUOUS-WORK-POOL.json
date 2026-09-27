@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T07:41:32.164Z",
+  "published_at": "2026-09-27T07:42:27.255Z",
   "summary": {
     "total_remaining_worker_tasks": 141,
     "completed_worker_prs_awaiting_trusted_review": 249,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-483 implementation is checkpointed at exact feature HEAD c96ab27ecd1b7855c66cc5656775924b45011972. Open a draft Worker PR for exact-head CI, repair concrete findings on the same branch, and preserve all other claims.",
+    "next_required_action": "WCP-483 draft PR #276 is running Worker CI 36303901139 on exact HEAD c96ab27ecd1b7855c66cc5656775924b45011972. Inspect both jobs; repair concrete findings on the same branch and keep the PR draft until all checks pass.",
     "composition_preparable": 0,
     "immediately_actionable": 4,
     "must_continue": true
@@ -30785,7 +30785,7 @@
         ]
       },
       "published_at": "2026-09-27T07:29:07.532Z",
-      "next_action": "Open a draft Worker PR from feature/wcp-483-content-tag-merge-g1 and run complete Worker CI on exact HEAD c96ab27ecd1b7855c66cc5656775924b45011972; inspect and fix any concrete findings on this branch.",
+      "next_action": "Inspect both jobs in Worker CI run 36303901139 on exact HEAD c96ab27ecd1b7855c66cc5656775924b45011972; fix concrete findings on the same branch and rerun full CI.",
       "claim_state": "active",
       "claimed_on": "2026-09-27T07:30:00.468Z",
       "active_base_branch": "main",
@@ -30797,14 +30797,36 @@
         "feature_branch": "c96ab27ecd1b7855c66cc5656775924b45011972"
       },
       "last_observed_head": "c96ab27ecd1b7855c66cc5656775924b45011972",
-      "last_checkpoint_at": "2026-09-27T07:41:32.164Z",
-      "last_verified_push_at": "2026-09-27T07:41:32.164Z",
+      "last_checkpoint_at": "2026-09-27T07:42:27.255Z",
+      "last_verified_push_at": "2026-09-27T07:42:27.255Z",
       "checkpoint_paths": [
         "src/Controller/AdminContentTagMergeController.php",
         "src/Form/ContentTagMergeType.php",
         "templates/admin/content_tag/index.html.twig",
         "templates/admin/content_tag/merge.html.twig",
         "tests/Controller/AdminContentTagMergeTest.php"
+      ],
+      "worker_pr": 276,
+      "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/276",
+      "worker_pr_changed_paths": [
+        "src/Controller/AdminContentTagMergeController.php",
+        "src/Form/ContentTagMergeType.php",
+        "templates/admin/content_tag/index.html.twig",
+        "templates/admin/content_tag/merge.html.twig",
+        "tests/Controller/AdminContentTagMergeTest.php"
+      ],
+      "ci_run_id": 36303901139,
+      "last_ci_run_id": 36303901139,
+      "ci_result": "in_progress",
+      "last_ci_result": "in_progress",
+      "draft_pr": true,
+      "pr_state": "open_draft_ci_pending",
+      "ci_attempts": [
+        {
+          "run_id": 36303901139,
+          "head": "c96ab27ecd1b7855c66cc5656775924b45011972",
+          "result": "in_progress"
+        }
       ]
     }
   ],
