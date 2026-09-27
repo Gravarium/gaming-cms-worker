@@ -26,15 +26,6 @@ final readonly class PublicGameCatalogueWidgetProvider implements WidgetProvider
                 'Spielekatalog',
                 'gaming',
                 'widget/public_game_catalogue.html.twig',
-                settings: [
-                    'count' => [
-                        'label' => 'Anzahl Spiele',
-                        'type' => 'int',
-                        'default' => PublicGameCatalogueQuery::DEFAULT_LIMIT,
-                        'min' => 1,
-                        'max' => PublicGameCatalogueQuery::MAX_ITEMS,
-                    ],
-                ],
             ),
         ];
     }
