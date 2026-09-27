@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T18:18:25.993Z",
+  "published_at": "2026-09-27T18:22:30.090Z",
   "summary": {
     "total_remaining_worker_tasks": 169,
-    "completed_worker_prs_awaiting_trusted_review": 295,
+    "completed_worker_prs_awaiting_trusted_review": 296,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-565 PR #359 is open as draft; exact-head Worker CI #910 / 36340137541 is running.",
+    "next_required_action": "WCP-565 PR #359 is ready for Trusted review with exact-head CI #910 / 36340137541 green. Re-evaluate all unclaimed dependencies and continue with an independent worker-only proposal if none is eligible.",
     "composition_preparable": 0,
     "immediately_actionable": 29,
     "must_continue": true
@@ -45227,7 +45227,7 @@
       "package_id": "WCP-565",
       "title": "Validate pagination inputs for public page categories",
       "risk": "medium",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -45298,7 +45298,7 @@
       },
       "published_at": "2026-09-27T18:15:48.780Z",
       "claimed_on": "2026-09-27T18:15:48.780Z",
-      "claim_state": "active",
+      "claim_state": "locked_until_trusted_resolution",
       "active_base_branch": "main",
       "active_base_sha": "7b2ca79405fc12d34bce1386157e929e4668f31a",
       "active_head": "c7136f0f07fa744bcdbd0f986e39e6d0e6fd9d81",
@@ -45308,40 +45308,42 @@
         "feature_branch": "c7136f0f07fa744bcdbd0f986e39e6d0e6fd9d81"
       },
       "last_observed_head": "c7136f0f07fa744bcdbd0f986e39e6d0e6fd9d81",
-      "last_checkpoint_at": "2026-09-27T18:18:25.993Z",
+      "last_checkpoint_at": "2026-09-27T18:22:30.090Z",
       "checkpoint_paths": [
         "src/Controller/PublicPageCategoryArchiveController.php",
         "tests/Controller/PublicPageCategoryArchiveTest.php"
       ],
-      "next_action": "Wait for exact-head Worker CI #910 / 36340137541; repair any code failure before marking PR #359 ready.",
-      "last_verified_push_at": "2026-09-27T18:18:25.993Z",
+      "next_action": "Await Trusted review and independent validation of PR #359; do not merge or deploy from the Worker repository.",
+      "last_verified_push_at": "2026-09-27T18:22:30.090Z",
       "worker_pr": 359,
-      "worker_pr_state": "draft",
+      "worker_pr_state": "ready_for_review",
       "worker_pr_changed_paths": [
         "src/Controller/PublicPageCategoryArchiveController.php",
         "tests/Controller/PublicPageCategoryArchiveTest.php"
       ],
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/359",
       "pr_state": "open",
-      "draft_pr": true,
+      "draft_pr": false,
       "worker_pr_base_branch": "main",
       "worker_pr_base_sha": "7b2ca79405fc12d34bce1386157e929e4668f31a",
-      "ci_result": "pending",
+      "ci_result": "success",
       "ci_attempts": [
         {
           "run_id": 36340137541,
           "run_number": 910,
           "head": "c7136f0f07fa744bcdbd0f986e39e6d0e6fd9d81",
           "base": "7b2ca79405fc12d34bce1386157e929e4668f31a",
-          "result": "pending",
+          "result": "success",
           "validation_pr": 359,
-          "conclusion": null
+          "conclusion": "success"
         }
       ],
       "ci_run_id": 36340137541,
       "last_ci_run_id": 36340137541,
-      "last_ci_result": "pending",
-      "ci_validation_pr": 359
+      "last_ci_result": "success",
+      "ci_validation_pr": 359,
+      "completed_at": "2026-09-27T18:22:30.090Z",
+      "worker_completion_summary": "Exact-head Worker CI #910 / 36340137541 passed on c7136f0f07fa744bcdbd0f986e39e6d0e6fd9d81: 736 tests, 4,641 assertions, 0 failures/errors (1 deprecation, 3 notices); PHPStan reported no errors; PostgreSQL 18 applied 57 migrations with 878 SQL queries. PR #359 is open and ready for Trusted review, based on main@7b2ca79405fc12d34bce1386157e929e4668f31a, with exactly two allowlisted paths."
     }
   ],
   "recovery_queue": [],
