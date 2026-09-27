@@ -10,7 +10,7 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T10:52:42.182Z",
+  "published_at": "2026-09-27T10:55:14.083Z",
   "summary": {
     "total_remaining_worker_tasks": 165,
     "completed_worker_prs_awaiting_trusted_review": 275,
@@ -35658,17 +35658,24 @@
       "claim_state": "active",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "402036adc20b5db90c0ebeba9d540a89124b0c02",
       "resume_branch": "feature/wcp-516-video-search-g1",
       "branch_heads": {
         "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-        "feature_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d"
+        "feature_branch": "402036adc20b5db90c0ebeba9d540a89124b0c02"
       },
-      "last_observed_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-      "last_checkpoint_at": "2026-09-27T10:49:18.394Z",
-      "checkpoint_paths": [],
-      "next_action": "Implement the public Video-module search widget and results workflow on the exclusive feature branch; checkpoint coherent commits and record every exact HEAD in the Pool.",
-      "last_verified_push_at": "2026-09-27T10:49:18.394Z"
+      "last_observed_head": "402036adc20b5db90c0ebeba9d540a89124b0c02",
+      "last_checkpoint_at": "2026-09-27T10:55:14.083Z",
+      "checkpoint_paths": [
+        "config/packages/twig.yaml",
+        "src/Controller/PublicVideoSearchController.php",
+        "src/Repository/PublicVideoSearchRepository.php",
+        "src/Widget/VideoSearchWidgetProvider.php",
+        "src/VideoSearch/Templates/widget/video_search.html.twig",
+        "src/VideoSearch/Templates/video_search/index.html.twig"
+      ],
+      "next_action": "Production workflow checkpoint is on 402036adc20b5db90c0ebeba9d540a89124b0c02. Add focused controller and widget functional tests, then lint the source-owned Twig path and run exact-head Worker CI.",
+      "last_verified_push_at": "2026-09-27T10:55:14.083Z"
     },
     {
       "priority": 517,
