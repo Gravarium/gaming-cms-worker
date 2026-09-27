@@ -10,16 +10,16 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T01:14:30.870Z",
+  "published_at": "2026-09-27T01:19:51.852Z",
   "summary": {
-    "total_remaining_worker_tasks": 139,
+    "total_remaining_worker_tasks": 140,
     "completed_worker_prs_awaiting_trusted_review": 213,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-444 is complete with exact-head Worker CI and awaits Trusted review; re-evaluate the remaining unclaimed FCP dependencies, then continue an independent bounded Worker proposal.",
+    "next_required_action": "WCP-446 is reserved on exact sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d for settings authorization and CSRF non-mutation tests.",
     "composition_preparable": 0,
-    "immediately_actionable": 3,
+    "immediately_actionable": 4,
     "must_continue": true
   },
   "rules": {
@@ -24823,6 +24823,94 @@
         "feature_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d"
       },
       "next_action": "Implement the protected read-only paginated directory on the reserved feature branch; checkpoint the complete behavior and negative tests before full CI."
+    },
+    {
+      "priority": 446,
+      "package_id": "WCP-446",
+      "title": "Protect website settings updates with authorization and CSRF tests",
+      "risk": "medium",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-446-site-settings-security-g1",
+      "suggested_branch": "feature/wcp-446-site-settings-security-g1",
+      "base_branch": "main",
+      "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "objective": "Add functional regression coverage for the existing website settings form: deny users without CMS_SETTINGS_MANAGE and prove missing or invalid CSRF tokens cannot persist an otherwise valid settings payload. Change tests only; do not exercise uploads or external media URLs.",
+      "allowed_paths": [
+        "tests/Controller/AdminSettingsSecurityTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "src/",
+        "templates/",
+        "migrations/",
+        "config/",
+        "public/uploads/"
+      ],
+      "deliverables": [
+        "An authenticated CMS_CONTENT_MANAGE-only user is denied access to /admin/settings.",
+        "Missing and invalid settings-form CSRF tokens are rejected with no persisted SiteSettings changes when all submitted fields are otherwise valid.",
+        "Any synthetic user and accidental test-created settings rows are removed; pre-existing settings are restored.",
+        "No settings controller, form, template, upload, storage or schema behavior is changed."
+      ],
+      "tests": [
+        "Targeted AdminSettingsSecurityTest functional coverage.",
+        "PHPStan level 8 and complete Worker CI on the exact final HEAD.",
+        "PostgreSQL 18 complete migration-chain checks."
+      ],
+      "completion_report": [
+        "Exact sanitized main base SHA and final Worker HEAD SHA.",
+        "Complete changed-path list and Worker PR.",
+        "Authorization, missing/invalid CSRF and persisted-settings non-mutation results.",
+        "Exact-head PHPUnit, PHPStan and full Worker CI results.",
+        "Any remaining Trusted integration work."
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "preserve-CMS_SETTINGS_MANAGE-and-settings-form-CSRF",
+        "invalid or absent CSRF must not persist site settings",
+        "do not add upload, external URL, private-runtime or schema behavior",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "proposal_kind": "worker_only",
+      "proposal_dependency_evidence": [],
+      "collision_check": {
+        "compared_against": "Fresh continuous/work-pool-v4 blob 5dc904a712d6e5ca8254775e5b518236ecd1a8d4, all active and claim-locked allowlists, and worker/main @ f1a246c64527ef3ad51f7490773d9bbf9d42be5d.",
+        "result": "No active or claim-locked task owns or overlaps tests/Controller/AdminSettingsSecurityTest.php. The path is absent from exact worker/main. Search for app_admin_settings finds the controller and UI templates but no settings functional test. WCP-445 owns disjoint user-directory code and tests; current active and locked claims otherwise have no overlapping path.",
+        "paths": [
+          "tests/Controller/AdminSettingsSecurityTest.php"
+        ]
+      },
+      "claimed_on": "2026-09-27T01:19:51.852Z",
+      "claim_state": "active",
+      "active_base_branch": "main",
+      "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "resume_branch": "feature/wcp-446-site-settings-security-g1",
+      "last_checkpoint_at": "2026-09-27T01:19:51.852Z",
+      "checkpoint_paths": [],
+      "branch_heads": {
+        "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+        "feature_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d"
+      },
+      "next_action": "Create claim/wcp-446-site-settings-security-g1 and feature/wcp-446-site-settings-security-g1 from exact sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d; add settings authorization and CSRF non-mutation regressions only in tests/Controller/AdminSettingsSecurityTest.php, then open a draft Worker PR for exact-head CI."
     }
   ],
   "recovery_queue": [],
