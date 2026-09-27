@@ -10,16 +10,16 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T10:00:22.287Z",
+  "published_at": "2026-09-27T10:02:32.498Z",
   "summary": {
-    "total_remaining_worker_tasks": 157,
+    "total_remaining_worker_tasks": 158,
     "completed_worker_prs_awaiting_trusted_review": 266,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-501 is complete with green exact-head Worker CI and locked for Trusted review; re-evaluate dependency-safe FCPs, then publish and claim the next independent worker-only CMS proposal if all are blocked.",
+    "next_required_action": "WCP-506 is actively claimed from exact sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d; implement the public guild event schedule and complete exact-head Worker CI. Keep all foreign claims and branches untouched.",
     "composition_preparable": 0,
-    "immediately_actionable": 14,
+    "immediately_actionable": 15,
     "must_continue": true
   },
   "rules": {
@@ -33920,6 +33920,123 @@
       "checkpoint_paths": [],
       "next_action": "Implement the new call-to-action provider and its dedicated template, then add functional coverage through the existing layout editor preview. Push a coherent checkpoint and run full exact-head Worker CI.",
       "last_verified_push_at": "2026-09-27T10:00:17.122Z"
+    },
+    {
+      "priority": 506,
+      "package_id": "WCP-506",
+      "title": "Expose the public guild event schedule",
+      "risk": "low",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-506-public-guild-events-g1",
+      "suggested_branch": "feature/wcp-506-public-guild-events-g1",
+      "base_branch": "main",
+      "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "objective": "Complete the public event surface of the existing guild collaboration module. Guild events can already be created, edited, cancelled and attended from administration, but public guild pages expose no upcoming schedule. Add an anonymous GET-only /gaming/guild/{slug}/events page that resolves only a public enabled guild and lists its planned events from the existing upcoming-event query. Keep past, cancelled and completed events out, expose no member signups or private management data, and let the existing app_guild module route gate fail closed when Gaming is disabled.",
+      "allowed_paths": [
+        "src/Controller/PublicGuildEventController.php",
+        "templates/gaming/events.html.twig",
+        "tests/Controller/PublicGuildEventTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/",
+        "assets/",
+        "public/",
+        "src/Entity/",
+        "src/Form/",
+        "src/Repository/",
+        "src/Controller/GamingController.php",
+        "src/Controller/AdminGuildCollaborationController.php",
+        "src/Controller/GuildApplicationStatusController.php",
+        "src/Module/CmsModuleCatalog.php",
+        "templates/base.html.twig",
+        "templates/layout/",
+        "templates/gaming/index.html.twig",
+        "templates/gaming/show.html.twig",
+        "templates/gaming/apply.html.twig",
+        "templates/gaming/applications.html.twig",
+        "templates/admin/gaming/",
+        "tests/Controller/Guild/"
+      ],
+      "deliverables": [
+        "GET /gaming/guild/{slug}/events is a public, read-only page for an enabled guild whose game is enabled.",
+        "The page lists only events returned by GuildEventRepository::upcomingForGuild, with title, type, start/end, description, location and optional participant limit; signup/attendance data is not exposed.",
+        "Past, cancelled, completed, foreign-guild and disabled-guild/game events are absent; a public guild with no upcoming events has a clear empty state.",
+        "Missing or non-public guilds return 404, and disabling the gaming module makes the route unavailable through the existing app_guild route-prefix gate.",
+        "Existing guild administration, public guild detail/application pages, event persistence, signup flow and schema remain unchanged."
+      ],
+      "tests": [
+        "Focused WebTestCase coverage creates public/disabled/foreign guild and planned/cancelled/done/past event fixtures, verifies the public list and empty state, and cleans all fixtures in finally blocks.",
+        "Negative coverage verifies missing and non-public guilds return 404 and disabled gaming fails closed without rendering event content.",
+        "PHPStan level 8 and complete Worker CI on the exact final HEAD, including PostgreSQL 18 migration-chain validation."
+      ],
+      "completion_report": [
+        "Exact sanitized main/base SHA and final Worker HEAD SHA.",
+        "Complete changed-path list and Worker PR.",
+        "Public upcoming guild-event behavior, visibility/privacy boundaries, empty state and disabled-module evidence.",
+        "Exact-head PHPStan, PHPUnit, PostgreSQL migration and full Worker CI results; remaining Trusted integration follow-up."
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "public-event-page-is-anonymous-read-only-and-never-exposes-signups-or-management-data",
+        "only-public-enabled-guilds-and-planned-upcoming-events-are-rendered",
+        "disabled-gaming-module-must-fail-closed-through-existing-app_guild-route-gate",
+        "existing-guild-administration-public-detail-application-and-event-persistence-behavior-remain-unchanged",
+        "no-schema-or-migration-change",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "red-CI-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment",
+        "no-private-runtime-or-sensitive-data"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "proposal_kind": "worker_only",
+      "proposal_dependency_evidence": [],
+      "collision_check": {
+        "compared_against": "Fresh continuous/work-pool-v4 commit a46e4c54edcc27b2a69d2ceddc773d0330d961bf; all active and claim-locked paths; sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d; current WCP-506 branches and PR state immediately before reservation.",
+        "result": "No active or claim-locked package owns or encloses the three proposed paths. WCP-448 owns the administrative guild-collaboration paths and WCP-502 owns the existing public guild detail/application-status paths; both remain untouched. A foreign WCP-505 gaming branch was observed but is not altered. The package adds only a new public event controller, dedicated template and focused test. No entity, repository, migration, module-catalog or shared public template changes are included.",
+        "paths": [
+          "src/Controller/PublicGuildEventController.php",
+          "templates/gaming/events.html.twig",
+          "tests/Controller/PublicGuildEventTest.php"
+        ]
+      },
+      "published_at": "2026-09-27T10:02:32.498Z",
+      "claimed_on": "2026-09-27T10:02:32.498Z",
+      "claim_state": "active",
+      "active_base_branch": "main",
+      "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "resume_branch": "feature/wcp-506-public-guild-events-g1",
+      "branch_heads": {
+        "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+        "feature_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d"
+      },
+      "last_observed_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "last_checkpoint_at": "2026-09-27T10:02:32.498Z",
+      "checkpoint_paths": [
+        "src/Controller/PublicGuildEventController.php",
+        "templates/gaming/events.html.twig",
+        "tests/Controller/PublicGuildEventTest.php"
+      ],
+      "next_action": "Implement the public guild event schedule and focused visibility/module-gate coverage, then push a meaningful feature checkpoint and create the Worker PR.",
+      "last_verified_push_at": "2026-09-27T10:02:32.498Z"
     }
   ],
   "recovery_queue": [],
