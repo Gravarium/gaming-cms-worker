@@ -9,6 +9,6 @@
         <div><p><strong>Original:</strong> {{ asset.originalName }}</p><p><strong>Typ:</strong> {{ asset.mimeType ?: 'Unbekannt' }}</p><p><strong>SHA-256:</strong> <code>{{ asset.checksumSha256 ?: 'Für Altbestand noch nicht erfasst' }}</code></p>{% if usages %}<p class="status status-ready">Verwendet: {{ usages|join(', ') }}</p>{% else %}<p class="muted">Derzeit keine bekannte Verwendung.</p>{% endif %}</div>
     </div>
     {{ form_start(form, {attr: {class: 'content-form'}}) }}{{ form_widget(form) }}<button type="submit">Metadaten speichern</button>{{ form_end(form) }}
-    <p><a class="button-link button-secondary" href="{{ path('app_admin_media_replace', {id: asset.id}) }}">Datei sicher ersetzen</a></p>
+    <p class="top-actions"><a class="button-link button-secondary" href="{{ path('app_admin_media_usage', {id: asset.id}) }}">Konkrete Verwendungen anzeigen</a><a class="button-link button-secondary" href="{{ path('app_admin_media_replace', {id: asset.id}) }}">Datei sicher ersetzen</a></p>
 </main>
 {% endblock %}
