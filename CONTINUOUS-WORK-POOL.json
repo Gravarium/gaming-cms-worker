@@ -10,7 +10,7 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T17:26:32.057Z",
+  "published_at": "2026-09-27T17:37:23.962Z",
   "summary": {
     "total_remaining_worker_tasks": 168,
     "completed_worker_prs_awaiting_trusted_review": 292,
@@ -44582,6 +44582,131 @@
       "ci_run_id": 36337371199,
       "last_ci_run_id": 36337371199,
       "ci_validation_pr": 353
+    },
+    {
+      "priority": 561,
+      "package_id": "WCP-561",
+      "title": "Paginate public video playlist pages",
+      "risk": "medium",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-561-video-playlist-pagination-g1",
+      "suggested_branch": "feature/wcp-561-video-playlist-pagination-g1",
+      "base_branch": "main",
+      "base_sha": "7b2ca79405fc12d34bce1386157e929e4668f31a",
+      "objective": "Complete the public Video playlist viewing flow with bounded pagination. Playlist detail currently loads every published video at once even though the existing VideoLibraryBrowser already provides a stable 24-item page and visible-only totals. Reuse that boundary for /video-playlists/{slug}, show accessible previous/next navigation and the visible published-video count, preserve the playlist slug on every page, return the existing not-found behavior for pages beyond a non-empty playlist, and keep the explicit empty state on page 1. Do not modify the separately claimed VideoController filter route or add schema changes.",
+      "allowed_paths": [
+        "src/Controller/VideoPlaylistController.php",
+        "templates/video_playlist/show.html.twig",
+        "tests/Controller/VideoPlaylistPaginationTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "CONTINUOUS-WORKER.md",
+        "CONTINUOUS-WORK-POOL.json",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "src/Entity/",
+        "src/Repository/",
+        "src/Video/Library/",
+        "src/Controller/VideoController.php",
+        "src/Controller/PublicVideoLibraryController.php",
+        "templates/video/index.html.twig",
+        "tests/Controller/PublicVideoLibraryControllerTest.php",
+        "tests/Controller/VideoPlaylistPublicWorkflowTest.php"
+      ],
+      "deliverables": [
+        "Playlist detail uses the existing VideoLibraryBrowser page size and filtering of enabled, published-at-or-before-now videos.",
+        "Visible totals and deterministic featured/publishedAt/id order come from the existing browser; no hidden or unpublished videos affect pages.",
+        "Accessible prev/next links retain the playlist slug and page number; page 2 contains the next stable slice.",
+        "Invalid page input follows the existing page-1 fallback; beyond-last page for a non-empty playlist returns 404; an empty playlist remains a useful page-1 empty state.",
+        "The video-module route gate remains in force; no entity, schema, migration or policy changes."
+      ],
+      "tests": [
+        "Functional test with more than 24 published videos, plus draft, disabled and future videos, proving page boundary, deterministic ordering, visible totals and playlist-preserving navigation.",
+        "Test empty playlist, malformed page and out-of-range page behavior.",
+        "Test the detail route remains hidden when the Video module is disabled; complete Worker CI on the exact final HEAD."
+      ],
+      "completion_report": [
+        "Exact main proposal base and final Worker HEAD; changed paths and Worker PR.",
+        "Playlist pagination size, stable ordering, visible-only total, empty/out-of-range behavior.",
+        "Focused browser tests and exact-head full CI evidence.",
+        "Remaining limits and Trusted follow-up."
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-Trusted-review-and-exact-head-CI",
+        "preserve-public-video-publication-visibility-and-video-module-gate",
+        "no-schema-or-migration-change",
+        "no-edit-to-active-or-claim-locked-paths",
+        "do-not-touch-locked-WCP-375-VideoController-path",
+        "no-direct-Trusted-integration-or-deployment"
+      ],
+      "proposal_kind": "worker_only",
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "7b2ca79405fc12d34bce1386157e929e4668f31a",
+      "proposal_dependency_evidence": [],
+      "collision_check": {
+        "compared_against": "Fresh continuous/work-pool-v4 @ bf49e7f7089d1607ba15df0ccec87d0a2da089db; Worker main @ 7b2ca79405fc12d34bce1386157e929e4668f31a; all active and claim-locked allowed paths; WCP-561 branch and PR searches.",
+        "result": "No exact or prefix overlap with active or claim-locked paths. The current five unclaimed FCP tasks remain dependency-blocked, so this independent existing-Video-flow proposal was published. WCP-375 owns src/Controller/VideoController.php; that path is explicitly excluded. WCP-560 public game catalogue sitemap paths are unrelated.",
+        "paths": [
+          "src/Controller/VideoPlaylistController.php",
+          "templates/video_playlist/show.html.twig",
+          "tests/Controller/VideoPlaylistPaginationTest.php"
+        ],
+        "observed_nonblocking_path_hits": [
+          {
+            "id": "WCP-375",
+            "state": "worker_complete_awaiting_trusted_review",
+            "excluded": [
+              "src/Controller/VideoController.php"
+            ],
+            "note": "Locked neighboring video-list route; no shared allowed path."
+          }
+        ]
+      },
+      "published_at": "2026-09-27T17:37:23.962Z",
+      "claimed_on": "2026-09-27T17:37:23.962Z",
+      "claim_state": "active",
+      "active_base_branch": "main",
+      "active_base_sha": "7b2ca79405fc12d34bce1386157e929e4668f31a",
+      "active_head": "7b2ca79405fc12d34bce1386157e929e4668f31a",
+      "branch_heads": {
+        "claim_branch": "7b2ca79405fc12d34bce1386157e929e4668f31a",
+        "feature_branch": "7b2ca79405fc12d34bce1386157e929e4668f31a"
+      },
+      "last_observed_head": "7b2ca79405fc12d34bce1386157e929e4668f31a",
+      "last_checkpoint_at": "2026-09-27T17:37:23.962Z",
+      "last_verified_push_at": "2026-09-27T17:37:23.962Z",
+      "checkpoint_paths": [
+        "src/Controller/VideoPlaylistController.php",
+        "templates/video_playlist/show.html.twig",
+        "tests/Controller/VideoPlaylistPaginationTest.php"
+      ],
+      "resume_branch": "feature/wcp-561-video-playlist-pagination-g1",
+      "next_action": "Implement playlist detail pagination by reusing VideoLibraryBrowser::page(null, $playlist, $page), add accessible playlist-specific pagination and visible totals, and cover published visibility, page boundaries, empty/out-of-range behavior and module deactivation.",
+      "worker_pr": null,
+      "worker_pr_state": "not_created",
+      "worker_pr_changed_paths": [],
+      "worker_pr_base_branch": "main",
+      "worker_pr_base_sha": "7b2ca79405fc12d34bce1386157e929e4668f31a",
+      "pr_state": "not_created",
+      "draft_pr": false,
+      "ci_result": "not_run",
+      "last_ci_result": "not_run",
+      "ci_attempts": []
     }
   ],
   "recovery_queue": [],
