@@ -4,6 +4,7 @@
 <main class="editor-shell">
     <p class="eyebrow">Gaming · Guides</p>
     <h1>{% if new %}Guide-Entwurf anlegen{% else %}Guide-Entwurf bearbeiten{% endif %}</h1>
+    <p><a href="{{ path('app_admin_gaming_guide_index') }}">Zur Guide-Übersicht</a></p>
     {% if error %}<div class="notice text-danger" role="alert">{{ error }}</div>{% endif %}
     <form method="post" class="content-form" action="{% if new %}{{ path('app_admin_gaming_guide_new') }}{% else %}{{ path('app_admin_gaming_guide_edit', {id: values.id}) }}{% endif %}">
         <input type="hidden" name="_token" value="{{ csrf_token(new ? 'game-guide-new' : 'game-guide-edit-' ~ values.id) }}">
