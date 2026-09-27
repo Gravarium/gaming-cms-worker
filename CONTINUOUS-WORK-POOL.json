@@ -12,12 +12,12 @@
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
   "published_at": "2026-09-27T17:37:23.962Z",
   "summary": {
-    "total_remaining_worker_tasks": 168,
-    "completed_worker_prs_awaiting_trusted_review": 292,
+    "total_remaining_worker_tasks": 167,
+    "completed_worker_prs_awaiting_trusted_review": 293,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "Poll WCP-559 draft PR #354 exact-head full Worker CI #904 / 36337649764 on HEAD 172c47336ecb0d17fd12944d4a2a9bf70b7a9e1a; resolve failures on the same branch and rerun the complete workflow on each repaired exact HEAD.",
+    "next_required_action": "WCP-559 PR #354 is open and ready for Trusted review; exact-head full CI #904 / 36337649764 passed on 172c47336ecb0d17fd12944d4a2a9bf70b7a9e1a. Keep its claim locked. Re-evaluate the five unclaimed dependency-blocked packages; if none is eligible, publish and claim the next independent worker-only module proposal.",
     "composition_preparable": 0,
     "immediately_actionable": 29,
     "must_continue": true
@@ -44186,7 +44186,7 @@
       "package_id": "WCP-559",
       "title": "Paginate permission-aware global search results",
       "risk": "medium",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [
         "FCP-069"
       ],
@@ -44309,7 +44309,7 @@
         ]
       },
       "claimed_on": "2026-09-27T17:10:06.277Z",
-      "claim_state": "active",
+      "claim_state": "locked_until_trusted_resolution",
       "active_base_branch": "main",
       "active_base_sha": "7b2ca79405fc12d34bce1386157e929e4668f31a",
       "active_head": "172c47336ecb0d17fd12944d4a2a9bf70b7a9e1a",
@@ -44319,7 +44319,7 @@
         "feature_branch": "172c47336ecb0d17fd12944d4a2a9bf70b7a9e1a"
       },
       "last_observed_head": "172c47336ecb0d17fd12944d4a2a9bf70b7a9e1a",
-      "last_checkpoint_at": "2026-09-27T17:38:46.367Z",
+      "last_checkpoint_at": "2026-09-27T17:44:44.770Z",
       "last_verified_push_at": "2026-09-27T17:38:46.367Z",
       "checkpoint_paths": [
         "src/Controller/Search/SearchController.php",
@@ -44330,9 +44330,9 @@
         "tests/Controller/SearchPaginationTest.php",
         "tests/Search/SearchResultsPageTest.php"
       ],
-      "next_action": "Full exact-head Worker CI #904 / run 36337649764 is pending on HEAD 172c47336ecb0d17fd12944d4a2a9bf70b7a9e1a in draft PR #354. Run #900 failed because the legacy shared search/feed.xml.twig uses unsupported Twig escaping strategy 'xml'; the RSS endpoint now emits XML safely within the allowed SearchController path, and functional coverage parses XML and checks hostile-title escaping. A small namespace typo in the first follow-up test commit was corrected on this same branch; run #904 covers the corrected exact head. Poll all jobs and repair any remaining failure here.",
+      "next_action": "Keep PR #354 and this claim locked until Trusted explicitly resolves it. Do not merge or deploy. Continue with the next dependency-safe Worker package; all five currently unclaimed FCP packages are dependency-blocked, so publish and claim an independent worker-only proposal after verifying current paths.",
       "worker_pr": 354,
-      "worker_pr_state": "draft",
+      "worker_pr_state": "ready_for_review",
       "worker_pr_changed_paths": [
         "src/Controller/Search/SearchController.php",
         "src/Search/SearchService.php",
@@ -44342,7 +44342,7 @@
         "tests/Controller/SearchPaginationTest.php",
         "tests/Search/SearchResultsPageTest.php"
       ],
-      "ci_result": "in_progress",
+      "ci_result": "success",
       "ci_attempts": [
         {
           "run_id": 36336807299,
@@ -44379,27 +44379,74 @@
           "run_number": 903,
           "head": "833fdf7d87d78d0f5fbc60d92b38801583a1d3a4",
           "base": "7b2ca79405fc12d34bce1386157e929e4668f31a",
-          "result": "pending",
+          "result": "cancelled",
           "validation_pr": 354,
-          "diagnosis": "Run on pre-correction test commit; superseded by run #904 after correcting test namespace references on the same branch."
+          "diagnosis": "Run on pre-correction test commit; superseded by run #904 after correcting test namespace references on the same branch.",
+          "conclusion": "cancelled"
         },
         {
           "run_id": 36337649764,
           "run_number": 904,
           "head": "172c47336ecb0d17fd12944d4a2a9bf70b7a9e1a",
           "base": "7b2ca79405fc12d34bce1386157e929e4668f31a",
-          "result": "pending",
-          "validation_pr": 354
+          "result": "success",
+          "validation_pr": 354,
+          "conclusion": "success"
         }
       ],
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/354",
       "pr_state": "open",
-      "draft_pr": true,
+      "draft_pr": false,
       "worker_pr_base_sha": "7b2ca79405fc12d34bce1386157e929e4668f31a",
       "ci_run_id": 36337649764,
       "last_ci_run_id": 36337649764,
       "ci_validation_pr": 354,
-      "last_ci_result": "in_progress"
+      "last_ci_result": "success",
+      "final_head": "172c47336ecb0d17fd12944d4a2a9bf70b7a9e1a",
+      "completion_head": "172c47336ecb0d17fd12944d4a2a9bf70b7a9e1a",
+      "completed_at": "2026-09-27T17:44:44.770Z",
+      "last_completed_at": "2026-09-27T17:44:44.770Z",
+      "completion_evidence": {
+        "proposal_base": "7b2ca79405fc12d34bce1386157e929e4668f31a",
+        "current_worker_main_base": "7b2ca79405fc12d34bce1386157e929e4668f31a",
+        "final_head": "172c47336ecb0d17fd12944d4a2a9bf70b7a9e1a",
+        "worker_pr": 354,
+        "worker_pr_state": "open_ready_for_review_unmerged",
+        "exact_head_ci": {
+          "run_number": 904,
+          "run_id": 36337649764,
+          "result": "success",
+          "php_symfony_job": "success",
+          "postgresql_18_migrations": "success"
+        },
+        "phpunit": {
+          "tests": 740,
+          "assertions": 4696,
+          "deprecations": 1,
+          "notices": 3
+        },
+        "changed_paths": [
+          "src/Controller/Search/SearchController.php",
+          "src/Search/SearchService.php",
+          "src/Search/SearchResultsPage.php",
+          "src/Search/Templates/search/paginated_index.html.twig",
+          "config/packages/search_pagination.yaml",
+          "tests/Controller/SearchPaginationTest.php",
+          "tests/Search/SearchResultsPageTest.php"
+        ],
+        "behavior": [
+          "20 visible results per page for search and discovery, with deterministic score/date/document-ID order inside the bounded 1,000-candidate window",
+          "Viewer visibility filtering occurs before page slicing and visible-count calculation",
+          "Query, module, and type filters persist in accessible pagination links; beyond-last pages canonicalize and malformed or out-of-bound page inputs return HTTP 400",
+          "JSON/RSS feeds keep their existing 50-result limit, visibility policy, formats, and private/no-store headers; RSS XML is now emitted with XML-safe escaping and hostile titles remain text"
+        ],
+        "limitations": [
+          "Pagination covers the existing maximum window of 1,000 candidate documents; results outside that window remain outside this proposal.",
+          "Trusted integration must transfer the changes to a fresh Trusted branch and run full Trusted CI.",
+          "The legacy shared search/feed.xml.twig remains unchanged and has an unsupported xml escaping strategy; Trusted follow-up should confirm it has no other consumers and remove or repair it as appropriate."
+        ]
+      },
+      "worker_completion_summary": "Exact-head full Worker CI #904 / 36337649764 passed on 172c47336ecb0d17fd12944d4a2a9bf70b7a9e1a: 740 tests, 4,696 assertions, zero failures/errors (1 deprecation, 3 notices); PHPStan, dependency audit, YAML/Twig/container/AssetMapper/Doctrine checks passed; PostgreSQL 18 migration validation passed. PR #354 is open, ready for review, unmerged and based on main@7b2ca79405fc12d34bce1386157e929e4668f31a."
     },
     {
       "priority": 560,
