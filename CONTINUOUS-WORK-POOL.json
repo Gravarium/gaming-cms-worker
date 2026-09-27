@@ -10,16 +10,16 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T12:12:20.757Z",
+  "published_at": "2026-09-27T12:14:02.922Z",
   "summary": {
-    "total_remaining_worker_tasks": 165,
+    "total_remaining_worker_tasks": 166,
     "completed_worker_prs_awaiting_trusted_review": 284,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
     "next_required_action": "WCP-528 core files are checkpointed on 9e9dfa1cec9e14ffa0e8327e60e8bab48f964b1b; add its functional tests and then run full Worker CI.",
     "composition_preparable": 0,
-    "immediately_actionable": 26,
+    "immediately_actionable": 27,
     "must_continue": true
   },
   "rules": {
@@ -37679,6 +37679,102 @@
       "ci_result": "not_started",
       "last_ci_result": "not_started",
       "last_verified_push_at": "2026-09-27T12:13:47.013Z"
+    },
+    {
+      "priority": 530,
+      "package_id": "WCP-530",
+      "title": "Protect passkey management ownership and CSRF",
+      "risk": "high",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-530-passkey-management-ownership-g1",
+      "suggested_branch": "feature/wcp-530-passkey-management-ownership-g1",
+      "base_branch": "main",
+      "base_sha": "b510875e7b0741b9b19f09429d2204a95df51198",
+      "objective": "Add controller-level functional security tests for GET /account/passkeys and the rename/delete routes. Prove credentials are visible and mutable only by their owner, foreign mutations return 404 without changing the credential, and owner mutations require the matching CSRF token rendered for each action.",
+      "allowed_paths": [
+        "tests/Controller/PasskeyManagementOwnershipTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/",
+        "src/",
+        "templates/",
+        "assets/",
+        "public/"
+      ],
+      "deliverables": [
+        "Create synthetic owner and foreign viewer accounts with a synthetic CredentialRecord.",
+        "Verify the owner sees the credential while a foreign user's passkey page does not expose its name.",
+        "Verify a foreign user cannot rename or delete the credential and the stored name and row remain unchanged.",
+        "Verify missing and forged owner CSRF tokens are rejected without mutation; use each rendered action token to perform an owner rename and deletion.",
+        "Change only the dedicated controller integration-test file; do not change controller, entity, template, security configuration, dependency or schema."
+      ],
+      "tests": [
+        "Run the focused PHPUnit test for PasskeyManagementOwnershipTest.",
+        "Run PHPStan level 8 and full Worker CI on exact final HEAD, including PostgreSQL 18 migration validation.",
+        "Preserve credential ownership checks, per-action CSRF validation, audit behavior and passkey lifecycle; do not weaken or skip checks."
+      ],
+      "completion_report": [
+        "Exact sanitized main/base SHA and final Worker HEAD SHA.",
+        "Exact changed path and Worker PR URL.",
+        "Owner-only listing, foreign mutation 404/no-change, owner missing/forged CSRF rejection and valid action-token evidence.",
+        "Focused PHPUnit, PHPStan and exact-head Worker CI results."
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "passkey-credential-is-visible-and-mutable-only-by-its-owner",
+        "rename-and-delete-require-their-own-valid-csrf-token",
+        "failed-owner-or-csrf-check-leaves-credential-unchanged",
+        "test-only-no-runtime-or-schema-change",
+        "no-security-test-phpstan-or-CI-weakening",
+        "red-CI-stops-integration",
+        "no-direct-trusted-integration-or-deployment",
+        "no-private-runtime-or-sensitive-data"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "b510875e7b0741b9b19f09429d2204a95df51198",
+      "proposal_kind": "worker_only",
+      "proposal_dependency_evidence": [],
+      "collision_check": {
+        "compared_against": "Fresh continuous/work-pool-v4 pool blob e268845cbf9562d83d1ad0b1837cc58b06a73ba0; sanitized Worker main b510875e7b0741b9b19f09429d2204a95df51198; all active and claim-locked allowed-path scopes; WCP-528 newsletter delivery report and WCP-529 public category widget claims; WCP-530 claim/feature branch searches; and pinned web-auth/webauthn-lib 5.3.7 fixture API.",
+        "result": "The dedicated Passkey management test path is absent on main and unowned by active or claim-locked tasks. Existing SecurityArchitectureTest checks source structure but does not exercise passkey management routes. WCP-528 and WCP-529 use separate newsletter and content-widget paths.",
+        "paths": [
+          "tests/Controller/PasskeyManagementOwnershipTest.php"
+        ]
+      },
+      "published_at": "2026-09-27T12:14:02.922Z",
+      "claimed_on": "2026-09-27T12:14:02.922Z",
+      "claim_state": "active",
+      "active_base_branch": "main",
+      "active_base_sha": "b510875e7b0741b9b19f09429d2204a95df51198",
+      "active_head": "b510875e7b0741b9b19f09429d2204a95df51198",
+      "resume_branch": "feature/wcp-530-passkey-management-ownership-g1",
+      "branch_heads": {
+        "claim_branch": "b510875e7b0741b9b19f09429d2204a95df51198",
+        "feature_branch": "b510875e7b0741b9b19f09429d2204a95df51198"
+      },
+      "last_observed_head": "b510875e7b0741b9b19f09429d2204a95df51198",
+      "last_checkpoint_at": "2026-09-27T12:14:02.922Z",
+      "checkpoint_paths": [
+        "tests/Controller/PasskeyManagementOwnershipTest.php"
+      ],
+      "next_action": "Implement route-level passkey ownership and per-action CSRF tests within the sole allowed test file; then run focused PHPUnit and full exact-head Worker CI."
     }
   ],
   "recovery_queue": [],
