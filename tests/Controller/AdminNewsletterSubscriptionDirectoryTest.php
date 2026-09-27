@@ -24,6 +24,7 @@ final class AdminNewsletterSubscriptionDirectoryTest extends WebTestCase
         $now = new \DateTimeImmutable();
         $suffix = bin2hex(random_bytes(5));
         $subscriptions = [];
+        $subscriptionIds = [];
 
         try {
             for ($index = 0; $index < 53; ++$index) {
@@ -57,6 +58,12 @@ final class AdminNewsletterSubscriptionDirectoryTest extends WebTestCase
             $entityManager->persist($suppressed);
             $subscriptions[] = $suppressed;
             $entityManager->flush();
+            foreach ($subscriptions as $subscription) {
+                $id = $subscription->getId();
+                if ($id !== null) {
+                    $subscriptionIds[] = $id;
+                }
+            }
 
             $client->request(
                 'GET',
@@ -68,19 +75,19 @@ final class AdminNewsletterSubscriptionDirectoryTest extends WebTestCase
 
             $client->request(
                 'GET',
-                '/admin/newsletter/subscriptions?email=directory-'.$suffix.'&status=active&page=2',
+                '/admin/newsletter/subscriptions?email='.$suffix.'&status=active&page=2',
             );
             self::assertResponseIsSuccessful();
             self::assertSelectorTextContains('body', 'Seite 2 von 2');
             self::assertCount(3, $client->getCrawler()->filter('tbody tr'));
             $previousHref = $client->getCrawler()->filter('a[rel="prev"]')->attr('href');
             self::assertIsString($previousHref);
-            self::assertStringContainsString('email=directory-'.$suffix, $previousHref);
+            self::assertStringContainsString('email='.$suffix, $previousHref);
             self::assertStringContainsString('status=active', $previousHref);
 
             $client->request(
                 'GET',
-                '/admin/newsletter/subscriptions?email=directory-'.$suffix.'&status=active&page=999',
+                '/admin/newsletter/subscriptions?email='.$suffix.'&status=active&page=999',
             );
             self::assertResponseIsSuccessful();
             self::assertSelectorTextContains('body', 'Seite 2 von 2');
@@ -127,10 +134,14 @@ final class AdminNewsletterSubscriptionDirectoryTest extends WebTestCase
             $client->request('GET', '/admin/newsletter/subscriptions?email='.str_repeat('a', 181));
             self::assertResponseStatusCodeSame(400);
         } finally {
-            foreach ($subscriptions as $subscription) {
-                $entityManager->remove($subscription);
+            $cleanupEntityManager = $this->entityManager($client);
+            foreach ($subscriptionIds as $id) {
+                $storedSubscription = $cleanupEntityManager->find(NewsletterSubscription::class, $id);
+                if ($storedSubscription instanceof NewsletterSubscription) {
+                    $cleanupEntityManager->remove($storedSubscription);
+                }
             }
-            $entityManager->flush();
+            $cleanupEntityManager->flush();
         }
     }
 
