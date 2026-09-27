@@ -10,7 +10,7 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T08:45:49.293Z",
+  "published_at": "2026-09-27T08:49:06.188Z",
   "summary": {
     "total_remaining_worker_tasks": 142,
     "completed_worker_prs_awaiting_trusted_review": 253,
@@ -31426,19 +31426,33 @@
       "claim_state": "active",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-      "active_head": "a79b2230c1c8d92cd42e577d8d05676b62f587d6",
+      "active_head": "e4f57f77c417048c911bb467ca6c79e665d69b74",
       "resume_branch": "feature/wcp-487-gaming-admin-permission-g1",
       "branch_heads": {
         "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-        "feature_branch": "a79b2230c1c8d92cd42e577d8d05676b62f587d6"
+        "feature_branch": "e4f57f77c417048c911bb467ca6c79e665d69b74"
       },
-      "last_observed_head": "a79b2230c1c8d92cd42e577d8d05676b62f587d6",
-      "last_checkpoint_at": "2026-09-27T08:45:49.293Z",
+      "last_observed_head": "e4f57f77c417048c911bb467ca6c79e665d69b74",
+      "last_checkpoint_at": "2026-09-27T08:49:06.188Z",
       "checkpoint_paths": [
         "tests/Controller/AdminGamingPermissionWorkflowTest.php"
       ],
-      "next_action": "Open a draft Worker PR from the checkpointed branch, run focused PHPUnit and full Worker CI on its exact HEAD, and repair any failures without changing the allowed path.",
-      "last_verified_push_at": "2026-09-27T08:45:49.293Z"
+      "next_action": "Rerun focused PHPUnit and full Worker CI on the corrected exact HEAD; investigate any remaining failure without changing paths.",
+      "last_verified_push_at": "2026-09-27T08:49:06.188Z",
+      "ci_attempts": [
+        {
+          "head": "a79b2230c1c8d92cd42e577d8d05676b62f587d6",
+          "ci_run_id": 36307256048,
+          "ci_result": "failure",
+          "failed_step": "Run worker-visible application tests",
+          "diagnosis": "PHP syntax error from doubled namespace separators in new test file; PHPStan and PostgreSQL migration job passed.",
+          "remediated_in_head": "e4f57f77c417048c911bb467ca6c79e665d69b74"
+        }
+      ],
+      "ci_run_id": 36307256048,
+      "last_ci_run_id": 36307256048,
+      "ci_result": "failure",
+      "last_ci_result": "failure"
     }
   ],
   "recovery_queue": [],
