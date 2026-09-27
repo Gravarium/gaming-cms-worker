@@ -13,7 +13,7 @@ final class BackupInventoryBrowser
     private const VERIFICATION_FILTERS = ['all', 'successful', 'failed', 'unchecked'];
 
     /**
-     * @return array{query: string, verification_filter: string, page: int}
+     * @return array{query: string, verification_filter: 'all'|'successful'|'failed'|'unchecked', page: int}
      */
     public function normalizeRequest(mixed $query, mixed $verificationFilter, mixed $page): array
     {
@@ -21,9 +21,16 @@ final class BackupInventoryBrowser
             throw new \InvalidArgumentException('Invalid backup search query.');
         }
 
-        if (!is_string($verificationFilter) || !in_array($verificationFilter, self::VERIFICATION_FILTERS, true)) {
+        if (!is_string($verificationFilter)) {
             throw new \InvalidArgumentException('Invalid backup verification filter.');
         }
+        $normalizedFilter = match ($verificationFilter) {
+            'all' => 'all',
+            'successful' => 'successful',
+            'failed' => 'failed',
+            'unchecked' => 'unchecked',
+            default => throw new \InvalidArgumentException('Invalid backup verification filter.'),
+        };
 
         $pageValue = is_int($page) ? (string) $page : $page;
         if (!is_string($pageValue) || preg_match('/\A[1-9][0-9]{0,5}\z/', $pageValue) !== 1) {
@@ -32,7 +39,7 @@ final class BackupInventoryBrowser
 
         return [
             'query' => $query,
-            'verification_filter' => $verificationFilter,
+            'verification_filter' => $normalizedFilter,
             'page' => (int) $pageValue,
         ];
     }
