@@ -137,15 +137,14 @@ final class AdminContentRedirectBrowserTest extends WebTestCase
         }
         $em->flush();
 
-        usort($redirects, static function (ContentRedirect $left, ContentRedirect $right): int {
-            $createdOrder = $right->getCreatedAt() <=> $left->getCreatedAt();
-            if ($createdOrder !== 0) {
-                return $createdOrder;
-            }
-
-            return ($right->getId() ?? 0) <=> ($left->getId() ?? 0);
-        });
-        $expectedIds = array_map(static fn (ContentRedirect $redirect): string => (string) $redirect->getId(), $redirects);
+        $em->clear();
+        /** @var list<ContentRedirect> $orderedRedirects */
+        $orderedRedirects = $em->getRepository(ContentRedirect::class)->findBy([], ['createdAt' => 'DESC', 'id' => 'DESC']);
+        $matchingRedirects = array_values(array_filter(
+            $orderedRedirects,
+            static fn (ContentRedirect $redirect): bool => str_contains($redirect->getSourceSlug(), $search),
+        ));
+        $expectedIds = array_map(static fn (ContentRedirect $redirect): string => (string) $redirect->getId(), $matchingRedirects);
         $client->loginUser($user);
 
         $client->request('GET', '/admin/content/redirects?q='.$search);
