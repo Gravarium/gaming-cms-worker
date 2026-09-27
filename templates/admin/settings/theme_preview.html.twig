@@ -1,0 +1,81 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Designpakete vergleichen | {{ site.siteName }}{% endblock %}
+
+{% block stylesheets %}
+<style>
+.theme-preview-page { max-width: 1240px; margin: 2rem auto; padding: 0 1rem; }
+.theme-preview-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr)); gap: 1rem; }
+.theme-preview-card { --preview-radius: .6rem; --preview-glow: rgba(213, 181, 106, .12); --preview-font: Inter, ui-sans-serif, system-ui, sans-serif; min-width: 0; padding: 1rem; border: 1px solid #394052; border-radius: 1rem; background: #111522; }
+.theme-preview-card[data-active="true"] { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent); }
+.theme-preview-card--nebula { --preview-radius: 1rem; --preview-glow: rgba(124, 92, 255, .17); }
+.theme-preview-card--ember { --preview-radius: .55rem; --preview-glow: rgba(255, 107, 80, .18); }
+.theme-preview-card--ocean { --preview-radius: 1.4rem; --preview-glow: rgba(35, 180, 220, .18); }
+.theme-preview-card--gravarium-cyberpunk { --preview-radius: .25rem; --preview-glow: rgba(60, 230, 255, .15); }
+.theme-preview-card__sample { overflow: hidden; margin: 0 0 1rem; padding: 1rem; border: 1px solid #46506a; border-radius: var(--preview-radius); background: radial-gradient(circle at 18% 8%, var(--preview-glow), transparent 46%), linear-gradient(135deg, #1c2340, #111522 72%); color: #fff; font-family: var(--preview-font); }
+.theme-preview-card__topline { display: flex; justify-content: space-between; gap: .5rem; color: #d9ddef; font-size: .85rem; }
+.theme-preview-card__sample h3 { margin: 2rem 0 .5rem; font-size: 1.4rem; }
+.theme-preview-card__sample p { line-height: 1.5; }
+.theme-preview-card__sample-action { display: inline-block; margin-top: .5rem; padding: .5rem .8rem; border-radius: var(--preview-radius); background: var(--accent); color: #fff; font-weight: 700; }
+.theme-preview-card__heading { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .5rem; }
+.theme-preview-card__heading h2 { margin: 0; font-size: 1.2rem; }
+.theme-preview-card__version { color: #aeb8ce; }
+.theme-preview-card__tokens { display: grid; grid-template-columns: minmax(7rem, auto) 1fr; gap: .3rem .8rem; margin: 1rem 0; }
+.theme-preview-card__tokens dt { color: #bac3d7; }
+.theme-preview-card__tokens dd { min-width: 0; margin: 0; overflow-wrap: anywhere; }
+.theme-preview-card__regions { display: flex; flex-wrap: wrap; gap: .4rem; padding: 0; list-style: none; }
+.theme-preview-card__regions li { padding: .2rem .5rem; border: 1px solid #46506a; border-radius: 999px; }
+@media (prefers-reduced-motion: reduce) { .theme-preview-card { scroll-behavior: auto; } }
+</style>
+{% endblock %}
+
+{% block body %}
+<main class="content-shell theme-preview-page">
+    <header class="page-header">
+        <p class="eyebrow">Website-Einstellungen</p>
+        <h1>Designpakete vergleichen</h1>
+        <p>Vergleiche alle verfügbaren Designs mit dem aktuellen Namen und Startseitentext. Diese Vorschau speichert keine Änderungen.</p>
+        <p>
+            <a class="button-link" href="{{ path('app_admin_settings') }}">Website-Einstellungen öffnen</a>
+            <a href="{{ path('app_admin_layout') }}">Layout-Werkstatt öffnen</a>
+        </p>
+    </header>
+
+    <section class="theme-preview-grid" aria-label="Verfügbare Designpakete">
+        {% for item in themes %}
+            <article class="theme-preview-card" data-theme-key="{{ item.definition.key }}" data-active="{{ item.active ? 'true' : 'false' }}">
+                <div class="theme-preview-card__sample">
+                    <div class="theme-preview-card__topline">
+                        <span>{{ settings.siteName }}</span>
+                        <span>GAME HUB</span>
+                    </div>
+                    <h3>{{ settings.homeTitle }}</h3>
+                    <p>{{ settings.homeText }}</p>
+                    <span class="theme-preview-card__sample-action">Spiele entdecken</span>
+                </div>
+
+                <div class="theme-preview-card__heading">
+                    <h2 class="theme-preview-card__name">{{ item.definition.name }}</h2>
+                    {% if item.active %}<span class="status status-ready">Aktiv</span>{% endif %}
+                </div>
+                <span class="theme-preview-card__version">{{ item.definition.version }}</span>
+
+                <dl class="theme-preview-card__tokens">
+                    <dt>CMS-Kompatibilität</dt><dd><code>{{ item.definition.cmsConstraint }}</code></dd>
+                    <dt>Oberflächenradius</dt><dd><code>{{ item.definition.variables.surfaceRadius }}</code></dd>
+                    <dt>Hero-Licht</dt><dd><code>{{ item.definition.variables.heroGlow }}</code></dd>
+                    <dt>Schriftfamilie</dt><dd><code>{{ item.definition.variables.fontStack }}</code></dd>
+                    <dt>Fallback-Bereich</dt><dd><code>{{ item.definition.fallbackRegion }}</code></dd>
+                </dl>
+
+                <h3>Layoutbereiche</h3>
+                <ul class="theme-preview-card__regions" aria-label="Layoutbereiche">
+                    {% for region in item.definition.regions %}<li>{{ region }}</li>{% endfor %}
+                </ul>
+            </article>
+        {% else %}
+            <p>Es sind keine Designpakete registriert.</p>
+        {% endfor %}
+    </section>
+</main>
+{% endblock %}
