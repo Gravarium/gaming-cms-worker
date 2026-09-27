@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T07:36:08.446Z",
+  "published_at": "2026-09-27T07:41:32.164Z",
   "summary": {
     "total_remaining_worker_tasks": 141,
     "completed_worker_prs_awaiting_trusted_review": 249,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-482 exact HEAD 1d200f2b66eeefc28e8ad224974c1f4de462458d is running Worker CI 36303407921 after correcting the expected HTTP 422; inspect test and migration jobs.",
+    "next_required_action": "WCP-483 implementation is checkpointed at exact feature HEAD c96ab27ecd1b7855c66cc5656775924b45011972. Open a draft Worker PR for exact-head CI, repair concrete findings on the same branch, and preserve all other claims.",
     "composition_preparable": 0,
     "immediately_actionable": 4,
     "must_continue": true
@@ -30785,19 +30785,27 @@
         ]
       },
       "published_at": "2026-09-27T07:29:07.532Z",
-      "next_action": "Implement the tag-index entry point, target form, atomic deduplicating reassignment and audit, with negative authorization/CSRF/destination tests on the claimed feature branch.",
+      "next_action": "Open a draft Worker PR from feature/wcp-483-content-tag-merge-g1 and run complete Worker CI on exact HEAD c96ab27ecd1b7855c66cc5656775924b45011972; inspect and fix any concrete findings on this branch.",
       "claim_state": "active",
       "claimed_on": "2026-09-27T07:30:00.468Z",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "c96ab27ecd1b7855c66cc5656775924b45011972",
       "resume_branch": "feature/wcp-483-content-tag-merge-g1",
       "branch_heads": {
         "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-        "feature_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d"
+        "feature_branch": "c96ab27ecd1b7855c66cc5656775924b45011972"
       },
-      "last_observed_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-      "last_checkpoint_at": "2026-09-27T07:30:00.468Z"
+      "last_observed_head": "c96ab27ecd1b7855c66cc5656775924b45011972",
+      "last_checkpoint_at": "2026-09-27T07:41:32.164Z",
+      "last_verified_push_at": "2026-09-27T07:41:32.164Z",
+      "checkpoint_paths": [
+        "src/Controller/AdminContentTagMergeController.php",
+        "src/Form/ContentTagMergeType.php",
+        "templates/admin/content_tag/index.html.twig",
+        "templates/admin/content_tag/merge.html.twig",
+        "tests/Controller/AdminContentTagMergeTest.php"
+      ]
     }
   ],
   "recovery_queue": [],
