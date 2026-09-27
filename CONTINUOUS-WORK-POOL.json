@@ -17,7 +17,7 @@
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-477 is complete on exact green HEAD 15054727e3bb3df90847fa61fede340290b6f717 (PR #270, CI run 36300168629) and claim-locked for Trusted review. Continue with the independent optional rankName form-mapping regression noted by WCP-476 after fresh collision checks; preserve every other active claim.",
+    "next_required_action": "WCP-478 is claimed and active on exact green WCP-440 HEAD a44416a60ea7d1eb9e802a2cf240870d636abc58; create both branches and add tests/Controller/AdminGuildRankDeletionSecurityTest.php. WCP-365 owns src/Form/GuildMemberType.php, so defer the blank rankName fix until that claim resolves. Preserve WCP-474 and all other foreign claims.",
     "composition_preparable": 0,
     "immediately_actionable": 4,
     "must_continue": true
@@ -29786,6 +29786,107 @@
         "No schema change; retain the separation between role copying and assignment and preserve PermissionDelegationPolicy through the later Fortress transition."
       ],
       "trusted_follow_up": "Map this worker proposal into the canonical Trusted queue, review/port the permission-safe copy workflow, and run full Trusted CI. Keep copy creation separate from role assignment and preserve PermissionDelegationPolicy for the later Fortress transition."
+    },
+    {
+      "priority": 478,
+      "package_id": "WCP-478",
+      "title": "Protect guild-rank deletion authorization, ownership and CSRF",
+      "risk": "medium",
+      "execution_state": "worker_in_progress",
+      "dependencies": [
+        "WCP-440"
+      ],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-478-guild-rank-deletion-security-g1",
+      "suggested_branch": "feature/wcp-478-guild-rank-deletion-security-g1",
+      "base_branch": "feature/wcp-440-guild-team-deletion-security-g1",
+      "base_sha": "a44416a60ea7d1eb9e802a2cf240870d636abc58",
+      "objective": "Add test-only functional security coverage for guild-rank deletion, stacked on WCP-440's exact green HEAD. Verify CMS_GAMING_MANAGE protects structure reads and deletion; missing, invalid and another rank's valid CSRF token preserve all ranks; a valid rank token cannot delete through a different parent guild route; and the rendered token for the intended rank deletes only that rank. Use synthetic games, guilds, ranks and users with full cleanup.",
+      "allowed_paths": [
+        "tests/Controller/AdminGuildRankDeletionSecurityTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/",
+        "src/",
+        "templates/",
+        "assets/",
+        "public/"
+      ],
+      "deliverables": [
+        "An authenticated actor without CMS_GAMING_MANAGE is denied the guild-structure read and rank-delete request; no rank changes.",
+        "An authorized actor's missing, invalid and sibling-rank CSRF tokens are rejected with both synthetic ranks preserved.",
+        "A rendered token for a rank cannot delete that rank through a different parent guild route; the request returns 404 and preserves both ranks.",
+        "The rendered token for the selected rank on its owning guild deletes only that rank; its sibling remains.",
+        "Only this new test file changes; all synthetic users, games, guilds and ranks are cleaned up."
+      ],
+      "tests": [
+        "Focused AdminGuildRankDeletionSecurityTest functional PHPUnit coverage.",
+        "Existing guild-structure security tests remain green.",
+        "PHPStan level 8 and complete Worker CI on exact final HEAD, including PostgreSQL 18 migration-chain checks."
+      ],
+      "completion_report": [
+        "Exact sanitized main base SHA and exact green WCP-440 proposal-base SHA.",
+        "Final HEAD, incremental changed paths, cumulative Worker PR paths and Worker PR.",
+        "Authorization denial, CSRF non-mutation, cross-guild isolation and selected-only deletion results.",
+        "Exact-head PHPStan and full Worker CI results.",
+        "Trusted integration follow-up and unresolved assumptions."
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "preserve-CMS_GAMING_MANAGE-parent-guild-ownership-and-rank-delete-CSRF",
+        "denied-or-cross-guild-requests-must-not-delete-or-mutate-ranks",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment",
+        "no-private-runtime-or-sensitive-data"
+      ],
+      "proposal_base_branch": "feature/wcp-440-guild-team-deletion-security-g1",
+      "proposal_base_sha": "a44416a60ea7d1eb9e802a2cf240870d636abc58",
+      "proposal_kind": "worker_only",
+      "proposal_dependency_evidence": [
+        {
+          "package_id": "WCP-440",
+          "exact_green_head": "a44416a60ea7d1eb9e802a2cf240870d636abc58",
+          "worker_pr": 234,
+          "ci_run_id": 36282974283,
+          "ci_result": "success"
+        }
+      ],
+      "collision_check": {
+        "compared_against": "Fresh continuous/work-pool-v4 at d5bfaf81849853eea172084f18f1aa83db529774, all active and claim-locked path scopes, sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d, and WCP-440 exact green HEAD a44416a60ea7d1eb9e802a2cf240870d636abc58.",
+        "result": "No active or claim-locked package owns or encloses tests/Controller/AdminGuildRankDeletionSecurityTest.php. WCP-440 owns the distinct team-deletion security test; WCP-365 owns guild-member form paths; WCP-475/476 own distinct guild-member security test files; foreign WCP-474 is limited to 2FA paths. This adds only rank-deletion tests and shares no edited source, migration, template or DI file.",
+        "paths": [
+          "tests/Controller/AdminGuildRankDeletionSecurityTest.php"
+        ]
+      },
+      "published_at": "2026-09-27T06:39:18.912Z",
+      "claimed_on": "2026-09-27T06:39:18.912Z",
+      "claim_state": "active",
+      "active_base_branch": "feature/wcp-440-guild-team-deletion-security-g1",
+      "active_base_sha": "a44416a60ea7d1eb9e802a2cf240870d636abc58",
+      "active_head": "a44416a60ea7d1eb9e802a2cf240870d636abc58",
+      "resume_branch": "feature/wcp-478-guild-rank-deletion-security-g1",
+      "branch_heads": {
+        "claim_branch": "a44416a60ea7d1eb9e802a2cf240870d636abc58",
+        "feature_branch": "a44416a60ea7d1eb9e802a2cf240870d636abc58"
+      },
+      "next_action": "Create the exclusive claim and feature branches from the verified WCP-440 exact green HEAD, then add the new test-only rank-deletion security coverage.",
+      "last_observed_head": "a44416a60ea7d1eb9e802a2cf240870d636abc58"
     }
   ],
   "recovery_queue": [],
