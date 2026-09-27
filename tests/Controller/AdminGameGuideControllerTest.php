@@ -57,11 +57,21 @@ final class AdminGameGuideControllerTest extends WebTestCase
             ]);
             self::assertGreaterThan(0, $id);
             $guideIds[] = $id;
-            $row = $connection->fetchAssociative('SELECT review_status, author_id FROM game_guide WHERE id = :id', ['id' => $id]);
+
+            $crawler = $client->request('GET', '/admin/gaming/guides/'.$id.'/edit');
+            $editForm = $crawler->selectButton('Entwurf speichern')->form(['title' => 'Guide <script>alert(1)</script> updated']);
+            $client->submit($editForm);
+            self::assertResponseRedirects('/admin/gaming/guides');
+            $row = $connection->fetchAssociative('SELECT review_status, author_id, title FROM game_guide WHERE id = :id', ['id' => $id]);
             self::assertIsArray($row);
             self::assertSame('draft', $row['review_status']);
             self::assertSame($authorId, (int) $row['author_id']);
+            self::assertSame('Guide <script>alert(1)</script> updated', $row['title']);
             self::assertSame(1, (int) $connection->fetchOne('SELECT COUNT(*) FROM game_guide_component WHERE guide_id = :id', ['id' => $id]));
+
+            $client->request('POST', '/admin/gaming/guides/'.$id.'/submit');
+            self::assertResponseStatusCodeSame(403);
+            self::assertSame('draft', $connection->fetchOne('SELECT review_status FROM game_guide WHERE id = :id', ['id' => $id]));
 
             $crawler = $client->request('GET', '/admin/gaming/guides');
             $submitForm = $crawler->filter('form[action="/admin/gaming/guides/'.$id.'/submit"]')->form();
@@ -70,6 +80,13 @@ final class AdminGameGuideControllerTest extends WebTestCase
             self::assertSame('review', $connection->fetchOne('SELECT review_status FROM game_guide WHERE id = :id', ['id' => $id]));
 
             $reviewUrl = '/admin/gaming/guides/'.$id.'/review';
+            $crawler = $client->request('GET', $reviewUrl);
+            $forgedReview = $crawler->selectButton('Veröffentlichen')->form(['reason' => 'Forged token']);
+            $forgedReview['_token'] = 'forged';
+            $client->submit($forgedReview);
+            self::assertResponseStatusCodeSame(403);
+            self::assertSame('review', $connection->fetchOne('SELECT review_status FROM game_guide WHERE id = :id', ['id' => $id]));
+
             $crawler = $client->request('GET', $reviewUrl);
             $form = $crawler->selectButton('Veröffentlichen')->form(['reason' => 'Author cannot approve own work']);
             $client->submit($form);
@@ -96,7 +113,7 @@ final class AdminGameGuideControllerTest extends WebTestCase
             $client->request('GET', '/gaming/guides/'.$id);
             self::assertResponseIsSuccessful();
             $html = (string) $client->getResponse()->getContent();
-            self::assertStringContainsString('&lt;script&gt;alert(1)&lt;/script&gt;', $html);
+            self::assertStringContainsString('&lt;script&gt;alert(1)&lt;/script&gt; updated', $html);
             self::assertStringNotContainsString('<script>alert(1)</script>', $html);
             self::assertStringContainsString('arcane-barrage', $html);
             self::assertStringNotContainsString($author->getEmail(), $html);
