@@ -44056,13 +44056,13 @@
       "claim_state": "active",
       "active_base_branch": "main",
       "active_base_sha": "7b2ca79405fc12d34bce1386157e929e4668f31a",
-      "active_head": "ef0cc35a85b4a25dedc3f5be27741f57c9db19ed",
+      "active_head": "0b50f9d066efecbca3bf5c6f66cc1d9eae03a085",
       "branch_heads": {
         "claim_branch": "75754d818243bd2e5f2f2da1f39b50a4568f7971",
-        "feature_branch": "ef0cc35a85b4a25dedc3f5be27741f57c9db19ed"
+        "feature_branch": "0b50f9d066efecbca3bf5c6f66cc1d9eae03a085"
       },
-      "last_observed_head": "ef0cc35a85b4a25dedc3f5be27741f57c9db19ed",
-      "last_checkpoint_at": "2026-09-27T17:13:11.317Z",
+      "last_observed_head": "0b50f9d066efecbca3bf5c6f66cc1d9eae03a085",
+      "last_checkpoint_at": "2026-09-27T17:14:37.231Z",
       "checkpoint_paths": [
         "src/Controller/Social/SocialController.php",
         "src/Form/Social/SocialConversationType.php",
@@ -44074,8 +44074,8 @@
       "worker_pr_state": "draft",
       "pr_state": "open",
       "draft_pr": true,
-      "ci_result": "in_progress",
-      "last_ci_result": "in_progress",
+      "ci_result": "queued",
+      "last_ci_result": "queued",
       "ci_attempts": [
         {
           "run_id": 36335840605,
@@ -44083,19 +44083,29 @@
           "head": "1d76d6020aa983a9bf7b4bcc5f265d71c0c58e3d",
           "base": "7b2ca79405fc12d34bce1386157e929e4668f31a",
           "result": "failure",
-          "conclusion": "failure"
+          "conclusion": "failure",
+          "summary": "PHPStan reported nine issues in the controller, form and recipient query."
         },
         {
           "run_id": 36335972596,
           "run_number": 892,
           "head": "ef0cc35a85b4a25dedc3f5be27741f57c9db19ed",
           "base": "7b2ca79405fc12d34bce1386157e929e4668f31a",
-          "result": "in_progress",
+          "result": "failure",
+          "conclusion": "failure",
+          "summary": "PHP/Symfony browser tests exposed reserved DQL alias member; PostgreSQL migration chain passed."
+        },
+        {
+          "run_id": 36336179103,
+          "run_number": 893,
+          "head": "0b50f9d066efecbca3bf5c6f66cc1d9eae03a085",
+          "base": "7b2ca79405fc12d34bce1386157e929e4668f31a",
+          "result": "queued",
           "conclusion": null
         }
       ],
-      "next_action": "Monitor exact-head Worker CI run #892 / 36335972596 on ef0cc35a85b4a25dedc3f5be27741f57c9db19ed. Run #891 failed PHPStan; the redundant type guards and stale PHPDoc are corrected. Complete all CI checks on the repaired exact HEAD before requesting review.",
-      "last_verified_push_at": "2026-09-27T17:13:11.317Z",
+      "next_action": "Monitor exact-head Worker CI run #893 / 36336179103 on 0b50f9d066efecbca3bf5c6f66cc1d9eae03a085. The DQL recipient alias is now recipientUser; complete full PHP/Symfony and PostgreSQL CI on this exact head before review.",
+      "last_verified_push_at": "2026-09-27T17:14:37.231Z",
       "worker_pr": 352,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/352",
       "worker_pr_base_branch": "main",
@@ -44107,8 +44117,8 @@
         "templates/social/new.html.twig",
         "tests/Controller/SocialGroupConversationCreationTest.php"
       ],
-      "ci_run_id": 36335972596,
-      "last_ci_run_id": 36335972596
+      "ci_run_id": 36336179103,
+      "last_ci_run_id": 36336179103
     },
     {
       "priority": 559,
