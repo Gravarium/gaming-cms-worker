@@ -29,6 +29,15 @@ final readonly class PublicGameGuideWidgetProvider implements WidgetProvider
                 'widget/public_guides.html.twig',
                 [],
                 false,
+                [
+                    'count' => [
+                        'label' => 'Anzahl Guides',
+                        'type' => 'int',
+                        'default' => 6,
+                        'min' => 1,
+                        'max' => PublicGameGuideWidgetQuery::MAX_RESULTS,
+                    ],
+                ],
             ),
         ];
     }
