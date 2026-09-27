@@ -3,7 +3,12 @@
 {% block body %}
 <header class="topbar">
     <a class="brand" href="{{ path('app_admin_dashboard') }}">Gaming CMS</a>
-    <a class="button-link button-secondary" href="{{ path('app_admin_category_index') }}">Zurück</a>
+    <nav class="top-actions">
+        <a class="button-link button-secondary" href="{{ path('app_admin_category_index') }}">Zurück</a>
+        {% if form.vars.data is not null and form.vars.data.id is not null %}
+            <a class="button-link" href="{{ path('app_admin_category_move_content', {id: form.vars.data.id}) }}">Inhalte verschieben</a>
+        {% endif %}
+    </nav>
 </header>
 <main class="editor-shell">
     <p class="eyebrow">Kategorien</p>

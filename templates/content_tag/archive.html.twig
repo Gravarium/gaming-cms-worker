@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+{% set site = site_settings() %}
+{% block title %}#{{ tag.name }} | {{ site.siteName }}{% endblock %}
+{% block body %}
+<header class="topbar">
+    <a class="brand" href="{{ path('app_home') }}">{{ site.siteName }}</a>
+    <nav class="top-actions" aria-label="Hauptnavigation">
+        <a href="{{ path('app_news_index') }}">News</a>
+        <a href="{{ path('app_content_search') }}">Suche</a>
+    </nav>
+</header>
+<main class="dashboard">
+    <p class="eyebrow">Inhalte</p>
+    <h1>Tag: #{{ tag.name }}</h1>
+    {% if tag.description %}<p class="muted">{{ tag.description }}</p>{% endif %}
+    <p class="muted">{{ total }} Inhalte</p>
+    <div class="news-grid">
+        {% for entry in entries %}
+            <article class="card">
+                <p class="eyebrow">{{ entry.type == 'news' ? 'News' : 'Seite' }}</p>
+                <h2><a href="{{ entry.type == 'news' ? path('app_news_show', {slug: entry.slug}) : path('app_page_show', {slug: entry.slug}) }}">{{ entry.title }}</a></h2>
+                {% if entry.subtitle %}<p><strong>{{ entry.subtitle }}</strong></p>{% endif %}
+                {% if entry.excerpt %}<p>{{ entry.excerpt }}</p>{% endif %}
+                <p class="news-date">{{ entry.publishedAt|date('d.m.Y H:i') }}</p>
+            </article>
+        {% else %}
+            <p>Keine veröffentlichten Inhalte vorhanden.</p>
+        {% endfor %}
+    </div>
+    {% if pages > 1 %}
+        <nav class="pagination" aria-label="Seitennavigation">
+            {% if page > 1 %}<a href="{{ path('app_content_tag_archive', {slug: tag.slug, page: page - 1}) }}">← Neuer</a>{% endif %}
+            <span>Seite {{ page }} von {{ pages }}</span>
+            {% if page < pages %}<a href="{{ path('app_content_tag_archive', {slug: tag.slug, page: page + 1}) }}">Älter →</a>{% endif %}
+        </nav>
+    {% endif %}
+</main>
+{% endblock %}

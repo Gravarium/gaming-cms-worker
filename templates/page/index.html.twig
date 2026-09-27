@@ -1,0 +1,36 @@
+{% extends 'base.html.twig' %}
+{% set site = site_settings() %}
+{% block title %}Seiten | {{ site.siteName }}{% endblock %}
+{% block body %}
+<header class="topbar">
+    <a class="brand" href="{{ path('app_home') }}">{% if site.logoPath %}<img class="site-logo" src="{{ site.logoPath }}" alt="{{ site.siteName }}">{% else %}{{ site.siteName }}{% endif %}</a>
+    <nav class="top-actions" aria-label="Hauptnavigation">
+        <a href="{{ path('app_news_index') }}">News</a>
+        <a href="{{ path('app_content_search') }}">Suche</a>
+    </nav>
+</header>
+<main class="dashboard">
+    <p class="eyebrow">Inhalte</p>
+    <h1>Seiten</h1>
+    <p class="muted">{{ total }} veröffentlichte Seite{% if total != 1 %}n{% endif %}</p>
+    <div class="news-grid">
+        {% for entry in entries %}
+            <article class="card">
+                <p class="eyebrow">Veröffentlicht{% if entry.publishedAt %} · {{ entry.publishedAt|date('d.m.Y') }}{% endif %}</p>
+                <h2><a href="{{ path('app_page_show', {slug: entry.slug}) }}">{{ entry.title }}</a></h2>
+                {% if entry.subtitle %}<p><strong>{{ entry.subtitle }}</strong></p>{% elseif entry.excerpt %}<p>{{ entry.excerpt }}</p>{% endif %}
+                <a class="button-link button-secondary" href="{{ path('app_page_show', {slug: entry.slug}) }}">Seite lesen</a>
+            </article>
+        {% else %}
+            <p class="muted">Keine veröffentlichten Seiten vorhanden.</p>
+        {% endfor %}
+    </div>
+    {% if pages > 1 %}
+        <nav class="pagination" aria-label="Seitennavigation">
+            {% if page > 1 %}<a href="{{ path('app_page_directory', {page: page - 1}) }}">← Neuere</a>{% endif %}
+            <span>Seite {{ page }} von {{ pages }}</span>
+            {% if page < pages %}<a href="{{ path('app_page_directory', {page: page + 1}) }}">Ältere →</a>{% endif %}
+        </nav>
+    {% endif %}
+</main>
+{% endblock %}

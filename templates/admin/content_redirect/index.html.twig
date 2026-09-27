@@ -1,0 +1,91 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Content-Weiterleitungen | Gaming CMS{% endblock %}
+
+{% block body %}
+<header class="topbar">
+    <a class="brand" href="{{ path('app_admin_dashboard') }}">Gaming CMS</a>
+    <nav class="top-actions">
+        <a class="button-link button-secondary" href="{{ path('app_admin_content_index') }}">Inhalte</a>
+        <a class="button-link button-secondary" href="{{ path('app_admin_dashboard') }}">Übersicht</a>
+    </nav>
+</header>
+
+<main class="dashboard">
+    <p class="eyebrow">Content-Verwaltung</p>
+    <h1>Automatische Weiterleitungen</h1>
+    <p class="muted">Hier findest du ältere Slugs, die nach einer Änderung auf den aktuellen Inhalt weiterleiten. Die Übersicht verändert keine bestehenden Weiterleitungen.</p>
+
+    <section class="panel" aria-label="Weiterleitungen filtern">
+        <form method="get" action="{{ path('app_admin_content_redirect_index') }}">
+            <label for="redirect-search">Alter Slug oder Zielname</label>
+            <input id="redirect-search" type="search" name="q" value="{{ filters.q }}" maxlength="120">
+            <label for="redirect-type">Inhaltstyp</label>
+            <select id="redirect-type" name="type">
+                <option value="" {{ filters.type == '' ? 'selected' : '' }}>Alle Typen</option>
+                <option value="news" {{ filters.type == 'news' ? 'selected' : '' }}>News</option>
+                <option value="page" {{ filters.type == 'page' ? 'selected' : '' }}>Seiten</option>
+            </select>
+            <button type="submit">Filtern</button>
+        </form>
+    </section>
+
+    <article class="panel">
+        <h2>{{ total }} Weiterleitung{{ total == 1 ? '' : 'en' }}</h2>
+        {% if redirects %}
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                    <tr>
+                        <th scope="col">Alter Pfad</th>
+                        <th scope="col">Typ</th>
+                        <th scope="col">Aktuelles Ziel</th>
+                        <th scope="col">Angelegt (UTC)</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for redirect in redirects %}
+                        {% set route_name = redirect.type == 'news' ? 'app_news_show' : 'app_page_show' %}
+                        {% set path_prefix = redirect.type == 'news' ? '/news/' : '/page/' %}
+                        <tr data-redirect-id="{{ redirect.id }}">
+                            <td>
+                                {% if redirect.entry.published %}
+                                    <a href="{{ path(route_name, {slug: redirect.sourceSlug}) }}"><code>{{ path_prefix }}{{ redirect.sourceSlug }}</code></a>
+                                {% else %}
+                                    <code>{{ path_prefix }}{{ redirect.sourceSlug }}</code>
+                                {% endif %}
+                            </td>
+                            <td>{{ redirect.type == 'news' ? 'News' : 'Seite' }}</td>
+                            <td>
+                                {% if redirect.entry.published %}
+                                    <a href="{{ path(route_name, {slug: redirect.entry.slug}) }}">{{ redirect.entry.title }}</a>
+                                    <span class="status status-ready">Aktiv</span>
+                                {% else %}
+                                    <a href="{{ path('app_admin_content_edit', {id: redirect.entry.id}) }}">{{ redirect.entry.title }}</a>
+                                    <span class="status status-disabled">Inaktiv · Ziel nicht veröffentlicht</span>
+                                {% endif %}
+                            </td>
+                            <td>{{ redirect.createdAt|date('d.m.Y H:i:s', 'UTC') }}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <p class="muted" role="status">Keine Weiterleitungen gefunden.</p>
+        {% endif %}
+    </article>
+
+    {% if pages > 1 %}
+        <nav aria-label="Seiten">
+            {% if page > 1 %}
+                <a class="button-link button-secondary" aria-label="Vorherige Seite" href="{{ path('app_admin_content_redirect_index', {q: filters.q, type: filters.type, page: page - 1}) }}">Zurück</a>
+            {% endif %}
+            <span>Seite {{ page }} von {{ pages }}</span>
+            {% if page < pages %}
+                <a class="button-link button-secondary" aria-label="Nächste Seite" href="{{ path('app_admin_content_redirect_index', {q: filters.q, type: filters.type, page: page + 1}) }}">Weiter</a>
+            {% endif %}
+        </nav>
+    {% endif %}
+</main>
+{% endblock %}

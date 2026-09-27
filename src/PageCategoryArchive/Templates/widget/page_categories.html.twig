@@ -1,0 +1,13 @@
+<div class="portal-cards">
+    {% for item in data.categories %}
+        <article class="portal-card">
+            <p class="portal-kicker">{{ item.pageCount }} veröffentlichte Seite{% if item.pageCount != 1 %}n{% endif %}</p>
+            <h3><a href="{{ path('app_content_page_category_archive', {slug: item.category.slug}) }}">{{ item.category.displayName }}</a></h3>
+            {% if item.category.description %}<p>{{ item.category.description }}</p>{% endif %}
+            <a class="portal-read" href="{{ path('app_content_page_category_archive', {slug: item.category.slug}) }}">Seiten ansehen ↗</a>
+        </article>
+    {% else %}
+        <p class="portal-empty">Zurzeit gibt es keine veröffentlichten Seitenkategorien.</p>
+    {% endfor %}
+</div>
+<p class="page-category-action"><a class="portal-read" href="{{ path('app_content_page_category_directory') }}">Alle Seitenkategorien ansehen ↗</a></p>
