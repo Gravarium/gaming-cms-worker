@@ -35218,7 +35218,7 @@
       "package_id": "WCP-514",
       "title": "Promote upcoming public competitions from the page builder",
       "risk": "low",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -35322,7 +35322,7 @@
       },
       "published_at": "2026-09-27T10:29:32.688Z",
       "claimed_on": "2026-09-27T10:29:32.688Z",
-      "claim_state": "active",
+      "claim_state": "locked_until_trusted_resolution",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
       "active_head": "1987b65169cb05392c0addcecb7c91fa9c90be53",
@@ -35332,18 +35332,18 @@
         "feature_branch": "1987b65169cb05392c0addcecb7c91fa9c90be53"
       },
       "last_observed_head": "1987b65169cb05392c0addcecb7c91fa9c90be53",
-      "last_checkpoint_at": "2026-09-27T10:41:55.639Z",
+      "last_checkpoint_at": "2026-09-27T10:43:38.500Z",
       "checkpoint_paths": [
         "src/Widget/UpcomingCompetitionWidgetProvider.php",
         "templates/widget/upcoming_competitions.html.twig",
         "tests/Widget/UpcomingCompetitionWidgetProviderTest.php"
       ],
-      "next_action": "Monitor exact-head Worker CI run #759 (36313247965) on 1987b65169cb05392c0addcecb7c91fa9c90be53. Resolve any concrete test, PHPStan or PostgreSQL failure only within the three allowed paths; after all checks pass, complete the PR report and keep the claim locked through Trusted resolution.",
+      "next_action": "Await Trusted review/resolution with the claim locked. Exact-head Worker PR #307 is complete on 1987b65169cb05392c0addcecb7c91fa9c90be53; CI run #759 (36313247965) passed all PHP/Symfony tests, PHPStan and PostgreSQL 18 migrations. Continue independent pool scheduling without modifying this branch or Trusted.",
       "last_verified_push_at": "2026-09-27T10:39:39Z",
       "worker_pr": 307,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/307",
       "draft_pr": true,
-      "pr_state": "open",
+      "pr_state": "open_draft",
       "worker_pr_state": "draft",
       "worker_pr_changed_paths": [
         "src/Widget/UpcomingCompetitionWidgetProvider.php",
@@ -35352,8 +35352,8 @@
       ],
       "ci_run_id": 36313247965,
       "last_ci_run_id": 36313247965,
-      "ci_result": "in_progress",
-      "last_ci_result": "in_progress",
+      "ci_result": "success",
+      "last_ci_result": "success",
       "ci_attempts": [
         {
           "run_id": 36313084581,
@@ -35368,7 +35368,12 @@
         {
           "run_id": 36313247965,
           "head": "1987b65169cb05392c0addcecb7c91fa9c90be53",
-          "result": "in_progress"
+          "result": "success",
+          "jobs": [
+            "108603090390:success",
+            "108603090512:success"
+          ],
+          "summary": "431 tests, 1,876 assertions; PHPStan no errors; PostgreSQL 18 applied and verified 39 migrations through 20260925070000."
         }
       ]
     }
