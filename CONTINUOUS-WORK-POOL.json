@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T19:08:27.006Z",
+  "published_at": "2026-09-27T19:09:53.974Z",
   "summary": {
     "total_remaining_worker_tasks": 173,
     "completed_worker_prs_awaiting_trusted_review": 302,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-571 is complete with exact-head green CI and PR #365; re-evaluate dependencies and continue autonomous Worker proposals.",
+    "next_required_action": "WCP-572 is claimed on main@7b2ca79405fc12d34bce1386157e929e4668f31a; add public video-feed XML-safety regression and run exact-head CI.",
     "composition_preparable": 0,
     "immediately_actionable": 29,
     "must_continue": true
@@ -46102,6 +46102,101 @@
       "last_ci_result": "success",
       "completed_at": "2026-09-27T19:08:27.006Z",
       "worker_completion_summary": "Exact-head Worker CI #916 / 36343107535 passed on 7cfd663bfe3beedd907a230b0fe9ad12bd6bbf74: 737 tests, 4,635 assertions, 0 failures/errors (1 PHPUnit deprecation, 3 notices); PHPStan reported no errors; PostgreSQL 18 applied 57 migrations with 878 SQL queries. PR #365 is open and ready for Trusted review from main@7b2ca79405fc12d34bce1386157e929e4668f31a; exactly one allowlisted test path changed, with no template or runtime changes."
+    },
+    {
+      "priority": 572,
+      "package_id": "WCP-572",
+      "title": "Test XML safety of public video feed fields",
+      "risk": "low",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-572-video-feed-xml-escaping-g1",
+      "suggested_branch": "feature/wcp-572-video-feed-xml-escaping-g1",
+      "base_branch": "main",
+      "base_sha": "7b2ca79405fc12d34bce1386157e929e4668f31a",
+      "objective": "Add test-only RSS regression coverage proving that public video titles containing markup are XML-escaped as text and descriptions with markup are stripped and safely encoded. Parse the feed and verify payloads never become executable XML elements. Do not change feed templates or runtime source.",
+      "allowed_paths": [
+        "tests/Controller/VideoFeedTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "CONTINUOUS-WORKER.md",
+        "CONTINUOUS-WORK-POOL.json",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/",
+        "src/",
+        "templates/"
+      ],
+      "deliverables": [
+        "A published test video with script-like title and HTML-bearing description is returned as valid RSS XML.",
+        "Assertions verify title is preserved only as XML text, description content is stripped/escaped per existing feed contract, and no script/image elements appear.",
+        "Test-only change; no source, template, schema or migration modification."
+      ],
+      "tests": [
+        "Targeted VideoFeedTest.",
+        "Complete exact-head Worker CI including PHPStan, full PHPUnit, template/config checks, and PostgreSQL 18 migration chain."
+      ],
+      "completion_report": [
+        "Exact sanitized base and final HEAD; changed path and Worker PR state.",
+        "RSS parsing and title/description XML-safety assertions.",
+        "Targeted regression and exact-head full Worker CI results.",
+        "Test-only package; no runtime changes."
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-Trusted-review-and-exact-head-CI",
+        "preserve-all-security-permissions-CSRF-validation-recovery-rollback-and-upload-controls",
+        "no-private-runtime-or-sensitive-data",
+        "no-template-or-runtime-code-changes",
+        "no-edit-to-active-or-claim-locked-paths",
+        "no-direct-Trusted-integration-or-deployment"
+      ],
+      "proposal_kind": "worker_only",
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "7b2ca79405fc12d34bce1386157e929e4668f31a",
+      "proposal_dependency_evidence": [],
+      "collision_check": {
+        "compared_against": "Fresh continuous/work-pool-v4 file blob @ 50a58d60f25ad6eab98c1abf5ad64cffcc7fde0b; current sanitized main @ 7b2ca79405fc12d34bce1386157e929e4668f31a; every unclaimed, active, and claim-locked task.",
+        "result": "No overlap with any active or claim-locked task. Existing WCP-389 hit is trusted_integrated with claim released; no active writer. This is test-only coverage of existing XML escaping/striptags behavior and reserves no source or template.",
+        "paths": [
+          "tests/Controller/VideoFeedTest.php"
+        ],
+        "observed_nonblocking_path_hits": [
+          {
+            "id": "WCP-389",
+            "state": "trusted_integrated",
+            "claim": "released_after_trusted_integration"
+          }
+        ]
+      },
+      "published_at": "2026-09-27T19:09:53.974Z",
+      "claimed_on": "2026-09-27T19:09:53.974Z",
+      "claim_state": "active",
+      "active_base_branch": "main",
+      "active_base_sha": "7b2ca79405fc12d34bce1386157e929e4668f31a",
+      "active_head": "7b2ca79405fc12d34bce1386157e929e4668f31a",
+      "resume_branch": "feature/wcp-572-video-feed-xml-escaping-g1",
+      "branch_heads": {
+        "claim_branch": "7b2ca79405fc12d34bce1386157e929e4668f31a",
+        "feature_branch": "7b2ca79405fc12d34bce1386157e929e4668f31a"
+      },
+      "last_observed_head": "7b2ca79405fc12d34bce1386157e929e4668f31a",
+      "last_checkpoint_at": "2026-09-27T19:09:53.974Z",
+      "checkpoint_paths": [],
+      "next_action": "Add an RSS XML regression with markup in video title and description; assert valid parse, inert title text, sanitized description and no executable elements."
     }
   ],
   "recovery_queue": [],
