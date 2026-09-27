@@ -27380,7 +27380,7 @@
       "package_id": "WCP-463",
       "title": "Search and paginate the administrative video catalogue",
       "risk": "medium",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -27466,12 +27466,12 @@
       },
       "published_at": "2026-09-27T03:56:46.866Z",
       "claimed_on": "2026-09-27T03:56:46.866Z",
-      "claim_state": "active",
+      "claim_state": "locked_until_trusted_resolution",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
       "active_head": "4deb6fcdfa21b544b7b996250530b9325870c405",
       "resume_branch": "feature/wcp-463-admin-video-browser-g1",
-      "last_checkpoint_at": "2026-09-27T09:03:43.735Z",
+      "last_checkpoint_at": "2026-09-27T09:05:56.764Z",
       "checkpoint_paths": [
         "src/Controller/AdminVideoController.php",
         "src/Video/AdminVideoBrowser.php",
@@ -27483,12 +27483,12 @@
         "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
         "feature_branch": "4deb6fcdfa21b544b7b996250530b9325870c405"
       },
-      "next_action": "Monitor exact-head Worker CI run 36308122964 on HEAD 4deb6fcdfa21b544b7b996250530b9325870c405; diagnose and repair any failure before marking the PR ready.",
+      "next_action": "Await Trusted review and integration decision; keep the WCP-463 claim locked until Trusted explicitly resolves it.",
       "last_observed_head": "4deb6fcdfa21b544b7b996250530b9325870c405",
-      "last_verified_push_at": "2026-09-27T09:03:43.735Z",
+      "last_verified_push_at": "2026-09-27T09:05:56.764Z",
       "worker_pr": 282,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/282",
-      "draft_pr": true,
+      "draft_pr": false,
       "pr_state": "open",
       "worker_pr_changed_paths": [
         "src/Controller/AdminVideoController.php",
@@ -27499,8 +27499,8 @@
       ],
       "ci_run_id": 36308122964,
       "last_ci_run_id": 36308122964,
-      "ci_result": "in_progress",
-      "last_ci_result": "in_progress",
+      "ci_result": "success",
+      "last_ci_result": "success",
       "ci_attempts": [
         {
           "run_id": 36307920947,
@@ -27514,7 +27514,32 @@
           "result": "in_progress",
           "summary": "Full exact-head Worker CI rerun after correcting all six selector-count calls."
         }
-      ]
+      ],
+      "final_head": "4deb6fcdfa21b544b7b996250530b9325870c405",
+      "completion_summary": "Completed the administrative video inventory with case-insensitive bounded title search, publication-state and category filters, stable 25-row pagination, result counts and past-end clamping. Normalized list context follows create/edit/delete routes and return links. Existing CMS_VIDEO_MANAGE authorization, delete CSRF, video uploads, categories, playlists and public playback remain intact. Five allowed paths changed; no schema, repository or migration changes.",
+      "completion_evidence": {
+        "exact_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+        "final_head": "4deb6fcdfa21b544b7b996250530b9325870c405",
+        "changed_paths": [
+          "src/Controller/AdminVideoController.php",
+          "src/Video/AdminVideoBrowser.php",
+          "templates/admin/video/index.html.twig",
+          "templates/admin/video/form.html.twig",
+          "tests/Controller/AdminVideoDirectoryBrowserTest.php"
+        ],
+        "worker_pr": 282,
+        "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/282",
+        "ci_run_id": 36308122964,
+        "ci_result": "success",
+        "phpstan": "No errors.",
+        "phpunit": "434 tests and 1,968 assertions passed.",
+        "postgresql": "PostgreSQL 18 complete migration validation passed: 39 migrations, 470 SQL queries, 0 unavailable migrations."
+      },
+      "open_limitations": [
+        "Title search only; category and playlist management tables remain unchanged and unpaginated.",
+        "Awaiting Trusted review and full Trusted CI/integration; Worker output remains untrusted."
+      ],
+      "trusted_follow_up": "On the Trusted branch, verify CMS_VIDEO_MANAGE access, filter bounds and status semantics, normalized links, Doctrine search/count behavior on PostgreSQL, and the unchanged media upload/rollback and public playback paths. Run complete Trusted CI on the exact Trusted HEAD before any integration or deployment."
     },
     {
       "priority": 464,
