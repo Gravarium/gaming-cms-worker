@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T08:17:18.764Z",
+  "published_at": "2026-09-27T08:18:36.637Z",
   "summary": {
     "total_remaining_worker_tasks": 141,
     "completed_worker_prs_awaiting_trusted_review": 251,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-485 has a coherent checkpoint at f6704a899cf654d0c07d87a1e3d4fe913935b549 on its reserved feature branch; verify the exact remote files, then open a draft PR and run full Worker CI. Other worker claims remain owned by their existing branches.",
+    "next_required_action": "WCP-485 has a corrected remote checkpoint at 64abd7e3a3f6a3f595120bb2a78efc88698c6f0a; open the draft Worker PR and run full exact-head CI. WCP-484 remains owned by its active worker.",
     "composition_preparable": 0,
     "immediately_actionable": 4,
     "must_continue": true
@@ -31121,15 +31121,15 @@
       "claim_state": "active",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-      "active_head": "f6704a899cf654d0c07d87a1e3d4fe913935b549",
+      "active_head": "64abd7e3a3f6a3f595120bb2a78efc88698c6f0a",
       "resume_branch": "feature/wcp-485-public-content-tag-archive-g1",
       "branch_heads": {
         "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5",
-        "feature_branch": "f6704a899cf654d0c07d87a1e3d4fe913935b549"
+        "feature_branch": "64abd7e3a3f6a3f595120bb2a78efc88698c6f0a"
       },
-      "last_observed_head": "f6704a899cf654d0c07d87a1e3d4fe913935b549",
-      "last_checkpoint_at": "2026-09-27T08:17:18.764Z",
-      "last_verified_push_at": "2026-09-27T08:17:18.764Z",
+      "last_observed_head": "64abd7e3a3f6a3f595120bb2a78efc88698c6f0a",
+      "last_checkpoint_at": "2026-09-27T08:18:36.637Z",
+      "last_verified_push_at": "2026-09-27T08:18:36.637Z",
       "checkpoint_paths": [
         "src/Controller/PublicContentTagArchiveController.php",
         "src/Repository/PublicContentTagArchiveRepository.php",
@@ -31137,7 +31137,7 @@
         "templates/content_tag/archive.html.twig",
         "tests/Controller/PublicContentTagArchiveTest.php"
       ],
-      "next_action": "Review the exact checkpoint for syntax and scope, then open a draft Worker PR to run focused PHPUnit, PHPStan level 8, full Worker CI and PostgreSQL migration validation; repair any failure on this branch."
+      "next_action": "Open or update the draft Worker PR at the current exact feature HEAD, run full Worker CI, inspect every job and repair only on this branch if required."
     }
   ],
   "recovery_queue": [],
