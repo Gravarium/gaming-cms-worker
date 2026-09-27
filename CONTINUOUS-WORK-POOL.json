@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-26T23:46:48.636Z",
+  "published_at": "2026-09-27T00:00:21.295Z",
   "summary": {
     "total_remaining_worker_tasks": 137,
     "completed_worker_prs_awaiting_trusted_review": 203,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-435 PR #228 is complete on exact green HEAD 0d33e2d1f10d3ee981d6619544fb28f4d90d6a9e; keep its claim locked for Trusted review and continue with an independent package.",
+    "next_required_action": "WCP-434 is active at exact feature HEAD 3becc3a6fdcba414a40dca90529704c57e0d6135; finish review, then run complete Worker CI on this commit and repair failures on the same branch.",
     "composition_preparable": 0,
     "immediately_actionable": 0,
     "must_continue": true
@@ -23238,7 +23238,7 @@
       "proposal_dependency_evidence": [],
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "3becc3a6fdcba414a40dca90529704c57e0d6135",
       "resume_branch": "feature/wcp-434-layout-page-directory-g1",
       "collision_check": {
         "compared_against": "Fresh continuous/work-pool-v4 blob 693cfffc170dba611a219892aa137f0f0bb4715b, all active and claim-locked allowlists, and exact sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d.",
@@ -23253,14 +23253,20 @@
       },
       "claimed_on": "2026-09-26T23:46:48.636Z",
       "claim_state": "active",
-      "last_checkpoint_at": "2026-09-26T23:46:48.636Z",
-      "last_verified_push_at": "2026-09-26T23:46:48.636Z",
-      "checkpoint_paths": [],
+      "last_checkpoint_at": "2026-09-27T00:00:21.295Z",
+      "last_verified_push_at": "2026-09-27T00:00:21.295Z",
+      "checkpoint_paths": [
+        "src/Controller/AdminLayoutPageDirectoryController.php",
+        "src/Repository/AdminLayoutPageDirectoryRepository.php",
+        "templates/admin/layout/edit.html.twig",
+        "templates/admin/layout/pages.html.twig",
+        "tests/Controller/AdminLayoutPageDirectoryTest.php"
+      ],
       "branch_heads": {
         "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-        "feature_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d"
+        "feature_branch": "3becc3a6fdcba414a40dca90529704c57e0d6135"
       },
-      "next_action": "Implement the read-only page layout directory, editor link and functional boundary tests on this feature branch; push a coherent checkpoint before interruption."
+      "next_action": "Review the exact feature HEAD, open a draft Worker PR to run the full CI, and repair any failures on this branch before marking it ready."
     },
     {
       "priority": 215,
