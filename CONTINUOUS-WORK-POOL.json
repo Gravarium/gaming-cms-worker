@@ -10,7 +10,7 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T15:25:22.990Z",
+  "published_at": "2026-09-27T15:33:46.121Z",
   "summary": {
     "total_remaining_worker_tasks": 167,
     "completed_worker_prs_awaiting_trusted_review": 294,
@@ -41613,16 +41613,24 @@
       "claim_state": "active",
       "active_base_branch": "fix/fcp-061-phpstan-g1",
       "active_base_sha": "ec6bb200affc3e5a46d416e98f7a1b0621c38ded",
-      "active_head": "ec6bb200affc3e5a46d416e98f7a1b0621c38ded",
+      "active_head": "7b1ac3e4c01f2d7c1404996405a2366f7ada75fa",
       "resume_branch": "feature/wcp-550-public-competition-bracket-g1",
       "branch_heads": {
         "claim_branch": "ec6bb200affc3e5a46d416e98f7a1b0621c38ded",
-        "feature_branch": "ec6bb200affc3e5a46d416e98f7a1b0621c38ded"
+        "feature_branch": "7b1ac3e4c01f2d7c1404996405a2366f7ada75fa"
       },
-      "last_checkpoint_at": "2026-09-27T15:07:05.909Z",
-      "checkpoint_paths": [],
+      "last_checkpoint_at": "2026-09-27T15:33:46.121Z",
+      "checkpoint_paths": [
+        "src/Controller/PublicCompetitionBracketController.php",
+        "src/Repository/PublicCompetitionBracketRepository.php",
+        "src/Widget/PublicCompetitionBracketWidgetProvider.php",
+        "templates/competition_bracket/show.html.twig",
+        "templates/widget/public_competition_brackets.html.twig",
+        "tests/Controller/PublicCompetitionBracketControllerTest.php",
+        "tests/Widget/PublicCompetitionBracketWidgetTest.php"
+      ],
       "ci_attempts": [],
-      "next_action": "Implement the bounded public bracket view, public-compilation Page Builder widget and visibility/module-gate tests on the exact FCP-061 base."
+      "next_action": "Open a draft worker PR against fix/fcp-061-phpstan-g1 to run complete CI on the exact checkpoint HEAD; fix all failures before marking ready."
     },
     {
       "priority": 551,
