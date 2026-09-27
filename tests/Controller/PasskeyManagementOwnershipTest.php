@@ -106,6 +106,9 @@ final class PasskeyManagementOwnershipTest extends WebTestCase
         $entityManager->persist($foreign);
         $entityManager->flush();
 
+        $ownerId = $owner->getId();
+        self::assertNotNull($ownerId);
+
         $credentialName = 'Owner passkey '.$suffix;
         $credential = new CredentialRecord(
             rtrim(strtr(base64_encode(random_bytes(24)), '+/', '-_'), '='),
@@ -115,7 +118,7 @@ final class PasskeyManagementOwnershipTest extends WebTestCase
             EmptyTrustPath::create(),
             Uuid::v4(),
             base64_encode(random_bytes(64)),
-            (string) $owner->getId(),
+            (string) $ownerId,
             0,
             name: $credentialName,
         );
