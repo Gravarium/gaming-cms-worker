@@ -17,7 +17,7 @@
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-466 is complete on green exact-head Worker PR #258. Continue with the next independent Worker-only proposal; keep WCP-463 and WCP-464 claims untouched and preserve blocked FCP dependencies.",
+    "next_required_action": "WCP-466 is complete on green exact-head Worker PR #258; WCP-467 is claimed on sanitized main for admin menu authorization and CSRF coverage. Preserve WCP-463 and WCP-464 claims.",
     "composition_preparable": 0,
     "immediately_actionable": 3,
     "must_continue": true
@@ -27913,6 +27913,99 @@
         "Awaiting Trusted review and Trusted integration CI."
       ],
       "trusted_follow_up": "Preserve CMS_SETTINGS_MANAGE and Symfony form CSRF enforcement before settings persistence; keep media upload/storage rollback behavior unchanged; run full Trusted CI."
+    },
+    {
+      "priority": 467,
+      "package_id": "WCP-467",
+      "title": "Protect admin menu creation and removal with authorization and CSRF",
+      "risk": "medium",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-467-admin-menu-write-security-g1",
+      "suggested_branch": "feature/wcp-467-admin-menu-write-security-g1",
+      "base_branch": "main",
+      "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "objective": "Add test-only functional security coverage for the existing admin menu editor. Verify CMS_CONTENT_MANAGE protects menu listing and create/delete requests, missing or invalid Symfony form CSRF tokens do not create menu entries, and the rendered route-specific deletion token is required before deleting an existing menu entry. Keep menu items and synthetic users cleaned up; do not change controller, form, template, content or schema code.",
+      "allowed_paths": [
+        "tests/Controller/AdminMenuWriteSecurityTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "src/",
+        "templates/",
+        "migrations/",
+        "config/",
+        "public/uploads/"
+      ],
+      "deliverables": [
+        "An authenticated user without CMS_CONTENT_MANAGE cannot view the menu, open the editor, create a menu item or delete a synthetic item.",
+        "Missing and invalid form CSRF tokens return 422 and do not persist a submitted menu item.",
+        "A rendered menu form token creates an allowed external-link item; missing or invalid route-specific delete tokens preserve an existing item, while the rendered delete token removes it.",
+        "Synthetic menu entries and users are removed during cleanup; keep the change to the one test file."
+      ],
+      "tests": [
+        "Focused AdminMenuWriteSecurityTest functional PHPUnit coverage for access denial, create-form CSRF, rendered valid create, route-specific delete CSRF, valid delete and cleanup.",
+        "PHPStan level 8 and complete Worker CI on exact final HEAD.",
+        "PostgreSQL 18 complete migration-chain validation."
+      ],
+      "completion_report": [
+        "Exact sanitized main base SHA and final Worker HEAD SHA.",
+        "Complete changed-path list and Worker PR.",
+        "Permission denial and unchanged menu rows after invalid/missing CSRF; rendered-token create/delete evidence.",
+        "Focused and complete test commands/results, PHPStan and exact-head CI run.",
+        "Remaining Trusted integration follow-up."
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "preserve-CMS_CONTENT_MANAGE-and-menu-form-route-specific-CSRF",
+        "denied-or-invalid-menu-mutations-must-not-change-persistent-menu-items",
+        "restore-all-synthetic-menu-items-users-and-audit-state",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment",
+        "no-private-runtime-or-sensitive-data"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "proposal_kind": "worker_only",
+      "proposal_dependency_evidence": [],
+      "collision_check": {
+        "compared_against": "Fresh continuous/work-pool-v4 at 2a84f76c7d68b395f63114205649902153be6d85, all active and claim-locked allowed-path scopes, and exact sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d.",
+        "result": "No active or claim-locked package owns or encloses tests/Controller/AdminMenuWriteSecurityTest.php; the test is absent from exact sanitized main. Existing SiteConfigurationAccessTest covers anonymous login redirects for /admin/menu but not authenticated CMS_CONTENT_MANAGE denial, form-CSRF persistence, or menu deletion tokens. Related menu implementation/test scopes in the pool: WCP-350 (worker_complete_awaiting_trusted_review, src/Form/MenuItemType.php, tests/Controller/MenuItemUrlBoundaryTest.php); WCP-392 (worker_complete_awaiting_trusted_review, src/Twig/SiteExtension.php, src/Repository/MenuItemRepository.php, templates/base.html.twig, templates/menu/main_navigation.html.twig, templates/admin/menu/index.html.twig, tests/Controller/PublicMenuRenderingTest.php); WCP-414 (worker_complete_awaiting_trusted_review, src/Controller/AdminMenuOrderController.php, templates/admin/menu/form.html.twig, templates/admin/menu/order.html.twig, tests/Controller/AdminMenuOrderingTest.php). This proposal touches only its dedicated controller test file and does not edit another task's paths or dependencies.",
+        "paths": [
+          "tests/Controller/AdminMenuWriteSecurityTest.php"
+        ]
+      },
+      "published_at": "2026-09-27T04:38:54.752Z",
+      "claimed_on": "2026-09-27T04:38:54.752Z",
+      "claim_state": "active",
+      "active_base_branch": "main",
+      "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "resume_branch": "feature/wcp-467-admin-menu-write-security-g1",
+      "last_checkpoint_at": "2026-09-27T04:38:54.752Z",
+      "checkpoint_paths": [],
+      "branch_heads": {
+        "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+        "feature_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d"
+      },
+      "next_action": "Implement menu authorization, form-CSRF and route-specific delete-CSRF functional regressions in the one allowed test file; checkpoint the focused tests and run complete exact-head Worker CI.",
+      "last_observed_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "last_verified_push_at": "2026-09-27T04:38:54.752Z"
     }
   ],
   "recovery_queue": [],
