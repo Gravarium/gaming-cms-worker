@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T14:53:42.927Z",
+  "published_at": "2026-09-27T15:01:16.715Z",
   "summary": {
     "total_remaining_worker_tasks": 167,
     "completed_worker_prs_awaiting_trusted_review": 293,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "Implement WCP-548 on feature/wcp-548-public-guild-role-needs-widget-g1 from exact green predecessor HEAD 991a1ec5ae42be72b3e36de12bb47bd3848683ca; use only its five reserved paths.",
+    "next_required_action": "Open a draft Worker PR against main to trigger the repository's PR-only Worker CI; run full CI on exact HEAD 5adb410edf08220a9b8abbb000d2c3679a9725b4. After green, retarget the stacked PR to exact WCP-541 base 991a1ec5ae42be72b3e36de12bb47bd3848683ca so the final diff contains only the five WCP-548 paths, then mark ready.",
     "composition_preparable": 0,
     "immediately_actionable": 28,
     "must_continue": true
@@ -41110,16 +41110,22 @@
       "claim_state": "active",
       "active_base_branch": "feature/wcp-541-guild-role-needs-g1",
       "active_base_sha": "991a1ec5ae42be72b3e36de12bb47bd3848683ca",
-      "active_head": "991a1ec5ae42be72b3e36de12bb47bd3848683ca",
+      "active_head": "5adb410edf08220a9b8abbb000d2c3679a9725b4",
       "resume_branch": "feature/wcp-548-public-guild-role-needs-widget-g1",
       "branch_heads": {
         "claim_branch": "991a1ec5ae42be72b3e36de12bb47bd3848683ca",
-        "feature_branch": "991a1ec5ae42be72b3e36de12bb47bd3848683ca"
+        "feature_branch": "5adb410edf08220a9b8abbb000d2c3679a9725b4"
       },
-      "last_observed_head": "991a1ec5ae42be72b3e36de12bb47bd3848683ca",
-      "last_checkpoint_at": "2026-09-27T14:53:42.927Z",
-      "checkpoint_paths": [],
-      "next_action": "Create the exact claim and feature branches from the green WCP-541 HEAD; implement only the five reserved files and test visibility, clamping and empty state.",
+      "last_observed_head": "5adb410edf08220a9b8abbb000d2c3679a9725b4",
+      "last_checkpoint_at": "2026-09-27T15:01:16.715Z",
+      "checkpoint_paths": [
+        "src/Widget/PublicGuildRoleNeedsWidgetProvider.php",
+        "src/Widget/GuildRoleNeeds/PublicGuildRoleNeedsWidgetQuery.php",
+        "src/GuildRoleNeedsWidget/Templates/widget/public_guild_role_needs.html.twig",
+        "config/packages/guild_role_needs_widget.yaml",
+        "tests/Widget/PublicGuildRoleNeedsWidgetProviderTest.php"
+      ],
+      "next_action": "Open a draft Worker PR against main to trigger the repository's PR-only Worker CI; run full CI on exact HEAD 5adb410edf08220a9b8abbb000d2c3679a9725b4. After green, retarget the stacked PR to exact WCP-541 base 991a1ec5ae42be72b3e36de12bb47bd3848683ca so the final diff contains only the five WCP-548 paths, then mark ready.",
       "worker_pr_state": "not_created",
       "worker_pr_changed_paths": [],
       "worker_pr_base_branch": "feature/wcp-541-guild-role-needs-g1",
@@ -41127,7 +41133,8 @@
       "pr_state": "not_created",
       "ci_result": "not_started",
       "last_ci_result": "not_started",
-      "ci_attempts": []
+      "ci_attempts": [],
+      "last_verified_push_at": "2026-09-27T15:01:16.715Z"
     }
   ],
   "recovery_queue": [],
