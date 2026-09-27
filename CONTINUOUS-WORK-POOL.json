@@ -10,10 +10,10 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T11:56:28.902Z",
+  "published_at": "2026-09-27T11:57:21.289Z",
   "summary": {
-    "total_remaining_worker_tasks": 165,
-    "completed_worker_prs_awaiting_trusted_review": 281,
+    "total_remaining_worker_tasks": 164,
+    "completed_worker_prs_awaiting_trusted_review": 282,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
@@ -36974,7 +36974,7 @@
       "package_id": "WCP-525",
       "title": "Keep unpublished and unlisted content out of public discovery feeds",
       "risk": "medium",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -37050,7 +37050,7 @@
       },
       "published_at": "2026-09-27T11:45:00.021Z",
       "claimed_on": "2026-09-27T11:45:00.021Z",
-      "claim_state": "active",
+      "claim_state": "locked_until_trusted_resolution",
       "active_base_branch": "main",
       "active_base_sha": "b510875e7b0741b9b19f09429d2204a95df51198",
       "active_head": "3c1bab1dc29f8f4441add3fbeecf17cc3c82f4b3",
@@ -37065,21 +37065,21 @@
         "templates/content/feed.xml.twig",
         "tests/Controller/Content/PublicContentDiscoveryVisibilityTest.php"
       ],
-      "next_action": "Monitor exact-head Worker CI run 36317226668 for HEAD 3c1bab1dc29f8f4441add3fbeecf17cc3c82f4b3; repair only concrete failures within the two allowed WCP-525 paths.",
+      "next_action": "Worker PR #316 is complete on exact green HEAD 3c1bab1dc29f8f4441add3fbeecf17cc3c82f4b3; claim remains locked until Trusted resolution.",
       "worker_pr": 316,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/316",
       "worker_pr_changed_paths": [
         "templates/content/feed.xml.twig",
         "tests/Controller/Content/PublicContentDiscoveryVisibilityTest.php"
       ],
-      "draft_pr": true,
+      "draft_pr": false,
       "pr_state": "open",
-      "worker_pr_state": "draft",
+      "worker_pr_state": "ready_for_review",
       "last_verified_push_at": "2026-09-27T11:55:05.312Z",
       "ci_run_id": 36317226668,
       "last_ci_run_id": 36317226668,
-      "ci_result": "in_progress",
-      "last_ci_result": "in_progress",
+      "ci_result": "success",
+      "last_ci_result": "success",
       "ci_attempts": [
         {
           "run_id": 36316842638,
@@ -37091,9 +37091,12 @@
         {
           "run_id": 36317226668,
           "head": "3c1bab1dc29f8f4441add3fbeecf17cc3c82f4b3",
-          "result": "in_progress"
+          "result": "success",
+          "conclusion": "success"
         }
-      ]
+      ],
+      "final_head": "3c1bab1dc29f8f4441add3fbeecf17cc3c82f4b3",
+      "completed_at": "2026-09-27T11:57:21.289Z"
     },
     {
       "priority": 526,
