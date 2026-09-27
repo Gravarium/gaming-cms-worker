@@ -30,6 +30,7 @@ final class AdminAccessRoleDelegationSecurityTest extends WebTestCase
             $crawler = $client->request('GET', '/admin/access-roles/new');
             $form = $crawler->selectButton('Rolle speichern')->form();
             $values = $form->getPhpValues();
+            self::assertNotEmpty($values['access_role']['_token'] ?? null, 'Use the CSRF token rendered in the form.');
             $values['access_role']['key'] = $key;
             $values['access_role']['name'] = 'Delegation create test';
             $values['access_role']['description'] = 'Synthetic security regression fixture';
@@ -76,6 +77,7 @@ final class AdminAccessRoleDelegationSecurityTest extends WebTestCase
             $crawler = $client->request('GET', '/admin/access-roles/'.$roleId.'/edit');
             $form = $crawler->selectButton('Rolle speichern')->form();
             $values = $form->getPhpValues();
+            self::assertNotEmpty($values['access_role']['_token'] ?? null, 'Use the CSRF token rendered in the form.');
             $values['access_role']['permissions'] = [CmsPermission::USERS, CmsPermission::SETTINGS];
 
             $client->request('POST', '/admin/access-roles/'.$roleId.'/edit', $values);
@@ -88,7 +90,8 @@ final class AdminAccessRoleDelegationSecurityTest extends WebTestCase
                 'A rejected role edit must not record an audit event.',
             );
 
-            $entityManager->clear();
+            $freshEntityManager = $this->entityManager($client);
+            $freshEntityManager->clear();
             $storedRole = $client->getContainer()->get(AccessRoleRepository::class)->find($roleId);
             self::assertInstanceOf(AccessRole::class, $storedRole);
             self::assertSame('Delegation edit test', $storedRole->getName());
