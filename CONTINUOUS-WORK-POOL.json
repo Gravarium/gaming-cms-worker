@@ -35997,14 +35997,19 @@
       "claim_state": "active",
       "active_base_branch": "main",
       "active_base_sha": "b510875e7b0741b9b19f09429d2204a95df51198",
-      "active_head": "b510875e7b0741b9b19f09429d2204a95df51198",
+      "active_head": "12b17d208ea55044d4e2a24155b724d00ea5d6c5",
       "resume_branch": "feature/wcp-519-notification-topic-ownership-g1",
       "branch_heads": {
         "claim_branch": "b510875e7b0741b9b19f09429d2204a95df51198",
-        "feature_branch": "b510875e7b0741b9b19f09429d2204a95df51198"
+        "feature_branch": "12b17d208ea55044d4e2a24155b724d00ea5d6c5"
       },
-      "next_action": "Create claim and feature refs from the exact current sanitized main SHA. Add only the notification-topic ownership and CSRF regression test, then run focused PHPUnit and exact-head Worker CI.",
-      "checkpoint_paths": []
+      "next_action": "Open a draft Worker PR and inspect the exact-head full CI; repair concrete failures only within the dedicated notification ownership test.",
+      "checkpoint_paths": [
+        "tests/Controller/NotificationPreferences/NotificationSubscriptionOwnershipTest.php"
+      ],
+      "last_observed_head": "12b17d208ea55044d4e2a24155b724d00ea5d6c5",
+      "last_checkpoint_at": "2026-09-27T11:02:38.728Z",
+      "last_verified_push_at": "2026-09-27T11:02:38.728Z"
     }
   ],
   "recovery_queue": [],
