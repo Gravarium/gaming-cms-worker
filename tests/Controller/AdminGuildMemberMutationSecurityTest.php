@@ -91,7 +91,7 @@ final class AdminGuildMemberMutationSecurityTest extends WebTestCase
                 $values = $this->renderedFormValues($client, $newPath, $case['name'], $case['mode']);
                 $client->request('POST', $newPath, $values);
 
-                self::assertResponseIsSuccessful();
+                self::assertResponseStatusCodeSame(422);
                 self::assertNull($this->findMemberByCharacterName($client, $case['name']));
             }
 
@@ -112,7 +112,7 @@ final class AdminGuildMemberMutationSecurityTest extends WebTestCase
                 $values = $this->renderedFormValues($client, $editPath, $case['name'], $case['mode']);
                 $client->request('POST', $editPath, $values);
 
-                self::assertResponseIsSuccessful();
+                self::assertResponseStatusCodeSame(422);
                 $this->assertStoredMember($client, $targetId, $guildId, 'Original target');
                 self::assertNull($this->findMemberByCharacterName($client, $case['name']));
             }
