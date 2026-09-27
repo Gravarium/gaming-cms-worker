@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T09:59:13.785Z",
+  "published_at": "2026-09-27T10:00:17.122Z",
   "summary": {
-    "total_remaining_worker_tasks": 156,
+    "total_remaining_worker_tasks": 157,
     "completed_worker_prs_awaiting_trusted_review": 265,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-500 is complete on exact green HEAD 95aae6029159fe93e40336ab5a9c765d94011e0c and locked for Trusted review. Re-evaluate remaining dependency-safe work and continue with the next independent Worker-only task; keep this claim untouched.",
+    "next_required_action": "WCP-504 is actively claimed from exact sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d. Implement the configurable internal call-to-action widget with fixed module-owned routes, editor preview coverage and full exact-head Worker CI; keep foreign claims untouched.",
     "composition_preparable": 0,
     "immediately_actionable": 14,
     "must_continue": true
@@ -33776,6 +33776,112 @@
         "tests/Controller/GuildApplicationStatusTest.php"
       ],
       "next_action": "Implement the authenticated, private guild application status view and public-profile link within the allowed paths; push a complete checkpoint and run the focused test plus full exact-head Worker CI."
+    },
+    {
+      "priority": 504,
+      "package_id": "WCP-504",
+      "title": "Add a configurable internal call-to-action widget to the page builder",
+      "risk": "low",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-504-internal-cta-widget-g1",
+      "suggested_branch": "feature/wcp-504-internal-cta-widget-g1",
+      "base_branch": "main",
+      "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "objective": "Complete the existing layout/widget module with a reusable internal call-to-action block. The hero widget has fixed navigation links and the text widget is plain text, so editors cannot add a configurable destination button to another page region. Register a new core.call-to-action widget through the existing tagged WidgetProvider contract. Let editors configure button text and choose only existing internal news, guild and video directory routes; render no button when the selected target module is disabled. Do not accept arbitrary URLs or alter the layout editor, registry, schema or route definitions.",
+      "allowed_paths": [
+        "src/Widget/CallToActionWidgetProvider.php",
+        "templates/widget/call_to_action.html.twig",
+        "tests/Widget/CallToActionWidgetProviderTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "config/",
+        "migrations/",
+        "src/Controller/",
+        "src/Entity/",
+        "src/Form/",
+        "src/Repository/",
+        "src/Layout/",
+        "src/Widget/BundledWidgetProvider.php",
+        "templates/admin/",
+        "templates/layout/",
+        "assets/",
+        "public/"
+      ],
+      "deliverables": [
+        "The layout editor discovers a new core.call-to-action widget from the existing auto-tagged WidgetProvider registry without changing the editor.",
+        "The widget reuses the existing title/text settings and adds a bounded button label plus a fixed destination choice for public news, gaming/guilds or videos.",
+        "The server maps each destination to a static internal route and its owning module; arbitrary URLs, route names and external schemes are never accepted.",
+        "The widget renders escaped copy and a useful internal link only while the target module is enabled; disabled-module targets render no call-to-action content.",
+        "Only the new provider, its dedicated public widget template and focused widget workflow tests change; no schema, migration, route or shared navigation changes."
+      ],
+      "tests": [
+        "Focused functional coverage proves the widget appears in the layout editor palette and its fields are configured through the existing WidgetDefinition schema.",
+        "Preview workflow tests render each fixed internal destination, verify escaped heading/button text and reject arbitrary or malformed destinations.",
+        "A target-module-disabled regression proves the CTA is omitted while the layout remains valid.",
+        "PHPStan level 8 and complete Worker CI on the exact final HEAD, including PostgreSQL 18 migration-chain validation."
+      ],
+      "completion_report": [
+        "Exact sanitized main/base SHA and final Worker HEAD.",
+        "Complete changed-path list and Worker PR.",
+        "Editor-discovery, preview rendering, safe destination and disabled-module test results.",
+        "Exact-head PHPStan, PHPUnit, PostgreSQL migration and full Worker CI evidence, open limitations and Trusted integration follow-up."
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "only-static-internal-route-destinations-are-rendered",
+        "disabled-target-modules-fail-closed-with-no-stale-cta-output",
+        "escape-all-editor-provided-text",
+        "no-schema-migration-controller-editor-registry-shared-navigation-or-private-runtime-change",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "red-CI-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment",
+        "no-private-runtime-or-sensitive-data"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "proposal_kind": "worker_only",
+      "proposal_dependency_evidence": [],
+      "collision_check": {
+        "compared_against": "Fresh continuous/work-pool-v4 blob 611fc39c9c4c033ea7680ffc6d71251753000802; all active and claim-locked path allowlists; sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d; active branches, PRs and CI revalidated immediately before reservation.",
+        "result": "No active or claim-locked package owns or encloses the three new paths. WCP-378 is limited to the existing BundledWidgetProvider and its test; this package adds a sibling provider, dedicated template and distinct test. WCP-434's layout directory/editor files and WCP-497's portal navigation files remain untouched; the editor already discovers auto-tagged WidgetProvider services. WCP-500/501/503 own separate content, redirect-test and Game Hub paths. No controller, editor, registry, schema, migration, route, shared navigation or private-runtime path is changed.",
+        "paths": [
+          "src/Widget/CallToActionWidgetProvider.php",
+          "templates/widget/call_to_action.html.twig",
+          "tests/Widget/CallToActionWidgetProviderTest.php"
+        ]
+      },
+      "published_at": "2026-09-27T10:00:17.122Z",
+      "claimed_on": "2026-09-27T10:00:17.122Z",
+      "claim_state": "active",
+      "active_base_branch": "main",
+      "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "resume_branch": "feature/wcp-504-internal-cta-widget-g1",
+      "branch_heads": {
+        "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+        "feature_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d"
+      },
+      "last_observed_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "last_checkpoint_at": "2026-09-27T10:00:17.122Z",
+      "checkpoint_paths": [],
+      "next_action": "Implement the new call-to-action provider and its dedicated template, then add functional coverage through the existing layout editor preview. Push a coherent checkpoint and run full exact-head Worker CI.",
+      "last_verified_push_at": "2026-09-27T10:00:17.122Z"
     }
   ],
   "recovery_queue": [],
