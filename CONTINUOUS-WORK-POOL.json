@@ -10,10 +10,10 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T10:10:45.441Z",
+  "published_at": "2026-09-27T10:11:18.658Z",
   "summary": {
     "total_remaining_worker_tasks": 162,
-    "completed_worker_prs_awaiting_trusted_review": 268,
+    "completed_worker_prs_awaiting_trusted_review": 269,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
@@ -33742,7 +33742,7 @@
       "package_id": "WCP-502",
       "title": "Let applicants track their guild application status",
       "risk": "medium",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -33795,11 +33795,11 @@
         "PostgreSQL 18 complete migration-chain validation."
       ],
       "completion_report": [
-        "Exact sanitized main base SHA and final Worker HEAD SHA.",
-        "Complete changed-path list and Worker PR.",
-        "Focused and complete test commands/results, PHPStan and exact-head CI run.",
-        "Privacy boundary, authenticated email matching, pagination and recruitment-closed behavior.",
-        "Unresolved risks and intentionally deferred application editing or withdrawal."
+        "Base main: f1a246c64527ef3ad51f7490773d9bbf9d42be5d; exact final Worker HEAD: dbdf2400f4b6c270aa9c227dab8cbba1028e786f.",
+        "PR #297 adds the authenticated Meine Bewerbungen status view, verified normalized-email isolation, status/date/guild/character display, newest-first pagination of 25, empty state and public guild-profile entry link.",
+        "The response is private/no-store and noindex/nofollow; submitted email, message, custom answers, internal notes and other applicants' rows are excluded. Status remains accessible after recruitment closes.",
+        "Changed paths: src/Controller/GuildApplicationStatusController.php, templates/gaming/show.html.twig, templates/gaming/applications.html.twig, tests/Controller/GuildApplicationStatusTest.php. No schema, migration, entity, repository, form, application submission or admin-review changes.",
+        "Exact-head Worker CI run 36311400396 (#735) succeeded: 433 tests, 1,903 assertions, PHPStan no errors, and PostgreSQL 18 executed 39 migrations through 20260925070000. PR remains open/draft for Trusted review; no merge or deployment."
       ],
       "immutable_constraints": [
         "trusted-main-is-the-only-integration-and-deployment-source",
@@ -33829,7 +33829,7 @@
         ]
       },
       "claimed_on": "2026-09-27T09:57:35.911Z",
-      "claim_state": "active",
+      "claim_state": "locked_until_trusted_resolution",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
       "active_head": "dbdf2400f4b6c270aa9c227dab8cbba1028e786f",
@@ -33844,9 +33844,9 @@
         "templates/gaming/applications.html.twig",
         "tests/Controller/GuildApplicationStatusTest.php"
       ],
-      "next_action": "Monitor exact-head Worker CI run 36311400396; repair any concrete failures on HEAD dbdf2400f4b6c270aa9c227dab8cbba1028e786f.",
+      "next_action": "PR #297 is ready for Trusted review at exact green HEAD dbdf2400f4b6c270aa9c227dab8cbba1028e786f. Keep this claim locked until Trusted explicitly resolves it; do not merge or deploy from Worker.",
       "last_observed_head": "dbdf2400f4b6c270aa9c227dab8cbba1028e786f",
-      "last_checkpoint_at": "2026-09-27T10:05:49.292Z",
+      "last_checkpoint_at": "2026-09-27T10:11:18.658Z",
       "last_verified_push_at": "2026-09-27T10:05:49.292Z",
       "worker_pr": 297,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/297",
@@ -33860,8 +33860,8 @@
       ],
       "ci_run_id": 36311400396,
       "last_ci_run_id": 36311400396,
-      "ci_result": "in_progress",
-      "last_ci_result": "in_progress",
+      "ci_result": "success",
+      "last_ci_result": "success",
       "ci_attempts": [
         {
           "head": "92f6119ef73141b1387148c02be1750cce8aaee7",
@@ -33873,10 +33873,21 @@
         },
         {
           "head": "dbdf2400f4b6c270aa9c227dab8cbba1028e786f",
-          "ci_run_id": 36311400396,
-          "ci_result": "in_progress"
+          "run_id": 36311400396,
+          "result": "success",
+          "summary": "Exact-head Worker CI run #735 succeeded: 433 tests, 1,903 assertions; PHPStan no errors; PostgreSQL 18 applied all 39 migrations and confirmed latest migration 20260925070000."
         }
-      ]
+      ],
+      "worker_pr_state": "draft",
+      "final_changed_paths": [
+        "src/Controller/GuildApplicationStatusController.php",
+        "templates/gaming/show.html.twig",
+        "templates/gaming/applications.html.twig",
+        "tests/Controller/GuildApplicationStatusTest.php"
+      ],
+      "final_head": "dbdf2400f4b6c270aa9c227dab8cbba1028e786f",
+      "final_ci_run_id": 36311400396,
+      "completed_at": "2026-09-27T10:11:18.658Z"
     },
     {
       "priority": 504,
