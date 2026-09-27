@@ -107,6 +107,16 @@ final class ContentDiscussionWorkflowTest extends WebTestCase
             'reaction' => 'like',
         ]));
 
+        $crawler = $client->request('GET', $threadPath);
+        $reactionToken = $crawler->filter('form[action="'.$reactionPath.'"] input[name="_token"]')->attr('value');
+        $client->request('POST', $reactionPath, ['_token' => $reactionToken, 'reaction' => 'like']);
+        self::assertTrue($client->getResponse()->isRedirect());
+        self::assertSame(0, $this->em($client)->getRepository(CommunityReaction::class)->count([
+            'comment' => $parent,
+            'user' => $member,
+            'reaction' => 'like',
+        ]));
+
         $reportPath = '/content/'.$entry->getSlug().'/discussion/comment/'.$parentId.'/report';
         $crawler = $client->request('GET', $threadPath);
         $reportForm = $crawler->filter('form[action="'.$reportPath.'"]')->form([
