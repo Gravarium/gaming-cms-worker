@@ -29,12 +29,12 @@ final class GuildOnboardingTaskType extends AbstractType
                 'label' => 'Gildenmitglied',
                 'choice_label' => static fn (GuildMember $member): string => $member->getCharacterName().' · '.$member->getDisplayRank(),
                 'placeholder' => 'Mitglied auswählen',
-                'query_builder' => static fn (EntityRepository $repository) => $repository->createQueryBuilder('member')
-                    ->andWhere('member.guild = :guild')
-                    ->andWhere('member.active = true')
+                'query_builder' => static fn (EntityRepository $repository) => $repository->createQueryBuilder('guildMember')
+                    ->andWhere('guildMember.guild = :guild')
+                    ->andWhere('guildMember.active = true')
                     ->setParameter('guild', $guild)
-                    ->orderBy('member.position', 'ASC')
-                    ->addOrderBy('member.characterName', 'ASC'),
+                    ->orderBy('guildMember.position', 'ASC')
+                    ->addOrderBy('guildMember.characterName', 'ASC'),
             ]);
     }
 

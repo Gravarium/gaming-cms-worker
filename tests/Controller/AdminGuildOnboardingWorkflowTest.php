@@ -119,6 +119,8 @@ final class AdminGuildOnboardingWorkflowTest extends WebTestCase
             $taskId = $this->requiredId($task->getId());
 
             $client->loginUser($manager);
+            $client->request('GET', '/admin/gaming/guild/'.$guildId.'/onboarding');
+            self::assertResponseIsSuccessful();
             $completeUrl = '/admin/gaming/guild/'.$guildId.'/onboarding/task/'.$taskId.'/complete';
             $client->request('POST', $completeUrl);
             self::assertResponseStatusCodeSame(403);
@@ -188,6 +190,8 @@ final class AdminGuildOnboardingWorkflowTest extends WebTestCase
             $localTaskId = $this->requiredId($localTask->getId());
             $foreignTaskId = $this->requiredId($foreignTask->getId());
             $client->loginUser($manager);
+            $client->request('GET', '/admin/gaming/guild/'.$guildId.'/onboarding');
+            self::assertResponseIsSuccessful();
 
             $foreignCompleteUrl = '/admin/gaming/guild/'.$guildId.'/onboarding/task/'.$foreignTaskId.'/complete';
             $client->request('POST', $foreignCompleteUrl, [
@@ -224,11 +228,11 @@ final class AdminGuildOnboardingWorkflowTest extends WebTestCase
     public function testChecklistRequiresGamingPermissionAndAllRoutesHideWhenGamingIsDisabled(): void
     {
         $client = static::createClient();
+        $this->removeGamingModuleState($client);
         [$game, $guild] = $this->guilds($client);
         $guildId = $this->requiredId($guild->getId());
         $gameId = $this->requiredId($game->getId());
         $userIds = [];
-        $this->removeGamingModuleState($client);
 
         try {
             $member = (new GuildMember())->setGuild($guild)->setCharacterName('Checklist member');
