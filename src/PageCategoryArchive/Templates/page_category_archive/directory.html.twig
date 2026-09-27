@@ -1,0 +1,28 @@
+{% extends 'base.html.twig' %}
+{% block title %}Seitenkategorien | {{ site.siteName }}{% endblock %}
+{% block body %}
+<header class="topbar"><a class="brand" href="{{ path('app_home') }}">{{ site.siteName }}</a><nav class="top-actions"><a href="{{ path('app_news_index') }}">News</a></nav></header>
+<main class="dashboard">
+    <p class="eyebrow">Seiten</p>
+    <h1>Kategorien</h1>
+    <p class="muted">{{ total }} Kategorien mit veröffentlichten Seiten</p>
+    <div class="news-grid">
+        {% for item in categories %}
+            <article class="card">
+                <h2><a href="{{ path('app_content_page_category_archive', {slug: item.category.slug}) }}">{{ item.category.displayName }}</a></h2>
+                <p class="muted">{{ item.pageCount }} veröffentlichte Seite{% if item.pageCount != 1 %}n{% endif %}</p>
+                {% if item.category.description %}<p>{{ item.category.description }}</p>{% endif %}
+            </article>
+        {% else %}
+            <p>Zurzeit gibt es keine Kategorien mit veröffentlichten Seiten.</p>
+        {% endfor %}
+    </div>
+    {% if pages > 1 %}
+        <nav class="pagination" aria-label="Seitennavigation">
+            {% if page > 1 %}<a href="{{ path('app_content_page_category_directory', {page: page - 1}) }}">← Vorherige</a>{% endif %}
+            <span>Seite {{ page }} von {{ pages }}</span>
+            {% if page < pages %}<a href="{{ path('app_content_page_category_directory', {page: page + 1}) }}">Weitere →</a>{% endif %}
+        </nav>
+    {% endif %}
+</main>
+{% endblock %}
