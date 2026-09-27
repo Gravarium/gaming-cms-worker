@@ -10,6 +10,7 @@ use App\Gaming\Guide\GuideVersion;
 use App\Gaming\Guide\StructuredBuild;
 use App\Gaming\Guide\TierList;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Types\Types;
 
 final readonly class AdminGameGuideWorkflow
 {
@@ -437,8 +438,9 @@ final readonly class AdminGameGuideWorkflow
                     'type' => $component->type,
                     'key' => $component->key,
                     'position' => $component->position,
-                    'alternatives' => json_encode($component->alternatives, JSON_THROW_ON_ERROR),
+                    'alternatives' => $component->alternatives,
                 ],
+                ['alternatives' => Types::JSON],
             );
         }
         foreach ($data['tiers'] as $tier) {
