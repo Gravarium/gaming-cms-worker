@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T07:32:17.293Z",
+  "published_at": "2026-09-27T07:32:55.816Z",
   "summary": {
     "total_remaining_worker_tasks": 141,
     "completed_worker_prs_awaiting_trusted_review": 248,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-482 exact HEAD 1d200f2b66eeefc28e8ad224974c1f4de462458d now asserts the observed HTTP 422 cross-site form-CSRF rejection; await exact-head Worker CI and persisted-state checks.",
+    "next_required_action": "WCP-482 exact HEAD 1d200f2b66eeefc28e8ad224974c1f4de462458d is running Worker CI 36303407921 after correcting the expected HTTP 422; inspect test and migration jobs.",
     "composition_preparable": 0,
     "immediately_actionable": 4,
     "must_continue": true
@@ -30612,9 +30612,9 @@
         "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
         "feature_branch": "1d200f2b66eeefc28e8ad224974c1f4de462458d"
       },
-      "next_action": "Await exact-head Worker CI after the HTTP 422 assertion correction; diagnose any remaining failure within the allowlisted test.",
+      "next_action": "Monitor exact-head Worker CI run 36303407921; resolve any remaining test-only failure.",
       "last_observed_head": "1d200f2b66eeefc28e8ad224974c1f4de462458d",
-      "last_checkpoint_at": "2026-09-27T07:32:17.293Z",
+      "last_checkpoint_at": "2026-09-27T07:32:55.816Z",
       "checkpoint_paths": [
         "tests/Controller/ContentLayoutMutationBoundaryTest.php"
       ],
@@ -30623,10 +30623,10 @@
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/275",
       "draft_pr": true,
       "pr_state": "open",
-      "ci_run_id": 36303226183,
-      "last_ci_run_id": 36303226183,
-      "ci_result": "failure",
-      "last_ci_result": "failure",
+      "ci_run_id": 36303407921,
+      "last_ci_run_id": 36303407921,
+      "ci_result": "in_progress",
+      "last_ci_result": "in_progress",
       "ci_attempts": [
         {
           "run_id": 36302859254,
@@ -30638,7 +30638,13 @@
           "run_id": 36303226183,
           "head": "cc549ef94703dc6279bd48397be5f1104cc14324",
           "result": "failure",
-          "note": "Explicit cross-site Sec-Fetch-Site and hostile Origin correctly rejected the form with HTTP 422; test incorrectly expected HTTP 200."
+          "note": "Explicit cross-site metadata rejected the form with HTTP 422; test originally expected HTTP 200."
+        },
+        {
+          "run_id": 36303407921,
+          "head": "1d200f2b66eeefc28e8ad224974c1f4de462458d",
+          "result": "in_progress",
+          "note": "Assertion now expects observed HTTP 422; persisted page/layout invariants execute afterward."
         }
       ]
     },
