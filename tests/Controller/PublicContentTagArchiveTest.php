@@ -18,8 +18,8 @@ final class PublicContentTagArchiveTest extends WebTestCase
     {
         $client = static::createClient();
         $fixture = $this->fixture($client);
-        $news = $this->entry($client, $fixture, 'news', 'news-entry', ContentEntry::TYPE_NEWS);
-        $page = $this->entry($client, $fixture, 'page', 'page-entry', ContentEntry::TYPE_PAGE);
+        $news = $this->entry($client, $fixture, 'news', 'Tagged news', ContentEntry::TYPE_NEWS);
+        $page = $this->entry($client, $fixture, 'page', 'Tagged page', ContentEntry::TYPE_PAGE);
         $this->em($client)->flush();
 
         try {
@@ -37,6 +37,7 @@ final class PublicContentTagArchiveTest extends WebTestCase
 
             $crawler = $client->request('GET', $archivePath);
             self::assertResponseIsSuccessful();
+            self::assertSelectorTextContains('body', '2 Inhalte');
             $titles = $crawler->filter('.news-grid article h2')->each(
                 static fn (Crawler $node): string => trim($node->text()),
             );
