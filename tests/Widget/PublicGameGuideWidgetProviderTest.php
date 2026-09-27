@@ -62,6 +62,9 @@ final class PublicGameGuideWidgetProviderTest extends WebTestCase
             self::assertInstanceOf(WidgetDefinition::class, $definition);
             self::assertSame('gaming', $definition->module);
             self::assertFalse($definition->multiple);
+            self::assertSame(6, $definition->settings['count']['default']);
+            self::assertSame(1, $definition->settings['count']['min']);
+            self::assertSame(12, $definition->settings['count']['max']);
             self::assertTrue($registry->available(self::KEY));
             self::assertContains(
                 self::KEY,
