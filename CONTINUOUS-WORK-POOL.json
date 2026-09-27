@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T14:30:41.165Z",
+  "published_at": "2026-09-27T14:31:59.430Z",
   "summary": {
     "total_remaining_worker_tasks": 167,
-    "completed_worker_prs_awaiting_trusted_review": 292,
+    "completed_worker_prs_awaiting_trusted_review": 293,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "PR #336 is ready for review with exact-head Worker CI #840 green; keep the claim locked until Trusted resolution, then continue with the next independent module gap.",
+    "next_required_action": "WCP-537 PR #330 is ready for Trusted review on exact green HEAD 58bdb7f553a14642b92b84a17233246cfcd386ee; its claim remains locked. Reconcile current claims and continue with the next independent available module package.",
     "composition_preparable": 0,
     "immediately_actionable": 28,
     "must_continue": true
@@ -38918,7 +38918,7 @@
       "package_id": "WCP-537",
       "title": "Place public guild event schedules in the Page Builder",
       "risk": "medium",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -39040,7 +39040,7 @@
       },
       "published_at": "2026-09-27T13:15:35.838Z",
       "claimed_on": "2026-09-27T13:15:35.838Z",
-      "claim_state": "active",
+      "claim_state": "locked_until_trusted_resolution",
       "active_base_branch": "main",
       "active_base_sha": "b510875e7b0741b9b19f09429d2204a95df51198",
       "active_head": "58bdb7f553a14642b92b84a17233246cfcd386ee",
@@ -39050,7 +39050,7 @@
         "feature_branch": "58bdb7f553a14642b92b84a17233246cfcd386ee"
       },
       "last_observed_head": "58bdb7f553a14642b92b84a17233246cfcd386ee",
-      "last_checkpoint_at": "2026-09-27T14:27:16.174Z",
+      "last_checkpoint_at": "2026-09-27T14:31:59.430Z",
       "last_verified_push_at": "2026-09-27T14:27:16.174Z",
       "checkpoint_paths": [
         "src/Widget/PublicGuildEventsWidgetProvider.php",
@@ -39059,10 +39059,10 @@
         "config/packages/public_guild_events_widget.yaml",
         "tests/Widget/PublicGuildEventsWidgetProviderTest.php"
       ],
-      "next_action": "Inspect Worker CI run #839 / 36325939255 on exact HEAD 58bdb7f553a14642b92b84a17233246cfcd386ee; diagnose any failure and rerun complete CI on the resulting exact head.",
+      "next_action": "PR #330 is ready for Trusted review; keep this claim locked until explicit Trusted resolution. Continue by selecting the next independent available module package.",
       "worker_pr": 330,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/330",
-      "draft_pr": true,
+      "draft_pr": false,
       "pr_state": "open",
       "worker_pr_state": "open",
       "worker_pr_changed_paths": [
@@ -39072,8 +39072,8 @@
         "src/Widget/PublicGuildEventsWidgetProvider.php",
         "tests/Widget/PublicGuildEventsWidgetProviderTest.php"
       ],
-      "ci_result": "pending",
-      "last_ci_result": "in_progress",
+      "ci_result": "success",
+      "last_ci_result": "success",
       "ci_attempts": [
         {
           "run_id": 36322738637,
@@ -39098,13 +39098,15 @@
           "run_number": 839,
           "head": "58bdb7f553a14642b92b84a17233246cfcd386ee",
           "base": "b510875e7b0741b9b19f09429d2204a95df51198",
-          "result": "in_progress",
-          "conclusion": null
+          "result": "success",
+          "conclusion": "success"
         }
       ],
       "worker_pr_base_branch": "main",
       "ci_run_id": 36325939255,
-      "last_ci_run_id": 36325939255
+      "last_ci_run_id": 36325939255,
+      "completed_at": "2026-09-27T14:31:59.430Z",
+      "completion_head": "58bdb7f553a14642b92b84a17233246cfcd386ee"
     },
     {
       "priority": 538,
