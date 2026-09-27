@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T15:10:24.734Z",
+  "published_at": "2026-09-27T15:11:39.261Z",
   "summary": {
     "total_remaining_worker_tasks": 167,
     "completed_worker_prs_awaiting_trusted_review": 293,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-550 claimed on exact green FCP-061 Worker head ec6bb200affc3e5a46d416e98f7a1b0621c38ded; build the public grouped bracket view and Page Builder entry point without touching the predecessor or other locked paths.",
+    "next_required_action": "Implement WCP-551 on feature/wcp-551-public-page-category-archive-g1 from exact Worker main HEAD e4be797b44948824e31843b88363d6ea1335c163; use only the nine reserved paths.",
     "composition_preparable": 0,
     "immediately_actionable": 28,
     "must_continue": true
@@ -41591,6 +41591,152 @@
       "checkpoint_paths": [],
       "ci_attempts": [],
       "next_action": "Implement the bounded public bracket view, public-compilation Page Builder widget and visibility/module-gate tests on the exact FCP-061 base."
+    },
+    {
+      "priority": 551,
+      "package_id": "WCP-551",
+      "title": "Browse published CMS pages by category",
+      "risk": "medium",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-551-public-page-category-archive-g1",
+      "suggested_branch": "feature/wcp-551-public-page-category-archive-g1",
+      "base_branch": "main",
+      "base_sha": "e4be797b44948824e31843b88363d6ea1335c163",
+      "objective": "Complete public discovery for the existing CMS page-category workflow. Add a GET-only public directory of categories with currently visible published TYPE_PAGE entries, a paginated archive for each category, and an auto-discovered Content Page Builder widget that links to those archives. Preserve existing news archives and news-category widgets. Filter on published status, publishedAt <= now, unlisted=false, and scheduledUnpublishAt IS NULL OR > now. Use stable pinned/publishedAt/id ordering, correct /page/{slug} links, understandable empty/invalid/out-of-range states, and hide routes/widget when the Content module is disabled.",
+      "allowed_paths": [
+        "src/Controller/PublicPageCategoryArchiveController.php",
+        "src/PageCategoryArchive/PublicPageCategoryArchiveQuery.php",
+        "src/PageCategoryArchive/Templates/page_category_archive/directory.html.twig",
+        "src/PageCategoryArchive/Templates/page_category_archive/archive.html.twig",
+        "src/PageCategoryArchive/Templates/widget/page_categories.html.twig",
+        "src/Widget/PublicPageCategoryArchiveWidgetProvider.php",
+        "config/packages/page_category_archive.yaml",
+        "tests/Controller/PublicPageCategoryArchiveTest.php",
+        "tests/Widget/PublicPageCategoryArchiveWidgetTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "templates/",
+        "src/Controller/PublicContentController.php",
+        "src/Repository/ContentEntryRepository.php",
+        "src/Entity/ContentEntry.php",
+        "src/Controller/AdminCategoryController.php",
+        "src/Form/CategoryType.php",
+        "src/Widget/BundledWidgetProvider.php",
+        "src/Widget/WidgetRegistry.php",
+        "config/services.yaml",
+        "tests/Controller/PublicContentControllerTest.php"
+      ],
+      "deliverables": [
+        "Public /pages/categories directory containing only categories with eligible published, listed CMS pages, ordered deterministically and paginated.",
+        "Public /pages/category/{slug} archive with stable pagination and links to the existing public page route.",
+        "Auto-discovered content.page_categories Page Builder widget with configurable count clamped to a hard maximum of 12, an empty state, and links to the directory and page archives.",
+        "Feature-local Twig templates and a feature-local Twig path; route and widget fail closed when the Content module is disabled.",
+        "No entity, repository, schema, migration, admin-write, shared-registry, or global templates change."
+      ],
+      "tests": [
+        "Functional tests for public directory/archive, page links, deterministic pagination, and category hierarchy labels.",
+        "Negative visibility coverage for drafts, future publication, unlisted pages, scheduled-unpublish elapsed, hidden-only categories, and wrong content types.",
+        "Invalid slug and out-of-range page handling; directory/archive GET-only behavior.",
+        "Widget tests for discovery, visible page-category filtering, count clamping/hard ceiling, escaping, empty state, and Content module suppression.",
+        "Run full exact-head Worker CI including PHPStan, PHPUnit, Twig/container validation, and PostgreSQL 18 migration-chain validation."
+      ],
+      "completion_report": [
+        "Exact Worker base and final HEAD SHAs.",
+        "Complete changed-path list and Worker PR state.",
+        "Public filtering, pagination, module-gate, Page Builder rendering, and count-bound evidence.",
+        "Focused tests and exact-head full CI run with results.",
+        "Remaining limitations and Trusted follow-up."
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-Trusted-review-and-exact-head-CI",
+        "preserve-all-security-permissions-CSRF-validation-recovery-rollback-and-upload-controls",
+        "no-private-runtime-or-sensitive-data",
+        "no-schema-migration-or-entity-change",
+        "no-edit-to-active-or-claim-locked-paths",
+        "no-direct-Trusted-integration-or-deployment"
+      ],
+      "proposal_kind": "worker_only",
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "e4be797b44948824e31843b88363d6ea1335c163",
+      "proposal_dependency_evidence": [],
+      "collision_check": {
+        "compared_against": "Fresh continuous/work-pool-v4 @ 1670e69089ea26a6b4e0051c601d09fd0846f700; current Worker main @ e4be797b44948824e31843b88363d6ea1335c163; WCP-511 active tag directory; WCP-529 completed/locked public news category widget; WCP-500 completed/locked public news category directory; WCP-544 completed/locked public page directory widget; WCP-547 active Downloads widget; WCP-548 exact green PR #340/head 91948c45a290782ba389a96b19bfe5793633d8b1; WCP-549 active global search widget; WCP-550 newly claimed competition bracket; WCP-551 branch and PR searches immediately before claim.",
+        "result": "No exact or prefix path collisions. This package is limited to TYPE_PAGE category discovery and uses new controller/query/template/widget/config/test paths; WCP-500/WCP-529 cover news categories, WCP-544 lists pages without category archives, and the active WCP-511/547/548/549/550 paths are disjoint. It uses only entities, routes, Content module gate, and Page Builder interfaces already present in sanitized Worker main; no FCP or WCP dependency is required.",
+        "paths": [
+          "src/Controller/PublicPageCategoryArchiveController.php",
+          "src/PageCategoryArchive/PublicPageCategoryArchiveQuery.php",
+          "src/PageCategoryArchive/Templates/page_category_archive/directory.html.twig",
+          "src/PageCategoryArchive/Templates/page_category_archive/archive.html.twig",
+          "src/PageCategoryArchive/Templates/widget/page_categories.html.twig",
+          "src/Widget/PublicPageCategoryArchiveWidgetProvider.php",
+          "config/packages/page_category_archive.yaml",
+          "tests/Controller/PublicPageCategoryArchiveTest.php",
+          "tests/Widget/PublicPageCategoryArchiveWidgetTest.php"
+        ],
+        "observed_nonblocking_path_hits": [
+          {
+            "id": "WCP-529",
+            "title": "Surface public news categories in the page builder",
+            "state": "worker_complete_awaiting_trusted_review",
+            "paths": [
+              "src/Widget/Content/PublicContentCategoryQuery.php",
+              "src/Widget/PublicContentCategoryWidgetProvider.php",
+              "templates/widget/public_content_categories.html.twig",
+              "tests/Widget/PublicContentCategoryWidgetProviderTest.php"
+            ]
+          },
+          {
+            "id": "WCP-544",
+            "title": "Place published CMS pages through the Page Builder",
+            "state": "worker_complete_awaiting_trusted_review",
+            "paths": [
+              "src/Widget/PublicPageDirectoryWidgetProvider.php",
+              "templates/widget/public_pages.html.twig",
+              "tests/Widget/PublicPageDirectoryWidgetProviderTest.php"
+            ]
+          }
+        ]
+      },
+      "published_at": "2026-09-27T15:11:39.261Z",
+      "claimed_on": "2026-09-27T15:11:39.261Z",
+      "claim_state": "active",
+      "active_base_branch": "main",
+      "active_base_sha": "e4be797b44948824e31843b88363d6ea1335c163",
+      "active_head": "e4be797b44948824e31843b88363d6ea1335c163",
+      "resume_branch": "feature/wcp-551-public-page-category-archive-g1",
+      "branch_heads": {
+        "claim_branch": "e4be797b44948824e31843b88363d6ea1335c163",
+        "feature_branch": "e4be797b44948824e31843b88363d6ea1335c163"
+      },
+      "last_observed_head": "e4be797b44948824e31843b88363d6ea1335c163",
+      "last_checkpoint_at": "2026-09-27T15:11:39.261Z",
+      "checkpoint_paths": [],
+      "next_action": "Implement the public page-category directory, paginated category archive, and Page Builder category widget only within the nine reserved paths; test published-page visibility, schedule-unpublish, pagination, Content module gating, and widget bounds.",
+      "worker_pr_state": "not_created",
+      "worker_pr_changed_paths": [],
+      "worker_pr_base_branch": "main",
+      "draft_pr": true,
+      "pr_state": "not_created",
+      "ci_result": "not_started",
+      "last_ci_result": "not_started",
+      "ci_attempts": []
     }
   ],
   "recovery_queue": [],
