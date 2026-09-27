@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace App\\Controller;
+namespace App\Controller;
 
-use App\\Repository\\SiteSettingsRepository;
-use App\\Theme\\ThemeRegistry;
-use Symfony\\Bundle\\FrameworkBundle\\Controller\\AbstractController;
-use Symfony\\Component\\HttpFoundation\\Response;
-use Symfony\\Component\\Routing\\Attribute\\Route;
-use Symfony\\Component\\Security\\Http\\Attribute\\IsGranted;
+use App\Repository\SiteSettingsRepository;
+use App\Theme\ThemeRegistry;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/admin/settings/theme-preview')]
 #[IsGranted('CMS_SETTINGS_MANAGE')]

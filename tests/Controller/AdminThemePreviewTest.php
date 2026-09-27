@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-namespace App\\Tests\\Controller;
+namespace App\Tests\Controller;
 
-use App\\Entity\\SiteSettings;
-use App\\Entity\\User;
-use App\\Repository\\SiteSettingsRepository;
-use App\\Security\\CmsPermission;
-use App\\Theme\\ThemeRegistry;
-use Doctrine\\ORM\\EntityManagerInterface;
-use Symfony\\Bundle\\FrameworkBundle\\KernelBrowser;
-use Symfony\\Bundle\\FrameworkBundle\\Test\\WebTestCase;
+use App\Entity\SiteSettings;
+use App\Entity\User;
+use App\Repository\SiteSettingsRepository;
+use App\Security\CmsPermission;
+use App\Theme\ThemeRegistry;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bundle\FrameworkBundle\KernelBrowser;
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 final class AdminThemePreviewTest extends WebTestCase
 {
