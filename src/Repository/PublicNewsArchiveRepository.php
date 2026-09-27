@@ -33,14 +33,14 @@ final class PublicNewsArchiveRepository extends ServiceEntityRepository
             ->getQuery()
             ->getArrayResult();
 
-        return array_map(
+        return array_values(array_map(
             static fn (array $row): array => [
                 'year' => (int) $row['archiveYear'],
                 'month' => (int) $row['archiveMonth'],
                 'count' => (int) $row['entryCount'],
             ],
             $rows,
-        );
+        ));
     }
 
     /**
