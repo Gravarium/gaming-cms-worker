@@ -108,10 +108,38 @@ final class SearchController extends AbstractController
             ? $this->search->discover($filters, $viewer, 50)
             : $this->search->search($this->searchQuery($rawQuery), $filters, $viewer, 50);
 
-        $response = $this->render('search/feed.xml.twig', [
-            'results' => $results,
-            'request' => $request,
-        ]);
+        $baseUrl = $request->getSchemeAndHttpHost();
+        $xml = [
+            '<?xml version="1.0" encoding="UTF-8" ?>',
+            '<rss version="2.0"><channel>',
+            '<title>Discovery</title>',
+            '<link>'.$this->escapeXml($baseUrl.$this->generateUrl('app_search_global')).'</link>',
+            '<description>Sichtbare Discovery-Ergebnisse</description>',
+        ];
+
+        foreach ($results as $result) {
+            $document = $result->document;
+            $route = $document->getRoute();
+            $link = $route !== null
+                ? $baseUrl.$route
+                : $this->generateUrl('app_search_item', ['id' => $document->getId()], UrlGeneratorInterface::ABSOLUTE_URL);
+            $description = mb_substr(
+                strip_tags((string) ($document->getExcerpt() ?: $document->getBody())),
+                0,
+                320,
+            );
+
+            $xml[] = '<item>';
+            $xml[] = '<title>'.$this->escapeXml($document->getTitle()).'</title>';
+            $xml[] = '<link>'.$this->escapeXml($link).'</link>';
+            $xml[] = '<guid isPermaLink="false">'.$this->escapeXml($document->getSourceType().':'.$document->getSourceId()).'</guid>';
+            $xml[] = '<description>'.$this->escapeXml($description).'</description>';
+            $xml[] = '<pubDate>'.$this->escapeXml($document->getSourceUpdatedAt()->format('r')).'</pubDate>';
+            $xml[] = '</item>';
+        }
+
+        $xml[] = '</channel></rss>';
+        $response = new Response(implode("\n", $xml));
         $response->headers->set('Content-Type', 'application/rss+xml; charset=UTF-8');
         $response->headers->set('Cache-Control', 'private, no-store');
 
@@ -232,6 +260,14 @@ final class SearchController extends AbstractController
         }
 
         return mb_substr(strip_tags($document->getBody()), 0, 320);
+    }
+
+    private function escapeXml(string $value): string
+    {
+        $escaped = htmlspecialchars($value, ENT_QUOTES | ENT_SUBSTITUTE | ENT_XML1, 'UTF-8');
+        $validXml = preg_replace('/[\\x00-\\x08\\x0B\\x0C\\x0E-\\x1F\\x{FFFE}\\x{FFFF}]/u', '', $escaped);
+
+        return $validXml ?? '';
     }
 
     private function documentUrl(Request $request, SearchResult $result): string
