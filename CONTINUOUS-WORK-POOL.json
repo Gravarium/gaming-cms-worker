@@ -42650,7 +42650,7 @@
         "claim_branch": "6988e871cbda8c27801ee0bcc02e8c5c2b0cd909",
         "feature_branch": "6bb6ad547b7fa4cb0724dd81bb271b68719e6033"
       },
-      "last_checkpoint_at": "2026-09-27T16:10:02.257Z",
+      "last_checkpoint_at": "2026-09-27T16:10:23.769Z",
       "last_verified_push_at": "2026-09-27T16:10:02.257Z",
       "checkpoint_paths": [
         "src/Controller/PublicVideoSitemapController.php",
@@ -42670,9 +42670,18 @@
           "conclusion": "failure",
           "pr": 345,
           "diagnosis": "PHPStan, Symfony/Twig/container and PostgreSQL 18 migration checks passed. PHPUnit had one assertion expecting 304 from an immediate second request. A video with publishedAt at the current-time boundary appeared between queries, correctly changing the sitemap ETag and membership; test now verifies ETag and shared cache max-age without assuming stale content."
+        },
+        {
+          "run_id": 36332200843,
+          "run_number": 865,
+          "head": "6bb6ad547b7fa4cb0724dd81bb271b68719e6033",
+          "base": "6988e871cbda8c27801ee0bcc02e8c5c2b0cd909",
+          "result": "in_progress",
+          "conclusion": null,
+          "pr": 345
         }
       ],
-      "next_action": "Rerun complete Worker CI on repaired exact HEAD 6bb6ad547b7fa4cb0724dd81bb271b68719e6033; prior run #863 failed only because a time-bound video entered the sitemap between two test requests, now covered by stable ETag/cache-header assertions.",
+      "next_action": "Monitor Worker CI run #865 / 36332200843 on exact HEAD 6bb6ad547b7fa4cb0724dd81bb271b68719e6033; repair only WCP-553 paths if needed.",
       "last_observed_head": "6bb6ad547b7fa4cb0724dd81bb271b68719e6033",
       "worker_pr": 345,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/345",
@@ -42690,9 +42699,9 @@
         "tests/Controller/PublicVideoSitemapControllerTest.php"
       ],
       "ci_result": "in_progress",
-      "last_ci_result": "failure",
-      "ci_run_id": 36331932505,
-      "last_ci_run_id": 36331932505
+      "last_ci_result": "in_progress",
+      "ci_run_id": 36332200843,
+      "last_ci_run_id": 36332200843
     },
     {
       "priority": 554,
