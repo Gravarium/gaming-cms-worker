@@ -1,0 +1,23 @@
+{% extends 'base.html.twig' %}
+{% block title %}Inhalte verschieben | Gaming CMS{% endblock %}
+{% block body %}
+<header class="topbar">
+    <a class="brand" href="{{ path('app_admin_dashboard') }}">Gaming CMS</a>
+    <a class="button-link button-secondary" href="{{ path('app_admin_category_edit', {id: source.id}) }}">Zur Kategorie</a>
+</header>
+<main class="editor-shell">
+    <p class="eyebrow">Kategorien</p>
+    <h1>Inhalte aus „{{ source.name }}“ verschieben</h1>
+    <p>Die Kategorie enthält {{ entryCount }} Content-Einträge. Es werden nur ihre Inhaltszuordnungen geändert; Inhalte, Status und Kategorie-Hierarchie bleiben erhalten.</p>
+    {% if entryCount == 0 %}
+        <div class="notice" role="status">Diese Kategorie enthält keine Inhalte, die verschoben werden müssen.</div>
+    {% elseif targetCount == 0 %}
+        <div class="notice" role="status">Lege zuerst eine zweite Kategorie an, bevor du Inhalte verschiebst.</div>
+    {% else %}
+        {{ form_start(form, {attr: {class: 'content-form'}}) }}
+            {{ form_widget(form) }}
+            <button type="submit">Inhalte verschieben</button>
+        {{ form_end(form) }}
+    {% endif %}
+</main>
+{% endblock %}
