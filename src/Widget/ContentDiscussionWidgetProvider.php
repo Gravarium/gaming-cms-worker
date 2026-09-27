@@ -22,7 +22,6 @@ final readonly class ContentDiscussionWidgetProvider implements WidgetProvider
                 'widget/content_discussions.html.twig',
                 [],
                 true,
-                ['count' => ['label' => 'Anzahl', 'type' => 'int', 'default' => 6, 'min' => 1, 'max' => 12]],
             ),
         ];
     }
