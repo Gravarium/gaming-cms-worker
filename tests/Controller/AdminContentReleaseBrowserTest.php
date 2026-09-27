@@ -7,6 +7,7 @@ namespace App\Tests\Controller;
 use App\Entity\ContentRelease;
 use App\Entity\User;
 use App\Security\CmsPermission;
+use Doctrine\DBAL\Connection;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
@@ -16,6 +17,8 @@ final class AdminContentReleaseBrowserTest extends WebTestCase
 {
     private string $marker;
 
+    private ?Connection $connection = null;
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -24,14 +27,13 @@ final class AdminContentReleaseBrowserTest extends WebTestCase
 
     protected function tearDown(): void
     {
-        if (self::$kernel !== null) {
-            $connection = self::$kernel->getContainer()->get(EntityManagerInterface::class)->getConnection();
-            $connection->executeStatement(
+        if ($this->connection !== null) {
+            $this->connection->executeStatement(
                 'DELETE FROM content_release_entry WHERE content_release_id IN (SELECT id FROM content_release WHERE name LIKE ?)',
                 [$this->marker.'-%'],
             );
-            $connection->executeStatement('DELETE FROM content_release WHERE name LIKE ?', [$this->marker.'-%']);
-            $connection->executeStatement('DELETE FROM cms_user WHERE email LIKE ?', [$this->marker.'-%@example.test']);
+            $this->connection->executeStatement('DELETE FROM content_release WHERE name LIKE ?', [$this->marker.'-%']);
+            $this->connection->executeStatement('DELETE FROM cms_user WHERE email LIKE ?', [$this->marker.'-%@example.test']);
         }
 
         parent::tearDown();
@@ -259,6 +261,7 @@ final class AdminContentReleaseBrowserTest extends WebTestCase
 
     private function user(KernelBrowser $client, bool $canManageContent): User
     {
+        $this->connection = $this->em($client)->getConnection();
         $permissions = $canManageContent ? [CmsPermission::CONTENT] : [];
         $user = (new User())
             ->setEmail($this->marker.'-'.bin2hex(random_bytes(4)).'@example.test')
@@ -302,9 +305,9 @@ final class AdminContentReleaseBrowserTest extends WebTestCase
     /** @return list<int> */
     private function idsFrom(Crawler $crawler): array
     {
-        $rows = $crawler->filter('tbody tr[data-release-id]')->extract(['data-release-id']);
+        $ids = $crawler->filter('tbody tr[data-release-id]')->extract(['data-release-id']);
 
-        return array_map(static fn (array $row): int => (int) $row[0], $rows);
+        return array_map('intval', $ids);
     }
 
     /** @return array<string, string> */
