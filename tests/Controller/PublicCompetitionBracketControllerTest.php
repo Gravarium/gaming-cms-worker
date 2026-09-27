@@ -60,8 +60,8 @@ final class PublicCompetitionBracketControllerTest extends WebTestCase
 
         self::assertResponseIsSuccessful();
         self::assertSelectorTextContains('h1', 'Bracket 공개 Cup');
-        self::assertSelectorTextContains('h2', 'Siegerbaum');
-        self::assertSelectorTextContains('h2', 'Verliererbaum');
+        self::assertSelectorTextContains('#bracket-winners', 'Siegerbaum');
+        self::assertSelectorTextContains('#bracket-losers', 'Verliererbaum');
         $html = (string) $client->getResponse()->getContent();
         $winnerPosition = strpos($html, 'id="bracket-winners"');
         $loserPosition = strpos($html, 'id="bracket-losers"');
