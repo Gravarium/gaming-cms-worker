@@ -10,16 +10,16 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T09:56:21.547Z",
+  "published_at": "2026-09-27T09:56:59.809Z",
   "summary": {
     "total_remaining_worker_tasks": 155,
-    "completed_worker_prs_awaiting_trusted_review": 263,
+    "completed_worker_prs_awaiting_trusted_review": 264,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-500 is actively claimed in draft Worker PR #294 on exact HEAD 95aae6029159fe93e40336ab5a9c765d94011e0c; complete exact-head Worker CI for the public content category directory. Keep all foreign claims untouched.",
+    "next_required_action": "WCP-498 is complete with green exact-head CI and locked for Trusted review; continue with the next independent functional module gap without touching foreign claims.",
     "composition_preparable": 0,
-    "immediately_actionable": 15,
+    "immediately_actionable": 14,
     "must_continue": true
   },
   "rules": {
@@ -33053,7 +33053,7 @@
       "package_id": "WCP-498",
       "title": "Expose a permission-protected connector health report",
       "risk": "medium",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -33136,7 +33136,7 @@
       },
       "published_at": "2026-09-27T09:42:08.032Z",
       "claimed_on": "2026-09-27T09:42:08.032Z",
-      "claim_state": "active",
+      "claim_state": "locked_until_trusted_resolution",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
       "active_head": "e4a4725684e7d03eec20a432c5e6e0e2f395d616",
@@ -33146,27 +33146,27 @@
         "feature_branch": "e4a4725684e7d03eec20a432c5e6e0e2f395d616"
       },
       "last_observed_head": "e4a4725684e7d03eec20a432c5e6e0e2f395d616",
-      "last_checkpoint_at": "2026-09-27T09:54:42.943Z",
+      "last_checkpoint_at": "2026-09-27T09:56:59.809Z",
       "checkpoint_paths": [
         "src/Controller/AdminConnectorHealthReportController.php",
         "src/ExternalConnector/ConnectorHealthReport.php",
         "tests/Controller/AdminConnectorHealthReportTest.php"
       ],
-      "next_action": "Monitor the new exact-head CI run for corrected head e4a4725684e7d03eec20a432c5e6e0e2f395d616; diagnose any remaining concrete failure only within the three allowed paths.",
-      "last_verified_push_at": "2026-09-27T09:54:42.943Z",
+      "next_action": "Worker PR #291 is ready for Trusted review at exact green HEAD e4a4725684e7d03eec20a432c5e6e0e2f395d616; keep WCP-498 claim locked and do not merge or deploy.",
+      "last_verified_push_at": "2026-09-27T09:56:59.809Z",
       "worker_pr": 291,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/291",
-      "draft_pr": true,
+      "draft_pr": false,
       "pr_state": "open",
       "worker_pr_changed_paths": [
         "src/Controller/AdminConnectorHealthReportController.php",
         "src/ExternalConnector/ConnectorHealthReport.php",
         "tests/Controller/AdminConnectorHealthReportTest.php"
       ],
-      "ci_run_id": 36310726491,
-      "last_ci_run_id": 36310726491,
-      "ci_result": "failure",
-      "last_ci_result": "failure",
+      "ci_run_id": 36310852711,
+      "last_ci_run_id": 36310852711,
+      "ci_result": "success",
+      "last_ci_result": "success",
       "ci_attempts": [
         {
           "run_id": 36310467633,
@@ -33185,8 +33185,16 @@
           "head": "e7b21c091f09db0147b7309a73a664818e7ba26e",
           "result": "failure",
           "diagnosis": "PHPStan, container, Doctrine mapping, PostgreSQL migration validation and all other tests passed. The authorized report test still attempted to remove detached health-status fixtures after Browser requests; cleanup now reloads every synthetic entity by primary key before removal."
+        },
+        {
+          "run_id": 36310852711,
+          "head": "e4a4725684e7d03eec20a432c5e6e0e2f395d616",
+          "result": "success",
+          "evidence": "PHPStan, Symfony container/mapping/Twig/asset validation, PHPUnit and PostgreSQL 18 migration-chain validation all passed."
         }
-      ]
+      ],
+      "final_head": "e4a4725684e7d03eec20a432c5e6e0e2f395d616",
+      "completed_on": "2026-09-27T09:56:59.809Z"
     },
     {
       "priority": 499,
