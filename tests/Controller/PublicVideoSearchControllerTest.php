@@ -10,6 +10,7 @@ use App\Module\CmsModuleManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\DomCrawler\Crawler;
 
 final class PublicVideoSearchControllerTest extends WebTestCase
 {
@@ -64,7 +65,7 @@ final class PublicVideoSearchControllerTest extends WebTestCase
             self::assertStringContainsString('&lt;script&gt;alert(1)&lt;/script&gt;', $content);
 
             $visibleIds = $client->getCrawler()->filter('.video-card')->each(
-                static fn ($node): string => (string) $node->attr('data-video-id'),
+                static fn (Crawler $node): string => (string) $node->attr('data-video-id'),
             );
             self::assertSame(
                 array_map('strval', array_reverse(array_slice($videoIds, 0, 2))),
