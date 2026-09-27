@@ -8,6 +8,13 @@
     <p class="muted">Passkeys verwenden die Gerätesperre, Fingerabdruck, Gesichtserkennung, Windows Hello oder einen Sicherheitsschlüssel. Der private Schlüssel verlässt dein Gerät nie.</p>
     {% for message in app.flashes('success') %}<div class="notice">{{ message }}</div>{% endfor %}
     {% for message in app.flashes('error') %}<div class="alert">{{ message }}</div>{% endfor %}
+    {% if app.user.twoFactorEnabled %}
+    <section class="panel">
+        <h2>Wiederherstellungscodes</h2>
+        <p>Dir bleiben {{ app.user.recoveryCodeCount }} Codes. Du kannst verlorene oder aufgebrauchte Codes ersetzen, ohne den Authenticator neu einzurichten.</p>
+        <a class="button-link button-secondary" href="{{ path('app_two_factor_recovery_manage') }}">Wiederherstellungscodes verwalten</a>
+    </section>
+    {% endif %}
     <section class="panel"><h2>Neuen Passkey anlegen</h2><p>Der Browser fragt anschließend nach deiner Gerätesperre oder deinem Sicherheitsschlüssel.</p>
         <button type="button" data-passkey-register data-options-url="{{ path('webauthn.controller.creation.request.additional_authenticator') }}" data-result-url="{{ path('webauthn.controller.creation.response.additional_authenticator') }}">Passkey hinzufügen</button>
         <p class="muted passkey-message" data-passkey-message hidden></p>
