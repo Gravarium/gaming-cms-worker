@@ -13,11 +13,11 @@
   "published_at": "2026-09-27T06:18:40.681Z",
   "summary": {
     "total_remaining_worker_tasks": 141,
-    "completed_worker_prs_awaiting_trusted_review": 244,
+    "completed_worker_prs_awaiting_trusted_review": 245,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-478 is active on exact PR HEAD 9d47cc610702f8af891d70af90acc6a831c1a885 (draft PR #271; Exact-Head CI run 36300928962 in progress). Wait for full CI and continue this claim; do not alter WCP-365 or foreign WCP-474.",
+    "next_required_action": "WCP-478 is complete on exact green HEAD 9d47cc610702f8af891d70af90acc6a831c1a885 (PR #271, CI run 36300928962) and claim-locked for Trusted review. Continue autonomously from a separate safe WCP; WCP-365 still owns src/Form/GuildMemberType.php, and its optional rankName follow-up must wait until that claim resolves. Preserve every foreign claim and all FCP dependencies.",
     "composition_preparable": 0,
     "immediately_actionable": 4,
     "must_continue": true
@@ -29792,7 +29792,7 @@
       "package_id": "WCP-478",
       "title": "Protect guild-rank deletion authorization, ownership and CSRF",
       "risk": "medium",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [
         "WCP-440"
       ],
@@ -29876,7 +29876,7 @@
       },
       "published_at": "2026-09-27T06:39:18.912Z",
       "claimed_on": "2026-09-27T06:39:18.912Z",
-      "claim_state": "active",
+      "claim_state": "locked_until_trusted_resolution",
       "active_base_branch": "feature/wcp-440-guild-team-deletion-security-g1",
       "active_base_sha": "a44416a60ea7d1eb9e802a2cf240870d636abc58",
       "active_head": "9d47cc610702f8af891d70af90acc6a831c1a885",
@@ -29885,7 +29885,7 @@
         "claim_branch": "a44416a60ea7d1eb9e802a2cf240870d636abc58",
         "feature_branch": "9d47cc610702f8af891d70af90acc6a831c1a885"
       },
-      "next_action": "Wait for exact-head Worker CI 36300928962 on 9d47cc610702f8af891d70af90acc6a831c1a885; inspect every job and fix concrete failures only within tests/Controller/AdminGuildRankDeletionSecurityTest.php.",
+      "next_action": "Await Trusted review and integration validation; keep this claim locked until Trusted explicitly integrates, cancels or transfers it. Continue autonomously from a separate claim.",
       "last_observed_head": "9d47cc610702f8af891d70af90acc6a831c1a885",
       "last_checkpoint_at": "2026-09-27T06:42:55.491Z",
       "checkpoint_paths": [
@@ -29894,23 +29894,71 @@
       "last_verified_push_at": "2026-09-27T06:42:55.491Z",
       "worker_pr": 271,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/271",
-      "draft_pr": true,
-      "pr_state": "open_draft_ci_pending",
+      "draft_pr": false,
+      "pr_state": "open_ready_unmerged",
       "ci_run_id": 36300928962,
       "last_ci_run_id": 36300928962,
-      "ci_result": "in_progress",
-      "last_ci_result": "in_progress",
+      "ci_result": "success",
+      "last_ci_result": "success",
       "ci_attempts": [
         {
           "run_id": 36300928962,
           "head": "9d47cc610702f8af891d70af90acc6a831c1a885",
-          "result": "in_progress"
+          "result": "success"
         }
       ],
       "worker_pr_changed_paths": [
-        "tests/Controller/AdminGuildRankDeletionSecurityTest.php",
-        "tests/Controller/AdminGuildStructureSecurityTest.php"
-      ]
+        "tests/Controller/AdminGuildStructureSecurityTest.php",
+        "tests/Controller/AdminGuildRankDeletionSecurityTest.php"
+      ],
+      "final_head": "9d47cc610702f8af891d70af90acc6a831c1a885",
+      "final_base_sha": "a44416a60ea7d1eb9e802a2cf240870d636abc58",
+      "final_sanitized_main_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "final_changed_paths": [
+        "tests/Controller/AdminGuildRankDeletionSecurityTest.php"
+      ],
+      "changed_paths": [
+        "tests/Controller/AdminGuildRankDeletionSecurityTest.php"
+      ],
+      "completed_at": "2026-09-27T06:47:10.805Z",
+      "test_results": {
+        "phpunit": "433 tests, 1938 assertions, 0 failures; one PHPUnit deprecation and one notice.",
+        "phpstan": "Level 8 passed with no errors.",
+        "php_symfony": "Worker PHP/Symfony validation job passed on exact final HEAD.",
+        "postgres18": "PostgreSQL 18 completed all 39 migrations; 0 unavailable.",
+        "exact_head_ci": {
+          "run_id": 36300928962,
+          "head": "9d47cc610702f8af891d70af90acc6a831c1a885",
+          "result": "success"
+        }
+      },
+      "completion_evidence": {
+        "exact_sanitized_main_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+        "exact_proposal_base_branch": "feature/wcp-440-guild-team-deletion-security-g1",
+        "exact_proposal_base_sha": "a44416a60ea7d1eb9e802a2cf240870d636abc58",
+        "dependency_worker_pr": 234,
+        "dependency_ci_run_id": 36282974283,
+        "dependency_ci_result": "success",
+        "final_head_sha": "9d47cc610702f8af891d70af90acc6a831c1a885",
+        "changed_paths": [
+          "tests/Controller/AdminGuildRankDeletionSecurityTest.php"
+        ],
+        "cumulative_pr_paths": [
+          "tests/Controller/AdminGuildStructureSecurityTest.php",
+          "tests/Controller/AdminGuildRankDeletionSecurityTest.php"
+        ],
+        "worker_pr": 271,
+        "ci_run_id": 36300928962,
+        "ci_result": "success",
+        "php_symfony_job": "success: 433 tests, 1938 assertions; PHPStan level 8 no errors",
+        "postgresql_job": "success: 39 migrations, 0 unavailable",
+        "guild_rank_deletion_security_coverage": "CMS_GAMING_MANAGE is required for structure reads and rank deletion; missing, invalid and sibling-rank CSRF tokens preserve target/sibling/foreign rows; valid target token on wrong parent guild returns 404; rendered owner-guild token deletes only the selected rank."
+      },
+      "completion_summary": "Stacked test-only functional security coverage for guild-rank deletion authorization, per-rank CSRF, parent-guild ownership, and selected-only deletion, alongside WCP-440's separate team-deletion tests.",
+      "open_limitations": [
+        "Awaiting Trusted review and Trusted integration CI; the cumulative PR includes WCP-440's predecessor test."
+      ],
+      "trusted_follow_up": "Preserve CMS_GAMING_MANAGE, parent-guild ownership checks and the delete-rank CSRF token; verify both team and rank deletion tests on fresh Trusted CI."
     }
   ],
   "recovery_queue": [],
