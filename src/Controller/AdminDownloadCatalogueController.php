@@ -53,8 +53,10 @@ final class AdminDownloadCatalogueController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $slug = trim($input->slug);
+            $slugError = false;
             if ($this->packages->findOneBy(['slug' => $slug]) instanceof DownloadPackage) {
                 $form->get('slug')->addError(new FormError('A package with this slug already exists.'));
+                $slugError = true;
             } else {
                 try {
                     $package = (new DownloadPackage(trim($input->title), $slug, $input->type))
@@ -64,13 +66,14 @@ final class AdminDownloadCatalogueController extends AbstractController
                     $this->entityManager->flush();
                 } catch (UniqueConstraintViolationException) {
                     $form->get('slug')->addError(new FormError('A package with this slug already exists.'));
+                    $slugError = true;
                 }
+            }
 
-                if ($form->isValid()) {
-                    $this->addFlash('success', 'Das Download-Paket wurde angelegt.');
+            if (!$slugError) {
+                $this->addFlash('success', 'Das Download-Paket wurde angelegt.');
 
-                    return $this->redirectToRoute('app_admin_download_catalogue_index');
-                }
+                return $this->redirectToRoute('app_admin_download_catalogue_index');
             }
         }
 
