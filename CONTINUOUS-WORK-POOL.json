@@ -39756,14 +39756,14 @@
       "claim_state": "active",
       "active_base_branch": "main",
       "active_base_sha": "b510875e7b0741b9b19f09429d2204a95df51198",
-      "active_head": "a865b753423a57690c5dfca554cfed0ae04bb417",
+      "active_head": "7976ade7a1c2bbddc1580c4871d8dd97773e2c1f",
       "resume_branch": "feature/wcp-541-guild-role-needs-g1",
       "branch_heads": {
         "claim_branch": "b510875e7b0741b9b19f09429d2204a95df51198",
-        "feature_branch": "a865b753423a57690c5dfca554cfed0ae04bb417"
+        "feature_branch": "7976ade7a1c2bbddc1580c4871d8dd97773e2c1f"
       },
-      "last_observed_head": "a865b753423a57690c5dfca554cfed0ae04bb417",
-      "last_checkpoint_at": "2026-09-27T14:06:18.810Z",
+      "last_observed_head": "7976ade7a1c2bbddc1580c4871d8dd97773e2c1f",
+      "last_checkpoint_at": "2026-09-27T14:10:56.899Z",
       "checkpoint_paths": [
         "src/Controller/AdminGuildRoleNeedController.php",
         "src/Form/GuildRoleNeedInput.php",
@@ -39777,9 +39777,9 @@
         "tests/Controller/AdminGuildRoleNeedControllerTest.php",
         "tests/Controller/PublicGuildRoleNeedDisplayTest.php"
       ],
-      "next_action": "Monitor draft PR #334 Worker CI run #826 / 36324739327 on exact HEAD a865b753423a57690c5dfca554cfed0ae04bb417; repair any PHPStan, PHPUnit or PostgreSQL failure on the same feature branch, then rerun full CI before marking the PR ready.",
+      "next_action": "Inspect Worker CI #828 / 36324947067 on exact HEAD 7976ade7a1c2bbddc1580c4871d8dd97773e2c1f; repair any remaining PHPStan, PHPUnit or PostgreSQL failures on this branch, then rerun complete exact-head CI.",
       "worker_pr_state": "draft",
-      "last_verified_push_at": "2026-09-27T14:07:59.107Z",
+      "last_verified_push_at": "2026-09-27T14:10:56.899Z",
       "ci_result": "in_progress",
       "last_ci_result": "in_progress",
       "ci_attempts": [
@@ -39788,7 +39788,18 @@
           "run_number": 826,
           "head": "a865b753423a57690c5dfca554cfed0ae04bb417",
           "base": "b510875e7b0741b9b19f09429d2204a95df51198",
-          "result": "queued"
+          "result": "failure",
+          "conclusion": "failure",
+          "phpstan": "failed",
+          "postgresql_18_migrations": "success",
+          "summary": "PHPStan found the existing GuildRoleNeed class is App\\\\Entity\\\\Guild\\\\GuildRoleNeed, not App\\\\Entity\\\\GuildRoleNeed, and requested explicit scalar row narrowing. Namespace imports and return shapes corrected on the next HEAD."
+        },
+        {
+          "run_id": 36324947067,
+          "run_number": 828,
+          "head": "7976ade7a1c2bbddc1580c4871d8dd97773e2c1f",
+          "base": "b510875e7b0741b9b19f09429d2204a95df51198",
+          "result": "in_progress"
         }
       ],
       "worker_pr": 334,
@@ -39809,8 +39820,8 @@
       "worker_pr_base_branch": "main",
       "pr_state": "open_draft",
       "draft_pr": true,
-      "ci_run_id": 36324739327,
-      "last_ci_run_id": 36324739327
+      "ci_run_id": 36324947067,
+      "last_ci_run_id": 36324947067
     },
     {
       "priority": 542,
