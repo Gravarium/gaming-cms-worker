@@ -10,6 +10,7 @@ use App\Repository\CategoryRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Routing\Attribute\Route;
 
 #[Route('/pages')]
@@ -17,6 +18,7 @@ final class PublicPageCategoryArchiveController extends AbstractController
 {
     private const DIRECTORY_PAGE_SIZE = 20;
     private const ARCHIVE_PAGE_SIZE = 20;
+    private const MAX_PAGE = 10000;
 
     public function __construct(
         private readonly PublicPageCategoryArchiveQuery $pages,
@@ -27,7 +29,7 @@ final class PublicPageCategoryArchiveController extends AbstractController
     #[Route('/categories', name: 'app_content_page_category_directory', methods: ['GET'])]
     public function directory(Request $request): Response
     {
-        $page = max(1, min(10000, $request->query->getInt('page', 1)));
+        $page = $this->pageNumber($request);
         $total = $this->pages->countCategoriesWithPublicPages();
         $pageCount = max(1, (int) ceil($total / self::DIRECTORY_PAGE_SIZE));
         if ($page > $pageCount) {
@@ -74,6 +76,20 @@ final class PublicPageCategoryArchiveController extends AbstractController
         return $this->publicCache($response);
     }
 
+    private function pageNumber(Request $request): int
+    {
+        $pageValue = $request->query->getString('page', '1');
+        if (preg_match('/\\A[1-9][0-9]{0,4}\\z/', $pageValue) !== 1) {
+            throw new BadRequestHttpException('The page parameter must be a positive integer.');
+        }
+
+        $page = (int) $pageValue;
+        if ($page > self::MAX_PAGE) {
+            throw $this->createNotFoundException();
+        }
+
+        return $page;
+    }
     private function publicCache(Response $response): Response
     {
         $response->setPublic();
