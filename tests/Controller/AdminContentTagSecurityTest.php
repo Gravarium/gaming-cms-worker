@@ -70,7 +70,7 @@ final class AdminContentTagSecurityTest extends WebTestCase
                 $values = $this->renderedFormValues($client, $case['name'], $case['mode']);
                 $client->request('POST', '/admin/content/tags/new', $values);
 
-                self::assertResponseIsSuccessful();
+                self::assertResponseStatusCodeSame(422);
                 self::assertNull($this->findTag($client, $case['name']));
                 self::assertSame([], $this->auditEntries($client, $user));
             }
