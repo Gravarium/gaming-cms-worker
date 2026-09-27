@@ -11,7 +11,7 @@
         {% for report in reports %}
             {% set comment = report.comment %}
             <article class="application-card">
-                <p class="eyebrow">{{ report.createdAt|date('d.m.Y H:i') }} · {{ report.status }} · {{ report.reason }}</p>
+                <p class="eyebrow">Bericht #{{ report.id }} · {{ report.status }} · {{ report.reason }}</p>
                 <h3>{{ targets[comment.targetId] ? targets[comment.targetId].title : 'Inhalt nicht mehr vorhanden' }}</h3>
                 <p><strong>Gemeldet von {{ report.reporter.displayName }}</strong></p>
                 <p>Autor: {{ comment.author.displayName }} · Kommentar #{{ comment.id }}</p>

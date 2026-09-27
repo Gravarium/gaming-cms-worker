@@ -150,7 +150,7 @@ final class ContentDiscussionWorkflowTest extends WebTestCase
         $entry = $this->entry($client, $author, ContentEntry::STATUS_PUBLISHED);
 
         $client->request('POST', '/content/'.$entry->getSlug().'/discussion/comment', []);
-        self::assertResponseStatusCodeSame(403);
+        self::assertResponseRedirects('/login');
 
         $manager = $this->user($client, [CmsPermission::CONTENT]);
         $client->loginUser($manager);

@@ -170,7 +170,7 @@ final readonly class ContentInteractionQuery
         }
 
         $rows = $this->entityManager->createQueryBuilder()
-            ->select('identity(reaction.comment) AS commentId', 'reaction.reaction AS reaction', 'COUNT(reaction.id) AS total')
+            ->select('identity(reaction.comment) AS commentId', 'reaction.reaction AS reactionType', 'COUNT(reaction.id) AS total')
             ->from(CommunityReaction::class, 'reaction')
             ->andWhere('identity(reaction.comment) IN (:commentIds)')
             ->setParameter('commentIds', $commentIds)
@@ -181,7 +181,7 @@ final readonly class ContentInteractionQuery
 
         $counts = [];
         foreach ($rows as $row) {
-            $counts[(int) $row['commentId']][(string) $row['reaction']] = (int) $row['total'];
+            $counts[(int) $row['commentId']][(string) $row['reactionType']] = (int) $row['total'];
         }
 
         return $counts;
@@ -208,7 +208,7 @@ final readonly class ContentInteractionQuery
 
         $reactions = [];
         foreach ($rows as $row) {
-            $reactions[(int) $row['commentId']][] = (string) $row['reaction'];
+            $reactions[(int) $row['commentId']][] = (string) $row['reactionType'];
         }
 
         return $reactions;
@@ -218,7 +218,7 @@ final readonly class ContentInteractionQuery
     public function targetReactionTypes(int $targetId, User $user): array
     {
         $rows = $this->entityManager->createQueryBuilder()
-            ->select('DISTINCT reaction.reaction AS reaction')
+            ->select('DISTINCT reaction.reaction AS reactionType')
             ->from(CommunityReaction::class, 'reaction')
             ->join('reaction.comment', 'comment')
             ->andWhere('comment.targetType = :targetType')
@@ -230,7 +230,7 @@ final readonly class ContentInteractionQuery
             ->getQuery()
             ->getArrayResult();
 
-        return array_values(array_map(static fn (array $row): string => (string) $row['reaction'], $rows));
+        return array_values(array_map(static fn (array $row): string => (string) $row['reactionType'], $rows));
     }
 
     public function reaction(CommunityComment $comment, User $user, string $value): ?CommunityReaction
