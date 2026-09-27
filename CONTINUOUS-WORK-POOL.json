@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T11:21:44.364Z",
+  "published_at": "2026-09-27T11:24:46.077Z",
   "summary": {
     "total_remaining_worker_tasks": 165,
     "completed_worker_prs_awaiting_trusted_review": 278,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-521 is reserved from current sanitized main b510875e7b0741b9b19f09429d2204a95df51198. Add only the watchlist visibility controller integration test, then validate its exact final HEAD.",
+    "next_required_action": "WCP-518 is resumed at corrected exact HEAD 407fc885fa2e19fe5d9970a8fdfa87a087120f90; full Worker CI 36315578537 is running after a shared Game Catalogue fixture was isolated in tests.",
     "composition_preparable": 0,
     "immediately_actionable": 20,
     "must_continue": true
@@ -35983,22 +35983,22 @@
       "claimed_on": "2026-09-27T10:58:06.085Z",
       "active_base_branch": "main",
       "active_base_sha": "b510875e7b0741b9b19f09429d2204a95df51198",
-      "active_head": "e256d9252646e4d41946eafb53eebfc592eabfa5",
+      "active_head": "407fc885fa2e19fe5d9970a8fdfa87a087120f90",
       "resume_branch": "feature/wcp-518-upcoming-game-release-widget-g1",
       "branch_heads": {
         "claim_branch": "b510875e7b0741b9b19f09429d2204a95df51198",
-        "feature_branch": "e256d9252646e4d41946eafb53eebfc592eabfa5"
+        "feature_branch": "407fc885fa2e19fe5d9970a8fdfa87a087120f90"
       },
-      "last_observed_head": "e256d9252646e4d41946eafb53eebfc592eabfa5",
+      "last_observed_head": "407fc885fa2e19fe5d9970a8fdfa87a087120f90",
       "checkpoint_paths": [
         "src/Widget/GameRelease/UpcomingReleaseQuery.php",
         "src/Widget/UpcomingGameReleaseWidgetProvider.php",
         "templates/widget/upcoming_game_releases.html.twig",
         "tests/Widget/UpcomingGameReleaseWidgetProviderTest.php"
       ],
-      "next_action": "Repair only the new widget test within its allowed path. Preserve the global query behavior for other valid future releases, then push the same feature branch and rerun complete CI on the exact new HEAD.",
-      "last_checkpoint_at": "2026-09-27T11:13:11.328Z",
-      "last_verified_push_at": "2026-09-27T11:13:11.328Z",
+      "next_action": "Monitor exact-head Worker CI run 36315578537 for 407fc885fa2e19fe5d9970a8fdfa87a087120f90. If any job fails, diagnose the reported issue and repair only within the four allowed paths on the same branch, then rerun full CI.",
+      "last_checkpoint_at": "2026-09-27T11:23:24Z",
+      "last_verified_push_at": "2026-09-27T11:23:24Z",
       "worker_pr": 310,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/310",
       "draft_pr": true,
@@ -36010,10 +36010,10 @@
         "templates/widget/upcoming_game_releases.html.twig",
         "tests/Widget/UpcomingGameReleaseWidgetProviderTest.php"
       ],
-      "ci_run_id": 36314987910,
-      "last_ci_run_id": 36314987910,
-      "ci_result": "failure",
-      "last_ci_result": "failure",
+      "ci_run_id": 36315578537,
+      "last_ci_run_id": 36315578537,
+      "ci_result": "in_progress",
+      "last_ci_result": "in_progress",
       "ci_attempts": [
         {
           "run_id": 36314564707,
@@ -36042,6 +36042,18 @@
           "head": "e256d9252646e4d41946eafb53eebfc592eabfa5",
           "result": "failure",
           "summary": "Static checks and PostgreSQL 18 migration chain passed. PHPUnit found one expected-vs-actual mismatch: the shared GameCatalogueControllerTest fixture has an enabled, non-cancelled release at +10 days (ID 1), so it correctly appeared in the global upcoming widget before the later test releases. Keep the production query unchanged. Isolate the exact ordering/cap query case with a later from-date, and compare provider output to the global query while asserting it is sorted and excludes this test's past/cancelled/disabled fixtures."
+        },
+        {
+          "run_id": 36315537922,
+          "head": "e2f1ea3b8d7a3dcfdbf5ba36c4de70ab1263400e",
+          "result": "cancelled",
+          "summary": "The intermediate same-branch checkpoint was cancelled when the immediate import/date-syntax correction was pushed. It provides no CI pass evidence; validate the corrected exact HEAD in the full run below."
+        },
+        {
+          "run_id": 36315578537,
+          "head": "407fc885fa2e19fe5d9970a8fdfa87a087120f90",
+          "result": "in_progress",
+          "summary": "Full Worker CI queued for corrected exact HEAD after test isolation from the existing +10-day Game Catalogue fixture. Await all PHPStan, PHPUnit and PostgreSQL 18 jobs."
         }
       ]
     },
