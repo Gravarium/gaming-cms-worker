@@ -10,16 +10,16 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T11:42:52.309Z",
+  "published_at": "2026-09-27T11:45:00.021Z",
   "summary": {
-    "total_remaining_worker_tasks": 165,
+    "total_remaining_worker_tasks": 166,
     "completed_worker_prs_awaiting_trusted_review": 279,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
     "next_required_action": "WCP-522 draft PR #315 is running exact-head Worker CI run 36316576401 on 66d224f96751b4f59d168f71815969e71ace122d; continue this branch and repair concrete failures only.",
     "composition_preparable": 0,
-    "immediately_actionable": 22,
+    "immediately_actionable": 23,
     "must_continue": true
   },
   "rules": {
@@ -33642,138 +33642,6 @@
       "completed_at": "2026-09-27T10:00:22.287Z"
     },
     {
-      "priority": 503,
-      "package_id": "WCP-503",
-      "title": "Manage public guild links from Game Hubs",
-      "risk": "medium",
-      "execution_state": "worker_in_progress",
-      "dependencies": [],
-      "dependencies_integrated_at_publication": [],
-      "blocked_by_at_publication": [],
-      "claim_branch": "claim/wcp-503-gamehub-guild-links-g1",
-      "suggested_branch": "feature/wcp-503-gamehub-guild-links-g1",
-      "base_branch": "main",
-      "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-      "objective": "Complete the existing Gaming module's Game Hub connection to guild pages. Give users with CMS_GAMING_MANAGE a discoverable link manager from each public Game Hub. Managers can associate and remove enabled public guilds for the same game; the public Game Hub resolves valid guild links to existing guild pages and hides stale, disabled, cross-game or missing targets. Reuse the existing GameHubLink storage and game/module visibility rules; do not change schema or migrations.",
-      "allowed_paths": [
-        "src/Controller/AdminGameHubGuildLinkController.php",
-        "src/Form/GameCatalogue/GameHubGuildLinkType.php",
-        "src/Twig/GameHubGuildLinkExtension.php",
-        "templates/admin/game_catalogue/guild_links.html.twig",
-        "templates/game_catalogue/show.html.twig",
-        "tests/Controller/AdminGameHubGuildLinkWorkflowTest.php"
-      ],
-      "forbidden_paths": [
-        "private/",
-        "PrivateCore/",
-        "ops/",
-        "docs/",
-        "bin/",
-        "AGENTS.md",
-        "WORKER.md",
-        "WORKER-TASK.json",
-        "WORKER-MANIFEST.json",
-        "WORKER-FILES.sha256",
-        ".worker-snapshot",
-        ".github/workflows/",
-        "migrations/",
-        "config/",
-        "src/Entity/",
-        "src/Repository/",
-        "src/Controller/GameCatalogue/GameCatalogueController.php",
-        "src/Controller/AdminGameCatalogue/",
-        "src/Form/GameCatalogue/GameCatalogueEntryAdminType.php",
-        "templates/admin/gaming/index.html.twig",
-        "templates/admin/game_catalogue/index.html.twig",
-        "templates/admin/game_catalogue/form.html.twig",
-        "templates/game_catalogue/index.html.twig",
-        "templates/layout/",
-        "tests/Gaming/Catalogue/GameCatalogueControllerTest.php"
-      ],
-      "deliverables": [
-        "A CMS_GAMING_MANAGE-protected admin screen is reachable from the public Game Hub by authorized editors and supports adding/removing guild links with CSRF protection.",
-        "Only enabled guilds attached to the same enabled game can be selected; duplicate links are rejected with a readable form error.",
-        "Public Game Hub pages render same-game enabled guilds as links to existing public guild pages, while missing, disabled, cross-game and non-guild targets do not disclose or link to private records.",
-        "The existing gaming module route gate, non-guild GameHubLink display, catalogue/release behavior and schema remain unchanged."
-      ],
-      "tests": [
-        "Focused functional coverage for authorized link create/delete, cross-game and disabled guild exclusion, anonymous/unprivileged denial, CSRF and ownership checks.",
-        "Public Game Hub coverage verifies a valid guild link resolves to app_guild_show and stale/disabled/cross-game targets stay hidden.",
-        "Disabling the gaming module keeps both public and admin routes unavailable; fixtures are restored in finally blocks.",
-        "PHPStan level 8 and full Worker CI on the exact final HEAD, including PostgreSQL 18 migration-chain validation."
-      ],
-      "completion_report": [
-        "Exact sanitized main/base SHA and final feature HEAD SHA.",
-        "Exact changed paths and Worker PR.",
-        "Create/delete, public link resolution, visibility, permission, CSRF and disabled-module test results.",
-        "PHPStan, PHPUnit, PostgreSQL migration and exact-head CI evidence; remaining integration follow-up."
-      ],
-      "immutable_constraints": [
-        "trusted-main-is-the-only-integration-and-deployment-source",
-        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
-        "preserve-CMS_GAMING_MANAGE-permission-CSRF-and-content-visibility",
-        "only-resolve-enabled-same-game-guild-targets",
-        "public-game-hub-links-do-not-disclose-disabled-or-cross-game-guilds",
-        "reuse-existing-GameHubLink-storage-no-schema-or-migration-change",
-        "preserve-existing-security-validation-and-worker-isolation-controls",
-        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
-        "red-CI-stops-integration",
-        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
-      ],
-      "proposal_base_branch": "main",
-      "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-      "proposal_kind": "worker_only",
-      "proposal_dependency_evidence": [],
-      "collision_check": {
-        "compared_against": "Fresh continuous/work-pool-v4 blob 7c1f3d93096dc26b1b45ae262c6c34c21015ff10, all active and claim-locked paths, sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d, and current branch/PR reservation state immediately before creating the WCP-503 claim.",
-        "result": "No active or claim-locked task owns or encloses these six paths. WCP-387 owns the public Game Catalogue controller, repository, index template and its existing test; those paths remain untouched. WCP-401 owns separate Game Catalogue admin controller/form/index/form/test paths; this proposal uses a new controller, form, admin template and focused test. WCP-500 and WCP-501 own public content-category and content-redirect paths, respectively, and do not overlap this Game Hub/guild workflow. No entity, repository, migration, shared layout or CI path is modified.",
-        "paths": [
-          "src/Controller/AdminGameHubGuildLinkController.php",
-          "src/Form/GameCatalogue/GameHubGuildLinkType.php",
-          "src/Twig/GameHubGuildLinkExtension.php",
-          "templates/admin/game_catalogue/guild_links.html.twig",
-          "templates/game_catalogue/show.html.twig",
-          "tests/Controller/AdminGameHubGuildLinkWorkflowTest.php"
-        ]
-      },
-      "published_at": "2026-09-27T09:56:19.571Z",
-      "claimed_on": "2026-09-27T09:56:19.571Z",
-      "claim_state": "active",
-      "active_base_branch": "main",
-      "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-      "active_head": "b198490e38f09dfaee119a5695f996c1af07c939",
-      "resume_branch": "feature/wcp-503-gamehub-guild-links-g1",
-      "branch_heads": {
-        "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-        "feature_branch": "b198490e38f09dfaee119a5695f996c1af07c939"
-      },
-      "last_observed_head": "b198490e38f09dfaee119a5695f996c1af07c939",
-      "last_checkpoint_at": "2026-09-27T10:04:59.724Z",
-      "checkpoint_paths": [
-        "src/Controller/AdminGameHubGuildLinkController.php",
-        "src/Form/GameCatalogue/GameHubGuildLinkType.php",
-        "src/Twig/GameHubGuildLinkExtension.php",
-        "templates/admin/game_catalogue/guild_links.html.twig",
-        "templates/game_catalogue/show.html.twig",
-        "tests/Controller/AdminGameHubGuildLinkWorkflowTest.php"
-      ],
-      "next_action": "Run full exact-head Worker CI #733; repair any new failures within the six allowed paths and update PR #296 after final green CI.",
-      "final_head": "b198490e38f09dfaee119a5695f996c1af07c939",
-      "last_verified_push_at": "2026-09-27T10:04:42.344Z",
-      "worker_pr": 296,
-      "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/296",
-      "ci_run_id": 36311362958,
-      "ci_result": "in_progress",
-      "ci_attempts": [
-        {
-          "head": "1afee9a6fafabce5a421d19ee30f825235aeba29",
-          "run_id": 36311288167,
-          "result": "failure",
-          "reason": "PHPStan required the unbound form type to declare its data generic; corrected in the current head."
-        }
-      ]
-    },
-    {
       "priority": 502,
       "package_id": "WCP-502",
       "title": "Let applicants track their guild application status",
@@ -33926,6 +33794,138 @@
       "completed_at": "2026-09-27T10:11:18.658Z"
     },
     {
+      "priority": 503,
+      "package_id": "WCP-503",
+      "title": "Manage public guild links from Game Hubs",
+      "risk": "medium",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-503-gamehub-guild-links-g1",
+      "suggested_branch": "feature/wcp-503-gamehub-guild-links-g1",
+      "base_branch": "main",
+      "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "objective": "Complete the existing Gaming module's Game Hub connection to guild pages. Give users with CMS_GAMING_MANAGE a discoverable link manager from each public Game Hub. Managers can associate and remove enabled public guilds for the same game; the public Game Hub resolves valid guild links to existing guild pages and hides stale, disabled, cross-game or missing targets. Reuse the existing GameHubLink storage and game/module visibility rules; do not change schema or migrations.",
+      "allowed_paths": [
+        "src/Controller/AdminGameHubGuildLinkController.php",
+        "src/Form/GameCatalogue/GameHubGuildLinkType.php",
+        "src/Twig/GameHubGuildLinkExtension.php",
+        "templates/admin/game_catalogue/guild_links.html.twig",
+        "templates/game_catalogue/show.html.twig",
+        "tests/Controller/AdminGameHubGuildLinkWorkflowTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/",
+        "src/Entity/",
+        "src/Repository/",
+        "src/Controller/GameCatalogue/GameCatalogueController.php",
+        "src/Controller/AdminGameCatalogue/",
+        "src/Form/GameCatalogue/GameCatalogueEntryAdminType.php",
+        "templates/admin/gaming/index.html.twig",
+        "templates/admin/game_catalogue/index.html.twig",
+        "templates/admin/game_catalogue/form.html.twig",
+        "templates/game_catalogue/index.html.twig",
+        "templates/layout/",
+        "tests/Gaming/Catalogue/GameCatalogueControllerTest.php"
+      ],
+      "deliverables": [
+        "A CMS_GAMING_MANAGE-protected admin screen is reachable from the public Game Hub by authorized editors and supports adding/removing guild links with CSRF protection.",
+        "Only enabled guilds attached to the same enabled game can be selected; duplicate links are rejected with a readable form error.",
+        "Public Game Hub pages render same-game enabled guilds as links to existing public guild pages, while missing, disabled, cross-game and non-guild targets do not disclose or link to private records.",
+        "The existing gaming module route gate, non-guild GameHubLink display, catalogue/release behavior and schema remain unchanged."
+      ],
+      "tests": [
+        "Focused functional coverage for authorized link create/delete, cross-game and disabled guild exclusion, anonymous/unprivileged denial, CSRF and ownership checks.",
+        "Public Game Hub coverage verifies a valid guild link resolves to app_guild_show and stale/disabled/cross-game targets stay hidden.",
+        "Disabling the gaming module keeps both public and admin routes unavailable; fixtures are restored in finally blocks.",
+        "PHPStan level 8 and full Worker CI on the exact final HEAD, including PostgreSQL 18 migration-chain validation."
+      ],
+      "completion_report": [
+        "Exact sanitized main/base SHA and final feature HEAD SHA.",
+        "Exact changed paths and Worker PR.",
+        "Create/delete, public link resolution, visibility, permission, CSRF and disabled-module test results.",
+        "PHPStan, PHPUnit, PostgreSQL migration and exact-head CI evidence; remaining integration follow-up."
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "preserve-CMS_GAMING_MANAGE-permission-CSRF-and-content-visibility",
+        "only-resolve-enabled-same-game-guild-targets",
+        "public-game-hub-links-do-not-disclose-disabled-or-cross-game-guilds",
+        "reuse-existing-GameHubLink-storage-no-schema-or-migration-change",
+        "preserve-existing-security-validation-and-worker-isolation-controls",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "red-CI-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "proposal_kind": "worker_only",
+      "proposal_dependency_evidence": [],
+      "collision_check": {
+        "compared_against": "Fresh continuous/work-pool-v4 blob 7c1f3d93096dc26b1b45ae262c6c34c21015ff10, all active and claim-locked paths, sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d, and current branch/PR reservation state immediately before creating the WCP-503 claim.",
+        "result": "No active or claim-locked task owns or encloses these six paths. WCP-387 owns the public Game Catalogue controller, repository, index template and its existing test; those paths remain untouched. WCP-401 owns separate Game Catalogue admin controller/form/index/form/test paths; this proposal uses a new controller, form, admin template and focused test. WCP-500 and WCP-501 own public content-category and content-redirect paths, respectively, and do not overlap this Game Hub/guild workflow. No entity, repository, migration, shared layout or CI path is modified.",
+        "paths": [
+          "src/Controller/AdminGameHubGuildLinkController.php",
+          "src/Form/GameCatalogue/GameHubGuildLinkType.php",
+          "src/Twig/GameHubGuildLinkExtension.php",
+          "templates/admin/game_catalogue/guild_links.html.twig",
+          "templates/game_catalogue/show.html.twig",
+          "tests/Controller/AdminGameHubGuildLinkWorkflowTest.php"
+        ]
+      },
+      "published_at": "2026-09-27T09:56:19.571Z",
+      "claimed_on": "2026-09-27T09:56:19.571Z",
+      "claim_state": "active",
+      "active_base_branch": "main",
+      "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "b198490e38f09dfaee119a5695f996c1af07c939",
+      "resume_branch": "feature/wcp-503-gamehub-guild-links-g1",
+      "branch_heads": {
+        "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+        "feature_branch": "b198490e38f09dfaee119a5695f996c1af07c939"
+      },
+      "last_observed_head": "b198490e38f09dfaee119a5695f996c1af07c939",
+      "last_checkpoint_at": "2026-09-27T10:04:59.724Z",
+      "checkpoint_paths": [
+        "src/Controller/AdminGameHubGuildLinkController.php",
+        "src/Form/GameCatalogue/GameHubGuildLinkType.php",
+        "src/Twig/GameHubGuildLinkExtension.php",
+        "templates/admin/game_catalogue/guild_links.html.twig",
+        "templates/game_catalogue/show.html.twig",
+        "tests/Controller/AdminGameHubGuildLinkWorkflowTest.php"
+      ],
+      "next_action": "Run full exact-head Worker CI #733; repair any new failures within the six allowed paths and update PR #296 after final green CI.",
+      "final_head": "b198490e38f09dfaee119a5695f996c1af07c939",
+      "last_verified_push_at": "2026-09-27T10:04:42.344Z",
+      "worker_pr": 296,
+      "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/296",
+      "ci_run_id": 36311362958,
+      "ci_result": "in_progress",
+      "ci_attempts": [
+        {
+          "head": "1afee9a6fafabce5a421d19ee30f825235aeba29",
+          "run_id": 36311288167,
+          "result": "failure",
+          "reason": "PHPStan required the unbound form type to declare its data generic; corrected in the current head."
+        }
+      ]
+    },
+    {
       "priority": 504,
       "package_id": "WCP-504",
       "title": "Add module-aware internal call-to-action widgets to the page builder",
@@ -34039,137 +34039,6 @@
       "draft_pr": false,
       "final_head": "be427ff638fbdfd488a7d053bd9f838762662ebe",
       "ci_run_id": 36312196551,
-      "ci_result": "success"
-    },
-    {
-      "priority": 506,
-      "package_id": "WCP-506",
-      "title": "Expose the public guild event schedule",
-      "risk": "low",
-      "execution_state": "worker_complete_awaiting_trusted_review",
-      "dependencies": [],
-      "dependencies_integrated_at_publication": [],
-      "blocked_by_at_publication": [],
-      "claim_branch": "claim/wcp-506-public-guild-events-g1",
-      "suggested_branch": "feature/wcp-506-public-guild-events-g1",
-      "base_branch": "main",
-      "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-      "objective": "Complete the public event surface of the existing guild collaboration module. Guild events can already be created, edited, cancelled and attended from administration, but public guild pages expose no upcoming schedule. Add an anonymous GET-only /gaming/guild/{slug}/events page that resolves only a public enabled guild and lists its planned events from the existing upcoming-event query. Keep past, cancelled and completed events out, expose no member signups or private management data, and let the existing app_guild module route gate fail closed when Gaming is disabled.",
-      "allowed_paths": [
-        "src/Controller/PublicGuildEventController.php",
-        "templates/gaming/events.html.twig",
-        "tests/Controller/PublicGuildEventTest.php"
-      ],
-      "forbidden_paths": [
-        "private/",
-        "PrivateCore/",
-        "ops/",
-        "docs/",
-        "bin/",
-        "AGENTS.md",
-        "WORKER.md",
-        "WORKER-TASK.json",
-        "WORKER-MANIFEST.json",
-        "WORKER-FILES.sha256",
-        ".worker-snapshot",
-        ".github/workflows/",
-        "migrations/",
-        "config/",
-        "assets/",
-        "public/",
-        "src/Entity/",
-        "src/Form/",
-        "src/Repository/",
-        "src/Controller/GamingController.php",
-        "src/Controller/AdminGuildCollaborationController.php",
-        "src/Controller/GuildApplicationStatusController.php",
-        "src/Module/CmsModuleCatalog.php",
-        "templates/base.html.twig",
-        "templates/layout/",
-        "templates/gaming/index.html.twig",
-        "templates/gaming/show.html.twig",
-        "templates/gaming/apply.html.twig",
-        "templates/gaming/applications.html.twig",
-        "templates/admin/gaming/",
-        "tests/Controller/Guild/"
-      ],
-      "deliverables": [
-        "GET /gaming/guild/{slug}/events is a public, read-only page for an enabled guild whose game is enabled.",
-        "The page lists only events returned by GuildEventRepository::upcomingForGuild, with title, type, start/end, description, location and optional participant limit; signup/attendance data is not exposed.",
-        "Past, cancelled, completed, foreign-guild and disabled-guild/game events are absent; a public guild with no upcoming events has a clear empty state.",
-        "Missing or non-public guilds return 404, and disabling the gaming module makes the route unavailable through the existing app_guild route-prefix gate.",
-        "Existing guild administration, public guild detail/application pages, event persistence, signup flow and schema remain unchanged."
-      ],
-      "tests": [
-        "Focused WebTestCase coverage creates public/disabled/foreign guild and planned/cancelled/done/past event fixtures, verifies the public list and empty state, and cleans all fixtures in finally blocks.",
-        "Negative coverage verifies missing and non-public guilds return 404 and disabled gaming fails closed without rendering event content.",
-        "PHPStan level 8 and complete Worker CI on the exact final HEAD, including PostgreSQL 18 migration-chain validation."
-      ],
-      "completion_report": [
-        "Exact sanitized main/base SHA and final Worker HEAD SHA.",
-        "Complete changed-path list and Worker PR.",
-        "Public upcoming guild-event behavior, visibility/privacy boundaries, empty state and disabled-module evidence.",
-        "Exact-head PHPStan, PHPUnit, PostgreSQL migration and full Worker CI results; remaining Trusted integration follow-up."
-      ],
-      "immutable_constraints": [
-        "trusted-main-is-the-only-integration-and-deployment-source",
-        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
-        "public-event-page-is-anonymous-read-only-and-never-exposes-signups-or-management-data",
-        "only-public-enabled-guilds-and-planned-upcoming-events-are-rendered",
-        "disabled-gaming-module-must-fail-closed-through-existing-app_guild-route-gate",
-        "existing-guild-administration-public-detail-application-and-event-persistence-behavior-remain-unchanged",
-        "no-schema-or-migration-change",
-        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
-        "red-CI-stops-integration",
-        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment",
-        "no-private-runtime-or-sensitive-data"
-      ],
-      "proposal_base_branch": "main",
-      "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-      "proposal_kind": "worker_only",
-      "proposal_dependency_evidence": [],
-      "collision_check": {
-        "compared_against": "Fresh continuous/work-pool-v4 commit a46e4c54edcc27b2a69d2ceddc773d0330d961bf; all active and claim-locked paths; sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d; current WCP-506 branches and PR state immediately before reservation.",
-        "result": "No active or claim-locked package owns or encloses the three proposed paths. WCP-448 owns the administrative guild-collaboration paths and WCP-502 owns the existing public guild detail/application-status paths; both remain untouched. A foreign WCP-505 gaming branch was observed but is not altered. The package adds only a new public event controller, dedicated template and focused test. No entity, repository, migration, module-catalog or shared public template changes are included.",
-        "paths": [
-          "src/Controller/PublicGuildEventController.php",
-          "templates/gaming/events.html.twig",
-          "tests/Controller/PublicGuildEventTest.php"
-        ]
-      },
-      "published_at": "2026-09-27T10:02:32.498Z",
-      "claimed_on": "2026-09-27T10:02:32.498Z",
-      "claim_state": "locked_until_trusted_resolution",
-      "active_base_branch": "main",
-      "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-      "active_head": "df716cb82745f7b11c0339bed1b63a6975390dab",
-      "resume_branch": "feature/wcp-506-public-guild-events-g1",
-      "branch_heads": {
-        "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-        "feature_branch": "df716cb82745f7b11c0339bed1b63a6975390dab"
-      },
-      "last_observed_head": "df716cb82745f7b11c0339bed1b63a6975390dab",
-      "last_checkpoint_at": "2026-09-27T10:10:21.841Z",
-      "checkpoint_paths": [
-        "src/Controller/PublicGuildEventController.php",
-        "templates/gaming/events.html.twig",
-        "tests/Controller/PublicGuildEventTest.php"
-      ],
-      "next_action": "Await Trusted review or explicit transfer; retain the claim lock until Trusted resolution. Do not merge or deploy from Worker.",
-      "last_verified_push_at": "2026-09-27T10:10:21.841Z",
-      "worker_pr": 299,
-      "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/299",
-      "draft_pr": false,
-      "pr_state": "open",
-      "worker_pr_changed_paths": [
-        "src/Controller/PublicGuildEventController.php",
-        "templates/gaming/events.html.twig",
-        "tests/Controller/PublicGuildEventTest.php"
-      ],
-      "last_failed_ci_run_id": 36311415557,
-      "last_failed_ci_result": "failure",
-      "final_head": "df716cb82745f7b11c0339bed1b63a6975390dab",
-      "ci_run_id": 36311554884,
       "ci_result": "success"
     },
     {
@@ -34301,6 +34170,137 @@
         "Validate worker-visible PostgreSQL 18 migration chain passed the complete migration chain and migration status validation.",
         "Focused AdminGamingGameModuleGateTest is included in the full exact-head PHPUnit suite; the disabled route returns 404 and the enabled form remains reachable."
       ]
+    },
+    {
+      "priority": 506,
+      "package_id": "WCP-506",
+      "title": "Expose the public guild event schedule",
+      "risk": "low",
+      "execution_state": "worker_complete_awaiting_trusted_review",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-506-public-guild-events-g1",
+      "suggested_branch": "feature/wcp-506-public-guild-events-g1",
+      "base_branch": "main",
+      "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "objective": "Complete the public event surface of the existing guild collaboration module. Guild events can already be created, edited, cancelled and attended from administration, but public guild pages expose no upcoming schedule. Add an anonymous GET-only /gaming/guild/{slug}/events page that resolves only a public enabled guild and lists its planned events from the existing upcoming-event query. Keep past, cancelled and completed events out, expose no member signups or private management data, and let the existing app_guild module route gate fail closed when Gaming is disabled.",
+      "allowed_paths": [
+        "src/Controller/PublicGuildEventController.php",
+        "templates/gaming/events.html.twig",
+        "tests/Controller/PublicGuildEventTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/",
+        "assets/",
+        "public/",
+        "src/Entity/",
+        "src/Form/",
+        "src/Repository/",
+        "src/Controller/GamingController.php",
+        "src/Controller/AdminGuildCollaborationController.php",
+        "src/Controller/GuildApplicationStatusController.php",
+        "src/Module/CmsModuleCatalog.php",
+        "templates/base.html.twig",
+        "templates/layout/",
+        "templates/gaming/index.html.twig",
+        "templates/gaming/show.html.twig",
+        "templates/gaming/apply.html.twig",
+        "templates/gaming/applications.html.twig",
+        "templates/admin/gaming/",
+        "tests/Controller/Guild/"
+      ],
+      "deliverables": [
+        "GET /gaming/guild/{slug}/events is a public, read-only page for an enabled guild whose game is enabled.",
+        "The page lists only events returned by GuildEventRepository::upcomingForGuild, with title, type, start/end, description, location and optional participant limit; signup/attendance data is not exposed.",
+        "Past, cancelled, completed, foreign-guild and disabled-guild/game events are absent; a public guild with no upcoming events has a clear empty state.",
+        "Missing or non-public guilds return 404, and disabling the gaming module makes the route unavailable through the existing app_guild route-prefix gate.",
+        "Existing guild administration, public guild detail/application pages, event persistence, signup flow and schema remain unchanged."
+      ],
+      "tests": [
+        "Focused WebTestCase coverage creates public/disabled/foreign guild and planned/cancelled/done/past event fixtures, verifies the public list and empty state, and cleans all fixtures in finally blocks.",
+        "Negative coverage verifies missing and non-public guilds return 404 and disabled gaming fails closed without rendering event content.",
+        "PHPStan level 8 and complete Worker CI on the exact final HEAD, including PostgreSQL 18 migration-chain validation."
+      ],
+      "completion_report": [
+        "Exact sanitized main/base SHA and final Worker HEAD SHA.",
+        "Complete changed-path list and Worker PR.",
+        "Public upcoming guild-event behavior, visibility/privacy boundaries, empty state and disabled-module evidence.",
+        "Exact-head PHPStan, PHPUnit, PostgreSQL migration and full Worker CI results; remaining Trusted integration follow-up."
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "public-event-page-is-anonymous-read-only-and-never-exposes-signups-or-management-data",
+        "only-public-enabled-guilds-and-planned-upcoming-events-are-rendered",
+        "disabled-gaming-module-must-fail-closed-through-existing-app_guild-route-gate",
+        "existing-guild-administration-public-detail-application-and-event-persistence-behavior-remain-unchanged",
+        "no-schema-or-migration-change",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "red-CI-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment",
+        "no-private-runtime-or-sensitive-data"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "proposal_kind": "worker_only",
+      "proposal_dependency_evidence": [],
+      "collision_check": {
+        "compared_against": "Fresh continuous/work-pool-v4 commit a46e4c54edcc27b2a69d2ceddc773d0330d961bf; all active and claim-locked paths; sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d; current WCP-506 branches and PR state immediately before reservation.",
+        "result": "No active or claim-locked package owns or encloses the three proposed paths. WCP-448 owns the administrative guild-collaboration paths and WCP-502 owns the existing public guild detail/application-status paths; both remain untouched. A foreign WCP-505 gaming branch was observed but is not altered. The package adds only a new public event controller, dedicated template and focused test. No entity, repository, migration, module-catalog or shared public template changes are included.",
+        "paths": [
+          "src/Controller/PublicGuildEventController.php",
+          "templates/gaming/events.html.twig",
+          "tests/Controller/PublicGuildEventTest.php"
+        ]
+      },
+      "published_at": "2026-09-27T10:02:32.498Z",
+      "claimed_on": "2026-09-27T10:02:32.498Z",
+      "claim_state": "locked_until_trusted_resolution",
+      "active_base_branch": "main",
+      "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "df716cb82745f7b11c0339bed1b63a6975390dab",
+      "resume_branch": "feature/wcp-506-public-guild-events-g1",
+      "branch_heads": {
+        "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+        "feature_branch": "df716cb82745f7b11c0339bed1b63a6975390dab"
+      },
+      "last_observed_head": "df716cb82745f7b11c0339bed1b63a6975390dab",
+      "last_checkpoint_at": "2026-09-27T10:10:21.841Z",
+      "checkpoint_paths": [
+        "src/Controller/PublicGuildEventController.php",
+        "templates/gaming/events.html.twig",
+        "tests/Controller/PublicGuildEventTest.php"
+      ],
+      "next_action": "Await Trusted review or explicit transfer; retain the claim lock until Trusted resolution. Do not merge or deploy from Worker.",
+      "last_verified_push_at": "2026-09-27T10:10:21.841Z",
+      "worker_pr": 299,
+      "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/299",
+      "draft_pr": false,
+      "pr_state": "open",
+      "worker_pr_changed_paths": [
+        "src/Controller/PublicGuildEventController.php",
+        "templates/gaming/events.html.twig",
+        "tests/Controller/PublicGuildEventTest.php"
+      ],
+      "last_failed_ci_run_id": 36311415557,
+      "last_failed_ci_result": "failure",
+      "final_head": "df716cb82745f7b11c0339bed1b63a6975390dab",
+      "ci_run_id": 36311554884,
+      "ci_result": "success"
     },
     {
       "priority": 507,
@@ -36875,6 +36875,100 @@
       "last_checkpoint_at": "2026-09-27T11:41:27.807Z",
       "checkpoint_paths": [],
       "next_action": "Implement the bounded Game Catalogue query, provider, public widget template and focused tests only in the four allowed paths; then validate exact-head Worker CI."
+    },
+    {
+      "priority": 525,
+      "package_id": "WCP-525",
+      "title": "Keep unpublished and unlisted content out of public discovery feeds",
+      "risk": "medium",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-525-public-content-discovery-visibility-g1",
+      "suggested_branch": "feature/wcp-525-public-content-discovery-visibility-g1",
+      "base_branch": "main",
+      "base_sha": "b510875e7b0741b9b19f09429d2204a95df51198",
+      "objective": "Add a controller-level functional regression test for the public news RSS/JSON feeds, search results and sitemap. Prove draft and unlisted content stay out of public discovery surfaces while listed published content remains present; prove noindex content is omitted from the sitemap. Do not change runtime behavior.",
+      "allowed_paths": [
+        "tests/Controller/Content/PublicContentDiscoveryVisibilityTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/",
+        "src/",
+        "templates/",
+        "assets/",
+        "public/"
+      ],
+      "deliverables": [
+        "Create isolated synthetic published, unlisted, draft and noindex news entries.",
+        "Verify only listed published entries appear in RSS, JSON feed and search results; verify draft and unlisted markers do not leak.",
+        "Verify sitemap includes indexable listed published entries and excludes noindex, unlisted and unpublished entries.",
+        "Change only the dedicated controller integration-test file; do not change controllers, repositories, templates, entities or schema."
+      ],
+      "tests": [
+        "Run the focused PHPUnit test for PublicContentDiscoveryVisibilityTest.",
+        "Run PHPStan level 8 and full Worker CI on the exact final HEAD, including PostgreSQL 18 migration validation.",
+        "Preserve existing publication, unlisted-content and noindex behavior; do not weaken or skip checks."
+      ],
+      "completion_report": [
+        "Exact sanitized main/base SHA and final Worker HEAD SHA.",
+        "Exact changed path and Worker PR URL.",
+        "RSS, JSON feed, search and sitemap visibility evidence for listed, unlisted, draft and noindex entries.",
+        "Focused PHPUnit, PHPStan and exact-head Worker CI results."
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "only-published-and-listed-content-appears-in-public-discovery-surfaces",
+        "noindex-content-is-omitted-from-sitemap",
+        "test-only-no-runtime-or-schema-change",
+        "no-security-test-phpstan-or-CI-weakening",
+        "red-CI-stops-integration",
+        "no-direct-trusted-integration-or-deployment",
+        "no-private-runtime-or-sensitive-data"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "b510875e7b0741b9b19f09429d2204a95df51198",
+      "proposal_kind": "worker_only",
+      "proposal_dependency_evidence": [],
+      "collision_check": {
+        "compared_against": "Fresh continuous/work-pool-v4 pool blob 48ae81d5e76eb114b679b39501ef096964c43b64; sanitized Worker main b510875e7b0741b9b19f09429d2204a95df51198; all active and claim-locked allowed-path scopes; WCP-525 claim/feature branch searches; main test-file lookup; and current WCP-520/522/523/524 claims.",
+        "result": "No active or claim-locked task owns or encloses the dedicated Content test path. The current public content query methods already exclude unpublished and unlisted records; no route-level regression test for RSS, JSON feed, search and sitemap exists in the main Content test directory. WCP-520 covers a separate widget and WCP-524 a game-catalogue widget.",
+        "paths": [
+          "tests/Controller/Content/PublicContentDiscoveryVisibilityTest.php"
+        ]
+      },
+      "published_at": "2026-09-27T11:45:00.021Z",
+      "claimed_on": "2026-09-27T11:45:00.021Z",
+      "claim_state": "active",
+      "active_base_branch": "main",
+      "active_base_sha": "b510875e7b0741b9b19f09429d2204a95df51198",
+      "active_head": "b510875e7b0741b9b19f09429d2204a95df51198",
+      "resume_branch": "feature/wcp-525-public-content-discovery-visibility-g1",
+      "branch_heads": {
+        "claim_branch": "b510875e7b0741b9b19f09429d2204a95df51198",
+        "feature_branch": "b510875e7b0741b9b19f09429d2204a95df51198"
+      },
+      "last_observed_head": "b510875e7b0741b9b19f09429d2204a95df51198",
+      "last_checkpoint_at": "2026-09-27T11:45:00.021Z",
+      "checkpoint_paths": [
+        "tests/Controller/Content/PublicContentDiscoveryVisibilityTest.php"
+      ],
+      "next_action": "Implement the route-level public discovery visibility test within the sole allowed test path; then run focused PHPUnit and complete exact-head Worker CI."
     }
   ],
   "recovery_queue": [],
