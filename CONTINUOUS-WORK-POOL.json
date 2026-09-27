@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T18:45:50.730Z",
+  "published_at": "2026-09-27T18:49:33.847Z",
   "summary": {
-    "total_remaining_worker_tasks": 172,
+    "total_remaining_worker_tasks": 173,
     "completed_worker_prs_awaiting_trusted_review": 299,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-568 PR #362 is ready for Trusted review with exact-head CI #913 / 36341660764 green. Re-evaluate all unclaimed dependencies and continue with an independent worker-only proposal if none is eligible.",
+    "next_required_action": "WCP-569 is claimed on main@7b2ca79405fc12d34bce1386157e929e4668f31a; implement bounded public category directory pagination and run exact-head CI.",
     "composition_preparable": 0,
     "immediately_actionable": 29,
     "must_continue": true
@@ -45705,6 +45705,110 @@
       "ci_validation_pr": 362,
       "completed_at": "2026-09-27T18:45:50.730Z",
       "worker_completion_summary": "Exact-head Worker CI #913 / 36341660764 passed on 4a4f10b8fe3b3bb75f50b102114d78f58b6b12b9: 737 tests, 4,628 assertions, 0 failures/errors (1 deprecation, 3 notices); PHPStan reported no errors; PostgreSQL 18 applied 57 migrations with 878 SQL queries. PR #362 is open and ready for Trusted review, based on main@7b2ca79405fc12d34bce1386157e929e4668f31a, with exactly one allowlisted test path and no runtime changes."
+    },
+    {
+      "priority": 569,
+      "package_id": "WCP-569",
+      "title": "Paginate the public category directory",
+      "risk": "medium",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-569-public-category-directory-pagination-g1",
+      "suggested_branch": "feature/wcp-569-public-category-directory-pagination-g1",
+      "base_branch": "main",
+      "base_sha": "7b2ca79405fc12d34bce1386157e929e4668f31a",
+      "objective": "Bound GET /news/categories to a stable 20-category database page instead of loading every category into each response. Count all categories, order by name ASC then ID ASC, preserve the default page, category hierarchy/display names, descriptions, archive links, empty-directory behavior and content-module gate, and render accessible previous/next navigation. Reject malformed page inputs with 400, pages over 10,000 and valid out-of-range pages with 404.",
+      "allowed_paths": [
+        "src/Controller/PublicCategoryDirectoryController.php",
+        "templates/category/index.html.twig",
+        "tests/Controller/PublicCategoryDirectoryPaginationTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "CONTINUOUS-WORKER.md",
+        "CONTINUOUS-WORK-POOL.json",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/",
+        "src/Entity/",
+        "src/Repository/",
+        "templates/admin/",
+        "templates/layout/"
+      ],
+      "deliverables": [
+        "Controller counts categories and loads only the requested 20-row page with stable name/id ordering.",
+        "Category page template displays accessible page position and previous/next links when multiple pages exist.",
+        "Functional tests prove deterministic 20-row boundaries, page links, malformed and out-of-range behavior, while existing hierarchy, route and module-gate tests stay intact.",
+        "No schema, entity, repository, configuration or migration changes."
+      ],
+      "tests": [
+        "Targeted PublicCategoryDirectoryPaginationTest covers page 1/page 2, stable order and page boundaries, malformed values, cap and out-of-range response.",
+        "Complete exact-head Worker CI including PHPStan, full PHPUnit, template/config validation, Doctrine and PostgreSQL 18 migration chain."
+      ],
+      "completion_report": [
+        "Exact sanitized main base and final HEAD; changed paths and Worker PR state.",
+        "DB count/page size/order and accessible navigation evidence.",
+        "Targeted functional regressions and exact-head Worker CI results.",
+        "No schema changes; Trusted review follow-up."
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-Trusted-review-and-exact-head-CI",
+        "preserve-all-security-permissions-CSRF-validation-recovery-rollback-and-upload-controls",
+        "no-private-runtime-or-sensitive-data",
+        "no-schema-migration-or-entity-change",
+        "no-edit-to-active-or-claim-locked-paths",
+        "no-direct-Trusted-integration-or-deployment"
+      ],
+      "proposal_kind": "worker_only",
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "7b2ca79405fc12d34bce1386157e929e4668f31a",
+      "proposal_dependency_evidence": [],
+      "collision_check": {
+        "compared_against": "Fresh continuous/work-pool-v4 file blob @ ffb1f18a3d090e543a8ba5e1019dd2d01363e5cd; current sanitized main @ 7b2ca79405fc12d34bce1386157e929e4668f31a; every active and claim-locked path.",
+        "result": "No allowed path overlaps an active or claim-locked task. The category template is also inside FCP-072's broad unclaimed templates/ allowance; FCP-072 is dependency-blocked by FCP-035 with no active writer. This WCP reserves only templates/category/index.html.twig; any future FCP-072 claimant must revalidate and narrow its template scope against this exact claimed path. The controller and new pagination test do not overlap any claim.",
+        "paths": [
+          "src/Controller/PublicCategoryDirectoryController.php",
+          "templates/category/index.html.twig",
+          "tests/Controller/PublicCategoryDirectoryPaginationTest.php"
+        ],
+        "observed_nonblocking_path_hits": [
+          {
+            "id": "FCP-072",
+            "state": "unclaimed",
+            "blocked_by": [
+              "FCP-035"
+            ],
+            "excluded": [
+              "templates/category/index.html.twig is explicitly claimed by this WCP; all other accessibility/PWA paths remain untouched"
+            ]
+          }
+        ]
+      },
+      "published_at": "2026-09-27T18:49:33.847Z",
+      "claimed_on": "2026-09-27T18:49:33.847Z",
+      "claim_state": "active",
+      "active_base_branch": "main",
+      "active_base_sha": "7b2ca79405fc12d34bce1386157e929e4668f31a",
+      "active_head": "7b2ca79405fc12d34bce1386157e929e4668f31a",
+      "resume_branch": "feature/wcp-569-public-category-directory-pagination-g1",
+      "branch_heads": {},
+      "last_observed_head": "7b2ca79405fc12d34bce1386157e929e4668f31a",
+      "last_checkpoint_at": "2026-09-27T18:49:33.847Z",
+      "checkpoint_paths": [],
+      "next_action": "Create exclusive claim and feature branches from this exact base, then implement DB-side category pagination, accessible links and regressions."
     }
   ],
   "recovery_queue": [],
