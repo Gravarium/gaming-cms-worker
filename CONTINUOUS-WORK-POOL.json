@@ -10,7 +10,7 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T11:47:00.836Z",
+  "published_at": "2026-09-27T11:47:24.785Z",
   "summary": {
     "total_remaining_worker_tasks": 167,
     "completed_worker_prs_awaiting_trusted_review": 279,
@@ -36748,16 +36748,21 @@
       "claim_state": "active",
       "active_base_branch": "main",
       "active_base_sha": "b510875e7b0741b9b19f09429d2204a95df51198",
-      "active_head": "b510875e7b0741b9b19f09429d2204a95df51198",
+      "active_head": "1ae46e89d15d6536e2653341ebddfe262355b848",
       "resume_branch": "feature/wcp-523-public-video-playlists-widget-g1",
       "branch_heads": {
         "claim_branch": "b510875e7b0741b9b19f09429d2204a95df51198",
-        "feature_branch": "b510875e7b0741b9b19f09429d2204a95df51198"
+        "feature_branch": "1ae46e89d15d6536e2653341ebddfe262355b848"
       },
-      "last_observed_head": "b510875e7b0741b9b19f09429d2204a95df51198",
-      "last_checkpoint_at": "2026-09-27T11:35:35.271Z",
-      "checkpoint_paths": [],
-      "next_action": "Implement the public-playlist query, Video-owned page-builder provider, template and focused tests only in the four allowed paths; push a coherent checkpoint and run exact-head Worker CI."
+      "last_observed_head": "1ae46e89d15d6536e2653341ebddfe262355b848",
+      "last_checkpoint_at": "2026-09-27T11:47:24.785Z",
+      "checkpoint_paths": [
+        "src/Widget/VideoPlaylist/PublicVideoPlaylistQuery.php",
+        "src/Widget/PublicVideoPlaylistWidgetProvider.php",
+        "templates/widget/public_video_playlists.html.twig",
+        "tests/Widget/PublicVideoPlaylistWidgetProviderTest.php"
+      ],
+      "next_action": "Open a draft Worker PR for the public video-playlist page-builder widget and run complete Worker CI on the exact HEAD."
     },
     {
       "priority": 524,
