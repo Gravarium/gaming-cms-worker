@@ -35275,7 +35275,7 @@
         "tests/Widget/FaqWidgetProviderTest.php"
       ],
       "deliverables": [
-        "Register a content-layout widget with key gaming.upcoming_competitions, Gaming module ownership, a dedicated template and the existing common count setting.",
+        "Register a content-layout widget with key gaming.upcoming-competitions, Gaming module ownership, a dedicated template and the existing common count setting.",
         "Render only future STATUS_OPEN competitions with public visibility and an enabled game, ordered by startsAt then id, capped at 12 and at the editor-selected count.",
         "Show game, competition name, start time, and a link to the existing public competition detail/registration flow; render a friendly empty state.",
         "Let existing page-builder module gating hide the widget and return no data when Gaming is disabled.",
@@ -35325,21 +35325,21 @@
       "claim_state": "active",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-      "active_head": "e8150373d495313cf549adc5e7daed854ac5d6c9",
+      "active_head": "1987b65169cb05392c0addcecb7c91fa9c90be53",
       "resume_branch": "feature/wcp-514-upcoming-competition-widget-g1",
       "branch_heads": {
         "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-        "feature_branch": "e8150373d495313cf549adc5e7daed854ac5d6c9"
+        "feature_branch": "1987b65169cb05392c0addcecb7c91fa9c90be53"
       },
-      "last_observed_head": "e8150373d495313cf549adc5e7daed854ac5d6c9",
-      "last_checkpoint_at": "2026-09-27T10:37:05.360Z",
+      "last_observed_head": "1987b65169cb05392c0addcecb7c91fa9c90be53",
+      "last_checkpoint_at": "2026-09-27T10:41:55.639Z",
       "checkpoint_paths": [
         "src/Widget/UpcomingCompetitionWidgetProvider.php",
         "templates/widget/upcoming_competitions.html.twig",
         "tests/Widget/UpcomingCompetitionWidgetProviderTest.php"
       ],
-      "next_action": "Monitor exact-head Worker CI run 36313084581 (run #757), queued for HEAD e8150373d495313cf549adc5e7daed854ac5d6c9. Diagnose and repair any concrete failure only within the three allowed paths.",
-      "last_verified_push_at": "2026-09-27T10:36:18.273Z",
+      "next_action": "Monitor exact-head Worker CI run #759 (36313247965) on 1987b65169cb05392c0addcecb7c91fa9c90be53. Resolve any concrete test, PHPStan or PostgreSQL failure only within the three allowed paths; after all checks pass, complete the PR report and keep the claim locked through Trusted resolution.",
+      "last_verified_push_at": "2026-09-27T10:39:39Z",
       "worker_pr": 307,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/307",
       "draft_pr": true,
@@ -35350,15 +35350,25 @@
         "templates/widget/upcoming_competitions.html.twig",
         "tests/Widget/UpcomingCompetitionWidgetProviderTest.php"
       ],
-      "ci_run_id": 36313084581,
-      "last_ci_run_id": 36313084581,
-      "ci_result": "queued",
-      "last_ci_result": "queued",
+      "ci_run_id": 36313247965,
+      "last_ci_run_id": 36313247965,
+      "ci_result": "in_progress",
+      "last_ci_result": "in_progress",
       "ci_attempts": [
         {
           "run_id": 36313084581,
           "head": "e8150373d495313cf549adc5e7daed854ac5d6c9",
-          "result": "queued"
+          "result": "failure",
+          "jobs": [
+            "108602623597:failure",
+            "108602623495:failure"
+          ],
+          "diagnosis": "Both jobs completed dependency installation but failed in Symfony cache:clear because the registered key gaming.upcoming_competitions violates WidgetDefinition's key regex (underscores are not allowed); PHPStan, PHPUnit and PostgreSQL migration steps were skipped."
+        },
+        {
+          "run_id": 36313247965,
+          "head": "1987b65169cb05392c0addcecb7c91fa9c90be53",
+          "result": "in_progress"
         }
       ]
     }
