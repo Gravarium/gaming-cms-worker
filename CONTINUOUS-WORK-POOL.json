@@ -17,7 +17,7 @@
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-518 implementation checkpoint pushed on feature/wcp-518-upcoming-game-release-widget-g1 at cb44af6e64b607e45b82764588db7fc93f6e4b0e. Open a draft Worker PR, run focused and complete exact-head CI, repair any red checks on this branch, and keep all other claims untouched.",
+    "next_required_action": "WCP-518 draft PR #310 is open on exact HEAD cb44af6e64b607e45b82764588db7fc93f6e4b0e; Worker CI run 36314564707 is in progress. Monitor checks and repair any failure on the same branch; preserve all other claims.",
     "composition_preparable": 0,
     "immediately_actionable": 21,
     "must_continue": true
@@ -35921,9 +35921,31 @@
         "templates/widget/upcoming_game_releases.html.twig",
         "tests/Widget/UpcomingGameReleaseWidgetProviderTest.php"
       ],
-      "next_action": "Create the draft Worker PR and run focused plus full exact-head CI for cb44af6e64b607e45b82764588db7fc93f6e4b0e; inspect any failure and fix it only on feature/wcp-518-upcoming-game-release-widget-g1.",
+      "next_action": "Monitor Worker CI run 36314564707 on exact HEAD cb44af6e64b607e45b82764588db7fc93f6e4b0e. Inspect focused/full CI results; if red, diagnose and repair only within the four allowed paths on the same feature branch.",
       "last_checkpoint_at": "2026-09-27T11:04:15.622Z",
-      "last_verified_push_at": "2026-09-27T11:04:15.622Z"
+      "last_verified_push_at": "2026-09-27T11:04:15.622Z",
+      "worker_pr": 310,
+      "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/310",
+      "draft_pr": true,
+      "pr_state": "open_draft",
+      "worker_pr_state": "draft",
+      "worker_pr_changed_paths": [
+        "src/Widget/GameRelease/UpcomingReleaseQuery.php",
+        "src/Widget/UpcomingGameReleaseWidgetProvider.php",
+        "templates/widget/upcoming_game_releases.html.twig",
+        "tests/Widget/UpcomingGameReleaseWidgetProviderTest.php"
+      ],
+      "ci_run_id": 36314564707,
+      "last_ci_run_id": 36314564707,
+      "ci_result": "in_progress",
+      "last_ci_result": "in_progress",
+      "ci_attempts": [
+        {
+          "run_id": 36314564707,
+          "head": "cb44af6e64b607e45b82764588db7fc93f6e4b0e",
+          "result": "in_progress"
+        }
+      ]
     },
     {
       "priority": 519,
