@@ -185,7 +185,11 @@ final class PublicGuildRoleNeedsWidgetProviderTest extends WebTestCase
         }
     }
 
-    /** @return list<string> */
+    /**
+     * @param list<array{guild: Guild, need: GuildRoleNeed}> $rows
+     *
+     * @return list<string>
+     */
     private function identities(array $rows): array
     {
         return array_map(
