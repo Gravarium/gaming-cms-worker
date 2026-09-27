@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T07:16:52.670Z",
+  "published_at": "2026-09-27T07:17:44.859Z",
   "summary": {
     "total_remaining_worker_tasks": 141,
     "completed_worker_prs_awaiting_trusted_review": 247,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-480 draft PR #274 is running Worker CI 36302379923 on exact HEAD 763ef6bbef5c54e7ad36c7bc5a15fd576291d206. Inspect both jobs, fix concrete findings on the same branch, and mark ready only after all checks pass; preserve other claims.",
+    "next_required_action": "WCP-482 is claimed on exact sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d; implement the test-only rejected-CSRF page-layout mutation regression at tests/Controller/ContentLayoutMutationBoundaryTest.php. WCP-480 remains another worker's active category claim.",
     "composition_preparable": 0,
     "immediately_actionable": 4,
     "must_continue": true
@@ -30459,6 +30459,99 @@
         "Awaiting Trusted review and Trusted integration CI; cumulative PR includes WCP-478/479 predecessor tests."
       ],
       "trusted_follow_up": "Verify the default-rank create/edit invariant tests together with the cumulative WCP-478/479 guild tests on fresh Trusted CI; preserve at-most-one-default-per-guild and cross-guild isolation."
+    },
+    {
+      "priority": 482,
+      "package_id": "WCP-482",
+      "title": "Preserve page layouts after rejected content-type edits",
+      "risk": "medium",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-482-content-layout-csrf-boundary-g1",
+      "suggested_branch": "feature/wcp-482-content-layout-csrf-boundary-g1",
+      "base_branch": "main",
+      "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "objective": "Add test-only functional coverage that a rejected, invalid-CSRF content-type edit cannot change a page into news or delete its page layout. Submit the actual rendered ContentEntryType form with an invalid token, re-read persisted state, and clean up synthetic fixtures.",
+      "allowed_paths": [
+        "tests/Controller/ContentLayoutMutationBoundaryTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/",
+        "src/",
+        "templates/",
+        "assets/",
+        "public/"
+      ],
+      "deliverables": [
+        "Create a synthetic page, persisted page layout, and CMS_CONTENT_MANAGE test user.",
+        "GET the rendered admin edit form, submit a page-to-news change with an invalid form CSRF token, and assert the form rejects the request without a success redirect.",
+        "After clearing Doctrine state, verify the entry remains a page and its page-layout record/document remains unchanged.",
+        "Clean up the synthetic page, layout, and user in a finally block; change only the allowlisted test file."
+      ],
+      "tests": [
+        "Focused ContentLayoutMutationBoundaryTest functional PHPUnit coverage for invalid-CSRF rejection and unchanged persisted page/layout state.",
+        "PHPStan level 8 and complete Worker CI on exact final HEAD.",
+        "PostgreSQL 18 complete migration-chain validation."
+      ],
+      "completion_report": [
+        "Exact sanitized main SHA and final HEAD.",
+        "Incremental changed path and Worker PR.",
+        "Rejected rendered form/CSRF result and persisted entry/layout state.",
+        "Exact-head tests, PHPStan and migration results.",
+        "Trusted integration follow-up and unresolved assumptions."
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "preserve-CMS_CONTENT_MANAGE-and-rendered-form-CSRF",
+        "rejected-type-changes-must-not-delete-or-mutate-page-layout-data",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment",
+        "no-private-runtime-or-sensitive-data"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "proposal_kind": "worker_only",
+      "proposal_dependency_evidence": [],
+      "collision_check": {
+        "compared_against": "Fresh continuous/work-pool-v4 at 171ad0c8bf28d8bc1c4bff7182884511e176bd10, every active and claim-locked allowed path, and sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d.",
+        "result": "No active or claim-locked package owns or encloses tests/Controller/ContentLayoutMutationBoundaryTest.php. WCP-439 owns only ContentEntryDuplicationSecurityTest.php; WCP-435 owns ContentEntryDeletionSecurityTest.php; WCP-480 owns category paths. The new file is distinct from the unclaimed ContentLayoutLifecycleTest.php and does not change AdminContentController or ContentEntryType.",
+        "paths": [
+          "tests/Controller/ContentLayoutMutationBoundaryTest.php"
+        ]
+      },
+      "published_at": "2026-09-27T07:17:44.859Z",
+      "claimed_on": "2026-09-27T07:17:44.859Z",
+      "claim_state": "active",
+      "active_base_branch": "main",
+      "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "resume_branch": "feature/wcp-482-content-layout-csrf-boundary-g1",
+      "branch_heads": {
+        "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+        "feature_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d"
+      },
+      "next_action": "Implement the rejected-CSRF page-to-news mutation regression in the allowlisted test file, then open a draft PR and run exact-head Worker CI.",
+      "last_observed_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "last_checkpoint_at": "2026-09-27T07:17:44.859Z",
+      "checkpoint_paths": [],
+      "worker_pr_changed_paths": []
     }
   ],
   "recovery_queue": [],
