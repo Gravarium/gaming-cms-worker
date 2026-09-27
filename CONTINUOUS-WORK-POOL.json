@@ -10,7 +10,7 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T15:49:05.851Z",
+  "published_at": "2026-09-27T15:50:42.246Z",
   "summary": {
     "total_remaining_worker_tasks": 167,
     "completed_worker_prs_awaiting_trusted_review": 290,
@@ -42007,13 +42007,13 @@
       "claim_state": "active",
       "active_base_branch": "fix/fcp-061-phpstan-g1",
       "active_base_sha": "ec6bb200affc3e5a46d416e98f7a1b0621c38ded",
-      "active_head": "469887b3c18758e7013152cafd19e22e176bc62e",
+      "active_head": "a17f098cfaf647cd59d7c7701baab1beecc99bdb",
       "resume_branch": "feature/wcp-550-public-competition-bracket-g1",
       "branch_heads": {
         "claim_branch": "ec6bb200affc3e5a46d416e98f7a1b0621c38ded",
-        "feature_branch": "469887b3c18758e7013152cafd19e22e176bc62e"
+        "feature_branch": "a17f098cfaf647cd59d7c7701baab1beecc99bdb"
       },
-      "last_checkpoint_at": "2026-09-27T15:48:13.282Z",
+      "last_checkpoint_at": "2026-09-27T15:50:42.246Z",
       "checkpoint_paths": [
         "src/Controller/PublicCompetitionBracketController.php",
         "src/Repository/PublicCompetitionBracketRepository.php",
@@ -42036,9 +42036,15 @@
           "result": "in_progress",
           "target_branch": "worker/account-wcp-550-validation",
           "target_sha": "ec6bb200affc3e5a46d416e98f7a1b0621c38ded"
+        },
+        {
+          "head": "469887b3c18758e7013152cafd19e22e176bc62e",
+          "run_id": 36330890672,
+          "result": "failure",
+          "reason": "PHPUnit assertion queried both bracket labels through generic h2 selector, which matched only the first heading; PHPStan, Symfony, Twig and PostgreSQL migration jobs passed."
         }
       ],
-      "next_action": "Monitor exact-head Worker CI run 36330890672 across both jobs; fix any code failures without weakening checks.",
+      "next_action": "Verify complete exact-head Worker CI after targeted bracket selector assertions; repair any remaining failure.",
       "worker_pr": 343,
       "ci_target_branch": "worker/account-wcp-550-validation",
       "ci_target_sha": "ec6bb200affc3e5a46d416e98f7a1b0621c38ded",
