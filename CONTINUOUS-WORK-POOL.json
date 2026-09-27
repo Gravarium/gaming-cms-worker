@@ -27296,22 +27296,27 @@
         "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
         "feature_branch": "be70e23155854281ff30867b06cb093195f521fd"
       },
-      "next_action": "Rerun full Worker CI on exact updated HEAD be70e23155854281ff30867b06cb093195f521fd after asserting the safe /login redirect for a deactivated session.",
+      "next_action": "Inspect complete exact-head Worker CI run 36292900132; repair any concrete failure on the same branch.",
       "last_observed_head": "be70e23155854281ff30867b06cb093195f521fd",
       "last_verified_push_at": "2026-09-27T03:57:51.634Z",
       "worker_pr": 256,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/256",
       "draft_pr": true,
       "pr_state": "open_draft_unmerged",
-      "ci_run_id": 36292742675,
-      "last_ci_run_id": 36292742675,
-      "ci_result": "pending",
+      "ci_run_id": 36292900132,
+      "last_ci_run_id": 36292900132,
+      "ci_result": "in_progress",
       "ci_attempts": [
         {
           "run_id": 36292742675,
           "head": "5ca9943f345ac6a833277e49fe87093aa13c223e",
           "result": "failure",
           "diagnosis": "After the privileged account was deactivated, the live session was safely invalidated and redirected to /login (302), not a 403. Updated the regression to assert the login redirect and successful login page."
+        },
+        {
+          "run_id": 36292900132,
+          "head": "be70e23155854281ff30867b06cb093195f521fd",
+          "result": "in_progress"
         }
       ]
     },
