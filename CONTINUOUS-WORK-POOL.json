@@ -42837,15 +42837,15 @@
       "claimed_on": "2026-09-27T16:01:51.086Z",
       "claim_state": "active",
       "active_base_branch": "main",
-      "active_base_sha": "53a0284c7fce22e6675702e7f175f7d62d56daab",
-      "active_head": "10da2e21c7a42833efb176c7b7b35814f0496e8b",
+      "active_base_sha": "540b4c64aeb2edc35067eb15eb75fe371aaa29bc",
+      "active_head": "beb90728dc932f58329c97bb37f3cf7a7591a92d",
       "resume_branch": "feature/wcp-554-public-member-directory-g1",
       "branch_heads": {
         "claim_branch": "6988e871cbda8c27801ee0bcc02e8c5c2b0cd909",
-        "feature_branch": "10da2e21c7a42833efb176c7b7b35814f0496e8b"
+        "feature_branch": "beb90728dc932f58329c97bb37f3cf7a7591a92d"
       },
-      "last_observed_head": "10da2e21c7a42833efb176c7b7b35814f0496e8b",
-      "last_checkpoint_at": "2026-09-27T16:14:37.223Z",
+      "last_observed_head": "beb90728dc932f58329c97bb37f3cf7a7591a92d",
+      "last_checkpoint_at": "2026-09-27T16:20:58.194Z",
       "checkpoint_paths": [
         "src/Controller/PublicMemberDirectoryController.php",
         "src/ProfileDirectory/PublicMemberDirectoryQuery.php",
@@ -42856,7 +42856,7 @@
         "tests/Controller/PublicMemberDirectoryControllerTest.php",
         "tests/Widget/PublicMemberDirectoryWidgetProviderTest.php"
       ],
-      "next_action": "Monitor Worker CI run #867 / 36332484371 on exact HEAD 10da2e21c7a42833efb176c7b7b35814f0496e8b; diagnose and repair any failures on the same branch.",
+      "next_action": "Wait for the PR synchronize CI run on exact HEAD beb90728dc932f58329c97bb37f3cf7a7591a92d, then record its run ID and repair any failure.",
       "worker_pr_state": "draft",
       "worker_pr_changed_paths": [
         "src/Controller/PublicMemberDirectoryController.php",
@@ -42871,22 +42871,23 @@
       "worker_pr_base_branch": "main",
       "draft_pr": true,
       "pr_state": "open",
-      "ci_result": "in_progress",
-      "last_ci_result": "in_progress",
+      "ci_result": "not_started",
+      "last_ci_result": "not_started",
       "ci_attempts": [
         {
           "run_id": 36332484371,
           "run_number": 867,
           "head": "10da2e21c7a42833efb176c7b7b35814f0496e8b",
           "base": "53a0284c7fce22e6675702e7f175f7d62d56daab",
-          "result": "in_progress",
-          "conclusion": null
+          "result": "failure",
+          "conclusion": "failure",
+          "failure_summary": "PHPUnit had one failure in the widget test: pre-existing valid public profile fixtures sorted before the test's names. PHPStan, Twig/container/config, Doctrine and PostgreSQL migration-chain checks passed."
         }
       ],
-      "last_verified_push_at": "2026-09-27T16:14:37.223Z",
+      "last_verified_push_at": "2026-09-27T16:20:58.194Z",
       "worker_pr": 346,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/346",
-      "worker_pr_base_sha": "53a0284c7fce22e6675702e7f175f7d62d56daab",
+      "worker_pr_base_sha": "540b4c64aeb2edc35067eb15eb75fe371aaa29bc",
       "ci_run_id": 36332484371,
       "last_ci_run_id": 36332484371
     }
