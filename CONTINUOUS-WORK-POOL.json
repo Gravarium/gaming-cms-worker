@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T14:28:06.103Z",
+  "published_at": "2026-09-27T14:28:11.005Z",
   "summary": {
     "total_remaining_worker_tasks": 167,
     "completed_worker_prs_awaiting_trusted_review": 291,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "Worker CI run #838 / 36325820912 is running on exact HEAD cc71d622acb85e6e73e49d4d6e81e93b994efe26; inspect both jobs, repair any failure and rerun on the final exact head.",
+    "next_required_action": "Wait for Worker CI on exact WCP-543 HEAD ebb240a005c0b63818dbb21fa28d05c06bf10e1f; inspect both jobs, repair any failure and verify the final exact head.",
     "composition_preparable": 0,
     "immediately_actionable": 28,
     "must_continue": true
@@ -40230,14 +40230,14 @@
       "claim_state": "active",
       "active_base_branch": "feature/wcp-522-public-newsletter-signup-g1",
       "active_base_sha": "b1cecaeadc1b8378cf8626f52aa48396a569d8cb",
-      "active_head": "cc71d622acb85e6e73e49d4d6e81e93b994efe26",
+      "active_head": "ebb240a005c0b63818dbb21fa28d05c06bf10e1f",
       "resume_branch": "feature/wcp-543-newsletter-subscriber-directory-g1",
       "branch_heads": {
         "claim_branch": "b1cecaeadc1b8378cf8626f52aa48396a569d8cb",
-        "feature_branch": "cc71d622acb85e6e73e49d4d6e81e93b994efe26"
+        "feature_branch": "ebb240a005c0b63818dbb21fa28d05c06bf10e1f"
       },
-      "last_observed_head": "cc71d622acb85e6e73e49d4d6e81e93b994efe26",
-      "last_checkpoint_at": "2026-09-27T14:25:24.794Z",
+      "last_observed_head": "ebb240a005c0b63818dbb21fa28d05c06bf10e1f",
+      "last_checkpoint_at": "2026-09-27T14:28:11.005Z",
       "checkpoint_paths": [
         "src/Controller/AdminNewsletter/AdminNewsletterController.php",
         "src/Newsletter/NewsletterSubscriptionDirectory.php",
@@ -40246,11 +40246,11 @@
         "templates/admin/newsletter/preview.html.twig",
         "tests/Controller/AdminNewsletterSubscriptionDirectoryTest.php"
       ],
-      "next_action": "Worker CI run #838 / 36325820912 is running on exact HEAD cc71d622acb85e6e73e49d4d6e81e93b994efe26; inspect both jobs, repair any failure and rerun on the final exact head.",
+      "next_action": "Wait for Worker CI on exact WCP-543 HEAD ebb240a005c0b63818dbb21fa28d05c06bf10e1f; inspect both jobs, repair any failure and verify the final exact head.",
       "worker_pr_state": "open",
-      "last_verified_push_at": "2026-09-27T14:25:24.794Z",
+      "last_verified_push_at": "2026-09-27T14:28:11.005Z",
       "ci_result": "pending",
-      "last_ci_result": "in_progress",
+      "last_ci_result": "failure",
       "ci_attempts": [
         {
           "run_id": 36325553002,
@@ -40270,7 +40270,15 @@
           "run_number": 838,
           "head": "cc71d622acb85e6e73e49d4d6e81e93b994efe26",
           "base": "b510875e7b0741b9b19f09429d2204a95df51198",
-          "result": "in_progress"
+          "result": "failure",
+          "conclusion": "failure",
+          "phpunit_tests": 547,
+          "assertions": 2343,
+          "phpstan": "passed",
+          "postgresql_18_migrations": "passed",
+          "migrations_executed": 54,
+          "sql_queries": 750,
+          "summary": "The pagination test found 54 active rows because its generated search-target address shared the pagination-fixture suffix; page two correctly contained 4 rows while the expectation was 3. The pagination fixtures now use a separate unique suffix."
         }
       ],
       "worker_pr": 336,
@@ -40287,7 +40295,7 @@
       "pr_state": "open",
       "draft_pr": true,
       "worker_pr_base_sha": "b510875e7b0741b9b19f09429d2204a95df51198",
-      "ci_run_id": 36325820912,
+      "ci_run_id": null,
       "last_ci_run_id": 36325820912
     },
     {
