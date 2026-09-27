@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T15:01:16.715Z",
+  "published_at": "2026-09-27T15:02:22.265Z",
   "summary": {
     "total_remaining_worker_tasks": 167,
     "completed_worker_prs_awaiting_trusted_review": 293,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "Open a draft Worker PR against main to trigger the repository's PR-only Worker CI; run full CI on exact HEAD 5adb410edf08220a9b8abbb000d2c3679a9725b4. After green, retarget the stacked PR to exact WCP-541 base 991a1ec5ae42be72b3e36de12bb47bd3848683ca so the final diff contains only the five WCP-548 paths, then mark ready.",
+    "next_required_action": "Inspect Worker CI run #846 / 36328033568 on exact HEAD 5adb410edf08220a9b8abbb000d2c3679a9725b4. Diagnose and repair any failure on this branch. After green, retarget draft PR #340 to exact predecessor WCP-541 head 991a1ec5ae42be72b3e36de12bb47bd3848683ca so its final diff contains only the five WCP-548 paths.",
     "composition_preparable": 0,
     "immediately_actionable": 28,
     "must_continue": true
@@ -41125,16 +41125,29 @@
         "config/packages/guild_role_needs_widget.yaml",
         "tests/Widget/PublicGuildRoleNeedsWidgetProviderTest.php"
       ],
-      "next_action": "Open a draft Worker PR against main to trigger the repository's PR-only Worker CI; run full CI on exact HEAD 5adb410edf08220a9b8abbb000d2c3679a9725b4. After green, retarget the stacked PR to exact WCP-541 base 991a1ec5ae42be72b3e36de12bb47bd3848683ca so the final diff contains only the five WCP-548 paths, then mark ready.",
-      "worker_pr_state": "not_created",
+      "next_action": "Inspect Worker CI run #846 / 36328033568 on exact HEAD 5adb410edf08220a9b8abbb000d2c3679a9725b4. Diagnose and repair any failure on this branch. After green, retarget draft PR #340 to exact predecessor WCP-541 head 991a1ec5ae42be72b3e36de12bb47bd3848683ca so its final diff contains only the five WCP-548 paths.",
+      "worker_pr_state": "open",
       "worker_pr_changed_paths": [],
-      "worker_pr_base_branch": "feature/wcp-541-guild-role-needs-g1",
+      "worker_pr_base_branch": "main",
       "draft_pr": true,
-      "pr_state": "not_created",
-      "ci_result": "not_started",
-      "last_ci_result": "not_started",
-      "ci_attempts": [],
-      "last_verified_push_at": "2026-09-27T15:01:16.715Z"
+      "pr_state": "open",
+      "ci_result": "pending",
+      "last_ci_result": "in_progress",
+      "ci_attempts": [
+        {
+          "run_id": 36328033568,
+          "run_number": 846,
+          "head": "5adb410edf08220a9b8abbb000d2c3679a9725b4",
+          "base": "e4be797b44948824e31843b88363d6ea1335c163",
+          "result": "in_progress",
+          "conclusion": null
+        }
+      ],
+      "last_verified_push_at": "2026-09-27T15:01:16.715Z",
+      "worker_pr": 340,
+      "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/340",
+      "ci_run_id": 36328033568,
+      "last_ci_run_id": 36328033568
     }
   ],
   "recovery_queue": [],
