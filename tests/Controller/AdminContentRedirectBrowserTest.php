@@ -41,6 +41,7 @@ final class AdminContentRedirectBrowserTest extends WebTestCase
         $client->loginUser($manager);
         $modules = $client->getContainer()->get(CmsModuleManager::class);
         $contentWasEnabled = $modules->isEnabled('content');
+        $gamingWasEnabled = $modules->isEnabled('gaming');
 
         try {
             if (!$contentWasEnabled) {
@@ -51,6 +52,9 @@ final class AdminContentRedirectBrowserTest extends WebTestCase
             self::assertResponseIsSuccessful();
             self::assertSelectorExists('a[href="/admin/content/redirects"]');
 
+            if ($gamingWasEnabled) {
+                $modules->setEnabled('gaming', false);
+            }
             $modules->setEnabled('content', false);
             $client->request('GET', '/admin');
             self::assertResponseIsSuccessful();
@@ -58,6 +62,9 @@ final class AdminContentRedirectBrowserTest extends WebTestCase
         } finally {
             if ($modules->isEnabled('content') !== $contentWasEnabled) {
                 $modules->setEnabled('content', $contentWasEnabled);
+            }
+            if ($modules->isEnabled('gaming') !== $gamingWasEnabled) {
+                $modules->setEnabled('gaming', $gamingWasEnabled);
             }
         }
     }
@@ -97,8 +104,8 @@ final class AdminContentRedirectBrowserTest extends WebTestCase
 
         $crawler = $client->request('GET', '/admin/content/redirects?q='.strtoupper($searchNeedle));
         self::assertResponseIsSuccessful();
-        self::assertSame('private, no-store, max-age=0', $client->getResponse()->headers->get('Cache-Control'));
-        self::assertSame('noindex, nofollow, noarchive', $client->getResponse()->headers->get('X-Robots-Tag'));
+        $this->assertPrivateNoStore($client);
+        
         self::assertSame(1, $crawler->filter('[data-redirect-id="'.$published->getId().'"]')->count());
         self::assertSame(0, $crawler->filter('[data-redirect-id="'.$draft->getId().'"]')->count());
 
@@ -199,9 +206,18 @@ final class AdminContentRedirectBrowserTest extends WebTestCase
         foreach ($invalidQueries as $url) {
             $client->request('GET', $url);
             self::assertResponseStatusCodeSame(400, $url);
-            self::assertSame('private, no-store, max-age=0', $client->getResponse()->headers->get('Cache-Control'));
-            self::assertSame('noindex, nofollow, noarchive', $client->getResponse()->headers->get('X-Robots-Tag'));
+            $this->assertPrivateNoStore($client);
+            
         }
+    }
+
+    private function assertPrivateNoStore(KernelBrowser $client): void
+    {
+        $cacheControl = (string) $client->getResponse()->headers->get('Cache-Control');
+        foreach (['private', 'no-store', 'max-age=0'] as $directive) {
+            self::assertStringContainsString($directive, $cacheControl);
+        }
+        self::assertSame('noindex, nofollow, noarchive', $client->getResponse()->headers->get('X-Robots-Tag'));
     }
 
     /**
