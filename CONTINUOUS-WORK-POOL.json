@@ -17,7 +17,7 @@
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-467 is complete on green exact-head Worker PR #260. Continue with the next independent Worker-only proposal; preserve active claims and blocked FCP dependencies.",
+    "next_required_action": "WCP-467 is complete on green exact-head Worker PR #260; WCP-468 is claimed on sanitized main for category authorization and CSRF coverage. Preserve all other active claims.",
     "composition_preparable": 0,
     "immediately_actionable": 3,
     "must_continue": true
@@ -28062,6 +28062,101 @@
         "Awaiting Trusted review and Trusted integration CI."
       ],
       "trusted_follow_up": "Preserve CMS_CONTENT_MANAGE and Symfony form/route-specific CSRF validation before menu mutations; run full Trusted CI."
+    },
+    {
+      "priority": 468,
+      "package_id": "WCP-468",
+      "title": "Protect category creation and deletion with authorization and CSRF",
+      "risk": "medium",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-468-admin-category-write-security-g1",
+      "suggested_branch": "feature/wcp-468-admin-category-write-security-g1",
+      "base_branch": "main",
+      "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "objective": "Add test-only functional security regressions for the existing admin content category editor. Verify CMS_CONTENT_MANAGE protects listing and create/delete requests, missing and invalid form CSRF tokens do not persist categories or audit records, and route-specific delete CSRF is required before removal. Prove a rendered form token creates a category and a rendered delete token removes an unused leaf category. Clean up synthetic categories, audit rows and users; do not change controller, form, template, content or schema code.",
+      "allowed_paths": [
+        "tests/Controller/AdminCategoryWriteSecurityTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "src/",
+        "templates/",
+        "migrations/",
+        "config/",
+        "public/uploads/"
+      ],
+      "deliverables": [
+        "An authenticated user without CMS_CONTENT_MANAGE is denied category listing, creation and deletion.",
+        "Missing and invalid category form CSRF tokens return 422 without category persistence or save-audit records.",
+        "A rendered create-form token creates the requested category with a unique normalized slug.",
+        "Missing and invalid route-specific delete tokens preserve an unused leaf category; its rendered delete token removes it and records the authorized action.",
+        "Synthetic categories, audit rows and users are removed during test cleanup; only the allowed functional test file changes."
+      ],
+      "tests": [
+        "Focused AdminCategoryWriteSecurityTest functional PHPUnit coverage for authorization, create-form CSRF, valid rendered create, delete CSRF, valid rendered delete and cleanup.",
+        "PHPStan level 8 and complete Worker CI on exact final HEAD.",
+        "PostgreSQL 18 complete migration-chain validation."
+      ],
+      "completion_report": [
+        "Exact sanitized main base SHA and final Worker HEAD SHA.",
+        "Complete changed-path list and Worker PR.",
+        "Permission denials and no-persistence/no-audit evidence after missing or invalid CSRF.",
+        "Rendered-token category create/delete evidence, focused tests, PHPStan and exact-head CI.",
+        "Remaining Trusted integration follow-up."
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "preserve-CMS_CONTENT_MANAGE-and-category-form/delete-route-CSRF",
+        "invalid-or-denied-category-mutations-must-not-persist-category-or-audit-changes",
+        "do-not-delete-categories-with-content-or-children",
+        "restore-all-synthetic-category-audit-and-user-state",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment",
+        "no-private-runtime-or-sensitive-data"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "proposal_kind": "worker_only",
+      "proposal_dependency_evidence": [],
+      "collision_check": {
+        "compared_against": "Fresh continuous/work-pool-v4 at 9b87252c7cd929e1c2b729657df156a0d2d74b9a, all active and claim-locked allowed-path scopes, and exact sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d.",
+        "result": "No active or claim-locked package owns or encloses tests/Controller/AdminCategoryWriteSecurityTest.php; it is absent from exact sanitized main. Existing ContentAccessTest only checks anonymous login for /admin/content. Related locked scopes in the pool are WCP-352 [src/Form/VideoCategoryType.php, tests/Form/VideoCategoryTypeBoundaryTest.php]; WCP-369 [src/Form/CategoryType.php, tests/Form/CategoryTypeBoundaryTest.php]; WCP-380 [src/Controller/AdminCategoryController.php, src/Controller/AdminContentTagController.php, tests/Controller/TaxonomySlugUniquenessTest.php]; WCP-458 [templates/admin/category/index.html.twig, tests/Controller/AdminCategoryHierarchyListingTest.php]; they cover the category controller, category form boundaries, or category hierarchy listing in separate paths. This proposal changes only its new controller test file and performs no category, content, template, form, migration or dependency changes.",
+        "paths": [
+          "tests/Controller/AdminCategoryWriteSecurityTest.php"
+        ]
+      },
+      "published_at": "2026-09-27T04:47:21.622Z",
+      "claimed_on": "2026-09-27T04:47:21.622Z",
+      "claim_state": "active",
+      "active_base_branch": "main",
+      "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "resume_branch": "feature/wcp-468-admin-category-write-security-g1",
+      "last_checkpoint_at": "2026-09-27T04:47:21.622Z",
+      "checkpoint_paths": [],
+      "branch_heads": {
+        "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+        "feature_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d"
+      },
+      "next_action": "Implement category permission, create-form CSRF and route-specific delete-CSRF functional tests in the one allowed path; checkpoint and run complete exact-head Worker CI.",
+      "last_observed_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "last_verified_push_at": "2026-09-27T04:47:21.622Z"
     }
   ],
   "recovery_queue": [],
