@@ -10,7 +10,7 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T14:11:31.643Z",
+  "published_at": "2026-09-27T14:15:59.512Z",
   "summary": {
     "total_remaining_worker_tasks": 167,
     "completed_worker_prs_awaiting_trusted_review": 291,
@@ -40155,6 +40155,119 @@
       ],
       "worker_pr_base_branch": "main",
       "pr_state": "not_created"
+    },
+    {
+      "priority": 544,
+      "package_id": "WCP-544",
+      "title": "Place published CMS pages through the Page Builder",
+      "risk": "low",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-544-public-pages-widget-g1",
+      "suggested_branch": "feature/wcp-544-public-pages-widget-g1",
+      "base_branch": "main",
+      "base_sha": "b510875e7b0741b9b19f09429d2204a95df51198",
+      "objective": "Provide a discoverable Page Builder widget for recent public CMS pages. It lists only published, publicly listed page entries, links through the existing page route, applies the shared bounded widget count, and is available only while Content is enabled. Register it through existing WidgetProvider autoconfiguration without changing shared registry, repositories, module catalog, schema or migrations.",
+      "allowed_paths": [
+        "src/Widget/PublicPageDirectoryWidgetProvider.php",
+        "templates/widget/public_pages.html.twig",
+        "tests/Widget/PublicPageDirectoryWidgetProviderTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/",
+        "src/Entity/",
+        "src/Form/",
+        "src/Repository/",
+        "src/Controller/",
+        "templates/base.html.twig",
+        "templates/layout/",
+        "templates/admin/",
+        "assets/",
+        "public/"
+      ],
+      "deliverables": [
+        "Auto-discover a content.pages WidgetProvider that selects only published, listed page entries with stable newest-first order and a bounded 12-item query.",
+        "Render page titles and optional excerpts as links to the existing public page route, with an explicit empty state.",
+        "Use the existing Content module availability gate and Page Builder count setting; add no shared registry, service configuration, entity, schema or migration changes."
+      ],
+      "tests": [
+        "Kernel test proves the widget is auto-discovered, includes published listed pages, excludes news, drafts and unlisted pages, and returns no widget data when Content is disabled; rollback all database changes.",
+        "Run focused widget tests and complete exact-head Worker CI, including PHPStan and PostgreSQL 18 migration-chain validation."
+      ],
+      "completion_report": [
+        "Exact sanitized main/base SHA and final Worker HEAD SHA.",
+        "Exact changed paths and Worker PR URL.",
+        "Widget discovery, safe page filtering, public links, count behavior and disabled-Content evidence.",
+        "Focused tests and exact-head PHPStan, PHPUnit, PostgreSQL migration and full Worker CI results."
+      ],
+      "immutable_constraints": [
+        "only-published-and-listed-page-entries-are-included",
+        "links-use-the-existing-public-page-route-with-Twig-autoescaping",
+        "Content-module-disable-hides-widget-in-palette-and-rendered-data-through-WidgetRegistry",
+        "query-is-bounded-and-order-is-deterministic",
+        "no-schema-or-migration-change",
+        "no-security-test-phpstan-CI-auth-CSRF-validation-recovery-rollback-or-upload-protection-weakening",
+        "worker-code-is-untrusted-no-direct-Trusted-integration-or-deployment",
+        "no-private-runtime-or-sensitive-data"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "b510875e7b0741b9b19f09429d2204a95df51198",
+      "proposal_kind": "worker_only",
+      "proposal_dependency_evidence": [],
+      "collision_check": {
+        "compared_against": "Latest continuous/work-pool-v4 commit 24dec2fca3e1cb1eddebae11cbbce4194b9ba413, pool blob 1700c94042d888ab591df217a1b5a6690bb49af4; sanitized Worker main b510875e7b0741b9b19f09429d2204a95df51198; all 324 published task allowed/checkpoint paths; WCP-544 branch and PR searches.",
+        "result": "None of the three proposed paths intersects any active, claim-locked or unclaimed task scope. All five unclaimed FCPs remain dependency-blocked and no WCP-544 task, branch or PR existed immediately before reservation. Existing shared widget registry, service configuration, repository, controller, theme and module catalog paths remain untouched.",
+        "paths": [
+          "src/Widget/PublicPageDirectoryWidgetProvider.php",
+          "templates/widget/public_pages.html.twig",
+          "tests/Widget/PublicPageDirectoryWidgetProviderTest.php"
+        ]
+      },
+      "published_at": "2026-09-27T14:15:59.512Z",
+      "claimed_on": "2026-09-27T14:15:59.512Z",
+      "claim_state": "active",
+      "active_base_branch": "main",
+      "active_base_sha": "b510875e7b0741b9b19f09429d2204a95df51198",
+      "active_head": "b510875e7b0741b9b19f09429d2204a95df51198",
+      "resume_branch": "feature/wcp-544-public-pages-widget-g1",
+      "branch_heads": {
+        "claim_branch": "b510875e7b0741b9b19f09429d2204a95df51198",
+        "feature_branch": "b510875e7b0741b9b19f09429d2204a95df51198"
+      },
+      "last_observed_head": "b510875e7b0741b9b19f09429d2204a95df51198",
+      "last_checkpoint_at": "2026-09-27T14:15:59.512Z",
+      "checkpoint_paths": [
+        "src/Widget/PublicPageDirectoryWidgetProvider.php",
+        "templates/widget/public_pages.html.twig",
+        "tests/Widget/PublicPageDirectoryWidgetProviderTest.php"
+      ],
+      "next_action": "Create claim and feature refs from exact main HEAD b510875e7b0741b9b19f09429d2204a95df51198, then add the auto-discovered published-page widget, template and regression test.",
+      "ci_attempts": [],
+      "worker_pr_state": "not_created",
+      "last_ci_result": "not_run",
+      "worker_pr_changed_paths": [
+        "src/Widget/PublicPageDirectoryWidgetProvider.php",
+        "templates/widget/public_pages.html.twig",
+        "tests/Widget/PublicPageDirectoryWidgetProviderTest.php"
+      ],
+      "worker_pr_base_branch": "main",
+      "worker_pr": null,
+      "worker_pr_url": null
     }
   ],
   "recovery_queue": [],
