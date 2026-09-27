@@ -1,0 +1,32 @@
+{% extends 'base.html.twig' %}
+{% block title %}Newsletter | Gaming CMS{% endblock %}
+{% block body %}
+<header class="topbar"><a class="brand" href="{{ path('app_admin_dashboard') }}">Gaming CMS</a><a class="button-link" href="{{ path('app_admin_notification_newsletter_admin_new') }}">Neuer Newsletter</a></header>
+<main class="dashboard">
+<p class="eyebrow">Benachrichtigungen · Newsletter</p><h1>Newsletter</h1>
+{% for message in app.flashes('success') %}<div class="notice">{{ message }}</div>{% endfor %}
+<div class="table-wrap"><table><thead><tr><th>Titel</th><th>Status</th><th>Segment</th><th>Limit</th><th>Aktionen</th></tr></thead><tbody>
+{% for campaign in campaigns %}
+<tr><td>{{ campaign.title }}</td><td>{{ campaign.status }}</td><td>{{ campaign.segment }}</td><td>{{ campaign.maxRecipients }}</td><td>
+<a href="{{ path('app_admin_notification_newsletter_admin_preview',{id:campaign.id}) }}">Vorschau</a>
+{% if not campaign.final and campaign.status != 'sending' %}<a href="{{ path('app_admin_notification_newsletter_admin_edit',{id:campaign.id}) }}">Bearbeiten</a>{% endif %}
+{% if campaign.status in ['draft','scheduled','sending'] %}
+<form method="post" action="{{ path('app_admin_notification_newsletter_admin_dispatch',{id:campaign.id}) }}"><input type="hidden" name="_token" value="{{ csrf_token('newsletter-dispatch-'~campaign.id) }}"><input type="number" name="quota" min="1" max="1000" value="100"><button>Versandlauf</button></form>
+{% endif %}
+{% if campaign.status == 'draft' %}
+<form method="post" action="{{ path('app_admin_notification_newsletter_admin_schedule',{id:campaign.id}) }}"><input type="hidden" name="_token" value="{{ csrf_token('newsletter-schedule-'~campaign.id) }}"><input type="datetime-local" name="scheduled_at" required><button>Planen</button></form>
+{% endif %}
+</td></tr>
+{% else %}<tr><td colspan="5">Noch keine Kampagnen.</td></tr>{% endfor %}
+</tbody></table></div>
+
+<h2>Abonnenten</h2>
+<div class="table-wrap"><table><thead><tr><th>E-Mail</th><th>Status</th><th>Einwilligung</th><th>Aktion</th></tr></thead><tbody>
+{% for subscription in subscriptions %}
+<tr><td>{{ subscription.email }}</td><td>{{ subscription.status }}</td><td>{{ subscription.confirmedAt ? subscription.confirmedAt|date('d.m.Y H:i') : 'ausstehend' }}</td><td>
+{% if subscription.status != 'suppressed' %}<form method="post" action="{{ path('app_admin_notification_newsletter_admin_suppress',{id:subscription.id}) }}"><input type="hidden" name="_token" value="{{ csrf_token('newsletter-suppress-'~subscription.id) }}"><button>Unterdrücken</button></form>{% endif %}
+</td></tr>
+{% else %}<tr><td colspan="4">Noch keine Abonnenten.</td></tr>{% endfor %}
+</tbody></table></div>
+</main>
+{% endblock %}

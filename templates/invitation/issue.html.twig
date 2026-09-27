@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Einladung erstellen | Gaming CMS{% endblock %}
+
+{% block body %}
+<main class="editor-shell">
+    <p class="eyebrow">Benutzer · Einladungen</p>
+    <h1>Einladung erstellen</h1>
+    {% for message in app.flashes('success') %}<div class="notice">{{ message }}</div>{% endfor %}
+    {{ form_start(form) }}
+        {{ form_widget(form) }}
+        <button type="submit">Einladung erstellen</button>
+    {{ form_end(form) }}
+</main>
+{% endblock %}

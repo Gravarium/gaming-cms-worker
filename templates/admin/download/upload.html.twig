@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+{% block title %}Download-Version hochladen{% endblock %}
+{% block body %}
+<main class="content-shell">
+    <h1>Version für {{ package.title }} hochladen</h1>
+    <form method="post" enctype="multipart/form-data" action="{{ path('app_admin_download_upload',{id:package.id}) }}">
+        <input type="hidden" name="_token" value="{{ csrf_token('download-upload-' ~ package.id) }}">
+        <label>Version <input type="text" name="version" required maxlength="80"></label>
+        <label>Datei <input type="file" name="file" required></label>
+        <button type="submit">Sicher hochladen</button>
+    </form>
+</main>
+{% endblock %}

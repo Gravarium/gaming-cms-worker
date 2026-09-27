@@ -11,7 +11,7 @@ final class Version20260924130000 extends AbstractMigration
 {
     public function getDescription(): string
     {
-        return 'Add supplemental guild onboarding tasks';
+        return 'Add guild member onboarding tasks';
     }
 
     public function up(Schema $schema): void
