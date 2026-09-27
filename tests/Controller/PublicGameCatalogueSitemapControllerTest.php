@@ -87,36 +87,47 @@ final class PublicGameCatalogueSitemapControllerTest extends WebTestCase
             $expectedPages = max(1, (int) ceil($totalPublicGames / PublicGameCatalogueSitemapQuery::PAGE_SIZE));
             self::assertSame($expectedPages, substr_count($indexXml, '<sitemap>'));
             self::assertStringContainsString('/sitemap-games/1.xml', $indexXml);
-            self::assertStringContainsString('/sitemap-games/2.xml', $indexXml);
+            self::assertStringContainsString('/sitemap-games/'.$expectedPages.'.xml', $indexXml);
             self::assertStringContainsString('http://localhost/sitemap-games/1.xml', $indexXml);
 
             $client->request('GET', '/sitemap-games/1.xml');
             self::assertResponseIsSuccessful();
             self::assertResponseHeaderSame('Content-Type', 'application/xml; charset=UTF-8');
             $pageOne = (string) $client->getResponse()->getContent();
-            self::assertSame(min(PublicGameCatalogueSitemapQuery::PAGE_SIZE, $totalPublicGames), substr_count($pageOne, '<url>'));
-            self::assertStringContainsString('/games/wcp560-game-'.$token.'-00001', $pageOne);
+            /** @var array<int, string> $pageXmlByNumber */
+            $pageXmlByNumber = [1 => $pageOne];
+
+            for ($pageNumber = 2; $pageNumber <= $expectedPages; ++$pageNumber) {
+                $client->request('GET', '/sitemap-games/'.$pageNumber.'.xml');
+                self::assertResponseIsSuccessful();
+                self::assertResponseHeaderSame('Content-Type', 'application/xml; charset=UTF-8');
+                $pageXmlByNumber[$pageNumber] = (string) $client->getResponse()->getContent();
+            }
+
+            foreach ($pageXmlByNumber as $pageNumber => $pageXml) {
+                $expectedUrlsOnPage = min(
+                    PublicGameCatalogueSitemapQuery::PAGE_SIZE,
+                    $totalPublicGames - (($pageNumber - 1) * PublicGameCatalogueSitemapQuery::PAGE_SIZE),
+                );
+                self::assertSame($expectedUrlsOnPage, substr_count($pageXml, '<url>'));
+            }
+
+            $allPageXml = implode('', $pageXmlByNumber);
             $lastFixtureSlug = 'wcp560-game-'.$token.'-'.sprintf('%05d', PublicGameCatalogueSitemapQuery::PAGE_SIZE + 1);
-            self::assertStringNotContainsString('/games/'.$lastFixtureSlug, $pageOne);
-            self::assertStringNotContainsString('wcp560-disabled-game-'.$token, $pageOne);
-            self::assertStringNotContainsString('wcp560-disabled-entry-'.$token, $pageOne);
+            self::assertStringContainsString('/games/wcp560-game-'.$token.'-00001', $allPageXml);
+            self::assertStringContainsString('/games/'.$lastFixtureSlug, $allPageXml);
+            self::assertStringNotContainsString('wcp560-disabled-game-'.$token, $allPageXml);
+            self::assertStringNotContainsString('wcp560-disabled-entry-'.$token, $allPageXml);
 
-            $client->request('GET', '/sitemap-games/2.xml');
-            self::assertResponseIsSuccessful();
-            $pageTwo = (string) $client->getResponse()->getContent();
-            self::assertSame(min(PublicGameCatalogueSitemapQuery::PAGE_SIZE, $totalPublicGames - PublicGameCatalogueSitemapQuery::PAGE_SIZE), substr_count($pageTwo, '<url>'));
-            self::assertStringContainsString('/games/'.$lastFixtureSlug, $pageTwo);
-
-            $combinedPages = $pageOne.$pageTwo;
-            $firstTiePosition = strpos($combinedPages, '/games/wcp560-game-'.$token.'-00001');
-            $secondTiePosition = strpos($combinedPages, '/games/wcp560-game-'.$token.'-00002');
+            $firstTiePosition = strpos($allPageXml, '/games/wcp560-game-'.$token.'-00001');
+            $secondTiePosition = strpos($allPageXml, '/games/wcp560-game-'.$token.'-00002');
             self::assertNotFalse($firstTiePosition);
             self::assertNotFalse($secondTiePosition);
             self::assertLessThan($secondTiePosition, $firstTiePosition);
 
             $client->request('GET', '/sitemap-games/0.xml');
             self::assertResponseStatusCodeSame(400);
-            $client->request('GET', '/sitemap-games/3.xml');
+            $client->request('GET', '/sitemap-games/'.($expectedPages + 1).'.xml');
             self::assertResponseStatusCodeSame(404);
             $client->request('POST', '/sitemap-games.xml');
             self::assertResponseStatusCodeSame(405);
