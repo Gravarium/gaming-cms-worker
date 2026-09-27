@@ -17,7 +17,7 @@
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-580 is claimed on main@7b2ca79405fc12d34bce1386157e929e4668f31a; add test-only public news index escaping coverage and run exact-head CI.",
+    "next_required_action": "WCP-580 public news index regression is implemented on 3c0459bb88a932e713a211477b5d9eb196e0dd3a; create draft PR and run exact-head CI.",
     "composition_preparable": 0,
     "immediately_actionable": 29,
     "must_continue": true
@@ -47206,16 +47206,18 @@
       "claim_state": "active",
       "active_base_branch": "main",
       "active_base_sha": "7b2ca79405fc12d34bce1386157e929e4668f31a",
-      "active_head": "7b2ca79405fc12d34bce1386157e929e4668f31a",
+      "active_head": "3c0459bb88a932e713a211477b5d9eb196e0dd3a",
       "resume_branch": "feature/wcp-580-public-news-index-safety-g1",
       "branch_heads": {
         "claim_branch": "7b2ca79405fc12d34bce1386157e929e4668f31a",
-        "feature_branch": "7b2ca79405fc12d34bce1386157e929e4668f31a"
+        "feature_branch": "3c0459bb88a932e713a211477b5d9eb196e0dd3a"
       },
-      "last_observed_head": "7b2ca79405fc12d34bce1386157e929e4668f31a",
-      "last_checkpoint_at": "2026-09-27T20:13:52.121Z",
-      "checkpoint_paths": [],
-      "next_action": "Create exact claim and feature branches from main@7b2ca79405fc12d34bce1386157e929e4668f31a; add the isolated public news index rendering regression, then run exact-head CI."
+      "last_observed_head": "3c0459bb88a932e713a211477b5d9eb196e0dd3a",
+      "last_checkpoint_at": "2026-09-27T20:14:59.895Z",
+      "checkpoint_paths": [
+        "tests/Controller/PublicNewsIndexSafetyTest.php"
+      ],
+      "next_action": "Open draft PR and run exact-head Worker CI on 3c0459bb88a932e713a211477b5d9eb196e0dd3a; verify the news index card and full validation."
     }
   ],
   "recovery_queue": [],
