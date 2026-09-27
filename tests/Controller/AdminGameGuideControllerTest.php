@@ -122,6 +122,178 @@ final class AdminGameGuideControllerTest extends WebTestCase
         }
     }
 
+    public function testAuthorCanCreateEditAndPublishTierList(): void
+    {
+        $client = static::createClient();
+        $this->setModules($client, true);
+        $em = $this->em($client);
+        $connection = $this->connection($client);
+        $game = $this->game($em);
+        $author = $this->user($em, CmsPermission::GAMING, 'tier-author');
+        $reviewer = $this->user($em, CmsPermission::GAMING, 'tier-reviewer');
+        $gameId = $game->getId();
+        $authorId = $author->getId();
+        $reviewerId = $reviewer->getId();
+        self::assertNotNull($gameId);
+        self::assertNotNull($authorId);
+        self::assertNotNull($reviewerId);
+        $guideIds = [];
+        $title = 'WCP552 tier list '.bin2hex(random_bytes(4));
+
+        try {
+            $fields = [
+                'title' => $title,
+                'game_id' => (string) $gameId,
+                'guide_type' => 'tier_list',
+                'game_version' => '4.2',
+                'season' => 'Season 4',
+                'valid_from' => (new \\DateTimeImmutable('-1 day'))->format('Y-m-d'),
+                'valid_until' => '',
+                'build_code' => '',
+                'tier_criteria' => 'Solo ranked viability',
+                'tier_provenance' => 'Synthetic review fixture',
+                'tier_entries_json' => json_encode([
+                    ['key' => 'arcane-barrage', 'tier' => 'S', 'reason' => 'Strong burst damage.'],
+                ], JSON_THROW_ON_ERROR),
+            ];
+
+            $client->loginUser($author);
+            $crawler = $client->request('GET', '/admin/gaming/guides/new');
+            $form = $crawler->selectButton('Entwurf speichern')->form($fields);
+            $client->submit($form);
+            self::assertResponseRedirects();
+
+            $id = (int) $connection->fetchOne('SELECT id FROM game_guide WHERE title = :title', ['title' => $title]);
+            self::assertGreaterThan(0, $id);
+            $guideIds[] = $id;
+            $entry = $connection->fetchAssociative(
+                'SELECT entry_key, tier, reason, criteria, provenance FROM game_guide_tier_entry WHERE guide_id = :id',
+                ['id' => $id],
+            );
+            self::assertIsArray($entry);
+            self::assertSame('arcane-barrage', $entry['entry_key']);
+            self::assertSame('S', $entry['tier']);
+            self::assertSame('Strong burst damage.', $entry['reason']);
+            self::assertSame('Solo ranked viability', $entry['criteria']);
+            self::assertSame('Synthetic review fixture', $entry['provenance']);
+
+            $crawler = $client->request('GET', '/admin/gaming/guides/'.$id.'/edit');
+            self::assertStringContainsString('arcane-barrage', (string) $client->getResponse()->getContent());
+            $editForm = $crawler->selectButton('Entwurf speichern')->form(['title' => $title.' revised']);
+            $client->submit($editForm);
+            self::assertResponseRedirects('/admin/gaming/guides');
+            self::assertSame(1, (int) $connection->fetchOne(
+                'SELECT COUNT(*) FROM game_guide_tier_entry WHERE guide_id = :id AND entry_key = :key',
+                ['id' => $id, 'key' => 'arcane-barrage'],
+            ));
+
+            $crawler = $client->request('GET', '/admin/gaming/guides');
+            $submitForm = $crawler->filter('form[action="/admin/gaming/guides/'.$id.'/submit"]')->form();
+            $client->submit($submitForm);
+            self::assertResponseRedirects('/admin/gaming/guides');
+
+            $client->loginUser($reviewer);
+            $crawler = $client->request('GET', '/admin/gaming/guides/'.$id.'/review');
+            self::assertSelectorTextContains('main', 'Solo ranked viability');
+            self::assertSelectorTextContains('main', 'arcane-barrage');
+            $reviewForm = $crawler->selectButton('Veröffentlichen')->form(['reason' => 'Tier-list data reviewed.']);
+            $client->submit($reviewForm);
+            self::assertResponseRedirects('/admin/gaming/guides');
+            self::assertSame('published', $connection->fetchOne('SELECT review_status FROM game_guide WHERE id = :id', ['id' => $id]));
+            self::assertSame(3, (int) $connection->fetchOne('SELECT COUNT(*) FROM game_guide_review_audit WHERE guide_id = :id', ['id' => $id]));
+
+            $client->request('GET', '/gaming/guides/'.$id);
+            self::assertResponseIsSuccessful();
+            self::assertSelectorTextContains('main', 'Solo ranked viability');
+            self::assertSelectorTextContains('main', 'Synthetic review fixture');
+            self::assertSelectorTextContains('main', 'Strong burst damage.');
+        } finally {
+            $this->cleanup($client, $guideIds, [$authorId, $reviewerId], [$gameId]);
+        }
+    }
+
+    public function testOversizedAndDuplicateGuidePayloadsAreRejectedWithoutWrites(): void
+    {
+        $client = static::createClient();
+        $this->setModules($client, true);
+        $em = $this->em($client);
+        $connection = $this->connection($client);
+        $game = $this->game($em);
+        $author = $this->user($em, CmsPermission::GAMING, 'oversize-author');
+        $gameId = $game->getId();
+        $authorId = $author->getId();
+        self::assertNotNull($gameId);
+        self::assertNotNull($authorId);
+
+        try {
+            $client->loginUser($author);
+            $base = [
+                'title' => '',
+                'game_id' => (string) $gameId,
+                'guide_type' => 'tier_list',
+                'game_version' => '4.2',
+                'season' => 'Season 4',
+                'valid_from' => (new \\DateTimeImmutable('-1 day'))->format('Y-m-d'),
+                'valid_until' => '',
+                'build_code' => '',
+                'tier_criteria' => 'Valid criteria',
+                'tier_provenance' => 'Valid provenance',
+                'tier_entries_json' => json_encode([
+                    ['key' => 'arcane-barrage', 'tier' => 'S', 'reason' => 'Strong burst damage.'],
+                ], JSON_THROW_ON_ERROR),
+            ];
+            $invalidCases = [
+                array_replace($base, [
+                    'title' => 'WCP552 duplicate tiers '.bin2hex(random_bytes(4)),
+                    'tier_entries_json' => json_encode([
+                        ['key' => 'arcane-barrage', 'tier' => 'S', 'reason' => 'First ranking.'],
+                        ['key' => 'arcane-barrage', 'tier' => 'A', 'reason' => 'Duplicate ranking.'],
+                    ], JSON_THROW_ON_ERROR),
+                ]),
+                array_replace($base, [
+                    'title' => 'WCP552 oversized tier data '.bin2hex(random_bytes(4)),
+                    'tier_entries_json' => str_repeat(' ', 32_001),
+                ]),
+                array_replace($base, [
+                    'title' => 'WCP552 oversized build code '.bin2hex(random_bytes(4)),
+                    'guide_type' => 'build',
+                    'build_code' => str_repeat('A', 50_001),
+                ]),
+            ];
+
+            foreach ($invalidCases as $fields) {
+                $crawler = $client->request('GET', '/admin/gaming/guides/new');
+                $form = $crawler->selectButton('Entwurf speichern')->form($fields);
+                $client->submit($form);
+                self::assertResponseStatusCodeSame(422);
+                self::assertSame(0, (int) $connection->fetchOne(
+                    'SELECT COUNT(*) FROM game_guide WHERE title = :title',
+                    ['title' => $fields['title']],
+                ));
+            }
+        } finally {
+            $this->cleanup($client, [], [$authorId], [$gameId]);
+        }
+    }
+
+    public function testDisabledGamingHidesGuideAdministration(): void
+    {
+        $client = static::createClient();
+        $this->setModules($client, false);
+        $em = $this->em($client);
+        $author = $this->user($em, CmsPermission::GAMING, 'disabled-author');
+        $authorId = $author->getId();
+        self::assertNotNull($authorId);
+
+        try {
+            $client->loginUser($author);
+            $client->request('GET', '/admin/gaming/guides');
+            self::assertResponseStatusCodeSame(404);
+        } finally {
+            $this->cleanup($client, [], [$authorId], []);
+        }
+    }
+
     public function testReviewerCanReturnSubmissionToItsAuthor(): void
     {
         $client = static::createClient();
