@@ -8,6 +8,7 @@ use App\Entity\Social\SocialAttachment;
 use App\Entity\Social\SocialConversation;
 use App\Entity\Social\SocialMessage;
 use App\Entity\User;
+use App\Social\SocialConversationRecipientQuery;
 use App\Form\Social\SocialConversationType;
 use App\Form\Social\SocialMessageType;
 use App\Form\Social\SocialPrivacySettingsType;
@@ -51,6 +52,7 @@ final class SocialController extends AbstractController
         private readonly SocialModerationService $moderation,
         private readonly SocialDataRightsService $dataRights,
         private readonly UserRepository $users,
+        private readonly SocialConversationRecipientQuery $recipientQuery,
         private readonly EntityManagerInterface $entityManager,
         #[Autowire('%kernel.project_dir%')] private readonly string $projectDir,
     ) {
@@ -73,27 +75,62 @@ final class SocialController extends AbstractController
     {
         $this->assertEnabled();
         $actor = $this->requireUser();
-        $form = $this->createForm(SocialConversationType::class)->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
-            $recipient = $this->users->find((int) $form->get('recipientId')->getData());
-            if (!$recipient instanceof User) {
-                $form->addError(new FormError('Mitglied nicht gefunden.'));
-            } else {
-                try {
-                    $title = trim((string) $form->get('title')->getData());
-                    $conversation = $title === ''
-                        ? $this->messaging->createDirect($actor, $recipient)
-                        : $this->messaging->createGroup($actor, $title, [$recipient]);
-                    $this->entityManager->flush();
+        $recipientChoices = $this->recipientQuery->choicesFor($actor);
+        $form = $this->createForm(SocialConversationType::class, null, [
+            'recipient_choices' => $recipientChoices,
+        ])->handleRequest($request);
 
-                    return $this->redirectToRoute('app_social_conversation', ['id' => $conversation->getId()]);
-                } catch (\DomainException|\InvalidArgumentException|\Symfony\Component\Security\Core\Exception\AccessDeniedException $exception) {
-                    $form->addError(new FormError($exception->getMessage()));
+        if ($form->isSubmitted() && $form->isValid()) {
+            $rawRecipientIds = $form->get('recipientIds')->getData();
+            $recipients = [];
+            $allRecipientsFound = true;
+
+            foreach (is_array($rawRecipientIds) ? $rawRecipientIds : [] as $rawRecipientId) {
+                if (!is_int($rawRecipientId) && !is_string($rawRecipientId)) {
+                    continue;
+                }
+                $recipient = $this->users->find((int) $rawRecipientId);
+                if (!$recipient instanceof User) {
+                    $form->addError(new FormError('Ein ausgewähltes Mitglied ist nicht mehr verfügbar.'));
+                    $allRecipientsFound = false;
+                    break;
+                }
+                $recipients[] = $recipient;
+            }
+
+            $title = trim((string) $form->get('title')->getData());
+            if ($allRecipientsFound) {
+                if ($title === '' && count($recipients) !== 1) {
+                    $form->addError(new FormError('Für eine Direktnachricht wähle genau ein Mitglied. Für mehrere Mitglieder gib einen Gruppentitel ein.'));
+                } else {
+                    try {
+                        if ($title === '') {
+                            $recipient = $recipients[0] ?? null;
+                            if (!$recipient instanceof User) {
+                                $form->addError(new FormError('Wähle ein Mitglied für die Direktnachricht aus.'));
+                            } else {
+                                $conversation = $this->messaging->createDirect($actor, $recipient);
+                            }
+                        } else {
+                            $conversation = $this->messaging->createGroup($actor, $title, $recipients);
+                        }
+
+                        if (isset($conversation)) {
+                            $this->entityManager->flush();
+
+                            return $this->redirectToRoute('app_social_conversation', ['id' => $conversation->getId()]);
+                        }
+                    } catch (\DomainException|\InvalidArgumentException|\Symfony\Component\Security\Core\Exception\AccessDeniedException $exception) {
+                        $form->addError(new FormError($exception->getMessage()));
+                    }
                 }
             }
         }
 
-        $response = $this->render('social/new.html.twig', ['form' => $form]);
+        $response = $this->render('social/new.html.twig', [
+            'form' => $form,
+            'hasRecipientChoices' => $recipientChoices !== [],
+        ]);
         if ($form->isSubmitted() && !$form->isValid()) {
             $response->setStatusCode(Response::HTTP_UNPROCESSABLE_ENTITY);
         }
