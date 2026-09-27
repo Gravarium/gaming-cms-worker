@@ -10,16 +10,16 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T09:16:30.138Z",
+  "published_at": "2026-09-27T09:17:11.608Z",
   "summary": {
-    "total_remaining_worker_tasks": 145,
+    "total_remaining_worker_tasks": 146,
     "completed_worker_prs_awaiting_trusted_review": 258,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-491 is complete on exact green HEAD c306526de7b52c1e1f24bc9e21e46465a63033f9 (PR #285, CI 36308732840); the claim remains locked. Re-evaluate current unclaimed FCPs against Trusted integration and exact green Worker predecessor heads; if none is dependency-safe, publish and claim the next bounded independent worker-only proposal. Do not change foreign active claims.",
+    "next_required_action": "WCP-492 is actively claimed from exact sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d; implement public playlist pages, admin discovery and full exact-head Worker CI. Keep all foreign claims untouched.",
     "composition_preparable": 0,
-    "immediately_actionable": 4,
+    "immediately_actionable": 5,
     "must_continue": true
   },
   "rules": {
@@ -32248,6 +32248,110 @@
         "Awaiting Trusted review and Trusted integration CI; no production source or configuration was changed."
       ],
       "trusted_follow_up": "Verify public roster active-member filtering and guild scoping on a fresh Trusted branch/full CI; preserve hidden inactive members and foreign-guild isolation."
+    },
+    {
+      "priority": 492,
+      "package_id": "WCP-492",
+      "title": "Publish shareable public pages for video playlists",
+      "risk": "medium",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-492-public-video-playlists-g1",
+      "suggested_branch": "feature/wcp-492-public-video-playlists-g1",
+      "base_branch": "main",
+      "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "objective": "Complete the existing video playlist workflow with a public playlist directory and shareable detail pages. List only enabled playlists. A playlist page shows its description and only its enabled, currently published videos. Provide a clear link to the playlist directory in the existing playlist administration form. Return 404 for disabled or missing playlists and whenever the video module is disabled. Reuse existing playlist CRUD and video assignment; do not add schema or migration changes.",
+      "allowed_paths": [
+        "src/Controller/VideoPlaylistController.php",
+        "templates/video_playlist/index.html.twig",
+        "templates/video_playlist/show.html.twig",
+        "templates/admin/video/simple_form.html.twig",
+        "tests/Controller/VideoPlaylistPublicWorkflowTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/",
+        "src/Entity/",
+        "src/Controller/VideoController.php",
+        "src/Controller/AdminVideoController.php",
+        "templates/base.html.twig",
+        "templates/video/"
+      ],
+      "deliverables": [
+        "A public directory links to each enabled video playlist and shows a useful empty state.",
+        "Each enabled playlist has a shareable detail URL with its title, optional description, and links to current public videos.",
+        "Draft, future-scheduled, disabled videos and videos outside the selected playlist are absent.",
+        "Disabled or missing playlists and a disabled video module return 404 without leaking playlist contents.",
+        "The existing playlist administration form links to the public playlist directory.",
+        "No migration or trusted-only runtime change is needed."
+      ],
+      "tests": [
+        "Functional tests cover anonymous access, enabled and disabled playlists, missing and disabled-module routes, playlist-scoped video membership and published/enabled video visibility.",
+        "A functional admin test verifies that video managers can discover the public playlist directory from playlist administration.",
+        "Focused PHPUnit, PHPStan level 8 and full Worker CI run on the exact final HEAD.",
+        "PostgreSQL 18 complete migration-chain validation."
+      ],
+      "completion_report": [
+        "Exact sanitized main/base SHA and final feature HEAD.",
+        "All changed paths and Worker PR.",
+        "Public directory/detail behavior, module-disable behavior, admin discovery link, focused tests and exact-head CI run.",
+        "Unresolved assumptions and Trusted integration follow-up."
+      ],
+      "immutable_constraints": [
+        "public-playlist-pages-show-only-enabled-playlists-and-published-enabled-videos",
+        "disabled-video-module-keeps-all-video-playlist-routes-unavailable",
+        "admin-link-does-not-change-existing-playlist-permission-or-write-boundaries",
+        "no-schema-or-migration-change",
+        "no-private-runtime-or-production-secret",
+        "preserve-existing-security-validation-and-worker-isolation-controls",
+        "no-security-test-phpstan-or-CI-weakening",
+        "red-CI-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "proposal_kind": "worker_only",
+      "proposal_dependency_evidence": [],
+      "collision_check": {
+        "compared_against": "Fresh continuous/work-pool-v4 branch commit 644ac87d773f42329c4d912b013d330bcc98608f; all active and claim-locked allowed paths; sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d.",
+        "result": "No active or claim-locked task owns or encloses the new VideoPlaylistController, the new video_playlist templates, the video playlist administration simple form, or the dedicated workflow test. Existing WCP-354 covers playlist form-field bounds, WCP-306 covers playlist entity/slug boundaries, WCP-381/389 cover the current public video index/show/feed, and WCP-463 covers video administration index/form; this package leaves those paths untouched. FCP-072 is unclaimed and blocked, with a broad templates/ allowance; any future FCP-072 claim must recheck and narrow that scope if WCP-492 remains active. No shared entity, route controller, schema, migration, global navigation or configuration file is modified.",
+        "paths": [
+          "src/Controller/VideoPlaylistController.php",
+          "templates/video_playlist/index.html.twig",
+          "templates/video_playlist/show.html.twig",
+          "templates/admin/video/simple_form.html.twig",
+          "tests/Controller/VideoPlaylistPublicWorkflowTest.php"
+        ]
+      },
+      "published_at": "2026-09-27T09:17:11.608Z",
+      "claimed_on": "2026-09-27T09:17:11.608Z",
+      "claim_state": "active",
+      "active_base_branch": "main",
+      "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "resume_branch": "feature/wcp-492-public-video-playlists-g1",
+      "branch_heads": {
+        "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+        "feature_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d"
+      },
+      "last_observed_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "last_checkpoint_at": "2026-09-27T09:17:11.608Z",
+      "checkpoint_paths": [],
+      "next_action": "Implement the public playlist directory/detail routes, visible admin discovery link and functional coverage within the listed paths; then run focused PHPUnit and complete exact-head Worker CI."
     }
   ],
   "recovery_queue": [],
