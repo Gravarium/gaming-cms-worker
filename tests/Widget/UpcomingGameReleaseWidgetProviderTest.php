@@ -136,16 +136,16 @@ final class UpcomingGameReleaseWidgetProviderTest extends KernelTestCase
                 $entities[] = $release;
             }
 
-            for ($day = 3; $day <= 15; ++$day) {
+            for ($day = 14; $day <= 26; ++$day) {
                 $release = new GameRelease($entry, $platform, 'EU', $releaseBase->modify(sprintf('+%d days', $day)));
-                if ($day === 3) {
+                if ($day === 14) {
                     $release->setEdition($edition);
                 }
                 $entities[] = $release;
                 $validReleases[] = $release;
             }
 
-            $sameTimeRelease = new GameRelease($entry, $platform, 'EU', $releaseBase->modify('+3 days'));
+            $sameTimeRelease = new GameRelease($entry, $platform, 'EU', $releaseBase->modify('+14 days'));
             $entities[] = $sameTimeRelease;
             $validReleases[] = $sameTimeRelease;
 
@@ -164,25 +164,56 @@ final class UpcomingGameReleaseWidgetProviderTest extends KernelTestCase
                 return ($left->getId() ?? 0) <=> ($right->getId() ?? 0);
             });
             $expected = array_slice($expected, 0, 12);
+            $expectedIds = array_map(static fn (GameRelease $release): int => $release->getId() ?? 0, $expected);
+
+            $releaseQuery = $container->get(UpcomingReleaseQuery::class);
+            // The existing catalogue integration fixture has a valid release at +10 days.
+            $isolatedResults = $releaseQuery->findUpcoming($releaseBase->modify('+11 days'), 99);
+            self::assertSame(
+                $expectedIds,
+                array_map(static fn (GameRelease $release): int => $release->getId() ?? 0, $isolatedResults),
+            );
+            self::assertCount(12, $isolatedResults);
 
             $provider = $container->get(UpcomingGameReleaseWidgetProvider::class);
             $result = $provider->data(self::KEY, ['count' => 99]);
             self::assertIsArray($result['items']);
             /** @var list<GameRelease> $actual */
             $actual = $result['items'];
-            self::assertSame(
-                array_map(static fn (GameRelease $release): int => $release->getId() ?? 0, $expected),
-                array_map(static fn (GameRelease $release): int => $release->getId() ?? 0, $actual),
-            );
+            $actualIds = array_map(static fn (GameRelease $release): int => $release->getId() ?? 0, $actual);
             self::assertCount(12, $actual);
+            self::assertSame(
+                array_map(
+                    static fn (GameRelease $release): int => $release->getId() ?? 0,
+                    $releaseQuery->findUpcoming(new \\DateTimeImmutable(), 12),
+                ),
+                $actualIds,
+            );
+            $orderedActual = $actual;
+            usort($orderedActual, static function (GameRelease $left, GameRelease $right): int {
+                $byTime = $left->getReleaseAt() <=> $right->getReleaseAt();
+                if ($byTime !== 0) {
+                    return $byTime;
+                }
+
+                return ($left->getId() ?? 0) <=> ($right->getId() ?? 0);
+            });
+            self::assertSame($actualIds, array_map(static fn (GameRelease $release): int => $release->getId() ?? 0, $orderedActual));
+            foreach ([$cancelled, $past, $disabledGameRelease, $disabledEntryRelease] as $excludedRelease) {
+                self::assertNotContains($excludedRelease->getId(), $actualIds);
+            }
+            self::assertContains($validReleases[0]->getId(), $actualIds);
 
             $limited = $provider->data(self::KEY, ['count' => 2]);
             self::assertCount(2, $limited['items']);
-            self::assertSame($actual[0]->getId(), $limited['items'][0]->getId());
+            self::assertSame(
+                array_slice($actualIds, 0, 2),
+                array_map(static fn (GameRelease $release): int => $release->getId() ?? 0, $limited['items']),
+            );
             self::assertSame([], $provider->data('unregistered.widget', []));
 
             $twig = $container->get(Environment::class);
-            $rendered = $twig->render('widget/upcoming_game_releases.html.twig', ['data' => ['items' => [$actual[0]]]]);
+            $rendered = $twig->render('widget/upcoming_game_releases.html.twig', ['data' => ['items' => [$validReleases[0]]]]);
             self::assertStringContainsString('Deluxe', $rendered);
             self::assertStringContainsString('PC', $rendered);
             self::assertStringContainsString('EU', $rendered);
