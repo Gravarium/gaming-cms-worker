@@ -12,14 +12,14 @@
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
   "published_at": "2026-09-27T01:51:12.714Z",
   "summary": {
-    "total_remaining_worker_tasks": 140,
-    "completed_worker_prs_awaiting_trusted_review": 217,
+    "total_remaining_worker_tasks": 139,
+    "completed_worker_prs_awaiting_trusted_review": 218,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-448 is complete on green exact HEAD 33cfd87b252f482cdc13d5929069d5e5676ae86e with PR #241 ready and its claim locked. WCP-449 is already reserved on exact sanitized main; continue only on that independent claim or select another unclaimed dependency-safe task.",
+    "next_required_action": "Re-evaluate all unclaimed tasks against current dependency evidence; all remaining published FCPs are blocked, so derive and claim one independent worker-only WCP under the continuous-work rules.",
     "composition_preparable": 0,
-    "immediately_actionable": 5,
+    "immediately_actionable": 4,
     "must_continue": true
   },
   "rules": {
@@ -25383,7 +25383,7 @@
       "package_id": "WCP-449",
       "title": "Verify authorized website settings can be saved",
       "risk": "low",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -25453,12 +25453,12 @@
         ]
       },
       "claimed_on": "2026-09-27T01:50:49.054Z",
-      "claim_state": "active",
+      "claim_state": "locked_until_trusted_resolution",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
       "active_head": "5cc187cf2d69ec95a4ff68516b3cc9505b3fb690",
       "resume_branch": "feature/wcp-449-site-settings-persistence-g1",
-      "last_checkpoint_at": "2026-09-27T01:54:55.929Z",
+      "last_checkpoint_at": "2026-09-27T01:56:46.265Z",
       "checkpoint_paths": [
         "tests/Controller/AdminSettingsPersistenceTest.php"
       ],
@@ -25466,21 +25466,47 @@
         "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
         "feature_branch": "5cc187cf2d69ec95a4ff68516b3cc9505b3fb690"
       },
-      "next_action": "Inspect exact-head Worker CI run 36286925359; repair concrete failures before completion.",
-      "last_verified_push_at": "2026-09-27T01:54:55.929Z",
+      "next_action": "PR #243 is ready for Trusted review with green exact-head Worker CI; keep this claim locked until Trusted explicitly integrates, cancels or transfers it, then continue with an independent task.",
+      "last_verified_push_at": "2026-09-27T01:56:46.265Z",
       "worker_pr": 243,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/243",
-      "draft_pr": true,
-      "pr_state": "open_draft_unmerged",
+      "draft_pr": false,
+      "pr_state": "open_ready_for_review_unmerged",
       "ci_attempts": [
         {
           "run_id": 36286925359,
           "head": "5cc187cf2d69ec95a4ff68516b3cc9505b3fb690",
-          "result": "queued"
+          "result": "success"
         }
       ],
       "last_ci_run_id": 36286925359,
-      "ci_result": "queued"
+      "ci_result": "success",
+      "final_head": "5cc187cf2d69ec95a4ff68516b3cc9505b3fb690",
+      "final_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "changed_paths": [
+        "tests/Controller/AdminSettingsPersistenceTest.php"
+      ],
+      "final_changed_paths": [
+        "tests/Controller/AdminSettingsPersistenceTest.php"
+      ],
+      "completed_at": "2026-09-27T01:56:46.265Z",
+      "ci_run_id": 36286925359,
+      "test_results": {
+        "phpunit": "430 tests, 1,862 assertions, 0 failures; one deprecation and one notice.",
+        "phpstan": "Level 8 passed with no errors.",
+        "php_symfony": "Worker PHP/Symfony validation job passed on exact final HEAD.",
+        "postgres18": "PostgreSQL 18 complete migration-chain validation passed.",
+        "exact_head_ci": {
+          "run_id": 36286925359,
+          "head": "5cc187cf2d69ec95a4ff68516b3cc9505b3fb690",
+          "result": "success"
+        }
+      },
+      "completion_summary": "A CMS_SETTINGS_MANAGE user submits valid text settings with the rendered CSRF token; the route redirects and a fresh Doctrine read confirms the site name and description persisted. Synthetic user and test-created settings rows are cleaned up and the original settings snapshot is restored. Only the allowlisted test file changed.",
+      "open_limitations": [
+        "Awaiting Trusted review and Trusted integration CI."
+      ],
+      "trusted_follow_up": "Preserve CMS_SETTINGS_MANAGE authorization and rendered-form CSRF on settings updates; no media upload or external URL behavior is covered by this proposal."
     }
   ],
   "recovery_queue": [],
