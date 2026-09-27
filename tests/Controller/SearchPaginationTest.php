@@ -122,11 +122,13 @@ final class SearchPaginationTest extends WebTestCase
             self::assertStringContainsString('&lt;script&gt;alert(&quot;rss&quot;)&lt;/script&gt;', $xmlBody);
             self::assertStringNotContainsString('<script>', $xmlBody);
 
-            $xml = new \\DOMDocument();
+            $xml = new \DOMDocument();
             self::assertTrue($xml->loadXML($xmlBody, LIBXML_NONET));
-            $xpath = new \\DOMXPath($xml);
-            $escapedTitle = $xpath->query('/rss/channel/item[guid="'.$sourceType.':1"]/title')?->item(0);
-            self::assertInstanceOf(\\DOMElement::class, $escapedTitle);
+            $xpath = new \DOMXPath($xml);
+            $matchedTitles = $xpath->query('/rss/channel/item[guid="'.$sourceType.':1"]/title');
+            self::assertNotFalse($matchedTitles);
+            $escapedTitle = $matchedTitles->item(0);
+            self::assertInstanceOf(\DOMElement::class, $escapedTitle);
             self::assertSame($titles[0], $escapedTitle->textContent);
         } finally {
             $connection->executeStatement('DELETE FROM search_document WHERE source_type = :source', ['source' => $sourceType]);
