@@ -10,7 +10,7 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T15:51:07.310Z",
+  "published_at": "2026-09-27T15:53:12.391Z",
   "summary": {
     "total_remaining_worker_tasks": 167,
     "completed_worker_prs_awaiting_trusted_review": 290,
@@ -41882,7 +41882,7 @@
       "package_id": "WCP-550",
       "title": "Show public competition brackets and add a Page Builder entry point",
       "risk": "medium",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [
         "FCP-061"
       ],
@@ -42004,7 +42004,7 @@
       },
       "published_at": "2026-09-27T15:06:31.329Z",
       "claimed_on": "2026-09-27T15:06:31.329Z",
-      "claim_state": "active",
+      "claim_state": "locked_until_trusted_resolution",
       "active_base_branch": "fix/fcp-061-phpstan-g1",
       "active_base_sha": "ec6bb200affc3e5a46d416e98f7a1b0621c38ded",
       "active_head": "a17f098cfaf647cd59d7c7701baab1beecc99bdb",
@@ -42049,13 +42049,34 @@
           "result": "in_progress",
           "target_branch": "worker/account-wcp-550-validation",
           "target_sha": "ec6bb200affc3e5a46d416e98f7a1b0621c38ded"
+        },
+        {
+          "head": "a17f098cfaf647cd59d7c7701baab1beecc99bdb",
+          "run_id": 36331043161,
+          "result": "success",
+          "target_branch": "worker/account-wcp-550-validation",
+          "target_sha": "ec6bb200affc3e5a46d416e98f7a1b0621c38ded",
+          "jobs": [
+            {
+              "name": "Validate worker-visible PostgreSQL 18 migration chain",
+              "conclusion": "success"
+            },
+            {
+              "name": "Validate worker-visible PHP and Symfony",
+              "conclusion": "success"
+            }
+          ]
         }
       ],
-      "next_action": "Monitor all jobs in exact-head CI run 36331043161; fix any remaining failures before marking the Worker PR ready.",
+      "next_action": "Claim remains locked until Trusted explicitly integrates, cancels or transfers WCP-550; no merge or deployment by this Worker.",
       "worker_pr": 343,
       "ci_target_branch": "worker/account-wcp-550-validation",
       "ci_target_sha": "ec6bb200affc3e5a46d416e98f7a1b0621c38ded",
-      "ci_target_purpose": "Worker CI only; points to exact green FCP-061 predecessor because current worker/main does not contain the dependency. It is not a task base or integration branch."
+      "ci_target_purpose": "Worker CI only; points to exact green FCP-061 predecessor because current worker/main does not contain the dependency. It is not a task base or integration branch.",
+      "final_head": "a17f098cfaf647cd59d7c7701baab1beecc99bdb",
+      "ci_run_id": 36331043161,
+      "ci_result": "success",
+      "completed_at": "2026-09-27T15:53:12.390Z"
     },
     {
       "priority": 551,
