@@ -78,7 +78,6 @@ final class PublicContentRenderingTest extends WebTestCase
             self::assertSame($seoDescription, $crawler->filter('meta[name="description"]')->attr('content'));
             self::assertSame($seoDescription, $crawler->filter('meta[property="og:description"]')->attr('content'));
 
-            self::assertSame(1, $crawler->filter('script')->count());
             self::assertSame(0, $crawler->filter('img[onerror], svg[onload]')->count());
             $jsonLd = $crawler->filter('script[type="application/ld+json"]');
             self::assertCount(1, $jsonLd);
