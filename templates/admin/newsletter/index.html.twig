@@ -1,7 +1,13 @@
 {% extends 'base.html.twig' %}
 {% block title %}Newsletter | Gaming CMS{% endblock %}
 {% block body %}
-<header class="topbar"><a class="brand" href="{{ path('app_admin_dashboard') }}">Gaming CMS</a><a class="button-link" href="{{ path('app_admin_notification_newsletter_admin_new') }}">Neuer Newsletter</a></header>
+<header class="topbar">
+    <a class="brand" href="{{ path('app_admin_dashboard') }}">Gaming CMS</a>
+    <nav class="top-actions">
+        <a class="button-link button-secondary" href="{{ path('app_admin_notification_newsletter_delivery_report') }}">Auslieferungsbericht</a>
+        <a class="button-link" href="{{ path('app_admin_notification_newsletter_admin_new') }}">Neuer Newsletter</a>
+    </nav>
+</header>
 <main class="dashboard">
 <p class="eyebrow">Benachrichtigungen · Newsletter</p><h1>Newsletter</h1>
 {% for message in app.flashes('success') %}<div class="notice">{{ message }}</div>{% endfor %}
