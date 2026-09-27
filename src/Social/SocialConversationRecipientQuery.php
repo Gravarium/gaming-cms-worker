@@ -26,19 +26,19 @@ final readonly class SocialConversationRecipientQuery
     {
         /** @var list<array{0: MemberProfile, 1: User}> $rows */
         $rows = $this->profiles->createQueryBuilder('profile')
-            ->select('profile', 'member')
-            ->innerJoin('profile.user', 'member')
-            ->andWhere('member.isActive = true')
-            ->andWhere('(member.lockedUntil IS NULL OR member.lockedUntil <= :now)')
+            ->select('profile', 'recipientUser')
+            ->innerJoin('profile.user', 'recipientUser')
+            ->andWhere('recipientUser.isActive = true')
+            ->andWhere('(recipientUser.lockedUntil IS NULL OR recipientUser.lockedUntil <= :now)')
             ->setParameter('now', new \DateTimeImmutable())
-            ->orderBy('LOWER(member.displayName)', 'ASC')
-            ->addOrderBy('member.id', 'ASC')
+            ->orderBy('LOWER(recipientUser.displayName)', 'ASC')
+            ->addOrderBy('recipientUser.id', 'ASC')
             ->getQuery()
             ->getResult();
 
         $choices = [];
-        foreach ($rows as [$profile, $member]) {
-            $id = $member->getId();
+        foreach ($rows as [$profile, $recipientUser]) {
+            $id = $recipientUser->getId();
             if (
                 $id === null
                 || $id === $viewer->getId()
@@ -47,7 +47,7 @@ final readonly class SocialConversationRecipientQuery
                 continue;
             }
 
-            $choices[sprintf('%s (#%d)', $member->getDisplayName(), $id)] = $id;
+            $choices[sprintf('%s (#%d)', $recipientUser->getDisplayName(), $id)] = $id;
         }
 
         return $choices;
