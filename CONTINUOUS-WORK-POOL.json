@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T07:54:50.439Z",
+  "published_at": "2026-09-27T07:56:16.765Z",
   "summary": {
     "total_remaining_worker_tasks": 141,
     "completed_worker_prs_awaiting_trusted_review": 250,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-483 full Worker CI run 36304215243 remains in progress on exact HEAD 0eec4a4289abe6d5850f5eac98c522892a1facf5. WCP-484 exact-head run 36304073650 failed because the synthetic draft lacks an SEO description and reaches a strict Twig fallback before the base site context; repair its fixture within the allowed test file and rerun full CI.",
+    "next_required_action": "WCP-483 full Worker CI run 36304215243 remains in progress on exact HEAD 0eec4a4289abe6d5850f5eac98c522892a1facf5. WCP-484 full Worker CI run 36304594074 is in progress on exact HEAD ea9a4753bd368611a4c105ce07e22e1459a03dff after an allowed test-fixture correction.",
     "composition_preparable": 0,
     "immediately_actionable": 4,
     "must_continue": true
@@ -30981,15 +30981,15 @@
       "claim_state": "active",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-      "active_head": "ba33c3a3f0626737d86bd079b16420a559f03b1c",
+      "active_head": "ea9a4753bd368611a4c105ce07e22e1459a03dff",
       "resume_branch": "feature/wcp-484-admin-content-preview-security-g1",
       "branch_heads": {
         "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-        "feature_branch": "ba33c3a3f0626737d86bd079b16420a559f03b1c"
+        "feature_branch": "ea9a4753bd368611a4c105ce07e22e1459a03dff"
       },
-      "next_action": "Exact-head Worker CI run 36304073650 failed in the authorized preview test because the fixture leaves the optional SEO description empty, reaching the site.description Twig fallback before the base template supplies its site context. Keep the fix test-only: give the synthetic draft an explicit SEO description, rerun complete Worker CI on the new exact head.",
-      "last_observed_head": "ba33c3a3f0626737d86bd079b16420a559f03b1c",
-      "last_checkpoint_at": "2026-09-27T07:54:50.439Z",
+      "next_action": "Exact-head Worker CI run 36304594074 is in progress on updated HEAD ea9a4753bd368611a4c105ce07e22e1459a03dff. The authorized preview fixture now sets an explicit SEO description to avoid the strict Twig fallback; inspect the full run and repair only within the allowlisted test file if needed.",
+      "last_observed_head": "ea9a4753bd368611a4c105ce07e22e1459a03dff",
+      "last_checkpoint_at": "2026-09-27T07:56:16.765Z",
       "checkpoint_paths": [
         "tests/Controller/AdminContentPreviewSecurityTest.php"
       ],
@@ -30998,15 +30998,20 @@
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/277",
       "draft_pr": true,
       "pr_state": "open",
-      "ci_run_id": 36304073650,
-      "last_ci_run_id": 36304073650,
-      "ci_result": "failure",
-      "last_ci_result": "failure",
+      "ci_run_id": 36304594074,
+      "last_ci_run_id": 36304594074,
+      "ci_result": "in_progress",
+      "last_ci_result": "in_progress",
       "ci_attempts": [
         {
           "run_id": 36304073650,
           "head": "ba33c3a3f0626737d86bd079b16420a559f03b1c",
           "result": "failure"
+        },
+        {
+          "run_id": 36304594074,
+          "head": "ea9a4753bd368611a4c105ce07e22e1459a03dff",
+          "result": "in_progress"
         }
       ]
     }
