@@ -44056,13 +44056,13 @@
       "claim_state": "active",
       "active_base_branch": "main",
       "active_base_sha": "7b2ca79405fc12d34bce1386157e929e4668f31a",
-      "active_head": "0b50f9d066efecbca3bf5c6f66cc1d9eae03a085",
+      "active_head": "4c95340eb6f3fd38c85e5cd4c27077a667b2b629",
       "branch_heads": {
         "claim_branch": "75754d818243bd2e5f2f2da1f39b50a4568f7971",
-        "feature_branch": "0b50f9d066efecbca3bf5c6f66cc1d9eae03a085"
+        "feature_branch": "4c95340eb6f3fd38c85e5cd4c27077a667b2b629"
       },
-      "last_observed_head": "0b50f9d066efecbca3bf5c6f66cc1d9eae03a085",
-      "last_checkpoint_at": "2026-09-27T17:14:37.231Z",
+      "last_observed_head": "4c95340eb6f3fd38c85e5cd4c27077a667b2b629",
+      "last_checkpoint_at": "2026-09-27T17:18:49.234Z",
       "checkpoint_paths": [
         "src/Controller/Social/SocialController.php",
         "src/Form/Social/SocialConversationType.php",
@@ -44074,8 +44074,8 @@
       "worker_pr_state": "draft",
       "pr_state": "open",
       "draft_pr": true,
-      "ci_result": "queued",
-      "last_ci_result": "queued",
+      "ci_result": "in_progress",
+      "last_ci_result": "in_progress",
       "ci_attempts": [
         {
           "run_id": 36335840605,
@@ -44100,12 +44100,21 @@
           "run_number": 893,
           "head": "0b50f9d066efecbca3bf5c6f66cc1d9eae03a085",
           "base": "7b2ca79405fc12d34bce1386157e929e4668f31a",
-          "result": "queued",
+          "result": "failure",
+          "conclusion": "failure",
+          "summary": "PHPUnit 743 tests: 5 errors and 1 failure. Doctrine returns MemberProfile root objects; test used array destructuring and an unsupported WebTestCase assertion. PostgreSQL migration chain passed."
+        },
+        {
+          "run_id": 36336426551,
+          "run_number": 894,
+          "head": "4c95340eb6f3fd38c85e5cd4c27077a667b2b629",
+          "base": "7b2ca79405fc12d34bce1386157e929e4668f31a",
+          "result": "in_progress",
           "conclusion": null
         }
       ],
-      "next_action": "Monitor exact-head Worker CI run #893 / 36336179103 on 0b50f9d066efecbca3bf5c6f66cc1d9eae03a085. The DQL recipient alias is now recipientUser; complete full PHP/Symfony and PostgreSQL CI on this exact head before review.",
-      "last_verified_push_at": "2026-09-27T17:14:37.231Z",
+      "next_action": "Monitor exact-head Worker CI run #894 / 36336426551 on 4c95340eb6f3fd38c85e5cd4c27077a667b2b629. The recipient query now iterates MemberProfile roots and reads the joined User; the no-choice test checks the disabled button via a CSS selector.",
+      "last_verified_push_at": "2026-09-27T17:18:49.234Z",
       "worker_pr": 352,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/352",
       "worker_pr_base_branch": "main",
@@ -44117,8 +44126,8 @@
         "templates/social/new.html.twig",
         "tests/Controller/SocialGroupConversationCreationTest.php"
       ],
-      "ci_run_id": 36336179103,
-      "last_ci_run_id": 36336179103
+      "ci_run_id": 36336426551,
+      "last_ci_run_id": 36336426551
     },
     {
       "priority": 559,
