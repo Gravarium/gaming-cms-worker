@@ -8,6 +8,7 @@ use App\Command\CreateAdminCommand;
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Tester\CommandTester;
 
@@ -95,6 +96,9 @@ final class CreateAdminCommandTest extends KernelTestCase
         $command = static::getContainer()->get(CreateAdminCommand::class);
         self::assertInstanceOf(CreateAdminCommand::class, $command);
 
-        return new CommandTester($command);
+        $application = new Application();
+        $application->add($command);
+
+        return new CommandTester($application->find('app:user:create-admin'));
     }
 }
