@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T13:36:35.964Z",
+  "published_at": "2026-09-27T13:42:23.530Z",
   "summary": {
     "total_remaining_worker_tasks": 166,
     "completed_worker_prs_awaiting_trusted_review": 290,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "Worker PR #329 is complete on exact green HEAD b012538370954f9c71f4acc9198e2703929d5ad6; keep this claim locked until Trusted resolution, and continue to the next independent package.",
+    "next_required_action": "Create the claim and feature refs from exact WCP-522 HEAD b1cecaeadc1b8378cf8626f52aa48396a569d8cb, then add the provider, CTA template and Page Builder integration test.",
     "composition_preparable": 0,
     "immediately_actionable": 27,
     "must_continue": true
@@ -39423,6 +39423,139 @@
           "The report link uses its existing stable URL path because WCP-528 does not expose the intended exact route name as a route alias."
         ]
       }
+    },
+    {
+      "priority": 540,
+      "package_id": "WCP-540",
+      "title": "Place public newsletter signup in the Page Builder",
+      "risk": "medium",
+      "execution_state": "worker_in_progress",
+      "dependencies": [
+        "WCP-522"
+      ],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-540-public-newsletter-signup-widget-g1",
+      "suggested_branch": "feature/wcp-540-public-newsletter-signup-widget-g1",
+      "base_branch": "feature/wcp-522-public-newsletter-signup-g1",
+      "base_sha": "b1cecaeadc1b8378cf8626f52aa48396a569d8cb",
+      "objective": "Complete the public newsletter subscription flow by making the WCP-522 double-opt-in signup page placeable as a call-to-action widget in Page Builder pages. The widget is available only while Notifications is enabled, renders a link to the existing public signup form, and remains hidden on published pages and from the editor palette when the module is disabled. Do not change the signup, confirmation, consent or delivery flow.",
+      "allowed_paths": [
+        "src/Widget/PublicNewsletterSignupWidgetProvider.php",
+        "templates/widget/public_newsletter_signup.html.twig",
+        "tests/Widget/PublicNewsletterSignupWidgetTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "templates/layout/portal.html.twig",
+        "templates/base.html.twig",
+        "config/packages/public_newsletter_signup.yaml",
+        "src/Controller/PublicNewsletterSignupController.php",
+        "src/Service/PublicNewsletterSignupService.php",
+        "src/PublicNewsletterSignup/Templates/signup.html.twig",
+        "tests/Controller/PublicNewsletterSignupControllerTest.php",
+        "src/Entity/Newsletter/",
+        "src/Repository/Newsletter/",
+        "migrations/",
+        "private/"
+      ],
+      "deliverables": [
+        "Register a single-use Page Builder widget under the Notifications module for promoting public newsletter signup.",
+        "Render a clear newsletter call-to-action linking to the existing /newsletter/subscribe endpoint.",
+        "Use the existing WidgetRegistry module availability so editors cannot place the widget and public pages hide it when Notifications is disabled.",
+        "Add an integration test that places the widget through the Page Builder write endpoint, follows it to the signup page, then disables Notifications and verifies the widget is hidden while its saved layout data remains.",
+        "Do not change WCP-522 signup and confirmation implementation, database, migrations, delivery behavior or Trusted-only files."
+      ],
+      "tests": [
+        "WebTestCase verifies the widget appears in the authorized Page Builder palette with Notifications enabled.",
+        "Save a widget placement through /admin/layout/home/save using its CSRF token, request the public homepage, and follow the signup CTA to the WCP-522 form.",
+        "Disable Notifications and verify the widget disappears from the published page and editor palette while the saved layout record retains the widget.",
+        "Run full exact-head Worker CI, including PHPStan and PostgreSQL 18 migration validation."
+      ],
+      "completion_report": [
+        "Exact WCP-522 proposal base SHA and final Worker HEAD SHA.",
+        "Changed paths and Worker PR URL/base branch.",
+        "Page Builder availability, public CTA navigation and disabled-module evidence.",
+        "Exact-head test totals, PHPStan and PostgreSQL 18 migration results.",
+        "Remaining limitations and proof WCP-522 remains an untrusted Worker dependency."
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "WCP-522-is-a-green-worker-predecessor-not-Trusted-integration",
+        "preserve-double-opt-in-CSRF-rate-limits-consent-and-notification-module-gate",
+        "widget-does-not-render-when-notifications-module-is-disabled",
+        "no-database-or-migration-change",
+        "no-security-test-phpstan-CI-auth-CSRF-validation-or-subscription-protection-weakening",
+        "no-private-runtime-or-sensitive-data",
+        "no-direct-trusted-integration-or-deployment"
+      ],
+      "proposal_base_branch": "feature/wcp-522-public-newsletter-signup-g1",
+      "proposal_base_sha": "b1cecaeadc1b8378cf8626f52aa48396a569d8cb",
+      "proposal_kind": "worker_only",
+      "proposal_dependency_evidence": [
+        {
+          "package_id": "WCP-522",
+          "feature_branch": "feature/wcp-522-public-newsletter-signup-g1",
+          "worker_pr": 315,
+          "exact_head": "b1cecaeadc1b8378cf8626f52aa48396a569d8cb",
+          "ci_run_id": 36317146986,
+          "ci_run_number": 784,
+          "ci_result": "success",
+          "status": "worker_complete_awaiting_trusted_review",
+          "claim_state": "locked_until_trusted_resolution"
+        }
+      ],
+      "collision_check": {
+        "compared_against": "Fresh continuous/work-pool-v4 commit f9501d4d022167fb14aa660b4a516e539b79122d / pool blob 60ef7c68b6c1f28dd4a970cfa8ba1b11c0fd825a; all active and claim-locked allowed/checkpoint paths; WCP-540 branch/PR searches; exact green WCP-522 branch and PR #315.",
+        "result": "The three widget paths do not intersect active or claim-locked paths. The public portal template is owned by WCP-497 and explicitly excluded. WCP-540 had no pool entry, branch or PR at reservation. WCP-522 exact HEAD is open, unmerged, claim-locked and green on both CI jobs.",
+        "paths": [
+          "src/Widget/PublicNewsletterSignupWidgetProvider.php",
+          "templates/widget/public_newsletter_signup.html.twig",
+          "tests/Widget/PublicNewsletterSignupWidgetTest.php"
+        ]
+      },
+      "published_at": "2026-09-27T13:42:23.530Z",
+      "claimed_on": "2026-09-27T13:42:23.530Z",
+      "claim_state": "active",
+      "active_base_branch": "feature/wcp-522-public-newsletter-signup-g1",
+      "active_base_sha": "b1cecaeadc1b8378cf8626f52aa48396a569d8cb",
+      "active_head": "b1cecaeadc1b8378cf8626f52aa48396a569d8cb",
+      "resume_branch": "feature/wcp-540-public-newsletter-signup-widget-g1",
+      "branch_heads": {
+        "claim_branch": "b1cecaeadc1b8378cf8626f52aa48396a569d8cb",
+        "feature_branch": "b1cecaeadc1b8378cf8626f52aa48396a569d8cb"
+      },
+      "last_observed_head": "b1cecaeadc1b8378cf8626f52aa48396a569d8cb",
+      "last_checkpoint_at": "2026-09-27T13:42:23.530Z",
+      "checkpoint_paths": [
+        "src/Widget/PublicNewsletterSignupWidgetProvider.php",
+        "templates/widget/public_newsletter_signup.html.twig",
+        "tests/Widget/PublicNewsletterSignupWidgetTest.php"
+      ],
+      "next_action": "Create the claim and feature refs from exact WCP-522 HEAD b1cecaeadc1b8378cf8626f52aa48396a569d8cb, then add the provider, CTA template and Page Builder integration test.",
+      "ci_attempts": [],
+      "worker_pr_state": "not_created",
+      "last_ci_result": "not_run",
+      "worker_pr_changed_paths": [
+        "src/Widget/PublicNewsletterSignupWidgetProvider.php",
+        "templates/widget/public_newsletter_signup.html.twig",
+        "tests/Widget/PublicNewsletterSignupWidgetTest.php"
+      ],
+      "worker_pr_base_branch": "main",
+      "worker_pr": null,
+      "worker_pr_url": null
     }
   ],
   "recovery_queue": [],
