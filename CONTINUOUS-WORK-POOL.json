@@ -28751,31 +28751,37 @@
       "claim_state": "active",
       "active_base_branch": "feature/wcp-340-backup-provider-selection-boundary-g1",
       "active_base_sha": "045b281ba77600e2fb4f35a82c3e9bcf3ae5a3e7",
-      "active_head": "df1285df59a894f52b195ce4e79ae19d5f6d72e1",
+      "active_head": "148c690c0444edf5d23891e1826b111791276eef",
       "resume_branch": "feature/wcp-472-backup-provider-planning-security-g1",
-      "last_checkpoint_at": "2026-09-27T05:31:20.557Z",
+      "last_checkpoint_at": "2026-09-27T05:36:21.083Z",
       "checkpoint_paths": [
         "tests/Controller/AdminBackupProviderPlanningSecurityTest.php"
       ],
       "branch_heads": {
         "claim_branch": "045b281ba77600e2fb4f35a82c3e9bcf3ae5a3e7",
-        "feature_branch": "df1285df59a894f52b195ce4e79ae19d5f6d72e1"
+        "feature_branch": "148c690c0444edf5d23891e1826b111791276eef"
       },
-      "next_action": "Wait for Worker CI run 36297469282 on exact HEAD df1285df59a894f52b195ce4e79ae19d5f6d72e1; inspect the PHPUnit, PHPStan, and PostgreSQL jobs and repair any concrete failures without leaving the allowed test path.",
-      "last_observed_head": "df1285df59a894f52b195ce4e79ae19d5f6d72e1",
-      "last_verified_push_at": "2026-09-27T05:31:20.557Z",
+      "next_action": "Wait for Worker CI run 36297643836 on exact HEAD 148c690c0444edf5d23891e1826b111791276eef; diagnose and fix any concrete test, PHPStan or migration issues within the sole allowed test path.",
+      "last_observed_head": "148c690c0444edf5d23891e1826b111791276eef",
+      "last_verified_push_at": "2026-09-27T05:36:21.083Z",
       "worker_pr": 265,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/265",
       "draft_pr": true,
       "pr_state": "open_draft_unmerged",
-      "ci_run_id": 36297469282,
-      "last_ci_run_id": 36297469282,
+      "ci_run_id": 36297643836,
+      "last_ci_run_id": 36297643836,
       "ci_result": "in_progress",
       "last_ci_result": "in_progress",
       "ci_attempts": [
         {
           "run_id": 36297469282,
           "head": "df1285df59a894f52b195ce4e79ae19d5f6d72e1",
+          "result": "failure",
+          "diagnosis": "Test setup called the session-backed CSRF token manager outside an active request and raised SessionNotFoundException; replace with invalid-token request and keep authorization/authorized-CSRF cases separate."
+        },
+        {
+          "run_id": 36297643836,
+          "head": "148c690c0444edf5d23891e1826b111791276eef",
           "result": "in_progress"
         }
       ]
