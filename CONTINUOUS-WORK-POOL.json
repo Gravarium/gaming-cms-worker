@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T08:18:36.637Z",
+  "published_at": "2026-09-27T08:19:40.799Z",
   "summary": {
     "total_remaining_worker_tasks": 141,
     "completed_worker_prs_awaiting_trusted_review": 251,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-485 has a corrected remote checkpoint at 64abd7e3a3f6a3f595120bb2a78efc88698c6f0a; open the draft Worker PR and run full exact-head CI. WCP-484 remains owned by its active worker.",
+    "next_required_action": "WCP-485 draft PR #278 is running full Worker CI #36305820275 on exact HEAD 64abd7e3a3f6a3f595120bb2a78efc88698c6f0a; inspect both jobs and repair on the same branch if red.",
     "composition_preparable": 0,
     "immediately_actionable": 4,
     "must_continue": true
@@ -31137,7 +31137,22 @@
         "templates/content_tag/archive.html.twig",
         "tests/Controller/PublicContentTagArchiveTest.php"
       ],
-      "next_action": "Open or update the draft Worker PR at the current exact feature HEAD, run full Worker CI, inspect every job and repair only on this branch if required."
+      "next_action": "Inspect Worker CI run 36305820275 on exact HEAD 64abd7e3a3f6a3f595120bb2a78efc88698c6f0a. Fix any reported issue only on this feature branch and rerun full CI on the new exact HEAD.",
+      "worker_pr": 278,
+      "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/278",
+      "worker_pr_changed_paths": [
+        "src/Controller/PublicContentTagArchiveController.php",
+        "src/Repository/PublicContentTagArchiveRepository.php",
+        "templates/content/show.html.twig",
+        "templates/content_tag/archive.html.twig",
+        "tests/Controller/PublicContentTagArchiveTest.php"
+      ],
+      "draft_pr": true,
+      "pr_state": "open",
+      "ci_run_id": 36305820275,
+      "last_ci_run_id": 36305820275,
+      "ci_result": "in_progress",
+      "last_ci_result": "in_progress"
     }
   ],
   "recovery_queue": [],
