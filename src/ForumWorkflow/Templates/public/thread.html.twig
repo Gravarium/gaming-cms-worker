@@ -74,7 +74,7 @@
                 <input id="forum-reason" name="reason" maxlength="500" required>
                 <button type="submit">Status ändern</button>
             </form>
-            {% set history = moderationHistory(thread.id) %}
+            {% set history = moderationHistory %}
             {% if history is not empty %}
                 <h3>Moderationsverlauf</h3>
                 <ul>
