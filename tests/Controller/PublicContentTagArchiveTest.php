@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace App\\Tests\\Controller;
+namespace App\Tests\Controller;
 
-use App\\Entity\\ContentEntry;
-use App\\Entity\\ContentTag;
-use App\\Entity\\User;
-use Doctrine\\ORM\\EntityManagerInterface;
-use Symfony\\Bundle\\FrameworkBundle\\KernelBrowser;
-use Symfony\\Bundle\\FrameworkBundle\\Test\\WebTestCase;
-use Symfony\\Component\\DomCrawler\\Crawler;
+use App\Entity\ContentEntry;
+use App\Entity\ContentTag;
+use App\Entity\User;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bundle\FrameworkBundle\KernelBrowser;
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\DomCrawler\Crawler;
 
 final class PublicContentTagArchiveTest extends WebTestCase
 {
@@ -61,7 +61,7 @@ final class PublicContentTagArchiveTest extends WebTestCase
             $this->entry($client, $fixture, 'draft', 'draft', ContentEntry::TYPE_NEWS, ContentEntry::STATUS_DRAFT),
             $this->entry($client, $fixture, 'review', 'review', ContentEntry::TYPE_PAGE, ContentEntry::STATUS_REVIEW),
             $this->entry($client, $fixture, 'scheduled', 'scheduled', ContentEntry::TYPE_NEWS, ContentEntry::STATUS_SCHEDULED),
-            $this->entry($client, $fixture, 'future', 'future', ContentEntry::TYPE_PAGE, ContentEntry::STATUS_PUBLISHED, false, new \\DateTimeImmutable('+1 day')),
+            $this->entry($client, $fixture, 'future', 'future', ContentEntry::TYPE_PAGE, ContentEntry::STATUS_PUBLISHED, false, new \DateTimeImmutable('+1 day')),
             $this->entry($client, $fixture, 'archived', 'archived', ContentEntry::TYPE_NEWS, ContentEntry::STATUS_ARCHIVED),
             $this->entry($client, $fixture, 'trashed', 'trashed', ContentEntry::TYPE_PAGE, ContentEntry::STATUS_TRASHED),
             $this->entry($client, $fixture, 'unlisted', 'unlisted', ContentEntry::TYPE_NEWS, ContentEntry::STATUS_PUBLISHED, true),
@@ -87,7 +87,7 @@ final class PublicContentTagArchiveTest extends WebTestCase
     {
         $client = static::createClient();
         $fixture = $this->fixture($client);
-        $publishedAt = new \\DateTimeImmutable('-1 hour');
+        $publishedAt = new \DateTimeImmutable('-1 hour');
         $entries = [];
         for ($index = 0; $index < 21; ++$index) {
             $entries[] = $this->entry(
@@ -177,6 +177,9 @@ final class PublicContentTagArchiveTest extends WebTestCase
         ];
     }
 
+    /**
+     * @param array{user: User, userId: int, tag: ContentTag, tagSlug: string, suffix: string} $fixture
+     */
     private function entry(
         KernelBrowser $client,
         array $fixture,
@@ -185,7 +188,7 @@ final class PublicContentTagArchiveTest extends WebTestCase
         string $type,
         string $status = ContentEntry::STATUS_PUBLISHED,
         bool $unlisted = false,
-        ?\\DateTimeImmutable $publishedAt = null,
+        ?\DateTimeImmutable $publishedAt = null,
     ): ContentEntry {
         $slug = 'tagged-'.$fixture['suffix'].'-'.$suffix;
         $entry = (new ContentEntry())
@@ -199,9 +202,9 @@ final class PublicContentTagArchiveTest extends WebTestCase
             ->addTag($fixture['tag']);
 
         if ($status === ContentEntry::STATUS_PUBLISHED) {
-            $entry->setPublishedAt($publishedAt ?? new \\DateTimeImmutable('-1 hour'));
+            $entry->setPublishedAt($publishedAt ?? new \DateTimeImmutable('-1 hour'));
         } elseif ($status === ContentEntry::STATUS_SCHEDULED) {
-            $entry->setScheduledAt(new \\DateTimeImmutable('+1 day'));
+            $entry->setScheduledAt(new \DateTimeImmutable('+1 day'));
         }
 
         $this->em($client)->persist($entry);

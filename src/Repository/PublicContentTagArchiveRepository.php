@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace App\\Repository;
+namespace App\Repository;
 
-use App\\Entity\\ContentEntry;
-use App\\Entity\\ContentTag;
+use App\Entity\ContentEntry;
+use App\Entity\ContentTag;
 use DateTimeImmutable;
-use Doctrine\\Bundle\\DoctrineBundle\\Repository\\ServiceEntityRepository;
-use Doctrine\\ORM\\QueryBuilder;
-use Doctrine\\Persistence\\ManagerRegistry;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\QueryBuilder;
+use Doctrine\Persistence\ManagerRegistry;
 
 /** @extends ServiceEntityRepository<ContentEntry> */
 final class PublicContentTagArchiveRepository extends ServiceEntityRepository
