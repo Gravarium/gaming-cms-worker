@@ -214,9 +214,14 @@ final class NewsArchiveWidgetProviderTest extends WebTestCase
     {
         $client = static::createClient();
         $moduleSnapshot = $this->enableContentModule($client);
+        $gamingSnapshot = $this->snapshotModuleState($client, 'gaming');
 
         try {
             $container = $client->getContainer();
+            $modules = $container->get(CmsModuleManager::class);
+            if ($modules->isEnabled('gaming')) {
+                $modules->setEnabled('gaming', false);
+            }
             $validator = $container->get(LayoutValidator::class);
             $document = $validator->defaults('nebula')->toArray();
             $region = $document['widgets'][0]['region'];
@@ -229,7 +234,6 @@ final class NewsArchiveWidgetProviderTest extends WebTestCase
             ];
             $layout = $validator->validate($document);
 
-            $modules = $container->get(CmsModuleManager::class);
             $modules->setEnabled('content', false);
             $registry = $container->get(WidgetRegistry::class);
             self::assertFalse($registry->available(self::KEY));
@@ -239,7 +243,44 @@ final class NewsArchiveWidgetProviderTest extends WebTestCase
             self::assertCount(1, $view['regions'][$region]);
         } finally {
             $this->restoreContentModule($client, $moduleSnapshot);
+            $this->restoreModuleState($client, 'gaming', $gamingSnapshot);
         }
+    }
+
+    /**
+     * @return array{exists: bool, enabled: bool}
+     */
+    private function snapshotModuleState(KernelBrowser $client, string $key): array
+    {
+        $state = $client->getContainer()->get(EntityManagerInterface::class)->find(CmsModuleState::class, $key);
+
+        return [
+            'exists' => $state instanceof CmsModuleState,
+            'enabled' => $state?->isEnabled() ?? true,
+        ];
+    }
+
+    /**
+     * @param array{exists: bool, enabled: bool} $snapshot
+     */
+    private function restoreModuleState(KernelBrowser $client, string $key, array $snapshot): void
+    {
+        $entityManager = $client->getContainer()->get(EntityManagerInterface::class);
+        if (!$entityManager->isOpen()) {
+            return;
+        }
+        $entityManager->clear();
+        $state = $entityManager->find(CmsModuleState::class, $key);
+
+        if (!$snapshot['exists']) {
+            if ($state !== null) {
+                $entityManager->remove($state);
+            }
+        } elseif ($state instanceof CmsModuleState && $state->isEnabled() !== $snapshot['enabled']) {
+            $state->setEnabled($snapshot['enabled']);
+        }
+
+        $entityManager->flush();
     }
 
     /**

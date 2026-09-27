@@ -16,6 +16,9 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[UniqueEntity(fields: ['slug'])]
 class Game
 {
+    private const MAX_SLUG_BYTES = 560;
+    private const MAX_SLUG_LENGTH = 140;
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -45,7 +48,14 @@ class Game
     public function getName(): string { return $this->name; }
     public function setName(string $name): self { $this->name = trim($name); return $this; }
     public function getSlug(): string { return $this->slug; }
-    public function setSlug(string $slug): self { $this->slug = $slug; return $this; }
+    public function setSlug(string $slug): self
+    {
+        $this->assertSlugColumnBoundary($slug);
+
+        $this->slug = $slug;
+
+        return $this;
+    }
     public function getDescription(): ?string { return $this->description; }
     public function setDescription(?string $description): self
     {
@@ -64,4 +74,16 @@ class Game
     public function setEnabled(bool $enabled): self { $this->enabled = $enabled; return $this; }
 
     public function __toString(): string { return $this->name; }
+
+    private function assertSlugColumnBoundary(string $slug): void
+    {
+        if (strlen($slug) > self::MAX_SLUG_BYTES || !mb_check_encoding($slug, 'UTF-8')) {
+            throw new \InvalidArgumentException('Der Spiel-Slug ist ungültig oder überschreitet die zulässige Länge.');
+        }
+
+        if (str_contains($slug, "\0") || mb_strlen($slug, 'UTF-8') > self::MAX_SLUG_LENGTH) {
+            throw new \InvalidArgumentException('Der Spiel-Slug ist ungültig oder überschreitet die zulässige Länge.');
+        }
+    }
+
 }
