@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T02:44:44.637Z",
+  "published_at": "2026-09-27T02:45:54.916Z",
   "summary": {
     "total_remaining_worker_tasks": 139,
     "completed_worker_prs_awaiting_trusted_review": 224,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-454 is complete on green exact-head Worker PR #247. All five unclaimed FCP assignments remain dependency-blocked; derive an independent existing-module WCP and claim it.",
+    "next_required_action": "WCP-456 is claimed on exact sanitized main with disjoint Admin Content Release browser paths; implement bounded search, status filtering, stable pagination and context-preserving actions while leaving WCP-402's ContentReleaseRepository path untouched.",
     "composition_preparable": 0,
     "immediately_actionable": 2,
     "must_continue": true
@@ -26342,6 +26342,108 @@
       ],
       "final_head": "ca1ec308fba49a0da26f5ae98982aaff866ecaf4",
       "final_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d"
+    },
+    {
+      "priority": 456,
+      "package_id": "WCP-456",
+      "title": "Search and paginate every administrative content release",
+      "risk": "medium",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-456-admin-content-release-browser-g1",
+      "suggested_branch": "feature/wcp-456-admin-content-release-browser-g1",
+      "base_branch": "main",
+      "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "objective": "Complete the existing CMS_CONTENT_MANAGE-protected Content-Releases screen for libraries with long release histories. The current index loads every release without search or navigation. Add bounded name search, a validated status filter, stable 25-row pagination and state-preserving edit/publish/delete navigation. Keep the existing release entity, form, repository, schema, CSRF checks and finalized-release rules unchanged.",
+      "allowed_paths": [
+        "src/Controller/AdminContentReleaseController.php",
+        "src/ContentRelease/AdminContentReleaseBrowser.php",
+        "templates/admin/content_release/index.html.twig",
+        "templates/admin/content_release/form.html.twig",
+        "tests/Controller/AdminContentReleaseBrowserTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "src/Entity/ContentRelease.php",
+        "src/Repository/ContentReleaseRepository.php",
+        "src/Form/ContentReleaseType.php",
+        "tests/Entity/ContentReleaseWorkflowTest.php",
+        "tests/Controller/ContentReleaseDeletionSecurityTest.php"
+      ],
+      "deliverables": [
+        "Add a module-scoped read service that projects only release ID, name, status, entry count and schedule/publication times; support a trimmed name search of at most 100 characters and one allowlisted status among draft, scheduled, published and cancelled.",
+        "Return at most 25 releases ordered by createdAt DESC then ID DESC, with total/page counts and result bounds; validate canonical bounded positive page input, reject malformed query arrays/scalars/overflow with a generic 400 response that does not echo input, and clamp valid past-end pages.",
+        "Render search/status controls, result counts, previous/next links and per-release actions while preserving current search, status and page through edit, publish, delete and their redirects.",
+        "Keep CMS_CONTENT_MANAGE authorization, existing publish/delete CSRF tokens, ContentRelease workflow semantics and finalized release protections. Do not change schema, entities, form type or ContentReleaseRepository."
+      ],
+      "tests": [
+        "Functional tests verify users without CMS_CONTENT_MANAGE are denied and authorized editors can browse the release list.",
+        "Create more than two pages of releases and assert stable ordering, no missing/duplicate IDs, correct page counts, last-page clamping, search and status filtering, and preservation of filters in navigation and row actions.",
+        "Reject malformed page/status/search arrays and scalars, zero, leading zero, overlong search and overflowing page values with a client error that does not echo the supplied text and does not mutate releases.",
+        "Exercise edit form context and a CSRF-protected release action; assert the query context returns to the same listing and invalid CSRF leaves release state unchanged.",
+        "Run the focused test, PHPStan level 8 and complete Worker CI on the exact final HEAD, including PostgreSQL 18 migration-chain checks."
+      ],
+      "completion_report": [
+        "Exact sanitized main base SHA and final Worker HEAD SHA.",
+        "Complete changed paths and Worker PR.",
+        "Admin release name/status filters, pagination limits/order and state preservation.",
+        "Exact-head PHPUnit, PHPStan and full Worker CI results.",
+        "Remaining Trusted integration follow-up."
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "preserve-CMS_CONTENT_MANAGE-and-existing-content-release-CSRF-boundaries",
+        "preserve-published-release-immutability-and-ContentRelease-workflow-semantics",
+        "do-not-edit-ContentReleaseRepository-locked-by-WCP-402",
+        "no-schema-migration-or-failure-transport-change",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "proposal_kind": "worker_only",
+      "proposal_dependency_evidence": [],
+      "collision_check": {
+        "compared_against": "Fresh continuous/work-pool-v4 blob 14c87e0c0d70b6423d67c048f9e30adb1ce26d31, all active and claim-locked allowlists, current open PRs and exact sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d.",
+        "result": "No active or claim-locked task owns any of the five paths. WCP-402 owns ContentReleaseRepository.php for its separate public archive; this proposal excludes that file, reuses only its existing inherited query-builder API, and adds an independent admin read service. WCP-364 owns the existing form type and does not overlap. All five unclaimed FCP assignments remain dependency-blocked.",
+        "paths": [
+          "src/Controller/AdminContentReleaseController.php",
+          "src/ContentRelease/AdminContentReleaseBrowser.php",
+          "templates/admin/content_release/index.html.twig",
+          "templates/admin/content_release/form.html.twig",
+          "tests/Controller/AdminContentReleaseBrowserTest.php"
+        ]
+      },
+      "claimed_on": "2026-09-27T02:45:54.916Z",
+      "claim_state": "active",
+      "active_base_branch": "main",
+      "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "resume_branch": "feature/wcp-456-admin-content-release-browser-g1",
+      "checkpoint_paths": [],
+      "branch_heads": {
+        "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+        "feature_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d"
+      },
+      "last_checkpoint_at": "2026-09-27T02:45:54.916Z",
+      "last_verified_push_at": "2026-09-27T02:45:54.916Z",
+      "next_action": "Implement the read-only Admin Content Release browser, validated search/status filters and stable pagination; preserve listing context through actions and push the first coherent checkpoint within 30 minutes."
     }
   ],
   "recovery_queue": [],
