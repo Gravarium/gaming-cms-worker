@@ -134,9 +134,8 @@ final class PublicNewsletterSignupControllerTest extends WebTestCase
         $active = (new NewsletterSubscription())->setEmail($activeEmail);
         $activeToken = $active->issueConfirmation('account', 'v1', $now);
         $active->confirm($activeToken, $now);
-        $suppressed = (new NewsletterSubscription())
-            ->setEmail($suppressedEmail)
-            ->suppress('hard_bounce', $now);
+        $suppressed = (new NewsletterSubscription())->setEmail($suppressedEmail);
+        $suppressed->suppress('hard_bounce', $now);
 
         $this->entityManager($client)->persist($active);
         $this->entityManager($client)->persist($suppressed);
@@ -232,6 +231,11 @@ final class PublicNewsletterSignupControllerTest extends WebTestCase
     public function testSignupReturnsNotFoundWhenNotificationsModuleIsDisabled(): void
     {
         $client = static::createClient();
+        $client->disableReboot();
+        $entityManager = $client->getContainer()->get(EntityManagerInterface::class);
+        $states = $entityManager->getRepository(CmsModuleState::class);
+        $originalState = $states->find('notifications');
+        $originalEnabled = $originalState?->isEnabled() ?? true;
         $modules = $client->getContainer()->get(CmsModuleManager::class);
         $modules->setEnabled('notifications', false);
 
@@ -239,13 +243,23 @@ final class PublicNewsletterSignupControllerTest extends WebTestCase
             $client->request('GET', '/newsletter/subscribe');
             self::assertResponseStatusCodeSame(Response::HTTP_NOT_FOUND);
         } finally {
-            $modules->setEnabled('notifications', true);
+            $state = $states->find('notifications');
+            if ($originalState === null) {
+                if ($state instanceof CmsModuleState) {
+                    $entityManager->remove($state);
+                }
+            } elseif ($state instanceof CmsModuleState) {
+                $state->setEnabled($originalEnabled);
+                $entityManager->persist($state);
+            }
+            $entityManager->flush();
         }
     }
 
     private function enabledClient(): KernelBrowser
     {
         $client = static::createClient();
+        $client->disableReboot();
         $modules = $client->getContainer()->get(CmsModuleManager::class);
         if (!$modules->isEnabled('notifications')) {
             $modules->setEnabled('notifications', true);
