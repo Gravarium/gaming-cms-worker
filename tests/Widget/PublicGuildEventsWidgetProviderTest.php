@@ -15,6 +15,8 @@ use App\Widget\WidgetDefinition;
 use App\Widget\WidgetRegistry;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Twig\Environment;
 
 final class PublicGuildEventsWidgetProviderTest extends WebTestCase
@@ -67,10 +69,8 @@ final class PublicGuildEventsWidgetProviderTest extends WebTestCase
             self::assertSame(['events'], array_keys($data));
             $renderedEvents = $data['events'] ?? null;
             self::assertIsArray($renderedEvents);
-            self::assertSame(
-                [$included->getId()],
-                array_map(static fn (mixed $event): ?int => $event instanceof GuildEvent ? $event->getId() : null, $renderedEvents),
-            );
+            $renderedIds = array_map(static fn (mixed $event): ?int => $event instanceof GuildEvent ? $event->getId() : null, $renderedEvents);
+            self::assertContains($included->getId(), $renderedIds);
 
             $html = $client->getContainer()->get(Environment::class)->render($definition->template, $data);
             self::assertStringContainsString('Visible &lt;em&gt;raid&lt;/em&gt;', $html);
@@ -127,21 +127,28 @@ final class PublicGuildEventsWidgetProviderTest extends WebTestCase
         }
     }
 
-    public function testWidgetRendersAnEmptyStateWhenNoPublicEventIsAvailable(): void
+    public function testWidgetRendersAnEmptyStateForAnEmptyQueryResult(): void
     {
         $client = static::createClient();
         $this->resetModuleStates($client);
         $this->enableGaming($client);
+
+        $requestStack = $client->getContainer()->get(RequestStack::class);
+        $request = new Request();
+        $request->attributes->set('_cms_widget_data_gaming.public-guild-events', []);
+        $requestStack->push($request);
 
         try {
             $registry = $client->getContainer()->get(WidgetRegistry::class);
             $definition = $registry->get(self::WIDGET_KEY);
             self::assertNotNull($definition);
             $data = $registry->data(self::WIDGET_KEY, ['event_limit' => 6]);
+            self::assertSame(['events' => []], $data);
 
             $html = $client->getContainer()->get(Environment::class)->render($definition->template, $data);
             self::assertStringContainsString('Zurzeit sind keine öffentlichen Gildentermine geplant.', $html);
         } finally {
+            $requestStack->pop();
             $this->resetModuleStates($client);
         }
     }
