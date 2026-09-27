@@ -35158,22 +35158,22 @@
       "claim_state": "active",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-      "active_head": "4b1f6d704c7bf9c52453798a0357d72bed75b87f",
+      "active_head": "b7e903a638bd44f60fd7c823ab42a8ca5419a5f9",
       "resume_branch": "feature/wcp-513-public-news-month-archive-g1",
       "branch_heads": {
         "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-        "feature_branch": "4b1f6d704c7bf9c52453798a0357d72bed75b87f"
+        "feature_branch": "b7e903a638bd44f60fd7c823ab42a8ca5419a5f9"
       },
-      "last_observed_head": "4b1f6d704c7bf9c52453798a0357d72bed75b87f",
-      "last_checkpoint_at": "2026-09-27T10:36:49.863Z",
+      "last_observed_head": "b7e903a638bd44f60fd7c823ab42a8ca5419a5f9",
+      "last_checkpoint_at": "2026-09-27T10:40:42.487Z",
       "checkpoint_paths": [
         "src/Controller/PublicNewsArchiveController.php",
         "src/Repository/PublicNewsArchiveRepository.php",
         "templates/content/news_archive.html.twig",
         "tests/Controller/PublicNewsArchiveTest.php"
       ],
-      "next_action": "Run the focused archive test and full exact-head Worker CI on the repaired HEAD; resolve any remaining concrete failure within allowed paths.",
-      "last_verified_push_at": "2026-09-27T10:36:49.863Z",
+      "next_action": "Run focused and full exact-head Worker CI on the portable archive implementation; repair any concrete remaining failure.",
+      "last_verified_push_at": "2026-09-27T10:40:42.487Z",
       "worker_pr": 306,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/306",
       "draft_pr": true,
@@ -35195,10 +35195,21 @@
           "run_id": 36313079459,
           "head": "4b1f6d704c7bf9c52453798a0357d72bed75b87f",
           "result": "in_progress"
+        },
+        {
+          "run_id": 36313079459,
+          "head": "4b1f6d704c7bf9c52453798a0357d72bed75b87f",
+          "result": "failure",
+          "summary": "Month index used unregistered Doctrine DQL YEAR(); replaced with portable timestamp streaming."
+        },
+        {
+          "run_id": 36313291931,
+          "head": "b7e903a638bd44f60fd7c823ab42a8ca5419a5f9",
+          "result": "in_progress"
         }
       ],
-      "ci_run_id": 36313079459,
-      "last_ci_run_id": 36313079459,
+      "ci_run_id": 36313291931,
+      "last_ci_run_id": 36313291931,
       "last_ci_result": "in_progress",
       "ci_result": "in_progress"
     },
