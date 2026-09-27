@@ -17,7 +17,7 @@
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-471 and WCP-472 are complete on green exact-head Worker PRs and remain claim-locked. This chat has claimed disjoint WCP-473 from WCP-347's exact green HEAD for guild application review/decision security coverage.",
+    "next_required_action": "WCP-471 and WCP-472 are complete on green exact-head Worker PRs and remain claim-locked. WCP-473 is checkpointed with its sole allowed guild application decision security test; preserve all other active claims.",
     "composition_preparable": 0,
     "immediately_actionable": 4,
     "must_continue": true
@@ -28988,15 +28988,19 @@
       "claim_state": "active",
       "active_base_branch": "feature/wcp-347-guild-application-note-boundary-g1",
       "active_base_sha": "b7fcd30d4275a6de6398523593e3f48c0addab3b",
-      "active_head": "b7fcd30d4275a6de6398523593e3f48c0addab3b",
+      "active_head": "b0dbbd2ab6d2d1d42a2964712352c512dbc84ad8",
       "resume_branch": "feature/wcp-473-guild-application-decision-security-g1",
-      "last_checkpoint_at": "2026-09-27T05:45:10.621Z",
-      "checkpoint_paths": [],
+      "last_checkpoint_at": "2026-09-27T05:48:42.379Z",
+      "checkpoint_paths": [
+        "tests/Controller/AdminGuildApplicationDecisionSecurityTest.php"
+      ],
       "branch_heads": {
         "claim_branch": "b7fcd30d4275a6de6398523593e3f48c0addab3b",
-        "feature_branch": "b7fcd30d4275a6de6398523593e3f48c0addab3b"
+        "feature_branch": "b0dbbd2ab6d2d1d42a2964712352c512dbc84ad8"
       },
-      "next_action": "Implement the focused authorization and per-application CSRF functional test in the sole allowed file, checkpoint it, then open a draft Worker PR for exact-head CI."
+      "next_action": "Open a draft Worker PR against worker main and run complete exact-head CI.",
+      "last_observed_head": "b0dbbd2ab6d2d1d42a2964712352c512dbc84ad8",
+      "last_verified_push_at": "2026-09-27T05:48:42.379Z"
     }
   ],
   "recovery_queue": [],
