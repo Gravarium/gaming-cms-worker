@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T03:15:59.948Z",
+  "published_at": "2026-09-27T05:51:04.811Z",
   "summary": {
-    "total_remaining_worker_tasks": 139,
+    "total_remaining_worker_tasks": 140,
     "completed_worker_prs_awaiting_trusted_review": 239,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-471 and WCP-472 are complete on green exact-head Worker PRs and remain claim-locked. WCP-473 is checkpointed with its sole allowed guild application decision security test; preserve all other active claims.",
+    "next_required_action": "WCP-474 is active on a separate account-security path. Preserve active claims WCP-383, WCP-401, WCP-439, WCP-463, and WCP-473, plus completed claims WCP-471/WCP-472; continue WCP-474 from its exact feature branch.",
     "composition_preparable": 0,
     "immediately_actionable": 4,
     "must_continue": true
@@ -29016,6 +29016,106 @@
           "result": "in_progress"
         }
       ]
+    },
+    {
+      "priority": 474,
+      "package_id": "WCP-474",
+      "title": "Self-service two-factor recovery-code rotation",
+      "risk": "medium",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-474-two-factor-recovery-code-rotation-g1",
+      "suggested_branch": "feature/wcp-474-two-factor-recovery-code-rotation-g1",
+      "base_branch": "main",
+      "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "objective": "Let an authenticated account owner replace lost or depleted two-factor recovery codes without disabling or re-enrolling their authenticator. Preserve the encrypted TOTP secret; require current-password confirmation, CSRF validation, account-scoped throttling, audit evidence, one-time plaintext delivery and session-version synchronization.",
+      "allowed_paths": [
+        "config/packages/rate_limiter.yaml",
+        "src/Controller/TwoFactorController.php",
+        "templates/account/passkeys.html.twig",
+        "templates/account/two_factor_recovery_manage.html.twig",
+        "tests/Controller/TwoFactorRecoveryCodeRotationTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "public/uploads/",
+        "src/Entity/",
+        "src/Repository/"
+      ],
+      "deliverables": [
+        "Authenticated GET page reachable from account security through the existing passkeys page; show the number of remaining recovery codes without revealing hashes or codes.",
+        "Password-confirmed, CSRF-protected, account-rate-limited POST that replaces only recovery-code hashes while preserving the encrypted TOTP secret and two-factor enabled state.",
+        "Store plaintext replacement codes in the existing one-time session delivery flow only after persistence; revoke other sessions and synchronize the current session security version.",
+        "Audit successful rotation without recording plaintext or hashes; no mutation for disabled 2FA, wrong password, missing/invalid CSRF, or throttled attempts."
+      ],
+      "tests": [
+        "Functional positive coverage for reachability, current-password confirmation, new hashed codes, old-code rejection, unchanged encrypted TOTP secret, audit event, session revocation and one-time code display.",
+        "Negative coverage for wrong password, missing/invalid CSRF, disabled 2FA, and account limiter exhaustion with unchanged recovery-code hashes and no plaintext delivery.",
+        "PHPStan level 8 and complete Worker CI on exact final HEAD, plus PostgreSQL 18 full migration-chain validation."
+      ],
+      "completion_report": [
+        "Exact sanitized main base SHA and final Worker HEAD SHA.",
+        "Complete changed-path list and Worker PR.",
+        "Focused tests, full Worker CI, PHPStan, and migration results on exact final HEAD.",
+        "Unresolved risks, assumptions, limits, and Trusted integration follow-up."
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "preserve-two-factor-enabled-state-and-encrypted-totp-secret",
+        "current-password-csrf-account-rate-limit-and-one-time-code-delivery-are-required",
+        "no-plaintext-recovery-code-logging-or-persistence",
+        "rejected-requests-do-not-mutate-recovery-codes-or-session-version",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment",
+        "no-private-runtime-or-sensitive-data"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "proposal_kind": "worker_only",
+      "proposal_dependency_evidence": [],
+      "collision_check": {
+        "compared_against": "Fresh continuous/work-pool-v4 at 2fa750a29ecbacf61bfedbfa5dac670e5fdab054, active and claim-locked allowed-path scopes, and sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d.",
+        "result": "No active or claim-locked claim owns these exact five paths. WCP-390 owns account/security.html.twig and account profile paths; this proposal only uses the separate passkeys page and 2FA routes. WCP-473 owns only the guild application decision test. FCP-072 currently has an unclaimed, dependency-blocked templates/ scope; because this feature needs its own account UI, do not start FCP-072 while this claim is active.",
+        "paths": [
+          "config/packages/rate_limiter.yaml",
+          "src/Controller/TwoFactorController.php",
+          "templates/account/passkeys.html.twig",
+          "templates/account/two_factor_recovery_manage.html.twig",
+          "tests/Controller/TwoFactorRecoveryCodeRotationTest.php"
+        ]
+      },
+      "published_at": "2026-09-27T05:51:04.811Z",
+      "claimed_on": "2026-09-27T05:51:04.811Z",
+      "claim_state": "active",
+      "active_base_branch": "main",
+      "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "resume_branch": "feature/wcp-474-two-factor-recovery-code-rotation-g1",
+      "last_checkpoint_at": "2026-09-27T05:51:04.811Z",
+      "checkpoint_paths": [],
+      "branch_heads": {
+        "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+        "feature_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d"
+      },
+      "next_action": "Implement password-confirmed recovery-code rotation and its reachable account UI; push a coherent checkpoint, run exact-head CI, and keep the claim locked after PR until Trusted resolves it.",
+      "last_observed_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "last_verified_push_at": "2026-09-27T05:51:04.811Z"
     }
   ],
   "recovery_queue": [],
