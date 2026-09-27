@@ -13,11 +13,11 @@
   "published_at": "2026-09-27T03:15:59.948Z",
   "summary": {
     "total_remaining_worker_tasks": 139,
-    "completed_worker_prs_awaiting_trusted_review": 235,
+    "completed_worker_prs_awaiting_trusted_review": 236,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-464 is complete on green exact-head Worker PR #259 at 1efbfb4ffd83ece13f138babe9184e89bbeed829; its claim remains locked. Five unclaimed FCP assignments remain dependency-blocked and WCP-469 is active, so select and publish the next independent Worker-only proposal while preserving all other claims.",
+    "next_required_action": "WCP-469 is complete on green exact-head Worker PR #262. Continue with the next independent Worker-only proposal; preserve all active claims and blocked FCP dependencies.",
     "composition_preparable": 0,
     "immediately_actionable": 3,
     "must_continue": true
@@ -28224,7 +28224,7 @@
       "package_id": "WCP-469",
       "title": "Protect failed-message queue details from users without settings permission",
       "risk": "medium",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -28296,12 +28296,12 @@
       },
       "published_at": "2026-09-27T04:57:02.819Z",
       "claimed_on": "2026-09-27T04:57:02.819Z",
-      "claim_state": "active",
+      "claim_state": "locked_until_trusted_resolution",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
       "active_head": "a44c7c6f87fd9ae0a1b4c4bd9f5e26691b3ccc15",
       "resume_branch": "feature/wcp-469-admin-queue-read-access-g1",
-      "last_checkpoint_at": "2026-09-27T04:58:13.302Z",
+      "last_checkpoint_at": "2026-09-27T05:01:38.888Z",
       "checkpoint_paths": [
         "tests/Controller/AdminQueueReadAccessSecurityTest.php"
       ],
@@ -28309,17 +28309,63 @@
         "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
         "feature_branch": "a44c7c6f87fd9ae0a1b4c4bd9f5e26691b3ccc15"
       },
-      "next_action": "Wait for Worker CI run 36295853852 on exact HEAD a44c7c6f87fd9ae0a1b4c4bd9f5e26691b3ccc15; repair any concrete failure and preserve the no-queue-mutation scope.",
+      "next_action": "Await Trusted review and integration validation; keep this claim locked until Trusted explicitly integrates, cancels or transfers it.",
       "last_observed_head": "a44c7c6f87fd9ae0a1b4c4bd9f5e26691b3ccc15",
-      "last_verified_push_at": "2026-09-27T04:58:13.302Z",
+      "last_verified_push_at": "2026-09-27T05:01:38.888Z",
       "worker_pr": 262,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/262",
-      "draft_pr": true,
-      "pr_state": "open_draft_unmerged",
+      "draft_pr": false,
+      "pr_state": "open_ready_unmerged",
       "ci_run_id": 36295853852,
       "last_ci_run_id": 36295853852,
-      "ci_result": "in_progress",
-      "last_ci_result": "in_progress"
+      "ci_result": "success",
+      "last_ci_result": "success",
+      "ci_attempts": [
+        {
+          "run_id": 36295853852,
+          "head": "a44c7c6f87fd9ae0a1b4c4bd9f5e26691b3ccc15",
+          "result": "success"
+        }
+      ],
+      "final_head": "a44c7c6f87fd9ae0a1b4c4bd9f5e26691b3ccc15",
+      "final_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "final_changed_paths": [
+        "tests/Controller/AdminQueueReadAccessSecurityTest.php"
+      ],
+      "changed_paths": [
+        "tests/Controller/AdminQueueReadAccessSecurityTest.php"
+      ],
+      "completed_at": "2026-09-27T05:01:38.888Z",
+      "test_results": {
+        "phpunit": "430 tests, 1856 assertions, 0 failures; one deprecation and one notice.",
+        "phpstan": "Level 8 passed with no errors.",
+        "php_symfony": "Worker PHP/Symfony validation job passed on exact final HEAD.",
+        "postgres18": "PostgreSQL 18 completed all 39 migrations; 0 unavailable.",
+        "exact_head_ci": {
+          "run_id": 36295853852,
+          "head": "a44c7c6f87fd9ae0a1b4c4bd9f5e26691b3ccc15",
+          "result": "success"
+        }
+      },
+      "completion_evidence": {
+        "exact_base_branch": "main",
+        "exact_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+        "final_head_sha": "a44c7c6f87fd9ae0a1b4c4bd9f5e26691b3ccc15",
+        "changed_paths": [
+          "tests/Controller/AdminQueueReadAccessSecurityTest.php"
+        ],
+        "worker_pr": 262,
+        "ci_run_id": 36295853852,
+        "ci_result": "success",
+        "php_symfony_job": "success: 430 tests, 1,856 assertions; PHPStan level 8 no errors",
+        "postgresql_job": "success: 39 migrations, 0 unavailable",
+        "queue_access_coverage": "An authenticated CMS_CONTENT_MANAGE user without CMS_SETTINGS_MANAGE is denied GET /admin/queue; the test creates and removes its synthetic account and performs no message transport or retry operations."
+      },
+      "completion_summary": "Test-only functional regression for the failed-message queue's CMS_SETTINGS_MANAGE read boundary. One test file changed.",
+      "open_limitations": [
+        "Awaiting Trusted review and Trusted integration CI."
+      ],
+      "trusted_follow_up": "Preserve CMS_SETTINGS_MANAGE before reading or rendering failed-message details; retain existing retry CSRF behavior and run full Trusted CI."
     }
   ],
   "recovery_queue": [],
