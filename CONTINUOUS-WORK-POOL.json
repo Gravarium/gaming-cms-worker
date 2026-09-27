@@ -10,16 +10,16 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T08:59:47.892Z",
+  "published_at": "2026-09-27T08:59:55.307Z",
   "summary": {
     "total_remaining_worker_tasks": 144,
     "completed_worker_prs_awaiting_trusted_review": 254,
     "recovery_tasks": 0,
-    "unclaimed": 6,
-    "immediately_claimable": 1,
-    "next_required_action": "WCP-489 has been published as a bounded worker-only theme-selection proposal. Reserve its exact claim and feature branches from sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d, then implement the read-only comparison page.",
+    "unclaimed": 5,
+    "immediately_claimable": 0,
+    "next_required_action": "WCP-489 is actively claimed from exact sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d; implement and run full exact-head Worker CI. The remaining unclaimed FCPs lack required predecessor evidence. Keep all foreign claims untouched.",
     "composition_preparable": 0,
-    "immediately_actionable": 4,
+    "immediately_actionable": 6,
     "must_continue": true
   },
   "rules": {
@@ -31621,7 +31621,7 @@
       "package_id": "WCP-489",
       "title": "Compare site themes from website settings",
       "risk": "medium",
-      "execution_state": "unclaimed",
+      "execution_state": "worker_in_progress",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -31704,7 +31704,19 @@
           "tests/Controller/AdminThemePreviewTest.php"
         ]
       },
-      "published_at": "2026-09-27T08:59:40.564Z"
+      "published_at": "2026-09-27T08:59:40.564Z",
+      "claim_state": "active",
+      "claimed_on": "2026-09-27T08:59:53.343Z",
+      "active_base_branch": "main",
+      "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "resume_branch": "feature/wcp-489-theme-comparison-g1",
+      "branch_heads": {
+        "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+        "feature_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d"
+      },
+      "last_observed_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "next_action": "Implement only the four allowed paths, push a coherent checkpoint, run focused PHPUnit, then full exact-head Worker CI."
     }
   ],
   "recovery_queue": [],
