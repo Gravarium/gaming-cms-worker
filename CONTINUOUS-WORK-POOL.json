@@ -10,16 +10,16 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T02:55:01.549Z",
+  "published_at": "2026-09-27T02:57:53.142Z",
   "summary": {
-    "total_remaining_worker_tasks": 140,
+    "total_remaining_worker_tasks": 141,
     "completed_worker_prs_awaiting_trusted_review": 224,
     "recovery_tasks": 0,
-    "unclaimed": 5,
-    "immediately_claimable": 0,
-    "next_required_action": "WCP-457 is reserved at exact HEAD 94da6297e417b886d101dae6cc4ec2170538549c; inspect exact-head Worker CI run 36289843576 and repair any concrete failure.",
+    "unclaimed": 6,
+    "immediately_claimable": 1,
+    "next_required_action": "WCP-458 is published from sanitized main; atomically create its exclusive claim and feature branches before changing its two allowed paths.",
     "composition_preparable": 0,
-    "immediately_actionable": 3,
+    "immediately_actionable": 4,
     "must_continue": true
   },
   "rules": {
@@ -26565,6 +26565,85 @@
       "ci_result": "in_progress",
       "last_ci_run_id": 36289843576,
       "ci_run_id": 36289843576
+    },
+    {
+      "priority": 458,
+      "package_id": "WCP-458",
+      "title": "Show category hierarchy and public archive entry points",
+      "risk": "medium",
+      "execution_state": "unclaimed",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-458-category-hierarchy-operator-g1",
+      "suggested_branch": "feature/wcp-458-category-hierarchy-operator-g1",
+      "base_branch": "main",
+      "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "objective": "Finish the existing category-management workflow without changing category or content data. Make nested category paths visible in the CMS category list, expose an operator link to each category's existing public archive, and show the error feedback already emitted when a category cannot be deleted. Keep the existing CMS_CONTENT_MANAGE and CSRF boundaries unchanged.",
+      "allowed_paths": [
+        "templates/admin/category/index.html.twig",
+        "tests/Controller/AdminCategoryHierarchyListingTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "src/",
+        "templates/content/",
+        "config/"
+      ],
+      "deliverables": [
+        "Render each category's full existing hierarchy label and link its existing app_news_category public archive from the admin category list.",
+        "Render success and error flashes accessibly so blocked deletion explains that content or child categories must be moved first.",
+        "Do not change controllers, form behavior, repository queries, category ownership, persistence, public visibility rules, CSRF or schema."
+      ],
+      "tests": [
+        "Functional tests verify anonymous users are redirected to login and signed-in users without CMS_CONTENT_MANAGE receive 403.",
+        "Create a root and nested category; assert the admin list shows the parent path and its public archive link resolves to the existing 200 category archive.",
+        "Submit a valid-CSRF deletion for a parent with a child, follow the redirect, assert the existing error message is visible and both category records remain.",
+        "Run the focused PHPUnit test, PHPStan level 8 and complete Worker CI on the exact final HEAD, including PostgreSQL 18 migration checks."
+      ],
+      "completion_report": [
+        "Exact sanitized main base SHA and final Worker HEAD SHA.",
+        "Complete changed-path list and Worker PR.",
+        "Admin hierarchy labels, public archive path and blocked-delete feedback.",
+        "Focused test, exact-head PHPStan and complete Worker CI results.",
+        "Remaining Trusted integration follow-up and module/privacy boundary."
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "preserve-CMS_CONTENT_MANAGE-authorization-and-category-delete-CSRF",
+        "preserve-category-cycle-and-published-content-visibility-rules",
+        "no-schema-migration-or-controller/entity/repository/form-changes",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment",
+        "no-private-runtime-or-sensitive-data"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "proposal_kind": "worker_only",
+      "proposal_dependency_evidence": [],
+      "collision_check": {
+        "compared_against": "Fresh continuous/work-pool-v4 blob f2c168064e691a9b5ee34226cbf1c52c8d714be3, all active and claim-locked allowlists, related open PRs #163/#174/#181/#196/#207 and sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d.",
+        "result": "No active or claim-locked task owns either exact path. WCP-369 owns CategoryType and its form test, WCP-380 owns taxonomy controllers/entities and slug tests, WCP-413 owns a separate authorization test, WCP-388 owns public search/controller files, and WCP-402 owns public news-list files; this proposal uses none of those paths and only links the already-existing public category route.",
+        "paths": [
+          "templates/admin/category/index.html.twig",
+          "tests/Controller/AdminCategoryHierarchyListingTest.php"
+        ]
+      },
+      "published_at": "2026-09-27T02:57:53.142Z"
     }
   ],
   "recovery_queue": [],
