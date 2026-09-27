@@ -1,0 +1,40 @@
+{% extends 'base.html.twig' %}
+{% block title %}Gaming-Guides verwalten{% endblock %}
+{% block body %}
+<main class="editor-shell">
+    <p class="eyebrow">Gaming · Guides</p>
+    <h1>Patch-Guides verwalten</h1>
+    {% for message in app.flashes('success') %}<div class="notice">{{ message }}</div>{% endfor %}
+    <p>Strukturierte Builds und Ranglisten werden erst nach unabhängiger Prüfung öffentlich.</p>
+    <p><a class="button-link" href="{{ path('app_admin_gaming_guide_new') }}">Neuen Entwurf anlegen</a>
+        <a href="{{ path('app_gaming_guide_index') }}">Öffentlichen Guide-Katalog ansehen</a></p>
+    <table>
+        <thead><tr><th>Titel</th><th>Spiel</th><th>Version / Saison</th><th>Status</th><th>Aktionen</th></tr></thead>
+        <tbody>
+        {% for guide in guides %}
+            <tr>
+                <td>{{ guide.title }}</td>
+                <td>{{ guide.game_name }}</td>
+                <td>{{ guide.game_version }} / {{ guide.season }}</td>
+                <td>{% if guide.review_status == 'review' %}Prüfung{% elseif guide.review_status == 'published' %}Veröffentlicht{% else %}Entwurf{% endif %}</td>
+                <td>
+                    {% if guide.review_status == 'review' %}
+                        <a href="{{ path('app_admin_gaming_guide_review', {id: guide.id}) }}">Prüfen</a>
+                    {% elseif guide.review_status == 'draft' and guide.author_id == app.user.id %}
+                        <a href="{{ path('app_admin_gaming_guide_edit', {id: guide.id}) }}">Bearbeiten</a>
+                        <form method="post" action="{{ path('app_admin_gaming_guide_submit', {id: guide.id}) }}">
+                            <input type="hidden" name="_token" value="{{ csrf_token('game-guide-submit-' ~ guide.id) }}">
+                            <button type="submit">Zur Prüfung einreichen</button>
+                        </form>
+                    {% elseif guide.review_status == 'published' %}
+                        <a href="{{ path('app_gaming_guide_show', {id: guide.id}) }}">Öffentliche Ansicht</a>
+                    {% endif %}
+                </td>
+            </tr>
+        {% else %}
+            <tr><td colspan="5" class="muted">Es gibt noch keine Guides.</td></tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</main>
+{% endblock %}
