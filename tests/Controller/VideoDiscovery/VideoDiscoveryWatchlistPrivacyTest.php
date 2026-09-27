@@ -13,12 +13,59 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 final class VideoDiscoveryWatchlistPrivacyTest extends WebTestCase
 {
-    public function testPrivateWatchlistIsHiddenFromAnonymousAndForeignViewers(): void
+    public function testPrivateWatchlistIsHiddenFromAnonymousViewer(): void
     {
         $client = static::createClient();
-        $entityManager = $client->getContainer()->get(EntityManagerInterface::class);
         $this->enableVideoModule($client);
+        $watchlists = $this->createWatchlists($client);
 
+        $client->request('GET', '/video-discovery/watchlists/'.$watchlists['privateId']);
+
+        self::assertResponseStatusCodeSame(404);
+        $content = $client->getResponse()->getContent();
+        self::assertIsString($content);
+        self::assertStringNotContainsString($watchlists['privateName'], $content);
+    }
+
+    public function testForeignViewerCannotViewPrivateWatchlistButCanViewPublicWatchlist(): void
+    {
+        $client = static::createClient();
+        $this->enableVideoModule($client);
+        $watchlists = $this->createWatchlists($client);
+        $client->loginUser($watchlists['other']);
+
+        $client->request('GET', '/video-discovery/watchlists/'.$watchlists['privateId']);
+
+        self::assertResponseStatusCodeSame(404);
+        $content = $client->getResponse()->getContent();
+        self::assertIsString($content);
+        self::assertStringNotContainsString($watchlists['privateName'], $content);
+
+        $crawler = $client->request('GET', '/video-discovery/watchlists/'.$watchlists['publicId']);
+
+        self::assertResponseIsSuccessful();
+        self::assertSame($watchlists['publicName'], $crawler->filter('h1')->text());
+    }
+
+    public function testOwnerCanViewPrivateWatchlist(): void
+    {
+        $client = static::createClient();
+        $this->enableVideoModule($client);
+        $watchlists = $this->createWatchlists($client);
+        $client->loginUser($watchlists['owner']);
+
+        $crawler = $client->request('GET', '/video-discovery/watchlists/'.$watchlists['privateId']);
+
+        self::assertResponseIsSuccessful();
+        self::assertSame($watchlists['privateName'], $crawler->filter('h1')->text());
+    }
+
+    /**
+     * @return array{owner: User, other: User, privateId: int, publicId: int, privateName: string, publicName: string}
+     */
+    private function createWatchlists(KernelBrowser $client): array
+    {
+        $entityManager = $client->getContainer()->get(EntityManagerInterface::class);
         $owner = $this->user($client, 'owner');
         $other = $this->user($client, 'other');
         $suffix = bin2hex(random_bytes(5));
@@ -35,28 +82,14 @@ final class VideoDiscoveryWatchlistPrivacyTest extends WebTestCase
         self::assertNotNull($privateId);
         self::assertNotNull($publicId);
 
-        $client->request('GET', '/video-discovery/watchlists/'.$privateId);
-        self::assertResponseStatusCodeSame(404);
-        $content = $client->getResponse()->getContent();
-        self::assertIsString($content);
-        self::assertStringNotContainsString($privateName, $content);
-
-        $client->loginUser($other);
-        $client->request('GET', '/video-discovery/watchlists/'.$privateId);
-        self::assertResponseStatusCodeSame(404);
-        $content = $client->getResponse()->getContent();
-        self::assertIsString($content);
-        self::assertStringNotContainsString($privateName, $content);
-
-        $client->loginUser($owner);
-        $crawler = $client->request('GET', '/video-discovery/watchlists/'.$privateId);
-        self::assertResponseIsSuccessful();
-        self::assertSame($privateName, $crawler->filter('h1')->text());
-
-        $client->loginUser($other);
-        $crawler = $client->request('GET', '/video-discovery/watchlists/'.$publicId);
-        self::assertResponseIsSuccessful();
-        self::assertSame($publicName, $crawler->filter('h1')->text());
+        return [
+            'owner' => $owner,
+            'other' => $other,
+            'privateId' => $privateId,
+            'publicId' => $publicId,
+            'privateName' => $privateName,
+            'publicName' => $publicName,
+        ];
     }
 
     private function user(KernelBrowser $client, string $suffix): User
