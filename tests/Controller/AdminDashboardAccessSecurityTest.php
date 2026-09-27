@@ -41,7 +41,9 @@ final class AdminDashboardAccessSecurityTest extends WebTestCase
             $this->entityManager($client)->flush();
 
             $client->request('GET', '/admin');
-            self::assertResponseStatusCodeSame(403);
+            self::assertResponseRedirects('/login');
+            $client->followRedirect();
+            self::assertResponseIsSuccessful();
         } finally {
             $this->removeUser($client, $user);
         }
