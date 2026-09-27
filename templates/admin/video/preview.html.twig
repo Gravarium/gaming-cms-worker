@@ -1,0 +1,60 @@
+{% extends 'base.html.twig' %}
+{% block title %}Vorschau: {{ video.title }} | Gaming CMS{% endblock %}
+{% block body %}
+<header class="topbar">
+    <a class="brand" href="{{ path('app_admin_dashboard') }}">Gaming CMS</a>
+    <nav class="top-actions" aria-label="Vorschauaktionen">
+        <a class="button-link button-secondary" href="{{ path('app_admin_video_edit', {id: video.id}) }}">Zur Bearbeitung</a>
+        {% if isPublic %}
+            <a class="button-link" href="{{ path('app_video_show', {slug: video.slug}) }}">Öffentliche Seite ansehen</a>
+        {% endif %}
+    </nav>
+</header>
+<main class="editor-shell video-preview">
+    <p class="eyebrow">Gespeicherte Video-Vorschau</p>
+    <h1>{{ video.title }}</h1>
+
+    {% if not video.enabled %}
+        <p class="notice" role="status">Dieses Video ist deaktiviert. Nur berechtigte Video-Redakteure können diese Vorschau sehen.</p>
+    {% elseif video.publishedAt is null %}
+        <p class="notice" role="status">Entwurf: Dieses Video ist noch nicht veröffentlicht.</p>
+    {% elseif not isPublic %}
+        <p class="notice" role="status">Geplante Veröffentlichung am {{ video.publishedAt|date('d.m.Y H:i') }} Uhr.</p>
+    {% else %}
+        <p class="notice" role="status">Veröffentlicht: Du siehst die öffentliche Darstellung mit Admin-Zugriff.</p>
+    {% endif %}
+
+    <p class="video-meta">
+        {% if video.category and video.category.enabled %}<span>{{ video.category.name }}</span>{% endif %}
+        {% if video.durationLabel %}<span>{{ video.durationLabel }}</span>{% endif %}
+        <span>{{ video.sourceType|capitalize }}</span>
+    </p>
+
+    {% if player %}
+        <div class="video-player">
+            {% if player.mode == 'iframe' %}
+                <iframe src="{{ player.url }}" title="{{ video.title }}" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen loading="eager" referrerpolicy="strict-origin-when-cross-origin"></iframe>
+            {% else %}
+                <video controls preload="metadata" {% if video.thumbnailUrl %}poster="{{ video.thumbnailUrl }}"{% endif %}>
+                    <source src="{{ player.url }}">
+                    Dein Browser kann dieses Video nicht abspielen.
+                </video>
+            {% endif %}
+        </div>
+    {% else %}
+        <div class="alert" role="alert">Das Video kann derzeit nicht wiedergegeben werden. Prüfe den Quelltyp, die Plattform-URL oder die zugehörige Mediendatei.</div>
+    {% endif %}
+
+    <section class="video-info" aria-label="Videobeschreibung">
+        <div class="article-body">{{ video.description|nl2br }}</div>
+        {% set enabledPlaylists = video.playlists|filter(playlist => playlist.enabled) %}
+        {% if enabledPlaylists|length %}
+            <div class="video-filters">
+                {% for playlist in enabledPlaylists %}
+                    <a class="status" href="{{ path('app_video_index', {playlist: playlist.slug}) }}">{{ playlist.title }}</a>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </section>
+</main>
+{% endblock %}

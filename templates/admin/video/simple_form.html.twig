@@ -8,6 +8,9 @@
 <main class="editor-shell">
     <p class="eyebrow">Video-Modul</p>
     <h1>{{ heading }}</h1>
+    {% if heading starts with 'Playlist' and cms_module_enabled('video') %}
+        <p><a class="button-link button-secondary" href="{{ path('app_video_playlist_index') }}">Öffentliche Playlist-Seiten ansehen</a></p>
+    {% endif %}
     {{ form_start(form, {attr: {class: 'content-form'}}) }}
         {{ form_widget(form) }}
         <button type="submit">Speichern</button>
