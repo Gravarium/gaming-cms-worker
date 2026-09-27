@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T17:54:47.480Z",
+  "published_at": "2026-09-27T18:02:41.240Z",
   "summary": {
     "total_remaining_worker_tasks": 167,
-    "completed_worker_prs_awaiting_trusted_review": 293,
+    "completed_worker_prs_awaiting_trusted_review": 294,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-563 is actively claimed on main@7b2ca79405fc12d34bce1386157e929e4668f31a; complete its database-side page query and exact-head Worker CI. The five remaining unclaimed FCPs are dependency-blocked; WCP-561 is another chat's independent active claim.",
+    "next_required_action": "WCP-563 PR #357 is ready for Trusted review with exact-head CI #908 / 36338941762 green. Re-evaluate the five unclaimed dependency-blocked packages; if none is eligible, publish and claim the next independent worker-only CMS proposal.",
     "composition_preparable": 0,
     "immediately_actionable": 29,
     "must_continue": true
@@ -44949,7 +44949,7 @@
       "package_id": "WCP-563",
       "title": "Database-paginate the public page directory",
       "risk": "medium",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -45050,7 +45050,7 @@
       },
       "published_at": "2026-09-27T17:54:47.480Z",
       "claimed_on": "2026-09-27T17:54:47.480Z",
-      "claim_state": "active",
+      "claim_state": "locked_until_trusted_resolution",
       "active_base_branch": "main",
       "active_base_sha": "7b2ca79405fc12d34bce1386157e929e4668f31a",
       "active_head": "0bdb6261d30e1111f90dc2a12e2e848285cf5381",
@@ -45060,40 +45060,44 @@
         "feature_branch": "0bdb6261d30e1111f90dc2a12e2e848285cf5381"
       },
       "last_observed_head": "0bdb6261d30e1111f90dc2a12e2e848285cf5381",
-      "last_checkpoint_at": "2026-09-27T17:58:51.725Z",
-      "last_verified_push_at": "2026-09-27T17:58:51.725Z",
+      "last_checkpoint_at": "2026-09-27T18:02:41.240Z",
+      "last_verified_push_at": "2026-09-27T18:02:41.240Z",
       "checkpoint_paths": [
         "src/Controller/PublicPageDirectoryController.php",
         "src/PageDirectory/PublicPageDirectoryQuery.php",
         "tests/Controller/PublicPageDirectoryTest.php"
       ],
-      "next_action": "Monitor exact-head Worker CI run #908 / 36338941762 on 0bdb6261d30e1111f90dc2a12e2e848285cf5381; diagnose failures and repair on this feature branch.",
+      "next_action": "Await Trusted review and independent validation of PR #357; do not merge or deploy from the Worker repository.",
       "worker_pr": 357,
-      "worker_pr_state": "draft",
+      "worker_pr_state": "ready_for_review",
       "worker_pr_changed_paths": [
         "src/Controller/PublicPageDirectoryController.php",
         "src/PageDirectory/PublicPageDirectoryQuery.php",
         "tests/Controller/PublicPageDirectoryTest.php"
       ],
-      "ci_result": "in_progress",
+      "ci_result": "success",
       "ci_attempts": [
         {
           "run_id": 36338941762,
           "run_number": 908,
           "head": "0bdb6261d30e1111f90dc2a12e2e848285cf5381",
           "base": "7b2ca79405fc12d34bce1386157e929e4668f31a",
-          "result": "queued",
-          "validation_pr": 357
+          "result": "success",
+          "validation_pr": 357,
+          "conclusion": "success"
         }
       ],
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/357",
-      "pr_state": "open_draft",
-      "draft_pr": true,
+      "pr_state": "open",
+      "draft_pr": false,
       "worker_pr_base_branch": "main",
       "worker_pr_base_sha": "7b2ca79405fc12d34bce1386157e929e4668f31a",
       "ci_run_id": 36338941762,
       "last_ci_run_id": 36338941762,
-      "last_ci_result": "in_progress"
+      "last_ci_result": "success",
+      "ci_validation_pr": 357,
+      "completed_at": "2026-09-27T18:02:41.240Z",
+      "worker_completion_summary": "Exact-head Worker CI #908 / 36338941762 passed on 0bdb6261d30e1111f90dc2a12e2e848285cf5381: 736 tests, 4,625 assertions, 0 failures/errors (1 deprecation, 3 notices); PHPStan reported no errors, YAML/Twig/container/AssetMapper/Doctrine checks passed; PostgreSQL 18 applied 57 migrations and is current. PR #357 is open, ready for review, mergeable, based on main@7b2ca79405fc12d34bce1386157e929e4668f31a, with exactly three allowlisted paths."
     }
   ],
   "recovery_queue": [],
