@@ -17,7 +17,7 @@
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-545 draft PR #338 is open on exact HEAD 8aa4f42888215613ba434c65000ea82fe1db3707; verify CI run #842 / 36326938647 and repair failures on the same branch.",
+    "next_required_action": "WCP-545 PR #338 is on exact HEAD 3c3aa7b733ff1ee439acdc235200a95838fd6831; test assertions from run #842 were corrected. Verify full CI run #843 / 36327083240.",
     "composition_preparable": 0,
     "immediately_actionable": 28,
     "must_continue": true
@@ -40583,14 +40583,14 @@
       "claim_state": "active",
       "active_base_branch": "main",
       "active_base_sha": "b510875e7b0741b9b19f09429d2204a95df51198",
-      "active_head": "8aa4f42888215613ba434c65000ea82fe1db3707",
+      "active_head": "3c3aa7b733ff1ee439acdc235200a95838fd6831",
       "resume_branch": "feature/wcp-545-video-library-pagination-g1",
       "branch_heads": {
         "claim_branch": "b510875e7b0741b9b19f09429d2204a95df51198",
-        "feature_branch": "8aa4f42888215613ba434c65000ea82fe1db3707"
+        "feature_branch": "3c3aa7b733ff1ee439acdc235200a95838fd6831"
       },
-      "last_observed_head": "8aa4f42888215613ba434c65000ea82fe1db3707",
-      "last_checkpoint_at": "2026-09-27T14:42:54.656Z",
+      "last_observed_head": "3c3aa7b733ff1ee439acdc235200a95838fd6831",
+      "last_checkpoint_at": "2026-09-27T14:46:19.754Z",
       "checkpoint_paths": [
         "src/Controller/PublicVideoLibraryController.php",
         "src/Video/Library/VideoLibraryBrowser.php",
@@ -40601,16 +40601,29 @@
         "tests/Controller/PublicVideoLibraryControllerTest.php",
         "tests/Widget/VideoLibraryWidgetProviderTest.php"
       ],
-      "next_action": "Inspect exact-head Worker CI run #842 / 36326938647 for 8aa4f42888215613ba434c65000ea82fe1db3707; fix any PHPStan, PHPUnit, Twig or container failures only within the eight reserved paths, then push and rerun complete CI.",
+      "next_action": "Inspect exact-head Worker CI run #843 / 36327083240 on 3c3aa7b733ff1ee439acdc235200a95838fd6831. Repair any remaining code or test failures within the eight reserved paths and rerun full CI.",
       "worker_pr_state": "open_draft",
-      "last_verified_push_at": "2026-09-27T14:42:54.656Z",
+      "last_verified_push_at": "2026-09-27T14:46:19.754Z",
       "ci_result": "in_progress",
-      "last_ci_result": "not_run",
+      "last_ci_result": "failure",
       "ci_attempts": [
         {
           "run_id": 36326938647,
           "run_number": 842,
           "head": "8aa4f42888215613ba434c65000ea82fe1db3707",
+          "base": "b510875e7b0741b9b19f09429d2204a95df51198",
+          "result": "failure",
+          "conclusion": "failure",
+          "phpstan": "success",
+          "phpunit": "failure",
+          "postgresql_18_migrations": "success",
+          "test_summary": "542 tests, 2,256 assertions, 2 failures.",
+          "summary": "Both failures were test assertions: the page-two title fixture was not zero-padded as expected, and the empty-state selector matched the active-category heading first. Fixed in the next commit without changing application behavior."
+        },
+        {
+          "run_id": 36327083240,
+          "run_number": 843,
+          "head": "3c3aa7b733ff1ee439acdc235200a95838fd6831",
           "base": "b510875e7b0741b9b19f09429d2204a95df51198",
           "result": "in_progress",
           "conclusion": null
@@ -40631,8 +40644,8 @@
       "worker_pr_base_branch": "main",
       "pr_state": "open",
       "draft_pr": true,
-      "ci_run_id": 36326938647,
-      "last_ci_run_id": 36326938647
+      "ci_run_id": 36327083240,
+      "last_ci_run_id": 36327083240
     },
     {
       "priority": 546,
