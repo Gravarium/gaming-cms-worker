@@ -35,7 +35,7 @@ final class PublicContentTagArchiveController extends AbstractController
         }
 
         $pageValue = $request->query->getString('page', '1');
-        if (preg_match('/\\\\A[1-9][0-9]{0,4}\\\\z/', $pageValue) !== 1) {
+        if (preg_match('/\\A[1-9][0-9]{0,4}\\z/', $pageValue) !== 1) {
             throw new BadRequestHttpException('The page parameter must be a positive integer.');
         }
 
