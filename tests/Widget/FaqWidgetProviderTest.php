@@ -62,27 +62,37 @@ final class FaqWidgetProviderTest extends KernelTestCase
         self::assertStringNotContainsString('This answer has no question', $html);
     }
 
-    public function testQuestionAndAnswerLengthsAreBoundedByTheLayoutValidator(): void
+    public function testQuestionLengthIsBoundedByTheLayoutValidator(): void
     {
         self::bootKernel();
         $validator = self::getContainer()->get(LayoutValidator::class);
-        $schema = $validator->widgetSchema('core.faq');
+        $config = $this->defaultConfig($validator);
+        $config['question1'] = str_repeat('x', 181);
+
+        $this->expectException(\\DomainException::class);
+        $this->document($validator, $config);
+    }
+
+    public function testAnswerLengthIsBoundedByTheLayoutValidator(): void
+    {
+        self::bootKernel();
+        $validator = self::getContainer()->get(LayoutValidator::class);
+        $config = $this->defaultConfig($validator);
+        $config['answer1'] = str_repeat('x', 2001);
+
+        $this->expectException(\\DomainException::class);
+        $this->document($validator, $config);
+    }
+
+    /** @return array<string, string|int|bool> */
+    private function defaultConfig(LayoutValidator $validator): array
+    {
         $config = [];
-        foreach ($schema as $key => $field) {
+        foreach ($validator->widgetSchema('core.faq') as $key => $field) {
             $config[$key] = $field['default'];
         }
 
-        foreach ([['question1', 181], ['answer1', 2001]] as [$key, $length]) {
-            $oversized = $config;
-            $oversized[$key] = str_repeat('x', $length);
-            try {
-                $this->document($validator, $oversized);
-                self::fail('An oversized FAQ field was accepted.');
-            } catch (\DomainException) {
-                continue;
-            }
-            self::fail('An oversized FAQ field was accepted.');
-        }
+        return $config;
     }
 
     /** @param array<string, string|int|bool> $config */
