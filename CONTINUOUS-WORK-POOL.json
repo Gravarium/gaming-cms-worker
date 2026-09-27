@@ -12,12 +12,12 @@
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
   "published_at": "2026-09-27T00:01:18.834Z",
   "summary": {
-    "total_remaining_worker_tasks": 136,
+    "total_remaining_worker_tasks": 137,
     "completed_worker_prs_awaiting_trusted_review": 204,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-434 PR #230 is a draft on exact HEAD 3becc3a6fdcba414a40dca90529704c57e0d6135; wait for complete Worker CI and repair any red result on the same branch.",
+    "next_required_action": "WCP-437 is claimed from sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d; create its exclusive branches and add test-only bulk content authorization, CSRF, scope, and bounds regressions.",
     "composition_preparable": 0,
     "immediately_actionable": 0,
     "must_continue": true
@@ -23537,6 +23537,97 @@
         "Awaiting Trusted review and Trusted integration CI."
       ],
       "trusted_follow_up": "Preserve CMS_USERS_MANAGE and PermissionDelegationPolicy target isolation during Trusted integration."
+    },
+    {
+      "priority": 217,
+      "package_id": "WCP-437",
+      "title": "Guard administrative bulk content actions and CSRF",
+      "risk": "low",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-437-admin-content-bulk-security-g1",
+      "suggested_branch": "feature/wcp-437-admin-content-bulk-security-g1",
+      "base_branch": "main",
+      "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "objective": "Add test-only functional security regressions for administrative bulk content actions. Users without CMS_CONTENT_MANAGE cannot use the bulk route; missing or invalid CSRF cannot mutate entries; a valid rendered token changes only submitted entries; invalid actions and more than 200 unique positive IDs fail closed without mutation.",
+      "allowed_paths": [
+        "tests/Controller/AdminContentBulkMutationSecurityTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/",
+        "src/",
+        "templates/",
+        "assets/",
+        "public/"
+      ],
+      "deliverables": [
+        "Verify a user without CMS_CONTENT_MANAGE receives 403 for the bulk content route, with entries unchanged.",
+        "Verify missing and invalid content-bulk CSRF tokens leave selected entries unchanged.",
+        "Verify a rendered bulk-form token applies an allowed action only to selected synthetic entries.",
+        "Verify unknown actions return 404 and bulk requests containing more than 200 unique positive IDs fail closed without state changes.",
+        "Only tests/Controller/AdminContentBulkMutationSecurityTest.php changes."
+      ],
+      "tests": [
+        "php bin/phpunit tests/Controller/AdminContentBulkMutationSecurityTest.php",
+        "Existing content editor, publication, and trash lifecycle tests remain green.",
+        "PHPStan level 8 and complete Worker CI on exact final HEAD, including PostgreSQL 18 migration-chain checks."
+      ],
+      "completion_report": [
+        "Exact sanitized main base SHA and final Worker HEAD.",
+        "Complete changed-path list and Worker PR.",
+        "Authorization denial, CSRF non-mutation, selected-only bulk update, and input-boundary results.",
+        "Exact-head PHPStan and full Worker CI; confirm only synthetic local entities were changed."
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "preserve-CMS_CONTENT_MANAGE-authorization-and-content-bulk-CSRF",
+        "enforce-existing-200-entry-bulk-limit-and-allowlisted-actions",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "proposal_kind": "worker_only",
+      "proposal_dependency_evidence": [],
+      "collision_check": {
+        "compared_against": "Fresh continuous/work-pool-v4 blob 346ddf9078b68d2074d99826b7d2649d580879fa, all active and claim-locked allowlists, and exact sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d.",
+        "result": "No active or claim-locked claim owns tests/Controller/AdminContentBulkMutationSecurityTest.php, and the path is absent from sanitized main. Main AdminContentController exposes a CMS_CONTENT_MANAGE-protected POST /admin/content/bulk route with a content-bulk CSRF token, an allowlist of actions, and a 200-ID limit. Code search for content-bulk found the controller and template but no functional test for bulk authorization, CSRF, scope, or bounds. Completed WCP-435 tests ContentEntry trash/purge in a separate file; active WCP-383, WCP-401, WCP-414, WCP-434, and WCP-436 paths are disjoint.",
+        "paths": [
+          "tests/Controller/AdminContentBulkMutationSecurityTest.php"
+        ]
+      },
+      "claimed_on": "2026-09-27T00:02:08.842Z",
+      "claim_state": "active",
+      "active_base_branch": "main",
+      "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "resume_branch": "feature/wcp-437-admin-content-bulk-security-g1",
+      "last_checkpoint_at": "2026-09-27T00:02:08.842Z",
+      "last_verified_push_at": "2026-09-27T00:02:08.842Z",
+      "checkpoint_paths": [
+        "tests/Controller/AdminContentBulkMutationSecurityTest.php"
+      ],
+      "branch_heads": {
+        "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+        "feature_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d"
+      },
+      "next_action": "Create the exclusive WCP-437 claim and feature branches from sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d, then implement the allowed test-only bulk action regressions."
     }
   ],
   "recovery_queue": [],
