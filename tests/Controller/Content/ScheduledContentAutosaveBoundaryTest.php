@@ -19,7 +19,7 @@ final class ScheduledContentAutosaveBoundaryTest extends WebTestCase
         $client = static::createClient();
         $entityManager = $client->getContainer()->get(EntityManagerInterface::class);
         $suffix = bin2hex(random_bytes(6));
-        $scheduledAt = new \DateTimeImmutable('+2 days');
+        $scheduledAt = (new \DateTimeImmutable('+2 days'))->setTime(12, 0, 0);
         $scheduledUnpublishAt = $scheduledAt->modify('+5 days');
         $originalDocument = ContentBlockDocument::PREFIX.json_encode(
             [
