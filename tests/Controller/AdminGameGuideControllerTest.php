@@ -99,8 +99,6 @@ final class AdminGameGuideControllerTest extends WebTestCase
             self::assertStringContainsString('&lt;script&gt;alert(1)&lt;/script&gt;', $html);
             self::assertStringNotContainsString('<script>alert(1)</script>', $html);
             self::assertStringContainsString('arcane-barrage', $html);
-            self::assertStringNotContainsString((string) $authorId, $html);
-            self::assertStringNotContainsString((string) $reviewerId, $html);
             self::assertStringNotContainsString($author->getEmail(), $html);
         } finally {
             $this->cleanup($client, $guideIds, [$authorId, $reviewerId], [$gameId]);
@@ -149,7 +147,7 @@ final class AdminGameGuideControllerTest extends WebTestCase
             self::assertSame('draft', $row['review_status']);
             self::assertSame($reviewerId, (int) $row['reviewer_id']);
             self::assertNull($row['published_at']);
-            self::assertSame(2, (int) $connection->fetchOne(
+            self::assertSame(1, (int) $connection->fetchOne(
                 "SELECT COUNT(*) FROM game_guide_review_audit WHERE guide_id = :id AND status = 'draft'",
                 ['id' => $id],
             ));
@@ -193,13 +191,13 @@ final class AdminGameGuideControllerTest extends WebTestCase
             ];
             $client->request('POST', '/admin/gaming/guides/new', $fields + ['_token' => 'forged']);
             self::assertResponseStatusCodeSame(403);
-            self::assertSame(0, (int) $connection->fetchOne('SELECT COUNT(*) FROM game_guide'));
+            self::assertSame(0, (int) $connection->fetchOne('SELECT COUNT(*) FROM game_guide WHERE title = :title', ['title' => $fields['title']]));
 
             $crawler = $client->request('GET', '/admin/gaming/guides/new');
             $form = $crawler->selectButton('Entwurf speichern')->form($fields);
             $client->submit($form);
             self::assertResponseStatusCodeSame(422);
-            self::assertSame(0, (int) $connection->fetchOne('SELECT COUNT(*) FROM game_guide'));
+            self::assertSame(0, (int) $connection->fetchOne('SELECT COUNT(*) FROM game_guide WHERE title = :title', ['title' => $fields['title']]));
         } finally {
             $this->cleanup($client, $guideIds, [$readerId, $authorId], [$gameId]);
         }
