@@ -9,6 +9,7 @@ use App\Entity\User;
 use App\ForumWorkflow\ForumWorkflowGateway;
 use App\Security\CmsPermission;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Schema\Table;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
@@ -22,6 +23,7 @@ final class ForumWorkflowControllerTest extends WebTestCase
         $container = $client->getContainer();
         $entityManager = $container->get(EntityManagerInterface::class);
         $connection = $container->get(Connection::class);
+        $this->ensureForumTables($connection);
         $gateway = $container->get(ForumWorkflowGateway::class);
         $suffix = bin2hex(random_bytes(5));
         $publicRoom = $gateway->saveRoom(null, 'Visible forum '.$suffix, 'public', null);
@@ -166,5 +168,87 @@ final class ForumWorkflowControllerTest extends WebTestCase
             }
         }
         $entityManager->flush();
+    }
+
+    /**
+     * The CI test schema is generated from ORM mappings; Forum tables are migration-only.
+     */
+    private function ensureForumTables(Connection $connection): void
+    {
+        $schemaManager = $connection->createSchemaManager();
+
+        if (!$schemaManager->tablesExist(['forum_room'])) {
+            $room = new Table('forum_room');
+            $room->addColumn('id', 'integer', ['autoincrement' => true]);
+            $room->addColumn('guild_id', 'integer', ['notnull' => false]);
+            $room->addColumn('title', 'string', ['length' => 180]);
+            $room->addColumn('visibility', 'string', ['length' => 16]);
+            $room->addColumn('created_at', 'datetime');
+            $room->setPrimaryKey(['id']);
+            $room->addIndex(['guild_id', 'visibility'], 'IDX_FORUM_ROOM_GUILD');
+            $room->addForeignKeyConstraint('guild', ['guild_id'], ['id'], ['onDelete' => 'CASCADE'], 'FK_FORUM_ROOM_GUILD');
+            $schemaManager->createTable($room);
+        }
+
+        if (!$schemaManager->tablesExist(['forum_thread'])) {
+            $thread = new Table('forum_thread');
+            $thread->addColumn('id', 'integer', ['autoincrement' => true]);
+            $thread->addColumn('room_id', 'integer');
+            $thread->addColumn('author_id', 'integer', ['notnull' => false]);
+            $thread->addColumn('solved_post_id', 'integer', ['notnull' => false]);
+            $thread->addColumn('title', 'string', ['length' => 180]);
+            $thread->addColumn('state', 'string', ['length' => 16]);
+            $thread->addColumn('version', 'integer');
+            $thread->addColumn('created_at', 'datetime');
+            $thread->addColumn('updated_at', 'datetime');
+            $thread->setPrimaryKey(['id']);
+            $thread->addIndex(['room_id', 'state', 'updated_at'], 'IDX_FORUM_THREAD_ROOM');
+            $thread->addForeignKeyConstraint('forum_room', ['room_id'], ['id'], ['onDelete' => 'CASCADE'], 'FK_FORUM_THREAD_ROOM');
+            $thread->addForeignKeyConstraint('cms_user', ['author_id'], ['id'], ['onDelete' => 'SET NULL'], 'FK_FORUM_THREAD_AUTHOR');
+            $schemaManager->createTable($thread);
+        }
+
+        if (!$schemaManager->tablesExist(['forum_post'])) {
+            $post = new Table('forum_post');
+            $post->addColumn('id', 'integer', ['autoincrement' => true]);
+            $post->addColumn('thread_id', 'integer');
+            $post->addColumn('author_id', 'integer', ['notnull' => false]);
+            $post->addColumn('quoted_post_id', 'integer', ['notnull' => false]);
+            $post->addColumn('body', 'text');
+            $post->addColumn('created_at', 'datetime');
+            $post->addColumn('edited_at', 'datetime', ['notnull' => false]);
+            $post->setPrimaryKey(['id']);
+            $post->addIndex(['thread_id', 'created_at'], 'IDX_FORUM_POST_THREAD');
+            $post->addForeignKeyConstraint('forum_thread', ['thread_id'], ['id'], ['onDelete' => 'CASCADE'], 'FK_FORUM_POST_THREAD');
+            $post->addForeignKeyConstraint('cms_user', ['author_id'], ['id'], ['onDelete' => 'SET NULL'], 'FK_FORUM_POST_AUTHOR');
+            $post->addForeignKeyConstraint('forum_post', ['quoted_post_id'], ['id'], ['onDelete' => 'SET NULL'], 'FK_FORUM_POST_QUOTE');
+            $schemaManager->createTable($post);
+        }
+
+        if (!$schemaManager->tablesExist(['forum_subscription'])) {
+            $subscription = new Table('forum_subscription');
+            $subscription->addColumn('thread_id', 'integer');
+            $subscription->addColumn('user_id', 'integer');
+            $subscription->addColumn('created_at', 'datetime');
+            $subscription->setPrimaryKey(['thread_id', 'user_id']);
+            $subscription->addForeignKeyConstraint('forum_thread', ['thread_id'], ['id'], ['onDelete' => 'CASCADE'], 'FK_FORUM_SUB_THREAD');
+            $subscription->addForeignKeyConstraint('cms_user', ['user_id'], ['id'], ['onDelete' => 'CASCADE'], 'FK_FORUM_SUB_USER');
+            $schemaManager->createTable($subscription);
+        }
+
+        if (!$schemaManager->tablesExist(['forum_moderation_audit'])) {
+            $audit = new Table('forum_moderation_audit');
+            $audit->addColumn('id', 'integer', ['autoincrement' => true]);
+            $audit->addColumn('thread_id', 'integer');
+            $audit->addColumn('actor_id', 'integer', ['notnull' => false]);
+            $audit->addColumn('state', 'string', ['length' => 16]);
+            $audit->addColumn('reason', 'string', ['length' => 500]);
+            $audit->addColumn('occurred_at', 'datetime');
+            $audit->setPrimaryKey(['id']);
+            $audit->addIndex(['thread_id', 'occurred_at'], 'IDX_FORUM_MOD_AUDIT');
+            $audit->addForeignKeyConstraint('forum_thread', ['thread_id'], ['id'], ['onDelete' => 'CASCADE'], 'FK_FORUM_MOD_THREAD');
+            $audit->addForeignKeyConstraint('cms_user', ['actor_id'], ['id'], ['onDelete' => 'SET NULL'], 'FK_FORUM_MOD_ACTOR');
+            $schemaManager->createTable($audit);
+        }
     }
 }
