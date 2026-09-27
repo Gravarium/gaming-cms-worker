@@ -17,7 +17,7 @@
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-474 is another worker's active 2FA recovery-code rotation claim and remains untouched. WCP-475 is claimed from WCP-450's exact green HEAD for disjoint guild-member deletion security coverage; WCP-471 through WCP-473 remain complete and claim-locked.",
+    "next_required_action": "WCP-474 remains another worker's active 2FA recovery-code rotation claim. WCP-475 is checkpointed with its sole allowed guild-member deletion security test; WCP-471 through WCP-473 remain complete and claim-locked.",
     "composition_preparable": 0,
     "immediately_actionable": 4,
     "must_continue": true
@@ -29268,15 +29268,19 @@
       "claim_state": "active",
       "active_base_branch": "feature/wcp-450-guild-member-directory-pagination-g1",
       "active_base_sha": "49d836de7c14c3b9958dcb3e43db573c80d2c8b3",
-      "active_head": "49d836de7c14c3b9958dcb3e43db573c80d2c8b3",
+      "active_head": "56274da100719bdbfd62e80f52141160da5a718d",
       "resume_branch": "feature/wcp-475-guild-member-deletion-security-g1",
-      "last_checkpoint_at": "2026-09-27T05:58:42.794Z",
-      "checkpoint_paths": [],
+      "last_checkpoint_at": "2026-09-27T06:01:29.833Z",
+      "checkpoint_paths": [
+        "tests/Controller/AdminGuildMemberDeletionSecurityTest.php"
+      ],
       "branch_heads": {
         "claim_branch": "49d836de7c14c3b9958dcb3e43db573c80d2c8b3",
-        "feature_branch": "49d836de7c14c3b9958dcb3e43db573c80d2c8b3"
+        "feature_branch": "56274da100719bdbfd62e80f52141160da5a718d"
       },
-      "next_action": "Implement the focused member authorization, route-scoped CSRF and cross-guild deletion tests in the sole allowed file, checkpoint them, and open a draft Worker PR."
+      "next_action": "Open a draft Worker PR against worker main and run complete exact-head CI.",
+      "last_observed_head": "56274da100719bdbfd62e80f52141160da5a718d",
+      "last_verified_push_at": "2026-09-27T06:01:29.833Z"
     }
   ],
   "recovery_queue": [],
