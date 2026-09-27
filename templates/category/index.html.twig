@@ -25,5 +25,12 @@
             <p class="muted">Noch keine Kategorien vorhanden.</p>
         {% endfor %}
     </section>
+    {% if pages > 1 %}
+        <nav class="pagination" aria-label="Kategorienavigation">
+            <span>Seite {{ page }} von {{ pages }}</span>
+            {% if page > 1 %}<a href="{{ path('app_news_category_directory', {page: page - 1}) }}" rel="prev">Zurück</a>{% endif %}
+            {% if page < pages %}<a href="{{ path('app_news_category_directory', {page: page + 1}) }}" rel="next">Weiter</a>{% endif %}
+        </nav>
+    {% endif %}
 </main>
 {% endblock %}
