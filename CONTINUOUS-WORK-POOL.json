@@ -10,7 +10,7 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T09:54:42.943Z",
+  "published_at": "2026-09-27T09:55:07.669Z",
   "summary": {
     "total_remaining_worker_tasks": 154,
     "completed_worker_prs_awaiting_trusted_review": 263,
@@ -33514,17 +33514,19 @@
       "claim_state": "active",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "6357499a85cd9f3eb85b8db0e00f7e662c6dcc34",
       "resume_branch": "feature/wcp-501-public-content-redirect-g1",
       "branch_heads": {
         "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-        "feature_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d"
+        "feature_branch": "6357499a85cd9f3eb85b8db0e00f7e662c6dcc34"
       },
-      "last_observed_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-      "last_checkpoint_at": "2026-09-27T09:53:43.006Z",
-      "checkpoint_paths": [],
-      "next_action": "Implement the focused regression test only on the feature branch, checkpoint it, then run targeted PHPUnit and full exact-head Worker CI.",
-      "last_verified_push_at": null
+      "last_observed_head": "6357499a85cd9f3eb85b8db0e00f7e662c6dcc34",
+      "last_checkpoint_at": "2026-09-27T09:55:07.669Z",
+      "checkpoint_paths": [
+        "tests/Controller/PublicContentRedirectVisibilityTest.php"
+      ],
+      "next_action": "Open a draft Worker PR from this exact checkpoint, run the focused PHPUnit test and complete exact-head Worker CI, and repair any concrete failure on this branch.",
+      "last_verified_push_at": "2026-09-27T09:55:07.669Z"
     }
   ],
   "recovery_queue": [],
