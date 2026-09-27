@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T08:59:55.307Z",
+  "published_at": "2026-09-27T09:01:25.906Z",
   "summary": {
     "total_remaining_worker_tasks": 144,
-    "completed_worker_prs_awaiting_trusted_review": 254,
+    "completed_worker_prs_awaiting_trusted_review": 255,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-489 is actively claimed from exact sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d; implement and run full exact-head Worker CI. The remaining unclaimed FCPs lack required predecessor evidence. Keep all foreign claims untouched.",
+    "next_required_action": "WCP-488 is complete on exact green HEAD 8636294c754452b02702f4d5ece17c413a4218b4 (PR #281, CI 36307855053); the claim remains locked. Re-evaluate current unclaimed FCPs against Trusted integration and exact green Worker predecessor heads; if none is dependency-safe, publish and claim the next bounded independent worker-only proposal. Do not change foreign active claims.",
     "composition_preparable": 0,
     "immediately_actionable": 6,
     "must_continue": true
@@ -31530,7 +31530,7 @@
       "package_id": "WCP-488",
       "title": "Protect game deletion with rendered CSRF and persistence checks",
       "risk": "medium",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -31603,7 +31603,7 @@
       },
       "published_at": "2026-09-27T08:56:05.245Z",
       "claimed_on": "2026-09-27T08:56:05.245Z",
-      "claim_state": "active",
+      "claim_state": "locked_until_trusted_resolution",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
       "active_head": "8636294c754452b02702f4d5ece17c413a4218b4",
@@ -31613,23 +31613,74 @@
         "feature_branch": "8636294c754452b02702f4d5ece17c413a4218b4"
       },
       "last_observed_head": "8636294c754452b02702f4d5ece17c413a4218b4",
-      "last_checkpoint_at": "2026-09-27T08:59:42.754Z",
+      "last_checkpoint_at": "2026-09-27T09:01:25.906Z",
       "checkpoint_paths": [
         "tests/Controller/AdminGamingGameDeletionSecurityTest.php"
       ],
-      "next_action": "Monitor exact-head Worker CI run 36307855053 on HEAD 8636294c754452b02702f4d5ece17c413a4218b4; diagnose and repair any failure before marking the PR ready.",
-      "last_verified_push_at": "2026-09-27T08:57:19.451Z",
+      "next_action": "Worker PR #281 is ready for Trusted review and remains unmerged. Exact final HEAD 8636294c754452b02702f4d5ece17c413a4218b4 passed Worker CI run 36307855053: 430 tests, 1,869 assertions, zero failures; PHPStan reported no errors; PostgreSQL 18 executed all 39 migrations. Keep the claim locked until Trusted resolves it.",
+      "last_verified_push_at": "2026-09-27T09:01:25.906Z",
       "worker_pr": 281,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/281",
-      "draft_pr": true,
+      "draft_pr": false,
       "pr_state": "open",
       "worker_pr_changed_paths": [
         "tests/Controller/AdminGamingGameDeletionSecurityTest.php"
       ],
       "ci_run_id": 36307855053,
       "last_ci_run_id": 36307855053,
-      "ci_result": "in_progress",
-      "last_ci_result": "in_progress"
+      "ci_result": "success",
+      "last_ci_result": "success",
+      "ci_attempts": [
+        {
+          "head": "8636294c754452b02702f4d5ece17c413a4218b4",
+          "ci_run_id": 36307855053,
+          "ci_result": "success"
+        }
+      ],
+      "final_head": "8636294c754452b02702f4d5ece17c413a4218b4",
+      "final_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "final_sanitized_main_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "changed_paths": [
+        "tests/Controller/AdminGamingGameDeletionSecurityTest.php"
+      ],
+      "final_changed_paths": [
+        "tests/Controller/AdminGamingGameDeletionSecurityTest.php"
+      ],
+      "completed_at": "2026-09-27T09:01:25.906Z",
+      "test_results": {
+        "phpunit": "430 tests, 1,869 assertions, zero failures; one PHPUnit deprecation and one notice.",
+        "phpstan": "Level 8 passed with no errors.",
+        "php_symfony": "Worker PHP/Symfony validation job passed on exact final HEAD.",
+        "postgres18": "PostgreSQL 18 completed all 39 migrations and 470 SQL queries; 0 unavailable.",
+        "exact_head_ci": {
+          "run_id": 36307855053,
+          "head": "8636294c754452b02702f4d5ece17c413a4218b4",
+          "result": "success"
+        }
+      },
+      "completion_evidence": {
+        "exact_sanitized_main_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5",
+        "exact_proposal_base_branch": "main",
+        "exact_proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5",
+        "final_head_sha": "8636294c754452b02702f4d5ece17c413a4218b4",
+        "changed_paths": [
+          "tests/Controller/AdminGamingGameDeletionSecurityTest.php"
+        ],
+        "cumulative_pr_paths": [
+          "tests/Controller/AdminGamingGameDeletionSecurityTest.php"
+        ],
+        "worker_pr": 281,
+        "ci_run_id": 36307855053,
+        "ci_result": "success",
+        "php_symfony_job": "success: 430 tests, 1,869 assertions, 0 failures; PHPStan level 8 no errors.",
+        "postgresql_job": "success: 39 migrations, 470 SQL queries, 0 unavailable.",
+        "game_delete_csrf_boundary": "A missing per-game CSRF token returned 403 and the game remained persisted; a token read from the rendered dashboard form authorized deletion and the success response was shown."
+      },
+      "completion_summary": "Added test-only functional coverage proving that deleting a game without its per-game CSRF token returns 403 and preserves the game, while the token from the rendered dashboard form authorizes deletion. Synthetic fixtures are cleaned up.",
+      "open_limitations": [
+        "Awaiting Trusted review and Trusted integration CI; no product source or configuration was changed."
+      ],
+      "trusted_follow_up": "Verify game deletion token rejection and rendered-token success on a fresh Trusted branch and full Trusted CI; preserve the per-game CSRF identifier and state on rejection."
     },
     {
       "priority": 489,
