@@ -10,7 +10,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 
 final class UpcomingCompetitionWidgetProvider implements WidgetProvider
 {
-    private const KEY = 'gaming.upcoming_competitions';
+    private const KEY = 'gaming.upcoming-competitions';
     private const CACHE_KEY = '_cms_widget_data_gaming.upcoming_competitions';
     private const MAX_ITEMS = 12;
 
