@@ -17,7 +17,7 @@
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-464 is exclusively claimed from exact green WCP-113 PR #76 head f6247efb947195b61d9688b758ee59d0f0fd6f06; implement signed-extension capability review and individual grant/revoke on feature/wcp-464-signed-extension-permission-admin-g1 while preserving all other active and claim-locked packages.",
+    "next_required_action": "WCP-463 has a coherent source/UI checkpoint at a0af4496cf2696d56e3d073865790379c7c8b621; finish its focused functional tests and run complete exact-head Worker CI, preserving the disjoint active claims.",
     "composition_preparable": 0,
     "immediately_actionable": 3,
     "must_continue": true
@@ -27460,17 +27460,23 @@
       "claim_state": "active",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "a0af4496cf2696d56e3d073865790379c7c8b621",
       "resume_branch": "feature/wcp-463-admin-video-browser-g1",
-      "last_checkpoint_at": "2026-09-27T03:56:46.866Z",
-      "checkpoint_paths": [],
+      "last_checkpoint_at": "2026-09-27T04:07:43.672Z",
+      "checkpoint_paths": [
+        "src/Controller/AdminVideoController.php",
+        "src/Video/AdminVideoBrowser.php",
+        "templates/admin/video/index.html.twig",
+        "templates/admin/video/form.html.twig",
+        "tests/Controller/AdminVideoDirectoryBrowserTest.php"
+      ],
       "branch_heads": {
         "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-        "feature_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d"
+        "feature_branch": "a0af4496cf2696d56e3d073865790379c7c8b621"
       },
-      "next_action": "Implement the admin-only video catalogue reader, query filters, pagination, preserved editor context and functional negative coverage on this feature branch; checkpoint each coherent batch.",
-      "last_observed_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-      "last_verified_push_at": "2026-09-27T03:56:46.866Z"
+      "next_action": "Inspect exact branch contents and add focused functional coverage for search, filters, bounded pagination, filter-preserving actions, authorization and invalid/CSRF requests; then open a draft Worker PR for complete exact-head CI.",
+      "last_observed_head": "a0af4496cf2696d56e3d073865790379c7c8b621",
+      "last_verified_push_at": "2026-09-27T04:07:43.672Z"
     },
     {
       "priority": 464,
