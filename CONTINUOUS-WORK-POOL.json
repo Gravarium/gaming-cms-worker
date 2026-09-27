@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T00:48:20.563Z",
+  "published_at": "2026-09-27T00:48:24.153Z",
   "summary": {
     "total_remaining_worker_tasks": 140,
     "completed_worker_prs_awaiting_trusted_review": 208,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-441 remains with its current owner for exact-head CI; WCP-442 is reserved from worker/main f1a246c64527ef3ad51f7490773d9bbf9d42be5d for disjoint media bulk-delete security regressions.",
+    "next_required_action": "WCP-441 is validating exact HEAD cf0774220ea0f6ead9b061a6a251a47605c954bd in Worker CI run 36283576919 after fixing the Node protocol test import and live-region selector; inspect the jobs and continue on this branch.",
     "composition_preparable": 0,
     "immediately_actionable": 3,
     "must_continue": true
@@ -24206,12 +24206,12 @@
       },
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-      "active_head": "9d0d7a17187ada58d0cd72b988c024a2f4b7b99d",
+      "active_head": "cf0774220ea0f6ead9b061a6a251a47605c954bd",
       "resume_branch": "feature/wcp-441-content-editor-media-picker-g1",
       "claimed_on": "2026-09-27T00:26:50.616Z",
       "claim_state": "active",
-      "last_checkpoint_at": "2026-09-27T00:41:52.960Z",
-      "last_verified_push_at": "2026-09-27T00:41:52.960Z",
+      "last_checkpoint_at": "2026-09-27T00:48:24.153Z",
+      "last_verified_push_at": "2026-09-27T00:48:24.153Z",
       "checkpoint_paths": [
         "src/Controller/AdminContentMediaPickerController.php",
         "src/Repository/ContentMediaPickerRepository.php",
@@ -24224,24 +24224,30 @@
       ],
       "branch_heads": {
         "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-        "feature_branch": "9d0d7a17187ada58d0cd72b988c024a2f4b7b99d"
+        "feature_branch": "cf0774220ea0f6ead9b061a6a251a47605c954bd"
       },
-      "next_action": "Draft Worker PR #235 is open; CI run 36283388284 is in progress on exact HEAD 9d0d7a17187ada58d0cd72b988c024a2f4b7b99d. Inspect both jobs and repair concrete failures on this same branch.",
+      "next_action": "CI run 36283576919 is in progress on exact HEAD cf0774220ea0f6ead9b061a6a251a47605c954bd. Inspect both jobs and repair any concrete failure on this same branch.",
       "worker_pr": 235,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/235",
       "draft_pr": true,
       "pr_state": "open_draft_awaiting_exact_head_ci",
-      "last_ci_run_id": 36283388284,
-      "ci_run_id": 36283388284,
+      "last_ci_run_id": 36283576919,
+      "ci_run_id": 36283576919,
       "last_ci_result": "in_progress",
       "ci_result": "in_progress",
       "ci_attempts": [
         {
           "run_id": 36283388284,
           "head": "9d0d7a17187ada58d0cd72b988c024a2f4b7b99d",
+          "result": "failure"
+        },
+        {
+          "run_id": 36283576919,
+          "head": "cf0774220ea0f6ead9b061a6a251a47605c954bd",
           "result": "in_progress"
         }
-      ]
+      ],
+      "last_ci_diagnosis": "CI run 36283388284 passed PHPStan, PHP/Symfony validations, JavaScript tests, and PostgreSQL 18 migration checks. PHPUnit had two failures: the existing ContentEditorJavaScriptProtocolTest evaluates the controller in a node --input-type=module eval and could not resolve a new static relative import; the new editor markup test asserted aria-live on the results container instead of its status region. The helper now loads dynamically only when needed, and the browser test checks the real status live region."
     },
     {
       "priority": 222,
