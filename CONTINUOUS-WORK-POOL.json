@@ -42906,6 +42906,141 @@
       "worker_pr_base_sha": "540b4c64aeb2edc35067eb15eb75fe371aaa29bc",
       "ci_run_id": 36332909153,
       "last_ci_run_id": 36332909153
+    },
+    {
+      "priority": 555,
+      "package_id": "WCP-555",
+      "title": "Publish upcoming game releases through RSS and a Page Builder link",
+      "risk": "medium",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-555-game-release-rss-g1",
+      "suggested_branch": "feature/wcp-555-game-release-rss-g1",
+      "base_branch": "main",
+      "base_sha": "540b4c64aeb2edc35067eb15eb75fe371aaa29bc",
+      "objective": "Publish a bounded RSS 2.0 feed for eligible upcoming catalogue releases and an auto-discovered Gaming Page Builder widget linking to the feed. Match the public calendar horizon and visibility rules, preserve module gating, and make the feed easy to discover without editing claim-locked shared catalogue templates.",
+      "allowed_paths": [
+        "src/Controller/PublicGameReleaseFeedController.php",
+        "src/GameReleaseFeed/PublicGameReleaseFeedQuery.php",
+        "src/GameReleaseFeed/Templates/game_release_feed.xml.twig",
+        "src/GameReleaseFeed/Templates/widget/game_release_feed.html.twig",
+        "src/Widget/PublicGameReleaseFeedWidgetProvider.php",
+        "config/packages/game_release_feed.yaml",
+        "tests/Controller/PublicGameReleaseFeedControllerTest.php",
+        "tests/Widget/PublicGameReleaseFeedWidgetTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "src/Controller/GameCatalogue/",
+        "src/Repository/GameCatalogue/GameReleaseRepository.php",
+        "src/Entity/GameCatalogue/",
+        "templates/game_catalogue/",
+        "src/Module/",
+        "src/Widget/WidgetRegistry.php",
+        "src/Widget/WidgetDefinition.php"
+      ],
+      "deliverables": [
+        "GET /games/releases.rss emits valid RSS 2.0 items for enabled catalogue entries and enabled games, between today and 18 months, excluding cancelled or unknown statuses, ordered deterministically and capped at 200 items.",
+        "The feed uses stable item identifiers, absolute links to existing public game routes, escaped XML, host-aware ETag validation and the Gaming module gate.",
+        "A Gaming Page Builder widget exposes the feed through an accessible internal link and is unavailable when Gaming is disabled.",
+        "Twig templates use a feature-local path; no schema, migration, shared catalogue controller/repository/entity, claim-locked catalogue template or registry edit."
+      ],
+      "tests": [
+        "Parse RSS with DOMDocument and verify published visibility, cancelled/disabled/past/out-of-horizon exclusions, stable order, absolute links, escaping and stable GUIDs.",
+        "Verify item limit bounds, GET-only behavior, Gaming module suppression and Page Builder discovery/rendering.",
+        "Run complete exact-head Worker CI with PHPStan, PHPUnit, Twig/container validation and PostgreSQL 18 migration-chain validation."
+      ],
+      "completion_report": [
+        "Exact Worker base and final HEAD SHAs.",
+        "Complete changed-path list and Worker PR state.",
+        "Feed horizon/status/visibility/limit evidence and Page Builder discovery/module-gate evidence.",
+        "Focused tests and exact-head full CI results.",
+        "Remaining limitations and Trusted follow-up."
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-Trusted-review-and-exact-head-CI",
+        "preserve-all-security-permissions-CSRF-validation-recovery-rollback-and-upload-controls",
+        "no-private-runtime-or-sensitive-data",
+        "no-schema-migration-or-entity-change",
+        "no-edit-to-active-or-claim-locked-paths",
+        "no-direct-Trusted-integration-or-deployment"
+      ],
+      "proposal_kind": "worker_only",
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "540b4c64aeb2edc35067eb15eb75fe371aaa29bc",
+      "proposal_dependency_evidence": [],
+      "collision_check": {
+        "compared_against": "Fresh continuous/work-pool-v4 @ 3e445702443484188fe7ad75f6b0733700ad67bd; current Worker main @ 540b4c64aeb2edc35067eb15eb75fe371aaa29bc; active and claim-locked task paths including WCP-554, WCP-401 and WCP-503.",
+        "result": "No exact or prefix overlap with active claims. FCP-056's locked src/Controller/GameCatalogue/ and templates/game_catalogue/ scopes and WCP-471's locked templates/game_catalogue/releases.html.twig path are deliberately excluded; feed discovery is provided by a new Gaming Page Builder widget. FCP-072 is unclaimed and dependency-blocked; no files under its broad templates/ scope are used. Existing GameRelease visibility semantics are reimplemented in a feature-local read-only query with a stricter allowlist for known statuses.",
+        "paths": [
+          "src/Controller/PublicGameReleaseFeedController.php",
+          "src/GameReleaseFeed/PublicGameReleaseFeedQuery.php",
+          "src/GameReleaseFeed/Templates/game_release_feed.xml.twig",
+          "src/GameReleaseFeed/Templates/widget/game_release_feed.html.twig",
+          "src/Widget/PublicGameReleaseFeedWidgetProvider.php",
+          "config/packages/game_release_feed.yaml",
+          "tests/Controller/PublicGameReleaseFeedControllerTest.php",
+          "tests/Widget/PublicGameReleaseFeedWidgetTest.php"
+        ],
+        "observed_nonblocking_path_hits": [
+          {
+            "id": "FCP-056",
+            "state": "worker_pr_complete_awaiting_trusted_review",
+            "excluded": [
+              "src/Controller/GameCatalogue/",
+              "templates/game_catalogue/"
+            ]
+          },
+          {
+            "id": "WCP-471",
+            "state": "worker_complete_awaiting_trusted_review",
+            "excluded": [
+              "templates/game_catalogue/releases.html.twig"
+            ]
+          },
+          {
+            "id": "FCP-072",
+            "state": "unclaimed",
+            "blocked_by": [
+              "FCP-035"
+            ],
+            "excluded": [
+              "templates/"
+            ]
+          }
+        ]
+      },
+      "published_at": "2026-09-27T16:21:53.790Z",
+      "claimed_on": "2026-09-27T16:21:53.790Z",
+      "claim_state": "active",
+      "active_base_branch": "main",
+      "active_base_sha": "540b4c64aeb2edc35067eb15eb75fe371aaa29bc",
+      "active_head": "540b4c64aeb2edc35067eb15eb75fe371aaa29bc",
+      "resume_branch": "feature/wcp-555-game-release-rss-g1",
+      "branch_heads": {
+        "claim_branch": "540b4c64aeb2edc35067eb15eb75fe371aaa29bc",
+        "feature_branch": "540b4c64aeb2edc35067eb15eb75fe371aaa29bc"
+      },
+      "last_checkpoint_at": "2026-09-27T16:21:53.790Z",
+      "last_verified_push_at": "2026-09-27T16:21:53.790Z",
+      "checkpoint_paths": [],
+      "ci_attempts": [],
+      "next_action": "Implement the bounded upcoming-release RSS query, feed controller/template, discoverable Gaming Page Builder link widget and focused tests on the exact main base."
     }
   ],
   "recovery_queue": [],
