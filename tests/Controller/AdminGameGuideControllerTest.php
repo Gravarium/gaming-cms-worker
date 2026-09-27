@@ -116,6 +116,7 @@ final class AdminGameGuideControllerTest extends WebTestCase
             self::assertStringContainsString('&lt;script&gt;alert(1)&lt;/script&gt; updated', $html);
             self::assertStringNotContainsString('<script>alert(1)</script>', $html);
             self::assertStringContainsString('arcane-barrage', $html);
+            self::assertStringContainsString('fire-bolt', $html);
             self::assertStringNotContainsString($author->getEmail(), $html);
         } finally {
             $this->cleanup($client, $guideIds, [$authorId, $reviewerId], [$gameId]);
