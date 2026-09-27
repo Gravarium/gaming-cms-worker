@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\\Tests\\Controller;
+namespace App\Tests\Controller;
 
-use App\\Entity\\CmsModuleState;
-use Doctrine\\ORM\\EntityManagerInterface;
-use Symfony\\Bundle\\FrameworkBundle\\Test\\WebTestCase;
+use App\Entity\CmsModuleState;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 final class VideoPlaylistPortalNavigationTest extends WebTestCase
 {
@@ -15,7 +15,7 @@ final class VideoPlaylistPortalNavigationTest extends WebTestCase
         $client = static::createClient();
         $entityManager = $client->getContainer()->get(EntityManagerInterface::class);
         $state = $entityManager->find(CmsModuleState::class, 'video');
-        $createdState = !$state instanceof CmsModuleState;
+        $createdState = !($state instanceof CmsModuleState);
         $originalEnabled = $state instanceof CmsModuleState ? $state->isEnabled() : null;
 
         try {
