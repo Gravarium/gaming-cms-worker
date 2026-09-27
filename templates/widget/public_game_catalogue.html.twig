@@ -1,0 +1,17 @@
+<section class="panel public-game-catalogue-widget" aria-labelledby="game-catalogue-{{ widget.id }}">
+    <h2 id="game-catalogue-{{ widget.id }}">Spiele entdecken</h2>
+    {% if data.items is not empty %}
+        <ul>
+            {% for entry in data.items %}
+                <li>
+                    <h3><a href="{{ path('app_game_catalogue_show', {slug: entry.game.slug}) }}">{{ entry.game.name }}</a></h3>
+                    {% if entry.summary %}
+                        <p>{{ entry.summary|slice(0, 240) }}</p>
+                    {% endif %}
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p class="muted" role="status">Der Spielekatalog enthält derzeit keine öffentlichen Einträge.</p>
+    {% endif %}
+</section>

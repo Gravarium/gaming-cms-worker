@@ -1,0 +1,14 @@
+<section class="panel public-content-categories-widget" aria-labelledby="content-categories-{{ widget.id }}">
+    <h2 id="content-categories-{{ widget.id }}">News nach Thema</h2>
+    {% if data.items is not empty %}
+        <ul>
+            {% for category in data.items %}
+                <li>
+                    <a href="{{ path('app_news_category', {slug: category.slug}) }}">{{ category.displayName }}</a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p class="muted" role="status">Für News sind derzeit keine öffentlichen Kategorien verfügbar.</p>
+    {% endif %}
+</section>
