@@ -23695,7 +23695,7 @@
       "package_id": "WCP-438",
       "title": "Enforce permission delegation when managing access-role definitions",
       "risk": "low",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -23762,13 +23762,13 @@
         ]
       },
       "claimed_on": "2026-09-27T00:05:42.907Z",
-      "claim_state": "active",
+      "claim_state": "locked_until_trusted_resolution",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
       "active_head": "d173b34978bbae205b906344aad434072cd7d303",
       "resume_branch": "feature/wcp-438-access-role-delegation-security-g1",
-      "last_checkpoint_at": "2026-09-27T00:13:20.631Z",
-      "last_verified_push_at": "2026-09-27T00:13:20.631Z",
+      "last_checkpoint_at": "2026-09-27T00:15:56.366Z",
+      "last_verified_push_at": "2026-09-27T00:15:56.366Z",
       "checkpoint_paths": [
         "tests/Controller/AdminAccessRoleDelegationSecurityTest.php"
       ],
@@ -23776,27 +23776,52 @@
         "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
         "feature_branch": "d173b34978bbae205b906344aad434072cd7d303"
       },
-      "next_action": "The first full CI run exposed a stale Doctrine identity-map assertion in the test; the test now clears the current manager before reading persisted state and explicitly asserts the rendered CSRF token. Await exact-head Worker CI run 36281821433 for HEAD d173b34978bbae205b906344aad434072cd7d303; repair any concrete remaining failure.",
+      "next_action": "PR #233 has green exact-head Worker CI and is ready for Trusted review; keep the claim locked until Trusted explicitly integrates, cancels or transfers it, then continue an independent package.",
       "worker_pr": 233,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/233",
       "pr_state": "open_ready_for_review_unmerged",
       "draft_pr": false,
       "last_ci_run_id": 36281821433,
       "ci_run_id": 36281821433,
-      "ci_result": "in_progress",
+      "ci_result": "success",
       "ci_attempts": [
         {
           "run_id": 36281698456,
           "head": "531c552b32edd016962892cf88782bd4dbe2ae8d",
           "result": "failure",
-          "reason": "Post-request entity state assertion read a stale Doctrine identity map; fixed to clear the current EntityManager before reloading."
+          "reason": "The test read a mutated Doctrine identity-map object after a rejected form submission; corrected to clear the current EntityManager before verifying persisted state."
         },
         {
           "run_id": 36281821433,
           "head": "d173b34978bbae205b906344aad434072cd7d303",
-          "result": "queued"
+          "result": "success"
         }
-      ]
+      ],
+      "final_head": "d173b34978bbae205b906344aad434072cd7d303",
+      "final_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "final_changed_paths": [
+        "tests/Controller/AdminAccessRoleDelegationSecurityTest.php"
+      ],
+      "changed_paths": [
+        "tests/Controller/AdminAccessRoleDelegationSecurityTest.php"
+      ],
+      "completed_at": "2026-09-27T00:15:56.366Z",
+      "test_results": {
+        "phpunit": "431 tests, 1,874 assertions, 0 failures; one deprecation and one notice.",
+        "phpstan": "Level 8 passed with no errors.",
+        "php_symfony": "Worker PHP/Symfony validation job passed on exact final HEAD.",
+        "postgres18": "PostgreSQL 18 applied and verified all 39 migrations.",
+        "exact_head_ci": {
+          "run_id": 36281821433,
+          "head": "d173b34978bbae205b906344aad434072cd7d303",
+          "result": "success"
+        }
+      },
+      "completion_summary": "Rendered valid-CSRF form regressions verify that a user manager without CMS_SETTINGS_MANAGE cannot create a role with that permission or add it to a manageable role. Both requests return 422; roles remain absent/unchanged and no corresponding audit event is recorded. Synthetic fixtures are cleaned up. Only the allowed test file changed.",
+      "open_limitations": [
+        "Awaiting Trusted review and Trusted integration CI."
+      ],
+      "trusted_follow_up": "Preserve PermissionDelegationPolicy::canDelegatePermissions checks for both access-role creation and editing, along with the no-write/no-audit behavior for rejected requests."
     },
     {
       "priority": 219,
