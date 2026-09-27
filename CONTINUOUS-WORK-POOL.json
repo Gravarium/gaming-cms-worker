@@ -10,10 +10,10 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T12:07:59.061Z",
+  "published_at": "2026-09-27T12:08:21.300Z",
   "summary": {
-    "total_remaining_worker_tasks": 165,
-    "completed_worker_prs_awaiting_trusted_review": 283,
+    "total_remaining_worker_tasks": 164,
+    "completed_worker_prs_awaiting_trusted_review": 284,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
@@ -37299,7 +37299,7 @@
       "package_id": "WCP-527",
       "title": "Require CSRF for own-session revocation",
       "risk": "high",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -37372,7 +37372,7 @@
       },
       "published_at": "2026-09-27T12:02:46.670Z",
       "claimed_on": "2026-09-27T12:02:46.670Z",
-      "claim_state": "active",
+      "claim_state": "locked_until_trusted_resolution",
       "active_base_branch": "main",
       "active_base_sha": "b510875e7b0741b9b19f09429d2204a95df51198",
       "active_head": "6dfe70231a0b58f127e741ab5883047a52b08c58",
@@ -37386,27 +37386,30 @@
       "checkpoint_paths": [
         "tests/Controller/AccountSessionRevocationCsrfTest.php"
       ],
-      "next_action": "Monitor exact-head Worker CI run 36317817075 for HEAD 6dfe70231a0b58f127e741ab5883047a52b08c58; repair only concrete failures within the dedicated test path.",
+      "next_action": "Worker PR #319 is complete on exact green HEAD 6dfe70231a0b58f127e741ab5883047a52b08c58; claim remains locked until Trusted resolution.",
       "worker_pr": 319,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/319",
       "worker_pr_changed_paths": [
         "tests/Controller/AccountSessionRevocationCsrfTest.php"
       ],
-      "draft_pr": true,
+      "draft_pr": false,
       "pr_state": "open",
-      "worker_pr_state": "draft",
+      "worker_pr_state": "ready_for_review",
       "last_verified_push_at": "2026-09-27T12:06:00.891Z",
       "ci_run_id": 36317817075,
       "last_ci_run_id": 36317817075,
-      "ci_result": "in_progress",
-      "last_ci_result": "in_progress",
+      "ci_result": "success",
+      "last_ci_result": "success",
       "ci_attempts": [
         {
           "run_id": 36317817075,
           "head": "6dfe70231a0b58f127e741ab5883047a52b08c58",
-          "result": "in_progress"
+          "result": "success",
+          "conclusion": "success"
         }
-      ]
+      ],
+      "final_head": "6dfe70231a0b58f127e741ab5883047a52b08c58",
+      "completed_at": "2026-09-27T12:08:21.300Z"
     },
     {
       "priority": 528,
