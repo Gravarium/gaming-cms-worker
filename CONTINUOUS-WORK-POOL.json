@@ -17,7 +17,7 @@
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-471 is claimed on sanitized main for public game release discovery with disjoint paths; continue its implementation while preserving WCP-470 and all other active claims.",
+    "next_required_action": "WCP-471 is another worker's active public release-calendar claim and remains untouched. This chat has claimed disjoint WCP-472 from WCP-340's exact green HEAD for backup-provider planning authorization and CSRF tests.",
     "composition_preparable": 0,
     "immediately_actionable": 4,
     "must_continue": true
@@ -28620,6 +28620,108 @@
         "feature_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d"
       },
       "next_action": "Implement the new read-only filtered calendar on the claimed feature branch, then open a draft Worker PR for exact-head CI."
+    },
+    {
+      "priority": 472,
+      "package_id": "WCP-472",
+      "title": "Protect backup provider planning authorization and CSRF",
+      "risk": "medium",
+      "execution_state": "worker_in_progress",
+      "dependencies": [
+        "WCP-340"
+      ],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-472-backup-provider-planning-security-g1",
+      "suggested_branch": "feature/wcp-472-backup-provider-planning-security-g1",
+      "base_branch": "feature/wcp-340-backup-provider-selection-boundary-g1",
+      "base_sha": "045b281ba77600e2fb4f35a82c3e9bcf3ae5a3e7",
+      "objective": "Add test-only functional security regressions for the existing backup provider catalogue and planning route, stacked on WCP-340's exact green HEAD. Verify CMS_CONNECTORS_MANAGE protects catalogue reads and plan submissions, and missing or invalid backup-provider-plan CSRF tokens cannot change backup targets, audit rows, or the generated selection file. Use only a synthetic CMS user and local test services; do not execute backups, activate connectors, or change production code.",
+      "allowed_paths": [
+        "tests/Controller/AdminBackupProviderPlanningSecurityTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "src/",
+        "templates/",
+        "migrations/",
+        "config/",
+        "public/uploads/"
+      ],
+      "deliverables": [
+        "A user lacking CMS_CONNECTORS_MANAGE is denied backup-catalogue GET and plan POST; target, audit and selection state remain unchanged.",
+        "An authorized user can render the plan form; missing and invalid plan CSRF tokens are denied without target, audit or selection-file mutations.",
+        "Use baseline-and-after comparisons and clean all synthetic user and audit state.",
+        "Only the new test file is added by this package."
+      ],
+      "tests": [
+        "Focused AdminBackupProviderPlanningSecurityTest functional coverage.",
+        "PHPStan level 8 and complete Worker CI on exact final HEAD.",
+        "PostgreSQL 18 complete migration-chain validation."
+      ],
+      "completion_report": [
+        "Exact sanitized main base SHA and exact green proposal-base SHA.",
+        "Exact final HEAD, complete changed paths, and Worker PR.",
+        "Authorization/CSRF denials and unchanged backup target, audit, and selection-file evidence.",
+        "Focused and complete test, PHPStan, and migration results.",
+        "Trusted follow-up and any remaining assumptions."
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "preserve-CMS_CONNECTORS_MANAGE-and-backup-provider-plan-CSRF",
+        "denied-or-invalid-plan-requests-must-not-mutate-backup-targets-audit-or-selection-state",
+        "no-live-backup-execution-or-connector-activation",
+        "no-real-credentials-or-backup-data",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment",
+        "no-private-runtime-or-sensitive-data"
+      ],
+      "proposal_base_branch": "feature/wcp-340-backup-provider-selection-boundary-g1",
+      "proposal_base_sha": "045b281ba77600e2fb4f35a82c3e9bcf3ae5a3e7",
+      "proposal_kind": "worker_only",
+      "proposal_dependency_evidence": [
+        {
+          "package_id": "WCP-340",
+          "exact_green_head": "045b281ba77600e2fb4f35a82c3e9bcf3ae5a3e7",
+          "worker_pr": 134,
+          "ci_run_id": 36250221072,
+          "ci_result": "success"
+        }
+      ],
+      "collision_check": {
+        "compared_against": "Fresh continuous/work-pool-v4 at 63090bd9bb16177793e75ea0b18d3dd4405e30b2, all active and claim-locked allowed-path scopes, sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d, and WCP-340 exact green HEAD 045b281ba77600e2fb4f35a82c3e9bcf3ae5a3e7.",
+        "result": "No active or claim-locked task owns or encloses tests/Controller/AdminBackupProviderPlanningSecurityTest.php. WCP-340 owns AdminBackupProviderController.php and the distinct AdminBackupProviderPlanningBoundaryTest.php; WCP-426 owns AdminBackupAccessSecurityTest.php; WCP-465 owns AdminConnectorCatalogPlanSecurityTest.php. WCP-471's public game release calendar paths are disjoint. This package changes only a new functional security test.",
+        "paths": [
+          "tests/Controller/AdminBackupProviderPlanningSecurityTest.php"
+        ]
+      },
+      "published_at": "2026-09-27T05:23:15.072Z",
+      "claimed_on": "2026-09-27T05:23:15.072Z",
+      "claim_state": "active",
+      "active_base_branch": "feature/wcp-340-backup-provider-selection-boundary-g1",
+      "active_base_sha": "045b281ba77600e2fb4f35a82c3e9bcf3ae5a3e7",
+      "active_head": "045b281ba77600e2fb4f35a82c3e9bcf3ae5a3e7",
+      "resume_branch": "feature/wcp-472-backup-provider-planning-security-g1",
+      "last_checkpoint_at": "2026-09-27T05:23:15.072Z",
+      "checkpoint_paths": [],
+      "branch_heads": {
+        "claim_branch": "045b281ba77600e2fb4f35a82c3e9bcf3ae5a3e7",
+        "feature_branch": "045b281ba77600e2fb4f35a82c3e9bcf3ae5a3e7"
+      },
+      "next_action": "Implement the authorization and plan-CSRF functional tests in the sole allowed file, commit to the feature branch, and open a draft Worker PR for exact-head CI."
     }
   ],
   "recovery_queue": [],
