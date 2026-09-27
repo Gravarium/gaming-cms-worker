@@ -37267,15 +37267,15 @@
       "claimed_on": "2026-09-27T11:49:42.443Z",
       "active_base_branch": "main",
       "active_base_sha": "b510875e7b0741b9b19f09429d2204a95df51198",
-      "active_head": "03e216e77cdc0b32acba35079f32bb72ff7cc592",
+      "active_head": "a484dabe7bdc32f7ee433a38267cc88dc9f3a3f2",
       "resume_branch": "feature/wcp-526-media-usage-browser-g1",
       "branch_heads": {
         "claim_branch": "b510875e7b0741b9b19f09429d2204a95df51198",
-        "feature_branch": "03e216e77cdc0b32acba35079f32bb72ff7cc592"
+        "feature_branch": "a484dabe7bdc32f7ee433a38267cc88dc9f3a3f2"
       },
-      "last_observed_head": "03e216e77cdc0b32acba35079f32bb72ff7cc592",
-      "last_checkpoint_at": "2026-09-27T12:37:04.000Z",
-      "last_verified_push_at": "2026-09-27T12:37:04.000Z",
+      "last_observed_head": "a484dabe7bdc32f7ee433a38267cc88dc9f3a3f2",
+      "last_checkpoint_at": "2026-09-27T12:44:16.055Z",
+      "last_verified_push_at": "2026-09-27T12:44:16.055Z",
       "checkpoint_paths": [
         "src/Media/MediaAssetUsageBrowser.php",
         "src/Controller/AdminMediaUsageController.php",
@@ -37283,7 +37283,7 @@
         "templates/admin/storage/media_usage.html.twig",
         "tests/Controller/AdminMediaUsageBrowserTest.php"
       ],
-      "next_action": "Monitor Worker CI run 36319423657 on exact HEAD. After full success, update the PR evidence and mark the draft ready.",
+      "next_action": "Monitor Worker CI run 36319939992 on exact HEAD. If red, diagnose and fix on this feature branch, then rerun complete relevant CI on the new exact HEAD. After green, update PR #323 with final evidence and mark it ready.",
       "worker_pr": 323,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/323",
       "draft_pr": true,
@@ -37296,8 +37296,8 @@
         "templates/admin/storage/media_usage.html.twig",
         "tests/Controller/AdminMediaUsageBrowserTest.php"
       ],
-      "ci_result": "queued",
-      "last_ci_result": "queued",
+      "ci_result": "in_progress",
+      "last_ci_result": "in_progress",
       "ci_attempts": [
         {
           "run_id": 36318742525,
@@ -37320,8 +37320,15 @@
         {
           "run_id": 36319423657,
           "head": "03e216e77cdc0b32acba35079f32bb72ff7cc592",
-          "result": "queued",
-          "summary": "Full Worker CI queued after correcting the cache policy assertion and deprecated DBAL identifier quoting."
+          "result": "failure",
+          "summary": "Exact-head Worker CI passed PHPStan, Symfony/container/Twig/Doctrine checks and PostgreSQL 18 migration validation; PHPUnit had one failing assertion because the test selected the first content row instead of the image-block entry. The test now targets the entry by its rendered content ID.",
+          "conclusion": "failure"
+        },
+        {
+          "run_id": 36319939992,
+          "head": "a484dabe7bdc32f7ee433a38267cc88dc9f3a3f2",
+          "result": "in_progress",
+          "summary": "Full Worker CI is running on the exact checkpoint after the selector correction."
         }
       ]
     },
