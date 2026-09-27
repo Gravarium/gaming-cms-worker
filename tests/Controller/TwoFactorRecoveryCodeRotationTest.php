@@ -345,8 +345,9 @@ final class TwoFactorRecoveryCodeRotationTest extends WebTestCase
         if (!$cipher instanceof SensitiveDataCipher) {
             throw new \LogicException('Sensitive data cipher service is unavailable.');
         }
+        $encryptedSecret = $cipher->encrypt($secret);
         $user->enableTwoFactor(
-            $cipher->encrypt($secret),
+            $encryptedSecret,
             array_map(static fn (string $code): string => password_hash($code, PASSWORD_DEFAULT), $recoveryCodes),
         );
         $this->em($client)->flush();
@@ -364,7 +365,7 @@ final class TwoFactorRecoveryCodeRotationTest extends WebTestCase
         ]);
         self::assertResponseRedirects('/account');
 
-        return [$client, $userId, $secret, $cipher->encrypt($secret)];
+        return [$client, $userId, $secret, $encryptedSecret];
     }
 
     private function createUser(KernelBrowser $client, string $label, string $password): User
