@@ -10,7 +10,7 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T09:53:55.411Z",
+  "published_at": "2026-09-27T09:54:42.943Z",
   "summary": {
     "total_remaining_worker_tasks": 154,
     "completed_worker_prs_awaiting_trusted_review": 263,
@@ -33138,21 +33138,21 @@
       "claim_state": "active",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-      "active_head": "e7b21c091f09db0147b7309a73a664818e7ba26e",
+      "active_head": "e4a4725684e7d03eec20a432c5e6e0e2f395d616",
       "resume_branch": "feature/wcp-498-connector-health-report-g1",
       "branch_heads": {
         "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-        "feature_branch": "e7b21c091f09db0147b7309a73a664818e7ba26e"
+        "feature_branch": "e4a4725684e7d03eec20a432c5e6e0e2f395d616"
       },
-      "last_observed_head": "e7b21c091f09db0147b7309a73a664818e7ba26e",
-      "last_checkpoint_at": "2026-09-27T09:52:14.711Z",
+      "last_observed_head": "e4a4725684e7d03eec20a432c5e6e0e2f395d616",
+      "last_checkpoint_at": "2026-09-27T09:54:42.943Z",
       "checkpoint_paths": [
         "src/Controller/AdminConnectorHealthReportController.php",
         "src/ExternalConnector/ConnectorHealthReport.php",
         "tests/Controller/AdminConnectorHealthReportTest.php"
       ],
-      "next_action": "Monitor the new exact-head CI run for corrected head e7b21c091f09db0147b7309a73a664818e7ba26e; diagnose any remaining concrete failure only within the three allowed paths.",
-      "last_verified_push_at": "2026-09-27T09:52:14.711Z",
+      "next_action": "Monitor the new exact-head CI run for corrected head e4a4725684e7d03eec20a432c5e6e0e2f395d616; diagnose any remaining concrete failure only within the three allowed paths.",
+      "last_verified_push_at": "2026-09-27T09:54:42.943Z",
       "worker_pr": 291,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/291",
       "draft_pr": true,
@@ -33162,8 +33162,8 @@
         "src/ExternalConnector/ConnectorHealthReport.php",
         "tests/Controller/AdminConnectorHealthReportTest.php"
       ],
-      "ci_run_id": 36310592861,
-      "last_ci_run_id": 36310592861,
+      "ci_run_id": 36310726491,
+      "last_ci_run_id": 36310726491,
       "ci_result": "failure",
       "last_ci_result": "failure",
       "ci_attempts": [
@@ -33178,6 +33178,12 @@
           "head": "3f1bac3dd97bb6c13bb8332c5a80480cfa6137cb",
           "result": "failure",
           "diagnosis": "PHPStan, container, Doctrine mapping, PostgreSQL migration validation and the prior test suite passed. New tests then exposed a normalized Symfony Cache-Control header assertion and detached User cleanup after Browser requests; the test now checks required cache directives and re-fetches the User before removal."
+        },
+        {
+          "run_id": 36310726491,
+          "head": "e7b21c091f09db0147b7309a73a664818e7ba26e",
+          "result": "failure",
+          "diagnosis": "PHPStan, container, Doctrine mapping, PostgreSQL migration validation and all other tests passed. The authorized report test still attempted to remove detached health-status fixtures after Browser requests; cleanup now reloads every synthetic entity by primary key before removal."
         }
       ]
     },
