@@ -11,7 +11,7 @@ use App\Entity\GuildRank;
 use App\Entity\User;
 use App\Security\CmsPermission;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Test\KernelBrowser;
+use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 final class AdminGuildStructureOrderTest extends WebTestCase
@@ -58,6 +58,8 @@ final class AdminGuildStructureOrderTest extends WebTestCase
         self::assertResponseIsSuccessful();
         self::assertSelectorExists('button[disabled][aria-label="Rang Officer ist bereits an erster Stelle"]');
         self::assertSelectorExists('button[disabled][aria-label="Frage Character ist bereits an erster Stelle"]');
+        self::assertSelectorExists('button[disabled][aria-label="Rang Member ist bereits an letzter Stelle"]');
+        self::assertSelectorExists('button[disabled][aria-label="Frage Experience ist bereits an letzter Stelle"]');
         self::assertSelectorExists(sprintf('form[data-order-type="rank"][data-order-id="%d"][data-direction="up"]', $secondRankId));
         self::assertSelectorExists(sprintf('form[data-order-type="question"][data-order-id="%d"][data-direction="down"]', $firstQuestionId));
 
@@ -219,7 +221,7 @@ final class AdminGuildStructureOrderTest extends WebTestCase
         return $user;
     }
 
-    /** @return array{Game, Guild, Guild} */
+    /** @return array{Guild, Guild} */
     private function guilds(KernelBrowser $client): array
     {
         $suffix = bin2hex(random_bytes(5));
