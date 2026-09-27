@@ -17,7 +17,7 @@
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-462 is exclusively claimed from sanitized main for admin-dashboard access regressions; continue on feature/wcp-462-admin-dashboard-access-g1 while preserving every other active and claim-locked package.",
+    "next_required_action": "WCP-462 is active on feature/wcp-462-admin-dashboard-access-g1 at exact HEAD 5ca9943f345ac6a833277e49fe87093aa13c223e; continue this dashboard security package and preserve WCP-461 plus all other locked claims.",
     "composition_preparable": 0,
     "immediately_actionable": 3,
     "must_continue": true
@@ -27286,15 +27286,19 @@
       "claim_state": "active",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "5ca9943f345ac6a833277e49fe87093aa13c223e",
       "resume_branch": "feature/wcp-462-admin-dashboard-access-g1",
-      "last_checkpoint_at": "2026-09-27T03:52:28.158Z",
-      "checkpoint_paths": [],
+      "last_checkpoint_at": "2026-09-27T03:53:35.943Z",
+      "checkpoint_paths": [
+        "tests/Controller/AdminDashboardAccessSecurityTest.php"
+      ],
       "branch_heads": {
         "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-        "feature_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d"
+        "feature_branch": "5ca9943f345ac6a833277e49fe87093aa13c223e"
       },
-      "next_action": "Implement only the allowed dashboard access security test, checkpoint it to this exact feature branch, open a Worker PR against main and run complete exact-head CI."
+      "next_action": "Open a draft Worker PR from exact HEAD 5ca9943f345ac6a833277e49fe87093aa13c223e against main, then run and inspect complete exact-head Worker CI.",
+      "last_observed_head": "5ca9943f345ac6a833277e49fe87093aa13c223e",
+      "last_verified_push_at": "2026-09-27T03:53:35.943Z"
     }
   ],
   "recovery_queue": [],
