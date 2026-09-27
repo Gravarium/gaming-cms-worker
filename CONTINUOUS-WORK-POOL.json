@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T11:26:16.917Z",
+  "published_at": "2026-09-27T11:29:00.709Z",
   "summary": {
     "total_remaining_worker_tasks": 165,
     "completed_worker_prs_awaiting_trusted_review": 278,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-521 is open as draft PR #313 on exact HEAD 31825c9fdb6aef152fe0604238b7123b3a75fdc7; Worker CI run 36315691377 is in progress.",
+    "next_required_action": "WCP-518 is complete at exact green HEAD 407fc885fa2e19fe5d9970a8fdfa87a087120f90; PR #310 is ready for Trusted review and its claim remains locked. Select the next free dependency-safe module package.",
     "composition_preparable": 0,
     "immediately_actionable": 20,
     "must_continue": true
@@ -35870,7 +35870,7 @@
       "package_id": "WCP-518",
       "title": "Promote upcoming game releases through the page builder",
       "risk": "low",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -35979,7 +35979,7 @@
         ]
       },
       "published_at": "2026-09-27T10:57:18.371Z",
-      "claim_state": "active",
+      "claim_state": "locked_until_trusted_resolution",
       "claimed_on": "2026-09-27T10:58:06.085Z",
       "active_base_branch": "main",
       "active_base_sha": "b510875e7b0741b9b19f09429d2204a95df51198",
@@ -35996,14 +35996,14 @@
         "templates/widget/upcoming_game_releases.html.twig",
         "tests/Widget/UpcomingGameReleaseWidgetProviderTest.php"
       ],
-      "next_action": "Monitor exact-head Worker CI run 36315578537 for 407fc885fa2e19fe5d9970a8fdfa87a087120f90. If any job fails, diagnose the reported issue and repair only within the four allowed paths on the same branch, then rerun full CI.",
-      "last_checkpoint_at": "2026-09-27T11:23:24Z",
+      "next_action": "WCP-518 is complete. Keep claim/wcp-518-upcoming-game-release-widget-g1 locked until Trusted explicitly integrates, cancels or transfers the ready PR #310. Trusted follow-up: integrate reviewed paths into Gravarium/gaming-cms, confirm service discovery/routes and run main-CMS CI.",
+      "last_checkpoint_at": "2026-09-27T11:29:00.709Z",
       "last_verified_push_at": "2026-09-27T11:23:24Z",
       "worker_pr": 310,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/310",
-      "draft_pr": true,
-      "pr_state": "open_draft",
-      "worker_pr_state": "draft",
+      "draft_pr": false,
+      "pr_state": "open_ready",
+      "worker_pr_state": "ready",
       "worker_pr_changed_paths": [
         "src/Widget/GameRelease/UpcomingReleaseQuery.php",
         "src/Widget/UpcomingGameReleaseWidgetProvider.php",
@@ -36012,8 +36012,8 @@
       ],
       "ci_run_id": 36315578537,
       "last_ci_run_id": 36315578537,
-      "ci_result": "in_progress",
-      "last_ci_result": "in_progress",
+      "ci_result": "success",
+      "last_ci_result": "success",
       "ci_attempts": [
         {
           "run_id": 36314564707,
@@ -36052,10 +36052,22 @@
         {
           "run_id": 36315578537,
           "head": "407fc885fa2e19fe5d9970a8fdfa87a087120f90",
-          "result": "in_progress",
-          "summary": "Full Worker CI queued for corrected exact HEAD after test isolation from the existing +10-day Game Catalogue fixture. Await all PHPStan, PHPUnit and PostgreSQL 18 jobs."
+          "result": "success",
+          "summary": "PHPStan level 8: no errors. PHPUnit: 538 tests and 2,256 assertions, zero failures (suite summary: one deprecation and one notice). PostgreSQL 18: full migration chain applied and migration status verified. Run succeeded on exact HEAD.",
+          "jobs": [
+            "108609549110:success",
+            "108609549194:success"
+          ]
         }
-      ]
+      ],
+      "final_head": "407fc885fa2e19fe5d9970a8fdfa87a087120f90",
+      "final_changed_paths": [
+        "src/Widget/GameRelease/UpcomingReleaseQuery.php",
+        "src/Widget/UpcomingGameReleaseWidgetProvider.php",
+        "templates/widget/upcoming_game_releases.html.twig",
+        "tests/Widget/UpcomingGameReleaseWidgetProviderTest.php"
+      ],
+      "completed_at": "2026-09-27T11:29:00.709Z"
     },
     {
       "priority": 519,
