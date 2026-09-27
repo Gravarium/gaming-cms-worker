@@ -39779,14 +39779,14 @@
       "claim_state": "active",
       "active_base_branch": "main",
       "active_base_sha": "b510875e7b0741b9b19f09429d2204a95df51198",
-      "active_head": "1967df1b9c34b1371df024f305274b871922e574",
+      "active_head": "2cb3c805bd1590ab3098634d9277d8ad41488f65",
       "resume_branch": "feature/wcp-541-guild-role-needs-g1",
       "branch_heads": {
         "claim_branch": "b510875e7b0741b9b19f09429d2204a95df51198",
-        "feature_branch": "1967df1b9c34b1371df024f305274b871922e574"
+        "feature_branch": "2cb3c805bd1590ab3098634d9277d8ad41488f65"
       },
-      "last_observed_head": "1967df1b9c34b1371df024f305274b871922e574",
-      "last_checkpoint_at": "2026-09-27T14:14:26.496Z",
+      "last_observed_head": "2cb3c805bd1590ab3098634d9277d8ad41488f65",
+      "last_checkpoint_at": "2026-09-27T14:18:17.548Z",
       "checkpoint_paths": [
         "src/Controller/AdminGuildRoleNeedController.php",
         "src/Form/GuildRoleNeedInput.php",
@@ -39800,9 +39800,9 @@
         "tests/Controller/AdminGuildRoleNeedControllerTest.php",
         "tests/Controller/PublicGuildRoleNeedDisplayTest.php"
       ],
-      "next_action": "Inspect exact-head Worker CI #829 / 36325149570 on 1967df1b9c34b1371df024f305274b871922e574; fix any remaining full-suite failure on this branch and rerun complete CI.",
+      "next_action": "Inspect Worker CI #831 / 36325358213 on exact HEAD 2cb3c805bd1590ab3098634d9277d8ad41488f65. Fix any remaining failure on the same branch, then rerun complete exact-head CI.",
       "worker_pr_state": "draft",
-      "last_verified_push_at": "2026-09-27T14:14:26.496Z",
+      "last_verified_push_at": "2026-09-27T14:18:17.548Z",
       "ci_result": "in_progress",
       "last_ci_result": "in_progress",
       "ci_attempts": [
@@ -39834,7 +39834,19 @@
           "run_number": 829,
           "head": "1967df1b9c34b1371df024f305274b871922e574",
           "base": "b510875e7b0741b9b19f09429d2204a95df51198",
-          "result": "queued"
+          "result": "failure",
+          "conclusion": "failure",
+          "phpstan": "success",
+          "phpunit": "failure",
+          "postgresql_18_migrations": "success",
+          "summary": "PHPStan, Twig/YAML/container validation and PostgreSQL 18 migrations passed. PHPUnit completed 545 tests with 1 error and 2 failures: BrowserKit could not assign an empty string to the active checkbox, and 404 exception-page assertions were too broad. Updated the checkbox interaction and removed exception-page text assertions."
+        },
+        {
+          "run_id": 36325358213,
+          "run_number": 831,
+          "head": "2cb3c805bd1590ab3098634d9277d8ad41488f65",
+          "base": "b510875e7b0741b9b19f09429d2204a95df51198",
+          "result": "in_progress"
         }
       ],
       "worker_pr": 334,
@@ -39855,8 +39867,8 @@
       "worker_pr_base_branch": "main",
       "pr_state": "open_draft",
       "draft_pr": true,
-      "ci_run_id": 36325149570,
-      "last_ci_run_id": 36325149570
+      "ci_run_id": 36325358213,
+      "last_ci_run_id": 36325358213
     },
     {
       "priority": 542,
