@@ -38339,15 +38339,15 @@
       "claim_state": "active",
       "active_base_branch": "main",
       "active_base_sha": "b510875e7b0741b9b19f09429d2204a95df51198",
-      "active_head": "56550815e1955961742a87e40fe9a7b61c9f262b",
+      "active_head": "2a71a692dca9924f20c0de90b5059f1a07d4ea0f",
       "resume_branch": "feature/wcp-533-public-content-release-widget-g1",
       "branch_heads": {
         "claim_branch": "b510875e7b0741b9b19f09429d2204a95df51198",
         "feature_branch": "b510875e7b0741b9b19f09429d2204a95df51198"
       },
-      "last_observed_head": "56550815e1955961742a87e40fe9a7b61c9f262b",
-      "last_checkpoint_at": "2026-09-27T12:56:12.564Z",
-      "last_verified_push_at": "2026-09-27T12:56:12.564Z",
+      "last_observed_head": "2a71a692dca9924f20c0de90b5059f1a07d4ea0f",
+      "last_checkpoint_at": "2026-09-27T13:00:24.286Z",
+      "last_verified_push_at": "2026-09-27T13:00:24.286Z",
       "checkpoint_paths": [
         "src/Widget/ContentRelease/PublicContentReleaseQuery.php",
         "src/Widget/PublicContentReleaseWidgetProvider.php",
@@ -38355,7 +38355,7 @@
         "config/packages/content_release_widget.yaml",
         "tests/Widget/PublicContentReleaseWidgetProviderTest.php"
       ],
-      "next_action": "Diagnose and repair any red exact-head CI result on the same branch, rerun all relevant checks on the new exact HEAD, then mark the Worker PR ready for Trusted review.",
+      "next_action": "Rerun full Worker CI on the repaired exact HEAD; diagnose and repair any remaining red result on this same branch.",
       "worker_pr": 327,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/327",
       "draft_pr": true,
@@ -38368,14 +38368,14 @@
         "config/packages/content_release_widget.yaml",
         "tests/Widget/PublicContentReleaseWidgetProviderTest.php"
       ],
-      "ci_result": "in_progress",
-      "last_ci_result": "in_progress",
+      "ci_result": "failure",
+      "last_ci_result": "failure",
       "ci_attempts": [
         {
           "run_id": 36320645780,
           "head": "56550815e1955961742a87e40fe9a7b61c9f262b",
-          "status": "in_progress",
-          "conclusion": null
+          "result": "failure",
+          "cause": "Three functional assertions expected the whole database to contain only this test's release; an existing published release in the shared worker test database made the actual result count two. The query and static checks passed. Tests now filter on their own fixture IDs and assert request-cache behavior without assuming an empty global release table."
         }
       ]
     },
