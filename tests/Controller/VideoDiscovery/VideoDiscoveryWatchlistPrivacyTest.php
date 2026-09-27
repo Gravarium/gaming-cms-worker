@@ -8,6 +8,7 @@ use App\Entity\CmsModuleState;
 use App\Entity\User;
 use App\Entity\VideoDiscovery\VideoWatchlist;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 final class VideoDiscoveryWatchlistPrivacyTest extends WebTestCase
@@ -34,7 +35,7 @@ final class VideoDiscoveryWatchlistPrivacyTest extends WebTestCase
         self::assertNotNull($privateId);
         self::assertNotNull($publicId);
 
-        $crawler = $client->request('GET', '/video-discovery/watchlists/'.$privateId);
+        $client->request('GET', '/video-discovery/watchlists/'.$privateId);
         self::assertResponseStatusCodeSame(404);
         $content = $client->getResponse()->getContent();
         self::assertIsString($content);
@@ -60,13 +61,14 @@ final class VideoDiscoveryWatchlistPrivacyTest extends WebTestCase
 
     private function user(KernelBrowser $client, string $suffix): User
     {
+        $entityManager = $client->getContainer()->get(EntityManagerInterface::class);
         $user = (new User())
             ->setEmail('video-watchlist-'.$suffix.'-'.bin2hex(random_bytes(4)).'@example.test')
             ->setDisplayName('Video watchlist '.$suffix)
             ->setPassword('unused-test-hash')
             ->verifyEmail();
-        $client->getContainer()->get(EntityManagerInterface::class)->persist($user);
-        $client->getContainer()->get(EntityManagerInterface::class)->flush();
+        $entityManager->persist($user);
+        $entityManager->flush();
 
         return $user;
     }
