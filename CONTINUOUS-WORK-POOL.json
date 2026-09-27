@@ -17,7 +17,7 @@
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-469 is complete on green exact-head Worker PR #262. Continue with the next independent Worker-only proposal; preserve all active claims and blocked FCP dependencies.",
+    "next_required_action": "WCP-469 is complete on green exact-head Worker PR #262; WCP-470 is claimed on sanitized main for content-tag authorization and CSRF coverage. Preserve all other active claims.",
     "composition_preparable": 0,
     "immediately_actionable": 3,
     "must_continue": true
@@ -28366,6 +28366,101 @@
         "Awaiting Trusted review and Trusted integration CI."
       ],
       "trusted_follow_up": "Preserve CMS_SETTINGS_MANAGE before reading or rendering failed-message details; retain existing retry CSRF behavior and run full Trusted CI."
+    },
+    {
+      "priority": 470,
+      "package_id": "WCP-470",
+      "title": "Protect content tag creation and deletion with authorization and CSRF",
+      "risk": "medium",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-470-content-tag-security-g1",
+      "suggested_branch": "feature/wcp-470-content-tag-security-g1",
+      "base_branch": "main",
+      "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "objective": "Add test-only functional security regressions for the existing content tag administration routes. Verify CMS_CONTENT_MANAGE protects tag listing and mutations, missing or invalid tag-form CSRF tokens do not persist tags or audit records, and route-specific delete CSRF is required to remove an unused tag. Prove a rendered form token creates a tag and a rendered delete token deletes it. Restore synthetic tags, audit rows and users; do not change the controller, form, entity, template or schema.",
+      "allowed_paths": [
+        "tests/Controller/AdminContentTagSecurityTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "src/",
+        "templates/",
+        "migrations/",
+        "config/",
+        "public/uploads/"
+      ],
+      "deliverables": [
+        "An authenticated user without CMS_CONTENT_MANAGE is denied tag listing, creation and deletion.",
+        "Missing and invalid content-tag form CSRF tokens return 422 without persisting tags or save-audit rows.",
+        "A rendered create-form token creates the selected content tag.",
+        "Missing and invalid route-specific delete tokens preserve an unused tag; the rendered delete token removes it and records the authorized action.",
+        "Synthetic tags, audit rows and users are cleaned up; only the allowed test file changes."
+      ],
+      "tests": [
+        "Focused AdminContentTagSecurityTest functional PHPUnit coverage for authorization, create-form CSRF, valid rendered create, route-specific delete CSRF, valid delete and cleanup.",
+        "PHPStan level 8 and complete Worker CI on exact final HEAD.",
+        "PostgreSQL 18 complete migration-chain validation."
+      ],
+      "completion_report": [
+        "Exact sanitized main base SHA and final Worker HEAD SHA.",
+        "Complete changed-path list and Worker PR.",
+        "Permission denials, unchanged tag/audit state after invalid CSRF and rendered-token create/delete evidence.",
+        "Focused and complete tests, PHPStan and exact-head CI results.",
+        "Remaining Trusted integration follow-up."
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "preserve-CMS_CONTENT_MANAGE-and-content-tag-form/delete-route-CSRF",
+        "invalid-or-denied-tag-mutations-must-not-persist-tag-or-audit-changes",
+        "do-not-delete-tags-associated-with-content",
+        "restore-all-synthetic-tag-audit-and-user-state",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment",
+        "no-private-runtime-or-sensitive-data"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "proposal_kind": "worker_only",
+      "proposal_dependency_evidence": [],
+      "collision_check": {
+        "compared_against": "Fresh continuous/work-pool-v4 at 6979f29b98a91db7fecdc78740a5118987b4f148, all active and claim-locked allowed-path scopes, and exact sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d.",
+        "result": "No active or claim-locked package owns or encloses tests/Controller/AdminContentTagSecurityTest.php; it is absent from sanitized main. WCP-380 owns AdminContentTagController.php and TaxonomySlugUniquenessTest.php; WCP-358 owns ContentTagType.php and its form boundary test. This proposal touches only a separate functional test file. Existing controller/list tests do not cover its authenticated role boundary, form CSRF side effects or route-specific delete token. No content, tag, form, template, migration or dependency path is changed.",
+        "paths": [
+          "tests/Controller/AdminContentTagSecurityTest.php"
+        ]
+      },
+      "published_at": "2026-09-27T05:04:51.529Z",
+      "claimed_on": "2026-09-27T05:04:51.529Z",
+      "claim_state": "active",
+      "active_base_branch": "main",
+      "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "resume_branch": "feature/wcp-470-content-tag-security-g1",
+      "last_checkpoint_at": "2026-09-27T05:04:51.529Z",
+      "checkpoint_paths": [],
+      "branch_heads": {
+        "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+        "feature_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d"
+      },
+      "next_action": "Implement the content-tag permission, form-CSRF and route-specific delete-CSRF functional tests in the single allowed test file; checkpoint and run full exact-head Worker CI.",
+      "last_observed_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "last_verified_push_at": "2026-09-27T05:04:51.529Z"
     }
   ],
   "recovery_queue": [],
