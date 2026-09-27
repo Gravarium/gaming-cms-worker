@@ -6,6 +6,7 @@
 <p class="eyebrow">{{ application.guild.name }} · Bewerbungsprüfung</p>
 <h1>{{ application.applicantName }} als {{ application.characterName }}</h1>
 <p class="muted">{{ application.email }}{% if application.characterClass %} · {{ application.characterClass }}{% endif %} · Status: {{ application.status }}</p>
+<p><a class="button-link button-secondary" href="{{ path('app_admin_guild_role_need_index', {guild: application.guild.id}) }}">Rollenbedarf verwalten</a></p>
 <section class="panel"><h2>Bewerbung</h2><p>{{ application.message|nl2br }}</p>
 {% if application.answers %}<dl>{% for item in application.answers %}<dt><strong>{{ item.question }}</strong></dt><dd>{{ item.answer ?: 'Keine Angabe' }}</dd>{% endfor %}</dl>{% endif %}</section>
 <section class="panel"><h2>Interne Bearbeitung</h2>
