@@ -12,14 +12,14 @@
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
   "published_at": "2026-09-27T01:51:12.714Z",
   "summary": {
-    "total_remaining_worker_tasks": 141,
-    "completed_worker_prs_awaiting_trusted_review": 216,
+    "total_remaining_worker_tasks": 140,
+    "completed_worker_prs_awaiting_trusted_review": 217,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-447 is complete on green exact HEAD 01c5a46ea113c90cef39019a802f7ace4519fa41 with PR #242 ready and claim locked. Select and claim the next dependency-safe independent Worker task.",
+    "next_required_action": "WCP-448 is complete on green exact HEAD 33cfd87b252f482cdc13d5929069d5e5676ae86e with PR #241 ready and its claim locked. WCP-449 is already reserved on exact sanitized main; continue only on that independent claim or select another unclaimed dependency-safe task.",
     "composition_preparable": 0,
-    "immediately_actionable": 6,
+    "immediately_actionable": 5,
     "must_continue": true
   },
   "rules": {
@@ -25218,7 +25218,7 @@
       "package_id": "WCP-448",
       "title": "Search and paginate guild collaboration events",
       "risk": "medium",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -25304,14 +25304,14 @@
           "tests/Controller/AdminGuildCollaborationPaginationTest.php"
         ]
       },
-      "claim_state": "active",
+      "claim_state": "locked_until_trusted_resolution",
       "claimed_on": "2026-09-27T01:38:12.865Z",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
       "active_head": "33cfd87b252f482cdc13d5929069d5e5676ae86e",
       "resume_branch": "feature/wcp-448-guild-event-directory-pagination-g1",
-      "last_checkpoint_at": "2026-09-27T01:50:05.028Z",
-      "last_verified_push_at": "2026-09-27T01:50:05.028Z",
+      "last_checkpoint_at": "2026-09-27T01:53:36.518Z",
+      "last_verified_push_at": "2026-09-27T01:53:36.518Z",
       "checkpoint_paths": [
         "src/Controller/AdminGuildCollaborationController.php",
         "src/Repository/GuildEventRepository.php",
@@ -25322,27 +25322,61 @@
         "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
         "feature_branch": "33cfd87b252f482cdc13d5929069d5e5676ae86e"
       },
-      "next_action": "Monitor Worker CI run 36286702816 on exact HEAD 33cfd87b252f482cdc13d5929069d5e5676ae86e; inspect results and fix any failure on this branch before marking completion.",
+      "next_action": "Await Trusted review; keep this claim locked until Trusted explicitly integrates, cancels or transfers it with checkpoint evidence.",
       "worker_pr": 241,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/241",
-      "pr_state": "open_draft_unmerged",
-      "draft_pr": true,
+      "pr_state": "open_ready_for_review_unmerged",
+      "draft_pr": false,
       "ci_run_id": 36286702816,
       "last_ci_run_id": 36286702816,
-      "ci_result": "queued",
+      "ci_result": "success",
       "ci_attempts": [
         {
           "run_id": 36286550792,
           "head": "5b049c7194c1199f53ed67239fed8a897fd4d6a6",
           "result": "success",
-          "summary": "PHP/Symfony and PostgreSQL 18 jobs succeeded; PHPUnit 433 tests, 1,917 assertions, zero test failures/errors, one deprecation and one notice; 39 migrations and 470 SQL queries."
+          "summary": "PHP/Symfony and PostgreSQL 18 jobs succeeded; PHPUnit 433 tests, 1,917 assertions, zero failures/errors, one deprecation and one notice; 39 migrations and 470 SQL queries."
         },
         {
           "run_id": 36286702816,
           "head": "33cfd87b252f482cdc13d5929069d5e5676ae86e",
-          "result": "queued"
+          "result": "success",
+          "summary": "Exact final HEAD; PHP/Symfony and PostgreSQL 18 jobs succeeded; PHPUnit 433 tests, 1,939 assertions, zero failures/errors, one deprecation and one notice; PHPStan passed with no errors; 39 migrations and 470 SQL queries."
         }
-      ]
+      ],
+      "final_head": "33cfd87b252f482cdc13d5929069d5e5676ae86e",
+      "final_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "final_changed_paths": [
+        "src/Controller/AdminGuildCollaborationController.php",
+        "src/Repository/GuildEventRepository.php",
+        "templates/admin/gaming/collaboration/index.html.twig",
+        "tests/Controller/AdminGuildCollaborationPaginationTest.php"
+      ],
+      "changed_paths": [
+        "src/Controller/AdminGuildCollaborationController.php",
+        "src/Repository/GuildEventRepository.php",
+        "templates/admin/gaming/collaboration/index.html.twig",
+        "tests/Controller/AdminGuildCollaborationPaginationTest.php"
+      ],
+      "last_ci_result": "success",
+      "completed_at": "2026-09-27T01:53:36.518Z",
+      "test_results": {
+        "phpunit": "433 tests, 1,939 assertions, 0 failures and 0 errors; one PHPUnit deprecation and one notice.",
+        "phpstan": "Passed with no errors on the Worker PHP/Symfony validation job.",
+        "php_symfony": "Worker PHP/Symfony validation job passed on exact final HEAD.",
+        "postgres18": "PostgreSQL 18 applied and verified the full migration chain: 39 migrations executed and 470 SQL queries.",
+        "exact_head_ci": {
+          "run_id": 36286702816,
+          "head": "33cfd87b252f482cdc13d5929069d5e5676ae86e",
+          "result": "success"
+        }
+      },
+      "completion_summary": "The existing CMS_GAMING_MANAGE-protected guild collaboration page now searches titles/descriptions case-insensitively, filters planned/done/cancelled events and shows stable guild-scoped 25-row pages with counts and filter-preserving navigation. Invalid query arrays/scalars, malformed UTF-8, control bytes, unknown statuses, overlong searches and invalid pages are rejected; valid out-of-range pages clamp. Existing event CRUD, signup lists and attendance CSRF forms remain on visible event cards. Announcements and Discord remain in place. Four allowed paths changed; no schema or event/announcement write behavior changed.",
+      "open_limitations": [
+        "Awaiting Trusted review and Trusted integration CI.",
+        "Only the event list is paginated; announcements and attendee rendering retain their existing query behavior."
+      ],
+      "trusted_follow_up": "Transfer to a fresh Trusted branch and review that CMS_GAMING_MANAGE, guild-scoped event reads, event-delete CSRF and attendance CSRF remain intact. Keep event/announcement/signup/Discord mutations outside this Worker change."
     },
     {
       "priority": 449,
