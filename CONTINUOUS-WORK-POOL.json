@@ -10,7 +10,7 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T15:04:41.139Z",
+  "published_at": "2026-09-27T15:05:22.300Z",
   "summary": {
     "total_remaining_worker_tasks": 167,
     "completed_worker_prs_awaiting_trusted_review": 293,
@@ -40920,18 +40920,28 @@
         "config/packages/public_download_catalogue_widget.yaml",
         "tests/Widget/PublicDownloadCatalogueWidgetTest.php"
       ],
-      "next_action": "Monitor Worker CI run #844 / 36327485473 on exact HEAD 6e28d039d4959cb7d9a339255408029e82808e95; diagnose any failures and rerun full CI on the repaired exact head before marking PR ready.",
+      "next_action": "Keep PR #339 draft and WCP-547 claim locked. Do not change the WCP-499-owned src/Module/CmsModuleCatalog.php. Wait for Trusted to integrate, cancel or explicitly transfer WCP-499; then re-evaluate WCP-547 paths/base, continue on the existing feature branch, and rerun full exact-head Worker CI.",
       "worker_pr_state": "draft",
-      "ci_result": "in_progress",
-      "last_ci_result": "in_progress",
+      "ci_result": "failure",
+      "last_ci_result": "failure",
       "ci_attempts": [
         {
           "run_id": 36327485473,
           "run_number": 844,
           "head": "6e28d039d4959cb7d9a339255408029e82808e95",
           "base": "b510875e7b0741b9b19f09429d2204a95df51198",
-          "result": "in_progress",
-          "conclusion": null
+          "result": "failure",
+          "conclusion": "failure",
+          "php_symfony_job": "failure",
+          "phpstan": "success",
+          "phpunit": "failure",
+          "postgresql_18_migrations": "success",
+          "tests": 538,
+          "assertions": 2229,
+          "errors": 1,
+          "failures": 1,
+          "summary": "Exact-head Worker CI failed only in PHPUnit: 538 tests, 2,229 assertions, 1 error and 1 failure. PHPStan, Twig/YAML, dependency container, assets, Doctrine mappings and PostgreSQL 18 migration-chain validation passed.",
+          "diagnosis": "Both failing tests are caused by the current CmsModuleCatalog lacking the downloads module: WidgetRegistry marks downloads.catalogue unavailable, so discovery fails and LayoutValidator rejects the disabled-module fixture. src/Module/CmsModuleCatalog.php is reserved and claim-locked by WCP-499 (PR #292, exact green HEAD 56ff0521b3da53f2b3d32b211610fd15d9754ca0), so WCP-547 must not edit it."
         }
       ],
       "worker_pr": 339,
@@ -40947,7 +40957,17 @@
       "pr_state": "open",
       "draft_pr": true,
       "ci_run_id": 36327485473,
-      "last_ci_run_id": 36327485473
+      "last_ci_run_id": 36327485473,
+      "blocker": {
+        "kind": "claim_locked_dependency",
+        "dependency_package": "WCP-499",
+        "dependency_pr": 292,
+        "dependency_head": "56ff0521b3da53f2b3d32b211610fd15d9754ca0",
+        "path": "src/Module/CmsModuleCatalog.php",
+        "claim_state": "locked_until_trusted_resolution",
+        "reason": "The Downloads module is absent from CmsModuleCatalog, so the module-aware WidgetRegistry cannot make downloads.catalogue available. The feature's discovery and disabled-module regression tests fail without a real Downloads module definition.",
+        "required_action": "Do not touch the WCP-499 path. Wait for Trusted to integrate, cancel or explicitly transfer the WCP-499 claim. Then refresh the sanitized base, update WCP-547's allowed-path and collision records, resume on its existing feature branch, fix the functional dependency and rerun complete exact-head Worker CI."
+      }
     },
     {
       "priority": 548,
