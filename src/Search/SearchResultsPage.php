@@ -30,11 +30,11 @@ final readonly class SearchResultsPage
         $this->page = min($requestedPage, $this->totalPages);
 
         /** @var list<SearchResult> $pageResults */
-        $pageResults = array_values(array_slice(
+        $pageResults = array_slice(
             $visibleResults,
             ($this->page - 1) * self::PAGE_SIZE,
             self::PAGE_SIZE,
-        ));
+        );
         $this->results = $pageResults;
     }
 
