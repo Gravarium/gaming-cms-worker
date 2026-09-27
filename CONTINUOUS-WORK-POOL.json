@@ -12,7 +12,7 @@
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
   "published_at": "2026-09-27T12:45:45.312Z",
   "summary": {
-    "total_remaining_worker_tasks": 165,
+    "total_remaining_worker_tasks": 166,
     "completed_worker_prs_awaiting_trusted_review": 287,
     "recovery_tasks": 0,
     "unclaimed": 5,
@@ -38493,6 +38493,111 @@
       "next_action": "Implement and test the CMS_STORAGE_MANAGE admin package catalogue/create/edit flow within the six reserved paths; then run the complete exact-head Worker CI.",
       "ci_attempts": [],
       "worker_pr_state": null
+    },
+    {
+      "priority": 535,
+      "package_id": "WCP-535",
+      "title": "Bound game and guild slugs to persisted column length",
+      "risk": "medium",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-535-game-guild-slug-boundary-g1",
+      "suggested_branch": "feature/wcp-535-game-guild-slug-boundary-g1",
+      "base_branch": "main",
+      "base_sha": "b510875e7b0741b9b19f09429d2204a95df51198",
+      "objective": "Ensure generated slugs for the existing Game and Guild forms never exceed their 140-character database columns, including when the slugger expands Unicode names, while preserving deterministic uniqueness suffixes for both entity types.",
+      "allowed_paths": [
+        "src/Controller/AdminGamingController.php",
+        "tests/Controller/AdminGamingSlugBoundaryTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/",
+        "src/Entity/",
+        "src/Form/",
+        "src/Repository/",
+        "templates/",
+        "assets/",
+        "public/"
+      ],
+      "deliverables": [
+        "Bound the shared game/guild slug generator to the 140-character storage limit before checking uniqueness.",
+        "When a bounded base slug collides, reserve enough room for a deterministic numeric suffix and preserve uniqueness.",
+        "Add functional coverage for Unicode-expanded long names creating both games and guilds, plus same-name collisions, with no schema or form-limit changes."
+      ],
+      "tests": [
+        "Focused WebTestCase posts valid long synthetic names for game and guild creation and asserts persisted slugs are at most 140 characters.",
+        "Create duplicate long names for both entity types and verify collision suffixes remain within the bound and distinct.",
+        "Run PHPStan level 8 and full exact-head Worker CI, including PostgreSQL 18 migration validation."
+      ],
+      "completion_report": [
+        "Exact sanitized main/base SHA and final Worker HEAD SHA.",
+        "Exact changed paths and Worker PR URL.",
+        "Game and Guild long-name and collision-suffix evidence.",
+        "Focused test and exact-head PHPStan, PHPUnit, PostgreSQL migration and full Worker CI results."
+      ],
+      "immutable_constraints": [
+        "persisted-game-and-guild-slugs-never-exceed-their-140-character-column-bound",
+        "slug-uniqueness-and-stable-numeric-collision-suffixes-are-preserved",
+        "no-schema-or-migration-change",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment",
+        "no-private-runtime-or-sensitive-data"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "b510875e7b0741b9b19f09429d2204a95df51198",
+      "proposal_kind": "worker_only",
+      "proposal_dependency_evidence": [],
+      "collision_check": {
+        "compared_against": "Fresh continuous/work-pool-v4 pool blob f8e9e2c189b85ca87d0f2ef18786c3425d270e3b; sanitized Worker main b510875e7b0741b9b19f09429d2204a95df51198; all active and claim-locked path scopes; WCP-535 claim/feature branch and PR searches.",
+        "result": "The controller and dedicated test paths are not owned by active or claim-locked scopes. WCP-487 covers gaming permission workflow and WCP-488 covers game deletion CSRF in separate test files; neither changes generated slug length. FCP-053/FCP-056 and WCP-401 cover separate Guild/Game Catalogue namespaces and paths. This proposal changes only shared slug generation in the existing core Game/Guild administration controller and one dedicated regression test.",
+        "paths": [
+          "src/Controller/AdminGamingController.php",
+          "tests/Controller/AdminGamingSlugBoundaryTest.php"
+        ]
+      },
+      "published_at": "2026-09-27T12:47:34.923Z",
+      "claimed_on": "2026-09-27T12:47:34.923Z",
+      "claim_state": "active",
+      "active_base_branch": "main",
+      "active_base_sha": "b510875e7b0741b9b19f09429d2204a95df51198",
+      "active_head": "b510875e7b0741b9b19f09429d2204a95df51198",
+      "resume_branch": "feature/wcp-535-game-guild-slug-boundary-g1",
+      "branch_heads": {
+        "claim_branch": "b510875e7b0741b9b19f09429d2204a95df51198",
+        "feature_branch": "b510875e7b0741b9b19f09429d2204a95df51198"
+      },
+      "last_observed_head": "b510875e7b0741b9b19f09429d2204a95df51198",
+      "last_checkpoint_at": "2026-09-27T12:47:34.923Z",
+      "last_verified_push_at": "2026-09-27T12:47:34.923Z",
+      "checkpoint_paths": [
+        "src/Controller/AdminGamingController.php",
+        "tests/Controller/AdminGamingSlugBoundaryTest.php"
+      ],
+      "next_action": "Create the exclusive claim and feature refs from sanitized main b510875e7b0741b9b19f09429d2204a95df51198, then bound shared Game/Guild slug generation and add functional regression coverage only in the two allowed paths.",
+      "worker_pr": null,
+      "worker_pr_url": null,
+      "draft_pr": false,
+      "pr_state": "not_created",
+      "worker_pr_state": "not_created",
+      "worker_pr_changed_paths": [],
+      "ci_result": "not_started",
+      "last_ci_result": "not_started",
+      "ci_attempts": []
     }
   ],
   "recovery_queue": [],
