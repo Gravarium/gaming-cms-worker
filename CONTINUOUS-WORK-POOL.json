@@ -10,7 +10,7 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T14:51:56.443Z",
+  "published_at": "2026-09-27T14:52:45.598Z",
   "summary": {
     "total_remaining_worker_tasks": 167,
     "completed_worker_prs_awaiting_trusted_review": 293,
@@ -40920,13 +40920,22 @@
         "config/packages/public_download_catalogue_widget.yaml",
         "tests/Widget/PublicDownloadCatalogueWidgetTest.php"
       ],
-      "next_action": "Create a draft Worker PR against main and run the full exact-head CI on 6e28d039d4959cb7d9a339255408029e82808e95; repair any concrete failures only in the five reserved paths.",
-      "worker_pr_state": "not_created",
-      "ci_result": "not_started",
-      "last_ci_result": "not_run",
-      "ci_attempts": [],
-      "worker_pr": null,
-      "worker_pr_url": null,
+      "next_action": "Monitor Worker CI run #844 / 36327485473 on exact HEAD 6e28d039d4959cb7d9a339255408029e82808e95; diagnose any failures and rerun full CI on the repaired exact head before marking PR ready.",
+      "worker_pr_state": "draft",
+      "ci_result": "in_progress",
+      "last_ci_result": "in_progress",
+      "ci_attempts": [
+        {
+          "run_id": 36327485473,
+          "run_number": 844,
+          "head": "6e28d039d4959cb7d9a339255408029e82808e95",
+          "base": "b510875e7b0741b9b19f09429d2204a95df51198",
+          "result": "in_progress",
+          "conclusion": null
+        }
+      ],
+      "worker_pr": 339,
+      "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/339",
       "worker_pr_changed_paths": [
         "src/Widget/PublicDownloadCatalogueWidgetProvider.php",
         "src/Widget/DownloadCatalogue/PublicDownloadCatalogueQuery.php",
@@ -40935,8 +40944,10 @@
         "tests/Widget/PublicDownloadCatalogueWidgetTest.php"
       ],
       "worker_pr_base_branch": "main",
-      "pr_state": "not_created",
-      "draft_pr": true
+      "pr_state": "open",
+      "draft_pr": true,
+      "ci_run_id": 36327485473,
+      "last_ci_run_id": 36327485473
     }
   ],
   "recovery_queue": [],
