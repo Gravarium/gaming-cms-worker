@@ -13,11 +13,11 @@
   "published_at": "2026-09-27T20:16:34.089Z",
   "summary": {
     "total_remaining_worker_tasks": 173,
-    "completed_worker_prs_awaiting_trusted_review": 310,
+    "completed_worker_prs_awaiting_trusted_review": 311,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-580 PR #375 is open on 3c0459bb88a932e713a211477b5d9eb196e0dd3a; exact-head Worker CI #929 is running.",
+    "next_required_action": "WCP-580 is complete on exact-head CI; inspect current pool and worker-visible CMS for the next independent safe proposal, reserve one path-disjoint WCP, and continue.",
     "composition_preparable": 0,
     "immediately_actionable": 29,
     "must_continue": true
@@ -47143,7 +47143,7 @@
       "package_id": "WCP-580",
       "title": "Test escaping on the public news index",
       "risk": "low",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -47213,7 +47213,7 @@
       },
       "published_at": "2026-09-27T20:13:52.121Z",
       "claimed_on": "2026-09-27T20:13:52.121Z",
-      "claim_state": "active",
+      "claim_state": "locked_until_trusted_resolution",
       "active_base_branch": "main",
       "active_base_sha": "7b2ca79405fc12d34bce1386157e929e4668f31a",
       "active_head": "3c0459bb88a932e713a211477b5d9eb196e0dd3a",
@@ -47227,33 +47227,35 @@
       "checkpoint_paths": [
         "tests/Controller/PublicNewsIndexSafetyTest.php"
       ],
-      "next_action": "Await exact-head Worker CI #929 / 36347339555 on 3c0459bb88a932e713a211477b5d9eb196e0dd3a; then reconcile the news index escaping assertions and continue.",
+      "next_action": "Await Trusted review and independent validation of PR #375; continue autonomous Worker scheduling without merging or deploying.",
       "worker_pr": 375,
-      "worker_pr_state": "draft",
+      "worker_pr_state": "ready_for_review",
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/375",
       "worker_pr_changed_paths": [
         "tests/Controller/PublicNewsIndexSafetyTest.php"
       ],
       "pr_state": "open",
-      "draft_pr": true,
+      "draft_pr": false,
       "worker_pr_base_branch": "main",
       "worker_pr_base_sha": "7b2ca79405fc12d34bce1386157e929e4668f31a",
-      "ci_result": "in_progress",
+      "ci_result": "success",
       "ci_attempts": [
         {
           "run_id": 36347339555,
           "run_number": 929,
           "head": "3c0459bb88a932e713a211477b5d9eb196e0dd3a",
           "base": "7b2ca79405fc12d34bce1386157e929e4668f31a",
-          "result": "in_progress",
+          "result": "success",
           "validation_pr": 375,
-          "conclusion": null
+          "conclusion": "success"
         }
       ],
       "ci_run_id": 36347339555,
       "last_ci_run_id": 36347339555,
       "ci_validation_pr": 375,
-      "last_ci_result": "in_progress"
+      "last_ci_result": "success",
+      "completed_at": "2026-09-27T20:18:10.910Z",
+      "worker_completion_summary": "Exact-head Worker CI #929 / 36347339555 passed on 3c0459bb88a932e713a211477b5d9eb196e0dd3a: 737 tests, 4,634 assertions, 0 failures/errors (1 PHPUnit deprecation, 3 notices); PHPStan reported no errors; PostgreSQL 18 applied 57 migrations with 878 SQL queries. PR #375 is open and ready for Trusted review from main@7b2ca79405fc12d34bce1386157e929e4668f31a; exactly one allowed test path changed, with no runtime or template changes."
     }
   ],
   "recovery_queue": [],
