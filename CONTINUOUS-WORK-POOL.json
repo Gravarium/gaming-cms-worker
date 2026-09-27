@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T07:48:31.129Z",
+  "published_at": "2026-09-27T07:51:44.647Z",
   "summary": {
     "total_remaining_worker_tasks": 141,
-    "completed_worker_prs_awaiting_trusted_review": 249,
+    "completed_worker_prs_awaiting_trusted_review": 250,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-483's second exact-head CI run 36304030265 found that the existing ContentEntry PreUpdate lifecycle advances updatedAt when tag associations change. The behavior remains intact and the test now asserts it. Full Worker CI run 36304215243 is in_progress on exact HEAD 0eec4a4289abe6d5850f5eac98c522892a1facf5.",
+    "next_required_action": "WCP-483 is complete on exact green HEAD 0eec4a4289abe6d5850f5eac98c522892a1facf5 (PR #276, CI 36304215243); its claim remains locked. Re-evaluate the latest pool for a free dependency-safe existing module task; if none is eligible, publish and claim a bounded worker-only CMS proposal without changing another claim.",
     "composition_preparable": 0,
     "immediately_actionable": 4,
     "must_continue": true
@@ -30698,7 +30698,7 @@
       "package_id": "WCP-483",
       "title": "Merge duplicate content tags without losing assigned entries",
       "risk": "medium",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -30785,20 +30785,20 @@
         ]
       },
       "published_at": "2026-09-27T07:29:07.532Z",
-      "next_action": "Inspect Worker CI run 36304215243 on exact HEAD 0eec4a4289abe6d5850f5eac98c522892a1facf5; resolve concrete findings on the same branch.",
-      "claim_state": "active",
+      "next_action": "Await Trusted review and integration CI; keep the claim locked until Trusted explicitly resolves it.",
+      "claim_state": "locked_until_trusted_resolution",
       "claimed_on": "2026-09-27T07:30:00.468Z",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
       "active_head": "0eec4a4289abe6d5850f5eac98c522892a1facf5",
       "resume_branch": "feature/wcp-483-content-tag-merge-g1",
       "branch_heads": {
-        "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+        "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5",
         "feature_branch": "0eec4a4289abe6d5850f5eac98c522892a1facf5"
       },
       "last_observed_head": "0eec4a4289abe6d5850f5eac98c522892a1facf5",
-      "last_checkpoint_at": "2026-09-27T07:48:31.129Z",
-      "last_verified_push_at": "2026-09-27T07:48:31.129Z",
+      "last_checkpoint_at": "2026-09-27T07:51:44.647Z",
+      "last_verified_push_at": "2026-09-27T07:51:44.647Z",
       "checkpoint_paths": [
         "src/Controller/AdminContentTagMergeController.php",
         "src/Form/ContentTagMergeType.php",
@@ -30817,10 +30817,10 @@
       ],
       "ci_run_id": 36304215243,
       "last_ci_run_id": 36304215243,
-      "ci_result": "in_progress",
-      "last_ci_result": "in_progress",
-      "draft_pr": true,
-      "pr_state": "open_draft_ci_pending",
+      "ci_result": "success",
+      "last_ci_result": "success",
+      "draft_pr": false,
+      "pr_state": "open",
       "ci_attempts": [
         {
           "run_id": 36303901139,
@@ -30835,9 +30835,69 @@
         {
           "run_id": 36304215243,
           "head": "0eec4a4289abe6d5850f5eac98c522892a1facf5",
-          "result": "in_progress"
+          "result": "success"
         }
-      ]
+      ],
+      "final_head": "0eec4a4289abe6d5850f5eac98c522892a1facf5",
+      "final_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "final_sanitized_main_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "completed_at": "2026-09-27T07:51:44.647Z",
+      "changed_paths": [
+        "src/Controller/AdminContentTagMergeController.php",
+        "src/Form/ContentTagMergeType.php",
+        "templates/admin/content_tag/index.html.twig",
+        "templates/admin/content_tag/merge.html.twig",
+        "tests/Controller/AdminContentTagMergeTest.php"
+      ],
+      "final_changed_paths": [
+        "src/Controller/AdminContentTagMergeController.php",
+        "src/Form/ContentTagMergeType.php",
+        "templates/admin/content_tag/index.html.twig",
+        "templates/admin/content_tag/merge.html.twig",
+        "tests/Controller/AdminContentTagMergeTest.php"
+      ],
+      "test_results": {
+        "phpunit": "436 tests, 2019 assertions, 0 failures; one PHPUnit deprecation and one notice.",
+        "phpstan": "Level 8 passed with no errors.",
+        "php_symfony": "Worker PHP/Symfony validation job passed on exact final HEAD.",
+        "postgres18": "PostgreSQL 18 applied all 39 migrations and 470 SQL queries; 0 unavailable.",
+        "exact_head_ci": {
+          "run_id": 36304215243,
+          "head": "0eec4a4289abe6d5850f5eac98c522892a1facf5",
+          "result": "success"
+        }
+      },
+      "completion_evidence": {
+        "exact_sanitized_main_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+        "exact_proposal_base_branch": "main",
+        "exact_proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+        "final_head_sha": "0eec4a4289abe6d5850f5eac98c522892a1facf5",
+        "changed_paths": [
+          "src/Controller/AdminContentTagMergeController.php",
+          "src/Form/ContentTagMergeType.php",
+          "templates/admin/content_tag/index.html.twig",
+          "templates/admin/content_tag/merge.html.twig",
+          "tests/Controller/AdminContentTagMergeTest.php"
+        ],
+        "cumulative_pr_paths": [
+          "src/Controller/AdminContentTagMergeController.php",
+          "src/Form/ContentTagMergeType.php",
+          "templates/admin/content_tag/index.html.twig",
+          "templates/admin/content_tag/merge.html.twig",
+          "tests/Controller/AdminContentTagMergeTest.php"
+        ],
+        "worker_pr": 276,
+        "ci_run_id": 36304215243,
+        "ci_result": "success",
+        "php_symfony_job": "success: 436 tests, 2019 assertions, 0 failures; PHPStan level 8 no errors",
+        "postgresql_job": "success: 39 migrations executed, 470 SQL queries, 0 unavailable",
+        "workflow": "Full Worker CI passed on exact final HEAD."
+      },
+      "completion_summary": "Added a reachable audited workflow to merge one content tag into another. The target's metadata survives, every source association is reassigned without duplicate target links, the source tag is removed, and entry content/publication state remain unchanged. The existing updatedAt lifecycle advances for association changes.",
+      "open_limitations": [
+        "Awaiting Trusted review and Trusted integration CI."
+      ],
+      "trusted_follow_up": "Map this Worker proposal into the canonical Trusted queue, review the merge transaction and source/target semantics, then run full Trusted CI while preserving audit evidence, entry associations, content/publication state and target metadata."
     },
     {
       "priority": 484,
