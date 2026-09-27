@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T12:06:00.891Z",
+  "published_at": "2026-09-27T12:07:59.061Z",
   "summary": {
-    "total_remaining_worker_tasks": 164,
+    "total_remaining_worker_tasks": 165,
     "completed_worker_prs_awaiting_trusted_review": 283,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "Continue foreign active claims on their exact branches; this chat owns WCP-527's independent account-session CSRF test.",
+    "next_required_action": "WCP-528 has been claimed from sanitized worker/main b510875e7b0741b9b19f09429d2204a95df51198; continue the newsletter delivery report on feature/wcp-528-newsletter-delivery-report-g1.",
     "composition_preparable": 0,
     "immediately_actionable": 25,
     "must_continue": true
@@ -37407,6 +37407,132 @@
           "result": "in_progress"
         }
       ]
+    },
+    {
+      "priority": 528,
+      "package_id": "WCP-528",
+      "title": "Review newsletter campaign delivery outcomes in the admin",
+      "risk": "medium",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-528-newsletter-delivery-report-g1",
+      "suggested_branch": "feature/wcp-528-newsletter-delivery-report-g1",
+      "base_branch": "main",
+      "base_sha": "b510875e7b0741b9b19f09429d2204a95df51198",
+      "objective": "Complete the existing newsletter administration's post-send workflow. Let authorized content managers inspect per-campaign counts for sent, pending, retry, failed, and suppressed deliveries from the existing NewsletterDelivery records. Show no recipient identities, email addresses, failure detail, or mutation controls; keep this a read-only view and make it disappear when Notifications is disabled.",
+      "allowed_paths": [
+        "src/Controller/AdminNewsletterDeliveryReportController.php",
+        "src/NewsletterDeliveryReport/NewsletterDeliveryReportQuery.php",
+        "src/NewsletterDeliveryReport/Templates/index.html.twig",
+        "config/packages/newsletter_delivery_report.yaml",
+        "tests/Controller/AdminNewsletterDeliveryReportTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "src/Newsletter/",
+        "src/Entity/Newsletter/",
+        "src/Repository/Newsletter/",
+        "src/Controller/AdminNewsletter/",
+        "src/Form/Newsletter/",
+        "templates/",
+        "templates/admin/newsletter/",
+        "tests/Newsletter/",
+        "tests/Notification/",
+        "config/packages/twig.yaml",
+        "config/services.yaml"
+      ],
+      "deliverables": [
+        "Add an authorized, read-only admin report route using the existing CMS_CONTENT_MANAGE permission and notifications route prefix.",
+        "Show a bounded recent campaign list with aggregate sent, pending, retry, failed, and suppressed delivery counts; display an understandable empty state.",
+        "Do not render recipient email addresses, subscription identifiers, failure codes, or delivery rows; do not modify or retry deliveries.",
+        "Use a feature-local Twig namespace and avoid the locked newsletter entity, repository, controller, template, and migration paths."
+      ],
+      "tests": [
+        "Authorized manager sees correct aggregate counts while recipient emails and identifiers are absent from the response.",
+        "User without CMS_CONTENT_MANAGE receives 403.",
+        "Report route returns 404 when notifications is disabled and restores test module state after execution.",
+        "Empty campaign state renders clearly; report GET does not mutate campaign or delivery data.",
+        "Complete Worker CI on the exact final HEAD, including PHPStan and PostgreSQL 18 migration checks."
+      ],
+      "completion_report": [
+        "Exact sanitized base SHA and final Worker HEAD SHA.",
+        "Changed paths and Worker PR URL.",
+        "Admin report permission, delivery status counts, privacy behavior, and module-disable behavior.",
+        "Targeted tests and exact-head full Worker CI results.",
+        "Remaining limitations and any report discoverability constraints."
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "do-not-expose-recipient-personal-data-or-delivery-identifiers",
+        "preserve-CMS_CONTENT_MANAGE-and-notifications-module-gating",
+        "read-only-report-no-delivery-mutation-or-retry",
+        "no-schema-migration-or-locked-FCP-068-file-edits",
+        "no-security-test-phpstan-CI-auth-CSRF-validation-recovery-rollback-or-upload-protection-weakening",
+        "red-CI-stops-integration",
+        "no-private-runtime-or-sensitive-data",
+        "no-direct-trusted-integration-or-deployment"
+      ],
+      "completion_report_actual": null,
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "b510875e7b0741b9b19f09429d2204a95df51198",
+      "proposal_kind": "worker_only",
+      "proposal_dependency_evidence": [],
+      "collision_check": {
+        "compared_against": "Fresh continuous/work-pool-v4 blob 34687726646bca7c3563e3b3a0e069e0ac955caf; all active and claim-locked task allowed/checkpoint paths; WCP-528 and newsletter-delivery-report branch and open-PR searches; current worker/main b510875e7b0741b9b19f09429d2204a95df51198.",
+        "result": "No active or claim-locked task intersects the five proposed paths. The current WCP-527 account-session task is disjoint. FCP-068 newsletter implementation paths and broad templates/ are explicitly excluded. No matching WCP-528 branch or open PR exists.",
+        "paths": [
+          "src/Controller/AdminNewsletterDeliveryReportController.php",
+          "src/NewsletterDeliveryReport/NewsletterDeliveryReportQuery.php",
+          "src/NewsletterDeliveryReport/Templates/index.html.twig",
+          "config/packages/newsletter_delivery_report.yaml",
+          "tests/Controller/AdminNewsletterDeliveryReportTest.php"
+        ]
+      },
+      "published_at": "2026-09-27T12:07:59.061Z",
+      "claimed_on": "2026-09-27T12:07:59.061Z",
+      "claim_state": "active",
+      "active_base_branch": "main",
+      "active_base_sha": "b510875e7b0741b9b19f09429d2204a95df51198",
+      "active_head": "b510875e7b0741b9b19f09429d2204a95df51198",
+      "resume_branch": "feature/wcp-528-newsletter-delivery-report-g1",
+      "branch_heads": {
+        "claim_branch": "b510875e7b0741b9b19f09429d2204a95df51198",
+        "feature_branch": "b510875e7b0741b9b19f09429d2204a95df51198"
+      },
+      "next_action": "Create both WCP-528 branches from the exact published worker/main base, then implement the read-only newsletter delivery report.",
+      "checkpoint_paths": [
+        "src/Controller/AdminNewsletterDeliveryReportController.php",
+        "src/NewsletterDeliveryReport/NewsletterDeliveryReportQuery.php",
+        "src/NewsletterDeliveryReport/Templates/index.html.twig",
+        "config/packages/newsletter_delivery_report.yaml",
+        "tests/Controller/AdminNewsletterDeliveryReportTest.php"
+      ],
+      "last_observed_head": "b510875e7b0741b9b19f09429d2204a95df51198",
+      "ci_attempts": [],
+      "worker_pr": null,
+      "worker_pr_url": null,
+      "draft_pr": true,
+      "pr_state": null,
+      "worker_pr_changed_paths": [],
+      "ci_run_id": null,
+      "last_ci_run_id": null,
+      "ci_result": "not_started",
+      "last_ci_result": "not_started"
     }
   ],
   "recovery_queue": [],
