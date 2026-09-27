@@ -12,14 +12,14 @@
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
   "published_at": "2026-09-27T10:16:10.292Z",
   "summary": {
-    "total_remaining_worker_tasks": 164,
-    "completed_worker_prs_awaiting_trusted_review": 270,
+    "total_remaining_worker_tasks": 163,
+    "completed_worker_prs_awaiting_trusted_review": 271,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
     "next_required_action": "WCP-508 is rerunning full exact-head Worker CI after a concrete PHPUnit risky-test finding; finish and reconcile before moving on.",
     "composition_preparable": 0,
-    "immediately_actionable": 18,
+    "immediately_actionable": 17,
     "must_continue": true
   },
   "rules": {
@@ -32812,7 +32812,7 @@
       "package_id": "WCP-496",
       "title": "Manage per-member guild onboarding checklists",
       "risk": "medium",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -32909,7 +32909,7 @@
       },
       "published_at": "2026-09-27T09:38:49.944Z",
       "claimed_on": "2026-09-27T09:38:49.944Z",
-      "claim_state": "active",
+      "claim_state": "locked_until_trusted_resolution",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
       "active_head": "e98f770164d225f110e6db7189584a3505a1a13f",
@@ -32919,7 +32919,7 @@
         "feature_branch": "e98f770164d225f110e6db7189584a3505a1a13f"
       },
       "last_observed_head": "e98f770164d225f110e6db7189584a3505a1a13f",
-      "last_checkpoint_at": "2026-09-27T10:13:12.256Z",
+      "last_checkpoint_at": "2026-09-27T10:16:56.178Z",
       "checkpoint_paths": [
         "src/Controller/AdminGuildOnboardingController.php",
         "src/Form/GuildOnboardingTaskInput.php",
@@ -32930,13 +32930,13 @@
         "templates/admin/gaming/onboarding/form.html.twig",
         "tests/Controller/AdminGuildOnboardingWorkflowTest.php"
       ],
-      "next_action": "Monitor Worker CI 36311817247 on exact HEAD e98f770164d225f110e6db7189584a3505a1a13f; fix any concrete test failures within allowed paths.",
-      "last_verified_push_at": "2026-09-27T10:13:12.256Z",
+      "next_action": "Await Trusted review on Worker PR #295. Keep the claim locked until Trusted explicitly integrates, cancels, or transfers it; do not merge or deploy.",
+      "last_verified_push_at": "2026-09-27T10:16:56.178Z",
       "worker_pr": 295,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/295",
-      "worker_pr_state": "draft",
+      "worker_pr_state": "open_ready_for_review",
       "ci_run_id": 36311817247,
-      "ci_result": "in_progress",
+      "ci_result": "success",
       "previous_ci_run_id": 36310997842,
       "previous_ci_head": "3e958ad1ccfd054c31f55d77de82b8b649598b0e",
       "previous_ci_result": "failure",
@@ -32965,9 +32965,40 @@
           "run_id": 36311490640,
           "head": "0624573444f03ca1d5b1a43caaec99741ecea867",
           "result": "failure"
+        },
+        {
+          "run_id": 36311817247,
+          "head": "e98f770164d225f110e6db7189584a3505a1a13f",
+          "result": "success"
         }
       ],
-      "ci_head_sha": "e98f770164d225f110e6db7189584a3505a1a13f"
+      "ci_head_sha": "e98f770164d225f110e6db7189584a3505a1a13f",
+      "final_head": "e98f770164d225f110e6db7189584a3505a1a13f",
+      "completed_on_current_pool": true,
+      "completed_at": "2026-09-27T10:16:56.178Z",
+      "completion_evidence": {
+        "exact_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+        "exact_head": "e98f770164d225f110e6db7189584a3505a1a13f",
+        "worker_pr": 295,
+        "ci_run_id": 36311817247,
+        "ci_result": "success",
+        "tests": "Worker CI: 435 PHPUnit tests, 1926 assertions, PHPStan, Twig lint, Doctrine validation, and PostgreSQL 18 migration chain all passed.",
+        "changed_paths": [
+          "src/Controller/AdminGuildOnboardingController.php",
+          "src/Form/GuildOnboardingTaskInput.php",
+          "src/Form/GuildOnboardingTaskType.php",
+          "src/Repository/GuildOnboardingTaskReadRepository.php",
+          "templates/admin/gaming/form.html.twig",
+          "templates/admin/gaming/onboarding/index.html.twig",
+          "templates/admin/gaming/onboarding/form.html.twig",
+          "tests/Controller/AdminGuildOnboardingWorkflowTest.php"
+        ],
+        "remaining_limits": [
+          "No member-facing public checklist",
+          "Tasks cannot be renamed after creation",
+          "Awaiting Trusted review; no merge or deployment"
+        ]
+      }
     },
     {
       "priority": 497,
