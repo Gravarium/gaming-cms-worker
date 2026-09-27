@@ -162,8 +162,11 @@ final class AdminContentRedirectBrowserTest extends WebTestCase
         self::assertResponseIsSuccessful();
         $secondPageIds = $this->visibleIds($client);
         self::assertCount(25, $secondPageIds);
-        self::assertSame($expectedIds, array_merge($firstPageIds, $secondPageIds, $this->fetchThirdPageIds($client, $search)));
-        self::assertSame(0, count(array_unique(array_merge($firstPageIds, $secondPageIds, $this->lastVisibleIds))));
+        $thirdPageIds = $this->fetchThirdPageIds($client, $search);
+        self::assertCount(5, $thirdPageIds);
+        $visibleIds = array_merge($firstPageIds, $secondPageIds, $thirdPageIds);
+        self::assertSame($expectedIds, $visibleIds);
+        self::assertCount(55, array_unique($visibleIds));
 
         $client->request('GET', '/admin/content/redirects?q='.$search.'&page=9999');
         self::assertResponseIsSuccessful();
