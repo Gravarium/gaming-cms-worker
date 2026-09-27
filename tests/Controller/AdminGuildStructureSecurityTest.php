@@ -41,7 +41,7 @@ final class AdminGuildStructureSecurityTest extends WebTestCase
         $siblingTeam = (new GuildTeam())
             ->setGuild($ownerGuild)
             ->setName('Sibling team '.$suffix);
-        $unauthorized = $this->createUser('guild-team-denied-'.$suffix, []);
+        $unauthorized = $this->createUser('guild-team-denied-'.$suffix, [CmsPermission::CONTENT]);
         $manager = $this->createUser('guild-team-manager-'.$suffix, [CmsPermission::GAMING]);
 
         $entityManager = $this->entityManager($client);
