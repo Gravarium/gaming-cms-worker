@@ -30,9 +30,9 @@ final class PublicGameCatalogueWidgetProviderTest extends WebTestCase
         $token = bin2hex(random_bytes(8));
         $fixture = $this->createEntry(
             $client,
-            '!WCP524-<script>alert(1)</script> '.$token,
+            '!WCP524-<script>title-'.$token.'</script>',
             'wcp524-'.$token,
-            '<script>alert(1)</script> '.$token,
+            '<img src=x onerror=alert(1)> summary-'.$token,
         );
         $user = $this->createEditor($client, $token);
         $userId = $user->getId();
@@ -70,9 +70,10 @@ final class PublicGameCatalogueWidgetProviderTest extends WebTestCase
             ]);
 
             self::assertStringContainsString('href="/games/wcp524-'.$token.'"', $markup);
-            self::assertStringContainsString('&lt;script&gt;alert(1)&lt;/script&gt;', $markup);
-            self::assertStringContainsString('&lt;script&gt;alert(1)&lt;/script&gt;', $markup);
-            self::assertStringNotContainsString('<script>alert(1)</script>', $markup);
+            self::assertStringContainsString('&lt;script&gt;title-'.$token.'&lt;/script&gt;', $markup);
+            self::assertStringContainsString('&lt;img src=x onerror=alert(1)&gt; summary-'.$token, $markup);
+            self::assertStringNotContainsString('<script>title-'.$token.'</script>', $markup);
+            self::assertStringNotContainsString('<img src=x onerror=alert(1)>', $markup);
             self::assertSame($fixture['gameId'], $this->findEntry($client, $fixture['entryId'])->getGame()->getId());
         } finally {
             $this->removeEntries($client, [$fixture]);
