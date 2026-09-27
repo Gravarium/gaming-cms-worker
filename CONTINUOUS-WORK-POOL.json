@@ -10,16 +10,16 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T10:12:57.878Z",
+  "published_at": "2026-09-27T10:13:57.732Z",
   "summary": {
     "total_remaining_worker_tasks": 164,
-    "completed_worker_prs_awaiting_trusted_review": 269,
+    "completed_worker_prs_awaiting_trusted_review": 270,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-511 is actively claimed from exact sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d; implement the public content-tag directory and complete exact-head Worker CI. Keep all foreign claims untouched.",
+    "next_required_action": "WCP-507 is complete on exact green HEAD a7d4fd835a134dd1b17d5e515e5a549a4ed7fd3a and locked for Trusted review. Re-evaluate remaining dependency-safe work and continue with the next independent Worker-only task; keep this claim untouched.",
     "composition_preparable": 0,
-    "immediately_actionable": 19,
+    "immediately_actionable": 18,
     "must_continue": true
   },
   "rules": {
@@ -34267,7 +34267,7 @@
       "package_id": "WCP-507",
       "title": "Expose a public directory of published pages",
       "risk": "low",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -34349,7 +34349,7 @@
       },
       "published_at": "2026-09-27T10:04:19.189Z",
       "claimed_on": "2026-09-27T10:04:19.189Z",
-      "claim_state": "active",
+      "claim_state": "locked_until_trusted_resolution",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
       "active_head": "a7d4fd835a134dd1b17d5e515e5a549a4ed7fd3a",
@@ -34358,16 +34358,16 @@
         "feature_branch": "a7d4fd835a134dd1b17d5e515e5a549a4ed7fd3a"
       },
       "last_observed_head": "a7d4fd835a134dd1b17d5e515e5a549a4ed7fd3a",
-      "last_checkpoint_at": "2026-09-27T10:11:22.805Z",
+      "last_checkpoint_at": "2026-09-27T10:13:57.732Z",
       "checkpoint_paths": [
         "src/Controller/PublicPageDirectoryController.php",
         "templates/page/index.html.twig",
         "tests/Controller/PublicPageDirectoryTest.php"
       ],
-      "next_action": "Monitor full exact-head Worker CI for a7d4fd835a134dd1b17d5e515e5a549a4ed7fd3a; repair only concrete failures within the three allowed paths.",
-      "last_verified_push_at": "2026-09-27T10:11:22.805Z",
+      "next_action": "PR #300 is ready for Trusted review at exact green HEAD a7d4fd835a134dd1b17d5e515e5a549a4ed7fd3a; keep this WCP-507 claim locked until Trusted explicitly resolves it.",
+      "last_verified_push_at": "2026-09-27T10:13:57.732Z",
       "worker_pr": 300,
-      "draft_pr": true,
+      "draft_pr": false,
       "ci_attempts": [
         {
           "head": "33ec93233a180efef7eb739652e380141798f416",
@@ -34377,10 +34377,18 @@
         },
         {
           "head": "a7d4fd835a134dd1b17d5e515e5a549a4ed7fd3a",
-          "result": "pending",
-          "diagnosis": "Re-run full Worker CI after removing the environment-specific cache-header assertion."
+          "run_id": 36311725866,
+          "result": "success",
+          "jobs": [
+            "108598836946:success",
+            "108598837083:success"
+          ]
         }
-      ]
+      ],
+      "final_head": "a7d4fd835a134dd1b17d5e515e5a549a4ed7fd3a",
+      "ci_run_id": 36311725866,
+      "ci_result": "success",
+      "completed_on": "2026-09-27T10:13:57.732Z"
     },
     {
       "priority": 508,
