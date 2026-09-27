@@ -23,12 +23,7 @@ final class AdminContentRevisionCompareController extends AbstractController
     ) {
     }
 
-    #[Route(
-        '/admin/content/{id}/revisions/{revisionId}/compare',
-        name: 'app_admin_content_revision_compare',
-        requirements: ['id' => '\d+', 'revisionId' => '\d+'],
-        methods: ['GET'],
-    )]
+    #[Route('/admin/content/{id}/revisions/{revisionId}/compare', name: 'app_admin_content_revision_compare', requirements: ['id' => '\\d+', 'revisionId' => '\\d+'], methods: ['GET'])]
     public function __invoke(ContentEntry $entry, int $revisionId): Response
     {
         if (!$this->modules->isEnabled('content')) {
