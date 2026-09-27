@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T14:20:40.692Z",
+  "published_at": "2026-09-27T14:20:56.041Z",
   "summary": {
     "total_remaining_worker_tasks": 167,
     "completed_worker_prs_awaiting_trusted_review": 291,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "Create a draft Worker PR from exact branch head e7b99a9922991bf43c97b382ee82ff5d58b7d565 to main to run full Worker CI; inspect and fix any failure.",
+    "next_required_action": "Worker CI run #834 / 36325553002 is running on exact HEAD e7b99a9922991bf43c97b382ee82ff5d58b7d565; inspect both jobs, fix any failures and rerun on the resulting exact head.",
     "composition_preparable": 0,
     "immediately_actionable": 28,
     "must_continue": true
@@ -40204,14 +40204,22 @@
         "templates/admin/newsletter/preview.html.twig",
         "tests/Controller/AdminNewsletterSubscriptionDirectoryTest.php"
       ],
-      "next_action": "Create a draft Worker PR from exact branch head e7b99a9922991bf43c97b382ee82ff5d58b7d565 to main to run full Worker CI; inspect and fix any failure.",
-      "worker_pr_state": "not_created",
+      "next_action": "Worker CI run #834 / 36325553002 is running on exact HEAD e7b99a9922991bf43c97b382ee82ff5d58b7d565; inspect both jobs, fix any failures and rerun on the resulting exact head.",
+      "worker_pr_state": "open",
       "last_verified_push_at": "2026-09-27T14:19:53.517Z",
-      "ci_result": "not_started",
-      "last_ci_result": "not_run",
-      "ci_attempts": [],
-      "worker_pr": null,
-      "worker_pr_url": null,
+      "ci_result": "pending",
+      "last_ci_result": "in_progress",
+      "ci_attempts": [
+        {
+          "run_id": 36325553002,
+          "run_number": 834,
+          "head": "e7b99a9922991bf43c97b382ee82ff5d58b7d565",
+          "base": "b510875e7b0741b9b19f09429d2204a95df51198",
+          "result": "in_progress"
+        }
+      ],
+      "worker_pr": 336,
+      "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/336",
       "worker_pr_changed_paths": [
         "src/Controller/AdminNewsletter/AdminNewsletterController.php",
         "src/Newsletter/NewsletterSubscriptionDirectory.php",
@@ -40221,7 +40229,11 @@
         "tests/Controller/AdminNewsletterSubscriptionDirectoryTest.php"
       ],
       "worker_pr_base_branch": "main",
-      "pr_state": "not_created"
+      "pr_state": "open",
+      "draft_pr": true,
+      "worker_pr_base_sha": "b510875e7b0741b9b19f09429d2204a95df51198",
+      "ci_run_id": 36325553002,
+      "last_ci_run_id": 36325553002
     },
     {
       "priority": 544,
