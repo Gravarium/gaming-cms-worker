@@ -43,6 +43,9 @@ final class PublicCompetitionBracketWidgetTest extends WebTestCase
             $public = [];
             for ($index = 0; $index < 9; ++$index) {
                 $competition = $this->createCompetition($em, $game, 'Public Cup '.$index, $start->modify('+'.$index.' hours'));
+                if ($index === 8) {
+                    $competition->complete();
+                }
                 $public[] = $competition;
                 $this->addMatch($em, $competition);
             }
@@ -108,6 +111,8 @@ final class PublicCompetitionBracketWidgetTest extends WebTestCase
             self::assertSame(8, $crawler->filter('.public-competition-brackets a')->count());
             $html = (string) $client->getResponse()->getContent();
             self::assertStringContainsString('Public Cup 8', $html);
+            self::assertStringContainsString('Status: Abgeschlossen', $html);
+            self::assertStringContainsString('Status: Läuft', $html);
             self::assertStringNotContainsString('Public Cup 0', $html);
             self::assertStringNotContainsString('Private Widget Cup', $html);
             self::assertStringNotContainsString('Draft Widget Cup', $html);
