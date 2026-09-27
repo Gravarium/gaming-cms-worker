@@ -12,14 +12,14 @@
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
   "published_at": "2026-09-27T02:05:27.111Z",
   "summary": {
-    "total_remaining_worker_tasks": 140,
+    "total_remaining_worker_tasks": 141,
     "completed_worker_prs_awaiting_trusted_review": 219,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "Re-evaluate the dependency-blocked FCP queue and select the next safe, independent Worker-only task; do not alter foreign WCP-450 claim.",
+    "next_required_action": "WCP-453 is reserved on exact sanitized main; implement the locale-switch CSRF, allowlist and redirect regression on its exclusive branch.",
     "composition_preparable": 0,
-    "immediately_actionable": 5,
+    "immediately_actionable": 6,
     "must_continue": true
   },
   "rules": {
@@ -25871,6 +25871,97 @@
         "feature_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d"
       },
       "next_action": "Create and verify both exact claim and feature refs from the recorded sanitized-main base, then implement. Push a coherent checkpoint within 30 minutes."
+    },
+    {
+      "priority": 453,
+      "package_id": "WCP-453",
+      "title": "Protect the locale switch from CSRF and unsafe redirects",
+      "risk": "medium",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-453-locale-switch-security-g1",
+      "suggested_branch": "feature/wcp-453-locale-switch-security-g1",
+      "base_branch": "main",
+      "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "objective": "Add functional regressions for the existing locale-switch POST: reject missing/invalid CSRF and disabled locales, and ensure an external redirect target falls back to a local path while a valid switch sets the HttpOnly SameSite=Lax locale cookie. Change tests only.",
+      "allowed_paths": [
+        "tests/Controller/LocaleSwitchSecurityTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "src/",
+        "templates/",
+        "migrations/",
+        "config/",
+        "public/uploads/"
+      ],
+      "deliverables": [
+        "The locale switch form is rendered when multiple locales are enabled and supplies its CSRF token.",
+        "Missing and invalid locale-switch CSRF tokens return 403 without setting the locale cookie.",
+        "A valid token cannot switch to a supported but disabled locale; that request returns 404 without setting the cookie.",
+        "A valid enabled locale redirects to a safe local target when given an external _target and sets the HttpOnly SameSite=Lax locale cookie.",
+        "The test restores all pre-existing SiteSettings and removes any test-created row; no product behavior changes."
+      ],
+      "tests": [
+        "Targeted LocaleSwitchSecurityTest functional coverage.",
+        "PHPStan level 8 and complete Worker CI on the exact final HEAD.",
+        "PostgreSQL 18 complete migration-chain validation."
+      ],
+      "completion_report": [
+        "Exact sanitized main base SHA and final Worker HEAD SHA.",
+        "Complete changed-path list and Worker PR.",
+        "CSRF rejection, disabled-locale refusal, local redirect fallback and locale-cookie results.",
+        "Exact-head PHPUnit, PHPStan and full Worker CI.",
+        "Remaining Trusted integration work."
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "preserve-locale-switch-CSRF-and-enabled-locale-allowlist",
+        "never-redirect-to-an-external-locale-switch-target",
+        "locale-cookie-remains-HttpOnly-SameSite-Lax",
+        "restore-pre-existing-settings-and-remove-test-created-data",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "proposal_kind": "worker_only",
+      "proposal_dependency_evidence": [],
+      "collision_check": {
+        "compared_against": "Fresh continuous/work-pool-v4 blob d3268f9c4fd212b9609b32a8a4d3f1e1cc74452e, all active and claim-locked allowlists, and worker/main @ f1a246c64527ef3ad51f7490773d9bbf9d42be5d.",
+        "result": "No active or claim-locked claim owns or overlaps tests/Controller/LocaleSwitchSecurityTest.php; active WCP-450 and WCP-452 paths are disjoint. The file is absent from exact worker/main. The existing controller validates locale CSRF, enabled-locale selection, local redirect targets and cookie attributes, but no controller functional test exists.",
+        "paths": [
+          "tests/Controller/LocaleSwitchSecurityTest.php"
+        ]
+      },
+      "claimed_on": "2026-09-27T02:09:43.149Z",
+      "claim_state": "active",
+      "active_base_branch": "main",
+      "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "resume_branch": "feature/wcp-453-locale-switch-security-g1",
+      "last_checkpoint_at": "2026-09-27T02:09:43.149Z",
+      "checkpoint_paths": [],
+      "branch_heads": {
+        "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+        "feature_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d"
+      },
+      "next_action": "Implement the locale-switch functional security test using the rendered token, cross-check missing/invalid CSRF, disabled locales, unsafe redirect fallback and locale cookie attributes; restore SiteSettings fixtures.",
+      "last_verified_push_at": "2026-09-27T02:09:43.149Z"
     }
   ],
   "recovery_queue": [],
