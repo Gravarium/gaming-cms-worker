@@ -59,7 +59,7 @@ final class PublicPageCategoryArchiveController extends AbstractController
             throw $this->createNotFoundException();
         }
 
-        $page = max(1, min(10000, $request->query->getInt('page', 1)));
+        $page = $this->pageNumber($request);
         $pageCount = max(1, (int) ceil($total / self::ARCHIVE_PAGE_SIZE));
         if ($page > $pageCount) {
             throw $this->createNotFoundException();
