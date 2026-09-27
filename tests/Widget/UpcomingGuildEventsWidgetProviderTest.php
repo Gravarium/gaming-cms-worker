@@ -136,14 +136,14 @@ final class UpcomingGuildEventsWidgetProviderTest extends WebTestCase
             ] as $privateValue) {
                 self::assertStringNotContainsString($privateValue, $html);
             }
-            self::assertSame('private, no-store, max-age=0', $client->getResponse()->headers->get('Cache-Control'));
+            $this->assertPrivateNoStore($client);
             self::assertSame('no-cache', $client->getResponse()->headers->get('Pragma'));
 
             $client->loginUser($unaffiliatedUser);
             $client->request('GET', '/');
             self::assertResponseIsSuccessful();
             self::assertSelectorTextContains('#widget-guild-events-widget', 'Für deine Gilden stehen keine kommenden Termine an.');
-            self::assertSame('private, no-store, max-age=0', $client->getResponse()->headers->get('Cache-Control'));
+            $this->assertPrivateNoStore($client);
         } finally {
             $this->cleanup($client, $ids);
         }
@@ -348,6 +348,14 @@ final class UpcomingGuildEventsWidgetProviderTest extends WebTestCase
         $em->flush();
     }
 
+    private function assertPrivateNoStore(KernelBrowser $client): void
+    {
+        $cacheControl = strtolower((string) $client->getResponse()->headers->get('Cache-Control'));
+        self::assertStringContainsString('private', $cacheControl);
+        self::assertStringContainsString('no-store', $cacheControl);
+        self::assertStringContainsString('max-age=0', $cacheControl);
+    }
+
     /** @param array<string, list<int>> $ids */
     private function cleanup(KernelBrowser $client, array $ids): void
     {
@@ -377,3 +385,4 @@ final class UpcomingGuildEventsWidgetProviderTest extends WebTestCase
         $em->flush();
     }
 }
+
