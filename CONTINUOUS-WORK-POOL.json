@@ -13,11 +13,11 @@
   "published_at": "2026-09-27T05:51:04.811Z",
   "summary": {
     "total_remaining_worker_tasks": 140,
-    "completed_worker_prs_awaiting_trusted_review": 240,
+    "completed_worker_prs_awaiting_trusted_review": 241,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-474 remains another worker's active 2FA recovery-code rotation claim. WCP-475 is checkpointed with its sole allowed guild-member deletion security test; WCP-471 through WCP-473 remain complete and claim-locked.",
+    "next_required_action": "WCP-475 is complete on exact green HEAD 56274da100719bdbfd62e80f52141160da5a718d (PR #268, CI run 36298899528) and locked for Trusted review. WCP-474 remains another worker's active 2FA recovery-code rotation claim. FCP-012 and FCP-013 remain blocked by missing predecessors; continue by selecting a separate dependency-safe Worker-only task.",
     "composition_preparable": 0,
     "immediately_actionable": 4,
     "must_continue": true
@@ -29197,7 +29197,7 @@
       "package_id": "WCP-475",
       "title": "Protect guild member deletion authorization, CSRF and guild ownership",
       "risk": "medium",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [
         "WCP-450"
       ],
@@ -29280,7 +29280,7 @@
       },
       "published_at": "2026-09-27T05:58:42.794Z",
       "claimed_on": "2026-09-27T05:58:42.794Z",
-      "claim_state": "active",
+      "claim_state": "locked_until_trusted_resolution",
       "active_base_branch": "feature/wcp-450-guild-member-directory-pagination-g1",
       "active_base_sha": "49d836de7c14c3b9958dcb3e43db573c80d2c8b3",
       "active_head": "56274da100719bdbfd62e80f52141160da5a718d",
@@ -29293,9 +29293,82 @@
         "claim_branch": "49d836de7c14c3b9958dcb3e43db573c80d2c8b3",
         "feature_branch": "56274da100719bdbfd62e80f52141160da5a718d"
       },
-      "next_action": "Open a draft Worker PR against worker main and run complete exact-head CI.",
+      "next_action": "Await Trusted review and integration validation; keep this claim locked until Trusted explicitly integrates, cancels or transfers it. Continue autonomously from a separate claim.",
       "last_observed_head": "56274da100719bdbfd62e80f52141160da5a718d",
-      "last_verified_push_at": "2026-09-27T06:01:29.833Z"
+      "last_verified_push_at": "2026-09-27T06:01:29.833Z",
+      "worker_pr": 268,
+      "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/268",
+      "draft_pr": false,
+      "pr_state": "open_ready_unmerged",
+      "ci_run_id": 36298899528,
+      "last_ci_run_id": 36298899528,
+      "ci_result": "success",
+      "last_ci_result": "success",
+      "ci_attempts": [
+        {
+          "run_id": 36298899528,
+          "head": "56274da100719bdbfd62e80f52141160da5a718d",
+          "result": "success"
+        }
+      ],
+      "final_head": "56274da100719bdbfd62e80f52141160da5a718d",
+      "final_base_sha": "49d836de7c14c3b9958dcb3e43db573c80d2c8b3",
+      "final_sanitized_main_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "final_changed_paths": [
+        "tests/Controller/AdminGuildMemberDeletionSecurityTest.php"
+      ],
+      "changed_paths": [
+        "tests/Controller/AdminGuildMemberDeletionSecurityTest.php"
+      ],
+      "worker_pr_changed_paths": [
+        "src/Controller/AdminGuildMemberController.php",
+        "src/Repository/GuildMemberRepository.php",
+        "templates/admin/gaming/member/index.html.twig",
+        "tests/Controller/AdminGuildMemberDeletionSecurityTest.php",
+        "tests/Controller/AdminGuildMemberDirectoryPaginationTest.php"
+      ],
+      "completed_at": "2026-09-27T06:05:52Z",
+      "test_results": {
+        "phpunit": "435 tests, 1973 assertions, 0 failures; one PHPUnit deprecation and one notice.",
+        "phpstan": "Level 8 passed with no errors.",
+        "php_symfony": "Worker PHP/Symfony validation job passed on exact final HEAD.",
+        "postgres18": "PostgreSQL 18 completed all 39 migrations; 0 unavailable.",
+        "exact_head_ci": {
+          "run_id": 36298899528,
+          "head": "56274da100719bdbfd62e80f52141160da5a718d",
+          "result": "success"
+        }
+      },
+      "completion_evidence": {
+        "exact_sanitized_main_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+        "exact_proposal_base_branch": "feature/wcp-450-guild-member-directory-pagination-g1",
+        "exact_proposal_base_sha": "49d836de7c14c3b9958dcb3e43db573c80d2c8b3",
+        "dependency_worker_pr": 245,
+        "dependency_ci_run_id": 36287792997,
+        "dependency_ci_result": "success",
+        "final_head_sha": "56274da100719bdbfd62e80f52141160da5a718d",
+        "changed_paths": [
+          "tests/Controller/AdminGuildMemberDeletionSecurityTest.php"
+        ],
+        "cumulative_pr_paths": [
+          "src/Controller/AdminGuildMemberController.php",
+          "src/Repository/GuildMemberRepository.php",
+          "templates/admin/gaming/member/index.html.twig",
+          "tests/Controller/AdminGuildMemberDeletionSecurityTest.php",
+          "tests/Controller/AdminGuildMemberDirectoryPaginationTest.php"
+        ],
+        "worker_pr": 268,
+        "ci_run_id": 36298899528,
+        "ci_result": "success",
+        "php_symfony_job": "success: 435 tests, 1973 assertions; PHPStan level 8 no errors",
+        "postgresql_job": "success: 39 migrations, 0 unavailable",
+        "guild_member_deletion_security_coverage": "CMS_GAMING_MANAGE is required for roster read and delete; missing, invalid and wrong-member CSRF tokens preserve all rows; a cross-guild token on another guild's route returns 404 without deleting; the intended rendered guild/member token deletes only the target. Synthetic records are fully cleaned up."
+      },
+      "completion_summary": "Stacked test-only functional coverage for guild-member roster authorization, deletion CSRF and guild ownership. WCP-475 adds one security regression test file atop the exact green WCP-450 predecessor.",
+      "open_limitations": [
+        "Awaiting Trusted review and Trusted integration CI; this stacked PR includes the WCP-450 predecessor changes."
+      ],
+      "trusted_follow_up": "Preserve CMS_GAMING_MANAGE, guild-scoped member ownership and the delete-member CSRF boundary; run full Trusted CI."
     }
   ],
   "recovery_queue": [],
