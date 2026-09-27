@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T15:02:55.289Z",
+  "published_at": "2026-09-27T15:04:41.139Z",
   "summary": {
     "total_remaining_worker_tasks": 167,
     "completed_worker_prs_awaiting_trusted_review": 293,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "Implement WCP-549 on feature/wcp-549-global-search-widget-g1 from exact green predecessor HEAD 0b243f72cd6813e76574840dcc9c542396ec270e, using only its four reserved paths.",
+    "next_required_action": "Inspect Worker CI run #847 / 36328199724 on exact HEAD 91948c45a290782ba389a96b19bfe5793633d8b1. Diagnose any failure on this branch; after green, retarget draft PR #340 to exact WCP-541 base 991a1ec5ae42be72b3e36de12bb47bd3848683ca so its final diff contains only the five WCP-548 paths.",
     "composition_preparable": 0,
     "immediately_actionable": 28,
     "must_continue": true
@@ -41110,14 +41110,14 @@
       "claim_state": "active",
       "active_base_branch": "feature/wcp-541-guild-role-needs-g1",
       "active_base_sha": "991a1ec5ae42be72b3e36de12bb47bd3848683ca",
-      "active_head": "5adb410edf08220a9b8abbb000d2c3679a9725b4",
+      "active_head": "91948c45a290782ba389a96b19bfe5793633d8b1",
       "resume_branch": "feature/wcp-548-public-guild-role-needs-widget-g1",
       "branch_heads": {
         "claim_branch": "991a1ec5ae42be72b3e36de12bb47bd3848683ca",
-        "feature_branch": "5adb410edf08220a9b8abbb000d2c3679a9725b4"
+        "feature_branch": "91948c45a290782ba389a96b19bfe5793633d8b1"
       },
-      "last_observed_head": "5adb410edf08220a9b8abbb000d2c3679a9725b4",
-      "last_checkpoint_at": "2026-09-27T15:01:16.715Z",
+      "last_observed_head": "91948c45a290782ba389a96b19bfe5793633d8b1",
+      "last_checkpoint_at": "2026-09-27T15:04:41.139Z",
       "checkpoint_paths": [
         "src/Widget/PublicGuildRoleNeedsWidgetProvider.php",
         "src/Widget/GuildRoleNeeds/PublicGuildRoleNeedsWidgetQuery.php",
@@ -41125,7 +41125,7 @@
         "config/packages/guild_role_needs_widget.yaml",
         "tests/Widget/PublicGuildRoleNeedsWidgetProviderTest.php"
       ],
-      "next_action": "Inspect Worker CI run #846 / 36328033568 on exact HEAD 5adb410edf08220a9b8abbb000d2c3679a9725b4. Diagnose and repair any failure on this branch. After green, retarget draft PR #340 to exact predecessor WCP-541 head 991a1ec5ae42be72b3e36de12bb47bd3848683ca so its final diff contains only the five WCP-548 paths.",
+      "next_action": "Inspect Worker CI run #847 / 36328199724 on exact HEAD 91948c45a290782ba389a96b19bfe5793633d8b1. Diagnose any failure on this branch; after green, retarget draft PR #340 to exact WCP-541 base 991a1ec5ae42be72b3e36de12bb47bd3848683ca so its final diff contains only the five WCP-548 paths.",
       "worker_pr_state": "open",
       "worker_pr_changed_paths": [],
       "worker_pr_base_branch": "main",
@@ -41139,15 +41139,24 @@
           "run_number": 846,
           "head": "5adb410edf08220a9b8abbb000d2c3679a9725b4",
           "base": "e4be797b44948824e31843b88363d6ea1335c163",
+          "result": "failure",
+          "conclusion": "failure",
+          "failure_summary": "PostgreSQL 18 migration validation passed. PHP/Symfony completed PHPStan, YAML/Twig lint and container validation; 2 PHPUnit errors came from the isolated template path being registered under a Twig namespace while WidgetDefinition uses the required default `widget/...` name. Config now registers the isolated path in Twig's default namespace."
+        },
+        {
+          "run_id": 36328199724,
+          "run_number": 847,
+          "head": "91948c45a290782ba389a96b19bfe5793633d8b1",
+          "base": "e4be797b44948824e31843b88363d6ea1335c163",
           "result": "in_progress",
           "conclusion": null
         }
       ],
-      "last_verified_push_at": "2026-09-27T15:01:16.715Z",
+      "last_verified_push_at": "2026-09-27T15:04:41.139Z",
       "worker_pr": 340,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/340",
-      "ci_run_id": 36328033568,
-      "last_ci_run_id": 36328033568
+      "ci_run_id": 36328199724,
+      "last_ci_run_id": 36328199724
     },
     {
       "priority": 549,
