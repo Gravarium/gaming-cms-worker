@@ -332,26 +332,42 @@ final class SocialGroupConversationCreationTest extends WebTestCase
     private function cleanup(KernelBrowser $client, array $users): void
     {
         $em = $this->em($client);
-        foreach ($users as $user) {
-            foreach ($em->getRepository(SocialConversation::class)->findBy(['createdBy' => $user]) as $conversation) {
-                $em->remove($conversation);
-            }
-        }
-        $em->flush();
+        $userIds = array_values(array_filter(
+            array_map(static fn (User $user): ?int => $user->getId(), $users),
+            static fn (?int $id): bool => $id !== null,
+        ));
 
-        foreach ($users as $user) {
-            $id = $user->getId();
-            if ($id !== null) {
-                $profile = $em->find(MemberProfile::class, $id);
-                if ($profile instanceof MemberProfile) {
-                    $em->remove($profile);
-                }
-                $privacy = $em->find(SocialPrivacySettings::class, $id);
-                if ($privacy instanceof SocialPrivacySettings) {
-                    $em->remove($privacy);
-                }
+        if ($userIds !== []) {
+            $placeholders = implode(', ', array_fill(0, count($userIds), '?'));
+            $connection = $em->getConnection();
+            $em->clear();
+            $connection->executeStatement(
+                sprintf(
+                    'DELETE FROM social_conversation_participant WHERE user_id IN (%1$s) OR conversation_id IN (SELECT id FROM social_conversation WHERE created_by_id IN (%1$s))',
+                    $placeholders,
+                ),
+                [...$userIds, ...$userIds],
+            );
+            $connection->executeStatement(
+                sprintf('DELETE FROM social_conversation WHERE created_by_id IN (%s)', $placeholders),
+                $userIds,
+            );
+        } else {
+            $em->clear();
+        }
+
+        foreach ($userIds as $id) {
+            $profile = $em->find(MemberProfile::class, $id);
+            if ($profile instanceof MemberProfile) {
+                $em->remove($profile);
             }
-            $storedUser = $em->getRepository(User::class)->findOneBy(['email' => $user->getEmail()]);
+
+            $privacy = $em->find(SocialPrivacySettings::class, $id);
+            if ($privacy instanceof SocialPrivacySettings) {
+                $em->remove($privacy);
+            }
+
+            $storedUser = $em->find(User::class, $id);
             if ($storedUser instanceof User) {
                 $em->remove($storedUser);
             }
