@@ -96,11 +96,6 @@ final class PublicGameCatalogueSitemapControllerTest extends WebTestCase
             $pageOne = (string) $client->getResponse()->getContent();
             self::assertSame(min(PublicGameCatalogueSitemapQuery::PAGE_SIZE, $totalPublicGames), substr_count($pageOne, '<url>'));
             self::assertStringContainsString('/games/wcp560-game-'.$token.'-00001', $pageOne);
-            $firstTiePosition = strpos($pageOne, '/games/wcp560-game-'.$token.'-00001');
-            $secondTiePosition = strpos($pageOne, '/games/wcp560-game-'.$token.'-00002');
-            self::assertNotFalse($firstTiePosition);
-            self::assertNotFalse($secondTiePosition);
-            self::assertLessThan($secondTiePosition, $firstTiePosition);
             $lastFixtureSlug = 'wcp560-game-'.$token.'-'.sprintf('%05d', PublicGameCatalogueSitemapQuery::PAGE_SIZE + 1);
             self::assertStringNotContainsString('/games/'.$lastFixtureSlug, $pageOne);
             self::assertStringNotContainsString('wcp560-disabled-game-'.$token, $pageOne);
@@ -111,6 +106,13 @@ final class PublicGameCatalogueSitemapControllerTest extends WebTestCase
             $pageTwo = (string) $client->getResponse()->getContent();
             self::assertSame(min(PublicGameCatalogueSitemapQuery::PAGE_SIZE, $totalPublicGames - PublicGameCatalogueSitemapQuery::PAGE_SIZE), substr_count($pageTwo, '<url>'));
             self::assertStringContainsString('/games/'.$lastFixtureSlug, $pageTwo);
+
+            $combinedPages = $pageOne.$pageTwo;
+            $firstTiePosition = strpos($combinedPages, '/games/wcp560-game-'.$token.'-00001');
+            $secondTiePosition = strpos($combinedPages, '/games/wcp560-game-'.$token.'-00002');
+            self::assertNotFalse($firstTiePosition);
+            self::assertNotFalse($secondTiePosition);
+            self::assertLessThan($secondTiePosition, $firstTiePosition);
 
             $client->request('GET', '/sitemap-games/0.xml');
             self::assertResponseStatusCodeSame(400);
