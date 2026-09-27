@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T07:22:06.048Z",
+  "published_at": "2026-09-27T07:28:16.350Z",
   "summary": {
     "total_remaining_worker_tasks": 141,
     "completed_worker_prs_awaiting_trusted_review": 248,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-482 draft PR #275 is open at exact HEAD b9bc6ae408ced2ab6f219ce149ee558bc8ee90ca; exact-head Worker CI run 36302859254 is in_progress. Await and resolve CI.",
+    "next_required_action": "WCP-482 CI run 36302859254 identified that stateless form CSRF accepts same-origin metadata despite an altered token. Fix the allowlisted test to send explicit cross-site metadata, then rerun exact-head CI.",
     "composition_preparable": 0,
     "immediately_actionable": 4,
     "must_continue": true
@@ -30538,7 +30538,7 @@
       "suggested_branch": "feature/wcp-482-content-layout-csrf-boundary-g1",
       "base_branch": "main",
       "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-      "objective": "Add test-only functional coverage that a rejected, invalid-CSRF content-type edit cannot change a page into news or delete its page layout. Submit the actual rendered ContentEntryType form with an invalid token, re-read persisted state, and clean up synthetic fixtures.",
+      "objective": "Add test-only functional coverage that a cross-site content-type edit is rejected by the configured stateless form-CSRF protection and cannot change a page into news or delete its page layout. Submit the rendered ContentEntryType form with a deliberately invalid token plus cross-site request metadata, re-read persisted state, and clean up synthetic fixtures.",
       "allowed_paths": [
         "tests/Controller/ContentLayoutMutationBoundaryTest.php"
       ],
@@ -30564,12 +30564,12 @@
       ],
       "deliverables": [
         "Create a synthetic page, persisted page layout, and CMS_CONTENT_MANAGE test user.",
-        "GET the rendered admin edit form, submit a page-to-news change with an invalid form CSRF token, and assert the form rejects the request without a success redirect.",
+        "GET the rendered admin edit form, submit a page-to-news change with an invalid form token and cross-site Sec-Fetch-Site/Origin headers, and assert the form rejects the request without a success redirect.",
         "After clearing Doctrine state, verify the entry remains a page and its page-layout record/document remains unchanged.",
         "Clean up the synthetic page, layout, and user in a finally block; change only the allowlisted test file."
       ],
       "tests": [
-        "Focused ContentLayoutMutationBoundaryTest functional PHPUnit coverage for invalid-CSRF rejection and unchanged persisted page/layout state.",
+        "Focused ContentLayoutMutationBoundaryTest functional PHPUnit coverage for stateless cross-site form-CSRF rejection and unchanged persisted page/layout state.",
         "PHPStan level 8 and complete Worker CI on exact final HEAD.",
         "PostgreSQL 18 complete migration-chain validation."
       ],
@@ -30612,9 +30612,9 @@
         "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
         "feature_branch": "b9bc6ae408ced2ab6f219ce149ee558bc8ee90ca"
       },
-      "next_action": "Await exact-head Worker CI run 36302859254; diagnose and repair any test-only failure within the allowlisted file.",
+      "next_action": "Submit the same rendered form with an invalid token and explicit cross-site Sec-Fetch-Site/Origin headers; verify rejected response and unchanged page/layout, then rerun exact-head CI.",
       "last_observed_head": "b9bc6ae408ced2ab6f219ce149ee558bc8ee90ca",
-      "last_checkpoint_at": "2026-09-27T07:22:06.048Z",
+      "last_checkpoint_at": "2026-09-27T07:28:16.350Z",
       "checkpoint_paths": [
         "tests/Controller/ContentLayoutMutationBoundaryTest.php"
       ],
@@ -30625,13 +30625,14 @@
       "pr_state": "open",
       "ci_run_id": 36302859254,
       "last_ci_run_id": 36302859254,
-      "ci_result": "in_progress",
-      "last_ci_result": "in_progress",
+      "ci_result": "failure",
+      "last_ci_result": "failure",
       "ci_attempts": [
         {
           "run_id": 36302859254,
           "head": "b9bc6ae408ced2ab6f219ce149ee558bc8ee90ca",
-          "result": "in_progress"
+          "result": "failure",
+          "note": "An invalid form token alone was accepted because the configured stateless form-CSRF manager validates same-origin request metadata; test request inherited same-origin context. Retest with explicit cross-site Sec-Fetch-Site and Origin headers."
         }
       ]
     }
