@@ -25622,21 +25622,24 @@
         "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
         "feature_branch": "6310ac68f3c4c484a76bbe292d8501b09d4d58d2"
       },
-      "next_action": "Monitor exact-head Worker CI run 36287630183; inspect PHPUnit, PHPStan level 8 and PostgreSQL 18 jobs and resolve any failure on this feature branch.",
+      "next_action": "Rename the new DQL alias from member to guildMember in countForAdminGuild/findForAdminGuild/filter logic, checkpoint the new head, then rerun full Worker CI.",
       "worker_pr": 245,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/245",
       "pr_state": "open_draft_unmerged",
       "draft_pr": true,
       "ci_run_id": 36287630183,
       "last_ci_run_id": 36287630183,
-      "ci_result": "queued",
+      "ci_result": "failure",
       "ci_attempts": [
         {
           "run_id": 36287630183,
           "head": "6310ac68f3c4c484a76bbe292d8501b09d4d58d2",
-          "result": "queued"
+          "result": "failure",
+          "reason": "PHP/Symfony PHPUnit failed because Doctrine DQL parsed the new query alias 'member' as a reserved keyword; renamed the feature-query alias to guildMember. PostgreSQL 18 job succeeded."
         }
-      ]
+      ],
+      "last_ci_result": "failure",
+      "last_ci_diagnosis": "The failing functional test reached countForAdminGuild; Doctrine raised Syntax Error at DQL alias 'member'. The repository must use a non-reserved alias consistently across new count, page and filter queries."
     },
     {
       "priority": 451,
