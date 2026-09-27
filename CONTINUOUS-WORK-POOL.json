@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T05:51:04.811Z",
+  "published_at": "2026-09-27T06:10:00.567Z",
   "summary": {
     "total_remaining_worker_tasks": 140,
-    "completed_worker_prs_awaiting_trusted_review": 241,
+    "completed_worker_prs_awaiting_trusted_review": 242,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-475 is complete on exact green HEAD 56274da100719bdbfd62e80f52141160da5a718d (PR #268, CI run 36298899528) and locked for Trusted review. WCP-474 remains another worker's active 2FA recovery-code rotation claim. FCP-012 and FCP-013 remain blocked by missing predecessors; continue by selecting a separate dependency-safe Worker-only task.",
+    "next_required_action": "WCP-474 is complete on green exact-head Worker PR #267 and remains claim-locked. Preserve active claims and select the next independent worker proposal without touching another claim.",
     "composition_preparable": 0,
     "immediately_actionable": 4,
     "must_continue": true
@@ -29076,7 +29076,7 @@
       "package_id": "WCP-474",
       "title": "Self-service two-factor recovery-code rotation",
       "risk": "medium",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -29156,12 +29156,12 @@
       },
       "published_at": "2026-09-27T05:51:04.811Z",
       "claimed_on": "2026-09-27T05:51:04.811Z",
-      "claim_state": "active",
+      "claim_state": "locked_until_trusted_resolution",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
       "active_head": "c55d185dabf0343d923a2e30a89dc7ae6dc8656b",
       "resume_branch": "feature/wcp-474-two-factor-recovery-code-rotation-g1",
-      "last_checkpoint_at": "2026-09-27T06:03:45.016Z",
+      "last_checkpoint_at": "2026-09-27T06:10:00.567Z",
       "checkpoint_paths": [
         "config/packages/rate_limiter.yaml",
         "src/Controller/TwoFactorController.php",
@@ -29173,24 +29173,83 @@
         "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
         "feature_branch": "c55d185dabf0343d923a2e30a89dc7ae6dc8656b"
       },
-      "next_action": "Inspect exact-head CI run 36298952620; repair any failures on this branch and rerun the complete workflow on the resulting exact HEAD.",
+      "next_action": "Await Trusted review and integration validation; keep the claim locked until Trusted explicitly integrates, cancels or transfers it.",
       "last_observed_head": "c55d185dabf0343d923a2e30a89dc7ae6dc8656b",
-      "last_verified_push_at": "2026-09-27T06:03:45.016Z",
+      "last_verified_push_at": "2026-09-27T06:10:00.567Z",
       "worker_pr": 267,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/267",
-      "draft_pr": true,
-      "pr_state": "open_draft_unmerged",
+      "draft_pr": false,
+      "pr_state": "open_ready_unmerged",
       "ci_run_id": 36298952620,
       "last_ci_run_id": 36298952620,
-      "ci_result": "in_progress",
-      "last_ci_result": "in_progress",
+      "ci_result": "success",
+      "last_ci_result": "success",
       "ci_attempts": [
+        {
+          "run_id": 36298858321,
+          "head": "4fe82e668a71239b0fb65cf3fa28b9e85befc5d4",
+          "result": "failure",
+          "diagnosis": "BrowserKit test passed a Crawler where click expects a Link; malformed CSRF arrays reached InputBag::get. Corrected the test to follow rendered hrefs and validate request parameters as scalars before CSRF checking."
+        },
         {
           "run_id": 36298952620,
           "head": "c55d185dabf0343d923a2e30a89dc7ae6dc8656b",
-          "result": "in_progress"
+          "result": "success"
         }
-      ]
+      ],
+      "final_head": "c55d185dabf0343d923a2e30a89dc7ae6dc8656b",
+      "final_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "completed_at": "2026-09-27T06:10:00.567Z",
+      "changed_paths": [
+        "config/packages/rate_limiter.yaml",
+        "src/Controller/TwoFactorController.php",
+        "templates/account/passkeys.html.twig",
+        "templates/account/two_factor_recovery_manage.html.twig",
+        "tests/Controller/TwoFactorRecoveryCodeRotationTest.php"
+      ],
+      "final_changed_paths": [
+        "config/packages/rate_limiter.yaml",
+        "src/Controller/TwoFactorController.php",
+        "templates/account/passkeys.html.twig",
+        "templates/account/two_factor_recovery_manage.html.twig",
+        "tests/Controller/TwoFactorRecoveryCodeRotationTest.php"
+      ],
+      "test_results": {
+        "phpunit": "434 tests, 1,965 assertions, zero failures/errors; one existing deprecation and one notice.",
+        "phpstan": "Level 8 passed with no errors.",
+        "php_symfony": "Worker PHP/Symfony job passed on exact final HEAD; Composer, locked dependency audit, YAML, Twig, container, AssetMapper, and Doctrine mapping checks passed.",
+        "postgres18": "PostgreSQL 18 executed all 39 migrations and 470 SQL queries; 0 unavailable migrations.",
+        "exact_head_ci": {
+          "run_id": 36298952620,
+          "head": "c55d185dabf0343d923a2e30a89dc7ae6dc8656b",
+          "result": "success"
+        }
+      },
+      "completion_evidence": {
+        "exact_sanitized_main_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+        "final_head_sha": "c55d185dabf0343d923a2e30a89dc7ae6dc8656b",
+        "changed_paths": [
+          "config/packages/rate_limiter.yaml",
+          "src/Controller/TwoFactorController.php",
+          "templates/account/passkeys.html.twig",
+          "templates/account/two_factor_recovery_manage.html.twig",
+          "tests/Controller/TwoFactorRecoveryCodeRotationTest.php"
+        ],
+        "worker_pr": 267,
+        "ci_run_id": 36298952620,
+        "ci_result": "success",
+        "phpunit": "434 tests, 1,965 assertions, zero failures/errors; one existing deprecation and one notice.",
+        "phpstan": "Level 8 passed with no errors.",
+        "postgresql": "PostgreSQL 18 executed all 39 migrations and 470 SQL queries; 0 unavailable migrations.",
+        "feature_coverage": "Password-confirmed recovery-code replacement preserves the encrypted TOTP secret; the flow is reachable from account security through passkeys, rate-limited, CSRF-protected, one-time delivered, audited, and synchronizes sessions. Tests cover old-code rejection, wrong passwords, malformed/missing/invalid CSRF, disabled 2FA, session revocation, and limiter exhaustion."
+      },
+      "completion_summary": "Self-service two-factor recovery-code rotation with reachable account UI, current-password confirmation, CSRF and account-scoped throttling, one-time delivery, audit, and session-version synchronization. Five changed paths; no schema change.",
+      "open_limitations": [
+        "Account security reaches code management through the passkeys page because WCP-390 owns templates/account/security.html.twig.",
+        "Rotation allows five attempts per account per 15 minutes.",
+        "Awaiting Trusted review and fresh Trusted integration CI."
+      ],
+      "trusted_follow_up": "On a fresh Trusted branch, port and review the controller operation, limiter configuration and UI; preserve encrypted-secret/hash separation, CSRF/password checks, one-time delivery and session-version behavior. Run full Trusted CI. Keep recovery-code storage behind the account-security boundary for Fortress."
     },
     {
       "priority": 475,
