@@ -43,7 +43,7 @@ final class VideoPlaylistController extends AbstractController
             throw $this->createNotFoundException();
         }
 
-        $page = max(1, min(10_000, $request->query->getInt('page', 1)));
+        $page = $this->requestedPage($request);
         $listing = $this->library->page(null, $playlist, $page);
         $pages = max(1, (int) ceil($listing['total'] / VideoLibraryBrowser::PAGE_SIZE));
         if ($listing['total'] > 0 && $page > $pages) {
@@ -60,6 +60,21 @@ final class VideoPlaylistController extends AbstractController
             'page' => $page,
             'pages' => $pages,
         ]);
+    }
+
+    private function requestedPage(Request $request): int
+    {
+        $rawPage = $request->query->all()['page'] ?? null;
+        if (!is_string($rawPage) && !is_int($rawPage)) {
+            return 1;
+        }
+
+        $page = filter_var($rawPage, FILTER_VALIDATE_INT);
+        if (!is_int($page)) {
+            return 1;
+        }
+
+        return max(1, min(10_000, $page));
     }
 
     private function assertAvailable(): void
