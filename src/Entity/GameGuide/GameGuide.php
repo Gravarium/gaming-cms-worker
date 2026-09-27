@@ -14,6 +14,11 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Index(name: 'IDX_GAME_GUIDE_VERSION', columns: ['game_id', 'game_version', 'season'])]
 class GameGuide
 {
+    public function __construct()
+    {
+        $this->validFrom = new \\DateTimeImmutable();
+    }
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
