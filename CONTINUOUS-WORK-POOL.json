@@ -10,7 +10,7 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T16:24:47.564Z",
+  "published_at": "2026-09-27T16:37:44.527Z",
   "summary": {
     "total_remaining_worker_tasks": 168,
     "completed_worker_prs_awaiting_trusted_review": 290,
@@ -43313,17 +43313,22 @@
       "claim_state": "active",
       "active_base_branch": "main",
       "active_base_sha": "540b4c64aeb2edc35067eb15eb75fe371aaa29bc",
-      "active_head": "540b4c64aeb2edc35067eb15eb75fe371aaa29bc",
+      "active_head": "3eedec46ecb4b4f29d33a50858b368f129f047f4",
       "resume_branch": "feature/wcp-556-forum-workflow-g1",
       "branch_heads": {
         "claim_branch": "540b4c64aeb2edc35067eb15eb75fe371aaa29bc",
-        "feature_branch": "540b4c64aeb2edc35067eb15eb75fe371aaa29bc"
+        "feature_branch": "3eedec46ecb4b4f29d33a50858b368f129f047f4"
       },
-      "last_checkpoint_at": "2026-09-27T16:24:47.564Z",
-      "last_verified_push_at": "2026-09-27T16:24:47.564Z",
-      "checkpoint_paths": [],
+      "last_checkpoint_at": "2026-09-27T16:37:44.527Z",
+      "last_verified_push_at": "2026-09-27T16:37:44.527Z",
+      "checkpoint_paths": [
+        "src/ForumWorkflow/ForumWorkflowGateway.php",
+        "src/Controller/PublicForumWorkflowController.php",
+        "src/Controller/AdminForumWorkflowController.php",
+        "config/packages/forum_workflow.yaml"
+      ],
       "ci_attempts": [],
-      "next_action": "Implement public Forum browsing and participation plus CMS_GAMING_MANAGE room administration and moderation only in reserved paths; test privacy, module gating, CSRF, permissions, persistence and concurrency.",
+      "next_action": "Public and admin controllers plus the feature-local Twig path are checkpointed. Add views and persistence/access integration tests next, then run exact-head Worker CI.",
       "worker_pr_state": "not_created",
       "worker_pr_changed_paths": [],
       "worker_pr_base_branch": "worker/account-wcp-556-validation",
@@ -43335,7 +43340,8 @@
       "worker_pr_url": null,
       "worker_pr_base_sha": null,
       "ci_run_id": null,
-      "last_ci_run_id": null
+      "last_ci_run_id": null,
+      "last_observed_head": "3eedec46ecb4b4f29d33a50858b368f129f047f4"
     }
   ],
   "recovery_queue": [],
