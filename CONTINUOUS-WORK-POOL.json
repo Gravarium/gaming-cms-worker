@@ -39777,14 +39777,22 @@
         "tests/Controller/AdminGuildRoleNeedControllerTest.php",
         "tests/Controller/PublicGuildRoleNeedDisplayTest.php"
       ],
-      "next_action": "Create a draft Worker PR to trigger the required pull-request-only CI, inspect both jobs on exact HEAD a865b753423a57690c5dfca554cfed0ae04bb417, repair failures on the same feature branch, and mark ready only after both jobs pass.",
-      "worker_pr_state": "not_created",
-      "last_verified_push_at": "2026-09-27T14:06:18.810Z",
-      "ci_result": "not_started",
-      "last_ci_result": "not_run",
-      "ci_attempts": [],
-      "worker_pr": null,
-      "worker_pr_url": null,
+      "next_action": "Monitor draft PR #334 Worker CI run #826 / 36324739327 on exact HEAD a865b753423a57690c5dfca554cfed0ae04bb417; repair any PHPStan, PHPUnit or PostgreSQL failure on the same feature branch, then rerun full CI before marking the PR ready.",
+      "worker_pr_state": "draft",
+      "last_verified_push_at": "2026-09-27T14:07:59.107Z",
+      "ci_result": "in_progress",
+      "last_ci_result": "in_progress",
+      "ci_attempts": [
+        {
+          "run_id": 36324739327,
+          "run_number": 826,
+          "head": "a865b753423a57690c5dfca554cfed0ae04bb417",
+          "base": "b510875e7b0741b9b19f09429d2204a95df51198",
+          "result": "queued"
+        }
+      ],
+      "worker_pr": 334,
+      "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/334",
       "worker_pr_changed_paths": [
         "src/Controller/AdminGuildRoleNeedController.php",
         "src/Form/GuildRoleNeedInput.php",
@@ -39799,7 +39807,10 @@
         "tests/Controller/PublicGuildRoleNeedDisplayTest.php"
       ],
       "worker_pr_base_branch": "main",
-      "pr_state": "not_created"
+      "pr_state": "open_draft",
+      "draft_pr": true,
+      "ci_run_id": 36324739327,
+      "last_ci_run_id": 36324739327
     },
     {
       "priority": 542,
