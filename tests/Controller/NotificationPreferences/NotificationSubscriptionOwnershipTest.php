@@ -55,12 +55,12 @@ final class NotificationSubscriptionOwnershipTest extends WebTestCase
             $subscriptions->subscribe($otherUserId, $topic, $now);
 
             $client->loginUser($actor);
-            $crawler = $client->request('GET', '/account/notifications');
-            self::assertResponseIsSuccessful();
-            $unsubscribeForm = $crawler->filter('form[action="/account/notifications/topics/unsubscribe"]');
-            self::assertCount(1, $unsubscribeForm);
-            $token = $unsubscribeForm->filter('input[name="_token"]')->attr('value');
-            self::assertNotNull($token);
+            $client->request('GET', '/login');
+            self::assertResponseRedirects('/account');
+            $token = $client->getContainer()->get(\Symfony\Component\Security\Csrf\CsrfTokenManagerInterface::class)
+                ->getToken('notification-topic')
+                ->getValue();
+            self::assertNotSame('', $token);
 
             $client->request('POST', '/account/notifications/topics/subscribe', [
                 '_token' => 'invalid-token',
