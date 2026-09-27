@@ -10,16 +10,16 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T10:05:49.292Z",
+  "published_at": "2026-09-27T10:08:05.178Z",
   "summary": {
-    "total_remaining_worker_tasks": 160,
+    "total_remaining_worker_tasks": 161,
     "completed_worker_prs_awaiting_trusted_review": 266,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-506 is actively claimed in draft Worker PR #299 on exact HEAD d8faee0bb8cfe4c380931a7f958218b1e9462635; complete exact-head Worker CI for the public guild event schedule. Keep all foreign claims untouched.",
+    "next_required_action": "WCP-508 is reserved on its exclusive exact-main branches; implement the independent accessible FAQ page-builder widget and continue through green exact-head Worker CI.",
     "composition_preparable": 0,
-    "immediately_actionable": 17,
+    "immediately_actionable": 18,
     "must_continue": true
   },
   "rules": {
@@ -34317,6 +34317,114 @@
       "checkpoint_paths": [],
       "next_action": "Implement the public page directory and focused visibility/module-gate coverage within the three allowed paths; push a coherent checkpoint before full exact-head Worker CI.",
       "last_verified_push_at": "2026-09-27T10:04:19.189Z"
+    },
+    {
+      "priority": 508,
+      "package_id": "WCP-508",
+      "title": "Add an accessible FAQ widget to the page builder",
+      "risk": "low",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-508-faq-widget-g1",
+      "suggested_branch": "feature/wcp-508-faq-widget-g1",
+      "base_branch": "main",
+      "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "objective": "Add a reusable core FAQ widget to the existing page builder using the auto-tagged WidgetProvider contract. Let editors configure up to four question/answer pairs through bounded text settings. Render complete pairs as native, keyboard-operable details/summary disclosures with Twig-escaped text; skip incomplete pairs. Do not accept editor HTML or URLs, and do not alter shared widget registration, layout validation/editor, schemas, navigation or routes.",
+      "allowed_paths": [
+        "src/Widget/FaqWidgetProvider.php",
+        "templates/widget/faq.html.twig",
+        "tests/Widget/FaqWidgetProviderTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "config/",
+        "migrations/",
+        "src/Controller/",
+        "src/Entity/",
+        "src/Form/",
+        "src/Repository/",
+        "src/Layout/",
+        "src/Widget/WidgetRegistry.php",
+        "src/Widget/WidgetDefinition.php",
+        "src/Widget/BundledWidgetProvider.php",
+        "templates/admin/",
+        "templates/layout/",
+        "assets/",
+        "public/"
+      ],
+      "deliverables": [
+        "The page builder discovers a core.faq widget through automatic WidgetProvider tagging, with no shared registration or editor changes.",
+        "Editors can configure four bounded question/answer pairs with clear German labels; only complete nonblank pairs render.",
+        "FAQ disclosure uses native details/summary semantics, works without JavaScript, and escapes all editor-provided text.",
+        "The feature is independent of WCP-504 call-to-action behavior: unique core.faq key and only new provider, dedicated template and focused test are changed."
+      ],
+      "tests": [
+        "Focused KernelTestCase coverage verifies provider discovery, available widget definition, the four bounded settings pairs, incomplete-pair filtering and escaped template output.",
+        "Validate that over-limit settings are rejected by the existing LayoutValidator and raw HTML remains text.",
+        "PHPStan level 8 and complete Worker CI on the exact final HEAD.",
+        "PostgreSQL 18 complete migration-chain validation."
+      ],
+      "completion_report": [
+        "Exact sanitized main/base SHA and final Worker HEAD SHA.",
+        "Complete changed-path list and Worker PR.",
+        "Widget registry discovery, settings validation, disclosure rendering and escaping results.",
+        "PHPStan, PHPUnit, exact-head Worker CI and PostgreSQL migration evidence; remaining Trusted integration follow-up."
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "faq-widget-uses-native-accessible-details-summary",
+        "editor-provided-values-remain-text-and-are-always-escaped",
+        "maximum-four-question-answer-pairs-with-bounded-text",
+        "no-editor-html-arbitrary-url-or-javascript",
+        "no-schema-migration-controller-editor-registry-navigation-or-private-runtime-change",
+        "preserve-existing-layout-editor-validation-auth-csrf-recovery-and-worker-isolation",
+        "no-security-test-phpstan-ci-weakening",
+        "red-CI-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment",
+        "no-private-runtime-or-sensitive-data"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "proposal_kind": "worker_only",
+      "proposal_dependency_evidence": [],
+      "collision_check": {
+        "compared_against": "Fresh continuous/work-pool-v4 blob 30c795b5edd6422b4f951ff9a088abdf1c69cadd; all active and claim-locked allowed paths; exact sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d; current WCP-508 branch/PR state.",
+        "result": "No active or claim-locked task owns or encloses these three paths. WCP-504 owns a separate call-to-action provider, template and test; this proposal uses a unique core.faq key and no shared WidgetRegistry, LayoutValidator, layout editor, Twig region or DI configuration paths. FCP-077 owns only nested Module widget/theme/layout directories, not these root provider/template/test paths. Main code auto-tags WidgetProvider implementations, so this adds no shared registration file.",
+        "paths": [
+          "src/Widget/FaqWidgetProvider.php",
+          "templates/widget/faq.html.twig",
+          "tests/Widget/FaqWidgetProviderTest.php"
+        ]
+      },
+      "published_at": "2026-09-27T10:08:05.178Z",
+      "claimed_on": "2026-09-27T10:08:05.178Z",
+      "claim_state": "active",
+      "active_base_branch": "main",
+      "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "resume_branch": "feature/wcp-508-faq-widget-g1",
+      "branch_heads": {
+        "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+        "feature_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d"
+      },
+      "last_observed_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "last_checkpoint_at": "2026-09-27T10:08:05.178Z",
+      "checkpoint_paths": [],
+      "next_action": "Implement the bounded core.faq provider and safe native disclosure template, then add focused kernel/Twig coverage within the three allowed paths and checkpoint the remote feature branch before full exact-head Worker CI."
     }
   ],
   "recovery_queue": [],
