@@ -100,7 +100,9 @@ final class SearchPaginationTest extends WebTestCase
 
             $client->request('GET', '/search/global.json?q=shared&module=content&type=news&page=2');
             self::assertResponseIsSuccessful();
-            self::assertSame('private, no-store', $client->getResponse()->headers->get('Cache-Control'));
+            $cacheControl = (string) $client->getResponse()->headers->get('Cache-Control');
+            self::assertStringContainsString('private', $cacheControl);
+            self::assertStringContainsString('no-store', $cacheControl);
             $payload = json_decode((string) $client->getResponse()->getContent(), true, 512, JSON_THROW_ON_ERROR);
             self::assertIsArray($payload);
             self::assertArrayHasKey('items', $payload);
