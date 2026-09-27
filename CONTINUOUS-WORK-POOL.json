@@ -13,13 +13,13 @@
   "published_at": "2026-09-27T10:08:05.178Z",
   "summary": {
     "total_remaining_worker_tasks": 161,
-    "completed_worker_prs_awaiting_trusted_review": 266,
+    "completed_worker_prs_awaiting_trusted_review": 267,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-508 is reserved on its exclusive exact-main branches; implement the independent accessible FAQ page-builder widget and continue through green exact-head Worker CI.",
+    "next_required_action": "WCP-505 is complete with green exact-head CI and locked for Trusted review; continue with the next independent functional module gap without touching foreign claims.",
     "composition_preparable": 0,
-    "immediately_actionable": 18,
+    "immediately_actionable": 17,
     "must_continue": true
   },
   "rules": {
@@ -34115,7 +34115,7 @@
       "package_id": "WCP-505",
       "title": "Keep direct game administration behind the Gaming module",
       "risk": "low",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -34193,7 +34193,7 @@
       },
       "published_at": "2026-09-27T10:02:46.487Z",
       "claimed_on": "2026-09-27T10:02:46.487Z",
-      "claim_state": "active",
+      "claim_state": "locked_until_trusted_resolution",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
       "active_head": "61278c660e8575fc09b9abc83c29982bc9294dd8",
@@ -34207,7 +34207,7 @@
         "src/EventSubscriber/DisabledModuleSubscriber.php",
         "tests/Controller/AdminGamingGameModuleGateTest.php"
       ],
-      "next_action": "Monitor Worker CI 36311411825 on exact HEAD 61278c660e8575fc09b9abc83c29982bc9294dd8; repair failures only within the two allowed paths, then record the final exact-head result.",
+      "next_action": "Await Trusted review; keep the WCP-505 claim locked; do not merge or deploy.",
       "last_checkpoint_at": "2026-09-27T10:05:44.527Z",
       "last_verified_push_at": "2026-09-27T10:05:44.527Z",
       "worker_pr": 298,
@@ -34215,7 +34215,30 @@
       "draft_pr": true,
       "pr_state": "open",
       "ci_run_id": 36311411825,
-      "ci_result": "in_progress"
+      "ci_result": "success",
+      "worker_pr_state": "draft",
+      "last_ci_run_id": 36311411825,
+      "last_ci_result": "success",
+      "ci_attempts": [
+        {
+          "run_id": 36311411825,
+          "head": "61278c660e8575fc09b9abc83c29982bc9294dd8",
+          "result": "success",
+          "diagnosis": "Exact-head Worker CI passed. PHP/Symfony validation, PHPStan, full PHPUnit and PostgreSQL 18 migration-chain validation all succeeded."
+        }
+      ],
+      "final_head": "61278c660e8575fc09b9abc83c29982bc9294dd8",
+      "completed_on": "2026-09-27T10:08:12.392Z",
+      "final_changed_paths": [
+        "src/EventSubscriber/DisabledModuleSubscriber.php",
+        "tests/Controller/AdminGamingGameModuleGateTest.php"
+      ],
+      "test_evidence": [
+        "Worker CI run 36311411825 succeeded on exact final HEAD 61278c660e8575fc09b9abc83c29982bc9294dd8.",
+        "Validate worker-visible PHP and Symfony passed PHPStan and the full PHPUnit suite: 431 tests and 1,859 assertions.",
+        "Validate worker-visible PostgreSQL 18 migration chain passed the complete migration chain and migration status validation.",
+        "Focused AdminGamingGameModuleGateTest is included in the full exact-head PHPUnit suite; the disabled route returns 404 and the enabled form remains reachable."
+      ]
     },
     {
       "priority": 507,
