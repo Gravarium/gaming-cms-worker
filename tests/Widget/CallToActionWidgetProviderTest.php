@@ -46,8 +46,19 @@ final class CallToActionWidgetProviderTest extends WebTestCase
     {
         $client = $this->client();
         $this->clearLayout($client);
+        $previousModuleStates = [];
 
         try {
+            $entityManager = $client->getContainer()->get(EntityManagerInterface::class);
+            foreach (['content', 'gaming', 'media', 'video'] as $module) {
+                $state = $entityManager->find(CmsModuleState::class, $module);
+                if ($state !== null) {
+                    $previousModuleStates[$module] = $state->isEnabled();
+                    $state->setEnabled(true);
+                }
+            }
+            $entityManager->flush();
+
             $crawler = $client->request('GET', '/admin/layout/home');
             self::assertResponseIsSuccessful();
             $token = $crawler->filter('[data-layout-editor-token-value]')->attr('data-layout-editor-token-value');
@@ -161,6 +172,14 @@ final class CallToActionWidgetProviderTest extends WebTestCase
                 self::assertResponseStatusCodeSame(422);
             }
         } finally {
+            $entityManager = $client->getContainer()->get(EntityManagerInterface::class);
+            foreach ($previousModuleStates as $module => $wasEnabled) {
+                $state = $entityManager->find(CmsModuleState::class, $module);
+                if ($state !== null) {
+                    $state->setEnabled($wasEnabled);
+                }
+            }
+            $entityManager->flush();
             $this->clearLayout($client);
         }
     }
