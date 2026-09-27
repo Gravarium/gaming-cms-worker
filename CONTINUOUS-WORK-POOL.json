@@ -12,12 +12,12 @@
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
   "published_at": "2026-09-27T00:31:40.727Z",
   "summary": {
-    "total_remaining_worker_tasks": 140,
-    "completed_worker_prs_awaiting_trusted_review": 207,
+    "total_remaining_worker_tasks": 139,
+    "completed_worker_prs_awaiting_trusted_review": 208,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-440 draft PR #234 validates exact HEAD a44416a60ea7d1eb9e802a2cf240870d636abc58 in Worker CI run 36282974283; complete full Worker CI and repair any concrete failure.",
+    "next_required_action": "WCP-440 is complete on exact HEAD a44416a60ea7d1eb9e802a2cf240870d636abc58 with PR #234 and green CI run 36282974283; its claim is locked. WCP-439 and WCP-441 are foreign active claims. Reevaluate remaining FCP dependencies and continue with an independent task.",
     "composition_preparable": 0,
     "immediately_actionable": 2,
     "must_continue": true
@@ -23954,7 +23954,7 @@
       "package_id": "WCP-440",
       "title": "Verify guild team deletion authorization, ownership and CSRF",
       "risk": "low",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -24023,13 +24023,13 @@
         ]
       },
       "claimed_on": "2026-09-27T00:21:13.540Z",
-      "claim_state": "active",
+      "claim_state": "locked_until_trusted_resolution",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
       "active_head": "a44416a60ea7d1eb9e802a2cf240870d636abc58",
       "resume_branch": "feature/wcp-440-guild-team-deletion-security-g1",
-      "last_checkpoint_at": "2026-09-27T00:36:22.859Z",
-      "last_verified_push_at": "2026-09-27T00:36:22.859Z",
+      "last_checkpoint_at": "2026-09-27T00:39:36.019Z",
+      "last_verified_push_at": "2026-09-27T00:39:36.019Z",
       "checkpoint_paths": [
         "tests/Controller/AdminGuildStructureSecurityTest.php"
       ],
@@ -24037,18 +24037,18 @@
         "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
         "feature_branch": "a44416a60ea7d1eb9e802a2cf240870d636abc58"
       },
-      "next_action": "Draft PR #234 validates isolated auth and mutation tests on exact HEAD a44416a60ea7d1eb9e802a2cf240870d636abc58 in Worker CI run 36282974283; inspect the full suite and repair any concrete remaining failures.",
+      "next_action": "PR #234 has green exact-head Worker CI and is ready for Trusted review; keep this claim locked until Trusted explicitly integrates, cancels or transfers it, then continue with an independent task.",
       "worker_pr": 234,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/234",
-      "pr_state": "open_draft_unmerged",
-      "draft_pr": true,
+      "pr_state": "open_ready_for_review_unmerged",
+      "draft_pr": false,
       "last_ci_run_id": 36282974283,
       "ci_run_id": 36282974283,
-      "ci_result": "queued",
+      "ci_result": "success",
       "ci_attempts": [
         {
           "run_id": 36282370450,
-          "head": "0f3a035c0d372b9d9d1cba2d82ee7bd9c73a8100",
+          "head": "0f3a035c0d372b9d9d1cba2d82ee7bd4dbe2ae8d",
           "result": "failure",
           "reason": "Test loading stopped on duplicate App\\\\Entity\\\\Guild import; removed the duplicate import."
         },
@@ -24062,20 +24062,45 @@
           "run_id": 36282545245,
           "head": "86007dce1942933c22318737232e5ae5ac1a5ae6",
           "result": "failure",
-          "reason": "Switching users in one BrowserKit session led to a login redirect on the following missing-CSRF POST; split permission and mutation/CSRF checks into separate tests."
+          "reason": "Switching users in one BrowserKit session led to a login redirect on the following missing-CSRF POST; isolated permission and mutation/CSRF checks in separate tests."
         },
         {
           "run_id": 36282747904,
           "head": "ea64c90e274f6ac2c41898b97424b817fd1a8456",
           "result": "failure",
-          "reason": "The authenticated CMS_CONTENT_MANAGE actor was correctly denied with 403, while the test expected a login redirect; restored the 403 assertion and isolated the authorization test."
+          "reason": "The authenticated CMS_CONTENT_MANAGE actor was correctly denied with 403; updated the expectation from login redirect to 403 and kept tests isolated."
         },
         {
           "run_id": 36282974283,
           "head": "a44416a60ea7d1eb9e802a2cf240870d636abc58",
-          "result": "queued"
+          "result": "success"
         }
-      ]
+      ],
+      "final_head": "a44416a60ea7d1eb9e802a2cf240870d636abc58",
+      "final_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "final_changed_paths": [
+        "tests/Controller/AdminGuildStructureSecurityTest.php"
+      ],
+      "changed_paths": [
+        "tests/Controller/AdminGuildStructureSecurityTest.php"
+      ],
+      "completed_at": "2026-09-27T00:39:36.019Z",
+      "test_results": {
+        "phpunit": "431 tests, 1,880 assertions, 0 failures; one deprecation and one notice.",
+        "phpstan": "Level 8 passed with no errors.",
+        "php_symfony": "Worker PHP/Symfony validation job passed on exact final HEAD.",
+        "postgres18": "PostgreSQL 18 applied and verified all 39 migrations.",
+        "exact_head_ci": {
+          "run_id": 36282974283,
+          "head": "a44416a60ea7d1eb9e802a2cf240870d636abc58",
+          "result": "success"
+        }
+      },
+      "completion_summary": "Functional regressions verify that a CMS_CONTENT_MANAGE user without CMS_GAMING_MANAGE is denied team deletion with 403; a gaming manager receives 403 for missing or invalid CSRF; a valid rendered token cannot delete the team under another guild parent; and the same token deletes only the selected team under its owning guild. Synthetic Game/Guild/GuildTeam/User fixtures are removed in finally. Only the allowed test file changed.",
+      "open_limitations": [
+        "Awaiting Trusted review and Trusted integration CI."
+      ],
+      "trusted_follow_up": "Preserve CMS_GAMING_MANAGE authorization, the delete-team CSRF token, parent-guild ownership checks and selected-team scope."
     },
     {
       "priority": 221,
