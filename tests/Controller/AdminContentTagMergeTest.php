@@ -129,7 +129,18 @@ final class AdminContentTagMergeTest extends WebTestCase
                     static fn (ContentTag $tag): ?int => $tag->getId(),
                     $entry->getTags()->toArray(),
                 ));
-                self::assertSame($before[$entryId], $this->snapshot($entry));
+                $expectedSnapshot = $before[$entryId];
+                $actualSnapshot = $this->snapshot($entry);
+                $previousUpdatedAt = $expectedSnapshot['updatedAt'] ?? null;
+                $actualUpdatedAt = $actualSnapshot['updatedAt'] ?? null;
+                self::assertIsString($previousUpdatedAt);
+                self::assertIsString($actualUpdatedAt);
+                self::assertGreaterThan(
+                    (new \DateTimeImmutable($previousUpdatedAt))->getTimestamp(),
+                    (new \DateTimeImmutable($actualUpdatedAt))->getTimestamp(),
+                );
+                unset($expectedSnapshot['updatedAt'], $actualSnapshot['updatedAt']);
+                self::assertSame($expectedSnapshot, $actualSnapshot);
             }
 
             $draftStored = $entityManager->find(ContentEntry::class, $entryIds[0]);
