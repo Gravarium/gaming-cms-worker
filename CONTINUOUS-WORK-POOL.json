@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T07:42:27.255Z",
+  "published_at": "2026-09-27T07:43:33.674Z",
   "summary": {
     "total_remaining_worker_tasks": 141,
     "completed_worker_prs_awaiting_trusted_review": 249,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-483 draft PR #276 is running Worker CI 36303901139 on exact HEAD c96ab27ecd1b7855c66cc5656775924b45011972. Inspect both jobs; repair concrete findings on the same branch and keep the PR draft until all checks pass.",
+    "next_required_action": "WCP-484 is claimed on exact sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d; implement test-only admin draft-preview privacy and authorization coverage at tests/Controller/AdminContentPreviewSecurityTest.php. WCP-483 remains another worker's active content-tag merge claim.",
     "composition_preparable": 0,
     "immediately_actionable": 4,
     "must_continue": true
@@ -30828,6 +30828,100 @@
           "result": "in_progress"
         }
       ]
+    },
+    {
+      "priority": 484,
+      "package_id": "WCP-484",
+      "title": "Protect unpublished content previews from public exposure",
+      "risk": "medium",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-484-admin-content-preview-security-g1",
+      "suggested_branch": "feature/wcp-484-admin-content-preview-security-g1",
+      "base_branch": "main",
+      "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "objective": "Add test-only functional security coverage for the existing admin content preview boundary. Verify a CMS_CONTENT_MANAGE user can privately preview a draft with no-store and noindex headers, that the same draft remains unavailable on its public page route, and that a logged-in user without CMS_CONTENT_MANAGE cannot read the preview. Use synthetic content/users and clean up all fixtures.",
+      "allowed_paths": [
+        "tests/Controller/AdminContentPreviewSecurityTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/",
+        "src/",
+        "templates/",
+        "assets/",
+        "public/"
+      ],
+      "deliverables": [
+        "A CMS_CONTENT_MANAGE user previews a synthetic draft through the rendered public content template; the response is private/no-store and carries noindex, nofollow, noarchive.",
+        "The synthetic draft remains unavailable at its public page URL and its marker is not exposed there.",
+        "A logged-in user without CMS_CONTENT_MANAGE receives a forbidden response and no draft body from the admin preview route.",
+        "Only tests/Controller/AdminContentPreviewSecurityTest.php changes; all synthetic content and users are removed in cleanup."
+      ],
+      "tests": [
+        "Focused AdminContentPreviewSecurityTest functional PHPUnit coverage for authorized preview, cache/robot headers, public draft invisibility, and denied preview access.",
+        "PHPStan level 8 and complete Worker CI on exact final HEAD.",
+        "PostgreSQL 18 complete migration-chain validation."
+      ],
+      "completion_report": [
+        "Exact sanitized main SHA and final HEAD.",
+        "Incremental changed path and Worker PR.",
+        "Authorized preview headers, public draft invisibility, and unauthorized denial.",
+        "Exact-head tests, PHPStan and migration results.",
+        "Trusted integration follow-up and unresolved assumptions."
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "preserve-CMS_CONTENT_MANAGE-for-admin-content-preview",
+        "draft-content-must-remain-private-and-unpublished",
+        "preview-responses-must-remain-private-no-store-and-noindex",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment",
+        "no-private-runtime-or-sensitive-data"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "proposal_kind": "worker_only",
+      "proposal_dependency_evidence": [],
+      "collision_check": {
+        "compared_against": "Fresh continuous/work-pool-v4 at fa8bfc185a98a6931bef38725d101418b92d2876, every active and claim-locked allowed path, and sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d.",
+        "result": "No active or claim-locked package owns or encloses tests/Controller/AdminContentPreviewSecurityTest.php. WCP-300 owns the AdminContentController source and its content-editor test; this package adds only a new preview-route test file and changes no source. WCP-435 trash/purge and WCP-439 duplication tests use different test files and actions. WCP-482 covers rejected content-type edits/layout preservation, not preview privacy.",
+        "paths": [
+          "tests/Controller/AdminContentPreviewSecurityTest.php"
+        ]
+      },
+      "published_at": "2026-09-27T07:43:33.674Z",
+      "claimed_on": "2026-09-27T07:43:33.674Z",
+      "claim_state": "active",
+      "active_base_branch": "main",
+      "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "resume_branch": "feature/wcp-484-admin-content-preview-security-g1",
+      "branch_heads": {
+        "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+        "feature_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d"
+      },
+      "next_action": "Implement the synthetic authorized/unauthorized draft-preview boundary tests in the allowlisted file, then open a draft PR and run exact-head CI.",
+      "last_observed_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "last_checkpoint_at": "2026-09-27T07:43:33.674Z",
+      "checkpoint_paths": [],
+      "worker_pr_changed_paths": []
     }
   ],
   "recovery_queue": [],
