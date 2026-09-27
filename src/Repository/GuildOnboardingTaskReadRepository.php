@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Repository;
 
 use App\Entity\Guild;
-use App\Entity\Guild\GuildOnboardingTask;
+use Doctrine\DBAL\ParameterType;
 use Doctrine\ORM\EntityManagerInterface;
 
 final readonly class GuildOnboardingTaskReadRepository
@@ -17,27 +17,31 @@ final readonly class GuildOnboardingTaskReadRepository
     /** @return list<array<string, mixed>> */
     public function forGuild(Guild $guild): array
     {
-        $query = $this->entityManager->createQueryBuilder()
+        $guildId = $guild->getId();
+        if ($guildId === null) {
+            return [];
+        }
+
+        $rows = $this->entityManager->getConnection()->createQueryBuilder()
             ->select(
                 'task.id AS id',
                 'task.label AS label',
-                'guildMember.characterName AS characterName',
+                'guild_member.character_name AS characterName',
                 'task.completed AS completed',
-                'actor.displayName AS completedBy',
-                'task.completedAt AS completedAt',
+                'actor.display_name AS completedBy',
+                'task.completed_at AS completedAt',
             )
-            ->from(GuildOnboardingTask::class, 'task')
-            ->innerJoin('task.member', 'guildMember')
-            ->leftJoin('task.completedBy', 'actor')
-            ->andWhere('task.guild = :guild')
-            ->setParameter('guild', $guild)
+            ->from('guild_onboarding_task', 'task')
+            ->innerJoin('task', 'guild_member', 'guild_member', 'guild_member.id = task.member_id')
+            ->leftJoin('task', 'cms_user', 'actor', 'actor.id = task.completed_by_id')
+            ->where('task.guild_id = :guildId')
+            ->setParameter('guildId', $guildId, ParameterType::INTEGER)
             ->orderBy('task.completed', 'ASC')
             ->addOrderBy('task.id', 'ASC')
-            ->getQuery();
+            ->executeQuery()
+            ->fetchAllAssociative();
 
         /** @var list<array<string, mixed>> $rows */
-        $rows = $query->getArrayResult();
-
         return $rows;
     }
 }

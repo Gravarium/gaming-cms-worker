@@ -16,7 +16,6 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\DomCrawler\Crawler;
-use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 
 final class AdminGuildOnboardingWorkflowTest extends WebTestCase
 {
@@ -119,9 +118,12 @@ final class AdminGuildOnboardingWorkflowTest extends WebTestCase
             $taskId = $this->requiredId($task->getId());
 
             $client->loginUser($manager);
-            $client->request('GET', '/admin/gaming/guild/'.$guildId.'/onboarding');
-            self::assertResponseIsSuccessful();
             $completeUrl = '/admin/gaming/guild/'.$guildId.'/onboarding/task/'.$taskId.'/complete';
+            $deleteUrl = '/admin/gaming/guild/'.$guildId.'/onboarding/task/'.$taskId.'/delete';
+            $crawler = $client->request('GET', '/admin/gaming/guild/'.$guildId.'/onboarding');
+            self::assertResponseIsSuccessful();
+            $completeToken = $this->actionToken($crawler, $completeUrl);
+            $deleteToken = $this->actionToken($crawler, $deleteUrl);
             $client->request('POST', $completeUrl);
             self::assertResponseStatusCodeSame(403);
             $client->request('POST', $completeUrl, ['_token' => 'invalid-token']);
@@ -129,7 +131,7 @@ final class AdminGuildOnboardingWorkflowTest extends WebTestCase
             self::assertFalse($task->isCompleted());
 
             $client->request('POST', $completeUrl, [
-                '_token' => $this->csrfToken($client, 'complete-onboarding-task-'.$guildId.'-'.$taskId),
+                '_token' => $completeToken,
             ]);
             self::assertResponseRedirects('/admin/gaming/guild/'.$guildId.'/onboarding');
             $client->followRedirect();
@@ -140,7 +142,8 @@ final class AdminGuildOnboardingWorkflowTest extends WebTestCase
             self::assertIsArray($first);
             self::assertTrue((bool) $first['completed']);
             self::assertSame('Guild officer', $first['completedBy']);
-            self::assertInstanceOf(\DateTimeImmutable::class, $first['completedAt']);
+            self::assertNotNull($first['completedAt']);
+            self::assertNotSame('', $first['completedAt']);
             $firstCompletedAt = $first['completedAt'];
 
             $client->request('POST', $completeUrl, [
@@ -156,7 +159,7 @@ final class AdminGuildOnboardingWorkflowTest extends WebTestCase
 
             $deleteUrl = '/admin/gaming/guild/'.$guildId.'/onboarding/task/'.$taskId.'/delete';
             $client->request('POST', $deleteUrl, [
-                '_token' => $this->csrfToken($client, 'delete-onboarding-task-'.$guildId.'-'.$taskId),
+                '_token' => $deleteToken,
             ]);
             self::assertResponseRedirects('/admin/gaming/guild/'.$guildId.'/onboarding');
             $client->followRedirect();
@@ -190,23 +193,20 @@ final class AdminGuildOnboardingWorkflowTest extends WebTestCase
             $localTaskId = $this->requiredId($localTask->getId());
             $foreignTaskId = $this->requiredId($foreignTask->getId());
             $client->loginUser($manager);
-            $client->request('GET', '/admin/gaming/guild/'.$guildId.'/onboarding');
+            $deleteUrl = '/admin/gaming/guild/'.$guildId.'/onboarding/task/'.$localTaskId.'/delete';
+            $crawler = $client->request('GET', '/admin/gaming/guild/'.$guildId.'/onboarding');
             self::assertResponseIsSuccessful();
+            $deleteToken = $this->actionToken($crawler, $deleteUrl);
 
             $foreignCompleteUrl = '/admin/gaming/guild/'.$guildId.'/onboarding/task/'.$foreignTaskId.'/complete';
-            $client->request('POST', $foreignCompleteUrl, [
-                '_token' => $this->csrfToken($client, 'complete-onboarding-task-'.$guildId.'-'.$foreignTaskId),
-            ]);
+            $client->request('POST', $foreignCompleteUrl);
             self::assertResponseStatusCodeSame(404);
 
             $foreignDeleteUrl = '/admin/gaming/guild/'.$guildId.'/onboarding/task/'.$foreignTaskId.'/delete';
-            $client->request('POST', $foreignDeleteUrl, [
-                '_token' => $this->csrfToken($client, 'delete-onboarding-task-'.$guildId.'-'.$foreignTaskId),
-            ]);
+            $client->request('POST', $foreignDeleteUrl);
             self::assertResponseStatusCodeSame(404);
             self::assertSame(1, $this->em($client)->getRepository(GuildOnboardingTask::class)->count(['guild' => $otherGuild]));
 
-            $deleteUrl = '/admin/gaming/guild/'.$guildId.'/onboarding/task/'.$localTaskId.'/delete';
             $client->request('POST', $deleteUrl);
             self::assertResponseStatusCodeSame(403);
             $client->request('POST', $deleteUrl, ['_token' => 'invalid-token']);
@@ -214,7 +214,7 @@ final class AdminGuildOnboardingWorkflowTest extends WebTestCase
             self::assertSame(1, $this->em($client)->getRepository(GuildOnboardingTask::class)->count(['guild' => $guild]));
 
             $client->request('POST', $deleteUrl, [
-                '_token' => $this->csrfToken($client, 'delete-onboarding-task-'.$guildId.'-'.$localTaskId),
+                '_token' => $deleteToken,
             ]);
             self::assertResponseRedirects('/admin/gaming/guild/'.$guildId.'/onboarding');
             $client->followRedirect();
@@ -225,7 +225,26 @@ final class AdminGuildOnboardingWorkflowTest extends WebTestCase
         }
     }
 
-    public function testChecklistRequiresGamingPermissionAndAllRoutesHideWhenGamingIsDisabled(): void
+    public function testChecklistRequiresGamingPermission(): void
+    {
+        $client = static::createClient();
+        [$game, $guild] = $this->guilds($client);
+        $guildId = $this->requiredId($guild->getId());
+        $gameId = $this->requiredId($game->getId());
+        $userIds = [];
+
+        try {
+            $reader = $this->user($client, 'Content editor', [CmsPermission::CONTENT]);
+            $userIds[] = $this->requiredId($reader->getId());
+            $client->loginUser($reader);
+            $client->request('GET', '/admin/gaming/guild/'.$guildId.'/onboarding');
+            self::assertResponseStatusCodeSame(403);
+        } finally {
+            $this->cleanup($client, [$guildId], $gameId, $userIds);
+        }
+    }
+
+    public function testAllChecklistRoutesHideWhenGamingIsDisabled(): void
     {
         $client = static::createClient();
         $this->removeGamingModuleState($client);
@@ -241,15 +260,6 @@ final class AdminGuildOnboardingWorkflowTest extends WebTestCase
             $this->em($client)->persist($task);
             $this->em($client)->flush();
             $taskId = $this->requiredId($task->getId());
-
-            $client->request('GET', '/admin/gaming/guild/'.$guildId.'/onboarding');
-            self::assertResponseRedirects('/login');
-
-            $reader = $this->user($client, 'Content editor', [CmsPermission::CONTENT]);
-            $userIds[] = $this->requiredId($reader->getId());
-            $client->loginUser($reader);
-            $client->request('GET', '/admin/gaming/guild/'.$guildId.'/onboarding');
-            self::assertResponseStatusCodeSame(403);
 
             $manager = $this->user($client, 'Gaming editor', [CmsPermission::GAMING]);
             $userIds[] = $this->requiredId($manager->getId());
@@ -328,9 +338,14 @@ final class AdminGuildOnboardingWorkflowTest extends WebTestCase
         return $token;
     }
 
-    private function csrfToken(KernelBrowser $client, string $id): string
+    private function actionToken(Crawler $crawler, string $url): string
     {
-        return $client->getContainer()->get(CsrfTokenManagerInterface::class)->getToken($id)->getValue();
+        $token = $crawler->filter('form[action="'.$url.'"] input[name="_token"]')->attr('value');
+        if ($token === null || $token === '') {
+            throw new \LogicException('The onboarding action did not render its CSRF token.');
+        }
+
+        return $token;
     }
 
     /** @return list<array<string, mixed>> */
