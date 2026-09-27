@@ -1,1 +1,87 @@
-{% extends 'base.html.twig' %}{% block title %}Content-Releases | Gaming CMS{% endblock %}{% block body %}<header class="topbar"><a class="brand" href="{{ path('app_admin_content_index') }}">Inhalte</a><a class="button-link" href="{{ path('app_admin_content_release_new') }}">Neuer Release</a></header><main class="dashboard"><p class="eyebrow">Editorial Orchestration</p><h1>Content-Releases</h1>{% for message in app.flashes('success') %}<div class="notice">{{ message }}</div>{% endfor %}{% for message in app.flashes('error') %}<div class="notice text-danger">{{ message }}</div>{% endfor %}<div class="table-wrap"><table><thead><tr><th>Name</th><th>Status</th><th>Inhalte</th><th>Zeitpunkt</th><th>Aktionen</th></tr></thead><tbody>{% for release in releases %}<tr><td>{{ release.name }}</td><td>{{ release.status }}</td><td>{{ release.entries|length }}</td><td>{{ release.scheduledAt ? release.scheduledAt|date('d.m.Y H:i') : (release.publishedAt ? release.publishedAt|date('d.m.Y H:i') : '—') }}</td><td class="row-actions">{% if release.status!='published' %}<a href="{{ path('app_admin_content_release_edit',{id:release.id}) }}">Bearbeiten</a><form method="post" action="{{ path('app_admin_content_release_publish',{id:release.id}) }}" onsubmit="return confirm('Alle enthaltenen Inhalte jetzt gemeinsam veröffentlichen?')"><input type="hidden" name="_token" value="{{ csrf_token('publish-content-release-'~release.id) }}"><button>Jetzt veröffentlichen</button></form><form method="post" action="{{ path('app_admin_content_release_delete',{id:release.id}) }}"><input type="hidden" name="_token" value="{{ csrf_token('delete-content-release-'~release.id) }}"><button class="text-danger">Löschen</button></form>{% endif %}</td></tr>{% else %}<tr><td colspan="5">Noch keine Releases.</td></tr>{% endfor %}</tbody></table></div></main>{% endblock %}
+{% extends 'base.html.twig' %}
+
+{% block title %}Content-Releases | Gaming CMS{% endblock %}
+
+{% block body %}
+    <header class="topbar">
+        <a class="brand" href="{{ path('app_admin_content_index') }}">Inhalte</a>
+        <a class="button-link" href="{{ path('app_admin_content_release_new', listParameters) }}">Neuer Release</a>
+    </header>
+
+    <main class="dashboard">
+        <p class="eyebrow">Editorial Orchestration</p>
+        <h1>Content-Releases</h1>
+
+        {% for message in app.flashes('success') %}<div class="notice">{{ message }}</div>{% endfor %}
+        {% for message in app.flashes('error') %}<div class="notice text-danger">{{ message }}</div>{% endfor %}
+
+        <form method="get" action="{{ path('app_admin_content_release_index') }}" class="content-form" role="search">
+            <label for="release-search">Release suchen</label>
+            <input id="release-search" type="search" name="q" value="{{ search }}" maxlength="100" autocomplete="off">
+            <label for="release-status">Status</label>
+            <select id="release-status" name="status">
+                <option value="">Alle Status</option>
+                {% for option in statusOptions %}
+                    <option value="{{ option.value }}"{% if status == option.value %} selected{% endif %}>{{ option.label }}</option>
+                {% endfor %}
+            </select>
+            <button type="submit">Filtern</button>
+            {% if search or status %}<a href="{{ path('app_admin_content_release_index') }}">Filter zurücksetzen</a>{% endif %}
+        </form>
+
+        <p class="eyebrow" role="status">
+            {% if total == 0 %}
+                Keine passenden Releases.
+            {% else %}
+                {{ first }}–{{ last }} von {{ total }} Releases
+            {% endif %}
+        </p>
+
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr><th>Name</th><th>Status</th><th>Inhalte</th><th>Zeitpunkt</th><th>Aktionen</th></tr>
+                </thead>
+                <tbody>
+                {% for release in releases %}
+                    <tr data-release-id="{{ release.id }}">
+                        <td>{{ release.name }}</td>
+                        <td>{{ release.status }}</td>
+                        <td>{{ release.entryCount }}</td>
+                        <td>{{ release.scheduledAt ? release.scheduledAt|date('d.m.Y H:i') : (release.publishedAt ? release.publishedAt|date('d.m.Y H:i') : '—') }}</td>
+                        <td class="row-actions">
+                            {% if release.status != 'published' %}
+                                <a href="{{ path('app_admin_content_release_edit', listParameters|merge({id: release.id})) }}">Bearbeiten</a>
+                                {% if release.status in ['draft', 'scheduled'] %}
+                                    <form method="post" action="{{ path('app_admin_content_release_publish', listParameters|merge({id: release.id})) }}" onsubmit="return confirm('Alle enthaltenen Inhalte jetzt gemeinsam veröffentlichen?')">
+                                        <input type="hidden" name="_token" value="{{ csrf_token('publish-content-release-'~release.id) }}">
+                                        <button type="submit">Jetzt veröffentlichen</button>
+                                    </form>
+                                {% endif %}
+                                <form method="post" action="{{ path('app_admin_content_release_delete', listParameters|merge({id: release.id})) }}">
+                                    <input type="hidden" name="_token" value="{{ csrf_token('delete-content-release-'~release.id) }}">
+                                    <button type="submit" class="text-danger">Löschen</button>
+                                </form>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr><td colspan="5">Keine Releases für diese Filter.</td></tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        {% if pageCount > 1 %}
+            <nav aria-label="Release-Seiten">
+                {% if page > 1 %}
+                    <a rel="prev" href="{{ path('app_admin_content_release_index', listParameters|merge({page: page - 1})) }}">Vorherige</a>
+                {% endif %}
+                <span>Seite {{ page }} von {{ pageCount }}</span>
+                {% if page < pageCount %}
+                    <a rel="next" href="{{ path('app_admin_content_release_index', listParameters|merge({page: page + 1})) }}">Nächste</a>
+                {% endif %}
+            </nav>
+        {% endif %}
+    </main>
+{% endblock %}
