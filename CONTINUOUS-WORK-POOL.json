@@ -10,7 +10,7 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T20:58:52.595Z",
+  "published_at": "2026-09-27T21:15:48.902Z",
   "summary": {
     "total_remaining_worker_tasks": 174,
     "completed_worker_prs_awaiting_trusted_review": 311,
@@ -47309,7 +47309,7 @@
       "suggested_branch": "feature/wcp-581-social-unread-widget-g1",
       "base_branch": "main",
       "base_sha": "7b2ca79405fc12d34bce1386157e929e4668f31a",
-      "objective": "Complete a missing Social inbox affordance using the module's existing read tracking: register the Social widget module key with WidgetRegistry via SocialModuleAvailability, then add a Page Builder widget that shows the signed-in member's unread conversation and message counts and links to the existing inbox. Count only non-deleted messages from other authors in conversations where the viewer is an active participant, newer than lastReadAt (or joinedAt when no read marker exists). Guests receive no counts; opening a conversation clears unread state. Keep personalized responses private/no-store and suppress the widget when Social is disabled. Do not change message writes, membership state, schema, migrations, or existing Social controllers.",
+      "objective": "Complete a missing Social inbox affordance using the module's existing read tracking: register the Social widget module key with WidgetRegistry via SocialModuleAvailability, then add a Page Builder widget that shows the signed-in member's unread conversation and message counts and links to the existing inbox. Count only non-deleted messages from other authors in non-deleted conversations where the viewer is an active participant, on or after joinedAt and after lastReadAt when one exists. Guests receive no counts; opening a conversation clears unread state. Keep personalized responses private/no-store and suppress the widget when Social is disabled. Do not change message writes, membership state, schema, migrations, or existing Social controllers.",
       "allowed_paths": [
         "src/Widget/SocialUnreadConversationsWidgetProvider.php",
         "src/Widget/Social/UnreadConversationsQuery.php",
@@ -47339,11 +47339,12 @@
         "src/Controller/Social/SocialController.php",
         "src/Entity/Social/",
         "src/Form/Social/",
-        "src/Repository/Social/"
+        "src/Repository/Social/",
+        "src/Module/CmsModuleCatalog.php"
       ],
       "deliverables": [
         "Auto-discovered `social.unread-conversations` Page Builder widget; WidgetRegistry recognizes the existing `social` module key through SocialModuleAvailability, allowing admins to place it and hiding it when Social is disabled.",
-        "Read-only aggregate counts based on active participant membership and existing lastReadAt/joinedAt markers; exclude own, deleted, and inaccessible conversation messages without exposing message bodies or participant identities.",
+        "Read-only aggregate counts based on active participant membership and both joinedAt/lastReadAt boundaries; exclude own, deleted, and inaccessible conversation messages without exposing message bodies or participant identities.",
         "Guests receive no personalized counts; the widget is suppressed when the Social module is disabled.",
         "Authenticated widget responses, including zero-count states, are marked `private, no-store` and query results are cached only for the current request."
       ],
@@ -47377,7 +47378,7 @@
       "proposal_base_sha": "7b2ca79405fc12d34bce1386157e929e4668f31a",
       "proposal_dependency_evidence": [],
       "collision_check": {
-        "compared_against": "Fresh continuous/work-pool-v4 @ b88d0c2780e9560460f1f972f4b64a9963658ed7; sanitized Worker main @ 7b2ca79405fc12d34bce1386157e929e4668f31a; every task's allowed-path scopes including the newly added WidgetRegistry bridge.",
+        "compared_against": "Fresh continuous/work-pool-v4 @ 4ecac48ba499d0227d6500f9a30bb08bf4826c18; sanitized Worker main @ 7b2ca79405fc12d34bce1386157e929e4668f31a; every task's allowed-path scopes including the newly added WidgetRegistry bridge.",
         "result": "No path overlap with any unclaimed, active, or claim-locked package. The Social group-conversation task WCP-558 owns SocialController, its group-recipient query/form, its new-conversation template and dedicated test; none of those paths are changed. The broad unclaimed FCP-072 template scope is avoided by storing the widget Twig source under src/SocialUnreadWidget/Templates. FCP-066 is Trusted-integrated. The exact WidgetRegistry.php path is also disjoint from all task scopes.",
         "paths": [
           "src/Widget/SocialUnreadConversationsWidgetProvider.php",
