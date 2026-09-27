@@ -12,14 +12,14 @@
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
   "published_at": "2026-09-27T01:51:12.714Z",
   "summary": {
-    "total_remaining_worker_tasks": 140,
+    "total_remaining_worker_tasks": 141,
     "completed_worker_prs_awaiting_trusted_review": 218,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-450 is reserved on exact sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d for search and pagination of the existing guild member directory; continue its exclusive implementation branch.",
+    "next_required_action": "WCP-451 is reserved on exact sanitized main; implement the site-settings locale integrity regression on its exclusive feature branch.",
     "composition_preparable": 0,
-    "immediately_actionable": 5,
+    "immediately_actionable": 6,
     "must_continue": true
   },
   "rules": {
@@ -25618,6 +25618,96 @@
         "feature_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d"
       },
       "next_action": "Implement bounded character-name search, active/inactive filters and stable 25-member pages; add functional positive and negative coverage, then checkpoint before full CI."
+    },
+    {
+      "priority": 451,
+      "package_id": "WCP-451",
+      "title": "Reject inconsistent website locale settings",
+      "risk": "medium",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-451-site-settings-locale-g1",
+      "suggested_branch": "feature/wcp-451-site-settings-locale-g1",
+      "base_branch": "main",
+      "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "objective": "Add a functional regression proving the existing settings form rejects a supported default locale that is absent from enabled locales, even with a valid rendered CSRF token, and does not persist that invalid state. Change tests only.",
+      "allowed_paths": [
+        "tests/Controller/AdminSettingsLocaleValidationTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "src/",
+        "templates/",
+        "migrations/",
+        "config/",
+        "public/uploads/"
+      ],
+      "deliverables": [
+        "A CMS_SETTINGS_MANAGE user submits supported defaultLocale=en with enabledLocales=[de] through the rendered form and its valid CSRF token.",
+        "The form returns HTTP 422 with the locale consistency validation message and an otherwise valid payload does not persist.",
+        "Existing SiteSettings state is restored and any test-created row and synthetic user are removed.",
+        "No controller, form, template, upload, storage, external URL or schema behavior changes."
+      ],
+      "tests": [
+        "Targeted AdminSettingsLocaleValidationTest functional coverage.",
+        "PHPStan level 8 and complete Worker CI on the exact final HEAD.",
+        "PostgreSQL 18 complete migration-chain validation."
+      ],
+      "completion_report": [
+        "Exact sanitized main base SHA and final Worker HEAD SHA.",
+        "Complete changed-path list and Worker PR.",
+        "Rejected locale mismatch, valid CSRF submission and persisted-settings non-mutation result.",
+        "Exact-head PHPUnit, PHPStan and full Worker CI results.",
+        "Remaining Trusted integration work."
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "preserve-CMS_SETTINGS_MANAGE-and-rendered-form-CSRF",
+        "invalid default/enabled locale combinations never persist",
+        "restore-pre-existing-settings-and-remove-synthetic-test-data",
+        "no uploads or external URLs",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "proposal_kind": "worker_only",
+      "proposal_dependency_evidence": [],
+      "collision_check": {
+        "compared_against": "Fresh continuous/work-pool-v4 blob 6301308519abc5134098e30fa0255fdbe705d91c, all active and claim-locked allowlists, and worker/main @ f1a246c64527ef3ad51f7490773d9bbf9d42be5d.",
+        "result": "No active or claim-locked task owns or overlaps tests/Controller/AdminSettingsLocaleValidationTest.php; WCP-450 guild-member directory paths are disjoint. The candidate is absent from exact worker/main. Search of the main branch found the SiteSettings locale invariant but no controller-level locale validation test.",
+        "paths": [
+          "tests/Controller/AdminSettingsLocaleValidationTest.php"
+        ]
+      },
+      "claimed_on": "2026-09-27T02:01:55.307Z",
+      "claim_state": "active",
+      "active_base_branch": "main",
+      "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "resume_branch": "feature/wcp-451-site-settings-locale-g1",
+      "last_checkpoint_at": "2026-09-27T02:01:55.307Z",
+      "checkpoint_paths": [],
+      "branch_heads": {
+        "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+        "feature_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d"
+      },
+      "next_action": "Implement the valid-CSRF mismatch case using supported defaultLocale=en and enabledLocales=[de]; assert the 422 locale error and persisted state unchanged, then clean all fixtures.",
+      "last_verified_push_at": "2026-09-27T02:01:55.307Z"
     }
   ],
   "recovery_queue": [],
