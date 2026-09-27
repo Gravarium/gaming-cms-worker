@@ -38339,15 +38339,15 @@
       "claim_state": "active",
       "active_base_branch": "main",
       "active_base_sha": "b510875e7b0741b9b19f09429d2204a95df51198",
-      "active_head": "2a71a692dca9924f20c0de90b5059f1a07d4ea0f",
+      "active_head": "6b70188e705953fb1ccfaf38a3a753f96f79e4f5",
       "resume_branch": "feature/wcp-533-public-content-release-widget-g1",
       "branch_heads": {
         "claim_branch": "b510875e7b0741b9b19f09429d2204a95df51198",
         "feature_branch": "b510875e7b0741b9b19f09429d2204a95df51198"
       },
-      "last_observed_head": "2a71a692dca9924f20c0de90b5059f1a07d4ea0f",
-      "last_checkpoint_at": "2026-09-27T13:01:39.560Z",
-      "last_verified_push_at": "2026-09-27T13:01:39.560Z",
+      "last_observed_head": "6b70188e705953fb1ccfaf38a3a753f96f79e4f5",
+      "last_checkpoint_at": "2026-09-27T13:02:35.985Z",
+      "last_verified_push_at": "2026-09-27T13:02:35.985Z",
       "checkpoint_paths": [
         "src/Widget/ContentRelease/PublicContentReleaseQuery.php",
         "src/Widget/PublicContentReleaseWidgetProvider.php",
@@ -38355,7 +38355,7 @@
         "config/packages/content_release_widget.yaml",
         "tests/Widget/PublicContentReleaseWidgetProviderTest.php"
       ],
-      "next_action": "Await full Worker CI run #808 on the repaired exact HEAD; diagnose and repair any red result on this same branch.",
+      "next_action": "Rerun full Worker CI on this exact repaired HEAD; diagnose and repair any red result on this same branch.",
       "worker_pr": 327,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/327",
       "draft_pr": true,
@@ -38368,8 +38368,8 @@
         "config/packages/content_release_widget.yaml",
         "tests/Widget/PublicContentReleaseWidgetProviderTest.php"
       ],
-      "ci_result": "in_progress",
-      "last_ci_result": "in_progress",
+      "ci_result": "failure",
+      "last_ci_result": "failure",
       "ci_attempts": [
         {
           "run_id": 36320645780,
@@ -38382,6 +38382,12 @@
           "head": "2a71a692dca9924f20c0de90b5059f1a07d4ea0f",
           "status": "in_progress",
           "result": "in_progress"
+        },
+        {
+          "run_id": 36320872338,
+          "head": "2a71a692dca9924f20c0de90b5059f1a07d4ea0f",
+          "result": "failure",
+          "cause": "The repaired suite no longer assumes an empty shared release table. Its remaining ordering failure came from the fixture: ContentRelease::publish() resets all linked publishedAt values to the release timestamp. The test now assigns the three intended entry timestamps after publishing so the asserted newest-first order is explicit."
         }
       ],
       "last_ci_run_id": 36320872338,
