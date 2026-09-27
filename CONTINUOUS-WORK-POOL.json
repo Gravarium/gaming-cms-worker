@@ -17,7 +17,7 @@
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-461 is exclusively claimed from sanitized main for module lifecycle security tests; continue on feature/wcp-461-module-lifecycle-security-g1. Preserve active WCP-460 and all other claims.",
+    "next_required_action": "WCP-460 and WCP-461 are active on separate claims with disjoint paths; continue each from its exact remote HEAD and preserve all other claims.",
     "composition_preparable": 0,
     "immediately_actionable": 3,
     "must_continue": true
@@ -27115,15 +27115,18 @@
       "claim_state": "active",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "347cd2b86a355ace9908dc9de5b57a8bec0855ca",
       "resume_branch": "feature/wcp-461-module-lifecycle-security-g1",
-      "last_checkpoint_at": "2026-09-27T03:36:17.357Z",
-      "checkpoint_paths": [],
+      "last_checkpoint_at": "2026-09-27T03:40:42.319Z",
+      "checkpoint_paths": [
+        "tests/Controller/AdminModuleLifecycleSecurityTest.php"
+      ],
       "branch_heads": {
         "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-        "feature_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d"
+        "feature_branch": "347cd2b86a355ace9908dc9de5b57a8bec0855ca"
       },
-      "next_action": "Implement only the allowed lifecycle security test, checkpoint it to this exact feature branch, open a Worker PR against main and run complete exact-head CI."
+      "next_action": "Draft the Worker PR from exact HEAD 347cd2b86a355ace9908dc9de5b57a8bec0855ca against main and run the complete exact-head Worker CI; diagnose and repair concrete failures on this branch.",
+      "last_verified_push_at": "2026-09-27T03:40:42.319Z"
     }
   ],
   "recovery_queue": [],
