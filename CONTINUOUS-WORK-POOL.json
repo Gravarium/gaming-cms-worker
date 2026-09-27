@@ -17,7 +17,7 @@
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-518 worker-only proposal published from current sanitized main b510875e7b0741b9b19f09429d2204a95df51198; create its exact claim and feature refs, then activate the claim before changing package files. Leave WCP-515 through WCP-517 and all other claims untouched.",
+    "next_required_action": "WCP-518 is claimed on feature/wcp-518-upcoming-game-release-widget-g1 from sanitized main b510875e7b0741b9b19f09429d2204a95df51198. Implement the upcoming Game Catalogue releases page-builder widget only in its four allowed paths, then validate the exact final head; leave all other claims untouched.",
     "composition_preparable": 0,
     "immediately_actionable": 20,
     "must_continue": true
@@ -35793,7 +35793,7 @@
       "package_id": "WCP-518",
       "title": "Promote upcoming game releases through the page builder",
       "risk": "low",
-      "execution_state": "unclaimed",
+      "execution_state": "worker_in_progress",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -35901,7 +35901,20 @@
           }
         ]
       },
-      "published_at": "2026-09-27T10:57:18.371Z"
+      "published_at": "2026-09-27T10:57:18.371Z",
+      "claim_state": "active",
+      "claimed_on": "2026-09-27T10:58:06.085Z",
+      "active_base_branch": "main",
+      "active_base_sha": "b510875e7b0741b9b19f09429d2204a95df51198",
+      "active_head": "b510875e7b0741b9b19f09429d2204a95df51198",
+      "resume_branch": "feature/wcp-518-upcoming-game-release-widget-g1",
+      "branch_heads": {
+        "claim_branch": "b510875e7b0741b9b19f09429d2204a95df51198",
+        "feature_branch": "b510875e7b0741b9b19f09429d2204a95df51198"
+      },
+      "last_observed_head": "b510875e7b0741b9b19f09429d2204a95df51198",
+      "checkpoint_paths": [],
+      "next_action": "Implement the dedicated bounded upcoming-release query, Gaming-owned page-builder provider, template and focused integration tests only in the four allowed files; push the first coherent checkpoint and run focused plus full exact-head Worker CI."
     }
   ],
   "recovery_queue": [],
