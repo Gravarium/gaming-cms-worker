@@ -10,7 +10,7 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T12:27:33.547Z",
+  "published_at": "2026-09-27T12:31:11.731Z",
   "summary": {
     "total_remaining_worker_tasks": 164,
     "completed_worker_prs_awaiting_trusted_review": 287,
@@ -38058,6 +38058,127 @@
       "ci_result": "not_started",
       "last_ci_result": "not_started",
       "last_verified_push_at": "2026-09-27T12:27:33.547Z"
+    },
+    {
+      "priority": 532,
+      "package_id": "WCP-532",
+      "title": "Add a member-scoped upcoming guild events Page Builder widget",
+      "risk": "medium",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-532-upcoming-guild-events-widget-g1",
+      "suggested_branch": "feature/wcp-532-upcoming-guild-events-widget-g1",
+      "base_branch": "main",
+      "base_sha": "b510875e7b0741b9b19f09429d2204a95df51198",
+      "objective": "Add a member-scoped Gaming widget that surfaces upcoming planned events for the signed-in user's active guild memberships on Page Builder pages and links to the existing guild portal, where members can RSVP and export the calendar. Keep team events limited to a member of that team, omit descriptions, locations and signup notes, return no event data for guests, hide the widget when Gaming is disabled, and mark personalized responses private and no-store. Do not change event writes, existing event controllers, schema or migrations.",
+      "allowed_paths": [
+        "src/Widget/GuildEvent/UpcomingGuildEventsQuery.php",
+        "src/Widget/UpcomingGuildEventsWidgetProvider.php",
+        "src/GuildEventWidget/Templates/widget/upcoming_guild_events.html.twig",
+        "src/EventSubscriber/GuildEventWidgetCacheSubscriber.php",
+        "config/packages/guild_event_widget.yaml",
+        "tests/Widget/UpcomingGuildEventsWidgetProviderTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "templates/",
+        "src/Entity/GuildEvent.php",
+        "src/Controller/GuildPortalController.php",
+        "src/Controller/AdminGuildCollaborationController.php",
+        "src/Repository/GuildEventRepository.php"
+      ],
+      "deliverables": [
+        "Auto-discovered `gaming.upcoming-guild-events` widget with a bounded count setting and its own Twig source path outside `templates/`.",
+        "Deterministic bounded query for upcoming planned events belonging to active members of enabled guilds and enabled games, with team membership enforced.",
+        "Member portal links for each event; no event records or details are returned for guests.",
+        "Private, no-store response headers when an authenticated request renders member-specific widget data.",
+        "Gaming-module availability suppresses both the widget and its provider data."
+      ],
+      "tests": [
+        "Functional widget registry and template coverage for authenticated members, guests, team and guild boundaries, canceled/past events, deterministic ordering and result limits.",
+        "Disabled Gaming module suppresses widget availability and data.",
+        "Authenticated personalized responses carry private no-store cache headers; public responses do not contain event data.",
+        "PHPStan level 8 and full Worker CI on the exact final HEAD, including PostgreSQL migration-chain validation."
+      ],
+      "completion_report": [
+        "Exact sanitized base SHA and final Worker HEAD.",
+        "All changed paths and Worker PR URL/state.",
+        "Member, team, guest, module and private-cache behavior with focused test and exact-head CI results.",
+        "Open limitations and Trusted follow-up."
+      ],
+      "immutable_constraints": [
+        "event-details-require-an-active-guild-membership",
+        "team-scoped-events-require-current-membership-in-that-team",
+        "no-event-description-location-or-signup-note-in-widget",
+        "personalized-widget-response-is-private-and-no-store",
+        "disabled-gaming-module-hides-widget-data",
+        "bounded-read-only-query-no-schema-or-migration-change",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "red-CI-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "b510875e7b0741b9b19f09429d2204a95df51198",
+      "proposal_kind": "worker_only",
+      "proposal_dependency_evidence": [],
+      "collision_check": {
+        "compared_against": "Fresh continuous/work-pool-v4 blob ce256d9341878ea35645e1f6af6c52f889eb92dd; Worker main b510875e7b0741b9b19f09429d2204a95df51198; all active and claim-locked path scopes; exact WCP-532 claim/feature branch searches and open PR list.",
+        "result": "No active or claim-locked package owns or encloses the six paths. WCP-506 is a separate public guild-event route; this package is member-only Page Builder integration. WCP-520/523/524/529 use separate widget classes, queries and template paths. FCP-072's broad templates/ path is avoided by placing the Twig source under src/GuildEventWidget/Templates. Existing GuildPortalController, event entities, event administration, and repositories are read-only dependencies.",
+        "paths": [
+          "src/Widget/GuildEvent/UpcomingGuildEventsQuery.php",
+          "src/Widget/UpcomingGuildEventsWidgetProvider.php",
+          "src/GuildEventWidget/Templates/widget/upcoming_guild_events.html.twig",
+          "src/EventSubscriber/GuildEventWidgetCacheSubscriber.php",
+          "config/packages/guild_event_widget.yaml",
+          "tests/Widget/UpcomingGuildEventsWidgetProviderTest.php"
+        ]
+      },
+      "published_at": "2026-09-27T12:31:11.731Z",
+      "claimed_on": "2026-09-27T12:31:11.731Z",
+      "claim_state": "active",
+      "active_base_branch": "main",
+      "active_base_sha": "b510875e7b0741b9b19f09429d2204a95df51198",
+      "active_head": "b510875e7b0741b9b19f09429d2204a95df51198",
+      "resume_branch": "feature/wcp-532-upcoming-guild-events-widget-g1",
+      "branch_heads": {
+        "claim_branch": "b510875e7b0741b9b19f09429d2204a95df51198",
+        "feature_branch": "b510875e7b0741b9b19f09429d2204a95df51198"
+      },
+      "last_observed_head": "b510875e7b0741b9b19f09429d2204a95df51198",
+      "last_checkpoint_at": "2026-09-27T12:31:11.731Z",
+      "last_verified_push_at": "2026-09-27T12:31:11.731Z",
+      "checkpoint_paths": [
+        "src/Widget/GuildEvent/UpcomingGuildEventsQuery.php",
+        "src/Widget/UpcomingGuildEventsWidgetProvider.php",
+        "src/GuildEventWidget/Templates/widget/upcoming_guild_events.html.twig",
+        "src/EventSubscriber/GuildEventWidgetCacheSubscriber.php",
+        "config/packages/guild_event_widget.yaml",
+        "tests/Widget/UpcomingGuildEventsWidgetProviderTest.php"
+      ],
+      "next_action": "Implement the authenticated member-scoped upcoming events widget and response cache boundary only within the six allowed paths.",
+      "worker_pr": null,
+      "worker_pr_url": null,
+      "draft_pr": false,
+      "pr_state": "not_created",
+      "worker_pr_state": "not_created",
+      "worker_pr_changed_paths": [],
+      "ci_result": "not_started",
+      "last_ci_result": "not_started",
+      "ci_attempts": []
     }
   ],
   "recovery_queue": [],
