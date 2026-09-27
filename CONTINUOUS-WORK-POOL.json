@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T09:16:00.012Z",
+  "published_at": "2026-09-27T09:16:30.138Z",
   "summary": {
     "total_remaining_worker_tasks": 145,
-    "completed_worker_prs_awaiting_trusted_review": 257,
+    "completed_worker_prs_awaiting_trusted_review": 258,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-489 is complete on exact green HEAD b789ffcf6088a1e9a3542cb0c23cd11f97e56c91 (PR #283, CI 36308561704); its claim remains locked until Trusted resolution. The remaining unclaimed FCPs lack required predecessor evidence. Continue with a free, independent worker-only proposal and leave foreign claims untouched.",
+    "next_required_action": "WCP-491 is complete on exact green HEAD c306526de7b52c1e1f24bc9e21e46465a63033f9 (PR #285, CI 36308732840); the claim remains locked. Re-evaluate current unclaimed FCPs against Trusted integration and exact green Worker predecessor heads; if none is dependency-safe, publish and claim the next bounded independent worker-only proposal. Do not change foreign active claims.",
     "composition_preparable": 0,
     "immediately_actionable": 4,
     "must_continue": true
@@ -32097,7 +32097,7 @@
       "package_id": "WCP-491",
       "title": "Keep inactive and foreign members out of public guild rosters",
       "risk": "medium",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -32170,7 +32170,7 @@
       },
       "published_at": "2026-09-27T09:13:25.613Z",
       "claimed_on": "2026-09-27T09:13:25.613Z",
-      "claim_state": "active",
+      "claim_state": "locked_until_trusted_resolution",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
       "active_head": "c306526de7b52c1e1f24bc9e21e46465a63033f9",
@@ -32180,23 +32180,74 @@
         "feature_branch": "c306526de7b52c1e1f24bc9e21e46465a63033f9"
       },
       "last_observed_head": "c306526de7b52c1e1f24bc9e21e46465a63033f9",
-      "last_checkpoint_at": "2026-09-27T09:15:08.962Z",
+      "last_checkpoint_at": "2026-09-27T09:16:30.138Z",
       "checkpoint_paths": [
         "tests/Controller/PublicGuildRosterPrivacyTest.php"
       ],
-      "next_action": "Monitor exact-head Worker CI run 36308732840 on HEAD c306526de7b52c1e1f24bc9e21e46465a63033f9; diagnose and repair any failure without leaving the single allowed test file.",
-      "last_verified_push_at": "2026-09-27T09:14:08.080Z",
+      "next_action": "Worker PR #285 is ready for Trusted review and remains unmerged. Exact final HEAD c306526de7b52c1e1f24bc9e21e46465a63033f9 passed Worker CI run 36308732840: 430 tests, 1,862 assertions, zero failures; PHPStan reported no errors; PostgreSQL 18 executed all 39 migrations. Keep the claim locked until Trusted resolves it.",
+      "last_verified_push_at": "2026-09-27T09:16:30.138Z",
       "worker_pr": 285,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/285",
       "worker_pr_changed_paths": [
         "tests/Controller/PublicGuildRosterPrivacyTest.php"
       ],
-      "draft_pr": true,
+      "draft_pr": false,
       "pr_state": "open",
       "ci_run_id": 36308732840,
       "last_ci_run_id": 36308732840,
-      "ci_result": "in_progress",
-      "last_ci_result": "in_progress"
+      "ci_result": "success",
+      "last_ci_result": "success",
+      "ci_attempts": [
+        {
+          "head": "c306526de7b52c1e1f24bc9e21e46465a63033f9",
+          "ci_run_id": 36308732840,
+          "ci_result": "success"
+        }
+      ],
+      "final_head": "c306526de7b52c1e1f24bc9e21e46465a63033f9",
+      "final_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "final_sanitized_main_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "changed_paths": [
+        "tests/Controller/PublicGuildRosterPrivacyTest.php"
+      ],
+      "final_changed_paths": [
+        "tests/Controller/PublicGuildRosterPrivacyTest.php"
+      ],
+      "completed_at": "2026-09-27T09:16:30.138Z",
+      "test_results": {
+        "phpunit": "430 tests, 1,862 assertions, zero failures; one PHPUnit deprecation and one notice.",
+        "phpstan": "Level 8 passed with no errors.",
+        "php_symfony": "Worker PHP/Symfony validation job passed on exact final HEAD.",
+        "postgres18": "PostgreSQL 18 completed all 39 migrations and 470 SQL queries; 0 unavailable.",
+        "exact_head_ci": {
+          "run_id": 36308732840,
+          "head": "c306526de7b52c1e1f24bc9e21e46465a63033f9",
+          "result": "success"
+        }
+      },
+      "completion_evidence": {
+        "exact_sanitized_main_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5",
+        "exact_proposal_base_branch": "main",
+        "exact_proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5",
+        "final_head_sha": "c306526de7b52c1e1f24bc9e21e46465a63033f9",
+        "changed_paths": [
+          "tests/Controller/PublicGuildRosterPrivacyTest.php"
+        ],
+        "cumulative_pr_paths": [
+          "tests/Controller/PublicGuildRosterPrivacyTest.php"
+        ],
+        "worker_pr": 285,
+        "ci_run_id": 36308732840,
+        "ci_result": "success",
+        "php_symfony_job": "success: 430 tests, 1,862 assertions, 0 failures; PHPStan level 8 no errors.",
+        "postgresql_job": "success: 39 migrations, 470 SQL queries, 0 unavailable.",
+        "public_roster_boundary": "Target guild public detail page renders its active member; inactive member markers and active member markers belonging to another guild are absent."
+      },
+      "completion_summary": "Added test-only functional coverage proving public guild rosters include active members of the requested guild while omitting inactive and foreign-guild members. Synthetic entities are cleaned up.",
+      "open_limitations": [
+        "Awaiting Trusted review and Trusted integration CI; no production source or configuration was changed."
+      ],
+      "trusted_follow_up": "Verify public roster active-member filtering and guild scoping on a fresh Trusted branch/full CI; preserve hidden inactive members and foreign-guild isolation."
     }
   ],
   "recovery_queue": [],
