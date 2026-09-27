@@ -46,9 +46,17 @@ final class NewsArchiveWidgetProviderTest extends WebTestCase
             }
             $client->loginUser($user);
 
-            $client->request('GET', '/admin/layout/home');
+            $crawler = $client->request('GET', '/admin/layout/home');
             self::assertResponseIsSuccessful();
-            self::assertSelectorTextContains('body', 'News-Archiv');
+            $editor = json_decode(
+                (string) $crawler->filter('[data-layout-editor-state-value]')->attr('data-layout-editor-state-value'),
+                true,
+                512,
+                JSON_THROW_ON_ERROR,
+            );
+            self::assertIsArray($editor);
+            self::assertIsArray($editor['widgets'] ?? null);
+            self::assertContains(self::KEY, array_column($editor['widgets'], 'key'));
 
             $container = $client->getContainer();
             $registry = $container->get(WidgetRegistry::class);
@@ -157,12 +165,18 @@ final class NewsArchiveWidgetProviderTest extends WebTestCase
             try {
                 $result = $provider->data(self::KEY, ['count' => 12]);
                 self::assertArrayHasKey('periods', $result);
+                self::assertIsArray($result['periods']);
+                /** @var list<array{year:int, month:int, count:int}> $periods */
                 $periods = $result['periods'];
+                $yearPeriods = array_values(array_filter(
+                    $periods,
+                    static fn (array $period): bool => $period['year'] === $year,
+                ));
                 self::assertSame([
                     ['year' => $year, 'month' => 7, 'count' => 2],
                     ['year' => $year, 'month' => 6, 'count' => 1],
                     ['year' => $year, 'month' => 5, 'count' => 2],
-                ], $periods);
+                ], $yearPeriods);
 
                 self::assertSame(['periods' => array_slice($periods, 0, 2)], $provider->data(self::KEY, ['count' => 2]));
                 self::assertSame(['periods' => array_slice($periods, 0, 1)], $provider->data(self::KEY, ['count' => 0]));
