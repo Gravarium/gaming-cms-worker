@@ -9,6 +9,10 @@ use App\Entity\ContentRelease;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\QueryBuilder;
 
+/**
+ * @phpstan-type PublicEntry array{id:int,title:string,slug:string,type:string,excerpt:?string,publishedAt:\DateTimeImmutable}
+ * @phpstan-type PublicRelease array{id:int,name:string,description:?string,publishedAt:\DateTimeImmutable,entries:list<PublicEntry>}
+ */
 final readonly class PublicContentReleaseQuery
 {
     public const DEFAULT_LIMIT = 6;
@@ -19,12 +23,7 @@ final readonly class PublicContentReleaseQuery
     {
     }
 
-    /**
-     * @phpstan-type PublicEntry array{id:int,title:string,slug:string,type:string,excerpt:?string,publishedAt:\DateTimeImmutable}
-     * @phpstan-type PublicRelease array{id:int,name:string,description:?string,publishedAt:\DateTimeImmutable,entries:list<PublicEntry>}
-     *
-     * @return list<PublicRelease>
-     */
+    /** @return list<PublicRelease> */
     public function findPublic(int $limit = self::DEFAULT_LIMIT, ?\DateTimeImmutable $now = null): array
     {
         $limit = max(1, min(self::MAX_RELEASES, $limit));
