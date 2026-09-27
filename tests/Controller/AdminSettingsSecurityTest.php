@@ -53,14 +53,26 @@ final class AdminSettingsSecurityTest extends WebTestCase
 
         try {
             foreach ([null, 'invalid-site-settings-token'] as $token) {
-                $payload = $this->validSettingsPayload();
-                if ($token !== null) {
-                    $payload['_token'] = $token;
+                $crawler = $client->request('GET', '/admin/settings');
+                self::assertResponseIsSuccessful();
+
+                $form = $crawler->selectButton('Einstellungen speichern')->form();
+                $payload = $form->getPhpValues();
+                if (!isset($payload['site_settings']) || !is_array($payload['site_settings'])) {
+                    self::fail('The rendered site settings form did not provide its expected form values.');
                 }
 
-                $client->request('POST', '/admin/settings', [
-                    'site_settings' => $payload,
-                ]);
+                $settingsPayload = array_merge($payload['site_settings'], $this->validSettingsPayload());
+                self::assertArrayHasKey('_token', $settingsPayload);
+
+                if ($token === null) {
+                    unset($settingsPayload['_token']);
+                } else {
+                    $settingsPayload['_token'] = $token;
+                }
+                $payload['site_settings'] = $settingsPayload;
+
+                $client->request('POST', '/admin/settings', $payload);
 
                 self::assertResponseStatusCodeSame(422);
                 self::assertSelectorTextContains('#site_settings_error1', 'Der CSRF-Token ist ungültig.');
