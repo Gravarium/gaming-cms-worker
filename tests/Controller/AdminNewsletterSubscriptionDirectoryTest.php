@@ -23,13 +23,14 @@ final class AdminNewsletterSubscriptionDirectoryTest extends WebTestCase
         $client->loginUser($this->user($client, [CmsPermission::CONTENT]));
         $now = new \DateTimeImmutable();
         $suffix = bin2hex(random_bytes(5));
+        $directorySuffix = bin2hex(random_bytes(5));
         $subscriptions = [];
         $subscriptionIds = [];
 
         try {
             for ($index = 0; $index < 53; ++$index) {
                 $subscription = $this->activeSubscription(
-                    sprintf('directory-%02d-%s@example.test', $index, $suffix),
+                    sprintf('directory-%02d-%s@example.test', $index, $directorySuffix),
                     $now,
                 );
                 $entityManager->persist($subscription);
@@ -75,19 +76,19 @@ final class AdminNewsletterSubscriptionDirectoryTest extends WebTestCase
 
             $client->request(
                 'GET',
-                '/admin/newsletter/subscriptions?email='.$suffix.'&status=active&page=2',
+                '/admin/newsletter/subscriptions?email='.$directorySuffix.'&status=active&page=2',
             );
             self::assertResponseIsSuccessful();
             self::assertSelectorTextContains('body', 'Seite 2 von 2');
             self::assertCount(3, $client->getCrawler()->filter('tbody tr'));
             $previousHref = $client->getCrawler()->filter('a[rel="prev"]')->attr('href');
             self::assertIsString($previousHref);
-            self::assertStringContainsString('email='.$suffix, $previousHref);
+            self::assertStringContainsString('email='.$directorySuffix, $previousHref);
             self::assertStringContainsString('status=active', $previousHref);
 
             $client->request(
                 'GET',
-                '/admin/newsletter/subscriptions?email='.$suffix.'&status=active&page=999',
+                '/admin/newsletter/subscriptions?email='.$directorySuffix.'&status=active&page=999',
             );
             self::assertResponseIsSuccessful();
             self::assertSelectorTextContains('body', 'Seite 2 von 2');
