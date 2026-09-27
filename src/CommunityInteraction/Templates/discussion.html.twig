@@ -34,11 +34,13 @@
                         </form>
                         {% if comment.depth < 4 %}<a class="button-link button-secondary" href="{{ path('app_content_discussion', {slug: entry.slug, reply_to: comment.id}) }}">Antworten</a>{% endif %}
                     </div>
+                    {% if app.user.id != comment.author.id %}
                     {{ form_start(reportForms[comment.id], {action: path('app_content_discussion_report', {slug: entry.slug, commentId: comment.id})}) }}
                         {{ form_row(reportForms[comment.id].reason) }}
                         {{ form_row(reportForms[comment.id].details) }}
                         <button class="button-secondary">Kommentar melden</button>
                     {{ form_end(reportForms[comment.id]) }}
+                    {% endif %}
                 {% else %}
                     <p><a href="{{ path('app_login') }}">Melde dich an</a>, um zu reagieren, zu antworten oder einen Kommentar zu melden.</p>
                 {% endif %}
