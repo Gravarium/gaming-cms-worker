@@ -1,0 +1,16 @@
+<section class="panel" aria-label="Öffentliche Gilden-Rollenbedarfe">
+    <p class="eyebrow">Gaming</p>
+    <h2>Gilden suchen Mitglieder</h2>
+    {% if needs %}
+        <ul>
+            {% for row in needs %}
+                <li>
+                    <a href="{{ path('app_guild_apply', {slug: row.guild.slug}) }}">{{ row.guild.name }}</a>:
+                    {{ row.need.roleKey }} · {{ row.need.classKey }} — {{ row.need.desiredCount }} gesucht
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>Zurzeit gibt es keine öffentlichen offenen Rollenbedarfe.</p>
+    {% endif %}
+</section>
