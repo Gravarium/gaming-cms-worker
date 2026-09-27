@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T06:10:00.567Z",
+  "published_at": "2026-09-27T06:18:40.681Z",
   "summary": {
-    "total_remaining_worker_tasks": 140,
+    "total_remaining_worker_tasks": 141,
     "completed_worker_prs_awaiting_trusted_review": 242,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-476 is claimed and active on exact green WCP-475 HEAD 56274da100719bdbfd62e80f52141160da5a718d; create its branches and implement tests/Controller/AdminGuildMemberMutationSecurityTest.php. WCP-474 remains another worker's active 2FA claim. The five unclaimed FCPs remain dependency-blocked; preserve their dependencies.",
+    "next_required_action": "WCP-477 is active on disjoint access-role controller/form paths. Preserve active WCP claims, including the separately claimed WCP-476, and continue this package from its exact feature branch.",
     "composition_preparable": 0,
     "immediately_actionable": 4,
     "must_continue": true
@@ -29528,6 +29528,104 @@
       },
       "next_action": "Create the exclusive claim and feature branches at the exact green WCP-475 base, then implement the authorized test-only security coverage.",
       "last_observed_head": "56274da100719bdbfd62e80f52141160da5a718d"
+    },
+    {
+      "priority": 477,
+      "package_id": "WCP-477",
+      "title": "Duplicate access roles into safe drafts",
+      "risk": "medium",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-477-access-role-duplication-g1",
+      "suggested_branch": "feature/wcp-477-access-role-duplication-g1",
+      "base_branch": "main",
+      "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "objective": "Make repeated CMS permission-role setup usable by allowing an authorized user manager to start from an existing delegable role, edit a unique key and name, and save an unassigned inactive copy. Preserve delegation policy and existing form CSRF.",
+      "allowed_paths": [
+        "src/Controller/AdminAccessRoleController.php",
+        "templates/admin/access_role/form.html.twig",
+        "tests/Controller/AdminAccessRoleDuplicationTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "src/Entity/AccessRole.php",
+        "src/Form/AccessRoleType.php",
+        "src/Repository/AccessRoleRepository.php",
+        "templates/admin/access_role/index.html.twig",
+        "templates/admin/access_role/members.html.twig"
+      ],
+      "deliverables": [
+        "A duplicate action on an existing role edit screen opens an unsaved copy with a unique valid technical key, bounded copy name, copied description and delegable permissions, inactive state, and no assigned users.",
+        "Require CMS_USERS_MANAGE, source-role manageability, and permission delegation before showing copied permissions; submit through the existing CSRF-protected role creation form.",
+        "Handle key collisions through the existing validation path; do not alter or assign the source role and do not persist until form submission.",
+        "Audit successful copy creation through the existing access-role creation event."
+      ],
+      "tests": [
+        "Functional coverage for reachable duplicate action, prefilled draft, unique key, copied data, inactive/unassigned state, authorized save, and unchanged source role.",
+        "Negative coverage for missing/invalid CSRF, caller without CMS_USERS_MANAGE, non-delegable source permissions, and key collision without source or duplicate mutation.",
+        "PHPStan level 8 and complete Worker CI on exact final HEAD, plus PostgreSQL 18 migration-chain validation."
+      ],
+      "completion_report": [
+        "Exact sanitized main base SHA and final Worker HEAD SHA.",
+        "Complete changed-path list and Worker PR.",
+        "Focused tests, full Worker CI, PHPStan, and migration results on exact final HEAD.",
+        "Unresolved risks, assumptions, limits, and Trusted integration follow-up."
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "preserve-CMS_USERS_MANAGE-and-PermissionDelegationPolicy",
+        "clones-have-no-users-and-start-inactive",
+        "csrf-protected-form-submission-is-required",
+        "no-migration-or-schema-change",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment",
+        "no-private-runtime-or-sensitive-data"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "proposal_kind": "worker_only",
+      "proposal_dependency_evidence": [],
+      "collision_check": {
+        "compared_against": "Fresh continuous/work-pool-v4 at fbb127c688e28a4a641f72b109c59923c1ec04d3, active and claim-locked allowed-path scopes, and sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d.",
+        "result": "No active or claim-locked package owns these exact paths. WCP-415 owns the separate access-role index, member-directory controller and members template; WCP-372 owns AccessRoleType and its boundary test, neither of which is edited. WCP-432/433 own separate authorization test files. FCP-072 has an unclaimed, dependency-blocked templates/ scope; this proposal reserves only the access-role form template and must remain separate from a future FCP-072 claim while active.",
+        "paths": [
+          "src/Controller/AdminAccessRoleController.php",
+          "templates/admin/access_role/form.html.twig",
+          "tests/Controller/AdminAccessRoleDuplicationTest.php"
+        ]
+      },
+      "published_at": "2026-09-27T06:18:40.681Z",
+      "claimed_on": "2026-09-27T06:18:40.681Z",
+      "claim_state": "active",
+      "active_base_branch": "main",
+      "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "resume_branch": "feature/wcp-477-access-role-duplication-g1",
+      "last_checkpoint_at": "2026-09-27T06:18:40.681Z",
+      "checkpoint_paths": [],
+      "branch_heads": {
+        "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+        "feature_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d"
+      },
+      "next_action": "Implement safe role duplication and tests; push a coherent checkpoint, run exact-head CI, and keep the claim locked after PR until Trusted resolves it.",
+      "last_observed_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "last_verified_push_at": "2026-09-27T06:18:40.681Z"
     }
   ],
   "recovery_queue": [],
