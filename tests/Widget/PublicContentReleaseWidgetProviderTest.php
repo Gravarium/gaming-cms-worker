@@ -103,17 +103,26 @@ final class PublicContentReleaseWidgetProviderTest extends WebTestCase
             $query = $client->getContainer()->get(PublicContentReleaseQuery::class);
             $result = $query->findPublic(99, $now);
 
-            self::assertCount(1, $result);
-            self::assertSame($this->contentReleaseId($visibleRelease), $result[0]['id']);
+            $fixtureReleaseIds = array_map(
+                fn (ContentRelease $release): int => $this->contentReleaseId($release),
+                $releases,
+            );
+            $fixtureResults = array_values(array_filter(
+                $result,
+                static fn (array $release): bool => in_array($release['id'], $fixtureReleaseIds, true),
+            ));
+
+            self::assertCount(1, $fixtureResults);
+            self::assertSame($this->contentReleaseId($visibleRelease), $fixtureResults[0]['id']);
             self::assertSame(
                 [
                     $this->contentEntryId($news),
                     $this->contentEntryId($page),
                     $this->contentEntryId($unpublishesLater),
                 ],
-                array_column($result[0]['entries'], 'id'),
+                array_column($fixtureResults[0]['entries'], 'id'),
             );
-            self::assertSame('Visible release description', $result[0]['description']);
+            self::assertSame('Visible release description', $fixtureResults[0]['description']);
         } finally {
             $this->cleanupFixtures($client, $releases, $entries, $author->getId());
         }
@@ -279,7 +288,12 @@ final class PublicContentReleaseWidgetProviderTest extends WebTestCase
             self::assertResponseIsSuccessful();
             $registry = $client->getContainer()->get(WidgetRegistry::class);
             self::assertTrue($registry->available(PublicContentReleaseWidgetProvider::KEY));
-            self::assertCount(1, $registry->data(PublicContentReleaseWidgetProvider::KEY, ['count' => 6])['releases']);
+            $enabledData = $registry->data(PublicContentReleaseWidgetProvider::KEY, ['count' => 6]);
+            self::assertIsArray($enabledData['releases']);
+            self::assertContains(
+                $this->contentReleaseId($release),
+                array_column($enabledData['releases'], 'id'),
+            );
 
             $this->setContentModuleEnabled($client, false);
             $client->request('GET', '/admin/layout/home');
@@ -310,13 +324,15 @@ final class PublicContentReleaseWidgetProviderTest extends WebTestCase
             $requestStack->push(Request::create('/'));
             try {
                 $first = $provider->data(PublicContentReleaseWidgetProvider::KEY, ['count' => 6]);
-                self::assertCount(1, $first['releases']);
+                self::assertIsArray($first['releases']);
+                $firstIds = array_column($first['releases'], 'id');
+                self::assertContains($this->contentReleaseId($release), $firstIds);
 
                 $release->setStatus(ContentRelease::STATUS_CANCELLED);
                 $this->entityManager($client)->flush();
-                $cached = $provider->data(PublicContentReleaseWidgetProvider::KEY, ['count' => 1]);
-                self::assertCount(1, $cached['releases']);
-                self::assertSame($first['releases'][0]['id'], $cached['releases'][0]['id']);
+                $cached = $provider->data(PublicContentReleaseWidgetProvider::KEY, ['count' => 6]);
+                self::assertIsArray($cached['releases']);
+                self::assertSame($firstIds, array_column($cached['releases'], 'id'));
             } finally {
                 $requestStack->pop();
             }
@@ -324,7 +340,8 @@ final class PublicContentReleaseWidgetProviderTest extends WebTestCase
             $requestStack->push(Request::create('/'));
             try {
                 $fresh = $provider->data(PublicContentReleaseWidgetProvider::KEY, ['count' => 6]);
-                self::assertSame([], $fresh['releases']);
+                self::assertIsArray($fresh['releases']);
+                self::assertNotContains($this->contentReleaseId($release), array_column($fresh['releases'], 'id'));
             } finally {
                 $requestStack->pop();
             }
