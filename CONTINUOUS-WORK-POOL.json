@@ -12,14 +12,14 @@
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
   "published_at": "2026-09-27T02:05:27.111Z",
   "summary": {
-    "total_remaining_worker_tasks": 140,
-    "completed_worker_prs_awaiting_trusted_review": 220,
+    "total_remaining_worker_tasks": 139,
+    "completed_worker_prs_awaiting_trusted_review": 221,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "Re-evaluate all remaining unclaimed FCPs against dependency evidence; if none is ready, publish and claim another independent worker-only task while leaving foreign active claims untouched.",
+    "next_required_action": "WCP-450 is complete on green exact HEAD 49d836de7c14c3b9958dcb3e43db573c80d2c8b3 with PR #245 ready and its claim locked. All five published unclaimed FCPs remain dependency-blocked; select or publish a separate worker-only task under the continuous-work rules.",
     "composition_preparable": 0,
-    "immediately_actionable": 5,
+    "immediately_actionable": 4,
     "must_continue": true
   },
   "rules": {
@@ -25513,7 +25513,7 @@
       "package_id": "WCP-450",
       "title": "Search and paginate guild member administration",
       "risk": "medium",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -25604,14 +25604,14 @@
           "tests/Controller/AdminGuildMemberDirectoryPaginationTest.php"
         ]
       },
-      "claim_state": "active",
+      "claim_state": "locked_until_trusted_resolution",
       "claimed_on": "2026-09-27T02:00:07.022Z",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
       "active_head": "49d836de7c14c3b9958dcb3e43db573c80d2c8b3",
       "resume_branch": "feature/wcp-450-guild-member-directory-pagination-g1",
-      "last_checkpoint_at": "2026-09-27T02:11:46.603Z",
-      "last_verified_push_at": "2026-09-27T02:11:46.603Z",
+      "last_checkpoint_at": "2026-09-27T02:15:04.679Z",
+      "last_verified_push_at": "2026-09-27T02:15:04.679Z",
       "checkpoint_paths": [
         "src/Controller/AdminGuildMemberController.php",
         "src/Repository/GuildMemberRepository.php",
@@ -25622,14 +25622,14 @@
         "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
         "feature_branch": "49d836de7c14c3b9958dcb3e43db573c80d2c8b3"
       },
-      "next_action": "Monitor Worker CI run 36287792997 on exact HEAD 49d836de7c14c3b9958dcb3e43db573c80d2c8b3; inspect the full PHP/Symfony and PostgreSQL 18 jobs.",
+      "next_action": "Await Trusted review; keep this claim locked until Trusted explicitly integrates, cancels or transfers it with checkpoint evidence.",
       "worker_pr": 245,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/245",
-      "pr_state": "open_draft_unmerged",
-      "draft_pr": true,
+      "pr_state": "open_ready_for_review_unmerged",
+      "draft_pr": false,
       "ci_run_id": 36287792997,
       "last_ci_run_id": 36287792997,
-      "ci_result": "in_progress",
+      "ci_result": "success",
       "ci_attempts": [
         {
           "run_id": 36287630183,
@@ -25640,11 +25640,43 @@
         {
           "run_id": 36287792997,
           "head": "49d836de7c14c3b9958dcb3e43db573c80d2c8b3",
-          "result": "in_progress"
+          "result": "success",
+          "summary": "Exact final HEAD; PHP/Symfony and PostgreSQL 18 jobs succeeded; PHPUnit 433 tests, 1,943 assertions, zero failures/errors, one deprecation and one notice; PHPStan passed with no errors; 39 migrations and 470 SQL queries."
         }
       ],
-      "last_ci_result": "failure",
-      "last_ci_diagnosis": "The failing functional test reached countForAdminGuild; Doctrine raised Syntax Error at DQL alias 'member'. The new count, page and filter queries now use the non-reserved alias guildMember."
+      "last_ci_result": "success",
+      "last_ci_diagnosis": "The first exact-head CI run identified Doctrine's reserved DQL alias 'member' in the new count query. The feature queries now use 'guildMember'; full exact-head CI passes.",
+      "final_head": "49d836de7c14c3b9958dcb3e43db573c80d2c8b3",
+      "final_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "final_changed_paths": [
+        "src/Controller/AdminGuildMemberController.php",
+        "src/Repository/GuildMemberRepository.php",
+        "templates/admin/gaming/member/index.html.twig",
+        "tests/Controller/AdminGuildMemberDirectoryPaginationTest.php"
+      ],
+      "changed_paths": [
+        "src/Controller/AdminGuildMemberController.php",
+        "src/Repository/GuildMemberRepository.php",
+        "templates/admin/gaming/member/index.html.twig",
+        "tests/Controller/AdminGuildMemberDirectoryPaginationTest.php"
+      ],
+      "test_results": {
+        "phpunit": "433 tests, 1,943 assertions, 0 failures and 0 errors; one PHPUnit deprecation and one notice.",
+        "phpstan": "Passed with no errors in the Worker PHP/Symfony validation job.",
+        "php_symfony": "Worker PHP/Symfony validation job passed on exact final HEAD.",
+        "postgres18": "PostgreSQL 18 applied and verified the full migration chain: 39 migrations executed and 470 SQL queries.",
+        "exact_head_ci": {
+          "run_id": 36287792997,
+          "head": "49d836de7c14c3b9958dcb3e43db573c80d2c8b3",
+          "result": "success"
+        }
+      },
+      "completed_at": "2026-09-27T02:15:04.679Z",
+      "completion_summary": "The existing CMS_GAMING_MANAGE-protected per-guild member directory now provides guild-scoped, case-insensitive character-name search, active/inactive filters and stable 25-row pagination with counts and filter-preserving navigation. Malformed query arrays/scalars, invalid UTF-8/control bytes, unknown status, overlong search and invalid pages are rejected; valid out-of-range pages clamp. Existing edit/delete links and delete CSRF forms remain on each visible row. Four allowed paths changed; no schema, form, member-write or public-roster behavior changed.",
+      "open_limitations": [
+        "Awaiting Trusted review and Trusted integration CI."
+      ],
+      "trusted_follow_up": "Transfer to a fresh Trusted branch and review that CMS_GAMING_MANAGE, guild-scoped member reads and the existing member delete CSRF boundary remain intact. Keep member writes and public roster behavior outside this Worker change."
     },
     {
       "priority": 451,
