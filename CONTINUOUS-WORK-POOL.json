@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T08:59:42.754Z",
+  "published_at": "2026-09-27T08:59:47.892Z",
   "summary": {
-    "total_remaining_worker_tasks": 143,
+    "total_remaining_worker_tasks": 144,
     "completed_worker_prs_awaiting_trusted_review": 254,
     "recovery_tasks": 0,
-    "unclaimed": 3,
-    "immediately_claimable": 0,
-    "next_required_action": "WCP-488 is actively claimed from exact sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d; implement and run full exact-head Worker CI. The remaining unclaimed FCPs lack required predecessor evidence. Keep all foreign claims untouched.",
+    "unclaimed": 6,
+    "immediately_claimable": 1,
+    "next_required_action": "WCP-489 has been published as a bounded worker-only theme-selection proposal. Reserve its exact claim and feature branches from sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d, then implement the read-only comparison page.",
     "composition_preparable": 0,
     "immediately_actionable": 4,
     "must_continue": true
@@ -31615,6 +31615,96 @@
       "last_ci_run_id": 36307855053,
       "ci_result": "in_progress",
       "last_ci_result": "in_progress"
+    },
+    {
+      "priority": 489,
+      "package_id": "WCP-489",
+      "title": "Compare site themes from website settings",
+      "risk": "medium",
+      "execution_state": "unclaimed",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-489-theme-comparison-g1",
+      "suggested_branch": "feature/wcp-489-theme-comparison-g1",
+      "base_branch": "main",
+      "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "objective": "Complete the existing global theme-selection workflow with a read-only comparison page directly reachable from Website Settings. Preview all bundled ThemeRegistry entries against the current site's name and home copy, identify the active site theme, and return to the existing settings form to select it. The Layout Workshop previews per-page layout edits; this package supplies the missing direct comparison path for the global Website Settings selection.",
+      "allowed_paths": [
+        "src/Controller/AdminThemePreviewController.php",
+        "templates/admin/settings/edit.html.twig",
+        "templates/admin/settings/theme_preview.html.twig",
+        "tests/Controller/AdminThemePreviewTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/",
+        "src/Form/SiteSettingsType.php",
+        "src/Theme/ThemeRegistry.php",
+        "src/Controller/AdminSettingsController.php",
+        "src/Controller/AdminLayoutController.php",
+        "templates/base.html.twig",
+        "templates/admin/layout/",
+        "tests/Controller/LayoutEditorTest.php"
+      ],
+      "deliverables": [
+        "Add GET-only /admin/settings/theme-preview protected by CMS_SETTINGS_MANAGE.",
+        "Link it from Website Settings and provide clear links back to global theme selection and the Layout Workshop.",
+        "Render one visual sample for every ThemeRegistry choice using the current site name/home title/text; mark exactly the active theme.",
+        "Show bundled theme version, CMS constraint, variables, regions and fallback region without executing external theme code or interpolating arbitrary CSS.",
+        "Keep persistence in the existing SiteSettings form; no schema, migration, shared controller, registry or service-wiring changes."
+      ],
+      "tests": [
+        "Functional test proves Website Settings links to the preview and every ThemeRegistry choice is rendered with the current theme marked active.",
+        "Negative access tests: anonymous redirect to login; authenticated user without CMS_SETTINGS_MANAGE gets 403.",
+        "Read-only test proves GET leaves persisted SiteSettings unchanged and POST is not accepted.",
+        "Focused PHPUnit, PHPStan level 8 and full Worker CI on the exact final HEAD, including PostgreSQL migration validation."
+      ],
+      "completion_report": [
+        "Exact sanitized main/base SHA and final feature HEAD.",
+        "All changed paths and Worker PR link.",
+        "Theme registry coverage, authorization, read-only behavior, focused tests and exact-head CI run.",
+        "Open gaps and Trusted follow-up, including the static bundled-theme preview boundary and future Fortress integration."
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "preserve-CMS_SETTINGS_MANAGE-on-all-admin-preview-requests",
+        "preview-is-GET-only-read-only-and-existing-theme-writes-remain-CSRF-protected",
+        "render-bundled-ThemeRegistry-definitions-only-never-execute-uploaded-or-third-party-theme-code",
+        "do-not-interpolate-arbitrary-theme-CSS-or-template-content",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "no-schema-migration-or-private-runtime-reconstruction",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "proposal_kind": "worker_only",
+      "proposal_dependency_evidence": [],
+      "collision_check": {
+        "compared_against": "Fresh continuous/work-pool-v4 blob d3c5544dd1aa8579f835834e6ce3275e6a150444; all active and claim-locked path scopes; current WCP-487 gaming permission branch and WCP-488 game deletion CSRF branch; sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d.",
+        "result": "No active or claim-locked package owns or encloses these four exact paths. Current WCP-487 and WCP-488 are independent test-only gaming paths. WCP-355 owns the SiteSettings form and remains untouched; WCP-387, WCP-400 and WCP-409 own unrelated game-catalogue, audit-log and notification-history paths. FCP-072 is unclaimed and blocked by FCP-035 but has broad templates/ scope; its future claimant must revalidate and narrow that scope if this WCP remains active. No entity, repository, migration, route configuration, layout-editor or ThemeRegistry path is changed.",
+        "paths": [
+          "src/Controller/AdminThemePreviewController.php",
+          "templates/admin/settings/edit.html.twig",
+          "templates/admin/settings/theme_preview.html.twig",
+          "tests/Controller/AdminThemePreviewTest.php"
+        ]
+      },
+      "published_at": "2026-09-27T08:59:40.564Z"
     }
   ],
   "recovery_queue": [],
