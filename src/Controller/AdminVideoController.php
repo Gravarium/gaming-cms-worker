@@ -18,12 +18,14 @@ use App\Repository\VideoRepository;
 use App\Service\MediaStorageManager;
 use App\Service\MediaUrlPolicy;
 use App\Service\VideoEmbedResolver;
+use App\Video\AdminVideoBrowser;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\String\Slugger\SluggerInterface;
@@ -51,7 +53,7 @@ final class AdminVideoController extends AbstractController
     {
         try {
             $listing = $browser->browse($request);
-        } catch (\\InvalidArgumentException) {
+        } catch (\InvalidArgumentException) {
             return $this->privateVideoBrowserResponse(new Response('Ungültige Video-Filter.', Response::HTTP_BAD_REQUEST));
         }
 
@@ -216,7 +218,7 @@ final class AdminVideoController extends AbstractController
     {
         try {
             return $browser->queryFor($request);
-        } catch (\\InvalidArgumentException $exception) {
+        } catch (\InvalidArgumentException $exception) {
             throw new BadRequestHttpException('Invalid video list filters.', $exception);
         }
     }
