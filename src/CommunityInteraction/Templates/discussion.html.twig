@@ -1,0 +1,74 @@
+{% extends 'base.html.twig' %}
+{% set site = site_settings() %}
+{% block title %}Diskussion: {{ entry.title }} | {{ site.siteName }}{% endblock %}
+{% block body %}
+<header class="topbar"><a class="brand" href="{{ path('app_home') }}">{{ site.siteName }}</a><nav class="top-actions"><a href="{{ path(contentRoute, {slug: entry.slug}) }}">Zum Inhalt</a><a href="{{ path('app_news_index') }}">News</a></nav></header>
+<main class="dashboard">
+    <p class="eyebrow">Community-Diskussion</p>
+    <h1>{{ entry.title }}</h1>
+    <p class="muted"><a href="{{ path(contentRoute, {slug: entry.slug}) }}">Veröffentlichten Inhalt öffnen</a> · {{ commentCount }} Kommentare</p>
+    {% for message in app.flashes('success') %}<div class="notice">{{ message }}</div>{% endfor %}
+    {% for message in app.flashes('error') %}<div class="alert">{{ message }}</div>{% endfor %}
+
+    <section aria-labelledby="comment-heading">
+        <h2 id="comment-heading">Kommentare</h2>
+        {% for row in comments %}
+            {% set comment = row.comment %}
+            <article class="application-card" id="comment-{{ comment.id }}">
+                {% if comment.parent %}<p class="eyebrow">Antwort auf {{ comment.parent.author.displayName }}</p>{% endif %}
+                <p class="eyebrow">{{ comment.author.displayName }} · {{ comment.createdAt|date('d.m.Y H:i') }}</p>
+                <p>{{ comment.body|nl2br }}</p>
+                {% if app.user %}
+                    <p class="muted">
+                        {% for reaction, total in row.reactions %}{{ reaction }}: {{ total }}{% if not loop.last %} · {% endif %}{% endfor %}
+                    </p>
+                    <div class="row-actions">
+                        <form method="post" action="{{ path('app_content_discussion_react', {slug: entry.slug, commentId: comment.id}) }}">
+                            <input type="hidden" name="_token" value="{{ csrf_token('content-reaction-' ~ comment.id) }}">
+                            <label>Reaktion
+                                <select name="reaction">
+                                    <option value="like">Gefällt mir</option><option value="helpful">Hilfreich</option><option value="love">Liebe</option><option value="laugh">Lustig</option><option value="wow">Wow</option>
+                                </select>
+                            </label>
+                            <button>{{ row.userReactions ? 'Reaktion speichern oder entfernen' : 'Reagieren' }}</button>
+                        </form>
+                        {% if comment.depth < 4 %}<a class="button-link button-secondary" href="{{ path('app_content_discussion', {slug: entry.slug, reply_to: comment.id}) }}">Antworten</a>{% endif %}
+                    </div>
+                    {{ form_start(reportForms[comment.id], {action: path('app_content_discussion_report', {slug: entry.slug, commentId: comment.id})}) }}
+                        {{ form_row(reportForms[comment.id].reason) }}
+                        {{ form_row(reportForms[comment.id].details) }}
+                        <button class="button-secondary">Kommentar melden</button>
+                    {{ form_end(reportForms[comment.id]) }}
+                {% else %}
+                    <p><a href="{{ path('app_login') }}">Melde dich an</a>, um zu reagieren, zu antworten oder einen Kommentar zu melden.</p>
+                {% endif %}
+            </article>
+        {% else %}
+            <p class="muted">Noch keine Kommentare. Eröffne die Diskussion.</p>
+        {% endfor %}
+        {% if pages > 1 %}
+            <nav aria-label="Kommentarseiten" class="pagination">
+                {% if page > 1 %}<a href="{{ path('app_content_discussion', {slug: entry.slug, page: page - 1}) }}">Neuere Kommentare</a>{% endif %}
+                <span>Seite {{ page }} von {{ pages }}</span>
+                {% if page < pages %}<a href="{{ path('app_content_discussion', {slug: entry.slug, page: page + 1}) }}">Ältere Kommentare</a>{% endif %}
+            </nav>
+        {% endif %}
+    </section>
+
+    <section aria-labelledby="comment-form-heading">
+        <h2 id="comment-form-heading">{{ replyTo ? 'Auf Kommentar antworten' : 'Kommentar schreiben' }}</h2>
+        {% if replyTo %}<p class="muted">Antwort auf {{ replyTo.author.displayName }} · <a href="{{ path('app_content_discussion', {slug: entry.slug}) }}">Antwort abbrechen</a></p>{% endif %}
+        {% for message in app.flashes('error') %}<div class="alert">{{ message }}</div>{% endfor %}
+        {% if app.user %}
+            {{ form_start(commentForm, {action: path('app_content_discussion_comment', {slug: entry.slug})}) }}
+                {{ form_widget(commentForm.parentId) }}
+                {{ form_row(commentForm.body) }}
+                {{ form_errors(commentForm) }}
+                <button>Kommentar veröffentlichen</button>
+            {{ form_end(commentForm) }}
+        {% else %}
+            <p><a href="{{ path('app_login') }}">Melde dich an</a>, um einen Kommentar zu schreiben.</p>
+        {% endif %}
+    </section>
+</main>
+{% endblock %}
