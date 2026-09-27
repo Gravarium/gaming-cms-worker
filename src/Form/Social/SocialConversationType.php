@@ -16,9 +16,6 @@ use Symfony\Component\Validator\Constraints\Length;
 /** @extends AbstractType<array<string, mixed>> */
 final class SocialConversationType extends AbstractType
 {
-    /**
-     * @param array<string, int> $recipientChoices
-     */
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder

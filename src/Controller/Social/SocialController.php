@@ -104,22 +104,12 @@ final class SocialController extends AbstractController
                     $form->addError(new FormError('Für eine Direktnachricht wähle genau ein Mitglied. Für mehrere Mitglieder gib einen Gruppentitel ein.'));
                 } else {
                     try {
-                        if ($title === '') {
-                            $recipient = $recipients[0] ?? null;
-                            if (!$recipient instanceof User) {
-                                $form->addError(new FormError('Wähle ein Mitglied für die Direktnachricht aus.'));
-                            } else {
-                                $conversation = $this->messaging->createDirect($actor, $recipient);
-                            }
-                        } else {
-                            $conversation = $this->messaging->createGroup($actor, $title, $recipients);
-                        }
+                        $conversation = $title === ''
+                            ? $this->messaging->createDirect($actor, $recipients[0])
+                            : $this->messaging->createGroup($actor, $title, $recipients);
+                        $this->entityManager->flush();
 
-                        if (isset($conversation)) {
-                            $this->entityManager->flush();
-
-                            return $this->redirectToRoute('app_social_conversation', ['id' => $conversation->getId()]);
-                        }
+                        return $this->redirectToRoute('app_social_conversation', ['id' => $conversation->getId()]);
                     } catch (\DomainException|\InvalidArgumentException|\Symfony\Component\Security\Core\Exception\AccessDeniedException $exception) {
                         $form->addError(new FormError($exception->getMessage()));
                     }

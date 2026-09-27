@@ -37,13 +37,7 @@ final readonly class SocialConversationRecipientQuery
             ->getResult();
 
         $choices = [];
-        foreach ($rows as $row) {
-            $profile = $row[0] ?? null;
-            $member = $row[1] ?? null;
-            if (!$profile instanceof MemberProfile || !$member instanceof User) {
-                continue;
-            }
-
+        foreach ($rows as [$profile, $member]) {
             $id = $member->getId();
             if (
                 $id === null
