@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T07:19:22.874Z",
+  "published_at": "2026-09-27T07:21:18.111Z",
   "summary": {
     "total_remaining_worker_tasks": 141,
     "completed_worker_prs_awaiting_trusted_review": 248,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-480 is complete on exact green HEAD 763ef6bbef5c54e7ad36c7bc5a15fd576291d206 (PR #274, CI 36302379923); its claim remains locked. Re-evaluate the latest pool for a free dependency-safe existing module task; if none is eligible, publish and claim a bounded worker-only CMS proposal without changing another claim.",
+    "next_required_action": "WCP-482 test commit b9bc6ae408ced2ab6f219ce149ee558bc8ee90ca is verified as one allowlisted file on sanitized main; open the draft PR and run exact-head CI. WCP-480 remains another worker's active category claim.",
     "composition_preparable": 0,
     "immediately_actionable": 4,
     "must_continue": true
@@ -30606,16 +30606,18 @@
       "claim_state": "active",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "b9bc6ae408ced2ab6f219ce149ee558bc8ee90ca",
       "resume_branch": "feature/wcp-482-content-layout-csrf-boundary-g1",
       "branch_heads": {
         "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-        "feature_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d"
+        "feature_branch": "b9bc6ae408ced2ab6f219ce149ee558bc8ee90ca"
       },
-      "next_action": "Implement the rejected-CSRF page-to-news mutation regression in the allowlisted test file, then open a draft PR and run exact-head Worker CI.",
-      "last_observed_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-      "last_checkpoint_at": "2026-09-27T07:17:44.859Z",
-      "checkpoint_paths": [],
+      "next_action": "Open a draft Worker PR from the verified single-file test commit and run exact-head CI, including PHPStan and PostgreSQL 18 migration validation.",
+      "last_observed_head": "b9bc6ae408ced2ab6f219ce149ee558bc8ee90ca",
+      "last_checkpoint_at": "2026-09-27T07:21:18.111Z",
+      "checkpoint_paths": [
+        "tests/Controller/ContentLayoutMutationBoundaryTest.php"
+      ],
       "worker_pr_changed_paths": []
     }
   ],
