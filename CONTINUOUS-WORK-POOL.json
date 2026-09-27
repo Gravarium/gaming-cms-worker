@@ -10,16 +10,16 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T01:37:47.608Z",
+  "published_at": "2026-09-27T01:38:12.865Z",
   "summary": {
     "total_remaining_worker_tasks": 141,
     "completed_worker_prs_awaiting_trusted_review": 214,
     "recovery_tasks": 0,
-    "unclaimed": 6,
-    "immediately_claimable": 1,
+    "unclaimed": 5,
+    "immediately_claimable": 0,
     "next_required_action": "WCP-447 is reserved on exact sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d for a protected batch media upload workflow; verify the exclusive refs and continue implementation.",
     "composition_preparable": 0,
-    "immediately_actionable": 4,
+    "immediately_actionable": 5,
     "must_continue": true
   },
   "rules": {
@@ -25142,7 +25142,7 @@
       "package_id": "WCP-448",
       "title": "Search and paginate guild collaboration events",
       "risk": "medium",
-      "execution_state": "unclaimed",
+      "execution_state": "worker_in_progress",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -25227,7 +25227,21 @@
           "templates/admin/gaming/collaboration/index.html.twig",
           "tests/Controller/AdminGuildCollaborationPaginationTest.php"
         ]
-      }
+      },
+      "claim_state": "active",
+      "claimed_on": "2026-09-27T01:38:12.865Z",
+      "active_base_branch": "main",
+      "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "resume_branch": "feature/wcp-448-guild-event-directory-pagination-g1",
+      "last_checkpoint_at": "2026-09-27T01:38:12.865Z",
+      "last_verified_push_at": "2026-09-27T01:38:12.865Z",
+      "checkpoint_paths": [],
+      "branch_heads": {
+        "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+        "feature_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d"
+      },
+      "next_action": "Implement guild-scoped event search, status filters and stable pagination on the reserved branch; add functional positive and negative coverage and checkpoint before full CI."
     }
   ],
   "recovery_queue": [],
