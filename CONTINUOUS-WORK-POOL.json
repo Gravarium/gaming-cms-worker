@@ -10,7 +10,7 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T09:38:34.092Z",
+  "published_at": "2026-09-27T09:38:43.774Z",
   "summary": {
     "total_remaining_worker_tasks": 148,
     "completed_worker_prs_awaiting_trusted_review": 259,
@@ -32573,20 +32573,20 @@
         "feature_branch": "709bc6c700dfb0bdc8236aa81c7a3fc605587ad8"
       },
       "last_observed_head": "709bc6c700dfb0bdc8236aa81c7a3fc605587ad8",
-      "last_checkpoint_at": "2026-09-27T09:38:17.419Z",
+      "last_checkpoint_at": "2026-09-27T09:38:43.774Z",
       "checkpoint_paths": [
         "tests/Controller/PublicScheduledContentVisibilityTest.php"
       ],
-      "next_action": "Run and verify full exact-head Worker CI on repaired HEAD 709bc6c700dfb0bdc8236aa81c7a3fc605587ad8. Prior run 36309864850 failed because the content marker remained a substring of the requested slug; slugs and content markers are now independent.",
+      "next_action": "Monitor exact-head Worker CI run 36309993366; diagnose and repair any concrete failures on this exact HEAD without weakening checks.",
       "last_verified_push_at": "2026-09-27T09:38:17.419Z",
       "worker_pr": 287,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/287",
       "draft_pr": true,
       "pr_state": "open",
-      "ci_run_id": 36309864850,
-      "last_ci_run_id": 36309864850,
-      "ci_result": "failure",
-      "last_ci_result": "failure",
+      "ci_run_id": 36309993366,
+      "last_ci_run_id": 36309993366,
+      "ci_result": "in_progress",
+      "last_ci_result": "in_progress",
       "ci_attempts": [
         {
           "run_id": 36309675365,
@@ -32599,6 +32599,11 @@
           "head": "ec849f35275f8f047a992a154c5cb5c6a7f818a6",
           "result": "failure",
           "diagnosis": "The content marker was still a substring of the request slug, which Symfony's debug 404 page displays in route diagnostics. The repaired fixture now uses unrelated route slugs and content markers."
+        },
+        {
+          "run_id": 36309993366,
+          "head": "709bc6c700dfb0bdc8236aa81c7a3fc605587ad8",
+          "result": "in_progress"
         }
       ]
     },
