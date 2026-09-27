@@ -10,7 +10,7 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T14:43:57.795Z",
+  "published_at": "2026-09-27T14:51:56.443Z",
   "summary": {
     "total_remaining_worker_tasks": 167,
     "completed_worker_prs_awaiting_trusted_review": 293,
@@ -40904,17 +40904,23 @@
       "claim_state": "active",
       "active_base_branch": "main",
       "active_base_sha": "b510875e7b0741b9b19f09429d2204a95df51198",
-      "active_head": "b510875e7b0741b9b19f09429d2204a95df51198",
+      "active_head": "6e28d039d4959cb7d9a339255408029e82808e95",
       "resume_branch": "feature/wcp-547-public-downloads-widget-g1",
       "branch_heads": {
         "claim_branch": "b510875e7b0741b9b19f09429d2204a95df51198",
-        "feature_branch": "b510875e7b0741b9b19f09429d2204a95df51198"
+        "feature_branch": "6e28d039d4959cb7d9a339255408029e82808e95"
       },
-      "last_observed_head": "b510875e7b0741b9b19f09429d2204a95df51198",
-      "last_checkpoint_at": "2026-09-27T14:43:17.244Z",
-      "last_verified_push_at": "2026-09-27T14:43:17.244Z",
-      "checkpoint_paths": [],
-      "next_action": "Implement and test the public Downloads Page Builder widget using only the five reserved paths. Keep query data limited to enabled public packages and verify the disabled-module gate.",
+      "last_observed_head": "6e28d039d4959cb7d9a339255408029e82808e95",
+      "last_checkpoint_at": "2026-09-27T14:51:56.443Z",
+      "last_verified_push_at": "2026-09-27T14:51:56.443Z",
+      "checkpoint_paths": [
+        "src/Widget/PublicDownloadCatalogueWidgetProvider.php",
+        "src/Widget/DownloadCatalogue/PublicDownloadCatalogueQuery.php",
+        "src/Widget/DownloadCatalogue/Templates/widget/public_download_catalogue.html.twig",
+        "config/packages/public_download_catalogue_widget.yaml",
+        "tests/Widget/PublicDownloadCatalogueWidgetTest.php"
+      ],
+      "next_action": "Create a draft Worker PR against main and run the full exact-head CI on 6e28d039d4959cb7d9a339255408029e82808e95; repair any concrete failures only in the five reserved paths.",
       "worker_pr_state": "not_created",
       "ci_result": "not_started",
       "last_ci_result": "not_run",
