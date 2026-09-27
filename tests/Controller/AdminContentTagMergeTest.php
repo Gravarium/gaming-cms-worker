@@ -140,10 +140,15 @@ final class AdminContentTagMergeTest extends WebTestCase
                 static fn (ContentTag $tag): ?int => $tag->getId(),
                 $draftStored->getTags()->toArray(),
             ));
-            self::assertContains($unrelatedId, array_map(
+            $publishedTagIds = array_map(
                 static fn (ContentTag $tag): ?int => $tag->getId(),
                 $publishedStored->getTags()->toArray(),
-            ));
+            );
+            self::assertContains($unrelatedId, $publishedTagIds);
+            self::assertSame(1, count(array_filter(
+                $publishedTagIds,
+                static fn (?int $id): bool => $id === $targetId,
+            )));
             self::assertSame(ContentEntry::STATUS_DRAFT, $draftStored->getStatus());
             self::assertSame(ContentEntry::STATUS_PUBLISHED, $publishedStored->getStatus());
             self::assertEquals($publishedAt, $publishedStored->getPublishedAt());
