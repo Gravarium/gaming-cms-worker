@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T08:19:40.799Z",
+  "published_at": "2026-09-27T08:21:05.616Z",
   "summary": {
     "total_remaining_worker_tasks": 141,
     "completed_worker_prs_awaiting_trusted_review": 251,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-485 draft PR #278 is running full Worker CI #36305820275 on exact HEAD 64abd7e3a3f6a3f595120bb2a78efc88698c6f0a; inspect both jobs and repair on the same branch if red.",
+    "next_required_action": "WCP-486 is claimed on feature/wcp-486-public-video-visibility-g1 from exact sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d; add the public video visibility regression test on its single reserved path. WCP-485 remains owned by its active worker.",
     "composition_preparable": 0,
     "immediately_actionable": 4,
     "must_continue": true
@@ -31153,6 +31153,99 @@
       "last_ci_run_id": 36305820275,
       "ci_result": "in_progress",
       "last_ci_result": "in_progress"
+    },
+    {
+      "priority": 486,
+      "package_id": "WCP-486",
+      "title": "Keep unpublished videos out of public pages",
+      "risk": "medium",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-486-public-video-visibility-g1",
+      "suggested_branch": "feature/wcp-486-public-video-visibility-g1",
+      "base_branch": "main",
+      "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "objective": "Add test-only functional security coverage for the public video visibility boundary. Verify that enabled videos with a publication time at or before now can appear in the public library and detail route, while unpublished, future-dated, or disabled videos remain absent from the library and return 404 by direct slug. Use synthetic videos and clean them up.",
+      "allowed_paths": [
+        "tests/Controller/PublicVideoPublicationBoundaryTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/",
+        "src/",
+        "templates/",
+        "assets/",
+        "public/"
+      ],
+      "deliverables": [
+        "Public /videos shows an enabled synthetic video whose publishedAt is not in the future.",
+        "Draft-like (publishedAt null), future-dated, and disabled synthetic videos are absent from the public library and return 404 at their public detail routes, with no body-only markers exposed.",
+        "All synthetic video entities are removed in cleanup even when an assertion fails.",
+        "Only tests/Controller/PublicVideoPublicationBoundaryTest.php changes; existing publication and embed security controls remain untouched."
+      ],
+      "tests": [
+        "Focused PHPUnit functional coverage for public video listing and direct-route visibility gates.",
+        "PHPStan level 8 and complete Worker CI on the exact final HEAD.",
+        "PostgreSQL 18 complete migration-chain validation."
+      ],
+      "completion_report": [
+        "Exact sanitized main SHA, exact final HEAD, changed path, and Worker PR.",
+        "Evidence that enabled published videos remain publicly visible while null/future publication times and disabled videos are hidden from list and direct detail routes.",
+        "Synthetic fixture cleanup behavior.",
+        "Exact-head PHPUnit, PHPStan, and PostgreSQL migration results.",
+        "Trusted review follow-up and unresolved assumptions."
+      ],
+      "immutable_constraints": [
+        "public-video-routes-must-expose-only-enabled-videos-published-at-or-before-now",
+        "do-not-weaken-or-change-video-visibility-or-embed-url-controls",
+        "synthetic-fixtures-only-and-cleaned-up",
+        "test-only-scope-no-product-source-or-configuration-changes",
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "red-ci-stops-integration",
+        "no-private-runtime-or-sensitive-data"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "proposal_kind": "worker_only",
+      "proposal_dependency_evidence": [],
+      "collision_check": {
+        "compared_against": "Fresh continuous/work-pool-v4 at 7ba1970395aaaa84761ed4c0fa3ceea65d1be768, all active and claim-locked allowed paths, and sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d.",
+        "result": "No active or claim-locked package owns or encloses tests/Controller/PublicVideoPublicationBoundaryTest.php. Existing public video controller, repository, and template work in WCP-375, WCP-381, and WCP-389 remains untouched; this package adds a new standalone functional security test.",
+        "paths": [
+          "tests/Controller/PublicVideoPublicationBoundaryTest.php"
+        ]
+      },
+      "published_at": "2026-09-27T08:21:05.616Z",
+      "claimed_on": "2026-09-27T08:21:05.616Z",
+      "claim_state": "active",
+      "active_base_branch": "main",
+      "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "resume_branch": "feature/wcp-486-public-video-visibility-g1",
+      "branch_heads": {
+        "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+        "feature_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d"
+      },
+      "last_observed_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "last_checkpoint_at": "2026-09-27T08:21:05.616Z",
+      "last_verified_push_at": "2026-09-27T08:21:05.616Z",
+      "checkpoint_paths": [],
+      "worker_pr_changed_paths": []
     }
   ],
   "recovery_queue": [],
