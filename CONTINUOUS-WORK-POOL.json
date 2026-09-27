@@ -10,16 +10,16 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T09:52:59.275Z",
+  "published_at": "2026-09-27T09:53:43.006Z",
   "summary": {
-    "total_remaining_worker_tasks": 153,
+    "total_remaining_worker_tasks": 154,
     "completed_worker_prs_awaiting_trusted_review": 262,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-500 is actively claimed from exact sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d; implement the public content category directory and complete exact-head Worker CI. Keep all foreign claims untouched.",
+    "next_required_action": "WCP-501 is actively claimed from exact sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d; add regression coverage preventing public redirects to unpublished content and run full exact-head Worker CI. Keep all foreign claims untouched.",
     "composition_preparable": 0,
-    "immediately_actionable": 13,
+    "immediately_actionable": 14,
     "must_continue": true
   },
   "rules": {
@@ -33408,6 +33408,99 @@
       ],
       "next_action": "Implement the public category directory and focused disabled-content coverage, then push a meaningful feature checkpoint and create the Worker PR.",
       "last_verified_push_at": "2026-09-27T09:52:59.275Z"
+    },
+    {
+      "priority": 501,
+      "package_id": "WCP-501",
+      "title": "Prevent public redirects to unpublished content",
+      "risk": "medium",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-501-public-content-redirect-g1",
+      "suggested_branch": "feature/wcp-501-public-content-redirect-g1",
+      "base_branch": "main",
+      "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "objective": "Add test-only functional regressions for public content slug redirects. A historical /news or /page URL may redirect only when its target is currently published; draft, scheduled, and future-dated published targets must return 404 without exposing the target slug or content. Do not change redirect resolution, controllers, repositories, entities, templates, configuration, routes, or schema.",
+      "allowed_paths": [
+        "tests/Controller/PublicContentRedirectVisibilityTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/",
+        "src/",
+        "templates/",
+        "assets/",
+        "public/"
+      ],
+      "deliverables": [
+        "A synthetic previously published news entry and historical slug redirect prove a valid public target still returns the existing permanent redirect.",
+        "Synthetic draft, scheduled, and future-dated published news/page targets behind old slugs return 404 and do not expose target titles, slugs, excerpts, or body markers.",
+        "All synthetic redirects, entries, and author records are removed in finally, including after assertion failures.",
+        "Only tests/Controller/PublicContentRedirectVisibilityTest.php changes; no runtime behavior or security controls change."
+      ],
+      "tests": [
+        "Focused PHPUnit functional coverage for valid redirects and denial of old slugs targeting unpublished or future content.",
+        "PHPStan level 8 and complete Worker CI on the exact final HEAD.",
+        "PostgreSQL 18 complete migration-chain validation."
+      ],
+      "completion_report": [
+        "Exact sanitized main SHA and final Worker HEAD SHA.",
+        "Complete changed-path list and Worker PR.",
+        "Focused tests, PHPStan, exact-head CI run, PostgreSQL migration results, and fixture-cleanup evidence.",
+        "Unresolved limitations and Trusted integration follow-up."
+      ],
+      "immutable_constraints": [
+        "public-slug-redirects-must-not-reveal-unpublished-or-future-content",
+        "test-only-no-product-runtime-or-schema-changes",
+        "synthetic-fixtures-only-and-cleaned-up",
+        "preserve-publication-authorization-redirect-cache-and-visibility-controls",
+        "no-security-test-phpstan-or-CI-weakening",
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "red-CI-stops-integration",
+        "no-private-runtime-or-sensitive-data"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "proposal_kind": "worker_only",
+      "proposal_dependency_evidence": [],
+      "collision_check": {
+        "compared_against": "Fresh continuous/work-pool-v4 blob c3c5b137e7a0d3fcda694de39891c0f240dc9256; active and claim-locked allowed paths; sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d; active branch and PR state.",
+        "result": "The new test path is absent from sanitized main and unowned by every active or claim-locked package. WCP-304 validates redirect source identities, and WCP-460 adds an admin inventory without changing public resolution. WCP-090 covers scheduled unpublication visibility and WCP-494 covers scheduled/future direct routes, feeds, and sitemap; this proposal tests only old-slug redirect decisions and uses a new independent test file.",
+        "paths": [
+          "tests/Controller/PublicContentRedirectVisibilityTest.php"
+        ]
+      },
+      "published_at": "2026-09-27T09:53:43.006Z",
+      "claimed_on": "2026-09-27T09:53:43.006Z",
+      "claim_state": "active",
+      "active_base_branch": "main",
+      "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "resume_branch": "feature/wcp-501-public-content-redirect-g1",
+      "branch_heads": {
+        "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+        "feature_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d"
+      },
+      "last_observed_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "last_checkpoint_at": "2026-09-27T09:53:43.006Z",
+      "checkpoint_paths": [],
+      "next_action": "Implement the focused regression test only on the feature branch, checkpoint it, then run targeted PHPUnit and full exact-head Worker CI.",
+      "last_verified_push_at": null
     }
   ],
   "recovery_queue": [],
