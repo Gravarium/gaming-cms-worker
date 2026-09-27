@@ -1,0 +1,58 @@
+{% extends 'base.html.twig' %}
+{% block title %}Spiele suchen{% endblock %}
+{% block body %}
+<main class="content-shell game-catalogue-search">
+    <header class="page-header">
+        <p class="eyebrow">Spielekatalog</p>
+        <h1>Spiele suchen</h1>
+        <p>Suche nach Spiel, Beschreibung, Entwickler, Publisher oder Genre.</p>
+    </header>
+
+    <form class="panel" action="{{ path('app_public_game_catalogue_search') }}" method="get" role="search">
+        <label for="game-catalogue-search-query">Suchbegriff</label>
+        <input
+            id="game-catalogue-search-query"
+            type="search"
+            name="q"
+            value="{{ query }}"
+            minlength="2"
+            maxlength="100"
+            aria-describedby="game-catalogue-search-help"
+        >
+        <p id="game-catalogue-search-help">Mindestens 2 und höchstens 100 Zeichen.</p>
+        <button type="submit">Spiele suchen</button>
+    </form>
+
+    {% if query is not empty %}
+        <p class="game-search-count">{{ total }} Treffer</p>
+        {% if entries is not empty %}
+            <section class="portal-cards" aria-label="Suchergebnisse">
+                {% for entry in entries %}
+                    <article class="portal-card game-search-result" data-game-id="{{ entry.game.id }}">
+                        <p class="portal-kicker">{{ entry.publisher ? entry.publisher.name : 'Publisher offen' }}</p>
+                        <h2><a href="{{ path('app_game_catalogue_show', {slug: entry.game.slug}) }}">{{ entry.game.name }}</a></h2>
+                        {% if entry.developer %}<p>{{ entry.developer }}</p>{% endif %}
+                        {% if entry.summary %}<p>{{ entry.summary|slice(0, 240) }}</p>{% endif %}
+                    </article>
+                {% endfor %}
+            </section>
+
+            {% if totalPages > 1 %}
+                <nav class="game-search-pagination" aria-label="Suchergebnisseiten">
+                    {% if page > 1 %}
+                        <a rel="prev" href="{{ path('app_public_game_catalogue_search', {q: query, page: page - 1}) }}">Vorherige</a>
+                    {% endif %}
+                    <span>Seite {{ page }} von {{ totalPages }}</span>
+                    {% if page < totalPages %}
+                        <a rel="next" href="{{ path('app_public_game_catalogue_search', {q: query, page: page + 1}) }}">Nächste</a>
+                    {% endif %}
+                </nav>
+            {% endif %}
+        {% else %}
+            <p class="game-search-empty" role="status">Keine passenden öffentlichen Spiele gefunden.</p>
+        {% endif %}
+    {% else %}
+        <p class="game-search-empty" role="status">Gib mindestens 2 Zeichen ein, um öffentliche Spiele zu suchen.</p>
+    {% endif %}
+</main>
+{% endblock %}

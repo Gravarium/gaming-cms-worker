@@ -1,0 +1,14 @@
+<section class="panel game-catalogue-search-widget" aria-labelledby="game-catalogue-search-{{ widget.id }}">
+    <h2 id="game-catalogue-search-{{ widget.id }}">Spiele suchen</h2>
+    <form action="{{ path('app_public_game_catalogue_search') }}" method="get" role="search">
+        <label for="game-catalogue-search-query-{{ widget.id }}">Spiel, Entwickler, Publisher oder Genre</label>
+        <input
+            id="game-catalogue-search-query-{{ widget.id }}"
+            type="search"
+            name="q"
+            minlength="2"
+            maxlength="100"
+        >
+        <button type="submit">Spiele suchen</button>
+    </form>
+</section>
