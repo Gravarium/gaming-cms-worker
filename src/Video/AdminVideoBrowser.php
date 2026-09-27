@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\\Video;
+namespace App\Video;
 
-use App\\Entity\\Video;
-use App\\Repository\\VideoRepository;
-use Doctrine\\ORM\\QueryBuilder;
-use Symfony\\Component\\HttpFoundation\\Request;
+use App\Entity\Video;
+use App\Repository\VideoRepository;
+use Doctrine\ORM\QueryBuilder;
+use Symfony\Component\HttpFoundation\Request;
 
 final class AdminVideoBrowser
 {
@@ -34,7 +34,7 @@ final class AdminVideoBrowser
     public function browse(Request $request): array
     {
         $filters = $this->filters($request);
-        $now = new \\DateTimeImmutable();
+        $now = new \DateTimeImmutable();
 
         $countQuery = $this->filteredQuery($filters, $now)->select('COUNT(video.id)');
         $total = (int) $countQuery->getQuery()->getSingleScalarResult();
@@ -73,7 +73,7 @@ final class AdminVideoBrowser
     /**
      * @param array{search: string, status: string, category: ?int, page: int} $filters
      */
-    private function filteredQuery(array $filters, \\DateTimeImmutable $now): QueryBuilder
+    private function filteredQuery(array $filters, \DateTimeImmutable $now): QueryBuilder
     {
         $query = $this->videos->createQueryBuilder('video')
             ->leftJoin('video.category', 'category');
@@ -125,15 +125,15 @@ final class AdminVideoBrowser
         $query = $request->query->all();
         $search = trim($this->stringParameter($query, 'search', ''));
         if (!mb_check_encoding($search, 'UTF-8')
-            || preg_match('/[\\x00-\\x1F\\x7F]/', $search) !== 0
+            || preg_match('/[\x00-\x1F\x7F]/', $search) !== 0
             || mb_strlen($search, 'UTF-8') > 100
         ) {
-            throw new \\InvalidArgumentException('Invalid video title search.');
+            throw new \InvalidArgumentException('Invalid video title search.');
         }
 
         $status = $this->stringParameter($query, 'status', 'all');
         if (!in_array($status, self::STATUSES, true)) {
-            throw new \\InvalidArgumentException('Invalid video status filter.');
+            throw new \InvalidArgumentException('Invalid video status filter.');
         }
 
         $categoryValue = $this->stringParameter($query, 'category', '');
@@ -143,7 +143,7 @@ final class AdminVideoBrowser
                 'options' => ['min_range' => 1, 'max_range' => 2147483647],
             ]);
             if ($validatedCategory === false || (string) $validatedCategory !== $categoryValue) {
-                throw new \\InvalidArgumentException('Invalid video category filter.');
+                throw new \InvalidArgumentException('Invalid video category filter.');
             }
             $category = $validatedCategory;
         }
@@ -153,7 +153,7 @@ final class AdminVideoBrowser
             'options' => ['min_range' => 1, 'max_range' => 999999],
         ]);
         if ($validatedPage === false || (string) $validatedPage !== $pageValue) {
-            throw new \\InvalidArgumentException('Invalid video page.');
+            throw new \InvalidArgumentException('Invalid video page.');
         }
 
         return [
@@ -174,7 +174,7 @@ final class AdminVideoBrowser
         }
 
         if (!is_string($query[$key])) {
-            throw new \\InvalidArgumentException('Invalid video filter type.');
+            throw new \InvalidArgumentException('Invalid video filter type.');
         }
 
         return $query[$key];
