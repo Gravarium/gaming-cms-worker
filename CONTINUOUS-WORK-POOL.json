@@ -39756,14 +39756,14 @@
       "claim_state": "active",
       "active_base_branch": "main",
       "active_base_sha": "b510875e7b0741b9b19f09429d2204a95df51198",
-      "active_head": "7976ade7a1c2bbddc1580c4871d8dd97773e2c1f",
+      "active_head": "1967df1b9c34b1371df024f305274b871922e574",
       "resume_branch": "feature/wcp-541-guild-role-needs-g1",
       "branch_heads": {
         "claim_branch": "b510875e7b0741b9b19f09429d2204a95df51198",
-        "feature_branch": "7976ade7a1c2bbddc1580c4871d8dd97773e2c1f"
+        "feature_branch": "1967df1b9c34b1371df024f305274b871922e574"
       },
-      "last_observed_head": "7976ade7a1c2bbddc1580c4871d8dd97773e2c1f",
-      "last_checkpoint_at": "2026-09-27T14:10:56.899Z",
+      "last_observed_head": "1967df1b9c34b1371df024f305274b871922e574",
+      "last_checkpoint_at": "2026-09-27T14:14:26.496Z",
       "checkpoint_paths": [
         "src/Controller/AdminGuildRoleNeedController.php",
         "src/Form/GuildRoleNeedInput.php",
@@ -39777,9 +39777,9 @@
         "tests/Controller/AdminGuildRoleNeedControllerTest.php",
         "tests/Controller/PublicGuildRoleNeedDisplayTest.php"
       ],
-      "next_action": "Inspect Worker CI #828 / 36324947067 on exact HEAD 7976ade7a1c2bbddc1580c4871d8dd97773e2c1f; repair any remaining PHPStan, PHPUnit or PostgreSQL failures on this branch, then rerun complete exact-head CI.",
+      "next_action": "Inspect exact-head Worker CI #829 / 36325149570 on 1967df1b9c34b1371df024f305274b871922e574; fix any remaining full-suite failure on this branch and rerun complete CI.",
       "worker_pr_state": "draft",
-      "last_verified_push_at": "2026-09-27T14:10:56.899Z",
+      "last_verified_push_at": "2026-09-27T14:14:26.496Z",
       "ci_result": "in_progress",
       "last_ci_result": "in_progress",
       "ci_attempts": [
@@ -39799,7 +39799,19 @@
           "run_number": 828,
           "head": "7976ade7a1c2bbddc1580c4871d8dd97773e2c1f",
           "base": "b510875e7b0741b9b19f09429d2204a95df51198",
-          "result": "in_progress"
+          "result": "failure",
+          "conclusion": "failure",
+          "phpstan": "success",
+          "phpunit": "failure",
+          "postgresql_18_migrations": "success",
+          "summary": "PHPStan, Twig/YAML/container checks, and PostgreSQL 18 migration validation passed. PHPUnit completed 545 tests with 1 error and 5 failures: empty TextType values mapped to null for typed string properties; one assertion compared detached ORM objects by identity; public 404 assertions inspected Symfony exception pages; and one fixture needed managed guild/game entities. Fixed on next HEAD."
+        },
+        {
+          "run_id": 36325149570,
+          "run_number": 829,
+          "head": "1967df1b9c34b1371df024f305274b871922e574",
+          "base": "b510875e7b0741b9b19f09429d2204a95df51198",
+          "result": "queued"
         }
       ],
       "worker_pr": 334,
@@ -39820,8 +39832,8 @@
       "worker_pr_base_branch": "main",
       "pr_state": "open_draft",
       "draft_pr": true,
-      "ci_run_id": 36324947067,
-      "last_ci_run_id": 36324947067
+      "ci_run_id": 36325149570,
+      "last_ci_run_id": 36325149570
     },
     {
       "priority": 542,
