@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T07:31:47.760Z",
+  "published_at": "2026-09-27T07:32:17.293Z",
   "summary": {
     "total_remaining_worker_tasks": 141,
     "completed_worker_prs_awaiting_trusted_review": 248,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-482 run 36303226183 confirms cross-site form CSRF rejection with HTTP 422; align the test assertion and verify persisted entry/layout state on rerun.",
+    "next_required_action": "WCP-482 exact HEAD 1d200f2b66eeefc28e8ad224974c1f4de462458d now asserts the observed HTTP 422 cross-site form-CSRF rejection; await exact-head Worker CI and persisted-state checks.",
     "composition_preparable": 0,
     "immediately_actionable": 4,
     "must_continue": true
@@ -30606,15 +30606,15 @@
       "claim_state": "active",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-      "active_head": "cc549ef94703dc6279bd48397be5f1104cc14324",
+      "active_head": "1d200f2b66eeefc28e8ad224974c1f4de462458d",
       "resume_branch": "feature/wcp-482-content-layout-csrf-boundary-g1",
       "branch_heads": {
         "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-        "feature_branch": "cc549ef94703dc6279bd48397be5f1104cc14324"
+        "feature_branch": "1d200f2b66eeefc28e8ad224974c1f4de462458d"
       },
-      "next_action": "Change the rejection assertion to HTTP 422, then verify persisted page type and layout document and rerun exact-head Worker CI.",
-      "last_observed_head": "cc549ef94703dc6279bd48397be5f1104cc14324",
-      "last_checkpoint_at": "2026-09-27T07:31:47.760Z",
+      "next_action": "Await exact-head Worker CI after the HTTP 422 assertion correction; diagnose any remaining failure within the allowlisted test.",
+      "last_observed_head": "1d200f2b66eeefc28e8ad224974c1f4de462458d",
+      "last_checkpoint_at": "2026-09-27T07:32:17.293Z",
       "checkpoint_paths": [
         "tests/Controller/ContentLayoutMutationBoundaryTest.php"
       ],
