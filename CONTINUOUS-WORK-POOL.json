@@ -17,7 +17,7 @@
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-518 run 36314831542 confirms the game slug fix and reports a second shared fixture slug (platform pc). Use a per-run unique platform slug and rerun full exact-head CI on the same branch.",
+    "next_required_action": "WCP-518 uses per-run unique game and platform slugs on exact HEAD e256d9252646e4d41946eafb53eebfc592eabfa5; corrected Worker CI run 36314987910 is queued. Verify all jobs and repair any remaining failure on the same branch.",
     "composition_preparable": 0,
     "immediately_actionable": 20,
     "must_continue": true
@@ -35979,22 +35979,22 @@
       "claimed_on": "2026-09-27T10:58:06.085Z",
       "active_base_branch": "main",
       "active_base_sha": "b510875e7b0741b9b19f09429d2204a95df51198",
-      "active_head": "bc4ee9da587590096c28c827f73a68fc45fff423",
+      "active_head": "e256d9252646e4d41946eafb53eebfc592eabfa5",
       "resume_branch": "feature/wcp-518-upcoming-game-release-widget-g1",
       "branch_heads": {
         "claim_branch": "b510875e7b0741b9b19f09429d2204a95df51198",
-        "feature_branch": "bc4ee9da587590096c28c827f73a68fc45fff423"
+        "feature_branch": "e256d9252646e4d41946eafb53eebfc592eabfa5"
       },
-      "last_observed_head": "bc4ee9da587590096c28c827f73a68fc45fff423",
+      "last_observed_head": "e256d9252646e4d41946eafb53eebfc592eabfa5",
       "checkpoint_paths": [
         "src/Widget/GameRelease/UpcomingReleaseQuery.php",
         "src/Widget/UpcomingGameReleaseWidgetProvider.php",
         "templates/widget/upcoming_game_releases.html.twig",
         "tests/Widget/UpcomingGameReleaseWidgetProviderTest.php"
       ],
-      "next_action": "Repair the remaining fixture collision by making its game_catalogue_platform.slug unique, then push and rerun complete Worker CI on the new exact HEAD. Keep the same claim and paths.",
-      "last_checkpoint_at": "2026-09-27T11:10:25.791Z",
-      "last_verified_push_at": "2026-09-27T11:10:25.791Z",
+      "next_action": "Monitor exact-head Worker CI run 36314987910 for e256d9252646e4d41946eafb53eebfc592eabfa5. If red, diagnose the concrete issue and repair only within the four allowed paths on the same branch.",
+      "last_checkpoint_at": "2026-09-27T11:13:11.328Z",
+      "last_verified_push_at": "2026-09-27T11:13:11.328Z",
       "worker_pr": 310,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/310",
       "draft_pr": true,
@@ -36006,10 +36006,10 @@
         "templates/widget/upcoming_game_releases.html.twig",
         "tests/Widget/UpcomingGameReleaseWidgetProviderTest.php"
       ],
-      "ci_run_id": 36314831542,
-      "last_ci_run_id": 36314831542,
-      "ci_result": "failure",
-      "last_ci_result": "failure",
+      "ci_run_id": 36314987910,
+      "last_ci_run_id": 36314987910,
+      "ci_result": "in_progress",
+      "last_ci_result": "in_progress",
       "ci_attempts": [
         {
           "run_id": 36314564707,
@@ -36027,6 +36027,11 @@
           "head": "bc4ee9da587590096c28c827f73a68fc45fff423",
           "result": "failure",
           "summary": "The first game.slug collision is fixed. PHPUnit then found a duplicate game_catalogue_platform.slug because the fixture still used the shared pc slug; the cleanup guard prevented a secondary closed-EntityManager error. Make the platform slug unique in the same fixture and rerun full exact-head CI."
+        },
+        {
+          "run_id": 36314987910,
+          "head": "e256d9252646e4d41946eafb53eebfc592eabfa5",
+          "result": "in_progress"
         }
       ]
     },
