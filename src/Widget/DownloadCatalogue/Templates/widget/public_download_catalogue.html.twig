@@ -1,0 +1,12 @@
+<div class="portal-cards">
+    {% for package in data.items %}
+        <article class="portal-card">
+            <p class="portal-kicker">{{ package.type|upper }}</p>
+            <h3><a href="{{ path('app_download_show', {slug: package.slug}) }}">{{ package.title }}</a></h3>
+            <a class="portal-read" href="{{ path('app_download_show', {slug: package.slug}) }}">Details ansehen ↗</a>
+        </article>
+    {% else %}
+        <p class="portal-empty">Zurzeit sind keine öffentlichen Downloads verfügbar.</p>
+    {% endfor %}
+</div>
+<p class="download-catalogue-action"><a class="portal-read" href="{{ path('app_download_index') }}">Alle Downloads anzeigen ↗</a></p>
