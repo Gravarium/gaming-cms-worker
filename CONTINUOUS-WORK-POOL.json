@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T18:49:52.663Z",
+  "published_at": "2026-09-27T18:53:47.402Z",
   "summary": {
     "total_remaining_worker_tasks": 173,
     "completed_worker_prs_awaiting_trusted_review": 299,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-569 is claimed on main@7b2ca79405fc12d34bce1386157e929e4668f31a; implement bounded public category directory pagination and run exact-head CI.",
+    "next_required_action": "Await complete Worker CI #914 on exact PR #363 HEAD; diagnose and repair any failure before marking ready.",
     "composition_preparable": 0,
     "immediately_actionable": 29,
     "must_continue": true
@@ -45802,16 +45802,48 @@
       "claim_state": "active",
       "active_base_branch": "main",
       "active_base_sha": "7b2ca79405fc12d34bce1386157e929e4668f31a",
-      "active_head": "7b2ca79405fc12d34bce1386157e929e4668f31a",
+      "active_head": "0c7f2456163e079b8ea47c521ff88a6662631dcf",
       "resume_branch": "feature/wcp-569-public-category-directory-pagination-g1",
       "branch_heads": {
         "claim_branch": "7b2ca79405fc12d34bce1386157e929e4668f31a",
-        "feature_branch": "7b2ca79405fc12d34bce1386157e929e4668f31a"
+        "feature_branch": "0c7f2456163e079b8ea47c521ff88a6662631dcf"
       },
-      "last_observed_head": "7b2ca79405fc12d34bce1386157e929e4668f31a",
-      "last_checkpoint_at": "2026-09-27T18:49:52.663Z",
-      "checkpoint_paths": [],
-      "next_action": "Implement strict bounded category pagination in the controller, previous/next template links and functional regression coverage."
+      "last_observed_head": "0c7f2456163e079b8ea47c521ff88a6662631dcf",
+      "last_checkpoint_at": "2026-09-27T18:53:47.402Z",
+      "checkpoint_paths": [
+        "src/Controller/PublicCategoryDirectoryController.php",
+        "templates/category/index.html.twig",
+        "tests/Controller/PublicCategoryDirectoryPaginationTest.php"
+      ],
+      "next_action": "Await complete Worker CI #914 on exact PR #363 HEAD; diagnose and repair any failure before marking ready.",
+      "last_verified_push_at": "2026-09-27T18:53:47.402Z",
+      "worker_pr": 363,
+      "worker_pr_state": "draft",
+      "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/363",
+      "worker_pr_changed_paths": [
+        "src/Controller/PublicCategoryDirectoryController.php",
+        "templates/category/index.html.twig",
+        "tests/Controller/PublicCategoryDirectoryPaginationTest.php"
+      ],
+      "pr_state": "open",
+      "draft_pr": true,
+      "worker_pr_base_branch": "main",
+      "worker_pr_base_sha": "7b2ca79405fc12d34bce1386157e929e4668f31a",
+      "ci_result": "pending",
+      "ci_attempts": [
+        {
+          "run_id": 36342306709,
+          "run_number": 914,
+          "head": "0c7f2456163e079b8ea47c521ff88a6662631dcf",
+          "base": "7b2ca79405fc12d34bce1386157e929e4668f31a",
+          "result": "in_progress",
+          "validation_pr": 363,
+          "conclusion": null
+        }
+      ],
+      "last_ci_run_id": 36342306709,
+      "ci_run_id": 36342306709,
+      "ci_validation_pr": 363
     }
   ],
   "recovery_queue": [],
