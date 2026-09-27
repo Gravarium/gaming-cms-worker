@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T11:30:46.268Z",
+  "published_at": "2026-09-27T11:32:21.047Z",
   "summary": {
     "total_remaining_worker_tasks": 165,
     "completed_worker_prs_awaiting_trusted_review": 278,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "Repair WCP-521 test identity isolation on the existing feature branch; then rerun complete exact-head Worker CI.",
+    "next_required_action": "Monitor WCP-521 exact-head Worker CI run 36316017303 on HEAD 404420ce940dcf00b2f753596f09de385dff1993.",
     "composition_preparable": 0,
     "immediately_actionable": 20,
     "must_continue": true
@@ -36418,19 +36418,19 @@
       "claim_state": "active",
       "active_base_branch": "main",
       "active_base_sha": "b510875e7b0741b9b19f09429d2204a95df51198",
-      "active_head": "31825c9fdb6aef152fe0604238b7123b3a75fdc7",
+      "active_head": "404420ce940dcf00b2f753596f09de385dff1993",
       "resume_branch": "feature/wcp-521-video-watchlist-privacy-g1",
       "branch_heads": {
         "claim_branch": "b510875e7b0741b9b19f09429d2204a95df51198",
-        "feature_branch": "31825c9fdb6aef152fe0604238b7123b3a75fdc7"
+        "feature_branch": "404420ce940dcf00b2f753596f09de385dff1993"
       },
-      "next_action": "Repair the route test by isolating anonymous, foreign-viewer, and owner requests into separate test clients, retaining private-name non-disclosure and public access assertions; rerun exact-head Worker CI.",
+      "next_action": "Monitor exact-head Worker CI run 36316017303 for HEAD 404420ce940dcf00b2f753596f09de385dff1993; repair only concrete failures within the dedicated video watchlist privacy test.",
       "checkpoint_paths": [
         "tests/Controller/VideoDiscovery/VideoDiscoveryWatchlistPrivacyTest.php"
       ],
-      "last_observed_head": "31825c9fdb6aef152fe0604238b7123b3a75fdc7",
-      "last_checkpoint_at": "2026-09-27T11:26:10.657Z",
-      "last_verified_push_at": "2026-09-27T11:26:10.657Z",
+      "last_observed_head": "404420ce940dcf00b2f753596f09de385dff1993",
+      "last_checkpoint_at": "2026-09-27T11:32:21.047Z",
+      "last_verified_push_at": "2026-09-27T11:32:21.047Z",
       "worker_pr": 313,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/313",
       "draft_pr": true,
@@ -36439,10 +36439,10 @@
       "worker_pr_changed_paths": [
         "tests/Controller/VideoDiscovery/VideoDiscoveryWatchlistPrivacyTest.php"
       ],
-      "ci_run_id": 36315691377,
-      "last_ci_run_id": 36315691377,
-      "ci_result": "failure",
-      "last_ci_result": "failure",
+      "ci_run_id": 36316017303,
+      "last_ci_run_id": 36316017303,
+      "ci_result": "in_progress",
+      "last_ci_result": "in_progress",
       "ci_attempts": [
         {
           "run_id": 36315691377,
@@ -36450,6 +36450,11 @@
           "result": "failure",
           "conclusion": "failure",
           "diagnosis": "PHPUnit owner-route request redirected to /login after repeated loginUser identity switches; PHPStan and PostgreSQL 18 migration validation passed."
+        },
+        {
+          "run_id": 36316017303,
+          "head": "404420ce940dcf00b2f753596f09de385dff1993",
+          "result": "in_progress"
         }
       ]
     }
