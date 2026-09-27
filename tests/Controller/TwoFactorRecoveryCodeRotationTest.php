@@ -12,6 +12,7 @@ use App\Service\SensitiveDataCipher;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\RateLimiter\RateLimiterFactory;
 
@@ -36,11 +37,14 @@ final class TwoFactorRecoveryCodeRotationTest extends WebTestCase
 
         $securityPage = $client->request('GET', '/account/security');
         self::assertResponseIsSuccessful();
-        $passkeysPage = $client->click($securityPage->selectLink('Passkeys verwalten'));
+        $passkeysPath = $this->linkHref($securityPage, 'Passkeys verwalten');
+        $passkeysPage = $client->request('GET', $passkeysPath);
         self::assertResponseIsSuccessful();
         self::assertSelectorExists('a[href="'.self::MANAGE_PATH.'"]');
 
-        $managePage = $client->click($passkeysPage->selectLink('Wiederherstellungscodes verwalten'));
+        $managePath = $this->linkHref($passkeysPage, 'Wiederherstellungscodes verwalten');
+        self::assertSame(self::MANAGE_PATH, $managePath);
+        $managePage = $client->request('GET', $managePath);
         self::assertResponseIsSuccessful();
         self::assertSelectorTextContains('body', 'Du hast noch 2 Wiederherstellungscodes');
 
@@ -99,8 +103,8 @@ final class TwoFactorRecoveryCodeRotationTest extends WebTestCase
         self::assertFalse($currentSession->isRevoked());
         self::assertSame($storedUser->getSecurityVersion(), $currentSession->getSecurityVersion());
 
-        $client->request('GET', '/login/2fa');
-        $challengeToken = (string) $client->getCrawler()->filter('input[name="_token"]')->attr('value');
+        $challenge = $client->request('GET', '/login/2fa');
+        $challengeToken = (string) $challenge->filter('input[name="_token"]')->attr('value');
         $client->request('POST', '/login/2fa', [
             '_token' => $challengeToken,
             'code' => 'DDDD-EEEE-FFFF',
@@ -222,7 +226,9 @@ final class TwoFactorRecoveryCodeRotationTest extends WebTestCase
         $client->request('GET', self::MANAGE_PATH);
         self::assertResponseRedirects('/account/security');
 
-        $client->request('GET', '/account/passkeys');
+        $securityPage = $client->request('GET', '/account/security');
+        $passkeysPath = $this->linkHref($securityPage, 'Passkeys verwalten');
+        $client->request('GET', $passkeysPath);
         self::assertResponseIsSuccessful();
         self::assertSelectorNotExists('a[href="'.self::MANAGE_PATH.'"]');
 
@@ -386,6 +392,16 @@ final class TwoFactorRecoveryCodeRotationTest extends WebTestCase
         $this->userIds[] = $userId;
 
         return $user;
+    }
+
+    private function linkHref(Crawler $page, string $label): string
+    {
+        $href = $page->selectLink($label)->attr('href');
+        if ($href === null || $href === '') {
+            throw new \LogicException('Expected account navigation link was not rendered.');
+        }
+
+        return $href;
     }
 
     private function em(KernelBrowser $client): EntityManagerInterface
