@@ -10,16 +10,16 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T09:15:08.962Z",
+  "published_at": "2026-09-27T09:16:00.012Z",
   "summary": {
-    "total_remaining_worker_tasks": 146,
-    "completed_worker_prs_awaiting_trusted_review": 256,
+    "total_remaining_worker_tasks": 145,
+    "completed_worker_prs_awaiting_trusted_review": 257,
     "recovery_tasks": 0,
-    "unclaimed": 3,
+    "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-491 is actively claimed from exact sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d; implement and run full exact-head Worker CI. The remaining unclaimed FCPs lack required predecessor evidence. Keep all foreign claims untouched.",
+    "next_required_action": "WCP-489 is complete on exact green HEAD b789ffcf6088a1e9a3542cb0c23cd11f97e56c91 (PR #283, CI 36308561704); its claim remains locked until Trusted resolution. The remaining unclaimed FCPs lack required predecessor evidence. Continue with a free, independent worker-only proposal and leave foreign claims untouched.",
     "composition_preparable": 0,
-    "immediately_actionable": 5,
+    "immediately_actionable": 4,
     "must_continue": true
   },
   "rules": {
@@ -31735,7 +31735,7 @@
       "package_id": "WCP-489",
       "title": "Compare site themes from website settings",
       "risk": "medium",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -31819,7 +31819,7 @@
         ]
       },
       "published_at": "2026-09-27T08:59:40.564Z",
-      "claim_state": "active",
+      "claim_state": "locked_until_trusted_resolution",
       "claimed_on": "2026-09-27T08:59:53.343Z",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
@@ -31830,9 +31830,9 @@
         "feature_branch": "b789ffcf6088a1e9a3542cb0c23cd11f97e56c91"
       },
       "last_observed_head": "b789ffcf6088a1e9a3542cb0c23cd11f97e56c91",
-      "next_action": "Inspect full Worker CI run 36308561704 on exact HEAD b789ffcf6088a1e9a3542cb0c23cd11f97e56c91; resolve any remaining failures on this branch and rerun all jobs.",
-      "last_checkpoint_at": "2026-09-27T09:11:44.622Z",
-      "last_verified_push_at": "2026-09-27T09:11:44.622Z",
+      "next_action": "Await Trusted review and integration CI; keep the claim locked until Trusted explicitly resolves it.",
+      "last_checkpoint_at": "2026-09-27T09:16:00.012Z",
+      "last_verified_push_at": "2026-09-27T09:16:00.012Z",
       "checkpoint_paths": [
         "src/Controller/AdminThemePreviewController.php",
         "templates/admin/settings/edit.html.twig",
@@ -31847,12 +31847,12 @@
         "templates/admin/settings/theme_preview.html.twig",
         "tests/Controller/AdminThemePreviewTest.php"
       ],
-      "draft_pr": true,
+      "draft_pr": false,
       "pr_state": "open",
       "ci_run_id": 36308561704,
       "last_ci_run_id": 36308561704,
-      "ci_result": "queued",
-      "last_ci_result": "queued",
+      "ci_result": "success",
+      "last_ci_result": "success",
       "ci_attempts": [
         {
           "run_id": 36308229164,
@@ -31872,9 +31872,66 @@
         {
           "run_id": 36308561704,
           "head": "b789ffcf6088a1e9a3542cb0c23cd11f97e56c91",
-          "result": "queued"
+          "result": "success"
         }
-      ]
+      ],
+      "final_head": "b789ffcf6088a1e9a3542cb0c23cd11f97e56c91",
+      "final_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "final_sanitized_main_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "changed_paths": [
+        "src/Controller/AdminThemePreviewController.php",
+        "templates/admin/settings/edit.html.twig",
+        "templates/admin/settings/theme_preview.html.twig",
+        "tests/Controller/AdminThemePreviewTest.php"
+      ],
+      "final_changed_paths": [
+        "src/Controller/AdminThemePreviewController.php",
+        "templates/admin/settings/edit.html.twig",
+        "templates/admin/settings/theme_preview.html.twig",
+        "tests/Controller/AdminThemePreviewTest.php"
+      ],
+      "completed_at": "2026-09-27T09:16:00.012Z",
+      "test_results": {
+        "phpunit": "433 tests, 1,953 assertions, zero failures (one PHPUnit deprecation and one notice).",
+        "phpstan": "Level 8 passed with no errors.",
+        "php_symfony": "Worker PHP/Symfony validation passed, including Twig lint, dependency container, AssetMapper compilation, Doctrine mapping and full application tests.",
+        "postgres18": "All 39 migrations executed; 470 SQL queries; migration status successful.",
+        "exact_head_ci": {
+          "run_id": 36308561704,
+          "head": "b789ffcf6088a1e9a3542cb0c23cd11f97e56c91",
+          "result": "success"
+        }
+      },
+      "completion_evidence": {
+        "exact_sanitized_main_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+        "exact_proposal_base_branch": "main",
+        "exact_proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+        "final_head_sha": "b789ffcf6088a1e9a3542cb0c23cd11f97e56c91",
+        "changed_paths": [
+          "src/Controller/AdminThemePreviewController.php",
+          "templates/admin/settings/edit.html.twig",
+          "templates/admin/settings/theme_preview.html.twig",
+          "tests/Controller/AdminThemePreviewTest.php"
+        ],
+        "cumulative_pr_paths": [
+          "src/Controller/AdminThemePreviewController.php",
+          "templates/admin/settings/edit.html.twig",
+          "templates/admin/settings/theme_preview.html.twig",
+          "tests/Controller/AdminThemePreviewTest.php"
+        ],
+        "worker_pr": 283,
+        "ci_run_id": 36308561704,
+        "ci_result": "success",
+        "php_symfony_job": "success: 433 tests, 1,953 assertions, zero failures; PHPStan level 8 no errors",
+        "postgresql_job": "success: 39 migrations executed, 470 SQL queries; migration status successful",
+        "workflow": "Full Worker CI passed on exact final HEAD."
+      },
+      "completion_summary": "Added a direct read-only theme comparison from Website Settings. The page shows all bundled theme definitions and visual token samples using current site branding, marks the effective active theme, and links back to the existing selector. Authorization, GET-only behavior, cache/privacy headers and no-persistence behavior are covered.",
+      "open_limitations": [
+        "The new page is a compact sample of bundled theme tokens, not a full independent render of every page/layout; the existing Layout Workshop remains the full per-page preview.",
+        "Third-party or dynamically installed themes are not executed or previewed by this worker change."
+      ],
+      "trusted_follow_up": "Map WCP-489 into the canonical Trusted queue, review the CMS_SETTINGS_MANAGE route, static bundled-theme CSS classes, read-only persistence boundary and template links, then run full Trusted CI on a fresh Trusted feature branch. If dynamic themes are introduced later, validate a public token contract and preserve the no-code-execution boundary."
     },
     {
       "priority": 490,
