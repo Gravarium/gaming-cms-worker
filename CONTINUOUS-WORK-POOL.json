@@ -13,11 +13,11 @@
   "published_at": "2026-09-27T05:51:04.811Z",
   "summary": {
     "total_remaining_worker_tasks": 140,
-    "completed_worker_prs_awaiting_trusted_review": 239,
+    "completed_worker_prs_awaiting_trusted_review": 240,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-474 is active on a separate account-security path. Preserve active claims WCP-383, WCP-401, WCP-439, WCP-463, and WCP-473, plus completed claims WCP-471/WCP-472; continue WCP-474 from its exact feature branch.",
+    "next_required_action": "WCP-473 is complete on green exact-head Worker PR #266 and remains claim-locked. WCP-471 and WCP-472 are also complete awaiting Trusted review. Continue autonomously with the next dependency-safe package or a disjoint Worker-only proposal.",
     "composition_preparable": 0,
     "immediately_actionable": 4,
     "must_continue": true
@@ -28901,7 +28901,7 @@
       "package_id": "WCP-473",
       "title": "Protect guild application review decisions with authorization and route-specific CSRF",
       "risk": "medium",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [
         "WCP-347"
       ],
@@ -28985,12 +28985,12 @@
       },
       "published_at": "2026-09-27T05:45:10.621Z",
       "claimed_on": "2026-09-27T05:45:10.621Z",
-      "claim_state": "active",
+      "claim_state": "locked_until_trusted_resolution",
       "active_base_branch": "feature/wcp-347-guild-application-note-boundary-g1",
       "active_base_sha": "b7fcd30d4275a6de6398523593e3f48c0addab3b",
       "active_head": "b0dbbd2ab6d2d1d42a2964712352c512dbc84ad8",
       "resume_branch": "feature/wcp-473-guild-application-decision-security-g1",
-      "last_checkpoint_at": "2026-09-27T05:48:42.379Z",
+      "last_checkpoint_at": "2026-09-27T05:52:56.916Z",
       "checkpoint_paths": [
         "tests/Controller/AdminGuildApplicationDecisionSecurityTest.php"
       ],
@@ -28998,24 +28998,78 @@
         "claim_branch": "b7fcd30d4275a6de6398523593e3f48c0addab3b",
         "feature_branch": "b0dbbd2ab6d2d1d42a2964712352c512dbc84ad8"
       },
-      "next_action": "Wait for exact-head Worker CI run 36298295936 on b0dbbd2ab6d2d1d42a2964712352c512dbc84ad8; inspect functional tests, PHPStan and PostgreSQL migration jobs.",
+      "next_action": "Await Trusted review and integration validation; keep this claim locked until Trusted explicitly integrates, cancels or transfers it. Continue autonomously from a separate claim.",
       "last_observed_head": "b0dbbd2ab6d2d1d42a2964712352c512dbc84ad8",
       "last_verified_push_at": "2026-09-27T05:48:42.379Z",
       "worker_pr": 266,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/266",
-      "draft_pr": true,
-      "pr_state": "open_draft_unmerged",
+      "draft_pr": false,
+      "pr_state": "open_ready_unmerged",
       "ci_run_id": 36298295936,
       "last_ci_run_id": 36298295936,
-      "ci_result": "in_progress",
-      "last_ci_result": "in_progress",
+      "ci_result": "success",
+      "last_ci_result": "success",
       "ci_attempts": [
         {
           "run_id": 36298295936,
           "head": "b0dbbd2ab6d2d1d42a2964712352c512dbc84ad8",
-          "result": "in_progress"
+          "result": "success"
         }
-      ]
+      ],
+      "final_head": "b0dbbd2ab6d2d1d42a2964712352c512dbc84ad8",
+      "final_base_sha": "b7fcd30d4275a6de6398523593e3f48c0addab3b",
+      "final_sanitized_main_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "final_changed_paths": [
+        "tests/Controller/AdminGuildApplicationDecisionSecurityTest.php"
+      ],
+      "changed_paths": [
+        "tests/Controller/AdminGuildApplicationDecisionSecurityTest.php"
+      ],
+      "worker_pr_changed_paths": [
+        "src/Controller/AdminGuildApplicationController.php",
+        "tests/Controller/GuildApplicationInternalNotesBoundaryTest.php",
+        "tests/Controller/AdminGuildApplicationDecisionSecurityTest.php"
+      ],
+      "completed_at": "2026-09-27T05:52:56.916Z",
+      "test_results": {
+        "phpunit": "433 tests, 1961 assertions, 0 failures; one deprecation and one notice.",
+        "phpstan": "Level 8 passed with no errors.",
+        "php_symfony": "Worker PHP/Symfony validation job passed on exact final HEAD.",
+        "postgres18": "PostgreSQL 18 completed all 39 migrations; 0 unavailable.",
+        "exact_head_ci": {
+          "run_id": 36298295936,
+          "head": "b0dbbd2ab6d2d1d42a2964712352c512dbc84ad8",
+          "result": "success"
+        }
+      },
+      "completion_evidence": {
+        "exact_sanitized_main_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+        "exact_proposal_base_branch": "feature/wcp-347-guild-application-note-boundary-g1",
+        "exact_proposal_base_sha": "b7fcd30d4275a6de6398523593e3f48c0addab3b",
+        "dependency_worker_pr": 141,
+        "dependency_ci_run_id": 36253376446,
+        "dependency_ci_result": "success",
+        "final_head_sha": "b0dbbd2ab6d2d1d42a2964712352c512dbc84ad8",
+        "changed_paths": [
+          "tests/Controller/AdminGuildApplicationDecisionSecurityTest.php"
+        ],
+        "cumulative_pr_paths": [
+          "src/Controller/AdminGuildApplicationController.php",
+          "tests/Controller/GuildApplicationInternalNotesBoundaryTest.php",
+          "tests/Controller/AdminGuildApplicationDecisionSecurityTest.php"
+        ],
+        "worker_pr": 266,
+        "ci_run_id": 36298295936,
+        "ci_result": "success",
+        "php_symfony_job": "success: 433 tests, 1,961 assertions; PHPStan level 8 no errors",
+        "postgresql_job": "success: 39 migrations, 0 unavailable",
+        "guild_application_security_coverage": "CMS_CONTENT-only user is denied application listing, review and accept/reject routes; authorized review rejects missing, invalid and decision-purpose tokens without changing assignment, notes, status or audit. Accept/reject reject missing, invalid and review-purpose tokens without changes; rendered decision tokens accept/reject synthetic records, with acceptance converting exactly one guild member. Synthetic games, guilds, applications, members, users and audit rows are cleaned up."
+      },
+      "completion_summary": "Stacked functional security coverage for guild application admin permission, review CSRF, and per-application accept/reject CSRF, including state-preservation and successful rendered-token decision paths. WCP-473 adds one test file on the exact green WCP-347 predecessor.",
+      "open_limitations": [
+        "Awaiting Trusted review and Trusted integration CI; this stacked PR includes the WCP-347 predecessor changes."
+      ],
+      "trusted_follow_up": "Preserve CMS_GAMING_MANAGE and separate review/decision CSRF purposes; retain transactional single-conversion behavior and run full Trusted CI."
     },
     {
       "priority": 474,
