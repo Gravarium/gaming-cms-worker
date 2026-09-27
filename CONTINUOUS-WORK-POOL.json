@@ -10,7 +10,7 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T14:43:17.244Z",
+  "published_at": "2026-09-27T14:43:57.795Z",
   "summary": {
     "total_remaining_worker_tasks": 167,
     "completed_worker_prs_awaiting_trusted_review": 293,
@@ -40639,7 +40639,7 @@
       "package_id": "WCP-546",
       "title": "Add a content search widget to the Page Builder",
       "risk": "low",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -40719,7 +40719,7 @@
       },
       "published_at": "2026-09-27T14:34:48.706Z",
       "claimed_on": "2026-09-27T14:34:48.706Z",
-      "claim_state": "active",
+      "claim_state": "locked_until_trusted_resolution",
       "active_base_branch": "main",
       "active_base_sha": "b510875e7b0741b9b19f09429d2204a95df51198",
       "active_head": "571e23b96be64c4e473df33c1f4000a0eab33771",
@@ -40729,25 +40729,50 @@
         "feature_branch": "571e23b96be64c4e473df33c1f4000a0eab33771"
       },
       "last_observed_head": "571e23b96be64c4e473df33c1f4000a0eab33771",
-      "last_checkpoint_at": "2026-09-27T14:36:02.055Z",
+      "last_checkpoint_at": "2026-09-27T14:43:57.795Z",
       "checkpoint_paths": [
         "src/Widget/PublicContentSearchWidgetProvider.php",
         "templates/widget/content_search.html.twig",
         "tests/Widget/PublicContentSearchWidgetTest.php"
       ],
-      "next_action": "Open a draft Worker PR from feature/wcp-546-content-search-widget-g1 against main and verify full exact-head CI on 571e23b96be64c4e473df33c1f4000a0eab33771.",
-      "ci_attempts": [],
-      "worker_pr_state": "not_created",
-      "last_ci_result": "not_run",
+      "next_action": "Worker PR #337 is complete on exact green HEAD 571e23b96be64c4e473df33c1f4000a0eab33771; Worker CI run #841 / 36326523818 passed both jobs. Keep the claim locked until Trusted explicitly integrates, cancels or transfers it, and continue the autonomous Worker loop without merge or deployment.",
+      "ci_attempts": [
+        {
+          "run_id": 36326523818,
+          "run_number": 841,
+          "head": "571e23b96be64c4e473df33c1f4000a0eab33771",
+          "base": "b510875e7b0741b9b19f09429d2204a95df51198",
+          "result": "success",
+          "conclusion": "success",
+          "php_symfony_job": "success",
+          "phpstan": "success",
+          "phpunit": "success",
+          "phpunit_tests": 537,
+          "assertions": 2239,
+          "phpunit_deprecations": 1,
+          "phpunit_notices": 1,
+          "postgresql_18_migrations": "success",
+          "migrations_executed": 54,
+          "sql_queries": 750
+        }
+      ],
+      "worker_pr_state": "ready_for_review",
+      "last_ci_result": "success",
       "worker_pr_changed_paths": [
         "src/Widget/PublicContentSearchWidgetProvider.php",
         "templates/widget/content_search.html.twig",
         "tests/Widget/PublicContentSearchWidgetTest.php"
       ],
       "worker_pr_base_branch": "main",
-      "worker_pr": null,
-      "worker_pr_url": null,
-      "last_verified_push_at": "2026-09-27T14:36:02.055Z"
+      "worker_pr": 337,
+      "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/337",
+      "last_verified_push_at": "2026-09-27T14:36:02.055Z",
+      "pr_state": "open",
+      "draft_pr": false,
+      "ci_run_id": 36326523818,
+      "ci_result": "success",
+      "final_head": "571e23b96be64c4e473df33c1f4000a0eab33771",
+      "completed_at": "2026-09-27T14:43:57.795Z"
     },
     {
       "priority": 547,
