@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T19:06:40.152Z",
+  "published_at": "2026-09-27T19:08:27.006Z",
   "summary": {
     "total_remaining_worker_tasks": 173,
-    "completed_worker_prs_awaiting_trusted_review": 301,
+    "completed_worker_prs_awaiting_trusted_review": 302,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "Await complete exact-head Worker CI #916 / 36343107535 for PR #365.",
+    "next_required_action": "WCP-571 is complete with exact-head green CI and PR #365; re-evaluate dependencies and continue autonomous Worker proposals.",
     "composition_preparable": 0,
     "immediately_actionable": 29,
     "must_continue": true
@@ -45982,7 +45982,7 @@
       "package_id": "WCP-571",
       "title": "Test escaping of public game search result metadata",
       "risk": "low",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -46058,7 +46058,7 @@
       },
       "published_at": "2026-09-27T19:05:13.042Z",
       "claimed_on": "2026-09-27T19:05:13.042Z",
-      "claim_state": "active",
+      "claim_state": "locked_until_trusted_resolution",
       "active_base_branch": "main",
       "active_base_sha": "7b2ca79405fc12d34bce1386157e929e4668f31a",
       "active_head": "7cfd663bfe3beedd907a230b0fe9ad12bd6bbf74",
@@ -46068,37 +46068,40 @@
         "feature_branch": "7cfd663bfe3beedd907a230b0fe9ad12bd6bbf74"
       },
       "last_observed_head": "7cfd663bfe3beedd907a230b0fe9ad12bd6bbf74",
-      "last_checkpoint_at": "2026-09-27T19:06:40.152Z",
+      "last_checkpoint_at": "2026-09-27T19:08:27.006Z",
       "checkpoint_paths": [
         "tests/Controller/PublicGameCatalogueSearchTest.php"
       ],
-      "next_action": "Await complete exact-head Worker CI #916 / 36343107535 for PR #365.",
-      "last_verified_push_at": "2026-09-27T19:06:22.005Z",
+      "next_action": "Await Trusted review and independent validation of PR #365; continue autonomous Worker scheduling on verified dependency evidence without merging or deploying.",
+      "last_verified_push_at": "2026-09-27T19:08:27.006Z",
       "worker_pr": 365,
-      "worker_pr_state": "draft",
+      "worker_pr_state": "ready_for_review",
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/365",
       "worker_pr_changed_paths": [
         "tests/Controller/PublicGameCatalogueSearchTest.php"
       ],
       "pr_state": "open",
-      "draft_pr": true,
+      "draft_pr": false,
       "worker_pr_base_branch": "main",
       "worker_pr_base_sha": "7b2ca79405fc12d34bce1386157e929e4668f31a",
-      "ci_result": "in_progress",
+      "ci_result": "success",
       "ci_attempts": [
         {
           "run_id": 36343107535,
           "run_number": 916,
           "head": "7cfd663bfe3beedd907a230b0fe9ad12bd6bbf74",
           "base": "7b2ca79405fc12d34bce1386157e929e4668f31a",
-          "result": "in_progress",
+          "result": "success",
           "validation_pr": 365,
-          "conclusion": null
+          "conclusion": "success"
         }
       ],
       "ci_run_id": 36343107535,
       "last_ci_run_id": 36343107535,
-      "ci_validation_pr": 365
+      "ci_validation_pr": 365,
+      "last_ci_result": "success",
+      "completed_at": "2026-09-27T19:08:27.006Z",
+      "worker_completion_summary": "Exact-head Worker CI #916 / 36343107535 passed on 7cfd663bfe3beedd907a230b0fe9ad12bd6bbf74: 737 tests, 4,635 assertions, 0 failures/errors (1 PHPUnit deprecation, 3 notices); PHPStan reported no errors; PostgreSQL 18 applied 57 migrations with 878 SQL queries. PR #365 is open and ready for Trusted review from main@7b2ca79405fc12d34bce1386157e929e4668f31a; exactly one allowlisted test path changed, with no template or runtime changes."
     }
   ],
   "recovery_queue": [],
