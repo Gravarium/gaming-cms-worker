@@ -10,7 +10,7 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T01:01:55.468Z",
+  "published_at": "2026-09-27T01:05:01.777Z",
   "summary": {
     "total_remaining_worker_tasks": 139,
     "completed_worker_prs_awaiting_trusted_review": 211,
@@ -24468,7 +24468,7 @@
       "suggested_branch": "feature/wcp-443-video-deletion-security-g1",
       "base_branch": "main",
       "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-      "objective": "Add functional regressions for the existing admin video deletion route: enforce CMS_VIDEO_MANAGE even with valid CSRF, reject missing and invalid per-video CSRF tokens without mutation, and preserve shared media plus unselected sibling videos when one video is deleted. Change tests only.",
+      "objective": "Add functional regressions for the existing admin video deletion route: require CMS_VIDEO_MANAGE on admin access, reject missing and invalid per-video CSRF tokens without mutation, and preserve shared media plus unselected sibling videos when one video is deleted. Change tests only.",
       "allowed_paths": [
         "tests/Controller/AdminVideoDeletionSecurityTest.php"
       ],
@@ -24490,7 +24490,7 @@
         "config/"
       ],
       "deliverables": [
-        "An authenticated CMS_CONTENT_MANAGE-only user cannot delete a video, even when the request carries a valid token for that video.",
+        "An authenticated CMS_CONTENT_MANAGE-only user is denied access to video administration.",
         "Missing and invalid delete-video-{id} CSRF tokens produce 403 and leave the video and media asset unchanged.",
         "A genuine token rendered for the selected video deletes only that video; a sibling video and the centrally managed MediaAsset remain.",
         "Synthetic user, video, and media fixtures are cleaned up."
@@ -24531,23 +24531,23 @@
       "claim_state": "active",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-      "active_head": "f51a4a84f3d2dbbd865f3c614d4b786fcfb80b5d",
+      "active_head": "0d67c7933e9a33ba78d9a6803cdb8c280277243e",
       "resume_branch": "feature/wcp-443-video-deletion-security-g1",
-      "last_checkpoint_at": "2026-09-27T01:01:55.468Z",
+      "last_checkpoint_at": "2026-09-27T01:05:01.777Z",
       "checkpoint_paths": [
         "tests/Controller/AdminVideoDeletionSecurityTest.php"
       ],
       "branch_heads": {
         "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-        "feature_branch": "f51a4a84f3d2dbbd865f3c614d4b786fcfb80b5d"
+        "feature_branch": "0d67c7933e9a33ba78d9a6803cdb8c280277243e"
       },
-      "next_action": "Re-run exact-head Worker CI on f51a4a84f3d2dbbd865f3c614d4b786fcfb80b5d; the prior failure was SessionNotFound before token creation, now addressed by establishing the authenticated request context.",
-      "last_verified_push_at": "2026-09-27T01:01:55.468Z",
+      "next_action": "Run exact-head Worker CI on 0d67c7933e9a33ba78d9a6803cdb8c280277243e; the permission test no longer generates a CSRF token outside an active request.",
+      "last_verified_push_at": "2026-09-27T01:05:01.777Z",
       "worker_pr": 237,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/237",
       "pr_state": "open_draft_unmerged",
       "draft_pr": true,
-      "last_ci_run_id": 36284117010,
+      "last_ci_run_id": 36284280905,
       "ci_result": "failure",
       "ci_attempts": [
         {
@@ -24555,6 +24555,12 @@
           "head": "110bb944c803bf32cab4635f8ee98c5494f9b8e9",
           "result": "failure",
           "reason": "The valid-CSRF permission test requested a CSRF token before a session existed; it now first makes an authenticated admin request, verifies the role denial, then obtains the token."
+        },
+        {
+          "run_id": 36284280905,
+          "head": "f51a4a84f3d2dbbd865f3c614d4b786fcfb80b5d",
+          "result": "failure",
+          "reason": "CsrfTokenManagerInterface still had no session after the denied request. The permission regression now asserts the protected admin GET directly; mutation CSRF checks remain isolated with an authorized actor."
         }
       ]
     }
