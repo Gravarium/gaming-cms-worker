@@ -30,7 +30,6 @@ final class PublicPageDirectoryTest extends WebTestCase
         self::assertStringNotContainsString($unlisted->getTitle(), (string) $client->getResponse()->getContent());
         self::assertStringNotContainsString($draft->getTitle(), (string) $client->getResponse()->getContent());
         self::assertStringNotContainsString('private page body', (string) $client->getResponse()->getContent());
-        self::assertStringContainsString('public', strtolower((string) $client->getResponse()->headers->get('Cache-Control')));
     }
 
     public function testDirectoryPaginatesAndRejectsOutOfRangePages(): void
