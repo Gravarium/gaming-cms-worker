@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T14:23:49.244Z",
+  "published_at": "2026-09-27T14:24:25.482Z",
   "summary": {
     "total_remaining_worker_tasks": 167,
     "completed_worker_prs_awaiting_trusted_review": 291,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "Worker CI run #834 / 36325553002 is running on exact HEAD e7b99a9922991bf43c97b382ee82ff5d58b7d565; inspect both jobs, fix any failures and rerun on the resulting exact head.",
+    "next_required_action": "Fix the pagination fixture search to match all seeded addresses using the unique suffix and clean up by reloading persisted IDs with the current EntityManager; push a new exact head and rerun full Worker CI.",
     "composition_preparable": 0,
     "immediately_actionable": 28,
     "must_continue": true
@@ -40237,18 +40237,24 @@
         "templates/admin/newsletter/preview.html.twig",
         "tests/Controller/AdminNewsletterSubscriptionDirectoryTest.php"
       ],
-      "next_action": "Worker CI run #834 / 36325553002 is running on exact HEAD e7b99a9922991bf43c97b382ee82ff5d58b7d565; inspect both jobs, fix any failures and rerun on the resulting exact head.",
+      "next_action": "Fix the pagination fixture search to match all seeded addresses using the unique suffix and clean up by reloading persisted IDs with the current EntityManager; push a new exact head and rerun full Worker CI.",
       "worker_pr_state": "open",
       "last_verified_push_at": "2026-09-27T14:19:53.517Z",
-      "ci_result": "pending",
-      "last_ci_result": "in_progress",
+      "ci_result": "failure",
+      "last_ci_result": "failure",
       "ci_attempts": [
         {
           "run_id": 36325553002,
           "run_number": 834,
           "head": "e7b99a9922991bf43c97b382ee82ff5d58b7d565",
           "base": "b510875e7b0741b9b19f09429d2204a95df51198",
-          "result": "in_progress"
+          "result": "failure",
+          "conclusion": "failure",
+          "phpunit_tests": 547,
+          "assertions": 2342,
+          "phpstan": "passed",
+          "postgresql_18_migrations": "passed",
+          "summary": "The pagination test searched for directory-{suffix}, but fixture emails contain directory-{number}-{suffix}, so the expected second page had zero rows. Its finally block also tried removing detached ORM entities after requests. Search by the unique suffix and reload persisted IDs in cleanup."
         }
       ],
       "worker_pr": 336,
