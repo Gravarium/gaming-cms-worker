@@ -26104,7 +26104,7 @@
       "suggested_branch": "feature/wcp-454-login-throttling-g1",
       "base_branch": "main",
       "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-      "objective": "Add functional regression coverage proving the existing /login firewall rate limiter blocks repeated wrong-password attempts against an existing account after its configured threshold. Submit through the rendered form with valid CSRF; change tests only.",
+      "objective": "Add functional regression coverage proving the existing /login firewall rate limiter blocks repeated wrong-password attempts against an existing account after its configured threshold. Symfony 7.4 reports the over-threshold attempt through TooManyLoginAttemptsAuthenticationException and the default failure redirect; change tests only.",
       "allowed_paths": [
         "tests/Controller/LoginThrottlingSecurityTest.php"
       ],
@@ -26127,8 +26127,9 @@
         "public/uploads/"
       ],
       "deliverables": [
-        "Repeated invalid password attempts for a synthetic existing account are accepted as authentication failures until the configured threshold and then produce HTTP 429.",
-        "Each request uses the rendered login form and its valid CSRF token; the test confirms the account is not authenticated.",
+        "Repeated invalid password attempts for a synthetic existing account are accepted as authentication failures through the configured threshold and are then rejected by the login throttler.",
+        "Each request uses the rendered login form and its valid CSRF token; the test verifies the throttle exception and that the account remains unauthenticated.",
+        "The default Symfony failure handler redirects the throttled attempt to /login; do not require an HTTP 429 response.",
         "The synthetic user is removed; the rate-limit key is isolated by randomized email and test-only request context.",
         "No authentication, rate-limit configuration, controller, template or production behavior is changed."
       ],
@@ -26140,7 +26141,7 @@
       "completion_report": [
         "Exact sanitized main base SHA and final Worker HEAD SHA.",
         "Complete changed-path list and Worker PR.",
-        "Configured threshold behavior, HTTP 429 and unauthenticated account result.",
+        "Configured threshold behavior, TooManyLoginAttemptsAuthenticationException, redirect response and unauthenticated account result.",
         "Exact-head PHPUnit, PHPStan and full Worker CI.",
         "Remaining Trusted integration work."
       ],
@@ -26170,18 +26171,18 @@
       "claim_state": "active",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-      "active_head": "f81fc6f5f166aab001e77622eb36052d8c7ba9f4",
+      "active_head": "66e5007255323b2475f7d7ef5ca794ed0850706e",
       "resume_branch": "feature/wcp-454-login-throttling-g1",
-      "last_checkpoint_at": "2026-09-27T02:33:13.072Z",
+      "last_checkpoint_at": "2026-09-27T02:39:47.927Z",
       "checkpoint_paths": [
         "tests/Controller/LoginThrottlingSecurityTest.php"
       ],
       "branch_heads": {
         "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-        "feature_branch": "f81fc6f5f166aab001e77622eb36052d8c7ba9f4"
+        "feature_branch": "66e5007255323b2475f7d7ef5ca794ed0850706e"
       },
-      "next_action": "Inspect exact-head Worker CI run 36288747908 on f81fc6f5f166aab001e77622eb36052d8c7ba9f4; repair any concrete failure before completion.",
-      "last_verified_push_at": "2026-09-27T02:33:13.072Z",
+      "next_action": "Inspect exact-head Worker CI run 36289122381 on 66e5007255323b2475f7d7ef5ca794ed0850706e; repair any concrete failure before completion.",
+      "last_verified_push_at": "2026-09-27T02:39:47.927Z",
       "worker_pr": 247,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/247",
       "draft_pr": true,
@@ -26195,12 +26196,20 @@
         {
           "run_id": 36288747908,
           "head": "f81fc6f5f166aab001e77622eb36052d8c7ba9f4",
+          "result": "failure",
+          "diagnosis": "The test correctly observed generic invalid-credential redirects, but Symfony's default login failure handler also redirects after throttling; requiring HTTP 429 contradicted the framework behavior.",
+          "remediated_in_head": "66e5007255323b2475f7d7ef5ca794ed0850706e"
+        },
+        {
+          "run_id": 36289122381,
+          "head": "66e5007255323b2475f7d7ef5ca794ed0850706e",
           "result": "in_progress"
         }
       ],
       "ci_result": "in_progress",
-      "last_ci_run_id": 36288747908,
-      "ci_run_id": 36288747908
+      "last_ci_run_id": 36289122381,
+      "ci_run_id": 36289122381,
+      "published_at": "2026-09-27T02:39:47.927Z"
     },
     {
       "priority": 455,
