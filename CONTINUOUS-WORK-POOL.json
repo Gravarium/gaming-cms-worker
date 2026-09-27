@@ -10,16 +10,16 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T02:37:19.926Z",
+  "published_at": "2026-09-27T02:40:55.750Z",
   "summary": {
-    "total_remaining_worker_tasks": 141,
-    "completed_worker_prs_awaiting_trusted_review": 222,
+    "total_remaining_worker_tasks": 140,
+    "completed_worker_prs_awaiting_trusted_review": 223,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-455 is claimed on exact sanitized main; create its exclusive branches and implement backup-inventory search, verification filters and pagination.",
+    "next_required_action": "WCP-455 is complete on green exact-head Worker PR #249; all five remaining FCP assignments are dependency-blocked. Select an independent existing-module gap and publish a collision-checked WCP proposal.",
     "composition_preparable": 0,
-    "immediately_actionable": 6,
+    "immediately_actionable": 5,
     "must_continue": true
   },
   "rules": {
@@ -26216,7 +26216,7 @@
       "package_id": "WCP-455",
       "title": "Search and paginate the complete backup inventory",
       "risk": "medium",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -26262,10 +26262,12 @@
         "PHPStan level 8, complete Worker CI and PostgreSQL 18 migration-chain validation on the exact final HEAD."
       ],
       "completion_report": [
-        "Exact sanitized main base SHA and final Worker HEAD SHA.",
-        "Complete changed-path list and Worker PR.",
-        "Targeted test, PHPStan and full Worker CI results for the exact final HEAD.",
-        "Unresolved risks or assumptions, remaining Trusted integration review, and explicit confirmation that restore remains server-side/manual."
+        "Exact base main f1a246c64527ef3ad51f7490773d9bbf9d42be5d; exact final feature HEAD ca1ec308fba49a0da26f5ae98982aaff866ecaf4.",
+        "Worker PR #249 is open, ready for review, unmerged and targets sanitized main.",
+        "Exact-head Worker CI run 36289029003 succeeded: 435 PHPUnit tests, 1887 assertions, zero failures/errors; PHPStan level 8 no errors; PHP/Symfony and PostgreSQL 18 jobs green; 39 migrations and 470 SQL queries.",
+        "Changed paths: src/Backup/BackupInventoryBrowser.php, src/Controller/AdminBackupController.php, templates/admin/backups/index.html.twig, tests/Backup/BackupInventoryBrowserTest.php.",
+        "Read-only sanitized inventory browsing only; existing CMS_CONNECTORS_MANAGE authorization retained. WCP-107 LocalBackupInventory code and restore boundary remain unchanged.",
+        "Trusted follow-up: transfer through a fresh Trusted feature branch, confirm compatibility with the trusted inventory reader and run full trusted CI. No deployment."
       ],
       "immutable_constraints": [
         "trusted-main-is-the-only-integration-and-deployment-source",
@@ -26292,13 +26294,13 @@
           "tests/Backup/BackupInventoryBrowserTest.php"
         ]
       },
-      "claim_state": "active",
+      "claim_state": "locked_until_trusted_resolution",
       "claimed_on": "2026-09-27T02:27:49.835Z",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
       "active_head": "ca1ec308fba49a0da26f5ae98982aaff866ecaf4",
       "resume_branch": "feature/wcp-455-backup-inventory-browser-g1",
-      "last_checkpoint_at": "2026-09-27T02:37:19.926Z",
+      "last_checkpoint_at": "2026-09-27T02:40:55.750Z",
       "checkpoint_paths": [
         "src/Backup/BackupInventoryBrowser.php",
         "src/Controller/AdminBackupController.php",
@@ -26309,11 +26311,11 @@
         "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
         "feature_branch": "ca1ec308fba49a0da26f5ae98982aaff866ecaf4"
       },
-      "next_action": "Run 633 is pending for exact HEAD ca1ec308fba49a0da26f5ae98982aaff866ecaf4; review its complete PHP/Symfony and PostgreSQL 18 results.",
-      "last_verified_push_at": "2026-09-27T02:37:19.926Z",
+      "next_action": "Claim remains locked until Trusted explicitly integrates, cancels or transfers it; Trusted follow-up is described in Worker PR #249.",
+      "last_verified_push_at": "2026-09-27T02:40:55.750Z",
       "worker_pr": 249,
       "ci_run_id": 36289029003,
-      "ci_result": "pending",
+      "ci_result": "success",
       "ci_history": [
         {
           "head": "7a3014adf92b36961a4fc30af20f8d82dafc2440",
@@ -26322,7 +26324,9 @@
           "cause": "PHPStan reported an unhandled remaining string in the verification-filter match expression at BackupInventoryBrowser.php:80.",
           "resolution": "normalizeRequest now returns the explicit four-value verification-filter union using an exhaustive match; an adjacent nullable test assertion is guarded."
         }
-      ]
+      ],
+      "final_head": "ca1ec308fba49a0da26f5ae98982aaff866ecaf4",
+      "final_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d"
     }
   ],
   "recovery_queue": [],
