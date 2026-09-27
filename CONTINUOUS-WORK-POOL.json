@@ -44515,14 +44515,14 @@
       "claim_state": "active",
       "active_base_branch": "main",
       "active_base_sha": "7b2ca79405fc12d34bce1386157e929e4668f31a",
-      "active_head": "822ff5c05b2a1e43173d338541598175cfa56f48",
+      "active_head": "fde670469e422416506c099284f6f414331b25e3",
       "branch_heads": {
         "claim_branch": "7b2ca79405fc12d34bce1386157e929e4668f31a",
-        "feature_branch": "822ff5c05b2a1e43173d338541598175cfa56f48"
+        "feature_branch": "fde670469e422416506c099284f6f414331b25e3"
       },
-      "last_observed_head": "822ff5c05b2a1e43173d338541598175cfa56f48",
-      "last_checkpoint_at": "2026-09-27T17:28:16.865Z",
-      "last_verified_push_at": "2026-09-27T17:28:16.865Z",
+      "last_observed_head": "fde670469e422416506c099284f6f414331b25e3",
+      "last_checkpoint_at": "2026-09-27T17:33:33.039Z",
+      "last_verified_push_at": "2026-09-27T17:33:33.039Z",
       "checkpoint_paths": [
         "src/Controller/PublicGameCatalogueSitemapController.php",
         "src/GameCatalogueSitemap/PublicGameCatalogueSitemapQuery.php",
@@ -44539,18 +44539,28 @@
           "base": "7b2ca79405fc12d34bce1386157e929e4668f31a",
           "result": "failure",
           "conclusion": "failure",
-          "failure_summary": "PHPUnit: fixture tie pair crossed from sitemap page 1 to page 2; fixed in test and pushed as 822ff5c."
+          "failure_summary": "The fixture tie pair crossed the page boundary; test assertion corrected."
         },
         {
           "run_id": 36336993849,
           "run_number": 899,
           "head": "822ff5c05b2a1e43173d338541598175cfa56f48",
           "base": "7b2ca79405fc12d34bce1386157e929e4668f31a",
-          "result": "in_progress",
+          "result": "failure",
+          "validation_pr": 353,
+          "conclusion": "failure",
+          "failure_summary": "The test assumed the last fixture was on page 2 despite pre-existing catalogue rows; changed to validate all pages."
+        },
+        {
+          "run_id": 36337371199,
+          "run_number": 901,
+          "head": "fde670469e422416506c099284f6f414331b25e3",
+          "base": "7b2ca79405fc12d34bce1386157e929e4668f31a",
+          "result": "queued",
           "validation_pr": 353
         }
       ],
-      "next_action": "Monitor exact-head Worker CI run #899 / 36336993849 on 822ff5c05b2a1e43173d338541598175cfa56f48; diagnose any remaining failures and rerun after repairs.",
+      "next_action": "Monitor exact-head Worker CI run #901 / 36337371199 on fde670469e422416506c099284f6f414331b25e3; diagnose any remaining failures and rerun after repairs.",
       "resume_branch": "feature/wcp-560-public-game-catalogue-sitemap-g1",
       "worker_pr": 353,
       "worker_pr_state": "draft",
@@ -44569,8 +44579,8 @@
       "pr_state": "open_draft",
       "worker_pr_base_branch": "main",
       "worker_pr_base_sha": "7b2ca79405fc12d34bce1386157e929e4668f31a",
-      "ci_run_id": 36336993849,
-      "last_ci_run_id": 36336993849,
+      "ci_run_id": 36337371199,
+      "last_ci_run_id": 36337371199,
       "ci_validation_pr": 353
     }
   ],
