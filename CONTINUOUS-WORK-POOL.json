@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T08:10:50.393Z",
+  "published_at": "2026-09-27T08:17:18.764Z",
   "summary": {
     "total_remaining_worker_tasks": 141,
     "completed_worker_prs_awaiting_trusted_review": 251,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-485 is claimed on feature/wcp-485-public-content-tag-archive-g1 from exact main HEAD f1a246c64527ef3ad51f7490773d9bbf9d42be5d; implement the public tagged-content archive on the five reserved paths. Other active claims, including WCP-484, remain with their owners.",
+    "next_required_action": "WCP-485 has a coherent checkpoint at f6704a899cf654d0c07d87a1e3d4fe913935b549 on its reserved feature branch; verify the exact remote files, then open a draft PR and run full Worker CI. Other worker claims remain owned by their existing branches.",
     "composition_preparable": 0,
     "immediately_actionable": 4,
     "must_continue": true
@@ -31121,17 +31121,23 @@
       "claim_state": "active",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "f6704a899cf654d0c07d87a1e3d4fe913935b549",
       "resume_branch": "feature/wcp-485-public-content-tag-archive-g1",
       "branch_heads": {
-        "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-        "feature_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d"
+        "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5",
+        "feature_branch": "f6704a899cf654d0c07d87a1e3d4fe913935b549"
       },
-      "last_observed_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-      "last_checkpoint_at": "2026-09-27T08:10:50.393Z",
-      "last_verified_push_at": "2026-09-27T08:10:50.393Z",
-      "checkpoint_paths": [],
-      "next_action": "Implement the dedicated published/listed tag query, generic public archive route/template and detail-page links; add visibility and pagination functional tests, then push a coherent checkpoint."
+      "last_observed_head": "f6704a899cf654d0c07d87a1e3d4fe913935b549",
+      "last_checkpoint_at": "2026-09-27T08:17:18.764Z",
+      "last_verified_push_at": "2026-09-27T08:17:18.764Z",
+      "checkpoint_paths": [
+        "src/Controller/PublicContentTagArchiveController.php",
+        "src/Repository/PublicContentTagArchiveRepository.php",
+        "templates/content/show.html.twig",
+        "templates/content_tag/archive.html.twig",
+        "tests/Controller/PublicContentTagArchiveTest.php"
+      ],
+      "next_action": "Review the exact checkpoint for syntax and scope, then open a draft Worker PR to run focused PHPUnit, PHPStan level 8, full Worker CI and PostgreSQL migration validation; repair any failure on this branch."
     }
   ],
   "recovery_queue": [],
