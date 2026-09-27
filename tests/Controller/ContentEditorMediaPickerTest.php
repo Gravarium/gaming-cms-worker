@@ -141,7 +141,7 @@ final class ContentEditorMediaPickerTest extends WebTestCase
             );
             self::assertSelectorExists('dialog[data-content-editor-target="mediaPickerDialog"]');
             self::assertSelectorExists('[data-content-editor-target="mediaQuery"]');
-            self::assertSelectorExists('[data-content-editor-target="mediaResults"][aria-live="polite"]');
+            self::assertSelectorExists('[data-content-editor-target="mediaStatus"][aria-live="polite"]');
             self::assertSelectorTextContains('.content-editor__toolbar', '+ Medium');
         } finally {
             $this->cleanup($client);
