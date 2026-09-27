@@ -12,14 +12,14 @@
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
   "published_at": "2026-09-27T09:21:02.424Z",
   "summary": {
-    "total_remaining_worker_tasks": 146,
+    "total_remaining_worker_tasks": 147,
     "completed_worker_prs_awaiting_trusted_review": 258,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-492 PR #286 is open on exact HEAD 345716272a86716923dfc66bfb983a60ade0d93d; complete and verify full exact-head Worker CI before marking it ready. Keep all foreign claims untouched.",
+    "next_required_action": "WCP-493 is actively claimed from exact sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d; implement and run full exact-head Worker CI. Keep all foreign claims untouched.",
     "composition_preparable": 0,
-    "immediately_actionable": 5,
+    "immediately_actionable": 6,
     "must_continue": true
   },
   "rules": {
@@ -32363,6 +32363,108 @@
       "last_verified_push_at": "2026-09-27T09:21:02.424Z",
       "ci_run_id": 36309065089,
       "ci_result": "in_progress"
+    },
+    {
+      "priority": 493,
+      "package_id": "WCP-493",
+      "title": "Reorder guild ranks and application questions from the structure screen",
+      "risk": "medium",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-493-guild-structure-order-g1",
+      "suggested_branch": "feature/wcp-493-guild-structure-order-g1",
+      "base_branch": "main",
+      "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "objective": "The existing guild structure page displays ranks and application questions in their configured position, but offers only edit/delete actions; operators have to open each form and hand-change its numeric sort field to rearrange the application or rank order. Add accessible one-step up/down controls on the existing structure screen so operators can reorder ranks and questions directly while preserving each guild's ordering and current default-rank behavior.",
+      "allowed_paths": [
+        "src/Controller/AdminGuildStructureOrderController.php",
+        "templates/admin/gaming/structure/index.html.twig",
+        "tests/Controller/AdminGuildStructureOrderTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/",
+        "src/Entity/",
+        "src/Repository/",
+        "src/Form/",
+        "src/Controller/AdminGuildStructureController.php",
+        "src/Controller/AdminGameCatalogue/",
+        "templates/admin/gaming/index.html.twig",
+        "tests/Controller/PublicGuildRosterPrivacyTest.php"
+      ],
+      "deliverables": [
+        "Add dedicated CMS_GAMING_MANAGE-protected POST routes for moving a guild rank or application question one position up or down; retain the existing guild structure GET route.",
+        "Validate guild ownership and route-specific CSRF before any reorder; keep first/last controls inert and leave cross-guild rows unchanged.",
+        "Persist deterministic contiguous positions in a transaction using current position then id as the stable order; changing rank order must not alter default-rank selection or permissions.",
+        "Add accessible no-JavaScript up/down controls to the existing structure overview for ranks and questions; show disabled controls at list boundaries.",
+        "Add functional authorization, rendered-token move, boundary, invalid-CSRF state-preservation and cross-guild ownership coverage. Do not change schemas, entities, repositories, forms, or other guild/game pages."
+      ],
+      "tests": [
+        "Focused PHPUnit functional coverage for CMS_GAMING_MANAGE access, rendered CSRF move actions, stable rank/question ordering and boundary behavior.",
+        "Negative functional coverage for anonymous/unprivileged access, invalid CSRF with unchanged order, and a row from another guild.",
+        "PHPStan level 8 and complete Worker CI on the exact final HEAD, including PostgreSQL 18 migration-chain validation."
+      ],
+      "completion_report": [
+        "Exact sanitized main base SHA and final Worker HEAD SHA.",
+        "Complete changed-path list and Worker PR.",
+        "Focused and complete test commands/results, PHPStan and exact-head CI run.",
+        "Remaining limitations and Trusted integration follow-up."
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "preserve-CMS_GAMING_MANAGE-and-route-specific-CSRF",
+        "verify-guild-ownership-before-reordering",
+        "preserve-default-rank-permissions-and-member/team associations",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "no-entity-schema-migration-or-shared-gaming-catalogue-changes",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment",
+        "no-private-runtime-or-sensitive-data"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "proposal_kind": "worker_only",
+      "proposal_dependency_evidence": [],
+      "collision_check": {
+        "compared_against": "Fresh continuous/work-pool-v4 blob 954a94efb3a8f82faade1ae6dfda6c0d316a419f, all active and claim-locked allowed paths, exact sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d, and active branch/PR/CI state.",
+        "result": "No active or claim-locked package owns these three exact paths. WCP-401 edits the sibling templates/admin/gaming/index.html.twig and game-catalogue paths; WCP-440/WCP-478/WCP-479/WCP-481 own separate security/default-rank tests; WCP-491 owns only public roster privacy coverage; active WCP-492 is in public video paths. FCP-072 is unclaimed and dependency-blocked with a broad templates/ scope; this package narrows its UI change to templates/admin/gaming/structure/index.html.twig and does not overlap any active claim. A future FCP-072 claimant must revalidate and narrow its scope if WCP-493 remains active.",
+        "paths": [
+          "src/Controller/AdminGuildStructureOrderController.php",
+          "templates/admin/gaming/structure/index.html.twig",
+          "tests/Controller/AdminGuildStructureOrderTest.php"
+        ]
+      },
+      "published_at": "2026-09-27T09:23:34.181Z",
+      "claimed_on": "2026-09-27T09:23:34.181Z",
+      "claim_state": "active",
+      "active_base_branch": "main",
+      "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "resume_branch": "feature/wcp-493-guild-structure-order-g1",
+      "branch_heads": {
+        "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+        "feature_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d"
+      },
+      "last_observed_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "last_checkpoint_at": "2026-09-27T09:23:34.181Z",
+      "checkpoint_paths": [],
+      "next_action": "Implement only the three allowed paths, push a functional checkpoint, then run focused tests and full exact-head Worker CI.",
+      "last_verified_push_at": null
     }
   ],
   "recovery_queue": [],
