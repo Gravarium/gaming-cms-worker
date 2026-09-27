@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T13:26:27.900Z",
+  "published_at": "2026-09-27T13:31:05.478Z",
   "summary": {
     "total_remaining_worker_tasks": 166,
     "completed_worker_prs_awaiting_trusted_review": 289,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "Run #815 (ID 36322375359) is checking exact WCP-539 HEAD c5f39150caf42da21f53d730350e650a6e053584; inspect both jobs and repair any failures.",
+    "next_required_action": "Run #816 (ID 36322647238) checks exact WCP-539 HEAD b012538370954f9c71f4acc9198e2703929d5ad6; inspect both jobs and fix any concrete failures.",
     "composition_preparable": 0,
     "immediately_actionable": 27,
     "must_continue": true
@@ -39236,7 +39236,7 @@
       "suggested_branch": "feature/wcp-539-newsletter-report-entrypoint-g1",
       "base_branch": "feature/wcp-528-newsletter-delivery-report-g1",
       "base_sha": "7b9ed0ef7b9cc3ec9ccefb7457ecd052a0b98c0e",
-      "objective": "Finish the newsletter delivery report's admin workflow by adding a clear link from the existing newsletter campaign dashboard to the WCP-528 report. This makes the report reachable through normal CMS navigation, including when there are no campaigns. The report remains read-only and retains its CMS_CONTENT_MANAGE permission and existing notification-module gate.",
+      "objective": "Finish the newsletter delivery report's admin workflow by adding a clear link from the existing newsletter campaign dashboard to /admin/newsletter/delivery-report. This makes the report reachable through normal CMS navigation, including when there are no campaigns. The report remains read-only and retains its CMS_CONTENT_MANAGE permission and existing notification-module gate.",
       "allowed_paths": [
         "templates/admin/newsletter/index.html.twig",
         "tests/Controller/NewsletterDeliveryReportNavigationTest.php"
@@ -39263,7 +39263,7 @@
         "migrations/"
       ],
       "deliverables": [
-        "Add a visible Auslieferungsbericht link to the newsletter admin dashboard, targeting app_admin_notification_newsletter_delivery_report.",
+        "Add a visible Auslieferungsbericht link to the newsletter admin dashboard, targeting the existing /admin/newsletter/delivery-report endpoint.",
         "Keep the link visible when the campaign list is empty, so administrators can reach the report before the first campaign.",
         "Add a functional test proving an authorized content manager can follow the dashboard link to the report and see a known campaign.",
         "Do not alter the report implementation, permissions, delivery behavior, recipient privacy, database or Trusted-only files."
@@ -39319,30 +39319,39 @@
       "claim_state": "active",
       "active_base_branch": "feature/wcp-528-newsletter-delivery-report-g1",
       "active_base_sha": "7b9ed0ef7b9cc3ec9ccefb7457ecd052a0b98c0e",
-      "active_head": "c5f39150caf42da21f53d730350e650a6e053584",
+      "active_head": "b012538370954f9c71f4acc9198e2703929d5ad6",
       "resume_branch": "feature/wcp-539-newsletter-report-entrypoint-g1",
       "branch_heads": {
         "claim_branch": "7b9ed0ef7b9cc3ec9ccefb7457ecd052a0b98c0e",
-        "feature_branch": "c5f39150caf42da21f53d730350e650a6e053584"
+        "feature_branch": "b012538370954f9c71f4acc9198e2703929d5ad6"
       },
-      "last_observed_head": "c5f39150caf42da21f53d730350e650a6e053584",
-      "last_checkpoint_at": "2026-09-27T13:25:46.250Z",
+      "last_observed_head": "b012538370954f9c71f4acc9198e2703929d5ad6",
+      "last_checkpoint_at": "2026-09-27T13:31:05.478Z",
       "checkpoint_paths": [
         "templates/admin/newsletter/index.html.twig",
         "tests/Controller/NewsletterDeliveryReportNavigationTest.php"
       ],
-      "next_action": "Run #815 (ID 36322375359) is checking exact WCP-539 HEAD c5f39150caf42da21f53d730350e650a6e053584; inspect both jobs and repair any failures.",
+      "next_action": "Run #816 (ID 36322647238) checks exact WCP-539 HEAD b012538370954f9c71f4acc9198e2703929d5ad6; inspect both jobs and fix any concrete failures.",
       "ci_attempts": [
         {
           "run_id": 36322375359,
           "run_number": 815,
           "head": "c5f39150caf42da21f53d730350e650a6e053584",
           "base": "b510875e7b0741b9b19f09429d2204a95df51198",
-          "result": "in_progress"
+          "result": "failure",
+          "conclusion": "failure",
+          "summary": "PHP/Symfony tests failed because the dashboard used a generated route name that WCP-528's class-level route prefix does not expose; PostgreSQL job passed."
+        },
+        {
+          "run_id": 36322647238,
+          "run_number": 816,
+          "head": "b012538370954f9c71f4acc9198e2703929d5ad6",
+          "base": "b510875e7b0741b9b19f09429d2204a95df51198",
+          "result": "queued"
         }
       ],
       "worker_pr_state": "open",
-      "last_ci_result": "in_progress",
+      "last_ci_result": "queued",
       "worker_pr_changed_paths": [
         "templates/admin/newsletter/index.html.twig",
         "tests/Controller/NewsletterDeliveryReportNavigationTest.php"
@@ -39350,12 +39359,12 @@
       "worker_pr_base_branch": "main",
       "worker_pr": 329,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/329",
-      "last_verified_push_at": "2026-09-27T13:25:46.250Z",
+      "last_verified_push_at": "2026-09-27T13:31:05.478Z",
       "pr_state": "open",
       "draft_pr": true,
-      "ci_run_id": 36322375359,
-      "last_ci_run_id": 36322375359,
-      "ci_result": "in_progress"
+      "ci_run_id": 36322647238,
+      "last_ci_run_id": 36322647238,
+      "ci_result": "queued"
     }
   ],
   "recovery_queue": [],
