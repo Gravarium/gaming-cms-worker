@@ -163,6 +163,7 @@ final class AdminVideoDeletionSecurityTest extends WebTestCase
         self::assertInstanceOf(MediaAsset::class, $entityManager->find(MediaAsset::class, $assetId));
     }
 
+    /** @param list<int> $videoIds */
     private function removeFixtures(KernelBrowser $client, array $videoIds, int $assetId, int $userId): void
     {
         $entityManager = $this->em($client);
