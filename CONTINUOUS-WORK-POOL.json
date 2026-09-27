@@ -12,12 +12,12 @@
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
   "published_at": "2026-09-27T00:04:58.409Z",
   "summary": {
-    "total_remaining_worker_tasks": 137,
+    "total_remaining_worker_tasks": 138,
     "completed_worker_prs_awaiting_trusted_review": 204,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-434 repaired the cache-header assertions on HEAD be0fca340e4ffe822cbf4843d0086b1d9d1df09f; run full exact-head Worker CI and repair any further failure on the same branch.",
+    "next_required_action": "WCP-438 is claimed from exact sanitized main; create its exclusive branches and implement access-role definition permission-delegation regressions.",
     "composition_preparable": 0,
     "immediately_actionable": 0,
     "must_continue": true
@@ -23273,7 +23273,13 @@
       "last_ci_run_id": 36281195962,
       "ci_run_id": 36281195962,
       "last_ci_result": "failure",
-      "ci_attempts": [{"run_id":36281195962,"head":"3becc3a6fdcba414a40dca90529704c57e0d6135","result":"failure"}],
+      "ci_attempts": [
+        {
+          "run_id": 36281195962,
+          "head": "3becc3a6fdcba414a40dca90529704c57e0d6135",
+          "result": "failure"
+        }
+      ],
       "last_ci_diagnosis": "CI run 36281195962 failed only two new-test assertions because Symfony added max-age=0 and must-revalidate to the private,no-store Cache-Control header. The response still included private and no-store; the test now checks those directives separately and preserves the noindex assertion.",
       "next_action": "Run complete exact-head Worker CI on repaired HEAD be0fca340e4ffe822cbf4843d0086b1d9d1df09f; fix any further failure on this branch."
     },
@@ -23648,6 +23654,92 @@
           "result": "queued"
         }
       ]
+    },
+    {
+      "priority": 218,
+      "package_id": "WCP-438",
+      "title": "Enforce permission delegation when managing access-role definitions",
+      "risk": "low",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-438-access-role-delegation-security-g1",
+      "suggested_branch": "feature/wcp-438-access-role-delegation-security-g1",
+      "base_branch": "main",
+      "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "objective": "Add test-only functional coverage proving an authorized non-admin access-role manager cannot use valid rendered form CSRF to grant permissions they do not hold when creating or editing a role. Rejected changes leave roles and audit records unchanged.",
+      "allowed_paths": [
+        "tests/Controller/AdminAccessRoleDelegationSecurityTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/",
+        "src/",
+        "templates/",
+        "assets/",
+        "public/"
+      ],
+      "deliverables": [
+        "Use a rendered valid CSRF token to attempt creating a role with CMS_SETTINGS when the actor owns only CMS_USERS; expect 422, no role row and no access_role.created audit event.",
+        "Use a rendered valid CSRF token to add CMS_SETTINGS to an existing role the actor can otherwise manage; expect 422 and preserve its name, description, active state and permissions.",
+        "Verify no access_role.updated audit event is recorded for the rejected edit; clean up synthetic role fixtures."
+      ],
+      "tests": [
+        "php bin/phpunit tests/Controller/AdminAccessRoleDelegationSecurityTest.php",
+        "Existing AdminUserSecurityTest delegation regressions remain green.",
+        "PHPStan level 8 and complete Worker CI on exact final HEAD, including PostgreSQL 18 migration-chain checks."
+      ],
+      "completion_report": [
+        "Exact sanitized main base SHA and final Worker HEAD.",
+        "Complete changed-file list and Worker PR.",
+        "Rendered-token create/edit delegation rejection, unchanged role state and no audit side effects.",
+        "Exact-head PHPStan and full Worker CI results; confirm only the allowed test path changed."
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "preserve-CMS_USERS_MANAGE-CMS_SETTINGS-delegation-and-access-role-audit-invariants",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "proposal_kind": "worker_only",
+      "proposal_dependency_evidence": [],
+      "collision_check": {
+        "compared_against": "Fresh continuous/work-pool-v4 blob d3d11045be29011209ceb4af13e82f2005823875, all active and claim-locked allowlists, and exact sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d.",
+        "result": "No active or claim-locked claim owns tests/Controller/AdminAccessRoleDelegationSecurityTest.php. WCP-432 owns role-deletion tests, WCP-433 owns access-role authorization/CSRF tests, WCP-415 owns role-membership tests, and WCP-372 owns form-boundary tests; those tasks do not test the role-definition permission-delegation check.",
+        "paths": [
+          "tests/Controller/AdminAccessRoleDelegationSecurityTest.php"
+        ]
+      },
+      "claimed_on": "2026-09-27T00:05:42.907Z",
+      "claim_state": "active",
+      "active_base_branch": "main",
+      "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "resume_branch": "feature/wcp-438-access-role-delegation-security-g1",
+      "last_checkpoint_at": "2026-09-27T00:05:42.907Z",
+      "last_verified_push_at": "2026-09-27T00:05:42.907Z",
+      "checkpoint_paths": [],
+      "branch_heads": {
+        "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+        "feature_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d"
+      },
+      "next_action": "Create both exclusive branches from exact sanitized main, then add create/edit delegation regressions using rendered CSRF tokens."
     }
   ],
   "recovery_queue": [],
