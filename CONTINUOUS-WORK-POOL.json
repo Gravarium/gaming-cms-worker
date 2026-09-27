@@ -17,7 +17,7 @@
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-516 is claimed on sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d. Complete and verify the Video-module page-builder search workflow on its exact feature HEAD; keep all other claims untouched.",
+    "next_required_action": "WCP-515 repaired the timestamp-precision fixture after run 36313715827 failed on a microsecond comparison; validate exact HEAD 0c484fe148c2b90ecf09c45ff8b352737b00f62c on the next Worker CI run.",
     "composition_preparable": 0,
     "immediately_actionable": 20,
     "must_continue": true
@@ -35508,19 +35508,19 @@
       "claim_state": "active",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-      "active_head": "bd90a0027384ad18b1f0ad406bd85bab12d551f2",
+      "active_head": "0c484fe148c2b90ecf09c45ff8b352737b00f62c",
       "resume_branch": "feature/wcp-515-scheduled-autosave-g1",
       "branch_heads": {
         "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-        "feature_branch": "bd90a0027384ad18b1f0ad406bd85bab12d551f2"
+        "feature_branch": "0c484fe148c2b90ecf09c45ff8b352737b00f62c"
       },
-      "next_action": "Monitor exact-head Worker CI run 36313715827 for HEAD bd90a0027384ad18b1f0ad406bd85bab12d551f2. Diagnose and repair a concrete failure only within tests/Controller/Content/ScheduledContentAutosaveBoundaryTest.php.",
+      "next_action": "The first CI run exposed PostgreSQL second-precision timestamp truncation in the fixture. The test now uses a second-precision future time. Validate the new exact HEAD and repair only the dedicated test path.",
       "checkpoint_paths": [
         "tests/Controller/Content/ScheduledContentAutosaveBoundaryTest.php"
       ],
-      "last_observed_head": "bd90a0027384ad18b1f0ad406bd85bab12d551f2",
-      "last_checkpoint_at": "2026-09-27T10:49:12.729Z",
-      "last_verified_push_at": "2026-09-27T10:49:12.729Z",
+      "last_observed_head": "0c484fe148c2b90ecf09c45ff8b352737b00f62c",
+      "last_checkpoint_at": "2026-09-27T10:51:03.789Z",
+      "last_verified_push_at": "2026-09-27T10:51:03.789Z",
       "worker_pr": 308,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/308",
       "draft_pr": true,
@@ -35531,13 +35531,14 @@
       ],
       "ci_run_id": 36313715827,
       "last_ci_run_id": 36313715827,
-      "ci_result": "in_progress",
-      "last_ci_result": "in_progress",
+      "ci_result": "failure",
+      "last_ci_result": "failure",
       "ci_attempts": [
         {
           "run_id": 36313715827,
           "head": "bd90a0027384ad18b1f0ad406bd85bab12d551f2",
-          "result": "in_progress"
+          "result": "failure",
+          "summary": "The scheduledAt fixture retained microseconds while PostgreSQL stored seconds; DateTime equality failed. All static analysis and PostgreSQL migration checks succeeded."
         }
       ]
     },
