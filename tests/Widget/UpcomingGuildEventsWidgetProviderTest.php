@@ -35,7 +35,6 @@ final class UpcomingGuildEventsWidgetProviderTest extends WebTestCase
         try {
             $user = $this->newUser($suffix.'-member');
             $otherUser = $this->newUser($suffix.'-other');
-            $unaffiliatedUser = $this->newUser($suffix.'-unaffiliated');
             $game = $this->newGame($suffix, true);
             $disabledGame = $this->newGame($suffix.'-disabled', false);
             $guild = $this->newGuild($game, $suffix.'-active', true);
@@ -47,13 +46,12 @@ final class UpcomingGuildEventsWidgetProviderTest extends WebTestCase
             $otherMember = $this->newMember($guild, $otherUser, 'Other Character');
             $inactiveMember = $this->newMember($inactiveMemberGuild, $user, 'Inactive Character', false);
 
-            foreach ([$user, $otherUser, $unaffiliatedUser, $game, $disabledGame, $guild, $disabledGuild, $disabledGameGuild, $inactiveMemberGuild, $member, $secondCharacter, $otherMember, $inactiveMember] as $entity) {
+            foreach ([$user, $otherUser, $game, $disabledGame, $guild, $disabledGuild, $disabledGameGuild, $inactiveMemberGuild, $member, $secondCharacter, $otherMember, $inactiveMember] as $entity) {
                 $em->persist($entity);
             }
             $em->flush();
             $this->remember($ids, 'users', $user->getId());
             $this->remember($ids, 'users', $otherUser->getId());
-            $this->remember($ids, 'users', $unaffiliatedUser->getId());
             $this->remember($ids, 'games', $game->getId());
             $this->remember($ids, 'games', $disabledGame->getId());
             $this->remember($ids, 'guilds', $guild->getId());
@@ -139,8 +137,27 @@ final class UpcomingGuildEventsWidgetProviderTest extends WebTestCase
             $this->assertPrivateNoStore($client);
             self::assertSame('no-cache', $client->getResponse()->headers->get('Pragma'));
 
-            $client->loginUser($unaffiliatedUser);
+        } finally {
+            $this->cleanup($client, $ids);
+        }
+    }
+
+    public function testAuthenticatedUserWithoutUpcomingGuildEventsGetsAnAccessibleEmptyState(): void
+    {
+        $client = static::createClient();
+        $ids = $this->newIds();
+        $em = $client->getContainer()->get(EntityManagerInterface::class);
+
+        try {
+            $user = $this->newUser(bin2hex(random_bytes(5)).'-empty');
+            $em->persist($user);
+            $em->flush();
+            $this->remember($ids, 'users', $user->getId());
+
+            $this->saveHomeWidget($client, 6);
+            $client->loginUser($user);
             $client->request('GET', '/');
+
             self::assertResponseIsSuccessful();
             self::assertSelectorTextContains('#widget-guild-events-widget', 'Für deine Gilden stehen keine kommenden Termine an.');
             $this->assertPrivateNoStore($client);
