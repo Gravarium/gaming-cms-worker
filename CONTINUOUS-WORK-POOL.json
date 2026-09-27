@@ -10,16 +10,16 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T01:25:48.379Z",
+  "published_at": "2026-09-27T01:30:33.611Z",
   "summary": {
-    "total_remaining_worker_tasks": 141,
-    "completed_worker_prs_awaiting_trusted_review": 213,
+    "total_remaining_worker_tasks": 140,
+    "completed_worker_prs_awaiting_trusted_review": 214,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
     "next_required_action": "WCP-447 is reserved on exact sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d for a protected batch media upload workflow; verify the exclusive refs and continue implementation.",
     "composition_preparable": 0,
-    "immediately_actionable": 5,
+    "immediately_actionable": 4,
     "must_continue": true
   },
   "rules": {
@@ -24722,7 +24722,7 @@
       "package_id": "WCP-445",
       "title": "Browse and paginate every administrative user",
       "risk": "medium",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -24809,14 +24809,14 @@
           "tests/Controller/AdminUserDirectoryTest.php"
         ]
       },
-      "claim_state": "active",
+      "claim_state": "locked_until_trusted_resolution",
       "claimed_on": "2026-09-27T01:14:30.870Z",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
       "active_head": "dcf59ec63e19f79914c819a6c2ba8d0dbfb6b623",
       "resume_branch": "feature/wcp-445-admin-user-directory-pagination-g1",
-      "last_checkpoint_at": "2026-09-27T01:25:48.379Z",
-      "last_verified_push_at": "2026-09-27T01:25:48.379Z",
+      "last_checkpoint_at": "2026-09-27T01:30:33.611Z",
+      "last_verified_push_at": "2026-09-27T01:30:33.611Z",
       "checkpoint_paths": [
         "src/Controller/AdminUserDirectoryController.php",
         "src/Repository/AdminUserDirectoryRepository.php",
@@ -24828,15 +24828,15 @@
         "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
         "feature_branch": "dcf59ec63e19f79914c819a6c2ba8d0dbfb6b623"
       },
-      "next_action": "Monitor complete CI on the corrected PHP source; fix remaining failures on this branch and rerun against each new exact HEAD.",
+      "next_action": "PR #240 is open and ready for Trusted review on exact HEAD dcf59ec63e19f79914c819a6c2ba8d0dbfb6b623; keep this claim locked until Trusted explicitly integrates, cancels, or transfers it, then continue with an independent dependency-safe package.",
       "worker_pr": 240,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/240",
-      "draft_pr": true,
-      "pr_state": "open_draft_unmerged",
+      "draft_pr": false,
+      "pr_state": "open_ready_for_review_unmerged",
       "last_ci_run_id": 36285489874,
       "ci_run_id": 36285489874,
-      "last_ci_result": "in_progress",
-      "ci_result": "in_progress",
+      "last_ci_result": "success",
+      "ci_result": "success",
       "ci_attempts": [
         {
           "run_id": 36285404054,
@@ -24844,12 +24844,51 @@
           "result": "in_progress"
         },
         {
+          "run_id": 36285404054,
+          "head": "1c679d1d1b090da023512c90153e61fe0f5da3a8",
+          "result": "failure",
+          "reason": "Initial run found doubled PHP namespace separators during Composer cache:clear; corrected on the feature branch."
+        },
+        {
           "run_id": 36285489874,
           "head": "dcf59ec63e19f79914c819a6c2ba8d0dbfb6b623",
-          "result": "in_progress"
+          "result": "success"
         }
       ],
-      "last_ci_diagnosis": "Run 36285404054 failed before analysis or tests: Composer's cache:clear encountered doubled PHP namespace separators in the new controller, repository and test. Corrected all three files on the same feature branch; rerunning complete CI on this head."
+      "last_ci_diagnosis": "Run 36285404054 caught doubled PHP namespace separators in the new PHP files before analysis or tests. They were corrected on the same feature branch. Full Worker CI 36285489874 passed on the corrected exact HEAD dcf59ec63e19f79914c819a6c2ba8d0dbfb6b623.",
+      "final_head": "dcf59ec63e19f79914c819a6c2ba8d0dbfb6b623",
+      "final_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "final_changed_paths": [
+        "src/Controller/AdminUserDirectoryController.php",
+        "src/Repository/AdminUserDirectoryRepository.php",
+        "templates/admin/user/index.html.twig",
+        "templates/admin/user/directory.html.twig",
+        "tests/Controller/AdminUserDirectoryTest.php"
+      ],
+      "changed_paths": [
+        "src/Controller/AdminUserDirectoryController.php",
+        "src/Repository/AdminUserDirectoryRepository.php",
+        "templates/admin/user/index.html.twig",
+        "templates/admin/user/directory.html.twig",
+        "tests/Controller/AdminUserDirectoryTest.php"
+      ],
+      "completed_at": "2026-09-27T01:30:33.611Z",
+      "test_results": {
+        "phpunit": "435 tests, 1,982 assertions, 0 failures and 0 errors; one deprecation and one notice.",
+        "phpstan": "Level 8 passed with no errors.",
+        "php_symfony": "Worker PHP/Symfony validation job passed on exact final HEAD.",
+        "postgres18": "PostgreSQL 18 applied and verified the full migration chain: 39 migrations executed and 470 SQL queries.",
+        "exact_head_ci": {
+          "run_id": 36285489874,
+          "head": "dcf59ec63e19f79914c819a6c2ba8d0dbfb6b623",
+          "result": "success"
+        }
+      },
+      "completion_summary": "A CMS_USERS_MANAGE-protected read-only user directory now supports bounded case-insensitive search, active/locked/unverified filters, stable 25-row pages across all users, and links to existing edit/session routes. Tests cover permission denial, list navigation, search and status semantics, hidden admin-target actions, malformed parameters, out-of-range clamping, privacy headers, and reaching all 251 matching fixture users without gaps or duplicates. Only the five allowed paths changed; the existing mutation routes and schema are untouched.",
+      "open_limitations": [
+        "Awaiting Trusted review and Trusted integration CI."
+      ],
+      "trusted_follow_up": "On a fresh Trusted branch, connect or replace the legacy first-250 user list while preserving CMS_USERS_MANAGE, PermissionDelegationPolicy, existing mutation CSRF/session behavior, and private/no-store/noindex responses."
     },
     {
       "priority": 446,
