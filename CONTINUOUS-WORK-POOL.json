@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T15:15:18.428Z",
+  "published_at": "2026-09-27T15:23:39.396Z",
   "summary": {
     "total_remaining_worker_tasks": 167,
     "completed_worker_prs_awaiting_trusted_review": 294,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "Implement WCP-551 on feature/wcp-551-public-page-category-archive-g1 from exact Worker main HEAD e4be797b44948824e31843b88363d6ea1335c163; use only the nine reserved paths.",
+    "next_required_action": "Open a draft Worker PR for WCP-551 from feature/wcp-551-public-page-category-archive-g1 at exact HEAD 98738b0909cb4ff407e9cb45e722c80cf42ab854; run complete exact-head CI and repair any failures.",
     "composition_preparable": 0,
     "immediately_actionable": 28,
     "must_continue": true
@@ -41743,29 +41743,50 @@
           }
         ]
       },
-      "published_at": "2026-09-27T15:11:39.261Z",
+      "published_at": "2026-09-27T15:23:39.396Z",
       "claimed_on": "2026-09-27T15:11:39.261Z",
       "claim_state": "active",
       "active_base_branch": "main",
       "active_base_sha": "e4be797b44948824e31843b88363d6ea1335c163",
-      "active_head": "e4be797b44948824e31843b88363d6ea1335c163",
+      "active_head": "98738b0909cb4ff407e9cb45e722c80cf42ab854",
       "resume_branch": "feature/wcp-551-public-page-category-archive-g1",
       "branch_heads": {
         "claim_branch": "e4be797b44948824e31843b88363d6ea1335c163",
-        "feature_branch": "e4be797b44948824e31843b88363d6ea1335c163"
+        "feature_branch": "98738b0909cb4ff407e9cb45e722c80cf42ab854"
       },
-      "last_observed_head": "e4be797b44948824e31843b88363d6ea1335c163",
-      "last_checkpoint_at": "2026-09-27T15:11:39.261Z",
-      "checkpoint_paths": [],
-      "next_action": "Implement the public page-category directory, paginated category archive, and Page Builder category widget only within the nine reserved paths; test published-page visibility, schedule-unpublish, pagination, Content module gating, and widget bounds.",
+      "last_observed_head": "98738b0909cb4ff407e9cb45e722c80cf42ab854",
+      "last_checkpoint_at": "2026-09-27T15:23:39.396Z",
+      "checkpoint_paths": [
+        "src/Controller/PublicPageCategoryArchiveController.php",
+        "src/PageCategoryArchive/PublicPageCategoryArchiveQuery.php",
+        "src/PageCategoryArchive/Templates/page_category_archive/directory.html.twig",
+        "src/PageCategoryArchive/Templates/page_category_archive/archive.html.twig",
+        "src/PageCategoryArchive/Templates/widget/page_categories.html.twig",
+        "src/Widget/PublicPageCategoryArchiveWidgetProvider.php",
+        "config/packages/page_category_archive.yaml",
+        "tests/Controller/PublicPageCategoryArchiveTest.php",
+        "tests/Widget/PublicPageCategoryArchiveWidgetTest.php"
+      ],
+      "next_action": "Create a draft Worker PR against main to run complete exact-head CI. Diagnose and repair any test, PHPStan, Twig, container, or migration failure without widening the reserved scope.",
       "worker_pr_state": "not_created",
-      "worker_pr_changed_paths": [],
+      "worker_pr_changed_paths": [
+        "src/Controller/PublicPageCategoryArchiveController.php",
+        "src/PageCategoryArchive/PublicPageCategoryArchiveQuery.php",
+        "src/PageCategoryArchive/Templates/page_category_archive/directory.html.twig",
+        "src/PageCategoryArchive/Templates/page_category_archive/archive.html.twig",
+        "src/PageCategoryArchive/Templates/widget/page_categories.html.twig",
+        "src/Widget/PublicPageCategoryArchiveWidgetProvider.php",
+        "config/packages/page_category_archive.yaml",
+        "tests/Controller/PublicPageCategoryArchiveTest.php",
+        "tests/Widget/PublicPageCategoryArchiveWidgetTest.php"
+      ],
       "worker_pr_base_branch": "main",
       "draft_pr": true,
       "pr_state": "not_created",
       "ci_result": "not_started",
       "last_ci_result": "not_started",
-      "ci_attempts": []
+      "ci_attempts": [],
+      "last_verified_push_at": "2026-09-27T15:23:39.396Z"
     }
   ],
   "recovery_queue": [],
