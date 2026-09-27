@@ -17,7 +17,7 @@
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-476 checkpoint advanced to corrected HEAD a28aa66069cf1b7cb81e83eecc9b90f95d9741c8; first exact-head run 36299815719 failed on invalid empty rankName test data and the fixture is corrected. PR #269 awaits CI on the new exact HEAD (run 36300003993). Preserve WCP-474 and blocked FCP dependencies.",
+    "next_required_action": "WCP-476 checkpoint is 1bf077e38d29daa31def26c007c631129ee323da; runs 36299815719 and 36300003993 failed on test fixture/expected 422 response details and are recorded. Corrected Exact-Head CI 36300156961 is now running. Preserve foreign claim WCP-474 and FCP dependencies.",
     "composition_preparable": 0,
     "immediately_actionable": 4,
     "must_continue": true
@@ -29520,25 +29520,25 @@
       "claim_state": "active",
       "active_base_branch": "feature/wcp-475-guild-member-deletion-security-g1",
       "active_base_sha": "56274da100719bdbfd62e80f52141160da5a718d",
-      "active_head": "a28aa66069cf1b7cb81e83eecc9b90f95d9741c8",
+      "active_head": "1bf077e38d29daa31def26c007c631129ee323da",
       "resume_branch": "feature/wcp-476-guild-member-mutation-security-g1",
       "branch_heads": {
         "claim_branch": "56274da100719bdbfd62e80f52141160da5a718d",
-        "feature_branch": "a28aa66069cf1b7cb81e83eecc9b90f95d9741c8"
+        "feature_branch": "1bf077e38d29daa31def26c007c631129ee323da"
       },
-      "next_action": "Wait for corrected exact-head Worker CI on a28aa66069cf1b7cb81e83eecc9b90f95d9741c8; inspect all jobs and fix any concrete failure within the allowed test file.",
-      "last_observed_head": "a28aa66069cf1b7cb81e83eecc9b90f95d9741c8",
-      "last_checkpoint_at": "2026-09-27T06:25:11.107Z",
+      "next_action": "Wait for exact-head Worker CI on 1bf077e38d29daa31def26c007c631129ee323da; inspect every job and repair concrete failures only within the allowed test file.",
+      "last_observed_head": "1bf077e38d29daa31def26c007c631129ee323da",
+      "last_checkpoint_at": "2026-09-27T06:28:12.518Z",
       "checkpoint_paths": [
         "tests/Controller/AdminGuildMemberMutationSecurityTest.php"
       ],
-      "last_verified_push_at": "2026-09-27T06:25:11.107Z",
+      "last_verified_push_at": "2026-09-27T06:28:12.518Z",
       "worker_pr": 269,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/269",
       "draft_pr": true,
       "pr_state": "open_draft_ci_pending",
-      "ci_run_id": 36300003993,
-      "last_ci_run_id": 36300003993,
+      "ci_run_id": 36300156961,
+      "last_ci_run_id": 36300156961,
       "ci_result": "in_progress",
       "last_ci_result": "in_progress",
       "ci_attempts": [
@@ -29546,11 +29546,17 @@
           "run_id": 36299815719,
           "head": "79c3d5eacc177fed4d83137b2e7ba7cd5489e46e",
           "result": "failure",
-          "note": "Form submission exposed blank rankName mapping TypeError in test fixture; supplied a valid fallback value."
+          "note": "Test form submission left rankName empty, triggering a property-mapping TypeError; fixture supplied valid rankName."
         },
         {
           "run_id": 36300003993,
           "head": "a28aa66069cf1b7cb81e83eecc9b90f95d9741c8",
+          "result": "failure",
+          "note": "Negative CSRF form response is HTTP 422; assertion corrected to expect the actual validation rejection status."
+        },
+        {
+          "run_id": 36300156961,
+          "head": "1bf077e38d29daa31def26c007c631129ee323da",
           "result": "in_progress"
         }
       ],
