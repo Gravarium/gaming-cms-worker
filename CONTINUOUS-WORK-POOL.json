@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T11:17:12.663Z",
+  "published_at": "2026-09-27T11:20:31.303Z",
   "summary": {
     "total_remaining_worker_tasks": 163,
     "completed_worker_prs_awaiting_trusted_review": 278,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-519 is complete on exact green HEAD 005802d0be3ecd695e0a354824d45b86b646f69f, PR #309 is ready for Trusted review, and its claim remains locked. Continue to the next free independent module gap.",
+    "next_required_action": "WCP-518 exact-head CI 36314987910 failed only because a valid +10-day Game Catalogue test release is globally visible. Repair the test without changing production behavior, then rerun complete exact-head CI.",
     "composition_preparable": 0,
     "immediately_actionable": 19,
     "must_continue": true
@@ -35996,7 +35996,7 @@
         "templates/widget/upcoming_game_releases.html.twig",
         "tests/Widget/UpcomingGameReleaseWidgetProviderTest.php"
       ],
-      "next_action": "Monitor exact-head Worker CI run 36314987910 for e256d9252646e4d41946eafb53eebfc592eabfa5. If red, diagnose the concrete issue and repair only within the four allowed paths on the same branch.",
+      "next_action": "Repair only the new widget test within its allowed path. Preserve the global query behavior for other valid future releases, then push the same feature branch and rerun complete CI on the exact new HEAD.",
       "last_checkpoint_at": "2026-09-27T11:13:11.328Z",
       "last_verified_push_at": "2026-09-27T11:13:11.328Z",
       "worker_pr": 310,
@@ -36012,8 +36012,8 @@
       ],
       "ci_run_id": 36314987910,
       "last_ci_run_id": 36314987910,
-      "ci_result": "in_progress",
-      "last_ci_result": "in_progress",
+      "ci_result": "failure",
+      "last_ci_result": "failure",
       "ci_attempts": [
         {
           "run_id": 36314564707,
@@ -36036,6 +36036,12 @@
           "run_id": 36314987910,
           "head": "e256d9252646e4d41946eafb53eebfc592eabfa5",
           "result": "in_progress"
+        },
+        {
+          "run_id": 36314987910,
+          "head": "e256d9252646e4d41946eafb53eebfc592eabfa5",
+          "result": "failure",
+          "summary": "Static checks and PostgreSQL 18 migration chain passed. PHPUnit found one expected-vs-actual mismatch: the shared GameCatalogueControllerTest fixture has an enabled, non-cancelled release at +10 days (ID 1), so it correctly appeared in the global upcoming widget before the later test releases. Keep the production query unchanged. Isolate the exact ordering/cap query case with a later from-date, and compare provider output to the global query while asserting it is sorted and excludes this test's past/cancelled/disabled fixtures."
         }
       ]
     },
