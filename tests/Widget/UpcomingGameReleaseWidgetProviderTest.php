@@ -12,6 +12,7 @@ use App\Entity\GameCatalogue\GameRelease;
 use App\Layout\LayoutRenderer;
 use App\Layout\LayoutValidator;
 use App\Module\CmsModuleManager;
+use App\Widget\GameRelease\UpcomingReleaseQuery;
 use App\Widget\UpcomingGameReleaseWidgetProvider;
 use App\Widget\WidgetDefinition;
 use App\Widget\WidgetRegistry;
@@ -185,7 +186,7 @@ final class UpcomingGameReleaseWidgetProviderTest extends KernelTestCase
             self::assertSame(
                 array_map(
                     static fn (GameRelease $release): int => $release->getId() ?? 0,
-                    $releaseQuery->findUpcoming(new \\DateTimeImmutable(), 12),
+                    $releaseQuery->findUpcoming(new \DateTimeImmutable(), 12),
                 ),
                 $actualIds,
             );
