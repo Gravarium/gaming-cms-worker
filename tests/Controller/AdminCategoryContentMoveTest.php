@@ -123,24 +123,22 @@ final class AdminCategoryContentMoveTest extends WebTestCase
         }
     }
 
-    public function testAuthorizationCsrfAndDestinationValidationPreserveAllEntries(): void
+    public function testUsersWithoutContentManagementPermissionCannotMoveCategoryContent(): void
     {
         $client = static::createClient();
         $reader = $this->createUser($client, 'move-denied', []);
-        $manager = $this->createUser($client, 'move-invalid', [CmsPermission::CONTENT]);
         $suffix = bin2hex(random_bytes(5));
-        $source = (new Category())->setName('Source '.$suffix)->setSlug('source-invalid-'.$suffix);
-        $target = (new Category())->setName('Target '.$suffix)->setSlug('target-invalid-'.$suffix);
+        $source = (new Category())->setName('Source '.$suffix)->setSlug('source-denied-'.$suffix);
+        $target = (new Category())->setName('Target '.$suffix)->setSlug('target-denied-'.$suffix);
         $this->entityManager($client)->persist($source);
         $this->entityManager($client)->persist($target);
-        $entry = $this->createEntry($client, $manager, $source, 'Unchanged '.$suffix, 'unchanged-'.$suffix, ContentEntry::STATUS_DRAFT);
+        $entry = $this->createEntry($client, $reader, $source, 'Protected '.$suffix, 'protected-'.$suffix, ContentEntry::STATUS_DRAFT);
         $this->entityManager($client)->flush();
 
         $sourceId = $this->requireId($source->getId());
         $targetId = $this->requireId($target->getId());
         $entryId = $this->requireId($entry->getId());
         $readerId = $this->requireId($reader->getId());
-        $managerId = $this->requireId($manager->getId());
         $path = '/admin/categories/'.$sourceId.'/move-content';
 
         try {
@@ -155,8 +153,32 @@ final class AdminCategoryContentMoveTest extends WebTestCase
             ]);
             self::assertResponseStatusCodeSame(403);
             $this->assertEntryStillInCategory($client, $entryId, $sourceId);
+            self::assertCount(0, $this->auditLogs($client, $sourceId));
+        } finally {
+            $this->cleanup($client, $readerId, [$sourceId, $targetId]);
+        }
+    }
 
-            $client->loginUser($manager);
+    public function testMissingInvalidCsrfAndInvalidTargetsPreserveAllEntries(): void
+    {
+        $client = static::createClient();
+        $manager = $this->createUser($client, 'move-invalid', [CmsPermission::CONTENT]);
+        $suffix = bin2hex(random_bytes(5));
+        $source = (new Category())->setName('Source '.$suffix)->setSlug('source-invalid-'.$suffix);
+        $target = (new Category())->setName('Target '.$suffix)->setSlug('target-invalid-'.$suffix);
+        $this->entityManager($client)->persist($source);
+        $this->entityManager($client)->persist($target);
+        $entry = $this->createEntry($client, $manager, $source, 'Unchanged '.$suffix, 'unchanged-'.$suffix, ContentEntry::STATUS_DRAFT);
+        $this->entityManager($client)->flush();
+
+        $sourceId = $this->requireId($source->getId());
+        $targetId = $this->requireId($target->getId());
+        $entryId = $this->requireId($entry->getId());
+        $managerId = $this->requireId($manager->getId());
+        $path = '/admin/categories/'.$sourceId.'/move-content';
+        $client->loginUser($manager);
+
+        try {
             foreach ([
                 ['mode' => 'missing', 'target' => $targetId],
                 ['mode' => 'invalid', 'target' => $targetId],
@@ -171,7 +193,7 @@ final class AdminCategoryContentMoveTest extends WebTestCase
                 self::assertCount(0, $this->auditLogs($client, $sourceId));
             }
         } finally {
-            $this->cleanup($client, $managerId, [$sourceId, $targetId], [$readerId]);
+            $this->cleanup($client, $managerId, [$sourceId, $targetId]);
         }
     }
 
