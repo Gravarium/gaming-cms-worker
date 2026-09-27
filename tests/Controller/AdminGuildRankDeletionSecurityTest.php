@@ -8,7 +8,6 @@ use App\Entity\Game;
 use App\Entity\Guild;
 use App\Entity\GuildRank;
 use App\Entity\User;
-use App\Repository\GuildRankRepository;
 use App\Security\CmsPermission;
 use Doctrine\ORM\EntityManagerInterface;
 use LogicException;
@@ -240,7 +239,7 @@ final class AdminGuildRankDeletionSecurityTest extends WebTestCase
         $entityManager->flush();
         $entityManager->clear();
     }
-    
+
     private function requireId(?int $id): int
     {
         if ($id === null) {
