@@ -203,6 +203,7 @@ final class AdminCategoryContentMoveTest extends WebTestCase
         return $values;
     }
 
+    /** @param list<string> $permissions */
     private function createUser(KernelBrowser $client, string $label, array $permissions): User
     {
         $user = (new User())
