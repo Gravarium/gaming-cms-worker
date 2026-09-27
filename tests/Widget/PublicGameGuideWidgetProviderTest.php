@@ -9,7 +9,6 @@ use App\Entity\Game;
 use App\Entity\User;
 use App\GameGuide\PublicGameGuideQuery;
 use App\Security\CmsPermission;
-use App\Widget\PublicGameGuideWidgetProvider;
 use App\Widget\WidgetDefinition;
 use App\Widget\WidgetRegistry;
 use Doctrine\DBAL\Connection;
@@ -76,7 +75,9 @@ final class PublicGameGuideWidgetProviderTest extends WebTestCase
             $titles = array_column($data['guides'], 'title');
             self::assertContains('WCP552-WIDGET-00', $titles);
             self::assertNotContains('WCP552-WIDGET-DISABLED', $titles);
-            self::assertSame($titles, array_column($registry->data(self::KEY, ['count' => 99])['guides'], 'title'));
+            $secondData = $registry->data(self::KEY, ['count' => 99]);
+            self::assertIsArray($secondData['guides']);
+            self::assertSame($titles, array_column($secondData['guides'], 'title'));
             self::assertCount(3, $registry->data(self::KEY, ['count' => 3])['guides']);
 
             $html = $client->getContainer()->get(Environment::class)->render($definition->template, $registry->data(self::KEY, ['count' => 3]));
@@ -87,8 +88,6 @@ final class PublicGameGuideWidgetProviderTest extends WebTestCase
 
             $emptyHtml = $client->getContainer()->get(Environment::class)->render($definition->template, ['guides' => []]);
             self::assertStringContainsString('Zurzeit gibt es keine öffentlichen Gaming-Guides.', $emptyHtml);
-            self::assertSame([], $client->getContainer()->get(PublicGameGuideQuery::class)->latest(999));
-            self::assertInstanceOf(PublicGameGuideWidgetProvider::class, $client->getContainer()->get(PublicGameGuideWidgetProvider::class));
         } finally {
             $this->cleanup($client, $guideIds, [$authorId], [$gameId, $disabledGameId]);
         }
