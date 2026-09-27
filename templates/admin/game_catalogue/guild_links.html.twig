@@ -1,0 +1,51 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Gildenverknüpfungen | Gaming CMS{% endblock %}
+
+{% block body %}
+<header class="topbar">
+    <a class="brand" href="{{ path('app_admin_gaming') }}">Gaming CMS</a>
+    <nav class="top-actions">
+        <a class="button-link button-secondary" href="{{ path('app_game_catalogue_show', {slug: entry.game.slug}) }}">Game Hub ansehen</a>
+        <a class="button-link button-secondary" href="{{ path('app_admin_gaming') }}">Gaming-Übersicht</a>
+    </nav>
+</header>
+
+<main class="dashboard">
+    <p class="eyebrow">Game Hub · Verknüpfungen</p>
+    <h1>Gilden für {{ entry.game.name }}</h1>
+    <p>Verknüpfe öffentliche Gilden, die dieses Spiel verwenden. Nur aktivierte Gilden desselben Spiels sind auswählbar.</p>
+
+    {% for message in app.flashes('success') %}
+        <div class="notice">{{ message }}</div>
+    {% endfor %}
+
+    <section aria-labelledby="guild-link-create-title">
+        <h2 id="guild-link-create-title">Gilde verknüpfen</h2>
+        {{ form_start(form) }}
+            {{ form_row(form.guild) }}
+            {{ form_errors(form) }}
+            <button class="button-link" type="submit">Gilde verknüpfen</button>
+        {{ form_end(form) }}
+    </section>
+
+    <section aria-labelledby="guild-link-list-title">
+        <h2 id="guild-link-list-title">Verknüpfte Gilden</h2>
+        {% if links %}
+            <ul>
+                {% for link in links %}
+                    <li>
+                        {{ link.label }}
+                        <form method="post" action="{{ path('app_admin_gaming_game_hub_guild_link_delete', {entryId: entry.id, guildId: link.targetId}) }}">
+                            <input type="hidden" name="_token" value="{{ csrf_token('delete-game-hub-guild-link-' ~ entry.id ~ '-' ~ link.targetId) }}">
+                            <button class="text-danger" type="submit">Verknüpfung entfernen</button>
+                        </form>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>Für dieses Game Hub sind noch keine Gilden verknüpft.</p>
+        {% endif %}
+    </section>
+</main>
+{% endblock %}
