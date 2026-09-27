@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T18:24:31.431Z",
+  "published_at": "2026-09-27T18:25:36.253Z",
   "summary": {
     "total_remaining_worker_tasks": 170,
     "completed_worker_prs_awaiting_trusted_review": 296,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-566 is claimed on main@7b2ca79405fc12d34bce1386157e929e4668f31a; implement strict monthly news archive page validation and exact-head CI.",
+    "next_required_action": "WCP-566 checkpoint 5596b3c5a6da79a4d65614faf8a7835177105307 is ready for a draft PR and exact-head Worker CI.",
     "composition_preparable": 0,
     "immediately_actionable": 29,
     "must_continue": true
@@ -45424,16 +45424,20 @@
       "claim_state": "active",
       "active_base_branch": "main",
       "active_base_sha": "7b2ca79405fc12d34bce1386157e929e4668f31a",
-      "active_head": "7b2ca79405fc12d34bce1386157e929e4668f31a",
+      "active_head": "5596b3c5a6da79a4d65614faf8a7835177105307",
       "resume_branch": "feature/wcp-566-news-archive-page-validation-g1",
       "branch_heads": {
         "claim_branch": "7b2ca79405fc12d34bce1386157e929e4668f31a",
-        "feature_branch": "7b2ca79405fc12d34bce1386157e929e4668f31a"
+        "feature_branch": "5596b3c5a6da79a4d65614faf8a7835177105307"
       },
-      "last_observed_head": "7b2ca79405fc12d34bce1386157e929e4668f31a",
-      "last_checkpoint_at": "2026-09-27T18:24:31.431Z",
-      "checkpoint_paths": [],
-      "next_action": "Implement strict positive-decimal page parsing for the monthly news archive and add regression tests."
+      "last_observed_head": "5596b3c5a6da79a4d65614faf8a7835177105307",
+      "last_checkpoint_at": "2026-09-27T18:25:36.253Z",
+      "checkpoint_paths": [
+        "src/Controller/PublicNewsArchiveController.php",
+        "tests/Controller/PublicNewsArchiveTest.php"
+      ],
+      "next_action": "Open a draft Worker PR from the verified branch HEAD and run exact-head Worker CI.",
+      "last_verified_push_at": "2026-09-27T18:25:36.253Z"
     }
   ],
   "recovery_queue": [],
