@@ -68,7 +68,7 @@ final class PublicContentSearchSafetyTest extends WebTestCase
             $results = $crawler->filter('.news-grid article');
             self::assertCount(1, $results);
             self::assertSame($query, $results->filter('h2')->text());
-            self::assertSame($excerpt, $results->filter('p')->text());
+            self::assertSame($excerpt, $results->filter('p')->eq(1)->text());
             self::assertSame(0, $results->filter('script, img[onerror], svg[onload]')->count());
             self::assertSame(0, $crawler->filter('main.dashboard img[onerror], main.dashboard svg[onload]')->count());
         } finally {
