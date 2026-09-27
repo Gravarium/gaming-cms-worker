@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T17:45:52.067Z",
+  "published_at": "2026-09-27T17:54:47.480Z",
   "summary": {
     "total_remaining_worker_tasks": 167,
     "completed_worker_prs_awaiting_trusted_review": 293,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-559 PR #354 is open and ready for Trusted review; exact-head full CI #904 / 36337649764 passed on 172c47336ecb0d17fd12944d4a2a9bf70b7a9e1a. Keep its claim locked. Re-evaluate the five unclaimed dependency-blocked packages; if none is eligible, publish and claim the next independent worker-only module proposal.",
+    "next_required_action": "WCP-563 is actively claimed on main@7b2ca79405fc12d34bce1386157e929e4668f31a; complete its database-side page query and exact-head Worker CI. The five remaining unclaimed FCPs are dependency-blocked; WCP-561 is another chat's independent active claim.",
     "composition_preparable": 0,
     "immediately_actionable": 29,
     "must_continue": true
@@ -44943,6 +44943,143 @@
       "ci_validation_pr": 356,
       "completed_at": "2026-09-27T17:51:05.129Z",
       "worker_completion_summary": "Exact-head Worker CI #907 / 36338245821 passed on 0eaebb7b8bf4dc66729d910a625c09d4db070d2b: 737 tests, 4,633 assertions, 0 failures/errors (1 deprecation, 3 notices); PHPStan, dependency audit, YAML/Twig/container/AssetMapper/Doctrine checks passed; PostgreSQL 18 applied 57 migrations and is current. PR #356 is open, ready for review, mergeable, based on main@7b2ca79405fc12d34bce1386157e929e4668f31a, with exactly two allowlisted paths."
+    },
+    {
+      "priority": 563,
+      "package_id": "WCP-563",
+      "title": "Database-paginate the public page directory",
+      "risk": "medium",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-563-page-directory-db-pagination-g1",
+      "suggested_branch": "feature/wcp-563-page-directory-db-pagination-g1",
+      "base_branch": "main",
+      "base_sha": "7b2ca79405fc12d34bce1386157e929e4668f31a",
+      "objective": "Make the public page directory filter and paginate published listed page entries in the database before loading result entities. Preserve the current 20-entry page size, publishedAt-descending then ID-descending order, public visibility rules (page type, published status, publishedAt not in the future, not unlisted), page bounds, cache headers, ETag behavior, and content-module gate. Remove the current fetch-up-to-5,000 mixed-content rows followed by in-PHP filtering, sorting, and slicing.",
+      "allowed_paths": [
+        "src/Controller/PublicPageDirectoryController.php",
+        "src/PageDirectory/PublicPageDirectoryQuery.php",
+        "tests/Controller/PublicPageDirectoryTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "CONTINUOUS-WORKER.md",
+        "CONTINUOUS-WORK-POOL.json",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/services.yaml",
+        "src/Entity/ContentEntry.php",
+        "src/Repository/ContentEntryRepository.php",
+        "templates/",
+        "src/Controller/PublicContentController.php"
+      ],
+      "deliverables": [
+        "GET /pages counts only public listed page entries and retrieves only the requested 20-row page from the database.",
+        "Database ordering matches the current stable publishedAt DESC, id DESC behavior; unlisted, drafts, future-dated entries, and news entries never appear.",
+        "Existing page validation, 404 behavior, cache headers, ETag, links, and module gating remain intact.",
+        "No entity, shared repository, schema, template, or migration changes."
+      ],
+      "tests": [
+        "Controller tests cover public visibility, page boundary/result counts, stable order, out-of-range requests, cache behavior if present, and the content module gate.",
+        "Full exact-head Worker CI covers PHPStan, PHPUnit, YAML/Twig/container checks, Doctrine mappings, assets, and PostgreSQL 18 migration chain."
+      ],
+      "completion_report": [
+        "Exact sanitized main base and final HEAD; changed paths and Worker PR state.",
+        "SQL-side visibility filters, count, stable order, page size, and max-page evidence.",
+        "Functional tests and exact-head Worker CI results.",
+        "No schema changes; Trusted follow-up."
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-Trusted-review-and-exact-head-CI",
+        "preserve-all-security-permissions-CSRF-validation-recovery-rollback-and-upload-controls",
+        "no-private-runtime-or-sensitive-data",
+        "no-schema-migration-or-entity-change",
+        "no-edit-to-active-or-claim-locked-paths",
+        "no-direct-Trusted-integration-or-deployment"
+      ],
+      "proposal_kind": "worker_only",
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "7b2ca79405fc12d34bce1386157e929e4668f31a",
+      "proposal_dependency_evidence": [],
+      "collision_check": {
+        "compared_against": "Fresh continuous/work-pool-v4 file blob @ 32fb0b6fd667d70c930cf223f2b6817198ef9b9b; current sanitized main @ 7b2ca79405fc12d34bce1386157e929e4668f31a; all unclaimed, active, and claim-locked task paths.",
+        "result": "No exact or directory-prefix overlap with any unclaimed, active, or claim-locked allowed paths. Existing PublicPageDirectoryController/Test paths are not reserved, and the new query uses a dedicated src/PageDirectory/ path.",
+        "paths": [
+          "src/Controller/PublicPageDirectoryController.php",
+          "src/PageDirectory/PublicPageDirectoryQuery.php",
+          "tests/Controller/PublicPageDirectoryTest.php"
+        ],
+        "observed_nonblocking_path_hits": [
+          {
+            "id": "WCP-090",
+            "state": "worker_complete_awaiting_trusted_review",
+            "excluded": [
+              "src/Controller/PublicContentController.php",
+              "src/Entity/ContentEntry.php"
+            ]
+          },
+          {
+            "id": "FCP-072",
+            "state": "unclaimed",
+            "excluded": [
+              "templates/"
+            ]
+          },
+          {
+            "id": "WCP-561",
+            "state": "worker_in_progress",
+            "excluded": [
+              "src/Controller/VideoPlaylistController.php",
+              "tests/Controller/VideoPlaylistPaginationTest.php"
+            ]
+          }
+        ]
+      },
+      "published_at": "2026-09-27T17:54:47.480Z",
+      "claimed_on": "2026-09-27T17:54:47.480Z",
+      "claim_state": "active",
+      "active_base_branch": "main",
+      "active_base_sha": "7b2ca79405fc12d34bce1386157e929e4668f31a",
+      "active_head": "7b2ca79405fc12d34bce1386157e929e4668f31a",
+      "resume_branch": "feature/wcp-563-page-directory-db-pagination-g1",
+      "branch_heads": {
+        "claim_branch": "7b2ca79405fc12d34bce1386157e929e4668f31a",
+        "feature_branch": "7b2ca79405fc12d34bce1386157e929e4668f31a"
+      },
+      "last_observed_head": "7b2ca79405fc12d34bce1386157e929e4668f31a",
+      "last_checkpoint_at": "2026-09-27T17:54:47.480Z",
+      "last_verified_push_at": "2026-09-27T17:54:47.480Z",
+      "checkpoint_paths": [
+        "src/Controller/PublicPageDirectoryController.php",
+        "src/PageDirectory/PublicPageDirectoryQuery.php",
+        "tests/Controller/PublicPageDirectoryTest.php"
+      ],
+      "next_action": "Replace the materializing public page-directory scan with a feature-local counted, filtered, stable database page query; add/extend controller regression tests and run exact-head Worker CI.",
+      "worker_pr": null,
+      "worker_pr_state": "not_created",
+      "worker_pr_changed_paths": [],
+      "ci_result": "not_started",
+      "ci_attempts": [],
+      "worker_pr_url": null,
+      "pr_state": "not_created",
+      "draft_pr": true,
+      "worker_pr_base_branch": "main",
+      "worker_pr_base_sha": "7b2ca79405fc12d34bce1386157e929e4668f31a",
+      "ci_run_id": null,
+      "last_ci_run_id": null
     }
   ],
   "recovery_queue": [],
