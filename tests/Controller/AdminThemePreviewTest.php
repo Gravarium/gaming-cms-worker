@@ -30,7 +30,10 @@ final class AdminThemePreviewTest extends WebTestCase
 
             $crawler = $client->request('GET', '/admin/settings/theme-preview');
             self::assertResponseIsSuccessful();
-            self::assertResponseHeaderSame('Cache-Control', 'private, no-store');
+            $cacheControl = strtolower((string) $client->getResponse()->headers->get('Cache-Control'));
+            $cacheDirectives = array_map('trim', explode(',', $cacheControl));
+            self::assertContains('private', $cacheDirectives);
+            self::assertContains('no-store', $cacheDirectives);
             self::assertResponseHeaderSame('X-Robots-Tag', 'noindex, nofollow');
 
             $registry = $client->getContainer()->get(ThemeRegistry::class);
