@@ -10,7 +10,7 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T09:49:44.333Z",
+  "published_at": "2026-09-27T09:51:20.847Z",
   "summary": {
     "total_remaining_worker_tasks": 152,
     "completed_worker_prs_awaiting_trusted_review": 262,
@@ -33260,28 +33260,36 @@
       "claim_state": "active",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-      "active_head": "1106c7befab1264f2cac2bc1c88ae12e5e8aa334",
+      "active_head": "56ff0521b3da53f2b3d32b211610fd15d9754ca0",
       "resume_branch": "feature/wcp-499-guild-member-notification-module-g1",
       "branch_heads": {
         "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-        "feature_branch": "1106c7befab1264f2cac2bc1c88ae12e5e8aa334"
+        "feature_branch": "56ff0521b3da53f2b3d32b211610fd15d9754ca0"
       },
-      "last_observed_head": "1106c7befab1264f2cac2bc1c88ae12e5e8aa334",
-      "last_checkpoint_at": "2026-09-27T09:47:30.226Z",
+      "last_observed_head": "56ff0521b3da53f2b3d32b211610fd15d9754ca0",
+      "last_checkpoint_at": "2026-09-27T09:51:20.847Z",
       "checkpoint_paths": [
         "src/Module/CmsModuleCatalog.php",
         "tests/Controller/GuildMemberNotificationModuleGateTest.php"
       ],
-      "next_action": "Run focused GuildMemberNotificationModuleGateTest and wait for complete Worker CI run 36310515953 on exact HEAD 1106c7befab1264f2cac2bc1c88ae12e5e8aa334; repair only concrete failures within the two allowed paths.",
-      "last_verified_push_at": "2026-09-27T09:47:30.226Z",
+      "next_action": "Run complete Worker CI 36310665550 on exact HEAD 56ff0521b3da53f2b3d32b211610fd15d9754ca0; diagnose and repair any concrete failure only within the two allowed paths.",
+      "last_verified_push_at": "2026-09-27T09:51:20.847Z",
       "worker_pr": 292,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/292",
       "draft_pr": true,
       "pr_state": "open",
-      "ci_run_id": 36310515953,
+      "ci_run_id": 36310665550,
       "ci_result": "queued",
-      "last_ci_run_id": 36310515953,
-      "last_ci_result": "queued"
+      "last_ci_run_id": 36310665550,
+      "last_ci_result": "queued",
+      "ci_attempts": [
+        {
+          "run_id": 36310515953,
+          "head": "1106c7befab1264f2cac2bc1c88ae12e5e8aa334",
+          "result": "failure",
+          "diagnosis": "Focused regression attempted to mint a session-backed CSRF token before any request created a session; the test now obtains its rendered token from the enabled guild portal before asserting the disabled-module 404 boundary."
+        }
+      ]
     }
   ],
   "recovery_queue": [],
