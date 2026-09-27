@@ -12,12 +12,12 @@
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
   "published_at": "2026-09-27T16:43:16.358Z",
   "summary": {
-    "total_remaining_worker_tasks": 167,
+    "total_remaining_worker_tasks": 168,
     "completed_worker_prs_awaiting_trusted_review": 291,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "Monitor WCP-551 draft PR #342 exact-head CI #851 / 36329413892 on HEAD 98738b0909cb4ff407e9cb45e722c80cf42ab854; fix any failures and rerun the complete workflow on the repaired exact HEAD.",
+    "next_required_action": "Implement the feature-local public genre query, paginated directory/detail controller, accessible widget and focused integration tests on this exact main base.",
     "composition_preparable": 0,
     "immediately_actionable": 28,
     "must_continue": true
@@ -43382,6 +43382,171 @@
       "ci_run_id": 36334239694,
       "last_ci_run_id": 36334239694,
       "last_observed_head": "be4eeaf0bbf945e18dc6e51a29555cde5409f000"
+    },
+    {
+      "priority": 557,
+      "package_id": "WCP-557",
+      "title": "Public game genre directory and Page Builder widget",
+      "risk": "medium",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-557-public-game-genre-directory-g1",
+      "suggested_branch": "feature/wcp-557-public-game-genre-directory-g1",
+      "base_branch": "main",
+      "base_sha": "d05a736b0e02c7382213772c3b1d6e99f2fd60d7",
+      "objective": "Make existing public Game Catalogue genres directly browsable. Add a paginated public genre directory and genre pages that list only games whose catalogue entry and game are enabled, plus a discoverable Gaming Page Builder widget. Keep ordering stable, validate pagination, suppress all surfaces when Gaming is disabled, and use feature-local templates without changing shared catalogue controllers, repositories, entities, schema, or widget registry.",
+      "allowed_paths": [
+        "src/Controller/PublicGameGenreDirectoryController.php",
+        "src/GameGenreDirectory/PublicGameGenreDirectoryQuery.php",
+        "src/GameGenreDirectory/Templates/game_genre_directory/index.html.twig",
+        "src/GameGenreDirectory/Templates/game_genre_directory/genre.html.twig",
+        "src/GameGenreDirectory/Templates/widget/game_genres.html.twig",
+        "src/Widget/PublicGameGenreDirectoryWidgetProvider.php",
+        "config/packages/public_game_genre_directory.yaml",
+        "tests/Controller/PublicGameGenreDirectoryControllerTest.php",
+        "tests/Widget/PublicGameGenreDirectoryWidgetTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/services.yaml",
+        "src/Controller/GameCatalogue/",
+        "src/Entity/GameCatalogue/",
+        "src/Repository/GameCatalogue/",
+        "templates/game_catalogue/",
+        "src/Widget/WidgetRegistry.php",
+        "src/Widget/WidgetDefinition.php",
+        "src/Controller/PublicGameCatalogueSearchController.php",
+        "src/Repository/PublicGameCatalogueSearchRepository.php",
+        "src/Entity/GameCatalogue/GameGenre.php",
+        "src/Entity/GameCatalogue/GameCatalogueEntry.php"
+      ],
+      "deliverables": [
+        "GET /games/genres lists only genres attached to at least one enabled catalogue entry and enabled game, in stable case-insensitive name/ID order with 40-item pagination.",
+        "GET /games/genres/{slug} shows only enabled public games assigned to that genre, in stable name/ID order with 20-item pagination; missing or non-public genres return not found and malformed pages return a client error.",
+        "Both public routes enforce the Gaming module gate and expose no games from disabled entries or disabled games.",
+        "Auto-discovered Gaming Page Builder widget links to the genre directory and up to 12 visible genre pages, handles empty data, and is unavailable when Gaming is disabled.",
+        "Templates and Twig configuration are feature-local; no migrations, shared catalogue controller/repository/entity, shared widget registry, or schema edits."
+      ],
+      "tests": [
+        "Controller regressions for active genre opt-in, hidden/unused genre exclusion, disabled entry/game filtering, stable sorting and pagination, not-found and invalid-page behavior, GET-only routes, and Gaming module suppression.",
+        "Widget regressions for Page Builder discovery/rendering, escaped genre labels and links, 12-item bound, empty state, and Gaming module suppression.",
+        "Full exact-head Worker CI with PHPStan, PHPUnit, Twig/container validation, Doctrine mappings, and PostgreSQL 18 migration-chain validation."
+      ],
+      "completion_report": [
+        "Exact Worker proposal base and final HEAD SHAs.",
+        "Complete changed-path list and PR state.",
+        "Public genre/game visibility, stable pagination, module-gate, and widget-discovery evidence.",
+        "Focused tests and exact-head full CI results.",
+        "Remaining limitations and Trusted follow-up."
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-Trusted-review-and-exact-head-CI",
+        "preserve-all-security-permissions-CSRF-validation-recovery-rollback-and-upload-controls",
+        "no-private-runtime-or-sensitive-data",
+        "no-schema-migration-or-entity-change",
+        "no-edit-to-active-or-claim-locked-paths",
+        "no-direct-Trusted-integration-or-deployment"
+      ],
+      "proposal_kind": "worker_only",
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "d05a736b0e02c7382213772c3b1d6e99f2fd60d7",
+      "proposal_dependency_evidence": [],
+      "collision_check": {
+        "compared_against": "Fresh continuous/work-pool-v4 @ 247d62ae05089663e3a0f6fc8b0dae53381219b7; Worker main @ d05a736b0e02c7382213772c3b1d6e99f2fd60d7; all active, claim-locked, and unclaimed task allowed-paths, including FCP-056, WCP-387, WCP-511, WCP-555 and WCP-556.",
+        "result": "No exact or prefix overlaps against any active or claim-locked allowed paths or any unclaimed task allowed paths. The broad locked Game Catalogue namespace paths, existing genre-filter route/repository, content-tag directory, release RSS, and forum workflow files are excluded. Query uses the existing entry-to-genre association without changing shared entities or repositories.",
+        "paths": [
+          "src/Controller/PublicGameGenreDirectoryController.php",
+          "src/GameGenreDirectory/PublicGameGenreDirectoryQuery.php",
+          "src/GameGenreDirectory/Templates/game_genre_directory/index.html.twig",
+          "src/GameGenreDirectory/Templates/game_genre_directory/genre.html.twig",
+          "src/GameGenreDirectory/Templates/widget/game_genres.html.twig",
+          "src/Widget/PublicGameGenreDirectoryWidgetProvider.php",
+          "config/packages/public_game_genre_directory.yaml",
+          "tests/Controller/PublicGameGenreDirectoryControllerTest.php",
+          "tests/Widget/PublicGameGenreDirectoryWidgetTest.php"
+        ],
+        "observed_nonblocking_path_hits": [
+          {
+            "id": "FCP-056",
+            "state": "worker_pr_complete_awaiting_trusted_review",
+            "excluded": [
+              "src/Controller/GameCatalogue/",
+              "src/Entity/GameCatalogue/",
+              "src/Repository/GameCatalogue/",
+              "templates/game_catalogue/"
+            ]
+          },
+          {
+            "id": "WCP-387",
+            "state": "worker_complete_awaiting_trusted_review",
+            "excluded": [
+              "src/Controller/GameCatalogue/GameCatalogueController.php",
+              "src/Repository/GameCatalogue/GameCatalogueEntryRepository.php",
+              "templates/game_catalogue/index.html.twig",
+              "tests/Gaming/Catalogue/GameCatalogueControllerTest.php"
+            ]
+          },
+          {
+            "id": "WCP-511",
+            "state": "worker_in_progress",
+            "excluded": [
+              "src/Controller/PublicContentTagDirectoryController.php",
+              "templates/content_tag/index.html.twig",
+              "tests/Controller/PublicContentTagDirectoryTest.php"
+            ]
+          },
+          {
+            "id": "WCP-555",
+            "state": "worker_complete_awaiting_trusted_review",
+            "excluded": [
+              "src/GameReleaseFeed/",
+              "src/Controller/PublicGameReleaseFeedController.php",
+              "tests/Controller/PublicGameReleaseFeedControllerTest.php"
+            ]
+          },
+          {
+            "id": "WCP-556",
+            "state": "worker_in_progress",
+            "excluded": [
+              "src/Controller/PublicForumWorkflowController.php",
+              "src/Controller/AdminForumWorkflowController.php",
+              "src/ForumWorkflow/"
+            ]
+          }
+        ]
+      },
+      "published_at": "2026-09-27T16:46:09.410Z",
+      "claimed_on": "2026-09-27T16:46:09.410Z",
+      "claim_state": "active",
+      "active_base_branch": "main",
+      "active_base_sha": "d05a736b0e02c7382213772c3b1d6e99f2fd60d7",
+      "active_head": "d05a736b0e02c7382213772c3b1d6e99f2fd60d7",
+      "branch_heads": {
+        "claim_branch": "d05a736b0e02c7382213772c3b1d6e99f2fd60d7",
+        "feature_branch": "d05a736b0e02c7382213772c3b1d6e99f2fd60d7"
+      },
+      "last_observed_head": "d05a736b0e02c7382213772c3b1d6e99f2fd60d7",
+      "last_checkpoint_at": "2026-09-27T16:46:09.410Z",
+      "last_verified_push_at": "2026-09-27T16:46:09.410Z",
+      "checkpoint_paths": [],
+      "ci_attempts": [],
+      "resume_branch": "feature/wcp-557-public-game-genre-directory-g1",
+      "next_action": "Implement the feature-local public genre query, paginated directory/detail controller, accessible widget and focused integration tests on this exact main base."
     }
   ],
   "recovery_queue": [],
