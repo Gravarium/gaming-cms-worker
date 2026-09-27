@@ -17,7 +17,7 @@
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-468 is complete on green exact-head Worker PR #261. Continue with the next independent Worker-only proposal while preserving all other active claims and blocked FCP dependencies.",
+    "next_required_action": "WCP-468 is complete on green exact-head Worker PR #261; WCP-469 is claimed on sanitized main for the failed-message queue read boundary. Preserve all other claims.",
     "composition_preparable": 0,
     "immediately_actionable": 3,
     "must_continue": true
@@ -28210,6 +28210,98 @@
         "Awaiting Trusted review and Trusted integration CI."
       ],
       "trusted_follow_up": "Preserve CMS_CONTENT_MANAGE and category form/delete-route CSRF checks before mutations; keep non-empty-category deletion protection; run full Trusted CI."
+    },
+    {
+      "priority": 469,
+      "package_id": "WCP-469",
+      "title": "Protect failed-message queue details from users without settings permission",
+      "risk": "medium",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-469-admin-queue-read-access-g1",
+      "suggested_branch": "feature/wcp-469-admin-queue-read-access-g1",
+      "base_branch": "main",
+      "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "objective": "Add test-only functional coverage for the admin failed-message queue's existing CMS_SETTINGS_MANAGE read boundary. An authenticated user with an unrelated CMS permission must receive 403 from /admin/queue before failed-message details are read or rendered. Do not touch retry behavior, queue state, controller, paginator, template, transport configuration or schema.",
+      "allowed_paths": [
+        "tests/Controller/AdminQueueReadAccessSecurityTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "src/",
+        "templates/",
+        "migrations/",
+        "config/",
+        "public/uploads/"
+      ],
+      "deliverables": [
+        "An authenticated account with CMS_CONTENT_MANAGE but without CMS_SETTINGS_MANAGE receives 403 from GET /admin/queue.",
+        "The test creates and removes its synthetic account and performs no retry, retry-all, transport or message mutation.",
+        "Keep the change test-only in the one allowed path."
+      ],
+      "tests": [
+        "Focused AdminQueueReadAccessSecurityTest functional PHPUnit coverage.",
+        "PHPStan level 8 and complete Worker CI on exact final HEAD.",
+        "PostgreSQL 18 complete migration-chain validation."
+      ],
+      "completion_report": [
+        "Exact sanitized main base SHA and final Worker HEAD SHA.",
+        "Complete changed-path list and Worker PR.",
+        "Authenticated insufficient-permission denial evidence for failed-message queue details.",
+        "Focused and complete test commands/results, PHPStan and exact-head CI.",
+        "Remaining Trusted integration follow-up."
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "preserve-CMS_SETTINGS_MANAGE-before-failed-message-overview-read",
+        "do-not-retry-or-mutate-failed-messages-in-this-test",
+        "restore-all-synthetic-test-state",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment",
+        "no-private-runtime-or-sensitive-data"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "proposal_kind": "worker_only",
+      "proposal_dependency_evidence": [],
+      "collision_check": {
+        "compared_against": "Fresh continuous/work-pool-v4 at f644623cd861d3f363cd61aafb668e718fe82e33, all active and claim-locked allowed-path scopes, and exact sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d.",
+        "result": "No active or claim-locked package owns or encloses tests/Controller/AdminQueueReadAccessSecurityTest.php; the file is absent from sanitized main. WCP-420 covers retry CSRF/security in its distinct test file, and WCP-452 owns the queue controller, paginator, template and pagination test; this package does not touch those files or retry behavior. Existing SecurityBoundaryBrowserTest does not include /admin/queue. It only adds an authenticated role-denial regression for the read boundary; no queue messages are created, retried or changed.",
+        "paths": [
+          "tests/Controller/AdminQueueReadAccessSecurityTest.php"
+        ]
+      },
+      "published_at": "2026-09-27T04:57:02.819Z",
+      "claimed_on": "2026-09-27T04:57:02.819Z",
+      "claim_state": "active",
+      "active_base_branch": "main",
+      "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "resume_branch": "feature/wcp-469-admin-queue-read-access-g1",
+      "last_checkpoint_at": "2026-09-27T04:57:02.819Z",
+      "checkpoint_paths": [],
+      "branch_heads": {
+        "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+        "feature_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d"
+      },
+      "next_action": "Add the one functional role-boundary test, checkpoint it and run the complete exact-head Worker CI.",
+      "last_observed_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "last_verified_push_at": "2026-09-27T04:57:02.819Z"
     }
   ],
   "recovery_queue": [],
