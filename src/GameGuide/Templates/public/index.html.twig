@@ -1,0 +1,48 @@
+{% extends 'base.html.twig' %}
+{% block title %}Gaming-Guides{% endblock %}
+{% block body %}
+<main class="public-shell">
+    <p class="eyebrow">Gaming · Builds und Tier-Listen</p>
+    <h1>Öffentliche Gaming-Guides</h1>
+    <p>Veröffentlichte Guides zeigen ihre Version, Saison und Gültigkeit.</p>
+    {% if is_granted('CMS_GAMING_MANAGE') %}<p><a href="{{ path('app_admin_gaming_guide_index') }}">Guides verwalten</a></p>{% endif %}
+    <form method="get" action="{{ path('app_gaming_guide_index') }}" class="content-form">
+        <label for="guide-search">Titel suchen</label>
+        <input id="guide-search" name="q" maxlength="100" value="{{ query }}">
+        <label for="guide-game-filter">Spiel</label>
+        <select id="guide-game-filter" name="game">
+            <option value="">Alle Spiele</option>
+            {% for option in games %}<option value="{{ option.slug }}" {% if game == option.slug %}selected{% endif %}>{{ option.name }}</option>{% endfor %}
+        </select>
+        <label for="guide-type-filter">Typ</label>
+        <select id="guide-type-filter" name="type">
+            <option value="">Alle Typen</option>
+            <option value="build" {% if type == 'build' %}selected{% endif %}>Build</option>
+            <option value="tier_list" {% if type == 'tier_list' %}selected{% endif %}>Tier-Liste</option>
+        </select>
+        <button type="submit">Filtern</button>
+    </form>
+    <p>{{ total }} Guides · Seite {{ page }} von {{ pages }}</p>
+    <section class="guild-grid" aria-label="Gaming-Guides">
+        {% for guide in guides %}
+            <article class="guild-card">
+                <p class="eyebrow">{{ guide.game_name }}</p>
+                <h2><a href="{{ path('app_gaming_guide_show', {id: guide.id}) }}">{{ guide.title }}</a></h2>
+                <p>{{ guide.guide_type == 'tier_list' ? 'Tier-Liste' : 'Build' }} · {{ guide.game_version }} · {{ guide.season }}</p>
+                {% if guide.is_outdated %}<span class="status status-disabled">Gültigkeitszeitraum abgelaufen oder noch nicht begonnen</span>{% else %}<span class="status status-ready">Aktueller Gültigkeitszeitraum</span>{% endif %}
+            </article>
+        {% else %}
+            <p class="muted">Für diese Auswahl gibt es noch keine öffentlichen Guides.</p>
+        {% endfor %}
+    </section>
+    {% if pages > 1 %}
+        <nav aria-label="Guide-Seiten">
+            {% if page > 1 %}<a href="{{ path('app_gaming_guide_index', {q: query, type: type, game: game, page: page - 1}) }}">Zurück</a>{% endif %}
+            {% for number in 1..pages %}
+                {% if number == page %}<strong aria-current="page">{{ number }}</strong>{% else %}<a href="{{ path('app_gaming_guide_index', {q: query, type: type, game: game, page: number}) }}">{{ number }}</a>{% endif %}
+            {% endfor %}
+            {% if page < pages %}<a href="{{ path('app_gaming_guide_index', {q: query, type: type, game: game, page: page + 1}) }}">Weiter</a>{% endif %}
+        </nav>
+    {% endif %}
+</main>
+{% endblock %}
