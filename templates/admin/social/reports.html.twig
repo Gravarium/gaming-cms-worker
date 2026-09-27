@@ -1,0 +1,31 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Social-Moderation{% endblock %}
+
+{% block body %}
+<main>
+    <h1>Social-Meldungen</h1>
+    {% if reports is empty %}
+        <p>Keine offenen Meldungen.</p>
+    {% else %}
+        <ul>
+            {% for report in reports %}
+                <li>
+                    <p><strong>{{ report.reason }}</strong>: {{ report.details ?: 'Keine Details' }}</p>
+                    <p>Nachricht von {{ report.message.author.displayName }}: {{ report.message.body }}</p>
+                    <form method="post" action="{{ path('app_admin_social_report_decide', {id: report.id, outcome: 'uphold'}) }}">
+                        <input type="hidden" name="_token" value="{{ csrf_token('social-moderation-' ~ report.id) }}">
+                        <input name="reason" required maxlength="1000" placeholder="Entscheidungsgrund">
+                        <button type="submit">Bestätigen und entfernen</button>
+                    </form>
+                    <form method="post" action="{{ path('app_admin_social_report_decide', {id: report.id, outcome: 'reject'}) }}">
+                        <input type="hidden" name="_token" value="{{ csrf_token('social-moderation-' ~ report.id) }}">
+                        <input name="reason" required maxlength="1000" placeholder="Entscheidungsgrund">
+                        <button type="submit">Ablehnen</button>
+                    </form>
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+</main>
+{% endblock %}

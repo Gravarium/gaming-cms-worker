@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ conversation.title ?: 'Direkte Nachricht' }}{% endblock %}
+
+{% block body %}
+<main>
+    <h1>{{ conversation.title ?: 'Direkte Nachricht' }}</h1>
+    <p><a href="{{ path('app_social_index') }}">Zurück zu Social</a></p>
+
+    <section aria-label="Nachrichten">
+        {% if messages is empty %}
+            <p>Noch keine Nachrichten.</p>
+        {% else %}
+            {% for message in messages %}
+                <article>
+                    <header>
+                        <strong>{{ message.author.displayName }}</strong>
+                        <time datetime="{{ message.createdAt|date('c') }}">{{ message.createdAt|date('d.m.Y H:i') }}</time>
+                    </header>
+                    <p>{{ message.body }}</p>
+                    {% if message.author.id != actor.id %}
+                        <form method="post" action="{{ path('app_social_message_report', {id: message.id}) }}">
+                            <input type="hidden" name="_token" value="{{ csrf_token('social-report-' ~ message.id) }}">
+                            <input type="hidden" name="reason" value="abuse">
+                            <button type="submit">Melden</button>
+                        </form>
+                    {% endif %}
+                </article>
+            {% endfor %}
+        {% endif %}
+    </section>
+
+    {{ form_start(messageForm) }}
+        {{ form_errors(messageForm) }}
+        {{ form_row(messageForm.body) }}
+        <button type="submit">Senden</button>
+    {{ form_end(messageForm) }}
+</main>
+{% endblock %}
