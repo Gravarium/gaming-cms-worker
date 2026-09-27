@@ -23,7 +23,7 @@ final readonly class PublicGameGenreDirectoryQuery
     public function countPublicGenres(): int
     {
         return (int) $this->publicGenres()
-            ->select('COUNT(DISTINCT genre.id)')
+            ->select('COUNT(genre.id)')
             ->getQuery()
             ->getSingleScalarResult();
     }
@@ -36,7 +36,7 @@ final readonly class PublicGameGenreDirectoryQuery
 
         /** @var list<GameGenre> $genres */
         $genres = $this->publicGenres()
-            ->select('DISTINCT genre')
+            ->select('genre')
             ->orderBy('LOWER(genre.name)', 'ASC')
             ->addOrderBy('genre.id', 'ASC')
             ->setFirstResult(($page - 1) * self::GENRE_PAGE_SIZE)
@@ -50,7 +50,7 @@ final readonly class PublicGameGenreDirectoryQuery
     public function findPublicGenreBySlug(string $slug): ?GameGenre
     {
         $genre = $this->publicGenres()
-            ->select('DISTINCT genre')
+            ->select('genre')
             ->andWhere('genre.slug = :slug')
             ->setParameter('slug', $slug)
             ->getQuery()
@@ -87,19 +87,33 @@ final readonly class PublicGameGenreDirectoryQuery
 
     private function publicGenres(): QueryBuilder
     {
+        $subquery = $this->entityManager->createQueryBuilder()
+            ->select('entryCheck.id')
+            ->from(GameCatalogueEntry::class, 'entryCheck')
+            ->join('entryCheck.game', 'gameCheck')
+            ->join('entryCheck.genres', 'genreCheck')
+            ->where('genreCheck.id = genre.id')
+            ->andWhere('entryCheck.enabled = :enabled')
+            ->andWhere('gameCheck.enabled = :enabled');
+
+        $query = $this->entityManager->createQueryBuilder()
+            ->from(GameGenre::class, 'genre');
+
+        return $query
+            ->andWhere($query->expr()->exists($subquery->getDQL()))
+            ->setParameter('enabled', true);
+    }
+
+    private function publicEntriesForGenre(string $slug): QueryBuilder
+    {
         return $this->entityManager->createQueryBuilder()
             ->from(GameCatalogueEntry::class, 'entry')
             ->join('entry.game', 'game')
             ->join('entry.genres', 'genre')
             ->andWhere('entry.enabled = :enabled')
             ->andWhere('game.enabled = :enabled')
-            ->setParameter('enabled', true);
-    }
-
-    private function publicEntriesForGenre(string $slug): QueryBuilder
-    {
-        return $this->publicGenres()
             ->andWhere('genre.slug = :slug')
+            ->setParameter('enabled', true)
             ->setParameter('slug', $slug);
     }
 

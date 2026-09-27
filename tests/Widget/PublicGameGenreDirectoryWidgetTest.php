@@ -137,40 +137,72 @@ final class PublicGameGenreDirectoryWidgetTest extends WebTestCase
         }
     }
 
-    /** @return array{exists: bool, enabled: bool} */
+    /**
+     * @return array{
+     *     gaming: array{exists: bool, enabled: bool},
+     *     content: array{exists: bool, enabled: bool}
+     * }
+     */
     private function captureGamingModuleState(KernelBrowser $client): array
     {
         if (!$client->getContainer()->get(CmsModuleManager::class)->isInstalled('gaming')) {
-            self::markTestSkipped('The Gaming module must be installed for the public genre widget test.');
+            self::markTestSkipped('The Gaming module must be installed for the public genre surface test.');
         }
 
-        $state = $this->entityManager($client)->find(CmsModuleState::class, 'gaming');
+        return [
+            'gaming' => $this->captureModuleState($client, 'gaming'),
+            'content' => $this->captureModuleState($client, 'content'),
+        ];
+    }
+
+    /** @return array{exists: bool, enabled: bool} */
+    private function captureModuleState(KernelBrowser $client, string $module): array
+    {
+        $state = $this->entityManager($client)->find(CmsModuleState::class, $module);
 
         return ['exists' => $state !== null, 'enabled' => $state?->isEnabled() ?? true];
     }
 
     private function setGamingModuleEnabled(KernelBrowser $client, bool $enabled): void
     {
+        $this->setModuleEnabled($client, 'content', true);
+        $this->setModuleEnabled($client, 'gaming', $enabled);
+    }
+
+    private function setModuleEnabled(KernelBrowser $client, string $module, bool $enabled): void
+    {
         $entityManager = $this->entityManager($client);
-        $state = $entityManager->find(CmsModuleState::class, 'gaming');
+        $state = $entityManager->find(CmsModuleState::class, $module);
         if ($state === null) {
-            $state = (new CmsModuleState())->setModuleKey('gaming')->updateVersion('test');
+            $state = (new CmsModuleState())->setModuleKey($module)->updateVersion('test');
             $entityManager->persist($state);
         }
         $state->setEnabled($enabled);
         $entityManager->flush();
     }
 
-    /** @param array{exists: bool, enabled: bool} $snapshot */
+    /**
+     * @param array{
+     *     gaming: array{exists: bool, enabled: bool},
+     *     content: array{exists: bool, enabled: bool}
+     * } $snapshot
+     */
     private function restoreGamingModuleState(KernelBrowser $client, array $snapshot): void
     {
-        $entityManager = $this->entityManager($client);
-        if (!$entityManager->isOpen()) {
+        if (!$this->entityManager($client)->isOpen()) {
             return;
         }
 
+        $this->restoreModuleState($client, 'gaming', $snapshot['gaming']);
+        $this->restoreModuleState($client, 'content', $snapshot['content']);
+    }
+
+    /** @param array{exists: bool, enabled: bool} $snapshot */
+    private function restoreModuleState(KernelBrowser $client, string $module, array $snapshot): void
+    {
+        $entityManager = $this->entityManager($client);
         $entityManager->clear();
-        $state = $entityManager->find(CmsModuleState::class, 'gaming');
+        $state = $entityManager->find(CmsModuleState::class, $module);
         if (!$snapshot['exists']) {
             if ($state instanceof CmsModuleState) {
                 $entityManager->remove($state);

@@ -20,7 +20,7 @@ final class PublicGameGenreDirectoryController extends AbstractController
     ) {
     }
 
-    #[Route('/games/genres', name: 'app_gaming_game_genre_index', methods: ['GET'])]
+    #[Route('/games/genres', name: 'app_gaming_game_genre_index', methods: ['GET'], priority: 100)]
     public function index(Request $request): Response
     {
         $this->assertAvailable();
