@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T00:02:41.765Z",
+  "published_at": "2026-09-27T00:04:58.409Z",
   "summary": {
     "total_remaining_worker_tasks": 137,
     "completed_worker_prs_awaiting_trusted_review": 204,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-437 draft PR #231 is queued for exact-head Worker CI run 36281335854; run the targeted tests, complete CI, and repair any concrete failure on this branch.",
+    "next_required_action": "WCP-434 repaired the cache-header assertions on HEAD be0fca340e4ffe822cbf4843d0086b1d9d1df09f; run full exact-head Worker CI and repair any further failure on the same branch.",
     "composition_preparable": 0,
     "immediately_actionable": 0,
     "must_continue": true
@@ -23238,7 +23238,7 @@
       "proposal_dependency_evidence": [],
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-      "active_head": "3becc3a6fdcba414a40dca90529704c57e0d6135",
+      "active_head": "be0fca340e4ffe822cbf4843d0086b1d9d1df09f",
       "resume_branch": "feature/wcp-434-layout-page-directory-g1",
       "collision_check": {
         "compared_against": "Fresh continuous/work-pool-v4 blob 693cfffc170dba611a219892aa137f0f0bb4715b, all active and claim-locked allowlists, and exact sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d.",
@@ -23253,8 +23253,8 @@
       },
       "claimed_on": "2026-09-26T23:46:48.636Z",
       "claim_state": "active",
-      "last_checkpoint_at": "2026-09-27T00:01:18.834Z",
-      "last_verified_push_at": "2026-09-27T00:00:21.295Z",
+      "last_checkpoint_at": "2026-09-27T00:04:58.409Z",
+      "last_verified_push_at": "2026-09-27T00:04:58.409Z",
       "checkpoint_paths": [
         "src/Controller/AdminLayoutPageDirectoryController.php",
         "src/Repository/AdminLayoutPageDirectoryRepository.php",
@@ -23264,7 +23264,7 @@
       ],
       "branch_heads": {
         "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-        "feature_branch": "3becc3a6fdcba414a40dca90529704c57e0d6135"
+        "feature_branch": "be0fca340e4ffe822cbf4843d0086b1d9d1df09f"
       },
       "worker_pr": 230,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/230",
@@ -23272,15 +23272,10 @@
       "pr_state": "open_draft_awaiting_exact_head_ci",
       "last_ci_run_id": 36281195962,
       "ci_run_id": 36281195962,
-      "last_ci_result": "in_progress",
-      "ci_attempts": [
-        {
-          "run_id": 36281195962,
-          "head": "3becc3a6fdcba414a40dca90529704c57e0d6135",
-          "result": "in_progress"
-        }
-      ],
-      "next_action": "Worker CI run 36281195962 is in progress on exact HEAD 3becc3a6fdcba414a40dca90529704c57e0d6135; inspect all jobs and fix any failure on this branch."
+      "last_ci_result": "failure",
+      "ci_attempts": [{"run_id":36281195962,"head":"3becc3a6fdcba414a40dca90529704c57e0d6135","result":"failure"}],
+      "last_ci_diagnosis": "CI run 36281195962 failed only two new-test assertions because Symfony added max-age=0 and must-revalidate to the private,no-store Cache-Control header. The response still included private and no-store; the test now checks those directives separately and preserves the noindex assertion.",
+      "next_action": "Run complete exact-head Worker CI on repaired HEAD be0fca340e4ffe822cbf4843d0086b1d9d1df09f; fix any further failure on this branch."
     },
     {
       "priority": 215,
