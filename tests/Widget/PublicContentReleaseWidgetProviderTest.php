@@ -57,6 +57,9 @@ final class PublicContentReleaseWidgetProviderTest extends WebTestCase
                 [$news, $page, $unpublishesLater, $draft, $review, $scheduled, $archived, $trashed, $future, $unlisted, $expired, $expiresNow, $unsupportedType],
                 $publishedAt,
             );
+            $news->setPublishedAt($now->modify('-1 hour'));
+            $page->setPublishedAt($now->modify('-2 hours'));
+            $unpublishesLater->setPublishedAt($now->modify('-3 hours'));
 
             $draftReleaseEntry = $this->newEntry($author, 'Draft release entry', 'news', 'wcp533-'.$token.'-draft-release-entry', $now->modify('-1 hour'));
             $draftRelease = $this->newRelease($author, 'Draft release', null, [$draftReleaseEntry], $publishedAt, ContentRelease::STATUS_DRAFT);
