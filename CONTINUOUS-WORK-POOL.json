@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T10:20:53.429Z",
+  "published_at": "2026-09-27T10:24:25.164Z",
   "summary": {
     "total_remaining_worker_tasks": 165,
     "completed_worker_prs_awaiting_trusted_review": 272,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-513 is actively claimed from exact sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d; implement the public news month archive and complete exact-head Worker CI.",
+    "next_required_action": "WCP-509 has a coherent exact-head checkpoint on cf15dc7a1942247bbd1e3b7fa3f5d9fae9a2e72c; run focused and complete Worker CI on the draft PR.",
     "composition_preparable": 0,
     "immediately_actionable": 19,
     "must_continue": true
@@ -34680,17 +34680,22 @@
       "claim_state": "active",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "cf15dc7a1942247bbd1e3b7fa3f5d9fae9a2e72c",
       "resume_branch": "feature/wcp-509-public-competition-calendar-g1",
       "branch_heads": {
         "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-        "feature_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d"
+        "feature_branch": "cf15dc7a1942247bbd1e3b7fa3f5d9fae9a2e72c"
       },
-      "last_observed_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-      "last_checkpoint_at": "2026-09-27T10:10:45.441Z",
-      "checkpoint_paths": [],
-      "next_action": "Implement the competition calendar landing page, safe iCalendar feed, home-page entry point and focused visibility/format tests within the four reserved files; checkpoint before full exact-head Worker CI.",
-      "last_verified_push_at": "2026-09-27T10:10:45.441Z"
+      "last_observed_head": "cf15dc7a1942247bbd1e3b7fa3f5d9fae9a2e72c",
+      "last_checkpoint_at": "2026-09-27T10:24:23.513Z",
+      "checkpoint_paths": [
+        "src/Controller/CompetitionCalendarController.php",
+        "templates/competition_calendar/index.html.twig",
+        "templates/home/index.html.twig",
+        "tests/Controller/CompetitionCalendarControllerTest.php"
+      ],
+      "next_action": "Open a draft Worker PR to trigger the focused and full CI. Diagnose any red check and fix only on this branch, then rerun complete CI on the exact final HEAD.",
+      "last_verified_push_at": "2026-09-27T10:24:23.513Z"
     },
     {
       "priority": 510,
