@@ -18,6 +18,7 @@ final class CompetitionCalendarControllerTest extends WebTestCase
     public function testCalendarAndFeedShowOnlyUpcomingPublicOpenCompetitions(): void
     {
         $client = static::createClient();
+        $client->disableReboot();
         $previousGamingState = $this->setGamingEnabled($client, true);
         $entities = [];
 
@@ -129,6 +130,7 @@ final class CompetitionCalendarControllerTest extends WebTestCase
     public function testGameFilterKeepsTheLandingPageAndFeedScopedAndEscapesIcalendarText(): void
     {
         $client = static::createClient();
+        $client->disableReboot();
         $previousGamingState = $this->setGamingEnabled($client, true);
         $entities = [];
 
@@ -197,6 +199,7 @@ final class CompetitionCalendarControllerTest extends WebTestCase
     public function testMalformedUnknownDisabledAndArrayGameFiltersFailClosedAndWritesAreRejected(): void
     {
         $client = static::createClient();
+        $client->disableReboot();
         $previousGamingState = $this->setGamingEnabled($client, true);
         $entities = [];
 
@@ -238,6 +241,7 @@ final class CompetitionCalendarControllerTest extends WebTestCase
     public function testBothRoutesFailClosedWhenGamingIsDisabledAndHomeLinkIsHidden(): void
     {
         $client = static::createClient();
+        $client->disableReboot();
         $previousGamingState = $this->setGamingEnabled($client, false);
 
         try {
