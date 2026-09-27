@@ -265,7 +265,7 @@ final class SocialGroupConversationCreationTest extends WebTestCase
 
             self::assertResponseIsSuccessful();
             self::assertSelectorTextContains('body', 'Zurzeit gibt es keine aktiven Mitglieder mit einem für dich sichtbaren Anzeigenamen.');
-            self::assertSelectorIsDisabled('button[type="submit"]');
+            self::assertSelectorExists('button[type="submit"][disabled]');
         } finally {
             $this->cleanup($client, $users);
         }

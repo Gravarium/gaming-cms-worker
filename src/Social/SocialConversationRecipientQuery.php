@@ -24,7 +24,7 @@ final readonly class SocialConversationRecipientQuery
      */
     public function choicesFor(User $viewer): array
     {
-        /** @var list<array{0: MemberProfile, 1: User}> $rows */
+        /** @var list<MemberProfile> $rows */
         $rows = $this->profiles->createQueryBuilder('profile')
             ->select('profile', 'recipientUser')
             ->innerJoin('profile.user', 'recipientUser')
@@ -37,7 +37,8 @@ final readonly class SocialConversationRecipientQuery
             ->getResult();
 
         $choices = [];
-        foreach ($rows as [$profile, $recipientUser]) {
+        foreach ($rows as $profile) {
+            $recipientUser = $profile->getUser();
             $id = $recipientUser->getId();
             if (
                 $id === null
