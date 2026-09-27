@@ -92,8 +92,9 @@ final class AdminMediaUsageBrowserTest extends WebTestCase
         self::assertSelectorExists('a[href="/admin/layout/page-'.$page->getId().'"]');
         self::assertSelectorTextContains('[data-usage-kind="content"]', '<img src=x onerror=alert(1)>');
         self::assertSelectorTextContains('[data-usage-kind="content"]', 'Kurztext');
-        self::assertSelectorTextContains('[data-usage-kind="content"]', 'Image block reference');
-        self::assertSelectorTextContains('[data-usage-kind="content"]', 'Bildblock');
+        $imageBlockSelector = '[data-content-entry-id="'.$imageBlockEntry->getId().'"]';
+        self::assertSelectorTextContains($imageBlockSelector, 'Image block reference');
+        self::assertSelectorTextContains($imageBlockSelector, 'Bildblock');
         self::assertSelectorTextContains('[data-usage-kind="layout"]', 'Layout <em>title</em>');
 
         $html = (string) $client->getResponse()->getContent();
