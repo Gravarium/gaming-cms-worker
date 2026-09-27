@@ -23765,30 +23765,36 @@
       "claim_state": "active",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-      "active_head": "531c552b32edd016962892cf88782bd4dbe2ae8d",
+      "active_head": "d173b34978bbae205b906344aad434072cd7d303",
       "resume_branch": "feature/wcp-438-access-role-delegation-security-g1",
-      "last_checkpoint_at": "2026-09-27T00:11:06.643Z",
-      "last_verified_push_at": "2026-09-27T00:11:06.643Z",
+      "last_checkpoint_at": "2026-09-27T00:13:20.631Z",
+      "last_verified_push_at": "2026-09-27T00:13:20.631Z",
       "checkpoint_paths": [
         "tests/Controller/AdminAccessRoleDelegationSecurityTest.php"
       ],
       "branch_heads": {
         "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-        "feature_branch": "531c552b32edd016962892cf88782bd4dbe2ae8d"
+        "feature_branch": "d173b34978bbae205b906344aad434072cd7d303"
       },
-      "next_action": "PR #233 has Worker CI run 36281698456 in progress on exact HEAD 531c552b32edd016962892cf88782bd4dbe2ae8d; continue on the same feature branch, diagnose any failures, and update this entry with final exact-head CI evidence.",
+      "next_action": "The first full CI run exposed a stale Doctrine identity-map assertion in the test; the test now clears the current manager before reading persisted state and explicitly asserts the rendered CSRF token. Await exact-head Worker CI run 36281821433 for HEAD d173b34978bbae205b906344aad434072cd7d303; repair any concrete remaining failure.",
       "worker_pr": 233,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/233",
       "pr_state": "open_ready_for_review_unmerged",
       "draft_pr": false,
-      "last_ci_run_id": 36281698456,
-      "ci_run_id": 36281698456,
+      "last_ci_run_id": 36281821433,
+      "ci_run_id": 36281821433,
       "ci_result": "in_progress",
       "ci_attempts": [
         {
           "run_id": 36281698456,
           "head": "531c552b32edd016962892cf88782bd4dbe2ae8d",
-          "result": "in_progress"
+          "result": "failure",
+          "reason": "Post-request entity state assertion read a stale Doctrine identity map; fixed to clear the current EntityManager before reloading."
+        },
+        {
+          "run_id": 36281821433,
+          "head": "d173b34978bbae205b906344aad434072cd7d303",
+          "result": "queued"
         }
       ]
     },
