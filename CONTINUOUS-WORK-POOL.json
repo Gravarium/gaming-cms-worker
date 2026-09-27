@@ -10,7 +10,7 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T11:54:04.494Z",
+  "published_at": "2026-09-27T11:55:05.312Z",
   "summary": {
     "total_remaining_worker_tasks": 166,
     "completed_worker_prs_awaiting_trusted_review": 280,
@@ -37031,32 +37031,33 @@
       "claim_state": "active",
       "active_base_branch": "main",
       "active_base_sha": "b510875e7b0741b9b19f09429d2204a95df51198",
-      "active_head": "b795d591f866862b7fff900a8d003253238e75d5",
+      "active_head": "3c1bab1dc29f8f4441add3fbeecf17cc3c82f4b3",
       "resume_branch": "feature/wcp-525-public-content-discovery-visibility-g1",
       "branch_heads": {
         "claim_branch": "b510875e7b0741b9b19f09429d2204a95df51198",
-        "feature_branch": "b795d591f866862b7fff900a8d003253238e75d5"
+        "feature_branch": "3c1bab1dc29f8f4441add3fbeecf17cc3c82f4b3"
       },
-      "last_observed_head": "b795d591f866862b7fff900a8d003253238e75d5",
-      "last_checkpoint_at": "2026-09-27T11:47:28.989Z",
+      "last_observed_head": "3c1bab1dc29f8f4441add3fbeecf17cc3c82f4b3",
+      "last_checkpoint_at": "2026-09-27T11:55:05.312Z",
       "checkpoint_paths": [
         "templates/content/feed.xml.twig",
         "tests/Controller/Content/PublicContentDiscoveryVisibilityTest.php"
       ],
-      "next_action": "Use the existing site_settings() Twig function in content/feed.xml.twig, rerun WCP-525 route tests and full exact-head Worker CI.",
+      "next_action": "Monitor exact-head Worker CI run 36317226668 for HEAD 3c1bab1dc29f8f4441add3fbeecf17cc3c82f4b3; repair only concrete failures within the two allowed WCP-525 paths.",
       "worker_pr": 316,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/316",
       "worker_pr_changed_paths": [
+        "templates/content/feed.xml.twig",
         "tests/Controller/Content/PublicContentDiscoveryVisibilityTest.php"
       ],
       "draft_pr": true,
       "pr_state": "open",
       "worker_pr_state": "draft",
-      "last_verified_push_at": "2026-09-27T11:47:28.989Z",
-      "ci_run_id": 36316842638,
-      "last_ci_run_id": 36316842638,
-      "ci_result": "failure",
-      "last_ci_result": "failure",
+      "last_verified_push_at": "2026-09-27T11:55:05.312Z",
+      "ci_run_id": 36317226668,
+      "last_ci_run_id": 36317226668,
+      "ci_result": "in_progress",
+      "last_ci_result": "in_progress",
       "ci_attempts": [
         {
           "run_id": 36316842638,
@@ -37064,6 +37065,11 @@
           "result": "failure",
           "conclusion": "failure",
           "diagnosis": "RSS route test failed because the test Twig environment has no site global; PHPStan and PostgreSQL 18 migration validation passed."
+        },
+        {
+          "run_id": 36317226668,
+          "head": "3c1bab1dc29f8f4441add3fbeecf17cc3c82f4b3",
+          "result": "in_progress"
         }
       ]
     },
