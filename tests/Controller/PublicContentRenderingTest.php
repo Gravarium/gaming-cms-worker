@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace App\\Tests\\Controller;
+namespace App\Tests\Controller;
 
-use App\\Entity\\ContentEntry;
-use App\\Entity\\User;
-use Doctrine\\ORM\\EntityManagerInterface;
-use Symfony\\Bundle\\FrameworkBundle\\KernelBrowser;
-use Symfony\\Bundle\\FrameworkBundle\\Test\\WebTestCase;
+use App\Entity\ContentEntry;
+use App\Entity\User;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bundle\FrameworkBundle\KernelBrowser;
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 final class PublicContentRenderingTest extends WebTestCase
 {
@@ -29,7 +29,7 @@ final class PublicContentRenderingTest extends WebTestCase
 
             $authorId = $author->getId();
             if ($authorId === null) {
-                throw new \\LogicException('The synthetic author was not persisted.');
+                throw new \LogicException('The synthetic author was not persisted.');
             }
 
             $suffix = bin2hex(random_bytes(6));
@@ -50,14 +50,14 @@ final class PublicContentRenderingTest extends WebTestCase
                 ->setSeoTitle($seoTitle)
                 ->setSeoDescription($seoDescription)
                 ->setStatus(ContentEntry::STATUS_PUBLISHED)
-                ->setPublishedAt(new \\DateTimeImmutable('-1 minute'));
+                ->setPublishedAt(new \DateTimeImmutable('-1 minute'));
             $entry->synchronizePublication();
             $em->persist($entry);
             $em->flush();
 
             $entryId = $entry->getId();
             if ($entryId === null) {
-                throw new \\LogicException('The synthetic content entry was not persisted.');
+                throw new \LogicException('The synthetic content entry was not persisted.');
             }
 
             $client->request('GET', '/news/'.$entry->getSlug());
