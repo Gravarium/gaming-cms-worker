@@ -95,7 +95,7 @@ final class PublicGameCatalogueSearchTest extends WebTestCase
                 self::assertSelectorCount(1, '.game-search-result');
             }
 
-            $client->request('GET', '/game-search?q='.rawurlencode('hidden marker-'.$token));
+            $client->request('GET', '/game-search?q='.rawurlencode('marker-'.$token));
             self::assertResponseIsSuccessful();
             self::assertSelectorExists('.game-search-empty');
             self::assertSelectorCount(0, '.game-search-result');
@@ -258,6 +258,7 @@ final class PublicGameCatalogueSearchTest extends WebTestCase
         }
 
         $genreId = null;
+        $genre = null;
         if ($genreName !== null) {
             $genre = new GameGenre($genreName, 'wcp531-genre-'.$token.'-'.$suffix);
             $entityManager->persist($genre);
@@ -276,8 +277,8 @@ final class PublicGameCatalogueSearchTest extends WebTestCase
         if ($publisherName !== null) {
             $publisherId = $entry->getPublisher()?->getId();
         }
-        if ($genreName !== null) {
-            $genreId = $entry->getGenres()->first()?->getId();
+        if ($genre instanceof GameGenre) {
+            $genreId = $genre->getId();
         }
 
         return [
