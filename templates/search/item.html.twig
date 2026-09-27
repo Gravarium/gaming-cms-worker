@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+{% block title %}{{ document.title }} | Suche{% endblock %}
+{% block body %}
+<main class="public-shell">
+    <p class="eyebrow">{{ document.moduleKey }} · {{ document.documentType }}</p>
+    <h1>{{ document.title }}</h1>
+    {% if document.excerpt %}<p class="hero-copy">{{ document.excerpt }}</p>{% endif %}
+    <div class="article-body">{{ document.body|striptags|nl2br }}</div>
+    <p><a href="{{ path('app_search_global') }}">Zurück zur Suche</a></p>
+</main>
+{% endblock %}
