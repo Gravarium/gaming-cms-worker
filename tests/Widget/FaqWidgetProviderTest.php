@@ -79,8 +79,9 @@ final class FaqWidgetProviderTest extends KernelTestCase
                 $this->document($validator, $oversized);
                 self::fail('An oversized FAQ field was accepted.');
             } catch (\DomainException) {
-                self::assertTrue(true);
+                continue;
             }
+            self::fail('An oversized FAQ field was accepted.');
         }
     }
 
