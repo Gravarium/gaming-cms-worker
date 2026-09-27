@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T18:10:03.498Z",
+  "published_at": "2026-09-27T18:10:47.082Z",
   "summary": {
     "total_remaining_worker_tasks": 168,
     "completed_worker_prs_awaiting_trusted_review": 294,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-564 checkpoint is faa41acadf7a8c69de2d7d753f084952de6118fc; open a draft proposal and run exact-head Worker CI.",
+    "next_required_action": "WCP-564 PR #358 is open as draft; exact-head Worker CI #909 / 36339653506 is running.",
     "composition_preparable": 0,
     "immediately_actionable": 29,
     "must_continue": true
@@ -45185,13 +45185,40 @@
         "feature_branch": "faa41acadf7a8c69de2d7d753f084952de6118fc"
       },
       "last_observed_head": "faa41acadf7a8c69de2d7d753f084952de6118fc",
-      "last_checkpoint_at": "2026-09-27T18:10:03.498Z",
+      "last_checkpoint_at": "2026-09-27T18:10:47.082Z",
       "checkpoint_paths": [
         "src/Controller/PublicContentTagArchiveController.php",
         "tests/Controller/PublicContentTagArchiveTest.php"
       ],
-      "next_action": "Open a draft Worker PR and validate the exact final branch HEAD with complete Worker CI.",
-      "last_verified_push_at": "2026-09-27T18:10:03.498Z"
+      "next_action": "Wait for complete exact-head Worker CI run #909 / 36339653506; repair any code failure before marking the PR ready.",
+      "last_verified_push_at": "2026-09-27T18:10:47.082Z",
+      "worker_pr": 358,
+      "worker_pr_state": "draft",
+      "worker_pr_changed_paths": [
+        "src/Controller/PublicContentTagArchiveController.php",
+        "tests/Controller/PublicContentTagArchiveTest.php"
+      ],
+      "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/358",
+      "pr_state": "open",
+      "draft_pr": true,
+      "worker_pr_base_branch": "main",
+      "worker_pr_base_sha": "7b2ca79405fc12d34bce1386157e929e4668f31a",
+      "ci_result": "pending",
+      "ci_attempts": [
+        {
+          "run_id": 36339653506,
+          "run_number": 909,
+          "head": "faa41acadf7a8c69de2d7d753f084952de6118fc",
+          "base": "7b2ca79405fc12d34bce1386157e929e4668f31a",
+          "result": "pending",
+          "validation_pr": 358,
+          "conclusion": null
+        }
+      ],
+      "ci_run_id": 36339653506,
+      "last_ci_run_id": 36339653506,
+      "last_ci_result": "pending",
+      "ci_validation_pr": 358
     }
   ],
   "recovery_queue": [],
