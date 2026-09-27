@@ -10,16 +10,16 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T10:34:03.192Z",
+  "published_at": "2026-09-27T10:45:22.486Z",
   "summary": {
-    "total_remaining_worker_tasks": 162,
+    "total_remaining_worker_tasks": 163,
     "completed_worker_prs_awaiting_trusted_review": 275,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-513 is complete with green exact-head CI and locked for Trusted review; continue with the next independent functional module gap without touching foreign claims.",
+    "next_required_action": "WCP-515 is reserved from sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d. Add the dedicated scheduled-content autosave regression test, then validate its exact final Worker HEAD; keep the proposal untrusted and claim-locked.",
     "composition_preparable": 0,
-    "immediately_actionable": 18,
+    "immediately_actionable": 19,
     "must_continue": true
   },
   "rules": {
@@ -35427,6 +35427,95 @@
           "summary": "431 tests, 1,876 assertions; PHPStan no errors; PostgreSQL 18 applied and verified 39 migrations through 20260925070000."
         }
       ]
+    },
+    {
+      "priority": 515,
+      "package_id": "WCP-515",
+      "title": "Protect scheduled content from editor autosave",
+      "risk": "low",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-515-scheduled-autosave-g1",
+      "suggested_branch": "feature/wcp-515-scheduled-autosave-g1",
+      "base_branch": "main",
+      "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "objective": "Add a focused functional regression test proving editor autosave cannot overwrite scheduled content. The existing controller allows autosave only for draft and review entries, but explicit protected-state coverage currently verifies published content only. Preserve scheduled status, body, editor document and publication timestamps on rejection; do not change runtime behavior.",
+      "allowed_paths": [
+        "tests/Controller/Content/ScheduledContentAutosaveBoundaryTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/",
+        "src/",
+        "templates/",
+        "assets/",
+        "public/"
+      ],
+      "deliverables": [
+        "A scheduled ContentEntry with a future publication time is submitted to editor autosave using a valid editor CSRF token and its current updatedAt value.",
+        "The endpoint responds 409 and leaves status, body, editor document, scheduledAt, scheduledUnpublishAt and publishedAt unchanged; no content revision is created.",
+        "Only this new dedicated test file changes; controller, entity, existing test files and publication behavior remain untouched."
+      ],
+      "tests": [
+        "Run the focused PHPUnit test for ScheduledContentAutosaveBoundaryTest.",
+        "Run PHPStan level 8 and complete Worker CI on the exact final HEAD, including PostgreSQL 18 migration validation.",
+        "Do not weaken or skip assertions, analyzers, security guards or CI jobs."
+      ],
+      "completion_report": [
+        "Exact sanitized main/base SHA and final Worker HEAD SHA.",
+        "Exact changed path and Worker PR URL.",
+        "HTTP 409 and unchanged scheduled content/publication metadata evidence.",
+        "Focused PHPUnit, PHPStan and exact-head Worker CI results."
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "scheduled-content-must-not-be-overwritten-by-background-editor-autosave",
+        "preserve-valid-editor-CSRF-and-concurrency-boundary",
+        "test-only-no-runtime-or-schema-change",
+        "no-security-test-phpstan-or-CI-weakening",
+        "red-CI-stops-integration",
+        "no-direct-trusted-integration-or-deployment",
+        "no-private-runtime-or-sensitive-data"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "proposal_kind": "worker_only",
+      "proposal_dependency_evidence": [],
+      "collision_check": {
+        "compared_against": "Fresh continuous/work-pool-v4 pool blob 735c5a5ab216faeea5fa29a6af3a1ee4072b1e62; every active and claim-locked allowed path; WCP-515 branch search; and sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d.",
+        "result": "No active or claim-locked task owns the new test path. WCP-300 owns the existing ContentEditorControllerTest.php, so this uses a distinct dedicated file. WCP-383 tests scheduled publication command failure isolation at another path. All other active public, competition, widget, guild and media proposals have disjoint paths.",
+        "paths": [
+          "tests/Controller/Content/ScheduledContentAutosaveBoundaryTest.php"
+        ]
+      },
+      "published_at": "2026-09-27T10:45:22.486Z",
+      "claimed_on": "2026-09-27T10:45:22.486Z",
+      "claim_state": "active",
+      "active_base_branch": "main",
+      "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "resume_branch": "feature/wcp-515-scheduled-autosave-g1",
+      "branch_heads": {
+        "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+        "feature_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d"
+      },
+      "next_action": "Create claim and feature refs from the exact sanitized main SHA. Add only the scheduled-content autosave regression test, then run focused PHPUnit and full exact-head Worker CI.",
+      "checkpoint_paths": []
     }
   ],
   "recovery_queue": [],
