@@ -12,15 +12,6 @@ final readonly class NewsletterDeliveryReportQuery
 {
     private const CAMPAIGN_LIMIT = 100;
 
-    /** @var list<string> */
-    private const DELIVERY_STATUSES = [
-        NewsletterDelivery::STATUS_SENT,
-        NewsletterDelivery::STATUS_PENDING,
-        NewsletterDelivery::STATUS_RETRY,
-        NewsletterDelivery::STATUS_FAILED,
-        NewsletterDelivery::STATUS_SUPPRESSED,
-    ];
-
     public function __construct(
         private NewsletterCampaignRepository $campaigns,
         private EntityManagerInterface $entityManager,
