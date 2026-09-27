@@ -17,7 +17,7 @@
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-519 fixture repair is on exact HEAD 81808a56444b97c5d699079593ceae313b4aec62; Worker CI run 36314647178 is in progress.",
+    "next_required_action": "WCP-518 CI run 36314564707 found a duplicate game.slug fixture in the new test (PHPStan and PostgreSQL 18 passed). Use per-run unique slugs, guard cleanup after failed flush, and rerun complete CI on a new exact feature HEAD; preserve all protections and claims.",
     "composition_preparable": 0,
     "immediately_actionable": 21,
     "must_continue": true
@@ -35921,7 +35921,7 @@
         "templates/widget/upcoming_game_releases.html.twig",
         "tests/Widget/UpcomingGameReleaseWidgetProviderTest.php"
       ],
-      "next_action": "Monitor Worker CI run 36314564707 on exact HEAD cb44af6e64b607e45b82764588db7fc93f6e4b0e. Inspect focused/full CI results; if red, diagnose and repair only within the four allowed paths on the same feature branch.",
+      "next_action": "Repair the new test fixture on the same feature branch: use unique game slugs and guard cleanup when a failed flush closes the EntityManager. Push a new exact HEAD and rerun complete Worker CI.",
       "last_checkpoint_at": "2026-09-27T11:04:15.622Z",
       "last_verified_push_at": "2026-09-27T11:04:15.622Z",
       "worker_pr": 310,
@@ -35937,13 +35937,14 @@
       ],
       "ci_run_id": 36314564707,
       "last_ci_run_id": 36314564707,
-      "ci_result": "in_progress",
-      "last_ci_result": "in_progress",
+      "ci_result": "failure",
+      "last_ci_result": "failure",
       "ci_attempts": [
         {
           "run_id": 36314564707,
           "head": "cb44af6e64b607e45b82764588db7fc93f6e4b0e",
-          "result": "in_progress"
+          "result": "failure",
+          "summary": "PHPStan, PHP/Symfony, Twig/container/Doctrine checks and PostgreSQL 18 migration chain passed. PHPUnit found one unique game.slug collision because the test used release-game, which already exists in GameCatalogueControllerTest; its finally cleanup then touched the EntityManager closed by the failed flush. Fix only the new test with per-run unique slugs and guarded cleanup, then rerun full exact-head CI."
         }
       ]
     },
