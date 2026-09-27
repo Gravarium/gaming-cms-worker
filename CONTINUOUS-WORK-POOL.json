@@ -32114,7 +32114,7 @@
       "package_id": "WCP-490",
       "title": "Keep disabled guilds and games out of public routes",
       "risk": "medium",
-      "execution_state": "worker_complete_awaiting_trusted_review",
+      "execution_state": "trusted_integrated",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -32188,7 +32188,7 @@
       },
       "published_at": "2026-09-27T09:05:21.479Z",
       "claimed_on": "2026-09-27T09:05:21.479Z",
-      "claim_state": "locked_until_trusted_resolution",
+      "claim_state": "released_after_trusted_integration",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
       "active_head": "b74438f0315a006f13d641c1a751fe27ab29d54d",
@@ -32210,7 +32210,7 @@
         "tests/Controller/PublicGuildVisibilityBoundaryTest.php"
       ],
       "draft_pr": false,
-      "pr_state": "open",
+      "pr_state": "closed",
       "ci_run_id": 36308324050,
       "last_ci_run_id": 36308324050,
       "ci_result": "success",
@@ -32231,7 +32231,7 @@
       "final_changed_paths": [
         "tests/Controller/PublicGuildVisibilityBoundaryTest.php"
       ],
-      "completed_at": "2026-09-27T09:09:07.960Z",
+      "completed_at": "2026-09-27T22:53:57.773Z",
       "test_results": {
         "phpunit": "430 tests, 1,871 assertions, zero failures; one PHPUnit deprecation and one notice.",
         "phpstan": "Level 8 passed with no errors.",
@@ -32266,14 +32266,27 @@
         "WCP-416 PR #209 covers essentially the same public guild visibility behavior on a different test path; Trusted review should reconcile the duplicate proposals.",
         "Awaiting Trusted review and Trusted integration CI; no product source or configuration was changed."
       ],
-      "trusted_follow_up": "Compare WCP-490 PR #284 with WCP-416 PR #209 and keep only one equivalent public guild visibility regression suite during Trusted integration. Preserve both enabled flags and fail-closed detail/application routes."
+      "trusted_follow_up": "Compare WCP-490 PR #284 with WCP-416 PR #209 and keep only one equivalent public guild visibility regression suite during Trusted integration. Preserve both enabled flags and fail-closed detail/application routes.",
+      "worker_pr_state": "closed",
+      "trusted_resolution": {
+        "status": "integrated",
+        "worker_pr": 284,
+        "worker_head": "b74438f0315a006f13d641c1a751fe27ab29d54d",
+        "trusted_pr": 166,
+        "trusted_merge_sha": "cb4f23acc954ed82dc32976bf2ee1c2767f7ea09",
+        "final_trusted_main_sha": "cb4f23acc954ed82dc32976bf2ee1c2767f7ea09",
+        "final_trusted_main_ci_run_id": 36356480281,
+        "sanitized_worker_sync_sha": "07b8f549448c15f11d7e5db0b8d14c29ae381782",
+        "worker_ci_run_id": 36356488671,
+        "resolved_at": "2026-09-27T22:53:57.773Z"
+      }
     },
     {
       "priority": 491,
       "package_id": "WCP-491",
       "title": "Keep inactive and foreign members out of public guild rosters",
       "risk": "medium",
-      "execution_state": "worker_complete_awaiting_trusted_review",
+      "execution_state": "trusted_integrated",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -32346,7 +32359,7 @@
       },
       "published_at": "2026-09-27T09:13:25.613Z",
       "claimed_on": "2026-09-27T09:13:25.613Z",
-      "claim_state": "locked_until_trusted_resolution",
+      "claim_state": "released_after_trusted_integration",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
       "active_head": "c306526de7b52c1e1f24bc9e21e46465a63033f9",
@@ -32368,7 +32381,7 @@
         "tests/Controller/PublicGuildRosterPrivacyTest.php"
       ],
       "draft_pr": false,
-      "pr_state": "open",
+      "pr_state": "closed",
       "ci_run_id": 36308732840,
       "last_ci_run_id": 36308732840,
       "ci_result": "success",
@@ -32389,7 +32402,7 @@
       "final_changed_paths": [
         "tests/Controller/PublicGuildRosterPrivacyTest.php"
       ],
-      "completed_at": "2026-09-27T09:16:30.138Z",
+      "completed_at": "2026-09-27T22:53:57.773Z",
       "test_results": {
         "phpunit": "430 tests, 1,862 assertions, zero failures; one PHPUnit deprecation and one notice.",
         "phpstan": "Level 8 passed with no errors.",
@@ -32423,7 +32436,20 @@
       "open_limitations": [
         "Awaiting Trusted review and Trusted integration CI; no production source or configuration was changed."
       ],
-      "trusted_follow_up": "Verify public roster active-member filtering and guild scoping on a fresh Trusted branch/full CI; preserve hidden inactive members and foreign-guild isolation."
+      "trusted_follow_up": "Verify public roster active-member filtering and guild scoping on a fresh Trusted branch/full CI; preserve hidden inactive members and foreign-guild isolation.",
+      "worker_pr_state": "closed",
+      "trusted_resolution": {
+        "status": "integrated",
+        "worker_pr": 285,
+        "worker_head": "c306526de7b52c1e1f24bc9e21e46465a63033f9",
+        "trusted_pr": 166,
+        "trusted_merge_sha": "cb4f23acc954ed82dc32976bf2ee1c2767f7ea09",
+        "final_trusted_main_sha": "cb4f23acc954ed82dc32976bf2ee1c2767f7ea09",
+        "final_trusted_main_ci_run_id": 36356480281,
+        "sanitized_worker_sync_sha": "07b8f549448c15f11d7e5db0b8d14c29ae381782",
+        "worker_ci_run_id": 36356488671,
+        "resolved_at": "2026-09-27T22:53:57.773Z"
+      }
     },
     {
       "priority": 492,
@@ -33889,7 +33915,7 @@
       "package_id": "WCP-502",
       "title": "Let applicants track their guild application status",
       "risk": "medium",
-      "execution_state": "worker_complete_awaiting_trusted_review",
+      "execution_state": "trusted_integrated",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -33976,7 +34002,7 @@
         ]
       },
       "claimed_on": "2026-09-27T09:57:35.911Z",
-      "claim_state": "locked_until_trusted_resolution",
+      "claim_state": "released_after_trusted_integration",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
       "active_head": "dbdf2400f4b6c270aa9c227dab8cbba1028e786f",
@@ -33998,7 +34024,7 @@
       "worker_pr": 297,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/297",
       "draft_pr": true,
-      "pr_state": "open",
+      "pr_state": "closed",
       "worker_pr_changed_paths": [
         "src/Controller/GuildApplicationStatusController.php",
         "templates/gaming/show.html.twig",
@@ -34025,7 +34051,7 @@
           "summary": "Exact-head Worker CI run #735 succeeded: 433 tests, 1,903 assertions; PHPStan no errors; PostgreSQL 18 applied all 39 migrations and confirmed latest migration 20260925070000."
         }
       ],
-      "worker_pr_state": "draft",
+      "worker_pr_state": "closed",
       "final_changed_paths": [
         "src/Controller/GuildApplicationStatusController.php",
         "templates/gaming/show.html.twig",
@@ -34034,14 +34060,26 @@
       ],
       "final_head": "dbdf2400f4b6c270aa9c227dab8cbba1028e786f",
       "final_ci_run_id": 36311400396,
-      "completed_at": "2026-09-27T10:11:18.658Z"
+      "completed_at": "2026-09-27T22:53:57.773Z",
+      "trusted_resolution": {
+        "status": "integrated",
+        "worker_pr": 297,
+        "worker_head": "dbdf2400f4b6c270aa9c227dab8cbba1028e786f",
+        "trusted_pr": 166,
+        "trusted_merge_sha": "cb4f23acc954ed82dc32976bf2ee1c2767f7ea09",
+        "final_trusted_main_sha": "cb4f23acc954ed82dc32976bf2ee1c2767f7ea09",
+        "final_trusted_main_ci_run_id": 36356480281,
+        "sanitized_worker_sync_sha": "07b8f549448c15f11d7e5db0b8d14c29ae381782",
+        "worker_ci_run_id": 36356488671,
+        "resolved_at": "2026-09-27T22:53:57.773Z"
+      }
     },
     {
       "priority": 503,
       "package_id": "WCP-503",
       "title": "Manage public guild links from Game Hubs",
       "risk": "medium",
-      "execution_state": "worker_in_progress",
+      "execution_state": "trusted_integrated",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -34133,7 +34171,7 @@
       },
       "published_at": "2026-09-27T09:56:19.571Z",
       "claimed_on": "2026-09-27T09:56:19.571Z",
-      "claim_state": "active",
+      "claim_state": "released_after_trusted_integration",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
       "active_head": "b198490e38f09dfaee119a5695f996c1af07c939",
@@ -34166,7 +34204,22 @@
           "result": "failure",
           "reason": "PHPStan required the unbound form type to declare its data generic; corrected in the current head."
         }
-      ]
+      ],
+      "pr_state": "closed",
+      "worker_pr_state": "closed",
+      "completed_at": "2026-09-27T22:53:57.773Z",
+      "trusted_resolution": {
+        "status": "integrated",
+        "worker_pr": 296,
+        "worker_head": "b198490e38f09dfaee119a5695f996c1af07c939",
+        "trusted_pr": 166,
+        "trusted_merge_sha": "cb4f23acc954ed82dc32976bf2ee1c2767f7ea09",
+        "final_trusted_main_sha": "cb4f23acc954ed82dc32976bf2ee1c2767f7ea09",
+        "final_trusted_main_ci_run_id": 36356480281,
+        "sanitized_worker_sync_sha": "07b8f549448c15f11d7e5db0b8d14c29ae381782",
+        "worker_ci_run_id": 36356488671,
+        "resolved_at": "2026-09-27T22:53:57.773Z"
+      }
     },
     {
       "priority": 504,
@@ -34419,7 +34472,7 @@
       "package_id": "WCP-506",
       "title": "Expose the public guild event schedule",
       "risk": "low",
-      "execution_state": "worker_complete_awaiting_trusted_review",
+      "execution_state": "trusted_integrated",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -34512,7 +34565,7 @@
       },
       "published_at": "2026-09-27T10:02:32.498Z",
       "claimed_on": "2026-09-27T10:02:32.498Z",
-      "claim_state": "locked_until_trusted_resolution",
+      "claim_state": "released_after_trusted_integration",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
       "active_head": "df716cb82745f7b11c0339bed1b63a6975390dab",
@@ -34533,7 +34586,7 @@
       "worker_pr": 299,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/299",
       "draft_pr": false,
-      "pr_state": "open",
+      "pr_state": "closed",
       "worker_pr_changed_paths": [
         "src/Controller/PublicGuildEventController.php",
         "templates/gaming/events.html.twig",
@@ -34543,7 +34596,21 @@
       "last_failed_ci_result": "failure",
       "final_head": "df716cb82745f7b11c0339bed1b63a6975390dab",
       "ci_run_id": 36311554884,
-      "ci_result": "success"
+      "ci_result": "success",
+      "worker_pr_state": "closed",
+      "completed_at": "2026-09-27T22:53:57.773Z",
+      "trusted_resolution": {
+        "status": "integrated",
+        "worker_pr": 299,
+        "worker_head": "df716cb82745f7b11c0339bed1b63a6975390dab",
+        "trusted_pr": 166,
+        "trusted_merge_sha": "cb4f23acc954ed82dc32976bf2ee1c2767f7ea09",
+        "final_trusted_main_sha": "cb4f23acc954ed82dc32976bf2ee1c2767f7ea09",
+        "final_trusted_main_ci_run_id": 36356480281,
+        "sanitized_worker_sync_sha": "07b8f549448c15f11d7e5db0b8d14c29ae381782",
+        "worker_ci_run_id": 36356488671,
+        "resolved_at": "2026-09-27T22:53:57.773Z"
+      }
     },
     {
       "priority": 507,
@@ -41569,7 +41636,7 @@
       "package_id": "WCP-548",
       "title": "Place public guild recruitment needs in the Page Builder",
       "risk": "medium",
-      "execution_state": "worker_complete_awaiting_trusted_review",
+      "execution_state": "trusted_integrated",
       "dependencies": [
         "WCP-541"
       ],
@@ -41722,7 +41789,7 @@
       },
       "published_at": "2026-09-27T14:53:42.927Z",
       "claimed_on": "2026-09-27T14:53:42.927Z",
-      "claim_state": "locked_until_trusted_resolution",
+      "claim_state": "released_after_trusted_integration",
       "active_base_branch": "feature/wcp-541-guild-role-needs-g1",
       "active_base_sha": "991a1ec5ae42be72b3e36de12bb47bd3848683ca",
       "active_head": "91948c45a290782ba389a96b19bfe5793633d8b1",
@@ -41741,7 +41808,7 @@
         "tests/Widget/PublicGuildRoleNeedsWidgetProviderTest.php"
       ],
       "next_action": "Keep claim locked through Trusted resolution; WCP-548 is complete and its PR remains an untrusted review proposal.",
-      "worker_pr_state": "open",
+      "worker_pr_state": "closed",
       "worker_pr_changed_paths": [
         "config/packages/guild_role_needs_widget.yaml",
         "src/GuildRoleNeedsWidget/Templates/widget/public_guild_role_needs.html.twig",
@@ -41751,7 +41818,7 @@
       ],
       "worker_pr_base_branch": "feature/wcp-541-guild-role-needs-g1",
       "draft_pr": false,
-      "pr_state": "open",
+      "pr_state": "closed",
       "ci_result": "success",
       "last_ci_result": "success",
       "ci_attempts": [
@@ -41791,7 +41858,7 @@
       "last_ci_run_number": 847,
       "final_head": "91948c45a290782ba389a96b19bfe5793633d8b1",
       "completion_head": "91948c45a290782ba389a96b19bfe5793633d8b1",
-      "completed_at": "2026-09-27T15:15:18.428Z",
+      "completed_at": "2026-09-27T22:53:57.773Z",
       "completion_evidence": [
         "Exact predecessor: WCP-541 PR #334, green Worker CI #833 (36325503468), head 991a1ec5ae42be72b3e36de12bb47bd3848683ca; predecessor claim remains locked.",
         "WCP-548 final feature HEAD 91948c45a290782ba389a96b19bfe5793633d8b1; Worker PR #340 is open, ready for review, and targets feature/wcp-541-guild-role-needs-g1.",
@@ -41800,7 +41867,19 @@
         "Focused behavior is covered by the full exact-head Worker CI #847 (36328199724): PHP/Symfony and PHPStan success, 565 tests / 2,460 assertions (one deprecation and one notice); PostgreSQL 18 applied 54 migrations and 750 SQL queries.",
         "Earlier Worker CI #846 (36328033568) failed on two tests because Twig loaded the source template under a named namespace while WidgetDefinition requires the default widget namespace. The isolated Twig path now uses the default namespace; #847 passed on the exact final HEAD.",
         "Remaining main-CMS work: review/integrate WCP-541 first, then transfer/review these five paths in Gravarium/gaming-cms and run its integration CI. Localized game-specific role/class labels remain deferred. No Trusted merge or deployment."
-      ]
+      ],
+      "trusted_resolution": {
+        "status": "integrated",
+        "worker_pr": 340,
+        "worker_head": "91948c45a290782ba389a96b19bfe5793633d8b1",
+        "trusted_pr": 166,
+        "trusted_merge_sha": "cb4f23acc954ed82dc32976bf2ee1c2767f7ea09",
+        "final_trusted_main_sha": "cb4f23acc954ed82dc32976bf2ee1c2767f7ea09",
+        "final_trusted_main_ci_run_id": 36356480281,
+        "sanitized_worker_sync_sha": "07b8f549448c15f11d7e5db0b8d14c29ae381782",
+        "worker_ci_run_id": 36356488671,
+        "resolved_at": "2026-09-27T22:53:57.773Z"
+      }
     },
     {
       "priority": 549,
