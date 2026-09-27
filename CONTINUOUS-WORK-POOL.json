@@ -12,14 +12,14 @@
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
   "published_at": "2026-09-27T01:23:15.924Z",
   "summary": {
-    "total_remaining_worker_tasks": 140,
+    "total_remaining_worker_tasks": 141,
     "completed_worker_prs_awaiting_trusted_review": 213,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-446 is reserved on exact sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d for settings authorization and CSRF non-mutation tests.",
+    "next_required_action": "WCP-447 is reserved on exact sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d for a protected batch media upload workflow; verify the exclusive refs and continue implementation.",
     "composition_preparable": 0,
-    "immediately_actionable": 4,
+    "immediately_actionable": 5,
     "must_continue": true
   },
   "rules": {
@@ -24933,6 +24933,111 @@
           "result": "queued"
         }
       ]
+    },
+    {
+      "priority": 447,
+      "package_id": "WCP-447",
+      "title": "Upload multiple images and documents to the media library",
+      "risk": "medium",
+      "execution_state": "worker_in_progress",
+      "claim_state": "active",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-447-media-batch-upload-g1",
+      "suggested_branch": "feature/wcp-447-media-batch-upload-g1",
+      "base_branch": "main",
+      "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "objective": "Add a discoverable CMS_STORAGE_MANAGE-protected batch upload workflow for up to 10 images and documents in one request. Reuse the existing MediaStorageManager and MediaUploadPolicy for module-specific limits, malware scanning, safe storage and rollback; reject duplicates within the batch and against active library assets before any write. Keep video uploads and the existing single-file route unchanged.",
+      "allowed_paths": [
+        "src/Controller/AdminMediaBatchUploadController.php",
+        "src/Form/MediaAssetBatchUploadType.php",
+        "templates/admin/storage/upload.html.twig",
+        "templates/admin/storage/batch_upload.html.twig",
+        "tests/Controller/AdminMediaBatchUploadTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/",
+        "src/Controller/AdminStorageController.php",
+        "src/Form/MediaAssetUploadType.php",
+        "src/Repository/MediaAssetRepository.php",
+        "src/Service/MediaStorageManager.php",
+        "src/Service/MediaUploadPolicy.php",
+        "src/Entity/",
+        "src/ExternalConnector/"
+      ],
+      "deliverables": [
+        "Add a separate batch-upload page linked from the existing single-file upload page, with destination module, optional folder and a multiple file selector for approved non-video image/document MIME types.",
+        "Limit each batch to 10 files and 25 MB per file; retain stricter existing per-module size limits through MediaStorageManager and reject unsupported, malformed or scanner-rejected files.",
+        "Reject duplicate content within the submitted batch and against active media assets before storage begins; do not accept client paths or locations.",
+        "Store all accepted assets through MediaStorageManager, share the selected module and folder, flush the batch together, and invoke the existing cleanup/recovery path if a later storage or database step fails.",
+        "Keep the single-file uploader, video upload behavior, MediaStorageManager, MediaUploadPolicy, repository and schema unchanged."
+      ],
+      "tests": [
+        "Functional coverage requires CMS_STORAGE_MANAGE and verifies the new page is linked from the current upload form.",
+        "A valid two-file request creates two assets with safe generated locations, the chosen module and folder, and no client-controlled URL.",
+        "Missing/invalid form CSRF, unauthorized access, empty/oversized batches, unsupported MIME, existing duplicates and same-batch duplicates fail without creating assets or leaving uncommitted storage.",
+        "A storage failure partway through a batch rolls back or schedules cleanup for every staged object and persists no partial asset set.",
+        "Run PHPStan level 8 and full Worker CI on the exact final HEAD, including PostgreSQL 18 migration-chain validation."
+      ],
+      "completion_report": [
+        "Exact sanitized main base SHA and final Worker HEAD SHA.",
+        "Complete changed-path list and Worker PR.",
+        "Batch count/file-size/MIME validation, duplicate refusal and all-or-nothing storage behavior.",
+        "Exact-head targeted tests, PHPStan and full Worker CI.",
+        "Any Trusted review follow-up; confirm existing malware scan, storage validation, cleanup and rollback remain authoritative."
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "preserve-CMS_STORAGE_MANAGE-and-Symfony-form-CSRF",
+        "every-file-passes-existing-MediaStorageManager-and-MediaUploadPolicy-with-malware-scan",
+        "never-accept-client-controlled-file-paths-or-media-locations",
+        "reject-duplicates-and-clean-or-journal-all-partial-storage-failures",
+        "video-and-existing-single-upload-workflows-remain-unchanged",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "proposal_kind": "worker_only",
+      "proposal_dependency_evidence": [],
+      "collision_check": {
+        "compared_against": "Fresh continuous/work-pool-v4 blob 516c43a158503b9dfb3e2ece3a3aa1b3fb723920, every active and claim-locked allowlist, and exact worker/main f1a246c64527ef3ad51f7490773d9bbf9d42be5d.",
+        "result": "No active or claim-locked claim owns any of the five allowlisted paths. The existing upload page is the only pre-existing path and is unclaimed. WCP-342 owns AdminStorageController and a security test; WCP-349 owns only the existing single-upload form type and its boundary test; WCP-421 owns MediaAssetRepository and the media library index/library templates; WCP-442 owns only a bulk-delete security test. There is no active storage-package claim. Current active claims in user, content, settings and game areas are disjoint. WCP-443/444 video deletion claims are completed and the proposed batch workflow excludes video files and the video module.",
+        "paths": [
+          "src/Controller/AdminMediaBatchUploadController.php",
+          "src/Form/MediaAssetBatchUploadType.php",
+          "templates/admin/storage/upload.html.twig",
+          "templates/admin/storage/batch_upload.html.twig",
+          "tests/Controller/AdminMediaBatchUploadTest.php"
+        ]
+      },
+      "claimed_on": "2026-09-27T01:23:59.511Z",
+      "active_base_branch": "main",
+      "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "resume_branch": "feature/wcp-447-media-batch-upload-g1",
+      "checkpoint_paths": [],
+      "branch_heads": {
+        "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+        "feature_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d"
+      },
+      "next_action": "The claim is reserved on exact sanitized main. Create and verify both claim and feature refs from the recorded base, then implement; push a coherent checkpoint within 30 minutes."
     }
   ],
   "recovery_queue": [],
