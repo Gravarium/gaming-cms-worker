@@ -10,7 +10,7 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T20:11:41.642Z",
+  "published_at": "2026-09-27T20:16:34.089Z",
   "summary": {
     "total_remaining_worker_tasks": 173,
     "completed_worker_prs_awaiting_trusted_review": 310,
@@ -38622,15 +38622,15 @@
       "claim_state": "active",
       "active_base_branch": "main",
       "active_base_sha": "b510875e7b0741b9b19f09429d2204a95df51198",
-      "active_head": "68c630e7920c7ca7cbfc34638a788a5798e2ecd3",
+      "active_head": "97dc213892f01f1b46836f10f05cd3206980f4a8",
       "resume_branch": "feature/wcp-532-upcoming-guild-events-widget-g1",
       "branch_heads": {
         "claim_branch": "b510875e7b0741b9b19f09429d2204a95df51198",
-        "feature_branch": "68c630e7920c7ca7cbfc34638a788a5798e2ecd3"
+        "feature_branch": "97dc213892f01f1b46836f10f05cd3206980f4a8"
       },
-      "last_observed_head": "68c630e7920c7ca7cbfc34638a788a5798e2ecd3",
-      "last_checkpoint_at": "2026-09-27T20:11:41.642Z",
-      "last_verified_push_at": "2026-09-27T20:11:41.642Z",
+      "last_observed_head": "97dc213892f01f1b46836f10f05cd3206980f4a8",
+      "last_checkpoint_at": "2026-09-27T20:16:34.089Z",
+      "last_verified_push_at": "2026-09-27T20:16:34.089Z",
       "checkpoint_paths": [
         "src/Widget/GuildEvent/UpcomingGuildEventsQuery.php",
         "src/Widget/UpcomingGuildEventsWidgetProvider.php",
@@ -38639,7 +38639,7 @@
         "config/packages/guild_event_widget.yaml",
         "tests/Widget/UpcomingGuildEventsWidgetProviderTest.php"
       ],
-      "next_action": "Await exact-head Worker CI #928 / 36347049668 on 68c630e7920c7ca7cbfc34638a788a5798e2ecd3; diagnose and repair any failure, then complete PR #373 only after all jobs pass.",
+      "next_action": "Await exact-head Worker CI #930 / 36347350876 on 97dc213892f01f1b46836f10f05cd3206980f4a8; diagnose any failing test and complete PR #373 only after all jobs pass.",
       "worker_pr": 373,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/373",
       "draft_pr": true,
@@ -38671,15 +38671,25 @@
           "run_number": 928,
           "head": "68c630e7920c7ca7cbfc34638a788a5798e2ecd3",
           "base": "7b2ca79405fc12d34bce1386157e929e4668f31a",
+          "result": "failure",
+          "validation_pr": 373,
+          "conclusion": "failure",
+          "summary": "PHPStan, Symfony/Twig/YAML/container checks and PostgreSQL 18 migrations passed. PHPUnit's new empty-state assertion switched users within one BrowserKit client, which redirected to /login. The empty-state assertion now uses a separate client/test."
+        },
+        {
+          "run_id": 36347350876,
+          "run_number": 930,
+          "head": "97dc213892f01f1b46836f10f05cd3206980f4a8",
+          "base": "7b2ca79405fc12d34bce1386157e929e4668f31a",
           "result": "in_progress",
           "validation_pr": 373
         }
       ],
       "worker_pr_base_branch": "main",
       "worker_pr_base_sha": "7b2ca79405fc12d34bce1386157e929e4668f31a",
-      "ci_run_id": 36347049668,
-      "last_ci_run_id": 36347049668,
-      "last_ci_run_number": 928
+      "ci_run_id": 36347350876,
+      "last_ci_run_id": 36347350876,
+      "last_ci_run_number": 930
     },
     {
       "priority": 533,
