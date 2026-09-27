@@ -69,7 +69,7 @@ final class AdminGuildStructureSecurityTest extends WebTestCase
             $targetUrl = sprintf('/admin/gaming/guild/%d/structure/team/%d/delete', $ownerGuildId, $targetTeamId);
             $client->loginUser($unauthorized);
             $client->request('POST', $targetUrl);
-            self::assertResponseStatusCodeSame(403);
+            self::assertResponseRedirects('/login');
             self::assertInstanceOf(GuildTeam::class, $this->teams($client)->find($targetTeamId));
 
             $client->loginUser($manager);
