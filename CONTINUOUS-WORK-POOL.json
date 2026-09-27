@@ -26975,10 +26975,10 @@
       "claimed_on": "2026-09-27T03:24:29.766Z",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-      "active_head": "8e27c0a978f7f67b13b18026e12e82fba7a0327f",
+      "active_head": "cd10c2f646639b4bb14f0d96587f74dbf6dd01fa",
       "resume_branch": "feature/wcp-460-content-redirect-browser-g1",
-      "last_checkpoint_at": "2026-09-27T03:31:39.642Z",
-      "last_verified_push_at": "2026-09-27T03:31:39.642Z",
+      "last_checkpoint_at": "2026-09-27T03:34:19.292Z",
+      "last_verified_push_at": "2026-09-27T03:34:19.292Z",
       "checkpoint_paths": [
         "src/Controller/AdminContentRedirectController.php",
         "src/Repository/ContentRedirectRepository.php",
@@ -26988,15 +26988,15 @@
       ],
       "branch_heads": {
         "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-        "feature_branch": "8e27c0a978f7f67b13b18026e12e82fba7a0327f"
+        "feature_branch": "cd10c2f646639b4bb14f0d96587f74dbf6dd01fa"
       },
-      "next_action": "Monitor exact-head Worker CI run 36291678041; inspect PHPUnit result and fix any failure on the same feature branch.",
+      "next_action": "Wait for updated exact-head CI 36291780404; inspect and fix any red result on this branch.",
       "worker_pr": 254,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/254",
       "pr_state": "open_draft_unmerged",
       "draft_pr": true,
-      "ci_run_id": 36291678041,
-      "last_ci_run_id": 36291678041,
+      "ci_run_id": 36291780404,
+      "last_ci_run_id": 36291780404,
       "ci_result": "in_progress",
       "last_ci_result": "in_progress",
       "ci_attempts": [
@@ -27005,6 +27005,18 @@
           "head": "8e27c0a978f7f67b13b18026e12e82fba7a0327f",
           "result": "in_progress",
           "summary": "PostgreSQL 18 migration chain passed; PHPStan, Twig, Symfony container, Doctrine mapping and asset checks passed; PHPUnit suite running."
+        },
+        {
+          "run_id": 36291678041,
+          "head": "8e27c0a978f7f67b13b18026e12e82fba7a0327f",
+          "result": "failure",
+          "summary": "Initial checkpoint run; superseded by a small test assertion correction on the same feature branch."
+        },
+        {
+          "run_id": 36291780404,
+          "head": "cd10c2f646639b4bb14f0d96587f74dbf6dd01fa",
+          "result": "in_progress",
+          "summary": "Full Worker CI on the updated exact branch head."
         }
       ]
     }
