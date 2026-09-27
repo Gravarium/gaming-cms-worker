@@ -10,9 +10,9 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T11:20:31.303Z",
+  "published_at": "2026-09-27T11:20:54.910Z",
   "summary": {
-    "total_remaining_worker_tasks": 163,
+    "total_remaining_worker_tasks": 164,
     "completed_worker_prs_awaiting_trusted_review": 278,
     "recovery_tasks": 0,
     "unclaimed": 5,
@@ -36182,6 +36182,135 @@
         "tests/Controller/NotificationPreferences/NotificationSubscriptionOwnershipTest.php"
       ],
       "completed_at": "2026-09-27T11:17:12.663Z"
+    },
+    {
+      "priority": 520,
+      "package_id": "WCP-520",
+      "title": "Make the public news month archive placeable in the page builder",
+      "risk": "low",
+      "execution_state": "worker_in_progress",
+      "dependencies": [
+        "WCP-513"
+      ],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-520-news-archive-widget-g1",
+      "suggested_branch": "feature/wcp-520-news-archive-widget-g1",
+      "base_branch": "feature/wcp-513-public-news-month-archive-g1",
+      "base_sha": "b7e903a638bd44f60fd7c823ab42a8ca5419a5f9",
+      "objective": "Complete Content's public news discovery workflow by making the month archive available as a Page Builder widget. WCP-513 provides /news/archive and a query for currently visible news months, but editors cannot yet place a month list on the home page or another page. Register content.news-archive through the existing auto-tagged WidgetProvider contract; list the newest months with counts and internal month/index links; reuse the existing bounded count setting; and ensure the existing Content module gate removes the widget and its data when Content is disabled. Keep the archive template under src/ContentArchive/Templates with a unique NewsArchive Twig namespace and an additive, separate config/packages YAML file. Do not modify templates/, the shared widget registry/provider, the active Video Twig config file, the WCP-513 route/controller/repository, or schema.",
+      "allowed_paths": [
+        "config/packages/news_archive_widget.yaml",
+        "src/Widget/NewsArchiveWidgetProvider.php",
+        "src/ContentArchive/Templates/widget/news_archive.html.twig",
+        "tests/Widget/NewsArchiveWidgetProviderTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "templates/",
+        "src/Controller/",
+        "src/Repository/",
+        "src/Entity/",
+        "src/Form/",
+        "src/Module/",
+        "src/Layout/",
+        "src/Theme/",
+        "src/Widget/BundledWidgetProvider.php",
+        "src/Widget/WidgetDefinition.php",
+        "src/Widget/WidgetRegistry.php",
+        "config/services.yaml",
+        "config/packages/twig.yaml",
+        "config/routes.yaml",
+        "assets/",
+        "public/",
+        "tests/Controller/"
+      ],
+      "deliverables": [
+        "Auto-register a Content-owned content.news-archive widget with the existing Page Builder and a unique NewsArchive Twig namespace.",
+        "Show the newest public archive periods and their counts, with internal links to the existing month route and archive index; include a clear empty state and an optional editor heading.",
+        "Use the existing count setting (default 6, bounded to at most 12) and avoid repeating the archive query when multiple instances render in one request.",
+        "The Page Builder palette and renderer hide the widget and suppress its data whenever the Content module is disabled.",
+        "No new route, schema, migration, shared provider/registry, controller, repository or entity change."
+      ],
+      "tests": [
+        "Functional widget-provider coverage for auto-discovery, Page Builder placement, count schema, Content module disablement and renderer suppression.",
+        "Repository-backed fixture coverage for newest-first month/count output and count selection, using published visible news; cover the empty state and safe Twig links/escaping.",
+        "Focused PHPUnit test, PHPStan level 8 and complete Worker CI on the exact final HEAD, including PostgreSQL 18 migrations."
+      ],
+      "completion_report": [
+        "Exact WCP-513 proposal base and final Worker HEAD, changed paths and Worker PR.",
+        "Page Builder discovery/placement, public month links, count behavior and disabled-Content results.",
+        "Focused tests and exact-head full Worker CI run/results.",
+        "Remaining integration assumptions and additive Twig namespace interaction with other Worker proposals."
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "only-visible-published-news-periods-are-listed",
+        "content-disabled-means-widget-hidden-and-no-data",
+        "reuse-existing-content-archive-routes-and-public-query",
+        "preserve-page-builder-validation-and-module-gating",
+        "no-schema-migration-shared-provider-controller-or-repository-change",
+        "no-security-test-phpstan-CI-auth-CSRF-validation-recovery-rollback-or-upload-protection-weakening",
+        "red-CI-stops-integration",
+        "no-private-runtime-or-sensitive-data",
+        "no-direct-trusted-integration-or-deployment"
+      ],
+      "proposal_base_branch": "feature/wcp-513-public-news-month-archive-g1",
+      "proposal_base_sha": "b7e903a638bd44f60fd7c823ab42a8ca5419a5f9",
+      "proposal_kind": "worker_only",
+      "proposal_dependency_evidence": [
+        {
+          "package_id": "WCP-513",
+          "pull_request": 306,
+          "head_sha": "b7e903a638bd44f60fd7c823ab42a8ca5419a5f9",
+          "ci_run_id": 36313291931,
+          "result": "success",
+          "authority": "worker-proposal-only"
+        }
+      ],
+      "collision_check": {
+        "compared_against": "Fresh continuous/work-pool-v4 blob 4c64e4d627cde3e031822121a8820ce19cd01c02; sanitized Worker main b510875e7b0741b9b19f09429d2204a95df51198; all task allowed-path scopes; current claim/feature branch searches and WCP-520/news-archive-widget PR searches; WCP-513 PR #306 and exact-head CI run 36313291931.",
+        "result": "No active or claim-locked task owns or encloses these four exact allowed paths. FCP-072's broad templates/ scope is avoided by placing the view under src/ContentArchive/Templates. Active WCP-516 uses config/packages/twig.yaml and src/VideoSearch/Templates; this package uses a distinct additive config file, separate source tree and unique Twig namespace. The only runtime dependency is the exact green WCP-513 archive repository/routes; no foreign controller, repository, template or shared widget wiring is modified.",
+        "paths": [
+          "config/packages/news_archive_widget.yaml",
+          "src/Widget/NewsArchiveWidgetProvider.php",
+          "src/ContentArchive/Templates/widget/news_archive.html.twig",
+          "tests/Widget/NewsArchiveWidgetProviderTest.php"
+        ]
+      },
+      "published_at": "2026-09-27T11:20:54.910Z",
+      "claimed_on": "2026-09-27T11:20:54.910Z",
+      "claim_state": "active",
+      "active_base_branch": "feature/wcp-513-public-news-month-archive-g1",
+      "active_base_sha": "b7e903a638bd44f60fd7c823ab42a8ca5419a5f9",
+      "active_head": "b7e903a638bd44f60fd7c823ab42a8ca5419a5f9",
+      "resume_branch": "feature/wcp-520-news-archive-widget-g1",
+      "branch_heads": {
+        "claim_branch": "b7e903a638bd44f60fd7c823ab42a8ca5419a5f9",
+        "feature_branch": "b7e903a638bd44f60fd7c823ab42a8ca5419a5f9"
+      },
+      "last_observed_head": "b7e903a638bd44f60fd7c823ab42a8ca5419a5f9",
+      "last_checkpoint_at": "2026-09-27T11:20:54.910Z",
+      "checkpoint_paths": [
+        "config/packages/news_archive_widget.yaml",
+        "src/Widget/NewsArchiveWidgetProvider.php",
+        "src/ContentArchive/Templates/widget/news_archive.html.twig",
+        "tests/Widget/NewsArchiveWidgetProviderTest.php"
+      ],
+      "next_action": "Implement the Content-owned archive widget and focused Page Builder, module-gate, data, and Twig coverage on the claimed feature branch."
     }
   ],
   "recovery_queue": [],
