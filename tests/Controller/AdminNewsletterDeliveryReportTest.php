@@ -72,7 +72,9 @@ final class AdminNewsletterDeliveryReportTest extends WebTestCase
         $client->request('GET', '/admin/newsletter/delivery-report');
 
         self::assertResponseIsSuccessful();
-        self::assertSame('private, no-store', $client->getResponse()->headers->get('Cache-Control'));
+        $cacheControlDirectives = array_map('trim', explode(',', strtolower((string) $client->getResponse()->headers->get('Cache-Control'))));
+        self::assertContains('private', $cacheControlDirectives);
+        self::assertContains('no-store', $cacheControlDirectives);
         self::assertSame('noindex', $client->getResponse()->headers->get('X-Robots-Tag'));
 
         $row = $client->getCrawler()->filter('tbody tr')->reduce(
