@@ -17,7 +17,7 @@
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-545 PR #338 is on exact HEAD 3c3aa7b733ff1ee439acdc235200a95838fd6831; test assertions from run #842 were corrected. Verify full CI run #843 / 36327083240.",
+    "next_required_action": "WCP-545 is complete on PR #338 with green exact-head CI; keep its claim locked. Re-evaluate the live pool and code for the next free, dependency-safe functional module-completion package; do not merge or deploy.",
     "composition_preparable": 0,
     "immediately_actionable": 28,
     "must_continue": true
@@ -40481,7 +40481,7 @@
       "package_id": "WCP-545",
       "title": "Paginate the public video library and add a Page Builder entry point",
       "risk": "medium",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -40580,7 +40580,7 @@
       },
       "published_at": "2026-09-27T14:33:10.522Z",
       "claimed_on": "2026-09-27T14:33:10.522Z",
-      "claim_state": "active",
+      "claim_state": "locked_until_trusted_resolution",
       "active_base_branch": "main",
       "active_base_sha": "b510875e7b0741b9b19f09429d2204a95df51198",
       "active_head": "3c3aa7b733ff1ee439acdc235200a95838fd6831",
@@ -40590,7 +40590,7 @@
         "feature_branch": "3c3aa7b733ff1ee439acdc235200a95838fd6831"
       },
       "last_observed_head": "3c3aa7b733ff1ee439acdc235200a95838fd6831",
-      "last_checkpoint_at": "2026-09-27T14:46:19.754Z",
+      "last_checkpoint_at": "2026-09-27T14:48:52.724Z",
       "checkpoint_paths": [
         "src/Controller/PublicVideoLibraryController.php",
         "src/Video/Library/VideoLibraryBrowser.php",
@@ -40601,11 +40601,11 @@
         "tests/Controller/PublicVideoLibraryControllerTest.php",
         "tests/Widget/VideoLibraryWidgetProviderTest.php"
       ],
-      "next_action": "Inspect exact-head Worker CI run #843 / 36327083240 on 3c3aa7b733ff1ee439acdc235200a95838fd6831. Repair any remaining code or test failures within the eight reserved paths and rerun full CI.",
-      "worker_pr_state": "open_draft",
-      "last_verified_push_at": "2026-09-27T14:46:19.754Z",
-      "ci_result": "in_progress",
-      "last_ci_result": "failure",
+      "next_action": "Worker PR #338 is ready for Trusted review on exact green HEAD 3c3aa7b733ff1ee439acdc235200a95838fd6831; exact-head CI #843 / 36327083240 passed both jobs. Keep the claim locked until Trusted explicitly integrates, cancels or transfers it; continue the autonomous Worker loop without merge or deployment.",
+      "worker_pr_state": "ready_for_review",
+      "last_verified_push_at": "2026-09-27T14:48:52.724Z",
+      "ci_result": "success",
+      "last_ci_result": "success",
       "ci_attempts": [
         {
           "run_id": 36326938647,
@@ -40625,8 +40625,15 @@
           "run_number": 843,
           "head": "3c3aa7b733ff1ee439acdc235200a95838fd6831",
           "base": "b510875e7b0741b9b19f09429d2204a95df51198",
-          "result": "in_progress",
-          "conclusion": null
+          "result": "success",
+          "conclusion": "success",
+          "php_symfony_job": "success",
+          "phpstan": "success",
+          "phpunit": "success",
+          "test_summary": "542 tests, 2,259 assertions.",
+          "postgresql_18_migrations": "success",
+          "migrations_executed": 54,
+          "sql_queries": 750
         }
       ],
       "worker_pr": 338,
@@ -40643,9 +40650,19 @@
       ],
       "worker_pr_base_branch": "main",
       "pr_state": "open",
-      "draft_pr": true,
+      "draft_pr": false,
       "ci_run_id": 36327083240,
-      "last_ci_run_id": 36327083240
+      "last_ci_run_id": 36327083240,
+      "final_head": "3c3aa7b733ff1ee439acdc235200a95838fd6831",
+      "completed_at": "2026-09-27T14:48:52.724Z",
+      "completion_evidence": [
+        "Exact sanitized main base b510875e7b0741b9b19f09429d2204a95df51198; final Worker HEAD 3c3aa7b733ff1ee439acdc235200a95838fd6831.",
+        "Worker PR #338 is open and ready for review against main; it remains unmerged and undeployed.",
+        "The eight changed paths match WCP-545's reserved paths. No claim-locked VideoController or VideoRepository, entity, schema, migration, shared widget registry, or global templates path was modified.",
+        "The additive /videos/library route shows up to 24 currently published videos per page, supports combined enabled category and playlist filters, preserves selections during paging, orders stably, links to existing video detail pages, and handles empty/invalid/out-of-range requests.",
+        "The video.library Page Builder widget links to the library and shows the current public video count; disabling Video hides route and widget.",
+        "Exact-head Worker CI #843 / 36327083240 passed PHPStan, PHPUnit 542 tests / 2259 assertions, and PostgreSQL 18 migration-chain validation (54 migrations / 750 SQL queries)."
+      ]
     },
     {
       "priority": 546,
