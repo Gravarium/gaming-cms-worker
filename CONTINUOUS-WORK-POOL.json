@@ -13,11 +13,11 @@
   "published_at": "2026-09-27T19:29:42.330Z",
   "summary": {
     "total_remaining_worker_tasks": 173,
-    "completed_worker_prs_awaiting_trusted_review": 307,
+    "completed_worker_prs_awaiting_trusted_review": 308,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-577 PR #371 is open on dca170c8be06935a5e8b8ef22622adf9d3958e62; exact-head Worker CI #923 is running.",
+    "next_required_action": "WCP-577 is complete on exact-head CI; inspect current pool and worker-visible CMS for the next independent safe proposal, reserve one path-disjoint WCP, and continue.",
     "composition_preparable": 0,
     "immediately_actionable": 29,
     "must_continue": true
@@ -46735,7 +46735,7 @@
       "package_id": "WCP-577",
       "title": "Test HTML escaping on public content tag archives",
       "risk": "low",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -46805,7 +46805,7 @@
       },
       "published_at": "2026-09-27T19:51:25.923Z",
       "claimed_on": "2026-09-27T19:51:25.923Z",
-      "claim_state": "active",
+      "claim_state": "locked_until_trusted_resolution",
       "active_base_branch": "main",
       "active_base_sha": "7b2ca79405fc12d34bce1386157e929e4668f31a",
       "active_head": "dca170c8be06935a5e8b8ef22622adf9d3958e62",
@@ -46819,33 +46819,35 @@
       "checkpoint_paths": [
         "tests/Controller/PublicContentTagRenderingTest.php"
       ],
-      "next_action": "Await exact-head Worker CI #923 / 36345970930 on dca170c8be06935a5e8b8ef22622adf9d3958e62; then reconcile the targeted tag archive assertions, update PR #371 and continue.",
+      "next_action": "Await Trusted review and independent validation of PR #371; continue autonomous Worker scheduling without merging or deploying.",
       "worker_pr": 371,
-      "worker_pr_state": "draft",
+      "worker_pr_state": "ready_for_review",
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/371",
       "worker_pr_changed_paths": [
         "tests/Controller/PublicContentTagRenderingTest.php"
       ],
       "pr_state": "open",
-      "draft_pr": true,
+      "draft_pr": false,
       "worker_pr_base_branch": "main",
       "worker_pr_base_sha": "7b2ca79405fc12d34bce1386157e929e4668f31a",
-      "ci_result": "in_progress",
+      "ci_result": "success",
       "ci_attempts": [
         {
           "run_id": 36345970930,
           "run_number": 923,
           "head": "dca170c8be06935a5e8b8ef22622adf9d3958e62",
           "base": "7b2ca79405fc12d34bce1386157e929e4668f31a",
-          "result": "in_progress",
+          "result": "success",
           "validation_pr": 371,
-          "conclusion": null
+          "conclusion": "success"
         }
       ],
       "ci_run_id": 36345970930,
       "last_ci_run_id": 36345970930,
       "ci_validation_pr": 371,
-      "last_ci_result": "in_progress"
+      "last_ci_result": "success",
+      "completed_at": "2026-09-27T19:55:54.120Z",
+      "worker_completion_summary": "Exact-head Worker CI #923 / 36345970930 passed on dca170c8be06935a5e8b8ef22622adf9d3958e62: 737 tests, 4,642 assertions, 0 failures/errors (1 PHPUnit deprecation, 3 notices); PHPStan reported no errors; PostgreSQL 18 applied 57 migrations with 878 SQL queries. PR #371 is open and ready for Trusted review from main@7b2ca79405fc12d34bce1386157e929e4668f31a; exactly one allowlisted test path changed, with no source or template changes."
     }
   ],
   "recovery_queue": [],
