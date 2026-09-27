@@ -109,6 +109,7 @@ final class AdminContentTagMergeTest extends WebTestCase
             self::assertResponseIsSuccessful();
             self::assertSelectorTextContains('body', '3 Inhalte wurden dem Ziel-Tag zugeordnet.');
 
+            $entityManager = $this->entityManager($client);
             $entityManager->clear();
             self::assertNull($entityManager->find(ContentTag::class, $sourceId));
             $storedTarget = $entityManager->find(ContentTag::class, $targetId);
@@ -195,6 +196,7 @@ final class AdminContentTagMergeTest extends WebTestCase
                 $client->request('POST', $path, $values);
 
                 self::assertResponseStatusCodeSame(422);
+                $entityManager = $this->entityManager($client);
                 $entityManager->clear();
                 self::assertInstanceOf(ContentTag::class, $entityManager->find(ContentTag::class, $sourceId));
                 self::assertInstanceOf(ContentTag::class, $entityManager->find(ContentTag::class, $targetId));
@@ -236,6 +238,7 @@ final class AdminContentTagMergeTest extends WebTestCase
             $client->request('POST', $path, ['content_tag_merge' => ['target' => (string) $targetId]]);
             self::assertResponseStatusCodeSame(403);
 
+            $entityManager = $this->entityManager($client);
             $entityManager->clear();
             self::assertInstanceOf(ContentTag::class, $entityManager->find(ContentTag::class, $sourceId));
             self::assertInstanceOf(ContentTag::class, $entityManager->find(ContentTag::class, $targetId));
@@ -271,6 +274,7 @@ final class AdminContentTagMergeTest extends WebTestCase
             $client->request('POST', $path, $values);
 
             self::assertResponseRedirects('/admin/content/tags');
+            $entityManager = $this->entityManager($client);
             $entityManager->clear();
             self::assertNull($entityManager->find(ContentTag::class, $sourceId));
             $storedTarget = $entityManager->find(ContentTag::class, $targetId);
@@ -387,6 +391,9 @@ final class AdminContentTagMergeTest extends WebTestCase
         return $entry;
     }
 
+    /**
+     * @param list<string> $permissions
+     */
     private function createUser(KernelBrowser $client, string $label, array $permissions): User
     {
         $user = (new User())
