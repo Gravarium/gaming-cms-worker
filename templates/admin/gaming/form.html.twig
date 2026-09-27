@@ -8,6 +8,9 @@
 <main class="editor-shell">
     <p class="eyebrow">Gaming-Modul</p>
     <h1>{{ heading }}</h1>
+    {% if guild is defined and guild.id %}
+        <p><a class="button-link button-secondary" href="{{ path('app_admin_guild_onboarding_index', {guild: guild.id}) }}">Onboarding-Checkliste öffnen</a></p>
+    {% endif %}
     {% if storageMode is defined %}
         <div class="storage-hint">
             <strong>Logo-Speicher: {{ storageMode == 'external' ? 'Extern' : 'Intern' }}</strong>

@@ -1,10 +1,77 @@
 {% extends 'base.html.twig' %}
 {% block title %}Mitglieder von {{ guild.name }} | Gaming CMS{% endblock %}
 {% block body %}
-<header class="topbar"><a class="brand" href="{{ path('app_admin_dashboard') }}">Gaming CMS</a><nav class="top-actions"><a class="button-link" href="{{ path('app_admin_guild_member_new', {guild: guild.id}) }}">Neuer Charakter</a><a class="button-link button-secondary" href="{{ path('app_admin_guild_structure', {guild: guild.id}) }}">Ränge & Fragen</a><a class="button-link button-secondary" href="{{ path('app_admin_gaming_index') }}">Zurück</a></nav></header>
-<main class="dashboard"><p class="eyebrow">Mitgliederverwaltung</p><h1>{{ guild.name }}</h1><p class="muted">Ein CMS-Benutzer kann mit mehreren Charakteren verknüpft werden.</p>
-{% for message in app.flashes('success') %}<div class="notice">{{ message }}</div>{% endfor %}
-<div class="table-wrap"><table><thead><tr><th>Charakter</th><th>CMS-Konto / Spieler</th><th>Rang</th><th>Klasse</th><th>Status</th><th>Aktionen</th></tr></thead><tbody>
-{% for member in members %}<tr><td>{{ member.characterName }}{% if member.leader %} <span class="status">Leitung</span>{% endif %}</td><td>{{ member.user ? member.user.email : (member.playerName ?: '–') }}</td><td>{{ member.displayRank }}</td><td>{{ member.characterClass ?: '–' }}{% if member.characterLevel %} · Stufe {{ member.characterLevel }}{% endif %}</td><td>{{ member.active ? 'Aktiv' : 'Ausgeblendet' }}</td><td class="row-actions"><a href="{{ path('app_admin_guild_member_edit', {guild: guild.id, member: member.id}) }}">Bearbeiten</a><form method="post" action="{{ path('app_admin_guild_member_delete', {guild: guild.id, member: member.id}) }}" onsubmit="return confirm('Mitglied wirklich löschen?');"><input type="hidden" name="_token" value="{{ csrf_token('delete-member-' ~ member.id) }}"><button class="text-danger">Löschen</button></form></td></tr>
-{% else %}<tr><td colspan="6">Noch keine Mitglieder vorhanden.</td></tr>{% endfor %}</tbody></table></div></main>
+<header class="topbar">
+    <a class="brand" href="{{ path('app_admin_dashboard') }}">Gaming CMS</a>
+    <nav class="top-actions">
+        <a class="button-link" href="{{ path('app_admin_guild_member_new', {guild: guild.id}) }}">Neuer Charakter</a>
+        <a class="button-link button-secondary" href="{{ path('app_admin_guild_structure', {guild: guild.id}) }}">Ränge & Fragen</a>
+        <a class="button-link button-secondary" href="{{ path('app_admin_gaming_index') }}">Zurück</a>
+    </nav>
+</header>
+<main class="dashboard">
+    <p class="eyebrow">Mitgliederverwaltung</p>
+    <h1>{{ guild.name }}</h1>
+    <p class="muted">Ein CMS-Benutzer kann mit mehreren Charakteren verknüpft werden.</p>
+    {% for message in app.flashes('success') %}<div class="notice">{{ message }}</div>{% endfor %}
+
+    <form method="get" action="{{ path('app_admin_guild_member_index', {guild: guild.id}) }}" class="media-filters" role="search">
+        <label for="guild-member-search">
+            <span>Suche</span>
+            <input id="guild-member-search" type="search" name="q" maxlength="120" value="{{ memberQuery }}" placeholder="Charaktername">
+        </label>
+        <label for="guild-member-status">
+            <span>Status</span>
+            <select id="guild-member-status" name="status">
+                <option value="" {{ memberStatus is null ? 'selected' }}>Alle</option>
+                <option value="active" {{ memberStatus == 'active' ? 'selected' }}>Aktiv</option>
+                <option value="inactive" {{ memberStatus == 'inactive' ? 'selected' }}>Ausgeblendet</option>
+            </select>
+        </label>
+        <input type="hidden" name="page" value="1">
+        <button type="submit">Filtern</button>
+        <a class="button-link button-secondary" href="{{ path('app_admin_guild_member_index', {guild: guild.id}) }}">Zurücksetzen</a>
+    </form>
+    <p class="muted" role="status" aria-live="polite">
+        {{ memberTotal }} {{ memberTotal == 1 ? 'Mitglied' : 'Mitglieder' }} · Seite {{ memberCurrentPage }} von {{ memberPageCount }}
+    </p>
+
+    <div class="table-wrap">
+        <table>
+            <thead><tr><th>Charakter</th><th>CMS-Konto / Spieler</th><th>Rang</th><th>Klasse</th><th>Status</th><th>Aktionen</th></tr></thead>
+            <tbody>
+            {% for member in members %}
+                <tr data-member-id="{{ member.id }}">
+                    <td>{{ member.characterName }}{% if member.leader %} <span class="status">Leitung</span>{% endif %}</td>
+                    <td>{{ member.user ? member.user.email : (member.playerName ?: '–') }}</td>
+                    <td>{{ member.displayRank }}</td>
+                    <td>{{ member.characterClass ?: '–' }}{% if member.characterLevel %} · Stufe {{ member.characterLevel }}{% endif %}</td>
+                    <td>{{ member.active ? 'Aktiv' : 'Ausgeblendet' }}</td>
+                    <td class="row-actions">
+                        <a href="{{ path('app_admin_guild_member_edit', {guild: guild.id, member: member.id}) }}">Bearbeiten</a>
+                        <form method="post" action="{{ path('app_admin_guild_member_delete', {guild: guild.id, member: member.id}) }}" onsubmit="return confirm('Mitglied wirklich löschen?');">
+                            <input type="hidden" name="_token" value="{{ csrf_token('delete-member-' ~ member.id) }}">
+                            <button class="text-danger">Löschen</button>
+                        </form>
+                    </td>
+                </tr>
+            {% else %}
+                <tr><td colspan="6">{{ memberQuery != '' or memberStatus is not null ? 'Keine passenden Mitglieder gefunden.' : 'Noch keine Mitglieder vorhanden.' }}</td></tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    {% if memberPageCount > 1 %}
+        <nav class="top-actions" aria-label="Seitennavigation">
+            {% if memberCurrentPage > 1 %}
+                <a rel="prev" href="{{ path('app_admin_guild_member_index', {guild: guild.id, q: memberQuery, status: memberStatus, page: memberCurrentPage - 1}) }}">Vorherige Seite</a>
+            {% endif %}
+            <span aria-current="page">Seite {{ memberCurrentPage }} von {{ memberPageCount }}</span>
+            {% if memberCurrentPage < memberPageCount %}
+                <a rel="next" href="{{ path('app_admin_guild_member_index', {guild: guild.id, q: memberQuery, status: memberStatus, page: memberCurrentPage + 1}) }}">Nächste Seite</a>
+            {% endif %}
+        </nav>
+    {% endif %}
+</main>
 {% endblock %}

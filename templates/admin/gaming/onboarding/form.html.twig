@@ -1,0 +1,19 @@
+{% extends 'base.html.twig' %}
+{% block title %}{{ heading|default('Aufgabe hinzufügen') }} | {{ guild.name }}{% endblock %}
+{% block body %}
+<header class="topbar">
+    <a class="brand" href="{{ path('app_admin_dashboard') }}">Gaming CMS</a>
+    <a class="button-link button-secondary" href="{{ path('app_admin_guild_onboarding_index', {guild: guild.id}) }}">Zurück zur Checkliste</a>
+</header>
+<main class="editor-shell">
+    <p class="eyebrow">{{ guild.name }}</p>
+    <h1>Onboarding-Aufgabe hinzufügen</h1>
+    {% if not hasActiveMembers %}
+        <div class="notice">Lege zuerst ein aktives Mitglied für diese Gilde an.</div>
+    {% endif %}
+    {{ form_start(form, {attr: {class: 'content-form'}}) }}
+        {{ form_widget(form) }}
+        <button type="submit" {% if not hasActiveMembers %}disabled{% endif %}>Aufgabe hinzufügen</button>
+    {{ form_end(form) }}
+</main>
+{% endblock %}
