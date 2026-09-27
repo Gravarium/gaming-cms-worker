@@ -1,0 +1,22 @@
+{% set heading = config.title|default('') %}
+{% set periods = data.periods|default([]) %}
+<section class="news-archive-widget" aria-label="{{ heading ?: 'News-Archiv' }}">
+    <header class="news-archive-widget-header">
+        <h2>{{ heading ?: 'News nach Monat' }}</h2>
+        <a class="portal-read" href="{{ path('app_news_archive_index') }}">Alle Monate <span aria-hidden="true">↗</span></a>
+    </header>
+    {% if periods %}
+        <ul class="news-archive-widget-periods">
+            {% for period in periods %}
+                <li>
+                    <a href="{{ path('app_news_archive_month', {year: period.year, month: '%02d'|format(period.month)}) }}">
+                        {{ '%02d'|format(period.month) }}/{{ period.year }}
+                    </a>
+                    <span>{{ period.count }} {{ period.count == 1 ? 'Beitrag' : 'Beiträge' }}</span>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p class="portal-empty">Noch keine veröffentlichten News im Archiv.</p>
+    {% endif %}
+</section>
