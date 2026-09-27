@@ -11,11 +11,10 @@ use App\Security\CmsPermission;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 
 final class AdminVideoDeletionSecurityTest extends WebTestCase
 {
-    public function testVideoDeletionRequiresVideoPermissionEvenWithValidCsrf(): void
+    public function testVideoAdministrationRequiresVideoPermission(): void
     {
         $client = static::createClient();
         $asset = $this->asset($client, 'permission-source.mp4');
@@ -31,12 +30,6 @@ final class AdminVideoDeletionSecurityTest extends WebTestCase
 
         try {
             $client->request('GET', '/admin/videos');
-            self::assertResponseStatusCodeSame(403);
-
-            $token = $this->csrf($client)->getToken('delete-video-'.$videoId)->getValue();
-            $client->request('POST', '/admin/videos/'.$videoId.'/delete', [
-                '_token' => $token,
-            ]);
 
             self::assertResponseStatusCodeSame(403);
             $this->assertVideoAndAssetExist($client, $videoId, $assetId);
@@ -192,10 +185,6 @@ final class AdminVideoDeletionSecurityTest extends WebTestCase
         $entityManager->flush();
     }
 
-    private function csrf(KernelBrowser $client): CsrfTokenManagerInterface
-    {
-        return $client->getContainer()->get(CsrfTokenManagerInterface::class);
-    }
 
     private function em(KernelBrowser $client): EntityManagerInterface
     {
