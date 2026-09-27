@@ -1,0 +1,56 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Bracket: {{ competition.name }}{% endblock %}
+
+{% block body %}
+<main class="container competition-bracket">
+    <p><a href="{{ path('app_competition_show', {id: competition.id}) }}">Zur Competition</a></p>
+    <h1>{{ competition.name }} – Turnier-Bracket</h1>
+
+    {% set bracketLabels = {
+        'winners': 'Siegerbaum',
+        'losers': 'Verliererbaum',
+        'group': 'Gruppenphase',
+        'swiss': 'Schweizer System',
+        'round_robin': 'Jeder gegen jeden'
+    } %}
+    {% set statusLabels = {
+        'scheduled': 'Geplant',
+        'ready': 'Bereit',
+        'in_progress': 'Läuft',
+        'pending_confirmation': 'Ergebnis wartet auf Bestätigung',
+        'disputed': 'Angefochten',
+        'confirmed': 'Bestätigt',
+        'cancelled': 'Abgesagt'
+    } %}
+
+    {% for bracket, rounds in brackets %}
+        <section aria-labelledby="bracket-{{ bracket }}">
+            <h2 id="bracket-{{ bracket }}">{{ bracketLabels[bracket]|default(bracket|replace({'_': ' '})|capitalize) }}</h2>
+            {% for roundNumber, matches in rounds %}
+                <section aria-labelledby="round-{{ bracket }}-{{ roundNumber }}">
+                    <h3 id="round-{{ bracket }}-{{ roundNumber }}">Runde {{ roundNumber }}</h3>
+                    {% for match in matches %}
+                        <article class="competition-bracket-match">
+                            <h4>Match #{{ match.sequence }}</h4>
+                            <p>{{ match.participantA ? match.participantA.name : 'Noch offen' }} – {{ match.participantB ? match.participantB.name : 'Noch offen' }}</p>
+                            {% if match.scheduledAt %}
+                                <p>Geplant für <time datetime="{{ match.scheduledAt|date('c') }}">{{ match.scheduledAt|date('d.m.Y H:i') }}</time></p>
+                            {% endif %}
+                            <p>Status: {{ statusLabels[match.status]|default('Status offen') }}</p>
+                            {% if match.isConfirmed() %}
+                                <p>Ergebnis: {{ match.scoreA }} : {{ match.scoreB }}</p>
+                                {% if match.winner %}
+                                    <p>Sieger: {{ match.winner.name }}</p>
+                                {% endif %}
+                            {% endif %}
+                        </article>
+                    {% endfor %}
+                </section>
+            {% endfor %}
+        </section>
+    {% else %}
+        <p>Für dieses Turnier gibt es noch keine Paarungen. Die Bracket-Ansicht erscheint, sobald Matches angelegt wurden.</p>
+    {% endfor %}
+</main>
+{% endblock %}
