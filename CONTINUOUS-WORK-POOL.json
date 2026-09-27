@@ -10,7 +10,7 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T16:43:16.358Z",
+  "published_at": "2026-09-27T16:49:41.071Z",
   "summary": {
     "total_remaining_worker_tasks": 168,
     "completed_worker_prs_awaiting_trusted_review": 291,
@@ -42546,15 +42546,15 @@
       "claim_state": "active",
       "active_base_branch": "feature/fcp-058-pool-g1",
       "active_base_sha": "4cd14680657e1b038f2037de07160e54aa86b809",
-      "active_head": "745f5d76fe77cec37df858ff793103eea7d2d666",
+      "active_head": "4c2dd3faadc545d99bb5499bc0034c5019b66739",
       "resume_branch": "feature/wcp-552-game-guide-workflow-g1",
       "branch_heads": {
         "claim_branch": "4cd14680657e1b038f2037de07160e54aa86b809",
-        "feature_branch": "745f5d76fe77cec37df858ff793103eea7d2d666"
+        "feature_branch": "4c2dd3faadc545d99bb5499bc0034c5019b66739"
       },
-      "last_observed_head": "745f5d76fe77cec37df858ff793103eea7d2d666",
-      "last_checkpoint_at": "2026-09-27T16:35:35Z",
-      "last_verified_push_at": "2026-09-27T16:35:35Z",
+      "last_observed_head": "4c2dd3faadc545d99bb5499bc0034c5019b66739",
+      "last_checkpoint_at": "2026-09-27T16:49:41.071Z",
+      "last_verified_push_at": "2026-09-27T16:49:41.071Z",
       "checkpoint_paths": [
         "src/Controller/AdminGameGuideController.php",
         "src/Controller/PublicGameGuideController.php",
@@ -42577,7 +42577,7 @@
         "src/Entity/GameGuide/GameGuideTierEntry.php",
         "src/Entity/GameGuide/GameGuideReviewAudit.php"
       ],
-      "next_action": "Monitor Worker CI #876 / run 36333813134 on exact HEAD 745f5d76fe77cec37df858ff793103eea7d2d666 through validation PR #348; repair any failures on this same feature branch and rerun the complete workflow.",
+      "next_action": "Monitor Worker CI #881 / run 36334525315 on exact HEAD 4c2dd3faadc545d99bb5499bc0034c5019b66739 through validation PR #348; fix any failures on this same feature branch and rerun the complete workflow.",
       "worker_pr_state": "draft",
       "worker_pr_changed_paths": [
         "src/Controller/AdminGameGuideController.php",
@@ -42630,15 +42630,35 @@
           "run_number": 876,
           "head": "745f5d76fe77cec37df858ff793103eea7d2d666",
           "base": "ad876fea62817d705ad997175e03f2253ca0e445",
-          "result": "in_progress",
+          "result": "failure",
+          "validation_pr": 348,
+          "conclusion": "failure",
+          "diagnosis": "PHPUnit reported 1 error and 2 failures: the same BrowserKit client reused its authentication cookie when loginUser switched to another user, so the reviewer page had no form/content and the later author request redirected to login. Added cookie-jar clearing before identity switches with successful reviewer GET assertions."
+        },
+        {
+          "run_id": 36334125035,
+          "run_number": 878,
+          "head": "85f45fb808bd24d84e8a0ec16fd3321fac40e0ee",
+          "base": "ad876fea62817d705ad997175e03f2253ca0e445",
+          "result": "failure",
+          "conclusion": "failure",
+          "validation_pr": 348,
+          "diagnosis": "Exact-head run failed at PHPUnit (423 tests, 1 error and 2 failures): identity switches within the same BrowserKit client retained the previous auth cookie. The code checks passed and PostgreSQL migration validation passed. The test update clears cookies before reviewer/author switches and asserts the reviewer page succeeds; also adds invalid edit form retry coverage."
+        },
+        {
+          "run_id": 36334525315,
+          "run_number": 881,
+          "head": "4c2dd3faadc545d99bb5499bc0034c5019b66739",
+          "base": "ad876fea62817d705ad997175e03f2253ca0e445",
+          "result": "queued",
           "validation_pr": 348
         }
       ],
       "worker_pr": 347,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/347",
       "worker_pr_base_sha": "4cd14680657e1b038f2037de07160e54aa86b809",
-      "ci_run_id": 36333813134,
-      "last_ci_run_id": 36333813134,
+      "ci_run_id": 36334525315,
+      "last_ci_run_id": 36334525315,
       "ci_validation_pr": 348
     },
     {
