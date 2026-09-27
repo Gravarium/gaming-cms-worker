@@ -12,12 +12,12 @@
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
   "published_at": "2026-09-27T01:38:12.865Z",
   "summary": {
-    "total_remaining_worker_tasks": 141,
-    "completed_worker_prs_awaiting_trusted_review": 214,
+    "total_remaining_worker_tasks": 140,
+    "completed_worker_prs_awaiting_trusted_review": 215,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-447 is reserved on exact sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d for a protected batch media upload workflow; verify the exclusive refs and continue implementation.",
+    "next_required_action": "Re-evaluate every unclaimed task against its current dependency evidence; if all published FCPs are blocked, publish and claim one disjoint worker-only task under the continuous-work rules.",
     "composition_preparable": 0,
     "immediately_actionable": 5,
     "must_continue": true
@@ -24895,7 +24895,7 @@
       "package_id": "WCP-446",
       "title": "Protect website settings updates with authorization and CSRF tests",
       "risk": "medium",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -24965,12 +24965,12 @@
         ]
       },
       "claimed_on": "2026-09-27T01:19:51.852Z",
-      "claim_state": "active",
+      "claim_state": "locked_until_trusted_resolution",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
       "active_head": "a6f7b27d4ea18171482cdb4d8199a6c8bf31bda6",
       "resume_branch": "feature/wcp-446-site-settings-security-g1",
-      "last_checkpoint_at": "2026-09-27T01:41:33.099Z",
+      "last_checkpoint_at": "2026-09-27T01:46:11.416Z",
       "checkpoint_paths": [
         "tests/Controller/AdminSettingsSecurityTest.php"
       ],
@@ -24978,14 +24978,14 @@
         "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
         "feature_branch": "a6f7b27d4ea18171482cdb4d8199a6c8bf31bda6"
       },
-      "next_action": "Inspect exact-head Worker CI run 36286279627; repair concrete failures if needed.",
-      "last_verified_push_at": "2026-09-27T01:41:33.099Z",
+      "next_action": "PR #239 is ready for Trusted review with green exact-head Worker CI; keep this claim locked until Trusted explicitly integrates, cancels or transfers it, then continue with an independent task.",
+      "last_verified_push_at": "2026-09-27T01:46:11.416Z",
       "worker_pr": 239,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/239",
-      "pr_state": "open_draft_unmerged",
-      "draft_pr": true,
+      "pr_state": "open_ready_for_review_unmerged",
+      "draft_pr": false,
       "last_ci_run_id": 36286279627,
-      "ci_result": "queued",
+      "ci_result": "success",
       "ci_attempts": [
         {
           "run_id": 36285309077,
@@ -25039,9 +25039,35 @@
         {
           "run_id": 36286279627,
           "head": "a6f7b27d4ea18171482cdb4d8199a6c8bf31bda6",
-          "result": "queued"
+          "result": "success"
         }
-      ]
+      ],
+      "final_head": "a6f7b27d4ea18171482cdb4d8199a6c8bf31bda6",
+      "final_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "changed_paths": [
+        "tests/Controller/AdminSettingsSecurityTest.php"
+      ],
+      "final_changed_paths": [
+        "tests/Controller/AdminSettingsSecurityTest.php"
+      ],
+      "ci_run_id": 36286279627,
+      "completed_at": "2026-09-27T01:46:11.416Z",
+      "test_results": {
+        "phpunit": "431 tests, 1,872 assertions, 0 failures; one deprecation and one notice.",
+        "phpstan": "Level 8 passed with no errors.",
+        "php_symfony": "Worker PHP/Symfony validation job passed on exact final HEAD.",
+        "postgres18": "PostgreSQL 18 applied and verified all 39 migrations.",
+        "exact_head_ci": {
+          "run_id": 36286279627,
+          "head": "a6f7b27d4ea18171482cdb4d8199a6c8bf31bda6",
+          "result": "success"
+        }
+      },
+      "completion_summary": "Functional regressions verify that an authenticated CMS_CONTENT_MANAGE-only user is denied website settings access, while missing and invalid CSRF tokens submitted with a cross-site request context are rejected with HTTP 422 and leave persisted SiteSettings unchanged. Synthetic users are removed and original settings are restored. Only the allowlisted test file changed.",
+      "open_limitations": [
+        "Awaiting Trusted review and Trusted integration CI."
+      ],
+      "trusted_follow_up": "Preserve CMS_SETTINGS_MANAGE authorization, settings-form CSRF protection including the configured stateless cross-site checks, and no-persistence behavior for missing or invalid tokens."
     },
     {
       "priority": 447,
