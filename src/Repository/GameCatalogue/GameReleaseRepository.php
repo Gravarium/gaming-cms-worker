@@ -45,11 +45,11 @@ final class GameReleaseRepository extends ServiceEntityRepository
         return $this->findBy(['entry' => $entry], ['releaseAt' => 'ASC', 'id' => 'ASC']);
     }
 
-    /** @return list<GamePlatform> */
+    /** @return list<array{id: int, name: string}> */
     public function calendarPlatforms(\DateTimeImmutable $from): array
     {
-        $platforms = $this->createQueryBuilder('release')
-            ->select('DISTINCT platform')
+        $rows = $this->createQueryBuilder('release')
+            ->select('DISTINCT platform.id AS id, platform.name AS name')
             ->join('release.platform', 'platform')
             ->join('release.entry', 'entry')
             ->join('entry.game', 'game')
@@ -61,9 +61,18 @@ final class GameReleaseRepository extends ServiceEntityRepository
             ->setParameter('cancelled', 'cancelled')
             ->orderBy('platform.name', 'ASC')
             ->getQuery()
-            ->getResult();
+            ->getScalarResult();
 
-        return array_values(array_filter($platforms, static fn (mixed $platform): bool => $platform instanceof GamePlatform));
+        $platforms = [];
+        foreach ($rows as $row) {
+            $id = filter_var($row['id'] ?? null, FILTER_VALIDATE_INT);
+            $name = $row['name'] ?? null;
+            if (is_int($id) && $id > 0 && is_string($name)) {
+                $platforms[] = ['id' => $id, 'name' => $name];
+            }
+        }
+
+        return $platforms;
     }
 
     /** @return list<string> */
