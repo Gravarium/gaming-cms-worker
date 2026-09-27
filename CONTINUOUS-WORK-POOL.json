@@ -10,16 +10,16 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T09:56:59.809Z",
+  "published_at": "2026-09-27T09:57:35.911Z",
   "summary": {
-    "total_remaining_worker_tasks": 155,
+    "total_remaining_worker_tasks": 156,
     "completed_worker_prs_awaiting_trusted_review": 264,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
     "next_required_action": "WCP-498 is complete with green exact-head CI and locked for Trusted review; continue with the next independent functional module gap without touching foreign claims.",
     "composition_preparable": 0,
-    "immediately_actionable": 14,
+    "immediately_actionable": 15,
     "must_continue": true
   },
   "rules": {
@@ -33656,6 +33656,115 @@
       "last_checkpoint_at": "2026-09-27T09:56:19.571Z",
       "checkpoint_paths": [],
       "next_action": "Implement the permission-protected same-game guild-link manager, public guild-link resolution and focused workflow coverage within the listed paths; push a checkpoint before full exact-head Worker CI."
+    },
+    {
+      "priority": 502,
+      "package_id": "WCP-502",
+      "title": "Let applicants track their guild application status",
+      "risk": "medium",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-502-guild-application-status-g1",
+      "suggested_branch": "feature/wcp-502-guild-application-status-g1",
+      "base_branch": "main",
+      "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "objective": "Complete the public guild-application workflow with an authenticated 'Meine Bewerbungen' view. Show the current account's own pending, reviewing, accepted, and rejected applications by matching only its verified normalized email to the existing GuildApplication email field. Let applicants see status after recruitment closes. Add a discoverable link from public guild profiles for signed-in users. Never expose submitted email, message, custom answers, internal notes, or another account's applications. Do not change the existing application submission, admin review, entity, repository, configuration, or schema.",
+      "allowed_paths": [
+        "src/Controller/GuildApplicationStatusController.php",
+        "templates/gaming/show.html.twig",
+        "templates/gaming/applications.html.twig",
+        "tests/Controller/GuildApplicationStatusTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/",
+        "src/Entity/",
+        "src/Repository/",
+        "src/Form/",
+        "src/Controller/GamingController.php",
+        "src/Controller/AdminGuildApplicationController.php",
+        "templates/base.html.twig",
+        "templates/gaming/apply.html.twig",
+        "templates/admin/gaming/application/"
+      ],
+      "deliverables": [
+        "Add authenticated GET /gaming/applications showing only GuildApplication rows whose normalized email exactly matches the current verified account's email.",
+        "Show guild, character and current status with clear German labels for pending, reviewing, accepted and rejected; display a friendly empty state and stable newest-first pages of 25.",
+        "Keep the status view accessible after recruitment closes; add a visible Meine Bewerbungen link to the existing public guild profile for authenticated users.",
+        "Set private/no-store and noindex response metadata; do not render the applicant email, message, custom answers, internal notes or foreign applications.",
+        "Add functional tests for anonymous access, own-versus-foreign isolation, status rendering, private-field exclusion, pagination, empty state and the public-profile link.",
+        "No schema, migration, entity, repository, application-submission or admin-review changes."
+      ],
+      "tests": [
+        "php bin/phpunit tests/Controller/GuildApplicationStatusTest.php",
+        "PHPStan level 8 and complete Worker CI on the exact final HEAD.",
+        "PostgreSQL 18 complete migration-chain validation."
+      ],
+      "completion_report": [
+        "Exact sanitized main base SHA and final Worker HEAD SHA.",
+        "Complete changed-path list and Worker PR.",
+        "Focused and complete test commands/results, PHPStan and exact-head CI run.",
+        "Privacy boundary, authenticated email matching, pagination and recruitment-closed behavior.",
+        "Unresolved risks and intentionally deferred application editing or withdrawal."
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "only-read-applications-matching-current-verified-account-email",
+        "never-expose-other-applicant-data-submitted-messages-custom-answers-or-internal-notes",
+        "private-no-store-and-noindex-for-account-application-status",
+        "preserve-existing-public-application-rate-limit-admin-review-and-module-controls",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "no-entity-repository-form-schema-or-migration-change",
+        "red-CI-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment",
+        "no-private-runtime-or-sensitive-data"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "proposal_kind": "worker_only",
+      "proposal_dependency_evidence": [],
+      "collision_check": {
+        "compared_against": "Fresh pool blob 4bd0bf4913855dc4eeac03a541f1486ce1277d82; all active and claim-locked WCP/FCP path scopes; current exact sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d; current WCP-499/500/501 branches and PRs.",
+        "result": "No active or claim-locked claim owns or encloses the four allowed paths. The only existing path is templates/gaming/show.html.twig; the status controller, view and test are new. WCP-499 member notifications, WCP-500 public category directory, and WCP-501 public content redirects use disjoint files. The feature reads existing GuildApplication email/status fields and inherited repository APIs; it changes no locked entity or repository file.",
+        "paths": [
+          "src/Controller/GuildApplicationStatusController.php",
+          "templates/gaming/show.html.twig",
+          "templates/gaming/applications.html.twig",
+          "tests/Controller/GuildApplicationStatusTest.php"
+        ]
+      },
+      "claimed_on": "2026-09-27T09:57:35.911Z",
+      "claim_state": "active",
+      "active_base_branch": "main",
+      "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "resume_branch": "feature/wcp-502-guild-application-status-g1",
+      "branch_heads": {
+        "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+        "feature_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d"
+      },
+      "checkpoint_paths": [
+        "src/Controller/GuildApplicationStatusController.php",
+        "templates/gaming/show.html.twig",
+        "templates/gaming/applications.html.twig",
+        "tests/Controller/GuildApplicationStatusTest.php"
+      ],
+      "next_action": "Implement the authenticated, private guild application status view and public-profile link within the allowed paths; push a complete checkpoint and run the focused test plus full exact-head Worker CI."
     }
   ],
   "recovery_queue": [],
