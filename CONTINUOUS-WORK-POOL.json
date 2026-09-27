@@ -10,16 +10,16 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T01:07:37.992Z",
+  "published_at": "2026-09-27T01:09:24.391Z",
   "summary": {
-    "total_remaining_worker_tasks": 138,
+    "total_remaining_worker_tasks": 139,
     "completed_worker_prs_awaiting_trusted_review": 212,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-443 is complete with exact-head Worker CI and awaits Trusted review; re-evaluate the remaining FCP dependencies, then continue an independent bounded Worker proposal.",
+    "next_required_action": "WCP-444 is reserved on exact sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d for test-only video category and playlist deletion CSRF/scope regressions.",
     "composition_preparable": 0,
-    "immediately_actionable": 2,
+    "immediately_actionable": 3,
     "must_continue": true
   },
   "rules": {
@@ -24594,6 +24594,92 @@
         "Awaiting Trusted review and Trusted integration CI."
       ],
       "trusted_follow_up": "Preserve CMS_VIDEO_MANAGE authorization, per-video delete CSRF, selected-video scope and central MediaAsset retention."
+    },
+    {
+      "priority": 224,
+      "package_id": "WCP-444",
+      "title": "Protect video category and playlist deletion",
+      "risk": "medium",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-444-video-taxonomy-deletion-security-g1",
+      "suggested_branch": "feature/wcp-444-video-taxonomy-deletion-security-g1",
+      "base_branch": "main",
+      "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "objective": "Add functional regression coverage for existing admin video category and playlist deletion routes: reject missing and invalid per-record CSRF tokens without mutation, and prove rendered tokens delete only the selected category or playlist. Change tests only.",
+      "allowed_paths": [
+        "tests/Controller/AdminVideoTaxonomyDeletionSecurityTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "src/",
+        "templates/",
+        "migrations/",
+        "config/"
+      ],
+      "deliverables": [
+        "Missing and invalid delete-video-category-{id} and delete-video-playlist-{id} tokens return 403 and preserve the selected entities.",
+        "Rendered per-record CSRF tokens delete only the chosen category and playlist; sibling records remain.",
+        "Synthetic user, category, and playlist fixtures are removed.",
+        "No controller, template, entity, storage, or schema behavior is changed."
+      ],
+      "tests": [
+        "Targeted AdminVideoTaxonomyDeletionSecurityTest functional coverage for category and playlist mutations.",
+        "PHPStan level 8 and complete Worker CI on the exact final HEAD.",
+        "PostgreSQL 18 complete migration-chain checks."
+      ],
+      "completion_report": [
+        "Exact sanitized main base SHA and final Worker HEAD SHA.",
+        "Complete changed-path list and Worker PR.",
+        "Exact-head PHPUnit, PHPStan and full Worker CI results.",
+        "Any remaining Trusted integration work."
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "preserve-CMS_VIDEO_MANAGE-and-per-record-CSRF-on-video-taxonomy-deletion",
+        "deletion is scoped to the selected category or playlist and sibling records remain",
+        "test-only proposal; no production, entity, storage or schema changes",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "proposal_kind": "worker_only",
+      "proposal_dependency_evidence": [],
+      "collision_check": {
+        "compared_against": "Fresh continuous/work-pool-v4 blob a5db57414ff9c602c9d29cc76c9c15ec07ca77a1, all active and claim-locked allowlists, and worker/main @ f1a246c64527ef3ad51f7490773d9bbf9d42be5d.",
+        "result": "No active or claim-locked task owns or overlaps tests/Controller/AdminVideoTaxonomyDeletionSecurityTest.php. The path is absent from the exact worker/main baseline. Code search for the category and playlist delete CSRF identifiers returns only AdminVideoController and the rendered admin video template; the existing video access test covers anonymous login and public listing, while WCP-443 tests only video-row deletion in a different test file.",
+        "paths": [
+          "tests/Controller/AdminVideoTaxonomyDeletionSecurityTest.php"
+        ]
+      },
+      "claimed_on": "2026-09-27T01:09:24.391Z",
+      "claim_state": "active",
+      "active_base_branch": "main",
+      "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "resume_branch": "feature/wcp-444-video-taxonomy-deletion-security-g1",
+      "last_checkpoint_at": "2026-09-27T01:09:24.391Z",
+      "checkpoint_paths": [],
+      "branch_heads": {
+        "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+        "feature_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d"
+      },
+      "next_action": "Create claim/wcp-444-video-taxonomy-deletion-security-g1 and feature/wcp-444-video-taxonomy-deletion-security-g1 from exact sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d; test category and playlist CSRF rejection and selected-record deletion only in tests/Controller/AdminVideoTaxonomyDeletionSecurityTest.php, then open a draft Worker PR for exact-head CI."
     }
   ],
   "recovery_queue": [],
