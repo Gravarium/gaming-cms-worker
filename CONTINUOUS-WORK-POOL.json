@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T08:04:29.678Z",
+  "published_at": "2026-09-27T08:08:42.364Z",
   "summary": {
     "total_remaining_worker_tasks": 141,
-    "completed_worker_prs_awaiting_trusted_review": 250,
+    "completed_worker_prs_awaiting_trusted_review": 251,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-483 exact-head Worker CI run 36304215243 is green on 0eec4a4289abe6d5850f5eac98c522892a1facf5. WCP-484 full Worker CI run 36305000689 is in progress on exact HEAD c0f6b95629bbfe7f40712d1fca6ecc205fac0d00 after the preview fixture fixes; only the allowlisted test file is changed.",
+    "next_required_action": "WCP-484 is complete on green exact HEAD c0f6b95629bbfe7f40712d1fca6ecc205fac0d00 (PR #277; CI 36305000689); its claim remains locked. Re-evaluate the current unclaimed FCPs against trusted integration and exact green worker predecessor heads; if none is dependency-safe, publish and claim the next bounded independent worker-only CMS proposal.",
     "composition_preparable": 0,
     "immediately_actionable": 4,
     "must_continue": true
@@ -30904,7 +30904,7 @@
       "package_id": "WCP-484",
       "title": "Protect unpublished content previews from public exposure",
       "risk": "medium",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -30948,11 +30948,11 @@
         "PostgreSQL 18 complete migration-chain validation."
       ],
       "completion_report": [
-        "Exact sanitized main SHA and final HEAD.",
-        "Incremental changed path and Worker PR.",
-        "Authorized preview headers, public draft invisibility, and unauthorized denial.",
-        "Exact-head tests, PHPStan and migration results.",
-        "Trusted integration follow-up and unresolved assumptions."
+        "Exact sanitized main SHA f1a246c64527ef3ad51f7490773d9bbf9d42be5d; final exact HEAD c0f6b95629bbfe7f40712d1fca6ecc205fac0d00.",
+        "Only tests/Controller/AdminContentPreviewSecurityTest.php changed; Worker PR #277 is ready for review and remains unmerged.",
+        "A CMS_CONTENT_MANAGE user previews the synthetic draft with private/no-store cache directives and noindex/nofollow/noarchive robots header; the draft's public URL returns 404 without exposing the body-only marker; a user without CMS_CONTENT_MANAGE receives 403.",
+        "Exact-head Worker CI run 36305000689: 431 tests, 1,865 assertions, zero failures (one PHPUnit deprecation and one notice); PHPStan level 8 has no errors; PostgreSQL 18 executed 39 migrations successfully.",
+        "Worker-only output remains untrusted and awaits Trusted review/integration CI; no deployment or trusted merge was performed."
       ],
       "immutable_constraints": [
         "trusted-main-is-the-only-integration-and-deployment-source",
@@ -30978,7 +30978,7 @@
       },
       "published_at": "2026-09-27T07:43:33.674Z",
       "claimed_on": "2026-09-27T07:43:33.674Z",
-      "claim_state": "active",
+      "claim_state": "locked_until_trusted_resolution",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
       "active_head": "c0f6b95629bbfe7f40712d1fca6ecc205fac0d00",
@@ -30987,21 +30987,23 @@
         "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
         "feature_branch": "c0f6b95629bbfe7f40712d1fca6ecc205fac0d00"
       },
-      "next_action": "Full Worker CI run 36305000689 is in progress on exact HEAD c0f6b95629bbfe7f40712d1fca6ecc205fac0d00. The public draft URL slug is now distinct from the private body marker, preventing the 404 diagnostic URI from triggering a false body-exposure match. Inspect the run; repair within the allowed test file if needed.",
+      "next_action": "Worker PR #277 is ready for Trusted review and remains unmerged. Exact final HEAD c0f6b95629bbfe7f40712d1fca6ecc205fac0d00 passed Worker CI run 36305000689: 431 tests, 1,865 assertions, zero failures; PHPStan level 8 reported no errors; PostgreSQL 18 executed all 39 migrations. Keep the claim locked until Trusted resolution.",
       "last_observed_head": "c0f6b95629bbfe7f40712d1fca6ecc205fac0d00",
-      "last_checkpoint_at": "2026-09-27T08:04:29.678Z",
+      "last_checkpoint_at": "2026-09-27T08:08:42.364Z",
       "checkpoint_paths": [
         "tests/Controller/AdminContentPreviewSecurityTest.php"
       ],
-      "worker_pr_changed_paths": [],
+      "worker_pr_changed_paths": [
+        "tests/Controller/AdminContentPreviewSecurityTest.php"
+      ],
       "worker_pr": 277,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/277",
-      "draft_pr": true,
+      "draft_pr": false,
       "pr_state": "open",
       "ci_run_id": 36305000689,
       "last_ci_run_id": 36305000689,
-      "ci_result": "in_progress",
-      "last_ci_result": "in_progress",
+      "ci_result": "success",
+      "last_ci_result": "success",
       "ci_attempts": [
         {
           "run_id": 36304073650,
@@ -31021,7 +31023,7 @@
         {
           "run_id": 36305000689,
           "head": "c0f6b95629bbfe7f40712d1fca6ecc205fac0d00",
-          "result": "in_progress"
+          "result": "success"
         }
       ]
     }
