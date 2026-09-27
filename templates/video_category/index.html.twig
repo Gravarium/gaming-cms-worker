@@ -1,0 +1,30 @@
+{% extends 'base.html.twig' %}
+{% set site = site_settings() %}
+{% block title %}Videokategorien | {{ site.siteName }}{% endblock %}
+{% block body %}
+<header class="topbar">
+    <a class="brand" href="{{ path('app_home') }}">{% if site.logoPath %}<img class="site-logo" src="{{ site.logoPath }}" alt="{{ site.siteName }}">{% else %}{{ site.siteName }}{% endif %}</a>
+    <nav class="top-actions"><a href="{{ path('app_video_index') }}">Alle Videos</a>{% if cms_module_enabled('gaming') %}<a href="{{ path('app_gaming_index') }}">Gaming</a>{% endif %}</nav>
+</header>
+<main class="public-shell video-library">
+    <p class="eyebrow">Mediathek</p>
+    <h1>Videokategorien</h1>
+    <p class="hero-copy">Finde Streams, Guides, Highlights und Community-Videos nach Themen sortiert.</p>
+
+    <section class="video-grid" aria-label="Öffentliche Videokategorien">
+        {% for category in categories %}
+            <article class="panel">
+                <p class="eyebrow">Kategorie</p>
+                <h2><a href="{{ path('app_video_category_show', {slug: category.slug}) }}">{{ category.name }}</a></h2>
+                {% if category.description %}<p>{{ category.description }}</p>{% endif %}
+                <a class="button-link button-secondary" href="{{ path('app_video_category_show', {slug: category.slug}) }}">Kategorie öffnen</a>
+            </article>
+        {% else %}
+            <div class="panel">
+                <h2>Noch keine Kategorien</h2>
+                <p>Derzeit wurden noch keine öffentlichen Videokategorien angelegt.</p>
+            </div>
+        {% endfor %}
+    </section>
+</main>
+{% endblock %}
