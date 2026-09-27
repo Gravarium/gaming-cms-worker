@@ -76,9 +76,11 @@ final class AdminConnectorHealthReportTest extends WebTestCase
             self::assertCount(1, $pendingRows);
             self::assertNull($pendingRows[0]['checkedAt']);
         } finally {
-            foreach ([$healthyStatus, $failedStatus, $healthy, $failed, $pending] as $entity) {
-                $em->remove($entity);
-            }
+            $this->removeById($em, ExternalConnectorHealthStatus::class, $healthyStatus->getId());
+            $this->removeById($em, ExternalConnectorHealthStatus::class, $failedStatus->getId());
+            $this->removeById($em, ExternalConnectorTarget::class, $healthy->getId());
+            $this->removeById($em, ExternalConnectorTarget::class, $failed->getId());
+            $this->removeById($em, ExternalConnectorTarget::class, $pending->getId());
             $this->removeUser($em, $user);
             $em->flush();
         }
@@ -150,9 +152,12 @@ final class AdminConnectorHealthReportTest extends WebTestCase
         } finally {
             $this->removeUser($em, $user);
             if ($createdState) {
-                $em->remove($state);
+                $this->removeById($em, CmsModuleState::class, 'integrations');
             } else {
-                $state->setEnabled($wasEnabled);
+                $managedState = $em->find(CmsModuleState::class, 'integrations');
+                if ($managedState instanceof CmsModuleState) {
+                    $managedState->setEnabled($wasEnabled);
+                }
             }
             $em->flush();
         }
@@ -201,13 +206,17 @@ final class AdminConnectorHealthReportTest extends WebTestCase
 
     private function removeUser(EntityManagerInterface $em, User $user): void
     {
-        $id = $user->getId();
+        $this->removeById($em, User::class, $user->getId());
+    }
+
+    private function removeById(EntityManagerInterface $em, string $class, int|string|null $id): void
+    {
         if ($id === null) {
             return;
         }
 
-        $managed = $em->find(User::class, $id);
-        if ($managed instanceof User) {
+        $managed = $em->find($class, $id);
+        if ($managed !== null) {
             $em->remove($managed);
         }
     }
