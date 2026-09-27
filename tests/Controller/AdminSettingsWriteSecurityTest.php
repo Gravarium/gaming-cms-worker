@@ -60,7 +60,7 @@ final class AdminSettingsWriteSecurityTest extends WebTestCase
 
                 $client->request('POST', '/admin/settings', $values);
 
-                self::assertResponseIsSuccessful();
+                self::assertResponseStatusCodeSame(422);
                 $this->assertStoredSiteName($client, $fixture['settings_id'], $fixture['snapshot']['site_name']);
             }
         } finally {
