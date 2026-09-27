@@ -41724,7 +41724,7 @@
       "package_id": "WCP-551",
       "title": "Browse published CMS pages by category",
       "risk": "medium",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -41843,7 +41843,7 @@
       },
       "published_at": "2026-09-27T15:25:12.599Z",
       "claimed_on": "2026-09-27T15:11:39.261Z",
-      "claim_state": "active",
+      "claim_state": "locked_until_trusted_resolution",
       "active_base_branch": "main",
       "active_base_sha": "6988e871cbda8c27801ee0bcc02e8c5c2b0cd909",
       "active_head": "e85f66f054febce514e22dbc130c585880ef71ad",
@@ -41853,7 +41853,7 @@
         "feature_branch": "e85f66f054febce514e22dbc130c585880ef71ad"
       },
       "last_observed_head": "e85f66f054febce514e22dbc130c585880ef71ad",
-      "last_checkpoint_at": "2026-09-27T15:39:54.169Z",
+      "last_checkpoint_at": "2026-09-27T15:43:05.320Z",
       "checkpoint_paths": [
         "src/Controller/PublicPageCategoryArchiveController.php",
         "src/PageCategoryArchive/PublicPageCategoryArchiveQuery.php",
@@ -41865,8 +41865,8 @@
         "tests/Controller/PublicPageCategoryArchiveTest.php",
         "tests/Widget/PublicPageCategoryArchiveWidgetTest.php"
       ],
-      "next_action": "Monitor Worker CI run #857 / 36330374989 on exact merge HEAD e85f66f054febce514e22dbc130c585880ef71ad; after this current-main run is fully green, refresh the PR metadata, mark it ready, complete WCP-551 in the pool, and continue to the next available functional package.",
-      "worker_pr_state": "draft",
+      "next_action": "WCP-551 is complete as a Worker proposal. Keep claim branches locked until Trusted resolution. Refresh continuous/work-pool-v4, then choose and immediately claim the first free dependency-safe functional module package with disjoint paths; do not wait for Trusted review.",
+      "worker_pr_state": "ready_for_review",
       "worker_pr_changed_paths": [
         "src/Controller/PublicPageCategoryArchiveController.php",
         "src/PageCategoryArchive/PublicPageCategoryArchiveQuery.php",
@@ -41879,10 +41879,10 @@
         "tests/Widget/PublicPageCategoryArchiveWidgetTest.php"
       ],
       "worker_pr_base_branch": "main",
-      "draft_pr": true,
+      "draft_pr": false,
       "pr_state": "open",
-      "ci_result": "in_progress",
-      "last_ci_result": "in_progress",
+      "ci_result": "success",
+      "last_ci_result": "success",
       "ci_attempts": [
         {
           "run_id": 36329413892,
@@ -41915,16 +41915,53 @@
           "run_number": 857,
           "head": "e85f66f054febce514e22dbc130c585880ef71ad",
           "base": "6988e871cbda8c27801ee0bcc02e8c5c2b0cd909",
-          "result": "in_progress",
-          "conclusion": null
+          "result": "success",
+          "conclusion": "success",
+          "test_summary": "PHPUnit: 611 tests, 3,015 assertions; 1 deprecation and 1 notice."
         }
       ],
-      "last_verified_push_at": "2026-09-27T15:25:12.599Z",
+      "last_verified_push_at": "2026-09-27T15:43:05.320Z",
       "worker_pr": 342,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/342",
-      "worker_pr_base_sha": "0516dc9372671ee0cf71af23edb0b8751ff2c911",
+      "worker_pr_base_sha": "6988e871cbda8c27801ee0bcc02e8c5c2b0cd909",
       "ci_run_id": 36330374989,
-      "last_ci_run_id": 36330374989
+      "last_ci_run_id": 36330374989,
+      "final_head": "e85f66f054febce514e22dbc130c585880ef71ad",
+      "completion_head": "e85f66f054febce514e22dbc130c585880ef71ad",
+      "completed_at": "2026-09-27T15:43:05.320Z",
+      "completion_evidence": {
+        "proposal_base": "e4be797b44948824e31843b88363d6ea1335c163",
+        "current_worker_main_base": "6988e871cbda8c27801ee0bcc02e8c5c2b0cd909",
+        "final_head": "e85f66f054febce514e22dbc130c585880ef71ad",
+        "worker_pr": 342,
+        "worker_pr_state": "open_ready_for_review_unmerged",
+        "exact_head_ci": {
+          "run_number": 857,
+          "run_id": 36330374989,
+          "result": "success"
+        },
+        "phpunit": {
+          "tests": 611,
+          "assertions": 3015,
+          "deprecations": 1,
+          "notices": 1
+        },
+        "changed_paths": [
+          "src/Controller/PublicPageCategoryArchiveController.php",
+          "src/PageCategoryArchive/PublicPageCategoryArchiveQuery.php",
+          "src/PageCategoryArchive/Templates/page_category_archive/directory.html.twig",
+          "src/PageCategoryArchive/Templates/page_category_archive/archive.html.twig",
+          "src/PageCategoryArchive/Templates/widget/page_categories.html.twig",
+          "src/Widget/PublicPageCategoryArchiveWidgetProvider.php",
+          "config/packages/page_category_archive.yaml",
+          "tests/Controller/PublicPageCategoryArchiveTest.php",
+          "tests/Widget/PublicPageCategoryArchiveWidgetTest.php"
+        ],
+        "limitations": [
+          "Consumes existing page categories; category create/edit administration remains in its existing workflow.",
+          "Worker output remains untrusted pending Trusted review and integration."
+        ]
+      }
     },
     {
       "priority": 552,
