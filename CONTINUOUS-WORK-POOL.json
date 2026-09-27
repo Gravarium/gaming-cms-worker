@@ -10,16 +10,16 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T00:45:13.343Z",
+  "published_at": "2026-09-27T00:46:12.970Z",
   "summary": {
-    "total_remaining_worker_tasks": 139,
+    "total_remaining_worker_tasks": 140,
     "completed_worker_prs_awaiting_trusted_review": 208,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-441 draft PR #235 is validating exact HEAD 9d0d7a17187ada58d0cd72b988c024a2f4b7b99d in Worker CI run 36283388284; inspect both jobs and repair concrete failures on this branch.",
+    "next_required_action": "WCP-441 remains with its current owner for exact-head CI; WCP-442 is reserved from worker/main f1a246c64527ef3ad51f7490773d9bbf9d42be5d for disjoint media bulk-delete security regressions.",
     "composition_preparable": 0,
-    "immediately_actionable": 2,
+    "immediately_actionable": 3,
     "must_continue": true
   },
   "rules": {
@@ -24242,6 +24242,92 @@
           "result": "in_progress"
         }
       ]
+    },
+    {
+      "priority": 222,
+      "package_id": "WCP-442",
+      "title": "Protect bulk media deletion authorization and usage safeguards",
+      "risk": "medium",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-442-media-storage-bulk-delete-security-g1",
+      "suggested_branch": "feature/wcp-442-media-storage-bulk-delete-security-g1",
+      "base_branch": "main",
+      "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "objective": "Add focused functional regression coverage for the existing media-library bulk-delete route: require CMS_STORAGE_MANAGE and the rendered bulk-media CSRF token, and preserve media assets that are still in use. Keep production behavior and storage workflows unchanged.",
+      "allowed_paths": [
+        "tests/Controller/MediaStorageBulkDeleteSecurityTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "src/",
+        "templates/",
+        "migrations/",
+        "config/"
+      ],
+      "deliverables": [
+        "Authenticated users without CMS_STORAGE_MANAGE are denied bulk deletion and selected assets remain unchanged.",
+        "Missing and invalid bulk-media CSRF tokens are denied before any asset mutation.",
+        "A valid rendered CSRF token cannot bulk-delete an asset referenced by a Video; unselected sibling assets remain untouched.",
+        "Synthetic user, media and video fixtures are removed after each test."
+      ],
+      "tests": [
+        "Targeted MediaStorageBulkDeleteSecurityTest functional coverage.",
+        "PHPStan level 8 and complete Worker CI on the exact final HEAD.",
+        "PostgreSQL 18 complete migration-chain checks."
+      ],
+      "completion_report": [
+        "Exact sanitized main base SHA and final Worker HEAD SHA.",
+        "Complete changed-path list and Worker PR.",
+        "Exact-head test, PHPStan and full Worker CI results.",
+        "Any remaining Trusted integration work."
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "preserve-CMS_STORAGE_MANAGE-and-bulk-media-CSRF",
+        "preserve-in-use-media-deletion-guard-and-selected-record-scope",
+        "no-production-code-or-storage-behavior-changes",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "proposal_kind": "worker_only",
+      "proposal_dependency_evidence": [],
+      "collision_check": {
+        "compared_against": "Fresh continuous/work-pool-v4 blob 241a7dd23f0674b5f42c6e11ce4ce0f0fb5b751e, all active and claim-locked allowlists, and worker/main @ f1a246c64527ef3ad51f7490773d9bbf9d42be5d.",
+        "result": "No active or claim-locked task owns or overlaps tests/Controller/MediaStorageBulkDeleteSecurityTest.php. The new path is absent from the exact worker/main baseline. Existing media-storage functional coverage tests bulk moves and single-item deletion, while no test exercises the bulk-delete route's storage permission, CSRF rejection, or in-use guard.",
+        "paths": [
+          "tests/Controller/MediaStorageBulkDeleteSecurityTest.php"
+        ]
+      },
+      "claimed_on": "2026-09-27T00:46:12.970Z",
+      "claim_state": "active",
+      "active_base_branch": "main",
+      "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "resume_branch": "feature/wcp-442-media-storage-bulk-delete-security-g1",
+      "last_checkpoint_at": "2026-09-27T00:46:12.970Z",
+      "checkpoint_paths": [],
+      "branch_heads": {
+        "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+        "feature_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d"
+      },
+      "next_action": "Create claim/wcp-442-media-storage-bulk-delete-security-g1 and feature/wcp-442-media-storage-bulk-delete-security-g1 from exact sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d; add the authorized bulk-delete regressions only in tests/Controller/MediaStorageBulkDeleteSecurityTest.php, then open a draft Worker PR for exact-head CI."
     }
   ],
   "recovery_queue": [],
