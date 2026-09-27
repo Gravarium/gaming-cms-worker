@@ -302,5 +302,3 @@ final readonly class ContentInteractionQuery
         return $comments;
     }
 }
-
-}

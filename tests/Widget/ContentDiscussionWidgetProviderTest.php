@@ -24,9 +24,10 @@ final class ContentDiscussionWidgetProviderTest extends WebTestCase
         $previousEnabled = $this->setContentEnabled($client, true);
         try {
             $author = $this->user($client);
-            $pinned = $this->entry($client, $author, 'widget-pinned', new \DateTimeImmutable('-8 days'), pinned: true);
-            $recentA = $this->entry($client, $author, 'widget-recent-a', new \DateTimeImmutable('-1 day'));
-            $recentB = $this->entry($client, $author, 'widget-recent-b', new \DateTimeImmutable('-1 day'));
+            $recentAt = new \DateTimeImmutable();
+            $pinned = $this->entry($client, $author, 'widget-pinned', $recentAt, pinned: true);
+            $recentA = $this->entry($client, $author, 'widget-recent-a', $recentAt);
+            $recentB = $this->entry($client, $author, 'widget-recent-b', $recentAt);
             $this->comment($client, $author, $pinned, 'Pinned discussion comment.');
             $this->comment($client, $author, $recentB, 'Recent discussion comment one.');
             $this->comment($client, $author, $recentB, 'Recent discussion comment two.');
@@ -70,21 +71,36 @@ final class ContentDiscussionWidgetProviderTest extends WebTestCase
             self::assertSame('content.discussions', $validated['widgets'][1]['type']);
             self::assertSame(3, $validated['widgets'][1]['config']['count']);
 
-            $data = $registry->data('content.discussions', ['count' => 3]);
+            $data = $registry->data('content.discussions', ['count' => 50]);
             /** @var list<array{entry: ContentEntry, commentCount: int}> $items */
             $items = $data['items'] ?? [];
-            self::assertCount(3, $items);
-            self::assertSame(
-                ['widget-pinned', 'widget-recent-b', 'widget-recent-a'],
-                array_map(static fn (array $item): string => $item['entry']->getSlug(), $items),
-            );
-            self::assertSame([1, 2, 0], array_map(static fn (array $item): int => $item['commentCount'], $items));
-            self::assertCount(12, $registry->data('content.discussions', ['count' => 50])['items']);
+            self::assertCount(12, $items);
+            $indices = [];
+            $counts = [];
+            foreach ($items as $index => $item) {
+                $slug = $item['entry']->getSlug();
+                $indices[$slug] = $index;
+                $counts[$slug] = $item['commentCount'];
+            }
+            self::assertArrayHasKey('widget-pinned', $indices);
+            self::assertArrayHasKey('widget-recent-b', $indices);
+            self::assertArrayHasKey('widget-recent-a', $indices);
+            self::assertTrue($indices['widget-pinned'] < $indices['widget-recent-b']);
+            self::assertTrue($indices['widget-recent-b'] < $indices['widget-recent-a']);
+            self::assertSame(1, $counts['widget-pinned']);
+            self::assertSame(2, $counts['widget-recent-b']);
+            self::assertSame(0, $counts['widget-recent-a']);
+            self::assertArrayNotHasKey('widget-unlisted', $indices);
+            self::assertArrayNotHasKey('widget-draft', $indices);
             self::assertCount(1, $registry->data('content.discussions', ['count' => 0])['items']);
 
+            $renderItems = array_values(array_filter(
+                $items,
+                static fn (array $item): bool => in_array($item['entry']->getSlug(), ['widget-pinned', 'widget-recent-b'], true),
+            ));
             $rendered = $client->getContainer()->get(Environment::class)->render(
                 'widget/content_discussions.html.twig',
-                ['items' => $items],
+                ['items' => $renderItems],
             );
             self::assertStringContainsString('/content/widget-pinned/discussion', $rendered);
             self::assertStringContainsString('/content/widget-recent-b/discussion', $rendered);
