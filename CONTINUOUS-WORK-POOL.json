@@ -10,7 +10,7 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T00:39:46.419Z",
+  "published_at": "2026-09-27T00:40:38.413Z",
   "summary": {
     "total_remaining_worker_tasks": 139,
     "completed_worker_prs_awaiting_trusted_review": 208,
@@ -24123,7 +24123,8 @@
         "assets/controllers/content_editor_controller.js",
         "assets/content_media_picker.js",
         "tests/Controller/ContentEditorMediaPickerTest.php",
-        "tests/JavaScript/content_media_picker.test.mjs"
+        "tests/JavaScript/content_media_picker.test.mjs",
+        "assets/styles/content-editor.css"
       ],
       "forbidden_paths": [
         "private/",
@@ -24183,7 +24184,7 @@
       "proposal_dependency_evidence": [],
       "collision_check": {
         "compared_against": "Fresh continuous/work-pool-v4 blob b6b7e5cfafadba060e8063d040065d89df9b17f4, all active and claim-locked allowlists, and exact sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d.",
-        "result": "No path collisions. The content editor currently creates a media block with assetId 0 and exposes a manual numeric ID field; the central media library has no selection flow. Existing ContentBlockPolicy/OwnedMediaReferenceGateway already limits references to safe active Content-owned images. The media picker adds a separate protected read-only workflow and reuses that policy. WCP-200/300/339/353 and WCP-440 paths are disjoint; no schema, entity, migration, upload, or content write path is touched.",
+        "result": "No path collisions. The content editor currently creates a media block with assetId 0 and exposes a manual numeric ID field; the central media library has no selection flow. Existing ContentBlockPolicy/OwnedMediaReferenceGateway already limits references to safe active Content-owned images. The media picker adds a separate protected read-only workflow and reuses that policy. WCP-200/300/339/353 and WCP-440 paths are disjoint; no schema, entity, migration, upload, or content write path is touched. The existing content-editor stylesheet is unclaimed and the picker-specific rules stay in this dedicated stylesheet.",
         "paths": [
           "src/Controller/AdminContentMediaPickerController.php",
           "src/Repository/ContentMediaPickerRepository.php",
@@ -24191,7 +24192,8 @@
           "assets/controllers/content_editor_controller.js",
           "assets/content_media_picker.js",
           "tests/Controller/ContentEditorMediaPickerTest.php",
-          "tests/JavaScript/content_media_picker.test.mjs"
+          "tests/JavaScript/content_media_picker.test.mjs",
+          "assets/styles/content-editor.css"
         ]
       },
       "active_base_branch": "main",
