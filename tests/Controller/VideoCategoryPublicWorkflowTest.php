@@ -39,8 +39,16 @@ final class VideoCategoryPublicWorkflowTest extends WebTestCase
             self::assertSelectorTextNotContains('body', $disabled->getName());
             self::assertSelectorExists('a[href="/videos/categories/'.$enabled->getSlug().'"]');
         } finally {
-            $entityManager->remove($enabled);
-            $entityManager->remove($disabled);
+            $entityManager->clear();
+            foreach ([$enabled->getId(), $disabled->getId()] as $id) {
+                if ($id === null) {
+                    continue;
+                }
+                $stored = $entityManager->find(VideoCategory::class, $id);
+                if ($stored instanceof VideoCategory) {
+                    $entityManager->remove($stored);
+                }
+            }
             $entityManager->flush();
         }
     }
@@ -81,11 +89,26 @@ final class VideoCategoryPublicWorkflowTest extends WebTestCase
             self::assertSelectorTextNotContains('body', $future->getTitle());
             self::assertSelectorTextNotContains('body', $disabled->getTitle());
         } finally {
+            $entityManager->clear();
             foreach ([$visible, $foreign, $draft, $future, $disabled] as $video) {
-                $entityManager->remove($video);
+                $id = $video->getId();
+                if ($id === null) {
+                    continue;
+                }
+                $stored = $entityManager->find(Video::class, $id);
+                if ($stored instanceof Video) {
+                    $entityManager->remove($stored);
+                }
             }
-            $entityManager->remove($category);
-            $entityManager->remove($foreignCategory);
+            foreach ([$category->getId(), $foreignCategory->getId()] as $id) {
+                if ($id === null) {
+                    continue;
+                }
+                $stored = $entityManager->find(VideoCategory::class, $id);
+                if ($stored instanceof VideoCategory) {
+                    $entityManager->remove($stored);
+                }
+            }
             $entityManager->flush();
         }
     }
@@ -109,7 +132,11 @@ final class VideoCategoryPublicWorkflowTest extends WebTestCase
             $client->request('GET', '/videos/categories/missing-category-'.$suffix);
             self::assertResponseStatusCodeSame(404);
         } finally {
-            $entityManager->remove($disabled);
+            $entityManager->clear();
+            $stored = $disabled->getId() === null ? null : $entityManager->find(VideoCategory::class, $disabled->getId());
+            if ($stored instanceof VideoCategory) {
+                $entityManager->remove($stored);
+            }
             $entityManager->flush();
         }
     }
@@ -132,7 +159,11 @@ final class VideoCategoryPublicWorkflowTest extends WebTestCase
             $client->request('GET', '/videos/categories/any-category');
             self::assertResponseStatusCodeSame(404);
         } finally {
-            $entityManager->remove($state);
+            $entityManager->clear();
+            $stored = $entityManager->find(CmsModuleState::class, 'video');
+            if ($stored instanceof CmsModuleState) {
+                $entityManager->remove($stored);
+            }
             $entityManager->flush();
         }
     }
