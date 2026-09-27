@@ -10,10 +10,10 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T09:41:06.783Z",
+  "published_at": "2026-09-27T09:41:38.202Z",
   "summary": {
     "total_remaining_worker_tasks": 150,
-    "completed_worker_prs_awaiting_trusted_review": 259,
+    "completed_worker_prs_awaiting_trusted_review": 260,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
@@ -32370,7 +32370,7 @@
       "package_id": "WCP-493",
       "title": "Reorder guild ranks and application questions from the structure screen",
       "risk": "medium",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -32452,7 +32452,7 @@
       },
       "published_at": "2026-09-27T09:23:34.181Z",
       "claimed_on": "2026-09-27T09:23:34.181Z",
-      "claim_state": "active",
+      "claim_state": "locked_until_trusted_resolution",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
       "active_head": "dc21d600ca90dde5943b61d863b26e62409fcded",
@@ -32462,17 +32462,17 @@
         "feature_branch": "dc21d600ca90dde5943b61d863b26e62409fcded"
       },
       "last_observed_head": "dc21d600ca90dde5943b61d863b26e62409fcded",
-      "last_checkpoint_at": "2026-09-27T09:38:34.092Z",
+      "last_checkpoint_at": "2026-09-27T09:41:38.202Z",
       "checkpoint_paths": [
         "src/Controller/AdminGuildStructureOrderController.php",
         "templates/admin/gaming/structure/index.html.twig",
         "tests/Controller/AdminGuildStructureOrderTest.php"
       ],
-      "next_action": "Wait for full Worker CI run 36309923984 on exact HEAD dc21d600ca90dde5943b61d863b26e62409fcded; diagnose any failure before preparing the PR for Trusted review.",
-      "last_verified_push_at": "2026-09-27T09:38:34.092Z",
+      "next_action": "Await Trusted review and integration decision; keep the WCP-493 claim locked until Trusted explicitly resolves it.",
+      "last_verified_push_at": "2026-09-27T09:41:38.202Z",
       "worker_pr": 288,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/288",
-      "draft_pr": true,
+      "draft_pr": false,
       "pr_state": "open",
       "worker_pr_changed_paths": [
         "src/Controller/AdminGuildStructureOrderController.php",
@@ -32481,8 +32481,57 @@
       ],
       "ci_run_id": 36309923984,
       "last_ci_run_id": 36309923984,
-      "ci_result": "in_progress",
-      "last_ci_result": "in_progress"
+      "ci_result": "success",
+      "last_ci_result": "success",
+      "final_head": "dc21d600ca90dde5943b61d863b26e62409fcded",
+      "final_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "final_sanitized_main_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "completed_at": "2026-09-27T09:41:38.202Z",
+      "changed_paths": [
+        "src/Controller/AdminGuildStructureOrderController.php",
+        "templates/admin/gaming/structure/index.html.twig",
+        "tests/Controller/AdminGuildStructureOrderTest.php"
+      ],
+      "final_changed_paths": [
+        "src/Controller/AdminGuildStructureOrderController.php",
+        "templates/admin/gaming/structure/index.html.twig",
+        "tests/Controller/AdminGuildStructureOrderTest.php"
+      ],
+      "ci_attempts": [
+        {
+          "run_id": 36309695806,
+          "head_sha": "07cf871207232164d30a6afea537816bc70ae284",
+          "result": "failure",
+          "summary": "Full PHP/Symfony job had three TypeErrors: AdminGuildStructureOrderTest helper parameters used the test KernelBrowser namespace; PostgreSQL migration job succeeded."
+        },
+        {
+          "run_id": 36309923984,
+          "head_sha": "dc21d600ca90dde5943b61d863b26e62409fcded",
+          "result": "success",
+          "summary": "Full exact-head Worker CI passed: PHPStan no errors; 433 tests and 1,907 assertions (one PHPUnit deprecation and one notice); PostgreSQL 18 applied 39 migrations with 470 SQL queries and zero unavailable migrations."
+        }
+      ],
+      "completion_summary": "Completed direct ordering of guild ranks and application questions from the structure overview. Accessible up/down controls enforce CSRF and guild ownership; moves reindex within a transaction and write audit events while preserving the default rank. No schema or migration changes.",
+      "completion_evidence": {
+        "exact_sanitized_main_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+        "final_head_sha": "dc21d600ca90dde5943b61d863b26e62409fcded",
+        "changed_paths": [
+          "src/Controller/AdminGuildStructureOrderController.php",
+          "templates/admin/gaming/structure/index.html.twig",
+          "tests/Controller/AdminGuildStructureOrderTest.php"
+        ],
+        "worker_pr": 288,
+        "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/288",
+        "ci_run_id": 36309923984,
+        "ci_result": "success",
+        "php_symfony_job": "success: PHPStan level 8 no errors; 433 tests, 1,907 assertions (one PHPUnit deprecation and one notice).",
+        "postgresql_job": "success: PostgreSQL 18 applied all 39 migrations, 470 SQL queries, 0 unavailable."
+      },
+      "open_limitations": [
+        "Manual numeric position editing remains supported; drag-and-drop is not included.",
+        "No schema, entity, repository, form, or migration changes are part of this proposal."
+      ],
+      "trusted_follow_up": "Review route permission, CSRF, cross-guild ownership, transaction/audit semantics and exact-head test evidence; then port the reviewed three paths to the Trusted CMS only through its integration process, keeping the Fortress/private-runtime work separate."
     },
     {
       "priority": 494,
