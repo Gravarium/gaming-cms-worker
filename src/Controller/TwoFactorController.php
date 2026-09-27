@@ -167,7 +167,8 @@ final class TwoFactorController extends AbstractController
             throw $this->createAccessDeniedException();
         }
 
-        $csrfToken = $request->request->get('_token');
+        $parameters = $request->request->all();
+        $csrfToken = $parameters['_token'] ?? null;
         if (!is_string($csrfToken) || !$this->isCsrfTokenValid('two-factor-recovery-rotate', $csrfToken)) {
             throw $this->createAccessDeniedException();
         }
@@ -178,7 +179,7 @@ final class TwoFactorController extends AbstractController
             return $this->redirectToRoute('app_two_factor_recovery_manage');
         }
 
-        $password = $request->request->get('password');
+        $password = $parameters['password'] ?? null;
         if (!is_string($password) || $password === '' || strlen($password) > 1024 || !$passwordHasher->isPasswordValid($user, $password)) {
             $this->addFlash('error', 'Das Passwort ist nicht korrekt. Die Wiederherstellungscodes blieben unverändert.');
             return $this->redirectToRoute('app_two_factor_recovery_manage');
