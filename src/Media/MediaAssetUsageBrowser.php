@@ -7,6 +7,10 @@ namespace App\Media;
 use App\ContentEditor\ContentBlockDocument;
 use App\Entity\ContentEntry;
 use App\Entity\MediaAsset;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\DBAL\Platforms\AbstractMySQLPlatform;
+use Doctrine\DBAL\Platforms\PostgreSQLPlatform;
+use Doctrine\DBAL\Platforms\SQLitePlatform;
 use Doctrine\ORM\EntityManagerInterface;
 
 final readonly class MediaAssetUsageBrowser
@@ -42,13 +46,9 @@ final readonly class MediaAssetUsageBrowser
             $conditions[] = 'LOCATE(:mediaMarker, entry.editorDocument) > 0';
             $parameters['mediaMarker'] = '"assetId":'.$assetId.',';
         }
-        if ($conditions === []) {
-            return ['items' => [], 'truncated' => false];
-        }
-
         $query = $this->entityManager->getRepository(ContentEntry::class)->createQueryBuilder('entry')
             ->andWhere('('.implode(' OR ', $conditions).')')
-            ->setParameters($parameters)
+            ->setParameters(new ArrayCollection($parameters))
             ->orderBy('entry.id', 'ASC')
             ->setMaxResults(self::MAX_CONTENT_CANDIDATES + 1)
             ->getQuery();
@@ -156,14 +156,13 @@ final readonly class MediaAssetUsageBrowser
         $needle = json_encode(['widgets' => [['config' => ['imageId' => $assetId]]]], JSON_THROW_ON_ERROR);
 
         $parameters = [];
-        $platformName = $platform->getName();
-        if ($platformName === 'postgresql') {
+        if ($platform instanceof PostgreSQLPlatform) {
             $predicate = 'CAST(pl.'.$documentColumn.' AS JSONB) @> CAST(:needle AS JSONB)';
             $parameters['needle'] = $needle;
-        } elseif ($platformName === 'sqlite') {
+        } elseif ($platform instanceof SQLitePlatform) {
             $predicate = "EXISTS (SELECT 1 FROM json_each(pl.".$documentColumn.", '$.widgets') AS widget WHERE json_extract(widget.value, '$.config.imageId') = :assetId)";
             $parameters['assetId'] = $assetId;
-        } elseif (in_array($platformName, ['mysql', 'mariadb'], true)) {
+        } elseif ($platform instanceof AbstractMySQLPlatform) {
             $predicate = 'JSON_CONTAINS(pl.'.$documentColumn.', :needle, \'$\')';
             $parameters['needle'] = $needle;
         } else {
