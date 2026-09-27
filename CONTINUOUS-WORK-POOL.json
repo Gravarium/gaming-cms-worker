@@ -10,7 +10,7 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T09:45:06.616Z",
+  "published_at": "2026-09-27T09:46:48.615Z",
   "summary": {
     "total_remaining_worker_tasks": 152,
     "completed_worker_prs_awaiting_trusted_review": 261,
@@ -33102,17 +33102,21 @@
       "claim_state": "active",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "a257b0647a067a4b31696719876b2e6bffdba3a9",
       "resume_branch": "feature/wcp-498-connector-health-report-g1",
       "branch_heads": {
         "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-        "feature_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d"
+        "feature_branch": "a257b0647a067a4b31696719876b2e6bffdba3a9"
       },
-      "last_observed_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-      "last_checkpoint_at": "2026-09-27T09:42:08.032Z",
-      "checkpoint_paths": [],
-      "next_action": "Implement the permission-protected connector health report and focused functional coverage within the three allowed paths, then run focused tests and complete exact-head Worker CI.",
-      "last_verified_push_at": null
+      "last_observed_head": "a257b0647a067a4b31696719876b2e6bffdba3a9",
+      "last_checkpoint_at": "2026-09-27T09:46:48.615Z",
+      "checkpoint_paths": [
+        "src/Controller/AdminConnectorHealthReportController.php",
+        "src/ExternalConnector/ConnectorHealthReport.php",
+        "tests/Controller/AdminConnectorHealthReportTest.php"
+      ],
+      "next_action": "Open the draft Worker PR to trigger exact-head CI; diagnose any focused or full validation failure without leaving the three allowed paths.",
+      "last_verified_push_at": "2026-09-27T09:46:48.615Z"
     },
     {
       "priority": 499,
