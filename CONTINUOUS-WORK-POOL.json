@@ -10,7 +10,7 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T09:36:00.778Z",
+  "published_at": "2026-09-27T09:36:28.112Z",
   "summary": {
     "total_remaining_worker_tasks": 148,
     "completed_worker_prs_awaiting_trusted_review": 259,
@@ -32573,26 +32573,31 @@
         "feature_branch": "ec849f35275f8f047a992a154c5cb5c6a7f818a6"
       },
       "last_observed_head": "ec849f35275f8f047a992a154c5cb5c6a7f818a6",
-      "last_checkpoint_at": "2026-09-27T09:36:00.778Z",
+      "last_checkpoint_at": "2026-09-27T09:36:28.112Z",
       "checkpoint_paths": [
         "tests/Controller/PublicScheduledContentVisibilityTest.php"
       ],
-      "next_action": "Rerun full exact-head Worker CI on the repaired HEAD ec849f35275f8f047a992a154c5cb5c6a7f818a6. Prior run failed only because the debug 404 page includes the requested slug; the repaired test separates request slugs from content markers and still asserts hidden content is absent.",
+      "next_action": "Monitor exact-head Worker CI run 36309864850; repair any concrete failures on HEAD ec849f35275f8f047a992a154c5cb5c6a7f818a6 without weakening checks.",
       "last_verified_push_at": "2026-09-27T09:36:00.778Z",
       "worker_pr": 287,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/287",
       "draft_pr": true,
       "pr_state": "open",
-      "ci_run_id": 36309675365,
-      "last_ci_run_id": 36309675365,
-      "ci_result": "failure",
-      "last_ci_result": "failure",
+      "ci_run_id": 36309864850,
+      "last_ci_run_id": 36309864850,
+      "ci_result": "in_progress",
+      "last_ci_result": "in_progress",
       "ci_attempts": [
         {
           "run_id": 36309675365,
           "head": "06bc908ba3d38d7fe5cb281d3bf0e6288a953c66",
           "result": "failure",
           "diagnosis": "The Symfony debug 404 page includes the requested slug in route diagnostics. The test initially reused that slug as its content marker; it now checks a distinct title/body marker while retaining the 404 assertion."
+        },
+        {
+          "run_id": 36309864850,
+          "head": "ec849f35275f8f047a992a154c5cb5c6a7f818a6",
+          "result": "in_progress"
         }
       ]
     },
