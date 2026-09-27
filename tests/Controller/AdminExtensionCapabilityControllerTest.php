@@ -355,7 +355,10 @@ final class AdminExtensionCapabilityControllerTest extends WebTestCase
         $requestStack = $client->getContainer()->get(RequestStack::class);
         $requestStack->push($request);
         try {
-            return $client->getContainer()->get(CsrfTokenManagerInterface::class)->getToken($tokenId)->getValue();
+            $token = $client->getContainer()->get(CsrfTokenManagerInterface::class)->getToken($tokenId)->getValue();
+            $request->getSession()->save();
+
+            return $token;
         } finally {
             $requestStack->pop();
         }
