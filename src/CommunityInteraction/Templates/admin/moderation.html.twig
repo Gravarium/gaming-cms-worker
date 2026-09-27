@@ -1,0 +1,58 @@
+{% extends 'base.html.twig' %}
+{% block title %}Community-Moderation | Gaming CMS{% endblock %}
+{% block body %}
+<header class="topbar"><a class="brand" href="{{ path('app_admin_dashboard') }}">Gaming CMS</a><nav class="top-actions"><a href="{{ path('app_admin_notification_index') }}">Benachrichtigungen</a><a href="{{ path('app_admin_dashboard') }}">Zurück</a></nav></header>
+<main class="dashboard">
+    <p class="eyebrow">Content-Modul</p><h1>Community-Moderation</h1>
+    {% for message in app.flashes('success') %}<div class="notice">{{ message }}</div>{% endfor %}
+    {% for message in app.flashes('error') %}<div class="alert">{{ message }}</div>{% endfor %}
+    <h2>Offene Berichte</h2>
+    <div class="application-list">
+        {% for report in reports %}
+            {% set comment = report.comment %}
+            <article class="application-card">
+                <p class="eyebrow">Bericht #{{ report.id }} · {{ report.status }} · {{ report.reason }}</p>
+                <h3>{{ targets[comment.targetId] ? targets[comment.targetId].title : 'Inhalt nicht mehr vorhanden' }}</h3>
+                <p><strong>Gemeldet von {{ report.reporter.displayName }}</strong></p>
+                <p>Autor: {{ comment.author.displayName }} · Kommentar #{{ comment.id }}</p>
+                <blockquote>{{ comment.body|nl2br }}</blockquote>
+                {% if report.details %}<p>Angaben: {{ report.details|nl2br }}</p>{% endif %}
+                {% if report.decisionReason %}<p>Vorherige Entscheidung: {{ report.decisionReason }}</p>{% endif %}
+                {% if report.status == 'open' %}
+                    <form method="post" action="{{ path('app_admin_content_moderation_review', {reportId: report.id}) }}">
+                        <input type="hidden" name="_token" value="{{ csrf_token('content-report-review-' ~ report.id) }}">
+                        <button class="button-secondary">Prüfung übernehmen</button>
+                    </form>
+                {% endif %}
+                {{ form_start(decisionForms[report.id], {action: path('app_admin_content_moderation_decide', {reportId: report.id})}) }}
+                    {{ form_row(decisionForms[report.id].action) }}
+                    {{ form_row(decisionForms[report.id].reason) }}
+                    {{ form_errors(decisionForms[report.id]) }}
+                    <button>Entscheidung speichern</button>
+                {{ form_end(decisionForms[report.id]) }}
+            </article>
+        {% else %}
+            <p class="muted">Keine offenen Berichte.</p>
+        {% endfor %}
+    </div>
+
+    <h2 class="section-heading">Ausgeblendete Kommentare</h2>
+    <div class="application-list">
+        {% for comment in hiddenComments %}
+            <article class="application-card">
+                <p class="eyebrow">Kommentar #{{ comment.id }} · Inhalt #{{ comment.targetId }} · {{ comment.author.displayName }}</p>
+                <p>Kommentartext bleibt nur für Moderatoren sichtbar: {{ comment.body|nl2br }}</p>
+                {% if comment.deletionReason %}<p>Ausblendungsgrund: {{ comment.deletionReason }}</p>{% endif %}
+                {{ form_start(restoreForms[comment.id], {action: path('app_admin_content_moderation_restore', {commentId: comment.id})}) }}
+                    {{ form_row(restoreForms[comment.id].action) }}
+                    {{ form_row(restoreForms[comment.id].reason) }}
+                    {{ form_errors(restoreForms[comment.id]) }}
+                    <button class="button-secondary">Wiederherstellen</button>
+                {{ form_end(restoreForms[comment.id]) }}
+            </article>
+        {% else %}
+            <p class="muted">Keine ausgeblendeten Kommentare.</p>
+        {% endfor %}
+    </div>
+</main>
+{% endblock %}
