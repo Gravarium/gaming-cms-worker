@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T09:48:18.079Z",
+  "published_at": "2026-09-27T09:49:40.780Z",
   "summary": {
     "total_remaining_worker_tasks": 152,
-    "completed_worker_prs_awaiting_trusted_review": 261,
+    "completed_worker_prs_awaiting_trusted_review": 262,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-494 is actively claimed atop exact green WCP-090 head f4f394b9a7d5d6f5cd9495d8d1527370cfb2dc18; finish public scheduled-content functional coverage and full exact-head Worker CI. Keep all foreign claims untouched.",
+    "next_required_action": "WCP-494 is complete on exact green HEAD d7b75a5c0bb9a35b6e50a6dc1c62006294450ca5 and locked for Trusted review. Re-evaluate all remaining dependency-safe work, then continue with an independent Worker-only task.",
     "composition_preparable": 0,
     "immediately_actionable": 12,
     "must_continue": true
@@ -32538,7 +32538,7 @@
       "package_id": "WCP-494",
       "title": "Keep scheduled content out of public news and page surfaces",
       "risk": "medium",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [
         "WCP-090"
       ],
@@ -32585,10 +32585,12 @@
         "PostgreSQL 18 complete migration-chain validation."
       ],
       "completion_report": [
-        "Exact sanitized main SHA and final Worker HEAD SHA.",
-        "Complete changed-path list and Worker PR.",
-        "Focused tests, PHPStan, exact-head CI run, PostgreSQL migration results, and cleanup evidence.",
-        "Any limitations and Trusted integration follow-up."
+        "Proposal base: WCP-090 exact green Worker HEAD f4f394b9a7d5d6f5cd9495d8d1527370cfb2dc18 (PR #56, CI 36234077054); sanitized main ancestor f1a246c64527ef3ad51f7490773d9bbf9d42be5d.",
+        "Final exact Worker HEAD d7b75a5c0bb9a35b6e50a6dc1c62006294450ca5; only tests/Controller/PublicScheduledContentVisibilityTest.php changed; Worker PR #287 ready and open.",
+        "Worker CI run 36310425453 passed on the exact final HEAD: 432 tests, 1,955 assertions, zero failures, one PHPUnit deprecation and one notice; PHPStan no errors; PostgreSQL 18 executed all 39 migrations and 470 SQL queries.",
+        "Coverage proves scheduled and future-dated published news/pages stay out of public news listing and direct routes, and out of RSS, JSON Feed, and sitemap; all synthetic records are cleaned in finally.",
+        "Earlier failed attempts and their concrete test-fixture diagnoses are retained in ci_attempts; final WCP-090 stacked run is green.",
+        "Worker output remains untrusted pending Trusted review/integration CI; no merge or deployment performed."
       ],
       "immutable_constraints": [
         "test-only-no-product-runtime-or-schema-changes",
@@ -32623,7 +32625,7 @@
       },
       "published_at": "2026-09-27T09:27:59.291Z",
       "claimed_on": "2026-09-27T09:27:59.291Z",
-      "claim_state": "active",
+      "claim_state": "locked_until_trusted_resolution",
       "active_base_branch": "feature/wcp-090-scheduled-unpublish-g1",
       "active_base_sha": "f4f394b9a7d5d6f5cd9495d8d1527370cfb2dc18",
       "active_head": "d7b75a5c0bb9a35b6e50a6dc1c62006294450ca5",
@@ -32633,20 +32635,20 @@
         "feature_branch": "d7b75a5c0bb9a35b6e50a6dc1c62006294450ca5"
       },
       "last_observed_head": "d7b75a5c0bb9a35b6e50a6dc1c62006294450ca5",
-      "last_checkpoint_at": "2026-09-27T09:47:03.994Z",
+      "last_checkpoint_at": "2026-09-27T09:49:40.780Z",
       "checkpoint_paths": [
         "tests/Controller/PublicScheduledContentVisibilityTest.php"
       ],
-      "next_action": "Monitor exact-head Worker CI run 36310425453 on WCP-090 base f4f394b9a7d5d6f5cd9495d8d1527370cfb2dc18; diagnose and repair concrete failures without weakening tests.",
+      "next_action": "Worker PR #287 is ready for Trusted review and remains unmerged. Exact final HEAD d7b75a5c0bb9a35b6e50a6dc1c62006294450ca5 passed Worker CI run 36310425453. Keep the claim locked until Trusted explicitly resolves it.",
       "last_verified_push_at": "2026-09-27T09:47:03.994Z",
       "worker_pr": 287,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/287",
-      "draft_pr": true,
+      "draft_pr": false,
       "pr_state": "open",
       "ci_run_id": 36310425453,
       "last_ci_run_id": 36310425453,
-      "ci_result": "in_progress",
-      "last_ci_result": "in_progress",
+      "ci_result": "success",
+      "last_ci_result": "success",
       "ci_attempts": [
         {
           "run_id": 36309675365,
@@ -32674,12 +32676,18 @@
         {
           "run_id": 36310425453,
           "head": "d7b75a5c0bb9a35b6e50a6dc1c62006294450ca5",
-          "result": "in_progress"
+          "result": "success",
+          "summary": "432 tests, 1,955 assertions, zero failures; one deprecation and one notice; PHPStan no errors; PostgreSQL 18 executed 39 migrations and 470 SQL queries."
         }
       ],
       "worker_pr_changed_paths": [
         "tests/Controller/PublicScheduledContentVisibilityTest.php"
-      ]
+      ],
+      "final_head": "d7b75a5c0bb9a35b6e50a6dc1c62006294450ca5",
+      "final_changed_paths": [
+        "tests/Controller/PublicScheduledContentVisibilityTest.php"
+      ],
+      "completed_at": "2026-09-27T09:49:40.780Z"
     },
     {
       "priority": 495,
