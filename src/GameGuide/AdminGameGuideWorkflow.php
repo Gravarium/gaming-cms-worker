@@ -272,16 +272,34 @@ final readonly class AdminGameGuideWorkflow
                 'key' => (string) $tier['entry_key'],
                 'tier' => (string) $tier['tier'],
                 'reason' => (string) $tier['reason'],
+                'criteria' => (string) $tier['criteria'],
+                'provenance' => (string) $tier['provenance'],
             ],
             $tiers,
         );
+        $componentRows = array_map(
+            fn (array $component): array => [
+                'type' => (string) $component['component_type'],
+                'key' => (string) $component['component_key'],
+                'position' => (int) $component['position'],
+                'alternatives' => $this->decodeStringList($component['alternatives']),
+            ],
+            $components,
+        );
 
-        return $row + [
+        return array_merge($row, [
+            'components' => $componentRows,
+            'tiers' => $tierRows,
             'build_code' => $build->components() === [] ? '' : $build->exportCode(),
-            'tier_entries_json' => $tierRows === [] ? '' : json_encode($tierRows, JSON_THROW_ON_ERROR | JSON_PRETTY_PRINT),
+            'tier_entries_json' => $tierRows === [] ? '' : json_encode(array_map(
+                static fn (array $tier): array => ['key' => $tier['key'], 'tier' => $tier['tier'], 'reason' => $tier['reason']],
+                $tierRows,
+            ), JSON_THROW_ON_ERROR | JSON_PRETTY_PRINT),
             'tier_criteria' => (string) ($tiers[0]['criteria'] ?? ''),
             'tier_provenance' => (string) ($tiers[0]['provenance'] ?? ''),
-        ];
+            'valid_from' => substr((string) $row['valid_from'], 0, 10),
+            'valid_until' => $row['valid_until'] === null ? '' : substr((string) $row['valid_until'], 0, 10),
+        ]);
     }
 
     /** @param array<string, mixed> $input
@@ -374,6 +392,7 @@ final readonly class AdminGameGuideWorkflow
         ];
     }
 
+    /** @param array<string, mixed> $input */
     private function field(array $input, string $key): string
     {
         $value = $input[$key] ?? '';
