@@ -8,6 +8,7 @@ use App\Entity\CmsModuleState;
 use App\Entity\Game;
 use App\Entity\GameCatalogue\GameCatalogueEntry;
 use App\Entity\User;
+use App\Layout\LayoutValidator;
 use App\Module\CmsModuleManager;
 use App\Security\CmsPermission;
 use App\Widget\GameCatalogue\PublicGameCatalogueQuery;
@@ -29,7 +30,7 @@ final class PublicGameCatalogueWidgetProviderTest extends WebTestCase
         $token = bin2hex(random_bytes(8));
         $fixture = $this->createEntry(
             $client,
-            '!WCP524-'.$token,
+            '!WCP524-<script>alert(1)</script> '.$token,
             'wcp524-'.$token,
             '<script>alert(1)</script> '.$token,
         );
@@ -57,9 +58,10 @@ final class PublicGameCatalogueWidgetProviderTest extends WebTestCase
             );
             self::assertContains(PublicGameCatalogueWidgetProvider::KEY, $availableKeys);
             self::assertSame('gaming', $definition->module);
-            self::assertSame(6, $definition->settings['count']['default']);
-            self::assertSame(1, $definition->settings['count']['min']);
-            self::assertSame(PublicGameCatalogueQuery::MAX_ITEMS, $definition->settings['count']['max']);
+            $schema = $container->get(LayoutValidator::class)->widgetSchema(PublicGameCatalogueWidgetProvider::KEY);
+            self::assertSame(6, $schema['count']['default']);
+            self::assertSame(1, $schema['count']['min']);
+            self::assertSame(PublicGameCatalogueQuery::MAX_ITEMS, $schema['count']['max']);
 
             $markup = $container->get(Environment::class)->render($definition->template, [
                 'widget' => ['id' => 'catalogue-fixture'],
@@ -68,7 +70,7 @@ final class PublicGameCatalogueWidgetProviderTest extends WebTestCase
             ]);
 
             self::assertStringContainsString('href="/games/wcp524-'.$token.'"', $markup);
-            self::assertStringContainsString('&lt;WCP524-', $markup);
+            self::assertStringContainsString('&lt;script&gt;alert(1)&lt;/script&gt;', $markup);
             self::assertStringContainsString('&lt;script&gt;alert(1)&lt;/script&gt;', $markup);
             self::assertStringNotContainsString('<script>alert(1)</script>', $markup);
             self::assertSame($fixture['gameId'], $this->findEntry($client, $fixture['entryId'])->getGame()->getId());
