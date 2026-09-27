@@ -13,7 +13,6 @@ use App\Module\CmsModuleManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 
 final class GuildMemberNotificationModuleGateTest extends WebTestCase
 {
@@ -59,19 +58,26 @@ final class GuildMemberNotificationModuleGateTest extends WebTestCase
                 ->updateVersion('1.0.0');
             $entityManager->persist($state);
         }
-        $state->setEnabled(false);
+        $state->setEnabled(true);
         $entityManager->flush();
 
         $client->loginUser($user);
-        $modules = $client->getContainer()->get(CmsModuleManager::class);
-        $csrf = $client->getContainer()->get(CsrfTokenManagerInterface::class)
-            ->getToken('member-notification-'.$notificationId)
-            ->getValue();
         $route = '/guild-area/notification/'.$notificationId.'/read';
+        $crawler = $client->request('GET', '/guild-area');
+        self::assertResponseIsSuccessful();
+        $csrf = (string) $crawler
+            ->filter('form[action="'.$route.'"] input[name="_token"]')
+            ->attr('value');
+        self::assertNotSame('', $csrf);
+
+        $modules = $client->getContainer()->get(CmsModuleManager::class);
 
         try {
             self::assertSame('gaming', $modules->moduleForRoute('app_member_notification_read'));
             self::assertSame('gaming', $modules->moduleForRoute('app_member_notification_read_all'));
+
+            $state->setEnabled(false);
+            $entityManager->flush();
 
             $client->request('POST', $route, ['_token' => $csrf]);
             self::assertResponseStatusCodeSame(404);
