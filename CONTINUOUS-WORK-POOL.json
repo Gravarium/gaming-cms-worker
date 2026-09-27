@@ -10,7 +10,7 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T00:58:50.383Z",
+  "published_at": "2026-09-27T01:01:55.468Z",
   "summary": {
     "total_remaining_worker_tasks": 139,
     "completed_worker_prs_awaiting_trusted_review": 211,
@@ -24531,22 +24531,32 @@
       "claim_state": "active",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-      "active_head": "110bb944c803bf32cab4635f8ee98c5494f9b8e9",
+      "active_head": "f51a4a84f3d2dbbd865f3c614d4b786fcfb80b5d",
       "resume_branch": "feature/wcp-443-video-deletion-security-g1",
-      "last_checkpoint_at": "2026-09-27T00:58:50.383Z",
+      "last_checkpoint_at": "2026-09-27T01:01:55.468Z",
       "checkpoint_paths": [
         "tests/Controller/AdminVideoDeletionSecurityTest.php"
       ],
       "branch_heads": {
         "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-        "feature_branch": "110bb944c803bf32cab4635f8ee98c5494f9b8e9"
+        "feature_branch": "f51a4a84f3d2dbbd865f3c614d4b786fcfb80b5d"
       },
-      "next_action": "Inspect exact-head Worker CI for PR #237 on 110bb944c803bf32cab4635f8ee98c5494f9b8e9; repair concrete failures on this branch.",
-      "last_verified_push_at": "2026-09-27T00:58:25.673Z",
+      "next_action": "Re-run exact-head Worker CI on f51a4a84f3d2dbbd865f3c614d4b786fcfb80b5d; the prior failure was SessionNotFound before token creation, now addressed by establishing the authenticated request context.",
+      "last_verified_push_at": "2026-09-27T01:01:55.468Z",
       "worker_pr": 237,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/237",
       "pr_state": "open_draft_unmerged",
-      "draft_pr": true
+      "draft_pr": true,
+      "last_ci_run_id": 36284117010,
+      "ci_result": "failure",
+      "ci_attempts": [
+        {
+          "run_id": 36284117010,
+          "head": "110bb944c803bf32cab4635f8ee98c5494f9b8e9",
+          "result": "failure",
+          "reason": "The valid-CSRF permission test requested a CSRF token before a session existed; it now first makes an authenticated admin request, verifies the role denial, then obtains the token."
+        }
+      ]
     }
   ],
   "recovery_queue": [],
