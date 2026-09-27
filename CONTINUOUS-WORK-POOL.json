@@ -10,13 +10,13 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T01:34:48.714Z",
+  "published_at": "2026-09-27T01:37:47.608Z",
   "summary": {
-    "total_remaining_worker_tasks": 140,
+    "total_remaining_worker_tasks": 141,
     "completed_worker_prs_awaiting_trusted_review": 214,
     "recovery_tasks": 0,
-    "unclaimed": 5,
-    "immediately_claimable": 0,
+    "unclaimed": 6,
+    "immediately_claimable": 1,
     "next_required_action": "WCP-447 is reserved on exact sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d for a protected batch media upload workflow; verify the exclusive refs and continue implementation.",
     "composition_preparable": 0,
     "immediately_actionable": 4,
@@ -25125,6 +25125,98 @@
         "feature_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d"
       },
       "next_action": "The claim is reserved on exact sanitized main. Create and verify both claim and feature refs from the recorded base, then implement; push a coherent checkpoint within 30 minutes."
+    },
+    {
+      "priority": 448,
+      "package_id": "WCP-448",
+      "title": "Search and paginate guild collaboration events",
+      "risk": "medium",
+      "execution_state": "unclaimed",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-448-guild-event-directory-pagination-g1",
+      "suggested_branch": "feature/wcp-448-guild-event-directory-pagination-g1",
+      "base_branch": "main",
+      "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "objective": "Complete the existing guild event-management screen for long histories. The CMS_GAMING_MANAGE-protected /admin/gaming/guild/{guild}/collaboration page currently loads every GuildEvent for the guild in an unbounded findBy call, with no search or status filter. Add bounded title/description search, planned/done/cancelled filters and stable 25-event pagination on this existing screen, while preserving its event CRUD, attendee list and attendance forms. Keep all reads scoped to the route guild and do not alter event or announcement writes.",
+      "allowed_paths": [
+        "src/Controller/AdminGuildCollaborationController.php",
+        "src/Repository/GuildEventRepository.php",
+        "templates/admin/gaming/collaboration/index.html.twig",
+        "tests/Controller/AdminGuildCollaborationPaginationTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/",
+        "src/Entity/",
+        "src/Form/",
+        "src/Controller/GuildPortalController.php",
+        "src/Controller/AdminGuildApplicationController.php",
+        "src/Controller/AdminGuildStructureController.php",
+        "src/Repository/GuildEventSignupRepository.php",
+        "templates/admin/gaming/index.html.twig",
+        "templates/admin/gaming/collaboration/form.html.twig",
+        "templates/admin/gaming/application/",
+        "tests/Controller/AdminGuildStructureSecurityTest.php"
+      ],
+      "deliverables": [
+        "Keep the existing per-guild collaboration route and CMS_GAMING_MANAGE authorization; replace unbounded event loading with a read-only paginated query filtered by that guild.",
+        "Support case-insensitive title/description search and planned, done or cancelled event-status filters, with stable startsAt DESC then id DESC ordering, 25 events per page, result/page counts, an empty state and previous/next links preserving filters.",
+        "Preserve existing event edit/delete controls, per-event signup lists and CSRF-protected attendance forms for every event shown; preserve the announcement and Discord sections.",
+        "Reject malformed query arrays/scalars, invalid UTF-8/control bytes, unknown status, overlong search and invalid/overflowing page parameters with a client error; clamp valid pages beyond the last page.",
+        "Mark administrative responses private/no-store and noindex. Make no schema, entity, event write, notification, signup mutation, Discord or media-storage changes."
+      ],
+      "tests": [
+        "Functional coverage denies users without CMS_GAMING_MANAGE and proves the authorized per-guild collaboration route remains usable.",
+        "Create more than two 25-row pages of events and prove a later page is reachable, page order is stable without duplicates/gaps, and search/status filters are preserved in navigation.",
+        "Verify title and description search, all three statuses, empty results, valid out-of-range clamping, invalid scalar/array/UTF-8/overlong inputs and private/no-store/noindex headers.",
+        "Verify events belonging to another guild are never returned and each listed event keeps its existing edit/delete links and, when signups exist, attendance form action/CSRF token.",
+        "Run the targeted test, PHPStan level 8 and complete Worker CI on the exact final HEAD, including PostgreSQL 18 migration-chain checks."
+      ],
+      "completion_report": [
+        "Exact sanitized main base SHA and final Worker HEAD SHA.",
+        "All changed paths and Worker PR.",
+        "Guild-scoped event search/status filters, pagination, navigation, authorization, validation, response headers and preserved attendee/attendance workflows.",
+        "Exact-head PHPUnit, PHPStan and full Worker CI results.",
+        "Remaining Trusted integration work to keep the current guild collaboration route and attendance write protections intact."
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "preserve-CMS_GAMING_MANAGE-on-guild-collaboration-administration",
+        "preserve-guild-scoping-on-events-and-the-existing-event-delete-and-attendance-CSRF-boundaries",
+        "directory-read-is-only; no-event-announcement-signup-Discord-or-storage-mutations",
+        "administrative-event-attendance-responses-remain-private-no-store-and-noindex",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "proposal_kind": "worker_only",
+      "proposal_dependency_evidence": [],
+      "collision_check": {
+        "compared_against": "Fresh continuous/work-pool-v4 blob da58d23aa8701b7ba4b380ef4d5b32fae8124693, all current active and claim-locked allowlists, and exact sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d.",
+        "result": "No active or claim-locked claim owns any proposed path. WCP-411 is limited to the guild application controller/repository/template; WCP-416 and WCP-440 are separate public-guild/team-security test paths. WCP-401's Game Hub editor owns the top-level templates/admin/gaming/index.html.twig but not the collaboration page. Current active WCP-383, WCP-401, WCP-439, WCP-446 and WCP-447 paths are disjoint. FCP-072 has an unclaimed broad templates/ allowlist but is dependency-blocked by FCP-035 and is not active.",
+        "paths": [
+          "src/Controller/AdminGuildCollaborationController.php",
+          "src/Repository/GuildEventRepository.php",
+          "templates/admin/gaming/collaboration/index.html.twig",
+          "tests/Controller/AdminGuildCollaborationPaginationTest.php"
+        ]
+      }
     }
   ],
   "recovery_queue": [],
