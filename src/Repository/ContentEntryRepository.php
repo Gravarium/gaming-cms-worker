@@ -57,14 +57,34 @@ final class ContentEntryRepository extends ServiceEntityRepository
     }
 
     /** @return list<ContentEntry> */
-    public function searchPublished(string $query, int $limit = 50): array
-    {
+    public function searchPublished(
+        string $query,
+        int $limit = 50,
+        ?string $type = null,
+        ?Category $category = null,
+    ): array {
         $query = trim($query);
-        if (mb_strlen($query) < 2) { return []; }
-        return $this->listedBuilder()->leftJoin('entry.tags', 'searchTag')->distinct()
-            ->andWhere('LOWER(entry.title) LIKE :query OR LOWER(entry.subtitle) LIKE :query OR LOWER(entry.excerpt) LIKE :query OR LOWER(entry.body) LIKE :query OR LOWER(searchTag.name) LIKE :query')
-            ->setParameter('query', '%'.mb_strtolower($query).'%')->orderBy('entry.pinned', 'DESC')->addOrderBy('entry.publishedAt', 'DESC')
-            ->setMaxResults(max(1, min(100, $limit)))->getQuery()->getResult();
+        if (mb_strlen($query) < 2
+            || ($type !== null && !in_array($type, [ContentEntry::TYPE_NEWS, ContentEntry::TYPE_PAGE], true))
+        ) {
+            return [];
+        }
+
+        $builder = $this->listedBuilder()->leftJoin('entry.tags', 'searchTag')->distinct()
+            ->andWhere('(LOWER(entry.title) LIKE :query OR LOWER(entry.subtitle) LIKE :query OR LOWER(entry.excerpt) LIKE :query OR LOWER(entry.body) LIKE :query OR LOWER(searchTag.name) LIKE :query)')
+            ->setParameter('query', '%'.mb_strtolower($query).'%')
+            ->orderBy('entry.pinned', 'DESC')
+            ->addOrderBy('entry.publishedAt', 'DESC')
+            ->setMaxResults(max(1, min(100, $limit)));
+
+        if ($type !== null) {
+            $builder->andWhere('entry.type = :searchType')->setParameter('searchType', $type);
+        }
+        if ($category !== null) {
+            $builder->andWhere('entry.category = :searchCategory')->setParameter('searchCategory', $category);
+        }
+
+        return $builder->getQuery()->getResult();
     }
 
     /** @return list<ContentEntry> */
@@ -130,6 +150,7 @@ final class ContentEntryRepository extends ServiceEntityRepository
     private function publishedBuilder(): QueryBuilder
     {
         return $this->createQueryBuilder('entry')->andWhere('entry.status = :status')->andWhere('entry.publishedAt <= :now')
+            ->andWhere('(entry.scheduledUnpublishAt IS NULL OR entry.scheduledUnpublishAt > :now)')
             ->setParameter('status', ContentEntry::STATUS_PUBLISHED)->setParameter('now', new \DateTimeImmutable());
     }
 }
