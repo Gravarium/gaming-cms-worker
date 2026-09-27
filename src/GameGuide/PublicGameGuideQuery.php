@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\GameGuide;
 
-use App\Gaming\Guide\BuildComponent;
 use App\Gaming\Guide\GuideVersion;
 use App\Module\CmsModuleManager;
 use Doctrine\DBAL\Connection;
