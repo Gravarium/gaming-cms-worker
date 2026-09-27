@@ -10,13 +10,13 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T01:13:18.112Z",
+  "published_at": "2026-09-27T01:13:46.331Z",
   "summary": {
-    "total_remaining_worker_tasks": 138,
+    "total_remaining_worker_tasks": 139,
     "completed_worker_prs_awaiting_trusted_review": 213,
     "recovery_tasks": 0,
-    "unclaimed": 5,
-    "immediately_claimable": 0,
+    "unclaimed": 6,
+    "immediately_claimable": 1,
     "next_required_action": "WCP-444 is complete with exact-head Worker CI and awaits Trusted review; re-evaluate the remaining unclaimed FCP dependencies, then continue an independent bounded Worker proposal.",
     "composition_preparable": 0,
     "immediately_actionable": 2,
@@ -24716,6 +24716,99 @@
       ],
       "trusted_follow_up": "Preserve CMS_VIDEO_MANAGE, category/playlist CSRF, selected-record scope and sibling records.",
       "ci_attempts": []
+    },
+    {
+      "priority": 445,
+      "package_id": "WCP-445",
+      "title": "Browse and paginate every administrative user",
+      "risk": "medium",
+      "execution_state": "unclaimed",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-445-admin-user-directory-pagination-g1",
+      "suggested_branch": "feature/wcp-445-admin-user-directory-pagination-g1",
+      "base_branch": "main",
+      "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "objective": "Complete the existing user-management directory's reach and navigation. The current /admin/users list calls UserRepository::searchAdmin(), which caps results at 250 and offers no pagination. Add a separate authorized, read-only directory route that reaches all users in stable pages, supports the existing name/email and account-state filters, links back to existing user edit/session actions, and is reachable from the existing list. Do not modify the locked AdminUserController or UserRepository paths.",
+      "allowed_paths": [
+        "src/Controller/AdminUserDirectoryController.php",
+        "src/Repository/AdminUserDirectoryRepository.php",
+        "templates/admin/user/index.html.twig",
+        "templates/admin/user/directory.html.twig",
+        "tests/Controller/AdminUserDirectoryTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/",
+        "src/Entity/",
+        "src/Form/",
+        "src/Security/",
+        "src/Service/",
+        "src/Controller/AdminUserController.php",
+        "src/Repository/UserRepository.php",
+        "templates/admin/user/form.html.twig",
+        "templates/admin/user/sessions.html.twig",
+        "tests/Controller/AdminUserDirectoryStateFilterTest.php",
+        "tests/Controller/AdminUserSearchBoundaryTest.php"
+      ],
+      "deliverables": [
+        "Add a separate GET /admin/users/directory route protected by CMS_USERS_MANAGE; return stable 25-row pages across the full user table rather than the legacy 250-row result cap.",
+        "Support bounded case-insensitive display-name/email search and the existing active, locked, and unverified state filters. Use stable createdAt DESC, id DESC ordering, show result/page counts and clear empty states, and provide previous/next links that preserve filters.",
+        "Link to the directory from /admin/users and link each result to existing edit and session screens while preserving the current admin-target visibility rule.",
+        "Reject malformed array/scalar, unknown state, overlong search, and invalid or overflowing page parameters with a client error; clamp valid pages beyond the final page. Make responses private/no-store and noindex.",
+        "Keep the new repository and controller read-only. Make no changes to schema, entities, account state, access delegation, or existing user mutation routes."
+      ],
+      "tests": [
+        "Functional test denies users without CMS_USERS_MANAGE and proves the directory is reachable from the current user list.",
+        "Create more than 250 synthetic users and verify later pages include users beyond the current cap, stable ordering produces no duplicates or gaps, and pagination preserves q/state filters.",
+        "Cover name/email search, active/locked/unverified filters including inactive users, empty state, out-of-range clamping, malformed array inputs, unknown state, overlong q and invalid/overflowing page parameters.",
+        "Assert private/no-store/noindex response headers, existing edit/session links, and cleanup of all synthetic users.",
+        "Run the targeted test, PHPStan level 8, and complete Worker CI on the exact final HEAD, including PostgreSQL 18 migration-chain checks."
+      ],
+      "completion_report": [
+        "Exact sanitized main base SHA and final Worker HEAD SHA.",
+        "All changed paths and Worker PR.",
+        "Directory permission denial, search/status filters, pagination beyond 250, stable ordering, validation, response headers, and navigation results.",
+        "Exact-head PHPUnit, PHPStan and full Worker CI results.",
+        "Remaining Trusted integration work to connect or replace the legacy first-250 user list without weakening account-management protections."
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "preserve-CMS_USERS_MANAGE-and-PermissionDelegationPolicy-on-user-management",
+        "directory-is-read-only; preserve-existing-user-mutation-CSRF-and-session-revocation-behavior",
+        "administrative-user-responses-remain-private-no-store-and-noindex",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "proposal_kind": "worker_only",
+      "proposal_dependency_evidence": [],
+      "collision_check": {
+        "compared_against": "Fresh continuous/work-pool-v4 blob 3c8aa6eda65cd905b0b32006eb7328209ab984fa, all current active and claim-locked allowlists, and exact sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d.",
+        "result": "No active or claim-locked claim owns any proposed path. WCP-348 locks AdminUserController.php and AdminUserSearchBoundaryTest.php; WCP-412 locks UserRepository.php and AdminUserDirectoryStateFilterTest.php; those paths are explicitly excluded. WCP-415 is limited to role-member browsing; WCP-421 and WCP-428 paginate media/content on disjoint paths. FCP-072 has an unclaimed broad templates/ allowlist but is dependency-blocked by FCP-035 and is not an active claim. Current active WCP-383, WCP-401, WCP-439 and WCP-444 paths are disjoint.",
+        "paths": [
+          "src/Controller/AdminUserDirectoryController.php",
+          "src/Repository/AdminUserDirectoryRepository.php",
+          "templates/admin/user/index.html.twig",
+          "templates/admin/user/directory.html.twig",
+          "tests/Controller/AdminUserDirectoryTest.php"
+        ]
+      }
     }
   ],
   "recovery_queue": [],
