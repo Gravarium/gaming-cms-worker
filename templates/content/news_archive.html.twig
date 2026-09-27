@@ -1,0 +1,59 @@
+{% extends 'base.html.twig' %}
+{% block title %}News-Archiv | {{ site.siteName }}{% endblock %}
+{% block body %}
+<header class="topbar">
+  <a class="brand" href="{{ path('app_home') }}">{{ site.siteName }}</a>
+  <nav class="top-actions" aria-label="News">
+    <a href="{{ path('app_news_index') }}">News</a>
+    <a href="{{ path('app_content_search') }}">Suche</a>
+  </nav>
+</header>
+<main class="dashboard">
+  <p class="eyebrow">News-Archiv</p>
+  {% if entries is defined %}
+    <h1>Beiträge aus {{ '%02d'|format(month) }}/{{ year }}</h1>
+    <p class="muted">{{ total }} Beiträge</p>
+    <div class="news-grid">
+      {% for entry in entries %}
+        <article class="card">
+          <p class="news-date">{{ entry.publishedAt|date('d.m.Y H:i') }}</p>
+          <h2><a href="{{ path('app_news_show', {slug: entry.slug}) }}">{{ entry.title }}</a></h2>
+          {% if entry.subtitle %}<p><strong>{{ entry.subtitle }}</strong></p>{% endif %}
+          {% if entry.excerpt %}<p>{{ entry.excerpt }}</p>{% endif %}
+        </article>
+      {% else %}
+        <p>Für diesen Monat sind keine Beiträge vorhanden.</p>
+      {% endfor %}
+    </div>
+    {% if pages > 1 %}
+      <nav class="pagination" aria-label="Seitennavigation">
+        {% if page > 1 %}
+          <a href="{{ path('app_news_archive_month', {year: year, month: '%02d'|format(month), page: page - 1}) }}">← Neuer</a>
+        {% endif %}
+        <span>Seite {{ page }} von {{ pages }}</span>
+        {% if page < pages %}
+          <a href="{{ path('app_news_archive_month', {year: year, month: '%02d'|format(month), page: page + 1}) }}">Älter →</a>
+        {% endif %}
+      </nav>
+    {% endif %}
+    <p><a href="{{ path('app_news_archive_index') }}">Zur Monatsübersicht</a></p>
+  {% else %}
+    <h1>Nach Erscheinungsmonat</h1>
+    <p class="muted">Finde veröffentlichte Beiträge über ihr Erscheinungsdatum.</p>
+    {% if periods %}
+      <ul>
+        {% for period in periods %}
+          <li>
+            <a href="{{ path('app_news_archive_month', {year: period.year, month: '%02d'|format(period.month)}) }}">
+              {{ '%02d'|format(period.month) }}/{{ period.year }}
+            </a>
+            · {{ period.count }} Beiträge
+          </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p>Es gibt noch keine veröffentlichten Beiträge im Archiv.</p>
+    {% endif %}
+  {% endif %}
+</main>
+{% endblock %}

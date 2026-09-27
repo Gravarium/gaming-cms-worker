@@ -1,0 +1,12 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ displayName }} | Gaming CMS{% endblock %}
+
+{% block body %}
+<main class="article-shell">
+    {% if bannerUrl %}<img src="{{ bannerUrl }}" alt="" class="profile-banner">{% endif %}
+    {% if avatarUrl %}<img src="{{ avatarUrl }}" alt="Avatar von {{ displayName }}" class="profile-avatar">{% endif %}
+    <h1>{{ displayName }}</h1>
+    {% if bio %}<div class="article-body">{{ bio|nl2br }}</div>{% endif %}
+</main>
+{% endblock %}

@@ -1,0 +1,9 @@
+{% extends 'base.html.twig' %}
+{% block title %}Charakterverwaltung{% endblock %}
+{% block body %}
+<main class="admin-shell">
+    <header class="admin-heading"><h1>Charakterverwaltung</h1><nav><a class="button-link" href="{{ path('app_admin_character_account_new') }}">Account anlegen</a><a class="button-link" href="{{ path('app_admin_character_profile_new') }}">Profil anlegen</a></nav></header>
+    <section class="panel"><h2>Accounts</h2><ul>{% for account in accounts %}<li>{{ account.displayName }} · {{ account.game.name }} · {{ account.source }}</li>{% else %}<li>Keine Accounts.</li>{% endfor %}</ul></section>
+    <section class="panel"><h2>Profile</h2><ul>{% for profile in profiles %}<li>{{ profile.name }} · {{ profile.account.displayName }} · {{ profile.source }}</li>{% else %}<li>Keine Profile.</li>{% endfor %}</ul></section>
+</main>
+{% endblock %}

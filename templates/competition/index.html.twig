@@ -5,6 +5,20 @@
 {% block body %}
 <main class="container">
     <h1>Competitions</h1>
+    <form method="get" action="{{ path('app_competition_index') }}">
+        <label for="competition-status">Status</label>
+        <select id="competition-status" name="status">
+            <option value=""{% if status is null %} selected{% endif %}>Alle Status</option>
+            <option value="open"{% if status == 'open' %} selected{% endif %}>Anmeldung offen</option>
+            <option value="in_progress"{% if status == 'in_progress' %} selected{% endif %}>Läuft</option>
+            <option value="completed"{% if status == 'completed' %} selected{% endif %}>Abgeschlossen</option>
+            <option value="archived"{% if status == 'archived' %} selected{% endif %}>Archiviert</option>
+        </select>
+        <button type="submit">Filtern</button>
+        {% if status is not null %}
+            <a href="{{ path('app_competition_index') }}">Filter zurücksetzen</a>
+        {% endif %}
+    </form>
     {% for competition in competitions %}
         <article>
             <h2><a href="{{ path('app_competition_show', {id: competition.id}) }}">{{ competition.name }}</a></h2>

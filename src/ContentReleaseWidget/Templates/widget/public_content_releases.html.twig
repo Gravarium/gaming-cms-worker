@@ -1,0 +1,27 @@
+<section class="panel public-content-releases-widget" aria-labelledby="public-content-releases-{{ widget.id }}">
+    <h2 id="public-content-releases-{{ widget.id }}">Veröffentlichte Content-Releases</h2>
+    {% for release in data.releases %}
+        <article class="public-content-releases-widget__release">
+            <h3>{{ release.name }}</h3>
+            <p class="muted">
+                <time datetime="{{ release.publishedAt|date('c') }}">{{ release.publishedAt|date('d.m.Y') }}</time>
+            </p>
+            {% if release.description %}
+                <p>{{ release.description }}</p>
+            {% endif %}
+            <ul>
+                {% for entry in release.entries %}
+                    {% set route = entry.type == 'news' ? 'app_news_show' : 'app_page_show' %}
+                    <li>
+                        <a href="{{ path(route, {slug: entry.slug}) }}">{{ entry.title }}</a>
+                        {% if entry.excerpt %}
+                            <p>{{ entry.excerpt }}</p>
+                        {% endif %}
+                    </li>
+                {% endfor %}
+            </ul>
+        </article>
+    {% else %}
+        <p class="muted" role="status">Zurzeit gibt es keine veröffentlichten Content-Releases.</p>
+    {% endfor %}
+</section>

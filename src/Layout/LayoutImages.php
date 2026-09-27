@@ -21,6 +21,7 @@ final readonly class LayoutImages
     /** @return list<array{id:int,title:string}> */
     public function choices(): array
     {
+        if (!$this->modules->isEnabled('media')) return [];
         $choices=[];
         foreach($this->em->getRepository(MediaAsset::class)->findBy([],['id'=>'DESC'],200) as $asset) if($this->usable($asset)&&$asset->getId()!==null)$choices[]=['id'=>$asset->getId(),'title'=>$asset->getTitle()];
         return $choices;

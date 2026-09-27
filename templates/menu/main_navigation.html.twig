@@ -1,0 +1,10 @@
+{% if items is not empty %}
+<nav class="top-actions site-navigation" aria-label="Hauptnavigation">
+    {% for item in items %}
+        {% set href = item.page ? path('app_page_show', {slug: item.page.slug}) : item.url %}
+        {% if href %}
+            <a class="button-link button-secondary" href="{{ href }}"{% if item.openNewWindow %} target="_blank" rel="noopener noreferrer"{% endif %}>{{ item.label }}</a>
+        {% endif %}
+    {% endfor %}
+</nav>
+{% endif %}
