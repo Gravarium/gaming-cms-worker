@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T17:23:29.872Z",
+  "published_at": "2026-09-27T17:24:54.268Z",
   "summary": {
     "total_remaining_worker_tasks": 168,
     "completed_worker_prs_awaiting_trusted_review": 292,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "Implement WCP-560 public game catalogue sitemap index and bounded pages on the exact sanitized-main base.",
+    "next_required_action": "Monitor WCP-559 draft PR #354 exact-head CI #897 / 36336807299 on HEAD c8b3f52a570687383d795cd684525106a6280be4; diagnose any failures and rerun the complete workflow on the repaired exact HEAD.",
     "composition_preparable": 0,
     "immediately_actionable": 29,
     "must_continue": true
@@ -44269,15 +44269,15 @@
       "claim_state": "active",
       "active_base_branch": "main",
       "active_base_sha": "7b2ca79405fc12d34bce1386157e929e4668f31a",
-      "active_head": "7b2ca79405fc12d34bce1386157e929e4668f31a",
+      "active_head": "c8b3f52a570687383d795cd684525106a6280be4",
       "resume_branch": "feature/wcp-559-global-search-pagination-g1",
       "branch_heads": {
         "claim_branch": "7b2ca79405fc12d34bce1386157e929e4668f31a",
-        "feature_branch": "7b2ca79405fc12d34bce1386157e929e4668f31a"
+        "feature_branch": "c8b3f52a570687383d795cd684525106a6280be4"
       },
-      "last_observed_head": "7b2ca79405fc12d34bce1386157e929e4668f31a",
-      "last_checkpoint_at": "2026-09-27T17:10:06.277Z",
-      "last_verified_push_at": "2026-09-27T17:10:06.277Z",
+      "last_observed_head": "c8b3f52a570687383d795cd684525106a6280be4",
+      "last_checkpoint_at": "2026-09-27T17:24:54.268Z",
+      "last_verified_push_at": "2026-09-27T17:24:54.268Z",
       "checkpoint_paths": [
         "src/Controller/Search/SearchController.php",
         "src/Search/SearchService.php",
@@ -44287,12 +44287,36 @@
         "tests/Controller/SearchPaginationTest.php",
         "tests/Search/SearchResultsPageTest.php"
       ],
-      "next_action": "Implement the bounded SearchResultsPage service flow, dedicated accessible Twig page, strict page parsing, and permission-aware pagination/feed regression tests on the published feature branch.",
-      "worker_pr": null,
-      "worker_pr_state": "not_created",
-      "worker_pr_changed_paths": [],
-      "ci_result": "not_run",
-      "ci_attempts": []
+      "next_action": "Monitor Worker CI #897 / run 36336807299 on exact HEAD c8b3f52a570687383d795cd684525106a6280be4 in draft PR #354; diagnose any red checks and repair on this same feature branch.",
+      "worker_pr": 354,
+      "worker_pr_state": "draft",
+      "worker_pr_changed_paths": [
+        "src/Controller/Search/SearchController.php",
+        "src/Search/SearchService.php",
+        "src/Search/SearchResultsPage.php",
+        "src/Search/Templates/search/paginated_index.html.twig",
+        "config/packages/search_pagination.yaml",
+        "tests/Controller/SearchPaginationTest.php",
+        "tests/Search/SearchResultsPageTest.php"
+      ],
+      "ci_result": "in_progress",
+      "ci_attempts": [
+        {
+          "run_id": 36336807299,
+          "run_number": 897,
+          "head": "c8b3f52a570687383d795cd684525106a6280be4",
+          "base": "7b2ca79405fc12d34bce1386157e929e4668f31a",
+          "result": "in_progress",
+          "validation_pr": 354
+        }
+      ],
+      "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/354",
+      "pr_state": "open",
+      "draft_pr": true,
+      "worker_pr_base_sha": "7b2ca79405fc12d34bce1386157e929e4668f31a",
+      "ci_run_id": 36336807299,
+      "last_ci_run_id": 36336807299,
+      "ci_validation_pr": 354
     },
     {
       "priority": 560,
