@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T14:01:49.236Z",
+  "published_at": "2026-09-27T14:01:56.096Z",
   "summary": {
     "total_remaining_worker_tasks": 167,
-    "completed_worker_prs_awaiting_trusted_review": 290,
+    "completed_worker_prs_awaiting_trusted_review": 291,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "Worker CI run #822 / 36324235153 is running on exact HEAD d59f0ac3e4457500485c8bd909c6697b7d9f1691; inspect both jobs and repair any failure.",
+    "next_required_action": "PR #331 is ready for review with exact-head Worker CI #822 green; keep the claim locked until Trusted resolution, then continue with the next independent module gap.",
     "composition_preparable": 0,
     "immediately_actionable": 28,
     "must_continue": true
@@ -39432,7 +39432,7 @@
       "package_id": "WCP-540",
       "title": "Place public newsletter signup in the Page Builder",
       "risk": "medium",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [
         "WCP-522"
       ],
@@ -39531,7 +39531,7 @@
       },
       "published_at": "2026-09-27T13:42:23.530Z",
       "claimed_on": "2026-09-27T13:42:23.530Z",
-      "claim_state": "active",
+      "claim_state": "locked_until_trusted_resolution",
       "active_base_branch": "feature/wcp-522-public-newsletter-signup-g1",
       "active_base_sha": "b1cecaeadc1b8378cf8626f52aa48396a569d8cb",
       "active_head": "d59f0ac3e4457500485c8bd909c6697b7d9f1691",
@@ -39547,7 +39547,7 @@
         "templates/widget/public_newsletter_signup.html.twig",
         "tests/Widget/PublicNewsletterSignupWidgetTest.php"
       ],
-      "next_action": "Worker CI run #822 / 36324235153 is running on exact HEAD d59f0ac3e4457500485c8bd909c6697b7d9f1691; inspect both jobs and repair any failure.",
+      "next_action": "PR #331 is ready for review with exact-head Worker CI #822 green; keep the claim locked until Trusted resolution, then continue with the next independent module gap.",
       "ci_attempts": [
         {
           "run_id": 36323918199,
@@ -39567,11 +39567,18 @@
           "run_number": 822,
           "head": "d59f0ac3e4457500485c8bd909c6697b7d9f1691",
           "base": "b510875e7b0741b9b19f09429d2204a95df51198",
-          "result": "in_progress"
+          "result": "success",
+          "conclusion": "success",
+          "phpunit_tests": 544,
+          "assertions": 2360,
+          "phpstan": "passed",
+          "postgresql_18_migrations": "passed",
+          "migrations_executed": 54,
+          "sql_queries": 750
         }
       ],
       "worker_pr_state": "open",
-      "last_ci_result": "in_progress",
+      "last_ci_result": "success",
       "worker_pr_changed_paths": [
         "src/Widget/PublicNewsletterSignupWidgetProvider.php",
         "templates/widget/public_newsletter_signup.html.twig",
@@ -39582,10 +39589,13 @@
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/331",
       "last_verified_push_at": "2026-09-27T13:57:25.617Z",
       "pr_state": "open",
-      "draft_pr": true,
+      "draft_pr": false,
       "ci_run_id": 36324235153,
       "last_ci_run_id": 36324235153,
-      "ci_result": "pending"
+      "ci_result": "success",
+      "final_head": "d59f0ac3e4457500485c8bd909c6697b7d9f1691",
+      "worker_pr_base_sha": "b510875e7b0741b9b19f09429d2204a95df51198",
+      "completed_at": "2026-09-27T14:01:56.096Z"
     },
     {
       "priority": 541,
