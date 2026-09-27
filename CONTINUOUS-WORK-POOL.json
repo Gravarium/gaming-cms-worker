@@ -12,8 +12,8 @@
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
   "published_at": "2026-09-27T12:17:16.565Z",
   "summary": {
-    "total_remaining_worker_tasks": 165,
-    "completed_worker_prs_awaiting_trusted_review": 285,
+    "total_remaining_worker_tasks": 164,
+    "completed_worker_prs_awaiting_trusted_review": 286,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
@@ -37784,7 +37784,7 @@
       "package_id": "WCP-530",
       "title": "Protect passkey management ownership and CSRF",
       "risk": "high",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -37859,21 +37859,50 @@
       },
       "published_at": "2026-09-27T12:14:02.922Z",
       "claimed_on": "2026-09-27T12:14:02.922Z",
-      "claim_state": "active",
+      "claim_state": "locked_until_trusted_resolution",
       "active_base_branch": "main",
       "active_base_sha": "b510875e7b0741b9b19f09429d2204a95df51198",
-      "active_head": "b510875e7b0741b9b19f09429d2204a95df51198",
+      "active_head": "bb3a13459ac4ca12c12b6211b6371029d52c60c6",
       "resume_branch": "feature/wcp-530-passkey-management-ownership-g1",
       "branch_heads": {
         "claim_branch": "b510875e7b0741b9b19f09429d2204a95df51198",
-        "feature_branch": "b510875e7b0741b9b19f09429d2204a95df51198"
+        "feature_branch": "bb3a13459ac4ca12c12b6211b6371029d52c60c6"
       },
-      "last_observed_head": "b510875e7b0741b9b19f09429d2204a95df51198",
-      "last_checkpoint_at": "2026-09-27T12:14:02.922Z",
+      "last_observed_head": "bb3a13459ac4ca12c12b6211b6371029d52c60c6",
+      "last_checkpoint_at": "2026-09-27T12:27:17.329Z",
       "checkpoint_paths": [
         "tests/Controller/PasskeyManagementOwnershipTest.php"
       ],
-      "next_action": "Implement route-level passkey ownership and per-action CSRF tests within the sole allowed test file; then run focused PHPUnit and full exact-head Worker CI."
+      "next_action": "Worker PR #322 is complete on exact green HEAD bb3a13459ac4ca12c12b6211b6371029d52c60c6; claim remains locked until Trusted resolution.",
+      "last_verified_push_at": "2026-09-27T12:27:17.329Z",
+      "worker_pr": 322,
+      "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/322",
+      "worker_pr_changed_paths": [
+        "tests/Controller/PasskeyManagementOwnershipTest.php"
+      ],
+      "draft_pr": false,
+      "pr_state": "open",
+      "worker_pr_state": "ready_for_review",
+      "ci_run_id": 36318673858,
+      "last_ci_run_id": 36318673858,
+      "ci_result": "success",
+      "last_ci_result": "success",
+      "ci_attempts": [
+        {
+          "run_id": 36318673858,
+          "head": "bb3a13459ac4ca12c12b6211b6371029d52c60c6",
+          "result": "success",
+          "conclusion": "success"
+        }
+      ],
+      "final_head": "bb3a13459ac4ca12c12b6211b6371029d52c60c6",
+      "completed_at": "2026-09-27T12:27:17.329Z",
+      "completion_evidence": [
+        "Base b510875e7b0741b9b19f09429d2204a95df51198; final Worker HEAD bb3a13459ac4ca12c12b6211b6371029d52c60c6.",
+        "Changed path: tests/Controller/PasskeyManagementOwnershipTest.php.",
+        "The owner sees the passkey; a foreign user cannot see or mutate it (404 with no database change); missing, forged and cross-action CSRF tokens are rejected, while rendered rename and delete tokens authorize only their matching owner actions.",
+        "Exact-head Worker CI run #792 / 36318673858: PHPStan passed with no errors; PHPUnit 539 tests and 2,262 assertions (1 deprecation, 1 notice); PostgreSQL 18 passed with 54 migrations and 750 SQL queries."
+      ]
     }
   ],
   "recovery_queue": [],
