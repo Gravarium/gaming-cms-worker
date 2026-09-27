@@ -13,7 +13,6 @@ use Doctrine\DBAL\Schema\Table;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 
 final class ForumWorkflowControllerTest extends WebTestCase
 {
@@ -48,7 +47,7 @@ final class ForumWorkflowControllerTest extends WebTestCase
             self::assertResponseStatusCodeSame(403);
             self::assertSame(0, (int) $connection->fetchOne('SELECT COUNT(*) FROM forum_thread WHERE room_id = :id', ['id' => $publicRoom]));
 
-            $token = $this->csrfToken($client, 'forum_thread_'.$publicRoom);
+            $token = $this->csrfToken($client, '/forum/rooms/'.$publicRoom);
             $client->request('POST', '/forum/rooms/'.$publicRoom.'/threads', [
                 '_token' => $token,
                 'title' => 'A usable question '.$suffix,
@@ -66,7 +65,7 @@ final class ForumWorkflowControllerTest extends WebTestCase
             $client->request('GET', '/admin/gaming/forum/rooms');
             self::assertResponseIsSuccessful();
 
-            $token = $this->csrfToken($client, 'forum_room_new');
+            $token = $this->csrfToken($client, '/admin/gaming/forum/rooms/new');
             $client->request('POST', '/admin/gaming/forum/rooms/new', [
                 '_token' => $token,
                 'title' => 'Admin-created room '.$suffix,
@@ -79,7 +78,7 @@ final class ForumWorkflowControllerTest extends WebTestCase
             $roomId = (int) $adminRoom['id'];
             $roomIds[] = $roomId;
 
-            $token = $this->csrfToken($client, 'forum_room_edit_'.$roomId);
+            $token = $this->csrfToken($client, '/admin/gaming/forum/rooms/'.$roomId.'/edit');
             $client->request('POST', '/admin/gaming/forum/rooms/'.$roomId.'/edit', [
                 '_token' => $token,
                 'title' => 'Edited admin room '.$suffix,
@@ -149,9 +148,15 @@ final class ForumWorkflowControllerTest extends WebTestCase
         return $user;
     }
 
-    private function csrfToken(KernelBrowser $client, string $id): string
+    private function csrfToken(KernelBrowser $client, string $path): string
     {
-        return $client->getContainer()->get(CsrfTokenManagerInterface::class)->getToken($id)->getValue();
+        $crawler = $client->request('GET', $path);
+        self::assertResponseIsSuccessful();
+
+        $token = $crawler->filter('form input[name="_token"]')->attr('value');
+        self::assertNotNull($token);
+
+        return $token;
     }
 
     /** @param list<int|null> $userIds */
