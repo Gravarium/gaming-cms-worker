@@ -10,7 +10,7 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T20:05:09.783Z",
+  "published_at": "2026-09-27T20:06:48.616Z",
   "summary": {
     "total_remaining_worker_tasks": 173,
     "completed_worker_prs_awaiting_trusted_review": 309,
@@ -38639,16 +38639,37 @@
         "config/packages/guild_event_widget.yaml",
         "tests/Widget/UpcomingGuildEventsWidgetProviderTest.php"
       ],
-      "next_action": "Open the Worker PR from the verified feature HEAD and run complete exact-head Worker CI; repair any failures without changing the reserved scope.",
-      "worker_pr": null,
-      "worker_pr_url": null,
-      "draft_pr": false,
-      "pr_state": "not_created",
-      "worker_pr_state": "not_created",
-      "worker_pr_changed_paths": [],
-      "ci_result": "not_started",
-      "last_ci_result": "not_started",
-      "ci_attempts": []
+      "next_action": "Await exact-head Worker CI #925 / 36346745076 on 68209d9dcc3e2ee8f41dbeb6403541ee4668f754; repair any failures without changing the reserved paths or weakening checks.",
+      "worker_pr": 373,
+      "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/373",
+      "draft_pr": true,
+      "pr_state": "open",
+      "worker_pr_state": "draft",
+      "worker_pr_changed_paths": [
+        "config/packages/guild_event_widget.yaml",
+        "src/EventSubscriber/GuildEventWidgetCacheSubscriber.php",
+        "src/GuildEventWidget/Templates/widget/upcoming_guild_events.html.twig",
+        "src/Widget/GuildEvent/UpcomingGuildEventsQuery.php",
+        "src/Widget/UpcomingGuildEventsWidgetProvider.php",
+        "tests/Widget/UpcomingGuildEventsWidgetProviderTest.php"
+      ],
+      "ci_result": "in_progress",
+      "last_ci_result": "in_progress",
+      "ci_attempts": [
+        {
+          "run_id": 36346745076,
+          "run_number": 925,
+          "head": "68209d9dcc3e2ee8f41dbeb6403541ee4668f754",
+          "base": "7b2ca79405fc12d34bce1386157e929e4668f31a",
+          "result": "in_progress",
+          "validation_pr": 373
+        }
+      ],
+      "worker_pr_base_branch": "main",
+      "worker_pr_base_sha": "7b2ca79405fc12d34bce1386157e929e4668f31a",
+      "ci_run_id": 36346745076,
+      "last_ci_run_id": 36346745076,
+      "last_ci_run_number": 925
     },
     {
       "priority": 533,
