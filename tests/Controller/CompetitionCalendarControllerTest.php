@@ -132,8 +132,6 @@ final class CompetitionCalendarControllerTest extends WebTestCase
         $client = static::createClient();
         $client->disableReboot();
         $previousGamingState = $this->setGamingEnabled($client, true);
-        $previousTimezone = date_default_timezone_get();
-        date_default_timezone_set('Europe/Berlin');
         $entities = [];
 
         try {
@@ -147,7 +145,7 @@ final class CompetitionCalendarControllerTest extends WebTestCase
             }
             $entityManager->flush();
 
-            $startsAt = new \DateTimeImmutable('+5 days', new \DateTimeZone('Europe/Berlin'));
+            $startsAt = new \DateTimeImmutable('+5 days', new \DateTimeZone('UTC'));
             $name = "Finale, R&D;\r\nBEGIN:VEVENT ".str_repeat('Ö', 55);
             $competition = $this->openCompetition($game, $name, 'calendar-finals-'.$suffix, $startsAt);
             $competition->setDescription("Schedule,\r\nRound; 2\\ review ".str_repeat('ä', 55));
@@ -195,7 +193,6 @@ final class CompetitionCalendarControllerTest extends WebTestCase
         } finally {
             $this->removeEntities($client, $entities);
             $this->restoreGamingState($client, $previousGamingState);
-            date_default_timezone_set($previousTimezone);
         }
     }
 
@@ -318,7 +315,19 @@ final class CompetitionCalendarControllerTest extends WebTestCase
     {
         $entityManager = $this->entityManager($client);
         foreach (array_reverse($entities) as $entity) {
-            $entityManager->remove($entity);
+            $metadata = $entityManager->getClassMetadata($entity::class);
+            $identifierValues = $metadata->getIdentifierValues($entity);
+            if ($identifierValues === [] || in_array(null, $identifierValues, true)) {
+                continue;
+            }
+
+            $identifier = count($identifierValues) === 1
+                ? array_values($identifierValues)[0]
+                : $identifierValues;
+            $managedEntity = $entityManager->find($entity::class, $identifier);
+            if ($managedEntity !== null) {
+                $entityManager->remove($managedEntity);
+            }
         }
         $entityManager->flush();
         $entityManager->clear();
