@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T14:24:44.411Z",
+  "published_at": "2026-09-27T14:25:24.794Z",
   "summary": {
     "total_remaining_worker_tasks": 167,
     "completed_worker_prs_awaiting_trusted_review": 291,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "Fix the pagination fixture search to match all seeded addresses using the unique suffix and clean up by reloading persisted IDs with the current EntityManager; push a new exact head and rerun full Worker CI.",
+    "next_required_action": "Worker CI run #838 / 36325820912 is running on exact HEAD cc71d622acb85e6e73e49d4d6e81e93b994efe26; inspect both jobs, repair any failure and rerun on the final exact head.",
     "composition_preparable": 0,
     "immediately_actionable": 28,
     "must_continue": true
@@ -40221,14 +40221,14 @@
       "claim_state": "active",
       "active_base_branch": "feature/wcp-522-public-newsletter-signup-g1",
       "active_base_sha": "b1cecaeadc1b8378cf8626f52aa48396a569d8cb",
-      "active_head": "e7b99a9922991bf43c97b382ee82ff5d58b7d565",
+      "active_head": "cc71d622acb85e6e73e49d4d6e81e93b994efe26",
       "resume_branch": "feature/wcp-543-newsletter-subscriber-directory-g1",
       "branch_heads": {
         "claim_branch": "b1cecaeadc1b8378cf8626f52aa48396a569d8cb",
-        "feature_branch": "e7b99a9922991bf43c97b382ee82ff5d58b7d565"
+        "feature_branch": "cc71d622acb85e6e73e49d4d6e81e93b994efe26"
       },
-      "last_observed_head": "e7b99a9922991bf43c97b382ee82ff5d58b7d565",
-      "last_checkpoint_at": "2026-09-27T14:19:53.517Z",
+      "last_observed_head": "cc71d622acb85e6e73e49d4d6e81e93b994efe26",
+      "last_checkpoint_at": "2026-09-27T14:25:24.794Z",
       "checkpoint_paths": [
         "src/Controller/AdminNewsletter/AdminNewsletterController.php",
         "src/Newsletter/NewsletterSubscriptionDirectory.php",
@@ -40237,11 +40237,11 @@
         "templates/admin/newsletter/preview.html.twig",
         "tests/Controller/AdminNewsletterSubscriptionDirectoryTest.php"
       ],
-      "next_action": "Fix the pagination fixture search to match all seeded addresses using the unique suffix and clean up by reloading persisted IDs with the current EntityManager; push a new exact head and rerun full Worker CI.",
+      "next_action": "Worker CI run #838 / 36325820912 is running on exact HEAD cc71d622acb85e6e73e49d4d6e81e93b994efe26; inspect both jobs, repair any failure and rerun on the final exact head.",
       "worker_pr_state": "open",
-      "last_verified_push_at": "2026-09-27T14:19:53.517Z",
-      "ci_result": "failure",
-      "last_ci_result": "failure",
+      "last_verified_push_at": "2026-09-27T14:25:24.794Z",
+      "ci_result": "pending",
+      "last_ci_result": "in_progress",
       "ci_attempts": [
         {
           "run_id": 36325553002,
@@ -40255,6 +40255,13 @@
           "phpstan": "passed",
           "postgresql_18_migrations": "passed",
           "summary": "The pagination test searched for directory-{suffix}, but fixture emails contain directory-{number}-{suffix}, so the expected second page had zero rows. Its finally block also tried removing detached ORM entities after requests. Search by the unique suffix and reload persisted IDs in cleanup."
+        },
+        {
+          "run_id": 36325820912,
+          "run_number": 838,
+          "head": "cc71d622acb85e6e73e49d4d6e81e93b994efe26",
+          "base": "b510875e7b0741b9b19f09429d2204a95df51198",
+          "result": "in_progress"
         }
       ],
       "worker_pr": 336,
@@ -40271,8 +40278,8 @@
       "pr_state": "open",
       "draft_pr": true,
       "worker_pr_base_sha": "b510875e7b0741b9b19f09429d2204a95df51198",
-      "ci_run_id": 36325553002,
-      "last_ci_run_id": 36325553002
+      "ci_run_id": 36325820912,
+      "last_ci_run_id": 36325820912
     },
     {
       "priority": 544,
