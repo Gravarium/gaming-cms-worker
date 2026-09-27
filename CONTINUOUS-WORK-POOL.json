@@ -10,16 +10,16 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T00:21:13.540Z",
+  "published_at": "2026-09-27T00:26:50.616Z",
   "summary": {
-    "total_remaining_worker_tasks": 139,
+    "total_remaining_worker_tasks": 140,
     "completed_worker_prs_awaiting_trusted_review": 207,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-440 draft PR #234 is validating corrected exact HEAD faef7ff09ff7cfed7120f49d1cbef7b11d21b130 in Worker CI run 36282445412; complete targeted and full CI and repair any concrete failures.",
+    "next_required_action": "WCP-441 is claimed on exact sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d; create its two branch refs and implement the content editor's searchable safe-image picker. WCP-440 remains an independent foreign claim.",
     "composition_preparable": 0,
-    "immediately_actionable": 1,
+    "immediately_actionable": 2,
     "must_continue": true
   },
   "rules": {
@@ -24058,6 +24058,124 @@
           "result": "queued"
         }
       ]
+    },
+    {
+      "priority": 221,
+      "package_id": "WCP-441",
+      "title": "Select content-owned images from the content editor",
+      "risk": "low",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-441-content-editor-media-picker-g1",
+      "suggested_branch": "feature/wcp-441-content-editor-media-picker-g1",
+      "base_branch": "main",
+      "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "objective": "Complete the existing content editor's media-block workflow. Replace manual media asset ID entry with a searchable, paginated picker connected to the existing central media library. Show only active Content-owned images that the existing content media reference policy can resolve. Keep saving and preview validation authoritative and unchanged.",
+      "allowed_paths": [
+        "src/Controller/AdminContentMediaPickerController.php",
+        "src/Repository/ContentMediaPickerRepository.php",
+        "templates/admin/content/form.html.twig",
+        "templates/admin/content/media_picker.html.twig",
+        "assets/controllers/content_editor_controller.js",
+        "assets/content_media_picker.js",
+        "tests/Controller/ContentEditorMediaPickerTest.php",
+        "tests/JavaScript/content_media_picker.test.mjs"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/",
+        "src/Entity/",
+        "src/Controller/AdminContentController.php",
+        "src/Form/ContentEntryType.php",
+        "src/ContentEditor/",
+        "src/Repository/MediaAssetRepository.php",
+        "src/Service/MediaUrlPolicy.php"
+      ],
+      "deliverables": [
+        "Add a CMS_CONTENT_MANAGE-protected read-only media picker API and repository with title/name search, deterministic pagination and useful empty/result states.",
+        "Connect the content editor's media block to the picker so selecting a result fills the existing asset ID and alt-text fields without entering a URL.",
+        "Validate scalar query/page inputs, limit page size, return private/no-store and noindex headers, and expose only active Content-owned images accepted by the existing safe media-reference gateway.",
+        "Preserve ContentBlockPolicy and existing preview/autosave/save validation; make no schema, entity, upload-storage, or content write-route changes."
+      ],
+      "tests": [
+        "Browser coverage denies users without CMS_CONTENT_MANAGE and verifies picker search/results, pagination, safe asset selection and the editor link/data attributes.",
+        "Create synthetic active, pending, cross-module, unsupported-MIME and unsafe-location assets; only resolvable active Content images appear.",
+        "Cover stable ordering, title/name search, invalid scalar/array and oversized query parameters, invalid/out-of-range pages, private/no-store/noindex headers, and read-only behavior.",
+        "Node tests prove selecting an allowed item updates only the media block asset ID and default alt text; malformed selections fail closed.",
+        "Run PHPStan level 8 and complete Worker CI on the exact final HEAD, including PostgreSQL 18 migration-chain checks."
+      ],
+      "completion_report": [
+        "Exact sanitized main base SHA and final Worker HEAD.",
+        "All changed paths and Worker PR.",
+        "Picker authorization, search/pagination, safe Content-owned image filtering and editor selection flow.",
+        "Exact-head PHPUnit, JavaScript tests, PHPStan and full Worker CI results.",
+        "Any remaining Trusted integration work."
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "preserve-CMS_CONTENT_MANAGE-on-content-editor-and-media-selection",
+        "only-return-active-content-owned-image-assets-accepted-by-ContentBlockPolicy-media-gateway",
+        "never-accept-user-supplied-media-URLs-or-bypass-existing-content-block-validation",
+        "read-only-picker-only-no-schema-upload-storage-content-write-route-or-authorization-changes",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "proposal_kind": "worker_only",
+      "proposal_dependency_evidence": [],
+      "collision_check": {
+        "compared_against": "Fresh continuous/work-pool-v4 blob b6b7e5cfafadba060e8063d040065d89df9b17f4, all active and claim-locked allowlists, and exact sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d.",
+        "result": "No path collisions. The content editor currently creates a media block with assetId 0 and exposes a manual numeric ID field; the central media library has no selection flow. Existing ContentBlockPolicy/OwnedMediaReferenceGateway already limits references to safe active Content-owned images. The media picker adds a separate protected read-only workflow and reuses that policy. WCP-200/300/339/353 and WCP-440 paths are disjoint; no schema, entity, migration, upload, or content write path is touched.",
+        "paths": [
+          "src/Controller/AdminContentMediaPickerController.php",
+          "src/Repository/ContentMediaPickerRepository.php",
+          "templates/admin/content/form.html.twig",
+          "templates/admin/content/media_picker.html.twig",
+          "assets/controllers/content_editor_controller.js",
+          "assets/content_media_picker.js",
+          "tests/Controller/ContentEditorMediaPickerTest.php",
+          "tests/JavaScript/content_media_picker.test.mjs"
+        ]
+      },
+      "active_base_branch": "main",
+      "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "resume_branch": "feature/wcp-441-content-editor-media-picker-g1",
+      "claimed_on": "2026-09-27T00:26:50.616Z",
+      "claim_state": "active",
+      "last_checkpoint_at": "2026-09-27T00:26:50.616Z",
+      "last_verified_push_at": "2026-09-27T00:26:50.616Z",
+      "checkpoint_paths": [
+        "src/Controller/AdminContentMediaPickerController.php",
+        "src/Repository/ContentMediaPickerRepository.php",
+        "templates/admin/content/form.html.twig",
+        "templates/admin/content/media_picker.html.twig",
+        "assets/controllers/content_editor_controller.js",
+        "assets/content_media_picker.js",
+        "tests/Controller/ContentEditorMediaPickerTest.php",
+        "tests/JavaScript/content_media_picker.test.mjs"
+      ],
+      "branch_heads": {
+        "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+        "feature_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d"
+      },
+      "next_action": "Create claim and feature refs claim/wcp-441-content-editor-media-picker-g1 and feature/wcp-441-content-editor-media-picker-g1 from exact sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d; then implement the authorized searchable Content image picker and editor selection flow."
     }
   ],
   "recovery_queue": [],
