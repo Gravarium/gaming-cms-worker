@@ -17,7 +17,7 @@
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-460 is exclusively claimed on its own feature branch from sanitized main; implement and preserve all other active and Trusted-review claims.",
+    "next_required_action": "WCP-461 is exclusively claimed from sanitized main for module lifecycle security tests; continue on feature/wcp-461-module-lifecycle-security-g1. Preserve active WCP-460 and all other claims.",
     "composition_preparable": 0,
     "immediately_actionable": 3,
     "must_continue": true
@@ -27019,6 +27019,99 @@
           "summary": "Full Worker CI on the updated exact branch head."
         }
       ]
+    },
+    {
+      "priority": 461,
+      "package_id": "WCP-461",
+      "title": "Protect CMS module install, update and removal lifecycle actions",
+      "risk": "medium",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-461-module-lifecycle-security-g1",
+      "suggested_branch": "feature/wcp-461-module-lifecycle-security-g1",
+      "base_branch": "main",
+      "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "objective": "Add test-only functional security regressions for the existing CMS module install, update and remove POST routes. Prove the class-level CMS_SETTINGS_MANAGE boundary, rejection of missing or invalid route-specific CSRF tokens without module-state changes, acceptance of tokens rendered by the module management page, and removal that keeps the module state row/data-retained signal. Do not change runtime code, configuration, schema or private components.",
+      "allowed_paths": [
+        "tests/Controller/AdminModuleLifecycleSecurityTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "src/",
+        "templates/",
+        "migrations/",
+        "config/",
+        "public/uploads/"
+      ],
+      "deliverables": [
+        "A logged-in user without CMS_SETTINGS_MANAGE is denied module lifecycle actions.",
+        "Missing or invalid CSRF tokens for install, update and remove leave installed, enabled and version state unchanged.",
+        "Rendered action tokens successfully install, update and remove the optional notifications module; removal leaves its state row and retained-data signal.",
+        "Restore synthetic module state, user and audit rows so the functional test leaves no persistent fixtures."
+      ],
+      "tests": [
+        "Focused AdminModuleLifecycleSecurityTest PHPUnit coverage.",
+        "PHPStan level 8 and complete Worker CI on the exact final HEAD.",
+        "PostgreSQL 18 complete migration-chain validation."
+      ],
+      "completion_report": [
+        "Exact sanitized main base SHA and final Worker HEAD SHA.",
+        "Complete changed-path list and Worker PR.",
+        "Permission denial and per-action CSRF evidence with unchanged state.",
+        "Rendered-token install/update/remove transitions and retained-state proof.",
+        "Exact-head PHPUnit, PHPStan and complete Worker CI evidence.",
+        "Remaining Trusted integration work."
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "preserve-CMS_SETTINGS_MANAGE-and-route-specific-CSRF-before-module-lifecycle-mutations",
+        "denied-lifecycle-actions-must-not-change-module-state",
+        "module-removal-must-retain-state-and-data",
+        "restore-all-synthetic-test-state-including-audit-rows",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment",
+        "no-private-runtime-or-sensitive-data"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "proposal_kind": "worker_only",
+      "proposal_dependency_evidence": [],
+      "collision_check": {
+        "compared_against": "Fresh continuous/work-pool-v4 blob ce7fda7f693c3239e504f06ead7301e7d3202630, every active and claim-locked allowed-path scope (including WCP-418's distinct module-toggle test, active WCP-460 and all current active claims), exact sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d.",
+        "result": "No active or claim-locked task owns or encloses tests/Controller/AdminModuleLifecycleSecurityTest.php. WCP-418 owns only tests/Controller/AdminModuleManagementSecurityTest.php and covers the separate module listing/toggle behavior; this proposal tests install/update/remove and uses a distinct test file. The candidate file is absent from exact sanitized main. No existing package or dependency is changed.",
+        "paths": [
+          "tests/Controller/AdminModuleLifecycleSecurityTest.php"
+        ]
+      },
+      "published_at": "2026-09-27T03:36:17.357Z",
+      "claimed_on": "2026-09-27T03:36:17.357Z",
+      "claim_state": "active",
+      "active_base_branch": "main",
+      "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "resume_branch": "feature/wcp-461-module-lifecycle-security-g1",
+      "last_checkpoint_at": "2026-09-27T03:36:17.357Z",
+      "checkpoint_paths": [],
+      "branch_heads": {
+        "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+        "feature_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d"
+      },
+      "next_action": "Implement only the allowed lifecycle security test, checkpoint it to this exact feature branch, open a Worker PR against main and run complete exact-head CI."
     }
   ],
   "recovery_queue": [],
