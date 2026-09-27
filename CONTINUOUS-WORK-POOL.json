@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T19:20:23.659Z",
+  "published_at": "2026-09-27T19:23:25.827Z",
   "summary": {
     "total_remaining_worker_tasks": 173,
     "completed_worker_prs_awaiting_trusted_review": 304,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-573 is complete with exact-head green CI and PR #367; re-evaluate blocked FCPs and continue autonomous Worker proposals.",
+    "next_required_action": "WCP-574 is claimed on main@7b2ca79405fc12d34bce1386157e929e4668f31a; add public playlist escaping regression coverage and run exact-head CI.",
     "composition_preparable": 0,
     "immediately_actionable": 29,
     "must_continue": true
@@ -46355,6 +46355,102 @@
       "last_ci_result": "success",
       "completed_at": "2026-09-27T19:20:23.659Z",
       "worker_completion_summary": "Exact-head Worker CI #918 / 36343788463 passed on 56b5ee2a4aa0e8b5ed68dd2ed556273e6f12a0ed: 737 tests, 4,636 assertions, 0 failures/errors (1 PHPUnit deprecation, 3 notices); PHPStan reported no errors; PostgreSQL 18 applied 57 migrations with 878 SQL queries. PR #367 is open and ready for Trusted review from main@7b2ca79405fc12d34bce1386157e929e4668f31a; exactly one allowlisted test path changed, with no runtime changes."
+    },
+    {
+      "priority": 574,
+      "package_id": "WCP-574",
+      "title": "Test HTML escaping on public video playlist pages",
+      "risk": "low",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-574-public-video-playlist-xss-g1",
+      "suggested_branch": "feature/wcp-574-public-video-playlist-xss-g1",
+      "base_branch": "main",
+      "base_sha": "7b2ca79405fc12d34bce1386157e929e4668f31a",
+      "objective": "Add a focused test-only regression proving that stored VideoPlaylist titles and descriptions render as inert text on public playlist detail pages when supplied script-element and event-handler image payloads. Assert response HTML is escaped, no executable DOM elements/attributes appear, and visible text is preserved. Do not modify the public templates or runtime code.",
+      "allowed_paths": [
+        "tests/Controller/VideoPlaylistPublicWorkflowTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "CONTINUOUS-WORKER.md",
+        "CONTINUOUS-WORK-POOL.json",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/",
+        "src/",
+        "templates/"
+      ],
+      "deliverables": [
+        "Functional test persists a playlist with script-like title and event-handler image description and requests the public detail route.",
+        "Assertions verify both payloads are encoded as inert text, no script/image event-handler nodes are created, and visible title/description text is preserved.",
+        "Existing playlist visibility, video filtering and module-gate assertions remain unchanged.",
+        "Test-only change; no template, controller, entity, schema or migration modification."
+      ],
+      "tests": [
+        "Targeted VideoPlaylistPublicWorkflowTest.",
+        "Complete exact-head Worker CI including PHPStan, full PHPUnit, template/config checks, and PostgreSQL 18 migration chain."
+      ],
+      "completion_report": [
+        "Exact sanitized base and final HEAD; changed path and Worker PR state.",
+        "Payload and escaped visible-text assertions.",
+        "Targeted regression and exact-head full Worker CI results.",
+        "Test-only package; no runtime changes."
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-Trusted-review-and-exact-head-CI",
+        "preserve-all-security-permissions-CSRF-validation-recovery-rollback-and-upload-controls",
+        "no-private-runtime-or-sensitive-data",
+        "no-template-or-runtime-code-changes",
+        "no-edit-to-active-or-claim-locked-paths",
+        "no-direct-Trusted-integration-or-deployment"
+      ],
+      "proposal_kind": "worker_only",
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "7b2ca79405fc12d34bce1386157e929e4668f31a",
+      "proposal_dependency_evidence": [],
+      "collision_check": {
+        "compared_against": "Fresh continuous/work-pool-v4 file blob @ 533676607feb93c53609eccecbbf722fa3810aeb; current sanitized main @ 7b2ca79405fc12d34bce1386157e929e4668f31a; every unclaimed, active, and claim-locked task.",
+        "result": "No overlap with active or claim-locked paths. The only historical exact-path hit is WCP-492, trusted_integrated with its claim released. This package reserves only the existing public playlist test; all source and template paths remain untouched.",
+        "paths": [
+          "tests/Controller/VideoPlaylistPublicWorkflowTest.php"
+        ],
+        "observed_nonblocking_path_hits": [
+          {
+            "id": "WCP-492",
+            "state": "trusted_integrated",
+            "claim": "released_after_trusted_integration"
+          }
+        ]
+      },
+      "published_at": "2026-09-27T19:23:25.827Z",
+      "claimed_on": "2026-09-27T19:23:25.827Z",
+      "claim_state": "active",
+      "active_base_branch": "main",
+      "active_base_sha": "7b2ca79405fc12d34bce1386157e929e4668f31a",
+      "active_head": "7b2ca79405fc12d34bce1386157e929e4668f31a",
+      "resume_branch": "feature/wcp-574-public-video-playlist-xss-g1",
+      "branch_heads": {
+        "claim_branch": "7b2ca79405fc12d34bce1386157e929e4668f31a",
+        "feature_branch": "7b2ca79405fc12d34bce1386157e929e4668f31a"
+      },
+      "last_observed_head": "7b2ca79405fc12d34bce1386157e929e4668f31a",
+      "last_checkpoint_at": "2026-09-27T19:23:25.827Z",
+      "checkpoint_paths": [],
+      "next_action": "Add HTML payload regression assertions to VideoPlaylistPublicWorkflowTest.php; keep the change test-only and run exact-head CI."
     }
   ],
   "recovery_queue": [],
