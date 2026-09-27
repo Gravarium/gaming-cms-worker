@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T08:00:11.745Z",
+  "published_at": "2026-09-27T08:02:55.064Z",
   "summary": {
     "total_remaining_worker_tasks": 141,
     "completed_worker_prs_awaiting_trusted_review": 250,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-483 exact-head Worker CI run 36304215243 is green on 0eec4a4289abe6d5850f5eac98c522892a1facf5; its owner retains the active claim. WCP-484 full Worker CI run 36304783435 is in progress on exact HEAD f576095ba5a9c34d11881ba5d2813186a6429e57 after two test-only fixture/assertion corrections.",
+    "next_required_action": "WCP-483 exact-head Worker CI run 36304215243 is green on 0eec4a4289abe6d5850f5eac98c522892a1facf5. WCP-484 run 36304783435 reached the public-draft check and failed because the test slug contains the body marker echoed by the 404 page; separate the fixture slug and body marker, then rerun.",
     "composition_preparable": 0,
     "immediately_actionable": 4,
     "must_continue": true
@@ -30987,9 +30987,9 @@
         "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
         "feature_branch": "f576095ba5a9c34d11881ba5d2813186a6429e57"
       },
-      "next_action": "Full Worker CI run 36304783435 is in progress on exact HEAD f576095ba5a9c34d11881ba5d2813186a6429e57. The test now asserts private/no-store cache directives without depending on directive order; inspect the complete run and repair within the allowlisted test file if needed.",
+      "next_action": "Exact-head Worker CI run 36304783435 rendered the authorized preview with headers, then failed because the test reused the private body marker as the public URL slug; the 404 diagnostic echoes the requested path, creating a false positive. Separate the synthetic slug from the body-only marker, retain the 404 and marker-absence assertions, and rerun full CI.",
       "last_observed_head": "f576095ba5a9c34d11881ba5d2813186a6429e57",
-      "last_checkpoint_at": "2026-09-27T08:00:11.745Z",
+      "last_checkpoint_at": "2026-09-27T08:02:55.064Z",
       "checkpoint_paths": [
         "tests/Controller/AdminContentPreviewSecurityTest.php"
       ],
@@ -31000,8 +31000,8 @@
       "pr_state": "open",
       "ci_run_id": 36304783435,
       "last_ci_run_id": 36304783435,
-      "ci_result": "in_progress",
-      "last_ci_result": "in_progress",
+      "ci_result": "failure",
+      "last_ci_result": "failure",
       "ci_attempts": [
         {
           "run_id": 36304073650,
@@ -31016,7 +31016,7 @@
         {
           "run_id": 36304783435,
           "head": "f576095ba5a9c34d11881ba5d2813186a6429e57",
-          "result": "in_progress"
+          "result": "failure"
         }
       ]
     }
