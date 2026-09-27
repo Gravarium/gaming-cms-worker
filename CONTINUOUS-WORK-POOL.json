@@ -13,11 +13,11 @@
   "published_at": "2026-09-27T06:18:40.681Z",
   "summary": {
     "total_remaining_worker_tasks": 141,
-    "completed_worker_prs_awaiting_trusted_review": 243,
+    "completed_worker_prs_awaiting_trusted_review": 244,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-476 is complete on exact green HEAD 1bf077e38d29daa31def26c007c631129ee323da (PR #269, CI run 36300156961) and claim-locked for Trusted review. Continue from a separate dependency-safe WCP; WCP-474 is another worker's active 2FA claim, and five unclaimed FCPs remain blocked. A separate blank rankName form-mapping regression was observed in CI and should be addressed as its own WCP without expanding WCP-476.",
+    "next_required_action": "WCP-477 is complete on exact green HEAD 15054727e3bb3df90847fa61fede340290b6f717 (PR #270, CI run 36300168629) and claim-locked for Trusted review. Continue with the independent optional rankName form-mapping regression noted by WCP-476 after fresh collision checks; preserve every other active claim.",
     "composition_preparable": 0,
     "immediately_actionable": 4,
     "must_continue": true
@@ -29627,7 +29627,7 @@
       "package_id": "WCP-477",
       "title": "Duplicate access roles into safe drafts",
       "risk": "medium",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -29705,7 +29705,7 @@
       },
       "published_at": "2026-09-27T06:18:40.681Z",
       "claimed_on": "2026-09-27T06:18:40.681Z",
-      "claim_state": "active",
+      "claim_state": "locked_until_trusted_resolution",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
       "active_head": "15054727e3bb3df90847fa61fede340290b6f717",
@@ -29720,24 +29720,72 @@
         "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
         "feature_branch": "15054727e3bb3df90847fa61fede340290b6f717"
       },
-      "next_action": "Inspect exact-head Worker CI run 36300168629; repair any findings on this branch and rerun the full workflow on the resulting exact HEAD.",
+      "next_action": "Continue to a separate dependency-safe module follow-up; inspect the optional rankName form-mapping regression recorded by WCP-476, check current active paths/branches/PRs, and claim a disjoint package before editing.",
       "last_observed_head": "15054727e3bb3df90847fa61fede340290b6f717",
       "last_verified_push_at": "2026-09-27T06:28:30.149Z",
       "worker_pr": 270,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/270",
-      "draft_pr": true,
-      "pr_state": "open_draft_unmerged",
+      "draft_pr": false,
+      "pr_state": "open_ready_unmerged",
       "ci_run_id": 36300168629,
       "last_ci_run_id": 36300168629,
-      "ci_result": "in_progress",
-      "last_ci_result": "in_progress",
+      "ci_result": "success",
+      "last_ci_result": "success",
       "ci_attempts": [
         {
           "run_id": 36300168629,
           "head": "15054727e3bb3df90847fa61fede340290b6f717",
-          "result": "in_progress"
+          "result": "success"
         }
-      ]
+      ],
+      "final_head": "15054727e3bb3df90847fa61fede340290b6f717",
+      "final_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "final_sanitized_main_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "final_changed_paths": [
+        "src/Controller/AdminAccessRoleController.php",
+        "templates/admin/access_role/form.html.twig",
+        "tests/Controller/AdminAccessRoleDuplicationTest.php"
+      ],
+      "changed_paths": [
+        "src/Controller/AdminAccessRoleController.php",
+        "templates/admin/access_role/form.html.twig",
+        "tests/Controller/AdminAccessRoleDuplicationTest.php"
+      ],
+      "completed_at": "2026-09-27T06:33:30.519Z",
+      "test_results": {
+        "phpunit": "434 tests, 1,905 assertions, 0 failures/errors; one deprecation and one notice.",
+        "phpstan": "Level 8 passed with no errors.",
+        "php_symfony": "Worker PHP/Symfony validation, PHP/YAML/Twig/container/AssetMapper/Doctrine checks passed on exact final HEAD.",
+        "postgres18": "PostgreSQL 18 completed all 39 migrations; 470 SQL queries; 0 unavailable.",
+        "exact_head_ci": {
+          "run_id": 36300168629,
+          "head": "15054727e3bb3df90847fa61fede340290b6f717",
+          "result": "success"
+        }
+      },
+      "completion_evidence": {
+        "exact_sanitized_main_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+        "final_head_sha": "15054727e3bb3df90847fa61fede340290b6f717",
+        "changed_paths": [
+          "src/Controller/AdminAccessRoleController.php",
+          "templates/admin/access_role/form.html.twig",
+          "tests/Controller/AdminAccessRoleDuplicationTest.php"
+        ],
+        "worker_pr": 270,
+        "ci_run_id": 36300168629,
+        "ci_result": "success",
+        "phpunit": "434 tests, 1,905 assertions, 0 failures/errors; one deprecation and one notice.",
+        "phpstan": "Level 8 passed with no errors.",
+        "php_symfony": "Worker PHP/Symfony validation, PHP/YAML/Twig/container/AssetMapper/Doctrine checks passed on exact final HEAD.",
+        "postgresql_job": "PostgreSQL 18 completed all 39 migrations; 470 SQL queries; 0 unavailable.",
+        "function": "Role-edit copy action creates an unsaved unique-key draft with copied delegable permissions and description, bounded name, inactive state and no assignments; authorized save uses existing CSRF, delegation, validation and audit path; source stays unchanged."
+      },
+      "completion_summary": "Added safe access-role duplication from the edit screen: an authorized manager can open and save an inactive, unassigned copy with a unique key and delegable permissions while preserving the source.",
+      "open_limitations": [
+        "Awaiting Trusted queue mapping, review/port, and fresh Trusted CI before integration.",
+        "No schema change; retain the separation between role copying and assignment and preserve PermissionDelegationPolicy through the later Fortress transition."
+      ],
+      "trusted_follow_up": "Map this worker proposal into the canonical Trusted queue, review/port the permission-safe copy workflow, and run full Trusted CI. Keep copy creation separate from role assignment and preserve PermissionDelegationPolicy for the later Fortress transition."
     }
   ],
   "recovery_queue": [],
