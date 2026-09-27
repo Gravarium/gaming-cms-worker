@@ -10,7 +10,7 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T02:34:42.714Z",
+  "published_at": "2026-09-27T02:37:19.926Z",
   "summary": {
     "total_remaining_worker_tasks": 141,
     "completed_worker_prs_awaiting_trusted_review": 222,
@@ -26287,9 +26287,9 @@
       "claimed_on": "2026-09-27T02:27:49.835Z",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-      "active_head": "7a3014adf92b36961a4fc30af20f8d82dafc2440",
+      "active_head": "ca1ec308fba49a0da26f5ae98982aaff866ecaf4",
       "resume_branch": "feature/wcp-455-backup-inventory-browser-g1",
-      "last_checkpoint_at": "2026-09-27T02:34:42.714Z",
+      "last_checkpoint_at": "2026-09-27T02:37:19.926Z",
       "checkpoint_paths": [
         "src/Backup/BackupInventoryBrowser.php",
         "src/Controller/AdminBackupController.php",
@@ -26298,13 +26298,22 @@
       ],
       "branch_heads": {
         "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-        "feature_branch": "7a3014adf92b36961a4fc30af20f8d82dafc2440"
+        "feature_branch": "ca1ec308fba49a0da26f5ae98982aaff866ecaf4"
       },
-      "next_action": "Monitor Worker CI run 36288901586 for exact HEAD 7a3014adf92b36961a4fc30af20f8d82dafc2440; diagnose and fix failures on this branch.",
-      "last_verified_push_at": "2026-09-27T02:34:42.714Z",
+      "next_action": "Run 633 is pending for exact HEAD ca1ec308fba49a0da26f5ae98982aaff866ecaf4; review its complete PHP/Symfony and PostgreSQL 18 results.",
+      "last_verified_push_at": "2026-09-27T02:37:19.926Z",
       "worker_pr": 249,
-      "ci_run_id": 36288901586,
-      "ci_result": "in_progress"
+      "ci_run_id": 36289029003,
+      "ci_result": "pending",
+      "ci_history": [
+        {
+          "head": "7a3014adf92b36961a4fc30af20f8d82dafc2440",
+          "run_id": 36288901586,
+          "result": "failure",
+          "cause": "PHPStan reported an unhandled remaining string in the verification-filter match expression at BackupInventoryBrowser.php:80.",
+          "resolution": "normalizeRequest now returns the explicit four-value verification-filter union using an exhaustive match; an adjacent nullable test assertion is guarded."
+        }
+      ]
     }
   ],
   "recovery_queue": [],
