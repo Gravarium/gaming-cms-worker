@@ -17,7 +17,7 @@
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-474 is complete on green exact-head Worker PR #267 and remains claim-locked. Preserve active claims and select the next independent worker proposal without touching another claim.",
+    "next_required_action": "WCP-476 is claimed and active on exact green WCP-475 HEAD 56274da100719bdbfd62e80f52141160da5a718d; create its branches and implement tests/Controller/AdminGuildMemberMutationSecurityTest.php. WCP-474 remains another worker's active 2FA claim. The five unclaimed FCPs remain dependency-blocked; preserve their dependencies.",
     "composition_preparable": 0,
     "immediately_actionable": 4,
     "must_continue": true
@@ -29428,6 +29428,106 @@
         "Awaiting Trusted review and Trusted integration CI; this stacked PR includes the WCP-450 predecessor changes."
       ],
       "trusted_follow_up": "Preserve CMS_GAMING_MANAGE, guild-scoped member ownership and the delete-member CSRF boundary; run full Trusted CI."
+    },
+    {
+      "priority": 476,
+      "package_id": "WCP-476",
+      "title": "Protect guild-member creation and editing authorization, CSRF and ownership",
+      "risk": "medium",
+      "execution_state": "worker_in_progress",
+      "dependencies": [
+        "WCP-475"
+      ],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-476-guild-member-mutation-security-g1",
+      "suggested_branch": "feature/wcp-476-guild-member-mutation-security-g1",
+      "base_branch": "feature/wcp-475-guild-member-deletion-security-g1",
+      "base_sha": "56274da100719bdbfd62e80f52141160da5a718d",
+      "objective": "Add test-only functional security regressions for the existing guild-member create/edit forms, stacked on WCP-475's exact green HEAD. Verify CMS_GAMING_MANAGE protects both form reads and submissions, missing/invalid CSRF never creates or edits a member, only the rendered form token permits the intended create/edit, and cross-guild edit routes conceal foreign members without mutation. Use only synthetic users, games, guilds and members with full cleanup.",
+      "allowed_paths": [
+        "tests/Controller/AdminGuildMemberMutationSecurityTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "src/",
+        "templates/",
+        "migrations/",
+        "config/",
+        "public/uploads/"
+      ],
+      "deliverables": [
+        "A user without CMS_GAMING_MANAGE is denied both member create/edit GET and POST routes; no member is created or changed.",
+        "Missing and invalid form CSRF tokens leave create state and existing member fields unchanged.",
+        "Rendered form tokens successfully create a member in the intended guild and edit only the intended existing member.",
+        "A member from another guild cannot be viewed or edited through the wrong guild route; GET and POST remain concealed as 404 and all member state remains unchanged.",
+        "Only this new test file changes in WCP-476; all synthetic users, games, guilds and members are cleaned up."
+      ],
+      "tests": [
+        "Focused AdminGuildMemberMutationSecurityTest functional PHPUnit coverage.",
+        "PHPStan level 8 and complete Worker CI on exact final HEAD.",
+        "PostgreSQL 18 complete migration-chain validation."
+      ],
+      "completion_report": [
+        "Exact sanitized main SHA and exact green WCP-475 proposal-base SHA.",
+        "Final HEAD, incremental changed paths, cumulative Worker PR paths and Worker PR.",
+        "Authorization and CSRF evidence for create/edit, state preservation after denial, and cross-guild ownership outcomes.",
+        "Focused and complete test, PHPStan and migration results.",
+        "Trusted integration follow-up and unresolved assumptions."
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "preserve-CMS_GAMING_MANAGE-guild-member-ownership-and-create/edit-form-CSRF",
+        "denied-invalid-or-cross-guild-requests-must-not-create-or-mutate-members",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment",
+        "no-private-runtime-or-sensitive-data"
+      ],
+      "proposal_base_branch": "feature/wcp-475-guild-member-deletion-security-g1",
+      "proposal_base_sha": "56274da100719bdbfd62e80f52141160da5a718d",
+      "proposal_kind": "worker_only",
+      "proposal_dependency_evidence": [
+        {
+          "package_id": "WCP-475",
+          "exact_green_head": "56274da100719bdbfd62e80f52141160da5a718d",
+          "worker_pr": 268,
+          "ci_run_id": 36298899528,
+          "ci_result": "success"
+        }
+      ],
+      "collision_check": {
+        "compared_against": "Fresh continuous/work-pool-v4 at a1ebef6c14eb16602bc953ffa4f92d24a11df2a5, all active and claim-locked path scopes, sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d, and WCP-475 exact green HEAD 56274da100719bdbfd62e80f52141160da5a718d.",
+        "result": "No active or claim-locked task owns or encloses tests/Controller/AdminGuildMemberMutationSecurityTest.php. WCP-450 owns the member controller, repository, template and distinct pagination test; WCP-475 owns a distinct deletion security test; FCP-053 owns tests/Gaming/Guild; WCP-474's 2FA paths are disjoint. This proposal adds a new test-only file for member create/edit authorization, CSRF and guild ownership.",
+        "paths": [
+          "tests/Controller/AdminGuildMemberMutationSecurityTest.php"
+        ]
+      },
+      "published_at": "2026-09-27T06:14:53.490Z",
+      "claimed_on": "2026-09-27T06:14:53.490Z",
+      "claim_state": "active",
+      "active_base_branch": "feature/wcp-475-guild-member-deletion-security-g1",
+      "active_base_sha": "56274da100719bdbfd62e80f52141160da5a718d",
+      "active_head": "56274da100719bdbfd62e80f52141160da5a718d",
+      "resume_branch": "feature/wcp-476-guild-member-mutation-security-g1",
+      "branch_heads": {
+        "claim_branch": "56274da100719bdbfd62e80f52141160da5a718d",
+        "feature_branch": "56274da100719bdbfd62e80f52141160da5a718d"
+      },
+      "next_action": "Create the exclusive claim and feature branches at the exact green WCP-475 base, then implement the authorized test-only security coverage.",
+      "last_observed_head": "56274da100719bdbfd62e80f52141160da5a718d"
     }
   ],
   "recovery_queue": [],
