@@ -1,0 +1,59 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ competition.name }}{% endblock %}
+
+{% block body %}
+<main class="container">
+    <h1>{{ competition.name }}</h1>
+    <p>{{ competition.description }}</p>
+    <p>{{ competition.format }} · {{ competition.mode }} · {{ competition.status }}</p>
+    {% if competition.registrationOpen %}
+        <a href="{{ path('app_competition_register', {id: competition.id}) }}">Jetzt anmelden</a>
+    {% endif %}
+
+    <h2>Teilnehmer</h2>
+    <ul>
+        {% for participant in participants %}
+            <li>{{ participant.name }} ({{ participant.status }}){% if participant.seed %} · Seed {{ participant.seed }}{% endif %}
+                {% if app.user and participant.containsUser(app.user) and participant.status == 'registered' %}
+                    <form method="post" action="{{ path('app_competition_check_in', {id: competition.id, participant: participant.id}) }}">
+                        <input type="hidden" name="_token" value="{{ csrf_token('competition-check-in-' ~ participant.id) }}">
+                        <button type="submit">Check-in</button>
+                    </form>
+                {% endif %}
+            </li>
+        {% endfor %}
+    </ul>
+
+    <h2>Matches</h2>
+    {% for match in matches %}
+        <article>
+            <h3>Runde {{ match.roundNumber }} / {{ match.bracket }} #{{ match.sequence }}</h3>
+            <p>{{ match.participantA ? match.participantA.name : 'TBD' }} – {{ match.participantB ? match.participantB.name : 'TBD' }}</p>
+            {% if match.status == 'confirmed' %}<p>Ergebnis: {{ match.scoreA }} : {{ match.scoreB }}</p>{% endif %}
+            {% if app.user and match.participantA and match.participantA.containsUser(app.user) and match.status != 'confirmed' %}
+                <form method="post" action="{{ path('app_competition_match_result', {id: competition.id, match: match.id}) }}">
+                    <input type="hidden" name="_token" value="{{ csrf_token('competition-result-' ~ match.id) }}">
+                    <input type="hidden" name="participant" value="{{ match.participantA.id }}">
+                    <input type="number" min="0" name="score_a" required><input type="number" min="0" name="score_b" required>
+                    <button type="submit">Ergebnis melden</button>
+                </form>
+            {% endif %}
+            {% if app.user and match.participantB and match.participantB.containsUser(app.user) and match.status == 'pending_confirmation' %}
+                <form method="post" action="{{ path('app_competition_match_confirm', {id: competition.id, match: match.id}) }}">
+                    <input type="hidden" name="_token" value="{{ csrf_token('competition-confirm-' ~ match.id) }}">
+                    <input type="hidden" name="participant" value="{{ match.participantB.id }}">
+                    <button type="submit">Ergebnis bestätigen</button>
+                </form>
+                <form method="post" action="{{ path('app_competition_match_dispute', {id: competition.id, match: match.id}) }}">
+                    <input type="hidden" name="_token" value="{{ csrf_token('competition-dispute-' ~ match.id) }}">
+                    <input type="hidden" name="participant" value="{{ match.participantB.id }}">
+                    <input type="text" name="reason" required maxlength="2000"><button type="submit">Anfechten</button>
+                </form>
+            {% endif %}
+        </article>
+    {% else %}
+        <p>Die Paarungen werden nach Check-in erzeugt.</p>
+    {% endfor %}
+</main>
+{% endblock %}
