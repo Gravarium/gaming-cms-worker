@@ -10,16 +10,16 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T10:30:10.889Z",
+  "published_at": "2026-09-27T10:34:03.192Z",
   "summary": {
-    "total_remaining_worker_tasks": 164,
-    "completed_worker_prs_awaiting_trusted_review": 273,
+    "total_remaining_worker_tasks": 163,
+    "completed_worker_prs_awaiting_trusted_review": 274,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-509 repaired CI run 36312552167 on its earlier HEAD; verify full CI on repaired HEAD 65112b9ddff3589cf5b47f770c3dc85ce79ee95e.",
+    "next_required_action": "WCP-509 is complete on exact green HEAD 65112b9ddff3589cf5b47f770c3dc85ce79ee95e, PR #305 is ready for Trusted review, and the claim remains locked. Continue to the next free independent module gap.",
     "composition_preparable": 0,
-    "immediately_actionable": 20,
+    "immediately_actionable": 19,
     "must_continue": true
   },
   "rules": {
@@ -34590,7 +34590,7 @@
       "package_id": "WCP-509",
       "title": "Subscribe to upcoming public competitions through a calendar feed",
       "risk": "low",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -34680,7 +34680,7 @@
       },
       "published_at": "2026-09-27T10:10:38.564Z",
       "claimed_on": "2026-09-27T10:10:45.441Z",
-      "claim_state": "active",
+      "claim_state": "locked_until_trusted_resolution",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
       "active_head": "65112b9ddff3589cf5b47f770c3dc85ce79ee95e",
@@ -34690,18 +34690,18 @@
         "feature_branch": "65112b9ddff3589cf5b47f770c3dc85ce79ee95e"
       },
       "last_observed_head": "65112b9ddff3589cf5b47f770c3dc85ce79ee95e",
-      "last_checkpoint_at": "2026-09-27T10:30:10.889Z",
+      "last_checkpoint_at": "2026-09-27T10:34:03.192Z",
       "checkpoint_paths": [
         "src/Controller/CompetitionCalendarController.php",
         "templates/competition_calendar/index.html.twig",
         "templates/home/index.html.twig",
         "tests/Controller/CompetitionCalendarControllerTest.php"
       ],
-      "next_action": "Run focused PHPUnit and the complete Worker CI on the repaired exact HEAD; keep the failure diagnosis recorded and do not mark complete until both CI jobs pass.",
-      "last_verified_push_at": "2026-09-27T10:30:10.889Z",
+      "next_action": "Await Trusted review or explicit transfer; retain the claim lock until Trusted resolution. Do not merge or deploy from Worker.",
+      "last_verified_push_at": "2026-09-27T10:34:03.192Z",
       "worker_pr": 305,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/305",
-      "draft_pr": true,
+      "draft_pr": false,
       "pr_state": "open",
       "worker_pr_changed_paths": [
         "src/Controller/CompetitionCalendarController.php",
@@ -34709,9 +34709,10 @@
         "templates/home/index.html.twig",
         "tests/Controller/CompetitionCalendarControllerTest.php"
       ],
-      "ci_run_id": 36312552167,
-      "ci_result": "failure",
-      "failed_ci_diagnosis": "The first full run found detached Doctrine fixtures during cleanup and an expected timestamp mismatch because DATETIME storage discarded the fixture timezone. Fixture cleanup now reloads managed rows by identifier, and the UTC-format assertion uses a UTC fixture."
+      "ci_run_id": 36312711094,
+      "ci_result": "success",
+      "failed_ci_diagnosis": "The first full run found detached Doctrine fixtures during cleanup and an expected timestamp mismatch because DATETIME storage discarded the fixture timezone. Fixture cleanup now reloads managed rows by identifier, and the UTC-format assertion uses a UTC fixture.",
+      "final_head": "65112b9ddff3589cf5b47f770c3dc85ce79ee95e"
     },
     {
       "priority": 510,
