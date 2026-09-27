@@ -166,7 +166,7 @@ final readonly class AdminGameGuideWorkflow
     {
         return $this->connection->transactional(function (Connection $connection) use ($id, $authorId): bool {
             $row = $connection->fetchAssociative(
-                'SELECT author_id, review_status FROM game_guide WHERE id = :id FOR UPDATE',
+                'SELECT author_id, review_status FROM game_guide WHERE id = :id',
                 ['id' => $id],
             );
             if ($row === false || (int) $row['author_id'] !== $authorId || $row['review_status'] !== 'draft') {
@@ -431,7 +431,7 @@ final readonly class AdminGameGuideWorkflow
         foreach ($data['components'] as $component) {
             $connection->executeStatement(
                 'INSERT INTO game_guide_component (guide_id, component_type, component_key, position, alternatives)
-                 VALUES (:guide, :type, :key, :position, CAST(:alternatives AS JSON))',
+                 VALUES (:guide, :type, :key, :position, :alternatives)',
                 [
                     'guide' => $guideId,
                     'type' => $component->type,
