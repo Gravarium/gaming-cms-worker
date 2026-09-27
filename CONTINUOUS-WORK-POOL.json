@@ -10,7 +10,7 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T09:51:20.847Z",
+  "published_at": "2026-09-27T09:52:14.711Z",
   "summary": {
     "total_remaining_worker_tasks": 152,
     "completed_worker_prs_awaiting_trusted_review": 262,
@@ -33138,21 +33138,21 @@
       "claim_state": "active",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-      "active_head": "3f1bac3dd97bb6c13bb8332c5a80480cfa6137cb",
+      "active_head": "e7b21c091f09db0147b7309a73a664818e7ba26e",
       "resume_branch": "feature/wcp-498-connector-health-report-g1",
       "branch_heads": {
         "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-        "feature_branch": "3f1bac3dd97bb6c13bb8332c5a80480cfa6137cb"
+        "feature_branch": "e7b21c091f09db0147b7309a73a664818e7ba26e"
       },
-      "last_observed_head": "3f1bac3dd97bb6c13bb8332c5a80480cfa6137cb",
-      "last_checkpoint_at": "2026-09-27T09:49:44.333Z",
+      "last_observed_head": "e7b21c091f09db0147b7309a73a664818e7ba26e",
+      "last_checkpoint_at": "2026-09-27T09:52:14.711Z",
       "checkpoint_paths": [
         "src/Controller/AdminConnectorHealthReportController.php",
         "src/ExternalConnector/ConnectorHealthReport.php",
         "tests/Controller/AdminConnectorHealthReportTest.php"
       ],
-      "next_action": "Monitor the new exact-head CI run for corrected head 3f1bac3dd97bb6c13bb8332c5a80480cfa6137cb; diagnose any remaining concrete failure only within the three allowed paths.",
-      "last_verified_push_at": "2026-09-27T09:49:44.333Z",
+      "next_action": "Monitor the new exact-head CI run for corrected head e7b21c091f09db0147b7309a73a664818e7ba26e; diagnose any remaining concrete failure only within the three allowed paths.",
+      "last_verified_push_at": "2026-09-27T09:52:14.711Z",
       "worker_pr": 291,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/291",
       "draft_pr": true,
@@ -33162,8 +33162,8 @@
         "src/ExternalConnector/ConnectorHealthReport.php",
         "tests/Controller/AdminConnectorHealthReportTest.php"
       ],
-      "ci_run_id": 36310467633,
-      "last_ci_run_id": 36310467633,
+      "ci_run_id": 36310592861,
+      "last_ci_run_id": 36310592861,
       "ci_result": "failure",
       "last_ci_result": "failure",
       "ci_attempts": [
@@ -33172,6 +33172,12 @@
           "head": "a257b0647a067a4b31696719876b2e6bffdba3a9",
           "result": "failure",
           "diagnosis": "PHPStan, container, Doctrine mapping, PostgreSQL migration validation and all prior tests passed; the four new tests errored because the test imported KernelBrowser from Symfony\\Component\\HttpKernel instead of Symfony\\Bundle\\FrameworkBundle. The import is corrected on the next exact head."
+        },
+        {
+          "run_id": 36310592861,
+          "head": "3f1bac3dd97bb6c13bb8332c5a80480cfa6137cb",
+          "result": "failure",
+          "diagnosis": "PHPStan, container, Doctrine mapping, PostgreSQL migration validation and the prior test suite passed. New tests then exposed a normalized Symfony Cache-Control header assertion and detached User cleanup after Browser requests; the test now checks required cache directives and re-fetches the User before removal."
         }
       ]
     },
