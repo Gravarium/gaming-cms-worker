@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T07:51:44.647Z",
+  "published_at": "2026-09-27T07:54:50.439Z",
   "summary": {
     "total_remaining_worker_tasks": 141,
     "completed_worker_prs_awaiting_trusted_review": 250,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-483 is complete on exact green HEAD 0eec4a4289abe6d5850f5eac98c522892a1facf5 (PR #276, CI 36304215243); its claim remains locked. Re-evaluate the latest pool for a free dependency-safe existing module task; if none is eligible, publish and claim a bounded worker-only CMS proposal without changing another claim.",
+    "next_required_action": "WCP-483 full Worker CI run 36304215243 remains in progress on exact HEAD 0eec4a4289abe6d5850f5eac98c522892a1facf5. WCP-484 exact-head run 36304073650 failed because the synthetic draft lacks an SEO description and reaches a strict Twig fallback before the base site context; repair its fixture within the allowed test file and rerun full CI.",
     "composition_preparable": 0,
     "immediately_actionable": 4,
     "must_continue": true
@@ -30987,9 +30987,9 @@
         "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
         "feature_branch": "ba33c3a3f0626737d86bd079b16420a559f03b1c"
       },
-      "next_action": "Await exact-head Worker CI run 36304073650; diagnose and repair any test-only failure within the allowlisted file.",
+      "next_action": "Exact-head Worker CI run 36304073650 failed in the authorized preview test because the fixture leaves the optional SEO description empty, reaching the site.description Twig fallback before the base template supplies its site context. Keep the fix test-only: give the synthetic draft an explicit SEO description, rerun complete Worker CI on the new exact head.",
       "last_observed_head": "ba33c3a3f0626737d86bd079b16420a559f03b1c",
-      "last_checkpoint_at": "2026-09-27T07:45:38.433Z",
+      "last_checkpoint_at": "2026-09-27T07:54:50.439Z",
       "checkpoint_paths": [
         "tests/Controller/AdminContentPreviewSecurityTest.php"
       ],
@@ -31000,13 +31000,13 @@
       "pr_state": "open",
       "ci_run_id": 36304073650,
       "last_ci_run_id": 36304073650,
-      "ci_result": "queued",
-      "last_ci_result": "queued",
+      "ci_result": "failure",
+      "last_ci_result": "failure",
       "ci_attempts": [
         {
           "run_id": 36304073650,
           "head": "ba33c3a3f0626737d86bd079b16420a559f03b1c",
-          "result": "queued"
+          "result": "failure"
         }
       ]
     }
