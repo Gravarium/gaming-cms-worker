@@ -17,7 +17,7 @@
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-462 Draft PR #256 is running complete Worker CI on exact HEAD 5ca9943f345ac6a833277e49fe87093aa13c223e; preserve its exclusive claim and all other active or locked packages.",
+    "next_required_action": "WCP-463 is claimed on feature/wcp-463-admin-video-browser-g1 from exact main f1a246c64527ef3ad51f7490773d9bbf9d42be5d; complete the bounded admin video catalogue workflow and exact-head CI while preserving WCP-462 and all other claims.",
     "composition_preparable": 0,
     "immediately_actionable": 3,
     "must_continue": true
@@ -27313,6 +27313,112 @@
           "result": "in_progress"
         }
       ]
+    },
+    {
+      "priority": 463,
+      "package_id": "WCP-463",
+      "title": "Search and paginate the administrative video catalogue",
+      "risk": "medium",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-463-admin-video-browser-g1",
+      "suggested_branch": "feature/wcp-463-admin-video-browser-g1",
+      "base_branch": "main",
+      "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "objective": "Complete the existing CMS_VIDEO_MANAGE video inventory for operators with long libraries. The current admin index loads every video at once and has no search or filters. Add bounded title search, publication-state and category filters, and stable 25-row pagination while preserving the existing video create/edit/delete actions and their CSRF boundaries. Preserve normalized list context through pagination and editor return paths. Do not change video writes, upload handling, public playback or schema.",
+      "allowed_paths": [
+        "src/Controller/AdminVideoController.php",
+        "src/Video/AdminVideoBrowser.php",
+        "templates/admin/video/index.html.twig",
+        "templates/admin/video/form.html.twig",
+        "tests/Controller/AdminVideoDirectoryBrowserTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/",
+        "src/Entity/",
+        "src/Repository/VideoRepository.php",
+        "src/Controller/VideoController.php",
+        "templates/video/",
+        "src/Service/MediaStorageManager.php",
+        "public/uploads/"
+      ],
+      "deliverables": [
+        "Replace the unbounded admin video listing with a CMS_VIDEO_MANAGE-protected reader returning at most 25 videos per page, total/page counts and stable createdAt DESC, id DESC ordering; clamp a valid past-end page to the last page.",
+        "Add trimmed, case-insensitive title search bounded to 100 characters, an allowlisted state filter (all, published, scheduled, draft, disabled), and an existing category ID filter. Apply identical constraints to rows and counts.",
+        "Preserve normalized search, state, category and page context in pagination links, video edit/new links, delete forms, the video form's return link and successful edit/delete redirects.",
+        "Reject malformed query types/arrays, invalid UTF-8 or control characters, overlong search, unknown state, and non-canonical or oversized page/category values before mutations. Invalid list filters return generic 400 with private/no-store and noindex headers.",
+        "Keep the existing category and playlist tables, video status labels, edit/delete controls, delete CSRF token and upload flow intact; make no entity, repository, public playback, schema or upload behavior changes."
+      ],
+      "tests": [
+        "Functional coverage for anonymous and CMS_VIDEO_MANAGE access boundaries.",
+        "Functional coverage for title, category and each publication-state filter; stable 25-row paging, counts, page clamping and filter-preserving navigation/actions.",
+        "Negative coverage for malformed filter shapes, unknown states, invalid bounds and rejected delete CSRF without persistent mutation.",
+        "PHPStan level 8 and complete Worker CI on exact final HEAD.",
+        "PostgreSQL 18 complete migration-chain validation."
+      ],
+      "completion_report": [
+        "Exact sanitized main base SHA and final Worker HEAD SHA.",
+        "Complete changed-path list and Worker PR.",
+        "Focused and complete test commands/results, PHPStan and exact-head CI run.",
+        "Remaining limitations and Trusted integration follow-up."
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "preserve-CMS_VIDEO_MANAGE-and-route-specific-CSRF",
+        "preserve-upload-storage-validation-and-rollback",
+        "do-not-edit-shared-VideoRepository-public-search-claim",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment",
+        "no-private-runtime-or-sensitive-data"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "proposal_kind": "worker_only",
+      "proposal_dependency_evidence": [],
+      "collision_check": {
+        "compared_against": "Fresh continuous/work-pool-v4 task and claim snapshot at publication; all currently active and claim-locked packages; exact sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d.",
+        "result": "No current active WCP claim owns the five exact allowed paths. The completed but claim-locked WCP-381 video search package owns VideoRepository.php and public-video paths; this proposal deliberately leaves those paths untouched and uses a separate admin browser reader. Active WCP-401 Game Hub, WCP-439 content duplication, WCP-383 publication tests and WCP-462 dashboard tests have disjoint paths. FCP-072 remains blocked and unclaimed; only admin/video templates are in this proposal's template scope.",
+        "paths": [
+          "src/Controller/AdminVideoController.php",
+          "src/Video/AdminVideoBrowser.php",
+          "templates/admin/video/index.html.twig",
+          "templates/admin/video/form.html.twig",
+          "tests/Controller/AdminVideoDirectoryBrowserTest.php"
+        ]
+      },
+      "published_at": "2026-09-27T03:56:46.866Z",
+      "claimed_on": "2026-09-27T03:56:46.866Z",
+      "claim_state": "active",
+      "active_base_branch": "main",
+      "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "resume_branch": "feature/wcp-463-admin-video-browser-g1",
+      "last_checkpoint_at": "2026-09-27T03:56:46.866Z",
+      "checkpoint_paths": [],
+      "branch_heads": {
+        "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+        "feature_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d"
+      },
+      "next_action": "Implement the admin-only video catalogue reader, query filters, pagination, preserved editor context and functional negative coverage on this feature branch; checkpoint each coherent batch.",
+      "last_observed_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "last_verified_push_at": "2026-09-27T03:56:46.866Z"
     }
   ],
   "recovery_queue": [],
