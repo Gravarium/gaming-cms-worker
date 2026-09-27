@@ -10,7 +10,7 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T01:24:32.075Z",
+  "published_at": "2026-09-27T01:25:48.379Z",
   "summary": {
     "total_remaining_worker_tasks": 141,
     "completed_worker_prs_awaiting_trusted_review": 213,
@@ -24813,10 +24813,10 @@
       "claimed_on": "2026-09-27T01:14:30.870Z",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-      "active_head": "1c679d1d1b090da023512c90153e61fe0f5da3a8",
+      "active_head": "dcf59ec63e19f79914c819a6c2ba8d0dbfb6b623",
       "resume_branch": "feature/wcp-445-admin-user-directory-pagination-g1",
-      "last_checkpoint_at": "2026-09-27T01:23:15.924Z",
-      "last_verified_push_at": "2026-09-27T01:23:15.924Z",
+      "last_checkpoint_at": "2026-09-27T01:25:48.379Z",
+      "last_verified_push_at": "2026-09-27T01:25:48.379Z",
       "checkpoint_paths": [
         "src/Controller/AdminUserDirectoryController.php",
         "src/Repository/AdminUserDirectoryRepository.php",
@@ -24826,15 +24826,15 @@
       ],
       "branch_heads": {
         "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-        "feature_branch": "1c679d1d1b090da023512c90153e61fe0f5da3a8"
+        "feature_branch": "dcf59ec63e19f79914c819a6c2ba8d0dbfb6b623"
       },
-      "next_action": "Inspect the exact-head Worker CI result; diagnose and fix any failure on this branch, then rerun full CI before making the PR ready.",
+      "next_action": "Monitor complete CI on the corrected PHP source; fix remaining failures on this branch and rerun against each new exact HEAD.",
       "worker_pr": 240,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/240",
       "draft_pr": true,
       "pr_state": "open_draft_unmerged",
-      "last_ci_run_id": 36285404054,
-      "ci_run_id": 36285404054,
+      "last_ci_run_id": 36285489874,
+      "ci_run_id": 36285489874,
       "last_ci_result": "in_progress",
       "ci_result": "in_progress",
       "ci_attempts": [
@@ -24842,8 +24842,14 @@
           "run_id": 36285404054,
           "head": "1c679d1d1b090da023512c90153e61fe0f5da3a8",
           "result": "in_progress"
+        },
+        {
+          "run_id": 36285489874,
+          "head": "dcf59ec63e19f79914c819a6c2ba8d0dbfb6b623",
+          "result": "in_progress"
         }
-      ]
+      ],
+      "last_ci_diagnosis": "Run 36285404054 failed before analysis or tests: Composer's cache:clear encountered doubled PHP namespace separators in the new controller, repository and test. Corrected all three files on the same feature branch; rerunning complete CI on this head."
     },
     {
       "priority": 446,
