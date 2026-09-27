@@ -9,6 +9,7 @@ use App\Entity\Game;
 use App\Entity\User;
 use App\Security\CmsPermission;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
@@ -45,7 +46,8 @@ final class PublicGameGuideControllerTest extends WebTestCase
             $connection->executeStatement(
                 'INSERT INTO game_guide_component (guide_id, component_type, component_key, position, alternatives)
                  VALUES (:guide, :type, :key, :position, :alternatives)',
-                ['guide' => $publicId, 'type' => 'gear', 'key' => 'ember-staff', 'position' => 1, 'alternatives' => '["oak-wand"]'],
+                ['guide' => $publicId, 'type' => 'gear', 'key' => 'ember-staff', 'position' => 1, 'alternatives' => ['oak-wand']],
+                ['alternatives' => Types::JSON],
             );
             $draftId = $this->guide($connection, $enabledGameId, $authorId, null, 'draft', 'WCP552-HiddenDraft');
             $guideIds[] = $draftId;
@@ -84,6 +86,7 @@ final class PublicGameGuideControllerTest extends WebTestCase
             self::assertResponseIsSuccessful();
             self::assertSelectorTextContains('h1', 'WCP552-Visible');
             self::assertSelectorTextContains('main', 'ember-staff');
+            self::assertSelectorTextContains('main', 'oak-wand');
             self::assertSelectorTextContains('main', 'Dieser Guide liegt außerhalb seines angegebenen Gültigkeitszeitraums.');
             self::assertStringNotContainsString($author->getEmail(), (string) $client->getResponse()->getContent());
 
