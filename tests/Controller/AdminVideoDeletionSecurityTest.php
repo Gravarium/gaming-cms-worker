@@ -30,6 +30,9 @@ final class AdminVideoDeletionSecurityTest extends WebTestCase
         $client->loginUser($user);
 
         try {
+            $client->request('GET', '/admin/videos');
+            self::assertResponseStatusCodeSame(403);
+
             $token = $this->csrf($client)->getToken('delete-video-'.$videoId)->getValue();
             $client->request('POST', '/admin/videos/'.$videoId.'/delete', [
                 '_token' => $token,
