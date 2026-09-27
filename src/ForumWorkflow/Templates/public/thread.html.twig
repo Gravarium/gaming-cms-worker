@@ -1,0 +1,89 @@
+{% extends 'base.html.twig' %}
+{% block title %}{{ thread.title }} | Forum{% endblock %}
+{% block body %}
+<main class="dashboard">
+    <p><a href="{{ path('app_gaming_forum_room', {id: thread.room_id}) }}">{{ thread.room_title }}</a></p>
+    <p class="eyebrow">Forumthema · {{ thread.state }}</p>
+    <h1>{{ thread.title }}</h1>
+    {% for message in app.flashes('forum_error') %}<p role="alert" class="notice notice-error">{{ message }}</p>{% endfor %}
+    {% for message in app.flashes('forum_success') %}<p role="status" class="notice notice-success">{{ message }}</p>{% endfor %}
+    {% if thread.solved_post_id %}<p class="notice">Dieses Thema hat eine markierte Lösung.</p>{% endif %}
+    <section aria-label="Beiträge">
+        {% for post in posts %}
+            <article class="panel" id="post-{{ post.id }}">
+                <h2>Beitrag von {{ post.author_name }}</h2>
+                <p class="muted">{{ post.created_at|date('d.m.Y H:i') }}</p>
+                {% if post.quoted_post_id %}<p>Antwort auf Beitrag #{{ post.quoted_post_id }}</p>{% endif %}
+                <pre class="forum-post-body">{{ post.body }}</pre>
+                {% if canSolve %}
+                    <form method="post" action="{{ path('app_gaming_forum_solve', {id: thread.id}) }}">
+                        <input type="hidden" name="_token" value="{{ csrf_token('forum_solve_' ~ thread.id) }}">
+                        <input type="hidden" name="post_id" value="{{ post.id }}">
+                        <input type="hidden" name="version" value="{{ thread.version }}">
+                        <button type="submit">Als Lösung markieren</button>
+                    </form>
+                {% endif %}
+            </article>
+        {% endfor %}
+    </section>
+    {% if is_granted('ROLE_USER') %}
+        <form method="post" action="{{ path('app_gaming_forum_subscription', {id: thread.id}) }}">
+            <input type="hidden" name="_token" value="{{ csrf_token('forum_subscription_' ~ thread.id) }}">
+            <input type="hidden" name="action" value="{{ isSubscribed ? 'unsubscribe' : 'subscribe' }}">
+            <button type="submit">{{ isSubscribed ? 'Nicht mehr folgen' : 'Thema folgen' }}</button>
+        </form>
+    {% else %}
+        <p>Melde dich an, um diesem Thema zu folgen.</p>
+    {% endif %}
+    {% if canReply %}
+        <section class="panel">
+            <h2>Antwort schreiben</h2>
+            {% if is_granted('ROLE_USER') %}
+                <form method="post" action="{{ path('app_gaming_forum_reply', {id: thread.id}) }}">
+                    <input type="hidden" name="_token" value="{{ csrf_token('forum_reply_' ~ thread.id) }}">
+                    <input type="hidden" name="version" value="{{ thread.version }}">
+                    <label for="forum-reply">Deine Antwort</label>
+                    <textarea id="forum-reply" name="body" maxlength="20000" rows="7" required></textarea>
+                    <label for="forum-quote">Beitrag zitieren (optional)</label>
+                    <select id="forum-quote" name="quoted_post_id">
+                        <option value="">Keinen Beitrag zitieren</option>
+                        {% for post in posts %}<option value="{{ post.id }}">Beitrag #{{ post.id }}</option>{% endfor %}
+                    </select>
+                    <button type="submit">Antwort veröffentlichen</button>
+                </form>
+            {% else %}
+                <p>Melde dich an, um zu antworten.</p>
+            {% endif %}
+        </section>
+    {% else %}
+        <p>Dieses Thema ist geschlossen oder bereits gelöst.</p>
+    {% endif %}
+    {% if isModerator %}
+        <section class="panel">
+            <h2>Moderation</h2>
+            <form method="post" action="{{ path('app_admin_gaming_forum_moderate', {id: thread.id}) }}">
+                <input type="hidden" name="_token" value="{{ csrf_token('forum_moderate_' ~ thread.id) }}">
+                <input type="hidden" name="version" value="{{ thread.version }}">
+                <label for="forum-state">Status</label>
+                <select id="forum-state" name="state">
+                    {% for state in ['open', 'locked', 'archived'] %}
+                        <option value="{{ state }}" {{ thread.state == state ? 'selected' : '' }}>{{ state }}</option>
+                    {% endfor %}
+                </select>
+                <label for="forum-reason">Begründung für das Protokoll</label>
+                <input id="forum-reason" name="reason" maxlength="500" required>
+                <button type="submit">Status ändern</button>
+            </form>
+            {% set history = moderationHistory %}
+            {% if history is not empty %}
+                <h3>Moderationsverlauf</h3>
+                <ul>
+                    {% for item in history %}
+                        <li>{{ item.state }} · {{ item.actor_name }} · {{ item.reason }} · {{ item.occurred_at|date('d.m.Y H:i') }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        </section>
+    {% endif %}
+</main>
+{% endblock %}

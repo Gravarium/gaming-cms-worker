@@ -1,0 +1,30 @@
+{% extends 'base.html.twig' %}
+{% block title %}Forum{% endblock %}
+{% block body %}
+<main class="dashboard">
+    <p class="eyebrow">Community</p>
+    <h1>Forum</h1>
+    <p class="muted">Fragen stellen, Antworten finden und Themen verfolgen.</p>
+    {% for message in app.flashes('forum_error') %}<p role="alert" class="notice notice-error">{{ message }}</p>{% endfor %}
+    {% for message in app.flashes('forum_success') %}<p role="status" class="notice notice-success">{{ message }}</p>{% endfor %}
+    {% if rooms is empty %}
+        <p>Für dich sind derzeit keine Forenräume verfügbar.</p>
+    {% else %}
+        <section class="dashboard-grid" aria-label="Verfügbare Forenräume">
+            {% for room in rooms %}
+                <article class="panel">
+                    <h2><a href="{{ path('app_gaming_forum_room', {id: room.id}) }}">{{ room.title }}</a></h2>
+                    <p>{{ room.thread_count }} Themen · {{ room.visibility }}</p>
+                </article>
+            {% endfor %}
+        </section>
+    {% endif %}
+    {% if pages > 1 %}
+        <nav aria-label="Forumseiten">
+            {% if page > 1 %}<a href="{{ path('app_gaming_forum_index', {page: page - 1}) }}">Zurück</a>{% endif %}
+            <span>Seite {{ page }} von {{ pages }}</span>
+            {% if page < pages %}<a href="{{ path('app_gaming_forum_index', {page: page + 1}) }}">Weiter</a>{% endif %}
+        </nav>
+    {% endif %}
+</main>
+{% endblock %}
