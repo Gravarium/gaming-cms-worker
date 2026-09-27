@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T19:24:38.665Z",
+  "published_at": "2026-09-27T19:27:13.579Z",
   "summary": {
     "total_remaining_worker_tasks": 173,
-    "completed_worker_prs_awaiting_trusted_review": 304,
+    "completed_worker_prs_awaiting_trusted_review": 305,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "Await full exact-head Worker CI #919 / 36344211712 for PR #368.",
+    "next_required_action": "WCP-574 is complete with exact-head green CI and PR #368; verify remaining dependencies and continue autonomous Worker proposals.",
     "composition_preparable": 0,
     "immediately_actionable": 29,
     "must_continue": true
@@ -46361,7 +46361,7 @@
       "package_id": "WCP-574",
       "title": "Test HTML escaping on public video playlist pages",
       "risk": "low",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -46438,7 +46438,7 @@
       },
       "published_at": "2026-09-27T19:23:25.827Z",
       "claimed_on": "2026-09-27T19:23:25.827Z",
-      "claim_state": "active",
+      "claim_state": "locked_until_trusted_resolution",
       "active_base_branch": "main",
       "active_base_sha": "7b2ca79405fc12d34bce1386157e929e4668f31a",
       "active_head": "13e1489ad6d0f5814abd504f874e022e5f821204",
@@ -46448,37 +46448,40 @@
         "feature_branch": "13e1489ad6d0f5814abd504f874e022e5f821204"
       },
       "last_observed_head": "13e1489ad6d0f5814abd504f874e022e5f821204",
-      "last_checkpoint_at": "2026-09-27T19:24:38.665Z",
+      "last_checkpoint_at": "2026-09-27T19:27:13.579Z",
       "checkpoint_paths": [
         "tests/Controller/VideoPlaylistPublicWorkflowTest.php"
       ],
-      "next_action": "Await full exact-head Worker CI #919 / 36344211712 for PR #368.",
-      "last_verified_push_at": "2026-09-27T19:24:23.429Z",
+      "next_action": "Await Trusted review and independent validation of PR #368; continue autonomous Worker scheduling without merging or deploying.",
+      "last_verified_push_at": "2026-09-27T19:27:13.579Z",
       "worker_pr": 368,
-      "worker_pr_state": "draft",
+      "worker_pr_state": "ready_for_review",
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/368",
       "worker_pr_changed_paths": [
         "tests/Controller/VideoPlaylistPublicWorkflowTest.php"
       ],
       "pr_state": "open",
-      "draft_pr": true,
+      "draft_pr": false,
       "worker_pr_base_branch": "main",
       "worker_pr_base_sha": "7b2ca79405fc12d34bce1386157e929e4668f31a",
-      "ci_result": "in_progress",
+      "ci_result": "success",
       "ci_attempts": [
         {
           "run_id": 36344211712,
           "run_number": 919,
           "head": "13e1489ad6d0f5814abd504f874e022e5f821204",
           "base": "7b2ca79405fc12d34bce1386157e929e4668f31a",
-          "result": "in_progress",
+          "result": "success",
           "validation_pr": 368,
-          "conclusion": null
+          "conclusion": "success"
         }
       ],
       "ci_run_id": 36344211712,
       "last_ci_run_id": 36344211712,
-      "ci_validation_pr": 368
+      "ci_validation_pr": 368,
+      "last_ci_result": "success",
+      "completed_at": "2026-09-27T19:27:13.579Z",
+      "worker_completion_summary": "Exact-head Worker CI #919 / 36344211712 passed on 13e1489ad6d0f5814abd504f874e022e5f821204: 737 tests, 4,631 assertions, 0 failures/errors (1 PHPUnit deprecation, 3 notices); PHPStan reported no errors; PostgreSQL 18 applied 57 migrations with 878 SQL queries. PR #368 is open and ready for Trusted review from main@7b2ca79405fc12d34bce1386157e929e4668f31a; exactly one allowlisted test path changed, with no template or runtime changes."
     }
   ],
   "recovery_queue": [],
