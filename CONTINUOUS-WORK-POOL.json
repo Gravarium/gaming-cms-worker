@@ -10,7 +10,7 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T10:05:36.666Z",
+  "published_at": "2026-09-27T10:05:49.292Z",
   "summary": {
     "total_remaining_worker_tasks": 160,
     "completed_worker_prs_awaiting_trusted_review": 266,
@@ -33827,11 +33827,11 @@
       "claim_state": "active",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-      "active_head": "92f6119ef73141b1387148c02be1750cce8aaee7",
+      "active_head": "dbdf2400f4b6c270aa9c227dab8cbba1028e786f",
       "resume_branch": "feature/wcp-502-guild-application-status-g1",
       "branch_heads": {
         "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-        "feature_branch": "92f6119ef73141b1387148c02be1750cce8aaee7"
+        "feature_branch": "dbdf2400f4b6c270aa9c227dab8cbba1028e786f"
       },
       "checkpoint_paths": [
         "src/Controller/GuildApplicationStatusController.php",
@@ -33839,10 +33839,10 @@
         "templates/gaming/applications.html.twig",
         "tests/Controller/GuildApplicationStatusTest.php"
       ],
-      "next_action": "Monitor exact-head Worker CI run 36311296766; repair any concrete failures on feature HEAD 92f6119ef73141b1387148c02be1750cce8aaee7, then verify the final exact HEAD and complete the Worker PR.",
-      "last_observed_head": "92f6119ef73141b1387148c02be1750cce8aaee7",
-      "last_checkpoint_at": "2026-09-27T10:02:51.769Z",
-      "last_verified_push_at": "2026-09-27T10:02:51.769Z",
+      "next_action": "Monitor exact-head Worker CI run 36311400396; repair any concrete failures on HEAD dbdf2400f4b6c270aa9c227dab8cbba1028e786f.",
+      "last_observed_head": "dbdf2400f4b6c270aa9c227dab8cbba1028e786f",
+      "last_checkpoint_at": "2026-09-27T10:05:49.292Z",
+      "last_verified_push_at": "2026-09-27T10:05:49.292Z",
       "worker_pr": 297,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/297",
       "draft_pr": true,
@@ -33853,10 +33853,25 @@
         "templates/gaming/applications.html.twig",
         "tests/Controller/GuildApplicationStatusTest.php"
       ],
-      "ci_run_id": 36311296766,
-      "last_ci_run_id": 36311296766,
+      "ci_run_id": 36311400396,
+      "last_ci_run_id": 36311400396,
       "ci_result": "in_progress",
-      "last_ci_result": "in_progress"
+      "last_ci_result": "in_progress",
+      "ci_attempts": [
+        {
+          "head": "92f6119ef73141b1387148c02be1750cce8aaee7",
+          "ci_run_id": 36311296766,
+          "ci_result": "failure",
+          "failed_step": "Run worker-visible application tests with coverage visibility",
+          "diagnosis": "The new pagination test passed arguments to assertSelectorCount in the reverse order; PHPUnit expects the count before the CSS selector.",
+          "remediated_in_head": "dbdf2400f4b6c270aa9c227dab8cbba1028e786f"
+        },
+        {
+          "head": "dbdf2400f4b6c270aa9c227dab8cbba1028e786f",
+          "ci_run_id": 36311400396,
+          "ci_result": "in_progress"
+        }
+      ]
     },
     {
       "priority": 504,
