@@ -69,7 +69,7 @@ final class FaqWidgetProviderTest extends KernelTestCase
         $config = $this->defaultConfig($validator);
         $config['question1'] = str_repeat('x', 181);
 
-        $this->expectException(\\DomainException::class);
+        $this->expectException(\DomainException::class);
         $this->document($validator, $config);
     }
 
@@ -80,7 +80,7 @@ final class FaqWidgetProviderTest extends KernelTestCase
         $config = $this->defaultConfig($validator);
         $config['answer1'] = str_repeat('x', 2001);
 
-        $this->expectException(\\DomainException::class);
+        $this->expectException(\DomainException::class);
         $this->document($validator, $config);
     }
 
