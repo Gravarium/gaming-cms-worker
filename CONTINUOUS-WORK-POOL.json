@@ -10,16 +10,16 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T00:49:43.847Z",
+  "published_at": "2026-09-27T00:52:11.194Z",
   "summary": {
-    "total_remaining_worker_tasks": 139,
-    "completed_worker_prs_awaiting_trusted_review": 209,
+    "total_remaining_worker_tasks": 138,
+    "completed_worker_prs_awaiting_trusted_review": 210,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
     "next_required_action": "WCP-441 is validating exact HEAD cf0774220ea0f6ead9b061a6a251a47605c954bd in Worker CI run 36283576919 after fixing the Node protocol test import and live-region selector; inspect the jobs and continue on this branch.",
     "composition_preparable": 0,
-    "immediately_actionable": 3,
+    "immediately_actionable": 2,
     "must_continue": true
   },
   "rules": {
@@ -24291,7 +24291,7 @@
       "package_id": "WCP-442",
       "title": "Protect bulk media deletion authorization and usage safeguards",
       "risk": "medium",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -24359,12 +24359,12 @@
         ]
       },
       "claimed_on": "2026-09-27T00:46:12.970Z",
-      "claim_state": "active",
+      "claim_state": "locked_until_trusted_resolution",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
       "active_head": "b5cd984e090dc6d17ba53c3fef7c6aba21b25dd3",
       "resume_branch": "feature/wcp-442-media-storage-bulk-delete-security-g1",
-      "last_checkpoint_at": "2026-09-27T00:48:54.768Z",
+      "last_checkpoint_at": "2026-09-27T00:52:11.194Z",
       "checkpoint_paths": [
         "tests/Controller/MediaStorageBulkDeleteSecurityTest.php"
       ],
@@ -24372,13 +24372,47 @@
         "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
         "feature_branch": "b5cd984e090dc6d17ba53c3fef7c6aba21b25dd3"
       },
-      "next_action": "Inspect exact-head Worker CI for PR #236 on b5cd984e090dc6d17ba53c3fef7c6aba21b25dd3; repair concrete failures on this branch.",
+      "next_action": "PR #236 is ready for Trusted review with green exact-head Worker CI; keep this claim locked until Trusted explicitly integrates, cancels or transfers it, then continue with an independent task.",
       "last_verified_push_at": "2026-09-27T00:48:20.563Z",
       "worker_pr": 236,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/236",
-      "pr_state": "open_draft_unmerged",
-      "draft_pr": true,
-      "final_head": "b5cd984e090dc6d17ba53c3fef7c6aba21b25dd3"
+      "pr_state": "open_ready_for_review_unmerged",
+      "draft_pr": false,
+      "final_head": "b5cd984e090dc6d17ba53c3fef7c6aba21b25dd3",
+      "final_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "final_changed_paths": [
+        "tests/Controller/MediaStorageBulkDeleteSecurityTest.php"
+      ],
+      "changed_paths": [
+        "tests/Controller/MediaStorageBulkDeleteSecurityTest.php"
+      ],
+      "last_ci_run_id": 36283619508,
+      "ci_run_id": 36283619508,
+      "ci_result": "success",
+      "ci_attempts": [
+        {
+          "run_id": 36283619508,
+          "head": "b5cd984e090dc6d17ba53c3fef7c6aba21b25dd3",
+          "result": "success"
+        }
+      ],
+      "completed_at": "2026-09-27T00:52:11.194Z",
+      "test_results": {
+        "phpunit": "432 tests, 1,876 assertions, 0 failures; one deprecation and one notice.",
+        "phpstan": "Level 8 passed with no errors.",
+        "php_symfony": "Worker PHP/Symfony validation job passed on exact final HEAD.",
+        "postgres18": "PostgreSQL 18 applied and verified all 39 migrations.",
+        "exact_head_ci": {
+          "run_id": 36283619508,
+          "head": "b5cd984e090dc6d17ba53c3fef7c6aba21b25dd3",
+          "result": "success"
+        }
+      },
+      "completion_summary": "Functional regressions verify that an authenticated CMS_CONTENT_MANAGE user without CMS_STORAGE_MANAGE cannot bulk-delete media; missing and invalid bulk-media CSRF tokens are rejected without mutation; and a valid rendered token cannot delete a video-referenced asset while an unselected sibling remains intact. Synthetic user, media, and video fixtures are removed in finally. Only the allowed test file changed.",
+      "open_limitations": [
+        "Awaiting Trusted review and Trusted integration CI."
+      ],
+      "trusted_follow_up": "Preserve CMS_STORAGE_MANAGE authorization, the bulk-media CSRF token, the in-use media deletion guard and selected-record scope."
     }
   ],
   "recovery_queue": [],
