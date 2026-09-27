@@ -12,14 +12,14 @@
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
   "published_at": "2026-09-27T01:51:12.714Z",
   "summary": {
-    "total_remaining_worker_tasks": 139,
+    "total_remaining_worker_tasks": 140,
     "completed_worker_prs_awaiting_trusted_review": 218,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "Re-evaluate all unclaimed tasks against current dependency evidence; all remaining published FCPs are blocked, so derive and claim one independent worker-only WCP under the continuous-work rules.",
+    "next_required_action": "WCP-450 is reserved on exact sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d for search and pagination of the existing guild member directory; continue its exclusive implementation branch.",
     "composition_preparable": 0,
-    "immediately_actionable": 4,
+    "immediately_actionable": 5,
     "must_continue": true
   },
   "rules": {
@@ -25507,6 +25507,117 @@
         "Awaiting Trusted review and Trusted integration CI."
       ],
       "trusted_follow_up": "Preserve CMS_SETTINGS_MANAGE authorization and rendered-form CSRF on settings updates; no media upload or external URL behavior is covered by this proposal."
+    },
+    {
+      "priority": 450,
+      "package_id": "WCP-450",
+      "title": "Search and paginate guild member administration",
+      "risk": "medium",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-450-guild-member-directory-pagination-g1",
+      "suggested_branch": "feature/wcp-450-guild-member-directory-pagination-g1",
+      "base_branch": "main",
+      "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "objective": "Complete the existing CMS_GAMING_MANAGE-protected per-guild member-administration screen for long rosters. The current page loads every GuildMember for the route guild in one findBy call, with no search or active/inactive filter. Add bounded character-name search, active/inactive filters and stable 25-row pagination while preserving guild scope, member edit/delete controls and delete CSRF forms. Do not alter member writes or public roster behavior.",
+      "allowed_paths": [
+        "src/Controller/AdminGuildMemberController.php",
+        "src/Repository/GuildMemberRepository.php",
+        "templates/admin/gaming/member/index.html.twig",
+        "tests/Controller/AdminGuildMemberDirectoryPaginationTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/",
+        "src/Entity/",
+        "src/Form/",
+        "src/Controller/GuildPortalController.php",
+        "src/Controller/AdminGuildCollaborationController.php",
+        "src/Controller/AdminGuildApplicationController.php",
+        "src/Controller/AdminGuildStructureController.php",
+        "src/Repository/GuildEventRepository.php",
+        "src/Repository/GuildEventSignupRepository.php",
+        "templates/admin/gaming/collaboration/",
+        "templates/admin/gaming/index.html.twig",
+        "templates/admin/gaming/structure/",
+        "templates/admin/gaming/collaboration/index.html.twig",
+        "tests/Controller/AdminGuildCollaborationPaginationTest.php",
+        "tests/Controller/Guild/",
+        "tests/Controller/AdminGuildStructureSecurityTest.php"
+      ],
+      "deliverables": [
+        "Keep the existing per-guild route and CMS_GAMING_MANAGE authorization. Replace unbounded member loading with guild-scoped count and page queries.",
+        "Support case-insensitive character-name search and active/inactive filters, ordered leader DESC, position ASC, characterName ASC, id ASC, with 25 rows per page, result/page counts, empty state and previous/next links preserving filters.",
+        "Preserve the existing edit/delete links and route-specific delete CSRF form for every displayed member. Do not change create/edit/delete behavior or user linking.",
+        "Reject malformed query arrays/scalars, invalid UTF-8/control bytes, unknown active-state filters, overlong search and invalid/overflowing page values with a client error; clamp valid pages past the last page.",
+        "Mark the administrative directory response private/no-store and noindex. Make no schema, entity, form, member-write, public-roster or notification changes."
+      ],
+      "tests": [
+        "Functional coverage denies users without CMS_GAMING_MANAGE and confirms an authorized guild member directory still renders.",
+        "Create more than two pages of guild members and prove later pages are reachable, order remains stable without duplicates/gaps, and search/status filters survive navigation.",
+        "Verify case-insensitive character-name search, active/inactive filtering, empty results, valid out-of-range clamping, malformed scalar/array/UTF-8/control/overlong inputs and private/no-store/noindex headers.",
+        "Verify a member from another guild never appears and every listed member retains edit/delete links and its route-specific delete CSRF token.",
+        "Run the targeted functional test, PHPStan level 8 and complete Worker CI on the exact final HEAD, including PostgreSQL 18 migration-chain checks."
+      ],
+      "completion_report": [
+        "Exact sanitized main base SHA and final Worker HEAD SHA.",
+        "All changed paths and Worker PR.",
+        "Guild-scoped member search/status filters, stable pagination, authorization, validation, response headers and preserved edit/delete/CSRF workflows.",
+        "Exact-head PHPUnit, PHPStan and full Worker CI results.",
+        "Remaining Trusted integration work to keep member route scoping and delete-CSRF protections intact."
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "preserve-CMS_GAMING_MANAGE-on-guild-member-administration",
+        "preserve-guild-scoping-and-the-existing-member-delete-CSRF-boundary",
+        "directory-read-only; no-member-write-or-public-roster-mutations",
+        "administrative-member-directory-responses-remain-private-no-store-and-noindex",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "proposal_kind": "worker_only",
+      "proposal_dependency_evidence": [],
+      "collision_check": {
+        "compared_against": "Fresh continuous/work-pool-v4 blob 91c423a4896d4a64d6338216ad25d4572d664b92; all current active and claim-locked allowlists; exact sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d.",
+        "result": "No current active or claim-locked claim owns any proposed path. WCP-448 is limited to guild collaboration; WCP-411 application and WCP-401 top-level Game Hub paths are separate. Current active WCP-383, WCP-401 and WCP-439 paths are disjoint; WCP-449 is no longer active. All five published unclaimed FCPs remain dependency-blocked.",
+        "paths": [
+          "src/Controller/AdminGuildMemberController.php",
+          "src/Repository/GuildMemberRepository.php",
+          "templates/admin/gaming/member/index.html.twig",
+          "tests/Controller/AdminGuildMemberDirectoryPaginationTest.php"
+        ]
+      },
+      "claim_state": "active",
+      "claimed_on": "2026-09-27T02:00:07.022Z",
+      "active_base_branch": "main",
+      "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "resume_branch": "feature/wcp-450-guild-member-directory-pagination-g1",
+      "last_checkpoint_at": "2026-09-27T02:00:07.022Z",
+      "last_verified_push_at": "2026-09-27T02:00:07.022Z",
+      "checkpoint_paths": [],
+      "branch_heads": {
+        "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+        "feature_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d"
+      },
+      "next_action": "Create both reserved branches from exact sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d; then implement the guild-scoped read-only directory query, filters, navigation and functional coverage."
     }
   ],
   "recovery_queue": [],
