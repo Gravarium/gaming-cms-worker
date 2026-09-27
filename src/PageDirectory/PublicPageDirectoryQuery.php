@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\\PageDirectory;
+namespace App\PageDirectory;
 
-use App\\Entity\\ContentEntry;
-use Doctrine\\ORM\\EntityManagerInterface;
-use Doctrine\\ORM\\QueryBuilder;
+use App\Entity\ContentEntry;
+use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\QueryBuilder;
 
 final readonly class PublicPageDirectoryQuery
 {
@@ -17,7 +17,7 @@ final readonly class PublicPageDirectoryQuery
     {
     }
 
-    public function countPublicPages(\\DateTimeImmutable $now): int
+    public function countPublicPages(\DateTimeImmutable $now): int
     {
         return (int) $this->publicPages($now)
             ->select('COUNT(entry.id)')
@@ -26,10 +26,10 @@ final readonly class PublicPageDirectoryQuery
     }
 
     /** @return list<ContentEntry> */
-    public function findPage(int $page, \\DateTimeImmutable $now): array
+    public function findPage(int $page, \DateTimeImmutable $now): array
     {
         if ($page < 1 || $page > self::MAX_PAGES) {
-            throw new \\InvalidArgumentException('Page is outside the public page directory range.');
+            throw new \InvalidArgumentException('Page is outside the public page directory range.');
         }
 
         /** @var list<ContentEntry> $entries */
@@ -44,7 +44,7 @@ final readonly class PublicPageDirectoryQuery
         return $entries;
     }
 
-    private function publicPages(\\DateTimeImmutable $now): QueryBuilder
+    private function publicPages(\DateTimeImmutable $now): QueryBuilder
     {
         return $this->entityManager->createQueryBuilder()
             ->select('entry')
