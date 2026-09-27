@@ -108,9 +108,10 @@ final class PublicGuildEventTest extends WebTestCase
     {
         $client = static::createClient();
         [$game, $guild] = $this->guildFixtures($client);
+        $hiddenTitle = 'Hidden while gaming is disabled '.bin2hex(random_bytes(5));
         $event = (new GuildEvent())
             ->setGuild($guild)
-            ->setTitle('Hidden while gaming is disabled')
+            ->setTitle($hiddenTitle)
             ->setDescription('Must not be rendered.')
             ->setStartsAt(new \DateTimeImmutable('+2 days'))
             ->setStatus(GuildEvent::STATUS_PLANNED);
@@ -136,7 +137,7 @@ final class PublicGuildEventTest extends WebTestCase
             $client->request('GET', '/gaming/guild/'.$guild->getSlug().'/events');
 
             self::assertResponseStatusCodeSame(404);
-            self::assertStringNotContainsString('Hidden while gaming is disabled', (string) $client->getResponse()->getContent());
+            self::assertStringNotContainsString($hiddenTitle, (string) $client->getResponse()->getContent());
         } finally {
             $this->restoreGamingModule($client, $previousEnabled);
             $this->removeFixtures($client, [$eventId], [$guildId], [$gameId]);
