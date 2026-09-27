@@ -153,8 +153,13 @@ final class AdminAccessRoleDuplicationTest extends WebTestCase
 
         self::assertResponseStatusCodeSame(422);
         self::assertSelectorTextContains('body', 'nur Berechtigungen geben');
-        self::assertNull($this->em($client)->getRepository(AccessRole::class)->findOneBy(['key' => $copyKey]));
-        self::assertSame([CmsPermission::CONTENT], $source->getPermissions());
+        $entityManager = $this->em($client);
+        $entityManager->clear();
+        self::assertNull($entityManager->getRepository(AccessRole::class)->findOneBy(['key' => $copyKey]));
+        $storedSource = $entityManager->find(AccessRole::class, $sourceId);
+        self::assertInstanceOf(AccessRole::class, $storedSource);
+        self::assertSame($sourceKey, $storedSource->getKey());
+        self::assertSame([CmsPermission::CONTENT], $storedSource->getPermissions());
     }
 
     public function testMissingAndInvalidCsrfCannotSaveRoleCopy(): void
@@ -190,7 +195,10 @@ final class AdminAccessRoleDuplicationTest extends WebTestCase
         self::assertInstanceOf(AccessRole::class, $storedSource);
         self::assertSame($sourceKey, $storedSource->getKey());
         self::assertSame([CmsPermission::CONTENT], $storedSource->getPermissions());
+        $storedActor = $entityManager->find(User::class, $actor->getId());
+        self::assertInstanceOf(User::class, $storedActor);
         self::assertSame([], $entityManager->getRepository(AuditLog::class)->findBy([
+            'actor' => $storedActor,
             'action' => 'access_role.created',
         ]));
     }
