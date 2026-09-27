@@ -10,7 +10,7 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T16:37:44.527Z",
+  "published_at": "2026-09-27T16:42:02.285Z",
   "summary": {
     "total_remaining_worker_tasks": 167,
     "completed_worker_prs_awaiting_trusted_review": 291,
@@ -43328,22 +43328,29 @@
       "claim_state": "active",
       "active_base_branch": "main",
       "active_base_sha": "540b4c64aeb2edc35067eb15eb75fe371aaa29bc",
-      "active_head": "3eedec46ecb4b4f29d33a50858b368f129f047f4",
+      "active_head": "be4eeaf0bbf945e18dc6e51a29555cde5409f000",
       "resume_branch": "feature/wcp-556-forum-workflow-g1",
       "branch_heads": {
         "claim_branch": "540b4c64aeb2edc35067eb15eb75fe371aaa29bc",
-        "feature_branch": "3eedec46ecb4b4f29d33a50858b368f129f047f4"
+        "feature_branch": "be4eeaf0bbf945e18dc6e51a29555cde5409f000"
       },
-      "last_checkpoint_at": "2026-09-27T16:37:44.527Z",
-      "last_verified_push_at": "2026-09-27T16:37:44.527Z",
+      "last_checkpoint_at": "2026-09-27T16:42:02.285Z",
+      "last_verified_push_at": "2026-09-27T16:42:02.285Z",
       "checkpoint_paths": [
         "src/ForumWorkflow/ForumWorkflowGateway.php",
         "src/Controller/PublicForumWorkflowController.php",
         "src/Controller/AdminForumWorkflowController.php",
-        "config/packages/forum_workflow.yaml"
+        "src/ForumWorkflow/Templates/public/rooms.html.twig",
+        "src/ForumWorkflow/Templates/public/threads.html.twig",
+        "src/ForumWorkflow/Templates/public/thread.html.twig",
+        "src/ForumWorkflow/Templates/admin/rooms.html.twig",
+        "src/ForumWorkflow/Templates/admin/room_form.html.twig",
+        "config/packages/forum_workflow.yaml",
+        "tests/ForumWorkflow/ForumWorkflowControllerTest.php",
+        "tests/ForumWorkflow/ForumWorkflowGatewayTest.php"
       ],
       "ci_attempts": [],
-      "next_action": "Public and admin controllers plus the feature-local Twig path are checkpointed. Add views and persistence/access integration tests next, then run exact-head Worker CI.",
+      "next_action": "Public and admin Forum workflows and persistence tests are checkpointed. Create the exact-base Worker validation branch, open a draft PR, run full exact-head CI, then fix any failures.",
       "worker_pr_state": "not_created",
       "worker_pr_changed_paths": [],
       "worker_pr_base_branch": "worker/account-wcp-556-validation",
@@ -43356,7 +43363,7 @@
       "worker_pr_base_sha": null,
       "ci_run_id": null,
       "last_ci_run_id": null,
-      "last_observed_head": "3eedec46ecb4b4f29d33a50858b368f129f047f4"
+      "last_observed_head": "be4eeaf0bbf945e18dc6e51a29555cde5409f000"
     }
   ],
   "recovery_queue": [],
