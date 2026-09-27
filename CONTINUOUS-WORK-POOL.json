@@ -17,7 +17,7 @@
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-545 checkpoint is pushed at 8aa4f42888215613ba434c65000ea82fe1db3707; create the draft PR against main to trigger full Worker CI, then fix failures on the same branch.",
+    "next_required_action": "WCP-545 draft PR #338 is open on exact HEAD 8aa4f42888215613ba434c65000ea82fe1db3707; verify CI run #842 / 36326938647 and repair failures on the same branch.",
     "composition_preparable": 0,
     "immediately_actionable": 28,
     "must_continue": true
@@ -40601,27 +40601,38 @@
         "tests/Controller/PublicVideoLibraryControllerTest.php",
         "tests/Widget/VideoLibraryWidgetProviderTest.php"
       ],
-      "next_action": "Create or verify the WCP-545 draft Worker PR against main to start exact-head CI; inspect and repair any PHPStan, PHPUnit, Twig, container or PostgreSQL failures without editing locked paths.",
-      "worker_pr_state": "draft_pending_ci",
+      "next_action": "Inspect exact-head Worker CI run #842 / 36326938647 for 8aa4f42888215613ba434c65000ea82fe1db3707; fix any PHPStan, PHPUnit, Twig or container failures only within the eight reserved paths, then push and rerun complete CI.",
+      "worker_pr_state": "open_draft",
       "last_verified_push_at": "2026-09-27T14:42:54.656Z",
-      "ci_result": "not_started",
+      "ci_result": "in_progress",
       "last_ci_result": "not_run",
-      "ci_attempts": [],
-      "worker_pr": null,
-      "worker_pr_url": null,
+      "ci_attempts": [
+        {
+          "run_id": 36326938647,
+          "run_number": 842,
+          "head": "8aa4f42888215613ba434c65000ea82fe1db3707",
+          "base": "b510875e7b0741b9b19f09429d2204a95df51198",
+          "result": "in_progress",
+          "conclusion": null
+        }
+      ],
+      "worker_pr": 338,
+      "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/338",
       "worker_pr_changed_paths": [
+        "config/packages/video_library.yaml",
         "src/Controller/PublicVideoLibraryController.php",
-        "src/Video/Library/VideoLibraryBrowser.php",
-        "src/Widget/VideoLibraryWidgetProvider.php",
         "src/Video/Library/Templates/index.html.twig",
         "src/Video/Library/Templates/widget/video_library.html.twig",
-        "config/packages/video_library.yaml",
+        "src/Video/Library/VideoLibraryBrowser.php",
+        "src/Widget/VideoLibraryWidgetProvider.php",
         "tests/Controller/PublicVideoLibraryControllerTest.php",
         "tests/Widget/VideoLibraryWidgetProviderTest.php"
       ],
       "worker_pr_base_branch": "main",
-      "pr_state": "not_created",
-      "draft_pr": true
+      "pr_state": "open",
+      "draft_pr": true,
+      "ci_run_id": 36326938647,
+      "last_ci_run_id": 36326938647
     },
     {
       "priority": 546,
