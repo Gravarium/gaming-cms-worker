@@ -1,0 +1,34 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ creating ? 'Download-Paket anlegen' : 'Download-Paket bearbeiten' }}{% endblock %}
+
+{% block body %}
+<main class="content-shell">
+    <p><a href="{{ path('app_admin_download_catalogue_index') }}">Zur Paketliste</a></p>
+    <h1>{{ creating ? 'Download-Paket anlegen' : 'Paket-Einstellungen bearbeiten' }}</h1>
+
+    {% if not creating and package is not null %}
+        <dl>
+            <dt>Paketname</dt>
+            <dd>{{ package.title }}</dd>
+            <dt>URL-Slug</dt>
+            <dd><code>{{ package.slug }}</code></dd>
+            <dt>Typ</dt>
+            <dd>{{ package.type }}</dd>
+        </dl>
+        <p>Name, Slug und Typ bleiben nach dem Anlegen unverändert. Du kannst die Sichtbarkeit und Aktivierung hier ändern.</p>
+    {% endif %}
+
+    {{ form_start(form) }}
+        {{ form_errors(form) }}
+        {% if creating %}
+            {{ form_row(form.title) }}
+            {{ form_row(form.slug) }}
+            {{ form_row(form.type) }}
+        {% endif %}
+        {{ form_row(form.visibility) }}
+        {{ form_row(form.enabled) }}
+        {{ form_row(form.save) }}
+    {{ form_end(form) }}
+</main>
+{% endblock %}
