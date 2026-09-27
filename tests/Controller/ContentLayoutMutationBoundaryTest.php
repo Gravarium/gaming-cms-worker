@@ -83,7 +83,7 @@ final class ContentLayoutMutationBoundaryTest extends WebTestCase
                 'HTTP_SEC_FETCH_SITE' => 'cross-site',
             ]);
 
-            self::assertResponseStatusCodeSame(200);
+            self::assertResponseStatusCodeSame(422);
             self::assertFalse($client->getResponse()->isRedirection());
 
             $entityManager->clear();
