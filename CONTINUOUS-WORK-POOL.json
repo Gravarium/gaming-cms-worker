@@ -42644,17 +42644,25 @@
       "claim_state": "active",
       "active_base_branch": "main",
       "active_base_sha": "6988e871cbda8c27801ee0bcc02e8c5c2b0cd909",
-      "active_head": "6988e871cbda8c27801ee0bcc02e8c5c2b0cd909",
+      "active_head": "002209d86980b9389bd5b40a18e72bdaa0d44857",
       "resume_branch": "feature/wcp-553-public-video-sitemap-g1",
       "branch_heads": {
         "claim_branch": "6988e871cbda8c27801ee0bcc02e8c5c2b0cd909",
-        "feature_branch": "6988e871cbda8c27801ee0bcc02e8c5c2b0cd909"
+        "feature_branch": "002209d86980b9389bd5b40a18e72bdaa0d44857"
       },
-      "last_checkpoint_at": "2026-09-27T15:59:21.116Z",
-      "last_verified_push_at": "2026-09-27T15:59:21.116Z",
-      "checkpoint_paths": [],
+      "last_checkpoint_at": "2026-09-27T16:05:17.814Z",
+      "last_verified_push_at": "2026-09-27T16:05:17.814Z",
+      "checkpoint_paths": [
+        "src/Controller/PublicVideoSitemapController.php",
+        "src/VideoSitemap/PublicVideoSitemapQuery.php",
+        "src/VideoSitemap/Templates/video_sitemap.xml.twig",
+        "src/VideoSitemap/Templates/sitemap_index.xml.twig",
+        "config/packages/video_sitemap.yaml",
+        "tests/Controller/PublicVideoSitemapControllerTest.php"
+      ],
       "ci_attempts": [],
-      "next_action": "Implement the feature-local video sitemap query, controller routes, templates and module-aware index on the exact main base; test XML, visibility, module state, method limits and URL ceiling."
+      "next_action": "Open a draft Worker PR against main and monitor the full exact-head CI; repair only the six WCP-553 allowed paths.",
+      "last_observed_head": "002209d86980b9389bd5b40a18e72bdaa0d44857"
     },
     {
       "priority": 554,
