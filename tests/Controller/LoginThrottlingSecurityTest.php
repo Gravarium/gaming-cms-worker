@@ -9,6 +9,9 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\Security\Core\Exception\AuthenticationException;
+use Symfony\Component\Security\Core\Exception\TooManyLoginAttemptsAuthenticationException;
+use Symfony\Component\Security\Http\SecurityRequestAttributes;
 
 final class LoginThrottlingSecurityTest extends WebTestCase
 {
@@ -23,7 +26,7 @@ final class LoginThrottlingSecurityTest extends WebTestCase
         self::assertNotNull($userId);
 
         try {
-            $blocked = false;
+            $throttled = false;
             for ($attempt = 0; $attempt < 6; ++$attempt) {
                 $crawler = $client->request('GET', '/login');
                 self::assertResponseIsSuccessful();
@@ -33,19 +36,24 @@ final class LoginThrottlingSecurityTest extends WebTestCase
                     '_password' => 'Wrong-Password-42',
                 ]);
                 $client->submit($form);
+                self::assertResponseRedirects('/login');
 
-                if ($client->getResponse()->getStatusCode() === 429) {
-                    $blocked = true;
+                $session = $client->getSession();
+                self::assertNotNull($session);
+                $authenticationError = $session->get(SecurityRequestAttributes::AUTHENTICATION_ERROR);
+
+                if ($authenticationError instanceof TooManyLoginAttemptsAuthenticationException) {
+                    $throttled = true;
                     break;
                 }
 
-                self::assertResponseRedirects('/login');
+                self::assertInstanceOf(AuthenticationException::class, $authenticationError);
                 $client->followRedirect();
                 self::assertResponseIsSuccessful();
                 self::assertSelectorTextContains('.alert', 'E-Mail-Adresse oder Passwort ist falsch.');
             }
 
-            self::assertTrue($blocked, 'Repeated invalid credentials should reach the configured login throttle.');
+            self::assertTrue($throttled, 'The configured login throttle should reject attempts beyond its threshold.');
 
             $client->request('GET', '/account');
             self::assertResponseRedirects('/login');
