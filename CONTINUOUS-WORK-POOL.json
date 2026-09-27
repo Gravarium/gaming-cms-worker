@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T13:04:34.050Z",
+  "published_at": "2026-09-27T13:07:58.753Z",
   "summary": {
     "total_remaining_worker_tasks": 165,
-    "completed_worker_prs_awaiting_trusted_review": 288,
+    "completed_worker_prs_awaiting_trusted_review": 289,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "Run #811 (ID 36321112837) is queued for exact-head 2ba2a5e936b4d50b7d485b0e1bd97d221d9252e8; inspect all checks and repair any concrete failures.",
+    "next_required_action": "Worker PR #326 is complete on exact green HEAD 2ba2a5e936b4d50b7d485b0e1bd97d221d9252e8; keep this claim locked until Trusted resolution, and continue to the next independent package.",
     "composition_preparable": 0,
     "immediately_actionable": 26,
     "must_continue": true
@@ -38433,7 +38433,7 @@
       "package_id": "WCP-534",
       "title": "Administer controlled download packages",
       "risk": "medium",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [
         "FCP-063"
       ],
@@ -38510,7 +38510,36 @@
         "no-private-runtime-or-sensitive-data",
         "no-direct-trusted-integration-or-deployment"
       ],
-      "completion_report_actual": null,
+      "completion_report_actual": {
+        "base_sha": "a12735aa9b5aed93cfaca4455a6e58b86446a0d7",
+        "final_head": "2ba2a5e936b4d50b7d485b0e1bd97d221d9252e8",
+        "worker_pr": "https://github.com/Gravarium/gaming-cms-worker/pull/326",
+        "worker_pr_base_branch": "main",
+        "changed_paths": [
+          "src/Controller/AdminDownloadCatalogueController.php",
+          "src/Form/DownloadCatalogue/DownloadPackageInput.php",
+          "src/Form/DownloadCatalogue/DownloadPackageType.php",
+          "templates/admin/download_catalogue/index.html.twig",
+          "templates/admin/download_catalogue/form.html.twig",
+          "tests/Controller/AdminDownloadCatalogueControllerTest.php"
+        ],
+        "exact_head_ci": {
+          "run_number": 811,
+          "run_id": 36321112837,
+          "result": "success",
+          "phpunit_tests": 543,
+          "assertions": 2264,
+          "phpstan": "passed",
+          "postgresql_18_migrations": "passed",
+          "migrations_executed": 54,
+          "sql_queries": 750
+        },
+        "usable_behavior": "Storage managers can list up to 200 controlled-download packages, create packages with validated title, unique URL-safe slug, supported type, visibility and enabled state, edit visibility/enabled state, and follow the existing upload-version route. The module returns 404 when disabled; the class requires CMS_STORAGE_MANAGE; Symfony form CSRF and clear validation errors are covered.",
+        "remaining_limitations": [
+          "Package title, slug and type remain immutable after creation because the existing entity exposes no setters.",
+          "The catalogue currently displays the first 200 packages."
+        ]
+      },
       "proposal_base_branch": "feature/fcp-063-pool-g1",
       "proposal_base_sha": "a12735aa9b5aed93cfaca4455a6e58b86446a0d7",
       "proposal_kind": "worker_only",
@@ -38539,7 +38568,7 @@
       },
       "published_at": "2026-09-27T12:44:34.437Z",
       "claimed_on": "2026-09-27T12:44:34.437Z",
-      "claim_state": "active",
+      "claim_state": "locked_until_trusted_resolution",
       "active_base_branch": "feature/fcp-063-pool-g1",
       "active_base_sha": "a12735aa9b5aed93cfaca4455a6e58b86446a0d7",
       "active_head": "2ba2a5e936b4d50b7d485b0e1bd97d221d9252e8",
@@ -38549,7 +38578,7 @@
         "feature_branch": "2ba2a5e936b4d50b7d485b0e1bd97d221d9252e8"
       },
       "last_observed_head": "2ba2a5e936b4d50b7d485b0e1bd97d221d9252e8",
-      "last_checkpoint_at": "2026-09-27T13:04:34.050Z",
+      "last_checkpoint_at": "2026-09-27T13:07:58.753Z",
       "checkpoint_paths": [
         "src/Controller/AdminDownloadCatalogueController.php",
         "src/Form/DownloadCatalogue/DownloadPackageInput.php",
@@ -38558,7 +38587,7 @@
         "templates/admin/download_catalogue/form.html.twig",
         "tests/Controller/AdminDownloadCatalogueControllerTest.php"
       ],
-      "next_action": "Run #811 (ID 36321112837) is queued for exact-head 2ba2a5e936b4d50b7d485b0e1bd97d221d9252e8; inspect all checks and repair any concrete failures.",
+      "next_action": "Worker PR #326 is complete on exact green HEAD 2ba2a5e936b4d50b7d485b0e1bd97d221d9252e8; keep this claim locked until Trusted resolution, and continue to the next independent package.",
       "ci_attempts": [
         {
           "run_id": 36320672201,
@@ -38591,15 +38620,20 @@
           "run_number": 811,
           "head": "2ba2a5e936b4d50b7d485b0e1bd97d221d9252e8",
           "base": "b510875e7b0741b9b19f09429d2204a95df51198",
-          "result": "queued"
+          "result": "success",
+          "conclusion": "success",
+          "phpunit_tests": 543,
+          "assertions": 2264,
+          "phpstan": "passed",
+          "postgresql_18_migrations": "passed"
         }
       ],
-      "worker_pr_state": "open",
+      "worker_pr_state": "ready_for_review",
       "last_verified_push_at": "2026-09-27T13:04:34.050Z",
       "worker_pr": 326,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/326",
       "pr_state": "open",
-      "draft_pr": true,
+      "draft_pr": false,
       "worker_pr_base_branch": "main",
       "worker_pr_changed_paths": [
         "src/Controller/AdminDownloadCatalogueController.php",
@@ -38611,8 +38645,10 @@
       ],
       "ci_run_id": 36321112837,
       "last_ci_run_id": 36321112837,
-      "ci_result": "queued",
-      "last_ci_result": "queued"
+      "ci_result": "success",
+      "last_ci_result": "success",
+      "final_head": "2ba2a5e936b4d50b7d485b0e1bd97d221d9252e8",
+      "completed_at": "2026-09-27T13:07:58.753Z"
     },
     {
       "priority": 535,
