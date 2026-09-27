@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Video;
 
 use App\Entity\Video;
+use App\Repository\VideoCategoryRepository;
 use App\Repository\VideoRepository;
 use Doctrine\ORM\QueryBuilder;
 use Symfony\Component\HttpFoundation\Request;
@@ -15,8 +16,10 @@ final class AdminVideoBrowser
 
     private const STATUSES = ['all', 'published', 'scheduled', 'draft', 'disabled'];
 
-    public function __construct(private readonly VideoRepository $videos)
-    {
+    public function __construct(
+        private readonly VideoRepository $videos,
+        private readonly VideoCategoryRepository $categories,
+    ) {
     }
 
     /**
@@ -123,13 +126,14 @@ final class AdminVideoBrowser
     private function filters(Request $request): array
     {
         $query = $request->query->all();
-        $search = trim($this->stringParameter($query, 'search', ''));
+        $search = $this->stringParameter($query, 'search', '');
         if (!mb_check_encoding($search, 'UTF-8')
             || preg_match('/[\x00-\x1F\x7F]/', $search) !== 0
             || mb_strlen($search, 'UTF-8') > 100
         ) {
             throw new \InvalidArgumentException('Invalid video title search.');
         }
+        $search = trim($search);
 
         $status = $this->stringParameter($query, 'status', 'all');
         if (!in_array($status, self::STATUSES, true)) {
@@ -144,6 +148,9 @@ final class AdminVideoBrowser
             ]);
             if ($validatedCategory === false || (string) $validatedCategory !== $categoryValue) {
                 throw new \InvalidArgumentException('Invalid video category filter.');
+            }
+            if ($this->categories->find($validatedCategory) === null) {
+                throw new \InvalidArgumentException('Unknown video category filter.');
             }
             $category = $validatedCategory;
         }
