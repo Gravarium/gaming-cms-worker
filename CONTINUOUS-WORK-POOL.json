@@ -17,7 +17,7 @@
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-461 is complete on green exact-head Worker PR #255; all five unclaimed FCP assignments remain dependency-blocked. Continue with the next independent Worker-only proposal while preserving active WCP-460 and all other claims.",
+    "next_required_action": "WCP-462 is exclusively claimed from sanitized main for admin-dashboard access regressions; continue on feature/wcp-462-admin-dashboard-access-g1 while preserving every other active and claim-locked package.",
     "composition_preparable": 0,
     "immediately_actionable": 3,
     "must_continue": true
@@ -27204,6 +27204,97 @@
         "Awaiting Trusted review and Trusted integration CI."
       ],
       "trusted_follow_up": "Preserve CMS_SETTINGS_MANAGE and route-specific CSRF validation before module lifecycle mutations; retain module state/data during removal; run full Trusted CI."
+    },
+    {
+      "priority": 462,
+      "package_id": "WCP-462",
+      "title": "Protect the admin dashboard from inactive and unprivileged accounts",
+      "risk": "medium",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-462-admin-dashboard-access-g1",
+      "suggested_branch": "feature/wcp-462-admin-dashboard-access-g1",
+      "base_branch": "main",
+      "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "objective": "Add test-only functional security regressions for the existing admin dashboard CMS_ACCESS boundary. Verify that an authenticated user with no CMS permission is denied, and that a previously authenticated full administrator loses dashboard access after the account is deactivated during that same browser session. Do not change authorization code or product behavior.",
+      "allowed_paths": [
+        "tests/Controller/AdminDashboardAccessSecurityTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "src/",
+        "templates/",
+        "migrations/",
+        "config/",
+        "public/uploads/"
+      ],
+      "deliverables": [
+        "An active user without CMS permissions receives 403 from the admin dashboard.",
+        "A privileged administrator first accesses the dashboard successfully; after deactivation, the same browser session receives 403.",
+        "Synthetic users are removed so tests leave no persistent account data.",
+        "Keep the change test-only in the single allowed path."
+      ],
+      "tests": [
+        "Focused AdminDashboardAccessSecurityTest functional coverage.",
+        "PHPStan level 8 and complete Worker CI on the exact final HEAD.",
+        "PostgreSQL 18 complete migration-chain validation."
+      ],
+      "completion_report": [
+        "Exact sanitized main base SHA and final Worker HEAD SHA.",
+        "Complete changed-path list and Worker PR.",
+        "No-permission and same-session account-deactivation dashboard denial evidence.",
+        "Exact-head PHPUnit, PHPStan and full Worker CI results.",
+        "Remaining Trusted integration work."
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "preserve-CMS_ACCESS-and-inactive-account-denial",
+        "do-not-weaken-or-bypass-authorization",
+        "restore-all-synthetic-test-users",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment",
+        "no-private-runtime-or-sensitive-data"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "proposal_kind": "worker_only",
+      "proposal_dependency_evidence": [],
+      "collision_check": {
+        "compared_against": "Fresh continuous/work-pool-v4 blob ee6606f2f3e1b2167a8ea2c54bf14425711a6d70, all active and claim-locked path scopes including completed WCP-460, exact sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d.",
+        "result": "No active or claim-locked task owns or encloses tests/Controller/AdminDashboardAccessSecurityTest.php; the file is absent from exact sanitized main. Existing CriticalSecurityJourneyTest.php and WCP-460's dashboard template are untouched. WCP-462 introduces no runtime, template, DI, route or migration conflict.",
+        "paths": [
+          "tests/Controller/AdminDashboardAccessSecurityTest.php"
+        ]
+      },
+      "published_at": "2026-09-27T03:52:28.158Z",
+      "claimed_on": "2026-09-27T03:52:28.158Z",
+      "claim_state": "active",
+      "active_base_branch": "main",
+      "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "resume_branch": "feature/wcp-462-admin-dashboard-access-g1",
+      "last_checkpoint_at": "2026-09-27T03:52:28.158Z",
+      "checkpoint_paths": [],
+      "branch_heads": {
+        "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+        "feature_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d"
+      },
+      "next_action": "Implement only the allowed dashboard access security test, checkpoint it to this exact feature branch, open a Worker PR against main and run complete exact-head CI."
     }
   ],
   "recovery_queue": [],
