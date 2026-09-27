@@ -10,16 +10,16 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T00:52:11.194Z",
+  "published_at": "2026-09-27T00:56:18.653Z",
   "summary": {
-    "total_remaining_worker_tasks": 138,
+    "total_remaining_worker_tasks": 139,
     "completed_worker_prs_awaiting_trusted_review": 211,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "Re-evaluate the five unclaimed FCP tasks against current Trusted integration evidence; they remain blocked by missing prerequisites. With no dependency-safe completion task available, select and claim a fresh bounded functional module package after checking current active claims, PRs, branches, CI, and path collisions.",
+    "next_required_action": "WCP-443 is reserved on exact sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d for test-only video-deletion authorization, CSRF and shared-media retention coverage.",
     "composition_preparable": 0,
-    "immediately_actionable": 2,
+    "immediately_actionable": 3,
     "must_continue": true
   },
   "rules": {
@@ -24454,6 +24454,92 @@
         "Awaiting Trusted review and Trusted integration CI."
       ],
       "trusted_follow_up": "Preserve CMS_STORAGE_MANAGE authorization, the bulk-media CSRF token, the in-use media deletion guard and selected-record scope."
+    },
+    {
+      "priority": 223,
+      "package_id": "WCP-443",
+      "title": "Verify admin video deletion authorization and media retention",
+      "risk": "medium",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-443-video-deletion-security-g1",
+      "suggested_branch": "feature/wcp-443-video-deletion-security-g1",
+      "base_branch": "main",
+      "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "objective": "Add functional regressions for the existing admin video deletion route: enforce CMS_VIDEO_MANAGE even with valid CSRF, reject missing and invalid per-video CSRF tokens without mutation, and preserve shared media plus unselected sibling videos when one video is deleted. Change tests only.",
+      "allowed_paths": [
+        "tests/Controller/AdminVideoDeletionSecurityTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "src/",
+        "templates/",
+        "migrations/",
+        "config/"
+      ],
+      "deliverables": [
+        "An authenticated CMS_CONTENT_MANAGE-only user cannot delete a video, even when the request carries a valid token for that video.",
+        "Missing and invalid delete-video-{id} CSRF tokens produce 403 and leave the video and media asset unchanged.",
+        "A genuine token rendered for the selected video deletes only that video; a sibling video and the centrally managed MediaAsset remain.",
+        "Synthetic user, video, and media fixtures are cleaned up."
+      ],
+      "tests": [
+        "Targeted AdminVideoDeletionSecurityTest functional coverage.",
+        "PHPStan level 8 and complete Worker CI on the exact final HEAD.",
+        "PostgreSQL 18 complete migration-chain checks."
+      ],
+      "completion_report": [
+        "Exact sanitized main base SHA and final Worker HEAD SHA.",
+        "Complete changed-path list and Worker PR.",
+        "Exact-head PHPUnit, PHPStan and full Worker CI results.",
+        "Any remaining Trusted integration work."
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "preserve-CMS_VIDEO_MANAGE-and-per-video-delete-CSRF",
+        "video deletion must not delete shared central media assets or unrelated videos",
+        "test-only proposal; no production behavior, entity, storage or schema changes",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "proposal_kind": "worker_only",
+      "proposal_dependency_evidence": [],
+      "collision_check": {
+        "compared_against": "Fresh continuous/work-pool-v4 blob 8564d5457e2a614dac8e3aea68f5075ec9176b03, all active and claim-locked allowlists, and worker/main @ f1a246c64527ef3ad51f7490773d9bbf9d42be5d.",
+        "result": "No active or claim-locked task owns or overlaps tests/Controller/AdminVideoDeletionSecurityTest.php. The path is absent from the exact worker/main baseline. Admin video access coverage currently checks anonymous login and public library access only; source search for delete-video CSRF found the controller and template but no deletion regression test. WCP-442 is limited to media-library bulk deletion in a different test file and does not touch video administration.",
+        "paths": [
+          "tests/Controller/AdminVideoDeletionSecurityTest.php"
+        ]
+      },
+      "claimed_on": "2026-09-27T00:56:18.653Z",
+      "claim_state": "active",
+      "active_base_branch": "main",
+      "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "resume_branch": "feature/wcp-443-video-deletion-security-g1",
+      "last_checkpoint_at": "2026-09-27T00:56:18.653Z",
+      "checkpoint_paths": [],
+      "branch_heads": {
+        "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+        "feature_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d"
+      },
+      "next_action": "Create claim/wcp-443-video-deletion-security-g1 and feature/wcp-443-video-deletion-security-g1 from exact sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d; add video deletion authorization, CSRF and shared-media retention tests only in tests/Controller/AdminVideoDeletionSecurityTest.php, then open a draft Worker PR for exact-head CI."
     }
   ],
   "recovery_queue": [],
