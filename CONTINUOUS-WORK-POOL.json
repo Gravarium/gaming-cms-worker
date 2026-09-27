@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T08:32:16.566Z",
+  "published_at": "2026-09-27T08:43:14.636Z",
   "summary": {
-    "total_remaining_worker_tasks": 141,
+    "total_remaining_worker_tasks": 142,
     "completed_worker_prs_awaiting_trusted_review": 253,
     "recovery_tasks": 0,
-    "unclaimed": 5,
+    "unclaimed": 4,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-486 is complete on exact green HEAD a1543dea32c1164ca0ba5844d5322459dfad9eb9 (PR #279, CI 36306353946); the claim remains locked. Re-evaluate current unclaimed FCPs against Trusted integration and exact green Worker predecessor heads; if none is dependency-safe, publish and claim the next bounded independent worker-only proposal. Do not change WCP-485's foreign active claim.",
+    "next_required_action": "WCP-487 is actively claimed from exact sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d; implement and run full exact-head Worker CI. The other unclaimed FCPs remain blocked by missing or unverified predecessors. Keep all foreign claims untouched.",
     "composition_preparable": 0,
     "immediately_actionable": 4,
     "must_continue": true
@@ -31343,6 +31343,99 @@
           "result": "success"
         }
       ]
+    },
+    {
+      "priority": 487,
+      "package_id": "WCP-487",
+      "title": "Verify the least-privilege gaming administration workflow",
+      "risk": "medium",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-487-gaming-admin-permission-g1",
+      "suggested_branch": "feature/wcp-487-gaming-admin-permission-g1",
+      "base_branch": "main",
+      "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "objective": "Add test-only functional coverage proving that a non-administrator granted CMS_GAMING_MANAGE can use the AdminGamingController dashboard and create a synthetic game through its rendered Symfony form. Preserve existing denial coverage for users without gaming permission. Do not change product code or other modules.",
+      "allowed_paths": [
+        "tests/Controller/AdminGamingPermissionWorkflowTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/",
+        "src/",
+        "templates/",
+        "assets/",
+        "public/"
+      ],
+      "deliverables": [
+        "A synthetic user with CMS_GAMING_MANAGE and no ROLE_ADMIN can load GET /admin/gaming.",
+        "The same least-privilege user can submit the rendered game creation form with its generated CSRF token and persist a synthetic game with the expected unique slug.",
+        "The synthetic user and game are removed in finally cleanup even when an assertion fails.",
+        "Only tests/Controller/AdminGamingPermissionWorkflowTest.php changes; existing 403 coverage for a content-only user remains intact."
+      ],
+      "tests": [
+        "Focused PHPUnit functional coverage for gaming dashboard authorization and the create-game workflow.",
+        "PHPStan level 8 and complete Worker CI on the exact final HEAD.",
+        "PostgreSQL 18 complete migration-chain validation."
+      ],
+      "completion_report": [
+        "Exact sanitized main SHA and exact final HEAD.",
+        "Complete changed-file list and Worker PR.",
+        "Proof that a non-admin CMS_GAMING_MANAGE user can view the dashboard and create a game using the rendered CSRF form.",
+        "Exact-head targeted PHPUnit, PHPStan, full Worker CI, and PostgreSQL migration results.",
+        "Unresolved assumptions and Trusted integration follow-up."
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "do-not-weaken-authentication-authorization-CSRF-validation-cleanup-or-CI",
+        "preserve-CMS_GAMING_MANAGE-boundary-and-content-only-denial",
+        "synthetic-fixtures-only-and-cleaned-up",
+        "test-only-scope-no-product-source-or-configuration-changes",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment",
+        "no-private-runtime-or-sensitive-data"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "proposal_kind": "worker_only",
+      "proposal_dependency_evidence": [],
+      "collision_check": {
+        "compared_against": "Fresh continuous/work-pool-v4 at d4a15afed0fea03df54afc4d55e4e7125ef72ec8, every active and claim-locked allowed path, and sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d.",
+        "result": "No active or claim-locked package owns or encloses tests/Controller/AdminGamingPermissionWorkflowTest.php. WCP-401 owns a distinct catalogue controller test under tests/Gaming/Catalogue and the admin gaming index/template paths; it does not own this test file. Existing GamingGuildSecurityTest covers the negative content-only denial, while this new file tests the positive least-privilege dashboard and rendered game-create workflow. No product, template, configuration, migration or shared dependency path is modified.",
+        "paths": [
+          "tests/Controller/AdminGamingPermissionWorkflowTest.php"
+        ]
+      },
+      "published_at": "2026-09-27T08:43:14.636Z",
+      "claimed_on": "2026-09-27T08:43:14.636Z",
+      "claim_state": "active",
+      "active_base_branch": "main",
+      "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "resume_branch": "feature/wcp-487-gaming-admin-permission-g1",
+      "branch_heads": {
+        "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+        "feature_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d"
+      },
+      "last_observed_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "last_checkpoint_at": "2026-09-27T08:43:14.636Z",
+      "checkpoint_paths": [],
+      "next_action": "Implement the positive CMS_GAMING_MANAGE dashboard and rendered game-create workflow in the single allowed test file; then run targeted PHPUnit and exact-head Worker CI."
     }
   ],
   "recovery_queue": [],
