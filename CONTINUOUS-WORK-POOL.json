@@ -43831,6 +43831,161 @@
       "last_ci_run_id": 36334865573,
       "ci_result": "in_progress",
       "last_ci_result": "in_progress"
+    },
+    {
+      "priority": 558,
+      "package_id": "WCP-558",
+      "title": "Create multi-member Social conversations from visible profiles",
+      "risk": "medium",
+      "execution_state": "worker_in_progress",
+      "dependencies": [
+        "FCP-066"
+      ],
+      "dependencies_integrated_at_publication": [
+        "FCP-066"
+      ],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-558-social-group-conversation-creation-g1",
+      "suggested_branch": "feature/wcp-558-social-group-conversation-creation-g1",
+      "base_branch": "main",
+      "base_sha": "75754d818243bd2e5f2f2da1f39b50a4568f7971",
+      "objective": "Complete the existing Social group-chat creation workflow. Replace the single manually entered recipient ID on /social/conversations/new with a multi-member selection of active, unlocked accounts whose display_name profile field is visible to the signed-in user. A direct conversation without a title must have exactly one recipient; a titled group may select multiple recipients, up to 20 total participants including the creator. Keep profile field privacy intact, retain the existing SocialMessagingService permission/privacy/block checks, show clear errors and an explicit no-visible-members state, and respect the Social module gate.",
+      "allowed_paths": [
+        "src/Controller/Social/SocialController.php",
+        "src/Form/Social/SocialConversationType.php",
+        "src/Social/SocialConversationRecipientQuery.php",
+        "templates/social/new.html.twig",
+        "tests/Controller/SocialGroupConversationCreationTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/services.yaml",
+        "src/Entity/Social/",
+        "src/Repository/Social/",
+        "src/Repository/UserRepository.php",
+        "src/Entity/User.php",
+        "src/Entity/Profile/",
+        "src/Repository/Profile/",
+        "src/Profile/ProfileVisibilityPolicy.php",
+        "src/Social/SocialAccessPolicy.php",
+        "src/Social/SocialMessagingService.php",
+        "src/Social/SocialModuleAvailability.php",
+        "templates/social/index.html.twig",
+        "templates/social/conversation.html.twig",
+        "templates/social/privacy.html.twig",
+        "templates/social/relationships.html.twig",
+        "tests/Social/",
+        "src/Controller/AdminSocial/"
+      ],
+      "deliverables": [
+        "Recipient-choice query shows only active, unlocked users whose display_name field is viewable by the current member; it never includes email, bio, avatar, banner, or private names.",
+        "The form clearly distinguishes direct conversations from titled group conversations; direct accepts one recipient, titled groups accept multiple recipients, and the existing maximum of 20 participants (including creator) is enforced.",
+        "Conversation creation uses the existing SocialMessagingService, preserving its recipient privacy, block, activity, rate and group-size checks; errors are visible in the form.",
+        "The empty recipient list has an explicit explanation, and Social module deactivation still hides the route.",
+        "No schema, entity, shared user/profile repository, or shared widget/controller changes."
+      ],
+      "tests": [
+        "Functional tests for visible profile choices, private/missing/inactive/locked profile exclusion, and omission of email/private profile fields.",
+        "Authenticated browser workflow creating a three-member group and confirming participant membership; single-recipient direct flow remains direct.",
+        "Multiple recipients without a group title and selections beyond the 20-participant limit return clear validation errors without persisting conversations.",
+        "Social messaging privacy/block denial is surfaced without creating a conversation; disabled Social module returns not found.",
+        "Exact-head Worker CI runs PHPStan, PHPUnit, Twig/config/container/Doctrine checks and the PostgreSQL 18 migration chain."
+      ],
+      "completion_report": [
+        "Exact proposal base, final Worker HEAD, current PR base and PR state.",
+        "Exact allowed changed paths and behavior of direct/group selection.",
+        "Profile visibility and Social recipient-policy evidence.",
+        "Focused browser tests and exact-head full Worker CI.",
+        "Remaining limitations and Trusted follow-up; do not claim Worker output is Trusted-integrated."
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-Trusted-review-and-exact-head-CI",
+        "preserve-profile-visibility-social-message-privacy-blocking-CSRF-validation-and-rate-limits",
+        "never expose email-or-private-profile-fields-in-recipient-choices",
+        "no-schema-migration-or-entity-change",
+        "no-edit-to-active-or-claim-locked-paths",
+        "no-direct-Trusted-integration-or-deployment"
+      ],
+      "proposal_kind": "worker_only",
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "75754d818243bd2e5f2f2da1f39b50a4568f7971",
+      "proposal_dependency_evidence": [
+        {
+          "id": "FCP-066",
+          "trusted_state": "trusted_integrated",
+          "worker_pr": 36,
+          "worker_pr_state": "closed",
+          "exact_worker_head": "394a7abfed91d3e08e3ea43efda80d2d61f9904d",
+          "exact_head_ci_result": "success",
+          "evidence": "The current work-pool marks FCP-066 trusted_integrated and current Worker main contains its SocialController, SocialMessagingService, Social access/privacy policy, and group-participant entities. This task extends that integrated group-chat flow; it does not modify its entities or schema."
+        }
+      ],
+      "collision_check": {
+        "compared_against": "Fresh continuous/work-pool-v4 @ ab09fb05da5c5acf09684804151c7e9d988b30b7; Worker main @ 75754d818243bd2e5f2f2da1f39b50a4568f7971; active/claim-locked allowed paths; WCP-557's separate active genre-directory claim; WCP-558 branch and PR searches.",
+        "result": "No exact or prefix collision with active or claim-locked paths. FCP-066 is released after Trusted integration; WCP-557 is actively claimed for separate Game Catalogue genre-directory paths and remains untouched. No WCP-558 branches or PRs existed at the immediate pre-claim check.",
+        "paths": [
+          "src/Controller/Social/SocialController.php",
+          "src/Form/Social/SocialConversationType.php",
+          "src/Social/SocialConversationRecipientQuery.php",
+          "templates/social/new.html.twig",
+          "tests/Controller/SocialGroupConversationCreationTest.php"
+        ],
+        "observed_nonblocking_path_hits": [
+          {
+            "id": "FCP-066",
+            "state": "trusted_integrated",
+            "excluded": [
+              "src/Entity/Social/",
+              "src/Repository/Social/",
+              "migrations/"
+            ]
+          },
+          {
+            "id": "WCP-557",
+            "state": "worker_in_progress",
+            "excluded": [
+              "src/Controller/PublicGameGenreDirectoryController.php",
+              "src/GameGenreDirectory/",
+              "src/Widget/PublicGameGenreDirectoryWidgetProvider.php",
+              "tests/Controller/PublicGameGenreDirectoryControllerTest.php"
+            ]
+          }
+        ]
+      },
+      "published_at": "2026-09-27T16:58:01.298Z",
+      "claimed_on": "2026-09-27T16:58:01.298Z",
+      "claim_state": "active",
+      "active_base_branch": "main",
+      "active_base_sha": "75754d818243bd2e5f2f2da1f39b50a4568f7971",
+      "active_head": "75754d818243bd2e5f2f2da1f39b50a4568f7971",
+      "branch_heads": {
+        "claim_branch": "75754d818243bd2e5f2f2da1f39b50a4568f7971",
+        "feature_branch": "75754d818243bd2e5f2f2da1f39b50a4568f7971"
+      },
+      "last_observed_head": "75754d818243bd2e5f2f2da1f39b50a4568f7971",
+      "last_checkpoint_at": "2026-09-27T16:58:01.298Z",
+      "checkpoint_paths": [],
+      "resume_branch": "feature/wcp-558-social-group-conversation-creation-g1",
+      "worker_pr_state": "not_created",
+      "pr_state": "not_created",
+      "draft_pr": true,
+      "ci_result": "not_started",
+      "last_ci_result": "not_started",
+      "ci_attempts": [],
+      "next_action": "Inspect exact Social conversation form, profile visibility policy, and group creation service on this branch; implement the multi-member workflow only in allowed paths and checkpoint before opening a draft PR."
     }
   ],
   "recovery_queue": [],
