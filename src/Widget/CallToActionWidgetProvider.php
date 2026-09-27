@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\\Widget;
+namespace App\Widget;
 
 final readonly class CallToActionWidgetProvider implements WidgetProvider
 {
