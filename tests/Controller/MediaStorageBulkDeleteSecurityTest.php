@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Tests\Controller;
 
 use App\Entity\MediaAsset;
-use App\Entity\MediaFolder;
 use App\Entity\User;
 use App\Entity\Video;
 use App\Security\CmsPermission;
@@ -110,11 +109,14 @@ final class MediaStorageBulkDeleteSecurityTest extends WebTestCase
             self::assertResponseRedirects('/admin/storage');
             $this->assertAssetExists($client, $usedAssetId);
             $this->assertAssetExists($client, $siblingAssetId);
+            $this->em($client)->clear();
+            self::assertInstanceOf(Video::class, $this->em($client)->find(Video::class, $videoId));
         } finally {
             $this->removeFixtures($client, [$usedAssetId, $siblingAssetId], $userId, $videoId);
         }
     }
 
+    /** @param list<string> $permissions */
     private function user(KernelBrowser $client, array $permissions): User
     {
         $user = (new User())
@@ -158,8 +160,7 @@ final class MediaStorageBulkDeleteSecurityTest extends WebTestCase
         $crawler = $client->request('GET', '/admin/storage');
         self::assertResponseIsSuccessful();
 
-        $token = $crawler->filter('#media-bulk-form input[name="_token"]')->attr('value');
-        self::assertIsString($token);
+        $token = (string) $crawler->filter('#media-bulk-form input[name="_token"]')->attr('value');
         self::assertNotSame('', $token);
 
         return $token;
