@@ -1,0 +1,25 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Competitions verwalten{% endblock %}
+
+{% block body %}
+<main class="container">
+    <h1>Competitions verwalten</h1>
+    <a href="{{ path('app_admin_competition_new') }}">Neue Competition</a>
+    {% for competition in competitions %}
+        <article>
+            <h2>{{ competition.name }}</h2>
+            <p>{{ competition.status }} · {{ competition.format }} · {{ competition.mode }}</p>
+            <a href="{{ path('app_admin_competition_edit', {id: competition.id}) }}">Bearbeiten</a>
+            {% if competition.status == 'draft' %}
+                <form method="post" action="{{ path('app_admin_competition_open', {id: competition.id}) }}"><input type="hidden" name="_token" value="{{ csrf_token('competition-open-' ~ competition.id) }}"><button type="submit">Öffnen</button></form>
+            {% elseif competition.status == 'open' %}
+                <form method="post" action="{{ path('app_admin_competition_seed', {id: competition.id}) }}"><input type="hidden" name="_token" value="{{ csrf_token('competition-seed-' ~ competition.id) }}"><button type="submit">Paarungen erzeugen</button></form>
+            {% endif %}
+            {% if competition.status != 'archived' %}<form method="post" action="{{ path('app_admin_competition_archive', {id: competition.id}) }}"><input type="hidden" name="_token" value="{{ csrf_token('competition-archive-' ~ competition.id) }}"><button type="submit">Archivieren</button></form>{% endif %}
+        </article>
+    {% else %}
+        <p>Noch keine Competitions.</p>
+    {% endfor %}
+</main>
+{% endblock %}
