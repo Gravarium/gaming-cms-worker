@@ -17,7 +17,7 @@
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-473 is complete on green exact-head Worker PR #266 and remains claim-locked. WCP-471 and WCP-472 are also complete awaiting Trusted review. Continue autonomously with the next dependency-safe package or a disjoint Worker-only proposal.",
+    "next_required_action": "WCP-474 is another worker's active 2FA recovery-code rotation claim and remains untouched. WCP-475 is claimed from WCP-450's exact green HEAD for disjoint guild-member deletion security coverage; WCP-471 through WCP-473 remain complete and claim-locked.",
     "composition_preparable": 0,
     "immediately_actionable": 4,
     "must_continue": true
@@ -29175,6 +29175,107 @@
       "next_action": "Complete focused positive/negative functional tests, then run exact-head Worker CI and prepare the Worker PR.",
       "last_observed_head": "bbd6169248824caa789d66ee0f7f129ec6b49aea",
       "last_verified_push_at": "2026-09-27T05:57:07.369Z"
+    },
+    {
+      "priority": 475,
+      "package_id": "WCP-475",
+      "title": "Protect guild member deletion authorization, CSRF and guild ownership",
+      "risk": "medium",
+      "execution_state": "worker_in_progress",
+      "dependencies": [
+        "WCP-450"
+      ],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-475-guild-member-deletion-security-g1",
+      "suggested_branch": "feature/wcp-475-guild-member-deletion-security-g1",
+      "base_branch": "feature/wcp-450-guild-member-directory-pagination-g1",
+      "base_sha": "49d836de7c14c3b9958dcb3e43db573c80d2c8b3",
+      "objective": "Add test-only functional security regressions for the existing guild-member deletion route, stacked on WCP-450's exact green HEAD. Verify CMS_GAMING_MANAGE protects roster reads and deletion, guild-scoped ownership rejects a member from another guild before deletion, missing/invalid/wrong-member CSRF tokens preserve all rows, and the token rendered for the intended member deletes only that member. Use only synthetic game, guild, member and user fixtures with full cleanup.",
+      "allowed_paths": [
+        "tests/Controller/AdminGuildMemberDeletionSecurityTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "src/",
+        "templates/",
+        "migrations/",
+        "config/",
+        "public/uploads/"
+      ],
+      "deliverables": [
+        "A user without CMS_GAMING_MANAGE is denied the member roster and delete request without removing the member.",
+        "Missing, invalid, and another member's valid CSRF tokens are rejected with the intended row and unrelated rows unchanged.",
+        "A valid token from another guild cannot delete that guild's member through a different guild route; the request remains concealed as 404.",
+        "The rendered token for the correct guild/member deletes only the intended member.",
+        "Synthetic users, games, guilds and members are cleaned up; WCP-475 adds only the new test file."
+      ],
+      "tests": [
+        "Focused AdminGuildMemberDeletionSecurityTest functional PHPUnit coverage.",
+        "PHPStan level 8 and complete Worker CI on exact final HEAD.",
+        "PostgreSQL 18 complete migration-chain validation."
+      ],
+      "completion_report": [
+        "Exact sanitized main SHA and WCP-450 exact green proposal-base SHA.",
+        "Final HEAD, incremental changed paths, cumulative Worker PR paths and Worker PR.",
+        "Permission, CSRF and cross-guild ownership checks plus valid scoped deletion evidence.",
+        "Focused and complete tests, PHPStan, and migration results.",
+        "Trusted follow-up and remaining assumptions."
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "preserve-CMS_GAMING_MANAGE-guild-member-ownership-and-delete-member-CSRF",
+        "denied-or-cross-guild-requests-must-not-delete-or-mutate-members",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment",
+        "no-private-runtime-or-sensitive-data"
+      ],
+      "proposal_base_branch": "feature/wcp-450-guild-member-directory-pagination-g1",
+      "proposal_base_sha": "49d836de7c14c3b9958dcb3e43db573c80d2c8b3",
+      "proposal_kind": "worker_only",
+      "proposal_dependency_evidence": [
+        {
+          "package_id": "WCP-450",
+          "exact_green_head": "49d836de7c14c3b9958dcb3e43db573c80d2c8b3",
+          "worker_pr": 245,
+          "ci_run_id": 36287792997,
+          "ci_result": "success"
+        }
+      ],
+      "collision_check": {
+        "compared_against": "Fresh continuous/work-pool-v4 at 6ee620871dec385c36a006936907a59295fb298f, all active and claim-locked scopes, sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d, and WCP-450 exact green HEAD 49d836de7c14c3b9958dcb3e43db573c80d2c8b3.",
+        "result": "No active or claim-locked task owns or encloses tests/Controller/AdminGuildMemberDeletionSecurityTest.php. WCP-450 owns AdminGuildMemberController.php, its repository/template and the distinct pagination test; WCP-440 owns the separate guild structure security test; WCP-474's 2FA recovery paths are disjoint. This package adds only a dedicated member-deletion security test.",
+        "paths": [
+          "tests/Controller/AdminGuildMemberDeletionSecurityTest.php"
+        ]
+      },
+      "published_at": "2026-09-27T05:58:42.794Z",
+      "claimed_on": "2026-09-27T05:58:42.794Z",
+      "claim_state": "active",
+      "active_base_branch": "feature/wcp-450-guild-member-directory-pagination-g1",
+      "active_base_sha": "49d836de7c14c3b9958dcb3e43db573c80d2c8b3",
+      "active_head": "49d836de7c14c3b9958dcb3e43db573c80d2c8b3",
+      "resume_branch": "feature/wcp-475-guild-member-deletion-security-g1",
+      "last_checkpoint_at": "2026-09-27T05:58:42.794Z",
+      "checkpoint_paths": [],
+      "branch_heads": {
+        "claim_branch": "49d836de7c14c3b9958dcb3e43db573c80d2c8b3",
+        "feature_branch": "49d836de7c14c3b9958dcb3e43db573c80d2c8b3"
+      },
+      "next_action": "Implement the focused member authorization, route-scoped CSRF and cross-guild deletion tests in the sole allowed file, checkpoint them, and open a draft Worker PR."
     }
   ],
   "recovery_queue": [],
