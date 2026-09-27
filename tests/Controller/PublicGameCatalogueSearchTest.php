@@ -27,7 +27,7 @@ final class PublicGameCatalogueSearchTest extends WebTestCase
 
         try {
             $searchCases = [
-                ['name', 'WCP531 title-<script>'.$token.'</script>', null, null, null, null],
+                ['name', 'WCP531 title-'.$token.' <script>'.$token.'</script>', null, null, null, null],
                 ['description', 'Game description', 'WCP531 game-description-'.$token, null, null, null],
                 ['summary', 'Summary game', null, 'WCP531 summary-'.$token, null, null],
                 ['developer', 'Developer game', null, null, 'WCP531 developer-'.$token, null],
