@@ -10,10 +10,10 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T07:06:43.924Z",
+  "published_at": "2026-09-27T07:11:38.772Z",
   "summary": {
     "total_remaining_worker_tasks": 141,
-    "completed_worker_prs_awaiting_trusted_review": 246,
+    "completed_worker_prs_awaiting_trusted_review": 247,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
@@ -30285,7 +30285,7 @@
       "package_id": "WCP-481",
       "title": "Keep one default guild rank when creating or editing ranks",
       "risk": "medium",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [
         "WCP-479"
       ],
@@ -30368,7 +30368,7 @@
       },
       "published_at": "2026-09-27T07:00:18.586Z",
       "claimed_on": "2026-09-27T07:00:18.586Z",
-      "claim_state": "active",
+      "claim_state": "locked_until_trusted_resolution",
       "active_base_branch": "feature/wcp-479-guild-application-question-deletion-security-g1",
       "active_base_sha": "0dcba428821d44ad9081f04725aa01a58c2dfed7",
       "active_head": "9b113f4bec19cf47a6e7d894b978affafa19f1cb",
@@ -30377,18 +30377,83 @@
         "claim_branch": "0dcba428821d44ad9081f04725aa01a58c2dfed7",
         "feature_branch": "9b113f4bec19cf47a6e7d894b978affafa19f1cb"
       },
-      "next_action": "Await exact-head Worker CI run 36302068286; diagnose and repair any test-only failure within the allowlisted file.",
+      "next_action": "Await Trusted review and integration CI; keep the claim locked until Trusted explicitly resolves it.",
       "last_observed_head": "9b113f4bec19cf47a6e7d894b978affafa19f1cb",
-      "last_checkpoint_at": "2026-09-27T07:06:43.924Z",
+      "last_checkpoint_at": "2026-09-27T07:11:38.772Z",
       "checkpoint_paths": [
         "tests/Controller/AdminGuildRankDefaultSelectionTest.php"
       ],
       "worker_pr_changed_paths": [
-        "tests/Controller/AdminGuildRankDefaultSelectionTest.php"
+        "tests/Controller/AdminGuildApplicationQuestionDeletionSecurityTest.php",
+        "tests/Controller/AdminGuildRankDefaultSelectionTest.php",
+        "tests/Controller/AdminGuildRankDeletionSecurityTest.php",
+        "tests/Controller/AdminGuildStructureSecurityTest.php"
       ],
       "worker_pr": 273,
       "ci_run_id": 36302068286,
-      "ci_result": "queued"
+      "ci_result": "success",
+      "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/273",
+      "draft_pr": false,
+      "pr_state": "open",
+      "last_ci_run_id": 36302068286,
+      "last_ci_result": "success",
+      "ci_attempts": [
+        {
+          "run_id": 36302068286,
+          "head": "9b113f4bec19cf47a6e7d894b978affafa19f1cb",
+          "result": "success"
+        }
+      ],
+      "final_head": "9b113f4bec19cf47a6e7d894b978affafa19f1cb",
+      "final_base_sha": "0dcba428821d44ad9081f04725aa01a58c2dfed7",
+      "final_sanitized_main_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "final_changed_paths": [
+        "tests/Controller/AdminGuildRankDefaultSelectionTest.php"
+      ],
+      "changed_paths": [
+        "tests/Controller/AdminGuildRankDefaultSelectionTest.php"
+      ],
+      "completed_at": "2026-09-27T07:11:38.772Z",
+      "test_results": {
+        "phpunit": "437 tests, 2032 assertions, 0 failures; one PHPUnit deprecation and one notice.",
+        "phpstan": "Level 8 passed with no errors.",
+        "php_symfony": "Worker PHP/Symfony validation job passed on exact final HEAD.",
+        "postgres18": "PostgreSQL 18 completed all 39 migrations; 0 unavailable.",
+        "exact_head_ci": {
+          "run_id": 36302068286,
+          "head": "9b113f4bec19cf47a6e7d894b978affafa19f1cb",
+          "result": "success"
+        }
+      },
+      "completion_evidence": {
+        "exact_sanitized_main_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+        "exact_proposal_base_branch": "feature/wcp-479-guild-application-question-deletion-security-g1",
+        "exact_proposal_base_sha": "0dcba428821d44ad9081f04725aa01a58c2dfed7",
+        "dependency_worker_pr": 272,
+        "dependency_ci_run_id": 36301404016,
+        "dependency_ci_result": "success",
+        "final_head_sha": "9b113f4bec19cf47a6e7d894b978affafa19f1cb",
+        "changed_paths": [
+          "tests/Controller/AdminGuildRankDefaultSelectionTest.php"
+        ],
+        "cumulative_pr_paths": [
+          "tests/Controller/AdminGuildApplicationQuestionDeletionSecurityTest.php",
+          "tests/Controller/AdminGuildRankDefaultSelectionTest.php",
+          "tests/Controller/AdminGuildRankDeletionSecurityTest.php",
+          "tests/Controller/AdminGuildStructureSecurityTest.php"
+        ],
+        "worker_pr": 273,
+        "ci_run_id": 36302068286,
+        "ci_result": "success",
+        "php_symfony_job": "success: 437 tests, 2032 assertions; PHPStan level 8 no errors",
+        "postgresql_job": "success: 39 migrations, 0 unavailable",
+        "default_rank_invariant_coverage": "Rendered GuildRankType forms with CSRF tokens verify edit and create replace only the target guild's default and preserve the other guild's default."
+      },
+      "completion_summary": "Added test-only functional coverage proving that creating or promoting a guild rank replaces only that guild's default rank while preserving a foreign guild's default. Both rendered forms carry valid CSRF tokens and use synthetic fixtures with cleanup.",
+      "open_limitations": [
+        "Awaiting Trusted review and Trusted integration CI; cumulative PR includes WCP-478/479 predecessor tests."
+      ],
+      "trusted_follow_up": "Verify the default-rank create/edit invariant tests together with the cumulative WCP-478/479 guild tests on fresh Trusted CI; preserve at-most-one-default-per-guild and cross-guild isolation."
     }
   ],
   "recovery_queue": [],
