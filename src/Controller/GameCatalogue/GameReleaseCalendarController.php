@@ -100,12 +100,7 @@ final class GameReleaseCalendarController extends AbstractController
         }
 
         $platforms = $this->releases->calendarPlatforms($today);
-        $platformIds = [];
-        foreach ($platforms as $platform) {
-            if ($platform->getId() !== null) {
-                $platformIds[] = $platform->getId();
-            }
-        }
+        $platformIds = array_column($platforms, 'id');
 
         if ($platformId !== null && !in_array($platformId, $platformIds, true)) {
             return $this->invalidFilter();
