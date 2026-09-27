@@ -96,22 +96,23 @@ final class UpcomingGameReleaseWidgetProviderTest extends KernelTestCase
 
         try {
             $releaseBase = new \DateTimeImmutable('today');
+            $uniqueSuffix = bin2hex(random_bytes(6));
             $game = (new Game())
                 ->setName('Release Game <script>alert(1)</script>')
-                ->setSlug('release-game');
+                ->setSlug('release-game-'.$uniqueSuffix);
             $entry = new GameCatalogueEntry($game);
             $platform = new GamePlatform('PC', 'pc');
             $edition = new GameEdition($entry, 'Deluxe');
 
             $disabledGame = (new Game())
                 ->setName('Disabled Game')
-                ->setSlug('disabled-release-game')
+                ->setSlug('disabled-release-game-'.$uniqueSuffix)
                 ->setEnabled(false);
             $disabledGameEntry = new GameCatalogueEntry($disabledGame);
 
             $disabledEntryGame = (new Game())
                 ->setName('Disabled Entry Game')
-                ->setSlug('disabled-entry-game');
+                ->setSlug('disabled-entry-game-'.$uniqueSuffix);
             $disabledEntry = (new GameCatalogueEntry($disabledEntryGame))->setEnabled(false);
 
             $entities = [
@@ -185,7 +186,7 @@ final class UpcomingGameReleaseWidgetProviderTest extends KernelTestCase
             self::assertStringContainsString('Deluxe', $rendered);
             self::assertStringContainsString('PC', $rendered);
             self::assertStringContainsString('EU', $rendered);
-            self::assertStringContainsString('/games/release-game', $rendered);
+            self::assertStringContainsString('/games/'.$game->getSlug(), $rendered);
             self::assertStringContainsString('/games/releases', $rendered);
             self::assertStringContainsString('&lt;script&gt;alert(1)&lt;/script&gt;', $rendered);
             self::assertStringNotContainsString('<script>alert(1)</script>', $rendered);
@@ -193,18 +194,20 @@ final class UpcomingGameReleaseWidgetProviderTest extends KernelTestCase
             $empty = $twig->render('widget/upcoming_game_releases.html.twig', ['data' => ['items' => []]]);
             self::assertStringContainsString('Aktuell sind keine kommenden Spielveröffentlichungen angekündigt.', $empty);
         } finally {
-            foreach (array_reverse($entities) as $entity) {
-                $id = $entity->getId();
-                if ($id === null) {
-                    continue;
-                }
+            if ($entityManager->isOpen()) {
+                foreach (array_reverse($entities) as $entity) {
+                    $id = $entity->getId();
+                    if ($id === null) {
+                        continue;
+                    }
 
-                $managed = $entityManager->find($entity::class, $id);
-                if ($managed !== null) {
-                    $entityManager->remove($managed);
+                    $managed = $entityManager->find($entity::class, $id);
+                    if ($managed !== null) {
+                        $entityManager->remove($managed);
+                    }
                 }
+                $entityManager->flush();
             }
-            $entityManager->flush();
         }
     }
 }
