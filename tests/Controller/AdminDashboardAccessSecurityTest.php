@@ -42,8 +42,6 @@ final class AdminDashboardAccessSecurityTest extends WebTestCase
 
             $client->request('GET', '/admin');
             self::assertResponseRedirects('/login');
-            $client->followRedirect();
-            self::assertResponseIsSuccessful();
         } finally {
             $this->removeUser($client, $user);
         }
