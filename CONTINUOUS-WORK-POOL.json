@@ -12,12 +12,12 @@
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
   "published_at": "2026-09-27T00:06:24.463Z",
   "summary": {
-    "total_remaining_worker_tasks": 137,
+    "total_remaining_worker_tasks": 138,
     "completed_worker_prs_awaiting_trusted_review": 205,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-434 repaired exact HEAD be0fca340e4ffe822cbf4843d0086b1d9d1df09f; Worker CI run 36281349515 is in progress and must be completed on the same branch.",
+    "next_required_action": "WCP-439 is claimed from sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d; create its exclusive branches and add test-only content-duplication authorization, CSRF, and safe-state regressions.",
     "composition_preparable": 0,
     "immediately_actionable": 0,
     "must_continue": true
@@ -23273,7 +23273,18 @@
       "last_ci_run_id": 36281349515,
       "ci_run_id": 36281349515,
       "last_ci_result": "in_progress",
-      "ci_attempts": [{"run_id":36281195962,"head":"3becc3a6fdcba414a40dca90529704c57e0d6135","result":"failure"},{"run_id":36281349515,"head":"be0fca340e4ffe822cbf4843d0086b1d9d1df09f","result":"in_progress"}],
+      "ci_attempts": [
+        {
+          "run_id": 36281195962,
+          "head": "3becc3a6fdcba414a40dca90529704c57e0d6135",
+          "result": "failure"
+        },
+        {
+          "run_id": 36281349515,
+          "head": "be0fca340e4ffe822cbf4843d0086b1d9d1df09f",
+          "result": "in_progress"
+        }
+      ],
       "last_ci_diagnosis": "CI run 36281195962 failed only two new-test assertions because Symfony added max-age=0 and must-revalidate to the private,no-store Cache-Control header. The response still included private and no-store; the test now checks those directives separately and preserves the noindex assertion.",
       "next_action": "Worker CI run 36281349515 is in progress on exact HEAD be0fca340e4ffe822cbf4843d0086b1d9d1df09f; inspect all jobs and repair any red result on this branch."
     },
@@ -23759,6 +23770,97 @@
         "feature_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d"
       },
       "next_action": "Create both exclusive branches from exact sanitized main, then add create/edit delegation regressions using rendered CSRF tokens."
+    },
+    {
+      "priority": 219,
+      "package_id": "WCP-439",
+      "title": "Safeguard content-entry duplication authorization and publication state",
+      "risk": "low",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-439-content-entry-duplication-security-g1",
+      "suggested_branch": "feature/wcp-439-content-entry-duplication-security-g1",
+      "base_branch": "main",
+      "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "objective": "Add test-only functional security regressions for duplicating content entries. Users without CMS_CONTENT_MANAGE cannot duplicate; missing or invalid route-specific CSRF cannot create a copy; a valid rendered token creates exactly one safe draft copy, clears publication/canonical state and featured/pinned flags, preserves intended content, and leaves the source unchanged.",
+      "allowed_paths": [
+        "tests/Controller/ContentEntryDuplicationSecurityTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/",
+        "src/",
+        "templates/",
+        "assets/",
+        "public/"
+      ],
+      "deliverables": [
+        "Verify CMS_CONTENT_MANAGE is required for POST /admin/content/{id}/duplicate.",
+        "Verify missing and invalid duplicate-content CSRF tokens do not create a copy.",
+        "Verify a rendered duplicate form token creates exactly one draft copy with null publishedAt and canonical URL, noIndex true, and featured/pinned false.",
+        "Verify the source entry remains unchanged and only the synthetic copy is created.",
+        "Only tests/Controller/ContentEntryDuplicationSecurityTest.php changes."
+      ],
+      "tests": [
+        "php bin/phpunit tests/Controller/ContentEntryDuplicationSecurityTest.php",
+        "Existing ContentPublicationAssuranceTest and content trash lifecycle tests remain green.",
+        "PHPStan level 8 and complete Worker CI on exact final HEAD, including PostgreSQL 18 migration-chain checks."
+      ],
+      "completion_report": [
+        "Exact sanitized main base SHA and final Worker HEAD.",
+        "Complete changed-path list and Worker PR.",
+        "Authorization denial, CSRF non-mutation, safe duplicate state, and source preservation results.",
+        "Exact-head PHPStan and full Worker CI; confirm only synthetic local entities were changed."
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "preserve-CMS_CONTENT_MANAGE-authorization-and-duplicate-specific-CSRF",
+        "duplicated-published-content-must-remain-a-non-public-draft-without-canonical-publication-state",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "proposal_kind": "worker_only",
+      "proposal_dependency_evidence": [],
+      "collision_check": {
+        "compared_against": "Fresh continuous/work-pool-v4 blob 02bca375ce5f180ed4a2884ab02268deb7f8ee7e, all active and claim-locked allowlists, and exact sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d.",
+        "result": "No active or claim-locked claim owns tests/Controller/ContentEntryDuplicationSecurityTest.php, and the path is absent from sanitized main. Main AdminContentController exposes a CMS_CONTENT_MANAGE-protected POST duplicate route with a duplicate-content CSRF token; it deliberately forces copies to draft, clears canonical URL and publication timestamp, and resets featured/pinned state. Code search for app_admin_content_duplicate and duplicate-content found the controller and content form template but no route-level functional test. WCP-435 covers the separate trash/restore/purge routes in another test file; active WCP-383, WCP-401, WCP-414, WCP-434, and WCP-438 paths are disjoint.",
+        "paths": [
+          "tests/Controller/ContentEntryDuplicationSecurityTest.php"
+        ]
+      },
+      "claimed_on": "2026-09-27T00:07:42.496Z",
+      "claim_state": "active",
+      "active_base_branch": "main",
+      "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "resume_branch": "feature/wcp-439-content-entry-duplication-security-g1",
+      "last_checkpoint_at": "2026-09-27T00:07:42.496Z",
+      "last_verified_push_at": "2026-09-27T00:07:42.496Z",
+      "checkpoint_paths": [
+        "tests/Controller/ContentEntryDuplicationSecurityTest.php"
+      ],
+      "branch_heads": {
+        "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+        "feature_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d"
+      },
+      "next_action": "Create the exclusive WCP-439 claim and feature branches from sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d, then implement the allowed test-only content duplication security regressions."
     }
   ],
   "recovery_queue": [],
