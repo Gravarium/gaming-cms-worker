@@ -47,7 +47,7 @@ final class AdminQueuePaginationTest extends WebTestCase
         parent::tearDown();
     }
 
-    public function testQueueRequiresItsSettingsPermissionAndRendersForAnAuthorizedUser(): void
+    public function testUserWithoutSettingsPermissionCannotOpenTheQueue(): void
     {
         $client = static::createClient();
         $this->ensureQueueTable($client);
@@ -55,7 +55,12 @@ final class AdminQueuePaginationTest extends WebTestCase
 
         $client->request('GET', '/admin/queue');
         self::assertResponseStatusCodeSame(403);
+    }
 
+    public function testAuthorizedUserCanOpenTheQueue(): void
+    {
+        $client = static::createClient();
+        $this->ensureQueueTable($client);
         $client->loginUser($this->user($client, [CmsPermission::SETTINGS]));
         $client->request('GET', '/admin/queue');
         self::assertResponseIsSuccessful();
@@ -100,7 +105,7 @@ final class AdminQueuePaginationTest extends WebTestCase
         self::assertResponseIsSuccessful();
         self::assertSelectorTextContains('body', sprintf('Seite %d von %d', $pageCount, $pageCount));
         self::assertStringNotContainsString('999999999', (string) $client->getResponse()->getContent());
-        self::assertSame(array_slice($expectedIds, -min(25, count($expectedIds))), $this->messageIds($lastPage));
+        self::assertSame(array_slice($expectedIds, ($pageCount - 1) * 25, 25), $this->messageIds($lastPage));
 
         $pageTwo = $client->request('GET', '/admin/queue?page=2');
         self::assertResponseIsSuccessful();

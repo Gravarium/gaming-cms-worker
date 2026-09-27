@@ -11,7 +11,6 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
@@ -30,7 +29,12 @@ final class AdminQueueController extends AbstractController
     #[Route('', name: 'app_admin_queue_index', methods: ['GET'])]
     public function index(Request $request): Response
     {
-        return $this->render('admin/queue/index.html.twig', $this->pageSnapshot($request));
+        $snapshot = $this->pageSnapshot($request);
+        if ($snapshot instanceof Response) {
+            return $snapshot;
+        }
+
+        return $this->render('admin/queue/index.html.twig', $snapshot);
     }
 
     #[Route('/{id}/retry', name: 'app_admin_queue_retry', requirements: ['id' => '[1-9][0-9]*'], methods: ['POST'])]
@@ -40,7 +44,11 @@ final class AdminQueueController extends AbstractController
             throw $this->createAccessDeniedException();
         }
 
-        $page = $this->pageSnapshot($request)['page'];
+        $snapshot = $this->pageSnapshot($request);
+        if ($snapshot instanceof Response) {
+            return $snapshot;
+        }
+        $page = $snapshot['page'];
 
         try {
             $retried = $this->recovery->retry($id);
@@ -67,6 +75,9 @@ final class AdminQueueController extends AbstractController
         }
 
         $snapshot = $this->pageSnapshot($request);
+        if ($snapshot instanceof Response) {
+            return $snapshot;
+        }
         $messages = $snapshot['messages'];
         $successful = 0;
         foreach ($messages as $message) {
@@ -99,17 +110,21 @@ final class AdminQueueController extends AbstractController
      *     pageCount: int,
      *     first: int,
      *     last: int
-     * }
+     * }|Response
      */
-    private function pageSnapshot(Request $request): array
+    private function pageSnapshot(Request $request): array|Response
     {
         $query = $request->query->all();
         $pageInput = $query['page'] ?? null;
 
         try {
             return $this->paginator->read($pageInput);
-        } catch (\InvalidArgumentException $exception) {
-            throw new BadRequestHttpException('Die Seitennummer ist ungültig.', $exception);
+        } catch (\InvalidArgumentException) {
+            return new Response(
+                'Die Seitennummer ist ungültig.',
+                Response::HTTP_BAD_REQUEST,
+                ['Cache-Control' => 'no-store', 'Content-Type' => 'text/plain; charset=UTF-8'],
+            );
         }
     }
 }
