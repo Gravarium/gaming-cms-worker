@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T18:13:40.576Z",
+  "published_at": "2026-09-27T18:15:48.780Z",
   "summary": {
-    "total_remaining_worker_tasks": 168,
+    "total_remaining_worker_tasks": 169,
     "completed_worker_prs_awaiting_trusted_review": 295,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-564 PR #358 is ready for Trusted review with exact-head CI #909 / 36339653506 green. Re-evaluate every unclaimed dependency and publish/claim the next independent worker-only proposal if none is eligible.",
+    "next_required_action": "WCP-565 is claimed on main@7b2ca79405fc12d34bce1386157e929e4668f31a; implement strict page-category pagination validation and exact-head CI.",
     "composition_preparable": 0,
     "immediately_actionable": 29,
     "must_continue": true
@@ -45221,6 +45221,93 @@
       "ci_validation_pr": 358,
       "completed_at": "2026-09-27T18:13:40.576Z",
       "worker_completion_summary": "Exact-head Worker CI #909 / 36339653506 passed on faa41acadf7a8c69de2d7d753f084952de6118fc: 737 tests, 4,634 assertions, 0 failures/errors (1 deprecation, 3 notices); PHPStan reported no errors; PostgreSQL 18 applied 57 migrations with 878 SQL queries. PR #358 is open and ready for Trusted review, based on main@7b2ca79405fc12d34bce1386157e929e4668f31a, with exactly two allowlisted paths."
+    },
+    {
+      "priority": 565,
+      "package_id": "WCP-565",
+      "title": "Validate pagination inputs for public page categories",
+      "risk": "medium",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-565-page-category-archive-page-validation-g1",
+      "suggested_branch": "feature/wcp-565-page-category-archive-page-validation-g1",
+      "base_branch": "main",
+      "base_sha": "7b2ca79405fc12d34bce1386157e929e4668f31a",
+      "objective": "Strictly parse page query values for both the public page-category directory and category archive. Reject empty, zero, negative, non-decimal, fractional, leading-zero, array, and otherwise malformed values with HTTP 400; keep page 1 as the default, reject pages above the 10000 cap with 404, and preserve existing public visibility, pagination size/order, out-of-range 404 responses, and cache headers.",
+      "allowed_paths": [
+        "src/Controller/PublicPageCategoryArchiveController.php",
+        "tests/Controller/PublicPageCategoryArchiveTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "CONTINUOUS-WORKER.md",
+        "CONTINUOUS-WORK-POOL.json",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "templates/",
+        "src/Entity/",
+        "src/Repository/"
+      ],
+      "deliverables": [
+        "One controller-local parser applies identical strict positive-decimal page validation to GET /pages/categories and GET /pages/category/{slug}.",
+        "Regression tests exercise both routes for default/valid inputs, malformed query forms and values beyond the supported page cap.",
+        "No visibility, database, schema, template, ordering, caching or page-size behavior changes."
+      ],
+      "tests": [
+        "Targeted PublicPageCategoryArchiveTest covers malformed page query forms through both public routes and retains existing pagination ordering/boundary cases.",
+        "Complete exact-head Worker CI including PHPStan, full PHPUnit, configuration/template checks, Doctrine mappings and PostgreSQL 18 migration chain."
+      ],
+      "completion_report": [
+        "Exact sanitized base and final HEAD; changed paths and Worker PR state.",
+        "Strict parser behavior for both routes and preserved public archive semantics.",
+        "Targeted regression and exact-head Worker CI results.",
+        "No schema or persistence changes; Trusted review follow-up."
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-Trusted-review-and-exact-head-CI",
+        "preserve-all-security-permissions-CSRF-validation-recovery-rollback-and-upload-controls",
+        "no-private-runtime-or-sensitive-data",
+        "no-schema-migration-or-entity-change",
+        "no-edit-to-active-or-claim-locked-paths",
+        "no-direct-Trusted-integration-or-deployment"
+      ],
+      "proposal_kind": "worker_only",
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "7b2ca79405fc12d34bce1386157e929e4668f31a",
+      "proposal_dependency_evidence": [],
+      "collision_check": {
+        "compared_against": "Fresh continuous/work-pool-v4 file blob @ 3c68472b12043d13d0234c7ada18ed5ce0fb2105; current sanitized main @ 7b2ca79405fc12d34bce1386157e929e4668f31a; every unclaimed, active, and claim-locked task.",
+        "result": "No exact or directory-prefix overlap for either allowed path with any unclaimed, active, or claim-locked allowed path. WCP-564's strict public content-tag archive change touches only PublicContentTagArchiveController and PublicContentTagArchiveTest; this package uses the distinct page-category controller and test.",
+        "paths": [
+          "src/Controller/PublicPageCategoryArchiveController.php",
+          "tests/Controller/PublicPageCategoryArchiveTest.php"
+        ]
+      },
+      "published_at": "2026-09-27T18:15:48.780Z",
+      "claimed_on": "2026-09-27T18:15:48.780Z",
+      "claim_state": "active",
+      "active_base_branch": "main",
+      "active_base_sha": "7b2ca79405fc12d34bce1386157e929e4668f31a",
+      "active_head": "7b2ca79405fc12d34bce1386157e929e4668f31a",
+      "resume_branch": "feature/wcp-565-page-category-archive-page-validation-g1",
+      "branch_heads": {},
+      "last_observed_head": "7b2ca79405fc12d34bce1386157e929e4668f31a",
+      "last_checkpoint_at": "2026-09-27T18:15:48.780Z",
+      "checkpoint_paths": [],
+      "next_action": "Create exclusive claim and feature branches from the published sanitized base, then implement shared strict page parsing for both public page-category routes."
     }
   ],
   "recovery_queue": [],
