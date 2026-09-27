@@ -1,0 +1,64 @@
+{% extends 'base.html.twig' %}
+{% set site = site_settings() %}
+
+{% block title %}Newsletter abonnieren | {{ site.siteName }}{% endblock %}
+{% block meta_description %}Melde dich mit deiner E-Mail-Adresse für den Newsletter an.{% endblock %}
+
+{% block body %}
+<main class="public-shell newsletter-signup">
+    <header>
+        <p class="eyebrow">Newsletter</p>
+        <h1>Newsletter abonnieren</h1>
+        <p>Du brauchst kein CMS-Konto. Nach deiner Anmeldung senden wir dir einen Bestätigungslink. Erst nach dem Klick wird die Adresse für den Newsletter aktiviert.</p>
+    </header>
+
+    {% for message in app.flashes('success') %}
+        <p class="panel newsletter-signup-status" role="status" aria-live="polite">{{ message }}</p>
+    {% endfor %}
+
+    {% if errors.form is defined %}
+        <p class="panel newsletter-signup-error" role="alert">{{ errors.form }}</p>
+    {% endif %}
+
+    <form class="newsletter-signup-form" action="{{ path('app_admin_notification_public_newsletter_signup') }}" method="post">
+        <input type="hidden" name="_token" value="{{ csrf_token('public-newsletter-signup') }}">
+
+        <div class="form-field">
+            <label for="newsletter-signup-email">E-Mail-Adresse</label>
+            <input
+                id="newsletter-signup-email"
+                name="email"
+                type="email"
+                value="{{ email }}"
+                maxlength="180"
+                autocomplete="email"
+                required
+                {% if errors.email is defined %}aria-invalid="true" aria-describedby="newsletter-signup-email-error"{% else %}aria-invalid="false"{% endif %}
+            >
+            {% if errors.email is defined %}
+                <p id="newsletter-signup-email-error" class="field-error" role="alert">{{ errors.email }}</p>
+            {% endif %}
+        </div>
+
+        <fieldset class="form-field">
+            <legend>Einwilligung</legend>
+            <label for="newsletter-signup-consent">
+                <input
+                    id="newsletter-signup-consent"
+                    name="consent"
+                    type="checkbox"
+                    value="yes"
+                    required
+                    {% if errors.consent is defined %}aria-invalid="true" aria-describedby="newsletter-signup-consent-error"{% endif %}
+                >
+                Ich möchte den Newsletter an diese E-Mail-Adresse erhalten. Ich kann mich jederzeit wieder abmelden.
+            </label>
+            {% if errors.consent is defined %}
+                <p id="newsletter-signup-consent-error" class="field-error" role="alert">{{ errors.consent }}</p>
+            {% endif %}
+        </fieldset>
+
+        <button type="submit">Bestätigungs-E-Mail senden</button>
+    </form>
+</main>
+{% endblock %}

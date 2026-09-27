@@ -1,0 +1,14 @@
+framework:
+    rate_limiter:
+        public_newsletter_signup_ip:
+            policy: 'fixed_window'
+            limit: 10
+            interval: '1 hour'
+        public_newsletter_signup_email:
+            policy: 'fixed_window'
+            limit: 3
+            interval: '1 hour'
+
+twig:
+    paths:
+        '%kernel.project_dir%/src/PublicNewsletterSignup/Templates': PublicNewsletterSignup
