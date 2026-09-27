@@ -6,6 +6,7 @@ namespace App\Tests\Widget;
 
 use App\Entity\CmsModuleState;
 use App\Entity\ContentEntry;
+use App\Entity\User;
 use App\Widget\WidgetDefinition;
 use App\Widget\WidgetRegistry;
 use Doctrine\ORM\EntityManagerInterface;
@@ -29,6 +30,12 @@ final class PublicPageDirectoryWidgetProviderTest extends KernelTestCase
             $state->install('1.0.0')->setEnabled(true);
 
             $suffix = bin2hex(random_bytes(6));
+            $author = (new User())
+                ->setEmail('page-widget-'.$suffix.'@example.test')
+                ->setDisplayName('Page widget test author')
+                ->setPermissions([])
+                ->verifyEmail();
+            $em->persist($author);
             $publishedAt = new \DateTimeImmutable();
             $first = $this->page('first-'.$suffix, ContentEntry::TYPE_PAGE, ContentEntry::STATUS_PUBLISHED, false, $publishedAt);
             $second = $this->page('second-'.$suffix, ContentEntry::TYPE_PAGE, ContentEntry::STATUS_PUBLISHED, false, $publishedAt);
@@ -37,6 +44,7 @@ final class PublicPageDirectoryWidgetProviderTest extends KernelTestCase
             $news = $this->page('news-'.$suffix, ContentEntry::TYPE_NEWS, ContentEntry::STATUS_PUBLISHED, false, $publishedAt);
 
             foreach ([$first, $second, $unlisted, $draft, $news] as $entry) {
+                $entry->setAuthor($author);
                 $em->persist($entry);
             }
             $em->flush();
