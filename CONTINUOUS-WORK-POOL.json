@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T18:08:02.543Z",
+  "published_at": "2026-09-27T18:10:03.498Z",
   "summary": {
     "total_remaining_worker_tasks": 168,
     "completed_worker_prs_awaiting_trusted_review": 294,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-564 is claimed on main@7b2ca79405fc12d34bce1386157e929e4668f31a; implement strict public tag-archive page parsing and run exact-head Worker CI.",
+    "next_required_action": "WCP-564 checkpoint is faa41acadf7a8c69de2d7d753f084952de6118fc; open a draft proposal and run exact-head Worker CI.",
     "composition_preparable": 0,
     "immediately_actionable": 29,
     "must_continue": true
@@ -45178,16 +45178,20 @@
       "claim_state": "active",
       "active_base_branch": "main",
       "active_base_sha": "7b2ca79405fc12d34bce1386157e929e4668f31a",
-      "active_head": "7b2ca79405fc12d34bce1386157e929e4668f31a",
+      "active_head": "faa41acadf7a8c69de2d7d753f084952de6118fc",
       "resume_branch": "feature/wcp-564-public-tag-archive-page-validation-g1",
       "branch_heads": {
         "claim_branch": "7b2ca79405fc12d34bce1386157e929e4668f31a",
-        "feature_branch": "7b2ca79405fc12d34bce1386157e929e4668f31a"
+        "feature_branch": "faa41acadf7a8c69de2d7d753f084952de6118fc"
       },
-      "last_observed_head": "7b2ca79405fc12d34bce1386157e929e4668f31a",
-      "last_checkpoint_at": "2026-09-27T18:08:02.543Z",
-      "checkpoint_paths": [],
-      "next_action": "Implement strict page query parsing and malformed-input regression coverage on the reserved feature branch."
+      "last_observed_head": "faa41acadf7a8c69de2d7d753f084952de6118fc",
+      "last_checkpoint_at": "2026-09-27T18:10:03.498Z",
+      "checkpoint_paths": [
+        "src/Controller/PublicContentTagArchiveController.php",
+        "tests/Controller/PublicContentTagArchiveTest.php"
+      ],
+      "next_action": "Open a draft Worker PR and validate the exact final branch HEAD with complete Worker CI.",
+      "last_verified_push_at": "2026-09-27T18:10:03.498Z"
     }
   ],
   "recovery_queue": [],
