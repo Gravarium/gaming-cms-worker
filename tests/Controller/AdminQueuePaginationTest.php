@@ -207,7 +207,7 @@ final class AdminQueuePaginationTest extends WebTestCase
         self::assertInstanceOf(Connection::class, $connection);
         $this->connection = $connection;
 
-        if (!$connection->createSchemaManager()->tablesExist('messenger_messages')) {
+        if (!$connection->createSchemaManager()->tablesExist(['messenger_messages'])) {
             $schema = new Schema();
             $table = $schema->createTable('messenger_messages');
             $table->addColumn('id', Types::BIGINT, ['autoincrement' => true]);
