@@ -10,16 +10,16 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T01:10:58.328Z",
+  "published_at": "2026-09-27T01:13:18.112Z",
   "summary": {
-    "total_remaining_worker_tasks": 139,
-    "completed_worker_prs_awaiting_trusted_review": 212,
+    "total_remaining_worker_tasks": 138,
+    "completed_worker_prs_awaiting_trusted_review": 213,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-444 is reserved on exact sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d for test-only video category and playlist deletion CSRF/scope regressions.",
+    "next_required_action": "WCP-444 is complete with exact-head Worker CI and awaits Trusted review; re-evaluate the remaining unclaimed FCP dependencies, then continue an independent bounded Worker proposal.",
     "composition_preparable": 0,
-    "immediately_actionable": 3,
+    "immediately_actionable": 2,
     "must_continue": true
   },
   "rules": {
@@ -24600,7 +24600,7 @@
       "package_id": "WCP-444",
       "title": "Protect video category and playlist deletion",
       "risk": "medium",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -24668,12 +24668,12 @@
         ]
       },
       "claimed_on": "2026-09-27T01:09:24.391Z",
-      "claim_state": "active",
+      "claim_state": "locked_until_trusted_resolution",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
       "active_head": "411ae900d795b7d2690d2fa4757fda16cd614384",
       "resume_branch": "feature/wcp-444-video-taxonomy-deletion-security-g1",
-      "last_checkpoint_at": "2026-09-27T01:10:58.328Z",
+      "last_checkpoint_at": "2026-09-27T01:13:18.112Z",
       "checkpoint_paths": [
         "tests/Controller/AdminVideoTaxonomyDeletionSecurityTest.php"
       ],
@@ -24681,12 +24681,41 @@
         "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
         "feature_branch": "411ae900d795b7d2690d2fa4757fda16cd614384"
       },
-      "next_action": "Inspect exact-head Worker CI for PR #238 on 411ae900d795b7d2690d2fa4757fda16cd614384; repair concrete failures on this branch.",
+      "next_action": "PR #238 is ready for Trusted review with green exact-head Worker CI; keep this claim locked until Trusted explicitly integrates, cancels or transfers it, then continue with an independent task.",
       "last_verified_push_at": "2026-09-27T01:10:37.300Z",
       "worker_pr": 238,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/238",
-      "pr_state": "open_draft_unmerged",
-      "draft_pr": true
+      "pr_state": "open_ready_for_review_unmerged",
+      "draft_pr": false,
+      "final_head": "411ae900d795b7d2690d2fa4757fda16cd614384",
+      "final_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5",
+      "final_changed_paths": [
+        "tests/Controller/AdminVideoTaxonomyDeletionSecurityTest.php"
+      ],
+      "changed_paths": [
+        "tests/Controller/AdminVideoTaxonomyDeletionSecurityTest.php"
+      ],
+      "last_ci_run_id": 36284747055,
+      "ci_run_id": 36284747055,
+      "ci_result": "success",
+      "completed_at": "2026-09-27T01:13:18.112Z",
+      "test_results": {
+        "phpunit": "431 tests, 1,888 assertions, 0 failures; one deprecation and one notice.",
+        "phpstan": "Level 8 passed with no errors.",
+        "php_symfony": "Worker PHP/Symfony validation job passed on exact final HEAD.",
+        "postgres18": "PostgreSQL 18 applied and verified all 39 migrations.",
+        "exact_head_ci": {
+          "run_id": 36284747055,
+          "head": "411ae900d795b7d2690d2fa4757fda16cd614384",
+          "result": "success"
+        }
+      },
+      "completion_summary": "Functional regressions verify that missing and invalid per-record CSRF tokens reject video category and playlist deletion without mutation; rendered per-record tokens delete only the selected category and playlist while sibling records remain. Synthetic user, category and playlist fixtures are removed in finally. Only the allowed test file changed.",
+      "open_limitations": [
+        "Awaiting Trusted review and Trusted integration CI."
+      ],
+      "trusted_follow_up": "Preserve CMS_VIDEO_MANAGE, category/playlist CSRF, selected-record scope and sibling records.",
+      "ci_attempts": []
     }
   ],
   "recovery_queue": [],
