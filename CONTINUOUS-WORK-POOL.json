@@ -10,16 +10,16 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T09:40:31.335Z",
+  "published_at": "2026-09-27T09:40:38.009Z",
   "summary": {
-    "total_remaining_worker_tasks": 149,
+    "total_remaining_worker_tasks": 150,
     "completed_worker_prs_awaiting_trusted_review": 259,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-496 is actively claimed from exact sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d; implement the Guild onboarding checklist workflow and run full exact-head Worker CI. Keep all foreign claims untouched.",
+    "next_required_action": "WCP-497 is actively claimed from exact green WCP-492 HEAD ddc53ae5cbc7834f56175e653d33e83918d0f75d; add and test playlist-directory portal navigation, then run full exact-head Worker CI. Keep foreign claims untouched.",
     "composition_preparable": 0,
-    "immediately_actionable": 9,
+    "immediately_actionable": 10,
     "must_continue": true
   },
   "rules": {
@@ -32836,6 +32836,113 @@
       "last_checkpoint_at": "2026-09-27T09:38:49.944Z",
       "checkpoint_paths": [],
       "next_action": "Implement the per-guild onboarding checklist list/create/complete/delete workflow and functional coverage within the listed paths; then run focused PHPUnit and complete exact-head Worker CI."
+    },
+    {
+      "priority": 497,
+      "package_id": "WCP-497",
+      "title": "Expose public video playlists in the portal navigation",
+      "risk": "low",
+      "execution_state": "worker_in_progress",
+      "dependencies": [
+        "WCP-492"
+      ],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-497-playlist-portal-navigation-g1",
+      "suggested_branch": "feature/wcp-497-playlist-portal-navigation-g1",
+      "base_branch": "feature/wcp-492-public-video-playlists-g1",
+      "base_sha": "ddc53ae5cbc7834f56175e653d33e83918d0f75d",
+      "objective": "Complete discovery for the existing shareable video-playlist pages. Add a direct Playlists link to the public portal navigation while the video module is enabled, so visitors can find and share the directory from the site. Hide the link while the video module is disabled. Reuse WCP-492's existing read-only directory and module gate; do not change its routes, templates, admin permissions or schema.",
+      "allowed_paths": [
+        "templates/layout/portal.html.twig",
+        "tests/Controller/VideoPlaylistPortalNavigationTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/",
+        "templates/base.html.twig",
+        "templates/video_playlist/",
+        "templates/admin/video/simple_form.html.twig",
+        "src/Controller/VideoPlaylistController.php",
+        "src/Entity/",
+        "src/Repository/"
+      ],
+      "deliverables": [
+        "The public portal's main navigation links to the existing /video-playlists directory only while the video module is enabled.",
+        "The playlist directory remains anonymous and read-only; existing disabled-module 404 behavior is unchanged.",
+        "Functional coverage verifies link visibility when enabled and its absence when disabled.",
+        "No schema, migration or existing WCP-492 path changes."
+      ],
+      "tests": [
+        "Functional test opens the public portal with video enabled and confirms the Playlists link resolves to the directory.",
+        "Functional test disables the video module and confirms the portal omits the playlist link.",
+        "PHPStan level 8 and complete Worker CI on the exact final HEAD, including PostgreSQL 18 migration-chain validation."
+      ],
+      "completion_report": [
+        "Exact WCP-492 predecessor HEAD and final feature HEAD.",
+        "Complete changed-path list and Worker PR.",
+        "Enabled/disabled navigation behavior and focused test result.",
+        "Exact-head PHPStan, PHPUnit and full CI results; unresolved integration follow-up."
+      ],
+      "immutable_constraints": [
+        "playlist-directory-link-is-present-only-when-video-module-is-enabled",
+        "public-playlist-pages-remain-read-only-and-use-the-existing-module-gate",
+        "no-schema-or-migration-change",
+        "no-private-runtime-or-production-secret",
+        "preserve-existing-security-validation-and-worker-isolation-controls",
+        "no-security-test-phpstan-or-CI-weakening",
+        "red-CI-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
+      ],
+      "proposal_base_branch": "feature/wcp-492-public-video-playlists-g1",
+      "proposal_base_sha": "ddc53ae5cbc7834f56175e653d33e83918d0f75d",
+      "proposal_kind": "worker_only",
+      "proposal_dependency_evidence": [
+        {
+          "package_id": "WCP-492",
+          "feature_branch": "feature/wcp-492-public-video-playlists-g1",
+          "worker_pr": 286,
+          "exact_head": "ddc53ae5cbc7834f56175e653d33e83918d0f75d",
+          "ci_run_id": 36309234506,
+          "ci_result": "success"
+        }
+      ],
+      "collision_check": {
+        "compared_against": "Fresh continuous/work-pool-v4 5fc1bbb83523468ae0b58a89a1d0609ae3997918, all active and claim-locked paths, Worker main f1a246c64527ef3ad51f7490773d9bbf9d42be5d, and exact WCP-492 PR/CI.",
+        "result": "No active or claim-locked package owns templates/layout/portal.html.twig or the new navigation test. WCP-492 owns only its playlist controller/templates/admin simple form/test, which remain unchanged; WCP-392 owns templates/base.html.twig, which remains untouched. WCP-493 is the guild structure workflow; WCP-494 only changes scheduled-content tests; WCP-495 owns the separate video-category controller/templates/tests; WCP-496 owns guild onboarding paths. FCP-072 is unclaimed and dependency-blocked with a broad templates/ allowance; a future claimant must recheck and narrow that scope if this claim remains active.",
+        "paths": [
+          "templates/layout/portal.html.twig",
+          "tests/Controller/VideoPlaylistPortalNavigationTest.php"
+        ]
+      },
+      "published_at": "2026-09-27T09:40:38.009Z",
+      "claimed_on": "2026-09-27T09:40:38.009Z",
+      "claim_state": "active",
+      "active_base_branch": "feature/wcp-492-public-video-playlists-g1",
+      "active_base_sha": "ddc53ae5cbc7834f56175e653d33e83918d0f75d",
+      "active_head": "ddc53ae5cbc7834f56175e653d33e83918d0f75d",
+      "resume_branch": "feature/wcp-497-playlist-portal-navigation-g1",
+      "branch_heads": {
+        "claim_branch": "ddc53ae5cbc7834f56175e653d33e83918d0f75d",
+        "feature_branch": "ddc53ae5cbc7834f56175e653d33e83918d0f75d"
+      },
+      "last_observed_head": "ddc53ae5cbc7834f56175e653d33e83918d0f75d",
+      "last_checkpoint_at": "2026-09-27T09:40:38.009Z",
+      "checkpoint_paths": [],
+      "next_action": "Implement only the portal navigation link and focused functional test, push a checkpoint, then run full exact-head Worker CI.",
+      "last_verified_push_at": null
     }
   ],
   "recovery_queue": [],
