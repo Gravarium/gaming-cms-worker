@@ -29,7 +29,7 @@ final class PublicVideoLibraryControllerTest extends WebTestCase
             $this->video(
                 $client,
                 $suffix.'-video-'.sprintf('%02d', $number),
-                'Guide '.$number,
+                'Guide '.sprintf('%02d', $number),
                 $publishedAt,
                 category: $category,
                 playlist: $playlist,
@@ -122,7 +122,7 @@ final class PublicVideoLibraryControllerTest extends WebTestCase
 
         $client->request('GET', '/videos/library?category='.$category->getSlug());
         self::assertResponseIsSuccessful();
-        self::assertSelectorTextContains('h2', 'Noch keine Videos');
+        self::assertSelectorTextContains('.video-grid .panel h2', 'Noch keine Videos');
         self::assertSelectorTextContains('main', 'Für diese Auswahl wurden keine veröffentlichten Videos gefunden.');
     }
 
