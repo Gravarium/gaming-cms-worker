@@ -10,16 +10,16 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T09:52:14.711Z",
+  "published_at": "2026-09-27T09:52:59.275Z",
   "summary": {
-    "total_remaining_worker_tasks": 152,
+    "total_remaining_worker_tasks": 153,
     "completed_worker_prs_awaiting_trusted_review": 262,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-494 is complete on exact green HEAD d7b75a5c0bb9a35b6e50a6dc1c62006294450ca5 and locked for Trusted review. Re-evaluate all remaining dependency-safe work, then continue with an independent Worker-only task.",
+    "next_required_action": "WCP-500 is actively claimed from exact sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d; implement the public content category directory and complete exact-head Worker CI. Keep all foreign claims untouched.",
     "composition_preparable": 0,
-    "immediately_actionable": 12,
+    "immediately_actionable": 13,
     "must_continue": true
   },
   "rules": {
@@ -33296,6 +33296,118 @@
           "diagnosis": "Focused regression attempted to mint a session-backed CSRF token before any request created a session; the test now obtains its rendered token from the enabled guild portal before asserting the disabled-module 404 boundary."
         }
       ]
+    },
+    {
+      "priority": 500,
+      "package_id": "WCP-500",
+      "title": "Expose the public content category directory",
+      "risk": "low",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-500-public-category-directory-g1",
+      "suggested_branch": "feature/wcp-500-public-category-directory-g1",
+      "base_branch": "main",
+      "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "objective": "Complete public discovery for the existing content-category module. Categories can already be created and edited in administration and individual published-news archives are reachable at /news/category/{slug}, but there is no public directory that lets visitors browse the available categories. Add an anonymous GET-only /news/categories directory that lists the existing category hierarchy with descriptions and links to the existing category archive route. The route must remain owned by the content module so disabling content returns 404, while existing category archives, administration, schema, migrations and shared templates stay unchanged.",
+      "allowed_paths": [
+        "src/Controller/PublicCategoryDirectoryController.php",
+        "templates/category/index.html.twig",
+        "tests/Controller/PublicCategoryDirectoryTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/",
+        "assets/",
+        "public/",
+        "src/Entity/",
+        "src/Form/",
+        "src/Repository/",
+        "src/Controller/PublicContentController.php",
+        "src/Controller/AdminCategoryController.php",
+        "src/Repository/CategoryRepository.php",
+        "src/Repository/ContentEntryRepository.php",
+        "templates/content/",
+        "templates/admin/category/",
+        "templates/base.html.twig",
+        "templates/layout/"
+      ],
+      "deliverables": [
+        "GET /news/categories is a public, read-only directory owned by the app_news route prefix.",
+        "The directory lists all persisted categories in a deterministic order, renders hierarchical display names and optional descriptions, and links each item to app_news_category.",
+        "An empty category set has a useful empty state and no write controls.",
+        "Disabling the content module makes the directory unavailable through the existing DisabledModuleSubscriber without exposing category data.",
+        "Existing category CRUD and /news/category/{slug} behavior remain unchanged; no schema, migration, repository, entity or shared navigation changes."
+      ],
+      "tests": [
+        "Focused functional PHPUnit coverage verifies anonymous directory access, deterministic category links, hierarchy/description rendering and empty state.",
+        "Focused functional coverage verifies the content-module disabled route returns 404 and does not render category contents; fixtures are removed in finally blocks.",
+        "PHPStan level 8 and complete Worker CI on the exact final HEAD, including PostgreSQL 18 migration-chain validation."
+      ],
+      "completion_report": [
+        "Exact sanitized main/base SHA and final Worker HEAD SHA.",
+        "Complete changed-path list and Worker PR.",
+        "Public category-directory behavior, hierarchy/description/empty-state evidence and disabled-content module behavior.",
+        "Exact-head PHPStan, PHPUnit, PostgreSQL migration and full Worker CI results; remaining Trusted integration follow-up."
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "public-directory-is-read-only-and-lists-only-persisted-category-metadata",
+        "directory-route-is-owned-by-content-and-fails-closed-when-content-is-disabled",
+        "existing-category-archive-and-administration-behavior-remain-unchanged",
+        "no-schema-or-migration-change",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "red-CI-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment",
+        "no-private-runtime-or-sensitive-data"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "proposal_kind": "worker_only",
+      "proposal_dependency_evidence": [],
+      "collision_check": {
+        "compared_against": "Fresh continuous/work-pool-v4 commit 28a38f3937e480f638afa483ae093358968e50f8; all active and claim-locked allowed paths; sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d; current WCP-500 branch and PR state immediately before reservation.",
+        "result": "No active or claim-locked package owns or encloses the three proposed paths. The content category entity, repository, existing public content controller, admin controller and shared content/navigation templates remain untouched. The package adds only a new content-owned directory controller, a dedicated template and focused functional coverage. The unclaimed broad FCP-072 templates allowance remains dependency-blocked and is narrowed here to the exact new template path.",
+        "paths": [
+          "src/Controller/PublicCategoryDirectoryController.php",
+          "templates/category/index.html.twig",
+          "tests/Controller/PublicCategoryDirectoryTest.php"
+        ]
+      },
+      "published_at": "2026-09-27T09:52:59.275Z",
+      "claimed_on": "2026-09-27T09:52:59.275Z",
+      "claim_state": "active",
+      "active_base_branch": "main",
+      "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "resume_branch": "feature/wcp-500-public-category-directory-g1",
+      "branch_heads": {
+        "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+        "feature_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d"
+      },
+      "last_observed_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "last_checkpoint_at": "2026-09-27T09:52:59.275Z",
+      "checkpoint_paths": [
+        "src/Controller/PublicCategoryDirectoryController.php",
+        "templates/category/index.html.twig",
+        "tests/Controller/PublicCategoryDirectoryTest.php"
+      ],
+      "next_action": "Implement the public category directory and focused disabled-content coverage, then push a meaningful feature checkpoint and create the Worker PR.",
+      "last_verified_push_at": "2026-09-27T09:52:59.275Z"
     }
   ],
   "recovery_queue": [],
