@@ -45053,24 +45053,28 @@
       "claim_state": "active",
       "active_base_branch": "main",
       "active_base_sha": "7b2ca79405fc12d34bce1386157e929e4668f31a",
-      "active_head": "7b2ca79405fc12d34bce1386157e929e4668f31a",
+      "active_head": "0bdb6261d30e1111f90dc2a12e2e848285cf5381",
       "resume_branch": "feature/wcp-563-page-directory-db-pagination-g1",
       "branch_heads": {
         "claim_branch": "7b2ca79405fc12d34bce1386157e929e4668f31a",
-        "feature_branch": "7b2ca79405fc12d34bce1386157e929e4668f31a"
+        "feature_branch": "0bdb6261d30e1111f90dc2a12e2e848285cf5381"
       },
-      "last_observed_head": "7b2ca79405fc12d34bce1386157e929e4668f31a",
-      "last_checkpoint_at": "2026-09-27T17:54:47.480Z",
-      "last_verified_push_at": "2026-09-27T17:54:47.480Z",
+      "last_observed_head": "0bdb6261d30e1111f90dc2a12e2e848285cf5381",
+      "last_checkpoint_at": "2026-09-27T17:58:51.725Z",
+      "last_verified_push_at": "2026-09-27T17:58:51.725Z",
       "checkpoint_paths": [
         "src/Controller/PublicPageDirectoryController.php",
         "src/PageDirectory/PublicPageDirectoryQuery.php",
         "tests/Controller/PublicPageDirectoryTest.php"
       ],
-      "next_action": "Replace the materializing public page-directory scan with a feature-local counted, filtered, stable database page query; add/extend controller regression tests and run exact-head Worker CI.",
+      "next_action": "Open a draft Worker PR from this checkpoint and run full exact-head Worker CI; repair any failures without weakening public visibility or pagination bounds.",
       "worker_pr": null,
       "worker_pr_state": "not_created",
-      "worker_pr_changed_paths": [],
+      "worker_pr_changed_paths": [
+        "src/Controller/PublicPageDirectoryController.php",
+        "src/PageDirectory/PublicPageDirectoryQuery.php",
+        "tests/Controller/PublicPageDirectoryTest.php"
+      ],
       "ci_result": "not_started",
       "ci_attempts": [],
       "worker_pr_url": null,
