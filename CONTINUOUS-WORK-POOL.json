@@ -17,7 +17,7 @@
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-462 is complete on green exact-head Worker PR #256; all five unclaimed FCP assignments remain dependency-blocked. Continue with the next independent Worker-only proposal while preserving every other claim.",
+    "next_required_action": "WCP-464 is exclusively claimed from exact green WCP-113 PR #76 head f6247efb947195b61d9688b758ee59d0f0fd6f06; implement signed-extension capability review and individual grant/revoke on feature/wcp-464-signed-extension-permission-admin-g1 while preserving all other active and claim-locked packages.",
     "composition_preparable": 0,
     "immediately_actionable": 3,
     "must_continue": true
@@ -27471,6 +27471,131 @@
       "next_action": "Implement the admin-only video catalogue reader, query filters, pagination, preserved editor context and functional negative coverage on this feature branch; checkpoint each coherent batch.",
       "last_observed_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
       "last_verified_push_at": "2026-09-27T03:56:46.866Z"
+    },
+    {
+      "priority": 464,
+      "package_id": "WCP-464",
+      "title": "Review and manage capabilities for signed external packages",
+      "risk": "high",
+      "execution_state": "worker_in_progress",
+      "claim_state": "active",
+      "dependencies": [
+        "WCP-113"
+      ],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-464-signed-extension-permission-admin-g1",
+      "suggested_branch": "feature/wcp-464-signed-extension-permission-admin-g1",
+      "base_branch": "feature/wcp-113-extension-permission-store-g1",
+      "base_sha": "f6247efb947195b61d9688b758ee59d0f0fd6f06",
+      "objective": "Complete the existing signed-extension administration workflow. The module manager currently lists verified external packages and shows only capability grant counts; grants and revocations are available only through a CLI command. Add a permissioned review screen reachable from each verified package row, with individually CSRF-protected grant/revoke actions. Use the existing signed-manifest verifier and hardened permission store contracts; do not create a second permission store or change package execution, signatures, schema, or CLI behavior.",
+      "allowed_paths": [
+        "src/Controller/AdminExtensionCapabilityController.php",
+        "src/ExtensionPackage/ExtensionCapabilityAdministration.php",
+        "templates/admin/modules/index.html.twig",
+        "templates/admin/modules/extension_permissions.html.twig",
+        "tests/Controller/AdminExtensionCapabilityControllerTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/",
+        "src/ExtensionPackage/ExtensionPermissionStore.php",
+        "tests/ExtensionPackage/ExtensionPermissionStoreBoundaryTest.php",
+        "src/ExtensionPackage/ExtensionPackageInventory.php",
+        "src/ExtensionPackage/ExtensionPackageVerifier.php",
+        "src/ExtensionPackage/ExtensionCapabilityPolicy.php",
+        "src/Command/ExtensionPermissionCommand.php",
+        "templates/admin/dashboard.html.twig",
+        "tests/Controller/AdminModuleLifecycleSecurityTest.php",
+        "tests/Controller/AdminDashboardAccessSecurityTest.php"
+      ],
+      "deliverables": [
+        "Link each verified signed module/theme row from the existing admin module page to a CMS_SETTINGS_MANAGE-protected per-package capability review screen; never offer a mutation link for invalid packages.",
+        "Re-verify the installed package signature and files before every view and mutation, require the verified manifest type/key to exactly match the route identity, and reject unsafe/symlinked install paths without following them.",
+        "Show only capabilities requested by the verified manifest, a clear human-readable effect, current per-capability approval state, package name/type/version, and that approvals are keyed by package type/key and persist across versions until revoked.",
+        "Allow one requested declarable capability at a time through an explicit CSRF-protected POST grant or revoke; reject unrequested, unknown, forbidden, or malformed capabilities and preserve the existing CLI workflow.",
+        "Use ExtensionPermissionStore exclusively for permission persistence so its exclusive locking, private file mode, size bounds, validation, and atomic replacement remain authoritative; record successful admin changes and restore the prior permission state if audit persistence fails.",
+        "Keep changes schema-free and never expose trusted key contents, signatures, private paths, or package file contents."
+      ],
+      "tests": [
+        "Functional coverage: anonymous users are redirected to login; signed-in users without CMS_SETTINGS_MANAGE receive 403 on the review page and grant/revoke POSTs.",
+        "Use a temporary signed fixture package to verify the module-list entry, manifest-only capability display, approval status, and successful grant then revoke of exactly one capability with valid rendered CSRF tokens.",
+        "Assert no other capability changes, the permission file remains mode 0600, and successful grant/revoke actions are audited.",
+        "Reject invalid CSRF, unknown package identity, manifest type/key mismatch, invalid signature or file checksum, symlinked package paths, unrequested/forbidden capability names, and malformed inputs without granting any permission.",
+        "Force audit persistence failure and verify the previous permission state is restored; preserve the existing CLI permission-command behavior.",
+        "Run the focused functional tests, PHPStan level 8 and complete Worker CI on the exact final HEAD, including PostgreSQL 18 migration-chain validation."
+      ],
+      "completion_report": [
+        "Exact WCP-113 dependency HEAD, exact worker PR base, and final Worker HEAD SHA.",
+        "Complete changed-path list and Worker PR target branch.",
+        "Verified-package capability review, individual grant/revoke, version-persistence disclosure, authorization, CSRF, path validation, audit and rollback evidence.",
+        "Focused PHPUnit, PHPStan level 8, and exact-head full Worker CI including PostgreSQL migration verification.",
+        "Open limitations, especially the existing package-key permission identity and later Trusted/Fortress integration work."
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "preserve-CMS_SETTINGS_MANAGE-and-valid-CSRF-for-every-capability-mutation",
+        "only-reverify-signed-package-manifest-capabilities-that-are-declarable-may-be-granted",
+        "never-follow-symlinked-package-paths-or-accept-route-identity-different-from-signed-manifest",
+        "reuse-the-existing-exclusive-lock-atomic-permission-store-and-private-file-mode",
+        "permission-grants-are-keyed-by-type-and-package-key-across-versions; disclose-this-semantics-and-do-not-claim-version-bound-approval",
+        "restore-prior-permission-state-if-admin-audit-persistence-fails",
+        "no-schema-migration-cli-semantics-change-or-private-runtime-reconstruction",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
+      ],
+      "proposal_base_branch": "feature/wcp-113-extension-permission-store-g1",
+      "proposal_base_sha": "f6247efb947195b61d9688b758ee59d0f0fd6f06",
+      "proposal_kind": "worker_only",
+      "proposal_dependency_evidence": [
+        {
+          "package_id": "WCP-113",
+          "feature_branch": "feature/wcp-113-extension-permission-store-g1",
+          "worker_pr": 76,
+          "exact_head": "f6247efb947195b61d9688b758ee59d0f0fd6f06",
+          "ci_run_id": 36237037834,
+          "ci_result": "success",
+          "authority": "worker-proposal-only"
+        }
+      ],
+      "collision_check": {
+        "compared_against": "Fresh continuous/work-pool-v4 blob 6e32b24cae56bdf85d5033b246a51146f92b4ccb; every active and claim-locked allowed-path scope; current open PRs #253–#256 and changed-file lists; exact green WCP-113 PR #76 HEAD f6247efb947195b61d9688b758ee59d0f0fd6f06; sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d.",
+        "result": "No active or claim-locked task owns any proposed path. WCP-113 owns only the permission-store implementation and its boundary test; this proposal stacks on its exact green HEAD and uses that public contract without editing either owned path. WCP-114 owns the separate package inventory implementation and test; both remain unchanged. WCP-418 and completed WCP-461 own distinct module-lifecycle security test files only. Completed WCP-462 owns only AdminDashboardAccessSecurityTest.php; active WCP-463 owns the admin video catalogue paths. Active WCP-401 Game Hub, WCP-439 content duplication, WCP-383 scheduled-publishing tests, and completed WCP-460 content redirects have disjoint paths. All five unclaimed FCP packages remain dependency-blocked.",
+        "paths": [
+          "src/Controller/AdminExtensionCapabilityController.php",
+          "src/ExtensionPackage/ExtensionCapabilityAdministration.php",
+          "templates/admin/modules/index.html.twig",
+          "templates/admin/modules/extension_permissions.html.twig",
+          "tests/Controller/AdminExtensionCapabilityControllerTest.php"
+        ]
+      },
+      "claimed_on": "2026-09-27T04:02:51Z",
+      "active_base_branch": "feature/wcp-113-extension-permission-store-g1",
+      "active_base_sha": "f6247efb947195b61d9688b758ee59d0f0fd6f06",
+      "active_head": "f6247efb947195b61d9688b758ee59d0f0fd6f06",
+      "resume_branch": "feature/wcp-464-signed-extension-permission-admin-g1",
+      "last_checkpoint_at": "2026-09-27T04:02:51Z",
+      "last_verified_push_at": "2026-09-27T04:02:51Z",
+      "checkpoint_paths": [],
+      "branch_heads": {
+        "claim_branch": "f6247efb947195b61d9688b758ee59d0f0fd6f06",
+        "suggested_branch": "f6247efb947195b61d9688b758ee59d0f0fd6f06"
+      },
+      "next_action": "Create the exact claim and feature branches from the green WCP-113 head, then implement and checkpoint the package capability review workflow."
     }
   ],
   "recovery_queue": [],
