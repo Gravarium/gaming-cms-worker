@@ -187,7 +187,7 @@ final class AdminMediaUsageBrowserTest extends WebTestCase
         }
     }
 
-    public function testUsagePageRequiresStoragePermissionAndExistingAsset(): void
+    public function testUsagePageRequiresStoragePermission(): void
     {
         $client = $this->startClient();
         $em = $this->em($client);
@@ -199,8 +199,15 @@ final class AdminMediaUsageBrowserTest extends WebTestCase
 
         self::assertResponseStatusCodeSame(403);
 
+    }
+
+    public function testUnknownAssetReturnsNotFound(): void
+    {
+        $client = $this->startClient();
+        $em = $this->em($client);
         $storageUser = $this->persistUser($em, [CmsPermission::ACCESS, CmsPermission::STORAGE]);
         $client->loginUser($storageUser);
+
         $client->request('GET', '/admin/storage/media/999999999/usage');
         self::assertResponseStatusCodeSame(404);
     }

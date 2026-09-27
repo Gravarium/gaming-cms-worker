@@ -7,7 +7,7 @@ namespace App\Media;
 use App\ContentEditor\ContentBlockDocument;
 use App\Entity\ContentEntry;
 use App\Entity\MediaAsset;
-use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\DBAL\ParameterType;
 use Doctrine\DBAL\Platforms\AbstractMySQLPlatform;
 use Doctrine\DBAL\Platforms\PostgreSQLPlatform;
 use Doctrine\DBAL\Platforms\SQLitePlatform;
@@ -46,15 +46,16 @@ final readonly class MediaAssetUsageBrowser
             $conditions[] = 'LOCATE(:mediaMarker, entry.editorDocument) > 0';
             $parameters['mediaMarker'] = '"assetId":'.$assetId.',';
         }
-        $query = $this->entityManager->getRepository(ContentEntry::class)->createQueryBuilder('entry')
+        $queryBuilder = $this->entityManager->getRepository(ContentEntry::class)->createQueryBuilder('entry')
             ->andWhere('('.implode(' OR ', $conditions).')')
-            ->setParameters(new ArrayCollection($parameters))
             ->orderBy('entry.id', 'ASC')
-            ->setMaxResults(self::MAX_CONTENT_CANDIDATES + 1)
-            ->getQuery();
+            ->setMaxResults(self::MAX_CONTENT_CANDIDATES + 1);
+        foreach ($parameters as $name => $value) {
+            $queryBuilder->setParameter($name, $value);
+        }
 
         /** @var list<ContentEntry> $entries */
-        $entries = $query->getResult();
+        $entries = $queryBuilder->getQuery()->getResult();
         $truncated = count($entries) > self::MAX_CONTENT_CANDIDATES;
         if ($truncated) {
             array_pop($entries);
@@ -156,12 +157,14 @@ final readonly class MediaAssetUsageBrowser
         $needle = json_encode(['widgets' => [['config' => ['imageId' => $assetId]]]], JSON_THROW_ON_ERROR);
 
         $parameters = [];
+        $types = [];
         if ($platform instanceof PostgreSQLPlatform) {
             $predicate = 'CAST(pl.'.$documentColumn.' AS JSONB) @> CAST(:needle AS JSONB)';
             $parameters['needle'] = $needle;
         } elseif ($platform instanceof SQLitePlatform) {
             $predicate = "EXISTS (SELECT 1 FROM json_each(pl.".$documentColumn.", '$.widgets') AS widget WHERE json_extract(widget.value, '$.config.imageId') = :assetId)";
             $parameters['assetId'] = $assetId;
+            $types['assetId'] = ParameterType::INTEGER;
         } elseif ($platform instanceof AbstractMySQLPlatform) {
             $predicate = 'JSON_CONTAINS(pl.'.$documentColumn.', :needle, \'$\')';
             $parameters['needle'] = $needle;
@@ -171,7 +174,7 @@ final readonly class MediaAssetUsageBrowser
 
         $sql = 'SELECT pl.'.$contextColumn.' FROM '.$table.' AS pl WHERE '.$predicate
             .' ORDER BY pl.'.$contextColumn.' ASC LIMIT '.(self::MAX_REFERENCES + 1);
-        $values = $connection->executeQuery($sql, $parameters)->fetchFirstColumn();
+        $values = $connection->executeQuery($sql, $parameters, $types)->fetchFirstColumn();
 
         $contexts = [];
         foreach ($values as $value) {
