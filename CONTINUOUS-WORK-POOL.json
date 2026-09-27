@@ -41214,7 +41214,8 @@
       "risk": "low",
       "execution_state": "worker_in_progress",
       "dependencies": [
-        "FCP-069"
+        "FCP-069",
+        "WCP-391"
       ],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -41280,18 +41281,32 @@
       ],
       "base_branch": "feature/fcp-069-pool-g1",
       "base_sha": "0b243f72cd6813e76574840dcc9c542396ec270e",
-      "proposal_base_branch": "feature/fcp-069-pool-g1",
-      "proposal_base_sha": "0b243f72cd6813e76574840dcc9c542396ec270e",
+      "proposal_base_branch": "composition/wcp-549-main-6988e87-g1",
+      "proposal_base_sha": "d54706a675d5f40d5f815ac7c2eeb612d85f423f",
       "proposal_kind": "worker_only",
       "proposal_dependency_evidence": [
         {
           "package_id": "FCP-069",
-          "feature_branch": "feature/fcp-069-pool-g1",
           "worker_pr": 38,
           "exact_head": "0b243f72cd6813e76574840dcc9c542396ec270e",
           "ci_run_id": 36227368671,
+          "ci_result": "success"
+        },
+        {
+          "package_id": "WCP-391",
+          "worker_pr": 185,
+          "exact_head": "9988284a0536acb5b3ac0b5b91d3205bfd2019cb",
+          "ci_result": "success"
+        },
+        {
+          "kind": "composition",
+          "branch": "composition/wcp-549-main-6988e87-g1",
+          "worker_pr": 344,
+          "exact_head": "d54706a675d5f40d5f815ac7c2eeb612d85f423f",
+          "ci_run_id": 36330483300,
+          "ci_run_number": 858,
           "ci_result": "success",
-          "authority": "worker-proposal-only"
+          "base_sha": "6988e871cbda8c27801ee0bcc02e8c5c2b0cd909"
         }
       ],
       "collision_check": {
@@ -41315,7 +41330,7 @@
         "feature_branch": "951a0237f1e6f259e812deec86b9cc7f4e8b71b8"
       },
       "last_observed_head": "951a0237f1e6f259e812deec86b9cc7f4e8b71b8",
-      "last_checkpoint_at": "2026-09-27T15:42:41.736Z",
+      "last_checkpoint_at": "2026-09-27T15:43:58.829Z",
       "checkpoint_paths": [
         "src/Widget/PublicGlobalSearchWidgetProvider.php",
         "src/GlobalSearchWidget/Templates/widget/global_search.html.twig",
@@ -41323,7 +41338,7 @@
         "tests/Widget/PublicGlobalSearchWidgetProviderTest.php"
       ],
       "resume_branch": "feature/wcp-549-global-search-widget-g1",
-      "next_action": "Monitor composition PR #344 exact-head CI #858 / 36330483300 on HEAD d54706a675d5f40d5f815ac7c2eeb612d85f423f. If fully green, publish that exact composition as WCP-549's proposal base and resume WCP-549; repair composition failures only within the dependency composition paths.",
+      "next_action": "Green exact-head dependency composition published. Continue WCP-549 from proposal base composition/wcp-549-main-6988e87-g1 at d54706a675d5f40d5f815ac7c2eeb612d85f423f; preserve only the four allowed widget paths, fast-forward the existing feature branch, and rerun complete exact-head Worker CI.",
       "worker_pr_state": "draft",
       "last_verified_push_at": "2026-09-27T15:08:28.294Z",
       "ci_result": "failure",
@@ -41507,8 +41522,8 @@
           "run_number": 858,
           "head": "d54706a675d5f40d5f815ac7c2eeb612d85f423f",
           "base": "6988e871cbda8c27801ee0bcc02e8c5c2b0cd909",
-          "result": "in_progress",
-          "conclusion": null
+          "result": "success",
+          "conclusion": "success"
         }
       ],
       "composition_changed_paths": [
@@ -41567,7 +41582,9 @@
         "tests/Gaming/Competition/CompetitionDomainTest.php",
         "tests/Search/SearchCoreTest.php",
         "tests/Search/SearchVisibilityTest.php"
-      ]
+      ],
+      "composition_ci_run_id": 36330483300,
+      "composition_ci_result": "success"
     },
     {
       "priority": 550,
