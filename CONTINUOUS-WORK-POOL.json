@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T21:24:50.740Z",
+  "published_at": "2026-09-27T21:39:20.833Z",
   "summary": {
     "total_remaining_worker_tasks": 174,
-    "completed_worker_prs_awaiting_trusted_review": 311,
+    "completed_worker_prs_awaiting_trusted_review": 312,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-581 CI #932 / 36351571903 is running on corrected exact HEAD 2b6b441c1fcd12c5e8f67e43cbe79762a08a6636; wait and repair any remaining failures.",
+    "next_required_action": "Re-evaluate dependency-safe Worker tasks after WCP-581 completion; the five prepared unclaimed FCP packages remain dependency-blocked, so derive, publish, and claim the next bounded independent functional module package.",
     "composition_preparable": 0,
     "immediately_actionable": 30,
     "must_continue": true
@@ -47301,7 +47301,7 @@
       "package_id": "WCP-581",
       "title": "Show unread Social conversations in a private Page Builder widget",
       "risk": "medium",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -47392,7 +47392,7 @@
         "observed_nonblocking_path_hits": []
       },
       "published_at": "2026-09-27T20:46:58.969Z",
-      "claim_state": "active",
+      "claim_state": "locked_until_trusted_resolution",
       "claimed_on": "2026-09-27T20:48:38.126Z",
       "active_base_branch": "main",
       "active_base_sha": "7b2ca79405fc12d34bce1386157e929e4668f31a",
@@ -47403,9 +47403,9 @@
         "feature_branch": "2b6b441c1fcd12c5e8f67e43cbe79762a08a6636"
       },
       "last_observed_head": "2b6b441c1fcd12c5e8f67e43cbe79762a08a6636",
-      "last_checkpoint_at": "2026-09-27T21:24:50.740Z",
+      "last_checkpoint_at": "2026-09-27T21:39:20.833Z",
       "last_verified_push_at": "2026-09-27T21:24:50.740Z",
-      "next_action": "Wait for Worker CI #932 on the corrected exact HEAD; fix any diagnosed failure before marking PR #376 ready.",
+      "next_action": "Await Trusted review of open ready-for-review PR #376; continue autonomous Worker scheduling without merging or deploying.",
       "checkpoint_paths": [
         "config/packages/social_unread_conversations_widget.yaml",
         "src/EventSubscriber/SocialUnreadWidgetCacheSubscriber.php",
@@ -47417,9 +47417,9 @@
       ],
       "worker_pr": 376,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/376",
-      "worker_pr_state": "draft",
+      "worker_pr_state": "ready_for_review",
       "pr_state": "open",
-      "draft_pr": true,
+      "draft_pr": false,
       "worker_pr_base_branch": "main",
       "worker_pr_base_sha": "7b2ca79405fc12d34bce1386157e929e4668f31a",
       "worker_pr_changed_paths": [
@@ -47431,8 +47431,8 @@
         "src/Widget/WidgetRegistry.php",
         "tests/Widget/SocialUnreadConversationsWidgetProviderTest.php"
       ],
-      "ci_result": "in_progress",
-      "last_ci_result": "in_progress",
+      "ci_result": "success",
+      "last_ci_result": "success",
       "ci_attempts": [
         {
           "run_id": 36351374198,
@@ -47450,12 +47450,47 @@
           "run_number": 932,
           "head": "2b6b441c1fcd12c5e8f67e43cbe79762a08a6636",
           "base": "7b2ca79405fc12d34bce1386157e929e4668f31a",
-          "result": "in_progress",
-          "validation_pr": 376
+          "result": "success",
+          "validation_pr": 376,
+          "status": "completed",
+          "conclusion": "success",
+          "jobs": {
+            "php_symfony": "success",
+            "postgres_18": "success"
+          },
+          "summary": "Exact-head checks passed: PHPStan and Symfony/config/container/Twig/AssetMapper/Doctrine validations succeeded; PHPUnit 739 tests / 4,675 assertions / 0 failures or errors (1 deprecation, 3 notices); JavaScript 11/11; PostgreSQL 18 applied 57 migrations with 878 SQL queries and confirmed latest migration status."
         }
       ],
       "ci_run_id": 36351571903,
-      "last_ci_run_id": 36351571903
+      "last_ci_run_id": 36351571903,
+      "last_ci_run_number": 932,
+      "ci_validation_pr": 376,
+      "final_head": "2b6b441c1fcd12c5e8f67e43cbe79762a08a6636",
+      "final_base_sha": "7b2ca79405fc12d34bce1386157e929e4668f31a",
+      "completion_head": "2b6b441c1fcd12c5e8f67e43cbe79762a08a6636",
+      "completed_at": "2026-09-27T21:39:20.833Z",
+      "test_results": [
+        "Exact-head Worker CI #932 / run 36351571903 completed successfully on 2b6b441c1fcd12c5e8f67e43cbe79762a08a6636.",
+        "PHP/Symfony job passed PHPStan level 8, config/container/Twig/AssetMapper/Doctrine validation and PHPUnit: 739 tests, 4,675 assertions, zero failures or errors; 1 PHPUnit deprecation and 3 notices.",
+        "JavaScript tests: 11 passed, 0 failed.",
+        "PostgreSQL 18 migration-chain job passed: 57 migrations and 878 SQL queries; latest version confirmed."
+      ],
+      "completion_evidence": [
+        "Proposal base and PR base are Worker main@7b2ca79405fc12d34bce1386157e929e4668f31a; final feature HEAD is 2b6b441c1fcd12c5e8f67e43cbe79762a08a6636.",
+        "PR #376 is open and ready for review with exactly seven WCP-581-allowlisted paths.",
+        "The Social unread-conversations Page Builder widget uses active participant membership, joinedAt and lastReadAt cutoffs, excludes own and deleted messages, shows no personalized data to guests, hides when Social is disabled, and marks authenticated responses private/no-store.",
+        "Exact-head Worker CI #932 / 36351571903 passed both PHP/Symfony and PostgreSQL 18 jobs; see test_results for counts.",
+        "Initial CI #931 failed on the AsEventListener import namespace; the import was corrected on the final HEAD, where full CI passed."
+      ],
+      "worker_completion_summary": "WCP-581 completed on exact green Worker HEAD 2b6b441c1fcd12c5e8f67e43cbe79762a08a6636 with PR #376 open and ready for Trusted review. The seven allowlisted paths provide a private Social unread-count Page Builder widget with membership/read-state filtering and disabled-module behavior. Exact-head CI #932 / 36351571903 passed (739 PHPUnit tests / 4,675 assertions, JavaScript 11/11, PHPStan and Symfony checks, PostgreSQL 18 with 57 migrations / 878 SQL queries).",
+      "trusted_follow_up": [
+        "Review the SocialModuleAvailability bridge in WidgetRegistry against the reserved generic module-catalog work before Trusted integration.",
+        "Consider timestamp precision behavior for messages and lastReadAt values persisted in the same second."
+      ],
+      "open_limitations": [
+        "Existing Social read-marker and message timestamps use second precision, so messages written in the same persisted second as a read marker cannot be ordered precisely without a schema change.",
+        "The generic CMS module catalog remains reserved by WCP-499; this widget uses the existing Social-specific availability service."
+      ]
     }
   ],
   "recovery_queue": [],
