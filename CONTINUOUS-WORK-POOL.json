@@ -35779,16 +35779,21 @@
       "claim_state": "active",
       "active_base_branch": "main",
       "active_base_sha": "b510875e7b0741b9b19f09429d2204a95df51198",
-      "active_head": "b510875e7b0741b9b19f09429d2204a95df51198",
+      "active_head": "77040423fd5cbf38ac105573de8b67641e9dfe73",
       "resume_branch": "feature/wcp-517-content-revision-compare-g1",
       "branch_heads": {
         "claim_branch": "b510875e7b0741b9b19f09429d2204a95df51198",
-        "feature_branch": "b510875e7b0741b9b19f09429d2204a95df51198"
+        "feature_branch": "77040423fd5cbf38ac105573de8b67641e9dfe73"
       },
-      "last_observed_head": "b510875e7b0741b9b19f09429d2204a95df51198",
-      "last_checkpoint_at": "2026-09-27T10:52:42.182Z",
-      "checkpoint_paths": [],
-      "next_action": "Implement the read-only revision comparison in the four allowed paths, verify the existing content permission and module-disable paths, then checkpoint and open a draft Worker PR."
+      "last_observed_head": "77040423fd5cbf38ac105573de8b67641e9dfe73",
+      "last_checkpoint_at": "2026-09-27T11:08:41.133Z",
+      "checkpoint_paths": [
+        "src/Controller/AdminContentRevisionCompareController.php",
+        "templates/admin/content/history.html.twig",
+        "templates/admin/content/revision_compare.html.twig",
+        "tests/Controller/AdminContentRevisionCompareTest.php"
+      ],
+      "next_action": "Run exact-head Worker CI; fix failures without weakening checks, then update the PR and completion record."
     },
     {
       "priority": 518,
