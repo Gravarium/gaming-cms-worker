@@ -44,11 +44,9 @@ final class AdminGuildCollaborationPaginationTest extends WebTestCase
         $events = [];
 
         for ($index = 0; $index < 56; ++$index) {
-            $status = match ($index % 3) {
-                0 => GuildEvent::STATUS_PLANNED,
-                1 => GuildEvent::STATUS_DONE,
-                default => GuildEvent::STATUS_CANCELLED,
-            };
+            $status = $index < 30
+                ? GuildEvent::STATUS_PLANNED
+                : (($index - 30) % 2 === 0 ? GuildEvent::STATUS_DONE : GuildEvent::STATUS_CANCELLED);
             $event = (new GuildEvent())
                 ->setGuild($fixtures['guild'])
                 ->setCreatedBy($auth['user'])
@@ -156,19 +154,44 @@ final class AdminGuildCollaborationPaginationTest extends WebTestCase
             self::assertResponseIsSuccessful();
             self::assertSame([$this->requireId($events[1]->getId())], $this->visibleEventIds($crawler));
 
-            $doneIds = [];
+            $statusIds = [
+                GuildEvent::STATUS_PLANNED => [],
+                GuildEvent::STATUS_DONE => [],
+                GuildEvent::STATUS_CANCELLED => [],
+            ];
             foreach ($events as $event) {
-                if ($event->getStatus() === GuildEvent::STATUS_DONE) {
-                    $doneIds[] = $this->requireId($event->getId());
+                $statusIds[$event->getStatus()][] = $this->requireId($event->getId());
+            }
+            foreach ($statusIds as $status => $expectedIds) {
+                $query = ['q' => $token, 'status' => $status];
+                $crawler = $client->request('GET', $base.'?'.http_build_query($query));
+                self::assertResponseIsSuccessful();
+                self::assertSelectorTextContains(
+                    '[role="status"]',
+                    count($expectedIds).' '.(count($expectedIds) === 1 ? 'Termin' : 'Termine'),
+                );
+
+                if ($status === GuildEvent::STATUS_PLANNED) {
+                    $firstPageStatusIds = $this->visibleEventIds($crawler);
+                    self::assertCount(25, $firstPageStatusIds);
+                    self::assertSelectorTextContains('[role="status"]', 'Seite 1 von 2');
+                    $nextUrl = (string) $crawler->filter('nav[aria-label="Seitennavigation"] a[rel="next"]')->attr('href');
+                    parse_str((string) parse_url($nextUrl, PHP_URL_QUERY), $nextQuery);
+                    self::assertSame($token, $nextQuery['q'] ?? null);
+                    self::assertSame(GuildEvent::STATUS_PLANNED, $nextQuery['status'] ?? null);
+                    self::assertSame('2', $nextQuery['page'] ?? null);
+
+                    $crawler = $client->request('GET', $base.'?'.http_build_query($nextQuery));
+                    self::assertResponseIsSuccessful();
+                    self::assertSelectorTextContains('[role="status"]', 'Seite 2 von 2');
+                    $allStatusIds = [...$firstPageStatusIds, ...$this->visibleEventIds($crawler)];
+                    self::assertCount(count($expectedIds), $allStatusIds);
+                    self::assertCount(count($expectedIds), array_unique($allStatusIds));
+                    self::assertEqualsCanonicalizing($expectedIds, $allStatusIds);
+                } else {
+                    self::assertEqualsCanonicalizing($expectedIds, $this->visibleEventIds($crawler));
                 }
             }
-            $crawler = $client->request('GET', $base.'?'.http_build_query([
-                'q' => $token,
-                'status' => GuildEvent::STATUS_DONE,
-            ]));
-            self::assertResponseIsSuccessful();
-            self::assertEqualsCanonicalizing($doneIds, $this->visibleEventIds($crawler));
-            self::assertSelectorTextContains('[role="status"]', count($doneIds).' Termine');
 
             $crawler = $client->request('GET', $base.'?'.http_build_query([
                 'q' => 'missing-'.$token,
@@ -239,6 +262,9 @@ final class AdminGuildCollaborationPaginationTest extends WebTestCase
                 $base.'?status=unknown',
                 $base.'?q='.str_repeat('x', 181),
                 $base.'?q=%FF',
+                $base.'?q=%00',
+                $base.'?q=%1F',
+                $base.'?q=%7F',
             ];
 
             foreach ($uris as $uri) {
@@ -316,6 +342,7 @@ final class AdminGuildCollaborationPaginationTest extends WebTestCase
     }
 
     /**
+     * @param array{game: Game, guild: Guild, otherGuild: Guild} $fixtures
      * @return array{eventIds: list<int>, signupIds: list<int>, memberIds: list<int>, userIds: list<int>, guildIds: list<int>, gameIds: list<int>}
      */
     private function emptyCleanupIds(int $authUserId, array $fixtures): array
