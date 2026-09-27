@@ -72,7 +72,7 @@ final class AdminSettingsSecurityTest extends WebTestCase
                 }
                 $payload['site_settings'] = $settingsPayload;
 
-                $client->request('POST', '/admin/settings', $payload, [], [], null, [
+                $client->request('POST', '/admin/settings', $payload, [], [
                     'HTTP_ORIGIN' => 'https://attacker.example',
                     'HTTP_REFERER' => 'https://attacker.example/cross-site-form',
                     'HTTP_SEC_FETCH_SITE' => 'cross-site',
