@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T02:57:53.142Z",
+  "published_at": "2026-09-27T02:58:18.241Z",
   "summary": {
     "total_remaining_worker_tasks": 141,
     "completed_worker_prs_awaiting_trusted_review": 224,
     "recovery_tasks": 0,
-    "unclaimed": 6,
-    "immediately_claimable": 1,
-    "next_required_action": "WCP-458 is published from sanitized main; atomically create its exclusive claim and feature branches before changing its two allowed paths.",
+    "unclaimed": 5,
+    "immediately_claimable": 0,
+    "next_required_action": "WCP-458 is claimed from exact sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d; implement the category hierarchy operator workflow on its two exclusive paths.",
     "composition_preparable": 0,
     "immediately_actionable": 4,
     "must_continue": true
@@ -26571,7 +26571,7 @@
       "package_id": "WCP-458",
       "title": "Show category hierarchy and public archive entry points",
       "risk": "medium",
-      "execution_state": "unclaimed",
+      "execution_state": "worker_in_progress",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -26643,7 +26643,21 @@
           "tests/Controller/AdminCategoryHierarchyListingTest.php"
         ]
       },
-      "published_at": "2026-09-27T02:57:53.142Z"
+      "published_at": "2026-09-27T02:57:53.142Z",
+      "claim_state": "active",
+      "claimed_on": "2026-09-27T02:58:18.241Z",
+      "active_base_branch": "main",
+      "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "resume_branch": "feature/wcp-458-category-hierarchy-operator-g1",
+      "checkpoint_paths": [],
+      "branch_heads": {
+        "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+        "feature_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d"
+      },
+      "last_checkpoint_at": "2026-09-27T02:58:18.241Z",
+      "last_verified_push_at": "2026-09-27T02:58:18.241Z",
+      "next_action": "Update the admin category index to expose full category hierarchy, public archive links and existing deletion error flashes; add functional authorization, archive-link and blocked-delete regression tests, then checkpoint."
     }
   ],
   "recovery_queue": [],
