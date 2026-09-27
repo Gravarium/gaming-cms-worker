@@ -19,7 +19,7 @@
     "immediately_claimable": 0,
     "next_required_action": "Re-evaluate the fresh pool in priority order and continue with the first dependency-safe unclaimed task or derive a bounded worker-only CMS proposal.",
     "composition_preparable": 0,
-    "immediately_actionable": 21,
+    "immediately_actionable": 22,
     "must_continue": true
   },
   "rules": {
@@ -36735,6 +36735,123 @@
       "last_checkpoint_at": "2026-09-27T11:35:35.271Z",
       "checkpoint_paths": [],
       "next_action": "Implement the public-playlist query, Video-owned page-builder provider, template and focused tests only in the four allowed paths; push a coherent checkpoint and run exact-head Worker CI."
+    },
+    {
+      "priority": 524,
+      "package_id": "WCP-524",
+      "title": "Promote public Game Catalogue entries through the page builder",
+      "risk": "low",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-524-public-game-catalogue-widget-g1",
+      "suggested_branch": "feature/wcp-524-public-game-catalogue-widget-g1",
+      "base_branch": "main",
+      "base_sha": "b510875e7b0741b9b19f09429d2204a95df51198",
+      "objective": "Complete the existing Gaming Game Catalogue and Page Builder workflow with a reusable public catalogue widget. Editors can place a bounded list of publicly visible catalogue entries on the home page or another CMS page. Reuse GameCatalogueEntry and its existing public show route; do not change the locked catalogue controller, repository, entity, index template or schema.",
+      "allowed_paths": [
+        "src/Widget/GameCatalogue/PublicGameCatalogueQuery.php",
+        "src/Widget/PublicGameCatalogueWidgetProvider.php",
+        "templates/widget/public_game_catalogue.html.twig",
+        "tests/Widget/PublicGameCatalogueWidgetProviderTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/",
+        "src/Controller/GameCatalogue/",
+        "src/Repository/GameCatalogue/",
+        "src/Entity/GameCatalogue/",
+        "src/Entity/Game.php",
+        "src/Widget/UpcomingGameReleaseWidgetProvider.php",
+        "src/Widget/GameRelease/",
+        "src/Widget/VideoPlaylist/",
+        "src/Widget/PublicVideoPlaylistWidgetProvider.php",
+        "templates/game_catalogue/",
+        "templates/home/",
+        "templates/base.html.twig",
+        "templates/layout/",
+        "templates/widget/upcoming_game_releases.html.twig",
+        "templates/widget/public_video_playlists.html.twig",
+        "tests/Gaming/Catalogue/",
+        "tests/Controller/GameCatalogue/",
+        "tests/Widget/UpcomingGameReleaseWidgetProviderTest.php",
+        "tests/Widget/PublicVideoPlaylistWidgetProviderTest.php"
+      ],
+      "deliverables": [
+        "Auto-discover a Gaming-owned gaming.game-catalogue widget through the existing WidgetProvider contract without modifying shared registry wiring.",
+        "Add a dedicated bounded read query for enabled catalogue entries whose underlying games are enabled; use deterministic game-name and ID ordering and cap results at 12.",
+        "Provide an editor count setting defaulting to 6 and bounded from 1 through 12; render game name and optional summary with escaped content and internal app_game_catalogue_show links.",
+        "Render a clear empty state and rely on the existing WidgetRegistry to hide the widget and suppress its data whenever Gaming is disabled.",
+        "Do not change existing catalogue routes, repository APIs, page templates, entities, schema or migrations."
+      ],
+      "tests": [
+        "Functional coverage for auto-discovery, Page Builder placement, bounded count schema and disabled-Gaming palette/data suppression.",
+        "Query fixture coverage includes visible enabled entries and excludes disabled entries or disabled games; verify deterministic ordering and the 12-item cap.",
+        "Render coverage verifies safe internal game-detail links, escaped title/summary and an empty state.",
+        "Run focused PHPUnit, PHPStan level 8 and complete Worker CI on the exact final HEAD, including PostgreSQL 18 migration-chain validation."
+      ],
+      "completion_report": [
+        "Exact sanitized main/base SHA and final Worker HEAD SHA.",
+        "Changed-path list and Worker PR.",
+        "Page Builder discovery/placement, bounded public catalogue query, internal links, empty state and disabled-Gaming behavior.",
+        "Focused tests, PHPStan and exact-head Worker CI evidence.",
+        "Remaining limitations and Trusted integration follow-up."
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "gaming-disabled-means-widget-hidden-and-no-data",
+        "only-enabled-catalogue-entries-for-enabled-games-are-publicly-promoted",
+        "reuse-existing-game-catalogue-entities-and-app_game_catalogue_show-route",
+        "bounded-deterministic-read-only-widget-no-schema-or-migration-change",
+        "preserve-page-builder-validation-permissions-and-widget-registry-module-gate",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "red-CI-stops-integration",
+        "no-direct-trusted-integration-or-deployment",
+        "no-private-runtime-or-sensitive-data"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "b510875e7b0741b9b19f09429d2204a95df51198",
+      "proposal_kind": "worker_only",
+      "proposal_dependency_evidence": [],
+      "collision_check": {
+        "compared_against": "Fresh continuous/work-pool-v4 blob d17245616b301697715d419639d0e8f618194873; all active and claim-locked package paths; WCP-387 catalogue browse, WCP-471 release calendar, WCP-518 release widget and WCP-523 playlist widget exact claims; current branch/PR search for WCP-524; sanitized main b510875e7b0741b9b19f09429d2204a95df51198.",
+        "result": "No active or claim-locked package owns the four exact paths. WCP-387's locked GameCatalogueController, GameCatalogueEntryRepository, index template and controller test are untouched. WCP-471/518 release calendar/widget paths and WCP-523 public-video-playlist widget paths are separate. WCP-401/WCP-503 administration paths are untouched. FCP-072's broad templates/ scope is unclaimed and dependency-blocked; the exact widget template is a nonblocking future scope hit that must be revalidated before that package is claimed.",
+        "paths": [
+          "src/Widget/GameCatalogue/PublicGameCatalogueQuery.php",
+          "src/Widget/PublicGameCatalogueWidgetProvider.php",
+          "templates/widget/public_game_catalogue.html.twig",
+          "tests/Widget/PublicGameCatalogueWidgetProviderTest.php"
+        ]
+      },
+      "published_at": "2026-09-27T11:41:27.807Z",
+      "claimed_on": "2026-09-27T11:41:27.807Z",
+      "claim_state": "active",
+      "active_base_branch": "main",
+      "active_base_sha": "b510875e7b0741b9b19f09429d2204a95df51198",
+      "active_head": "b510875e7b0741b9b19f09429d2204a95df51198",
+      "resume_branch": "feature/wcp-524-public-game-catalogue-widget-g1",
+      "branch_heads": {
+        "claim_branch": "b510875e7b0741b9b19f09429d2204a95df51198",
+        "feature_branch": "b510875e7b0741b9b19f09429d2204a95df51198"
+      },
+      "last_observed_head": "b510875e7b0741b9b19f09429d2204a95df51198",
+      "last_checkpoint_at": "2026-09-27T11:41:27.807Z",
+      "checkpoint_paths": [],
+      "next_action": "Implement the bounded Game Catalogue query, provider, public widget template and focused tests only in the four allowed paths; then validate exact-head Worker CI."
     }
   ],
   "recovery_queue": [],
