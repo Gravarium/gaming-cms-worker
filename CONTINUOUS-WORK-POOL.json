@@ -17,7 +17,7 @@
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-463 has a coherent source/UI checkpoint at a0af4496cf2696d56e3d073865790379c7c8b621; finish its focused functional tests and run complete exact-head Worker CI, preserving the disjoint active claims.",
+    "next_required_action": "WCP-465 is claimed from exact sanitized main for test-only connector catalogue authorization, CSRF and safe-planning coverage; continue it while preserving active WCP-463 and WCP-464 claims.",
     "composition_preparable": 0,
     "immediately_actionable": 3,
     "must_continue": true
@@ -27602,6 +27602,99 @@
         "suggested_branch": "f6247efb947195b61d9688b758ee59d0f0fd6f06"
       },
       "next_action": "Create the exact claim and feature branches from the green WCP-113 head, then implement and checkpoint the package capability review workflow."
+    },
+    {
+      "priority": 465,
+      "package_id": "WCP-465",
+      "title": "Protect connector catalogue planning actions",
+      "risk": "medium",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-465-connector-catalog-plan-security-g1",
+      "suggested_branch": "feature/wcp-465-connector-catalog-plan-security-g1",
+      "base_branch": "main",
+      "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "objective": "Add test-only functional security regressions for the existing external connector provider catalogue. Verify CMS_CONNECTORS_MANAGE access control for catalogue display and planning, rejection of missing or invalid connector-catalog-plan CSRF tokens before target/audit writes, and that rendered tokens create only allowlisted connector targets which remain disabled and not required with a non-secret catalogue configuration reference. Do not change runtime code or connector configuration.",
+      "allowed_paths": [
+        "tests/Controller/AdminConnectorCatalogPlanSecurityTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "src/",
+        "templates/",
+        "migrations/",
+        "config/",
+        "public/uploads/"
+      ],
+      "deliverables": [
+        "A user without CMS_CONNECTORS_MANAGE cannot view the provider catalogue or submit a planning request; denied requests create no targets or audit rows.",
+        "Missing and invalid connector-catalog-plan CSRF tokens return 403 without target or audit mutation.",
+        "A rendered catalogue token plans a known provider, while the created target remains disabled, optional, and bound only to its public non-secret configuration reference.",
+        "Remove the synthetic user, test-created target, and associated audit rows during cleanup; keep the change in the one test file."
+      ],
+      "tests": [
+        "Focused AdminConnectorCatalogPlanSecurityTest functional PHPUnit coverage for access control, missing/invalid CSRF, valid rendered token, safe target defaults and cleanup.",
+        "PHPStan level 8 and complete Worker CI on the exact final HEAD.",
+        "PostgreSQL 18 complete migration-chain validation."
+      ],
+      "completion_report": [
+        "Exact sanitized main base SHA and final Worker HEAD SHA.",
+        "Complete changed-path list and Worker PR.",
+        "Permission and CSRF denials with no target/audit side effects; valid-plan disabled-target evidence.",
+        "Focused and complete test commands/results, PHPStan and exact-head CI run.",
+        "Remaining Trusted integration follow-up."
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "preserve-CMS_CONNECTORS_MANAGE-and-connector-catalog-plan-CSRF-before-planning",
+        "planned-targets-remain-disabled-optional-and-use-only-public-non-secret-catalogue-references",
+        "restore-all-synthetic-target-user-and-audit-state",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment",
+        "no-private-runtime-or-sensitive-data"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "proposal_kind": "worker_only",
+      "proposal_dependency_evidence": [],
+      "collision_check": {
+        "compared_against": "Fresh continuous/work-pool-v4 at 93dd1a666910020506bb045681f4fa18ab313601, every active and claim-locked allowed-path scope, and exact sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d.",
+        "result": "No active or claim-locked package owns or encloses tests/Controller/AdminConnectorCatalogPlanSecurityTest.php. The path is absent from sanitized main. WCP-334 owns the connector catalogue controller and planner paths plus its separate planner boundary test; this proposal changes only the distinct controller functional test path. Existing connector access/security tests do not cover catalogue plan authorization, its route-specific CSRF failure side effects, and safe defaults of a valid plan. WCP-429 deletion, WCP-418 module toggles, and active WCP-463/WCP-464 paths are disjoint. No existing task or dependency is modified.",
+        "paths": [
+          "tests/Controller/AdminConnectorCatalogPlanSecurityTest.php"
+        ]
+      },
+      "published_at": "2026-09-27T04:12:42.661Z",
+      "claimed_on": "2026-09-27T04:12:42.661Z",
+      "claim_state": "active",
+      "active_base_branch": "main",
+      "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "resume_branch": "feature/wcp-465-connector-catalog-plan-security-g1",
+      "last_checkpoint_at": "2026-09-27T04:12:42.661Z",
+      "checkpoint_paths": [],
+      "branch_heads": {
+        "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+        "feature_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d"
+      },
+      "next_action": "Implement the test-only connector catalogue permission, route-CSRF and safe planning regression coverage on the feature branch; checkpoint the completed focused test before running full Worker CI.",
+      "last_observed_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "last_verified_push_at": "2026-09-27T04:12:42.661Z"
     }
   ],
   "recovery_queue": [],
