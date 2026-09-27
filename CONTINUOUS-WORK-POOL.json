@@ -35157,16 +35157,22 @@
       "claim_state": "active",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "022100c5101af2a890b3737e1b2627a53989b8d1",
       "resume_branch": "feature/wcp-513-public-news-month-archive-g1",
       "branch_heads": {
         "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-        "feature_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d"
+        "feature_branch": "022100c5101af2a890b3737e1b2627a53989b8d1"
       },
-      "last_observed_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-      "last_checkpoint_at": "2026-09-27T10:23:04.700Z",
-      "checkpoint_paths": [],
-      "next_action": "Implement the independent public month archive, add focused visibility/module-disable coverage, then push a complete checkpoint and run exact-head Worker CI."
+      "last_observed_head": "022100c5101af2a890b3737e1b2627a53989b8d1",
+      "last_checkpoint_at": "2026-09-27T10:32:35.043Z",
+      "checkpoint_paths": [
+        "src/Controller/PublicNewsArchiveController.php",
+        "src/Repository/PublicNewsArchiveRepository.php",
+        "templates/content/news_archive.html.twig",
+        "tests/Controller/PublicNewsArchiveTest.php"
+      ],
+      "next_action": "Open draft Worker PR and run the focused archive test plus full exact-head Worker CI; repair concrete findings only within allowed paths.",
+      "last_verified_push_at": "2026-09-27T10:32:35.043Z"
     },
     {
       "priority": 514,
