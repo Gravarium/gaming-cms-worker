@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T10:00:17.122Z",
+  "published_at": "2026-09-27T10:00:22.287Z",
   "summary": {
     "total_remaining_worker_tasks": 157,
-    "completed_worker_prs_awaiting_trusted_review": 265,
+    "completed_worker_prs_awaiting_trusted_review": 266,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-504 is actively claimed from exact sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d. Implement the configurable internal call-to-action widget with fixed module-owned routes, editor preview coverage and full exact-head Worker CI; keep foreign claims untouched.",
+    "next_required_action": "WCP-501 is complete with green exact-head Worker CI and locked for Trusted review; re-evaluate dependency-safe FCPs, then publish and claim the next independent worker-only CMS proposal if all are blocked.",
     "composition_preparable": 0,
     "immediately_actionable": 14,
     "must_continue": true
@@ -33467,7 +33467,7 @@
       "package_id": "WCP-501",
       "title": "Prevent public redirects to unpublished content",
       "risk": "medium",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -33511,10 +33511,11 @@
         "PostgreSQL 18 complete migration-chain validation."
       ],
       "completion_report": [
-        "Exact sanitized main SHA and final Worker HEAD SHA.",
-        "Complete changed-path list and Worker PR.",
-        "Focused tests, PHPStan, exact-head CI run, PostgreSQL migration results, and fixture-cleanup evidence.",
-        "Unresolved limitations and Trusted integration follow-up."
+        "Proposal base: sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d; final exact Worker HEAD 6357499a85cd9f3eb85b8db0e00f7e662c6dcc34.",
+        "Worker PR #293 is ready for Trusted review and remains open/unmerged; only tests/Controller/PublicContentRedirectVisibilityTest.php changed.",
+        "Exact-head Worker CI run 36310898430 passed: 430 tests, 1,872 assertions, zero failures (one deprecation and one notice); PHPStan no errors; PostgreSQL 18 applied all 39 migrations and executed 470 SQL queries.",
+        "Coverage verifies published-target redirects remain permanent and draft, scheduled, and future-dated targets return 404 without target title/body/slug disclosure; synthetic records are cleaned in finally.",
+        "Worker proposal remains untrusted; no Trusted merge or deployment performed."
       ],
       "immutable_constraints": [
         "public-slug-redirects-must-not-reveal-unpublished-or-future-content",
@@ -33540,7 +33541,7 @@
       },
       "published_at": "2026-09-27T09:53:43.006Z",
       "claimed_on": "2026-09-27T09:53:43.006Z",
-      "claim_state": "active",
+      "claim_state": "locked_until_trusted_resolution",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
       "active_head": "6357499a85cd9f3eb85b8db0e00f7e662c6dcc34",
@@ -33550,12 +33551,36 @@
         "feature_branch": "6357499a85cd9f3eb85b8db0e00f7e662c6dcc34"
       },
       "last_observed_head": "6357499a85cd9f3eb85b8db0e00f7e662c6dcc34",
-      "last_checkpoint_at": "2026-09-27T09:55:07.669Z",
+      "last_checkpoint_at": "2026-09-27T10:00:22.287Z",
       "checkpoint_paths": [
         "tests/Controller/PublicContentRedirectVisibilityTest.php"
       ],
-      "next_action": "Open a draft Worker PR from this exact checkpoint, run the focused PHPUnit test and complete exact-head Worker CI, and repair any concrete failure on this branch.",
-      "last_verified_push_at": "2026-09-27T09:55:07.669Z"
+      "next_action": "PR #293 is ready for Trusted review at exact green HEAD 6357499a85cd9f3eb85b8db0e00f7e662c6dcc34. Keep this claim locked until Trusted explicitly resolves it.",
+      "last_verified_push_at": "2026-09-27T10:00:22.287Z",
+      "worker_pr": 293,
+      "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/293",
+      "draft_pr": false,
+      "pr_state": "open",
+      "ci_run_id": 36310898430,
+      "last_ci_run_id": 36310898430,
+      "ci_result": "success",
+      "last_ci_result": "success",
+      "ci_attempts": [
+        {
+          "run_id": 36310898430,
+          "head": "6357499a85cd9f3eb85b8db0e00f7e662c6dcc34",
+          "result": "success",
+          "summary": "Exact-head Worker CI passed: 430 tests, 1,872 assertions, zero failures (1 deprecation, 1 notice); PHPStan no errors; PostgreSQL 18 applied 39 migrations and completed 470 SQL queries."
+        }
+      ],
+      "worker_pr_changed_paths": [
+        "tests/Controller/PublicContentRedirectVisibilityTest.php"
+      ],
+      "final_head": "6357499a85cd9f3eb85b8db0e00f7e662c6dcc34",
+      "final_changed_paths": [
+        "tests/Controller/PublicContentRedirectVisibilityTest.php"
+      ],
+      "completed_at": "2026-09-27T10:00:22.287Z"
     },
     {
       "priority": 503,
