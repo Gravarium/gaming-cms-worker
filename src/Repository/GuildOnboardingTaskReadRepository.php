@@ -17,7 +17,7 @@ final readonly class GuildOnboardingTaskReadRepository
     /** @return list<array<string, mixed>> */
     public function forGuild(Guild $guild): array
     {
-        return $this->entityManager->createQueryBuilder()
+        $query = $this->entityManager->createQueryBuilder()
             ->select(
                 'task.id AS id',
                 'task.label AS label',
@@ -33,7 +33,11 @@ final readonly class GuildOnboardingTaskReadRepository
             ->setParameter('guild', $guild)
             ->orderBy('task.completed', 'ASC')
             ->addOrderBy('task.id', 'ASC')
-            ->getQuery()
-            ->getArrayResult();
+            ->getQuery();
+
+        /** @var list<array<string, mixed>> $rows */
+        $rows = $query->getArrayResult();
+
+        return $rows;
     }
 }

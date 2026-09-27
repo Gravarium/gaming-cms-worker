@@ -6,7 +6,7 @@ namespace App\Controller;
 
 use App\Entity\Guild;
 use App\Entity\GuildMember;
-use App\Entity\GuildOnboardingTask;
+use App\Entity\Guild\GuildOnboardingTask;
 use App\Entity\User;
 use App\Form\GuildOnboardingTaskInput;
 use App\Form\GuildOnboardingTaskType;

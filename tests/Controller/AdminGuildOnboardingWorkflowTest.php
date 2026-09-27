@@ -8,7 +8,7 @@ use App\Entity\CmsModuleState;
 use App\Entity\Game;
 use App\Entity\Guild;
 use App\Entity\GuildMember;
-use App\Entity\GuildOnboardingTask;
+use App\Entity\Guild\GuildOnboardingTask;
 use App\Entity\User;
 use App\Repository\GuildOnboardingTaskReadRepository;
 use App\Security\CmsPermission;
