@@ -13,11 +13,11 @@
   "published_at": "2026-09-27T19:29:42.330Z",
   "summary": {
     "total_remaining_worker_tasks": 173,
-    "completed_worker_prs_awaiting_trusted_review": 306,
+    "completed_worker_prs_awaiting_trusted_review": 307,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-576 CI #922 is running on b017774ea2ebb28b01d3815268064964eaa92991 after removal of the brittle total-script-count assertion.",
+    "next_required_action": "WCP-576 is complete on exact-head CI; inspect current pool and worker-visible CMS for the next independent safe proposal, reserve one path-disjoint WCP, and continue.",
     "composition_preparable": 0,
     "immediately_actionable": 29,
     "must_continue": true
@@ -46607,7 +46607,7 @@
       "package_id": "WCP-576",
       "title": "Test HTML and JSON-LD escaping on public content detail pages",
       "risk": "low",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -46677,7 +46677,7 @@
       },
       "published_at": "2026-09-27T19:39:07.587Z",
       "claimed_on": "2026-09-27T19:39:07.587Z",
-      "claim_state": "active",
+      "claim_state": "locked_until_trusted_resolution",
       "active_base_branch": "main",
       "active_base_sha": "7b2ca79405fc12d34bce1386157e929e4668f31a",
       "active_head": "b017774ea2ebb28b01d3815268064964eaa92991",
@@ -46691,18 +46691,18 @@
       "checkpoint_paths": [
         "tests/Controller/PublicContentRenderingTest.php"
       ],
-      "next_action": "Await exact-head Worker CI #922 / 36345536395 on b017774ea2ebb28b01d3815268064964eaa92991; CI #921's script-count assertion fix is now included.",
+      "next_action": "Await Trusted review and independent validation of PR #370; continue autonomous Worker scheduling without merging or deploying.",
       "worker_pr": 370,
-      "worker_pr_state": "draft",
+      "worker_pr_state": "ready_for_review",
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/370",
       "worker_pr_changed_paths": [
         "tests/Controller/PublicContentRenderingTest.php"
       ],
       "pr_state": "open",
-      "draft_pr": true,
+      "draft_pr": false,
       "worker_pr_base_branch": "main",
       "worker_pr_base_sha": "7b2ca79405fc12d34bce1386157e929e4668f31a",
-      "ci_result": "in_progress",
+      "ci_result": "success",
       "ci_attempts": [
         {
           "run_id": 36345340465,
@@ -46718,15 +46718,17 @@
           "run_number": 922,
           "head": "b017774ea2ebb28b01d3815268064964eaa92991",
           "base": "7b2ca79405fc12d34bce1386157e929e4668f31a",
-          "result": "in_progress",
+          "result": "success",
           "validation_pr": 370,
-          "conclusion": null
+          "conclusion": "success"
         }
       ],
       "ci_run_id": 36345536395,
       "last_ci_run_id": 36345536395,
       "ci_validation_pr": 370,
-      "last_ci_result": "in_progress"
+      "last_ci_result": "success",
+      "completed_at": "2026-09-27T19:49:02.622Z",
+      "worker_completion_summary": "Exact-head Worker CI #922 / 36345536395 passed on b017774ea2ebb28b01d3815268064964eaa92991: 737 tests, 4,641 assertions, 0 failures/errors (1 PHPUnit deprecation, 3 notices); PHPStan reported no errors; PostgreSQL 18 applied 57 migrations with 878 SQL queries. PR #370 is open and ready for Trusted review from main@7b2ca79405fc12d34bce1386157e929e4668f31a; exactly one allowlisted test path changed, with no runtime or template changes. Initial CI #921 exposed a brittle total-script-count assertion, corrected before green exact-head validation."
     }
   ],
   "recovery_queue": [],
