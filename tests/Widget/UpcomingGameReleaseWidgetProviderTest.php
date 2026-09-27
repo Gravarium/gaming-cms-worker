@@ -101,7 +101,7 @@ final class UpcomingGameReleaseWidgetProviderTest extends KernelTestCase
                 ->setName('Release Game <script>alert(1)</script>')
                 ->setSlug('release-game-'.$uniqueSuffix);
             $entry = new GameCatalogueEntry($game);
-            $platform = new GamePlatform('PC', 'pc');
+            $platform = new GamePlatform('PC', 'pc-'.$uniqueSuffix);
             $edition = new GameEdition($entry, 'Deluxe');
 
             $disabledGame = (new Game())
