@@ -1,0 +1,6 @@
+{% for item in data.items|default([]) %}
+<details class="faq-item">
+    <summary>{{ item.question }}</summary>
+    <div class="faq-answer"><p>{{ item.answer }}</p></div>
+</details>
+{% endfor %}
