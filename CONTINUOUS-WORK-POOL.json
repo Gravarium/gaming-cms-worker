@@ -17,7 +17,7 @@
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-479 is active on exact PR HEAD 0dcba428821d44ad9081f04725aa01a58c2dfed7 (draft PR #272; exact-head CI run 36301404016 in progress). Continue this claim through complete Worker CI. Keep WCP-365 and all foreign claims untouched.",
+    "next_required_action": "WCP-480 is claimed on exact green WCP-458 HEAD f500378f1d17b383300d025e40fbefc0b671af0a. It adds an audited, CSRF-protected category content-reassignment workflow on disjoint paths. Preserve all active foreign claims and dependency blocks.",
     "composition_preparable": 0,
     "immediately_actionable": 4,
     "must_continue": true
@@ -30085,6 +30085,121 @@
         "tests/Controller/AdminGuildRankDeletionSecurityTest.php",
         "tests/Controller/AdminGuildStructureSecurityTest.php"
       ]
+    },
+    {
+      "priority": 480,
+      "package_id": "WCP-480",
+      "title": "Move content before retiring a category",
+      "risk": "medium",
+      "execution_state": "worker_in_progress",
+      "dependencies": [
+        "WCP-458"
+      ],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-480-category-content-reassignment-g1",
+      "suggested_branch": "feature/wcp-480-category-content-reassignment-g1",
+      "base_branch": "main",
+      "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "objective": "Give CMS content managers a safe, reachable workflow to move every content entry assigned to a category into another existing category, so an occupied category can be cleared before deletion without editing entries one by one.",
+      "allowed_paths": [
+        "src/Controller/AdminCategoryContentMoveController.php",
+        "src/Form/CategoryContentMoveType.php",
+        "templates/admin/category/form.html.twig",
+        "templates/admin/category/move_content.html.twig",
+        "tests/Controller/AdminCategoryContentMoveTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "src/Entity/Category.php",
+        "src/Entity/ContentEntry.php",
+        "src/Repository/ContentEntryRepository.php",
+        "templates/admin/category/index.html.twig",
+        "tests/Controller/AdminCategoryHierarchyListingTest.php"
+      ],
+      "deliverables": [
+        "The existing edit screen for an identified category links to a dedicated content-move screen; the screen shows source category and current entry count and offers only other existing categories as targets.",
+        "A valid CMS_CONTENT_MANAGE user can submit a CSRF-protected form to reassign all source-category content entries to the chosen target atomically, preserve entry status and metadata, record an audit event with source, target and moved count, then return to the category list.",
+        "Reject an invalid, missing, or same-category target and do not mutate entries or write a success audit; an empty source category is presented as a no-op without writes.",
+        "Unauthorized requests and missing/invalid CSRF are denied or invalid with no content/category mutation; invalid attempts do not produce a success audit.",
+        "The source category and its parent/child relationships remain unchanged; no content is deleted and no schema change is made."
+      ],
+      "tests": [
+        "Functional coverage for the reachable edit-screen link, move-form source/count/choices, successful multi-entry reassignment and state preservation.",
+        "Negative functional coverage for unauthorized access, missing/invalid CSRF, same-category/invalid destination and zero-entry no-op with state preservation.",
+        "Assert one successful audit event contains the source, target and moved count; no success event exists after rejected requests.",
+        "PHPStan level 8 and complete Worker CI on exact final HEAD, plus PostgreSQL 18 migration-chain validation."
+      ],
+      "completion_report": [
+        "Exact sanitized main SHA and exact green proposal base WCP-458 HEAD.",
+        "Final HEAD and complete changed paths.",
+        "Functional test, authorization, CSRF, invalid destination, state-preservation and audit results.",
+        "Exact-head Worker CI run, PHPUnit/PHPStan and PostgreSQL migration results.",
+        "Unresolved limits and Trusted integration follow-up."
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "preserve-CMS_CONTENT_MANAGE-and-form-CSRF",
+        "reassignment-is-atomic-and-audited",
+        "never-delete-content-or-source-category-as-part-of-reassignment",
+        "preserve-content-status-metadata-and-category-hierarchy",
+        "no-migration-or-schema-change",
+        "red-ci-stops-integration",
+        "no-private-runtime-or-sensitive-data"
+      ],
+      "proposal_base_branch": "feature/wcp-458-category-hierarchy-operator-g1",
+      "proposal_base_sha": "f500378f1d17b383300d025e40fbefc0b671af0a",
+      "proposal_kind": "worker_only",
+      "proposal_dependency_evidence": [
+        {
+          "package_id": "WCP-458",
+          "exact_green_head": "f500378f1d17b383300d025e40fbefc0b671af0a",
+          "worker_pr": 251,
+          "ci_run_id": 36290192242,
+          "ci_result": "success"
+        }
+      ],
+      "collision_check": {
+        "compared_against": "Fresh continuous/work-pool-v4 after checking WCP-478 and WCP-479 claims, all active and claim-locked path scopes, sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d, and WCP-458 exact green HEAD f500378f1d17b383300d025e40fbefc0b671af0a.",
+        "result": "No active or claim-locked package owns or encloses any allowed path. WCP-458 owns only templates/admin/category/index.html.twig and its hierarchy listing test; this proposal changes the category edit template and adds a dedicated controller, form, move template and functional test. WCP-478/479 are guild tests; WCP-365's rank-name form paths are unrelated. No entity, repository, migration, index template or other task file is changed.",
+        "paths": [
+          "src/Controller/AdminCategoryContentMoveController.php",
+          "src/Form/CategoryContentMoveType.php",
+          "templates/admin/category/form.html.twig",
+          "templates/admin/category/move_content.html.twig",
+          "tests/Controller/AdminCategoryContentMoveTest.php"
+        ]
+      },
+      "published_at": "2026-09-27T06:54:51.325Z",
+      "claimed_on": "2026-09-27T06:54:51.325Z",
+      "claim_state": "active",
+      "active_base_branch": "feature/wcp-458-category-hierarchy-operator-g1",
+      "active_base_sha": "f500378f1d17b383300d025e40fbefc0b671af0a",
+      "active_head": "f500378f1d17b383300d025e40fbefc0b671af0a",
+      "resume_branch": "feature/wcp-480-category-content-reassignment-g1",
+      "branch_heads": {
+        "claim_branch": "f500378f1d17b383300d025e40fbefc0b671af0a",
+        "feature_branch": "f500378f1d17b383300d025e40fbefc0b671af0a"
+      },
+      "next_action": "Implement the category edit-screen link, CSRF-protected target form and transactional audited content reassignment in the allowlisted paths only.",
+      "last_observed_head": "f500378f1d17b383300d025e40fbefc0b671af0a",
+      "last_checkpoint_at": "2026-09-27T06:54:51.325Z",
+      "checkpoint_paths": [],
+      "worker_pr_changed_paths": []
     }
   ],
   "recovery_queue": [],
