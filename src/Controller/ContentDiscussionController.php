@@ -122,7 +122,7 @@ final class ContentDiscussionController extends AbstractController
             return $this->redirectToRoute('app_content_discussion', ['slug' => $entry->getSlug()], Response::HTTP_SEE_OTHER);
         }
 
-        $existing = $this->interactions->reaction($commentId, $user, $reaction);
+        $existing = $this->interactions->reaction($comment, $user, $reaction);
         if ($existing instanceof CommunityReaction) {
             $this->entityManager->remove($existing);
             $this->entityManager->flush();
@@ -208,6 +208,10 @@ final class ContentDiscussionController extends AbstractController
 
     private function publishedEntry(string $slug): ContentEntry
     {
+        if (!$this->modules->isEnabled('content')) {
+            throw $this->createNotFoundException();
+        }
+
         $entry = $this->interactions->publishedEntry($slug);
         if (!$entry instanceof ContentEntry) {
             throw $this->createNotFoundException();
@@ -310,7 +314,7 @@ final class ContentDiscussionController extends AbstractController
         ]);
 
         $contentRoute = $entry->getType() === ContentEntry::TYPE_NEWS ? 'app_news_show' : 'app_page_show';
-        $response = $this->render('community_interaction/discussion.html.twig', [
+        $response = $this->render('discussion.html.twig', [
             'entry' => $entry,
             'contentRoute' => $contentRoute,
             'comments' => $commentRows,

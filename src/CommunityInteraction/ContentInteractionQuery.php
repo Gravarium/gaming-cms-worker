@@ -37,7 +37,7 @@ final readonly class ContentInteractionQuery
     /** @return list<CommunityComment> */
     public function publicComments(int $targetId, int $page): array
     {
-        return $this->entityManager->createQueryBuilder()
+        $comments = $this->entityManager->createQueryBuilder()
             ->select('comment', 'author', 'parent', 'parentAuthor')
             ->from(CommunityComment::class, 'comment')
             ->join('comment.author', 'author')
@@ -54,6 +54,9 @@ final readonly class ContentInteractionQuery
             ->setMaxResults(self::COMMENT_PAGE_SIZE)
             ->getQuery()
             ->getResult();
+
+        /** @var list<CommunityComment> $comments */
+        return $comments;
     }
 
     public function countPublicComments(int $targetId): int
@@ -95,7 +98,7 @@ final readonly class ContentInteractionQuery
      */
     public function recentPublicDiscussions(int $limit = 6): array
     {
-        $entries = $this->entityManager->createQueryBuilder()
+        $entriesQuery = $this->entityManager->createQueryBuilder()
             ->select('entry')
             ->from(ContentEntry::class, 'entry')
             ->andWhere('entry.status = :status')
@@ -111,6 +114,8 @@ final readonly class ContentInteractionQuery
             ->getQuery()
             ->getResult();
 
+        /** @var list<ContentEntry> $entries */
+        $entries = $entriesQuery;
         $entryIds = array_values(array_filter(array_map(
             static fn (ContentEntry $entry): ?int => $entry->getId(),
             $entries,
@@ -228,10 +233,10 @@ final readonly class ContentInteractionQuery
         return array_values(array_map(static fn (array $row): string => (string) $row['reaction'], $rows));
     }
 
-    public function reaction(int $commentId, User $user, string $value): ?CommunityReaction
+    public function reaction(CommunityComment $comment, User $user, string $value): ?CommunityReaction
     {
         $reaction = $this->entityManager->getRepository(CommunityReaction::class)->findOneBy([
-            'comment' => $commentId,
+            'comment' => $comment,
             'user' => $user,
             'reaction' => $value,
         ]);
@@ -258,7 +263,7 @@ final readonly class ContentInteractionQuery
     /** @return list<CommunityReport> */
     public function reportsForModeration(): array
     {
-        return $this->entityManager->createQueryBuilder()
+        $reports = $this->entityManager->createQueryBuilder()
             ->select('report', 'comment', 'author', 'reporter')
             ->from(CommunityReport::class, 'report')
             ->join('report.comment', 'comment')
@@ -273,12 +278,15 @@ final readonly class ContentInteractionQuery
             ->setMaxResults(100)
             ->getQuery()
             ->getResult();
+
+        /** @var list<CommunityReport> $reports */
+        return $reports;
     }
 
     /** @return list<CommunityComment> */
     public function hiddenContentComments(): array
     {
-        return $this->entityManager->createQueryBuilder()
+        $comments = $this->entityManager->createQueryBuilder()
             ->select('comment', 'author')
             ->from(CommunityComment::class, 'comment')
             ->join('comment.author', 'author')
@@ -289,5 +297,10 @@ final readonly class ContentInteractionQuery
             ->setMaxResults(100)
             ->getQuery()
             ->getResult();
+
+        /** @var list<CommunityComment> $comments */
+        return $comments;
     }
+}
+
 }
