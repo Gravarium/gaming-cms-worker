@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T18:29:00.169Z",
+  "published_at": "2026-09-27T18:35:03.581Z",
   "summary": {
-    "total_remaining_worker_tasks": 170,
+    "total_remaining_worker_tasks": 171,
     "completed_worker_prs_awaiting_trusted_review": 297,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-566 PR #360 is ready for Trusted review with exact-head CI #911 / 36340604369 green. Re-evaluate unclaimed dependencies and continue with the next independent worker-only proposal if none is eligible.",
+    "next_required_action": "WCP-567 is claimed on main@7b2ca79405fc12d34bce1386157e929e4668f31a; add public category directory stored-XSS regression coverage and run exact-head CI.",
     "composition_preparable": 0,
     "immediately_actionable": 29,
     "must_continue": true
@@ -45467,6 +45467,91 @@
       "ci_validation_pr": 360,
       "completed_at": "2026-09-27T18:29:00.169Z",
       "worker_completion_summary": "Exact-head Worker CI #911 / 36340604369 passed on 5596b3c5a6da79a4d65614faf8a7835177105307: 736 tests, 4,632 assertions, 0 failures/errors (1 deprecation, 3 notices); PHPStan reported no errors; PostgreSQL 18 applied 57 migrations with 878 SQL queries. PR #360 is open and ready for Trusted review, based on main@7b2ca79405fc12d34bce1386157e929e4668f31a, with exactly two allowlisted paths."
+    },
+    {
+      "priority": 567,
+      "package_id": "WCP-567",
+      "title": "Guard category directory against stored HTML injection",
+      "risk": "low",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-567-category-directory-xss-test-g1",
+      "suggested_branch": "feature/wcp-567-category-directory-xss-test-g1",
+      "base_branch": "main",
+      "base_sha": "7b2ca79405fc12d34bce1386157e929e4668f31a",
+      "objective": "Add a focused regression to the public category directory functional test proving database-controlled category names and descriptions are emitted as escaped text, not executable HTML. Exercise both a script element in a category name and an event-handler image payload in a description. This package is test-only; do not change templates or security behavior.",
+      "allowed_paths": [
+        "tests/Controller/PublicCategoryDirectoryTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "CONTINUOUS-WORKER.md",
+        "CONTINUOUS-WORK-POOL.json",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "templates/",
+        "src/",
+        "migrations/",
+        "config/"
+      ],
+      "deliverables": [
+        "Functional coverage asserts the public category directory contains the safely escaped malicious text and does not contain executable raw script or event-handler markup.",
+        "Existing hierarchy, ordering, archive-link, and content-module gate assertions remain intact.",
+        "No production-code changes."
+      ],
+      "tests": [
+        "Targeted PublicCategoryDirectoryTest.",
+        "Complete exact-head Worker CI including PHPUnit, PHPStan, template/config checks and PostgreSQL 18 migration chain."
+      ],
+      "completion_report": [
+        "Exact sanitized base and final HEAD; changed path and Worker PR state.",
+        "Exact XSS payloads and escaped-output assertions.",
+        "Targeted regression and exact-head Worker CI results.",
+        "Test-only package; no runtime changes."
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-Trusted-review-and-exact-head-CI",
+        "preserve-all-security-permissions-CSRF-validation-recovery-rollback-and-upload-controls",
+        "no-private-runtime-or-sensitive-data",
+        "no-template-or-production-code-changes",
+        "no-edit-to-active-or-claim-locked-paths",
+        "no-direct-Trusted-integration-or-deployment"
+      ],
+      "proposal_kind": "worker_only",
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "7b2ca79405fc12d34bce1386157e929e4668f31a",
+      "proposal_dependency_evidence": [],
+      "collision_check": {
+        "compared_against": "Fresh continuous/work-pool-v4 file blob @ 3e54f098f682574b34724a659c65a2e683e6bf5e; current sanitized main @ 7b2ca79405fc12d34bce1386157e929e4668f31a; every unclaimed, active, and claim-locked task.",
+        "result": "No exact or directory-prefix overlap for tests/Controller/PublicCategoryDirectoryTest.php with any unclaimed, active, or claim-locked task path. The test adds no template or source paths.",
+        "paths": [
+          "tests/Controller/PublicCategoryDirectoryTest.php"
+        ]
+      },
+      "published_at": "2026-09-27T18:35:03.581Z",
+      "claimed_on": "2026-09-27T18:35:03.581Z",
+      "claim_state": "active",
+      "active_base_branch": "main",
+      "active_base_sha": "7b2ca79405fc12d34bce1386157e929e4668f31a",
+      "active_head": "7b2ca79405fc12d34bce1386157e929e4668f31a",
+      "resume_branch": "feature/wcp-567-category-directory-xss-test-g1",
+      "branch_heads": {},
+      "last_observed_head": "7b2ca79405fc12d34bce1386157e929e4668f31a",
+      "last_checkpoint_at": "2026-09-27T18:35:03.581Z",
+      "checkpoint_paths": [],
+      "next_action": "Create exclusive claim and feature branches from this exact base, then add stored-XSS escaping assertions to the existing functional test."
     }
   ],
   "recovery_queue": [],
