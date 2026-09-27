@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T18:22:30.090Z",
+  "published_at": "2026-09-27T18:24:14.304Z",
   "summary": {
-    "total_remaining_worker_tasks": 169,
+    "total_remaining_worker_tasks": 170,
     "completed_worker_prs_awaiting_trusted_review": 296,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-565 PR #359 is ready for Trusted review with exact-head CI #910 / 36340137541 green. Re-evaluate all unclaimed dependencies and continue with an independent worker-only proposal if none is eligible.",
+    "next_required_action": "WCP-566 is claimed on main@7b2ca79405fc12d34bce1386157e929e4668f31a; implement strict monthly news archive page validation and exact-head CI.",
     "composition_preparable": 0,
     "immediately_actionable": 29,
     "must_continue": true
@@ -45344,6 +45344,93 @@
       "ci_validation_pr": 359,
       "completed_at": "2026-09-27T18:22:30.090Z",
       "worker_completion_summary": "Exact-head Worker CI #910 / 36340137541 passed on c7136f0f07fa744bcdbd0f986e39e6d0e6fd9d81: 736 tests, 4,641 assertions, 0 failures/errors (1 deprecation, 3 notices); PHPStan reported no errors; PostgreSQL 18 applied 57 migrations with 878 SQL queries. PR #359 is open and ready for Trusted review, based on main@7b2ca79405fc12d34bce1386157e929e4668f31a, with exactly two allowlisted paths."
+    },
+    {
+      "priority": 566,
+      "package_id": "WCP-566",
+      "title": "Reject malformed page values in monthly news archives",
+      "risk": "medium",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-566-news-archive-page-validation-g1",
+      "suggested_branch": "feature/wcp-566-news-archive-page-validation-g1",
+      "base_branch": "main",
+      "base_sha": "7b2ca79405fc12d34bce1386157e929e4668f31a",
+      "objective": "Strictly parse page query values for GET /news/archive/{year}/{month}. Reject empty, zero, negative, non-decimal, fractional, leading-zero, array and malformed values with HTTP 400 instead of silently defaulting them to page 1. Preserve omitted page as page 1, valid pagination, the 10000 page cap, archive visibility and 404 behavior for invalid, disabled, empty or out-of-range archive requests.",
+      "allowed_paths": [
+        "src/Controller/PublicNewsArchiveController.php",
+        "tests/Controller/PublicNewsArchiveTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "CONTINUOUS-WORKER.md",
+        "CONTINUOUS-WORK-POOL.json",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "templates/",
+        "src/Entity/",
+        "src/Repository/"
+      ],
+      "deliverables": [
+        "The monthly news archive validates page as a strictly positive decimal integer and returns 400 for malformed query values; values above 10000 remain 404.",
+        "Regression tests cover omitted and explicit page 1, malformed values, over-cap values, and existing stable pagination/out-of-range behavior.",
+        "No changes to publication visibility, time-window filtering, page size/order, caching, schema or persistence."
+      ],
+      "tests": [
+        "Targeted PublicNewsArchiveTest exercises malformed page values through an existing populated monthly archive and retains pagination and invalid-route checks.",
+        "Complete exact-head Worker CI including PHPStan, full PHPUnit, configuration/template checks, Doctrine and PostgreSQL 18 migration chain."
+      ],
+      "completion_report": [
+        "Exact sanitized base and final HEAD; changed paths and Worker PR state.",
+        "Strict monthly-archive page behavior and preserved visibility/ordering rules.",
+        "Targeted regression and exact-head Worker CI results.",
+        "No schema changes; Trusted review follow-up."
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-Trusted-review-and-exact-head-CI",
+        "preserve-all-security-permissions-CSRF-validation-recovery-rollback-and-upload-controls",
+        "no-private-runtime-or-sensitive-data",
+        "no-schema-migration-or-entity-change",
+        "no-edit-to-active-or-claim-locked-paths",
+        "no-direct-Trusted-integration-or-deployment"
+      ],
+      "proposal_kind": "worker_only",
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "7b2ca79405fc12d34bce1386157e929e4668f31a",
+      "proposal_dependency_evidence": [],
+      "collision_check": {
+        "compared_against": "Fresh continuous/work-pool-v4 file blob @ 35e6e8ee17c0ac7ddc0e4cc9526448fe52903f9c; current sanitized main @ 7b2ca79405fc12d34bce1386157e929e4668f31a; every unclaimed, active, and claim-locked task.",
+        "result": "No exact or directory-prefix overlap for either allowed path with any unclaimed, active, or claim-locked path. The earlier strict-page proposals use PublicContentTagArchiveController/Test and PublicPageCategoryArchiveController/Test, which are disjoint. PublicContentController remains excluded and untouched.",
+        "paths": [
+          "src/Controller/PublicNewsArchiveController.php",
+          "tests/Controller/PublicNewsArchiveTest.php"
+        ]
+      },
+      "published_at": "2026-09-27T18:24:14.304Z",
+      "claimed_on": "2026-09-27T18:24:14.304Z",
+      "claim_state": "active",
+      "active_base_branch": "main",
+      "active_base_sha": "7b2ca79405fc12d34bce1386157e929e4668f31a",
+      "active_head": "7b2ca79405fc12d34bce1386157e929e4668f31a",
+      "resume_branch": "feature/wcp-566-news-archive-page-validation-g1",
+      "branch_heads": {},
+      "last_observed_head": "7b2ca79405fc12d34bce1386157e929e4668f31a",
+      "last_checkpoint_at": "2026-09-27T18:24:14.304Z",
+      "checkpoint_paths": [],
+      "next_action": "Create exclusive claim and feature branches from this exact sanitized base, then implement strict monthly news archive page validation and regression coverage."
     }
   ],
   "recovery_queue": [],
