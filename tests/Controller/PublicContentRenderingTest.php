@@ -83,6 +83,7 @@ final class PublicContentRenderingTest extends WebTestCase
             $jsonLd = $crawler->filter('script[type="application/ld+json"]');
             self::assertCount(1, $jsonLd);
             $schema = json_decode($jsonLd->text(), true, 512, JSON_THROW_ON_ERROR);
+            self::assertIsArray($schema);
             self::assertSame($title, $schema['headline']);
             self::assertSame($seoDescription, $schema['description']);
         } finally {
