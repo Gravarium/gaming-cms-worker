@@ -10,7 +10,7 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T01:22:19.234Z",
+  "published_at": "2026-09-27T01:23:15.924Z",
   "summary": {
     "total_remaining_worker_tasks": 140,
     "completed_worker_prs_awaiting_trusted_review": 213,
@@ -24813,16 +24813,22 @@
       "claimed_on": "2026-09-27T01:14:30.870Z",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "1c679d1d1b090da023512c90153e61fe0f5da3a8",
       "resume_branch": "feature/wcp-445-admin-user-directory-pagination-g1",
-      "last_checkpoint_at": "2026-09-27T01:14:30.870Z",
-      "last_verified_push_at": "2026-09-27T01:14:30.870Z",
-      "checkpoint_paths": [],
+      "last_checkpoint_at": "2026-09-27T01:23:15.924Z",
+      "last_verified_push_at": "2026-09-27T01:23:15.924Z",
+      "checkpoint_paths": [
+        "src/Controller/AdminUserDirectoryController.php",
+        "src/Repository/AdminUserDirectoryRepository.php",
+        "templates/admin/user/index.html.twig",
+        "templates/admin/user/directory.html.twig",
+        "tests/Controller/AdminUserDirectoryTest.php"
+      ],
       "branch_heads": {
         "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-        "feature_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d"
+        "feature_branch": "1c679d1d1b090da023512c90153e61fe0f5da3a8"
       },
-      "next_action": "Implement the protected read-only paginated directory on the reserved feature branch; checkpoint the complete behavior and negative tests before full CI."
+      "next_action": "Run targeted AdminUserDirectoryTest and full Worker CI on this checkpoint; fix any failures on this same branch before opening a ready Worker PR."
     },
     {
       "priority": 446,
