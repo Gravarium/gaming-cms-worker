@@ -24,15 +24,6 @@ final readonly class PublicVideoPlaylistWidgetProvider implements WidgetProvider
                 'widget/public_video_playlists.html.twig',
                 [],
                 true,
-                [
-                    'count' => [
-                        'label' => 'Anzahl Playlists',
-                        'type' => 'int',
-                        'default' => 6,
-                        'min' => 1,
-                        'max' => 12,
-                    ],
-                ],
             ),
         ];
     }

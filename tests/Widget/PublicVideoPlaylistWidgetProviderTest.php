@@ -7,6 +7,7 @@ namespace App\Tests\Widget;
 use App\Entity\CmsModuleState;
 use App\Entity\Video;
 use App\Entity\VideoPlaylist;
+use App\Layout\LayoutValidator;
 use App\Widget\WidgetDefinition;
 use App\Widget\WidgetRegistry;
 use Doctrine\ORM\EntityManagerInterface;
@@ -16,6 +17,31 @@ use Twig\Environment;
 
 final class PublicVideoPlaylistWidgetProviderTest extends WebTestCase
 {
+    /** @var list<VideoPlaylist> */
+    private array $createdPlaylists = [];
+
+    /** @var list<Video> */
+    private array $createdVideos = [];
+
+    private ?EntityManagerInterface $entityManager = null;
+
+    protected function tearDown(): void
+    {
+        try {
+            if ($this->entityManager !== null) {
+                foreach ($this->createdVideos as $video) {
+                    $this->entityManager->remove($video);
+                }
+                foreach ($this->createdPlaylists as $playlist) {
+                    $this->entityManager->remove($playlist);
+                }
+                $this->entityManager->flush();
+            }
+        } finally {
+            parent::tearDown();
+        }
+    }
+
     public function testProviderIsDiscoverableAndFiltersPlaylistsToPublicVideos(): void
     {
         $client = static::createClient();
@@ -38,8 +64,9 @@ final class PublicVideoPlaylistWidgetProviderTest extends WebTestCase
         self::assertInstanceOf(WidgetDefinition::class, $definition);
         self::assertSame('video', $definition->module);
         self::assertSame('widget/public_video_playlists.html.twig', $definition->template);
-        self::assertSame(1, $definition->settings['count']['min']);
-        self::assertSame(12, $definition->settings['count']['max']);
+        $widgetSettings = $client->getContainer()->get(LayoutValidator::class)->widgetSchema('video.public-playlists');
+        self::assertSame(1, $widgetSettings['count']['min']);
+        self::assertSame(12, $widgetSettings['count']['max']);
 
         $availableKeys = array_map(
             static fn (WidgetDefinition $widget): string => $widget->key,
@@ -168,6 +195,7 @@ final class PublicVideoPlaylistWidgetProviderTest extends WebTestCase
             ->setEnabled($enabled);
         $entityManager = $this->em($client);
         $entityManager->persist($playlist);
+        $this->createdPlaylists[] = $playlist;
 
         if ($withVideo) {
             $video = (new Video())
@@ -178,6 +206,7 @@ final class PublicVideoPlaylistWidgetProviderTest extends WebTestCase
                 ->setPublishedAt($published ? ($publishedAt ?? new \DateTimeImmutable('-1 day')) : null)
                 ->addPlaylist($playlist);
             $entityManager->persist($video);
+            $this->createdVideos[] = $video;
         }
 
         $entityManager->flush();
@@ -205,6 +234,6 @@ final class PublicVideoPlaylistWidgetProviderTest extends WebTestCase
 
     private function em(KernelBrowser $client): EntityManagerInterface
     {
-        return $client->getContainer()->get(EntityManagerInterface::class);
+        return $this->entityManager = $client->getContainer()->get(EntityManagerInterface::class);
     }
 }
