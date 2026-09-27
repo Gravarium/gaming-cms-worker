@@ -197,7 +197,7 @@ final readonly class ContentInteractionQuery
         }
 
         $rows = $this->entityManager->createQueryBuilder()
-            ->select('identity(reaction.comment) AS commentId', 'reaction.reaction AS reaction')
+            ->select('identity(reaction.comment) AS commentId', 'reaction.reaction AS reactionType')
             ->from(CommunityReaction::class, 'reaction')
             ->andWhere('identity(reaction.comment) IN (:commentIds)')
             ->andWhere('reaction.user = :user')
