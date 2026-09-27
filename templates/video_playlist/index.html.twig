@@ -1,0 +1,29 @@
+{% extends 'base.html.twig' %}
+{% set site = site_settings() %}
+{% block title %}Video-Playlists | {{ site.siteName }}{% endblock %}
+{% block meta_description %}Öffentliche Video-Playlists von {{ site.siteName }}.{% endblock %}
+{% block body %}
+<header class="topbar">
+    <a class="brand" href="{{ path('app_home') }}">{% if site.logoPath %}<img class="site-logo" src="{{ site.logoPath }}" alt="{{ site.siteName }}">{% else %}{{ site.siteName }}{% endif %}</a>
+    <nav class="top-actions"><a href="{{ path('app_video_index') }}">Alle Videos</a><a href="{{ path('app_news_index') }}">News</a></nav>
+</header>
+<main class="public-shell video-library">
+    <p class="eyebrow">Mediathek</p>
+    <h1>Video-Playlists</h1>
+    <p class="hero-copy">Entdecke Videos nach zusammengestellten Themen und Reihen.</p>
+    <section class="video-grid">
+        {% for playlist in playlists %}
+            <article class="video-card">
+                <div class="video-card-body">
+                    <p class="eyebrow">Playlist</p>
+                    <h2><a href="{{ path('app_video_playlist_show', {slug: playlist.slug}) }}">{{ playlist.title }}</a></h2>
+                    {% if playlist.description %}<p>{{ playlist.description|striptags|slice(0, 240) }}{% if playlist.description|length > 240 %}…{% endif %}</p>{% endif %}
+                    <a class="button-link button-secondary" href="{{ path('app_video_playlist_show', {slug: playlist.slug}) }}">Playlist ansehen</a>
+                </div>
+            </article>
+        {% else %}
+            <div class="panel"><h2>Noch keine Playlists</h2><p>Derzeit sind keine öffentlichen Video-Playlists verfügbar.</p></div>
+        {% endfor %}
+    </section>
+</main>
+{% endblock %}
