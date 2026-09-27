@@ -45,6 +45,7 @@ final class AdminDownloadCatalogueControllerTest extends WebTestCase
         self::assertInstanceOf(DownloadPackage::class, $package);
         $id = $package->getId();
         self::assertNotNull($id);
+        self::assertSame('/admin/downloads/'.$id.'/upload', $client->getCrawler()->filter('a[href*="/upload"]')->attr('href'));
 
         $crawler = $client->request('GET', '/admin/downloads/'.$id.'/edit');
         self::assertResponseIsSuccessful();
