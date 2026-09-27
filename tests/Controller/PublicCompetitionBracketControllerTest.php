@@ -63,6 +63,12 @@ final class PublicCompetitionBracketControllerTest extends WebTestCase
         self::assertSelectorTextContains('h2', 'Siegerbaum');
         self::assertSelectorTextContains('h2', 'Verliererbaum');
         $html = (string) $client->getResponse()->getContent();
+        $winnerPosition = strpos($html, 'id="bracket-winners"');
+        $loserPosition = strpos($html, 'id="bracket-losers"');
+        if ($winnerPosition === false || $loserPosition === false) {
+            self::fail('Both bracket sections should be rendered.');
+        }
+        self::assertTrue($winnerPosition < $loserPosition, 'The winners bracket should appear before the losers bracket.');
         self::assertStringContainsString('Runde 1', $html);
         self::assertStringContainsString('Runde 2', $html);
         self::assertStringContainsString('Ergebnis: 2 : 1', $html);
