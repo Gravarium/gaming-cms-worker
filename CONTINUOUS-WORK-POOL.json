@@ -42655,6 +42655,155 @@
       "checkpoint_paths": [],
       "ci_attempts": [],
       "next_action": "Implement the feature-local video sitemap query, controller routes, templates and module-aware index on the exact main base; test XML, visibility, module state, method limits and URL ceiling."
+    },
+    {
+      "priority": 554,
+      "package_id": "WCP-554",
+      "title": "Browse public member profiles by visibility",
+      "risk": "medium",
+      "execution_state": "worker_in_progress",
+      "dependencies": [
+        "FCP-071"
+      ],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-554-public-member-directory-g1",
+      "suggested_branch": "feature/wcp-554-public-member-directory-g1",
+      "base_branch": "main",
+      "base_sha": "6988e871cbda8c27801ee0bcc02e8c5c2b0cd909",
+      "objective": "Complete public discovery for the existing self-service member profile flow. Add a paginated GET-only /members directory and an auto-discovered Page Builder widget linking to the existing /members/{id} profiles. Include only active accounts that have a member profile with display_name visibility explicitly public, in stable case-insensitive display-name/ID order. Show only the public display name in the directory and widget; leave bio/avatar/banner enforcement to the existing per-field profile route. Return understandable empty, invalid-page, and out-of-range states, and hide the directory when the users module is disabled.",
+      "allowed_paths": [
+        "src/Controller/PublicMemberDirectoryController.php",
+        "src/ProfileDirectory/PublicMemberDirectoryQuery.php",
+        "src/ProfileDirectory/Templates/public_member_directory/directory.html.twig",
+        "src/ProfileDirectory/Templates/widget/member_directory.html.twig",
+        "src/Widget/PublicMemberDirectoryWidgetProvider.php",
+        "config/packages/public_member_directory.yaml",
+        "tests/Controller/PublicMemberDirectoryControllerTest.php",
+        "tests/Widget/PublicMemberDirectoryWidgetProviderTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "src/Profile/",
+        "src/Controller/Profile/",
+        "src/Entity/Profile/",
+        "src/Form/Profile/",
+        "src/Repository/Profile/",
+        "templates/profile/",
+        "tests/Profile/",
+        "src/Widget/WidgetRegistry.php",
+        "config/services.yaml",
+        "src/Entity/User.php",
+        "src/Entity/Profile/MemberProfile.php",
+        "src/Controller/Profile/MemberProfileController.php"
+      ],
+      "deliverables": [
+        "Public /members directory with stable 20-row pagination, linking to existing public member-profile pages.",
+        "Only active users with an existing profile and explicitly public display-name visibility are listed; no email, bio, avatar, banner, or member-only/private names are included in directory output.",
+        "Auto-discovered users.public-members Page Builder widget that links to listed profiles and the full directory, clamps shared count to 12, and has an empty state.",
+        "Users-module gating for the directory and widget; GET-only route with clear invalid and out-of-range page behavior.",
+        "Feature-local templates/configuration and no changes to existing profile entities, repositories, privacy policy, shared widget registry, or schema."
+      ],
+      "tests": [
+        "Controller tests for public-only opt-in filtering, inactive/missing profiles, output privacy, deterministic pagination, empty state, invalid/out-of-range page and GET-only behavior.",
+        "Widget tests for discovery, module suppression, profile links, escaped display names, empty state and hard count clamp.",
+        "Full exact-head Worker CI including PHPStan, PHPUnit, Twig/config/container validation and PostgreSQL 18 migration-chain validation."
+      ],
+      "completion_report": [
+        "Exact Worker proposal base and final HEAD SHAs.",
+        "Complete changed-path list and PR state.",
+        "Public visibility, pagination, widget/module-gate behavior and data-exposure evidence.",
+        "Focused tests and exact-head full CI run.",
+        "Remaining limitations and Trusted follow-up."
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-Trusted-review-and-exact-head-CI",
+        "preserve-existing-security-permissions-CSRF-validation-recovery-rollback-and-upload-controls",
+        "no-private-runtime-or-sensitive-data",
+        "no-schema-migration-or-entity-change",
+        "no-edit-to-active-or-claim-locked-paths",
+        "no-direct-Trusted-integration-or-deployment"
+      ],
+      "proposal_kind": "worker_only",
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "6988e871cbda8c27801ee0bcc02e8c5c2b0cd909",
+      "proposal_dependency_evidence": [
+        {
+          "id": "FCP-071",
+          "worker_pr": 19,
+          "exact_head": "82e10e0c10d16b52009132fa7b56e475b7c58f1c",
+          "exact_head_ci_run_id": 36020706272,
+          "exact_head_ci_result": "success",
+          "worker_pr_state": "closed_unmerged",
+          "evidence": "Proposal basis only. PR #19 is closed unmerged, so no Trusted integration is asserted. Required profile entities, per-field visibility policy, public profile route and users-module gate are present in Worker main at this base."
+        }
+      ],
+      "collision_check": {
+        "compared_against": "Fresh continuous/work-pool-v4 @ ff947d0b4daa893bd6645d301330c9a63f097007; Worker main @ 6988e871cbda8c27801ee0bcc02e8c5c2b0cd909; all active and claim-locked task paths; WCP-554 branch and open-PR searches.",
+        "result": "No exact or prefix path collisions. FCP-071 has an exact green Worker CI result but its Worker PR is closed unmerged; it is used only as an untrusted proposal basis. All new route/query/templates/widget/config/tests use unique paths, while profile entities, controllers, repositories, forms, privacy policy and shared widget registry remain untouched.",
+        "paths": [
+          "src/Controller/PublicMemberDirectoryController.php",
+          "src/ProfileDirectory/PublicMemberDirectoryQuery.php",
+          "src/ProfileDirectory/Templates/public_member_directory/directory.html.twig",
+          "src/ProfileDirectory/Templates/widget/member_directory.html.twig",
+          "src/Widget/PublicMemberDirectoryWidgetProvider.php",
+          "config/packages/public_member_directory.yaml",
+          "tests/Controller/PublicMemberDirectoryControllerTest.php",
+          "tests/Widget/PublicMemberDirectoryWidgetProviderTest.php"
+        ],
+        "observed_dependencies": [
+          {
+            "id": "FCP-071",
+            "head": "82e10e0c10d16b52009132fa7b56e475b7c58f1c",
+            "ci_run_id": 36020706272,
+            "ci_result": "success",
+            "worker_pr": 19,
+            "worker_pr_state": "closed_unmerged"
+          }
+        ]
+      },
+      "published_at": "2026-09-27T16:01:51.086Z",
+      "claimed_on": "2026-09-27T16:01:51.086Z",
+      "claim_state": "active",
+      "active_base_branch": "main",
+      "active_base_sha": "6988e871cbda8c27801ee0bcc02e8c5c2b0cd909",
+      "active_head": "6988e871cbda8c27801ee0bcc02e8c5c2b0cd909",
+      "resume_branch": "feature/wcp-554-public-member-directory-g1",
+      "branch_heads": {
+        "claim_branch": "6988e871cbda8c27801ee0bcc02e8c5c2b0cd909",
+        "feature_branch": "6988e871cbda8c27801ee0bcc02e8c5c2b0cd909"
+      },
+      "last_observed_head": "6988e871cbda8c27801ee0bcc02e8c5c2b0cd909",
+      "last_checkpoint_at": "2026-09-27T16:01:51.086Z",
+      "checkpoint_paths": [],
+      "next_action": "Implement the public opt-in profile directory and Page Builder widget only within the reserved paths. Preserve per-field profile visibility and the users-module gate; push a functional checkpoint before full exact-head CI.",
+      "worker_pr_state": "not_created",
+      "worker_pr_changed_paths": [],
+      "worker_pr_base_branch": "main",
+      "draft_pr": true,
+      "pr_state": "not_created",
+      "ci_result": "not_started",
+      "last_ci_result": "not_started",
+      "ci_attempts": [],
+      "last_verified_push_at": "2026-09-27T16:01:51.086Z",
+      "worker_pr": null,
+      "worker_pr_url": null,
+      "worker_pr_base_sha": null,
+      "ci_run_id": null,
+      "last_ci_run_id": null
     }
   ],
   "recovery_queue": [],
