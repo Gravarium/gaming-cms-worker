@@ -10,16 +10,16 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T00:16:40.682Z",
+  "published_at": "2026-09-27T00:21:13.540Z",
   "summary": {
-    "total_remaining_worker_tasks": 138,
+    "total_remaining_worker_tasks": 139,
     "completed_worker_prs_awaiting_trusted_review": 207,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-434 is complete on exact HEAD c45220b6dbd526ebc6a5c536435bab3bd331f20c with ready PR #230 and green CI run 36281530798; its claim stays locked. Re-evaluate the five unclaimed FCPs against their latest dependency evidence, then continue with the first dependency-safe task or publish and claim a bounded independent WCP if none is ready.",
+    "next_required_action": "WCP-440 is claimed for an isolated functional security regression in tests/Controller/AdminGuildStructureSecurityTest.php; create its claim and feature branches from exact sanitized main and test guild-team authorization, parent isolation, and CSRF without touching foreign claims.",
     "composition_preparable": 0,
-    "immediately_actionable": 0,
+    "immediately_actionable": 1,
     "must_continue": true
   },
   "rules": {
@@ -23948,6 +23948,94 @@
         "feature_branch": "bef3a80ec9289647799830d50d8e323f087999d6"
       },
       "next_action": "Open a draft Worker PR from exact HEAD bef3a80ec9289647799830d50d8e323f087999d6, run the targeted content-duplication test and full exact-head Worker CI, and repair concrete failures on this branch."
+    },
+    {
+      "priority": 220,
+      "package_id": "WCP-440",
+      "title": "Verify guild team deletion authorization, ownership and CSRF",
+      "risk": "low",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-440-guild-team-deletion-security-g1",
+      "suggested_branch": "feature/wcp-440-guild-team-deletion-security-g1",
+      "base_branch": "main",
+      "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "objective": "Add test-only functional coverage proving a user without CMS_GAMING_MANAGE cannot delete a guild team; missing and invalid CSRF tokens are rejected without mutation; a rendered valid token cannot delete a team through a different parent guild; and a valid same-guild token deletes only its selected synthetic team.",
+      "allowed_paths": [
+        "tests/Controller/AdminGuildStructureSecurityTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/",
+        "src/",
+        "templates/",
+        "assets/",
+        "public/"
+      ],
+      "deliverables": [
+        "An actor without CMS_GAMING_MANAGE receives 403 and both synthetic teams remain.",
+        "An authorized actor's missing and invalid CSRF submissions receive 403 and preserve the selected team.",
+        "A CSRF token rendered for the selected team cannot delete it through a different guild parent; the request returns 404 and the team remains.",
+        "The rendered valid token on the owning guild deletes only the selected team; a sibling synthetic team remains.",
+        "Only tests/Controller/AdminGuildStructureSecurityTest.php changes."
+      ],
+      "tests": [
+        "php bin/phpunit tests/Controller/AdminGuildStructureSecurityTest.php",
+        "Existing guild controller tests remain green.",
+        "PHPStan level 8 and complete Worker CI on exact final HEAD, including PostgreSQL 18 migration-chain checks."
+      ],
+      "completion_report": [
+        "Exact sanitized main base SHA and final Worker HEAD.",
+        "Complete changed-path list and Worker PR.",
+        "Authorization denial, CSRF non-mutation, cross-guild isolation, and selected-only deletion results.",
+        "Exact-head PHPStan and full Worker CI results; confirm only the allowed test file changed."
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "preserve-CMS_GAMING_MANAGE-parent-guild-ownership-and-team-delete-CSRF",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "proposal_kind": "worker_only",
+      "proposal_dependency_evidence": [],
+      "collision_check": {
+        "compared_against": "Fresh continuous/work-pool-v4 blob fc811897a794c90db693f912ba9f45be39521fbd, all active and claim-locked allowlists, and sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d.",
+        "result": "No active or claim-locked claim owns tests/Controller/AdminGuildStructureSecurityTest.php. The path is absent from sanitized main. Code search for the guild-team-delete route and delete-team CSRF key found only AdminGuildStructureController and its rendered structure template, with no functional test. WCP-439 owns content-duplication tests; other active claims have disjoint paths and no shared migrations, templates, DI or production edits.",
+        "paths": [
+          "tests/Controller/AdminGuildStructureSecurityTest.php"
+        ]
+      },
+      "claimed_on": "2026-09-27T00:21:13.540Z",
+      "claim_state": "active",
+      "active_base_branch": "main",
+      "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "resume_branch": "feature/wcp-440-guild-team-deletion-security-g1",
+      "last_checkpoint_at": "2026-09-27T00:21:13.540Z",
+      "last_verified_push_at": "2026-09-27T00:21:13.540Z",
+      "checkpoint_paths": [],
+      "branch_heads": {
+        "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+        "feature_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d"
+      },
+      "next_action": "Create both exclusive branches from exact sanitized main, then add synthetic functional regressions for permission denial, CSRF rejection, parent-guild isolation and selected-only deletion."
     }
   ],
   "recovery_queue": [],
