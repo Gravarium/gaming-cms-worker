@@ -38774,6 +38774,100 @@
         "The test confirmed the raw Unicode slug exceeded 140 characters; saved Game and Guild slugs remained within 140, and duplicates received distinct -2 suffixes.",
         "Worker PR #325: https://github.com/Gravarium/gaming-cms-worker/pull/325. Exact-head Worker CI run #804 / 36320485480 passed; PHPStan had no errors; PHPUnit 537 tests / 2,256 assertions (1 deprecation, 1 notice); PostgreSQL 18 validated 54 migrations and 750 SQL queries."
       ]
+    },
+    {
+      "priority": 536,
+      "package_id": "WCP-536",
+      "title": "Validate create-admin identity column bounds",
+      "risk": "low",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-536-create-admin-input-bounds-g1",
+      "suggested_branch": "feature/wcp-536-create-admin-input-bounds-g1",
+      "base_branch": "main",
+      "base_sha": "b510875e7b0741b9b19f09429d2204a95df51198",
+      "objective": "Reject create-admin email addresses longer than the User email column (180 characters) and display names longer than the User display-name column (80 characters) before password prompting, hashing or persistence; retain acceptance at both exact limits.",
+      "allowed_paths": [
+        "src/Command/CreateAdminCommand.php",
+        "tests/Command/CreateAdminCommandTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/",
+        "src/Entity/",
+        "src/Form/",
+        "src/Repository/",
+        "templates/",
+        "assets/",
+        "public/"
+      ],
+      "deliverables": [
+        "Reject overlength email and display-name input before any password prompt or database write, using the existing User entity limits.",
+        "Preserve valid input exactly at the 180-character email and 80-character display-name limits.",
+        "Add focused command tests proving both invalid boundaries and successful persistence at the exact limits without changing schema or password policy."
+      ],
+      "tests": [
+        "Kernel command tests reject an over-180-character syntactically valid email and an 81-character display name before prompting for a password.",
+        "A transactional command test creates an account with a valid 180-character email and 80-character display name, then rolls back.",
+        "Run focused PHPUnit, PHPStan level 8 and full exact-head Worker CI, including PostgreSQL 18 migration validation."
+      ],
+      "completion_report": [
+        "Exact sanitized main/base SHA and final Worker HEAD SHA.",
+        "Exact changed paths and Worker PR URL.",
+        "Evidence of early rejection above 180/80 and successful persistence at both exact limits.",
+        "Focused test and exact-head PHPStan, PHPUnit, PostgreSQL migration and full Worker CI results."
+      ],
+      "immutable_constraints": [
+        "email-length-limit-remains-180-and-display-name-limit-remains-80-as-defined-by-the-User-entity",
+        "overlength-identity-input-is-rejected-before-password-prompt-hashing-or-database-mutation",
+        "existing-password-policy-and-admin-role-assignment-are-preserved",
+        "no-schema-or-migration-change",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment",
+        "no-private-runtime-or-sensitive-data"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "b510875e7b0741b9b19f09429d2204a95df51198",
+      "proposal_kind": "worker_only",
+      "proposal_dependency_evidence": [],
+      "collision_check": {
+        "compared_against": "Latest continuous/work-pool-v4 pool blob 8e2b3302979a2d00048d9fe059a63aaabe2e71c3; sanitized Worker main b510875e7b0741b9b19f09429d2204a95df51198; all active and claim-locked allowed paths; WCP-536 branch and PR searches.",
+        "result": "No active or claim-locked allowed path covers either src/Command/CreateAdminCommand.php or tests/Command/CreateAdminCommandTest.php. WCP-383 owns only tests/Command/PublishScheduledContentCommandTest.php, a distinct file. No WCP-536 task, branch or PR exists. The scoped change uses no migration, shared DI/configuration, template or asset paths.",
+        "paths": [
+          "src/Command/CreateAdminCommand.php",
+          "tests/Command/CreateAdminCommandTest.php"
+        ]
+      },
+      "published_at": "2026-09-27T13:10:04.054Z",
+      "claimed_on": "2026-09-27T13:10:04.054Z",
+      "claim_state": "active",
+      "active_base_branch": "main",
+      "active_base_sha": "b510875e7b0741b9b19f09429d2204a95df51198",
+      "active_head": "b510875e7b0741b9b19f09429d2204a95df51198",
+      "resume_branch": "feature/wcp-536-create-admin-input-bounds-g1",
+      "branch_heads": {
+        "claim_branch": "b510875e7b0741b9b19f09429d2204a95df51198",
+        "feature_branch": "b510875e7b0741b9b19f09429d2204a95df51198"
+      },
+      "last_observed_head": "b510875e7b0741b9b19f09429d2204a95df51198",
+      "last_checkpoint_at": "2026-09-27T13:10:04.054Z",
+      "last_verified_push_at": null,
+      "checkpoint_paths": [],
+      "next_action": "Create the two exclusive branches from exact main HEAD b510875e7b0741b9b19f09429d2204a95df51198, add pre-prompt 180/80 identity bounds and focused Kernel command regression tests, then run exact-head Worker CI. Do not merge or deploy."
     }
   ],
   "recovery_queue": [],
