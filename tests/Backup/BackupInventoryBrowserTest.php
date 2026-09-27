@@ -68,7 +68,7 @@ final class BackupInventoryBrowserTest extends TestCase
 
         self::assertSame([$failed['id']], array_column($filtered['backups'], 'id'));
         self::assertSame(1, $filtered['total_backups']);
-        self::assertSame($unchecked['id'], $filtered['latest_backup']['id']);
+        self::assertSame($unchecked['id'], $filtered['latest_backup']['id'] ?? null);
 
         $unverified = $this->browser->paginate([$successful, $failed, $unchecked], $statuses, 'deadbeef', 'unchecked', 1);
         self::assertSame([$unchecked['id']], array_column($unverified['backups'], 'id'));

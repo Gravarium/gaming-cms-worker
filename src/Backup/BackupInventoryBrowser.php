@@ -10,8 +10,6 @@ final class BackupInventoryBrowser
 {
     public const PAGE_SIZE = 25;
 
-    private const VERIFICATION_FILTERS = ['all', 'successful', 'failed', 'unchecked'];
-
     /**
      * @return array{query: string, verification_filter: 'all'|'successful'|'failed'|'unchecked', page: int}
      */
