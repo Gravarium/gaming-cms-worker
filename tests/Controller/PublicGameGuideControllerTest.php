@@ -39,8 +39,12 @@ final class PublicGameGuideControllerTest extends WebTestCase
             $publicId = $this->guide($connection, $enabledGameId, $authorId, $reviewerId, 'published', 'WCP552-Visible <img src=x onerror=alert(1)>');
             $guideIds[] = $publicId;
             $connection->executeStatement(
+                'UPDATE game_guide SET valid_until = :until WHERE id = :id',
+                ['until' => (new \DateTimeImmutable('-1 day'))->format('Y-m-d H:i:s'), 'id' => $publicId],
+            );
+            $connection->executeStatement(
                 'INSERT INTO game_guide_component (guide_id, component_type, component_key, position, alternatives)
-                 VALUES (:guide, :type, :key, :position, CAST(:alternatives AS JSON))',
+                 VALUES (:guide, :type, :key, :position, :alternatives)',
                 ['guide' => $publicId, 'type' => 'gear', 'key' => 'ember-staff', 'position' => 1, 'alternatives' => '["oak-wand"]'],
             );
             $draftId = $this->guide($connection, $enabledGameId, $authorId, null, 'draft', 'WCP552-HiddenDraft');
@@ -64,6 +68,7 @@ final class PublicGameGuideControllerTest extends WebTestCase
             self::assertResponseIsSuccessful();
             $html = (string) $client->getResponse()->getContent();
             self::assertStringContainsString('WCP552-Visible', $html);
+            self::assertStringContainsString('Gültigkeitszeitraum abgelaufen oder noch nicht begonnen', $html);
             self::assertStringContainsString('&lt;img src=x onerror=alert(1)&gt;', $html);
             self::assertStringNotContainsString('<img src=x onerror=alert(1)>', $html);
             self::assertStringNotContainsString('WCP552-HiddenDraft', $html);
@@ -79,6 +84,7 @@ final class PublicGameGuideControllerTest extends WebTestCase
             self::assertResponseIsSuccessful();
             self::assertSelectorTextContains('h1', 'WCP552-Visible');
             self::assertSelectorTextContains('main', 'ember-staff');
+            self::assertSelectorTextContains('main', 'Dieser Guide liegt außerhalb seines angegebenen Gültigkeitszeitraums.');
             self::assertStringNotContainsString($author->getEmail(), (string) $client->getResponse()->getContent());
 
             foreach ([$draftId, $reviewId, $futureId, $disabledId] as $hiddenId) {
