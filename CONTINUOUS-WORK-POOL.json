@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T03:02:12.188Z",
+  "published_at": "2026-09-27T03:03:52.670Z",
   "summary": {
     "total_remaining_worker_tasks": 141,
     "completed_worker_prs_awaiting_trusted_review": 225,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-459 is claimed from exact green WCP-457 HEAD 94da6297e417b886d101dae6cc4ec2170538549c; implement the login failure disclosure regression in its exclusive test file.",
+    "next_required_action": "WCP-459 is reserved at exact HEAD 238b1fdabf381713cb1bc2ad34d93449a0fb967d; inspect exact-head Worker CI run 36290280807 and repair concrete failures.",
     "composition_preparable": 0,
     "immediately_actionable": 4,
     "must_continue": true
@@ -26769,16 +26769,32 @@
       "claim_state": "active",
       "active_base_branch": "feature/wcp-457-login-throttling-global-ip-g1",
       "active_base_sha": "94da6297e417b886d101dae6cc4ec2170538549c",
-      "active_head": "94da6297e417b886d101dae6cc4ec2170538549c",
+      "active_head": "238b1fdabf381713cb1bc2ad34d93449a0fb967d",
       "resume_branch": "feature/wcp-459-login-failure-disclosure-g1",
-      "last_checkpoint_at": "2026-09-27T03:01:56.704Z",
-      "checkpoint_paths": [],
+      "last_checkpoint_at": "2026-09-27T03:03:52.670Z",
+      "checkpoint_paths": [
+        "tests/Controller/LoginFailureDisclosureSecurityTest.php"
+      ],
       "branch_heads": {
         "claim_branch": "94da6297e417b886d101dae6cc4ec2170538549c",
-        "feature_branch": "94da6297e417b886d101dae6cc4ec2170538549c"
+        "feature_branch": "238b1fdabf381713cb1bc2ad34d93449a0fb967d"
       },
-      "last_verified_push_at": "2026-09-27T03:01:56.704Z",
-      "next_action": "Implement the test-only comparison of wrong-password and unknown-email failures on the exclusive branch; create a draft PR and run exact-head Worker CI."
+      "last_verified_push_at": "2026-09-27T03:03:52.670Z",
+      "next_action": "Inspect exact-head Worker CI run 36290280807 on 238b1fdabf381713cb1bc2ad34d93449a0fb967d; diagnose and repair any concrete failure before completion.",
+      "worker_pr": 252,
+      "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/252",
+      "draft_pr": true,
+      "pr_state": "open_draft_unmerged",
+      "ci_attempts": [
+        {
+          "run_id": 36290280807,
+          "head": "238b1fdabf381713cb1bc2ad34d93449a0fb967d",
+          "result": "in_progress"
+        }
+      ],
+      "ci_result": "in_progress",
+      "last_ci_run_id": 36290280807,
+      "ci_run_id": 36290280807
     }
   ],
   "recovery_queue": [],
