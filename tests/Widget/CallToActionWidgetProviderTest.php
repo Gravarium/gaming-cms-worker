@@ -127,7 +127,7 @@ final class CallToActionWidgetProviderTest extends WebTestCase
                 '<script>alert("cta-title")</script>',
             );
             self::assertSelectorTextContains(
-                '.widget-content-call-to-action-copy',
+                '.widget-call-to-action-copy',
                 '<img src=x onerror=alert(1)>',
             );
             self::assertSelectorTextContains(
