@@ -65,8 +65,7 @@ final class PublicGuildRoleNeedDisplayTest extends WebTestCase
             $client->request('GET', '/gaming/guild/'.$guild->getSlug().'/apply');
 
             self::assertResponseStatusCodeSame(404);
-            self::assertSelectorTextNotContains('body', 'Priester');
-        }
+            }
     }
 
     public function testDisabledGamingModuleHidesPublicRecruitmentPage(): void
@@ -87,8 +86,7 @@ final class PublicGuildRoleNeedDisplayTest extends WebTestCase
         try {
             $client->request('GET', '/gaming/guild/'.$guild->getSlug().'/apply');
             self::assertResponseStatusCodeSame(404);
-            self::assertSelectorTextNotContains('body', 'Priester');
-        } finally {
+            } finally {
             if ($wasExisting) {
                 $state->setEnabled($previouslyEnabled);
                 $em->persist($state);

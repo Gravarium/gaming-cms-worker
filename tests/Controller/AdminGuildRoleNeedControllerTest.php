@@ -47,8 +47,8 @@ final class AdminGuildRoleNeedControllerTest extends WebTestCase
         $crawler = $client->request('GET', $editUrl);
         $form = $crawler->selectButton('Änderungen speichern')->form([
             'guild_role_need[desiredCount]' => '4',
-            'guild_role_need[active]' => '',
         ]);
+        $form['guild_role_need[active]']->untick();
         $client->submit($form);
 
         self::assertResponseRedirects($url);
