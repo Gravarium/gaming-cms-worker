@@ -52,7 +52,19 @@ final class PublicCompetitionBracketController extends AbstractController
             ksort($rounds, SORT_NUMERIC);
         }
         unset($rounds);
-        ksort($brackets, SORT_STRING);
+        /** @var array<string, int> $bracketOrder */
+        $bracketOrder = [
+            CompetitionMatch::BRACKET_WINNERS => 0,
+            CompetitionMatch::BRACKET_LOSERS => 1,
+            CompetitionMatch::BRACKET_GROUP => 2,
+            CompetitionMatch::BRACKET_SWISS => 3,
+            CompetitionMatch::BRACKET_ROUND_ROBIN => 4,
+        ];
+        uksort($brackets, static function (string $left, string $right) use ($bracketOrder): int {
+            $order = ($bracketOrder[$left] ?? PHP_INT_MAX) <=> ($bracketOrder[$right] ?? PHP_INT_MAX);
+
+            return $order !== 0 ? $order : strcmp($left, $right);
+        });
 
         return $this->render('competition_bracket/show.html.twig', [
             'competition' => $competition,
