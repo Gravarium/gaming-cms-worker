@@ -17,7 +17,7 @@
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "Poll WCP-559 draft PR #354 full exact-head CI #900 / 36337212357 on HEAD e385dcfe94210d547343cf2eb7c8152bfd290129; repair any failures on the same branch and rerun the complete workflow on each repaired exact HEAD.",
+    "next_required_action": "Poll WCP-559 draft PR #354 exact-head full Worker CI #904 / 36337649764 on HEAD 172c47336ecb0d17fd12944d4a2a9bf70b7a9e1a; resolve failures on the same branch and rerun the complete workflow on each repaired exact HEAD.",
     "composition_preparable": 0,
     "immediately_actionable": 29,
     "must_continue": true
@@ -44312,15 +44312,15 @@
       "claim_state": "active",
       "active_base_branch": "main",
       "active_base_sha": "7b2ca79405fc12d34bce1386157e929e4668f31a",
-      "active_head": "e385dcfe94210d547343cf2eb7c8152bfd290129",
+      "active_head": "172c47336ecb0d17fd12944d4a2a9bf70b7a9e1a",
       "resume_branch": "feature/wcp-559-global-search-pagination-g1",
       "branch_heads": {
         "claim_branch": "7b2ca79405fc12d34bce1386157e929e4668f31a",
-        "feature_branch": "e385dcfe94210d547343cf2eb7c8152bfd290129"
+        "feature_branch": "172c47336ecb0d17fd12944d4a2a9bf70b7a9e1a"
       },
-      "last_observed_head": "e385dcfe94210d547343cf2eb7c8152bfd290129",
-      "last_checkpoint_at": "2026-09-27T17:33:20.294Z",
-      "last_verified_push_at": "2026-09-27T17:33:20.294Z",
+      "last_observed_head": "172c47336ecb0d17fd12944d4a2a9bf70b7a9e1a",
+      "last_checkpoint_at": "2026-09-27T17:38:46.367Z",
+      "last_verified_push_at": "2026-09-27T17:38:46.367Z",
       "checkpoint_paths": [
         "src/Controller/Search/SearchController.php",
         "src/Search/SearchService.php",
@@ -44330,7 +44330,7 @@
         "tests/Controller/SearchPaginationTest.php",
         "tests/Search/SearchResultsPageTest.php"
       ],
-      "next_action": "Full exact-head Worker CI #900 / run 36337212357 is running on HEAD e385dcfe94210d547343cf2eb7c8152bfd290129 in draft PR #354. Run #898 failed one PHPUnit assertion because Symfony adds max-age=0 and must-revalidate around the existing private/no-store feed directives; the test now checks private and no-store without weakening behavior. Poll #900, fix any failure on this branch, and rerun full CI on each repaired exact HEAD.",
+      "next_action": "Full exact-head Worker CI #904 / run 36337649764 is pending on HEAD 172c47336ecb0d17fd12944d4a2a9bf70b7a9e1a in draft PR #354. Run #900 failed because the legacy shared search/feed.xml.twig uses unsupported Twig escaping strategy 'xml'; the RSS endpoint now emits XML safely within the allowed SearchController path, and functional coverage parses XML and checks hostile-title escaping. A small namespace typo in the first follow-up test commit was corrected on this same branch; run #904 covers the corrected exact head. Poll all jobs and repair any remaining failure here.",
       "worker_pr": 354,
       "worker_pr_state": "draft",
       "worker_pr_changed_paths": [
@@ -44369,7 +44369,26 @@
           "run_number": 900,
           "head": "e385dcfe94210d547343cf2eb7c8152bfd290129",
           "base": "7b2ca79405fc12d34bce1386157e929e4668f31a",
-          "result": "in_progress",
+          "result": "failure",
+          "validation_pr": 354,
+          "conclusion": "failure",
+          "diagnosis": "PHPStan passed. PHPUnit reached the RSS route and found the pre-existing templates/search/feed.xml.twig uses Twig escape strategy 'xml', unavailable in this Twig environment, so the route returned HTTP 500. The shared template is outside the WCP-559 claim; SearchController now renders equivalent RSS output with explicit XML escaping within an allowed path, with XML parsing and injection regression coverage."
+        },
+        {
+          "run_id": 36337582415,
+          "run_number": 903,
+          "head": "833fdf7d87d78d0f5fbc60d92b38801583a1d3a4",
+          "base": "7b2ca79405fc12d34bce1386157e929e4668f31a",
+          "result": "pending",
+          "validation_pr": 354,
+          "diagnosis": "Run on pre-correction test commit; superseded by run #904 after correcting test namespace references on the same branch."
+        },
+        {
+          "run_id": 36337649764,
+          "run_number": 904,
+          "head": "172c47336ecb0d17fd12944d4a2a9bf70b7a9e1a",
+          "base": "7b2ca79405fc12d34bce1386157e929e4668f31a",
+          "result": "pending",
           "validation_pr": 354
         }
       ],
@@ -44377,8 +44396,8 @@
       "pr_state": "open",
       "draft_pr": true,
       "worker_pr_base_sha": "7b2ca79405fc12d34bce1386157e929e4668f31a",
-      "ci_run_id": 36337212357,
-      "last_ci_run_id": 36337212357,
+      "ci_run_id": 36337649764,
+      "last_ci_run_id": 36337649764,
       "ci_validation_pr": 354,
       "last_ci_result": "in_progress"
     },
