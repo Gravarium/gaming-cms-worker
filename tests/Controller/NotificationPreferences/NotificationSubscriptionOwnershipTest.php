@@ -18,14 +18,21 @@ final class NotificationSubscriptionOwnershipTest extends WebTestCase
         $client = static::createClient();
         $entityManager = $client->getContainer()->get(EntityManagerInterface::class);
         $connection = $client->getContainer()->get(Connection::class);
-        $subscriptionTableExisted = $connection->createSchemaManager()->tablesExist(['notification_subscription']);
-        if (!$subscriptionTableExisted) {
-            $connection->executeStatement(
-                'CREATE TABLE notification_subscription (user_id INTEGER NOT NULL, topic VARCHAR(128) NOT NULL, created_at TIMESTAMP NOT NULL, PRIMARY KEY (user_id, topic))',
-            );
-        }
+        $schemaManager = $connection->createSchemaManager();
+        $testTables = [
+            'notification_preference' => 'CREATE TABLE notification_preference (user_id INTEGER NOT NULL PRIMARY KEY, in_app_enabled BOOLEAN NOT NULL DEFAULT TRUE, email_enabled BOOLEAN NOT NULL DEFAULT TRUE, mentions_enabled BOOLEAN NOT NULL DEFAULT TRUE, subscriptions_enabled BOOLEAN NOT NULL DEFAULT TRUE, digest_frequency VARCHAR(16) NOT NULL DEFAULT \'immediate\', quiet_hours_start VARCHAR(5) DEFAULT NULL, quiet_hours_end VARCHAR(5) DEFAULT NULL, timezone VARCHAR(64) NOT NULL DEFAULT \'UTC\', updated_at TIMESTAMP NOT NULL)',
+            'notification_subscription' => 'CREATE TABLE notification_subscription (user_id INTEGER NOT NULL, topic VARCHAR(128) NOT NULL, created_at TIMESTAMP NOT NULL, PRIMARY KEY (user_id, topic))',
+        ];
+        $createdTables = [];
 
         try {
+            foreach ($testTables as $table => $ddl) {
+                if (!$schemaManager->tablesExist([$table])) {
+                    $connection->executeStatement($ddl);
+                    $createdTables[] = $table;
+                }
+            }
+
             $suffix = bin2hex(random_bytes(6));
             $actor = (new User())
                 ->setEmail('notification-actor-'.$suffix.'@example.test')
@@ -55,12 +62,12 @@ final class NotificationSubscriptionOwnershipTest extends WebTestCase
             $subscriptions->subscribe($otherUserId, $topic, $now);
 
             $client->loginUser($actor);
-            $client->request('GET', '/login');
-            self::assertResponseRedirects('/account');
-            $token = $client->getContainer()->get(\Symfony\Component\Security\Csrf\CsrfTokenManagerInterface::class)
-                ->getToken('notification-topic')
-                ->getValue();
-            self::assertNotSame('', $token);
+            $crawler = $client->request('GET', '/account/notifications');
+            self::assertResponseIsSuccessful();
+            $unsubscribeForm = $crawler->filter('form[action="/account/notifications/topics/unsubscribe"]');
+            self::assertCount(1, $unsubscribeForm);
+            $token = $unsubscribeForm->filter('input[name="_token"]')->attr('value');
+            self::assertNotNull($token);
 
             $client->request('POST', '/account/notifications/topics/subscribe', [
                 '_token' => 'invalid-token',
@@ -81,8 +88,8 @@ final class NotificationSubscriptionOwnershipTest extends WebTestCase
             self::assertFalse($subscriptions->isSubscribed($actorId, $topic));
             self::assertTrue($subscriptions->isSubscribed($otherUserId, $topic));
         } finally {
-            if (!$subscriptionTableExisted) {
-                $connection->executeStatement('DROP TABLE notification_subscription');
+            foreach (array_reverse($createdTables) as $table) {
+                $connection->executeStatement('DROP TABLE '.$table);
             }
         }
     }
