@@ -50,7 +50,7 @@ final class AccountSessionRevocationCsrfTest extends WebTestCase
         self::assertTrue($this->session($client, $sessionId)->isRevoked());
     }
 
-    private function session($client, int $sessionId): UserSession
+    private function session(KernelBrowser $client, int $sessionId): UserSession
     {
         $entityManager = $client->getContainer()->get(EntityManagerInterface::class);
         $entityManager->clear();
