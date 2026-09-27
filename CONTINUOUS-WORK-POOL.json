@@ -10,16 +10,16 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T11:45:00.021Z",
+  "published_at": "2026-09-27T11:47:00.836Z",
   "summary": {
-    "total_remaining_worker_tasks": 166,
+    "total_remaining_worker_tasks": 167,
     "completed_worker_prs_awaiting_trusted_review": 279,
     "recovery_tasks": 0,
-    "unclaimed": 5,
-    "immediately_claimable": 0,
-    "next_required_action": "WCP-522 draft PR #315 is running exact-head Worker CI run 36316576401 on 66d224f96751b4f59d168f71815969e71ace122d; continue this branch and repair concrete failures only.",
+    "unclaimed": 6,
+    "immediately_claimable": 1,
+    "next_required_action": "WCP-526 is published as an unclaimed, dependency-free Media Library usage-browser proposal on main @ b510875e7b0741b9b19f09429d2204a95df51198; create its exact claim and feature branches before editing source.",
     "composition_preparable": 0,
-    "immediately_actionable": 23,
+    "immediately_actionable": 24,
     "must_continue": true
   },
   "rules": {
@@ -36973,6 +36973,116 @@
         "tests/Controller/Content/PublicContentDiscoveryVisibilityTest.php"
       ],
       "next_action": "Implement the route-level public discovery visibility test within the sole allowed test path; then run focused PHPUnit and complete exact-head Worker CI."
+    },
+    {
+      "priority": 526,
+      "package_id": "WCP-526",
+      "title": "Show exact content and layout uses for media assets",
+      "risk": "medium",
+      "execution_state": "unclaimed",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-526-media-usage-browser-g1",
+      "suggested_branch": "feature/wcp-526-media-usage-browser-g1",
+      "base_branch": "main",
+      "base_sha": "b510875e7b0741b9b19f09429d2204a95df51198",
+      "objective": "Complete the existing Media Library workflow by showing administrators which CMS content entries and page layouts reference an asset, instead of only showing coarse usage counts. Add a bounded read-only usage browser reachable from the asset edit screen, link to existing editors only when the viewer has the corresponding permission, and fail closed when the Media module is disabled. Do not change media storage, replacement, deletion, the shared usage resolver, existing library controller/repository, schema or migrations.",
+      "allowed_paths": [
+        "src/Media/MediaAssetUsageBrowser.php",
+        "src/Controller/AdminMediaUsageController.php",
+        "templates/admin/storage/media_edit.html.twig",
+        "templates/admin/storage/media_usage.html.twig",
+        "tests/Controller/AdminMediaUsageBrowserTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/",
+        "src/Controller/AdminStorageController.php",
+        "src/Controller/AdminStorageLibraryController.php",
+        "src/Repository/MediaAssetRepository.php",
+        "src/Service/MediaAssetUsageResolver.php",
+        "templates/admin/storage/index.html.twig",
+        "templates/admin/storage/library.html.twig",
+        "tests/Controller/MediaStorageSecurityTest.php",
+        "tests/Controller/AdminStorageLibraryPaginationTest.php"
+      ],
+      "deliverables": [
+        "A bounded, read-only browser returns the specific content/news entries and page-layout contexts that refer to a media asset by its stored location or image ID.",
+        "An admin GET route is linked from the existing media edit screen and requires CMS_STORAGE_MANAGE plus an enabled Media module.",
+        "Content titles, details and editor links require CMS_CONTENT_MANAGE and the Content module; page-layout editor links require CMS_SETTINGS_MANAGE. Unauthorized viewers receive no protected titles or links.",
+        "Keep existing storage, replacement and deletion behavior, shared resolver/controller/repository, database schema and migrations unchanged."
+      ],
+      "tests": [
+        "Integration coverage for the media edit link, concrete content/layout references, editor links, escaping and bounded results.",
+        "Negative coverage for missing storage permission, disabled Media/Content modules, unknown asset IDs and content details hidden from viewers without CMS_CONTENT_MANAGE.",
+        "PHPStan level 8 and complete Worker CI on the exact final HEAD, including PostgreSQL 18 migration-chain validation."
+      ],
+      "completion_report": [
+        "Exact sanitized main/base SHA and final Worker HEAD SHA.",
+        "Complete changed-path list and Worker PR.",
+        "Usage browser, page entry point, permission filtering, module gating and result-bound test evidence.",
+        "Focused tests, PHPStan and exact-head complete Worker CI.",
+        "Open limitations and Trusted follow-up."
+      ],
+      "immutable_constraints": [
+        "read-only-media-usage-view-no-storage-mutation",
+        "media-module-disabled-means-admin-route-hidden",
+        "content-title-and-reference-details-require-content-management-permission",
+        "layout-editor-links-require-settings-management-permission",
+        "preserve-current-upload-replacement-deletion-and-usage-resolver-protections",
+        "bounded-deterministic-read-only-query",
+        "no-schema-or-migration-change",
+        "no-private-runtime-or-sensitive-storage-path-disclosure",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "red-CI-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "b510875e7b0741b9b19f09429d2204a95df51198",
+      "proposal_kind": "worker_only",
+      "proposal_dependency_evidence": [],
+      "collision_check": {
+        "compared_against": "Fresh continuous/work-pool-v4 head 6da050f14250cab5811582d42e900ef3d4625c65, current sanitized main b510875e7b0741b9b19f09429d2204a95df51198, all active and claim-locked task paths, exact GitHub claim/feature branch searches and PR state immediately before publication.",
+        "result": "No active or claim-locked package owns or encloses the five exact proposed paths. WCP-510 only gates direct Media routes through its event subscriber and tests; this proposal adds a separate detail controller/service/view and does not modify its files. Completed locked WCP-339 owns the shared usage resolver, which remains untouched. WCP-342 owns AdminStorageController and its security test; WCP-421 owns the library controller/repository, index/library templates and pagination test; WCP-447 owns upload templates/controller; none overlaps these paths. WCP-520, WCP-523 and WCP-524 have separate News, Video Playlist and Game Catalogue widget paths. FCP-072 is unclaimed and dependency-blocked with a broad templates/ allowance; the proposal uses one exact media_edit template and any future FCP-072 claimant must revalidate/narrow that path. Existing account, module and route policy remains in place.",
+        "paths": [
+          "src/Media/MediaAssetUsageBrowser.php",
+          "src/Controller/AdminMediaUsageController.php",
+          "templates/admin/storage/media_edit.html.twig",
+          "templates/admin/storage/media_usage.html.twig",
+          "tests/Controller/AdminMediaUsageBrowserTest.php"
+        ],
+        "observed_nonblocking_path_hits": [
+          {
+            "id": "WCP-510",
+            "title": "Keep direct media actions behind the Media module",
+            "state": "worker_in_progress",
+            "paths": [
+              "src/EventSubscriber/MediaStorageModuleSubscriber.php",
+              "tests/Controller/MediaStorageModuleGateTest.php"
+            ]
+          },
+          {
+            "id": "FCP-072",
+            "title": "Translations accessibility mobile editing and optional PWA",
+            "state": "unclaimed_dependency_blocked",
+            "path": "templates/"
+          }
+        ]
+      },
+      "published_at": "2026-09-27T11:47:00.836Z"
     }
   ],
   "recovery_queue": [],
