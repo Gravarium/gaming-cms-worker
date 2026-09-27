@@ -12,14 +12,14 @@
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
   "published_at": "2026-09-27T01:38:12.865Z",
   "summary": {
-    "total_remaining_worker_tasks": 140,
+    "total_remaining_worker_tasks": 141,
     "completed_worker_prs_awaiting_trusted_review": 215,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "Re-evaluate every unclaimed task against its current dependency evidence; if all published FCPs are blocked, publish and claim one disjoint worker-only task under the continuous-work rules.",
+    "next_required_action": "WCP-449 is claimed on exact sanitized main; implement the authorized settings persistence regression on its feature branch and continue through exact-head Worker CI.",
     "composition_preparable": 0,
-    "immediately_actionable": 5,
+    "immediately_actionable": 6,
     "must_continue": true
   },
   "rules": {
@@ -25327,6 +25327,95 @@
           "result": "queued"
         }
       ]
+    },
+    {
+      "priority": 449,
+      "package_id": "WCP-449",
+      "title": "Verify authorized website settings can be saved",
+      "risk": "low",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-449-site-settings-persistence-g1",
+      "suggested_branch": "feature/wcp-449-site-settings-persistence-g1",
+      "base_branch": "main",
+      "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "objective": "Add a functional regression proving an authenticated CMS_SETTINGS_MANAGE user can save otherwise-valid non-media website settings through the rendered form with its valid CSRF token. Change tests only; do not upload files or submit external media URLs.",
+      "allowed_paths": [
+        "tests/Controller/AdminSettingsPersistenceTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "src/",
+        "templates/",
+        "migrations/",
+        "config/",
+        "public/uploads/"
+      ],
+      "deliverables": [
+        "A CMS_SETTINGS_MANAGE user opens the existing website settings form and submits valid text settings with the rendered CSRF token.",
+        "The form redirects after saving and a fresh database read confirms the changed site name and description persisted.",
+        "Synthetic users and any test-created SiteSettings rows are removed; pre-existing settings are restored.",
+        "No controller, form, template, upload, storage, external URL or schema behavior is changed."
+      ],
+      "tests": [
+        "Targeted AdminSettingsPersistenceTest functional coverage.",
+        "PHPStan level 8 and full Worker CI on the exact final HEAD.",
+        "PostgreSQL 18 full migration-chain validation."
+      ],
+      "completion_report": [
+        "Exact sanitized main base SHA and final Worker HEAD SHA.",
+        "Complete changed-path list and Worker PR.",
+        "Successful rendered-form CSRF submission, redirect and persisted settings assertions.",
+        "Exact-head PHPUnit, PHPStan and full Worker CI results.",
+        "Any remaining Trusted integration work."
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "preserve-CMS_SETTINGS_MANAGE-and-rendered-form-CSRF",
+        "do-not-use-file-uploads-or-external-media-URLs",
+        "restore-pre-existing-settings-and-remove-synthetic-test-data",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "proposal_kind": "worker_only",
+      "proposal_dependency_evidence": [],
+      "collision_check": {
+        "compared_against": "Fresh continuous/work-pool-v4 blob 142a152f30290c47b5681a753a08e898dda508e1, all active and claim-locked allowlists, and worker/main @ f1a246c64527ef3ad51f7490773d9bbf9d42be5d.",
+        "result": "No active or claim-locked package owns or overlaps tests/Controller/AdminSettingsPersistenceTest.php. The path is absent from exact worker/main. The nearby WCP-446 security test uses a distinct file; WCP-445 user directory, WCP-447 batch media uploads, and WCP-448 guild event pagination have disjoint paths.",
+        "paths": [
+          "tests/Controller/AdminSettingsPersistenceTest.php"
+        ]
+      },
+      "claimed_on": "2026-09-27T01:50:49.054Z",
+      "claim_state": "active",
+      "active_base_branch": "main",
+      "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "resume_branch": "feature/wcp-449-site-settings-persistence-g1",
+      "last_checkpoint_at": "2026-09-27T01:50:49.054Z",
+      "checkpoint_paths": [],
+      "branch_heads": {
+        "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+        "feature_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d"
+      },
+      "next_action": "Implement the valid rendered-form settings save regression, prove persistence after clearing Doctrine, and restore all pre-existing settings plus the synthetic user.",
+      "last_verified_push_at": "2026-09-27T01:50:49.054Z"
     }
   ],
   "recovery_queue": [],
