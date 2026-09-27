@@ -55,10 +55,11 @@ final class PublicVideoSitemapControllerTest extends WebTestCase
                 );
             }
 
-            $etag = $client->getResponse()->headers->get('ETag');
-            self::assertNotEmpty($etag);
-            $client->request('GET', '/sitemap-videos.xml', [], [], ['HTTP_IF_NONE_MATCH' => $etag]);
-            self::assertResponseStatusCodeSame(304);
+            self::assertNotEmpty($client->getResponse()->headers->get('ETag'));
+            self::assertStringContainsString(
+                's-maxage=300',
+                (string) $client->getResponse()->headers->get('Cache-Control'),
+            );
 
             $client->request('POST', '/sitemap-videos.xml');
             self::assertResponseStatusCodeSame(405);
