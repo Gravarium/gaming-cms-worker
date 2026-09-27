@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T07:58:53.132Z",
+  "published_at": "2026-09-27T08:00:11.745Z",
   "summary": {
     "total_remaining_worker_tasks": 141,
     "completed_worker_prs_awaiting_trusted_review": 250,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-483 exact-head Worker CI run 36304215243 is green on 0eec4a4289abe6d5850f5eac98c522892a1facf5. WCP-484 run 36304594074 failed on an order-sensitive Cache-Control header equality assertion; normalize the test to assert private/no-store directives semantically and rerun on the same PR branch.",
+    "next_required_action": "WCP-483 exact-head Worker CI run 36304215243 is green on 0eec4a4289abe6d5850f5eac98c522892a1facf5; its owner retains the active claim. WCP-484 full Worker CI run 36304783435 is in progress on exact HEAD f576095ba5a9c34d11881ba5d2813186a6429e57 after two test-only fixture/assertion corrections.",
     "composition_preparable": 0,
     "immediately_actionable": 4,
     "must_continue": true
@@ -30981,15 +30981,15 @@
       "claim_state": "active",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-      "active_head": "ea9a4753bd368611a4c105ce07e22e1459a03dff",
+      "active_head": "f576095ba5a9c34d11881ba5d2813186a6429e57",
       "resume_branch": "feature/wcp-484-admin-content-preview-security-g1",
       "branch_heads": {
         "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-        "feature_branch": "ea9a4753bd368611a4c105ce07e22e1459a03dff"
+        "feature_branch": "f576095ba5a9c34d11881ba5d2813186a6429e57"
       },
-      "next_action": "Exact-head Worker CI run 36304594074 failed only because the Cache-Control assertion compares the entire directive string, while Symfony normalizes response header ordering. Change the test to assert the required private and no-store directives semantically, retain the robots-header and public-draft checks, then rerun full Worker CI.",
-      "last_observed_head": "ea9a4753bd368611a4c105ce07e22e1459a03dff",
-      "last_checkpoint_at": "2026-09-27T07:58:53.132Z",
+      "next_action": "Full Worker CI run 36304783435 is in progress on exact HEAD f576095ba5a9c34d11881ba5d2813186a6429e57. The test now asserts private/no-store cache directives without depending on directive order; inspect the complete run and repair within the allowlisted test file if needed.",
+      "last_observed_head": "f576095ba5a9c34d11881ba5d2813186a6429e57",
+      "last_checkpoint_at": "2026-09-27T08:00:11.745Z",
       "checkpoint_paths": [
         "tests/Controller/AdminContentPreviewSecurityTest.php"
       ],
@@ -30998,10 +30998,10 @@
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/277",
       "draft_pr": true,
       "pr_state": "open",
-      "ci_run_id": 36304594074,
-      "last_ci_run_id": 36304594074,
-      "ci_result": "failure",
-      "last_ci_result": "failure",
+      "ci_run_id": 36304783435,
+      "last_ci_run_id": 36304783435,
+      "ci_result": "in_progress",
+      "last_ci_result": "in_progress",
       "ci_attempts": [
         {
           "run_id": 36304073650,
@@ -31012,6 +31012,11 @@
           "run_id": 36304594074,
           "head": "ea9a4753bd368611a4c105ce07e22e1459a03dff",
           "result": "failure"
+        },
+        {
+          "run_id": 36304783435,
+          "head": "f576095ba5a9c34d11881ba5d2813186a6429e57",
+          "result": "in_progress"
         }
       ]
     }
