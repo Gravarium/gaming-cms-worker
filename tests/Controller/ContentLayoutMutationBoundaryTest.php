@@ -78,7 +78,10 @@ final class ContentLayoutMutationBoundaryTest extends WebTestCase
             $formValues['_token'] = 'invalid-layout-mutation-token';
             $values[$formName] = $formValues;
 
-            $client->request('POST', $editPath, $values);
+            $client->request('POST', $editPath, $values, [], [
+                'HTTP_ORIGIN' => 'https://attacker.example',
+                'HTTP_SEC_FETCH_SITE' => 'cross-site',
+            ]);
 
             self::assertResponseStatusCodeSame(200);
             self::assertFalse($client->getResponse()->isRedirection());
