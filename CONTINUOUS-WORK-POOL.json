@@ -10,16 +10,16 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T03:01:01.815Z",
+  "published_at": "2026-09-27T03:01:56.704Z",
   "summary": {
-    "total_remaining_worker_tasks": 140,
+    "total_remaining_worker_tasks": 141,
     "completed_worker_prs_awaiting_trusted_review": 225,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-457 is complete on green exact-head Worker PR #250. All five unclaimed FCP assignments remain dependency-blocked; derive the next independent worker-only proposal and claim it.",
+    "next_required_action": "WCP-459 is claimed from exact green WCP-457 HEAD 94da6297e417b886d101dae6cc4ec2170538549c; implement the login failure disclosure regression in its exclusive test file.",
     "composition_preparable": 0,
-    "immediately_actionable": 3,
+    "immediately_actionable": 4,
     "must_continue": true
   },
   "rules": {
@@ -26677,6 +26677,107 @@
       "last_checkpoint_at": "2026-09-27T03:01:01.815Z",
       "last_verified_push_at": "2026-09-27T03:01:01.815Z",
       "next_action": "Open a draft Worker PR to trigger the full CI; inspect focused category hierarchy tests, PHPStan level 8 and the complete CI on the exact PR HEAD. Fix any failure on this branch."
+    },
+    {
+      "priority": 459,
+      "package_id": "WCP-459",
+      "title": "Keep login failures indistinguishable for unknown accounts",
+      "risk": "medium",
+      "execution_state": "worker_in_progress",
+      "dependencies": [
+        "WCP-457"
+      ],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-459-login-failure-disclosure-g1",
+      "suggested_branch": "feature/wcp-459-login-failure-disclosure-g1",
+      "base_branch": "feature/wcp-457-login-throttling-global-ip-g1",
+      "base_sha": "94da6297e417b886d101dae6cc4ec2170538549c",
+      "objective": "Add test-only functional regression coverage that a wrong password for a synthetic existing account and an unknown email identifier expose the same generic login failure to the client. Preserve the existing rendered form, valid CSRF, default redirect behavior and account non-authentication; do not change product code.",
+      "allowed_paths": [
+        "tests/Controller/LoginFailureDisclosureSecurityTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "src/",
+        "templates/",
+        "migrations/",
+        "config/",
+        "public/uploads/"
+      ],
+      "deliverables": [
+        "Submit a wrong password for a synthetic verified account and a separate randomized, non-existent email using freshly rendered login forms and valid CSRF tokens.",
+        "Assert both attempts redirect to /login and display the same generic authentication failure message; do not compare input fields or claim timing equivalence.",
+        "Verify the account remains unauthenticated and remove the synthetic user.",
+        "Change tests only; preserve the existing user-enumeration safeguards and all production behavior."
+      ],
+      "tests": [
+        "Focused LoginFailureDisclosureSecurityTest functional coverage.",
+        "PHPStan level 8 and complete Worker CI on the exact final HEAD.",
+        "PostgreSQL 18 complete migration-chain validation."
+      ],
+      "completion_report": [
+        "Exact green proposal base SHA and final Worker HEAD SHA.",
+        "Complete changed-file list and Worker PR.",
+        "Rendered-form CSRF, equal client-visible failure response and unauthenticated-state results.",
+        "Exact-head PHPUnit, PHPStan and full Worker CI.",
+        "Remaining Trusted integration work."
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "preserve-generic-authentication-errors-and-user-enumeration-protections",
+        "preserve-rendered-login-form-CSRF-and-default-failure-redirect",
+        "test-only-synthetic-user-cleanup",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
+      ],
+      "proposal_base_branch": "feature/wcp-457-login-throttling-global-ip-g1",
+      "proposal_base_sha": "94da6297e417b886d101dae6cc4ec2170538549c",
+      "proposal_kind": "worker_only",
+      "proposal_dependency_evidence": [
+        {
+          "package_id": "WCP-457",
+          "pull_request": 250,
+          "head_sha": "94da6297e417b886d101dae6cc4ec2170538549c",
+          "ci_run_id": 36289843576,
+          "result": "success",
+          "authority": "worker-proposal-only"
+        }
+      ],
+      "collision_check": {
+        "compared_against": "Fresh continuous/work-pool-v4 blob dd3fd200c48387a104a8c32eda58b518c106e598, all active and claim-locked allowed-path scopes including WCP-458 and active WCP-456, exact proposal base 94da6297e417b886d101dae6cc4ec2170538549c, and sanitized worker/main f1a246c64527ef3ad51f7490773d9bbf9d42be5d.",
+        "result": "No active or claim-locked task owns or encloses the exact new test path; the file is absent from sanitized main. WCP-457 is the single exact-green Worker dependency (it contains WCP-454). WCP-458 belongs to another chat and is unchanged. All five unclaimed FCP assignments remain blocked by missing dependencies.",
+        "paths": [
+          "tests/Controller/LoginFailureDisclosureSecurityTest.php"
+        ]
+      },
+      "claimed_on": "2026-09-27T03:01:56.704Z",
+      "claim_state": "active",
+      "active_base_branch": "feature/wcp-457-login-throttling-global-ip-g1",
+      "active_base_sha": "94da6297e417b886d101dae6cc4ec2170538549c",
+      "active_head": "94da6297e417b886d101dae6cc4ec2170538549c",
+      "resume_branch": "feature/wcp-459-login-failure-disclosure-g1",
+      "last_checkpoint_at": "2026-09-27T03:01:56.704Z",
+      "checkpoint_paths": [],
+      "branch_heads": {
+        "claim_branch": "94da6297e417b886d101dae6cc4ec2170538549c",
+        "feature_branch": "94da6297e417b886d101dae6cc4ec2170538549c"
+      },
+      "last_verified_push_at": "2026-09-27T03:01:56.704Z",
+      "next_action": "Implement the test-only comparison of wrong-password and unknown-email failures on the exclusive branch; create a draft PR and run exact-head Worker CI."
     }
   ],
   "recovery_queue": [],
