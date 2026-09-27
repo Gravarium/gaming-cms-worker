@@ -10,7 +10,7 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T09:37:14.630Z",
+  "published_at": "2026-09-27T09:38:17.419Z",
   "summary": {
     "total_remaining_worker_tasks": 148,
     "completed_worker_prs_awaiting_trusted_review": 259,
@@ -32566,27 +32566,27 @@
       "claim_state": "active",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-      "active_head": "ec849f35275f8f047a992a154c5cb5c6a7f818a6",
+      "active_head": "709bc6c700dfb0bdc8236aa81c7a3fc605587ad8",
       "resume_branch": "feature/wcp-494-public-scheduled-content-g1",
       "branch_heads": {
         "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-        "feature_branch": "ec849f35275f8f047a992a154c5cb5c6a7f818a6"
+        "feature_branch": "709bc6c700dfb0bdc8236aa81c7a3fc605587ad8"
       },
-      "last_observed_head": "ec849f35275f8f047a992a154c5cb5c6a7f818a6",
-      "last_checkpoint_at": "2026-09-27T09:36:28.112Z",
+      "last_observed_head": "709bc6c700dfb0bdc8236aa81c7a3fc605587ad8",
+      "last_checkpoint_at": "2026-09-27T09:38:17.419Z",
       "checkpoint_paths": [
         "tests/Controller/PublicScheduledContentVisibilityTest.php"
       ],
-      "next_action": "Monitor exact-head Worker CI run 36309864850; repair any concrete failures on HEAD ec849f35275f8f047a992a154c5cb5c6a7f818a6 without weakening checks.",
-      "last_verified_push_at": "2026-09-27T09:36:00.778Z",
+      "next_action": "Run and verify full exact-head Worker CI on repaired HEAD 709bc6c700dfb0bdc8236aa81c7a3fc605587ad8. Prior run 36309864850 failed because the content marker remained a substring of the requested slug; slugs and content markers are now independent.",
+      "last_verified_push_at": "2026-09-27T09:38:17.419Z",
       "worker_pr": 287,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/287",
       "draft_pr": true,
       "pr_state": "open",
       "ci_run_id": 36309864850,
       "last_ci_run_id": 36309864850,
-      "ci_result": "in_progress",
-      "last_ci_result": "in_progress",
+      "ci_result": "failure",
+      "last_ci_result": "failure",
       "ci_attempts": [
         {
           "run_id": 36309675365,
@@ -32597,7 +32597,8 @@
         {
           "run_id": 36309864850,
           "head": "ec849f35275f8f047a992a154c5cb5c6a7f818a6",
-          "result": "in_progress"
+          "result": "failure",
+          "diagnosis": "The content marker was still a substring of the request slug, which Symfony's debug 404 page displays in route diagnostics. The repaired fixture now uses unrelated route slugs and content markers."
         }
       ]
     },
