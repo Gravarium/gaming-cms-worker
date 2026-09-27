@@ -10,10 +10,10 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T02:33:13.072Z",
+  "published_at": "2026-09-27T02:34:14.468Z",
   "summary": {
     "total_remaining_worker_tasks": 141,
-    "completed_worker_prs_awaiting_trusted_review": 221,
+    "completed_worker_prs_awaiting_trusted_review": 222,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
@@ -25814,7 +25814,7 @@
       "package_id": "WCP-452",
       "title": "Browse all failed messages with queue pagination",
       "risk": "medium",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -25898,7 +25898,7 @@
         ]
       },
       "claimed_on": "2026-09-27T02:05:27.111Z",
-      "claim_state": "active",
+      "claim_state": "locked_until_trusted_resolution",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
       "active_head": "990a040511df2cdea3380d8ba705ba2c87d5c6c8",
@@ -25915,7 +25915,49 @@
         "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
         "feature_branch": "990a040511df2cdea3380d8ba705ba2c87d5c6c8"
       },
-      "next_action": "Worker CI run #629 (36288660120) is in_progress on exact HEAD 990a040511df2cdea3380d8ba705ba2c87d5c6c8. Inspect all jobs, fix any failure on this branch, rerun complete CI, and mark PR #248 ready only after green."
+      "next_action": "Await Trusted review with the claim locked; do not merge or deploy. Continue with the next independent Worker-only task.",
+      "worker_pr": 248,
+      "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/248",
+      "pr_state": "ready_for_review",
+      "draft_pr": false,
+      "ci_run_id": 36288660120,
+      "last_ci_run_id": 36288660120,
+      "ci_result": "success",
+      "last_ci_result": "success",
+      "ci_attempts": [
+        {
+          "run_id": 36288357124,
+          "head": "66898d430ff01dbaf596b08e564dad482d66d0ed",
+          "result": "failure"
+        },
+        {
+          "run_id": 36288473996,
+          "head": "e4c3ac7fd74d761223aa6d91de57fad7dfca1321",
+          "result": "failure"
+        },
+        {
+          "run_id": 36288660120,
+          "head": "990a040511df2cdea3380d8ba705ba2c87d5c6c8",
+          "result": "success"
+        }
+      ],
+      "final_head": "990a040511df2cdea3380d8ba705ba2c87d5c6c8",
+      "final_changed_paths": [
+        "src/Controller/AdminQueueController.php",
+        "src/Messenger/FailedMessagePaginator.php",
+        "templates/admin/queue/index.html.twig",
+        "tests/Controller/AdminQueuePaginationTest.php"
+      ],
+      "completed_on": "2026-09-27T02:34:14.468Z",
+      "test_evidence": [
+        "Worker CI run #629 (36288660120) passed on exact HEAD 990a040511df2cdea3380d8ba705ba2c87d5c6c8; both jobs succeeded.",
+        "PHPUnit passed: 434 tests and 1,985 assertions; one PHPUnit deprecation and one notice were reported.",
+        "PHPStan level 8, Composer audit, migration PHP lint, YAML and Twig lint, Symfony container validation, AssetMapper compilation and Doctrine mapping validation succeeded.",
+        "PostgreSQL 18 migration job applied and verified all 39 migrations; current and latest version was Version20260925070000.",
+        "Functional coverage checks CMS_SETTINGS_MANAGE, 25-row ID-descending pagination without gaps or duplicates, page clamping, malformed inputs without echo or queue mutation, payload privacy, both CSRF boundaries, preserved page on row retry and retry-all limited to the visible page.",
+        "Earlier CI failures were diagnosed and corrected on the same branch; complete exact-head CI passed on the final commit.",
+        "PR #248 is open and ready for review, unmerged, and changes only the four WCP-452 allowed paths."
+      ]
     },
     {
       "priority": 453,
