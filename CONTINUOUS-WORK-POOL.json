@@ -10,7 +10,7 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T11:24:46.077Z",
+  "published_at": "2026-09-27T11:26:16.917Z",
   "summary": {
     "total_remaining_worker_tasks": 165,
     "completed_worker_prs_awaiting_trusted_review": 278,
@@ -36210,7 +36210,7 @@
       "suggested_branch": "feature/wcp-520-news-archive-widget-g1",
       "base_branch": "feature/wcp-513-public-news-month-archive-g1",
       "base_sha": "b7e903a638bd44f60fd7c823ab42a8ca5419a5f9",
-      "objective": "Complete Content's public news discovery workflow by making the month archive available as a Page Builder widget. WCP-513 provides /news/archive and a query for currently visible news months, but editors cannot yet place a month list on the home page or another page. Register content.news-archive through the existing auto-tagged WidgetProvider contract; list the newest months with counts and internal month/index links; reuse the existing bounded count setting; and ensure the existing Content module gate removes the widget and its data when Content is disabled. Keep the archive template under src/ContentArchive/Templates with a unique NewsArchive Twig namespace and an additive, separate config/packages YAML file. Do not modify templates/, the shared widget registry/provider, the active Video Twig config file, the WCP-513 route/controller/repository, or schema.",
+      "objective": "Complete Content's public news discovery workflow by making the month archive available as a Page Builder widget. WCP-513 provides /news/archive and a query for currently visible news months, but editors cannot yet place a month list on the home page or another page. Register content.news-archive through the existing auto-tagged WidgetProvider contract; list the newest months with counts and internal month/index links; reuse the existing bounded count setting; and ensure the existing Content module gate removes the widget and its data when Content is disabled. Keep the archive template under src/ContentArchive/Templates with a dedicated default Twig path with the unique widget template name widget/news_archive.html.twig and an additive, separate config/packages YAML file. Do not modify templates/, the shared widget registry/provider, the active Video Twig config file, the WCP-513 route/controller/repository, or schema.",
       "allowed_paths": [
         "config/packages/news_archive_widget.yaml",
         "src/Widget/NewsArchiveWidgetProvider.php",
@@ -36250,7 +36250,7 @@
         "tests/Controller/"
       ],
       "deliverables": [
-        "Auto-register a Content-owned content.news-archive widget with the existing Page Builder and a unique NewsArchive Twig namespace.",
+        "Auto-register a Content-owned content.news-archive widget with the existing Page Builder and a dedicated default Twig path.",
         "Show the newest public archive periods and their counts, with internal links to the existing month route and archive index; include a clear empty state and an optional editor heading.",
         "Use the existing count setting (default 6, bounded to at most 12) and avoid repeating the archive query when multiple instances render in one request.",
         "The Page Builder palette and renderer hide the widget and suppress its data whenever the Content module is disabled.",
@@ -36295,7 +36295,7 @@
       ],
       "collision_check": {
         "compared_against": "Fresh continuous/work-pool-v4 blob 4c64e4d627cde3e031822121a8820ce19cd01c02; sanitized Worker main b510875e7b0741b9b19f09429d2204a95df51198; all task allowed-path scopes; current claim/feature branch searches and WCP-520/news-archive-widget PR searches; WCP-513 PR #306 and exact-head CI run 36313291931.",
-        "result": "No active or claim-locked task owns or encloses these four exact allowed paths. FCP-072's broad templates/ scope is avoided by placing the view under src/ContentArchive/Templates. Active WCP-516 uses config/packages/twig.yaml and src/VideoSearch/Templates; this package uses a distinct additive config file, separate source tree and unique Twig namespace. The only runtime dependency is the exact green WCP-513 archive repository/routes; no foreign controller, repository, template or shared widget wiring is modified.",
+        "result": "No active or claim-locked task owns or encloses these four exact allowed paths. FCP-072's broad templates/ scope is avoided by placing the view under src/ContentArchive/Templates. Active WCP-516 uses config/packages/twig.yaml and src/VideoSearch/Templates; this package uses a separate additive config file and a distinct source tree, with a unique default-path widget template name. The existing WidgetDefinition contract requires template names to begin with widget/, so no Twig namespace is introduced. The only runtime dependency is the exact green WCP-513 archive repository/routes; no foreign controller, repository, template or shared widget wiring is modified.",
         "paths": [
           "config/packages/news_archive_widget.yaml",
           "src/Widget/NewsArchiveWidgetProvider.php",
@@ -36315,14 +36315,14 @@
         "feature_branch": "b7e903a638bd44f60fd7c823ab42a8ca5419a5f9"
       },
       "last_observed_head": "b7e903a638bd44f60fd7c823ab42a8ca5419a5f9",
-      "last_checkpoint_at": "2026-09-27T11:20:54.910Z",
+      "last_checkpoint_at": "2026-09-27T11:26:16.917Z",
       "checkpoint_paths": [
         "config/packages/news_archive_widget.yaml",
         "src/Widget/NewsArchiveWidgetProvider.php",
         "src/ContentArchive/Templates/widget/news_archive.html.twig",
         "tests/Widget/NewsArchiveWidgetProviderTest.php"
       ],
-      "next_action": "Implement the Content-owned archive widget and focused Page Builder, module-gate, data, and Twig coverage on the claimed feature branch."
+      "next_action": "Implement the Content-owned archive widget using the existing widget/ template contract and a separate additive Twig path configuration; then verify Page Builder discovery, module gating, data and rendered links."
     },
     {
       "priority": 521,
