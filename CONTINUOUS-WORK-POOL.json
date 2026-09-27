@@ -10,10 +10,10 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T15:39:37.065Z",
+  "published_at": "2026-09-27T15:47:20.063Z",
   "summary": {
     "total_remaining_worker_tasks": 167,
-    "completed_worker_prs_awaiting_trusted_review": 294,
+    "completed_worker_prs_awaiting_trusted_review": 290,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
@@ -16861,7 +16861,7 @@
       "package_id": "WCP-385",
       "title": "Preview unpublished videos from administration",
       "risk": "medium",
-      "execution_state": "worker_complete_awaiting_trusted_review",
+      "execution_state": "trusted_integrated",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -16945,9 +16945,9 @@
         ]
       },
       "claimed_on": "2026-09-26T19:23:05.127Z",
-      "claim_state": "locked_until_trusted_resolution",
+      "claim_state": "released_after_trusted_integration",
       "last_checkpoint_at": "2026-09-26T19:30:03.137Z",
-      "next_action": "Remain claim-locked while awaiting Trusted review; proceed with the next dependency-safe or independent Worker proposal. Do not merge or deploy.",
+      "next_action": "Trusted PR #147 integrated this Worker PR; final Main CI and sanitized Worker sync/CI passed. Claim released.",
       "checkpoint_paths": [
         "src/Controller/AdminVideoPreviewController.php",
         "templates/admin/video/form.html.twig",
@@ -16957,7 +16957,7 @@
       "last_verified_push_at": "2026-09-26T19:30:03.137Z",
       "worker_pr": 179,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/179",
-      "pr_state": "open",
+      "pr_state": "closed",
       "ci_run_id": 36266142287,
       "ci_result": "success",
       "final_head": "e9d4db8605908667e936ba07ceb0dec7a7eaf894",
@@ -16967,7 +16967,20 @@
         "templates/admin/video/form.html.twig",
         "templates/admin/video/preview.html.twig",
         "tests/Controller/VideoDraftPreviewTest.php"
-      ]
+      ],
+      "worker_pr_state": "closed",
+      "trusted_resolution": {
+        "status": "integrated",
+        "worker_pr": 179,
+        "worker_head": "e9d4db8605908667e936ba07ceb0dec7a7eaf894",
+        "trusted_pr": 147,
+        "trusted_merge_sha": "f100076792eadce19280b005a239e387f2b023dd",
+        "final_trusted_main_sha": "8b142c2faf6950610f73bdd256043492ecf0152c",
+        "final_trusted_main_ci_run_id": 36330305722,
+        "sanitized_worker_sync_sha": "6988e871cbda8c27801ee0bcc02e8c5c2b0cd909",
+        "worker_ci_run_id": 36330318577,
+        "resolved_at": "2026-09-27T15:47:20.063Z"
+      }
     },
     {
       "priority": 166,
@@ -17356,7 +17369,7 @@
       "package_id": "WCP-389",
       "title": "Syndicate the public video library through RSS",
       "risk": "medium",
-      "execution_state": "worker_complete_awaiting_trusted_review",
+      "execution_state": "trusted_integrated",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -17442,9 +17455,9 @@
         ]
       },
       "claimed_on": "2026-09-26T19:35:24.119Z",
-      "claim_state": "locked_until_trusted_resolution",
+      "claim_state": "released_after_trusted_integration",
       "last_checkpoint_at": "2026-09-26T19:49:30.233Z",
-      "next_action": "Worker PR #183 is ready for Trusted review with exact successful Worker CI run 36267220181 on HEAD 3705b5b51d5f6fb2080b51721658e86db91215aa; keep this claim locked until Trusted resolution.",
+      "next_action": "Trusted PR #148 integrated this Worker PR; final Main CI and sanitized Worker sync/CI passed. Claim released.",
       "checkpoint_paths": [
         "src/Controller/VideoFeedController.php",
         "templates/video/feed.xml.twig",
@@ -17454,7 +17467,21 @@
       "last_verified_push_at": "2026-09-26T19:49:30.233Z",
       "worker_pr": 183,
       "ci_run_id": 36267220181,
-      "ci_result": "success"
+      "ci_result": "success",
+      "pr_state": "closed",
+      "worker_pr_state": "closed",
+      "trusted_resolution": {
+        "status": "integrated",
+        "worker_pr": 183,
+        "worker_head": "3705b5b51d5f6fb2080b51721658e86db91215aa",
+        "trusted_pr": 148,
+        "trusted_merge_sha": "30d002cfa9e52cddbe7eab72f4a829a53e388794",
+        "final_trusted_main_sha": "8b142c2faf6950610f73bdd256043492ecf0152c",
+        "final_trusted_main_ci_run_id": 36330305722,
+        "sanitized_worker_sync_sha": "6988e871cbda8c27801ee0bcc02e8c5c2b0cd909",
+        "worker_ci_run_id": 36330318577,
+        "resolved_at": "2026-09-27T15:47:20.063Z"
+      }
     },
     {
       "priority": 170,
@@ -17690,7 +17717,7 @@
       "package_id": "WCP-392",
       "title": "Render the managed main navigation on public pages",
       "risk": "medium",
-      "execution_state": "worker_complete_awaiting_trusted_review",
+      "execution_state": "trusted_integrated",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -17784,9 +17811,9 @@
         ]
       },
       "claimed_on": "2026-09-26T19:57:23.191Z",
-      "claim_state": "locked_until_trusted_resolution",
+      "claim_state": "released_after_trusted_integration",
       "last_checkpoint_at": "2026-09-26T20:19:56.533Z",
-      "next_action": "Await Trusted review and keep claim locked until trusted resolution; do not merge or deploy.",
+      "next_action": "Trusted PR #149 integrated this Worker PR; final Main CI and sanitized Worker sync/CI passed. Claim released.",
       "checkpoint_paths": [
         "src/Twig/SiteExtension.php",
         "src/Repository/MenuItemRepository.php",
@@ -17799,7 +17826,21 @@
       "worker_pr": 186,
       "ci_run_id": 36268878962,
       "ci_result": "success",
-      "final_head": "1dae69c4e26e4b573130d9148a8830929def76b0"
+      "final_head": "1dae69c4e26e4b573130d9148a8830929def76b0",
+      "pr_state": "closed",
+      "worker_pr_state": "closed",
+      "trusted_resolution": {
+        "status": "integrated",
+        "worker_pr": 186,
+        "worker_head": "1dae69c4e26e4b573130d9148a8830929def76b0",
+        "trusted_pr": 149,
+        "trusted_merge_sha": "50cb3d205736831814e9e8ccf7832305f6667372",
+        "final_trusted_main_sha": "8b142c2faf6950610f73bdd256043492ecf0152c",
+        "final_trusted_main_ci_run_id": 36330305722,
+        "sanitized_worker_sync_sha": "6988e871cbda8c27801ee0bcc02e8c5c2b0cd909",
+        "worker_ci_run_id": 36330318577,
+        "resolved_at": "2026-09-27T15:47:20.063Z"
+      }
     },
     {
       "priority": 173,
@@ -32254,7 +32295,7 @@
       "package_id": "WCP-492",
       "title": "Publish shareable public pages for video playlists",
       "risk": "medium",
-      "execution_state": "worker_complete_awaiting_trusted_review",
+      "execution_state": "trusted_integrated",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -32339,7 +32380,7 @@
       },
       "published_at": "2026-09-27T09:17:11.608Z",
       "claimed_on": "2026-09-27T09:17:11.608Z",
-      "claim_state": "locked_until_trusted_resolution",
+      "claim_state": "released_after_trusted_integration",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
       "active_head": "ddc53ae5cbc7834f56175e653d33e83918d0f75d",
@@ -32357,13 +32398,27 @@
         "templates/admin/video/simple_form.html.twig",
         "tests/Controller/VideoPlaylistPublicWorkflowTest.php"
       ],
-      "next_action": "Keep the claim locked until Trusted resolution; the worker proposal remains untrusted.",
+      "next_action": "Trusted PR #150 integrated this Worker PR; final Main CI and sanitized Worker sync/CI passed. Claim released.",
       "worker_pr": 286,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/286",
       "last_verified_push_at": "2026-09-27T09:27:05.141Z",
       "ci_run_id": 36309234506,
       "ci_result": "success",
-      "final_head": "ddc53ae5cbc7834f56175e653d33e83918d0f75d"
+      "final_head": "ddc53ae5cbc7834f56175e653d33e83918d0f75d",
+      "pr_state": "closed",
+      "worker_pr_state": "closed",
+      "trusted_resolution": {
+        "status": "integrated",
+        "worker_pr": 286,
+        "worker_head": "ddc53ae5cbc7834f56175e653d33e83918d0f75d",
+        "trusted_pr": 150,
+        "trusted_merge_sha": "1f0e247622161b1bb19fcac77df835ec817f6c64",
+        "final_trusted_main_sha": "8b142c2faf6950610f73bdd256043492ecf0152c",
+        "final_trusted_main_ci_run_id": 36330305722,
+        "sanitized_worker_sync_sha": "6988e871cbda8c27801ee0bcc02e8c5c2b0cd909",
+        "worker_ci_run_id": 36330318577,
+        "resolved_at": "2026-09-27T15:47:20.063Z"
+      }
     },
     {
       "priority": 493,
@@ -33005,7 +33060,7 @@
       "package_id": "WCP-497",
       "title": "Expose public video playlists in the portal navigation",
       "risk": "low",
-      "execution_state": "worker_complete_awaiting_trusted_review",
+      "execution_state": "trusted_integrated",
       "dependencies": [
         "WCP-492"
       ],
@@ -33092,7 +33147,7 @@
       },
       "published_at": "2026-09-27T09:40:38.009Z",
       "claimed_on": "2026-09-27T09:40:38.009Z",
-      "claim_state": "locked_until_trusted_resolution",
+      "claim_state": "released_after_trusted_integration",
       "active_base_branch": "feature/wcp-492-public-video-playlists-g1",
       "active_base_sha": "ddc53ae5cbc7834f56175e653d33e83918d0f75d",
       "active_head": "81a90f186fa5c80b00f0663a7d0198ef965c377b",
@@ -33107,13 +33162,27 @@
         "templates/layout/portal.html.twig",
         "tests/Controller/VideoPlaylistPortalNavigationTest.php"
       ],
-      "next_action": "Await Trusted review or explicit transfer; retain the claim lock until Trusted resolution.",
+      "next_action": "Trusted PR #150 integrated this Worker PR; final Main CI and sanitized Worker sync/CI passed. Claim released.",
       "last_verified_push_at": "2026-09-27T09:47:58.486Z",
       "worker_pr": 290,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/290",
       "ci_run_id": 36310353266,
       "ci_result": "success",
-      "final_head": "81a90f186fa5c80b00f0663a7d0198ef965c377b"
+      "final_head": "81a90f186fa5c80b00f0663a7d0198ef965c377b",
+      "pr_state": "closed",
+      "worker_pr_state": "closed",
+      "trusted_resolution": {
+        "status": "integrated",
+        "worker_pr": 290,
+        "worker_head": "81a90f186fa5c80b00f0663a7d0198ef965c377b",
+        "trusted_pr": 150,
+        "trusted_merge_sha": "1f0e247622161b1bb19fcac77df835ec817f6c64",
+        "final_trusted_main_sha": "8b142c2faf6950610f73bdd256043492ecf0152c",
+        "final_trusted_main_ci_run_id": 36330305722,
+        "sanitized_worker_sync_sha": "6988e871cbda8c27801ee0bcc02e8c5c2b0cd909",
+        "worker_ci_run_id": 36330318577,
+        "resolved_at": "2026-09-27T15:47:20.063Z"
+      }
     },
     {
       "priority": 498,
@@ -35065,7 +35134,7 @@
       "package_id": "WCP-513",
       "title": "Browse public news by publication month",
       "risk": "medium",
-      "execution_state": "worker_complete_awaiting_trusted_review",
+      "execution_state": "trusted_integrated",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -35155,7 +35224,7 @@
       },
       "published_at": "2026-09-27T10:23:04.700Z",
       "claimed_on": "2026-09-27T10:23:04.700Z",
-      "claim_state": "locked_until_trusted_resolution",
+      "claim_state": "released_after_trusted_integration",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
       "active_head": "b7e903a638bd44f60fd7c823ab42a8ca5419a5f9",
@@ -35172,12 +35241,12 @@
         "templates/content/news_archive.html.twig",
         "tests/Controller/PublicNewsArchiveTest.php"
       ],
-      "next_action": "Await Trusted review and integration CI; keep the claim locked until Trusted explicitly resolves it.",
+      "next_action": "Trusted PR #158 integrated this Worker PR; final Main CI and sanitized Worker sync/CI passed. Claim released.",
       "last_verified_push_at": "2026-09-27T10:40:42.487Z",
       "worker_pr": 306,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/306",
       "draft_pr": false,
-      "pr_state": "open",
+      "pr_state": "closed",
       "worker_pr_changed_paths": [
         "src/Controller/PublicNewsArchiveController.php",
         "src/Repository/PublicNewsArchiveRepository.php",
@@ -35262,7 +35331,20 @@
       "open_limitations": [
         "The existing news list, search and portal templates are owned by active or claim-locked packages, so the standalone /news/archive route has no default link from those screens. Add one in a later non-overlapping package after those claims resolve."
       ],
-      "trusted_follow_up": "Review the visibility query, month grouping, route gating and pagination on a fresh Trusted branch; once the news-template claims resolve, add a discoverable archive link and run full Trusted CI. This Worker PR remains untrusted and is not integrated or deployed."
+      "trusted_follow_up": "Review the visibility query, month grouping, route gating and pagination on a fresh Trusted branch; once the news-template claims resolve, add a discoverable archive link and run full Trusted CI. This Worker PR remains untrusted and is not integrated or deployed.",
+      "worker_pr_state": "closed",
+      "trusted_resolution": {
+        "status": "integrated",
+        "worker_pr": 306,
+        "worker_head": "b7e903a638bd44f60fd7c823ab42a8ca5419a5f9",
+        "trusted_pr": 158,
+        "trusted_merge_sha": "8b142c2faf6950610f73bdd256043492ecf0152c",
+        "final_trusted_main_sha": "8b142c2faf6950610f73bdd256043492ecf0152c",
+        "final_trusted_main_ci_run_id": 36330305722,
+        "sanitized_worker_sync_sha": "6988e871cbda8c27801ee0bcc02e8c5c2b0cd909",
+        "worker_ci_run_id": 36330318577,
+        "resolved_at": "2026-09-27T15:47:20.063Z"
+      }
     },
     {
       "priority": 514,
@@ -35870,7 +35952,7 @@
       "package_id": "WCP-518",
       "title": "Promote upcoming game releases through the page builder",
       "risk": "low",
-      "execution_state": "worker_complete_awaiting_trusted_review",
+      "execution_state": "trusted_integrated",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -35979,7 +36061,7 @@
         ]
       },
       "published_at": "2026-09-27T10:57:18.371Z",
-      "claim_state": "locked_until_trusted_resolution",
+      "claim_state": "released_after_trusted_integration",
       "claimed_on": "2026-09-27T10:58:06.085Z",
       "active_base_branch": "main",
       "active_base_sha": "b510875e7b0741b9b19f09429d2204a95df51198",
@@ -35996,14 +36078,14 @@
         "templates/widget/upcoming_game_releases.html.twig",
         "tests/Widget/UpcomingGameReleaseWidgetProviderTest.php"
       ],
-      "next_action": "WCP-518 is complete. Keep claim/wcp-518-upcoming-game-release-widget-g1 locked until Trusted explicitly integrates, cancels or transfers the ready PR #310. Trusted follow-up: integrate reviewed paths into Gravarium/gaming-cms, confirm service discovery/routes and run main-CMS CI.",
+      "next_action": "Trusted PR #158 integrated this Worker PR; final Main CI and sanitized Worker sync/CI passed. Claim released.",
       "last_checkpoint_at": "2026-09-27T11:29:00.709Z",
       "last_verified_push_at": "2026-09-27T11:23:24Z",
       "worker_pr": 310,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/310",
       "draft_pr": false,
-      "pr_state": "open_ready",
-      "worker_pr_state": "ready",
+      "pr_state": "closed",
+      "worker_pr_state": "closed",
       "worker_pr_changed_paths": [
         "src/Widget/GameRelease/UpcomingReleaseQuery.php",
         "src/Widget/UpcomingGameReleaseWidgetProvider.php",
@@ -36067,7 +36149,19 @@
         "templates/widget/upcoming_game_releases.html.twig",
         "tests/Widget/UpcomingGameReleaseWidgetProviderTest.php"
       ],
-      "completed_at": "2026-09-27T11:29:00.709Z"
+      "completed_at": "2026-09-27T11:29:00.709Z",
+      "trusted_resolution": {
+        "status": "integrated",
+        "worker_pr": 310,
+        "worker_head": "407fc885fa2e19fe5d9970a8fdfa87a087120f90",
+        "trusted_pr": 158,
+        "trusted_merge_sha": "8b142c2faf6950610f73bdd256043492ecf0152c",
+        "final_trusted_main_sha": "8b142c2faf6950610f73bdd256043492ecf0152c",
+        "final_trusted_main_ci_run_id": 36330305722,
+        "sanitized_worker_sync_sha": "6988e871cbda8c27801ee0bcc02e8c5c2b0cd909",
+        "worker_ci_run_id": 36330318577,
+        "resolved_at": "2026-09-27T15:47:20.063Z"
+      }
     },
     {
       "priority": 519,
@@ -36212,7 +36306,7 @@
       "package_id": "WCP-520",
       "title": "Make the public news month archive placeable in the page builder",
       "risk": "low",
-      "execution_state": "worker_complete_awaiting_trusted_review",
+      "execution_state": "trusted_integrated",
       "dependencies": [
         "WCP-513"
       ],
@@ -36317,7 +36411,7 @@
       },
       "published_at": "2026-09-27T11:20:54.910Z",
       "claimed_on": "2026-09-27T11:20:54.910Z",
-      "claim_state": "locked_until_trusted_resolution",
+      "claim_state": "released_after_trusted_integration",
       "active_base_branch": "feature/wcp-513-public-news-month-archive-g1",
       "active_base_sha": "b7e903a638bd44f60fd7c823ab42a8ca5419a5f9",
       "active_head": "9cd45b26a5ddedecf3d4d0515896795ce2545cef",
@@ -36334,12 +36428,12 @@
         "src/ContentArchive/Templates/widget/news_archive.html.twig",
         "tests/Widget/NewsArchiveWidgetProviderTest.php"
       ],
-      "next_action": "PR #314 is ready for Trusted review on exact green HEAD 9cd45b26a5ddedecf3d4d0515896795ce2545cef. Keep the claim locked until Trusted explicitly integrates, cancels or transfers it. Do not merge or deploy.",
+      "next_action": "Trusted PR #158 integrated this Worker PR; final Main CI and sanitized Worker sync/CI passed. Claim released.",
       "last_verified_push_at": "2026-09-27T11:47:55.835Z",
       "worker_pr": 314,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/314",
-      "worker_pr_state": "open_ready",
-      "pr_state": "open_ready",
+      "worker_pr_state": "closed",
+      "pr_state": "closed",
       "draft_pr": false,
       "worker_pr_changed_paths": [
         "config/packages/news_archive_widget.yaml",
@@ -36416,6 +36510,18 @@
           "An editor must place the widget in the Page Builder layout; no default home-page layout is changed."
         ],
         "trusted_follow_up": "Review the WCP-513 stacked prerequisite and the additive default Twig path together, preserve Content module gating/public-news filtering, and run Trusted CI. Keep all Worker output untrusted until integration review."
+      },
+      "trusted_resolution": {
+        "status": "integrated",
+        "worker_pr": 314,
+        "worker_head": "9cd45b26a5ddedecf3d4d0515896795ce2545cef",
+        "trusted_pr": 158,
+        "trusted_merge_sha": "8b142c2faf6950610f73bdd256043492ecf0152c",
+        "final_trusted_main_sha": "8b142c2faf6950610f73bdd256043492ecf0152c",
+        "final_trusted_main_ci_run_id": 36330305722,
+        "sanitized_worker_sync_sha": "6988e871cbda8c27801ee0bcc02e8c5c2b0cd909",
+        "worker_ci_run_id": 36330318577,
+        "resolved_at": "2026-09-27T15:47:20.063Z"
       }
     },
     {
@@ -36547,7 +36653,7 @@
       "package_id": "WCP-522",
       "title": "Let visitors subscribe to the newsletter with double opt-in",
       "risk": "medium",
-      "execution_state": "worker_complete_awaiting_trusted_review",
+      "execution_state": "trusted_integrated",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -36642,7 +36748,7 @@
       },
       "published_at": "2026-09-27T11:33:07.402Z",
       "claimed_on": "2026-09-27T11:33:07.402Z",
-      "claim_state": "locked_until_trusted_resolution",
+      "claim_state": "released_after_trusted_integration",
       "active_base_branch": "main",
       "active_base_sha": "b510875e7b0741b9b19f09429d2204a95df51198",
       "active_head": "b1cecaeadc1b8378cf8626f52aa48396a569d8cb",
@@ -36651,7 +36757,7 @@
         "claim_branch": "b510875e7b0741b9b19f09429d2204a95df51198",
         "feature_branch": "b1cecaeadc1b8378cf8626f52aa48396a569d8cb"
       },
-      "next_action": "Claim remains locked until Trusted resolution; Worker must not merge to trusted CMS or deploy.",
+      "next_action": "Trusted PR #157 integrated this Worker PR; final Main CI and sanitized Worker sync/CI passed. Claim released.",
       "checkpoint_paths": [
         "config/packages/public_newsletter_signup.yaml",
         "src/Controller/PublicNewsletterSignupController.php",
@@ -36665,8 +36771,8 @@
       "worker_pr": 315,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/315",
       "draft_pr": false,
-      "pr_state": "open",
-      "worker_pr_state": "open",
+      "pr_state": "closed",
+      "worker_pr_state": "closed",
       "worker_pr_changed_paths": [
         "config/packages/public_newsletter_signup.yaml",
         "src/Controller/PublicNewsletterSignupController.php",
@@ -36711,6 +36817,18 @@
         ],
         "trusted_merge_performed": false,
         "deployment_performed": false
+      },
+      "trusted_resolution": {
+        "status": "integrated",
+        "worker_pr": 315,
+        "worker_head": "b1cecaeadc1b8378cf8626f52aa48396a569d8cb",
+        "trusted_pr": 157,
+        "trusted_merge_sha": "bd0d9a766d856263b8cd35e472e7c2a23fb3f3e7",
+        "final_trusted_main_sha": "8b142c2faf6950610f73bdd256043492ecf0152c",
+        "final_trusted_main_ci_run_id": 36330305722,
+        "sanitized_worker_sync_sha": "6988e871cbda8c27801ee0bcc02e8c5c2b0cd909",
+        "worker_ci_run_id": 36330318577,
+        "resolved_at": "2026-09-27T15:47:20.063Z"
       }
     },
     {
@@ -36718,7 +36836,7 @@
       "package_id": "WCP-523",
       "title": "Promote public video playlists through the page builder",
       "risk": "low",
-      "execution_state": "worker_complete_awaiting_trusted_review",
+      "execution_state": "trusted_integrated",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -36823,7 +36941,7 @@
       },
       "published_at": "2026-09-27T11:35:35.271Z",
       "claimed_on": "2026-09-27T11:35:35.271Z",
-      "claim_state": "locked_until_trusted_resolution",
+      "claim_state": "released_after_trusted_integration",
       "active_base_branch": "main",
       "active_base_sha": "b510875e7b0741b9b19f09429d2204a95df51198",
       "active_head": "5ef90674be744ab172aa6ee0dd59555cd2986f02",
@@ -36840,19 +36958,33 @@
         "templates/widget/public_video_playlists.html.twig",
         "tests/Widget/PublicVideoPlaylistWidgetProviderTest.php"
       ],
-      "next_action": "Claim remains locked until Trusted resolution. Select the next independent functional module package from the fresh pool.",
+      "next_action": "Trusted PR #158 integrated this Worker PR; final Main CI and sanitized Worker sync/CI passed. Claim released.",
       "worker_pr": 317,
       "ci_run_id": 36317196934,
       "ci_result": "success",
       "last_verified_push_at": "2026-09-27T11:57:34.897Z",
-      "final_head": "5ef90674be744ab172aa6ee0dd59555cd2986f02"
+      "final_head": "5ef90674be744ab172aa6ee0dd59555cd2986f02",
+      "pr_state": "closed",
+      "worker_pr_state": "closed",
+      "trusted_resolution": {
+        "status": "integrated",
+        "worker_pr": 317,
+        "worker_head": "5ef90674be744ab172aa6ee0dd59555cd2986f02",
+        "trusted_pr": 158,
+        "trusted_merge_sha": "8b142c2faf6950610f73bdd256043492ecf0152c",
+        "final_trusted_main_sha": "8b142c2faf6950610f73bdd256043492ecf0152c",
+        "final_trusted_main_ci_run_id": 36330305722,
+        "sanitized_worker_sync_sha": "6988e871cbda8c27801ee0bcc02e8c5c2b0cd909",
+        "worker_ci_run_id": 36330318577,
+        "resolved_at": "2026-09-27T15:47:20.063Z"
+      }
     },
     {
       "priority": 524,
       "package_id": "WCP-524",
       "title": "Promote public Game Catalogue entries through the page builder",
       "risk": "low",
-      "execution_state": "worker_complete_awaiting_trusted_review",
+      "execution_state": "trusted_integrated",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -36950,7 +37082,7 @@
       },
       "published_at": "2026-09-27T11:41:27.807Z",
       "claimed_on": "2026-09-27T11:41:27.807Z",
-      "claim_state": "locked_until_trusted_resolution",
+      "claim_state": "released_after_trusted_integration",
       "active_base_branch": "main",
       "active_base_sha": "b510875e7b0741b9b19f09429d2204a95df51198",
       "active_head": "81ac6da1789753cc70c8c81999a39fb51ce45fc8",
@@ -36967,12 +37099,12 @@
         "templates/widget/public_game_catalogue.html.twig",
         "tests/Widget/PublicGameCatalogueWidgetProviderTest.php"
       ],
-      "next_action": "Worker PR #318 is complete on exact green HEAD 81ac6da1789753cc70c8c81999a39fb51ce45fc8; claim remains locked until Trusted explicitly integrates, cancels or transfers it. Do not merge or deploy.",
+      "next_action": "Trusted PR #156 integrated this Worker PR; final Main CI and sanitized Worker sync/CI passed. Claim released.",
       "last_verified_push_at": "2026-09-27T11:52:15.827Z",
       "worker_pr": 318,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/318",
-      "worker_pr_state": "open",
-      "pr_state": "open",
+      "worker_pr_state": "closed",
+      "pr_state": "closed",
       "draft_pr": false,
       "worker_pr_changed_paths": [
         "src/Widget/GameCatalogue/PublicGameCatalogueQuery.php",
@@ -37023,6 +37155,18 @@
         ],
         "limitations": [],
         "trusted_follow_up": "Review and port the four widget/query/test paths into Gravarium/gaming-cms, then verify Page Builder placement and rendering against current Trusted integration state. No Worker merge or deployment."
+      },
+      "trusted_resolution": {
+        "status": "integrated",
+        "worker_pr": 318,
+        "worker_head": "81ac6da1789753cc70c8c81999a39fb51ce45fc8",
+        "trusted_pr": 156,
+        "trusted_merge_sha": "3e432c9d4b325406623730c41d1f277f72b2a308",
+        "final_trusted_main_sha": "8b142c2faf6950610f73bdd256043492ecf0152c",
+        "final_trusted_main_ci_run_id": 36330305722,
+        "sanitized_worker_sync_sha": "6988e871cbda8c27801ee0bcc02e8c5c2b0cd909",
+        "worker_ci_run_id": 36330318577,
+        "resolved_at": "2026-09-27T15:47:20.063Z"
       }
     },
     {
@@ -37460,7 +37604,7 @@
       "package_id": "WCP-528",
       "title": "Review newsletter campaign delivery outcomes in the admin",
       "risk": "medium",
-      "execution_state": "worker_complete_awaiting_trusted_review",
+      "execution_state": "trusted_integrated",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -37576,7 +37720,7 @@
       },
       "published_at": "2026-09-27T12:07:59.061Z",
       "claimed_on": "2026-09-27T12:07:59.061Z",
-      "claim_state": "locked_until_trusted_resolution",
+      "claim_state": "released_after_trusted_integration",
       "active_base_branch": "main",
       "active_base_sha": "b510875e7b0741b9b19f09429d2204a95df51198",
       "active_head": "7b9ed0ef7b9cc3ec9ccefb7457ecd052a0b98c0e",
@@ -37585,7 +37729,7 @@
         "claim_branch": "b510875e7b0741b9b19f09429d2204a95df51198",
         "feature_branch": "7b9ed0ef7b9cc3ec9ccefb7457ecd052a0b98c0e"
       },
-      "next_action": "Await Trusted resolution; keep this claim locked. Re-evaluate dependency-safe work and select the next independent CMS module gap.",
+      "next_action": "Trusted PR #157 integrated this Worker PR; final Main CI and sanitized Worker sync/CI passed. Claim released.",
       "checkpoint_paths": [
         "src/Controller/AdminNewsletterDeliveryReportController.php",
         "src/NewsletterDeliveryReport/NewsletterDeliveryReportQuery.php",
@@ -37624,7 +37768,7 @@
       "worker_pr": 320,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/320",
       "draft_pr": false,
-      "pr_state": "open",
+      "pr_state": "closed",
       "worker_pr_changed_paths": [
         "src/Controller/AdminNewsletterDeliveryReportController.php",
         "src/NewsletterDeliveryReport/NewsletterDeliveryReportQuery.php",
@@ -37638,16 +37782,28 @@
       "last_ci_result": "success",
       "last_checkpoint_at": "2026-09-27T12:28:28.503Z",
       "last_verified_push_at": "2026-09-27T12:24:53.410Z",
-      "worker_pr_state": "open",
+      "worker_pr_state": "closed",
       "final_head": "7b9ed0ef7b9cc3ec9ccefb7457ecd052a0b98c0e",
-      "completed_at": "2026-09-27T12:28:28.503Z"
+      "completed_at": "2026-09-27T12:28:28.503Z",
+      "trusted_resolution": {
+        "status": "integrated",
+        "worker_pr": 320,
+        "worker_head": "7b9ed0ef7b9cc3ec9ccefb7457ecd052a0b98c0e",
+        "trusted_pr": 157,
+        "trusted_merge_sha": "bd0d9a766d856263b8cd35e472e7c2a23fb3f3e7",
+        "final_trusted_main_sha": "8b142c2faf6950610f73bdd256043492ecf0152c",
+        "final_trusted_main_ci_run_id": 36330305722,
+        "sanitized_worker_sync_sha": "6988e871cbda8c27801ee0bcc02e8c5c2b0cd909",
+        "worker_ci_run_id": 36330318577,
+        "resolved_at": "2026-09-27T15:47:20.063Z"
+      }
     },
     {
       "priority": 529,
       "package_id": "WCP-529",
       "title": "Surface public news categories in the page builder",
       "risk": "medium",
-      "execution_state": "worker_complete_awaiting_trusted_review",
+      "execution_state": "trusted_integrated",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -37753,7 +37909,7 @@
       },
       "published_at": "2026-09-27T12:11:48.259Z",
       "claimed_on": "2026-09-27T12:11:48.259Z",
-      "claim_state": "locked_until_trusted_resolution",
+      "claim_state": "released_after_trusted_integration",
       "active_base_branch": "main",
       "active_base_sha": "b510875e7b0741b9b19f09429d2204a95df51198",
       "active_head": "00ef901888e8071ec7ff9f4881ba986fd2df8cfb",
@@ -37770,7 +37926,7 @@
         "templates/widget/public_content_categories.html.twig",
         "tests/Widget/PublicContentCategoryWidgetProviderTest.php"
       ],
-      "next_action": "Worker PR #321 is complete on exact green HEAD 00ef901888e8071ec7ff9f4881ba986fd2df8cfb; keep this claim locked until Trusted explicitly integrates, cancels or transfers it. Do not merge or deploy.",
+      "next_action": "Trusted PR #156 integrated this Worker PR; final Main CI and sanitized Worker sync/CI passed. Claim released.",
       "ci_attempts": [
         {
           "run_id": 36318542021,
@@ -37783,7 +37939,7 @@
       "worker_pr": 321,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/321",
       "draft_pr": false,
-      "pr_state": "open",
+      "pr_state": "closed",
       "worker_pr_changed_paths": [
         "src/Widget/Content/PublicContentCategoryQuery.php",
         "src/Widget/PublicContentCategoryWidgetProvider.php",
@@ -37795,7 +37951,7 @@
       "ci_result": "success",
       "last_ci_result": "success",
       "last_verified_push_at": "2026-09-27T12:17:33.043Z",
-      "worker_pr_state": "open",
+      "worker_pr_state": "closed",
       "final_head": "00ef901888e8071ec7ff9f4881ba986fd2df8cfb",
       "final_ci_base_sha": "b510875e7b0741b9b19f09429d2204a95df51198",
       "latest_main_sha": "b510875e7b0741b9b19f09429d2204a95df51198",
@@ -37828,6 +37984,18 @@
           "Categories without currently public, listed news are intentionally omitted."
         ],
         "trusted_follow_up": "Review and port the four widget/query/template/test paths into Gravarium/gaming-cms, reconcile the category-directory integration, preserve public-content filtering and the Content module gate, then run complete Trusted checks. No Trusted merge or deployment from Worker."
+      },
+      "trusted_resolution": {
+        "status": "integrated",
+        "worker_pr": 321,
+        "worker_head": "00ef901888e8071ec7ff9f4881ba986fd2df8cfb",
+        "trusted_pr": 156,
+        "trusted_merge_sha": "3e432c9d4b325406623730c41d1f277f72b2a308",
+        "final_trusted_main_sha": "8b142c2faf6950610f73bdd256043492ecf0152c",
+        "final_trusted_main_ci_run_id": 36330305722,
+        "sanitized_worker_sync_sha": "6988e871cbda8c27801ee0bcc02e8c5c2b0cd909",
+        "worker_ci_run_id": 36330318577,
+        "resolved_at": "2026-09-27T15:47:20.063Z"
       }
     },
     {
@@ -37960,7 +38128,7 @@
       "package_id": "WCP-531",
       "title": "Add public Game Catalogue search and a Page Builder entry point",
       "risk": "medium",
-      "execution_state": "worker_complete_awaiting_trusted_review",
+      "execution_state": "trusted_integrated",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -38059,7 +38227,7 @@
       },
       "published_at": "2026-09-27T12:27:33.547Z",
       "claimed_on": "2026-09-27T12:27:33.547Z",
-      "claim_state": "locked_until_trusted_resolution",
+      "claim_state": "released_after_trusted_integration",
       "active_base_branch": "main",
       "active_base_sha": "b510875e7b0741b9b19f09429d2204a95df51198",
       "active_head": "21d23ea93e33834e8a9594d55b47124bc2f11ad1",
@@ -38079,7 +38247,7 @@
         "tests/Controller/PublicGameCatalogueSearchTest.php",
         "tests/Widget/PublicGameCatalogueSearchWidgetProviderTest.php"
       ],
-      "next_action": "Await Trusted review or explicit resolution; keep claim and allowed paths locked.",
+      "next_action": "Trusted PR #157 integrated this Worker PR; final Main CI and sanitized Worker sync/CI passed. Claim released.",
       "ci_attempts": [
         {
           "head": "716b3394b88be1aded0b3dc438db75d285861c6f",
@@ -38103,7 +38271,7 @@
       "worker_pr": 324,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/324",
       "draft_pr": false,
-      "pr_state": "open",
+      "pr_state": "closed",
       "worker_pr_changed_paths": [
         "src/Controller/PublicGameCatalogueSearchController.php",
         "src/Repository/PublicGameCatalogueSearchRepository.php",
@@ -38120,7 +38288,20 @@
       "last_verified_push_at": "2026-09-27T12:45:45.312Z",
       "final_head": "21d23ea93e33834e8a9594d55b47124bc2f11ad1",
       "completed_on": "2026-09-27T12:45:45.312Z",
-      "completion_summary": "Adds bounded public Game Catalogue search at /game-search and a Gaming Page Builder search widget. The route matches name, description, summary, developer, publisher and genre; only enabled catalogue entries for enabled Games are visible; results link to existing Game Hubs."
+      "completion_summary": "Adds bounded public Game Catalogue search at /game-search and a Gaming Page Builder search widget. The route matches name, description, summary, developer, publisher and genre; only enabled catalogue entries for enabled Games are visible; results link to existing Game Hubs.",
+      "worker_pr_state": "closed",
+      "trusted_resolution": {
+        "status": "integrated",
+        "worker_pr": 324,
+        "worker_head": "21d23ea93e33834e8a9594d55b47124bc2f11ad1",
+        "trusted_pr": 157,
+        "trusted_merge_sha": "bd0d9a766d856263b8cd35e472e7c2a23fb3f3e7",
+        "final_trusted_main_sha": "8b142c2faf6950610f73bdd256043492ecf0152c",
+        "final_trusted_main_ci_run_id": 36330305722,
+        "sanitized_worker_sync_sha": "6988e871cbda8c27801ee0bcc02e8c5c2b0cd909",
+        "worker_ci_run_id": 36330318577,
+        "resolved_at": "2026-09-27T15:47:20.063Z"
+      }
     },
     {
       "priority": 532,
@@ -38248,7 +38429,7 @@
       "package_id": "WCP-533",
       "title": "Promote public content releases through the Page Builder",
       "risk": "medium",
-      "execution_state": "worker_complete_awaiting_trusted_review",
+      "execution_state": "trusted_integrated",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -38337,7 +38518,7 @@
       },
       "published_at": "2026-09-27T12:41:29.330Z",
       "claimed_on": "2026-09-27T12:41:29.330Z",
-      "claim_state": "locked_until_trusted_resolution",
+      "claim_state": "released_after_trusted_integration",
       "active_base_branch": "main",
       "active_base_sha": "b510875e7b0741b9b19f09429d2204a95df51198",
       "active_head": "6b70188e705953fb1ccfaf38a3a753f96f79e4f5",
@@ -38356,12 +38537,12 @@
         "src/Widget/PublicContentReleaseWidgetProvider.php",
         "tests/Widget/PublicContentReleaseWidgetProviderTest.php"
       ],
-      "next_action": "PR #327 is ready for Trusted review; keep this claim locked until Trusted explicitly integrates, cancels or transfers it. Continue with a separate dependency-safe module task.",
+      "next_action": "Trusted PR #156 integrated this Worker PR; final Main CI and sanitized Worker sync/CI passed. Claim released.",
       "worker_pr": 327,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/327",
       "draft_pr": false,
-      "pr_state": "open_ready_for_review",
-      "worker_pr_state": "open_ready_for_review",
+      "pr_state": "closed",
+      "worker_pr_state": "closed",
       "worker_pr_changed_paths": [
         "config/packages/content_release_widget.yaml",
         "src/ContentReleaseWidget/Templates/widget/public_content_releases.html.twig",
@@ -38426,7 +38607,19 @@
       "open_limitations": [
         "Release titles are informational; the widget links each eligible News/Page entry directly and does not link to the separate release archive detail URL."
       ],
-      "completed_at": "2026-09-27T13:07:21.093Z"
+      "completed_at": "2026-09-27T13:07:21.093Z",
+      "trusted_resolution": {
+        "status": "integrated",
+        "worker_pr": 327,
+        "worker_head": "6b70188e705953fb1ccfaf38a3a753f96f79e4f5",
+        "trusted_pr": 156,
+        "trusted_merge_sha": "3e432c9d4b325406623730c41d1f277f72b2a308",
+        "final_trusted_main_sha": "8b142c2faf6950610f73bdd256043492ecf0152c",
+        "final_trusted_main_ci_run_id": 36330305722,
+        "sanitized_worker_sync_sha": "6988e871cbda8c27801ee0bcc02e8c5c2b0cd909",
+        "worker_ci_run_id": 36330318577,
+        "resolved_at": "2026-09-27T15:47:20.063Z"
+      }
     },
     {
       "priority": 534,
@@ -38655,7 +38848,7 @@
       "package_id": "WCP-535",
       "title": "Bound game and guild slugs to persisted column length",
       "risk": "medium",
-      "execution_state": "worker_complete_awaiting_trusted_review",
+      "execution_state": "trusted_integrated",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -38728,7 +38921,7 @@
       },
       "published_at": "2026-09-27T12:47:34.923Z",
       "claimed_on": "2026-09-27T12:47:34.923Z",
-      "claim_state": "locked_until_trusted_resolution",
+      "claim_state": "released_after_trusted_integration",
       "active_base_branch": "main",
       "active_base_sha": "b510875e7b0741b9b19f09429d2204a95df51198",
       "active_head": "a1a7f2b00d7830e8817e427c47ea291336358463",
@@ -38744,12 +38937,12 @@
         "src/Controller/AdminGamingController.php",
         "tests/Controller/AdminGamingSlugBoundaryTest.php"
       ],
-      "next_action": "Worker PR #325 is complete on exact green HEAD a1a7f2b00d7830e8817e427c47ea291336358463; keep the claim locked until Trusted resolution.",
+      "next_action": "Trusted PR #157 integrated this Worker PR; final Main CI and sanitized Worker sync/CI passed. Claim released.",
       "worker_pr": 325,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/325",
       "draft_pr": false,
-      "pr_state": "open",
-      "worker_pr_state": "ready_for_review",
+      "pr_state": "closed",
+      "worker_pr_state": "closed",
       "worker_pr_changed_paths": [
         "src/Controller/AdminGamingController.php",
         "tests/Controller/AdminGamingSlugBoundaryTest.php"
@@ -38773,14 +38966,26 @@
         "Changed paths: src/Controller/AdminGamingController.php and tests/Controller/AdminGamingSlugBoundaryTest.php.",
         "The test confirmed the raw Unicode slug exceeded 140 characters; saved Game and Guild slugs remained within 140, and duplicates received distinct -2 suffixes.",
         "Worker PR #325: https://github.com/Gravarium/gaming-cms-worker/pull/325. Exact-head Worker CI run #804 / 36320485480 passed; PHPStan had no errors; PHPUnit 537 tests / 2,256 assertions (1 deprecation, 1 notice); PostgreSQL 18 validated 54 migrations and 750 SQL queries."
-      ]
+      ],
+      "trusted_resolution": {
+        "status": "integrated",
+        "worker_pr": 325,
+        "worker_head": "a1a7f2b00d7830e8817e427c47ea291336358463",
+        "trusted_pr": 157,
+        "trusted_merge_sha": "bd0d9a766d856263b8cd35e472e7c2a23fb3f3e7",
+        "final_trusted_main_sha": "8b142c2faf6950610f73bdd256043492ecf0152c",
+        "final_trusted_main_ci_run_id": 36330305722,
+        "sanitized_worker_sync_sha": "6988e871cbda8c27801ee0bcc02e8c5c2b0cd909",
+        "worker_ci_run_id": 36330318577,
+        "resolved_at": "2026-09-27T15:47:20.063Z"
+      }
     },
     {
       "priority": 536,
       "package_id": "WCP-536",
       "title": "Validate create-admin identity column bounds",
       "risk": "low",
-      "execution_state": "worker_complete_awaiting_trusted_review",
+      "execution_state": "trusted_integrated",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -38854,7 +39059,7 @@
       },
       "published_at": "2026-09-27T13:10:04.054Z",
       "claimed_on": "2026-09-27T13:10:04.054Z",
-      "claim_state": "locked_until_trusted_resolution",
+      "claim_state": "released_after_trusted_integration",
       "active_base_branch": "main",
       "active_base_sha": "b510875e7b0741b9b19f09429d2204a95df51198",
       "active_head": "496595aa0d63e26856df95a2e621d494b6e8d9f0",
@@ -38870,12 +39075,12 @@
         "src/Command/CreateAdminCommand.php",
         "tests/Command/CreateAdminCommandTest.php"
       ],
-      "next_action": "Worker PR #328 is complete on exact green HEAD 496595aa0d63e26856df95a2e621d494b6e8d9f0; CI run #814 / 36322080654 passed. Keep the claim locked until Trusted explicitly integrates, cancels or transfers it. Continue the autonomous Worker loop without merging or deploying.",
+      "next_action": "Trusted PR #157 integrated this Worker PR; final Main CI and sanitized Worker sync/CI passed. Claim released.",
       "worker_pr": 328,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/328",
       "draft_pr": false,
-      "pr_state": "open",
-      "worker_pr_state": "ready_for_review",
+      "pr_state": "closed",
+      "worker_pr_state": "closed",
       "worker_pr_changed_paths": [
         "src/Command/CreateAdminCommand.php",
         "tests/Command/CreateAdminCommandTest.php"
@@ -38911,14 +39116,26 @@
         "Changed paths: src/Command/CreateAdminCommand.php and tests/Command/CreateAdminCommandTest.php.",
         "Over-180-character syntactically valid emails and 81-character display names are rejected before password prompting; a valid 180-character email and 80-character display name persist successfully in a rolled-back transaction.",
         "Worker PR #328: https://github.com/Gravarium/gaming-cms-worker/pull/328. Exact-head Worker CI run #814 / 36322080654 succeeded. PHPStan: no errors; PHPUnit: 539 tests / 2,243 assertions (1 PHPUnit deprecation and 1 notice, no failures); PostgreSQL 18: 54 migrations and 750 SQL queries."
-      ]
+      ],
+      "trusted_resolution": {
+        "status": "integrated",
+        "worker_pr": 328,
+        "worker_head": "496595aa0d63e26856df95a2e621d494b6e8d9f0",
+        "trusted_pr": 157,
+        "trusted_merge_sha": "bd0d9a766d856263b8cd35e472e7c2a23fb3f3e7",
+        "final_trusted_main_sha": "8b142c2faf6950610f73bdd256043492ecf0152c",
+        "final_trusted_main_ci_run_id": 36330305722,
+        "sanitized_worker_sync_sha": "6988e871cbda8c27801ee0bcc02e8c5c2b0cd909",
+        "worker_ci_run_id": 36330318577,
+        "resolved_at": "2026-09-27T15:47:20.063Z"
+      }
     },
     {
       "priority": 537,
       "package_id": "WCP-537",
       "title": "Place public guild event schedules in the Page Builder",
       "risk": "medium",
-      "execution_state": "worker_complete_awaiting_trusted_review",
+      "execution_state": "trusted_integrated",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -39040,7 +39257,7 @@
       },
       "published_at": "2026-09-27T13:15:35.838Z",
       "claimed_on": "2026-09-27T13:15:35.838Z",
-      "claim_state": "locked_until_trusted_resolution",
+      "claim_state": "released_after_trusted_integration",
       "active_base_branch": "main",
       "active_base_sha": "b510875e7b0741b9b19f09429d2204a95df51198",
       "active_head": "58bdb7f553a14642b92b84a17233246cfcd386ee",
@@ -39059,12 +39276,12 @@
         "config/packages/public_guild_events_widget.yaml",
         "tests/Widget/PublicGuildEventsWidgetProviderTest.php"
       ],
-      "next_action": "PR #330 is ready for Trusted review; keep this claim locked until explicit Trusted resolution. Continue by selecting the next independent available module package.",
+      "next_action": "Trusted PR #156 integrated this Worker PR; final Main CI and sanitized Worker sync/CI passed. Claim released.",
       "worker_pr": 330,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/330",
       "draft_pr": false,
-      "pr_state": "open",
-      "worker_pr_state": "open",
+      "pr_state": "closed",
+      "worker_pr_state": "closed",
       "worker_pr_changed_paths": [
         "config/packages/public_guild_events_widget.yaml",
         "src/PublicGuildEventsWidget/Templates/widget/public_guild_events.html.twig",
@@ -39106,7 +39323,19 @@
       "ci_run_id": 36325939255,
       "last_ci_run_id": 36325939255,
       "completed_at": "2026-09-27T14:31:59.430Z",
-      "completion_head": "58bdb7f553a14642b92b84a17233246cfcd386ee"
+      "completion_head": "58bdb7f553a14642b92b84a17233246cfcd386ee",
+      "trusted_resolution": {
+        "status": "integrated",
+        "worker_pr": 330,
+        "worker_head": "58bdb7f553a14642b92b84a17233246cfcd386ee",
+        "trusted_pr": 156,
+        "trusted_merge_sha": "3e432c9d4b325406623730c41d1f277f72b2a308",
+        "final_trusted_main_sha": "8b142c2faf6950610f73bdd256043492ecf0152c",
+        "final_trusted_main_ci_run_id": 36330305722,
+        "sanitized_worker_sync_sha": "6988e871cbda8c27801ee0bcc02e8c5c2b0cd909",
+        "worker_ci_run_id": 36330318577,
+        "resolved_at": "2026-09-27T15:47:20.063Z"
+      }
     },
     {
       "priority": 538,
@@ -39974,7 +40203,7 @@
       "package_id": "WCP-542",
       "title": "Hide Page Builder media image choices when Media is disabled",
       "risk": "low",
-      "execution_state": "worker_complete_awaiting_trusted_review",
+      "execution_state": "trusted_integrated",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -40046,7 +40275,7 @@
       },
       "published_at": "2026-09-27T13:46:42.006Z",
       "claimed_on": "2026-09-27T13:46:42.006Z",
-      "claim_state": "locked_until_trusted_resolution",
+      "claim_state": "released_after_trusted_integration",
       "active_base_branch": "main",
       "active_base_sha": "b510875e7b0741b9b19f09429d2204a95df51198",
       "active_head": "95ba0a3dbde574a03b94de68cd9325fe82f3ce78",
@@ -40061,7 +40290,7 @@
         "src/Layout/LayoutImages.php",
         "tests/Layout/LayoutImagesModuleGateTest.php"
       ],
-      "next_action": "Worker PR #332 is complete on exact green HEAD 95ba0a3dbde574a03b94de68cd9325fe82f3ce78; Worker CI run #820 / 36323858121 passed both jobs. Keep the claim locked until Trusted explicitly integrates, cancels or transfers it, and continue the autonomous Worker loop without merge or deployment.",
+      "next_action": "Trusted PR #153 integrated this Worker PR; final Main CI and sanitized Worker sync/CI passed. Claim released.",
       "ci_attempts": [
         {
           "run_id": 36323726051,
@@ -40085,7 +40314,7 @@
           "postgresql_18_migrations": "success"
         }
       ],
-      "worker_pr_state": "ready_for_review",
+      "worker_pr_state": "closed",
       "last_ci_result": "success",
       "worker_pr_changed_paths": [
         "src/Layout/LayoutImages.php",
@@ -40095,7 +40324,7 @@
       "worker_pr": 332,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/332",
       "last_verified_push_at": "2026-09-27T13:50:56Z",
-      "pr_state": "open",
+      "pr_state": "closed",
       "draft_pr": false,
       "ci_run_id": 36323858121,
       "last_ci_run_id": 36323858121,
@@ -40110,7 +40339,19 @@
         "Worker PR #332 is open and ready for Trusted review; it remains unmerged and undeployed.",
         "Exact-head Worker CI run #820 / 36323858121 succeeded on final HEAD: PHP/Symfony job (including PHPStan and PHPUnit) and PostgreSQL 18 migration-chain job both passed.",
         "Earlier draft CI run #819 failed on the test namespace escaping; the defect was fixed and the final exact-head run passed."
-      ]
+      ],
+      "trusted_resolution": {
+        "status": "integrated",
+        "worker_pr": 332,
+        "worker_head": "95ba0a3dbde574a03b94de68cd9325fe82f3ce78",
+        "trusted_pr": 153,
+        "trusted_merge_sha": "4ddcb6ec013e040b8e984c5c3a4020856a8534a1",
+        "final_trusted_main_sha": "8b142c2faf6950610f73bdd256043492ecf0152c",
+        "final_trusted_main_ci_run_id": 36330305722,
+        "sanitized_worker_sync_sha": "6988e871cbda8c27801ee0bcc02e8c5c2b0cd909",
+        "worker_ci_run_id": 36330318577,
+        "resolved_at": "2026-09-27T15:47:20.063Z"
+      }
     },
     {
       "priority": 543,
@@ -40321,7 +40562,7 @@
       "package_id": "WCP-544",
       "title": "Place published CMS pages through the Page Builder",
       "risk": "low",
-      "execution_state": "worker_complete_awaiting_trusted_review",
+      "execution_state": "trusted_integrated",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -40400,7 +40641,7 @@
       },
       "published_at": "2026-09-27T14:15:59.512Z",
       "claimed_on": "2026-09-27T14:15:59.512Z",
-      "claim_state": "locked_until_trusted_resolution",
+      "claim_state": "released_after_trusted_integration",
       "active_base_branch": "main",
       "active_base_sha": "b510875e7b0741b9b19f09429d2204a95df51198",
       "active_head": "6724a40f58205cbb0df78d4115690a6585b78c76",
@@ -40416,7 +40657,7 @@
         "templates/widget/public_pages.html.twig",
         "tests/Widget/PublicPageDirectoryWidgetProviderTest.php"
       ],
-      "next_action": "Worker PR #335 is complete on exact green HEAD 6724a40f58205cbb0df78d4115690a6585b78c76; Worker CI run #837 / 36325741990 passed both jobs. Keep the claim locked until Trusted explicitly integrates, cancels or transfers it; continue the autonomous Worker loop without merging or deploying.",
+      "next_action": "Trusted PR #154 integrated this Worker PR; final Main CI and sanitized Worker sync/CI passed. Claim released.",
       "ci_attempts": [
         {
           "run_id": 36325502531,
@@ -40447,7 +40688,7 @@
           "sql_queries": 750
         }
       ],
-      "worker_pr_state": "ready_for_review",
+      "worker_pr_state": "closed",
       "last_ci_result": "success",
       "worker_pr_changed_paths": [
         "src/Widget/PublicPageDirectoryWidgetProvider.php",
@@ -40459,7 +40700,7 @@
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/335",
       "last_verified_push_at": "2026-09-27T14:28:06.103Z",
       "draft_pr": false,
-      "pr_state": "open",
+      "pr_state": "closed",
       "ci_run_id": 36325741990,
       "last_ci_run_id": 36325741990,
       "ci_result": "success",
@@ -40474,14 +40715,26 @@
         "Worker PR #335 is open and ready for Trusted review, unmerged and undeployed.",
         "Exact-head Worker CI run #837 / 36325741990 succeeded on final HEAD: PHPStan passed; PHPUnit passed with 537 tests and 2,239 assertions (one existing deprecation and one notice); PostgreSQL 18 passed with 54 migrations and 750 SQL queries.",
         "Earlier run #832 failed because test fixtures omitted the required page author; the fixture was repaired and final exact-head CI passed."
-      ]
+      ],
+      "trusted_resolution": {
+        "status": "integrated",
+        "worker_pr": 335,
+        "worker_head": "6724a40f58205cbb0df78d4115690a6585b78c76",
+        "trusted_pr": 154,
+        "trusted_merge_sha": "b27928bdc79b0eaa4ae74f8633f2b62ce85f159e",
+        "final_trusted_main_sha": "8b142c2faf6950610f73bdd256043492ecf0152c",
+        "final_trusted_main_ci_run_id": 36330305722,
+        "sanitized_worker_sync_sha": "6988e871cbda8c27801ee0bcc02e8c5c2b0cd909",
+        "worker_ci_run_id": 36330318577,
+        "resolved_at": "2026-09-27T15:47:20.063Z"
+      }
     },
     {
       "priority": 545,
       "package_id": "WCP-545",
       "title": "Paginate the public video library and add a Page Builder entry point",
       "risk": "medium",
-      "execution_state": "worker_complete_awaiting_trusted_review",
+      "execution_state": "trusted_integrated",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -40580,7 +40833,7 @@
       },
       "published_at": "2026-09-27T14:33:10.522Z",
       "claimed_on": "2026-09-27T14:33:10.522Z",
-      "claim_state": "locked_until_trusted_resolution",
+      "claim_state": "released_after_trusted_integration",
       "active_base_branch": "main",
       "active_base_sha": "b510875e7b0741b9b19f09429d2204a95df51198",
       "active_head": "3c3aa7b733ff1ee439acdc235200a95838fd6831",
@@ -40601,8 +40854,8 @@
         "tests/Controller/PublicVideoLibraryControllerTest.php",
         "tests/Widget/VideoLibraryWidgetProviderTest.php"
       ],
-      "next_action": "Worker PR #338 is ready for Trusted review on exact green HEAD 3c3aa7b733ff1ee439acdc235200a95838fd6831; exact-head CI #843 / 36327083240 passed both jobs. Keep the claim locked until Trusted explicitly integrates, cancels or transfers it; continue the autonomous Worker loop without merge or deployment.",
-      "worker_pr_state": "ready_for_review",
+      "next_action": "Trusted PR #152 integrated this Worker PR; final Main CI and sanitized Worker sync/CI passed. Claim released.",
+      "worker_pr_state": "closed",
       "last_verified_push_at": "2026-09-27T14:48:52.724Z",
       "ci_result": "success",
       "last_ci_result": "success",
@@ -40649,7 +40902,7 @@
         "tests/Widget/VideoLibraryWidgetProviderTest.php"
       ],
       "worker_pr_base_branch": "main",
-      "pr_state": "open",
+      "pr_state": "closed",
       "draft_pr": false,
       "ci_run_id": 36327083240,
       "last_ci_run_id": 36327083240,
@@ -40662,14 +40915,26 @@
         "The additive /videos/library route shows up to 24 currently published videos per page, supports combined enabled category and playlist filters, preserves selections during paging, orders stably, links to existing video detail pages, and handles empty/invalid/out-of-range requests.",
         "The video.library Page Builder widget links to the library and shows the current public video count; disabling Video hides route and widget.",
         "Exact-head Worker CI #843 / 36327083240 passed PHPStan, PHPUnit 542 tests / 2259 assertions, and PostgreSQL 18 migration-chain validation (54 migrations / 750 SQL queries)."
-      ]
+      ],
+      "trusted_resolution": {
+        "status": "integrated",
+        "worker_pr": 338,
+        "worker_head": "3c3aa7b733ff1ee439acdc235200a95838fd6831",
+        "trusted_pr": 152,
+        "trusted_merge_sha": "20791ca3bde0ba8fbf2d326c9111540bd08d6124",
+        "final_trusted_main_sha": "8b142c2faf6950610f73bdd256043492ecf0152c",
+        "final_trusted_main_ci_run_id": 36330305722,
+        "sanitized_worker_sync_sha": "6988e871cbda8c27801ee0bcc02e8c5c2b0cd909",
+        "worker_ci_run_id": 36330318577,
+        "resolved_at": "2026-09-27T15:47:20.063Z"
+      }
     },
     {
       "priority": 546,
       "package_id": "WCP-546",
       "title": "Add a content search widget to the Page Builder",
       "risk": "low",
-      "execution_state": "worker_complete_awaiting_trusted_review",
+      "execution_state": "trusted_integrated",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -40749,7 +41014,7 @@
       },
       "published_at": "2026-09-27T14:34:48.706Z",
       "claimed_on": "2026-09-27T14:34:48.706Z",
-      "claim_state": "locked_until_trusted_resolution",
+      "claim_state": "released_after_trusted_integration",
       "active_base_branch": "main",
       "active_base_sha": "b510875e7b0741b9b19f09429d2204a95df51198",
       "active_head": "571e23b96be64c4e473df33c1f4000a0eab33771",
@@ -40765,7 +41030,7 @@
         "templates/widget/content_search.html.twig",
         "tests/Widget/PublicContentSearchWidgetTest.php"
       ],
-      "next_action": "Worker PR #337 is complete on exact green HEAD 571e23b96be64c4e473df33c1f4000a0eab33771; Worker CI run #841 / 36326523818 passed both jobs. Keep the claim locked until Trusted explicitly integrates, cancels or transfers it, and continue the autonomous Worker loop without merge or deployment.",
+      "next_action": "Trusted PR #155 integrated this Worker PR; final Main CI and sanitized Worker sync/CI passed. Claim released.",
       "ci_attempts": [
         {
           "run_id": 36326523818,
@@ -40786,7 +41051,7 @@
           "sql_queries": 750
         }
       ],
-      "worker_pr_state": "ready_for_review",
+      "worker_pr_state": "closed",
       "last_ci_result": "success",
       "worker_pr_changed_paths": [
         "src/Widget/PublicContentSearchWidgetProvider.php",
@@ -40797,12 +41062,24 @@
       "worker_pr": 337,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/337",
       "last_verified_push_at": "2026-09-27T14:36:02.055Z",
-      "pr_state": "open",
+      "pr_state": "closed",
       "draft_pr": false,
       "ci_run_id": 36326523818,
       "ci_result": "success",
       "final_head": "571e23b96be64c4e473df33c1f4000a0eab33771",
-      "completed_at": "2026-09-27T14:43:57.795Z"
+      "completed_at": "2026-09-27T14:43:57.795Z",
+      "trusted_resolution": {
+        "status": "integrated",
+        "worker_pr": 337,
+        "worker_head": "571e23b96be64c4e473df33c1f4000a0eab33771",
+        "trusted_pr": 155,
+        "trusted_merge_sha": "4030a53fe3969dd09064deaa4f5ec6aefade657f",
+        "final_trusted_main_sha": "8b142c2faf6950610f73bdd256043492ecf0152c",
+        "final_trusted_main_ci_run_id": 36330305722,
+        "sanitized_worker_sync_sha": "6988e871cbda8c27801ee0bcc02e8c5c2b0cd909",
+        "worker_ci_run_id": 36330318577,
+        "resolved_at": "2026-09-27T15:47:20.063Z"
+      }
     },
     {
       "priority": 547,
