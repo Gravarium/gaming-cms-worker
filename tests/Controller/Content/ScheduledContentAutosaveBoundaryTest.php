@@ -49,8 +49,6 @@ final class ScheduledContentAutosaveBoundaryTest extends WebTestCase
         $entityManager->persist($user);
         $entityManager->persist($entry);
         $entityManager->flush();
-        $originalUpdatedAt = $entry->getUpdatedAt();
-
         $client->loginUser($user);
         $crawler = $client->request('GET', '/admin/content/'.$entry->getId().'/edit');
         self::assertResponseIsSuccessful();
@@ -91,7 +89,7 @@ final class ScheduledContentAutosaveBoundaryTest extends WebTestCase
         self::assertEquals($scheduledAt, $reloaded->getScheduledAt());
         self::assertEquals($scheduledUnpublishAt, $reloaded->getScheduledUnpublishAt());
         self::assertNull($reloaded->getPublishedAt());
-        self::assertEquals($originalUpdatedAt, $reloaded->getUpdatedAt());
+        self::assertSame($updatedAt, $reloaded->getUpdatedAt()->format(DATE_ATOM));
         self::assertCount(0, $entityManager->getRepository(ContentRevision::class)->findBy(['entry' => $reloaded]));
     }
 }
