@@ -107,18 +107,18 @@ final class GuildApplicationStatusTest extends WebTestCase
 
         $client->request('GET', '/gaming/applications?page=1');
         self::assertResponseIsSuccessful();
-        self::assertSelectorCount('tbody tr[data-application-row]', 25);
+        self::assertSelectorCount(25, 'tbody tr[data-application-row]');
         self::assertSelectorExists('a[rel="next"][href="/gaming/applications?page=2"]');
 
         $client->request('GET', '/gaming/applications?page=99');
         self::assertResponseIsSuccessful();
         self::assertSelectorTextContains('body', 'Seite 2 von 2');
-        self::assertSelectorCount('tbody tr[data-application-row]', 1);
+        self::assertSelectorCount(1, 'tbody tr[data-application-row]');
 
         $client->request('GET', '/gaming/applications?page[]=2');
         self::assertResponseIsSuccessful();
         self::assertSelectorTextContains('body', 'Seite 1 von 2');
-        self::assertSelectorCount('tbody tr[data-application-row]', 25);
+        self::assertSelectorCount(25, 'tbody tr[data-application-row]');
     }
 
     private function user(KernelBrowser $client): User
