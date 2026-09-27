@@ -105,11 +105,13 @@ final class AdminGuildStructureOrderTest extends WebTestCase
 
         $firstRank = (new GuildRank())->setGuild($firstGuild)->setName('Alpha')->setPosition(10);
         $secondRank = (new GuildRank())->setGuild($firstGuild)->setName('Beta')->setPosition(20);
+        $foreignFirstRank = (new GuildRank())->setGuild($secondGuild)->setName('Foreign rank first')->setPosition(10);
+        $foreignSecondRank = (new GuildRank())->setGuild($secondGuild)->setName('Foreign rank second')->setPosition(20);
         $foreignFirstQuestion = (new GuildApplicationQuestion())->setGuild($secondGuild)->setLabel('Foreign first')->setPosition(10);
         $foreignSecondQuestion = (new GuildApplicationQuestion())->setGuild($secondGuild)->setLabel('Foreign second')->setPosition(20);
 
         $em = $this->em($client);
-        foreach ([$firstRank, $secondRank, $foreignFirstQuestion, $foreignSecondQuestion] as $entry) {
+        foreach ([$firstRank, $secondRank, $foreignFirstRank, $foreignSecondRank, $foreignFirstQuestion, $foreignSecondQuestion] as $entry) {
             $em->persist($entry);
         }
         $em->flush();
@@ -118,10 +120,12 @@ final class AdminGuildStructureOrderTest extends WebTestCase
         $firstGuildId = $firstGuild->getId();
         $secondGuildId = $secondGuild->getId();
         $secondRankId = $secondRank->getId();
+        $foreignSecondRankId = $foreignSecondRank->getId();
         $foreignSecondQuestionId = $foreignSecondQuestion->getId();
         self::assertNotNull($firstGuildId);
         self::assertNotNull($secondGuildId);
         self::assertNotNull($secondRankId);
+        self::assertNotNull($foreignSecondRankId);
         self::assertNotNull($foreignSecondQuestionId);
 
         $client->request(
@@ -133,14 +137,23 @@ final class AdminGuildStructureOrderTest extends WebTestCase
 
         $crawler = $client->request('GET', '/admin/gaming/guild/'.$secondGuildId.'/structure');
         self::assertResponseIsSuccessful();
-        $foreignForm = $crawler->filter(sprintf('form[data-order-type="question"][data-order-id="%d"][data-direction="up"]', $foreignSecondQuestionId));
-        $token = $foreignForm->filter('input[name="_token"]')->attr('value');
-        self::assertNotNull($token);
+        $foreignRankForm = $crawler->filter(sprintf('form[data-order-type="rank"][data-order-id="%d"][data-direction="up"]', $foreignSecondRankId));
+        $foreignRankToken = $foreignRankForm->filter('input[name="_token"]')->attr('value');
+        self::assertNotNull($foreignRankToken);
+        $foreignQuestionForm = $crawler->filter(sprintf('form[data-order-type="question"][data-order-id="%d"][data-direction="up"]', $foreignSecondQuestionId));
+        $foreignQuestionToken = $foreignQuestionForm->filter('input[name="_token"]')->attr('value');
+        self::assertNotNull($foreignQuestionToken);
 
         $client->request(
             'POST',
+            '/admin/gaming/guild/'.$firstGuildId.'/structure/rank/'.$foreignSecondRankId.'/move/up',
+            ['_token' => $foreignRankToken],
+        );
+        self::assertResponseStatusCodeSame(404);
+        $client->request(
+            'POST',
             '/admin/gaming/guild/'.$firstGuildId.'/structure/question/'.$foreignSecondQuestionId.'/move/up',
-            ['_token' => $token],
+            ['_token' => $foreignQuestionToken],
         );
         self::assertResponseStatusCodeSame(404);
 
@@ -152,6 +165,9 @@ final class AdminGuildStructureOrderTest extends WebTestCase
         /** @var list<GuildRank> $ranks */
         $ranks = $em->getRepository(GuildRank::class)->findBy(['guild' => $storedFirstGuild], ['position' => 'ASC', 'id' => 'ASC']);
         self::assertSame(['Alpha', 'Beta'], array_map(static fn (GuildRank $rank): string => $rank->getName(), $ranks));
+        /** @var list<GuildRank> $foreignRanks */
+        $foreignRanks = $em->getRepository(GuildRank::class)->findBy(['guild' => $storedSecondGuild], ['position' => 'ASC', 'id' => 'ASC']);
+        self::assertSame(['Foreign rank first', 'Foreign rank second'], array_map(static fn (GuildRank $rank): string => $rank->getName(), $foreignRanks));
         /** @var list<GuildApplicationQuestion> $questions */
         $questions = $em->getRepository(GuildApplicationQuestion::class)->findBy(['guild' => $storedSecondGuild], ['position' => 'ASC', 'id' => 'ASC']);
         self::assertSame(['Foreign first', 'Foreign second'], array_map(static fn (GuildApplicationQuestion $question): string => $question->getLabel(), $questions));
