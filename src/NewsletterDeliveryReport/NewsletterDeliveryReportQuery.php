@@ -57,8 +57,8 @@ final readonly class NewsletterDeliveryReportQuery
                 ->from(NewsletterDelivery::class, 'delivery')
                 ->where('IDENTITY(delivery.campaign) IN (:campaignIds)')
                 ->setParameter('campaignIds', $campaignIds)
-                ->groupBy('IDENTITY(delivery.campaign)')
-                ->addGroupBy('delivery.status')
+                ->groupBy('campaignId')
+                ->addGroupBy('status')
                 ->getQuery()
                 ->getArrayResult();
 
