@@ -41315,7 +41315,7 @@
         "feature_branch": "951a0237f1e6f259e812deec86b9cc7f4e8b71b8"
       },
       "last_observed_head": "951a0237f1e6f259e812deec86b9cc7f4e8b71b8",
-      "last_checkpoint_at": "2026-09-27T15:25:22.990Z",
+      "last_checkpoint_at": "2026-09-27T15:42:41.736Z",
       "checkpoint_paths": [
         "src/Widget/PublicGlobalSearchWidgetProvider.php",
         "src/GlobalSearchWidget/Templates/widget/global_search.html.twig",
@@ -41323,7 +41323,7 @@
         "tests/Widget/PublicGlobalSearchWidgetProviderTest.php"
       ],
       "resume_branch": "feature/wcp-549-global-search-widget-g1",
-      "next_action": "Prepare a conflict-checked Worker-only composition based on current main e4be797b, restoring only required exact-green competition predecessor files and layering exact-green FCP-069 plus WCP-549; run full CI on the composition, then continue WCP-549 from that exact green base.",
+      "next_action": "Monitor composition PR #344 exact-head CI #858 / 36330483300 on HEAD d54706a675d5f40d5f815ac7c2eeb612d85f423f. If fully green, publish that exact composition as WCP-549's proposal base and resume WCP-549; repair composition failures only within the dependency composition paths.",
       "worker_pr_state": "draft",
       "last_verified_push_at": "2026-09-27T15:08:28.294Z",
       "ci_result": "failure",
@@ -41481,7 +41481,93 @@
         "tests/Search/SearchCoreTest.php",
         "tests/Search/SearchVisibilityTest.php"
       ],
-      "ci_run_id": 36328486772
+      "ci_run_id": 36328486772,
+      "composition_branch": "composition/wcp-549-main-6988e87-g1",
+      "composition_base_sha": "6988e871cbda8c27801ee0bcc02e8c5c2b0cd909",
+      "composition_head": "d54706a675d5f40d5f815ac7c2eeb612d85f423f",
+      "composition_pr": 344,
+      "composition_source_heads": [
+        {
+          "package_id": "WCP-391",
+          "head": "9988284a0536acb5b3ac0b5b91d3205bfd2019cb",
+          "worker_pr": 185,
+          "ci_result": "success"
+        },
+        {
+          "package_id": "FCP-069",
+          "head": "0b243f72cd6813e76574840dcc9c542396ec270e",
+          "worker_pr": 38,
+          "ci_run_id": 36227368671,
+          "ci_result": "success"
+        }
+      ],
+      "composition_ci_attempts": [
+        {
+          "run_id": 36330483300,
+          "run_number": 858,
+          "head": "d54706a675d5f40d5f815ac7c2eeb612d85f423f",
+          "base": "6988e871cbda8c27801ee0bcc02e8c5c2b0cd909",
+          "result": "in_progress",
+          "conclusion": null
+        }
+      ],
+      "composition_changed_paths": [
+        "migrations/Version20260925070000.php",
+        "migrations/Version20260926100000.php",
+        "src/Controller/AdminCompetition/AdminCompetitionController.php",
+        "src/Controller/Competition/CompetitionController.php",
+        "src/Controller/Search/SearchController.php",
+        "src/Entity/Competition/Competition.php",
+        "src/Entity/Competition/CompetitionDispute.php",
+        "src/Entity/Competition/CompetitionMatch.php",
+        "src/Entity/Competition/CompetitionMatchEvidence.php",
+        "src/Entity/Competition/CompetitionParticipant.php",
+        "src/Entity/Competition/CompetitionSeason.php",
+        "src/Entity/Search/SearchDocument.php",
+        "src/Form/Competition/CompetitionRegistrationType.php",
+        "src/Form/Competition/CompetitionType.php",
+        "src/Gaming/Competition/CompetitionBracket.php",
+        "src/Gaming/Competition/CompetitionFormat.php",
+        "src/Gaming/Competition/CompetitionResultPolicy.php",
+        "src/Gaming/Competition/CompetitionVisibilityPolicy.php",
+        "src/Repository/Competition/CompetitionDisputeRepository.php",
+        "src/Repository/Competition/CompetitionMatchRepository.php",
+        "src/Repository/Competition/CompetitionParticipantRepository.php",
+        "src/Repository/Competition/CompetitionRepository.php",
+        "src/Repository/Competition/CompetitionSeasonRepository.php",
+        "src/Repository/Search/SearchDocumentRepository.php",
+        "src/Search/Index/ContentSearchIndexAdapter.php",
+        "src/Search/Index/ForumSearchIndexAdapter.php",
+        "src/Search/Index/GamingSearchIndexAdapter.php",
+        "src/Search/Index/VideoSearchIndexAdapter.php",
+        "src/Search/LocalSearchVisibilityBoundary.php",
+        "src/Search/SearchFilters.php",
+        "src/Search/SearchIndexAdapter.php",
+        "src/Search/SearchIndexAdapterRegistry.php",
+        "src/Search/SearchIndexRecord.php",
+        "src/Search/SearchIndexReport.php",
+        "src/Search/SearchIndexer.php",
+        "src/Search/SearchModuleAvailability.php",
+        "src/Search/SearchQuery.php",
+        "src/Search/SearchRanker.php",
+        "src/Search/SearchRanking.php",
+        "src/Search/SearchResult.php",
+        "src/Search/SearchService.php",
+        "src/Search/SearchViewer.php",
+        "src/Search/SearchViewerFactory.php",
+        "src/Search/SearchVisibilityBoundary.php",
+        "templates/admin/competition/form.html.twig",
+        "templates/admin/competition/index.html.twig",
+        "templates/competition/index.html.twig",
+        "templates/competition/register.html.twig",
+        "templates/competition/show.html.twig",
+        "templates/search/feed.xml.twig",
+        "templates/search/index.html.twig",
+        "templates/search/item.html.twig",
+        "tests/Gaming/Competition/CompetitionDomainTest.php",
+        "tests/Search/SearchCoreTest.php",
+        "tests/Search/SearchVisibilityTest.php"
+      ]
     },
     {
       "priority": 550,
