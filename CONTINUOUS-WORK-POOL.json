@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T18:53:47.402Z",
+  "published_at": "2026-09-27T18:57:02.795Z",
   "summary": {
     "total_remaining_worker_tasks": 173,
-    "completed_worker_prs_awaiting_trusted_review": 299,
+    "completed_worker_prs_awaiting_trusted_review": 300,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "Await complete Worker CI #914 on exact PR #363 HEAD; diagnose and repair any failure before marking ready.",
+    "next_required_action": "WCP-569 is complete with exact-head green CI and PR #363; re-evaluate dependencies and prepare the next safe FCP or composition.",
     "composition_preparable": 0,
     "immediately_actionable": 29,
     "must_continue": true
@@ -45711,7 +45711,7 @@
       "package_id": "WCP-569",
       "title": "Paginate the public category directory",
       "risk": "medium",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -45799,7 +45799,7 @@
       },
       "published_at": "2026-09-27T18:49:33.847Z",
       "claimed_on": "2026-09-27T18:49:33.847Z",
-      "claim_state": "active",
+      "claim_state": "locked_until_trusted_resolution",
       "active_base_branch": "main",
       "active_base_sha": "7b2ca79405fc12d34bce1386157e929e4668f31a",
       "active_head": "0c7f2456163e079b8ea47c521ff88a6662631dcf",
@@ -45809,16 +45809,16 @@
         "feature_branch": "0c7f2456163e079b8ea47c521ff88a6662631dcf"
       },
       "last_observed_head": "0c7f2456163e079b8ea47c521ff88a6662631dcf",
-      "last_checkpoint_at": "2026-09-27T18:53:47.402Z",
+      "last_checkpoint_at": "2026-09-27T18:57:02.795Z",
       "checkpoint_paths": [
         "src/Controller/PublicCategoryDirectoryController.php",
         "templates/category/index.html.twig",
         "tests/Controller/PublicCategoryDirectoryPaginationTest.php"
       ],
-      "next_action": "Await complete Worker CI #914 on exact PR #363 HEAD; diagnose and repair any failure before marking ready.",
-      "last_verified_push_at": "2026-09-27T18:53:47.402Z",
+      "next_action": "Await Trusted review and independent validation of PR #363; continue autonomous Worker scheduling on verified dependency evidence without merging or deploying.",
+      "last_verified_push_at": "2026-09-27T18:57:02.795Z",
       "worker_pr": 363,
-      "worker_pr_state": "draft",
+      "worker_pr_state": "ready_for_review",
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/363",
       "worker_pr_changed_paths": [
         "src/Controller/PublicCategoryDirectoryController.php",
@@ -45826,24 +45826,27 @@
         "tests/Controller/PublicCategoryDirectoryPaginationTest.php"
       ],
       "pr_state": "open",
-      "draft_pr": true,
+      "draft_pr": false,
       "worker_pr_base_branch": "main",
       "worker_pr_base_sha": "7b2ca79405fc12d34bce1386157e929e4668f31a",
-      "ci_result": "pending",
+      "ci_result": "success",
       "ci_attempts": [
         {
           "run_id": 36342306709,
           "run_number": 914,
           "head": "0c7f2456163e079b8ea47c521ff88a6662631dcf",
           "base": "7b2ca79405fc12d34bce1386157e929e4668f31a",
-          "result": "in_progress",
+          "result": "success",
           "validation_pr": 363,
-          "conclusion": null
+          "conclusion": "success"
         }
       ],
       "last_ci_run_id": 36342306709,
       "ci_run_id": 36342306709,
-      "ci_validation_pr": 363
+      "ci_validation_pr": 363,
+      "last_ci_result": "success",
+      "completed_at": "2026-09-27T18:57:02.795Z",
+      "worker_completion_summary": "Exact-head Worker CI #914 / 36342306709 passed on 0c7f2456163e079b8ea47c521ff88a6662631dcf: 737 tests, 4,671 assertions, 0 failures/errors (1 PHPUnit deprecation, 3 notices); PHPStan and PHP/Symfony validation passed; PostgreSQL 18 applied 57 migrations with 878 SQL queries. PR #363 is open and ready for Trusted review from main@7b2ca79405fc12d34bce1386157e929e4668f31a; exactly the three allowlisted paths changed, with no schema or runtime migrations."
     }
   ],
   "recovery_queue": [],
