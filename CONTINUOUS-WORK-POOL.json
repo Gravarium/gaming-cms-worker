@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T00:31:40.727Z",
+  "published_at": "2026-09-27T00:39:46.419Z",
   "summary": {
     "total_remaining_worker_tasks": 139,
     "completed_worker_prs_awaiting_trusted_review": 208,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-440 is complete on exact HEAD a44416a60ea7d1eb9e802a2cf240870d636abc58 with PR #234 and green CI run 36282974283; its claim is locked. WCP-439 and WCP-441 are foreign active claims. Reevaluate remaining FCP dependencies and continue with an independent task.",
+    "next_required_action": "WCP-441 has a verified checkpoint at exact feature HEAD ec8b6ad07137812f98cee8af17642422443b4042; finish review of the picker and run exact-head Worker CI through a draft PR. WCP-440 remains a separate foreign claim.",
     "composition_preparable": 0,
     "immediately_actionable": 2,
     "must_continue": true
@@ -24196,17 +24196,16 @@
       },
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "ec8b6ad07137812f98cee8af17642422443b4042",
       "resume_branch": "feature/wcp-441-content-editor-media-picker-g1",
       "claimed_on": "2026-09-27T00:26:50.616Z",
       "claim_state": "active",
-      "last_checkpoint_at": "2026-09-27T00:26:50.616Z",
-      "last_verified_push_at": "2026-09-27T00:26:50.616Z",
+      "last_checkpoint_at": "2026-09-27T00:39:46.419Z",
+      "last_verified_push_at": "2026-09-27T00:39:46.419Z",
       "checkpoint_paths": [
         "src/Controller/AdminContentMediaPickerController.php",
         "src/Repository/ContentMediaPickerRepository.php",
         "templates/admin/content/form.html.twig",
-        "templates/admin/content/media_picker.html.twig",
         "assets/controllers/content_editor_controller.js",
         "assets/content_media_picker.js",
         "tests/Controller/ContentEditorMediaPickerTest.php",
@@ -24214,9 +24213,9 @@
       ],
       "branch_heads": {
         "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-        "feature_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d"
+        "feature_branch": "ec8b6ad07137812f98cee8af17642422443b4042"
       },
-      "next_action": "Create claim and feature refs claim/wcp-441-content-editor-media-picker-g1 and feature/wcp-441-content-editor-media-picker-g1 from exact sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d; then implement the authorized searchable Content image picker and editor selection flow."
+      "next_action": "Authorized content image picker, editor dialog, and browser/JavaScript tests are checkpointed at exact HEAD ec8b6ad07137812f98cee8af17642422443b4042. Review the exact branch state, then open a draft Worker PR to run targeted tests, PHPStan level 8, PostgreSQL 18 migration checks, and full Worker CI; repair concrete failures on this branch."
     }
   ],
   "recovery_queue": [],
