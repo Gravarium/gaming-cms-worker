@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T21:39:20.833Z",
+  "published_at": "2026-09-27T22:01:15.723Z",
   "summary": {
-    "total_remaining_worker_tasks": 174,
+    "total_remaining_worker_tasks": 175,
     "completed_worker_prs_awaiting_trusted_review": 312,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "Re-evaluate dependency-safe Worker tasks after WCP-581 completion; the five prepared unclaimed FCP packages remain dependency-blocked, so derive, publish, and claim the next bounded independent functional module package.",
+    "next_required_action": "WCP-582 is claimed on feature/wcp-582-social-competition-dashboard-g1 from the exact green FCP-061 correction head ec6bb200affc3e5a46d416e98f7a1b0621c38ded; implement its bounded competition registration self-service workflow.",
     "composition_preparable": 0,
     "immediately_actionable": 30,
     "must_continue": true
@@ -47491,6 +47491,145 @@
         "Existing Social read-marker and message timestamps use second precision, so messages written in the same persisted second as a read marker cannot be ordered precisely without a schema change.",
         "The generic CMS module catalog remains reserved by WCP-499; this widget uses the existing Social-specific availability service."
       ]
+    },
+    {
+      "priority": 582,
+      "package_id": "WCP-582",
+      "title": "Manage competition registrations from a personal dashboard",
+      "risk": "medium",
+      "execution_state": "worker_in_progress",
+      "dependencies": [
+        "FCP-061"
+      ],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-582-social-competition-dashboard-g1",
+      "suggested_branch": "feature/wcp-582-social-competition-dashboard-g1",
+      "base_branch": "fix/fcp-061-phpstan-g1",
+      "base_sha": "ec6bb200affc3e5a46d416e98f7a1b0621c38ded",
+      "objective": "Complete the competition participant self-service lifecycle after registration. Add a Page Builder widget and authenticated /account/competitions dashboard that show only the current captain's visible registrations, then let that captain withdraw their own still-registered participant/team while the competition remains open. Preserve CompetitionVisibilityPolicy and the Gaming module gate; require CSRF and bind both route IDs to the same participant/competition. Do not change bracket, match, result or team-roster behavior, schema, migrations, or any path reserved by FCP-061.",
+      "allowed_paths": [
+        "config/packages/competition_participation_widget.yaml",
+        "src/CompetitionParticipation/Templates/account/dashboard.html.twig",
+        "src/CompetitionParticipation/Templates/widget/my_competitions.html.twig",
+        "src/Controller/CompetitionParticipationDashboardController.php",
+        "src/EventSubscriber/CompetitionParticipationWidgetCacheSubscriber.php",
+        "src/Widget/CompetitionParticipationQuery.php",
+        "src/Widget/MyCompetitionsWidgetProvider.php",
+        "tests/Controller/CompetitionParticipationDashboardTest.php",
+        "tests/Widget/MyCompetitionsWidgetTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "CONTINUOUS-WORKER.md",
+        "CONTINUOUS-WORK-POOL.json",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "src/Gaming/Competition/",
+        "src/Controller/AdminCompetition/",
+        "src/Controller/Competition/",
+        "src/Entity/Competition/",
+        "src/Form/Competition/",
+        "src/Repository/Competition/",
+        "templates/",
+        "migrations/",
+        "src/Module/CmsModuleCatalog.php",
+        "src/Widget/WidgetRegistry.php"
+      ],
+      "deliverables": [
+        "Auto-discovered gaming.my-competition-entries Page Builder widget and a dedicated feature-local Twig namespace; admins can place a member-only entry point without changing WidgetRegistry.",
+        "Authenticated /account/competitions dashboard showing a bounded list of the signed-in captain's visible participant registrations and their current status.",
+        "Captain-only CSRF-protected withdrawal action for a registered participant/team, available only while its competition is open; mismatched IDs, non-captains, hidden competitions and stale/closed registrations fail closed with understandable feedback.",
+        "Guest responses expose no participant IDs, names or counts; authenticated dashboard/widget responses are private and no-store; disabled Gaming hides both widget and dashboard."
+      ],
+      "tests": [
+        "Page Builder offers the gaming.my-competition-entries widget and renders only the signed-in captain's bounded, visibility-filtered entries.",
+        "Guest widget has no personalized data; authenticated widget and dashboard responses are private/no-store.",
+        "Captain can withdraw a registered entry while registration is open; subsequent dashboard state shows withdrawal.",
+        "Non-captain, cross-competition IDs, invalid CSRF, checked-in entries, closed registrations and disabled Gaming cannot withdraw an entry.",
+        "PHPStan level 8 and complete exact-head Worker CI including PostgreSQL 18 migration-chain validation."
+      ],
+      "completion_report": [
+        "Exact FCP-061 proposal base SHA, final Worker HEAD, complete changed-path list, and PR URL/state.",
+        "Dashboard/widget data ownership, visibility and withdrawal semantics with test evidence.",
+        "Exact-head CI run and targeted/full test results.",
+        "Remaining limits, including inherited registration/team-roster constraints."
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-Trusted-review-and-exact-head-CI",
+        "only-the-authenticated-captain-can-withdraw-their-own-registered-entry",
+        "withdrawal-requires-CSRF-and-an-open-competition",
+        "competition-visibility-policy-and-gaming-module-gate-remain-enforced",
+        "guest-output-has-no-personalized-entry-data",
+        "personalized-responses-are-private-and-no-store",
+        "no-schema-or-migration-change",
+        "do-not-edit-any-FCP-061-claimed-path-or-WidgetRegistry",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "no-direct-Trusted-integration-or-deployment"
+      ],
+      "proposal_kind": "worker_only",
+      "proposal_base_branch": "fix/fcp-061-phpstan-g1",
+      "proposal_base_sha": "ec6bb200affc3e5a46d416e98f7a1b0621c38ded",
+      "proposal_dependency_evidence": [
+        {
+          "package_id": "FCP-061",
+          "feature_branch": "feature/fcp-061-pool-g1",
+          "worker_pr": 32,
+          "exact_head": "655c31e59914f5d99013bee85beb9edb8166fee1",
+          "ci_run_id": 36191815415,
+          "ci_result": "success"
+        },
+        {
+          "package_id": "FCP-061 corrective checkpoint",
+          "feature_branch": "fix/fcp-061-phpstan-g1",
+          "worker_pr": 34,
+          "exact_head": "ec6bb200affc3e5a46d416e98f7a1b0621c38ded",
+          "ci_run_id": 36200833419,
+          "ci_result": "success"
+        }
+      ],
+      "collision_check": {
+        "compared_against": "Fresh continuous/work-pool-v4 @ 983a93f52f1f951be1b13594b8ff286fbe911ed0; sanitized Worker main @ 7b2ca79405fc12d34bce1386157e929e4668f31a; all task allowlists; exact WCP-582 branch and PR searches.",
+        "result": "No allowed-path overlap with any current pool task. FCP-061 owns its Competition subdirectories, migration chain and original tests; this package adds separate root-level controller, widget/query, subscriber, config, feature-local templates and dedicated tests. The unclaimed FCP-072 templates/ scope is avoided. All proposed file paths are absent from the current tree.",
+        "paths": [
+          "config/packages/competition_participation_widget.yaml",
+          "src/CompetitionParticipation/Templates/account/dashboard.html.twig",
+          "src/CompetitionParticipation/Templates/widget/my_competitions.html.twig",
+          "src/Controller/CompetitionParticipationDashboardController.php",
+          "src/EventSubscriber/CompetitionParticipationWidgetCacheSubscriber.php",
+          "src/Widget/CompetitionParticipationQuery.php",
+          "src/Widget/MyCompetitionsWidgetProvider.php",
+          "tests/Controller/CompetitionParticipationDashboardTest.php",
+          "tests/Widget/MyCompetitionsWidgetTest.php"
+        ],
+        "observed_nonblocking_path_hits": []
+      },
+      "published_at": "2026-09-27T22:01:15.723Z",
+      "claimed_on": "2026-09-27T22:01:15.723Z",
+      "claim_state": "active",
+      "active_base_branch": "fix/fcp-061-phpstan-g1",
+      "active_base_sha": "ec6bb200affc3e5a46d416e98f7a1b0621c38ded",
+      "active_head": "ec6bb200affc3e5a46d416e98f7a1b0621c38ded",
+      "resume_branch": "feature/wcp-582-social-competition-dashboard-g1",
+      "branch_heads": {
+        "claim_branch": "ec6bb200affc3e5a46d416e98f7a1b0621c38ded",
+        "feature_branch": "ec6bb200affc3e5a46d416e98f7a1b0621c38ded"
+      },
+      "last_observed_head": "ec6bb200affc3e5a46d416e98f7a1b0621c38ded",
+      "last_checkpoint_at": "2026-09-27T22:01:15.723Z",
+      "last_verified_push_at": "2026-09-27T22:01:15.723Z",
+      "next_action": "Implement the personalized competition dashboard/widget and captain-only withdrawal flow within the allowlisted files; checkpoint the first complete vertical slice on this feature branch.",
+      "checkpoint_paths": []
     }
   ],
   "recovery_queue": [],
