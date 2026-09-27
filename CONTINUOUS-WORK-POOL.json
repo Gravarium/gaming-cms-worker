@@ -12,14 +12,14 @@
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
   "published_at": "2026-09-27T10:20:53.429Z",
   "summary": {
-    "total_remaining_worker_tasks": 164,
+    "total_remaining_worker_tasks": 165,
     "completed_worker_prs_awaiting_trusted_review": 272,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-508 is complete with green exact-head Worker CI and locked for Trusted review; re-evaluate current unclaimed dependencies, then continue with the next safe Worker package.",
+    "next_required_action": "WCP-513 is actively claimed from exact sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d; implement the public news month archive and complete exact-head Worker CI.",
     "composition_preparable": 0,
-    "immediately_actionable": 18,
+    "immediately_actionable": 19,
     "must_continue": true
   },
   "rules": {
@@ -35025,6 +35025,115 @@
       "last_verified_push_at": "2026-09-27T10:20:53.429Z",
       "worker_pr": 304,
       "draft_pr": true
+    },
+    {
+      "priority": 513,
+      "package_id": "WCP-513",
+      "title": "Browse public news by publication month",
+      "risk": "medium",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-513-public-news-month-archive-g1",
+      "suggested_branch": "feature/wcp-513-public-news-month-archive-g1",
+      "base_branch": "main",
+      "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "objective": "Complete the existing content module's public news browsing with a chronological archive. Visitors can browse available year/month periods, open a month and page through its entries. Keep archive results limited to currently published, publicly listed news; preserve the existing news, category, tag, search, and page routes.",
+      "allowed_paths": [
+        "src/Controller/PublicNewsArchiveController.php",
+        "src/Repository/PublicNewsArchiveRepository.php",
+        "templates/content/news_archive.html.twig",
+        "tests/Controller/PublicNewsArchiveTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/",
+        "src/Entity/",
+        "src/Controller/PublicContentController.php",
+        "src/Repository/ContentEntryRepository.php",
+        "templates/base.html.twig",
+        "templates/content/news.html.twig",
+        "templates/content/search.html.twig",
+        "templates/layout/portal.html.twig",
+        "tests/Controller/Content/"
+      ],
+      "deliverables": [
+        "Add GET /news/archive listing available year/month periods with counts and an understandable empty state.",
+        "Add GET /news/archive/{year}/{month} with deterministic 20-item pagination and links to existing public news entries.",
+        "Archive queries include only news that is published, listed, has publishedAt <= now, and is not past scheduledUnpublishAt; pages and hidden/unlisted/future content are excluded.",
+        "The route names use the existing app_news prefix so DisabledModuleSubscriber returns 404 when the content module is unavailable.",
+        "No schema, migration, entity, shared repository/controller, existing news/search template, or configuration change."
+      ],
+      "tests": [
+        "Functional coverage verifies period index, month list, stable ordering, pagination and empty archive behavior.",
+        "Negative visibility coverage excludes pages, drafts, scheduled/future, archived, trashed, unlisted, and already-unpublished news, with unique markers absent.",
+        "Invalid month/year and out-of-range page behavior returns 404; disabling the content module hides archive routes.",
+        "Synthetic content and users are removed in finally blocks.",
+        "Focused PHPUnit, PHPStan level 8 and full Worker CI on the exact final HEAD, including PostgreSQL 18 migration validation."
+      ],
+      "completion_report": [
+        "Exact sanitized main/base SHA and final Worker HEAD SHA.",
+        "All changed paths and Worker PR URL.",
+        "Public archive/index/month/pagination behavior, visibility and module-disable tests.",
+        "Focused tests, PHPStan, PostgreSQL migration results and exact-head CI run.",
+        "Remaining discoverability limitation and Trusted integration follow-up."
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "public-archive-exposes-only-currently-published-listed-news",
+        "exclude-future-and-scheduled-unpublish-expired-content",
+        "preserve-existing-news-category-tag-search-and-page-route-semantics",
+        "app_news-route-prefix-must-remain-disabled-with-content-module",
+        "no-schema-or-migration-change",
+        "preserve-existing-security-validation-recovery-rollback-controls",
+        "no-security-test-phpstan-or-CI-weakening",
+        "red-CI-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment",
+        "no-private-runtime-or-sensitive-data"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "proposal_kind": "worker_only",
+      "proposal_dependency_evidence": [],
+      "collision_check": {
+        "compared_against": "Fresh continuous/work-pool-v4 pool blob ffbc264431fa3aca0d6d875ca05d29071460447b; every active and claim-locked allowed path, branch/PR state, and sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d.",
+        "result": "No active or claim-locked task owns these four exact paths. WCP-090 and WCP-388 own the shared public repository/controller paths and WCP-402/WCP-485/WCP-509/WCP-511 own the adjacent news, content-detail, homepage, or tag-directory templates; this proposal leaves them untouched. FCP-072 remains unclaimed and dependency-blocked with a broad templates/ scope; any future claimant must revalidate and narrow that scope. No schema or shared service wiring is changed.",
+        "paths": [
+          "src/Controller/PublicNewsArchiveController.php",
+          "src/Repository/PublicNewsArchiveRepository.php",
+          "templates/content/news_archive.html.twig",
+          "tests/Controller/PublicNewsArchiveTest.php"
+        ]
+      },
+      "published_at": "2026-09-27T10:23:04.700Z",
+      "claimed_on": "2026-09-27T10:23:04.700Z",
+      "claim_state": "active",
+      "active_base_branch": "main",
+      "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "resume_branch": "feature/wcp-513-public-news-month-archive-g1",
+      "branch_heads": {
+        "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+        "feature_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d"
+      },
+      "last_observed_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "last_checkpoint_at": "2026-09-27T10:23:04.700Z",
+      "checkpoint_paths": [],
+      "next_action": "Implement the independent public month archive, add focused visibility/module-disable coverage, then push a complete checkpoint and run exact-head Worker CI."
     }
   ],
   "recovery_queue": [],
