@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T09:53:43.006Z",
+  "published_at": "2026-09-27T09:53:55.411Z",
   "summary": {
     "total_remaining_worker_tasks": 154,
-    "completed_worker_prs_awaiting_trusted_review": 262,
+    "completed_worker_prs_awaiting_trusted_review": 263,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-501 is actively claimed from exact sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d; add regression coverage preventing public redirects to unpublished content and run full exact-head Worker CI. Keep all foreign claims untouched.",
+    "next_required_action": "WCP-499 is complete on exact green HEAD 56ff0521b3da53f2b3d32b211610fd15d9754ca0 with PR #292; keep its claim locked and select the next free independent functional gap. Keep all foreign claims untouched.",
     "composition_preparable": 0,
     "immediately_actionable": 14,
     "must_continue": true
@@ -33186,7 +33186,7 @@
       "package_id": "WCP-499",
       "title": "Keep guild member notification actions inside the gaming module",
       "risk": "low",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -33263,7 +33263,7 @@
       },
       "published_at": "2026-09-27T09:44:34.334Z",
       "claimed_on": "2026-09-27T09:44:34.334Z",
-      "claim_state": "active",
+      "claim_state": "locked_until_trusted_resolution",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
       "active_head": "56ff0521b3da53f2b3d32b211610fd15d9754ca0",
@@ -33278,23 +33278,41 @@
         "src/Module/CmsModuleCatalog.php",
         "tests/Controller/GuildMemberNotificationModuleGateTest.php"
       ],
-      "next_action": "Run complete Worker CI 36310665550 on exact HEAD 56ff0521b3da53f2b3d32b211610fd15d9754ca0; diagnose and repair any concrete failure only within the two allowed paths.",
+      "next_action": "Await Trusted review; keep claim locked, do not merge or deploy.",
       "last_verified_push_at": "2026-09-27T09:51:20.847Z",
       "worker_pr": 292,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/292",
       "draft_pr": true,
       "pr_state": "open",
       "ci_run_id": 36310665550,
-      "ci_result": "queued",
+      "ci_result": "success",
       "last_ci_run_id": 36310665550,
-      "last_ci_result": "queued",
+      "last_ci_result": "success",
       "ci_attempts": [
         {
           "run_id": 36310515953,
           "head": "1106c7befab1264f2cac2bc1c88ae12e5e8aa334",
           "result": "failure",
           "diagnosis": "Focused regression attempted to mint a session-backed CSRF token before any request created a session; the test now obtains its rendered token from the enabled guild portal before asserting the disabled-module 404 boundary."
+        },
+        {
+          "run_id": 36310665550,
+          "head": "56ff0521b3da53f2b3d32b211610fd15d9754ca0",
+          "result": "success",
+          "diagnosis": "Exact-head Worker CI passed after the test initialized its session through the enabled guild portal before the disabled-module assertion."
         }
+      ],
+      "final_head": "56ff0521b3da53f2b3d32b211610fd15d9754ca0",
+      "completed_on": "2026-09-27T09:53:55.411Z",
+      "final_changed_paths": [
+        "src/Module/CmsModuleCatalog.php",
+        "tests/Controller/GuildMemberNotificationModuleGateTest.php"
+      ],
+      "test_evidence": [
+        "Worker CI run 36310665550 succeeded on exact final HEAD 56ff0521b3da53f2b3d32b211610fd15d9754ca0.",
+        "PHP/Symfony job passed the full worker-visible application suite including GuildMemberNotificationModuleGateTest.",
+        "PostgreSQL 18 job passed the complete migration chain and migration status validation.",
+        "Previous run 36310515953 failed with SessionNotFoundException before the intended assertions; no product behavior was altered in that repair."
       ]
     },
     {
