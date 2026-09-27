@@ -17,7 +17,7 @@
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "Create claim/wcp-543-newsletter-subscriber-directory-g1 and feature/wcp-543-newsletter-subscriber-directory-g1 from exact WCP-522 HEAD b1cecaeadc1b8378cf8626f52aa48396a569d8cb, then implement the subscriber directory only in the six reserved paths and push reviewable checkpoints.",
+    "next_required_action": "Resume WCP-538 on feature/wcp-538-public-content-community-flow-g1 at exact HEAD edf45cd65d6a00f5bc7245559fb74514c968987c; verify Worker CI run #830 / 36325182613 and complete the public discussion and moderation workflow.",
     "composition_preparable": 0,
     "immediately_actionable": 28,
     "must_continue": true
@@ -39214,14 +39214,14 @@
       "claim_state": "active",
       "active_base_branch": "feature/fcp-052-pool-g1",
       "active_base_sha": "f2e0ceea07b5152a30d78797a9427c9aebfe4e40",
-      "active_head": "5a847ac1192eabcb5d0939f749678733311ac27e",
+      "active_head": "edf45cd65d6a00f5bc7245559fb74514c968987c",
       "resume_branch": "feature/wcp-538-public-content-community-flow-g1",
       "branch_heads": {
         "claim_branch": "f2e0ceea07b5152a30d78797a9427c9aebfe4e40",
-        "feature_branch": "5a847ac1192eabcb5d0939f749678733311ac27e"
+        "feature_branch": "edf45cd65d6a00f5bc7245559fb74514c968987c"
       },
-      "last_observed_head": "5a847ac1192eabcb5d0939f749678733311ac27e",
-      "last_checkpoint_at": "2026-09-27T14:05:28.098Z",
+      "last_observed_head": "edf45cd65d6a00f5bc7245559fb74514c968987c",
+      "last_checkpoint_at": "2026-09-27T14:15:50.385Z",
       "checkpoint_paths": [
         "src/Controller/ContentDiscussionController.php",
         "src/Controller/AdminContentModerationController.php",
@@ -39238,7 +39238,7 @@
         "tests/Controller/AdminContentModerationWorkflowTest.php",
         "tests/Widget/ContentDiscussionWidgetProviderTest.php"
       ],
-      "next_action": "Inspect the exact-head Worker CI run(s) for commit 5a847ac1192eabcb5d0939f749678733311ac27e; repair remaining PHPStan/test/PostgreSQL failures and verify the final SHA.",
+      "next_action": "Inspect exact-head Worker CI run #830 / 36325182613 on edf45cd65d6a00f5bc7245559fb74514c968987c; fix any remaining functional or analysis failures on this branch and rerun complete exact-head CI.",
       "ci_attempts": [
         {
           "run_id": 36324431229,
@@ -39281,15 +39281,38 @@
           "base": "ad876fea62817d705ad997175e03f2253ca0e445",
           "result": "in_progress",
           "conclusion": null
+        },
+        {
+          "run_id": 36324928253,
+          "run_number": 827,
+          "head": "d31ecfc92ac51d7c45332905231cdfd962fd9a41",
+          "base": "ad876fea62817d705ad997175e03f2253ca0e445",
+          "result": "failure",
+          "conclusion": "failure",
+          "phpstan": "success",
+          "phpunit": "failure",
+          "postgres_migrations": "success",
+          "test_summary": "418 tests, 1,872 assertions, 1 failure; PostgreSQL migration job passed.",
+          "summary": "DQL error in userReactions(): selecting reaction.reaction AS reaction conflicted with entity alias reaction. Changed result alias to reactionType on edf45cd."
+        },
+        {
+          "run_id": 36325182613,
+          "run_number": 830,
+          "head": "edf45cd65d6a00f5bc7245559fb74514c968987c",
+          "base": "ad876fea62817d705ad997175e03f2253ca0e445",
+          "result": "in_progress",
+          "conclusion": null
         }
       ],
       "worker_pr_state": "open",
-      "last_verified_push_at": "2026-09-27T14:05:28.098Z",
+      "last_verified_push_at": "2026-09-27T14:15:50.385Z",
       "worker_pr": 333,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/333",
       "pr_state": "open",
       "ci_result": "in_progress",
-      "last_ci_result": "failure"
+      "last_ci_result": "failure",
+      "last_ci_run_id": 36325182613,
+      "draft_pr": true
     },
     {
       "priority": 539,
