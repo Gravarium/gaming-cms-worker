@@ -10,16 +10,16 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T11:32:21.047Z",
+  "published_at": "2026-09-27T11:33:07.402Z",
   "summary": {
-    "total_remaining_worker_tasks": 165,
+    "total_remaining_worker_tasks": 166,
     "completed_worker_prs_awaiting_trusted_review": 278,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "Monitor WCP-521 exact-head Worker CI run 36316017303 on HEAD 404420ce940dcf00b2f753596f09de385dff1993.",
+    "next_required_action": "WCP-522 is claimed on the exact sanitized main SHA; continue the public newsletter signup implementation on its exclusive feature branch. Other active claims remain with their owners.",
     "composition_preparable": 0,
-    "immediately_actionable": 20,
+    "immediately_actionable": 21,
     "must_continue": true
   },
   "rules": {
@@ -36457,6 +36457,127 @@
           "result": "in_progress"
         }
       ]
+    },
+    {
+      "priority": 522,
+      "package_id": "WCP-522",
+      "title": "Let visitors subscribe to the newsletter with double opt-in",
+      "risk": "medium",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-522-public-newsletter-signup-g1",
+      "suggested_branch": "feature/wcp-522-public-newsletter-signup-g1",
+      "base_branch": "main",
+      "base_sha": "b510875e7b0741b9b19f09429d2204a95df51198",
+      "objective": "Complete the existing newsletter workflow for visitors without CMS accounts. A visitor submits a valid address and explicit consent, receives a confirmation through the existing provider-neutral mail dispatcher, and becomes eligible for campaigns only after the existing one-time confirmation route succeeds. Preserve current account signup, campaign administration, unsubscribe, suppression and transactional mail behavior.",
+      "allowed_paths": [
+        "config/packages/public_newsletter_signup.yaml",
+        "src/Controller/PublicNewsletterSignupController.php",
+        "src/Service/PublicNewsletterSignupService.php",
+        "src/PublicNewsletterSignup/Templates/signup.html.twig",
+        "tests/Controller/PublicNewsletterSignupControllerTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "src/Newsletter/",
+        "src/Entity/Newsletter/",
+        "src/Repository/Newsletter/",
+        "src/Controller/AdminNewsletter/",
+        "src/Form/Newsletter/",
+        "src/Notification/",
+        "templates/",
+        "tests/Newsletter/",
+        "tests/Notification/",
+        "config/packages/twig.yaml",
+        "config/services.yaml"
+      ],
+      "deliverables": [
+        "A public signup page and POST flow usable without a CMS account, with accessible email and affirmative-consent fields, CSRF validation and clear field errors.",
+        "Create or refresh a pending consent record using the existing newsletter entity and send its single-use confirmation URL through ExternalMailDispatcher; do not activate before confirmation.",
+        "Keep active and suppressed addresses unchanged and return the same generic acknowledgement for existing, suppressed and new addresses so subscription state is not disclosed.",
+        "Apply bounded per-IP and per-normalized-email rate limits; store only a hash of the normalized email in the limiter key.",
+        "Name the route within the notifications module prefix so DisabledModuleSubscriber returns 404 when notifications is disabled.",
+        "Keep account preferences, newsletter campaign administration, confirmation/unsubscribe handlers, database schema and transactional mail unchanged."
+      ],
+      "tests": [
+        "Functional signup and confirmation through the existing one-time confirmation route; assert an unconfirmed subscription cannot receive campaign mail.",
+        "Reject invalid email, absent consent and invalid CSRF without creating or changing a subscription.",
+        "Assert active and suppressed addresses receive the same generic response and are not downgraded or re-subscribed.",
+        "Exercise email and IP rate limits and verify no extra confirmation mail is sent after the limit.",
+        "Verify the public signup route returns 404 when the notifications module is disabled.",
+        "Run complete Worker CI on the exact final HEAD, including PHPStan and PostgreSQL 18 migration checks."
+      ],
+      "completion_report": [
+        "Exact sanitized base SHA and final Worker HEAD SHA.",
+        "Complete changed-file list and draft Worker PR URL.",
+        "Public guest signup, consent, confirmation, rate-limit and module-disable behavior.",
+        "Targeted functional tests and exact-head full Worker CI run/results.",
+        "Unresolved risks, assumptions and remaining newsletter flow gaps."
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "explicit-consent-and-double-opt-in-required-before-newsletter-delivery",
+        "suppressed-addresses-remain-suppressed",
+        "preserve-newsletter-module-gating-and-account-ownership",
+        "preserve-CSRF-validation-rate-limits-and-private-data-boundaries",
+        "no-schema-migration-or-transactional-mail-changes",
+        "no-security-test-phpstan-CI-auth-CSRF-validation-recovery-rollback-or-upload-protection-weakening",
+        "red-CI-stops-integration",
+        "no-private-runtime-or-sensitive-data",
+        "no-direct-trusted-integration-or-deployment"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "b510875e7b0741b9b19f09429d2204a95df51198",
+      "proposal_kind": "worker_only",
+      "proposal_dependency_evidence": [],
+      "collision_check": {
+        "compared_against": "Fresh continuous/work-pool-v4 blob 47ae45b7dfdc3f03e796d1c966979d8b5bd97222; all current task allowed-path scopes and lock states; WCP-522 claim/feature branch and open-PR searches; current open PR heads and exact sanitized main b510875e7b0741b9b19f09429d2204a95df51198.",
+        "result": "No active or claim-locked task intersects these paths. WCP-068 newsletter implementation paths remain untouched; the new controller/service and source-local Twig view are separate. FCP-072's broad templates/ path is avoided with a dedicated src/PublicNewsletterSignup/Templates path. WCP-516's config/packages/twig.yaml and WCP-520's news-archive config/template paths are untouched; this proposal uses its own additive config file and Twig namespace. No schema, account, campaign admin, shared newsletter service/repository, or shared Twig config changes are planned.",
+        "paths": [
+          "config/packages/public_newsletter_signup.yaml",
+          "src/Controller/PublicNewsletterSignupController.php",
+          "src/Service/PublicNewsletterSignupService.php",
+          "src/PublicNewsletterSignup/Templates/signup.html.twig",
+          "tests/Controller/PublicNewsletterSignupControllerTest.php"
+        ]
+      },
+      "published_at": "2026-09-27T11:33:07.402Z",
+      "claimed_on": "2026-09-27T11:33:07.402Z",
+      "claim_state": "active",
+      "active_base_branch": "main",
+      "active_base_sha": "b510875e7b0741b9b19f09429d2204a95df51198",
+      "active_head": "b510875e7b0741b9b19f09429d2204a95df51198",
+      "resume_branch": "feature/wcp-522-public-newsletter-signup-g1",
+      "branch_heads": {
+        "claim_branch": "b510875e7b0741b9b19f09429d2204a95df51198",
+        "feature_branch": "b510875e7b0741b9b19f09429d2204a95df51198"
+      },
+      "next_action": "Create both exclusive branches from the exact sanitized main SHA, implement the public guest signup with the existing confirmation and mail seams, and push a tested checkpoint before opening the Worker PR.",
+      "checkpoint_paths": [
+        "config/packages/public_newsletter_signup.yaml",
+        "src/Controller/PublicNewsletterSignupController.php",
+        "src/Service/PublicNewsletterSignupService.php",
+        "src/PublicNewsletterSignup/Templates/signup.html.twig",
+        "tests/Controller/PublicNewsletterSignupControllerTest.php"
+      ],
+      "last_observed_head": "b510875e7b0741b9b19f09429d2204a95df51198",
+      "last_checkpoint_at": "2026-09-27T11:33:07.402Z",
+      "last_verified_push_at": "2026-09-27T11:33:07.402Z"
     }
   ],
   "recovery_queue": [],
