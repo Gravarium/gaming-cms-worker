@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T09:04:28.390Z",
+  "published_at": "2026-09-27T09:05:21.479Z",
   "summary": {
-    "total_remaining_worker_tasks": 144,
+    "total_remaining_worker_tasks": 145,
     "completed_worker_prs_awaiting_trusted_review": 255,
     "recovery_tasks": 0,
-    "unclaimed": 5,
+    "unclaimed": 4,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-488 is complete on exact green HEAD 8636294c754452b02702f4d5ece17c413a4218b4 (PR #281, CI 36307855053); the claim remains locked. Re-evaluate current unclaimed FCPs against Trusted integration and exact green Worker predecessor heads; if none is dependency-safe, publish and claim the next bounded independent worker-only proposal. Do not change foreign active claims.",
+    "next_required_action": "WCP-490 is actively claimed from exact sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d; implement and run full exact-head Worker CI. The remaining unclaimed FCPs lack required predecessor evidence. Keep all foreign claims untouched.",
     "composition_preparable": 0,
     "immediately_actionable": 5,
     "must_continue": true
@@ -31805,6 +31805,99 @@
         "templates/admin/settings/theme_preview.html.twig",
         "tests/Controller/AdminThemePreviewTest.php"
       ]
+    },
+    {
+      "priority": 490,
+      "package_id": "WCP-490",
+      "title": "Keep disabled guilds and games out of public routes",
+      "risk": "medium",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-490-public-guild-visibility-g1",
+      "suggested_branch": "feature/wcp-490-public-guild-visibility-g1",
+      "base_branch": "main",
+      "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "objective": "Add test-only functional coverage for the public guild visibility boundary. Verify that an enabled guild on an enabled game appears on the public gaming index and direct page, while a disabled guild or a guild on a disabled game is absent and returns 404 by direct URL. Also verify that disabled-guild application routes stay unavailable even when recruitment is marked open. Use synthetic fixtures and remove all of them in finally.",
+      "allowed_paths": [
+        "tests/Controller/PublicGuildVisibilityBoundaryTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/",
+        "src/",
+        "templates/",
+        "assets/",
+        "public/"
+      ],
+      "deliverables": [
+        "The public /gaming index includes an enabled synthetic guild attached to an enabled game.",
+        "The index omits a disabled guild and an enabled guild attached to a disabled game, including unique body-only fixture markers.",
+        "The enabled guild detail route is available; hidden guild and disabled-game guild detail routes return 404 without exposing their markers.",
+        "A disabled guild's direct application route returns 404 even when recruitment is open.",
+        "Only tests/Controller/PublicGuildVisibilityBoundaryTest.php changes; all synthetic games and guilds are removed in finally."
+      ],
+      "tests": [
+        "Focused PHPUnit functional coverage for listing, detail-route and application-route visibility boundaries.",
+        "PHPStan level 8 and complete Worker CI on the exact final HEAD.",
+        "PostgreSQL 18 complete migration-chain validation."
+      ],
+      "completion_report": [
+        "Exact sanitized main SHA and exact final HEAD.",
+        "Complete changed-file list and Worker PR.",
+        "Public index/detail/application responses for enabled and hidden synthetic guilds.",
+        "Exact-head PHPUnit, PHPStan, full Worker CI and PostgreSQL migration results.",
+        "Unresolved assumptions and Trusted integration follow-up."
+      ],
+      "immutable_constraints": [
+        "public-guild-routes-expose-only-enabled-guilds-on-enabled-games",
+        "disabled-or-hidden-guilds-remain-unavailable-by-direct-slug-and-application-route",
+        "preserve-recruitment-gates-and-existing-authorization",
+        "synthetic-fixtures-only-and-cleaned-up",
+        "test-only-scope-no-product-source-or-configuration-changes",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment",
+        "no-private-runtime-or-sensitive-data"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "proposal_kind": "worker_only",
+      "proposal_dependency_evidence": [],
+      "collision_check": {
+        "compared_against": "Fresh continuous/work-pool-v4 blob 6fad5e3093302ca12d4179065635e86771235bdd, all active and claim-locked allowed paths, and sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d.",
+        "result": "No active or claim-locked package owns or encloses tests/Controller/PublicGuildVisibilityBoundaryTest.php. WCP-489 owns theme-preview settings paths; WCP-401 owns catalogue paths; FCP-053 uses tests/Gaming/Guild and does not include this controller test file. Existing GamingGuildSecurityTest covers permission, member/event ownership, application validation and rate limiting but no public guild detail/index visibility. Code search for app_guild_show under tests returned zero matches. This package changes no production controller, repository, template, configuration or migration.",
+        "paths": [
+          "tests/Controller/PublicGuildVisibilityBoundaryTest.php"
+        ]
+      },
+      "published_at": "2026-09-27T09:05:21.479Z",
+      "claimed_on": "2026-09-27T09:05:21.479Z",
+      "claim_state": "active",
+      "active_base_branch": "main",
+      "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "resume_branch": "feature/wcp-490-public-guild-visibility-g1",
+      "branch_heads": {
+        "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+        "feature_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d"
+      },
+      "last_observed_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "last_checkpoint_at": "2026-09-27T09:05:21.479Z",
+      "checkpoint_paths": [],
+      "next_action": "Implement positive and negative public guild visibility coverage in the single allowed test file, then run targeted PHPUnit and full exact-head Worker CI."
     }
   ],
   "recovery_queue": [],
