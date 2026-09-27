@@ -17,7 +17,7 @@
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-518 uses per-run unique game and platform slugs on exact HEAD e256d9252646e4d41946eafb53eebfc592eabfa5; corrected Worker CI run 36314987910 is queued. Verify all jobs and repair any remaining failure on the same branch.",
+    "next_required_action": "WCP-519's rendered-CSRF and table-fixture revision is on exact HEAD 005802d0be3ecd695e0a354824d45b86b646f69f; Worker CI run 36315014881 is in progress.",
     "composition_preparable": 0,
     "immediately_actionable": 20,
     "must_continue": true
@@ -36116,19 +36116,19 @@
       "claim_state": "active",
       "active_base_branch": "main",
       "active_base_sha": "b510875e7b0741b9b19f09429d2204a95df51198",
-      "active_head": "9f33ccc27f973276d6990d6e21bb25c8ab9edbc2",
+      "active_head": "005802d0be3ecd695e0a354824d45b86b646f69f",
       "resume_branch": "feature/wcp-519-notification-topic-ownership-g1",
       "branch_heads": {
         "claim_branch": "b510875e7b0741b9b19f09429d2204a95df51198",
-        "feature_branch": "9f33ccc27f973276d6990d6e21bb25c8ab9edbc2"
+        "feature_branch": "005802d0be3ecd695e0a354824d45b86b646f69f"
       },
-      "next_action": "Monitor exact-head Worker CI run 36314830842 for HEAD 9f33ccc27f973276d6990d6e21bb25c8ab9edbc2; fix only concrete failures in the dedicated test file.",
+      "next_action": "Monitor exact-head Worker CI run 36315014881 for HEAD 005802d0be3ecd695e0a354824d45b86b646f69f; repair only a concrete failure within the dedicated test file.",
       "checkpoint_paths": [
         "tests/Controller/NotificationPreferences/NotificationSubscriptionOwnershipTest.php"
       ],
-      "last_observed_head": "9f33ccc27f973276d6990d6e21bb25c8ab9edbc2",
-      "last_checkpoint_at": "2026-09-27T11:10:09.300Z",
-      "last_verified_push_at": "2026-09-27T11:10:09.300Z",
+      "last_observed_head": "005802d0be3ecd695e0a354824d45b86b646f69f",
+      "last_checkpoint_at": "2026-09-27T11:13:40.116Z",
+      "last_verified_push_at": "2026-09-27T11:13:40.116Z",
       "worker_pr": 309,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/309",
       "draft_pr": true,
@@ -36137,8 +36137,8 @@
       "worker_pr_changed_paths": [
         "tests/Controller/NotificationPreferences/NotificationSubscriptionOwnershipTest.php"
       ],
-      "ci_run_id": 36314830842,
-      "last_ci_run_id": 36314830842,
+      "ci_run_id": 36315014881,
+      "last_ci_run_id": 36315014881,
       "ci_result": "in_progress",
       "last_ci_result": "in_progress",
       "ci_attempts": [
@@ -36157,6 +36157,12 @@
         {
           "run_id": 36314830842,
           "head": "9f33ccc27f973276d6990d6e21bb25c8ab9edbc2",
+          "result": "failure",
+          "summary": "The CSRF manager cannot generate a token after a completed /login request because RequestStack has no active session. The test now reads it from the actual preferences form and creates missing migration-managed preference/subscription tables as temporary fixtures."
+        },
+        {
+          "run_id": 36315014881,
+          "head": "005802d0be3ecd695e0a354824d45b86b646f69f",
           "result": "in_progress"
         }
       ]
