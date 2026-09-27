@@ -1,0 +1,218 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Tests\Widget;
+
+use App\Entity\CmsModuleState;
+use App\Entity\Game;
+use App\Entity\Guild;
+use App\Entity\GuildEvent;
+use App\Entity\GuildTeam;
+use App\Module\CmsModuleManager;
+use App\Widget\PublicGuildEventsQuery;
+use App\Widget\WidgetDefinition;
+use App\Widget\WidgetRegistry;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Twig\Environment;
+
+final class PublicGuildEventsWidgetProviderTest extends WebTestCase
+{
+    private const WIDGET_KEY = 'gaming.public-guild-events';
+    private const MODULE_KEYS = ['content', 'gaming'];
+
+    public function testPublicWidgetRendersOnlyUpcomingEnabledGuildWideEvents(): void
+    {
+        $client = static::createClient();
+        $this->resetModuleStates($client);
+        $this->enableGaming($client);
+
+        $em = $this->em($client);
+        $now = new \DateTimeImmutable();
+        $suffix = bin2hex(random_bytes(5));
+        $game = $this->game($em, $suffix);
+        $guild = $this->guild($em, $game, $suffix);
+        $included = $this->event($guild, 'Visible <em>raid</em>', $now->modify('+1 hour'));
+        $em->persist($included);
+        $team = (new GuildTeam())->setGuild($guild)->setName('Private team '.$suffix);
+        $em->persist($team);
+        $em->persist($this->event($guild, 'Private team event', $now->modify('+2 hours'))->setTeam($team));
+        $em->persist($this->event($guild, 'Cancelled event', $now->modify('+3 hours'))->setStatus(GuildEvent::STATUS_CANCELLED));
+        $em->persist($this->event($guild, 'Completed event', $now->modify('+4 hours'))->setStatus(GuildEvent::STATUS_DONE));
+        $em->persist($this->event($guild, 'Stale event', $now->modify('-3 hours')));
+
+        $disabledGuild = $this->guild($em, $game, $suffix.'-disabled-guild')->setEnabled(false);
+        $em->persist($this->event($disabledGuild, 'Disabled guild event', $now->modify('+5 hours')));
+        $disabledGame = $this->game($em, $suffix.'-disabled-game')->setEnabled(false);
+        $disabledGameGuild = $this->guild($em, $disabledGame, $suffix.'-disabled-game')->setEnabled(true);
+        $em->persist($this->event($disabledGameGuild, 'Disabled game event', $now->modify('+6 hours')));
+        $em->flush();
+
+        try {
+            $registry = $client->getContainer()->get(WidgetRegistry::class);
+            $definition = $registry->get(self::WIDGET_KEY);
+            self::assertNotNull($definition);
+            self::assertSame('gaming', $definition->module);
+            self::assertTrue($registry->available(self::WIDGET_KEY));
+
+            $data = $registry->data(self::WIDGET_KEY, ['count' => 6]);
+            self::assertSame(['events'], array_keys($data));
+            $renderedEvents = $data['events'] ?? null;
+            self::assertIsArray($renderedEvents);
+            self::assertSame(
+                [$included->getId()],
+                array_map(static fn (mixed $event): ?int => $event instanceof GuildEvent ? $event->getId() : null, $renderedEvents),
+            );
+
+            $html = $client->getContainer()->get(Environment::class)->render($definition->template, $data);
+            self::assertStringContainsString('Visible &lt;em&gt;raid&lt;/em&gt;', $html);
+            self::assertStringContainsString($guild->getSlug(), $html);
+            self::assertStringNotContainsString('<em>raid</em>', $html);
+            self::assertStringNotContainsString('Private team event', $html);
+            self::assertStringNotContainsString('Disabled guild event', $html);
+            self::assertStringNotContainsString('Disabled game event', $html);
+            self::assertStringNotContainsString('Warteliste', $html);
+            self::assertStringNotContainsString('Anmeldung', $html);
+        } finally {
+            $this->resetModuleStates($client);
+        }
+    }
+
+    public function testQueryAndWidgetClampToTwelveWithStableOrder(): void
+    {
+        $client = static::createClient();
+        $this->resetModuleStates($client);
+        $this->enableGaming($client);
+
+        try {
+            $em = $this->em($client);
+            $now = new \DateTimeImmutable();
+            $suffix = bin2hex(random_bytes(5));
+            $guild = $this->guild($em, $this->game($em, $suffix), $suffix);
+            $start = $now->modify('+1 day');
+            for ($i = 0; $i < 15; ++$i) {
+                $em->persist($this->event($guild, 'Event '.$i, $start));
+            }
+            $em->flush();
+
+            $query = $client->getContainer()->get(PublicGuildEventsQuery::class);
+            $events = $query->upcoming($now, 999);
+            self::assertCount(12, $events);
+            $ids = array_map(static fn (GuildEvent $event): ?int => $event->getId(), $events);
+            $sortedIds = $ids;
+            sort($sortedIds);
+            self::assertSame($sortedIds, $ids);
+
+            $data = $client->getContainer()->get(WidgetRegistry::class)->data(self::WIDGET_KEY, ['count' => 999]);
+            $widgetEvents = $data['events'] ?? null;
+            self::assertIsArray($widgetEvents);
+            self::assertCount(12, $widgetEvents);
+        } finally {
+            $this->resetModuleStates($client);
+        }
+    }
+
+    public function testWidgetRendersAnEmptyStateWhenNoPublicEventIsAvailable(): void
+    {
+        $client = static::createClient();
+        $this->resetModuleStates($client);
+        $this->enableGaming($client);
+
+        try {
+            $registry = $client->getContainer()->get(WidgetRegistry::class);
+            $definition = $registry->get(self::WIDGET_KEY);
+            self::assertNotNull($definition);
+            $data = $registry->data(self::WIDGET_KEY, ['count' => 6]);
+
+            $html = $client->getContainer()->get(Environment::class)->render($definition->template, $data);
+            self::assertStringContainsString('Zurzeit sind keine öffentlichen Gildentermine geplant.', $html);
+        } finally {
+            $this->resetModuleStates($client);
+        }
+    }
+
+    public function testDisabledGamingSuppressesWidgetAndItsData(): void
+    {
+        $client = static::createClient();
+        $this->resetModuleStates($client);
+        $this->moduleState($client, 'content', true);
+        $this->moduleState($client, 'gaming', false);
+
+        try {
+            $registry = $client->getContainer()->get(WidgetRegistry::class);
+            self::assertFalse($registry->available(self::WIDGET_KEY));
+            self::assertSame([], $registry->data(self::WIDGET_KEY, ['count' => 6]));
+            self::assertNotContains(self::WIDGET_KEY, array_map(static fn (WidgetDefinition $definition): string => $definition->key, $registry->availableDefinitions()));
+        } finally {
+            $this->resetModuleStates($client);
+        }
+    }
+
+    private function enableGaming(\Symfony\Bundle\FrameworkBundle\KernelBrowser $client): void
+    {
+        $this->moduleState($client, 'content', true);
+        $this->moduleState($client, 'gaming', true);
+        self::assertTrue($client->getContainer()->get(CmsModuleManager::class)->isEnabled('gaming'));
+    }
+
+    private function moduleState(\Symfony\Bundle\FrameworkBundle\KernelBrowser $client, string $key, bool $enabled): void
+    {
+        $em = $this->em($client);
+        $state = $em->find(CmsModuleState::class, $key);
+        if (!$state instanceof CmsModuleState) {
+            $state = (new CmsModuleState())->setModuleKey($key)->updateVersion('1.0.0');
+            $em->persist($state);
+        }
+        $state->setEnabled($enabled);
+        $em->flush();
+    }
+
+    private function resetModuleStates(\Symfony\Bundle\FrameworkBundle\KernelBrowser $client): void
+    {
+        $em = $this->em($client);
+        foreach (self::MODULE_KEYS as $key) {
+            $state = $em->find(CmsModuleState::class, $key);
+            if ($state instanceof CmsModuleState) {
+                $em->remove($state);
+            }
+        }
+        $em->flush();
+        $em->clear();
+    }
+
+    private function game(EntityManagerInterface $em, string $suffix): Game
+    {
+        $game = (new Game())->setName('Game '.$suffix)->setSlug('game-'.$suffix);
+        $em->persist($game);
+
+        return $game;
+    }
+
+    private function guild(EntityManagerInterface $em, Game $game, string $suffix): Guild
+    {
+        $guild = (new Guild())
+            ->setGame($game)
+            ->setName('Guild '.$suffix)
+            ->setSlug('guild-'.$suffix)
+            ->setServerName('EU')
+            ->setDescription('Public schedule fixture');
+        $em->persist($guild);
+
+        return $guild;
+    }
+
+    private function event(Guild $guild, string $title, \DateTimeImmutable $startsAt): GuildEvent
+    {
+        return (new GuildEvent())
+            ->setGuild($guild)
+            ->setTitle($title)
+            ->setDescription('Public details')
+            ->setStartsAt($startsAt);
+    }
+
+    private function em(\Symfony\Bundle\FrameworkBundle\KernelBrowser $client): EntityManagerInterface
+    {
+        return $client->getContainer()->get(EntityManagerInterface::class);
+    }
+}

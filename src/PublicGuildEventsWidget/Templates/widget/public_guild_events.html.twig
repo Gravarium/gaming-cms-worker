@@ -1,0 +1,23 @@
+{% set typeLabels = {'raid':'Raid','meeting':'Besprechung','training':'Training','other':'Sonstiges'} %}
+<section class="panel" aria-label="Kommende öffentliche Gildentermine">
+    <p class="eyebrow">Gaming</p>
+    <h2>Kommende Gildentermine</h2>
+    {% if events %}
+        <div class="application-list">
+            {% for event in events %}
+                <article class="application-card">
+                    <p class="eyebrow">
+                        <a href="{{ path('app_guild_show', {slug: event.guild.slug}) }}">{{ event.guild.game.name }} · {{ event.guild.name }}</a>
+                        · {{ typeLabels[event.type] ?? 'Termin' }} · {{ event.startsAt|date('d.m.Y H:i') }}
+                    </p>
+                    <h3>{{ event.title }}</h3>
+                    {% if event.description %}<p>{{ event.description|nl2br }}</p>{% endif %}
+                    {% if event.location %}<p class="muted">Treffpunkt: {{ event.location }}</p>{% endif %}
+                    {% if event.maxParticipants is not null %}<p class="muted">Teilnehmerlimit: {{ event.maxParticipants }}</p>{% endif %}
+                </article>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p class="muted">Zurzeit sind keine öffentlichen Gildentermine geplant.</p>
+    {% endif %}
+</section>
