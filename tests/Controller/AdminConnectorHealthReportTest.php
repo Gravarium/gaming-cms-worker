@@ -10,9 +10,9 @@ use App\Entity\ExternalConnectorTarget;
 use App\Entity\User;
 use App\Security\CmsPermission;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\KernelBrowser;
 
 final class AdminConnectorHealthReportTest extends WebTestCase
 {
