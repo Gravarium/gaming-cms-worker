@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T09:11:44.622Z",
+  "published_at": "2026-09-27T09:13:25.613Z",
   "summary": {
-    "total_remaining_worker_tasks": 145,
+    "total_remaining_worker_tasks": 146,
     "completed_worker_prs_awaiting_trusted_review": 256,
     "recovery_tasks": 0,
-    "unclaimed": 4,
+    "unclaimed": 3,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-490 is complete on exact green HEAD b74438f0315a006f13d641c1a751fe27ab29d54d (PR #284, CI 36308324050); the claim remains locked. Re-evaluate current unclaimed FCPs against Trusted integration and exact green Worker predecessor heads; if none is dependency-safe, publish and claim the next bounded independent worker-only proposal. Do not change foreign active claims.",
+    "next_required_action": "WCP-491 is actively claimed from exact sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d; implement and run full exact-head Worker CI. The remaining unclaimed FCPs lack required predecessor evidence. Keep all foreign claims untouched.",
     "composition_preparable": 0,
     "immediately_actionable": 5,
     "must_continue": true
@@ -32034,6 +32034,98 @@
         "Awaiting Trusted review and Trusted integration CI; no product source or configuration was changed."
       ],
       "trusted_follow_up": "Compare WCP-490 PR #284 with WCP-416 PR #209 and keep only one equivalent public guild visibility regression suite during Trusted integration. Preserve both enabled flags and fail-closed detail/application routes."
+    },
+    {
+      "priority": 491,
+      "package_id": "WCP-491",
+      "title": "Keep inactive and foreign members out of public guild rosters",
+      "risk": "medium",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-491-public-guild-roster-g1",
+      "suggested_branch": "feature/wcp-491-public-guild-roster-g1",
+      "base_branch": "main",
+      "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "objective": "Add test-only functional coverage for the public guild roster boundary. Verify that a guild's active members appear on its public detail page, while an inactive member and an active member belonging to another guild are not rendered. Use synthetic game, guild and member fixtures and clean all of them up in finally.",
+      "allowed_paths": [
+        "tests/Controller/PublicGuildRosterPrivacyTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/",
+        "src/",
+        "templates/",
+        "assets/",
+        "public/"
+      ],
+      "deliverables": [
+        "A synthetic enabled game, target guild, foreign guild, active target member, inactive target member and active foreign member are created.",
+        "The target guild's public detail page shows the target active member and does not expose the inactive or foreign member markers.",
+        "All synthetic members, guilds and game are removed in finally cleanup.",
+        "Only tests/Controller/PublicGuildRosterPrivacyTest.php changes; no production controller/repository/template behavior is modified."
+      ],
+      "tests": [
+        "Focused PHPUnit functional coverage for active-member display, inactive-member suppression and guild-scoped roster isolation.",
+        "PHPStan level 8 and complete Worker CI on the exact final HEAD.",
+        "PostgreSQL 18 complete migration-chain validation."
+      ],
+      "completion_report": [
+        "Exact sanitized main SHA and exact final HEAD.",
+        "Complete changed-file list and Worker PR.",
+        "Public roster response evidence for active, inactive and foreign-guild synthetic members.",
+        "Exact-head PHPUnit, PHPStan, full Worker CI and PostgreSQL migration results.",
+        "Unresolved assumptions and Trusted integration follow-up."
+      ],
+      "immutable_constraints": [
+        "public-roster-shows-only-active-members-of-the-requested-guild",
+        "foreign-guild-member-data-must-not-cross-guild-boundaries",
+        "synthetic-fixtures-only-and-cleaned-up",
+        "test-only-scope-no-production-source-or-configuration-changes",
+        "preserve-existing-public-guild-visibility-and-member-authorization",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment",
+        "no-private-runtime-or-sensitive-data"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "proposal_kind": "worker_only",
+      "proposal_dependency_evidence": [],
+      "collision_check": {
+        "compared_against": "Fresh continuous/work-pool-v4 blob 16d2fbf1d073b2abf07b742b58b08d60891cc2d8, all active and claim-locked path scopes, and sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d.",
+        "result": "No active or claim-locked package owns or encloses tests/Controller/PublicGuildRosterPrivacyTest.php. WCP-416/WCP-490 cover guild-level enabled visibility in the directory/detail/application routes, not roster-member activity or per-guild roster contents. WCP-450's completed objective is explicitly limited to the CMS_GAMING_MANAGE admin directory and says it does not alter public roster behavior; its test path is distinct. The candidate test file is absent from main and no existing test searches for activeForGuild. Only this new public-page test file is reserved; no shared migration, controller, repository, template, service wiring or configuration path is changed.",
+        "paths": [
+          "tests/Controller/PublicGuildRosterPrivacyTest.php"
+        ]
+      },
+      "published_at": "2026-09-27T09:13:25.613Z",
+      "claimed_on": "2026-09-27T09:13:25.613Z",
+      "claim_state": "active",
+      "active_base_branch": "main",
+      "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "resume_branch": "feature/wcp-491-public-guild-roster-g1",
+      "branch_heads": {
+        "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+        "feature_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d"
+      },
+      "last_observed_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "last_checkpoint_at": "2026-09-27T09:13:25.613Z",
+      "checkpoint_paths": [],
+      "next_action": "Implement active/inactive/foreign member public roster coverage in the single allowed test file; then run targeted PHPUnit and full exact-head Worker CI."
     }
   ],
   "recovery_queue": [],
