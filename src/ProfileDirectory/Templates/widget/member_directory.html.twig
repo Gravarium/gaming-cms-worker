@@ -1,0 +1,13 @@
+<section class="panel member-directory-widget">
+    <h2>Öffentliche Mitglieder</h2>
+    {% if members is not empty %}
+        <ul>
+            {% for member in members %}
+                <li><a href="{{ path('app_profile_show', {id: member.id}) }}">{{ member.displayName }}</a></li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p class="muted">Zurzeit gibt es keine öffentlichen Mitgliederprofile.</p>
+    {% endif %}
+    <p><a href="{{ path('app_public_member_directory') }}">Alle öffentlichen Mitglieder</a></p>
+</section>
