@@ -43,7 +43,7 @@
 
     <section class="theme-preview-grid" aria-label="Verfügbare Designpakete">
         {% for item in themes %}
-            <article class="theme-preview-card" data-theme-key="{{ item.definition.key }}" data-active="{{ item.active ? 'true' : 'false' }}">
+            <article class="theme-preview-card theme-preview-card--{{ item.definition.key }}" data-theme-key="{{ item.definition.key }}" data-active="{{ item.active ? 'true' : 'false' }}">
                 <div class="theme-preview-card__sample">
                     <div class="theme-preview-card__topline">
                         <span>{{ settings.siteName }}</span>

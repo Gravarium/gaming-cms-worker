@@ -39,7 +39,7 @@ final class AdminThemePreviewTest extends WebTestCase
 
             foreach ($choices as $label => $key) {
                 $definition = $registry->get($key);
-                $selector = sprintf('.theme-preview-card[data-theme-key="%s"]', $key);
+                $selector = sprintf('.theme-preview-card.theme-preview-card--%s[data-theme-key="%s"]', $key, $key);
                 self::assertSame(1, $crawler->filter($selector)->count());
                 self::assertSelectorTextContains($selector.' .theme-preview-card__name', $definition->name);
                 self::assertSelectorTextContains($selector.' .theme-preview-card__version', $definition->version);
