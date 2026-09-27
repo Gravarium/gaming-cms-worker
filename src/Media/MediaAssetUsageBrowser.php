@@ -151,9 +151,9 @@ final readonly class MediaAssetUsageBrowser
     {
         $connection = $this->entityManager->getConnection();
         $platform = $connection->getDatabasePlatform();
-        $table = $platform->quoteIdentifier('page_layout');
-        $documentColumn = $platform->quoteIdentifier('document');
-        $contextColumn = $platform->quoteIdentifier('context');
+        $table = $platform->quoteSingleIdentifier('page_layout');
+        $documentColumn = $platform->quoteSingleIdentifier('document');
+        $contextColumn = $platform->quoteSingleIdentifier('context');
         $needle = json_encode(['widgets' => [['config' => ['imageId' => $assetId]]]], JSON_THROW_ON_ERROR);
 
         $parameters = [];

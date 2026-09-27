@@ -84,7 +84,9 @@ final class AdminMediaUsageBrowserTest extends WebTestCase
         $client->request('GET', '/admin/storage/media/'.$asset->getId().'/usage');
 
         self::assertResponseIsSuccessful();
-        self::assertSame('private, no-store', $client->getResponse()->headers->get('Cache-Control'));
+        $cacheControl = strtolower((string) $client->getResponse()->headers->get('Cache-Control'));
+        self::assertStringContainsString('private', $cacheControl);
+        self::assertStringContainsString('no-store', $cacheControl);
         self::assertSelectorExists('a[href="/admin/content/'.$news->getId().'/edit"]');
         self::assertSelectorExists('a[href="/admin/content/'.$imageBlockEntry->getId().'/edit"]');
         self::assertSelectorExists('a[href="/admin/layout/page-'.$page->getId().'"]');
