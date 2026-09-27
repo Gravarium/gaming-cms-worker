@@ -9,6 +9,7 @@ use App\Entity\PageLayout;
 use App\Entity\User;
 use App\Security\CmsPermission;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\DomCrawler\Crawler;
@@ -126,6 +127,8 @@ final class PublicNewsletterSignupWidgetTest extends WebTestCase
                 $error['error'] ?? null,
             );
 
+            // The rejected write rolls back and Doctrine closes this manager; reset it before reading and restoring fixtures.
+            $entityManager = $this->resetEntityManager($client);
             $storedLayout = $entityManager->find(PageLayout::class, 'home');
             self::assertInstanceOf(PageLayout::class, $storedLayout);
             self::assertSame($disabledDocument, $storedLayout->getDocument());
@@ -217,6 +220,18 @@ final class PublicNewsletterSignupWidgetTest extends WebTestCase
         $this->entityManager($client)->flush();
 
         return $user;
+    }
+
+    private function resetEntityManager(KernelBrowser $client): EntityManagerInterface
+    {
+        $registry = $client->getContainer()->get(ManagerRegistry::class);
+        $registry->resetManager();
+        $manager = $registry->getManager();
+        if (!$manager instanceof EntityManagerInterface) {
+            throw new \\LogicException('Doctrine did not reset the EntityManager.');
+        }
+
+        return $manager;
     }
 
     private function entityManager(KernelBrowser $client): EntityManagerInterface
