@@ -38248,7 +38248,7 @@
       "package_id": "WCP-533",
       "title": "Promote public content releases through the Page Builder",
       "risk": "medium",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -38303,9 +38303,10 @@
         "Run focused PHPUnit, PHPStan level 8, and full Worker CI on exact final HEAD including the PostgreSQL migration-chain job."
       ],
       "completion_report": [
-        "Exact sanitized base SHA, final Worker HEAD, all changed paths, Worker PR URL/state, and exact-head CI run.",
-        "Release and linked-entry visibility predicates, Page Builder/module gate behavior, count/ordering bounds and rendering behavior with focused tests.",
-        "Open limitations and Trusted integration follow-up."
+        "Final Worker HEAD 6b70188e705953fb1ccfaf38a3a753f96f79e4f5; base b510875e7b0741b9b19f09429d2204a95df51198; PR #327 is open and ready for Trusted review.",
+        "The widget registers content.releases, filters current-public ContentRelease/ContentEntry records, returns at most 12 releases and three linked entries per release, respects Content module availability, and renders escaped internal news/page links with an accessible empty state.",
+        "Exact-head CI run 36321027742 passed: 541 PHPUnit tests / 2,299 assertions; PHPStan level 8; Twig/YAML, container, AssetMapper and Doctrine validation; all 54 PostgreSQL 18 migrations.",
+        "Open limitation and Trusted follow-up are documented in PR #327."
       ],
       "immutable_constraints": [
         "trusted-main-is-the-only-integration-and-deployment-source",
@@ -38336,40 +38337,40 @@
       },
       "published_at": "2026-09-27T12:41:29.330Z",
       "claimed_on": "2026-09-27T12:41:29.330Z",
-      "claim_state": "active",
+      "claim_state": "locked_until_trusted_resolution",
       "active_base_branch": "main",
       "active_base_sha": "b510875e7b0741b9b19f09429d2204a95df51198",
       "active_head": "6b70188e705953fb1ccfaf38a3a753f96f79e4f5",
       "resume_branch": "feature/wcp-533-public-content-release-widget-g1",
       "branch_heads": {
         "claim_branch": "b510875e7b0741b9b19f09429d2204a95df51198",
-        "feature_branch": "b510875e7b0741b9b19f09429d2204a95df51198"
+        "feature_branch": "6b70188e705953fb1ccfaf38a3a753f96f79e4f5"
       },
       "last_observed_head": "6b70188e705953fb1ccfaf38a3a753f96f79e4f5",
-      "last_checkpoint_at": "2026-09-27T13:02:55.289Z",
-      "last_verified_push_at": "2026-09-27T13:02:55.289Z",
+      "last_checkpoint_at": "2026-09-27T13:07:21.093Z",
+      "last_verified_push_at": "2026-09-27T13:07:21.093Z",
       "checkpoint_paths": [
+        "config/packages/content_release_widget.yaml",
+        "src/ContentReleaseWidget/Templates/widget/public_content_releases.html.twig",
         "src/Widget/ContentRelease/PublicContentReleaseQuery.php",
         "src/Widget/PublicContentReleaseWidgetProvider.php",
-        "src/ContentReleaseWidget/Templates/widget/public_content_releases.html.twig",
-        "config/packages/content_release_widget.yaml",
         "tests/Widget/PublicContentReleaseWidgetProviderTest.php"
       ],
-      "next_action": "Await Worker CI run #810 on this exact HEAD; diagnose and repair any red result on the same branch.",
+      "next_action": "PR #327 is ready for Trusted review; keep this claim locked until Trusted explicitly integrates, cancels or transfers it. Continue with a separate dependency-safe module task.",
       "worker_pr": 327,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/327",
-      "draft_pr": true,
-      "pr_state": "open_draft",
-      "worker_pr_state": "open_draft",
+      "draft_pr": false,
+      "pr_state": "open_ready_for_review",
+      "worker_pr_state": "open_ready_for_review",
       "worker_pr_changed_paths": [
+        "config/packages/content_release_widget.yaml",
+        "src/ContentReleaseWidget/Templates/widget/public_content_releases.html.twig",
         "src/Widget/ContentRelease/PublicContentReleaseQuery.php",
         "src/Widget/PublicContentReleaseWidgetProvider.php",
-        "src/ContentReleaseWidget/Templates/widget/public_content_releases.html.twig",
-        "config/packages/content_release_widget.yaml",
         "tests/Widget/PublicContentReleaseWidgetProviderTest.php"
       ],
-      "ci_result": "in_progress",
-      "last_ci_result": "in_progress",
+      "ci_result": "success",
+      "last_ci_result": "success",
       "ci_attempts": [
         {
           "run_id": 36320645780,
@@ -38392,12 +38393,40 @@
         {
           "run_id": 36321027742,
           "head": "6b70188e705953fb1ccfaf38a3a753f96f79e4f5",
-          "status": "queued",
-          "result": "in_progress"
+          "status": "completed",
+          "result": "success",
+          "conclusion": "success",
+          "outcome": "Both PHP/Symfony and PostgreSQL 18 migration-chain jobs passed on exact final HEAD."
         }
       ],
       "last_ci_run_id": 36321027742,
-      "ci_run_id": 36321027742
+      "ci_run_id": 36321027742,
+      "final_head": "6b70188e705953fb1ccfaf38a3a753f96f79e4f5",
+      "final_base_sha": "b510875e7b0741b9b19f09429d2204a95df51198",
+      "final_changed_paths": [
+        "config/packages/content_release_widget.yaml",
+        "src/ContentReleaseWidget/Templates/widget/public_content_releases.html.twig",
+        "src/Widget/ContentRelease/PublicContentReleaseQuery.php",
+        "src/Widget/PublicContentReleaseWidgetProvider.php",
+        "tests/Widget/PublicContentReleaseWidgetProviderTest.php"
+      ],
+      "test_results": {
+        "phpunit": "541 tests, 2,299 assertions, zero failures; one existing PHPUnit deprecation and one notice.",
+        "phpstan": "Level 8 passed with no errors.",
+        "php_symfony": "Twig/YAML lint, dependency-container validation, AssetMapper compilation and Doctrine mapping checks passed.",
+        "postgres18": "All 54 migrations applied and migration status confirmed.",
+        "exact_head_ci": {
+          "run_id": 36321027742,
+          "head": "6b70188e705953fb1ccfaf38a3a753f96f79e4f5",
+          "result": "success"
+        }
+      },
+      "last_failure_diagnosis": "Run 36320645780 exposed assumptions that the shared test database had no other published release; functional assertions were scoped to the test fixtures. Run 36320872338 then exposed fixture timestamps reset by ContentRelease::publish(); the test now explicitly sets its expected timestamps after publication. Full run 36321027742 passed on final HEAD.",
+      "trusted_follow_up": "Transfer the five paths into a fresh Trusted feature branch. Verify the Twig default-path mapping in the integrated tree and run the full Trusted CI. Keep the widget read-only and preserve current-public release and entry filters.",
+      "open_limitations": [
+        "Release titles are informational; the widget links each eligible News/Page entry directly and does not link to the separate release archive detail URL."
+      ],
+      "completed_at": "2026-09-27T13:07:21.093Z"
     },
     {
       "priority": 534,
