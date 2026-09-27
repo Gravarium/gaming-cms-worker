@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T17:10:06.277Z",
+  "published_at": "2026-09-27T17:16:01.547Z",
   "summary": {
     "total_remaining_worker_tasks": 168,
     "completed_worker_prs_awaiting_trusted_review": 292,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "Implement WCP-559 permission-aware global search pagination on feature/wcp-559-global-search-pagination-g1 from main @ 7b2ca79405fc12d34bce1386157e929e4668f31a.",
+    "next_required_action": "Implement WCP-560 public game catalogue sitemap index and bounded pages on the exact sanitized-main base.",
     "composition_preparable": 0,
     "immediately_actionable": 29,
     "must_continue": true
@@ -44275,6 +44275,164 @@
       "worker_pr_changed_paths": [],
       "ci_result": "not_run",
       "ci_attempts": []
+    },
+    {
+      "priority": 560,
+      "package_id": "WCP-560",
+      "title": "Public game catalogue sitemap",
+      "risk": "medium",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-560-public-game-catalogue-sitemap-g1",
+      "suggested_branch": "feature/wcp-560-public-game-catalogue-sitemap-g1",
+      "base_branch": "main",
+      "base_sha": "7b2ca79405fc12d34bce1386157e929e4668f31a",
+      "objective": "Expose the public Game Catalogue through a standard XML sitemap index and bounded sitemap pages. Include only catalogue entries and games that are enabled, use stable case-insensitive game-name/ID ordering, emit absolute public detail URLs, and suppress both routes when Gaming is disabled. Keep templates and query feature-local; make no shared catalogue, entity, schema, or migration changes.",
+      "allowed_paths": [
+        "src/Controller/PublicGameCatalogueSitemapController.php",
+        "src/GameCatalogueSitemap/PublicGameCatalogueSitemapQuery.php",
+        "src/GameCatalogueSitemap/Templates/sitemap/games_index.xml.twig",
+        "src/GameCatalogueSitemap/Templates/sitemap/games_page.xml.twig",
+        "config/packages/public_game_catalogue_sitemap.yaml",
+        "tests/Controller/PublicGameCatalogueSitemapControllerTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "CONTINUOUS-WORKER.md",
+        "CONTINUOUS-WORK-POOL.json",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/services.yaml",
+        "src/Entity/GameCatalogue/",
+        "src/Repository/GameCatalogue/",
+        "src/Controller/PublicContentController.php",
+        "src/Controller/PublicVideoSitemapController.php",
+        "src/VideoSitemap/",
+        "templates/content/"
+      ],
+      "deliverables": [
+        "GET /sitemap-games.xml returns a Sitemap Protocol index whose absolute locations cover every generated game sitemap page; each sitemap page contains at most 10,000 URLs.",
+        "GET /sitemap-games/{page}.xml returns only enabled GameCatalogueEntry/Game detail URLs with stable LOWER(game.name), game.id ordering; disabled entries and disabled games are excluded.",
+        "Both routes are GET-only, enforce the Gaming module gate, reject invalid/out-of-range page requests without exposing private catalogue rows, and return application/xml UTF-8.",
+        "Feature-local query, Twig templates and package configuration; no migration, entity, shared catalogue or global template changes."
+      ],
+      "tests": [
+        "Controller tests cover sitemap index/page XML, absolute URLs, content type, stable ordering and a page boundary, disabled entry/game filtering, GET-only routes, invalid/out-of-range pages, and Gaming module suppression.",
+        "Full exact-head Worker CI covers PHPStan, PHPUnit, Twig/container validation, Doctrine mappings, assets and PostgreSQL 18 migration chain."
+      ],
+      "completion_report": [
+        "Exact sanitized main base and final HEAD; changed paths and Worker PR state.",
+        "Public visibility filters, stable ordering, sitemap size/page behavior and module gate evidence.",
+        "Functional tests and exact-head Worker CI results.",
+        "Remaining limits, including no lastmod because the public game entities expose no update timestamp, and Trusted follow-up."
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-Trusted-review-and-exact-head-CI",
+        "preserve-all-security-permissions-CSRF-validation-recovery-rollback-and-upload-controls",
+        "no-private-runtime-or-sensitive-data",
+        "no-schema-migration-or-entity-change",
+        "no-edit-to-active-or-claim-locked-paths",
+        "no-direct-Trusted-integration-or-deployment"
+      ],
+      "proposal_kind": "worker_only",
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "7b2ca79405fc12d34bce1386157e929e4668f31a",
+      "proposal_dependency_evidence": [],
+      "collision_check": {
+        "compared_against": "Fresh continuous/work-pool-v4 @ 6e2c5f38e4970c8b37fecedf6d200d1e0b582d67; current sanitized main @ 7b2ca79405fc12d34bce1386157e929e4668f31a; every active, claim-locked, and unclaimed task allowed-path set.",
+        "result": "No exact or directory-prefix overlap with any active, claim-locked, or unclaimed allowed paths. Candidate paths are feature-local and exclude shared catalogue/entity/repository/schema files.",
+        "paths": [
+          "src/Controller/PublicGameCatalogueSitemapController.php",
+          "src/GameCatalogueSitemap/PublicGameCatalogueSitemapQuery.php",
+          "src/GameCatalogueSitemap/Templates/sitemap/games_index.xml.twig",
+          "src/GameCatalogueSitemap/Templates/sitemap/games_page.xml.twig",
+          "config/packages/public_game_catalogue_sitemap.yaml",
+          "tests/Controller/PublicGameCatalogueSitemapControllerTest.php"
+        ],
+        "observed_nonblocking_path_hits": [
+          {
+            "id": "WCP-553",
+            "state": "worker_complete_awaiting_trusted_review",
+            "excluded": [
+              "src/Controller/PublicVideoSitemapController.php",
+              "src/VideoSitemap/"
+            ]
+          },
+          {
+            "id": "WCP-557",
+            "state": "worker_complete_awaiting_trusted_review",
+            "excluded": [
+              "src/Controller/PublicGameGenreDirectoryController.php",
+              "src/GameGenreDirectory/"
+            ]
+          },
+          {
+            "id": "WCP-558",
+            "state": "worker_in_progress",
+            "excluded": [
+              "src/Controller/Social/",
+              "src/Social/"
+            ]
+          },
+          {
+            "id": "WCP-559",
+            "state": "worker_in_progress",
+            "excluded": [
+              "src/Controller/Search/",
+              "src/Search/"
+            ]
+          },
+          {
+            "id": "FCP-072",
+            "state": "unclaimed",
+            "excluded": [
+              "templates/"
+            ]
+          }
+        ]
+      },
+      "published_at": "2026-09-27T17:16:01.547Z",
+      "claimed_on": "2026-09-27T17:16:01.547Z",
+      "claim_state": "active",
+      "active_base_branch": "main",
+      "active_base_sha": "7b2ca79405fc12d34bce1386157e929e4668f31a",
+      "active_head": "7b2ca79405fc12d34bce1386157e929e4668f31a",
+      "branch_heads": {
+        "claim_branch": "7b2ca79405fc12d34bce1386157e929e4668f31a",
+        "feature_branch": "7b2ca79405fc12d34bce1386157e929e4668f31a"
+      },
+      "last_observed_head": "7b2ca79405fc12d34bce1386157e929e4668f31a",
+      "last_checkpoint_at": "2026-09-27T17:16:01.547Z",
+      "last_verified_push_at": "2026-09-27T17:16:01.547Z",
+      "checkpoint_paths": [
+        "src/Controller/PublicGameCatalogueSitemapController.php",
+        "src/GameCatalogueSitemap/PublicGameCatalogueSitemapQuery.php",
+        "src/GameCatalogueSitemap/Templates/sitemap/games_index.xml.twig",
+        "src/GameCatalogueSitemap/Templates/sitemap/games_page.xml.twig",
+        "config/packages/public_game_catalogue_sitemap.yaml",
+        "tests/Controller/PublicGameCatalogueSitemapControllerTest.php"
+      ],
+      "ci_attempts": [],
+      "next_action": "Implement the public game sitemap index and bounded sitemap pages on this exact sanitized-main feature branch.",
+      "resume_branch": "feature/wcp-560-public-game-catalogue-sitemap-g1",
+      "worker_pr": null,
+      "worker_pr_state": "not_created",
+      "worker_pr_changed_paths": [],
+      "ci_result": "not_run",
+      "last_ci_result": "not_run"
     }
   ],
   "recovery_queue": [],
