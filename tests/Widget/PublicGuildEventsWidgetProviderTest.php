@@ -46,7 +46,7 @@ final class PublicGuildEventsWidgetProviderTest extends WebTestCase
             $this->trackEvent($em, $fixtures, $this->event($guild, 'Cancelled event', $now->modify('+3 hours'))->setStatus(GuildEvent::STATUS_CANCELLED));
             $this->trackEvent($em, $fixtures, $this->event($guild, 'Completed event', $now->modify('+4 hours'))->setStatus(GuildEvent::STATUS_DONE));
             $this->trackEvent($em, $fixtures, $this->event($guild, 'Stale event', $now->modify('-3 hours')));
-    
+
             $disabledGuild = $this->guild($em, $game, $suffix.'-disabled-guild')->setEnabled(false);
             $fixtures[] = $disabledGuild;
             $this->trackEvent($em, $fixtures, $this->event($disabledGuild, 'Disabled guild event', $now->modify('+5 hours')));
@@ -56,8 +56,8 @@ final class PublicGuildEventsWidgetProviderTest extends WebTestCase
             $fixtures[] = $disabledGameGuild;
             $this->trackEvent($em, $fixtures, $this->event($disabledGameGuild, 'Disabled game event', $now->modify('+6 hours')));
             $em->flush();
-    
-                $registry = $client->getContainer()->get(WidgetRegistry::class);
+
+            $registry = $client->getContainer()->get(WidgetRegistry::class);
             $definition = $registry->get(self::WIDGET_KEY);
             self::assertNotNull($definition);
             self::assertSame('gaming', $definition->module);
