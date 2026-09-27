@@ -17,7 +17,7 @@
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "Resume WCP-538 on feature/wcp-538-public-content-community-flow-g1 at exact HEAD edf45cd65d6a00f5bc7245559fb74514c968987c; verify Worker CI run #830 / 36325182613 and complete the public discussion and moderation workflow.",
+    "next_required_action": "WCP-538 is complete on PR #333 with green exact-head CI; keep its claim locked. Re-evaluate the live pool and code for the next free, dependency-safe functional module-completion package; do not merge, deploy, or take another active claim.",
     "composition_preparable": 0,
     "immediately_actionable": 28,
     "must_continue": true
@@ -39092,7 +39092,7 @@
       "package_id": "WCP-538",
       "title": "Connect public content discussions and moderation to the Community core",
       "risk": "high",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [
         "FCP-052"
       ],
@@ -39211,7 +39211,7 @@
       },
       "published_at": "2026-09-27T13:18:27.651Z",
       "claimed_on": "2026-09-27T13:18:27.651Z",
-      "claim_state": "active",
+      "claim_state": "locked_until_trusted_resolution",
       "active_base_branch": "feature/fcp-052-pool-g1",
       "active_base_sha": "f2e0ceea07b5152a30d78797a9427c9aebfe4e40",
       "active_head": "edf45cd65d6a00f5bc7245559fb74514c968987c",
@@ -39221,7 +39221,7 @@
         "feature_branch": "edf45cd65d6a00f5bc7245559fb74514c968987c"
       },
       "last_observed_head": "edf45cd65d6a00f5bc7245559fb74514c968987c",
-      "last_checkpoint_at": "2026-09-27T14:15:50.385Z",
+      "last_checkpoint_at": "2026-09-27T14:19:18.074Z",
       "checkpoint_paths": [
         "src/Controller/ContentDiscussionController.php",
         "src/Controller/AdminContentModerationController.php",
@@ -39238,7 +39238,7 @@
         "tests/Controller/AdminContentModerationWorkflowTest.php",
         "tests/Widget/ContentDiscussionWidgetProviderTest.php"
       ],
-      "next_action": "Inspect exact-head Worker CI run #830 / 36325182613 on edf45cd65d6a00f5bc7245559fb74514c968987c; fix any remaining functional or analysis failures on this branch and rerun complete exact-head CI.",
+      "next_action": "Worker PR #333 is ready for Trusted review on exact green HEAD edf45cd65d6a00f5bc7245559fb74514c968987c; exact-head CI #830 / 36325182613 passed both PHP/Symfony and PostgreSQL 18 jobs. Keep the claim locked until Trusted explicitly integrates, cancels or transfers it. Continue autonomous task selection without merge or deployment.",
       "ci_attempts": [
         {
           "run_id": 36324431229,
@@ -39279,8 +39279,13 @@
           "run_number": 825,
           "head": "5a847ac1192eabcb5d0939f749678733311ac27e",
           "base": "ad876fea62817d705ad997175e03f2253ca0e445",
-          "result": "in_progress",
-          "conclusion": null
+          "result": "failure",
+          "conclusion": "failure",
+          "phpstan": "success",
+          "phpunit": "failure",
+          "postgresql_18_migrations": "success",
+          "test_summary": "418 tests; one error and four failures, plus one PHPUnit deprecation and one notice.",
+          "summary": "The moderator template called a missing report timestamp getter; reaction DQL aliases conflicted; anonymous mutations correctly redirect to /login; the report selector failure followed the template exception. These failures were repaired and rechecked on later exact heads."
         },
         {
           "run_id": 36324928253,
@@ -39292,27 +39297,65 @@
           "phpstan": "success",
           "phpunit": "failure",
           "postgres_migrations": "success",
-          "test_summary": "418 tests, 1,872 assertions, 1 failure; PostgreSQL migration job passed.",
-          "summary": "DQL error in userReactions(): selecting reaction.reaction AS reaction conflicted with entity alias reaction. Changed result alias to reactionType on edf45cd."
+          "test_summary": "418 tests, 1,872 assertions, 1 failure.",
+          "summary": "DQL alias conflict in userReactions(): selecting reaction.reaction AS reaction conflicted with entity alias reaction. Changed to reactionType on edf45cd.",
+          "postgresql_18_migrations": "success"
         },
         {
           "run_id": 36325182613,
           "run_number": 830,
           "head": "edf45cd65d6a00f5bc7245559fb74514c968987c",
           "base": "ad876fea62817d705ad997175e03f2253ca0e445",
-          "result": "in_progress",
-          "conclusion": null
+          "result": "success",
+          "conclusion": "success",
+          "php_symfony_job": "success",
+          "phpstan": "success",
+          "phpunit": "success",
+          "test_summary": "418 tests, 1,888 assertions.",
+          "postgresql_18_migrations": "success",
+          "migrations_executed": 36,
+          "sql_queries": 353
         }
       ],
-      "worker_pr_state": "open",
-      "last_verified_push_at": "2026-09-27T14:15:50.385Z",
+      "worker_pr_state": "ready_for_review",
+      "last_verified_push_at": "2026-09-27T14:19:18.074Z",
       "worker_pr": 333,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/333",
       "pr_state": "open",
-      "ci_result": "in_progress",
-      "last_ci_result": "failure",
+      "ci_result": "success",
+      "last_ci_result": "success",
       "last_ci_run_id": 36325182613,
-      "draft_pr": true
+      "draft_pr": false,
+      "final_head": "edf45cd65d6a00f5bc7245559fb74514c968987c",
+      "completed_at": "2026-09-27T14:19:18.074Z",
+      "worker_pr_base_branch": "worker/account-6",
+      "worker_pr_changed_paths": [
+        "src/Controller/ContentDiscussionController.php",
+        "src/Controller/AdminContentModerationController.php",
+        "src/CommunityInteraction/ContentInteractionQuery.php",
+        "src/Form/PublicContentCommentType.php",
+        "src/Form/PublicContentReportType.php",
+        "src/Form/ContentModerationDecisionType.php",
+        "src/Widget/ContentDiscussionWidgetProvider.php",
+        "src/CommunityInteraction/Templates/discussion.html.twig",
+        "src/CommunityInteraction/Templates/admin/moderation.html.twig",
+        "src/CommunityInteraction/Templates/widget/content_discussions.html.twig",
+        "config/packages/community_interactions.yaml",
+        "tests/Controller/ContentDiscussionWorkflowTest.php",
+        "tests/Controller/AdminContentModerationWorkflowTest.php",
+        "tests/Widget/ContentDiscussionWidgetProviderTest.php"
+      ],
+      "ci_run_id": 36325182613,
+      "completion_evidence": [
+        "Exact proposal base FCP-052 HEAD f2e0ceea07b5152a30d78797a9427c9aebfe4e40; predecessor PR #13 / CI #201 passed and remains an untrusted Worker proposal.",
+        "WCP-538 final Worker HEAD edf45cd65d6a00f5bc7245559fb74514c968987c; Worker PR #333 is open and ready for review against worker/account-6. It remains unmerged and undeployed.",
+        "The 14 WCP-538 changed paths are exactly the reserved controllers, interaction query, forms, widget provider, discussion/admin/widget templates, Twig config and workflow tests. No entity, schema or migration paths changed.",
+        "Public published-content discussion pages support signed-in comments, replies, reaction toggle and reports with target isolation, authentication, CSRF and Content-module visibility. Unlisted content is directly reachable; drafts and disabled Content are unavailable.",
+        "The Page Builder content.discussions widget lists published, publicly listed content in stable order with visible comment totals and internal links; module disablement suppresses the widget.",
+        "CMS_CONTENT_MANAGE moderators can review and resolve reports with reasons, hide upheld comments, restore hidden comments and create moderation audit records. Public output excludes hidden comments and report details.",
+        "Exact-head Worker CI #830 / 36325182613 passed: PHPStan, PHPUnit 418 tests / 1888 assertions, PostgreSQL 18 migration chain 36 migrations / 353 SQL queries.",
+        "Earlier PHPStan and DQL/test failures were recorded in ci_attempts and fixed without reducing security or test coverage."
+      ]
     },
     {
       "priority": 539,
