@@ -10,7 +10,7 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T12:36:14.945Z",
+  "published_at": "2026-09-27T12:39:30.474Z",
   "summary": {
     "total_remaining_worker_tasks": 164,
     "completed_worker_prs_awaiting_trusted_review": 287,
@@ -38049,14 +38049,14 @@
       "claim_state": "active",
       "active_base_branch": "main",
       "active_base_sha": "b510875e7b0741b9b19f09429d2204a95df51198",
-      "active_head": "716b3394b88be1aded0b3dc438db75d285861c6f",
+      "active_head": "bf6feadae66ced5493f404a39708e16d71da51d3",
       "resume_branch": "feature/wcp-531-game-catalogue-search-g1",
       "branch_heads": {
         "claim_branch": "b510875e7b0741b9b19f09429d2204a95df51198",
-        "feature_branch": "716b3394b88be1aded0b3dc438db75d285861c6f"
+        "feature_branch": "bf6feadae66ced5493f404a39708e16d71da51d3"
       },
-      "last_observed_head": "716b3394b88be1aded0b3dc438db75d285861c6f",
-      "last_checkpoint_at": "2026-09-27T12:36:14.945Z",
+      "last_observed_head": "bf6feadae66ced5493f404a39708e16d71da51d3",
+      "last_checkpoint_at": "2026-09-27T12:39:30.474Z",
       "checkpoint_paths": [
         "src/Controller/PublicGameCatalogueSearchController.php",
         "src/Repository/PublicGameCatalogueSearchRepository.php",
@@ -38066,8 +38066,15 @@
         "tests/Controller/PublicGameCatalogueSearchTest.php",
         "tests/Widget/PublicGameCatalogueSearchWidgetProviderTest.php"
       ],
-      "next_action": "Monitor exact-head CI run 36319513782; diagnose and fix any concrete failing check.",
-      "ci_attempts": [],
+      "next_action": "Verify the corrected test title fixture on the new exact head and complete full Worker CI.",
+      "ci_attempts": [
+        {
+          "head": "716b3394b88be1aded0b3dc438db75d285861c6f",
+          "run_id": 36319513782,
+          "result": "failure",
+          "detail": "Only the controller test failed because a fixture placed script markup between the searched title token; corrected the fixture. All PHPStan, Twig, container, Doctrine mapping and PostgreSQL migration jobs passed."
+        }
+      ],
       "worker_pr": 324,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/324",
       "draft_pr": true,
@@ -38081,11 +38088,11 @@
         "tests/Controller/PublicGameCatalogueSearchTest.php",
         "tests/Widget/PublicGameCatalogueSearchWidgetProviderTest.php"
       ],
-      "ci_run_id": 36319513782,
+      "ci_run_id": null,
       "last_ci_run_id": 36319513782,
-      "ci_result": "in_progress",
-      "last_ci_result": "in_progress",
-      "last_verified_push_at": "2026-09-27T12:36:14.945Z"
+      "ci_result": "pending",
+      "last_ci_result": "failure",
+      "last_verified_push_at": "2026-09-27T12:39:30.474Z"
     },
     {
       "priority": 532,
