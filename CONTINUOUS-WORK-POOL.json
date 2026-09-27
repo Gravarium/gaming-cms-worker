@@ -26886,8 +26886,8 @@
       "package_id": "WCP-460",
       "title": "Browse and inspect automatic content redirects",
       "risk": "medium",
-      "execution_state": "worker_in_progress",
-      "claim_state": "active",
+      "execution_state": "worker_complete_awaiting_trusted_review",
+      "claim_state": "locked_until_trusted_resolution",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -26977,8 +26977,8 @@
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
       "active_head": "58d70fec12c3397f96bb2cb05f2ee7e050e56696",
       "resume_branch": "feature/wcp-460-content-redirect-browser-g1",
-      "last_checkpoint_at": "2026-09-27T03:36:31.818Z",
-      "last_verified_push_at": "2026-09-27T03:36:31.818Z",
+      "last_checkpoint_at": "2026-09-27T03:41:12.307Z",
+      "last_verified_push_at": "2026-09-27T03:41:12.307Z",
       "checkpoint_paths": [
         "src/Controller/AdminContentRedirectController.php",
         "src/Repository/ContentRedirectRepository.php",
@@ -26990,47 +26990,69 @@
         "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
         "feature_branch": "58d70fec12c3397f96bb2cb05f2ee7e050e56696"
       },
-      "next_action": "Inspect exact-head CI run 36291890547; fix any failure on this branch.",
+      "next_action": "Await Trusted review; keep this claim locked until Trusted explicitly integrates, cancels or transfers it with checkpoint evidence.",
       "worker_pr": 254,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/254",
-      "pr_state": "open_draft_unmerged",
-      "draft_pr": true,
+      "pr_state": "open_ready_for_review_unmerged",
+      "draft_pr": false,
       "ci_run_id": 36291890547,
       "last_ci_run_id": 36291890547,
-      "ci_result": "in_progress",
-      "last_ci_result": "in_progress",
+      "ci_result": "success",
+      "last_ci_result": "success",
       "ci_attempts": [
         {
           "run_id": 36291678041,
           "head": "8e27c0a978f7f67b13b18026e12e82fba7a0327f",
-          "result": "in_progress",
-          "summary": "PostgreSQL 18 migration chain passed; PHPStan, Twig, Symfony container, Doctrine mapping and asset checks passed; PHPUnit suite running."
-        },
-        {
-          "run_id": 36291678041,
-          "head": "8e27c0a978f7f67b13b18026e12e82fba7a0327f",
           "result": "failure",
-          "summary": "Initial checkpoint run; superseded by a small test assertion correction on the same feature branch."
-        },
-        {
-          "run_id": 36291780404,
-          "head": "cd10c2f646639b4bb14f0d96587f74dbf6dd01fa",
-          "result": "in_progress",
-          "summary": "Full Worker CI on the updated exact branch head."
+          "summary": "Initial CI found Cache-Control ordering assertions and a content-module toggle blocked by dependent gaming; both test issues were fixed."
         },
         {
           "run_id": 36291780404,
           "head": "cd10c2f646639b4bb14f0d96587f74dbf6dd01fa",
           "result": "failure",
-          "summary": "Superseded by follow-up assertion and dependency cleanup based on the previous run's concrete failures."
+          "summary": "The same two test failures reproduced; final commit changed assertions to verify directives and disables/restores the dependent gaming module for the dashboard test."
         },
         {
           "run_id": 36291890547,
           "head": "58d70fec12c3397f96bb2cb05f2ee7e050e56696",
-          "result": "in_progress",
-          "summary": "Complete Worker CI on the updated exact head."
+          "result": "success",
+          "summary": "Final exact HEAD. PHPUnit 436 tests, 1,953 assertions, zero failures/errors (one deprecation, one notice); PHPStan level 8 and complete PHP/Symfony checks passed; PostgreSQL 18 applied 39 migrations and 470 SQL queries with clean status."
         }
-      ]
+      ],
+      "completed_at": "2026-09-27T03:41:12.307Z",
+      "final_head": "58d70fec12c3397f96bb2cb05f2ee7e050e56696",
+      "final_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "final_changed_paths": [
+        "src/Controller/AdminContentRedirectController.php",
+        "src/Repository/ContentRedirectRepository.php",
+        "templates/admin/content_redirect/index.html.twig",
+        "templates/admin/dashboard.html.twig",
+        "tests/Controller/AdminContentRedirectBrowserTest.php"
+      ],
+      "changed_paths": [
+        "src/Controller/AdminContentRedirectController.php",
+        "src/Repository/ContentRedirectRepository.php",
+        "templates/admin/content_redirect/index.html.twig",
+        "templates/admin/dashboard.html.twig",
+        "tests/Controller/AdminContentRedirectBrowserTest.php"
+      ],
+      "test_results": {
+        "phpunit": "436 tests, 1,953 assertions, zero failures and errors; one PHPUnit deprecation and one notice.",
+        "phpstan": "PHPStan level 8 passed on exact final HEAD.",
+        "php_symfony": "Complete Worker PHP/Symfony job passed on exact final HEAD, including Twig, container, AssetMapper and Doctrine validation.",
+        "postgres18": "39 migrations applied and migration status clean; 470 SQL queries.",
+        "exact_head_ci": {
+          "run_id": 36291890547,
+          "head": "58d70fec12c3397f96bb2cb05f2ee7e050e56696",
+          "result": "success"
+        }
+      },
+      "completion_summary": "The existing automatic content-slug redirects now have a CMS_CONTENT_MANAGE-protected read-only admin inventory with source-slug and target-title search, news/page filters, stable 25-row pagination, counts and filter-preserving navigation. The dashboard entry appears only with the content permission and module enabled. Unpublished targets link only to the existing admin editor and are marked inactive. Validation rejects query arrays, malformed UTF-8/control bytes, overlong search, unknown types and invalid/overflowing pages; valid out-of-range pages clamp. Administrative list and invalid-filter responses are private/no-store and noindex. Five allowed paths changed; no redirect records, automatic redirect writer, public 301 resolver, schema or migration changed.",
+      "open_limitations": [
+        "The inventory is intentionally read-only; manual redirect creation and retiring an existing redirect remain outside this proposal.",
+        "Awaiting Trusted review and transfer to a fresh Trusted branch with full Trusted CI."
+      ],
+      "trusted_follow_up": "On transfer, verify CMS_CONTENT_MANAGE authorization, dashboard content-module gating, unpublished-target link restrictions, and unchanged automatic slug-change redirect creation/public 301 resolution. Run the complete Trusted CI at the exact Trusted HEAD before integration or deployment."
     },
     {
       "priority": 461,
