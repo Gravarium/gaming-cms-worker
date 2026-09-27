@@ -17,7 +17,7 @@
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-575 is complete on exact-head CI; inspect current pool and worker-visible CMS for the next independent safe proposal, reserve one path-disjoint WCP, and continue.",
+    "next_required_action": "WCP-576 is claimed on main@7b2ca79405fc12d34bce1386157e929e4668f31a; add a test-only public content-detail HTML/JSON-LD escaping regression, then run exact-head CI.",
     "composition_preparable": 0,
     "immediately_actionable": 29,
     "must_continue": true
@@ -46601,6 +46601,95 @@
       "last_ci_result": "success",
       "completed_at": "2026-09-27T19:35:53.263Z",
       "worker_completion_summary": "Exact-head Worker CI #920 / 36344702134 passed on 12c5cf8ec9fda8c306aa88879d3326d70cec5d7d: 737 tests, 4,633 assertions, 0 failures/errors (1 PHPUnit deprecation, 3 notices); PHPStan reported no errors; PostgreSQL 18 applied 57 migrations with 878 SQL queries. PR #369 is open and ready for Trusted review from main@7b2ca79405fc12d34bce1386157e929e4668f31a; exactly one allowed test path changed, with no runtime or template changes."
+    },
+    {
+      "priority": 576,
+      "package_id": "WCP-576",
+      "title": "Test HTML and JSON-LD escaping on public content detail pages",
+      "risk": "low",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-576-public-content-html-safety-g1",
+      "suggested_branch": "feature/wcp-576-public-content-html-safety-g1",
+      "base_branch": "main",
+      "base_sha": "7b2ca79405fc12d34bce1386157e929e4668f31a",
+      "objective": "Add a test-only functional regression for the public news detail route proving stored title, subtitle, excerpt and SEO metadata remain inert in HTML and JSON-LD. Verify attacker-controlled markup cannot create executable elements or attributes and that JSON-LD still decodes to the original text. Do not change source, templates, or runtime code.",
+      "allowed_paths": [
+        "tests/Controller/PublicContentRenderingTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "CONTINUOUS-WORKER.md",
+        "CONTINUOUS-WORK-POOL.json",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/",
+        "src/",
+        "templates/"
+      ],
+      "deliverables": [
+        "Functional test persists a published ContentEntry with script-like title/SEO title and event-handler excerpt/SEO description, then requests the public /news/{slug} route.",
+        "Assertions verify HTML text and metadata attributes are safely escaped, no attacker script or event-handler element appears, and JSON-LD decodes to the original title and description.",
+        "Test-only change; no production source, template, schema, or migration modification."
+      ],
+      "tests": [
+        "Targeted PublicContentRenderingTest.",
+        "Complete exact-head Worker CI including PHPStan, full PHPUnit, template/config checks, and PostgreSQL 18 migration chain."
+      ],
+      "completion_report": [
+        "Exact sanitized base and final HEAD; changed path and Worker PR state.",
+        "Title, excerpt, metadata and JSON-LD payload assertions against the public detail route.",
+        "Targeted regression and exact-head full Worker CI results.",
+        "Test-only package; no runtime changes."
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-Trusted-review-and-exact-head-CI",
+        "preserve-all-security-permissions-CSRF-validation-recovery-rollback-and-upload-controls",
+        "no-private-runtime-or-sensitive-data",
+        "no-source-or-template-changes",
+        "no-edit-to-active-or-claim-locked-paths",
+        "no-direct-Trusted-integration-or-deployment"
+      ],
+      "proposal_kind": "worker_only",
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "7b2ca79405fc12d34bce1386157e929e4668f31a",
+      "proposal_dependency_evidence": [],
+      "collision_check": {
+        "compared_against": "Fresh continuous/work-pool-v4 file blob @ 5737baf4ddcd648373c2feb128f3bfc9e5f07418; latest sanitized main @ 7b2ca79405fc12d34bce1386157e929e4668f31a; every unclaimed, active, and claim-locked task.",
+        "result": "No overlap with any active or claim-locked allowed path. The dedicated PublicContentRenderingTest.php test path is absent from the current tree and the published pool; all source, template, migration, schema, and other test paths remain untouched.",
+        "paths": [
+          "tests/Controller/PublicContentRenderingTest.php"
+        ],
+        "observed_nonblocking_path_hits": []
+      },
+      "published_at": "2026-09-27T19:39:07.587Z",
+      "claimed_on": "2026-09-27T19:39:07.587Z",
+      "claim_state": "active",
+      "active_base_branch": "main",
+      "active_base_sha": "7b2ca79405fc12d34bce1386157e929e4668f31a",
+      "active_head": "7b2ca79405fc12d34bce1386157e929e4668f31a",
+      "resume_branch": "feature/wcp-576-public-content-html-safety-g1",
+      "branch_heads": {
+        "claim_branch": "7b2ca79405fc12d34bce1386157e929e4668f31a",
+        "feature_branch": "7b2ca79405fc12d34bce1386157e929e4668f31a"
+      },
+      "last_observed_head": "7b2ca79405fc12d34bce1386157e929e4668f31a",
+      "last_checkpoint_at": "2026-09-27T19:39:07.587Z",
+      "checkpoint_paths": [],
+      "next_action": "Create exact claim and feature branches from main@7b2ca79405fc12d34bce1386157e929e4668f31a; add the isolated functional escaping regression, then run exact-head CI."
     }
   ],
   "recovery_queue": [],
