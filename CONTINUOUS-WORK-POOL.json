@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T19:03:27.956Z",
+  "published_at": "2026-09-27T19:05:13.042Z",
   "summary": {
     "total_remaining_worker_tasks": 173,
     "completed_worker_prs_awaiting_trusted_review": 301,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-570 is complete with exact-head green CI and PR #364; re-evaluate dependencies and continue with the next safe Worker package.",
+    "next_required_action": "WCP-571 is claimed on main@7b2ca79405fc12d34bce1386157e929e4668f31a; add output-escaping regression coverage for public game search metadata and run exact-head CI.",
     "composition_preparable": 0,
     "immediately_actionable": 29,
     "must_continue": true
@@ -45976,6 +45976,101 @@
       "last_ci_result": "success",
       "completed_at": "2026-09-27T19:03:27.956Z",
       "worker_completion_summary": "Exact-head Worker CI #915 / 36342783509 passed on 9a45fca513e15925a2ca39c7aa5bae785bd2ba4d: 737 tests, 4,630 assertions, 0 failures/errors (1 PHPUnit deprecation, 3 notices); PHPStan reported no errors; PostgreSQL 18 applied 57 migrations with 878 SQL queries. PR #364 is open and ready for Trusted review from main@7b2ca79405fc12d34bce1386157e929e4668f31a; exactly one allowlisted test path changed, with no template or runtime changes."
+    },
+    {
+      "priority": 571,
+      "package_id": "WCP-571",
+      "title": "Test escaping of public game search result metadata",
+      "risk": "low",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-571-public-game-search-metadata-escaping-g1",
+      "suggested_branch": "feature/wcp-571-public-game-search-metadata-escaping-g1",
+      "base_branch": "main",
+      "base_sha": "7b2ca79405fc12d34bce1386157e929e4668f31a",
+      "objective": "Add a focused test-only functional regression proving that publisher name, developer and summary metadata shown in public Game Catalogue search results remains escaped as inert text. Existing coverage already checks game names and reflected query text; target only the other displayed result fields. Do not change runtime or templates.",
+      "allowed_paths": [
+        "tests/Controller/PublicGameCatalogueSearchTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "CONTINUOUS-WORKER.md",
+        "CONTINUOUS-WORK-POOL.json",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/",
+        "src/",
+        "templates/"
+      ],
+      "deliverables": [
+        "Functional search regression supplies script, event-handler and SVG-handler markup in publisher, developer and summary values displayed on public result cards.",
+        "Assertions prove payloads appear as inert text, no executable elements are created, and the raw markup is absent from response HTML.",
+        "Test-only change; no production source, template, schema or migration changes."
+      ],
+      "tests": [
+        "Targeted PublicGameCatalogueSearchTest.",
+        "Complete exact-head Worker CI including PHPStan, full PHPUnit, template/config checks, and PostgreSQL 18 migration chain."
+      ],
+      "completion_report": [
+        "Exact sanitized base and final HEAD; changed path and Worker PR state.",
+        "Coverage of publisher, developer and summary output fields with inert-text assertions.",
+        "Targeted regression and exact-head full Worker CI results.",
+        "Test-only package; no runtime changes."
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-Trusted-review-and-exact-head-CI",
+        "preserve-all-security-permissions-CSRF-validation-recovery-rollback-and-upload-controls",
+        "no-private-runtime-or-sensitive-data",
+        "no-template-or-runtime-code-changes",
+        "no-edit-to-active-or-claim-locked-paths",
+        "no-direct-Trusted-integration-or-deployment"
+      ],
+      "proposal_kind": "worker_only",
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "7b2ca79405fc12d34bce1386157e929e4668f31a",
+      "proposal_dependency_evidence": [],
+      "collision_check": {
+        "compared_against": "Fresh continuous/work-pool-v4 file blob @ 2fd890b51b38433c2b6a638a7cc5f92bbc98dbf4; current sanitized main @ 7b2ca79405fc12d34bce1386157e929e4668f31a; every unclaimed, active, and claim-locked task.",
+        "result": "No overlap with active or claim-locked allowed paths. Existing WCP-531 path is trusted_integrated with its claim released; current test already covers game-name and reflected-query escaping. This proposal covers only publisher, developer and summary fields rendered in public result cards; no source or template files are reserved.",
+        "paths": [
+          "tests/Controller/PublicGameCatalogueSearchTest.php"
+        ],
+        "observed_nonblocking_path_hits": [
+          {
+            "id": "WCP-531",
+            "state": "trusted_integrated",
+            "claim": "released_after_trusted_integration"
+          }
+        ]
+      },
+      "published_at": "2026-09-27T19:05:13.042Z",
+      "claimed_on": "2026-09-27T19:05:13.042Z",
+      "claim_state": "active",
+      "active_base_branch": "main",
+      "active_base_sha": "7b2ca79405fc12d34bce1386157e929e4668f31a",
+      "active_head": "7b2ca79405fc12d34bce1386157e929e4668f31a",
+      "resume_branch": "feature/wcp-571-public-game-search-metadata-escaping-g1",
+      "branch_heads": {
+        "claim_branch": "7b2ca79405fc12d34bce1386157e929e4668f31a",
+        "feature_branch": "7b2ca79405fc12d34bce1386157e929e4668f31a"
+      },
+      "last_observed_head": "7b2ca79405fc12d34bce1386157e929e4668f31a",
+      "last_checkpoint_at": "2026-09-27T19:05:13.042Z",
+      "checkpoint_paths": [],
+      "next_action": "Add one focused test with stored HTML in publisher, developer and summary fields; assert escaped response and inert result text without editing production paths."
     }
   ],
   "recovery_queue": [],
