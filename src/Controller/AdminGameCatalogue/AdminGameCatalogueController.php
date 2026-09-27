@@ -190,7 +190,8 @@ final class AdminGameCatalogueController extends AbstractController
         ];
     }
 
-    private function syncGenres(GameCatalogueEntry $entry, FormInterface<GameCatalogueEntry> $form): void
+    /** @param FormInterface<GameCatalogueEntry> $form */
+    private function syncGenres(GameCatalogueEntry $entry, FormInterface $form): void
     {
         /** @var list<GameGenre> $genres */
         $genres = $form->get('genres')->getData() ?? [];
