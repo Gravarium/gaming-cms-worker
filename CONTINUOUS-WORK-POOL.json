@@ -10,16 +10,16 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T11:20:54.910Z",
+  "published_at": "2026-09-27T11:21:44.364Z",
   "summary": {
-    "total_remaining_worker_tasks": 164,
+    "total_remaining_worker_tasks": 165,
     "completed_worker_prs_awaiting_trusted_review": 278,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-518 exact-head CI 36314987910 failed only because a valid +10-day Game Catalogue test release is globally visible. Repair the test without changing production behavior, then rerun complete exact-head CI.",
+    "next_required_action": "WCP-521 is reserved from current sanitized main b510875e7b0741b9b19f09429d2204a95df51198. Add only the watchlist visibility controller integration test, then validate its exact final HEAD.",
     "composition_preparable": 0,
-    "immediately_actionable": 19,
+    "immediately_actionable": 20,
     "must_continue": true
   },
   "rules": {
@@ -36311,6 +36311,97 @@
         "tests/Widget/NewsArchiveWidgetProviderTest.php"
       ],
       "next_action": "Implement the Content-owned archive widget and focused Page Builder, module-gate, data, and Twig coverage on the claimed feature branch."
+    },
+    {
+      "priority": 521,
+      "package_id": "WCP-521",
+      "title": "Verify private video watchlists stay hidden at the public route",
+      "risk": "medium",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-521-video-watchlist-privacy-g1",
+      "suggested_branch": "feature/wcp-521-video-watchlist-privacy-g1",
+      "base_branch": "main",
+      "base_sha": "b510875e7b0741b9b19f09429d2204a95df51198",
+      "objective": "Add a controller-level functional security regression test for video watchlist visibility. Existing coverage verifies the VideoVisibilityPolicy directly, but does not exercise GET /video-discovery/watchlists/{id}. Prove that private watchlists are hidden from anonymous and foreign viewers while remaining visible to their owner, and that an explicitly public list remains viewable. Do not change controller or policy behavior.",
+      "allowed_paths": [
+        "tests/Controller/VideoDiscovery/VideoDiscoveryWatchlistPrivacyTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/",
+        "src/",
+        "templates/",
+        "assets/",
+        "public/"
+      ],
+      "deliverables": [
+        "Create isolated synthetic owner and foreign viewer accounts with private and public watchlists.",
+        "Verify anonymous and foreign requests receive 404 for the private list and its unique name is absent from the response.",
+        "Verify the owner can view the private list and a foreign viewer can view an explicitly public list.",
+        "Change only the dedicated controller integration-test file; do not change the visibility policy, route, controller, entities, templates or schema."
+      ],
+      "tests": [
+        "Run the focused PHPUnit test for VideoDiscoveryWatchlistPrivacyTest.",
+        "Run PHPStan level 8 and complete Worker CI on the exact final HEAD, including PostgreSQL 18 migration validation.",
+        "Preserve fail-closed privacy and module-disable behavior; do not weaken or skip checks."
+      ],
+      "completion_report": [
+        "Exact sanitized main/base SHA and final Worker HEAD SHA.",
+        "Exact changed path and Worker PR URL.",
+        "Anonymous/foreign 404, owner access, public-list access, and absence of private-name leakage evidence.",
+        "Focused PHPUnit, PHPStan and exact-head Worker CI results."
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "private-watchlists-are-visible-only-to-the-owner",
+        "public-watchlists-remain-explicitly-public",
+        "preserve-video-module-disable-boundary",
+        "test-only-no-runtime-or-schema-change",
+        "no-security-test-phpstan-or-CI-weakening",
+        "red-CI-stops-integration",
+        "no-direct-trusted-integration-or-deployment",
+        "no-private-runtime-or-sensitive-data"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "b510875e7b0741b9b19f09429d2204a95df51198",
+      "proposal_kind": "worker_only",
+      "proposal_dependency_evidence": [],
+      "collision_check": {
+        "compared_against": "Fresh continuous/work-pool-v4 pool blob ed04974e16dfcb57590f6dd1f7281a4bf466b6d5; all active and claim-locked allowed paths; WCP-521 branch search; dedicated test-file search; and exact current sanitized main b510875e7b0741b9b19f09429d2204a95df51198.",
+        "result": "No active or claim-locked task owns this new controller-test path. WCP-516 covers the distinct public video-search controller and widget; WCP-518 covers game releases; WCP-519 covers notification preferences. Existing VideoDiscoverySecurityTest checks the policy object only, so this route-level regression is additive and path-disjoint.",
+        "paths": [
+          "tests/Controller/VideoDiscovery/VideoDiscoveryWatchlistPrivacyTest.php"
+        ]
+      },
+      "published_at": "2026-09-27T11:21:44.364Z",
+      "claimed_on": "2026-09-27T11:21:44.364Z",
+      "claim_state": "active",
+      "active_base_branch": "main",
+      "active_base_sha": "b510875e7b0741b9b19f09429d2204a95df51198",
+      "active_head": "b510875e7b0741b9b19f09429d2204a95df51198",
+      "resume_branch": "feature/wcp-521-video-watchlist-privacy-g1",
+      "branch_heads": {
+        "claim_branch": "b510875e7b0741b9b19f09429d2204a95df51198",
+        "feature_branch": "b510875e7b0741b9b19f09429d2204a95df51198"
+      },
+      "next_action": "Create the claim and feature refs from exact current sanitized main, add only the controller visibility regression test, then run focused PHPUnit and full exact-head Worker CI.",
+      "checkpoint_paths": []
     }
   ],
   "recovery_queue": [],
