@@ -10,7 +10,7 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T17:37:23.962Z",
+  "published_at": "2026-09-27T17:45:52.067Z",
   "summary": {
     "total_remaining_worker_tasks": 167,
     "completed_worker_prs_awaiting_trusted_review": 293,
@@ -44793,6 +44793,139 @@
       "worker_pr_head": "ce903250fe35710e11b5cf07f6c15ea7abe1d453",
       "ci_run_id": 36337964894,
       "last_ci_run_id": 36337964894
+    },
+    {
+      "priority": 562,
+      "package_id": "WCP-562",
+      "title": "Strict public video-library page parameters",
+      "risk": "low",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-562-strict-video-library-page-params-g1",
+      "suggested_branch": "feature/wcp-562-strict-video-library-page-params-g1",
+      "base_branch": "main",
+      "base_sha": "7b2ca79405fc12d34bce1386157e929e4668f31a",
+      "objective": "Reject malformed public video-library page parameters instead of silently coercing them to page 1. Omitted page defaults to 1; ASCII positive decimal pages within the existing 1..10,000 bound continue through the existing result-page checks; malformed, zero, negative, fractional, padded, or array values return 400, and valid values above the supported bound return 404. Preserve filter, module-gate, visibility, ordering, and pagination behavior.",
+      "allowed_paths": [
+        "src/Controller/PublicVideoLibraryController.php",
+        "tests/Controller/PublicVideoLibraryControllerTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "CONTINUOUS-WORKER.md",
+        "CONTINUOUS-WORK-POOL.json",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/services.yaml",
+        "src/Video/Playlist/",
+        "src/Controller/VideoPlaylistController.php",
+        "tests/Controller/VideoPlaylistPaginationTest.php",
+        "templates/video_discovery/"
+      ],
+      "deliverables": [
+        "Missing page query defaults to page 1; strict positive decimal values in the current range are accepted without coercion.",
+        "Malformed values including 0, negative, nonnumeric, fractional, leading-zero, and array values return 400; values above the supported 10,000 page cap return 404.",
+        "Existing category/playlist filters, result visibility, ordering, module gate, and out-of-range behavior remain intact."
+      ],
+      "tests": [
+        "Regression tests exercise malformed query values and values beyond the supported page cap through GET /videos/library.",
+        "Full exact-head Worker CI verifies PHPStan, PHPUnit, configuration/templates, Doctrine, assets, and PostgreSQL 18 migration chain."
+      ],
+      "completion_report": [
+        "Exact sanitized main base and final HEAD; changed paths and Worker PR state.",
+        "Strict page parsing and preserved route behavior.",
+        "Regression tests and exact-head Worker CI result.",
+        "No schema or persistence change; Trusted follow-up."
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-Trusted-review-and-exact-head-CI",
+        "preserve-all-security-permissions-CSRF-validation-recovery-rollback-and-upload-controls",
+        "no-private-runtime-or-sensitive-data",
+        "no-schema-migration-or-entity-change",
+        "no-edit-to-active-or-claim-locked-paths",
+        "no-direct-Trusted-integration-or-deployment"
+      ],
+      "proposal_kind": "worker_only",
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "7b2ca79405fc12d34bce1386157e929e4668f31a",
+      "proposal_dependency_evidence": [],
+      "collision_check": {
+        "compared_against": "Fresh continuous/work-pool-v4 file blob @ 4d964b70529979a8065001b53c6c8d52d81f77c2; current sanitized main @ 7b2ca79405fc12d34bce1386157e929e4668f31a; every unclaimed, active, and claim-locked task.",
+        "result": "No exact or directory-prefix overlap with any unclaimed, active, or claim-locked allowed paths. WCP-561's video-playlist pagination paths and FCP-072's templates/ paths are disjoint.",
+        "paths": [
+          "src/Controller/PublicVideoLibraryController.php",
+          "tests/Controller/PublicVideoLibraryControllerTest.php"
+        ],
+        "observed_nonblocking_path_hits": [
+          {
+            "id": "WCP-561",
+            "state": "worker_in_progress",
+            "excluded": [
+              "src/Controller/VideoPlaylistController.php",
+              "tests/Controller/VideoPlaylistPaginationTest.php"
+            ]
+          },
+          {
+            "id": "WCP-553",
+            "state": "worker_complete_awaiting_trusted_review",
+            "excluded": [
+              "src/Controller/PublicVideoSitemapController.php",
+              "src/VideoSitemap/"
+            ]
+          },
+          {
+            "id": "FCP-072",
+            "state": "unclaimed",
+            "excluded": [
+              "templates/"
+            ]
+          }
+        ]
+      },
+      "published_at": "2026-09-27T17:45:52.067Z",
+      "claimed_on": "2026-09-27T17:45:52.067Z",
+      "claim_state": "active",
+      "active_base_branch": "main",
+      "active_base_sha": "7b2ca79405fc12d34bce1386157e929e4668f31a",
+      "active_head": "7b2ca79405fc12d34bce1386157e929e4668f31a",
+      "resume_branch": "feature/wcp-562-strict-video-library-page-params-g1",
+      "branch_heads": {
+        "claim_branch": "7b2ca79405fc12d34bce1386157e929e4668f31a",
+        "feature_branch": "7b2ca79405fc12d34bce1386157e929e4668f31a"
+      },
+      "last_observed_head": "7b2ca79405fc12d34bce1386157e929e4668f31a",
+      "last_checkpoint_at": "2026-09-27T17:45:52.067Z",
+      "last_verified_push_at": "2026-09-27T17:45:52.067Z",
+      "checkpoint_paths": [
+        "src/Controller/PublicVideoLibraryController.php",
+        "tests/Controller/PublicVideoLibraryControllerTest.php"
+      ],
+      "next_action": "Implement strict public video-library page parsing, add malformed-input regression coverage, open a draft Worker PR, and run full Worker CI on the exact final feature HEAD.",
+      "worker_pr": null,
+      "worker_pr_state": "not_created",
+      "worker_pr_changed_paths": [],
+      "ci_result": "not_started",
+      "ci_attempts": [],
+      "worker_pr_url": null,
+      "pr_state": "not_created",
+      "draft_pr": true,
+      "worker_pr_base_branch": "main",
+      "worker_pr_base_sha": "7b2ca79405fc12d34bce1386157e929e4668f31a",
+      "ci_run_id": null,
+      "last_ci_run_id": null
     }
   ],
   "recovery_queue": [],
