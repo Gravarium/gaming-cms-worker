@@ -6,6 +6,7 @@ namespace App\Repository;
 
 use App\Entity\ContentEntry;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -22,25 +23,37 @@ final class PublicNewsArchiveRepository extends ServiceEntityRepository
      */
     public function availablePeriods(\DateTimeImmutable $now): array
     {
+        /** @var iterable<array{publishedAt:mixed}> $rows */
         $rows = $this->publicNewsBuilder($now)
-            ->select('YEAR(entry.publishedAt) AS archiveYear')
-            ->addSelect('MONTH(entry.publishedAt) AS archiveMonth')
-            ->addSelect('COUNT(entry.id) AS entryCount')
-            ->groupBy('YEAR(entry.publishedAt)')
-            ->addGroupBy('MONTH(entry.publishedAt)')
-            ->orderBy('YEAR(entry.publishedAt)', 'DESC')
-            ->addOrderBy('MONTH(entry.publishedAt)', 'DESC')
+            ->select('entry.publishedAt AS publishedAt')
+            ->orderBy('entry.publishedAt', 'DESC')
             ->getQuery()
-            ->getArrayResult();
+            ->toIterable([], AbstractQuery::HYDRATE_SCALAR);
 
-        return array_values(array_map(
-            static fn (array $row): array => [
-                'year' => (int) $row['archiveYear'],
-                'month' => (int) $row['archiveMonth'],
-                'count' => (int) $row['entryCount'],
-            ],
-            $rows,
-        ));
+        /** @var array<string, array{year:int, month:int, count:int}> $periods */
+        $periods = [];
+        foreach ($rows as $row) {
+            $publishedAt = $row['publishedAt'];
+            if ($publishedAt instanceof \DateTimeInterface) {
+                $date = $publishedAt;
+            } elseif (is_string($publishedAt)) {
+                $date = new \DateTimeImmutable($publishedAt);
+            } else {
+                continue;
+            }
+
+            $key = $date->format('Y-m');
+            if (!isset($periods[$key])) {
+                $periods[$key] = [
+                    'year' => (int) $date->format('Y'),
+                    'month' => (int) $date->format('n'),
+                    'count' => 0,
+                ];
+            }
+            ++$periods[$key]['count'];
+        }
+
+        return array_values($periods);
     }
 
     /**
