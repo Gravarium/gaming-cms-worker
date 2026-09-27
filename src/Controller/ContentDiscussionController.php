@@ -252,7 +252,7 @@ final class ContentDiscussionController extends AbstractController
 
     /**
      * @param FormInterface<array{body?: string, parentId?: string}>|null $commentForm
-     * @param FormInterface<array{reason?: string, details?: string}>|null $reportForm
+     * @param FormInterface<array{reason?: string, details?: string}|null>|null $reportForm
      */
     private function renderDiscussion(
         ContentEntry $entry,
