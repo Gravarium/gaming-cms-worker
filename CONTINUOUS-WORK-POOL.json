@@ -25243,16 +25243,21 @@
       "claimed_on": "2026-09-27T01:38:12.865Z",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "5b049c7194c1199f53ed67239fed8a897fd4d6a6",
       "resume_branch": "feature/wcp-448-guild-event-directory-pagination-g1",
-      "last_checkpoint_at": "2026-09-27T01:38:12.865Z",
-      "last_verified_push_at": "2026-09-27T01:38:12.865Z",
-      "checkpoint_paths": [],
+      "last_checkpoint_at": "2026-09-27T01:45:58.718Z",
+      "last_verified_push_at": "2026-09-27T01:45:58.718Z",
+      "checkpoint_paths": [
+        "src/Controller/AdminGuildCollaborationController.php",
+        "src/Repository/GuildEventRepository.php",
+        "templates/admin/gaming/collaboration/index.html.twig",
+        "tests/Controller/AdminGuildCollaborationPaginationTest.php"
+      ],
       "branch_heads": {
         "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-        "feature_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d"
+        "feature_branch": "5b049c7194c1199f53ed67239fed8a897fd4d6a6"
       },
-      "next_action": "Implement guild-scoped event search, status filters and stable pagination on the reserved branch; add functional positive and negative coverage and checkpoint before full CI."
+      "next_action": "Create a draft Worker PR to trigger exact-HEAD CI; inspect Symfony/PHPUnit, PHPStan level 8 and PostgreSQL 18 results, then fix any failures on this feature branch."
     }
   ],
   "recovery_queue": [],
