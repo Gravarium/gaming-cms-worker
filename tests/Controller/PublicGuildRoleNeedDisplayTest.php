@@ -49,8 +49,8 @@ final class PublicGuildRoleNeedDisplayTest extends WebTestCase
 
     public function testDisabledGuildAndGameDoNotExposeApplicationNeeds(): void
     {
+        $client = static::createClient();
         foreach (['guild', 'game'] as $disabled) {
-            $client = static::createClient();
             $guild = $this->guild($client, 'disabled-'.$disabled);
             $this->need($client, $guild, 'Heiler', 'Priester', 2, true);
             if ($disabled === 'guild') {
