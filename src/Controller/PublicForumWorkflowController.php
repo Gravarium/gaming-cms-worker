@@ -112,6 +112,7 @@ final class PublicForumWorkflowController extends AbstractController
         return $this->render('@forum_workflow/public/thread.html.twig', [
             'thread' => $thread,
             'posts' => $this->forum->postsForThread($id),
+            'moderationHistory' => $isModerator ? $this->forum->moderationHistory($id) : [],
             'canReply' => $thread['state'] === 'open' && $thread['solved_post_id'] === null,
             'canSolve' => $userId !== null && (int) $thread['author_id'] === $userId
                 && $thread['state'] === 'open' && $thread['solved_post_id'] === null,
