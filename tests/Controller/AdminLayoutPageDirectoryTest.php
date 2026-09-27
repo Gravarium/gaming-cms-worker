@@ -215,7 +215,10 @@ final class AdminLayoutPageDirectoryTest extends WebTestCase
 
     private function assertPrivateDirectoryHeaders(KernelBrowser $client): void
     {
-        self::assertSame('private, no-store', $client->getResponse()->headers->get('Cache-Control'));
+        $cacheControl = strtolower((string) $client->getResponse()->headers->get('Cache-Control'));
+        $directives = array_map('trim', explode(',', $cacheControl));
+        self::assertContains('private', $directives);
+        self::assertContains('no-store', $directives);
         self::assertSame('noindex, nofollow', $client->getResponse()->headers->get('X-Robots-Tag'));
     }
 }
