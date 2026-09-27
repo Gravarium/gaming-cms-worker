@@ -10,16 +10,16 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T10:12:10.306Z",
+  "published_at": "2026-09-27T10:12:57.878Z",
   "summary": {
-    "total_remaining_worker_tasks": 163,
+    "total_remaining_worker_tasks": 164,
     "completed_worker_prs_awaiting_trusted_review": 269,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-510 is active on its exclusive feature branch; complete the direct media-action module gate and continue after green exact-head CI.",
+    "next_required_action": "WCP-511 is actively claimed from exact sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d; implement the public content-tag directory and complete exact-head Worker CI. Keep all foreign claims untouched.",
     "composition_preparable": 0,
-    "immediately_actionable": 18,
+    "immediately_actionable": 19,
     "must_continue": true
   },
   "rules": {
@@ -34718,6 +34718,122 @@
       "last_observed_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
       "checkpoint_paths": [],
       "next_action": "Implement the bounded direct-media route-family listener and focused workflow test within the two allowed paths; push a checkpoint before full exact-head Worker CI."
+    },
+    {
+      "priority": 511,
+      "package_id": "WCP-511",
+      "title": "Expose the public content-tag directory",
+      "risk": "low",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-511-public-content-tag-directory-g1",
+      "suggested_branch": "feature/wcp-511-public-content-tag-directory-g1",
+      "base_branch": "main",
+      "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "objective": "Complete public discovery for the existing content-tag module. Tags can already be created and edited in administration and individual published-news tag archives are reachable at /news/tag/{slug}, but visitors have no public directory of available tags. Add an anonymous GET-only /news/tags directory that lists the existing tags with optional descriptions and links to the existing tag archive route. Keep the route owned by the content module so disabling content returns 404, while existing tag archives, administration, schema, migrations and shared templates stay unchanged.",
+      "allowed_paths": [
+        "src/Controller/PublicContentTagDirectoryController.php",
+        "templates/content_tag/index.html.twig",
+        "tests/Controller/PublicContentTagDirectoryTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/",
+        "assets/",
+        "public/",
+        "src/Entity/",
+        "src/Form/",
+        "src/Repository/",
+        "src/Controller/PublicContentController.php",
+        "src/Controller/PublicContentTagArchiveController.php",
+        "src/Controller/AdminContentTagController.php",
+        "src/Repository/ContentTagRepository.php",
+        "src/Repository/PublicContentTagArchiveRepository.php",
+        "templates/base.html.twig",
+        "templates/layout/",
+        "templates/content/",
+        "templates/content_tag/archive.html.twig",
+        "templates/admin/content_tag/",
+        "templates/admin/content/",
+        "tests/Controller/Content/"
+      ],
+      "deliverables": [
+        "GET /news/tags is a public, read-only directory owned by the app_news route prefix.",
+        "The directory lists all persisted content tags in deterministic name/id order, renders optional descriptions and links each item to app_news_tag.",
+        "An empty tag set has a useful empty state and no write controls.",
+        "Disabling the content module makes the directory unavailable through the existing DisabledModuleSubscriber without exposing tag contents.",
+        "Existing content-tag CRUD and /news/tag/{slug} behavior remain unchanged; no schema, migration, repository, entity or shared navigation changes."
+      ],
+      "tests": [
+        "Focused functional PHPUnit coverage verifies anonymous directory access, deterministic archive links, description rendering, GET-only behavior and empty state.",
+        "Focused functional coverage verifies the content-module disabled route returns 404 and does not render tag contents; fixtures are removed in finally blocks.",
+        "PHPStan level 8 and complete Worker CI on the exact final HEAD, including PostgreSQL 18 migration-chain validation."
+      ],
+      "completion_report": [
+        "Exact sanitized main/base SHA and final Worker HEAD SHA.",
+        "Complete changed-path list and Worker PR.",
+        "Public tag-directory behavior, descriptions, empty state, GET-only and disabled-content evidence.",
+        "Exact-head PHPStan, PHPUnit, PostgreSQL migration and full Worker CI results; remaining Trusted integration follow-up."
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "public-directory-is-read-only-and-lists-only-persisted-tag-metadata",
+        "directory-route-is-owned-by-content-and-fails-closed-when-content-is-disabled",
+        "existing-content-tag-archive-and-administration-behavior-remain-unchanged",
+        "no-schema-or-migration-change",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "red-CI-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment",
+        "no-private-runtime-or-sensitive-data"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "proposal_kind": "worker_only",
+      "proposal_dependency_evidence": [],
+      "collision_check": {
+        "compared_against": "Fresh continuous/work-pool-v4 commit 17be8696d9832c59f010ae3807e04619d75aa321; all active and claim-locked paths; sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d; current WCP-511 branch and PR state immediately before reservation.",
+        "result": "No active or claim-locked package owns or encloses the three proposed paths. WCP-485 owns the separate public tag archive controller/repository/template and WCP-483 owns administrative tag merge paths; those remain untouched. WCP-500 owns the separate category directory. A foreign WCP-510 Media-module branch was observed but is not altered. The package adds only a new content-owned tag directory controller, dedicated template and focused functional coverage. The unclaimed broad FCP-072 templates scope remains dependency-blocked and is narrowed here to the exact new template.",
+        "paths": [
+          "src/Controller/PublicContentTagDirectoryController.php",
+          "templates/content_tag/index.html.twig",
+          "tests/Controller/PublicContentTagDirectoryTest.php"
+        ]
+      },
+      "published_at": "2026-09-27T10:12:57.878Z",
+      "claimed_on": "2026-09-27T10:12:57.878Z",
+      "claim_state": "active",
+      "active_base_branch": "main",
+      "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "resume_branch": "feature/wcp-511-public-content-tag-directory-g1",
+      "branch_heads": {
+        "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+        "feature_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d"
+      },
+      "last_observed_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "last_checkpoint_at": "2026-09-27T10:12:57.878Z",
+      "checkpoint_paths": [
+        "src/Controller/PublicContentTagDirectoryController.php",
+        "templates/content_tag/index.html.twig",
+        "tests/Controller/PublicContentTagDirectoryTest.php"
+      ],
+      "next_action": "Implement the public content-tag directory and focused disabled-content coverage, then push a meaningful feature checkpoint and create the Worker PR.",
+      "last_verified_push_at": "2026-09-27T10:12:57.878Z"
     }
   ],
   "recovery_queue": [],
