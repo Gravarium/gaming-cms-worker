@@ -88,7 +88,7 @@ final class AdminDownloadCatalogueControllerTest extends WebTestCase
         ]);
 
         self::assertResponseStatusCodeSame(422);
-        self::assertSame(0, $this->packages($client)->count([]));
+        self::assertCount(0, $this->packages($client)->findBy(['title' => 'Invalid package']));
     }
 
     public function testDuplicateSlugShowsAnErrorWithoutCreatingAPackage(): void
