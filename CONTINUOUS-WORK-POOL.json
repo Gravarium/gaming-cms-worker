@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T19:27:13.579Z",
+  "published_at": "2026-09-27T19:29:42.330Z",
   "summary": {
     "total_remaining_worker_tasks": 173,
     "completed_worker_prs_awaiting_trusted_review": 305,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-574 is complete with exact-head green CI and PR #368; verify remaining dependencies and continue autonomous Worker proposals.",
+    "next_required_action": "WCP-575 is claimed on main@7b2ca79405fc12d34bce1386157e929e4668f31a; add public video-detail escaping regression coverage and run exact-head CI.",
     "composition_preparable": 0,
     "immediately_actionable": 29,
     "must_continue": true
@@ -46482,6 +46482,95 @@
       "last_ci_result": "success",
       "completed_at": "2026-09-27T19:27:13.579Z",
       "worker_completion_summary": "Exact-head Worker CI #919 / 36344211712 passed on 13e1489ad6d0f5814abd504f874e022e5f821204: 737 tests, 4,631 assertions, 0 failures/errors (1 PHPUnit deprecation, 3 notices); PHPStan reported no errors; PostgreSQL 18 applied 57 migrations with 878 SQL queries. PR #368 is open and ready for Trusted review from main@7b2ca79405fc12d34bce1386157e929e4668f31a; exactly one allowlisted test path changed, with no template or runtime changes."
+    },
+    {
+      "priority": 575,
+      "package_id": "WCP-575",
+      "title": "Test HTML escaping on public video detail pages",
+      "risk": "low",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-575-public-video-detail-xss-g1",
+      "suggested_branch": "feature/wcp-575-public-video-detail-xss-g1",
+      "base_branch": "main",
+      "base_sha": "7b2ca79405fc12d34bce1386157e929e4668f31a",
+      "objective": "Add a focused test-only functional regression proving that stored Video.title and Video.description values containing script-element and event-handler image payloads render as inert text on the public video detail route. Assert response HTML is escaped, no executable DOM elements/attributes appear, and visible text is preserved. Do not change source, templates, or runtime code.",
+      "allowed_paths": [
+        "tests/Controller/VideoAccessTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "CONTINUOUS-WORKER.md",
+        "CONTINUOUS-WORK-POOL.json",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/",
+        "src/",
+        "templates/"
+      ],
+      "deliverables": [
+        "Functional test requests the public video detail route for stored script-like title and event-handler description values.",
+        "Assertions verify raw HTML is absent, escaped payload text remains visible, and no script or event-handler image nodes are created.",
+        "Test-only change; no production source, template, schema or migration change."
+      ],
+      "tests": [
+        "Targeted VideoAccessTest.",
+        "Complete exact-head Worker CI including PHPStan, full PHPUnit, template/config checks, and PostgreSQL 18 migration chain."
+      ],
+      "completion_report": [
+        "Exact sanitized base and final HEAD; changed path and Worker PR state.",
+        "Title and description payload assertions against the public detail route.",
+        "Targeted regression and exact-head full Worker CI results.",
+        "Test-only package; no runtime changes."
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-Trusted-review-and-exact-head-CI",
+        "preserve-all-security-permissions-CSRF-validation-recovery-rollback-and-upload-controls",
+        "no-private-runtime-or-sensitive-data",
+        "no-source-or-template-changes",
+        "no-edit-to-active-or-claim-locked-paths",
+        "no-direct-Trusted-integration-or-deployment"
+      ],
+      "proposal_kind": "worker_only",
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "7b2ca79405fc12d34bce1386157e929e4668f31a",
+      "proposal_dependency_evidence": [],
+      "collision_check": {
+        "compared_against": "Fresh continuous/work-pool-v4 file blob @ e73ef37d807af3e0d2257ff4cfaa85b400162ba5; current sanitized main @ 7b2ca79405fc12d34bce1386157e929e4668f31a; every unclaimed, active, and claim-locked task.",
+        "result": "No overlap with any active or claim-locked allowed path. Only the existing VideoAccessTest.php file is reserved; no controller, entity, template, migration, or schema paths are modified.",
+        "paths": [
+          "tests/Controller/VideoAccessTest.php"
+        ],
+        "observed_nonblocking_path_hits": []
+      },
+      "published_at": "2026-09-27T19:29:42.330Z",
+      "claimed_on": "2026-09-27T19:29:42.330Z",
+      "claim_state": "active",
+      "active_base_branch": "main",
+      "active_base_sha": "7b2ca79405fc12d34bce1386157e929e4668f31a",
+      "active_head": "7b2ca79405fc12d34bce1386157e929e4668f31a",
+      "resume_branch": "feature/wcp-575-public-video-detail-xss-g1",
+      "branch_heads": {
+        "claim_branch": "7b2ca79405fc12d34bce1386157e929e4668f31a",
+        "feature_branch": "7b2ca79405fc12d34bce1386157e929e4668f31a"
+      },
+      "last_observed_head": "7b2ca79405fc12d34bce1386157e929e4668f31a",
+      "last_checkpoint_at": "2026-09-27T19:29:42.330Z",
+      "checkpoint_paths": [],
+      "next_action": "Add a test-only public detail page regression for script and event-handler payloads in stored video title/description; then run exact-head CI."
     }
   ],
   "recovery_queue": [],
