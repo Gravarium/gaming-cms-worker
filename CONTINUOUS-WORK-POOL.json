@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T22:01:15.723Z",
+  "published_at": "2026-09-27T22:29:43.529Z",
   "summary": {
     "total_remaining_worker_tasks": 175,
     "completed_worker_prs_awaiting_trusted_review": 312,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-582 is claimed on feature/wcp-582-social-competition-dashboard-g1 from the exact green FCP-061 correction head ec6bb200affc3e5a46d416e98f7a1b0621c38ded; implement its bounded competition registration self-service workflow.",
+    "next_required_action": "WCP-582 has a complete dashboard/widget/withdrawal checkpoint at 33a4773fdc466f23a7daa12dd3db66546dfd56a1; open the draft proposal PR and validate the exact HEAD with full Worker CI.",
     "composition_preparable": 0,
     "immediately_actionable": 30,
     "must_continue": true
@@ -47619,17 +47619,27 @@
       "claim_state": "active",
       "active_base_branch": "fix/fcp-061-phpstan-g1",
       "active_base_sha": "ec6bb200affc3e5a46d416e98f7a1b0621c38ded",
-      "active_head": "ec6bb200affc3e5a46d416e98f7a1b0621c38ded",
+      "active_head": "33a4773fdc466f23a7daa12dd3db66546dfd56a1",
       "resume_branch": "feature/wcp-582-social-competition-dashboard-g1",
       "branch_heads": {
         "claim_branch": "ec6bb200affc3e5a46d416e98f7a1b0621c38ded",
-        "feature_branch": "ec6bb200affc3e5a46d416e98f7a1b0621c38ded"
+        "feature_branch": "33a4773fdc466f23a7daa12dd3db66546dfd56a1"
       },
-      "last_observed_head": "ec6bb200affc3e5a46d416e98f7a1b0621c38ded",
-      "last_checkpoint_at": "2026-09-27T22:01:15.723Z",
-      "last_verified_push_at": "2026-09-27T22:01:15.723Z",
-      "next_action": "Implement the personalized competition dashboard/widget and captain-only withdrawal flow within the allowlisted files; checkpoint the first complete vertical slice on this feature branch.",
-      "checkpoint_paths": []
+      "last_observed_head": "33a4773fdc466f23a7daa12dd3db66546dfd56a1",
+      "last_checkpoint_at": "2026-09-27T22:29:43.529Z",
+      "last_verified_push_at": "2026-09-27T22:29:43.529Z",
+      "next_action": "Open the exact-head draft PR against fix/fcp-061-phpstan-g1, run complete Worker CI, and repair any failing check without changing protections.",
+      "checkpoint_paths": [
+        "config/packages/competition_participation_widget.yaml",
+        "src/CompetitionParticipation/Templates/account/dashboard.html.twig",
+        "src/CompetitionParticipation/Templates/widget/my_competitions.html.twig",
+        "src/Controller/CompetitionParticipationDashboardController.php",
+        "src/EventSubscriber/CompetitionParticipationWidgetCacheSubscriber.php",
+        "src/Widget/CompetitionParticipationQuery.php",
+        "src/Widget/MyCompetitionsWidgetProvider.php",
+        "tests/Controller/CompetitionParticipationDashboardTest.php",
+        "tests/Widget/MyCompetitionsWidgetTest.php"
+      ]
     }
   ],
   "recovery_queue": [],
