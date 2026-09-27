@@ -64,7 +64,8 @@ final class AdminContentPreviewSecurityTest extends WebTestCase
     private function createFixture(KernelBrowser $client, bool $canManageContent): array
     {
         $suffix = bin2hex(random_bytes(6));
-        $marker = 'private-draft-preview-'.$suffix;
+        $slug = 'private-draft-preview-'.$suffix;
+        $marker = 'private-draft-preview-body-'.$suffix;
         $user = (new User())
             ->setEmail('content-preview-'.$suffix.'@example.test')
             ->setDisplayName('Content preview test '.$suffix)
@@ -74,7 +75,7 @@ final class AdminContentPreviewSecurityTest extends WebTestCase
             ->setAuthor($user)
             ->setType(ContentEntry::TYPE_PAGE)
             ->setTitle('Draft preview '.$suffix)
-            ->setSlug($marker)
+            ->setSlug($slug)
             ->setBody($marker)
             ->setSeoDescription('Private draft preview '.$suffix);
 
