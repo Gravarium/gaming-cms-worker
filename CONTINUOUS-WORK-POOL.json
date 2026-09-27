@@ -12,12 +12,12 @@
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
   "published_at": "2026-09-27T00:04:58.409Z",
   "summary": {
-    "total_remaining_worker_tasks": 138,
-    "completed_worker_prs_awaiting_trusted_review": 204,
+    "total_remaining_worker_tasks": 137,
+    "completed_worker_prs_awaiting_trusted_review": 205,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-438 is claimed from exact sanitized main; create its exclusive branches and implement access-role definition permission-delegation regressions.",
+    "next_required_action": "WCP-437 PR #231 is complete on exact green HEAD e4725fc37685caddd53d6cf805ae7b4bb44dd356; keep its claim locked for Trusted review and continue with an independent package.",
     "composition_preparable": 0,
     "immediately_actionable": 0,
     "must_continue": true
@@ -23554,7 +23554,7 @@
       "package_id": "WCP-437",
       "title": "Guard administrative bulk content actions and CSRF",
       "risk": "low",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -23624,13 +23624,13 @@
         ]
       },
       "claimed_on": "2026-09-27T00:02:08.842Z",
-      "claim_state": "active",
+      "claim_state": "locked_until_trusted_resolution",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
       "active_head": "e4725fc37685caddd53d6cf805ae7b4bb44dd356",
       "resume_branch": "feature/wcp-437-admin-content-bulk-security-g1",
-      "last_checkpoint_at": "2026-09-27T00:03:49.320Z",
-      "last_verified_push_at": "2026-09-27T00:03:49.320Z",
+      "last_checkpoint_at": "2026-09-27T00:06:13.754Z",
+      "last_verified_push_at": "2026-09-27T00:06:13.754Z",
       "checkpoint_paths": [
         "tests/Controller/AdminContentBulkMutationSecurityTest.php"
       ],
@@ -23638,22 +23638,47 @@
         "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
         "feature_branch": "e4725fc37685caddd53d6cf805ae7b4bb44dd356"
       },
-      "next_action": "Draft PR #231 is open; run 36281335854 is queued for exact HEAD e4725fc37685caddd53d6cf805ae7b4bb44dd356. Confirm the targeted tests and complete Worker CI, then fix concrete failures on this branch.",
+      "next_action": "PR #231 has green exact-head Worker CI and is ready for Trusted review; keep this claim locked until Trusted explicitly integrates, cancels or transfers it, and continue with an independent package.",
       "worker_pr": 231,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/231",
-      "pr_state": "open_draft_for_ci",
-      "draft_pr": true,
+      "pr_state": "open_ready_for_review_unmerged",
+      "draft_pr": false,
       "last_ci_run_id": 36281335854,
-      "last_ci_result": "queued",
+      "last_ci_result": "success",
       "ci_run_id": 36281335854,
-      "ci_result": "queued",
+      "ci_result": "success",
       "ci_attempts": [
         {
           "run_id": 36281335854,
           "head": "e4725fc37685caddd53d6cf805ae7b4bb44dd356",
-          "result": "queued"
+          "result": "success"
         }
-      ]
+      ],
+      "final_head": "e4725fc37685caddd53d6cf805ae7b4bb44dd356",
+      "final_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "final_changed_paths": [
+        "tests/Controller/AdminContentBulkMutationSecurityTest.php"
+      ],
+      "changed_paths": [
+        "tests/Controller/AdminContentBulkMutationSecurityTest.php"
+      ],
+      "completed_at": "2026-09-27T00:06:13.754Z",
+      "test_results": {
+        "phpunit": "433 tests, 1,878 assertions, 0 failures; one deprecation and one notice.",
+        "phpstan": "Level 8 passed with no errors.",
+        "php_symfony": "Worker PHP/Symfony validation job passed on exact final HEAD.",
+        "postgres18": "PostgreSQL 18 completed the full migration chain: 39 migrations executed, 0 unavailable.",
+        "exact_head_ci": {
+          "run_id": 36281335854,
+          "head": "e4725fc37685caddd53d6cf805ae7b4bb44dd356",
+          "result": "success"
+        }
+      },
+      "completion_summary": "Functional regressions verify CMS_CONTENT_MANAGE authorization, missing/invalid CSRF non-mutation, selected-only execution of a valid rendered bulk action, rejection of unknown actions, and fail-closed behavior above the 200-ID limit. Only the allowed test file changed.",
+      "open_limitations": [
+        "Awaiting Trusted review and Trusted integration CI."
+      ],
+      "trusted_follow_up": "Preserve CMS_CONTENT_MANAGE authorization and the content-bulk CSRF, action allowlist, selected-record scope, and 200-entry limit."
     },
     {
       "priority": 218,
