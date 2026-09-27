@@ -13,6 +13,11 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Index(name: 'IDX_GAME_GUIDE_REVIEW_AUDIT', columns: ['guide_id', 'occurred_at'])]
 class GameGuideReviewAudit
 {
+    public function __construct()
+    {
+        $this->occurredAt = new \\DateTimeImmutable();
+    }
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
