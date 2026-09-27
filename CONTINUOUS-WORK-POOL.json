@@ -39711,7 +39711,7 @@
       "package_id": "WCP-541",
       "title": "Surface and manage structured guild recruitment needs",
       "risk": "medium",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -39819,7 +39819,7 @@
       },
       "published_at": "2026-09-27T13:45:50.999Z",
       "claimed_on": "2026-09-27T13:45:50.999Z",
-      "claim_state": "active",
+      "claim_state": "locked_until_trusted_resolution",
       "active_base_branch": "main",
       "active_base_sha": "b510875e7b0741b9b19f09429d2204a95df51198",
       "active_head": "991a1ec5ae42be72b3e36de12bb47bd3848683ca",
@@ -39829,7 +39829,7 @@
         "feature_branch": "991a1ec5ae42be72b3e36de12bb47bd3848683ca"
       },
       "last_observed_head": "991a1ec5ae42be72b3e36de12bb47bd3848683ca",
-      "last_checkpoint_at": "2026-09-27T14:20:33.055Z",
+      "last_checkpoint_at": "2026-09-27T14:23:23.315Z",
       "checkpoint_paths": [
         "src/Controller/AdminGuildRoleNeedController.php",
         "src/Form/GuildRoleNeedInput.php",
@@ -39843,11 +39843,11 @@
         "tests/Controller/AdminGuildRoleNeedControllerTest.php",
         "tests/Controller/PublicGuildRoleNeedDisplayTest.php"
       ],
-      "next_action": "Inspect Worker CI #833 / 36325503468 on exact HEAD 991a1ec5ae42be72b3e36de12bb47bd3848683ca. Repair any remaining suite failures on the same branch; require both CI jobs green before releasing the draft PR.",
-      "worker_pr_state": "draft",
-      "last_verified_push_at": "2026-09-27T14:20:33.055Z",
-      "ci_result": "in_progress",
-      "last_ci_result": "in_progress",
+      "next_action": "Worker PR #334 is complete on exact green HEAD 991a1ec5ae42be72b3e36de12bb47bd3848683ca. Keep the WCP-541 claim locked until Trusted explicitly integrates, cancels or transfers it. Continue the autonomous Worker loop with a fresh independent package.",
+      "worker_pr_state": "ready_for_review",
+      "last_verified_push_at": "2026-09-27T14:23:23.315Z",
+      "ci_result": "success",
+      "last_ci_result": "success",
       "ci_attempts": [
         {
           "run_id": 36324739327,
@@ -39901,7 +39901,17 @@
           "run_number": 833,
           "head": "991a1ec5ae42be72b3e36de12bb47bd3848683ca",
           "base": "b510875e7b0741b9b19f09429d2204a95df51198",
-          "result": "in_progress"
+          "result": "success",
+          "conclusion": "success",
+          "php_symfony_job": "success",
+          "phpstan": "success",
+          "phpunit": "success",
+          "postgresql_18_migrations": "success",
+          "tests": 545,
+          "assertions": 2299,
+          "migrations_executed": 54,
+          "sql_queries": 750,
+          "summary": "Exact-head Worker CI passed both jobs: PHP/Symfony, PHPStan, Twig/container validation and PHPUnit (545 tests, 2,299 assertions, no failures/errors; one deprecation and one notice); PostgreSQL 18 executed 54 migrations and 750 SQL queries."
         }
       ],
       "worker_pr": 334,
@@ -39920,10 +39930,23 @@
         "tests/Controller/PublicGuildRoleNeedDisplayTest.php"
       ],
       "worker_pr_base_branch": "main",
-      "pr_state": "open_draft",
-      "draft_pr": true,
+      "pr_state": "open",
+      "draft_pr": false,
       "ci_run_id": 36325503468,
-      "last_ci_run_id": 36325503468
+      "last_ci_run_id": 36325503468,
+      "final_head": "991a1ec5ae42be72b3e36de12bb47bd3848683ca",
+      "completed_at": "2026-09-27T14:23:23.315Z",
+      "last_ci_run_number": 833,
+      "completion_evidence": [
+        "Worker main/base SHA b510875e7b0741b9b19f09429d2204a95df51198; final feature HEAD 991a1ec5ae42be72b3e36de12bb47bd3848683ca.",
+        "PR #334 is open and ready for Trusted review on main; 11 changed paths are the reserved WCP-541 paths. No entity or migration changes.",
+        "Admin CRUD is restricted to CMS_GAMING_MANAGE and enabled Gaming; create/edit use form CSRF, delete checks a CSRF token, and create/update/delete are audited. Identity keys remain immutable and all new records inherit the guild's game.",
+        "Duplicate and invalid inputs are returned as form errors; role/class lengths and desired-count range match the existing model.",
+        "The admin application review page links to role-needs management for its guild.",
+        "Public application pages show only active positive-count needs for enabled guilds and games while recruitment and Gaming are enabled.",
+        "Exact-head Worker CI #833 / 36325503468 passed both PHP/Symfony and PostgreSQL 18 jobs. PHPUnit: 545 tests / 2,299 assertions, zero failures/errors; PostgreSQL: 54 migrations / 750 SQL queries.",
+        "No Trusted integration or deployment was performed. Apply to the main CMS only after Trusted review, with its exact-head validation. Keep claim locked until Trusted explicitly resolves it."
+      ]
     },
     {
       "priority": 542,
