@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T07:28:53.773Z",
+  "published_at": "2026-09-27T07:29:07.532Z",
   "summary": {
     "total_remaining_worker_tasks": 141,
     "completed_worker_prs_awaiting_trusted_review": 248,
     "recovery_tasks": 0,
-    "unclaimed": 5,
-    "immediately_claimable": 0,
-    "next_required_action": "WCP-482 was corrected on the same branch at cc549ef94703dc6279bd48397be5f1104cc14324 to send cross-site Sec-Fetch-Site and Origin values against stateless form CSRF; await exact-head Worker CI.",
+    "unclaimed": 6,
+    "immediately_claimable": 1,
+    "next_required_action": "WCP-483 is published and dependency-free on exact sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d. Reserve its exact claim and feature branches before editing files; preserve WCP-482 and all other claims.",
     "composition_preparable": 0,
     "immediately_actionable": 4,
     "must_continue": true
@@ -30635,6 +30635,100 @@
           "note": "An invalid form token alone was accepted because the configured stateless form-CSRF manager validates same-origin request metadata; test request inherited same-origin context. Retest with explicit cross-site Sec-Fetch-Site and Origin headers."
         }
       ]
+    },
+    {
+      "priority": 483,
+      "package_id": "WCP-483",
+      "title": "Merge duplicate content tags without losing assigned entries",
+      "risk": "medium",
+      "execution_state": "unclaimed",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-483-content-tag-merge-g1",
+      "suggested_branch": "feature/wcp-483-content-tag-merge-g1",
+      "base_branch": "main",
+      "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "proposal_kind": "worker_only",
+      "objective": "Give CMS content managers a reachable, audited workflow to merge duplicate content tags into another existing tag without losing any content-tag associations or changing entry data and state.",
+      "allowed_paths": [
+        "src/Controller/AdminContentTagMergeController.php",
+        "src/Form/ContentTagMergeType.php",
+        "templates/admin/content_tag/index.html.twig",
+        "templates/admin/content_tag/merge.html.twig",
+        "tests/Controller/AdminContentTagMergeTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "src/Entity/ContentTag.php",
+        "src/Entity/ContentEntry.php",
+        "src/Repository/ContentTagRepository.php",
+        "src/Controller/AdminContentTagController.php",
+        "src/Form/ContentTagType.php",
+        "tests/Controller/AdminContentTagSecurityTest.php",
+        "tests/Controller/ContentTagLifecycleSecurityTest.php"
+      ],
+      "deliverables": [
+        "Each persisted tag row links to a dedicated merge screen showing the source tag and its assigned-entry count; the target selector lists only other existing tags.",
+        "A CMS_CONTENT_MANAGE user can merge a source tag into the selected target in one transaction: all source associations move, an already-present target association is kept without a duplicate, the source tag is removed, and target tag name/slug/description remain unchanged.",
+        "Content entry fields, publication state, timestamps and unrelated tag associations remain unchanged; one audit event records source id, target id, and affected entry count.",
+        "Missing/invalid CSRF, unauthorized access, same-tag and unknown-tag destinations are rejected without tag or entry mutation or success audit. Merging an empty tag is an audited zero-entry operation."
+      ],
+      "tests": [
+        "Functional coverage for the reachable tag-index action, merge form source/count/target choices, and successful merge across multiple entries including an entry that already has the target tag.",
+        "Assert source removal, target preservation, unchanged entry fields/status/timestamps and unrelated tags, plus exactly one audit event with source, target and affected-entry count.",
+        "Negative functional coverage for denied users, missing/invalid CSRF, same-tag and unknown target; rejected attempts preserve tags, entries and audit history.",
+        "PHPStan level 8, full Worker CI on exact final HEAD, and PostgreSQL 18 migration-chain validation."
+      ],
+      "completion_report": [
+        "Exact sanitized main SHA and exact proposal base.",
+        "Final HEAD and complete changed paths.",
+        "Reachable merge UI, reassignment semantics, duplicate-association handling, source removal and target metadata preservation.",
+        "Authorization, CSRF, invalid destination, entry-state preservation and audit test results.",
+        "Exact-head Worker CI, PHPUnit/PHPStan and PostgreSQL results.",
+        "Unresolved limits and Trusted integration follow-up."
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "preserve-CMS_CONTENT_MANAGE-and-form-CSRF",
+        "merge-is-atomic-and-audited",
+        "never-delete-content-entries-or-unrelated-tag-associations",
+        "preserve-entry-metadata-status-and-target-tag-metadata",
+        "deduplicate-target-tag-join-rows",
+        "no-migration-or-schema-change",
+        "red-ci-stops-integration",
+        "no-private-runtime-or-sensitive-data"
+      ],
+      "proposal_dependency_evidence": [],
+      "collision_check": {
+        "compared_against": "Fresh continuous/work-pool-v4 at 325f65e27726e407937a74eb4561f659ed9aff2c, all active and claim-locked package scopes, sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d, and current open Worker PR heads.",
+        "result": "No active or claim-locked package owns or encloses any allowed path. WCP-470 and WCP-427 own distinct tag-security regression test files; WCP-358's tag form-boundary work and WCP-303 taxonomy slug work are outside this scope; WCP-482 is an active page-layout test. FCP-072 has a broad templates/ scope but is unclaimed and blocked by FCP-035; this proposal does not reserve or modify any foreign claim, and any later FCP-072 claim must revalidate/narrow its template paths against active claims.",
+        "paths": [
+          "src/Controller/AdminContentTagMergeController.php",
+          "src/Form/ContentTagMergeType.php",
+          "templates/admin/content_tag/index.html.twig",
+          "templates/admin/content_tag/merge.html.twig",
+          "tests/Controller/AdminContentTagMergeTest.php"
+        ]
+      },
+      "published_at": "2026-09-27T07:29:07.532Z",
+      "next_action": "Create the exact claim and feature branches from main f1a246c64527ef3ad51f7490773d9bbf9d42be5d before modifying source files."
     }
   ],
   "recovery_queue": [],
