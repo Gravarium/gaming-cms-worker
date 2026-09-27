@@ -17,7 +17,7 @@ use Twig\Environment;
 
 final class UpcomingCompetitionWidgetProviderTest extends KernelTestCase
 {
-    private const KEY = 'gaming.upcoming_competitions';
+    private const KEY = 'gaming.upcoming-competitions';
 
     public function testPageBuilderRegistersTheWidgetAndGamingControlsAvailability(): void
     {
