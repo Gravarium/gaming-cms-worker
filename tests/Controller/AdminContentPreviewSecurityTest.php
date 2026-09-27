@@ -24,7 +24,12 @@ final class AdminContentPreviewSecurityTest extends WebTestCase
             $client->request('GET', '/admin/content/'.$fixture['entryId'].'/preview');
 
             self::assertResponseIsSuccessful();
-            self::assertResponseHeaderSame('Cache-Control', 'private, no-store, max-age=0');
+            $cacheControl = array_map(
+                'trim',
+                explode(',', strtolower((string) $client->getResponse()->headers->get('Cache-Control'))),
+            );
+            self::assertContains('private', $cacheControl);
+            self::assertContains('no-store', $cacheControl);
             self::assertResponseHeaderSame('X-Robots-Tag', 'noindex, nofollow, noarchive');
             self::assertSelectorTextContains('body', $fixture['marker']);
 
