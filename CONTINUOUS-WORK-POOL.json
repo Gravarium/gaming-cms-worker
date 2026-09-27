@@ -10,7 +10,7 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T10:25:47.496Z",
+  "published_at": "2026-09-27T10:31:30.000Z",
   "summary": {
     "total_remaining_worker_tasks": 164,
     "completed_worker_prs_awaiting_trusted_review": 273,
@@ -35027,22 +35027,34 @@
       "claim_state": "active",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-      "active_head": "a34047e59fe3fd64a3f945106d4b0fb093ba573c",
+      "active_head": "f9153fde5a30cd37a4d398cfe41a660e5ba3c3db",
       "branch_heads": {
         "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-        "feature_branch": "a34047e59fe3fd64a3f945106d4b0fb093ba573c"
+        "feature_branch": "f9153fde5a30cd37a4d398cfe41a660e5ba3c3db"
       },
-      "last_observed_head": "a34047e59fe3fd64a3f945106d4b0fb093ba573c",
-      "last_checkpoint_at": "2026-09-27T10:20:53.429Z",
+      "last_observed_head": "f9153fde5a30cd37a4d398cfe41a660e5ba3c3db",
+      "last_checkpoint_at": "2026-09-27T10:31:30.000Z",
       "checkpoint_paths": [
         "src/Controller/PublicCompetitionLeaderboardController.php",
         "templates/competition_leaderboard/index.html.twig",
         "tests/Controller/PublicCompetitionLeaderboardTest.php"
       ],
-      "next_action": "Monitor full exact-head Worker CI for draft PR #304; repair any concrete failures only within the three allowed paths.",
-      "last_verified_push_at": "2026-09-27T10:20:53.429Z",
+      "next_action": "Run and diagnose full exact-head Worker CI for draft PR #304 at f9153fde5a30cd37a4d398cfe41a660e5ba3c3db; the prior PHPStan attempt failed on standing-array offset narrowing, so repair only the three allowed paths.",
+      "last_verified_push_at": "2026-09-27T10:31:30.000Z",
       "worker_pr": 304,
-      "draft_pr": true
+      "draft_pr": true,
+      "ci_attempts": [
+        {
+          "head": "a34047e59fe3fd64a3f945106d4b0fb093ba573c",
+          "run_id": 36312302713,
+          "result": "failure",
+          "jobs": [
+            "108600468737:failure",
+            "108600468998:success"
+          ],
+          "diagnosis": "PHPStan level 8 reported possibly missing standings-array offsets in the new controller; the PostgreSQL migration job was successful."
+        }
+      ]
     },
     {
       "priority": 513,
