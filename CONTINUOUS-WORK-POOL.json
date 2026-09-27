@@ -35158,22 +35158,22 @@
       "claim_state": "active",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-      "active_head": "022100c5101af2a890b3737e1b2627a53989b8d1",
+      "active_head": "4b1f6d704c7bf9c52453798a0357d72bed75b87f",
       "resume_branch": "feature/wcp-513-public-news-month-archive-g1",
       "branch_heads": {
         "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-        "feature_branch": "022100c5101af2a890b3737e1b2627a53989b8d1"
+        "feature_branch": "4b1f6d704c7bf9c52453798a0357d72bed75b87f"
       },
-      "last_observed_head": "022100c5101af2a890b3737e1b2627a53989b8d1",
-      "last_checkpoint_at": "2026-09-27T10:32:35.043Z",
+      "last_observed_head": "4b1f6d704c7bf9c52453798a0357d72bed75b87f",
+      "last_checkpoint_at": "2026-09-27T10:36:49.863Z",
       "checkpoint_paths": [
         "src/Controller/PublicNewsArchiveController.php",
         "src/Repository/PublicNewsArchiveRepository.php",
         "templates/content/news_archive.html.twig",
         "tests/Controller/PublicNewsArchiveTest.php"
       ],
-      "next_action": "Run the focused archive test and full exact-head Worker CI on PR #306; diagnose and fix any concrete failures within the allowed paths.",
-      "last_verified_push_at": "2026-09-27T10:32:35.043Z",
+      "next_action": "Run the focused archive test and full exact-head Worker CI on the repaired HEAD; resolve any remaining concrete failure within allowed paths.",
+      "last_verified_push_at": "2026-09-27T10:36:49.863Z",
       "worker_pr": 306,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/306",
       "draft_pr": true,
@@ -35183,7 +35183,24 @@
         "src/Repository/PublicNewsArchiveRepository.php",
         "templates/content/news_archive.html.twig",
         "tests/Controller/PublicNewsArchiveTest.php"
-      ]
+      ],
+      "ci_attempts": [
+        {
+          "run_id": 36312913864,
+          "head": "022100c5101af2a890b3737e1b2627a53989b8d1",
+          "result": "failure",
+          "summary": "PHPStan required array_values() to preserve list return type."
+        },
+        {
+          "run_id": 36313079459,
+          "head": "4b1f6d704c7bf9c52453798a0357d72bed75b87f",
+          "result": "in_progress"
+        }
+      ],
+      "ci_run_id": 36313079459,
+      "last_ci_run_id": 36313079459,
+      "last_ci_result": "in_progress",
+      "ci_result": "in_progress"
     },
     {
       "priority": 514,
