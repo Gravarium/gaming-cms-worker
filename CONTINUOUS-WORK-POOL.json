@@ -10,10 +10,10 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T11:50:20.311Z",
+  "published_at": "2026-09-27T11:51:08.045Z",
   "summary": {
-    "total_remaining_worker_tasks": 167,
-    "completed_worker_prs_awaiting_trusted_review": 279,
+    "total_remaining_worker_tasks": 166,
+    "completed_worker_prs_awaiting_trusted_review": 280,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
@@ -36212,7 +36212,7 @@
       "package_id": "WCP-520",
       "title": "Make the public news month archive placeable in the page builder",
       "risk": "low",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [
         "WCP-513"
       ],
@@ -36317,7 +36317,7 @@
       },
       "published_at": "2026-09-27T11:20:54.910Z",
       "claimed_on": "2026-09-27T11:20:54.910Z",
-      "claim_state": "active",
+      "claim_state": "locked_until_trusted_resolution",
       "active_base_branch": "feature/wcp-513-public-news-month-archive-g1",
       "active_base_sha": "b7e903a638bd44f60fd7c823ab42a8ca5419a5f9",
       "active_head": "9cd45b26a5ddedecf3d4d0515896795ce2545cef",
@@ -36327,20 +36327,20 @@
         "feature_branch": "9cd45b26a5ddedecf3d4d0515896795ce2545cef"
       },
       "last_observed_head": "9cd45b26a5ddedecf3d4d0515896795ce2545cef",
-      "last_checkpoint_at": "2026-09-27T11:47:55.835Z",
+      "last_checkpoint_at": "2026-09-27T11:51:08.045Z",
       "checkpoint_paths": [
         "config/packages/news_archive_widget.yaml",
         "src/Widget/NewsArchiveWidgetProvider.php",
         "src/ContentArchive/Templates/widget/news_archive.html.twig",
         "tests/Widget/NewsArchiveWidgetProviderTest.php"
       ],
-      "next_action": "Monitor exact-head Worker CI run 36316784094 for 9cd45b26a5ddedecf3d4d0515896795ce2545cef; repair concrete failures only within the four allowed WCP-520 paths.",
+      "next_action": "PR #314 is ready for Trusted review on exact green HEAD 9cd45b26a5ddedecf3d4d0515896795ce2545cef. Keep the claim locked until Trusted explicitly integrates, cancels or transfers it. Do not merge or deploy.",
       "last_verified_push_at": "2026-09-27T11:47:55.835Z",
       "worker_pr": 314,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/314",
-      "worker_pr_state": "draft",
-      "pr_state": "open_draft",
-      "draft_pr": true,
+      "worker_pr_state": "open_ready",
+      "pr_state": "open_ready",
+      "draft_pr": false,
       "worker_pr_changed_paths": [
         "config/packages/news_archive_widget.yaml",
         "src/ContentArchive/Templates/widget/news_archive.html.twig",
@@ -36353,8 +36353,8 @@
       ],
       "ci_run_id": 36316784094,
       "last_ci_run_id": 36316784094,
-      "ci_result": "in_progress",
-      "last_ci_result": "in_progress",
+      "ci_result": "success",
+      "last_ci_result": "success",
       "final_ci_base_sha": "b510875e7b0741b9b19f09429d2204a95df51198",
       "latest_main_sha": "b510875e7b0741b9b19f09429d2204a95df51198",
       "ci_attempts": [
@@ -36370,10 +36370,53 @@
           "run_id": 36316784094,
           "run_number": 780,
           "head": "9cd45b26a5ddedecf3d4d0515896795ce2545cef",
-          "result": "in_progress",
+          "result": "success",
           "base": "b510875e7b0741b9b19f09429d2204a95df51198"
         }
-      ]
+      ],
+      "final_head": "9cd45b26a5ddedecf3d4d0515896795ce2545cef",
+      "completed_at": "2026-09-27T11:51:08.045Z",
+      "completion_evidence": {
+        "exact_head": "9cd45b26a5ddedecf3d4d0515896795ce2545cef",
+        "pull_request": "#314 ready for Trusted review",
+        "worker_ci_run": 36316784094,
+        "worker_ci_run_number": 780,
+        "worker_ci_result": "success",
+        "current_pr_base": "b510875e7b0741b9b19f09429d2204a95df51198",
+        "proposal_base_branch": "feature/wcp-513-public-news-month-archive-g1",
+        "proposal_base_sha": "b7e903a638bd44f60fd7c823ab42a8ca5419a5f9",
+        "dependency_ci_run": 36313291931,
+        "phpstan": "Level 8 passed with no errors",
+        "phpunit": {
+          "tests": 542,
+          "assertions": 2294,
+          "failures": 0,
+          "deprecations": 1,
+          "notices": 1
+        },
+        "postgres18_migration_chain": "passed; 54 migrations, 750 SQL queries, 0 unavailable",
+        "changed_paths": [
+          "config/packages/news_archive_widget.yaml",
+          "src/ContentArchive/Templates/widget/news_archive.html.twig",
+          "src/Controller/PublicNewsArchiveController.php",
+          "src/Repository/PublicNewsArchiveRepository.php",
+          "src/Widget/NewsArchiveWidgetProvider.php",
+          "templates/content/news_archive.html.twig",
+          "tests/Controller/PublicNewsArchiveTest.php",
+          "tests/Widget/NewsArchiveWidgetProviderTest.php"
+        ],
+        "package_paths": [
+          "config/packages/news_archive_widget.yaml",
+          "src/Widget/NewsArchiveWidgetProvider.php",
+          "src/ContentArchive/Templates/widget/news_archive.html.twig",
+          "tests/Widget/NewsArchiveWidgetProviderTest.php"
+        ],
+        "limitations": [
+          "The WCP-513 route/repository feature is a separate green Worker proposal and has not been represented as Trusted-integrated.",
+          "An editor must place the widget in the Page Builder layout; no default home-page layout is changed."
+        ],
+        "trusted_follow_up": "Review the WCP-513 stacked prerequisite and the additive default Twig path together, preserve Content module gating/public-news filtering, and run Trusted CI. Keep all Worker output untrusted until integration review."
+      }
     },
     {
       "priority": 521,
