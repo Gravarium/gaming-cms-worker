@@ -1,0 +1,54 @@
+{% extends 'base.html.twig' %}
+{% set site = site_settings() %}
+{% block title %}Videos suchen | {{ site.siteName }}{% endblock %}
+{% block body %}
+<header class="topbar">
+    <a class="brand" href="{{ path('app_home') }}">{% if site.logoPath %}<img class="site-logo" src="{{ site.logoPath }}" alt="{{ site.siteName }}">{% else %}{{ site.siteName }}{% endif %}</a>
+    <nav class="top-actions"><a href="{{ path('app_video_index') }}">Mediathek</a></nav>
+</header>
+<main class="public-shell video-library video-search-page">
+    <p class="eyebrow">Mediathek</p>
+    <h1>Videos suchen</h1>
+    <p class="hero-copy">Finde veröffentlichte Videos nach Titel oder Beschreibung.</p>
+
+    <form class="video-search-form" action="{{ path('app_video_search') }}" method="get" role="search">
+        <label for="video-search-query">Suchbegriff</label>
+        <div class="video-search-controls">
+            <input id="video-search-query" type="search" name="q" value="{{ query }}" minlength="2" maxlength="100" required>
+            <button type="submit">Videos suchen</button>
+        </div>
+    </form>
+
+    {% if query %}
+        <p class="video-search-count" role="status" aria-live="polite">{{ total }} Treffer für „{{ query }}“.</p>
+        <section class="video-grid" aria-label="Suchergebnisse">
+            {% for video in videos %}
+                <article class="video-card" data-video-id="{{ video.id }}">
+                    <div class="video-card-body">
+                        <p class="eyebrow">VIDEO{% if video.durationLabel %} · {{ video.durationLabel }}{% endif %}</p>
+                        <h2><a href="{{ path('app_video_show', {slug: video.slug}) }}">{{ video.title }}</a></h2>
+                        <p>{{ video.description|striptags|slice(0, 180) }}</p>
+                        <span class="video-date">{{ video.publishedAt|date('d.m.Y H:i') }} Uhr</span>
+                    </div>
+                </article>
+            {% else %}
+                <p class="panel video-search-empty" role="status">Keine passenden veröffentlichten Videos gefunden.</p>
+            {% endfor %}
+        </section>
+
+        {% if totalPages > 1 %}
+            <nav class="video-search-pagination" aria-label="Suchergebnisseiten">
+                {% if page > 1 %}
+                    <a rel="prev" href="{{ path('app_video_search', {q: query, page: page - 1}) }}">Vorherige Seite</a>
+                {% endif %}
+                <span aria-current="page">Seite {{ page }} von {{ totalPages }}</span>
+                {% if page < totalPages %}
+                    <a rel="next" href="{{ path('app_video_search', {q: query, page: page + 1}) }}">Nächste Seite</a>
+                {% endif %}
+            </nav>
+        {% endif %}
+    {% else %}
+        <p class="panel video-search-empty" role="status">Gib mindestens zwei Zeichen ein, um veröffentlichte Videos zu durchsuchen.</p>
+    {% endif %}
+</main>
+{% endblock %}
