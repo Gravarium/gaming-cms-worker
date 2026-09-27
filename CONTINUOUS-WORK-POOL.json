@@ -10,16 +10,16 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T11:57:34.897Z",
+  "published_at": "2026-09-27T12:02:46.670Z",
   "summary": {
-    "total_remaining_worker_tasks": 163,
+    "total_remaining_worker_tasks": 164,
     "completed_worker_prs_awaiting_trusted_review": 283,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-523 PR #317 is ready for review with exact-head CI run 36317196934 passed; continue to the next dependency-safe functional module package.",
+    "next_required_action": "Continue foreign active claims on their exact branches; this chat owns WCP-527's independent account-session CSRF test.",
     "composition_preparable": 0,
-    "immediately_actionable": 24,
+    "immediately_actionable": 25,
     "must_continue": true
   },
   "rules": {
@@ -37293,6 +37293,100 @@
       "ci_result": "not_started",
       "last_ci_result": "not_started",
       "ci_attempts": []
+    },
+    {
+      "priority": 527,
+      "package_id": "WCP-527",
+      "title": "Require CSRF for own-session revocation",
+      "risk": "high",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-527-own-session-revocation-csrf-g1",
+      "suggested_branch": "feature/wcp-527-own-session-revocation-csrf-g1",
+      "base_branch": "main",
+      "base_sha": "b510875e7b0741b9b19f09429d2204a95df51198",
+      "objective": "Add a controller-level functional security regression for POST /account/security/sessions/{id}/revoke. Prove that a missing or invalid CSRF token is rejected without revoking the user's own noncurrent session, and that a valid token from the rendered form permits the owner to revoke it. Do not change runtime behavior.",
+      "allowed_paths": [
+        "tests/Controller/AccountSessionRevocationCsrfTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/",
+        "src/",
+        "templates/",
+        "assets/",
+        "public/"
+      ],
+      "deliverables": [
+        "Create one isolated synthetic user and an owned noncurrent session.",
+        "Verify POST without a token and with a forged token returns 403; after each failure, verify the session remains active.",
+        "Read the real CSRF token from the rendered account security form, revoke the owned session, and verify persisted revoked state.",
+        "Change only the dedicated functional-test file; do not change the controller, session entity, templates, schema or security configuration."
+      ],
+      "tests": [
+        "Run the focused PHPUnit test for AccountSessionRevocationCsrfTest.",
+        "Run PHPStan level 8 and full Worker CI on exact final HEAD, including PostgreSQL 18 migration validation.",
+        "Preserve ownership checks, CSRF validation, session invalidation and audit behavior; do not weaken or skip checks."
+      ],
+      "completion_report": [
+        "Exact sanitized main/base SHA and final Worker HEAD SHA.",
+        "Exact changed path and Worker PR URL.",
+        "Evidence that absent/forged tokens return 403 without mutation and the rendered valid token revokes only the owned noncurrent session.",
+        "Focused PHPUnit, PHPStan and exact-head Worker CI results."
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "session-revocation-requires-owner-and-valid-csrf-token",
+        "failed-csrf-mutation-leaves-session-active",
+        "test-only-no-runtime-or-schema-change",
+        "no-security-test-phpstan-or-CI-weakening",
+        "red-CI-stops-integration",
+        "no-direct-trusted-integration-or-deployment",
+        "no-private-runtime-or-sensitive-data"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "b510875e7b0741b9b19f09429d2204a95df51198",
+      "proposal_kind": "worker_only",
+      "proposal_dependency_evidence": [],
+      "collision_check": {
+        "compared_against": "Fresh continuous/work-pool-v4 blob e879a34644c58a199d89e7c5979e1e7f3ba328e0; sanitized Worker main b510875e7b0741b9b19f09429d2204a95df51198; all active and claim-locked allowed-path scopes; WCP-526 active claim; WCP-527 claim/feature branch searches; and candidate file lookup on main.",
+        "result": "The exact dedicated Account session-revocation CSRF test path is absent from main and is not owned or enclosed by any active or claim-locked task. Existing AccountSecurityHardeningTest covers foreign-session ownership but does not test missing/forged CSRF rejection and persisted state for an owned session. WCP-526 is scoped to media usage.",
+        "paths": [
+          "tests/Controller/AccountSessionRevocationCsrfTest.php"
+        ]
+      },
+      "published_at": "2026-09-27T12:02:46.670Z",
+      "claimed_on": "2026-09-27T12:02:46.670Z",
+      "claim_state": "active",
+      "active_base_branch": "main",
+      "active_base_sha": "b510875e7b0741b9b19f09429d2204a95df51198",
+      "active_head": "b510875e7b0741b9b19f09429d2204a95df51198",
+      "resume_branch": "feature/wcp-527-own-session-revocation-csrf-g1",
+      "branch_heads": {
+        "claim_branch": "b510875e7b0741b9b19f09429d2204a95df51198",
+        "feature_branch": "b510875e7b0741b9b19f09429d2204a95df51198"
+      },
+      "last_observed_head": "b510875e7b0741b9b19f09429d2204a95df51198",
+      "last_checkpoint_at": "2026-09-27T12:02:46.670Z",
+      "checkpoint_paths": [
+        "tests/Controller/AccountSessionRevocationCsrfTest.php"
+      ],
+      "next_action": "Add the owned-session CSRF functional test in the single allowed path; run focused PHPUnit and full exact-head Worker CI."
     }
   ],
   "recovery_queue": [],
