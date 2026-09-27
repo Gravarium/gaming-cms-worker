@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T21:22:51.037Z",
+  "published_at": "2026-09-27T21:24:50.740Z",
   "summary": {
     "total_remaining_worker_tasks": 174,
     "completed_worker_prs_awaiting_trusted_review": 311,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-581 CI #931 failed because the subscriber imported AsEventListener from DependencyInjection instead of EventDispatcher; fix that source import and rerun full exact-head CI.",
+    "next_required_action": "WCP-581 CI #932 / 36351571903 is running on corrected exact HEAD 2b6b441c1fcd12c5e8f67e43cbe79762a08a6636; wait and repair any remaining failures.",
     "composition_preparable": 0,
     "immediately_actionable": 30,
     "must_continue": true
@@ -47396,16 +47396,16 @@
       "claimed_on": "2026-09-27T20:48:38.126Z",
       "active_base_branch": "main",
       "active_base_sha": "7b2ca79405fc12d34bce1386157e929e4668f31a",
-      "active_head": "0f40bcbd514e012feab52c38d276690e2a5320a5",
+      "active_head": "2b6b441c1fcd12c5e8f67e43cbe79762a08a6636",
       "resume_branch": "feature/wcp-581-social-unread-widget-g1",
       "branch_heads": {
         "claim_branch": "7b2ca79405fc12d34bce1386157e929e4668f31a",
-        "feature_branch": "0f40bcbd514e012feab52c38d276690e2a5320a5"
+        "feature_branch": "2b6b441c1fcd12c5e8f67e43cbe79762a08a6636"
       },
-      "last_observed_head": "0f40bcbd514e012feab52c38d276690e2a5320a5",
-      "last_checkpoint_at": "2026-09-27T21:20:10.354Z",
-      "last_verified_push_at": "2026-09-27T21:20:10.354Z",
-      "next_action": "Correct the event-listener attribute namespace, push a new exact feature HEAD, then complete all PHPStan, Symfony, PHPUnit and PostgreSQL checks.",
+      "last_observed_head": "2b6b441c1fcd12c5e8f67e43cbe79762a08a6636",
+      "last_checkpoint_at": "2026-09-27T21:24:50.740Z",
+      "last_verified_push_at": "2026-09-27T21:24:50.740Z",
+      "next_action": "Wait for Worker CI #932 on the corrected exact HEAD; fix any diagnosed failure before marking PR #376 ready.",
       "checkpoint_paths": [
         "config/packages/social_unread_conversations_widget.yaml",
         "src/EventSubscriber/SocialUnreadWidgetCacheSubscriber.php",
@@ -47431,8 +47431,8 @@
         "src/Widget/WidgetRegistry.php",
         "tests/Widget/SocialUnreadConversationsWidgetProviderTest.php"
       ],
-      "ci_result": "failure",
-      "last_ci_result": "failure",
+      "ci_result": "in_progress",
+      "last_ci_result": "in_progress",
       "ci_attempts": [
         {
           "run_id": 36351374198,
@@ -47444,10 +47444,18 @@
           "status": "completed",
           "conclusion": "failure",
           "summary": "PHPStan found an incorrect AsEventListener import namespace in the new cache subscriber. PostgreSQL 18 migration validation passed; remaining PHP/Symfony checks were skipped after analysis failed."
+        },
+        {
+          "run_id": 36351571903,
+          "run_number": 932,
+          "head": "2b6b441c1fcd12c5e8f67e43cbe79762a08a6636",
+          "base": "7b2ca79405fc12d34bce1386157e929e4668f31a",
+          "result": "in_progress",
+          "validation_pr": 376
         }
       ],
-      "ci_run_id": 36351374198,
-      "last_ci_run_id": 36351374198
+      "ci_run_id": 36351571903,
+      "last_ci_run_id": 36351571903
     }
   ],
   "recovery_queue": [],
