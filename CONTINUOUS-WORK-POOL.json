@@ -17,7 +17,7 @@
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-465 is complete on green exact-head Worker PR #257. Continue with another independent Worker-only proposal, preserving active WCP-463 and WCP-464 claims; FCP-069 remains completed and claim-locked.",
+    "next_required_action": "WCP-465 is complete on green exact-head Worker PR #257; WCP-466 is now claimed on sanitized main for website settings permission and form-CSRF persistence coverage. Preserve active WCP-463 and WCP-464 claims.",
     "composition_preparable": 0,
     "immediately_actionable": 3,
     "must_continue": true
@@ -27751,6 +27751,100 @@
         "Awaiting Trusted review and Trusted integration CI."
       ],
       "trusted_follow_up": "Preserve CMS_CONNECTORS_MANAGE and connector-catalog-plan CSRF checks before planning; keep planned targets disabled and optional until private server configuration is set; run full Trusted CI."
+    },
+    {
+      "priority": 466,
+      "package_id": "WCP-466",
+      "title": "Protect website settings updates with permission and form CSRF",
+      "risk": "medium",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-466-admin-settings-write-security-g1",
+      "suggested_branch": "feature/wcp-466-admin-settings-write-security-g1",
+      "base_branch": "main",
+      "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "objective": "Add test-only functional regressions for the existing website settings editor. Verify CMS_SETTINGS_MANAGE protects both read and write requests, missing or invalid Symfony form CSRF tokens do not persist submitted setting changes, and a token rendered by the editor allows an authorized settings update. Restore the prior site-name value and any synthetic settings row during cleanup; do not change settings, media, upload or runtime code.",
+      "allowed_paths": [
+        "tests/Controller/AdminSettingsWriteSecurityTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "src/",
+        "templates/",
+        "migrations/",
+        "config/",
+        "public/uploads/"
+      ],
+      "deliverables": [
+        "An authenticated user without CMS_SETTINGS_MANAGE receives 403 on the settings editor GET and POST; stored site settings remain unchanged.",
+        "Missing and invalid rendered-form CSRF tokens do not persist a forged site-name change.",
+        "A valid token rendered by the form successfully persists an authorized site-name update.",
+        "The original settings value is restored (or a synthetic settings row removed) and synthetic users are removed even on assertion failure.",
+        "Keep the complete change in the single allowed functional test path; do not upload files or external URLs."
+      ],
+      "tests": [
+        "Focused AdminSettingsWriteSecurityTest functional PHPUnit coverage for permission denial, missing/invalid form CSRF, successful rendered-token submission and database restoration.",
+        "PHPStan level 8 and complete Worker CI on exact final HEAD.",
+        "PostgreSQL 18 complete migration-chain validation."
+      ],
+      "completion_report": [
+        "Exact sanitized main base SHA and final Worker HEAD SHA.",
+        "Complete changed-path list and Worker PR.",
+        "Permission denial and unchanged persisted settings after both CSRF failures; rendered-token update proof.",
+        "Focused and complete test commands/results, PHPStan and exact-head CI run.",
+        "Remaining Trusted integration follow-up."
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "preserve-CMS_SETTINGS_MANAGE-and-Symfony-form-CSRF-before-settings-persistence",
+        "invalid-forms-must-not-persist-settings-or-create-media-assets",
+        "restore-preexisting-settings-and-all-synthetic-test-state",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment",
+        "no-private-runtime-or-sensitive-data"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "proposal_kind": "worker_only",
+      "proposal_dependency_evidence": [],
+      "collision_check": {
+        "compared_against": "Fresh continuous/work-pool-v4 at fb85239b09b79788fc57c94ade8fc55c693af23d, all active and claim-locked allowed-path scopes, and exact sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d.",
+        "result": "No active or claim-locked package owns or encloses tests/Controller/AdminSettingsWriteSecurityTest.php. The test file is absent from exact sanitized main. WCP-313 owns SiteSettings.php and its entity boundary test, and WCP-355 owns SiteSettingsType.php and its form boundary test; this proposal leaves those paths untouched and tests controller authorization/form-CSRF persistence behavior only. Existing SiteConfigurationAccessTest covers anonymous login redirects for /admin/settings but not an authenticated user without CMS_SETTINGS_MANAGE, invalid form CSRF, or a valid rendered-token write. No active WCP-463/WCP-464 or claim-locked scope overlaps this file; no existing task or dependency is modified.",
+        "paths": [
+          "tests/Controller/AdminSettingsWriteSecurityTest.php"
+        ]
+      },
+      "published_at": "2026-09-27T04:25:51.409Z",
+      "claimed_on": "2026-09-27T04:25:51.409Z",
+      "claim_state": "active",
+      "active_base_branch": "main",
+      "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "resume_branch": "feature/wcp-466-admin-settings-write-security-g1",
+      "last_checkpoint_at": "2026-09-27T04:25:51.409Z",
+      "checkpoint_paths": [],
+      "branch_heads": {
+        "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+        "feature_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d"
+      },
+      "next_action": "Implement the settings editor permission, form-CSRF and safe persistence regression tests on the feature branch; checkpoint the focused test file and run full exact-head Worker CI.",
+      "last_observed_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "last_verified_push_at": "2026-09-27T04:25:51.409Z"
     }
   ],
   "recovery_queue": [],
