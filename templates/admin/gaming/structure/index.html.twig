@@ -56,7 +56,29 @@
         <thead><tr><th>Frage</th><th>Typ</th><th>Pflicht</th><th>Status</th><th>Aktionen</th></tr></thead>
         <tbody>{% for question in questions %}<tr>
             <td>{{ question.label }}</td><td>{{ question.type }}</td><td>{{ question.required ? 'Ja' : 'Nein' }}</td><td>{{ question.enabled ? 'Aktiv' : 'Inaktiv' }}</td>
-            <td class="row-actions"><a href="{{ path('app_admin_guild_question_edit', {guild: guild.id, question: question.id}) }}">Bearbeiten</a><form method="post" action="{{ path('app_admin_guild_question_delete', {guild: guild.id, question: question.id}) }}" onsubmit="return confirm('Frage löschen?');"><input type="hidden" name="_token" value="{{ csrf_token('delete-question-' ~ question.id) }}"><button class="text-danger">Löschen</button></form></td>
+            <td class="row-actions">
+                {% if not loop.first %}
+                    <form method="post" action="{{ path('app_admin_guild_question_move', {guild: guild.id, question: question.id, direction: 'up'}) }}" data-order-type="question" data-order-id="{{ question.id }}" data-direction="up">
+                        <input type="hidden" name="_token" value="{{ csrf_token('guild-question-move-' ~ question.id) }}">
+                        <button type="submit" aria-label="Frage {{ question.label }} nach oben" title="Nach oben">↑</button>
+                    </form>
+                {% else %}
+                    <button type="button" disabled aria-label="Frage {{ question.label }} ist bereits an erster Stelle" title="Bereits an erster Stelle">↑</button>
+                {% endif %}
+                {% if not loop.last %}
+                    <form method="post" action="{{ path('app_admin_guild_question_move', {guild: guild.id, question: question.id, direction: 'down'}) }}" data-order-type="question" data-order-id="{{ question.id }}" data-direction="down">
+                        <input type="hidden" name="_token" value="{{ csrf_token('guild-question-move-' ~ question.id) }}">
+                        <button type="submit" aria-label="Frage {{ question.label }} nach unten" title="Nach unten">↓</button>
+                    </form>
+                {% else %}
+                    <button type="button" disabled aria-label="Frage {{ question.label }} ist bereits an letzter Stelle" title="Bereits an letzter Stelle">↓</button>
+                {% endif %}
+                <a href="{{ path('app_admin_guild_question_edit', {guild: guild.id, question: question.id}) }}">Bearbeiten</a>
+                <form method="post" action="{{ path('app_admin_guild_question_delete', {guild: guild.id, question: question.id}) }}" onsubmit="return confirm('Frage löschen?');">
+                    <input type="hidden" name="_token" value="{{ csrf_token('delete-question-' ~ question.id) }}">
+                    <button class="text-danger">Löschen</button>
+                </form>
+            </td>
         </tr>{% else %}<tr><td colspan="5">Noch keine eigenen Fragen vorhanden.</td></tr>{% endfor %}</tbody>
     </table></div>
 </main>
