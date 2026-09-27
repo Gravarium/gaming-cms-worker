@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T14:52:45.598Z",
+  "published_at": "2026-09-27T14:53:42.927Z",
   "summary": {
     "total_remaining_worker_tasks": 167,
     "completed_worker_prs_awaiting_trusted_review": 293,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-545 is complete on PR #338 with green exact-head CI; keep its claim locked. Re-evaluate the live pool and code for the next free, dependency-safe functional module-completion package; do not merge or deploy.",
+    "next_required_action": "Implement WCP-548 on feature/wcp-548-public-guild-role-needs-widget-g1 from exact green predecessor HEAD 991a1ec5ae42be72b3e36de12bb47bd3848683ca; use only its five reserved paths.",
     "composition_preparable": 0,
     "immediately_actionable": 28,
     "must_continue": true
@@ -40948,6 +40948,186 @@
       "draft_pr": true,
       "ci_run_id": 36327485473,
       "last_ci_run_id": 36327485473
+    },
+    {
+      "priority": 548,
+      "package_id": "WCP-548",
+      "title": "Place public guild recruitment needs in the Page Builder",
+      "risk": "medium",
+      "execution_state": "worker_in_progress",
+      "dependencies": [
+        "WCP-541"
+      ],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-548-public-guild-role-needs-widget-g1",
+      "suggested_branch": "feature/wcp-548-public-guild-role-needs-widget-g1",
+      "base_branch": "feature/wcp-541-guild-role-needs-g1",
+      "base_sha": "991a1ec5ae42be72b3e36de12bb47bd3848683ca",
+      "objective": "Make the existing public guild recruitment role-needs workflow placeable on Page Builder pages. Add an auto-discovered Gaming widget that shows at most 12 active positive-count role needs for enabled guilds with open recruitment and their enabled matching games, ordered deterministically and linked to the public application page. Respect the Gaming module gate. Do not add or change entities, schema, migrations, recruitment writes, shared Page Builder registry, WCP-541 files, or the active member-events widget.",
+      "allowed_paths": [
+        "src/Widget/PublicGuildRoleNeedsWidgetProvider.php",
+        "src/Widget/GuildRoleNeeds/PublicGuildRoleNeedsWidgetQuery.php",
+        "src/GuildRoleNeedsWidget/Templates/widget/public_guild_role_needs.html.twig",
+        "config/packages/guild_role_needs_widget.yaml",
+        "tests/Widget/PublicGuildRoleNeedsWidgetProviderTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "templates/",
+        "src/Widget/WidgetRegistry.php",
+        "src/Widget/BundledWidgetProvider.php",
+        "src/GuildRecruitment/PublicGuildRoleNeedQuery.php",
+        "src/Controller/AdminGuildRoleNeedController.php",
+        "src/Form/GuildRoleNeedInput.php",
+        "src/Form/GuildRoleNeedType.php",
+        "src/Repository/GuildRoleNeedRepository.php",
+        "src/Twig/PublicGuildRoleNeedExtension.php",
+        "templates/gaming/apply.html.twig",
+        "tests/Controller/PublicGuildRoleNeedDisplayTest.php",
+        "src/Widget/UpcomingGuildEventsWidgetProvider.php",
+        "src/Widget/PublicGuildEventsWidgetProvider.php",
+        "src/Widget/GuildEvent/UpcomingGuildEventsQuery.php",
+        "src/Widget/PublicGuildEventsQuery.php",
+        "src/EventSubscriber/GuildEventWidgetCacheSubscriber.php",
+        "src/Entity/GuildEvent.php",
+        "src/Entity/GuildEventSignup.php"
+      ],
+      "deliverables": [
+        "Auto-discovered gaming.public-guild-role-needs Page Builder widget with a bounded shared count setting.",
+        "Public-only deterministic projection of active positive-count needs for enabled guilds with open recruitment and enabled matching games, capped at 12.",
+        "Escaped role/class/count display linking to the existing public guild application route; no applicant or member information.",
+        "Gaming-module availability suppresses widget discovery and data; no write, schema or migration changes."
+      ],
+      "tests": [
+        "Kernel tests verify widget discovery, public filtering, deterministic order, shared count clamping and the hard 12-item ceiling.",
+        "Negative coverage excludes inactive and zero-count needs, disabled guilds/games, closed recruitment and disabled Gaming; prove no applicant or member data is returned.",
+        "Twig tests cover escaping, public application links and empty state.",
+        "Run full exact-head Worker CI including PHPStan, PHPUnit and PostgreSQL 18 migration-chain validation."
+      ],
+      "completion_report": [
+        "Exact base and final Worker HEAD.",
+        "Complete changed-path list and Worker PR.",
+        "Public filtering, module gate, Page Builder rendering and hard-bound evidence.",
+        "Focused tests and exact-head complete CI results.",
+        "Open limitations and Trusted follow-up."
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-Trusted-review-and-exact-head-CI",
+        "preserve-all-security-permissions-CSRF-validation-recovery-rollback-and-upload-controls",
+        "no-private-runtime-or-sensitive-data",
+        "no-schema-migration-or-entity-change",
+        "no-edit-to-active-or-claim-locked-paths",
+        "no-direct-Trusted-integration-or-deployment"
+      ],
+      "proposal_base_branch": "feature/wcp-541-guild-role-needs-g1",
+      "proposal_base_sha": "991a1ec5ae42be72b3e36de12bb47bd3848683ca",
+      "proposal_kind": "worker_only",
+      "proposal_dependency_evidence": [
+        {
+          "package_id": "WCP-541",
+          "feature_branch": "feature/wcp-541-guild-role-needs-g1",
+          "worker_pr": 334,
+          "exact_head": "991a1ec5ae42be72b3e36de12bb47bd3848683ca",
+          "ci_run_id": 36325503468,
+          "ci_run_number": 833,
+          "ci_result": "success",
+          "status": "worker_complete_awaiting_trusted_review",
+          "claim_state": "locked_until_trusted_resolution"
+        }
+      ],
+      "collision_check": {
+        "compared_against": "Fresh continuous/work-pool-v4 @ 4228a8593f6072ac8aea7771e0014de69b7b4e54; exact WCP-541 PR #334/CI #833/head 991a1ec5ae42be72b3e36de12bb47bd3848683ca; active WCP-532 member-events, WCP-545 video-library, WCP-547 public-downloads; completed/locked WCP-537 public guild events and FCP-053 guild lifecycle; WCP-548 branch/issue/PR search immediately before claim.",
+        "result": "All five reserved paths are disjoint from active and claim-locked paths. WCP-541 is a green completed predecessor and its claim remains locked; the new package only consumes its public role-needs data and does not edit its files. The active member-events widget and the completed public-events widget use different provider/query/template/config/test paths. No shared registry, route, module catalog, entity, schema or migration change is needed.",
+        "paths": [
+          "src/Widget/PublicGuildRoleNeedsWidgetProvider.php",
+          "src/Widget/GuildRoleNeeds/PublicGuildRoleNeedsWidgetQuery.php",
+          "src/GuildRoleNeedsWidget/Templates/widget/public_guild_role_needs.html.twig",
+          "config/packages/guild_role_needs_widget.yaml",
+          "tests/Widget/PublicGuildRoleNeedsWidgetProviderTest.php"
+        ],
+        "observed_nonblocking_path_hits": [
+          {
+            "id": "WCP-541",
+            "title": "Surface and manage structured guild recruitment needs",
+            "state": "worker_complete_awaiting_trusted_review",
+            "paths": [
+              "src/Controller/AdminGuildRoleNeedController.php",
+              "src/Form/GuildRoleNeedInput.php",
+              "src/Form/GuildRoleNeedType.php",
+              "src/Repository/GuildRoleNeedRepository.php",
+              "src/GuildRecruitment/PublicGuildRoleNeedQuery.php",
+              "src/Twig/PublicGuildRoleNeedExtension.php",
+              "templates/admin/gaming/role_needs.html.twig",
+              "templates/admin/gaming/application/review.html.twig",
+              "templates/gaming/apply.html.twig",
+              "tests/Controller/AdminGuildRoleNeedControllerTest.php",
+              "tests/Controller/PublicGuildRoleNeedDisplayTest.php"
+            ]
+          },
+          {
+            "id": "WCP-532",
+            "title": "Add a member-scoped upcoming guild events Page Builder widget",
+            "state": "worker_in_progress",
+            "paths": [
+              "src/Widget/GuildEvent/UpcomingGuildEventsQuery.php",
+              "src/Widget/UpcomingGuildEventsWidgetProvider.php",
+              "src/GuildEventWidget/Templates/widget/upcoming_guild_events.html.twig",
+              "src/EventSubscriber/GuildEventWidgetCacheSubscriber.php",
+              "config/packages/guild_event_widget.yaml",
+              "tests/Widget/UpcomingGuildEventsWidgetProviderTest.php"
+            ]
+          },
+          {
+            "id": "WCP-537",
+            "title": "Place public guild event schedules in the Page Builder",
+            "state": "worker_complete_awaiting_trusted_review",
+            "paths": [
+              "src/Widget/PublicGuildEventsWidgetProvider.php",
+              "src/Widget/PublicGuildEventsQuery.php",
+              "src/PublicGuildEventsWidget/Templates/widget/public_guild_events.html.twig",
+              "config/packages/public_guild_events_widget.yaml",
+              "tests/Widget/PublicGuildEventsWidgetProviderTest.php"
+            ]
+          }
+        ]
+      },
+      "published_at": "2026-09-27T14:53:42.927Z",
+      "claimed_on": "2026-09-27T14:53:42.927Z",
+      "claim_state": "active",
+      "active_base_branch": "feature/wcp-541-guild-role-needs-g1",
+      "active_base_sha": "991a1ec5ae42be72b3e36de12bb47bd3848683ca",
+      "active_head": "991a1ec5ae42be72b3e36de12bb47bd3848683ca",
+      "resume_branch": "feature/wcp-548-public-guild-role-needs-widget-g1",
+      "branch_heads": {
+        "claim_branch": "991a1ec5ae42be72b3e36de12bb47bd3848683ca",
+        "feature_branch": "991a1ec5ae42be72b3e36de12bb47bd3848683ca"
+      },
+      "last_observed_head": "991a1ec5ae42be72b3e36de12bb47bd3848683ca",
+      "last_checkpoint_at": "2026-09-27T14:53:42.927Z",
+      "checkpoint_paths": [],
+      "next_action": "Create the exact claim and feature branches from the green WCP-541 HEAD; implement only the five reserved files and test visibility, clamping and empty state.",
+      "worker_pr_state": "not_created",
+      "worker_pr_changed_paths": [],
+      "worker_pr_base_branch": "feature/wcp-541-guild-role-needs-g1",
+      "draft_pr": true,
+      "pr_state": "not_created",
+      "ci_result": "not_started",
+      "last_ci_result": "not_started",
+      "ci_attempts": []
     }
   ],
   "recovery_queue": [],
