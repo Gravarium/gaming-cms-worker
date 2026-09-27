@@ -92,29 +92,40 @@ final class PublicCompetitionLeaderboardController extends AbstractController
                 continue;
             }
 
-            $standings[$participantAId]['played']++;
-            $standings[$participantBId]['played']++;
-            $standings[$participantAId]['scoreFor'] += $scoreA;
-            $standings[$participantAId]['scoreAgainst'] += $scoreB;
-            $standings[$participantBId]['scoreFor'] += $scoreB;
-            $standings[$participantBId]['scoreAgainst'] += $scoreA;
-            $standings[$participantAId]['difference'] += $scoreA - $scoreB;
-            $standings[$participantBId]['difference'] += $scoreB - $scoreA;
+            /** @var array{participant: CompetitionParticipant, played: int, wins: int, draws: int, losses: int, scoreFor: int, scoreAgainst: int, difference: int, points: int}|null $standingA */
+            $standingA = $standings[$participantAId] ?? null;
+            /** @var array{participant: CompetitionParticipant, played: int, wins: int, draws: int, losses: int, scoreFor: int, scoreAgainst: int, difference: int, points: int}|null $standingB */
+            $standingB = $standings[$participantBId] ?? null;
+            if ($standingA === null || $standingB === null) {
+                continue;
+            }
+
+            ++$standingA['played'];
+            ++$standingB['played'];
+            $standingA['scoreFor'] += $scoreA;
+            $standingA['scoreAgainst'] += $scoreB;
+            $standingB['scoreFor'] += $scoreB;
+            $standingB['scoreAgainst'] += $scoreA;
+            $standingA['difference'] += $scoreA - $scoreB;
+            $standingB['difference'] += $scoreB - $scoreA;
 
             if ($scoreA > $scoreB) {
-                ++$standings[$participantAId]['wins'];
-                ++$standings[$participantBId]['losses'];
-                $standings[$participantAId]['points'] += 3;
+                ++$standingA['wins'];
+                ++$standingB['losses'];
+                $standingA['points'] += 3;
             } elseif ($scoreB > $scoreA) {
-                ++$standings[$participantBId]['wins'];
-                ++$standings[$participantAId]['losses'];
-                $standings[$participantBId]['points'] += 3;
+                ++$standingB['wins'];
+                ++$standingA['losses'];
+                $standingB['points'] += 3;
             } else {
-                ++$standings[$participantAId]['draws'];
-                ++$standings[$participantBId]['draws'];
-                ++$standings[$participantAId]['points'];
-                ++$standings[$participantBId]['points'];
+                ++$standingA['draws'];
+                ++$standingB['draws'];
+                ++$standingA['points'];
+                ++$standingB['points'];
             }
+
+            $standings[$participantAId] = $standingA;
+            $standings[$participantBId] = $standingB;
 
             $results[] = [
                 'round' => $match->getRoundNumber(),
@@ -128,6 +139,10 @@ final class PublicCompetitionLeaderboardController extends AbstractController
         }
 
         $standings = array_values($standings);
+        /**
+         * @param array{participant: CompetitionParticipant, played: int, wins: int, draws: int, losses: int, scoreFor: int, scoreAgainst: int, difference: int, points: int} $left
+         * @param array{participant: CompetitionParticipant, played: int, wins: int, draws: int, losses: int, scoreFor: int, scoreAgainst: int, difference: int, points: int} $right
+         */
         usort($standings, static function (array $left, array $right): int {
             foreach (['points', 'wins', 'difference', 'scoreFor'] as $key) {
                 $comparison = $right[$key] <=> $left[$key];
