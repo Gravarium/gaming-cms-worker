@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T07:28:16.350Z",
+  "published_at": "2026-09-27T07:28:53.773Z",
   "summary": {
     "total_remaining_worker_tasks": 141,
     "completed_worker_prs_awaiting_trusted_review": 248,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-482 CI run 36302859254 identified that stateless form CSRF accepts same-origin metadata despite an altered token. Fix the allowlisted test to send explicit cross-site metadata, then rerun exact-head CI.",
+    "next_required_action": "WCP-482 was corrected on the same branch at cc549ef94703dc6279bd48397be5f1104cc14324 to send cross-site Sec-Fetch-Site and Origin values against stateless form CSRF; await exact-head Worker CI.",
     "composition_preparable": 0,
     "immediately_actionable": 4,
     "must_continue": true
@@ -30606,15 +30606,15 @@
       "claim_state": "active",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-      "active_head": "b9bc6ae408ced2ab6f219ce149ee558bc8ee90ca",
+      "active_head": "cc549ef94703dc6279bd48397be5f1104cc14324",
       "resume_branch": "feature/wcp-482-content-layout-csrf-boundary-g1",
       "branch_heads": {
         "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-        "feature_branch": "b9bc6ae408ced2ab6f219ce149ee558bc8ee90ca"
+        "feature_branch": "cc549ef94703dc6279bd48397be5f1104cc14324"
       },
-      "next_action": "Submit the same rendered form with an invalid token and explicit cross-site Sec-Fetch-Site/Origin headers; verify rejected response and unchanged page/layout, then rerun exact-head CI.",
-      "last_observed_head": "b9bc6ae408ced2ab6f219ce149ee558bc8ee90ca",
-      "last_checkpoint_at": "2026-09-27T07:28:16.350Z",
+      "next_action": "Await exact-head CI after the stateless-CSRF cross-site metadata correction; diagnose any remaining test-only failure.",
+      "last_observed_head": "cc549ef94703dc6279bd48397be5f1104cc14324",
+      "last_checkpoint_at": "2026-09-27T07:28:53.773Z",
       "checkpoint_paths": [
         "tests/Controller/ContentLayoutMutationBoundaryTest.php"
       ],
