@@ -81,7 +81,7 @@ final class BackupInventoryBrowser
                 'all' => true,
                 'successful' => $status instanceof BackupVerificationStatus && $status->isSuccessful(),
                 'failed' => $status instanceof BackupVerificationStatus && !$status->isSuccessful(),
-                'unchecked' => !$status instanceof BackupVerificationStatus,
+                'unchecked' => !($status instanceof BackupVerificationStatus),
             };
             if (!$matchesStatus) {
                 continue;
