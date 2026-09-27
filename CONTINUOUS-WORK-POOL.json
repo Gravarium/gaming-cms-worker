@@ -17,7 +17,7 @@
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-476 is active on checkpoint HEAD 79c3d5eacc177fed4d83137b2e7ba7cd5489e46e with only tests/Controller/AdminGuildMemberMutationSecurityTest.php changed; open a draft PR and run complete exact-head CI. WCP-474 remains another worker's active claim; keep the five blocked FCP dependencies unchanged.",
+    "next_required_action": "WCP-476 is active on exact PR HEAD 79c3d5eacc177fed4d83137b2e7ba7cd5489e46e (draft PR #269; exact-head CI run 36299815719 in progress). Wait for the complete run, diagnose failures, and continue the own claim. WCP-474 remains another worker's active 2FA claim; do not alter it.",
     "composition_preparable": 0,
     "immediately_actionable": 4,
     "must_continue": true
@@ -29526,13 +29526,36 @@
         "claim_branch": "56274da100719bdbfd62e80f52141160da5a718d",
         "feature_branch": "79c3d5eacc177fed4d83137b2e7ba7cd5489e46e"
       },
-      "next_action": "Open a draft Worker PR against worker main and run complete exact-head CI.",
+      "next_action": "Wait for exact-head Worker CI run 36299815719; inspect every job and repair concrete failures only within the allowed test file.",
       "last_observed_head": "79c3d5eacc177fed4d83137b2e7ba7cd5489e46e",
       "last_checkpoint_at": "2026-09-27T06:20:14.768Z",
       "checkpoint_paths": [
         "tests/Controller/AdminGuildMemberMutationSecurityTest.php"
       ],
-      "last_verified_push_at": "2026-09-27T06:20:14.768Z"
+      "last_verified_push_at": "2026-09-27T06:20:14.768Z",
+      "worker_pr": 269,
+      "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/269",
+      "draft_pr": true,
+      "pr_state": "open_draft_ci_pending",
+      "ci_run_id": 36299815719,
+      "last_ci_run_id": 36299815719,
+      "ci_result": "in_progress",
+      "last_ci_result": "in_progress",
+      "ci_attempts": [
+        {
+          "run_id": 36299815719,
+          "head": "79c3d5eacc177fed4d83137b2e7ba7cd5489e46e",
+          "result": "in_progress"
+        }
+      ],
+      "worker_pr_changed_paths": [
+        "src/Controller/AdminGuildMemberController.php",
+        "src/Repository/GuildMemberRepository.php",
+        "templates/admin/gaming/member/index.html.twig",
+        "tests/Controller/AdminGuildMemberDeletionSecurityTest.php",
+        "tests/Controller/AdminGuildMemberDirectoryPaginationTest.php",
+        "tests/Controller/AdminGuildMemberMutationSecurityTest.php"
+      ]
     },
     {
       "priority": 477,
