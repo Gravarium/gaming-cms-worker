@@ -10,7 +10,7 @@ use App\Entity\Guild;
 use App\Entity\GuildMember;
 use App\Entity\GuildOnboardingTask;
 use App\Entity\User;
-use App\Form\GuildOnboardingTaskReadRepository;
+use App\Repository\GuildOnboardingTaskReadRepository;
 use App\Security\CmsPermission;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
