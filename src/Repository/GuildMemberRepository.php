@@ -18,9 +18,9 @@ final class GuildMemberRepository extends ServiceEntityRepository
 
     public function countForAdminGuild(Guild $guild, string $query, ?bool $active): int
     {
-        $builder = $this->createQueryBuilder('member')
-            ->select('COUNT(member.id)')
-            ->andWhere('member.guild = :guild')
+        $builder = $this->createQueryBuilder('guildMember')
+            ->select('COUNT(guildMember.id)')
+            ->andWhere('guildMember.guild = :guild')
             ->setParameter('guild', $guild);
         $this->applyAdminFilters($builder, $query, $active);
 
@@ -37,13 +37,13 @@ final class GuildMemberRepository extends ServiceEntityRepository
         int $limit,
         int $offset,
     ): array {
-        $builder = $this->createQueryBuilder('member')
-            ->andWhere('member.guild = :guild')
+        $builder = $this->createQueryBuilder('guildMember')
+            ->andWhere('guildMember.guild = :guild')
             ->setParameter('guild', $guild)
-            ->orderBy('member.leader', 'DESC')
-            ->addOrderBy('member.position', 'ASC')
-            ->addOrderBy('member.characterName', 'ASC')
-            ->addOrderBy('member.id', 'ASC')
+            ->orderBy('guildMember.leader', 'DESC')
+            ->addOrderBy('guildMember.position', 'ASC')
+            ->addOrderBy('guildMember.characterName', 'ASC')
+            ->addOrderBy('guildMember.id', 'ASC')
             ->setFirstResult(max(0, $offset))
             ->setMaxResults(max(1, min(100, $limit)));
         $this->applyAdminFilters($builder, $query, $active);
@@ -68,13 +68,13 @@ final class GuildMemberRepository extends ServiceEntityRepository
         $query = mb_strtolower(trim($query));
         if ($query !== '') {
             $builder
-                ->andWhere('LOWER(member.characterName) LIKE :search')
+                ->andWhere('LOWER(guildMember.characterName) LIKE :search')
                 ->setParameter('search', '%'.$query.'%');
         }
 
         if ($active !== null) {
             $builder
-                ->andWhere('member.active = :active')
+                ->andWhere('guildMember.active = :active')
                 ->setParameter('active', $active);
         }
     }
