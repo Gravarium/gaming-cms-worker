@@ -102,6 +102,10 @@ final class AdminContentRedirectBrowserTest extends WebTestCase
         self::assertSame(1, $crawler->filter('[data-redirect-id="'.$published->getId().'"]')->count());
         self::assertSame(0, $crawler->filter('[data-redirect-id="'.$draft->getId().'"]')->count());
 
+        $sourceSearch = $client->request('GET', '/admin/content/redirects?q='.rawurlencode('old-'.$suffix));
+        self::assertResponseIsSuccessful();
+        self::assertSame(1, $sourceSearch->filter('[data-redirect-id="'.$published->getId().'"]')->count());
+
         $targetSearch = $client->request('GET', '/admin/content/redirects?q='.rawurlencode('draft '.$suffix).'&type=page');
         self::assertResponseIsSuccessful();
         self::assertSame(1, $targetSearch->filter('[data-redirect-id="'.$draft->getId().'"]')->count());
@@ -112,7 +116,7 @@ final class AdminContentRedirectBrowserTest extends WebTestCase
         self::assertSelectorTextContains('h2', '1 Weiterleitung');
         self::assertSelectorExists('a[href="/admin/content/'.$draft->getEntry()->getId().'/edit"]');
         self::assertSelectorTextContains('body', 'Inaktiv · Ziel nicht veröffentlicht');
-        self::assertSelectorNotExists('a[href="/news/old-draft-'.$suffix.'"]');
+        self::assertSelectorNotExists('a[href="/page/old-draft-'.$suffix.'"]');
     }
 
     public function testInventoryPaginatesAllMatchingRedirectsWithoutGapsOrDuplicates(): void
