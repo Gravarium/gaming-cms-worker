@@ -13,11 +13,11 @@
   "published_at": "2026-09-27T06:18:40.681Z",
   "summary": {
     "total_remaining_worker_tasks": 141,
-    "completed_worker_prs_awaiting_trusted_review": 242,
+    "completed_worker_prs_awaiting_trusted_review": 243,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-476 checkpoint is 1bf077e38d29daa31def26c007c631129ee323da; runs 36299815719 and 36300003993 failed on test fixture/expected 422 response details and are recorded. Corrected Exact-Head CI 36300156961 is now running. Preserve foreign claim WCP-474 and FCP dependencies.",
+    "next_required_action": "WCP-476 is complete on exact green HEAD 1bf077e38d29daa31def26c007c631129ee323da (PR #269, CI run 36300156961) and claim-locked for Trusted review. Continue from a separate dependency-safe WCP; WCP-474 is another worker's active 2FA claim, and five unclaimed FCPs remain blocked. A separate blank rankName form-mapping regression was observed in CI and should be addressed as its own WCP without expanding WCP-476.",
     "composition_preparable": 0,
     "immediately_actionable": 4,
     "must_continue": true
@@ -29434,7 +29434,7 @@
       "package_id": "WCP-476",
       "title": "Protect guild-member creation and editing authorization, CSRF and ownership",
       "risk": "medium",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [
         "WCP-475"
       ],
@@ -29517,7 +29517,7 @@
       },
       "published_at": "2026-09-27T06:14:53.490Z",
       "claimed_on": "2026-09-27T06:14:53.490Z",
-      "claim_state": "active",
+      "claim_state": "locked_until_trusted_resolution",
       "active_base_branch": "feature/wcp-475-guild-member-deletion-security-g1",
       "active_base_sha": "56274da100719bdbfd62e80f52141160da5a718d",
       "active_head": "1bf077e38d29daa31def26c007c631129ee323da",
@@ -29526,7 +29526,7 @@
         "claim_branch": "56274da100719bdbfd62e80f52141160da5a718d",
         "feature_branch": "1bf077e38d29daa31def26c007c631129ee323da"
       },
-      "next_action": "Wait for exact-head Worker CI on 1bf077e38d29daa31def26c007c631129ee323da; inspect every job and repair concrete failures only within the allowed test file.",
+      "next_action": "Await Trusted review and integration validation; keep this claim locked until Trusted explicitly integrates, cancels or transfers it. Continue autonomously from a separate claim.",
       "last_observed_head": "1bf077e38d29daa31def26c007c631129ee323da",
       "last_checkpoint_at": "2026-09-27T06:28:12.518Z",
       "checkpoint_paths": [
@@ -29535,29 +29535,29 @@
       "last_verified_push_at": "2026-09-27T06:28:12.518Z",
       "worker_pr": 269,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/269",
-      "draft_pr": true,
-      "pr_state": "open_draft_ci_pending",
+      "draft_pr": false,
+      "pr_state": "open_ready_unmerged",
       "ci_run_id": 36300156961,
       "last_ci_run_id": 36300156961,
-      "ci_result": "in_progress",
-      "last_ci_result": "in_progress",
+      "ci_result": "success",
+      "last_ci_result": "success",
       "ci_attempts": [
         {
           "run_id": 36299815719,
           "head": "79c3d5eacc177fed4d83137b2e7ba7cd5489e46e",
           "result": "failure",
-          "note": "Test form submission left rankName empty, triggering a property-mapping TypeError; fixture supplied valid rankName."
+          "note": "The submitted form left the optional rankName empty; the existing typed property rejected the resulting null. Test form data was corrected to use a non-empty fallback."
         },
         {
           "run_id": 36300003993,
           "head": "a28aa66069cf1b7cb81e83eecc9b90f95d9741c8",
           "result": "failure",
-          "note": "Negative CSRF form response is HTTP 422; assertion corrected to expect the actual validation rejection status."
+          "note": "Negative form submissions returned HTTP 422; assertions were changed to require the observed rejection status."
         },
         {
           "run_id": 36300156961,
           "head": "1bf077e38d29daa31def26c007c631129ee323da",
-          "result": "in_progress"
+          "result": "success"
         }
       ],
       "worker_pr_changed_paths": [
@@ -29567,7 +29567,60 @@
         "tests/Controller/AdminGuildMemberDeletionSecurityTest.php",
         "tests/Controller/AdminGuildMemberDirectoryPaginationTest.php",
         "tests/Controller/AdminGuildMemberMutationSecurityTest.php"
-      ]
+      ],
+      "final_head": "1bf077e38d29daa31def26c007c631129ee323da",
+      "final_base_sha": "56274da100719bdbfd62e80f52141160da5a718d",
+      "final_sanitized_main_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "final_changed_paths": [
+        "tests/Controller/AdminGuildMemberMutationSecurityTest.php"
+      ],
+      "changed_paths": [
+        "tests/Controller/AdminGuildMemberMutationSecurityTest.php"
+      ],
+      "completed_at": "2026-09-27T06:31:39.631Z",
+      "test_results": {
+        "phpunit": "437 tests, 2064 assertions, 0 failures; one PHPUnit deprecation and one notice.",
+        "phpstan": "Level 8 passed with no errors.",
+        "php_symfony": "Worker PHP/Symfony validation job passed on exact final HEAD.",
+        "postgres18": "PostgreSQL 18 completed all 39 migrations; 0 unavailable.",
+        "exact_head_ci": {
+          "run_id": 36300156961,
+          "head": "1bf077e38d29daa31def26c007c631129ee323da",
+          "result": "success"
+        }
+      },
+      "completion_evidence": {
+        "exact_sanitized_main_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+        "exact_proposal_base_branch": "feature/wcp-475-guild-member-deletion-security-g1",
+        "exact_proposal_base_sha": "56274da100719bdbfd62e80f52141160da5a718d",
+        "dependency_worker_pr": 268,
+        "dependency_ci_run_id": 36298899528,
+        "dependency_ci_result": "success",
+        "final_head_sha": "1bf077e38d29daa31def26c007c631129ee323da",
+        "changed_paths": [
+          "tests/Controller/AdminGuildMemberMutationSecurityTest.php"
+        ],
+        "cumulative_pr_paths": [
+          "src/Controller/AdminGuildMemberController.php",
+          "src/Repository/GuildMemberRepository.php",
+          "templates/admin/gaming/member/index.html.twig",
+          "tests/Controller/AdminGuildMemberDeletionSecurityTest.php",
+          "tests/Controller/AdminGuildMemberDirectoryPaginationTest.php",
+          "tests/Controller/AdminGuildMemberMutationSecurityTest.php"
+        ],
+        "worker_pr": 269,
+        "ci_run_id": 36300156961,
+        "ci_result": "success",
+        "php_symfony_job": "success: 437 tests, 2064 assertions; PHPStan level 8 no errors",
+        "postgresql_job": "success: 39 migrations, 0 unavailable",
+        "guild_member_mutation_security_coverage": "CMS_GAMING_MANAGE is required for create/edit GET and POST; missing/invalid CSRF receives HTTP 422 without creating or changing members; rendered tokens create/edit the intended guild-scoped member; cross-guild GET and POST edit requests return 404 and preserve foreign, target and sibling rows. Synthetic records are cleaned up."
+      },
+      "completion_summary": "Stacked test-only functional coverage for guild-member create/edit permissions, CSRF and guild ownership, with valid rendered-token create and edit flows and state-preserving denial cases.",
+      "open_limitations": [
+        "Awaiting Trusted review and Trusted integration CI; this stacked PR includes WCP-450 and WCP-475 predecessor changes.",
+        "A blank optional rankName submission exposed a separate typed-form mapping failure; it is excluded from the WCP-476 security scope and recorded for an independent follow-up."
+      ],
+      "trusted_follow_up": "Preserve CMS_GAMING_MANAGE and guild-scoped ownership. Separately resolve the optional rankName empty-data mapping with a focused form regression test, then run full Trusted CI."
     },
     {
       "priority": 477,
