@@ -20,6 +20,7 @@ use Symfony\Component\String\Slugger\SluggerInterface;
 #[IsGranted('CMS_CONTENT_MANAGE')]
 final class AdminCategoryController extends AbstractController
 {
+    private const MAX_SLUG_LENGTH = 120;
     public function __construct(private readonly CategoryRepository $categories, private readonly ContentEntryRepository $entries, private readonly EntityManagerInterface $entityManager, private readonly SluggerInterface $slugger, private readonly AuditLogger $audit) {}
     #[Route('', name: 'app_admin_category_index', methods: ['GET'])]
     public function index(): Response { return $this->render('admin/category/index.html.twig', ['categories' => $this->categories->findBy([], ['name' => 'ASC'])]); }
@@ -73,5 +74,26 @@ final class AdminCategoryController extends AbstractController
 
         return $response;
     }
-    private function uniqueSlug(string $name, ?int $exceptId): string { $base = mb_strtolower($this->slugger->slug($name)->toString()) ?: 'kategorie'; $slug = $base; $number = 2; while ($this->categories->slugExists($slug, $exceptId)) { $slug = $base.'-'.$number++; } return $slug; }
+    private function uniqueSlug(string $name, ?int $exceptId): string
+    {
+        $base = mb_strtolower($this->slugger->slug($name)->toString()) ?: 'kategorie';
+        $base = trim(mb_substr($base, 0, self::MAX_SLUG_LENGTH), '-');
+        if ($base === '') {
+            $base = 'kategorie';
+        }
+
+        $slug = $base;
+        $number = 2;
+        while ($this->categories->slugExists($slug, $exceptId)) {
+            $suffix = '-'.$number++;
+            $baseLength = self::MAX_SLUG_LENGTH - strlen($suffix);
+            if ($baseLength < 1) {
+                throw new \OverflowException('No unique category slug remains within the storage limit.');
+            }
+
+            $slug = trim(mb_substr($base, 0, $baseLength), '-').$suffix;
+        }
+
+        return $slug;
+    }
 }

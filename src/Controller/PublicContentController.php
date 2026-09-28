@@ -45,9 +45,45 @@ final class PublicContentController extends AbstractController
     #[Route('/search', name: 'app_content_search', methods: ['GET'])]
     public function search(Request $request): Response
     {
-        $query = mb_substr(trim($request->query->getString('q')), 0, 100); $entries = $this->entries->searchPublished($query);
-        $response = $this->render('content/search.html.twig', ['query' => $query, 'entries' => $entries, 'site' => $this->siteSettings->current()]);
-        return $this->cache($request, $response, hash('sha256', $query.'|'.$this->fingerprint($entries)), 60, null, $entries);
+        $filters = $request->query->all();
+        $type = $filters['type'] ?? '';
+        $categorySlug = $filters['category'] ?? '';
+        if (!is_string($type) || mb_strlen($type) > 20 || !is_string($categorySlug) || mb_strlen($categorySlug) > 120) {
+            throw $this->createNotFoundException();
+        }
+
+        $type = trim($type);
+        $categorySlug = trim($categorySlug);
+        if ($type !== '' && !in_array($type, [ContentEntry::TYPE_NEWS, ContentEntry::TYPE_PAGE], true)) {
+            throw $this->createNotFoundException();
+        }
+
+        $category = $this->resolveCategory($categorySlug);
+        $query = mb_substr(trim($request->query->getString('q')), 0, 100);
+        $entries = $this->entries->searchPublished(
+            $query,
+            type: $type === '' ? null : $type,
+            category: $category,
+        );
+        $categories = $this->categories->findBy([], ['name' => 'ASC']);
+        $response = $this->render('content/search.html.twig', [
+            'query' => $query,
+            'entries' => $entries,
+            'categories' => $categories,
+            'type' => $type,
+            'category' => $category,
+            'site' => $this->siteSettings->current(),
+        ]);
+        $etagState = [$query, $type, $category?->getSlug() ?? '', $this->fingerprint($entries)];
+
+        return $this->cache(
+            $request,
+            $response,
+            hash('sha256', serialize($etagState)),
+            60,
+            null,
+            $entries,
+        );
     }
     #[Route('/news/{slug}', name: 'app_news_show', priority: -10, methods: ['GET'])]
     public function showNews(string $slug, Request $request): Response { return $this->show($slug, ContentEntry::TYPE_NEWS, $request); }

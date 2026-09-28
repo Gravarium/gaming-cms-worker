@@ -33,9 +33,38 @@ final class GamingController extends AbstractController
     ) {}
 
     #[Route('/gaming', name: 'app_gaming_index', methods: ['GET'])]
-    public function index(): Response
+    public function index(Request $request): Response
     {
-        return $this->render('gaming/index.html.twig', ['games' => $this->games->findEnabled(), 'guilds' => $this->guilds->findPublicGuilds()]);
+        $query = $request->query->all();
+        $requestedGameSlug = $query['game'] ?? null;
+        $selectedGame = null;
+        $invalidGameFilter = false;
+
+        if ($requestedGameSlug === null || $requestedGameSlug === '') {
+            $guilds = $this->guilds->findPublicGuilds();
+        } elseif (
+            !is_string($requestedGameSlug)
+            || strlen($requestedGameSlug) > 140
+            || preg_match('/\A[a-z0-9]+(?:-[a-z0-9]+)*\z/', $requestedGameSlug) !== 1
+        ) {
+            $guilds = [];
+            $invalidGameFilter = true;
+        } else {
+            $selectedGame = $this->games->findOneBy(['slug' => $requestedGameSlug, 'enabled' => true]);
+            if ($selectedGame === null) {
+                $guilds = [];
+                $invalidGameFilter = true;
+            } else {
+                $guilds = $this->guilds->findPublicGuilds($selectedGame);
+            }
+        }
+
+        return $this->render('gaming/index.html.twig', [
+            'games' => $this->games->findEnabled(),
+            'guilds' => $guilds,
+            'selectedGame' => $selectedGame,
+            'invalidGameFilter' => $invalidGameFilter,
+        ]);
     }
 
     #[Route('/gaming/guild/{slug}', name: 'app_guild_show', methods: ['GET'])]

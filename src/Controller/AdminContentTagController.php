@@ -17,6 +17,7 @@ use Symfony\Component\String\Slugger\SluggerInterface;
 #[IsGranted('CMS_CONTENT_MANAGE')]
 final class AdminContentTagController extends AbstractController
 {
+    private const MAX_SLUG_LENGTH = 120;
     public function __construct(private readonly ContentTagRepository $tags, private readonly EntityManagerInterface $entityManager, private readonly SluggerInterface $slugger, private readonly AuditLogger $audit) {}
     #[Route('', name: 'app_admin_content_tag_index', methods: ['GET'])]
     public function index(): Response { return $this->render('admin/content_tag/index.html.twig', ['tags' => $this->tags->findBy([], ['name' => 'ASC'])]); }
@@ -51,8 +52,24 @@ final class AdminContentTagController extends AbstractController
     }
     private function uniqueSlug(string $name, ?int $exceptId): string
     {
-        $base = mb_strtolower($this->slugger->slug($name)->toString()) ?: 'tag'; $slug = $base; $number = 2;
-        while ($this->tags->slugExists($slug, $exceptId)) { $slug = $base.'-'.$number++; }
+        $base = mb_strtolower($this->slugger->slug($name)->toString()) ?: 'tag';
+        $base = trim(mb_substr($base, 0, self::MAX_SLUG_LENGTH), '-');
+        if ($base === '') {
+            $base = 'tag';
+        }
+
+        $slug = $base;
+        $number = 2;
+        while ($this->tags->slugExists($slug, $exceptId)) {
+            $suffix = '-'.$number++;
+            $baseLength = self::MAX_SLUG_LENGTH - strlen($suffix);
+            if ($baseLength < 1) {
+                throw new \OverflowException('No unique content-tag slug remains within the storage limit.');
+            }
+
+            $slug = trim(mb_substr($base, 0, $baseLength), '-').$suffix;
+        }
+
         return $slug;
     }
 }

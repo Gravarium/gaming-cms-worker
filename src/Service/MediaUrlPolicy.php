@@ -61,6 +61,7 @@ final class MediaUrlPolicy
             return str_starts_with($url, '/uploads/media/')
                 && !str_contains($url, '..')
                 && !str_contains($url, '\\')
+                && !str_contains($url, '%')
                 && preg_match('/[\x00-\x1F\x7F]/u', $url) !== 1;
         }
 

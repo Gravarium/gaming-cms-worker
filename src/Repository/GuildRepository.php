@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Repository;
 
+use App\Entity\Game;
 use App\Entity\Guild;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -14,11 +15,17 @@ final class GuildRepository extends ServiceEntityRepository
     public function __construct(ManagerRegistry $registry) { parent::__construct($registry, Guild::class); }
 
     /** @return list<Guild> */
-    public function findPublicGuilds(): array
+    public function findPublicGuilds(?Game $game = null): array
     {
-        return $this->createQueryBuilder('guild')
+        $builder = $this->createQueryBuilder('guild')
             ->addSelect('game')->join('guild.game', 'game')
-            ->andWhere('guild.enabled = true')->andWhere('game.enabled = true')
+            ->andWhere('guild.enabled = true')->andWhere('game.enabled = true');
+
+        if ($game !== null) {
+            $builder->andWhere('guild.game = :game')->setParameter('game', $game);
+        }
+
+        return $builder
             ->orderBy('game.name', 'ASC')->addOrderBy('guild.name', 'ASC')
             ->getQuery()->getResult();
     }
