@@ -113,7 +113,9 @@ final class CompetitionParticipationDashboardTest extends WebTestCase
             $currentEntityManager = $this->entityManager($client);
             $managedParticipant = $currentEntityManager->getRepository(CompetitionParticipant::class)->find($participant->getId());
             self::assertInstanceOf(CompetitionParticipant::class, $managedParticipant);
-            $managedParticipant->setCaptain($captain);
+            $managedCaptain = $currentEntityManager->getRepository(User::class)->find($captain->getId());
+            self::assertInstanceOf(User::class, $managedCaptain);
+            $managedParticipant->setCaptain($managedCaptain);
             $currentEntityManager->flush();
 
             $client->request('POST', '/account/competitions/'.$competition->getId().'/participant/'.$participant->getId().'/withdraw', [
