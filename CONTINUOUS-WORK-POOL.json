@@ -12,7 +12,7 @@
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
   "published_at": "2026-09-27T22:29:43.529Z",
   "summary": {
-    "total_remaining_worker_tasks": 174,
+    "total_remaining_worker_tasks": 175,
     "completed_worker_prs_awaiting_trusted_review": 314,
     "recovery_tasks": 0,
     "unclaimed": 5,
@@ -51183,6 +51183,130 @@
         "Review member-task privacy and completion ownership, the route-specific CSRF boundary, immutable completion evidence and Gaming module-disabled behavior."
       ],
       "open_limitations": []
+    },
+    {
+      "priority": 584,
+      "package_id": "WCP-584",
+      "title": "Manage personal upcoming guild event registrations",
+      "risk": "medium",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-584-guild-event-signup-portal-g1",
+      "suggested_branch": "feature/wcp-584-guild-event-signup-portal-g1",
+      "base_branch": "main",
+      "base_sha": "ebfeb6032548002846b9352ddb2b06b909b461c0",
+      "objective": "Complete member self-service for guild event registrations. Add a private personal dashboard and Gaming Page Builder widget that show only the signed-in user's active-character registrations for future planned events in enabled guilds, and let that user withdraw their own active RSVP by changing it to declined. Preserve the existing guild signup flow and capacity semantics; require route-specific CSRF, lock and recheck the event during withdrawal, and keep personalized responses private/no-store and noindex.",
+      "allowed_paths": [
+        "src/Controller/GuildEventSignupPortalController.php",
+        "src/Repository/GuildEventSignupPortalRepository.php",
+        "src/Widget/MyGuildEventSignupsWidgetProvider.php",
+        "src/EventSubscriber/GuildEventSignupWidgetCacheSubscriber.php",
+        "src/GuildEventSignupPortal/Templates/index.html.twig",
+        "src/GuildEventSignupPortal/Templates/widget/my_event_signups.html.twig",
+        "config/packages/guild_event_signup_portal.yaml",
+        "tests/Controller/GuildEventSignupPortalControllerTest.php",
+        "tests/Widget/MyGuildEventSignupsWidgetProviderTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "CONTINUOUS-WORKER.md",
+        "CONTINUOUS-WORK-POOL.json",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "src/Entity/GuildEvent.php",
+        "src/Entity/GuildEventSignup.php",
+        "src/Controller/GuildPortalController.php",
+        "src/Repository/GuildEventSignupRepository.php",
+        "src/Controller/AdminGuildEvent/",
+        "src/Gaming/Event/",
+        "src/Widget/WidgetRegistry.php",
+        "templates/",
+        "src/Module/CmsModuleCatalog.php"
+      ],
+      "deliverables": [
+        "Add a ROLE_USER member dashboard for bounded, stable pagination of the current user's upcoming event signups, showing only their active GuildMember rows, enabled guilds and planned events that have not started.",
+        "Add a Page Builder widget gaming.my-event-signups with a small upcoming RSVP summary and a link to the member dashboard; guests receive no personalized data, authenticated responses are private/no-store, and Gaming-disabled module state suppresses the widget.",
+        "Add a CSRF-protected withdrawal action scoped to the current user's own active signup, same-guild active character, enabled guild and future planned event. Under a pessimistic event lock, mark the signup declined and clear its note; preserve the row and attendance metadata.",
+        "Keep existing signup, capacity, waitlist, admin, entity, schema and migration behavior unchanged; change only the allowlisted paths."
+      ],
+      "tests": [
+        "Dashboard returns only the current user's active-character signups for enabled guilds and future planned events; other users, inactive characters, closed/started events and unrelated guilds remain invisible.",
+        "Valid withdrawal requires route-specific CSRF, rechecks current ownership/status under an event lock, marks only the user's signup declined, clears its note, preserves attendance evidence and releases its confirmed capacity; invalid CSRF and cross-user IDs do not mutate anything.",
+        "Pagination is stable and bounded; malformed page values fail closed; personal dashboard responses are private/no-store and noindex.",
+        "Widget registry discovers the Gaming widget, guests see no user-specific data, authenticated populated and empty responses are private/no-store, and disabling Gaming hides the widget.",
+        "PHPStan level 8 and full exact-head Worker CI including PostgreSQL 18 migration-chain validation."
+      ],
+      "completion_report": [
+        "Exact sanitized main base SHA, final Worker HEAD SHA, complete changed-path list and Worker PR URL/state.",
+        "Member ownership, active character, enabled guild, future/planned event filters; pagination and withdrawal semantics with test evidence.",
+        "Widget key, guest/authenticated/privacy behavior and Gaming module gate.",
+        "Exact-head PHPUnit, PHPStan, JavaScript and PostgreSQL 18 CI results.",
+        "Confirm no entity, existing signup-flow, schema or migration changes."
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-Trusted-review-and-exact-head-CI",
+        "only-the-authenticated-owner-can-withdraw-their-own-active-signup",
+        "withdrawal-requires-route-specific-CSRF-and-a-future-planned-event",
+        "preserve-event-capacity-and-waitlist-semantics-and-attendance-evidence",
+        "member-data-is-scoped-to-active-character-and-enabled-guild",
+        "personalized-responses-are-private-and-no-store; member-dashboard-is-noindex",
+        "guest-widget-output-has-no-personalized-signup-data",
+        "Gaming-disabled-state-hides-widget-and-guild-routes",
+        "no-schema-or-migration-change",
+        "do-not-edit-locked-guild-portal-admin-or-existing-signup-controller-paths",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "no-direct-Trusted-integration-or-deployment"
+      ],
+      "proposal_kind": "worker_only",
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "ebfeb6032548002846b9352ddb2b06b909b461c0",
+      "proposal_dependency_evidence": [],
+      "collision_check": {
+        "compared_against": "Fresh continuous/work-pool-v4 @ a8e9bf24f79700904a9bf6ab9bbde8f91bbcd96b; sanitized Worker main @ ebfeb6032548002846b9352ddb2b06b909b461c0; all published, unclaimed, active and claim-locked allowed paths; branch and PR searches for WCP-584.",
+        "result": "No allowed-path overlap with any existing published task. WCP-532 owns its separate upcoming-events widget files; WCP-583's completed but locked onboarding claim owns different controller/repository/template/test paths. This package reuses the existing event/signup entities and flow read-only, and leaves the existing signup controller, repositories, entities, module catalog, schema and migrations unchanged.",
+        "paths": [
+          "src/Controller/GuildEventSignupPortalController.php",
+          "src/Repository/GuildEventSignupPortalRepository.php",
+          "src/Widget/MyGuildEventSignupsWidgetProvider.php",
+          "src/EventSubscriber/GuildEventSignupWidgetCacheSubscriber.php",
+          "src/GuildEventSignupPortal/Templates/index.html.twig",
+          "src/GuildEventSignupPortal/Templates/widget/my_event_signups.html.twig",
+          "config/packages/guild_event_signup_portal.yaml",
+          "tests/Controller/GuildEventSignupPortalControllerTest.php",
+          "tests/Widget/MyGuildEventSignupsWidgetProviderTest.php"
+        ],
+        "observed_nonblocking_path_hits": [
+          "The public event signup flow in GuildPortalController is an existing read-only contract; it is not modified."
+        ]
+      },
+      "published_at": "2026-09-28T18:34:54.389Z",
+      "claimed_on": "2026-09-28T18:34:54.389Z",
+      "claim_state": "active",
+      "active_base_branch": "main",
+      "active_base_sha": "ebfeb6032548002846b9352ddb2b06b909b461c0",
+      "active_head": "ebfeb6032548002846b9352ddb2b06b909b461c0",
+      "resume_branch": "feature/wcp-584-guild-event-signup-portal-g1",
+      "branch_heads": {
+        "claim_branch": "ebfeb6032548002846b9352ddb2b06b909b461c0",
+        "feature_branch": "ebfeb6032548002846b9352ddb2b06b909b461c0"
+      },
+      "last_observed_head": "ebfeb6032548002846b9352ddb2b06b909b461c0",
+      "last_checkpoint_at": "2026-09-28T18:34:54.389Z",
+      "checkpoint_paths": [],
+      "next_action": "Create both WCP-584 branches from exact main@ebfeb6032548002846b9352ddb2b06b909b461c0, implement the allowlisted member RSVP dashboard/widget/withdrawal flow, then validate exact-head Worker CI."
     }
   ],
   "recovery_queue": [],
