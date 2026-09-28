@@ -51975,16 +51975,16 @@
       "claim_state": "active",
       "active_base_branch": "fix/fcp-061-phpstan-g1",
       "active_base_sha": "ec6bb200affc3e5a46d416e98f7a1b0621c38ded",
-      "active_head": "eaf6cdc710a4636c517e95018b07839b79b8fba6",
+      "active_head": "f3118dbe8dbada145538a879efa43808a84d6b4e",
       "resume_branch": "feature/wcp-582-social-competition-dashboard-g1",
       "branch_heads": {
         "claim_branch": "ec6bb200affc3e5a46d416e98f7a1b0621c38ded",
-        "feature_branch": "eaf6cdc710a4636c517e95018b07839b79b8fba6"
+        "feature_branch": "f3118dbe8dbada145538a879efa43808a84d6b4e"
       },
-      "last_observed_head": "eaf6cdc710a4636c517e95018b07839b79b8fba6",
-      "last_checkpoint_at": "2026-09-28T20:06:02.653Z",
-      "last_verified_push_at": "2026-09-28T20:06:02.653Z",
-      "next_action": "Validate the corrected exact feature HEAD eaf6cdc710a4636c517e95018b07839b79b8fba6 with complete Worker CI on draft PR #379; repair any remaining failures.",
+      "last_observed_head": "f3118dbe8dbada145538a879efa43808a84d6b4e",
+      "last_checkpoint_at": "2026-09-28T20:17:21.664Z",
+      "last_verified_push_at": "2026-09-28T20:17:21.664Z",
+      "next_action": "Validate corrected exact feature HEAD f3118dbe8dbada145538a879efa43808a84d6b4e with complete Worker CI on draft PR #379; repair any remaining failures.",
       "checkpoint_paths": [
         "config/packages/competition_participation_widget.yaml",
         "src/CompetitionParticipation/Templates/account/dashboard.html.twig",
@@ -51997,10 +51997,10 @@
         "tests/Widget/MyCompetitionsWidgetTest.php"
       ],
       "last_ci_attempt": {
-        "head": "97d01ddc9c74c086d4aba346630e3788100a73c2",
-        "run_id": 36475859039,
+        "head": "eaf6cdc710a4636c517e95018b07839b79b8fba6",
+        "run_id": 36476756813,
         "result": "failure",
-        "summary": "Full PHP/Symfony checks and PostgreSQL migrations passed; two PHPUnit assumptions remained: a user switch invalidated the test session, and guest cache headers were overconstrained. Corrected in this checkpoint."
+        "summary": "PostgreSQL migrations, PHPStan and static checks passed; PHPUnit had 1 Doctrine fixture error in the noncaptain/cross-competition regression test because it reused a detached User entity. Reloaded the fixture user through the active EntityManager."
       }
     },
     {
