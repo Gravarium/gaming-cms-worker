@@ -55,6 +55,68 @@ final class LocalBackupInventoryTest extends TestCase
         self::assertSame([], (new LocalBackupInventory($this->root))->read()['backups']);
     }
 
+    public function testRejectsUnsafeBackupRootAndDirectoryTraversalInput(): void
+    {
+        foreach ([
+            'relative-backups',
+            $this->root."\x00",
+            $this->root."\xFF",
+            '/'.str_repeat('a', 4096),
+        ] as $unsafeRoot) {
+            $snapshot = (new LocalBackupInventory($unsafeRoot))->read();
+
+            self::assertFalse($snapshot['available']);
+            self::assertSame([], $snapshot['backups']);
+        }
+
+        $this->expectException(\InvalidArgumentException::class);
+        (new LocalBackupInventory('relative-backups'))->directory('20260918T030000Z-abcdef123456');
+    }
+
+    public function testRejectsMalformedDuplicateUnknownAndOversizedManifests(): void
+    {
+        $this->backup('20260918T030000Z-abcdef123456', '2026-09-18T03:00:00Z');
+        $manifest = $this->root.'/20260918T030000Z-abcdef123456/manifest.txt';
+
+        foreach ([
+            "format_version=1\nbackup_id=20260918T030000Z-abcdef123456\ncreated_at_utc=2026-09-18T12:00:00Z\napplication_revision=abcdef1234567890\nobject_storage=not_configured\nunknown=value\n",
+            "format_version=1\nbackup_id=20260918T030000Z-abcdef123456\nbackup_id=20260918T030000Z-abcdef123456\ncreated_at_utc=2026-09-18T12:00:00Z\napplication_revision=abcdef1234567890\nobject_storage=not_configured\n",
+            "format_version=1\nbackup_id=20260918T030000Z-abcdef123456\ncreated_at_utc=2026-02-30T12:00:00Z\napplication_revision=abcdef1234567890\nobject_storage=not_configured\n",
+            str_repeat('x', 16_385),
+        ] as $contents) {
+            file_put_contents($manifest, $contents);
+
+            self::assertSame([], (new LocalBackupInventory($this->root))->read()['backups']);
+        }
+    }
+
+    public function testRejectsMalformedEncodingAndControlCharactersInManifest(): void
+    {
+        $this->backup('20260918T030000Z-abcdef123456', '2026-09-18T03:00:00Z');
+        $manifest = $this->root.'/20260918T030000Z-abcdef123456/manifest.txt';
+
+        foreach ([
+            "format_version=1\nbackup_id=20260918T030000Z-abcdef123456\xFF\ncreated_at_utc=2026-09-18T12:00:00Z\napplication_revision=abcdef1234567890\nobject_storage=not_configured\n",
+            "format_version=1\nbackup_id=20260918T030000Z-abcdef123456\ncreated_at_utc=2026-09-18T12:00:00Z\napplication_revision=abcdef1234567890\nobject_storage=not_configured\x00\n",
+        ] as $contents) {
+            file_put_contents($manifest, $contents);
+
+            self::assertSame([], (new LocalBackupInventory($this->root))->read()['backups']);
+        }
+    }
+
+    public function testRejectsOversizedBackupComponent(): void
+    {
+        $this->backup('20260918T030000Z-abcdef123456', '2026-09-18T03:00:00Z');
+        $component = $this->root.'/20260918T030000Z-abcdef123456/uploads.tar.gz';
+        $handle = fopen($component, 'rb+');
+        self::assertIsResource($handle);
+        ftruncate($handle, 4_294_967_297);
+        fclose($handle);
+
+        self::assertSame([], (new LocalBackupInventory($this->root))->read()['backups']);
+    }
+
     private function backup(string $id, string $createdAt, ?string $manifestId = null): void
     {
         $directory = $this->root.'/'.$id;

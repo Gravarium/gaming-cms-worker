@@ -43,4 +43,16 @@ final class MediaAssetReplicaTest extends TestCase
             }
         }
     }
+
+    public function testRejectsMalformedUtf8ObjectKey(): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        (new MediaAssetReplica())->setObjectKey("media/\xC3\x28.png");
+    }
+
+    public function testRejectsMalformedUtf8Location(): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        (new MediaAssetReplica())->setLocation("https://cdn.example.invalid/media/\xC3\x28.png");
+    }
 }

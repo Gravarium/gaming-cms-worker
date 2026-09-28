@@ -91,7 +91,11 @@ class MediaAssetReplica
     public function setLocation(string $location): self
     {
         $location = trim($location);
-        if ($location === '' || mb_strlen($location) > 500 || preg_match('/[\x00-\x1F\x7F]/u', $location) === 1) {
+        if ($location === ''
+            || mb_strlen($location) > 500
+            || preg_match('//u', $location) !== 1
+            || preg_match('/[\x00-\x1F\x7F]/', $location) === 1
+        ) {
             throw new \InvalidArgumentException('Invalid media replica location.');
         }
         $this->location = $location;
@@ -103,7 +107,13 @@ class MediaAssetReplica
 
     private function isSafeObjectKey(string $key): bool
     {
-        if ($key === '' || mb_strlen($key) > 500 || str_starts_with($key, '/') || str_contains($key, '\\') || preg_match('/[\x00-\x1F\x7F]/u', $key) === 1) {
+        if ($key === ''
+            || mb_strlen($key) > 500
+            || str_starts_with($key, '/')
+            || str_contains($key, '\\')
+            || preg_match('//u', $key) !== 1
+            || preg_match('/[\x00-\x1F\x7F]/', $key) === 1
+        ) {
             return false;
         }
         foreach (explode('/', $key) as $segment) {
