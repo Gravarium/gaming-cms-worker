@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-28T22:38:33.499Z",
+  "published_at": "2026-09-28T22:43:07.633Z",
   "summary": {
     "total_remaining_worker_tasks": 175,
-    "completed_worker_prs_awaiting_trusted_review": 317,
+    "completed_worker_prs_awaiting_trusted_review": 318,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-596 implementation is checkpointed at d8e85ed7e9cd14e2c6c04cec139660a463bcfff4; validate the owner-scoped editor and full exact-head Worker CI, then complete the Worker PR.",
+    "next_required_action": "WCP-596 PR #390 is ready for independent Trusted review on exact green HEAD d8e85ed7e9cd14e2c6c04cec139660a463bcfff4 (CI #985/run 36493648419); its claim remains locked. Re-evaluate dependency-blocked FCPs and continue to the next independent functional module gap.",
     "composition_preparable": 0,
     "immediately_actionable": 33,
     "must_continue": true
@@ -54446,7 +54446,7 @@
       "package_id": "WCP-596",
       "title": "Let members update their guild event signups from the personal portal",
       "risk": "medium",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -54541,7 +54541,7 @@
         ]
       },
       "claimed_on": "2026-09-28T22:31:14.116Z",
-      "claim_state": "active",
+      "claim_state": "locked_until_trusted_resolution",
       "active_base_branch": "main",
       "active_base_sha": "a19ed4bcf1203bba69de472613805d5fcdc978e6",
       "active_head": "d8e85ed7e9cd14e2c6c04cec139660a463bcfff4",
@@ -54556,9 +54556,78 @@
         "src/GuildEventSignupPortal/Templates/guild_event_signup_portal/index.html.twig",
         "tests/Controller/GuildEventSignupPortalControllerTest.php"
       ],
-      "next_action": "Open a draft Worker PR to main, run focused signup portal tests and full exact-head Worker CI, then fix any failures without changing existing capacity or authorization protections.",
+      "next_action": "Await independent Trusted review; keep the claim locked until Trusted explicitly integrates, cancels or transfers it.",
       "last_checkpoint_at": "2026-09-28T22:38:33.499Z",
-      "last_verified_push_at": "2026-09-28T22:38:33.499Z"
+      "last_verified_push_at": "2026-09-28T22:38:33.499Z",
+      "worker_pr": 390,
+      "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/390",
+      "worker_pr_state": "ready_for_review",
+      "pr_state": "open",
+      "draft_pr": false,
+      "worker_pr_base_branch": "main",
+      "worker_pr_base_sha": "a19ed4bcf1203bba69de472613805d5fcdc978e6",
+      "worker_pr_changed_paths": [
+        "src/Controller/GuildEventSignupPortalController.php",
+        "src/GuildEventSignupPortal/Templates/guild_event_signup_portal/index.html.twig",
+        "tests/Controller/GuildEventSignupPortalControllerTest.php"
+      ],
+      "ci_result": "success",
+      "last_ci_result": "success",
+      "ci_run_id": 36493648419,
+      "last_ci_run_id": 36493648419,
+      "ci_validation_pr": 390,
+      "ci_attempts": [
+        {
+          "run_id": 36493648419,
+          "run_number": 985,
+          "head": "d8e85ed7e9cd14e2c6c04cec139660a463bcfff4",
+          "base": "a19ed4bcf1203bba69de472613805d5fcdc978e6",
+          "result": "success",
+          "validation_pr": 390,
+          "status": "completed",
+          "conclusion": "success"
+        }
+      ],
+      "final_head": "d8e85ed7e9cd14e2c6c04cec139660a463bcfff4",
+      "completed_at": "2026-09-28T22:43:07.633Z",
+      "completion_evidence": {
+        "exact_sanitized_base_sha": "a19ed4bcf1203bba69de472613805d5fcdc978e6",
+        "final_head": "d8e85ed7e9cd14e2c6c04cec139660a463bcfff4",
+        "changed_paths": [
+          "src/Controller/GuildEventSignupPortalController.php",
+          "src/GuildEventSignupPortal/Templates/guild_event_signup_portal/index.html.twig",
+          "tests/Controller/GuildEventSignupPortalControllerTest.php"
+        ],
+        "worker_pr": "https://github.com/Gravarium/gaming-cms-worker/pull/390",
+        "exact_head_ci_run_id": 36493648419,
+        "exact_head_ci_run_number": 985,
+        "exact_head_ci_result": "success",
+        "phpunit": {
+          "tests": 1519,
+          "assertions": 10084,
+          "deprecations": 1,
+          "notices": 24
+        },
+        "jobs": {
+          "php_symfony": "success",
+          "postgres_18": "success"
+        },
+        "coverage": [
+          "PHPStan level 8",
+          "Twig lint",
+          "dependency-container validation",
+          "AssetMapper compilation",
+          "Doctrine mapping validation",
+          "PostgreSQL 18 complete migration-chain validation"
+        ],
+        "functional_evidence": [
+          "Members can change their own active upcoming guild signup response and role from the private signup portal while retaining the withdraw action.",
+          "The update requires CSRF and revalidates signup ownership, active membership, guild enablement, event status and timing under an event lock.",
+          "A full event converts a requested GOING transition to WAITLIST without exceeding capacity.",
+          "Updates preserve private notes and attendance evidence; invalid values show an error and foreign/inactive signup updates are rejected.",
+          "Existing Gaming gate, private/no-store/noindex response, withdrawal, pagination and visibility coverage remains in place."
+        ]
+      }
     }
   ],
   "recovery_queue": [],
