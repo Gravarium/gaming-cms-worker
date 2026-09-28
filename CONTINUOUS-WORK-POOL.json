@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-28T21:38:13.576Z",
+  "published_at": "2026-09-28T21:52:26.199Z",
   "summary": {
-    "total_remaining_worker_tasks": 175,
+    "total_remaining_worker_tasks": 176,
     "completed_worker_prs_awaiting_trusted_review": 315,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-593 PR #387 is ready for Trusted review at green exact HEAD e916295eb5770a87a987f48f2a08ba6f93ae6c64; its claim remains locked. Re-evaluate the unclaimed dependency-blocked FCPs and derive the next independent module completion package.",
+    "next_required_action": "WCP-594 is claimed on feature/wcp-594-public-guild-events-widget-schedule-link-g1 from exact sanitized main a19ed4bcf1203bba69de472613805d5fcdc978e6; complete the widget-to-public-schedule flow, then validate exact-head Worker CI. WCP-593 remains ready for Trusted review with its claim locked.",
     "composition_preparable": 0,
     "immediately_actionable": 33,
     "must_continue": true
@@ -54091,6 +54091,101 @@
           "Doctrine mapping validation"
         ]
       }
+    },
+    {
+      "priority": 594,
+      "package_id": "WCP-594",
+      "title": "Link public guild-event widgets to each guild's full schedule",
+      "risk": "low",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-594-public-guild-events-widget-schedule-link-g1",
+      "suggested_branch": "feature/wcp-594-public-guild-events-widget-schedule-link-g1",
+      "base_branch": "main",
+      "base_sha": "a19ed4bcf1203bba69de472613805d5fcdc978e6",
+      "objective": "Complete the reader journey from the Page Builder's public upcoming guild-events widget. Each event currently links only to its guild overview, while the existing public guild schedule at app_guild_event_index lists the full upcoming schedule for that guild. Add a clear per-guild schedule link to each public event card so readers can open the complete schedule. Retain the widget's existing Gaming-module availability, public-only event query, and the schedule route's public visibility and Gaming-module gates.",
+      "allowed_paths": [
+        "src/PublicGuildEventsWidget/Templates/widget/public_guild_events.html.twig",
+        "tests/Widget/PublicGuildEventsWidgetProviderTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/",
+        "src/Controller/",
+        "src/Entity/",
+        "src/Repository/",
+        "src/Gaming/",
+        "templates/"
+      ],
+      "deliverables": [
+        "Each public Page Builder event card exposes a clearly labeled link to that guild's existing full public event schedule.",
+        "Widget rendering coverage proves the generated schedule URL and verifies that the destination serves the event.",
+        "Existing public event schedule tests continue to prove hidden guilds, non-public events and disabled Gaming state remain unavailable.",
+        "No event data, route, query, module gate, schema, permission, cache behavior or signup behavior changes."
+      ],
+      "tests": [
+        "Focused PublicGuildEventsWidgetProviderTest verifies the generated route URL and follows it to the matching public schedule.",
+        "Existing PublicGuildEventTest covers public visibility, hidden/disabled guilds and the Gaming-module gate.",
+        "Full exact-head Worker CI, including PHPStan, Twig/container checks and PostgreSQL 18 migration-chain validation."
+      ],
+      "completion_report": [
+        "Exact sanitized main base SHA, final Worker HEAD, changed paths and Worker PR URL/state.",
+        "Evidence that readers can use the Page Builder widget to reach the full public schedule for a visible guild.",
+        "Exact-head focused tests, PHPStan, PHPUnit and PostgreSQL 18 results.",
+        "Remaining public guild-event discovery or schedule-navigation gaps."
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-Trusted-review-and-exact-head-CI",
+        "preserve-existing-Gaming-module-availability-and-public-event-visibility-gates",
+        "no-schema-or-migration-change",
+        "no-private-runtime-or-sensitive-data",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "no-direct-Trusted-integration-or-deployment"
+      ],
+      "proposal_kind": "worker_only",
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "a19ed4bcf1203bba69de472613805d5fcdc978e6",
+      "proposal_dependency_evidence": [],
+      "published_at": "2026-09-28T21:52:26.199Z",
+      "collision_check": {
+        "compared_against": "Fresh continuous/work-pool-v4 pool blob c4bf44c18eff81d7c27e46b1d35524146b663a90; sanitized Worker main a19ed4bcf1203bba69de472613805d5fcdc978e6; current worker_in_progress and claim-locked allowed paths; WCP-594 branch search and open PR list; candidate template and widget test on main.",
+        "result": "No overlap with any worker_in_progress or claim-locked task. WCP-589 owns templates/gaming/events.html.twig and separate calendar-feed files; WCP-511, WCP-588 and WCP-591 own disjoint paths. WCP-537 created the existing widget template and test but is Trusted-integrated with its claim released. FCP-072's broad templates/ allowance does not include files under src/PublicGuildEventsWidget/.",
+        "paths": [
+          "src/PublicGuildEventsWidget/Templates/widget/public_guild_events.html.twig",
+          "tests/Widget/PublicGuildEventsWidgetProviderTest.php"
+        ],
+        "observed_nonblocking_path_hits": [
+          "WCP-537 touched the candidate widget template and test; it is Trusted-integrated and its claim is released.",
+          "WCP-506 owns the schedule controller and templates/gaming/events.html.twig; it is Trusted-integrated and its claim is released."
+        ]
+      },
+      "claim_state": "locked_until_trusted_resolution",
+      "claimed_on": "2026-09-28T21:52:26.199Z",
+      "active_base_branch": "main",
+      "active_base_sha": "a19ed4bcf1203bba69de472613805d5fcdc978e6",
+      "active_head": "a19ed4bcf1203bba69de472613805d5fcdc978e6",
+      "resume_branch": "feature/wcp-594-public-guild-events-widget-schedule-link-g1",
+      "branch_heads": {
+        "claim_branch": "a19ed4bcf1203bba69de472613805d5fcdc978e6",
+        "feature_branch": "a19ed4bcf1203bba69de472613805d5fcdc978e6"
+      },
+      "last_observed_head": "a19ed4bcf1203bba69de472613805d5fcdc978e6",
+      "checkpoint_paths": [],
+      "next_action": "Implement the widget-to-schedule navigation on the resume_branch; keep this claim locked through Trusted resolution."
     }
   ],
   "recovery_queue": [],
