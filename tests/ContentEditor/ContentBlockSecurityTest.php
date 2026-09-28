@@ -25,6 +25,31 @@ final class ContentBlockSecurityTest extends TestCase
         self::assertSame('Zweiter <script>alert(1)</script>', $decoded['blocks'][1]['text']);
     }
 
+    public function testRejectsOversizedLegacyBodyBeforeParagraphSplitting(): void
+    {
+        $body = implode("\n\n", array_fill(0, 101, str_repeat('a', 600)));
+        self::assertGreaterThan(ContentBlockDocument::MAX_DOCUMENT_BYTES, strlen($body));
+
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Editor-Dokument ist zu groß');
+        (new ContentBlockDocument())->decode($body);
+    }
+
+    public function testOversizedBodyDoesNotReachRendererFallback(): void
+    {
+        $documents = new ContentBlockDocument();
+        $gateway = new class implements OwnedMediaReferenceGateway {
+            public function resolve(int $assetId): ?array
+            {
+                return null;
+            }
+        };
+        $renderer = new ContentBlockRenderer($documents, $gateway);
+        $body = str_repeat('x', ContentBlockDocument::MAX_DOCUMENT_BYTES + 1);
+
+        self::assertSame('<p>Inhalt kann nicht angezeigt werden.</p>', $renderer->render($body));
+    }
+
     public function testUnknownBlocksAndActiveLinkSchemesAreRejected(): void
     {
         $documents = new ContentBlockDocument();

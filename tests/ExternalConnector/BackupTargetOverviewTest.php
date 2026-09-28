@@ -36,6 +36,34 @@ final class BackupTargetOverviewTest extends TestCase
         self::assertSame('attention', $summary['overall']);
     }
 
+    public function testTreatsStatusWithMismatchedIdentityAsMissing(): void
+    {
+        $now = new \DateTimeImmutable('2026-09-18 18:00:00 UTC');
+        $mismatched = new OffsiteBackupTargetStatus(
+            'archive',
+            '20260917T100000Z-abcdef1',
+            $now->modify('-32 hours'),
+            true,
+            1,
+            true,
+        );
+
+        $summary = (new BackupTargetOverview())->summarize(
+            [$this->target('primary', true, true)],
+            ['primary' => $mismatched],
+            $now,
+        );
+
+        self::assertSame(1, $summary['enabled']);
+        self::assertSame(1, $summary['required']);
+        self::assertSame(0, $summary['healthy']);
+        self::assertSame(0, $summary['failed']);
+        self::assertSame(1, $summary['missing']);
+        self::assertSame(0, $summary['stale']);
+        self::assertNull($summary['latest']);
+        self::assertSame('attention', $summary['overall']);
+    }
+
     private function target(string $key, bool $required, bool $enabled): ExternalConnectorTarget
     {
         return (new ExternalConnectorTarget())

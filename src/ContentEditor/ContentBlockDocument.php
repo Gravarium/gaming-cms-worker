@@ -3,12 +3,12 @@ declare(strict_types=1);
 namespace App\ContentEditor;
 final class ContentBlockDocument
 {
-    public const PREFIX="cms-blocks:v1\n"; public const VERSION=1; private const MAX_DOCUMENT_BYTES=60000; private const MAX_BLOCKS=100;
+    public const PREFIX="cms-blocks:v1\n"; public const VERSION=1; public const MAX_DOCUMENT_BYTES=60000; private const MAX_BLOCKS=100;
     /** @return array{version:int,blocks:list<array<string,mixed>>} */
     public function decode(string $body): array
     {
-        if(!str_starts_with($body,self::PREFIX)) return ['version'=>self::VERSION,'blocks'=>$this->legacyBlocks($body)];
         if(strlen($body)>self::MAX_DOCUMENT_BYTES) throw new \InvalidArgumentException('Das Editor-Dokument ist zu groß.');
+        if(!str_starts_with($body,self::PREFIX)) return ['version'=>self::VERSION,'blocks'=>$this->legacyBlocks($body)];
         try{$decoded=json_decode(substr($body,strlen(self::PREFIX)),true,32,JSON_THROW_ON_ERROR);}catch(\JsonException $e){throw new \InvalidArgumentException('Das Editor-Dokument ist kein gültiges JSON.',0,$e);}
         if(!is_array($decoded)||($decoded['version']??null)!==self::VERSION||!is_array($decoded['blocks']??null)) throw new \InvalidArgumentException('Unbekannte Editor-Dokumentversion.');
         /** @var array<int,mixed> $blocks */ $blocks=$decoded['blocks']; if(count($blocks)>self::MAX_BLOCKS) throw new \InvalidArgumentException('Das Editor-Dokument enthält zu viele Blöcke.');

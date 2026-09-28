@@ -6,6 +6,8 @@ namespace App\ExternalConnector;
 
 final readonly class ExternalConnectorExecutor
 {
+    private const MAX_EXECUTION_TARGETS = 64;
+
     public function __construct(
         private ExternalConnectorRegistry $targets,
         private ExternalConnectorAdapterRegistry $adapters,
@@ -17,8 +19,13 @@ final readonly class ExternalConnectorExecutor
      */
     public function execute(string $capability, callable $operation): ExternalConnectorExecutionSummary
     {
+        $targets = $this->targets->forCapability($capability);
+        if (count($targets) > self::MAX_EXECUTION_TARGETS) {
+            throw new \DomainException('External connector execution fanout exceeds its safe bound.');
+        }
+
         $results = [];
-        foreach ($this->targets->forCapability($capability) as $target) {
+        foreach ($targets as $target) {
             try {
                 $operation($this->adapters->forTarget($target), $target);
                 $results[] = ExternalConnectorExecutionResult::success($target);

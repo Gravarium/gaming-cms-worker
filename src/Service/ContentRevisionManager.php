@@ -29,6 +29,10 @@ final readonly class ContentRevisionManager
 
     public function restore(ContentEntry $entry, ContentRevision $revision, User $user): void
     {
+        if ($revision->getEntry() !== $entry) {
+            throw new \DomainException('Revision belongs to another content entry.');
+        }
+
         $this->capture($entry, $user);
         $revision->restoreTo($entry);
         $entry->clearTags();

@@ -8,13 +8,20 @@ use App\Entity\ExternalConnectorTarget;
 
 final readonly class BackupTargetSelectionExporter
 {
+    private const MAX_TARGET_KEY_BYTES = 64;
+    private const MAX_CONFIGURATION_REFERENCE_BYTES = 120;
+
     public function __construct(private ExternalConnectorRegistry $targets)
     {
     }
 
     public function export(bool $allowEmpty = false): string
     {
-        $targets = $this->targets->forCapability(ExternalConnectorTarget::CAPABILITY_BACKUP);
+        try {
+            $targets = $this->targets->forCapability(ExternalConnectorTarget::CAPABILITY_BACKUP);
+        } catch (\InvalidArgumentException $exception) {
+            throw new \RuntimeException('Backup target selection contains invalid data.', 0, $exception);
+        }
 
         if ($targets === [] && !$allowEmpty) {
             throw new \RuntimeException('No enabled backup targets are configured in the CMS.');
@@ -22,6 +29,13 @@ final readonly class BackupTargetSelectionExporter
 
         $lines = ['# configuration_reference|target_key|required'];
         foreach ($targets as $target) {
+            if (
+                !$this->isSafeToken($target->configurationReference, self::MAX_CONFIGURATION_REFERENCE_BYTES)
+                || !$this->isSafeToken($target->targetKey, self::MAX_TARGET_KEY_BYTES)
+            ) {
+                throw new \RuntimeException('Backup target selection contains invalid data.');
+            }
+
             $lines[] = sprintf(
                 '%s|%s|%d',
                 $target->configurationReference,
@@ -31,5 +45,12 @@ final readonly class BackupTargetSelectionExporter
         }
 
         return implode("\n", $lines)."\n";
+    }
+
+    private function isSafeToken(string $value, int $maxBytes): bool
+    {
+        return $value !== ''
+            && strlen($value) <= $maxBytes
+            && preg_match('/\A[a-z0-9][a-z0-9_.-]*\z/', $value) === 1;
     }
 }
