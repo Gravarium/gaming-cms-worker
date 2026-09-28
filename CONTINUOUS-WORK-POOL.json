@@ -10,7 +10,7 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-28T19:50:53.543Z",
+  "published_at": "2026-09-28T19:51:55.529Z",
   "summary": {
     "total_remaining_worker_tasks": 175,
     "completed_worker_prs_awaiting_trusted_review": 314,
@@ -51742,7 +51742,7 @@
         "feature_branch": "497026353d6991b97ce34873de5fe6af5d81b6d3"
       },
       "last_observed_head": "497026353d6991b97ce34873de5fe6af5d81b6d3",
-      "last_checkpoint_at": "2026-09-28T19:46:12.986Z",
+      "last_checkpoint_at": "2026-09-28T19:51:55.529Z",
       "checkpoint_paths": [
         "src/Controller/PublicCompetitionLeaderboardController.php",
         "src/Widget/CompetitionStandingsWidgetProvider.php",
@@ -51750,7 +51750,7 @@
         "src/Widget/CompetitionStandings/Templates/widget/competition_standings.html.twig",
         "tests/Widget/CompetitionStandingsWidgetProviderTest.php"
       ],
-      "next_action": "Inspect exact-head Worker CI run #961. PostgreSQL 18 migration validation passed; PHP/Symfony analysis and tests are running. Fix any failures without widening paths or weakening checks.",
+      "next_action": "Register the allowlisted feature template directory with Twig from the widget provider, keep the Page Builder definition template key under widget/, add a regression assertion if needed, and rerun full exact-head Worker CI.",
       "last_verified_push_at": "2026-09-28T19:43:42.007Z",
       "worker_pr": 381,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/381",
@@ -51766,27 +51766,28 @@
         "src/Widget/CompetitionStandings/Templates/widget/competition_standings.html.twig",
         "tests/Widget/CompetitionStandingsWidgetProviderTest.php"
       ],
-      "ci_result": "in_progress",
+      "ci_result": "failure",
       "ci_attempts": [
         {
           "run_id": 36474342734,
           "run_number": 961,
           "head": "497026353d6991b97ce34873de5fe6af5d81b6d3",
           "base": "c3c7b14066d9f8b32925eb4381e30b6794f21027",
-          "result": "in_progress",
+          "result": "failure",
           "validation_pr": 381,
-          "status": "in_progress",
-          "conclusion": null,
+          "status": "completed",
+          "conclusion": "failure",
           "jobs": {
             "postgres_18": "success",
-            "php_symfony": "in_progress"
-          }
+            "php_symfony": "failure"
+          },
+          "summary": "Exact-head CI #961: PHPStan, Composer, Twig/config/container/AssetMapper/Doctrine validation passed; PostgreSQL 18 migration chain passed. PHPUnit had one error and one failure in the new widget test because Twig could not find widget/competition_standings.html.twig from the unregistered src/Widget/CompetitionStandings/Templates directory."
         }
       ],
       "last_ci_run_id": 36474342734,
       "ci_run_id": 36474342734,
       "ci_validation_pr": 381,
-      "last_ci_result": "in_progress"
+      "last_ci_result": "failure"
     },
     {
       "priority": 587,
