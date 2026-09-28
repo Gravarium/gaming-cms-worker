@@ -2885,7 +2885,7 @@
       "package_id": "WCP-082",
       "title": "Harden Discord webhook URL parser boundary",
       "risk": "high",
-      "execution_state": "worker_complete_awaiting_trusted_review",
+      "execution_state": "trusted_integrated",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -2958,9 +2958,9 @@
       "final_head": "3afb059e097132dbe07adc730132cbda427a6202",
       "ci_run_id": 36231995605,
       "ci_result": "success",
-      "claim_state": "locked_until_trusted_resolution",
+      "claim_state": "released_after_trusted_integration",
       "completed_on": "2026-09-26T09:13:45.528Z",
-      "next_action": "Remain claim-locked while awaiting Trusted review; do not merge or deploy from the Worker repository.",
+      "next_action": "Worker PR #45 closed after Trusted PR #176 and downstream gates succeeded.",
       "final_changed_paths": [
         "src/Service/DiscordWebhookUrlPolicy.php",
         "tests/Service/DiscordWebhookUrlPolicyTest.php"
@@ -2973,6 +2973,27 @@
         "postgres_migration_result": "success",
         "php_symfony_job": 108376764949,
         "php_symfony_result": "success"
+      },
+      "worker_pr_state": "closed",
+      "pr_state": "closed",
+      "trusted_resolution": {
+        "status": "integrated",
+        "worker_pr": 45,
+        "worker_head": "3afb059e097132dbe07adc730132cbda427a6202",
+        "trusted_pr": 176,
+        "trusted_pr_ci_run_id": 36365364627,
+        "trusted_pr_ci_result": "success",
+        "trusted_merge_sha": "7f287dd166297691fcae4bfec9c26859581b39b4",
+        "final_trusted_main_sha": "7f287dd166297691fcae4bfec9c26859581b39b4",
+        "final_trusted_main_ci_run_id": 36365665398,
+        "final_trusted_main_ci_result": "success",
+        "worker_sync_run_id": 36365665408,
+        "worker_sync_result": "success",
+        "sanitized_worker_sync_sha": "4367c6d53b015cbff04837c136f9a9aead52f554",
+        "worker_ci_run_id": 36365677589,
+        "worker_ci_after_sync_result": "success",
+        "resolved_at": "2026-09-28T01:32:06.632Z",
+        "trusted_import_note": "Imported once through A15 Trusted PR #176; no Worker branch was merged wholesale. This prerequisite was included once through dependent PR #175."
       }
     },
     {
@@ -7311,7 +7332,7 @@
       "package_id": "WCP-302",
       "title": "Enforce content release immutability after publication",
       "risk": "medium",
-      "execution_state": "worker_complete_awaiting_trusted_review",
+      "execution_state": "trusted_integrated",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -7385,8 +7406,8 @@
         ]
       },
       "claimed_on": "2026-09-26T11:35:58.527Z",
-      "claim_state": "locked_until_trusted_resolution",
-      "next_action": "Remain claim-locked while awaiting Trusted review; do not merge or deploy from the Worker repository.",
+      "claim_state": "released_after_trusted_integration",
+      "next_action": "Worker PR #91 closed after Trusted PR #176 and downstream gates succeeded.",
       "worker_pr": 91,
       "pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/91",
       "ci_run_id": 36239493686,
@@ -7407,7 +7428,28 @@
         "Exact-head Worker CI run 36239493686 succeeded on f87b2e8ee9e22344958d4cf99f37a572f8818a0c.",
         "PHP/Symfony validation and application-test job 108397214862 passed: 431 tests and 1,873 assertions; one PHPUnit deprecation and one notice were also reported in the preceding green Worker run.",
         "PostgreSQL 18 migration-chain job 108397214728 passed."
-      ]
+      ],
+      "worker_pr_state": "closed",
+      "pr_state": "closed",
+      "trusted_resolution": {
+        "status": "integrated",
+        "worker_pr": 91,
+        "worker_head": "f87b2e8ee9e22344958d4cf99f37a572f8818a0c",
+        "trusted_pr": 176,
+        "trusted_pr_ci_run_id": 36365364627,
+        "trusted_pr_ci_result": "success",
+        "trusted_merge_sha": "7f287dd166297691fcae4bfec9c26859581b39b4",
+        "final_trusted_main_sha": "7f287dd166297691fcae4bfec9c26859581b39b4",
+        "final_trusted_main_ci_run_id": 36365665398,
+        "final_trusted_main_ci_result": "success",
+        "worker_sync_run_id": 36365665408,
+        "worker_sync_result": "success",
+        "sanitized_worker_sync_sha": "4367c6d53b015cbff04837c136f9a9aead52f554",
+        "worker_ci_run_id": 36365677589,
+        "worker_ci_after_sync_result": "success",
+        "resolved_at": "2026-09-28T01:32:06.632Z",
+        "trusted_import_note": "Imported once through A15 Trusted PR #176; no Worker branch was merged wholesale. This prerequisite was included once through dependent PR #177."
+      }
     },
     {
       "priority": 78,
@@ -11988,7 +12030,7 @@
       "package_id": "WCP-339",
       "title": "Protect editor-block media references",
       "risk": "medium",
-      "execution_state": "worker_complete_awaiting_trusted_review",
+      "execution_state": "trusted_integrated",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -12069,16 +12111,16 @@
         ]
       },
       "claimed_on": "2026-09-26T14:44:03.487Z",
-      "claim_state": "locked_until_trusted_resolution",
+      "claim_state": "released_after_trusted_integration",
       "last_checkpoint_at": "2026-09-26T14:59:55.808Z",
-      "next_action": "Await Trusted review with the claim locked; continue only with the next independent Worker-only package.",
+      "next_action": "Worker PR #133 closed after Trusted PR #176 and downstream gates succeeded.",
       "checkpoint_paths": [
         "src/Service/MediaAssetUsageResolver.php",
         "tests/Layout/LayoutMediaTest.php"
       ],
       "worker_pr": 133,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/133",
-      "pr_state": "ready_for_review",
+      "pr_state": "closed",
       "last_verified_push_at": "2026-09-26T14:59:55.808Z",
       "final_head": "07a9935e85bc4b5ed1cf1f1abede3bde9bb49df2",
       "ci_run_id": 36250230757,
@@ -12093,7 +12135,27 @@
         "PHPStan analysis and complete Symfony application test suite passed: 430 tests and 1,864 assertions; one PHPUnit deprecation and one notice.",
         "PostgreSQL 18 applied and verified all 39 migrations.",
         "Regression coverage verifies real media-block references protect deletion, text-only JSON-looking decoys do not count, malformed exact-ID candidates fail closed, and existing layout deletion/reference behavior remains covered."
-      ]
+      ],
+      "worker_pr_state": "closed",
+      "trusted_resolution": {
+        "status": "integrated",
+        "worker_pr": 133,
+        "worker_head": "07a9935e85bc4b5ed1cf1f1abede3bde9bb49df2",
+        "trusted_pr": 176,
+        "trusted_pr_ci_run_id": 36365364627,
+        "trusted_pr_ci_result": "success",
+        "trusted_merge_sha": "7f287dd166297691fcae4bfec9c26859581b39b4",
+        "final_trusted_main_sha": "7f287dd166297691fcae4bfec9c26859581b39b4",
+        "final_trusted_main_ci_run_id": 36365665398,
+        "final_trusted_main_ci_result": "success",
+        "worker_sync_run_id": 36365665408,
+        "worker_sync_result": "success",
+        "sanitized_worker_sync_sha": "4367c6d53b015cbff04837c136f9a9aead52f554",
+        "worker_ci_run_id": 36365677589,
+        "worker_ci_after_sync_result": "success",
+        "resolved_at": "2026-09-28T01:32:06.632Z",
+        "trusted_import_note": "Imported once through A15 Trusted PR #176; no Worker branch was merged wholesale. This prerequisite was included once through dependent PR #135."
+      }
     },
     {
       "priority": 121,
@@ -12236,7 +12298,7 @@
       "package_id": "WCP-341",
       "title": "Verify pending-media repair protects editor references",
       "risk": "medium",
-      "execution_state": "worker_complete_awaiting_trusted_review",
+      "execution_state": "trusted_integrated",
       "dependencies": [
         "WCP-339"
       ],
@@ -12308,15 +12370,15 @@
         ]
       },
       "claimed_on": "2026-09-26T15:04:57.141Z",
-      "claim_state": "locked_until_trusted_resolution",
+      "claim_state": "released_after_trusted_integration",
       "last_checkpoint_at": "2026-09-26T15:12:31.291Z",
-      "next_action": "Await Trusted review with the claim locked; continue only with another independent Worker-only package.",
+      "next_action": "Worker PR #135 closed after Trusted PR #176 and downstream gates succeeded.",
       "checkpoint_paths": [
         "tests/Service/MediaDeletionRepairerTest.php"
       ],
       "worker_pr": 135,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/135",
-      "pr_state": "ready_for_review",
+      "pr_state": "closed",
       "last_verified_push_at": "2026-09-26T15:12:31.291Z",
       "final_head": "2c70c4ca123abffea27e8cc9de0ab09a88565b1d",
       "pr_base_branch": "main",
@@ -12332,7 +12394,27 @@
         "PostgreSQL 18 applied and verified all 39 migrations.",
         "Incremental diff against the completed WCP-339 dependency is only tests/Service/MediaDeletionRepairerTest.php; the test verifies the real repairer preserves the editor-only referenced asset and its pending-deletion state.",
         "PR #135 targets sanitized main to trigger repository CI; its main-relative diff includes WCP-339 predecessor changes. No Trusted merge or deployment."
-      ]
+      ],
+      "worker_pr_state": "closed",
+      "trusted_resolution": {
+        "status": "integrated",
+        "worker_pr": 135,
+        "worker_head": "2c70c4ca123abffea27e8cc9de0ab09a88565b1d",
+        "trusted_pr": 176,
+        "trusted_pr_ci_run_id": 36365364627,
+        "trusted_pr_ci_result": "success",
+        "trusted_merge_sha": "7f287dd166297691fcae4bfec9c26859581b39b4",
+        "final_trusted_main_sha": "7f287dd166297691fcae4bfec9c26859581b39b4",
+        "final_trusted_main_ci_run_id": 36365665398,
+        "final_trusted_main_ci_result": "success",
+        "worker_sync_run_id": 36365665408,
+        "worker_sync_result": "success",
+        "sanitized_worker_sync_sha": "4367c6d53b015cbff04837c136f9a9aead52f554",
+        "worker_ci_run_id": 36365677589,
+        "worker_ci_after_sync_result": "success",
+        "resolved_at": "2026-09-28T01:32:06.632Z",
+        "trusted_import_note": "Imported once through A15 Trusted PR #176; no Worker branch was merged wholesale."
+      }
     },
     {
       "priority": 123,
@@ -16356,7 +16438,7 @@
       "package_id": "WCP-379",
       "title": "Add Discord webhook delivery security regressions",
       "risk": "medium",
-      "execution_state": "worker_complete_awaiting_trusted_review",
+      "execution_state": "trusted_integrated",
       "dependencies": [
         "WCP-082"
       ],
@@ -16432,9 +16514,9 @@
         ]
       },
       "claimed_on": "2026-09-26T18:51:23.312Z",
-      "claim_state": "locked_until_trusted_resolution",
+      "claim_state": "released_after_trusted_integration",
       "last_checkpoint_at": "2026-09-26T19:05:28.236Z",
-      "next_action": "Await Trusted review with the claim locked; proceed with the next dependency-safe or independent Worker proposal. Do not merge or deploy.",
+      "next_action": "Worker PR #172 closed after Trusted PR #176 and downstream gates succeeded.",
       "checkpoint_paths": [
         "tests/Service/DiscordWebhookNotifierSecurityTest.php"
       ],
@@ -16452,7 +16534,28 @@
       "follow_on_changed_paths": [
         "tests/Service/DiscordWebhookNotifierSecurityTest.php"
       ],
-      "completed_at": "2026-09-26T19:05:28.236Z"
+      "completed_at": "2026-09-26T19:05:28.236Z",
+      "worker_pr_state": "closed",
+      "pr_state": "closed",
+      "trusted_resolution": {
+        "status": "integrated",
+        "worker_pr": 172,
+        "worker_head": "a67ef9cb1d489d57157258d236445f34ee9e144a",
+        "trusted_pr": 176,
+        "trusted_pr_ci_run_id": 36365364627,
+        "trusted_pr_ci_result": "success",
+        "trusted_merge_sha": "7f287dd166297691fcae4bfec9c26859581b39b4",
+        "final_trusted_main_sha": "7f287dd166297691fcae4bfec9c26859581b39b4",
+        "final_trusted_main_ci_run_id": 36365665398,
+        "final_trusted_main_ci_result": "success",
+        "worker_sync_run_id": 36365665408,
+        "worker_sync_result": "success",
+        "sanitized_worker_sync_sha": "4367c6d53b015cbff04837c136f9a9aead52f554",
+        "worker_ci_run_id": 36365677589,
+        "worker_ci_after_sync_result": "success",
+        "resolved_at": "2026-09-28T01:32:06.632Z",
+        "trusted_import_note": "Imported once through A15 Trusted PR #176; no Worker branch was merged wholesale."
+      }
     },
     {
       "priority": 160,
@@ -16690,7 +16793,7 @@
       "package_id": "WCP-382",
       "title": "Test Discord webhook failure handling and log privacy",
       "risk": "medium",
-      "execution_state": "worker_complete_awaiting_trusted_review",
+      "execution_state": "trusted_integrated",
       "dependencies": [
         "WCP-379"
       ],
@@ -16766,9 +16869,9 @@
         ]
       },
       "claimed_on": "2026-09-26T19:10:55.677Z",
-      "claim_state": "locked_until_trusted_resolution",
+      "claim_state": "released_after_trusted_integration",
       "last_checkpoint_at": "2026-09-26T19:15:34.080Z",
-      "next_action": "Await Trusted review with the claim locked; proceed with the next dependency-safe or independent Worker proposal. Do not merge or deploy.",
+      "next_action": "Worker PR #175 closed after Trusted PR #176 and downstream gates succeeded.",
       "checkpoint_paths": [
         "tests/Service/DiscordWebhookNotifierFailureSecurityTest.php"
       ],
@@ -16787,14 +16890,35 @@
       "follow_on_changed_paths": [
         "tests/Service/DiscordWebhookNotifierFailureSecurityTest.php"
       ],
-      "completed_at": "2026-09-26T19:15:34.080Z"
+      "completed_at": "2026-09-26T19:15:34.080Z",
+      "worker_pr_state": "closed",
+      "pr_state": "closed",
+      "trusted_resolution": {
+        "status": "integrated",
+        "worker_pr": 175,
+        "worker_head": "7b825f1b8734e4cc3267418b7d2d7813ad19de54",
+        "trusted_pr": 176,
+        "trusted_pr_ci_run_id": 36365364627,
+        "trusted_pr_ci_result": "success",
+        "trusted_merge_sha": "7f287dd166297691fcae4bfec9c26859581b39b4",
+        "final_trusted_main_sha": "7f287dd166297691fcae4bfec9c26859581b39b4",
+        "final_trusted_main_ci_run_id": 36365665398,
+        "final_trusted_main_ci_result": "success",
+        "worker_sync_run_id": 36365665408,
+        "worker_sync_result": "success",
+        "sanitized_worker_sync_sha": "4367c6d53b015cbff04837c136f9a9aead52f554",
+        "worker_ci_run_id": 36365677589,
+        "worker_ci_after_sync_result": "success",
+        "resolved_at": "2026-09-28T01:32:06.632Z",
+        "trusted_import_note": "Imported once through A15 Trusted PR #176; no Worker branch was merged wholesale."
+      }
     },
     {
       "priority": 163,
       "package_id": "WCP-383",
       "title": "Cover scheduled publishing command failure isolation",
       "risk": "medium",
-      "execution_state": "worker_in_progress",
+      "execution_state": "trusted_integrated",
       "dependencies": [
         "WCP-302"
       ],
@@ -16868,9 +16992,9 @@
         ]
       },
       "claimed_on": "2026-09-26T19:16:05.385Z",
-      "claim_state": "active",
+      "claim_state": "released_after_trusted_integration",
       "last_checkpoint_at": "2026-09-26T19:22:06.395Z",
-      "next_action": "Wait for exact-head Worker CI run 36265793463; diagnose and repair any test, PHPStan or migration failure without weakening safeguards.",
+      "next_action": "Worker PR #177 closed after Trusted PR #176 and downstream gates succeeded.",
       "checkpoint_paths": [
         "tests/Command/PublishScheduledContentCommandTest.php"
       ],
@@ -16878,7 +17002,28 @@
       "worker_pr": 177,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/177",
       "ci_run_id": 36265793463,
-      "ci_result": "in_progress"
+      "ci_result": "in_progress",
+      "worker_pr_state": "closed",
+      "pr_state": "closed",
+      "trusted_resolution": {
+        "status": "integrated",
+        "worker_pr": 177,
+        "worker_head": "434015b518f375052c784a739155916b3e86a349",
+        "trusted_pr": 176,
+        "trusted_pr_ci_run_id": 36365364627,
+        "trusted_pr_ci_result": "success",
+        "trusted_merge_sha": "7f287dd166297691fcae4bfec9c26859581b39b4",
+        "final_trusted_main_sha": "7f287dd166297691fcae4bfec9c26859581b39b4",
+        "final_trusted_main_ci_run_id": 36365665398,
+        "final_trusted_main_ci_result": "success",
+        "worker_sync_run_id": 36365665408,
+        "worker_sync_result": "success",
+        "sanitized_worker_sync_sha": "4367c6d53b015cbff04837c136f9a9aead52f554",
+        "worker_ci_run_id": 36365677589,
+        "worker_ci_after_sync_result": "success",
+        "resolved_at": "2026-09-28T01:32:06.632Z",
+        "trusted_import_note": "Imported once through A15 Trusted PR #176; no Worker branch was merged wholesale. Exact-head Worker CI run #36265793463 succeeded."
+      }
     },
     {
       "priority": 164,
@@ -18114,7 +18259,7 @@
       "package_id": "WCP-394",
       "title": "Protect User display-name validation boundaries",
       "risk": "low",
-      "execution_state": "worker_complete_awaiting_trusted_review",
+      "execution_state": "trusted_integrated",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -18185,16 +18330,16 @@
         ]
       },
       "claimed_on": "2026-09-26T20:04:43.431Z",
-      "claim_state": "locked_until_trusted_resolution",
+      "claim_state": "released_after_trusted_integration",
       "last_checkpoint_at": "2026-09-26T20:09:26.653Z",
-      "next_action": "Await Trusted review with this claim locked; proceed with a different independent Worker proposal. Do not merge or deploy.",
+      "next_action": "Worker PR #188 closed after Trusted PR #176 and downstream gates succeeded.",
       "checkpoint_paths": [
         "tests/Entity/UserDisplayNameValidationTest.php"
       ],
       "last_verified_push_at": "2026-09-26T20:06:39.837Z",
       "worker_pr": 188,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/188",
-      "pr_state": "open_ready_for_review",
+      "pr_state": "closed",
       "last_ci_run_id": 36268348877,
       "last_ci_result": "success",
       "final_head": "fd5bd185794bac5aa06d209ce418469f356169c2",
@@ -18203,7 +18348,27 @@
       "final_changed_paths": [
         "tests/Entity/UserDisplayNameValidationTest.php"
       ],
-      "completed_at": "2026-09-26T20:09:26.653Z"
+      "completed_at": "2026-09-26T20:09:26.653Z",
+      "worker_pr_state": "closed",
+      "trusted_resolution": {
+        "status": "integrated",
+        "worker_pr": 188,
+        "worker_head": "fd5bd185794bac5aa06d209ce418469f356169c2",
+        "trusted_pr": 176,
+        "trusted_pr_ci_run_id": 36365364627,
+        "trusted_pr_ci_result": "success",
+        "trusted_merge_sha": "7f287dd166297691fcae4bfec9c26859581b39b4",
+        "final_trusted_main_sha": "7f287dd166297691fcae4bfec9c26859581b39b4",
+        "final_trusted_main_ci_run_id": 36365665398,
+        "final_trusted_main_ci_result": "success",
+        "worker_sync_run_id": 36365665408,
+        "worker_sync_result": "success",
+        "sanitized_worker_sync_sha": "4367c6d53b015cbff04837c136f9a9aead52f554",
+        "worker_ci_run_id": 36365677589,
+        "worker_ci_after_sync_result": "success",
+        "resolved_at": "2026-09-28T01:32:06.632Z",
+        "trusted_import_note": "Imported once through A15 Trusted PR #176; no Worker branch was merged wholesale."
+      }
     },
     {
       "priority": 175,
@@ -18368,7 +18533,7 @@
       "package_id": "WCP-396",
       "title": "Guard the public portal skip-link landmark",
       "risk": "low",
-      "execution_state": "worker_complete_awaiting_trusted_review",
+      "execution_state": "trusted_integrated",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -18440,16 +18605,16 @@
         ]
       },
       "claimed_on": "2026-09-26T20:11:27.929Z",
-      "claim_state": "locked_until_trusted_resolution",
+      "claim_state": "released_after_trusted_integration",
       "last_checkpoint_at": "2026-09-26T20:15:03.011Z",
-      "next_action": "Await Trusted review with this claim locked; proceed with a different independent Worker proposal. Do not merge or deploy.",
+      "next_action": "Worker PR #189 closed after Trusted PR #176 and downstream gates succeeded.",
       "checkpoint_paths": [
         "tests/Controller/HomePortalAccessibilityTest.php"
       ],
       "last_verified_push_at": "2026-09-26T20:12:38.168Z",
       "worker_pr": 189,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/189",
-      "pr_state": "open_ready_for_review",
+      "pr_state": "closed",
       "last_ci_run_id": 36268699701,
       "last_ci_result": "success",
       "final_head": "db5a3badeb94c793c2bbcd851b67d72b021512dd",
@@ -18458,7 +18623,27 @@
       "final_changed_paths": [
         "tests/Controller/HomePortalAccessibilityTest.php"
       ],
-      "completed_at": "2026-09-26T20:15:03.011Z"
+      "completed_at": "2026-09-26T20:15:03.011Z",
+      "worker_pr_state": "closed",
+      "trusted_resolution": {
+        "status": "integrated",
+        "worker_pr": 189,
+        "worker_head": "db5a3badeb94c793c2bbcd851b67d72b021512dd",
+        "trusted_pr": 176,
+        "trusted_pr_ci_run_id": 36365364627,
+        "trusted_pr_ci_result": "success",
+        "trusted_merge_sha": "7f287dd166297691fcae4bfec9c26859581b39b4",
+        "final_trusted_main_sha": "7f287dd166297691fcae4bfec9c26859581b39b4",
+        "final_trusted_main_ci_run_id": 36365665398,
+        "final_trusted_main_ci_result": "success",
+        "worker_sync_run_id": 36365665408,
+        "worker_sync_result": "success",
+        "sanitized_worker_sync_sha": "4367c6d53b015cbff04837c136f9a9aead52f554",
+        "worker_ci_run_id": 36365677589,
+        "worker_ci_after_sync_result": "success",
+        "resolved_at": "2026-09-28T01:32:06.632Z",
+        "trusted_import_note": "Imported once through A15 Trusted PR #176; no Worker branch was merged wholesale."
+      }
     },
     {
       "priority": 177,
@@ -18582,7 +18767,7 @@
       "package_id": "WCP-398",
       "title": "Guard the private guild calendar against line injection",
       "risk": "medium",
-      "execution_state": "worker_complete_awaiting_trusted_review",
+      "execution_state": "trusted_integrated",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -18655,9 +18840,9 @@
         ]
       },
       "claimed_on": "2026-09-26T20:18:00.742Z",
-      "claim_state": "locked_until_trusted_resolution",
+      "claim_state": "released_after_trusted_integration",
       "last_checkpoint_at": "2026-09-26T20:33:18.430Z",
-      "next_action": "PR #192 is ready for Trusted review; keep the claim locked until Trusted explicitly integrates, cancels or transfers it. Continue only with a different independent claim; do not merge or deploy.",
+      "next_action": "Worker PR #192 closed after Trusted PR #176 and downstream gates succeeded.",
       "checkpoint_paths": [
         "tests/Controller/GuildCalendarSecurityTest.php"
       ],
@@ -18705,7 +18890,28 @@
           "result": "success"
         }
       },
-      "trusted_follow_up": "Port the regression coverage only if the related calendar implementation changes in Trusted; preserve member-only authorization, private/no-store caching, and CRLF escaping. Run full Trusted CI."
+      "trusted_follow_up": "Port the regression coverage only if the related calendar implementation changes in Trusted; preserve member-only authorization, private/no-store caching, and CRLF escaping. Run full Trusted CI.",
+      "worker_pr_state": "closed",
+      "pr_state": "closed",
+      "trusted_resolution": {
+        "status": "integrated",
+        "worker_pr": 192,
+        "worker_head": "9c0afcfd6feebc114ff5a959361d155795b06c8a",
+        "trusted_pr": 176,
+        "trusted_pr_ci_run_id": 36365364627,
+        "trusted_pr_ci_result": "success",
+        "trusted_merge_sha": "7f287dd166297691fcae4bfec9c26859581b39b4",
+        "final_trusted_main_sha": "7f287dd166297691fcae4bfec9c26859581b39b4",
+        "final_trusted_main_ci_run_id": 36365665398,
+        "final_trusted_main_ci_result": "success",
+        "worker_sync_run_id": 36365665408,
+        "worker_sync_result": "success",
+        "sanitized_worker_sync_sha": "4367c6d53b015cbff04837c136f9a9aead52f554",
+        "worker_ci_run_id": 36365677589,
+        "worker_ci_after_sync_result": "success",
+        "resolved_at": "2026-09-28T01:32:06.632Z",
+        "trusted_import_note": "Imported once through A15 Trusted PR #176; no Worker branch was merged wholesale."
+      }
     },
     {
       "priority": 179,
@@ -19248,7 +19454,7 @@
       "package_id": "WCP-403",
       "title": "Protect member passkey management actions",
       "risk": "medium",
-      "execution_state": "worker_complete_awaiting_trusted_review",
+      "execution_state": "trusted_integrated",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -19323,12 +19529,12 @@
         ]
       },
       "claimed_on": "2026-09-26T20:42:04.147Z",
-      "claim_state": "locked_until_trusted_resolution",
+      "claim_state": "released_after_trusted_integration",
       "last_checkpoint_at": "2026-09-26T20:52:23.685Z",
       "checkpoint_paths": [
         "tests/Controller/PasskeyManagementSecurityTest.php"
       ],
-      "next_action": "PR #197 is ready for Trusted review; keep this claim locked until Trusted explicitly integrates, cancels or transfers it. Continue only with a different independent claim; do not merge or deploy.",
+      "next_action": "Worker PR #197 closed after Trusted PR #176 and downstream gates succeeded.",
       "branch_heads": {
         "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
         "feature_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d"
@@ -19364,14 +19570,35 @@
           "result": "success"
         }
       },
-      "trusted_follow_up": "Keep member-scoped credential lookup, authentication and CSRF enforcement when porting or changing passkey management in Trusted; run complete Trusted CI."
+      "trusted_follow_up": "Keep member-scoped credential lookup, authentication and CSRF enforcement when porting or changing passkey management in Trusted; run complete Trusted CI.",
+      "worker_pr_state": "closed",
+      "pr_state": "closed",
+      "trusted_resolution": {
+        "status": "integrated",
+        "worker_pr": 197,
+        "worker_head": "aadc382ca4429de7b4f4ffd941d20844ae3e0852",
+        "trusted_pr": 176,
+        "trusted_pr_ci_run_id": 36365364627,
+        "trusted_pr_ci_result": "success",
+        "trusted_merge_sha": "7f287dd166297691fcae4bfec9c26859581b39b4",
+        "final_trusted_main_sha": "7f287dd166297691fcae4bfec9c26859581b39b4",
+        "final_trusted_main_ci_run_id": 36365665398,
+        "final_trusted_main_ci_result": "success",
+        "worker_sync_run_id": 36365665408,
+        "worker_sync_result": "success",
+        "sanitized_worker_sync_sha": "4367c6d53b015cbff04837c136f9a9aead52f554",
+        "worker_ci_run_id": 36365677589,
+        "worker_ci_after_sync_result": "success",
+        "resolved_at": "2026-09-28T01:32:06.632Z",
+        "trusted_import_note": "Imported once through A15 Trusted PR #176; no Worker branch was merged wholesale."
+      }
     },
     {
       "priority": 184,
       "package_id": "WCP-404",
       "title": "Test competition detail visibility boundaries",
       "risk": "low",
-      "execution_state": "worker_complete_awaiting_trusted_review",
+      "execution_state": "trusted_integrated",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -19442,8 +19669,8 @@
         ]
       },
       "claimed_on": "2026-09-26T20:50:12.004Z",
-      "claim_state": "locked_until_trusted_resolution",
-      "next_action": "Await Trusted review; keep this exact claim locked and do not merge or deploy.",
+      "claim_state": "released_after_trusted_integration",
+      "next_action": "Worker PR #198 closed after Trusted PR #176 and downstream gates succeeded.",
       "last_checkpoint_at": "2026-09-26T20:56:02.864Z",
       "last_verified_push_at": "2026-09-26T20:56:02.864Z",
       "checkpoint_paths": [
@@ -19453,7 +19680,28 @@
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/198",
       "final_head": "2d66654dd19bf1bee4f6bae5f72f3c2e5020d1b5",
       "ci_run_id": 36271039257,
-      "ci_result": "success"
+      "ci_result": "success",
+      "worker_pr_state": "closed",
+      "pr_state": "closed",
+      "trusted_resolution": {
+        "status": "integrated",
+        "worker_pr": 198,
+        "worker_head": "2d66654dd19bf1bee4f6bae5f72f3c2e5020d1b5",
+        "trusted_pr": 176,
+        "trusted_pr_ci_run_id": 36365364627,
+        "trusted_pr_ci_result": "success",
+        "trusted_merge_sha": "7f287dd166297691fcae4bfec9c26859581b39b4",
+        "final_trusted_main_sha": "7f287dd166297691fcae4bfec9c26859581b39b4",
+        "final_trusted_main_ci_run_id": 36365665398,
+        "final_trusted_main_ci_result": "success",
+        "worker_sync_run_id": 36365665408,
+        "worker_sync_result": "success",
+        "sanitized_worker_sync_sha": "4367c6d53b015cbff04837c136f9a9aead52f554",
+        "worker_ci_run_id": 36365677589,
+        "worker_ci_after_sync_result": "success",
+        "resolved_at": "2026-09-28T01:32:06.632Z",
+        "trusted_import_note": "Imported once through A15 Trusted PR #176; no Worker branch was merged wholesale."
+      }
     },
     {
       "priority": 185,
@@ -19620,7 +19868,7 @@
       "package_id": "WCP-406",
       "title": "Guard public video release visibility",
       "risk": "low",
-      "execution_state": "worker_complete_awaiting_trusted_review",
+      "execution_state": "trusted_integrated",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -19693,12 +19941,12 @@
         ]
       },
       "claimed_on": "2026-09-26T21:00:29.714Z",
-      "claim_state": "locked_until_trusted_resolution",
+      "claim_state": "released_after_trusted_integration",
       "last_checkpoint_at": "2026-09-26T21:05:55.821Z",
       "checkpoint_paths": [
         "tests/Controller/VideoPublicationVisibilityTest.php"
       ],
-      "next_action": "PR #199 is ready for Trusted review; keep this claim locked until Trusted explicitly integrates, cancels or transfers it. Continue only with a different independent claim; do not merge or deploy.",
+      "next_action": "Worker PR #199 closed after Trusted PR #176 and downstream gates succeeded.",
       "last_verified_push_at": "2026-09-26T21:05:55.821Z",
       "worker_pr": 199,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/199",
@@ -19730,14 +19978,35 @@
           "result": "success"
         }
       },
-      "trusted_follow_up": "Preserve enabled and publication-time visibility checks in the Trusted video listing and detail routes; run full Trusted CI."
+      "trusted_follow_up": "Preserve enabled and publication-time visibility checks in the Trusted video listing and detail routes; run full Trusted CI.",
+      "worker_pr_state": "closed",
+      "pr_state": "closed",
+      "trusted_resolution": {
+        "status": "integrated",
+        "worker_pr": 199,
+        "worker_head": "0717acc5fed292780f040c15d9ec41ad0e8abf40",
+        "trusted_pr": 176,
+        "trusted_pr_ci_run_id": 36365364627,
+        "trusted_pr_ci_result": "success",
+        "trusted_merge_sha": "7f287dd166297691fcae4bfec9c26859581b39b4",
+        "final_trusted_main_sha": "7f287dd166297691fcae4bfec9c26859581b39b4",
+        "final_trusted_main_ci_run_id": 36365665398,
+        "final_trusted_main_ci_result": "success",
+        "worker_sync_run_id": 36365665408,
+        "worker_sync_result": "success",
+        "sanitized_worker_sync_sha": "4367c6d53b015cbff04837c136f9a9aead52f554",
+        "worker_ci_run_id": 36365677589,
+        "worker_ci_after_sync_result": "success",
+        "resolved_at": "2026-09-28T01:32:06.632Z",
+        "trusted_import_note": "Imported once through A15 Trusted PR #176; no Worker branch was merged wholesale."
+      }
     },
     {
       "priority": 187,
       "package_id": "WCP-407",
       "title": "Test competition registration access and duplicate submissions",
       "risk": "low",
-      "execution_state": "worker_complete_awaiting_trusted_review",
+      "execution_state": "trusted_integrated",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -19810,8 +20079,8 @@
         ]
       },
       "claimed_on": "2026-09-26T21:04:17.724Z",
-      "claim_state": "locked_until_trusted_resolution",
-      "next_action": "Exact-head Worker CI run 36273271630 passed on dbad20845fecdf0b8a10c739f5de18e0123db262. Claim stays locked for Trusted resolution; continue with the next independent safe package.",
+      "claim_state": "released_after_trusted_integration",
+      "next_action": "Worker PR #204 closed after Trusted PR #176 and downstream gates succeeded.",
       "branch_heads": {
         "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5",
         "feature_branch": "dbad20845fecdf0b8a10c739f5de18e0123db262"
@@ -19824,14 +20093,35 @@
       "worker_pr": 204,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/204",
       "last_ci_run_id": 36273271630,
-      "last_ci_result": "success"
+      "last_ci_result": "success",
+      "worker_pr_state": "closed",
+      "pr_state": "closed",
+      "trusted_resolution": {
+        "status": "integrated",
+        "worker_pr": 204,
+        "worker_head": "dbad20845fecdf0b8a10c739f5de18e0123db262",
+        "trusted_pr": 176,
+        "trusted_pr_ci_run_id": 36365364627,
+        "trusted_pr_ci_result": "success",
+        "trusted_merge_sha": "7f287dd166297691fcae4bfec9c26859581b39b4",
+        "final_trusted_main_sha": "7f287dd166297691fcae4bfec9c26859581b39b4",
+        "final_trusted_main_ci_run_id": 36365665398,
+        "final_trusted_main_ci_result": "success",
+        "worker_sync_run_id": 36365665408,
+        "worker_sync_result": "success",
+        "sanitized_worker_sync_sha": "4367c6d53b015cbff04837c136f9a9aead52f554",
+        "worker_ci_run_id": 36365677589,
+        "worker_ci_after_sync_result": "success",
+        "resolved_at": "2026-09-28T01:32:06.632Z",
+        "trusted_import_note": "Imported once through A15 Trusted PR #176; no Worker branch was merged wholesale."
+      }
     },
     {
       "priority": 188,
       "package_id": "WCP-408",
       "title": "Cover enabled video category and playlist filters",
       "risk": "low",
-      "execution_state": "worker_complete_awaiting_trusted_review",
+      "execution_state": "trusted_integrated",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -19905,12 +20195,12 @@
         ]
       },
       "claimed_on": "2026-09-26T21:09:10.198Z",
-      "claim_state": "locked_until_trusted_resolution",
+      "claim_state": "released_after_trusted_integration",
       "last_checkpoint_at": "2026-09-26T21:14:49.377Z",
       "checkpoint_paths": [
         "tests/Controller/VideoLibraryFilterTest.php"
       ],
-      "next_action": "PR #201 is ready for Trusted review; keep this claim locked until Trusted explicitly integrates, cancels or transfers it. Continue only with a different independent claim; do not merge or deploy.",
+      "next_action": "Worker PR #201 closed after Trusted PR #176 and downstream gates succeeded.",
       "last_verified_push_at": "2026-09-26T21:14:49.377Z",
       "worker_pr": 201,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/201",
@@ -19942,7 +20232,28 @@
           "result": "success"
         }
       },
-      "trusted_follow_up": "Preserve enabled category and playlist lookup rules and video scoping when porting or changing the public video library in Trusted; run full Trusted CI."
+      "trusted_follow_up": "Preserve enabled category and playlist lookup rules and video scoping when porting or changing the public video library in Trusted; run full Trusted CI.",
+      "worker_pr_state": "closed",
+      "pr_state": "closed",
+      "trusted_resolution": {
+        "status": "integrated",
+        "worker_pr": 201,
+        "worker_head": "57cb88159ccd7206b9f2ae5da9843a5136989098",
+        "trusted_pr": 176,
+        "trusted_pr_ci_run_id": 36365364627,
+        "trusted_pr_ci_result": "success",
+        "trusted_merge_sha": "7f287dd166297691fcae4bfec9c26859581b39b4",
+        "final_trusted_main_sha": "7f287dd166297691fcae4bfec9c26859581b39b4",
+        "final_trusted_main_ci_run_id": 36365665398,
+        "final_trusted_main_ci_result": "success",
+        "worker_sync_run_id": 36365665408,
+        "worker_sync_result": "success",
+        "sanitized_worker_sync_sha": "4367c6d53b015cbff04837c136f9a9aead52f554",
+        "worker_ci_run_id": 36365677589,
+        "worker_ci_after_sync_result": "success",
+        "resolved_at": "2026-09-28T01:32:06.632Z",
+        "trusted_import_note": "Imported once through A15 Trusted PR #176; no Worker branch was merged wholesale."
+      }
     },
     {
       "priority": 189,
@@ -20100,7 +20411,7 @@
       "package_id": "WCP-410",
       "title": "Guard admin menu management access and mutations",
       "risk": "medium",
-      "execution_state": "worker_complete_awaiting_trusted_review",
+      "execution_state": "trusted_integrated",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -20173,12 +20484,12 @@
         ]
       },
       "claimed_on": "2026-09-26T21:17:45.812Z",
-      "claim_state": "locked_until_trusted_resolution",
+      "claim_state": "released_after_trusted_integration",
       "last_checkpoint_at": "2026-09-26T21:27:29.250Z",
       "checkpoint_paths": [
         "tests/Controller/AdminMenuManagementSecurityTest.php"
       ],
-      "next_action": "PR #202 is ready for Trusted review; keep this claim locked until Trusted explicitly integrates, cancels, or transfers it. Continue only with an independent claim; do not merge or deploy.",
+      "next_action": "Worker PR #202 closed after Trusted PR #176 and downstream gates succeeded.",
       "last_verified_push_at": "2026-09-26T21:27:29.250Z",
       "worker_pr": 202,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/202",
@@ -20194,7 +20505,7 @@
       "changed_paths": [
         "tests/Controller/AdminMenuManagementSecurityTest.php"
       ],
-      "pr_state": "open_ready_for_review_unmerged",
+      "pr_state": "closed",
       "completed_at": "2026-09-26T21:27:29.250Z",
       "test_results": {
         "phpunit": "433 tests, 1,874 assertions, 0 failures; one deprecation and one notice.",
@@ -20218,7 +20529,27 @@
       "open_limitations": [
         "Awaiting Trusted review and Trusted integration CI."
       ],
-      "trusted_follow_up": "Preserve CMS_CONTENT_MANAGE authorization, form CSRF, empty-target rejection, and delete CSRF when porting or changing the menu manager in Trusted; run full Trusted CI."
+      "trusted_follow_up": "Preserve CMS_CONTENT_MANAGE authorization, form CSRF, empty-target rejection, and delete CSRF when porting or changing the menu manager in Trusted; run full Trusted CI.",
+      "worker_pr_state": "closed",
+      "trusted_resolution": {
+        "status": "integrated",
+        "worker_pr": 202,
+        "worker_head": "9818a919cd4a0cf5b9d9d45df23bd5d21768322c",
+        "trusted_pr": 176,
+        "trusted_pr_ci_run_id": 36365364627,
+        "trusted_pr_ci_result": "success",
+        "trusted_merge_sha": "7f287dd166297691fcae4bfec9c26859581b39b4",
+        "final_trusted_main_sha": "7f287dd166297691fcae4bfec9c26859581b39b4",
+        "final_trusted_main_ci_run_id": 36365665398,
+        "final_trusted_main_ci_result": "success",
+        "worker_sync_run_id": 36365665408,
+        "worker_sync_result": "success",
+        "sanitized_worker_sync_sha": "4367c6d53b015cbff04837c136f9a9aead52f554",
+        "worker_ci_run_id": 36365677589,
+        "worker_ci_after_sync_result": "success",
+        "resolved_at": "2026-09-28T01:32:06.632Z",
+        "trusted_import_note": "Imported once through A15 Trusted PR #176; no Worker branch was merged wholesale."
+      }
     },
     {
       "priority": 191,
@@ -20510,7 +20841,7 @@
       "package_id": "WCP-413",
       "title": "Cover category manager authorization and mutation boundaries",
       "risk": "low",
-      "execution_state": "worker_complete_awaiting_trusted_review",
+      "execution_state": "trusted_integrated",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -20583,12 +20914,12 @@
         ]
       },
       "claimed_on": "2026-09-26T21:48:25.054Z",
-      "claim_state": "locked_until_trusted_resolution",
+      "claim_state": "released_after_trusted_integration",
       "last_checkpoint_at": "2026-09-26T22:00:39.725Z",
       "checkpoint_paths": [
         "tests/Controller/AdminCategoryManagementSecurityTest.php"
       ],
-      "next_action": "PR #207 is ready for Trusted review; keep this claim locked until Trusted explicitly integrates, cancels, or transfers it. Continue only with an independent claim; do not merge or deploy.",
+      "next_action": "Worker PR #207 closed after Trusted PR #176 and downstream gates succeeded.",
       "branch_heads": {
         "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5",
         "feature_branch": "67ac4fb451b5ece305bd37cf2b0888b911af8355"
@@ -20625,7 +20956,7 @@
       "changed_paths": [
         "tests/Controller/AdminCategoryManagementSecurityTest.php"
       ],
-      "pr_state": "open_ready_for_review_unmerged",
+      "pr_state": "closed",
       "completed_at": "2026-09-26T22:00:39.725Z",
       "test_results": {
         "phpunit": "432 tests, 1,877 assertions, 0 failures; one deprecation and one notice.",
@@ -20642,7 +20973,27 @@
       "open_limitations": [
         "Awaiting Trusted review and Trusted integration CI."
       ],
-      "trusted_follow_up": "Preserve CMS_CONTENT_MANAGE, form CSRF, category cycle prevention, and deletion CSRF when porting or changing category management in Trusted; run full Trusted CI."
+      "trusted_follow_up": "Preserve CMS_CONTENT_MANAGE, form CSRF, category cycle prevention, and deletion CSRF when porting or changing category management in Trusted; run full Trusted CI.",
+      "worker_pr_state": "closed",
+      "trusted_resolution": {
+        "status": "integrated",
+        "worker_pr": 207,
+        "worker_head": "67ac4fb451b5ece305bd37cf2b0888b911af8355",
+        "trusted_pr": 176,
+        "trusted_pr_ci_run_id": 36365364627,
+        "trusted_pr_ci_result": "success",
+        "trusted_merge_sha": "7f287dd166297691fcae4bfec9c26859581b39b4",
+        "final_trusted_main_sha": "7f287dd166297691fcae4bfec9c26859581b39b4",
+        "final_trusted_main_ci_run_id": 36365665398,
+        "final_trusted_main_ci_result": "success",
+        "worker_sync_run_id": 36365665408,
+        "worker_sync_result": "success",
+        "sanitized_worker_sync_sha": "4367c6d53b015cbff04837c136f9a9aead52f554",
+        "worker_ci_run_id": 36365677589,
+        "worker_ci_after_sync_result": "success",
+        "resolved_at": "2026-09-28T01:32:06.632Z",
+        "trusted_import_note": "Imported once through A15 Trusted PR #176; no Worker branch was merged wholesale."
+      }
     },
     {
       "priority": 194,
@@ -21004,7 +21355,7 @@
       "package_id": "WCP-416",
       "title": "Verify public guild visibility boundaries",
       "risk": "low",
-      "execution_state": "worker_complete_awaiting_trusted_review",
+      "execution_state": "trusted_integrated",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -21070,7 +21421,7 @@
         ]
       },
       "claimed_on": "2026-09-26T22:01:08.963Z",
-      "claim_state": "locked_until_trusted_resolution",
+      "claim_state": "released_after_trusted_integration",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
       "active_head": "d6f211be7e463dab0352f9f9e19bae48cb35d30e",
@@ -21084,7 +21435,7 @@
         "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
         "feature_branch": "d6f211be7e463dab0352f9f9e19bae48cb35d30e"
       },
-      "next_action": "PR #209 is ready for Trusted review at exact green HEAD d6f211be7e463dab0352f9f9e19bae48cb35d30e; keep this claim locked and continue with an independent safe package.",
+      "next_action": "Worker PR #209 closed after Trusted PR #176 and downstream gates succeeded.",
       "worker_pr": 209,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/209",
       "last_ci_run_id": 36275244784,
@@ -21099,7 +21450,7 @@
       "changed_paths": [
         "tests/Controller/PublicGuildVisibilityTest.php"
       ],
-      "pr_state": "open",
+      "pr_state": "closed",
       "completed_at": "2026-09-26T22:14:24.478Z",
       "test_results": {
         "phpstan": "success; no errors",
@@ -21120,14 +21471,34 @@
       ],
       "completion_summary": "Test-only public guild visibility coverage passed exact-head Worker CI. Enabled guilds on enabled games remain listed/viewable; disabled guilds and guilds on disabled games are hidden from the directory and return 404 on detail/application routes.",
       "open_limitations": [],
-      "trusted_follow_up": "Review PR #209 and independently validate the exact-head Worker CI."
+      "trusted_follow_up": "Review PR #209 and independently validate the exact-head Worker CI.",
+      "worker_pr_state": "closed",
+      "trusted_resolution": {
+        "status": "integrated",
+        "worker_pr": 209,
+        "worker_head": "d6f211be7e463dab0352f9f9e19bae48cb35d30e",
+        "trusted_pr": 176,
+        "trusted_pr_ci_run_id": 36365364627,
+        "trusted_pr_ci_result": "success",
+        "trusted_merge_sha": "7f287dd166297691fcae4bfec9c26859581b39b4",
+        "final_trusted_main_sha": "7f287dd166297691fcae4bfec9c26859581b39b4",
+        "final_trusted_main_ci_run_id": 36365665398,
+        "final_trusted_main_ci_result": "success",
+        "worker_sync_run_id": 36365665408,
+        "worker_sync_result": "success",
+        "sanitized_worker_sync_sha": "4367c6d53b015cbff04837c136f9a9aead52f554",
+        "worker_ci_run_id": 36365677589,
+        "worker_ci_after_sync_result": "success",
+        "resolved_at": "2026-09-28T01:32:06.632Z",
+        "trusted_import_note": "Imported once through A15 Trusted PR #176; no Worker branch was merged wholesale."
+      }
     },
     {
       "priority": 197,
       "package_id": "WCP-417",
       "title": "Cover video administration authorization and deletion CSRF",
       "risk": "low",
-      "execution_state": "worker_complete_awaiting_trusted_review",
+      "execution_state": "trusted_integrated",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -21200,12 +21571,12 @@
         ]
       },
       "claimed_on": "2026-09-26T22:05:03.396Z",
-      "claim_state": "locked_until_trusted_resolution",
+      "claim_state": "released_after_trusted_integration",
       "last_checkpoint_at": "2026-09-26T22:11:01.689Z",
       "checkpoint_paths": [
         "tests/Controller/AdminVideoManagementSecurityTest.php"
       ],
-      "next_action": "PR #211 is ready for Trusted review; keep this claim locked until Trusted explicitly integrates, cancels, or transfers it. Continue only with an independent claim; do not merge or deploy.",
+      "next_action": "Worker PR #211 closed after Trusted PR #176 and downstream gates succeeded.",
       "branch_heads": {
         "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
         "feature_branch": "b70fdf94a187dc7ea3761b4baf8f1556394a8df8"
@@ -21218,7 +21589,7 @@
       "last_ci_result": "success",
       "ci_run_id": 36275257048,
       "ci_result": "success",
-      "pr_state": "open_ready_for_review_unmerged",
+      "pr_state": "closed",
       "final_head": "b70fdf94a187dc7ea3761b4baf8f1556394a8df8",
       "final_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
       "final_changed_paths": [
@@ -21250,14 +21621,34 @@
       "open_limitations": [
         "Awaiting Trusted review and Trusted integration CI."
       ],
-      "trusted_follow_up": "Preserve CMS_VIDEO_MANAGE and delete CSRF when porting or changing the video manager in Trusted; run full Trusted CI."
+      "trusted_follow_up": "Preserve CMS_VIDEO_MANAGE and delete CSRF when porting or changing the video manager in Trusted; run full Trusted CI.",
+      "worker_pr_state": "closed",
+      "trusted_resolution": {
+        "status": "integrated",
+        "worker_pr": 211,
+        "worker_head": "b70fdf94a187dc7ea3761b4baf8f1556394a8df8",
+        "trusted_pr": 176,
+        "trusted_pr_ci_run_id": 36365364627,
+        "trusted_pr_ci_result": "success",
+        "trusted_merge_sha": "7f287dd166297691fcae4bfec9c26859581b39b4",
+        "final_trusted_main_sha": "7f287dd166297691fcae4bfec9c26859581b39b4",
+        "final_trusted_main_ci_run_id": 36365665398,
+        "final_trusted_main_ci_result": "success",
+        "worker_sync_run_id": 36365665408,
+        "worker_sync_result": "success",
+        "sanitized_worker_sync_sha": "4367c6d53b015cbff04837c136f9a9aead52f554",
+        "worker_ci_run_id": 36365677589,
+        "worker_ci_after_sync_result": "success",
+        "resolved_at": "2026-09-28T01:32:06.632Z",
+        "trusted_import_note": "Imported once through A15 Trusted PR #176; no Worker branch was merged wholesale."
+      }
     },
     {
       "priority": 198,
       "package_id": "WCP-418",
       "title": "Test module manager permissions and authorized toggles",
       "risk": "low",
-      "execution_state": "worker_complete_awaiting_trusted_review",
+      "execution_state": "trusted_integrated",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -21330,12 +21721,12 @@
         ]
       },
       "claimed_on": "2026-09-26T22:15:48.331Z",
-      "claim_state": "locked_until_trusted_resolution",
+      "claim_state": "released_after_trusted_integration",
       "last_checkpoint_at": "2026-09-26T22:22:56.230Z",
       "checkpoint_paths": [
         "tests/Controller/AdminModuleManagementSecurityTest.php"
       ],
-      "next_action": "PR #212 is ready for Trusted review; keep this claim locked until Trusted explicitly integrates, cancels, or transfers it. Continue only with an independent claim; do not merge or deploy.",
+      "next_action": "Worker PR #212 closed after Trusted PR #176 and downstream gates succeeded.",
       "branch_heads": {
         "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
         "feature_branch": "592c35a8f3f7a91e34c24e4cf85746aa6793ada1"
@@ -21348,7 +21739,7 @@
       "last_ci_result": "success",
       "ci_run_id": 36275920494,
       "ci_result": "success",
-      "pr_state": "open_ready_for_review_unmerged",
+      "pr_state": "closed",
       "final_head": "592c35a8f3f7a91e34c24e4cf85746aa6793ada1",
       "final_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
       "final_changed_paths": [
@@ -21380,14 +21771,34 @@
       "open_limitations": [
         "Awaiting Trusted review and Trusted integration CI."
       ],
-      "trusted_follow_up": "Preserve CMS_SETTINGS_MANAGE authorization and CSRF validation for module mutations when porting or changing module administration in Trusted; run full Trusted CI."
+      "trusted_follow_up": "Preserve CMS_SETTINGS_MANAGE authorization and CSRF validation for module mutations when porting or changing module administration in Trusted; run full Trusted CI.",
+      "worker_pr_state": "closed",
+      "trusted_resolution": {
+        "status": "integrated",
+        "worker_pr": 212,
+        "worker_head": "592c35a8f3f7a91e34c24e4cf85746aa6793ada1",
+        "trusted_pr": 176,
+        "trusted_pr_ci_run_id": 36365364627,
+        "trusted_pr_ci_result": "success",
+        "trusted_merge_sha": "7f287dd166297691fcae4bfec9c26859581b39b4",
+        "final_trusted_main_sha": "7f287dd166297691fcae4bfec9c26859581b39b4",
+        "final_trusted_main_ci_run_id": 36365665398,
+        "final_trusted_main_ci_result": "success",
+        "worker_sync_run_id": 36365665408,
+        "worker_sync_result": "success",
+        "sanitized_worker_sync_sha": "4367c6d53b015cbff04837c136f9a9aead52f554",
+        "worker_ci_run_id": 36365677589,
+        "worker_ci_after_sync_result": "success",
+        "resolved_at": "2026-09-28T01:32:06.632Z",
+        "trusted_import_note": "Imported once through A15 Trusted PR #176; no Worker branch was merged wholesale."
+      }
     },
     {
       "priority": 199,
       "package_id": "WCP-419",
       "title": "Guard account password changes and session revocation",
       "risk": "low",
-      "execution_state": "worker_complete_awaiting_trusted_review",
+      "execution_state": "trusted_integrated",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -21454,7 +21865,7 @@
         ]
       },
       "claimed_on": "2026-09-26T22:24:27.192Z",
-      "claim_state": "locked_until_trusted_resolution",
+      "claim_state": "released_after_trusted_integration",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
       "active_head": "2ade50d8933176d5bd4ba2080995fe0f4ba92f61",
@@ -21468,10 +21879,10 @@
         "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
         "feature_branch": "2ade50d8933176d5bd4ba2080995fe0f4ba92f61"
       },
-      "next_action": "PR #213 is ready for Trusted review; keep this claim locked until Trusted explicitly integrates, cancels, or transfers it, and continue with an independent dependency-safe task.",
+      "next_action": "Worker PR #213 closed after Trusted PR #176 and downstream gates succeeded.",
       "worker_pr": 213,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/213",
-      "pr_state": "open_ready_for_review_unmerged",
+      "pr_state": "closed",
       "last_ci_run_id": 36276950899,
       "last_ci_result": "success",
       "ci_run_id": 36276950899,
@@ -21520,14 +21931,34 @@
       "open_limitations": [
         "Awaiting Trusted review and Trusted integration CI."
       ],
-      "trusted_follow_up": "Preserve account password-change authorization, CSRF validation, session revocation and password-reset token invalidation when porting changes into Trusted; run full Trusted CI."
+      "trusted_follow_up": "Preserve account password-change authorization, CSRF validation, session revocation and password-reset token invalidation when porting changes into Trusted; run full Trusted CI.",
+      "worker_pr_state": "closed",
+      "trusted_resolution": {
+        "status": "integrated",
+        "worker_pr": 213,
+        "worker_head": "2ade50d8933176d5bd4ba2080995fe0f4ba92f61",
+        "trusted_pr": 176,
+        "trusted_pr_ci_run_id": 36365364627,
+        "trusted_pr_ci_result": "success",
+        "trusted_merge_sha": "7f287dd166297691fcae4bfec9c26859581b39b4",
+        "final_trusted_main_sha": "7f287dd166297691fcae4bfec9c26859581b39b4",
+        "final_trusted_main_ci_run_id": 36365665398,
+        "final_trusted_main_ci_result": "success",
+        "worker_sync_run_id": 36365665408,
+        "worker_sync_result": "success",
+        "sanitized_worker_sync_sha": "4367c6d53b015cbff04837c136f9a9aead52f554",
+        "worker_ci_run_id": 36365677589,
+        "worker_ci_after_sync_result": "success",
+        "resolved_at": "2026-09-28T01:32:06.632Z",
+        "trusted_import_note": "Imported once through A15 Trusted PR #176; no Worker branch was merged wholesale."
+      }
     },
     {
       "priority": 200,
       "package_id": "WCP-420",
       "title": "Protect admin failed-queue retry actions",
       "risk": "low",
-      "execution_state": "worker_complete_awaiting_trusted_review",
+      "execution_state": "trusted_integrated",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -21594,7 +22025,7 @@
         ]
       },
       "claimed_on": "2026-09-26T22:31:38.103Z",
-      "claim_state": "locked_until_trusted_resolution",
+      "claim_state": "released_after_trusted_integration",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
       "active_head": "9f37a344fc524b89265325e27d09df00bed88e12",
@@ -21608,11 +22039,11 @@
         "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
         "feature_branch": "9f37a344fc524b89265325e27d09df00bed88e12"
       },
-      "next_action": "PR #214 has green exact-head Worker CI; keep this claim locked until Trusted explicitly integrates, cancels or transfers it, and continue with an independent package.",
+      "next_action": "Worker PR #214 closed after Trusted PR #176 and downstream gates succeeded.",
       "worker_pr": 214,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/214",
       "draft_pr": false,
-      "pr_state": "open_ready_for_review_unmerged",
+      "pr_state": "closed",
       "final_head": "9f37a344fc524b89265325e27d09df00bed88e12",
       "final_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
       "final_changed_paths": [
@@ -21648,7 +22079,27 @@
       "open_limitations": [
         "Awaiting Trusted review and Trusted integration CI."
       ],
-      "trusted_follow_up": "Preserve CMS_SETTINGS_MANAGE authorization and CSRF validation before failed-message recovery when porting or changing admin queue retry actions in Trusted; run full Trusted CI."
+      "trusted_follow_up": "Preserve CMS_SETTINGS_MANAGE authorization and CSRF validation before failed-message recovery when porting or changing admin queue retry actions in Trusted; run full Trusted CI.",
+      "worker_pr_state": "closed",
+      "trusted_resolution": {
+        "status": "integrated",
+        "worker_pr": 214,
+        "worker_head": "9f37a344fc524b89265325e27d09df00bed88e12",
+        "trusted_pr": 176,
+        "trusted_pr_ci_run_id": 36365364627,
+        "trusted_pr_ci_result": "success",
+        "trusted_merge_sha": "7f287dd166297691fcae4bfec9c26859581b39b4",
+        "final_trusted_main_sha": "7f287dd166297691fcae4bfec9c26859581b39b4",
+        "final_trusted_main_ci_run_id": 36365665398,
+        "final_trusted_main_ci_result": "success",
+        "worker_sync_run_id": 36365665408,
+        "worker_sync_result": "success",
+        "sanitized_worker_sync_sha": "4367c6d53b015cbff04837c136f9a9aead52f554",
+        "worker_ci_run_id": 36365677589,
+        "worker_ci_after_sync_result": "success",
+        "resolved_at": "2026-09-28T01:32:06.632Z",
+        "trusted_import_note": "Imported once through A15 Trusted PR #176; no Worker branch was merged wholesale."
+      }
     },
     {
       "priority": 201,
@@ -21823,7 +22274,7 @@
       "package_id": "WCP-422",
       "title": "Protect website settings administration access",
       "risk": "low",
-      "execution_state": "worker_complete_awaiting_trusted_review",
+      "execution_state": "trusted_integrated",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -21891,7 +22342,7 @@
         ]
       },
       "claimed_on": "2026-09-26T22:41:55.889Z",
-      "claim_state": "locked_until_trusted_resolution",
+      "claim_state": "released_after_trusted_integration",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
       "active_head": "33dc6ccbc9caac68d9ab18b54fedc78495842b9f",
@@ -21905,11 +22356,11 @@
         "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
         "feature_branch": "33dc6ccbc9caac68d9ab18b54fedc78495842b9f"
       },
-      "next_action": "PR #216 has green exact-head Worker CI; keep this claim locked until Trusted explicitly integrates, cancels or transfers it, and continue with an independent package.",
+      "next_action": "Worker PR #216 closed after Trusted PR #176 and downstream gates succeeded.",
       "worker_pr": 216,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/216",
       "draft_pr": false,
-      "pr_state": "open_ready_for_review_unmerged",
+      "pr_state": "closed",
       "final_head": "33dc6ccbc9caac68d9ab18b54fedc78495842b9f",
       "final_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
       "final_changed_paths": [
@@ -21945,14 +22396,34 @@
       "open_limitations": [
         "Awaiting Trusted review and Trusted integration CI."
       ],
-      "trusted_follow_up": "Preserve CMS_SETTINGS_MANAGE authorization for website settings reads and writes when porting or changing settings administration in Trusted; run full Trusted CI."
+      "trusted_follow_up": "Preserve CMS_SETTINGS_MANAGE authorization for website settings reads and writes when porting or changing settings administration in Trusted; run full Trusted CI.",
+      "worker_pr_state": "closed",
+      "trusted_resolution": {
+        "status": "integrated",
+        "worker_pr": 216,
+        "worker_head": "33dc6ccbc9caac68d9ab18b54fedc78495842b9f",
+        "trusted_pr": 176,
+        "trusted_pr_ci_run_id": 36365364627,
+        "trusted_pr_ci_result": "success",
+        "trusted_merge_sha": "7f287dd166297691fcae4bfec9c26859581b39b4",
+        "final_trusted_main_sha": "7f287dd166297691fcae4bfec9c26859581b39b4",
+        "final_trusted_main_ci_run_id": 36365665398,
+        "final_trusted_main_ci_result": "success",
+        "worker_sync_run_id": 36365665408,
+        "worker_sync_result": "success",
+        "sanitized_worker_sync_sha": "4367c6d53b015cbff04837c136f9a9aead52f554",
+        "worker_ci_run_id": 36365677589,
+        "worker_ci_after_sync_result": "success",
+        "resolved_at": "2026-09-28T01:32:06.632Z",
+        "trusted_import_note": "Imported once through A15 Trusted PR #176; no Worker branch was merged wholesale."
+      }
     },
     {
       "priority": 203,
       "package_id": "WCP-423",
       "title": "Guard individual account session revocation",
       "risk": "low",
-      "execution_state": "worker_complete_awaiting_trusted_review",
+      "execution_state": "trusted_integrated",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -22019,7 +22490,7 @@
         ]
       },
       "claimed_on": "2026-09-26T22:48:20.584Z",
-      "claim_state": "locked_until_trusted_resolution",
+      "claim_state": "released_after_trusted_integration",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
       "active_head": "855e0187b9f12af00ec209ef1c07297ea615a64c",
@@ -22033,10 +22504,10 @@
         "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
         "feature_branch": "855e0187b9f12af00ec209ef1c07297ea615a64c"
       },
-      "next_action": "PR #217 is ready for Trusted review; keep this claim locked until Trusted explicitly integrates, cancels, or transfers it, then continue with an independent dependency-safe task.",
+      "next_action": "Worker PR #217 closed after Trusted PR #176 and downstream gates succeeded.",
       "worker_pr": 217,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/217",
-      "pr_state": "open_ready_for_review_unmerged",
+      "pr_state": "closed",
       "last_ci_run_id": 36277788368,
       "last_ci_result": "success",
       "ci_run_id": 36277788368,
@@ -22079,14 +22550,34 @@
       "open_limitations": [
         "Awaiting Trusted review and Trusted integration CI."
       ],
-      "trusted_follow_up": "Preserve account session ownership checks, per-session CSRF validation and current-session invalidation when porting to Trusted; run full Trusted CI."
+      "trusted_follow_up": "Preserve account session ownership checks, per-session CSRF validation and current-session invalidation when porting to Trusted; run full Trusted CI.",
+      "worker_pr_state": "closed",
+      "trusted_resolution": {
+        "status": "integrated",
+        "worker_pr": 217,
+        "worker_head": "855e0187b9f12af00ec209ef1c07297ea615a64c",
+        "trusted_pr": 176,
+        "trusted_pr_ci_run_id": 36365364627,
+        "trusted_pr_ci_result": "success",
+        "trusted_merge_sha": "7f287dd166297691fcae4bfec9c26859581b39b4",
+        "final_trusted_main_sha": "7f287dd166297691fcae4bfec9c26859581b39b4",
+        "final_trusted_main_ci_run_id": 36365665398,
+        "final_trusted_main_ci_result": "success",
+        "worker_sync_run_id": 36365665408,
+        "worker_sync_result": "success",
+        "sanitized_worker_sync_sha": "4367c6d53b015cbff04837c136f9a9aead52f554",
+        "worker_ci_run_id": 36365677589,
+        "worker_ci_after_sync_result": "success",
+        "resolved_at": "2026-09-28T01:32:06.632Z",
+        "trusted_import_note": "Imported once through A15 Trusted PR #176; no Worker branch was merged wholesale."
+      }
     },
     {
       "priority": 204,
       "package_id": "WCP-424",
       "title": "Guard admin notification acknowledgement and CSRF",
       "risk": "low",
-      "execution_state": "worker_complete_awaiting_trusted_review",
+      "execution_state": "trusted_integrated",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -22154,7 +22645,7 @@
         ]
       },
       "claimed_on": "2026-09-26T22:49:57.721Z",
-      "claim_state": "locked_until_trusted_resolution",
+      "claim_state": "released_after_trusted_integration",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
       "active_head": "59f17ff7feea4e9248865bd222189926593ee787",
@@ -22168,11 +22659,11 @@
         "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
         "feature_branch": "59f17ff7feea4e9248865bd222189926593ee787"
       },
-      "next_action": "PR #218 has green exact-head Worker CI; keep this claim locked until Trusted explicitly integrates, cancels or transfers it, and continue with an independent package.",
+      "next_action": "Worker PR #218 closed after Trusted PR #176 and downstream gates succeeded.",
       "worker_pr": 218,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/218",
       "draft_pr": false,
-      "pr_state": "open_ready_for_review_unmerged",
+      "pr_state": "closed",
       "final_head": "59f17ff7feea4e9248865bd222189926593ee787",
       "final_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
       "final_changed_paths": [
@@ -22220,14 +22711,34 @@
       "open_limitations": [
         "Awaiting Trusted review and Trusted integration CI."
       ],
-      "trusted_follow_up": "Preserve CMS_ACCESS authorization and CSRF validation before notification read-state changes when porting or changing admin notifications in Trusted; run full Trusted CI."
+      "trusted_follow_up": "Preserve CMS_ACCESS authorization and CSRF validation before notification read-state changes when porting or changing admin notifications in Trusted; run full Trusted CI.",
+      "worker_pr_state": "closed",
+      "trusted_resolution": {
+        "status": "integrated",
+        "worker_pr": 218,
+        "worker_head": "59f17ff7feea4e9248865bd222189926593ee787",
+        "trusted_pr": 176,
+        "trusted_pr_ci_run_id": 36365364627,
+        "trusted_pr_ci_result": "success",
+        "trusted_merge_sha": "7f287dd166297691fcae4bfec9c26859581b39b4",
+        "final_trusted_main_sha": "7f287dd166297691fcae4bfec9c26859581b39b4",
+        "final_trusted_main_ci_run_id": 36365665398,
+        "final_trusted_main_ci_result": "success",
+        "worker_sync_run_id": 36365665408,
+        "worker_sync_result": "success",
+        "sanitized_worker_sync_sha": "4367c6d53b015cbff04837c136f9a9aead52f554",
+        "worker_ci_run_id": 36365677589,
+        "worker_ci_after_sync_result": "success",
+        "resolved_at": "2026-09-28T01:32:06.632Z",
+        "trusted_import_note": "Imported once through A15 Trusted PR #176; no Worker branch was merged wholesale."
+      }
     },
     {
       "priority": 205,
       "package_id": "WCP-425",
       "title": "Guard administrative audit-log visibility",
       "risk": "low",
-      "execution_state": "worker_complete_awaiting_trusted_review",
+      "execution_state": "trusted_integrated",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -22293,7 +22804,7 @@
         ]
       },
       "claimed_on": "2026-09-26T23:02:19.458Z",
-      "claim_state": "locked_until_trusted_resolution",
+      "claim_state": "released_after_trusted_integration",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
       "active_head": "cef66647824c74c0afde2806588a5a37fce2848e",
@@ -22307,10 +22818,10 @@
         "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
         "feature_branch": "cef66647824c74c0afde2806588a5a37fce2848e"
       },
-      "next_action": "PR #219 is ready for Trusted review; keep this claim locked until Trusted explicitly integrates, cancels, or transfers it, then continue with an independent dependency-safe task.",
+      "next_action": "Worker PR #219 closed after Trusted PR #176 and downstream gates succeeded.",
       "worker_pr": 219,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/219",
-      "pr_state": "open_ready_for_review_unmerged",
+      "pr_state": "closed",
       "last_ci_run_id": 36278236159,
       "last_ci_result": "success",
       "ci_run_id": 36278236159,
@@ -22347,14 +22858,34 @@
       "open_limitations": [
         "Awaiting Trusted review and Trusted integration CI."
       ],
-      "trusted_follow_up": "Preserve CMS_AUDIT_VIEW authorization and the audit-log data boundary when porting to Trusted; run full Trusted CI."
+      "trusted_follow_up": "Preserve CMS_AUDIT_VIEW authorization and the audit-log data boundary when porting to Trusted; run full Trusted CI.",
+      "worker_pr_state": "closed",
+      "trusted_resolution": {
+        "status": "integrated",
+        "worker_pr": 219,
+        "worker_head": "cef66647824c74c0afde2806588a5a37fce2848e",
+        "trusted_pr": 176,
+        "trusted_pr_ci_run_id": 36365364627,
+        "trusted_pr_ci_result": "success",
+        "trusted_merge_sha": "7f287dd166297691fcae4bfec9c26859581b39b4",
+        "final_trusted_main_sha": "7f287dd166297691fcae4bfec9c26859581b39b4",
+        "final_trusted_main_ci_run_id": 36365665398,
+        "final_trusted_main_ci_result": "success",
+        "worker_sync_run_id": 36365665408,
+        "worker_sync_result": "success",
+        "sanitized_worker_sync_sha": "4367c6d53b015cbff04837c136f9a9aead52f554",
+        "worker_ci_run_id": 36365677589,
+        "worker_ci_after_sync_result": "success",
+        "resolved_at": "2026-09-28T01:32:06.632Z",
+        "trusted_import_note": "Imported once through A15 Trusted PR #176; no Worker branch was merged wholesale."
+      }
     },
     {
       "priority": 206,
       "package_id": "WCP-426",
       "title": "Protect backup inventory permissions",
       "risk": "low",
-      "execution_state": "worker_complete_awaiting_trusted_review",
+      "execution_state": "trusted_integrated",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -22422,7 +22953,7 @@
         ]
       },
       "claimed_on": "2026-09-26T23:05:31.052Z",
-      "claim_state": "locked_until_trusted_resolution",
+      "claim_state": "released_after_trusted_integration",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
       "active_head": "216df34ac05de0629fc2c5d6c94844d9d6a4640e",
@@ -22436,11 +22967,11 @@
         "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
         "feature_branch": "216df34ac05de0629fc2c5d6c94844d9d6a4640e"
       },
-      "next_action": "PR #220 has green exact-head Worker CI; keep this claim locked until Trusted explicitly integrates, cancels or transfers it, and continue with an independent package.",
+      "next_action": "Worker PR #220 closed after Trusted PR #176 and downstream gates succeeded.",
       "worker_pr": 220,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/220",
       "draft_pr": false,
-      "pr_state": "open_ready_for_review_unmerged",
+      "pr_state": "closed",
       "final_head": "216df34ac05de0629fc2c5d6c94844d9d6a4640e",
       "final_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
       "final_changed_paths": [
@@ -22476,14 +23007,34 @@
       "open_limitations": [
         "Awaiting Trusted review and Trusted integration CI."
       ],
-      "trusted_follow_up": "Preserve CMS_CONNECTORS_MANAGE authorization and the read-only backup inventory boundary when porting or changing backup administration in Trusted; run full Trusted CI."
+      "trusted_follow_up": "Preserve CMS_CONNECTORS_MANAGE authorization and the read-only backup inventory boundary when porting or changing backup administration in Trusted; run full Trusted CI.",
+      "worker_pr_state": "closed",
+      "trusted_resolution": {
+        "status": "integrated",
+        "worker_pr": 220,
+        "worker_head": "216df34ac05de0629fc2c5d6c94844d9d6a4640e",
+        "trusted_pr": 176,
+        "trusted_pr_ci_run_id": 36365364627,
+        "trusted_pr_ci_result": "success",
+        "trusted_merge_sha": "7f287dd166297691fcae4bfec9c26859581b39b4",
+        "final_trusted_main_sha": "7f287dd166297691fcae4bfec9c26859581b39b4",
+        "final_trusted_main_ci_run_id": 36365665398,
+        "final_trusted_main_ci_result": "success",
+        "worker_sync_run_id": 36365665408,
+        "worker_sync_result": "success",
+        "sanitized_worker_sync_sha": "4367c6d53b015cbff04837c136f9a9aead52f554",
+        "worker_ci_run_id": 36365677589,
+        "worker_ci_after_sync_result": "success",
+        "resolved_at": "2026-09-28T01:32:06.632Z",
+        "trusted_import_note": "Imported once through A15 Trusted PR #176; no Worker branch was merged wholesale."
+      }
     },
     {
       "priority": 207,
       "package_id": "WCP-427",
       "title": "Protect content-tag deletion and authorization",
       "risk": "low",
-      "execution_state": "worker_complete_awaiting_trusted_review",
+      "execution_state": "trusted_integrated",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -22551,7 +23102,7 @@
         ]
       },
       "claimed_on": "2026-09-26T23:09:12.906Z",
-      "claim_state": "locked_until_trusted_resolution",
+      "claim_state": "released_after_trusted_integration",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
       "active_head": "6cf2180880485a3053f46a4f22bbb4c9e907c334",
@@ -22565,10 +23116,10 @@
         "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
         "feature_branch": "6cf2180880485a3053f46a4f22bbb4c9e907c334"
       },
-      "next_action": "PR #221 is ready for Trusted review; keep this claim locked until Trusted explicitly integrates, cancels, or transfers it, then continue with an independent dependency-safe task.",
+      "next_action": "Worker PR #221 closed after Trusted PR #176 and downstream gates succeeded.",
       "worker_pr": 221,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/221",
-      "pr_state": "open_ready_for_review_unmerged",
+      "pr_state": "closed",
       "last_ci_run_id": 36278660529,
       "last_ci_result": "success",
       "ci_run_id": 36278660529,
@@ -22605,7 +23156,27 @@
       "open_limitations": [
         "Awaiting Trusted review and Trusted integration CI."
       ],
-      "trusted_follow_up": "Preserve CMS_CONTENT_MANAGE authorization, per-tag CSRF validation and referenced-tag integrity when porting to Trusted; run full Trusted CI."
+      "trusted_follow_up": "Preserve CMS_CONTENT_MANAGE authorization, per-tag CSRF validation and referenced-tag integrity when porting to Trusted; run full Trusted CI.",
+      "worker_pr_state": "closed",
+      "trusted_resolution": {
+        "status": "integrated",
+        "worker_pr": 221,
+        "worker_head": "6cf2180880485a3053f46a4f22bbb4c9e907c334",
+        "trusted_pr": 176,
+        "trusted_pr_ci_run_id": 36365364627,
+        "trusted_pr_ci_result": "success",
+        "trusted_merge_sha": "7f287dd166297691fcae4bfec9c26859581b39b4",
+        "final_trusted_main_sha": "7f287dd166297691fcae4bfec9c26859581b39b4",
+        "final_trusted_main_ci_run_id": 36365665398,
+        "final_trusted_main_ci_result": "success",
+        "worker_sync_run_id": 36365665408,
+        "worker_sync_result": "success",
+        "sanitized_worker_sync_sha": "4367c6d53b015cbff04837c136f9a9aead52f554",
+        "worker_ci_run_id": 36365677589,
+        "worker_ci_after_sync_result": "success",
+        "resolved_at": "2026-09-28T01:32:06.632Z",
+        "trusted_import_note": "Imported once through A15 Trusted PR #176; no Worker branch was merged wholesale."
+      }
     },
     {
       "priority": 208,
@@ -22774,7 +23345,7 @@
       "package_id": "WCP-429",
       "title": "Guard connector-target deletion authorization and CSRF",
       "risk": "low",
-      "execution_state": "worker_complete_awaiting_trusted_review",
+      "execution_state": "trusted_integrated",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -22843,7 +23414,7 @@
         ]
       },
       "claimed_on": "2026-09-26T23:12:43.996Z",
-      "claim_state": "locked_until_trusted_resolution",
+      "claim_state": "released_after_trusted_integration",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
       "active_head": "8586826c01fbda47e0e803d3d8b92933a780342d",
@@ -22857,11 +23428,11 @@
         "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
         "feature_branch": "8586826c01fbda47e0e803d3d8b92933a780342d"
       },
-      "next_action": "PR #222 has green exact-head Worker CI; keep this claim locked until Trusted explicitly integrates, cancels or transfers it, and continue with an independent package.",
+      "next_action": "Worker PR #222 closed after Trusted PR #176 and downstream gates succeeded.",
       "worker_pr": 222,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/222",
       "draft_pr": false,
-      "pr_state": "open_ready_for_review_unmerged",
+      "pr_state": "closed",
       "final_head": "8586826c01fbda47e0e803d3d8b92933a780342d",
       "final_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
       "final_changed_paths": [
@@ -22897,14 +23468,34 @@
       "open_limitations": [
         "Awaiting Trusted review and Trusted integration CI."
       ],
-      "trusted_follow_up": "Preserve CMS_CONNECTORS_MANAGE authorization and connector deletion CSRF before removing target definitions; confirm that deleting a CMS target never deletes external provider data or credentials."
+      "trusted_follow_up": "Preserve CMS_CONNECTORS_MANAGE authorization and connector deletion CSRF before removing target definitions; confirm that deleting a CMS target never deletes external provider data or credentials.",
+      "worker_pr_state": "closed",
+      "trusted_resolution": {
+        "status": "integrated",
+        "worker_pr": 222,
+        "worker_head": "8586826c01fbda47e0e803d3d8b92933a780342d",
+        "trusted_pr": 176,
+        "trusted_pr_ci_run_id": 36365364627,
+        "trusted_pr_ci_result": "success",
+        "trusted_merge_sha": "7f287dd166297691fcae4bfec9c26859581b39b4",
+        "final_trusted_main_sha": "7f287dd166297691fcae4bfec9c26859581b39b4",
+        "final_trusted_main_ci_run_id": 36365665398,
+        "final_trusted_main_ci_result": "success",
+        "worker_sync_run_id": 36365665408,
+        "worker_sync_result": "success",
+        "sanitized_worker_sync_sha": "4367c6d53b015cbff04837c136f9a9aead52f554",
+        "worker_ci_run_id": 36365677589,
+        "worker_ci_after_sync_result": "success",
+        "resolved_at": "2026-09-28T01:32:06.632Z",
+        "trusted_import_note": "Imported once through A15 Trusted PR #176; no Worker branch was merged wholesale."
+      }
     },
     {
       "priority": 210,
       "package_id": "WCP-430",
       "title": "Preserve published content-release history",
       "risk": "low",
-      "execution_state": "worker_complete_awaiting_trusted_review",
+      "execution_state": "trusted_integrated",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -22972,7 +23563,7 @@
         ]
       },
       "claimed_on": "2026-09-26T23:17:34.067Z",
-      "claim_state": "locked_until_trusted_resolution",
+      "claim_state": "released_after_trusted_integration",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
       "active_head": "daf0138479b79ea36881b04909491c521d18a695",
@@ -22986,10 +23577,10 @@
         "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
         "feature_branch": "daf0138479b79ea36881b04909491c521d18a695"
       },
-      "next_action": "PR #223 has green exact-head Worker CI and is ready for Trusted review; keep this claim locked until Trusted explicitly integrates, cancels or transfers it, and continue with an independent package.",
+      "next_action": "Worker PR #223 closed after Trusted PR #176 and downstream gates succeeded.",
       "worker_pr": 223,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/223",
-      "pr_state": "open_ready_for_review_unmerged",
+      "pr_state": "closed",
       "last_ci_run_id": 36279343887,
       "last_ci_result": "success",
       "ci_run_id": 36279343887,
@@ -23030,14 +23621,34 @@
       "open_limitations": [
         "Awaiting Trusted review and Trusted integration CI."
       ],
-      "trusted_follow_up": "Keep published content-release history immutable even when a valid deletion token was rendered before publication; preserve authorization and CSRF checks."
+      "trusted_follow_up": "Keep published content-release history immutable even when a valid deletion token was rendered before publication; preserve authorization and CSRF checks.",
+      "worker_pr_state": "closed",
+      "trusted_resolution": {
+        "status": "integrated",
+        "worker_pr": 223,
+        "worker_head": "daf0138479b79ea36881b04909491c521d18a695",
+        "trusted_pr": 176,
+        "trusted_pr_ci_run_id": 36365364627,
+        "trusted_pr_ci_result": "success",
+        "trusted_merge_sha": "7f287dd166297691fcae4bfec9c26859581b39b4",
+        "final_trusted_main_sha": "7f287dd166297691fcae4bfec9c26859581b39b4",
+        "final_trusted_main_ci_run_id": 36365665398,
+        "final_trusted_main_ci_result": "success",
+        "worker_sync_run_id": 36365665408,
+        "worker_sync_result": "success",
+        "sanitized_worker_sync_sha": "4367c6d53b015cbff04837c136f9a9aead52f554",
+        "worker_ci_run_id": 36365677589,
+        "worker_ci_after_sync_result": "success",
+        "resolved_at": "2026-09-28T01:32:06.632Z",
+        "trusted_import_note": "Imported once through A15 Trusted PR #176; no Worker branch was merged wholesale."
+      }
     },
     {
       "priority": 211,
       "package_id": "WCP-431",
       "title": "Protect module storage settings permission and CSRF",
       "risk": "low",
-      "execution_state": "worker_complete_awaiting_trusted_review",
+      "execution_state": "trusted_integrated",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -23106,7 +23717,7 @@
         ]
       },
       "claimed_on": "2026-09-26T23:22:33.417Z",
-      "claim_state": "locked_until_trusted_resolution",
+      "claim_state": "released_after_trusted_integration",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
       "active_head": "e70b6446bf8e8f4624c2b0c095d821f81fba8d94",
@@ -23120,11 +23731,11 @@
         "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
         "feature_branch": "e70b6446bf8e8f4624c2b0c095d821f81fba8d94"
       },
-      "next_action": "Keep claim locked until Trusted explicitly integrates, cancels or transfers it; continue with an independent dependency-safe package.",
+      "next_action": "Worker PR #225 closed after Trusted PR #176 and downstream gates succeeded.",
       "worker_pr": 225,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/225",
       "draft_pr": false,
-      "pr_state": "open_ready_for_review_unmerged",
+      "pr_state": "closed",
       "last_ci_run_id": 36279926345,
       "last_ci_result": "success",
       "ci_run_id": 36279926345,
@@ -23167,14 +23778,34 @@
       "open_limitations": [
         "Awaiting Trusted review and Trusted integration CI."
       ],
-      "trusted_follow_up": "Keep CMS_STORAGE_MANAGE and form CSRF enforcement on per-module storage settings; confirm the valid form path never contacts external storage."
+      "trusted_follow_up": "Keep CMS_STORAGE_MANAGE and form CSRF enforcement on per-module storage settings; confirm the valid form path never contacts external storage.",
+      "worker_pr_state": "closed",
+      "trusted_resolution": {
+        "status": "integrated",
+        "worker_pr": 225,
+        "worker_head": "e70b6446bf8e8f4624c2b0c095d821f81fba8d94",
+        "trusted_pr": 176,
+        "trusted_pr_ci_run_id": 36365364627,
+        "trusted_pr_ci_result": "success",
+        "trusted_merge_sha": "7f287dd166297691fcae4bfec9c26859581b39b4",
+        "final_trusted_main_sha": "7f287dd166297691fcae4bfec9c26859581b39b4",
+        "final_trusted_main_ci_run_id": 36365665398,
+        "final_trusted_main_ci_result": "success",
+        "worker_sync_run_id": 36365665408,
+        "worker_sync_result": "success",
+        "sanitized_worker_sync_sha": "4367c6d53b015cbff04837c136f9a9aead52f554",
+        "worker_ci_run_id": 36365677589,
+        "worker_ci_after_sync_result": "success",
+        "resolved_at": "2026-09-28T01:32:06.632Z",
+        "trusted_import_note": "Imported once through A15 Trusted PR #176; no Worker branch was merged wholesale."
+      }
     },
     {
       "priority": 212,
       "package_id": "WCP-432",
       "title": "Protect access-role deletion authorization and assignment invariants",
       "risk": "low",
-      "execution_state": "worker_complete_awaiting_trusted_review",
+      "execution_state": "trusted_integrated",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -23244,7 +23875,7 @@
         ]
       },
       "claimed_on": "2026-09-26T23:34:04.139Z",
-      "claim_state": "locked_until_trusted_resolution",
+      "claim_state": "released_after_trusted_integration",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
       "active_head": "61ef1c679bb6a431b5247198a5bab8533c7757b5",
@@ -23258,10 +23889,10 @@
         "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
         "feature_branch": "61ef1c679bb6a431b5247198a5bab8533c7757b5"
       },
-      "next_action": "PR #226 has green exact-head Worker CI and is ready for Trusted review; keep this claim locked until Trusted explicitly integrates, cancels or transfers it, and continue with an independent package.",
+      "next_action": "Worker PR #226 closed after Trusted PR #176 and downstream gates succeeded.",
       "worker_pr": 226,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/226",
-      "pr_state": "open_ready_for_review_unmerged",
+      "pr_state": "closed",
       "draft_pr": false,
       "last_ci_run_id": 36280057628,
       "last_ci_result": "success",
@@ -23298,14 +23929,34 @@
       "open_limitations": [
         "Awaiting Trusted review and Trusted integration CI."
       ],
-      "trusted_follow_up": "Preserve CMS_USERS_MANAGE authorization, role-specific CSRF validation, and the invariant that system or user-assigned access roles cannot be deleted."
+      "trusted_follow_up": "Preserve CMS_USERS_MANAGE authorization, role-specific CSRF validation, and the invariant that system or user-assigned access roles cannot be deleted.",
+      "worker_pr_state": "closed",
+      "trusted_resolution": {
+        "status": "integrated",
+        "worker_pr": 226,
+        "worker_head": "61ef1c679bb6a431b5247198a5bab8533c7757b5",
+        "trusted_pr": 176,
+        "trusted_pr_ci_run_id": 36365364627,
+        "trusted_pr_ci_result": "success",
+        "trusted_merge_sha": "7f287dd166297691fcae4bfec9c26859581b39b4",
+        "final_trusted_main_sha": "7f287dd166297691fcae4bfec9c26859581b39b4",
+        "final_trusted_main_ci_run_id": 36365665398,
+        "final_trusted_main_ci_result": "success",
+        "worker_sync_run_id": 36365665408,
+        "worker_sync_result": "success",
+        "sanitized_worker_sync_sha": "4367c6d53b015cbff04837c136f9a9aead52f554",
+        "worker_ci_run_id": 36365677589,
+        "worker_ci_after_sync_result": "success",
+        "resolved_at": "2026-09-28T01:32:06.632Z",
+        "trusted_import_note": "Imported once through A15 Trusted PR #176; no Worker branch was merged wholesale."
+      }
     },
     {
       "priority": 213,
       "package_id": "WCP-433",
       "title": "Guard access-role creation and edit authorization and CSRF",
       "risk": "low",
-      "execution_state": "worker_complete_awaiting_trusted_review",
+      "execution_state": "trusted_integrated",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -23373,7 +24024,7 @@
         ]
       },
       "claimed_on": "2026-09-26T23:43:42.897Z",
-      "claim_state": "locked_until_trusted_resolution",
+      "claim_state": "released_after_trusted_integration",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5",
       "active_head": "6efe5b2911770700ff48d3f8c61a84e6707cdb23",
@@ -23387,11 +24038,11 @@
         "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5",
         "feature_branch": "6efe5b2911770700ff48d3f8c61a84e6707cdb23"
       },
-      "next_action": "Keep this claim locked until Trusted explicitly integrates, cancels or transfers it; continue with an independent dependency-safe package.",
+      "next_action": "Worker PR #227 closed after Trusted PR #176 and downstream gates succeeded.",
       "worker_pr": 227,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/227",
       "draft_pr": false,
-      "pr_state": "open_ready_for_review_unmerged",
+      "pr_state": "closed",
       "last_ci_run_id": 36280542173,
       "last_ci_result": "success",
       "ci_run_id": 36280542173,
@@ -23428,7 +24079,27 @@
       "open_limitations": [
         "Awaiting Trusted review and Trusted integration CI."
       ],
-      "trusted_follow_up": "Preserve CMS_USERS_MANAGE, access-role form CSRF and PermissionDelegationPolicy during Trusted integration."
+      "trusted_follow_up": "Preserve CMS_USERS_MANAGE, access-role form CSRF and PermissionDelegationPolicy during Trusted integration.",
+      "worker_pr_state": "closed",
+      "trusted_resolution": {
+        "status": "integrated",
+        "worker_pr": 227,
+        "worker_head": "6efe5b2911770700ff48d3f8c61a84e6707cdb23",
+        "trusted_pr": 176,
+        "trusted_pr_ci_run_id": 36365364627,
+        "trusted_pr_ci_result": "success",
+        "trusted_merge_sha": "7f287dd166297691fcae4bfec9c26859581b39b4",
+        "final_trusted_main_sha": "7f287dd166297691fcae4bfec9c26859581b39b4",
+        "final_trusted_main_ci_run_id": 36365665398,
+        "final_trusted_main_ci_result": "success",
+        "worker_sync_run_id": 36365665408,
+        "worker_sync_result": "success",
+        "sanitized_worker_sync_sha": "4367c6d53b015cbff04837c136f9a9aead52f554",
+        "worker_ci_run_id": 36365677589,
+        "worker_ci_after_sync_result": "success",
+        "resolved_at": "2026-09-28T01:32:06.632Z",
+        "trusted_import_note": "Imported once through A15 Trusted PR #176; no Worker branch was merged wholesale."
+      }
     },
     {
       "priority": 214,
@@ -23598,7 +24269,7 @@
       "package_id": "WCP-435",
       "title": "Protect content-entry trash, restore, and permanent purge",
       "risk": "low",
-      "execution_state": "worker_complete_awaiting_trusted_review",
+      "execution_state": "trusted_integrated",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -23668,7 +24339,7 @@
         ]
       },
       "claimed_on": "2026-09-26T23:48:19.961Z",
-      "claim_state": "locked_until_trusted_resolution",
+      "claim_state": "released_after_trusted_integration",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
       "active_head": "0d33e2d1f10d3ee981d6619544fb28f4d90d6a9e",
@@ -23682,10 +24353,10 @@
         "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
         "feature_branch": "0d33e2d1f10d3ee981d6619544fb28f4d90d6a9e"
       },
-      "next_action": "PR #228 has green exact-head Worker CI and is ready for Trusted review; keep this claim locked until Trusted explicitly integrates, cancels or transfers it, and continue with an independent package.",
+      "next_action": "Worker PR #228 closed after Trusted PR #176 and downstream gates succeeded.",
       "worker_pr": 228,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/228",
-      "pr_state": "open_ready_for_review_unmerged",
+      "pr_state": "closed",
       "draft_pr": false,
       "last_ci_run_id": 36280933191,
       "last_ci_result": "success",
@@ -23727,14 +24398,34 @@
       "open_limitations": [
         "Awaiting Trusted review and Trusted integration CI."
       ],
-      "trusted_follow_up": "Preserve CMS_CONTENT_MANAGE authorization, route-specific CSRF, and the rule that permanent purge is available only while content is in the trash."
+      "trusted_follow_up": "Preserve CMS_CONTENT_MANAGE authorization, route-specific CSRF, and the rule that permanent purge is available only while content is in the trash.",
+      "worker_pr_state": "closed",
+      "trusted_resolution": {
+        "status": "integrated",
+        "worker_pr": 228,
+        "worker_head": "0d33e2d1f10d3ee981d6619544fb28f4d90d6a9e",
+        "trusted_pr": 176,
+        "trusted_pr_ci_run_id": 36365364627,
+        "trusted_pr_ci_result": "success",
+        "trusted_merge_sha": "7f287dd166297691fcae4bfec9c26859581b39b4",
+        "final_trusted_main_sha": "7f287dd166297691fcae4bfec9c26859581b39b4",
+        "final_trusted_main_ci_run_id": 36365665398,
+        "final_trusted_main_ci_result": "success",
+        "worker_sync_run_id": 36365665408,
+        "worker_sync_result": "success",
+        "sanitized_worker_sync_sha": "4367c6d53b015cbff04837c136f9a9aead52f554",
+        "worker_ci_run_id": 36365677589,
+        "worker_ci_after_sync_result": "success",
+        "resolved_at": "2026-09-28T01:32:06.632Z",
+        "trusted_import_note": "Imported once through A15 Trusted PR #176; no Worker branch was merged wholesale."
+      }
     },
     {
       "priority": 216,
       "package_id": "WCP-436",
       "title": "Prevent delegated user managers from crossing privilege boundaries",
       "risk": "low",
-      "execution_state": "worker_complete_awaiting_trusted_review",
+      "execution_state": "trusted_integrated",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -23802,7 +24493,7 @@
         ]
       },
       "claimed_on": "2026-09-26T23:55:48.964Z",
-      "claim_state": "locked_until_trusted_resolution",
+      "claim_state": "released_after_trusted_integration",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
       "active_head": "bf53e50c794f227aeaf41b1239573cf90a974251",
@@ -23816,11 +24507,11 @@
         "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
         "feature_branch": "bf53e50c794f227aeaf41b1239573cf90a974251"
       },
-      "next_action": "Keep this claim locked until Trusted explicitly integrates, cancels or transfers it; continue with an independent dependency-safe package.",
+      "next_action": "Worker PR #229 closed after Trusted PR #176 and downstream gates succeeded.",
       "worker_pr": 229,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/229",
       "draft_pr": false,
-      "pr_state": "open_ready_for_review_unmerged",
+      "pr_state": "closed",
       "last_ci_run_id": 36281047108,
       "last_ci_result": "success",
       "ci_run_id": 36281047108,
@@ -23857,14 +24548,34 @@
       "open_limitations": [
         "Awaiting Trusted review and Trusted integration CI."
       ],
-      "trusted_follow_up": "Preserve CMS_USERS_MANAGE and PermissionDelegationPolicy target isolation during Trusted integration."
+      "trusted_follow_up": "Preserve CMS_USERS_MANAGE and PermissionDelegationPolicy target isolation during Trusted integration.",
+      "worker_pr_state": "closed",
+      "trusted_resolution": {
+        "status": "integrated",
+        "worker_pr": 229,
+        "worker_head": "bf53e50c794f227aeaf41b1239573cf90a974251",
+        "trusted_pr": 176,
+        "trusted_pr_ci_run_id": 36365364627,
+        "trusted_pr_ci_result": "success",
+        "trusted_merge_sha": "7f287dd166297691fcae4bfec9c26859581b39b4",
+        "final_trusted_main_sha": "7f287dd166297691fcae4bfec9c26859581b39b4",
+        "final_trusted_main_ci_run_id": 36365665398,
+        "final_trusted_main_ci_result": "success",
+        "worker_sync_run_id": 36365665408,
+        "worker_sync_result": "success",
+        "sanitized_worker_sync_sha": "4367c6d53b015cbff04837c136f9a9aead52f554",
+        "worker_ci_run_id": 36365677589,
+        "worker_ci_after_sync_result": "success",
+        "resolved_at": "2026-09-28T01:32:06.632Z",
+        "trusted_import_note": "Imported once through A15 Trusted PR #176; no Worker branch was merged wholesale."
+      }
     },
     {
       "priority": 217,
       "package_id": "WCP-437",
       "title": "Guard administrative bulk content actions and CSRF",
       "risk": "low",
-      "execution_state": "worker_complete_awaiting_trusted_review",
+      "execution_state": "trusted_integrated",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -23934,7 +24645,7 @@
         ]
       },
       "claimed_on": "2026-09-27T00:02:08.842Z",
-      "claim_state": "locked_until_trusted_resolution",
+      "claim_state": "released_after_trusted_integration",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
       "active_head": "e4725fc37685caddd53d6cf805ae7b4bb44dd356",
@@ -23948,10 +24659,10 @@
         "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
         "feature_branch": "e4725fc37685caddd53d6cf805ae7b4bb44dd356"
       },
-      "next_action": "PR #231 has green exact-head Worker CI and is ready for Trusted review; keep this claim locked until Trusted explicitly integrates, cancels or transfers it, and continue with an independent package.",
+      "next_action": "Worker PR #231 closed after Trusted PR #176 and downstream gates succeeded.",
       "worker_pr": 231,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/231",
-      "pr_state": "open_ready_for_review_unmerged",
+      "pr_state": "closed",
       "draft_pr": false,
       "last_ci_run_id": 36281335854,
       "last_ci_result": "success",
@@ -23988,14 +24699,34 @@
       "open_limitations": [
         "Awaiting Trusted review and Trusted integration CI."
       ],
-      "trusted_follow_up": "Preserve CMS_CONTENT_MANAGE authorization and the content-bulk CSRF, action allowlist, selected-record scope, and 200-entry limit."
+      "trusted_follow_up": "Preserve CMS_CONTENT_MANAGE authorization and the content-bulk CSRF, action allowlist, selected-record scope, and 200-entry limit.",
+      "worker_pr_state": "closed",
+      "trusted_resolution": {
+        "status": "integrated",
+        "worker_pr": 231,
+        "worker_head": "e4725fc37685caddd53d6cf805ae7b4bb44dd356",
+        "trusted_pr": 176,
+        "trusted_pr_ci_run_id": 36365364627,
+        "trusted_pr_ci_result": "success",
+        "trusted_merge_sha": "7f287dd166297691fcae4bfec9c26859581b39b4",
+        "final_trusted_main_sha": "7f287dd166297691fcae4bfec9c26859581b39b4",
+        "final_trusted_main_ci_run_id": 36365665398,
+        "final_trusted_main_ci_result": "success",
+        "worker_sync_run_id": 36365665408,
+        "worker_sync_result": "success",
+        "sanitized_worker_sync_sha": "4367c6d53b015cbff04837c136f9a9aead52f554",
+        "worker_ci_run_id": 36365677589,
+        "worker_ci_after_sync_result": "success",
+        "resolved_at": "2026-09-28T01:32:06.632Z",
+        "trusted_import_note": "Imported once through A15 Trusted PR #176; no Worker branch was merged wholesale."
+      }
     },
     {
       "priority": 218,
       "package_id": "WCP-438",
       "title": "Enforce permission delegation when managing access-role definitions",
       "risk": "low",
-      "execution_state": "worker_complete_awaiting_trusted_review",
+      "execution_state": "trusted_integrated",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -24062,7 +24793,7 @@
         ]
       },
       "claimed_on": "2026-09-27T00:05:42.907Z",
-      "claim_state": "locked_until_trusted_resolution",
+      "claim_state": "released_after_trusted_integration",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
       "active_head": "d173b34978bbae205b906344aad434072cd7d303",
@@ -24076,10 +24807,10 @@
         "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
         "feature_branch": "d173b34978bbae205b906344aad434072cd7d303"
       },
-      "next_action": "PR #233 has green exact-head Worker CI and is ready for Trusted review; keep the claim locked until Trusted explicitly integrates, cancels or transfers it, then continue an independent package.",
+      "next_action": "Worker PR #233 closed after Trusted PR #176 and downstream gates succeeded.",
       "worker_pr": 233,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/233",
-      "pr_state": "open_ready_for_review_unmerged",
+      "pr_state": "closed",
       "draft_pr": false,
       "last_ci_run_id": 36281821433,
       "ci_run_id": 36281821433,
@@ -24121,7 +24852,27 @@
       "open_limitations": [
         "Awaiting Trusted review and Trusted integration CI."
       ],
-      "trusted_follow_up": "Preserve PermissionDelegationPolicy::canDelegatePermissions checks for both access-role creation and editing, along with the no-write/no-audit behavior for rejected requests."
+      "trusted_follow_up": "Preserve PermissionDelegationPolicy::canDelegatePermissions checks for both access-role creation and editing, along with the no-write/no-audit behavior for rejected requests.",
+      "worker_pr_state": "closed",
+      "trusted_resolution": {
+        "status": "integrated",
+        "worker_pr": 233,
+        "worker_head": "d173b34978bbae205b906344aad434072cd7d303",
+        "trusted_pr": 176,
+        "trusted_pr_ci_run_id": 36365364627,
+        "trusted_pr_ci_result": "success",
+        "trusted_merge_sha": "7f287dd166297691fcae4bfec9c26859581b39b4",
+        "final_trusted_main_sha": "7f287dd166297691fcae4bfec9c26859581b39b4",
+        "final_trusted_main_ci_run_id": 36365665398,
+        "final_trusted_main_ci_result": "success",
+        "worker_sync_run_id": 36365665408,
+        "worker_sync_result": "success",
+        "sanitized_worker_sync_sha": "4367c6d53b015cbff04837c136f9a9aead52f554",
+        "worker_ci_run_id": 36365677589,
+        "worker_ci_after_sync_result": "success",
+        "resolved_at": "2026-09-28T01:32:06.632Z",
+        "trusted_import_note": "Imported once through A15 Trusted PR #176; no Worker branch was merged wholesale."
+      }
     },
     {
       "priority": 219,
@@ -24219,7 +24970,7 @@
       "package_id": "WCP-440",
       "title": "Verify guild team deletion authorization, ownership and CSRF",
       "risk": "low",
-      "execution_state": "worker_complete_awaiting_trusted_review",
+      "execution_state": "trusted_integrated",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -24288,7 +25039,7 @@
         ]
       },
       "claimed_on": "2026-09-27T00:21:13.540Z",
-      "claim_state": "locked_until_trusted_resolution",
+      "claim_state": "released_after_trusted_integration",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
       "active_head": "a44416a60ea7d1eb9e802a2cf240870d636abc58",
@@ -24302,10 +25053,10 @@
         "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
         "feature_branch": "a44416a60ea7d1eb9e802a2cf240870d636abc58"
       },
-      "next_action": "PR #234 has green exact-head Worker CI and is ready for Trusted review; keep this claim locked until Trusted explicitly integrates, cancels or transfers it, then continue with an independent task.",
+      "next_action": "Worker PR #234 closed after Trusted PR #176 and downstream gates succeeded.",
       "worker_pr": 234,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/234",
-      "pr_state": "open_ready_for_review_unmerged",
+      "pr_state": "closed",
       "draft_pr": false,
       "last_ci_run_id": 36282974283,
       "ci_run_id": 36282974283,
@@ -24365,7 +25116,27 @@
       "open_limitations": [
         "Awaiting Trusted review and Trusted integration CI."
       ],
-      "trusted_follow_up": "Preserve CMS_GAMING_MANAGE authorization, the delete-team CSRF token, parent-guild ownership checks and selected-team scope."
+      "trusted_follow_up": "Preserve CMS_GAMING_MANAGE authorization, the delete-team CSRF token, parent-guild ownership checks and selected-team scope.",
+      "worker_pr_state": "closed",
+      "trusted_resolution": {
+        "status": "integrated",
+        "worker_pr": 234,
+        "worker_head": "a44416a60ea7d1eb9e802a2cf240870d636abc58",
+        "trusted_pr": 176,
+        "trusted_pr_ci_run_id": 36365364627,
+        "trusted_pr_ci_result": "success",
+        "trusted_merge_sha": "7f287dd166297691fcae4bfec9c26859581b39b4",
+        "final_trusted_main_sha": "7f287dd166297691fcae4bfec9c26859581b39b4",
+        "final_trusted_main_ci_run_id": 36365665398,
+        "final_trusted_main_ci_result": "success",
+        "worker_sync_run_id": 36365665408,
+        "worker_sync_result": "success",
+        "sanitized_worker_sync_sha": "4367c6d53b015cbff04837c136f9a9aead52f554",
+        "worker_ci_run_id": 36365677589,
+        "worker_ci_after_sync_result": "success",
+        "resolved_at": "2026-09-28T01:32:06.632Z",
+        "trusted_import_note": "Imported once through A15 Trusted PR #176; no Worker branch was merged wholesale. Its overlapping regression files were already byte-identical in Trusted main and were omitted to avoid duplicate content."
+      }
     },
     {
       "priority": 221,
@@ -24552,7 +25323,7 @@
       "package_id": "WCP-442",
       "title": "Protect bulk media deletion authorization and usage safeguards",
       "risk": "medium",
-      "execution_state": "worker_complete_awaiting_trusted_review",
+      "execution_state": "trusted_integrated",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -24620,7 +25391,7 @@
         ]
       },
       "claimed_on": "2026-09-27T00:46:12.970Z",
-      "claim_state": "locked_until_trusted_resolution",
+      "claim_state": "released_after_trusted_integration",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
       "active_head": "b5cd984e090dc6d17ba53c3fef7c6aba21b25dd3",
@@ -24633,11 +25404,11 @@
         "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
         "feature_branch": "b5cd984e090dc6d17ba53c3fef7c6aba21b25dd3"
       },
-      "next_action": "PR #236 is ready for Trusted review with green exact-head Worker CI; keep this claim locked until Trusted explicitly integrates, cancels or transfers it, then continue with an independent task.",
+      "next_action": "Worker PR #236 closed after Trusted PR #176 and downstream gates succeeded.",
       "last_verified_push_at": "2026-09-27T00:48:20.563Z",
       "worker_pr": 236,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/236",
-      "pr_state": "open_ready_for_review_unmerged",
+      "pr_state": "closed",
       "draft_pr": false,
       "final_head": "b5cd984e090dc6d17ba53c3fef7c6aba21b25dd3",
       "final_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
@@ -24673,14 +25444,34 @@
       "open_limitations": [
         "Awaiting Trusted review and Trusted integration CI."
       ],
-      "trusted_follow_up": "Preserve CMS_STORAGE_MANAGE authorization, the bulk-media CSRF token, the in-use media deletion guard and selected-record scope."
+      "trusted_follow_up": "Preserve CMS_STORAGE_MANAGE authorization, the bulk-media CSRF token, the in-use media deletion guard and selected-record scope.",
+      "worker_pr_state": "closed",
+      "trusted_resolution": {
+        "status": "integrated",
+        "worker_pr": 236,
+        "worker_head": "b5cd984e090dc6d17ba53c3fef7c6aba21b25dd3",
+        "trusted_pr": 176,
+        "trusted_pr_ci_run_id": 36365364627,
+        "trusted_pr_ci_result": "success",
+        "trusted_merge_sha": "7f287dd166297691fcae4bfec9c26859581b39b4",
+        "final_trusted_main_sha": "7f287dd166297691fcae4bfec9c26859581b39b4",
+        "final_trusted_main_ci_run_id": 36365665398,
+        "final_trusted_main_ci_result": "success",
+        "worker_sync_run_id": 36365665408,
+        "worker_sync_result": "success",
+        "sanitized_worker_sync_sha": "4367c6d53b015cbff04837c136f9a9aead52f554",
+        "worker_ci_run_id": 36365677589,
+        "worker_ci_after_sync_result": "success",
+        "resolved_at": "2026-09-28T01:32:06.632Z",
+        "trusted_import_note": "Imported once through A15 Trusted PR #176; no Worker branch was merged wholesale."
+      }
     },
     {
       "priority": 223,
       "package_id": "WCP-443",
       "title": "Verify admin video deletion authorization and media retention",
       "risk": "medium",
-      "execution_state": "worker_complete_awaiting_trusted_review",
+      "execution_state": "trusted_integrated",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -24748,7 +25539,7 @@
         ]
       },
       "claimed_on": "2026-09-27T00:56:18.653Z",
-      "claim_state": "locked_until_trusted_resolution",
+      "claim_state": "released_after_trusted_integration",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
       "active_head": "0d67c7933e9a33ba78d9a6803cdb8c280277243e",
@@ -24761,11 +25552,11 @@
         "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
         "feature_branch": "0d67c7933e9a33ba78d9a6803cdb8c280277243e"
       },
-      "next_action": "PR #237 is ready for Trusted review with green exact-head Worker CI; keep this claim locked until Trusted explicitly integrates, cancels or transfers it, then continue with an independent task.",
+      "next_action": "Worker PR #237 closed after Trusted PR #176 and downstream gates succeeded.",
       "last_verified_push_at": "2026-09-27T01:05:01.777Z",
       "worker_pr": 237,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/237",
-      "pr_state": "open_ready_for_review_unmerged",
+      "pr_state": "closed",
       "draft_pr": false,
       "last_ci_run_id": 36284434248,
       "ci_result": "success",
@@ -24813,14 +25604,34 @@
       "open_limitations": [
         "Awaiting Trusted review and Trusted integration CI."
       ],
-      "trusted_follow_up": "Preserve CMS_VIDEO_MANAGE authorization, per-video delete CSRF, selected-video scope and central MediaAsset retention."
+      "trusted_follow_up": "Preserve CMS_VIDEO_MANAGE authorization, per-video delete CSRF, selected-video scope and central MediaAsset retention.",
+      "worker_pr_state": "closed",
+      "trusted_resolution": {
+        "status": "integrated",
+        "worker_pr": 237,
+        "worker_head": "0d67c7933e9a33ba78d9a6803cdb8c280277243e",
+        "trusted_pr": 176,
+        "trusted_pr_ci_run_id": 36365364627,
+        "trusted_pr_ci_result": "success",
+        "trusted_merge_sha": "7f287dd166297691fcae4bfec9c26859581b39b4",
+        "final_trusted_main_sha": "7f287dd166297691fcae4bfec9c26859581b39b4",
+        "final_trusted_main_ci_run_id": 36365665398,
+        "final_trusted_main_ci_result": "success",
+        "worker_sync_run_id": 36365665408,
+        "worker_sync_result": "success",
+        "sanitized_worker_sync_sha": "4367c6d53b015cbff04837c136f9a9aead52f554",
+        "worker_ci_run_id": 36365677589,
+        "worker_ci_after_sync_result": "success",
+        "resolved_at": "2026-09-28T01:32:06.632Z",
+        "trusted_import_note": "Imported once through A15 Trusted PR #176; no Worker branch was merged wholesale."
+      }
     },
     {
       "priority": 224,
       "package_id": "WCP-444",
       "title": "Protect video category and playlist deletion",
       "risk": "medium",
-      "execution_state": "worker_complete_awaiting_trusted_review",
+      "execution_state": "trusted_integrated",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -24888,7 +25699,7 @@
         ]
       },
       "claimed_on": "2026-09-27T01:09:24.391Z",
-      "claim_state": "locked_until_trusted_resolution",
+      "claim_state": "released_after_trusted_integration",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
       "active_head": "411ae900d795b7d2690d2fa4757fda16cd614384",
@@ -24901,11 +25712,11 @@
         "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
         "feature_branch": "411ae900d795b7d2690d2fa4757fda16cd614384"
       },
-      "next_action": "PR #238 is ready for Trusted review with green exact-head Worker CI; keep this claim locked until Trusted explicitly integrates, cancels or transfers it, then continue with an independent task.",
+      "next_action": "Worker PR #238 closed after Trusted PR #176 and downstream gates succeeded.",
       "last_verified_push_at": "2026-09-27T01:10:37.300Z",
       "worker_pr": 238,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/238",
-      "pr_state": "open_ready_for_review_unmerged",
+      "pr_state": "closed",
       "draft_pr": false,
       "final_head": "411ae900d795b7d2690d2fa4757fda16cd614384",
       "final_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5",
@@ -24935,7 +25746,27 @@
         "Awaiting Trusted review and Trusted integration CI."
       ],
       "trusted_follow_up": "Preserve CMS_VIDEO_MANAGE, category/playlist CSRF, selected-record scope and sibling records.",
-      "ci_attempts": []
+      "ci_attempts": [],
+      "worker_pr_state": "closed",
+      "trusted_resolution": {
+        "status": "integrated",
+        "worker_pr": 238,
+        "worker_head": "411ae900d795b7d2690d2fa4757fda16cd614384",
+        "trusted_pr": 176,
+        "trusted_pr_ci_run_id": 36365364627,
+        "trusted_pr_ci_result": "success",
+        "trusted_merge_sha": "7f287dd166297691fcae4bfec9c26859581b39b4",
+        "final_trusted_main_sha": "7f287dd166297691fcae4bfec9c26859581b39b4",
+        "final_trusted_main_ci_run_id": 36365665398,
+        "final_trusted_main_ci_result": "success",
+        "worker_sync_run_id": 36365665408,
+        "worker_sync_result": "success",
+        "sanitized_worker_sync_sha": "4367c6d53b015cbff04837c136f9a9aead52f554",
+        "worker_ci_run_id": 36365677589,
+        "worker_ci_after_sync_result": "success",
+        "resolved_at": "2026-09-28T01:32:06.632Z",
+        "trusted_import_note": "Imported once through A15 Trusted PR #176; no Worker branch was merged wholesale."
+      }
     },
     {
       "priority": 225,
@@ -25115,7 +25946,7 @@
       "package_id": "WCP-446",
       "title": "Protect website settings updates with authorization and CSRF tests",
       "risk": "medium",
-      "execution_state": "worker_complete_awaiting_trusted_review",
+      "execution_state": "trusted_integrated",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -25185,7 +26016,7 @@
         ]
       },
       "claimed_on": "2026-09-27T01:19:51.852Z",
-      "claim_state": "locked_until_trusted_resolution",
+      "claim_state": "released_after_trusted_integration",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
       "active_head": "a6f7b27d4ea18171482cdb4d8199a6c8bf31bda6",
@@ -25198,11 +26029,11 @@
         "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
         "feature_branch": "a6f7b27d4ea18171482cdb4d8199a6c8bf31bda6"
       },
-      "next_action": "PR #239 is ready for Trusted review with green exact-head Worker CI; keep this claim locked until Trusted explicitly integrates, cancels or transfers it, then continue with an independent task.",
+      "next_action": "Worker PR #239 closed after Trusted PR #176 and downstream gates succeeded.",
       "last_verified_push_at": "2026-09-27T01:46:11.416Z",
       "worker_pr": 239,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/239",
-      "pr_state": "open_ready_for_review_unmerged",
+      "pr_state": "closed",
       "draft_pr": false,
       "last_ci_run_id": 36286279627,
       "ci_result": "success",
@@ -25287,7 +26118,27 @@
       "open_limitations": [
         "Awaiting Trusted review and Trusted integration CI."
       ],
-      "trusted_follow_up": "Preserve CMS_SETTINGS_MANAGE authorization, settings-form CSRF protection including the configured stateless cross-site checks, and no-persistence behavior for missing or invalid tokens."
+      "trusted_follow_up": "Preserve CMS_SETTINGS_MANAGE authorization, settings-form CSRF protection including the configured stateless cross-site checks, and no-persistence behavior for missing or invalid tokens.",
+      "worker_pr_state": "closed",
+      "trusted_resolution": {
+        "status": "integrated",
+        "worker_pr": 239,
+        "worker_head": "a6f7b27d4ea18171482cdb4d8199a6c8bf31bda6",
+        "trusted_pr": 176,
+        "trusted_pr_ci_run_id": 36365364627,
+        "trusted_pr_ci_result": "success",
+        "trusted_merge_sha": "7f287dd166297691fcae4bfec9c26859581b39b4",
+        "final_trusted_main_sha": "7f287dd166297691fcae4bfec9c26859581b39b4",
+        "final_trusted_main_ci_run_id": 36365665398,
+        "final_trusted_main_ci_result": "success",
+        "worker_sync_run_id": 36365665408,
+        "worker_sync_result": "success",
+        "sanitized_worker_sync_sha": "4367c6d53b015cbff04837c136f9a9aead52f554",
+        "worker_ci_run_id": 36365677589,
+        "worker_ci_after_sync_result": "success",
+        "resolved_at": "2026-09-28T01:32:06.632Z",
+        "trusted_import_note": "Imported once through A15 Trusted PR #176; no Worker branch was merged wholesale."
+      }
     },
     {
       "priority": 447,
@@ -25603,7 +26454,7 @@
       "package_id": "WCP-449",
       "title": "Verify authorized website settings can be saved",
       "risk": "low",
-      "execution_state": "worker_complete_awaiting_trusted_review",
+      "execution_state": "trusted_integrated",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -25673,7 +26524,7 @@
         ]
       },
       "claimed_on": "2026-09-27T01:50:49.054Z",
-      "claim_state": "locked_until_trusted_resolution",
+      "claim_state": "released_after_trusted_integration",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
       "active_head": "5cc187cf2d69ec95a4ff68516b3cc9505b3fb690",
@@ -25686,12 +26537,12 @@
         "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
         "feature_branch": "5cc187cf2d69ec95a4ff68516b3cc9505b3fb690"
       },
-      "next_action": "PR #243 is ready for Trusted review with green exact-head Worker CI; keep this claim locked until Trusted explicitly integrates, cancels or transfers it, then continue with an independent task.",
+      "next_action": "Worker PR #243 closed after Trusted PR #176 and downstream gates succeeded.",
       "last_verified_push_at": "2026-09-27T01:56:46.265Z",
       "worker_pr": 243,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/243",
       "draft_pr": false,
-      "pr_state": "open_ready_for_review_unmerged",
+      "pr_state": "closed",
       "ci_attempts": [
         {
           "run_id": 36286925359,
@@ -25726,7 +26577,27 @@
       "open_limitations": [
         "Awaiting Trusted review and Trusted integration CI."
       ],
-      "trusted_follow_up": "Preserve CMS_SETTINGS_MANAGE authorization and rendered-form CSRF on settings updates; no media upload or external URL behavior is covered by this proposal."
+      "trusted_follow_up": "Preserve CMS_SETTINGS_MANAGE authorization and rendered-form CSRF on settings updates; no media upload or external URL behavior is covered by this proposal.",
+      "worker_pr_state": "closed",
+      "trusted_resolution": {
+        "status": "integrated",
+        "worker_pr": 243,
+        "worker_head": "5cc187cf2d69ec95a4ff68516b3cc9505b3fb690",
+        "trusted_pr": 176,
+        "trusted_pr_ci_run_id": 36365364627,
+        "trusted_pr_ci_result": "success",
+        "trusted_merge_sha": "7f287dd166297691fcae4bfec9c26859581b39b4",
+        "final_trusted_main_sha": "7f287dd166297691fcae4bfec9c26859581b39b4",
+        "final_trusted_main_ci_run_id": 36365665398,
+        "final_trusted_main_ci_result": "success",
+        "worker_sync_run_id": 36365665408,
+        "worker_sync_result": "success",
+        "sanitized_worker_sync_sha": "4367c6d53b015cbff04837c136f9a9aead52f554",
+        "worker_ci_run_id": 36365677589,
+        "worker_ci_after_sync_result": "success",
+        "resolved_at": "2026-09-28T01:32:06.632Z",
+        "trusted_import_note": "Imported once through A15 Trusted PR #176; no Worker branch was merged wholesale."
+      }
     },
     {
       "priority": 450,
@@ -25903,7 +26774,7 @@
       "package_id": "WCP-451",
       "title": "Reject inconsistent website locale settings",
       "risk": "medium",
-      "execution_state": "worker_complete_awaiting_trusted_review",
+      "execution_state": "trusted_integrated",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -25974,7 +26845,7 @@
         ]
       },
       "claimed_on": "2026-09-27T02:01:55.307Z",
-      "claim_state": "locked_until_trusted_resolution",
+      "claim_state": "released_after_trusted_integration",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
       "active_head": "4a269a9ab0cc43c824349dbe2499649cf362ebf5",
@@ -25987,12 +26858,12 @@
         "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
         "feature_branch": "4a269a9ab0cc43c824349dbe2499649cf362ebf5"
       },
-      "next_action": "PR #244 is ready for Trusted review with green exact-head Worker CI; keep this claim locked until Trusted explicitly integrates, cancels or transfers it, then continue with an independent task.",
+      "next_action": "Worker PR #244 closed after Trusted PR #176 and downstream gates succeeded.",
       "last_verified_push_at": "2026-09-27T02:06:16.602Z",
       "worker_pr": 244,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/244",
       "draft_pr": false,
-      "pr_state": "open_ready_for_review_unmerged",
+      "pr_state": "closed",
       "ci_attempts": [
         {
           "run_id": 36287383308,
@@ -26027,7 +26898,27 @@
       "open_limitations": [
         "Awaiting Trusted review and Trusted integration CI."
       ],
-      "trusted_follow_up": "Preserve the SiteSettings invariant that defaultLocale must be supported and enabledLocales must include it; invalid locale combinations must remain rejected before persistence."
+      "trusted_follow_up": "Preserve the SiteSettings invariant that defaultLocale must be supported and enabledLocales must include it; invalid locale combinations must remain rejected before persistence.",
+      "worker_pr_state": "closed",
+      "trusted_resolution": {
+        "status": "integrated",
+        "worker_pr": 244,
+        "worker_head": "4a269a9ab0cc43c824349dbe2499649cf362ebf5",
+        "trusted_pr": 176,
+        "trusted_pr_ci_run_id": 36365364627,
+        "trusted_pr_ci_result": "success",
+        "trusted_merge_sha": "7f287dd166297691fcae4bfec9c26859581b39b4",
+        "final_trusted_main_sha": "7f287dd166297691fcae4bfec9c26859581b39b4",
+        "final_trusted_main_ci_run_id": 36365665398,
+        "final_trusted_main_ci_result": "success",
+        "worker_sync_run_id": 36365665408,
+        "worker_sync_result": "success",
+        "sanitized_worker_sync_sha": "4367c6d53b015cbff04837c136f9a9aead52f554",
+        "worker_ci_run_id": 36365677589,
+        "worker_ci_after_sync_result": "success",
+        "resolved_at": "2026-09-28T01:32:06.632Z",
+        "trusted_import_note": "Imported once through A15 Trusted PR #176; no Worker branch was merged wholesale."
+      }
     },
     {
       "priority": 452,
@@ -26204,7 +27095,7 @@
       "package_id": "WCP-453",
       "title": "Protect the locale switch from CSRF and unsafe redirects",
       "risk": "medium",
-      "execution_state": "worker_complete_awaiting_trusted_review",
+      "execution_state": "trusted_integrated",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -26276,7 +27167,7 @@
         ]
       },
       "claimed_on": "2026-09-27T02:09:43.149Z",
-      "claim_state": "locked_until_trusted_resolution",
+      "claim_state": "released_after_trusted_integration",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
       "active_head": "01a5ce90b9f471f14233b06397768e7030ae2fcd",
@@ -26289,12 +27180,12 @@
         "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
         "feature_branch": "01a5ce90b9f471f14233b06397768e7030ae2fcd"
       },
-      "next_action": "PR #246 is ready for Trusted review with green exact-head Worker CI; keep this claim locked until Trusted explicitly integrates, cancels or transfers it, then continue with an independent task.",
+      "next_action": "Worker PR #246 closed after Trusted PR #176 and downstream gates succeeded.",
       "last_verified_push_at": "2026-09-27T02:14:29.224Z",
       "worker_pr": 246,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/246",
       "draft_pr": false,
-      "pr_state": "open_ready_for_review_unmerged",
+      "pr_state": "closed",
       "ci_attempts": [
         {
           "run_id": 36287819282,
@@ -26329,7 +27220,27 @@
       "open_limitations": [
         "Awaiting Trusted review and Trusted integration CI."
       ],
-      "trusted_follow_up": "Preserve the locale-switch CSRF token, enabled-locale allowlist, LocalRedirectTarget fallback, and HttpOnly SameSite=Lax locale cookie."
+      "trusted_follow_up": "Preserve the locale-switch CSRF token, enabled-locale allowlist, LocalRedirectTarget fallback, and HttpOnly SameSite=Lax locale cookie.",
+      "worker_pr_state": "closed",
+      "trusted_resolution": {
+        "status": "integrated",
+        "worker_pr": 246,
+        "worker_head": "01a5ce90b9f471f14233b06397768e7030ae2fcd",
+        "trusted_pr": 176,
+        "trusted_pr_ci_run_id": 36365364627,
+        "trusted_pr_ci_result": "success",
+        "trusted_merge_sha": "7f287dd166297691fcae4bfec9c26859581b39b4",
+        "final_trusted_main_sha": "7f287dd166297691fcae4bfec9c26859581b39b4",
+        "final_trusted_main_ci_run_id": 36365665398,
+        "final_trusted_main_ci_result": "success",
+        "worker_sync_run_id": 36365665408,
+        "worker_sync_result": "success",
+        "sanitized_worker_sync_sha": "4367c6d53b015cbff04837c136f9a9aead52f554",
+        "worker_ci_run_id": 36365677589,
+        "worker_ci_after_sync_result": "success",
+        "resolved_at": "2026-09-28T01:32:06.632Z",
+        "trusted_import_note": "Imported once through A15 Trusted PR #176; no Worker branch was merged wholesale."
+      }
     },
     {
       "priority": 454,
@@ -27592,7 +28503,7 @@
       "package_id": "WCP-462",
       "title": "Protect the admin dashboard from inactive and unprivileged accounts",
       "risk": "medium",
-      "execution_state": "worker_complete_awaiting_trusted_review",
+      "execution_state": "trusted_integrated",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -27665,7 +28576,7 @@
       },
       "published_at": "2026-09-27T03:52:28.158Z",
       "claimed_on": "2026-09-27T03:52:28.158Z",
-      "claim_state": "locked_until_trusted_resolution",
+      "claim_state": "released_after_trusted_integration",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
       "active_head": "5819a2caf18da71416161f379e7c0f2b5fde8380",
@@ -27678,13 +28589,13 @@
         "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
         "feature_branch": "5819a2caf18da71416161f379e7c0f2b5fde8380"
       },
-      "next_action": "Await Trusted review and integration validation; keep this claim locked until Trusted explicitly integrates, cancels or transfers it.",
+      "next_action": "Worker PR #256 closed after Trusted PR #176 and downstream gates succeeded.",
       "last_observed_head": "5819a2caf18da71416161f379e7c0f2b5fde8380",
       "last_verified_push_at": "2026-09-27T04:02:45.391Z",
       "worker_pr": 256,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/256",
       "draft_pr": false,
-      "pr_state": "open_ready_unmerged",
+      "pr_state": "closed",
       "ci_run_id": 36293013565,
       "last_ci_run_id": 36293013565,
       "ci_result": "success",
@@ -27746,7 +28657,27 @@
       "open_limitations": [
         "Awaiting Trusted review and Trusted integration CI."
       ],
-      "trusted_follow_up": "Preserve CMS_ACCESS and inactive-account checks when importing or changing dashboard authorization; run full Trusted CI."
+      "trusted_follow_up": "Preserve CMS_ACCESS and inactive-account checks when importing or changing dashboard authorization; run full Trusted CI.",
+      "worker_pr_state": "closed",
+      "trusted_resolution": {
+        "status": "integrated",
+        "worker_pr": 256,
+        "worker_head": "5819a2caf18da71416161f379e7c0f2b5fde8380",
+        "trusted_pr": 176,
+        "trusted_pr_ci_run_id": 36365364627,
+        "trusted_pr_ci_result": "success",
+        "trusted_merge_sha": "7f287dd166297691fcae4bfec9c26859581b39b4",
+        "final_trusted_main_sha": "7f287dd166297691fcae4bfec9c26859581b39b4",
+        "final_trusted_main_ci_run_id": 36365665398,
+        "final_trusted_main_ci_result": "success",
+        "worker_sync_run_id": 36365665408,
+        "worker_sync_result": "success",
+        "sanitized_worker_sync_sha": "4367c6d53b015cbff04837c136f9a9aead52f554",
+        "worker_ci_run_id": 36365677589,
+        "worker_ci_after_sync_result": "success",
+        "resolved_at": "2026-09-28T01:32:06.632Z",
+        "trusted_import_note": "Imported once through A15 Trusted PR #176; no Worker branch was merged wholesale."
+      }
     },
     {
       "priority": 463,
@@ -28434,7 +29365,7 @@
       "package_id": "WCP-467",
       "title": "Protect admin menu creation and removal with authorization and CSRF",
       "risk": "medium",
-      "execution_state": "worker_complete_awaiting_trusted_review",
+      "execution_state": "trusted_integrated",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -28507,7 +29438,7 @@
       },
       "published_at": "2026-09-27T04:38:54.752Z",
       "claimed_on": "2026-09-27T04:38:54.752Z",
-      "claim_state": "locked_until_trusted_resolution",
+      "claim_state": "released_after_trusted_integration",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
       "active_head": "0413cacc917d2d795a511239d8bf20feddbadff3",
@@ -28520,13 +29451,13 @@
         "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
         "feature_branch": "0413cacc917d2d795a511239d8bf20feddbadff3"
       },
-      "next_action": "Await Trusted review and integration validation; keep this claim locked until Trusted explicitly integrates, cancels or transfers it.",
+      "next_action": "Worker PR #260 closed after Trusted PR #176 and downstream gates succeeded.",
       "last_observed_head": "0413cacc917d2d795a511239d8bf20feddbadff3",
       "last_verified_push_at": "2026-09-27T04:45:07.279Z",
       "worker_pr": 260,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/260",
       "draft_pr": false,
-      "pr_state": "open_ready_unmerged",
+      "pr_state": "closed",
       "ci_run_id": 36295073688,
       "last_ci_run_id": 36295073688,
       "ci_result": "success",
@@ -28576,14 +29507,34 @@
       "open_limitations": [
         "Awaiting Trusted review and Trusted integration CI."
       ],
-      "trusted_follow_up": "Preserve CMS_CONTENT_MANAGE and Symfony form/route-specific CSRF validation before menu mutations; run full Trusted CI."
+      "trusted_follow_up": "Preserve CMS_CONTENT_MANAGE and Symfony form/route-specific CSRF validation before menu mutations; run full Trusted CI.",
+      "worker_pr_state": "closed",
+      "trusted_resolution": {
+        "status": "integrated",
+        "worker_pr": 260,
+        "worker_head": "0413cacc917d2d795a511239d8bf20feddbadff3",
+        "trusted_pr": 176,
+        "trusted_pr_ci_run_id": 36365364627,
+        "trusted_pr_ci_result": "success",
+        "trusted_merge_sha": "7f287dd166297691fcae4bfec9c26859581b39b4",
+        "final_trusted_main_sha": "7f287dd166297691fcae4bfec9c26859581b39b4",
+        "final_trusted_main_ci_run_id": 36365665398,
+        "final_trusted_main_ci_result": "success",
+        "worker_sync_run_id": 36365665408,
+        "worker_sync_result": "success",
+        "sanitized_worker_sync_sha": "4367c6d53b015cbff04837c136f9a9aead52f554",
+        "worker_ci_run_id": 36365677589,
+        "worker_ci_after_sync_result": "success",
+        "resolved_at": "2026-09-28T01:32:06.632Z",
+        "trusted_import_note": "Imported once through A15 Trusted PR #176; no Worker branch was merged wholesale."
+      }
     },
     {
       "priority": 468,
       "package_id": "WCP-468",
       "title": "Protect category creation and deletion with authorization and CSRF",
       "risk": "medium",
-      "execution_state": "worker_complete_awaiting_trusted_review",
+      "execution_state": "trusted_integrated",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -28658,7 +29609,7 @@
       },
       "published_at": "2026-09-27T04:47:21.622Z",
       "claimed_on": "2026-09-27T04:47:21.622Z",
-      "claim_state": "locked_until_trusted_resolution",
+      "claim_state": "released_after_trusted_integration",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
       "active_head": "abfd649b510151a403ab97f728d0f045a7be6f88",
@@ -28671,13 +29622,13 @@
         "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
         "feature_branch": "abfd649b510151a403ab97f728d0f045a7be6f88"
       },
-      "next_action": "Await Trusted review and integration validation; keep this claim locked until Trusted explicitly integrates, cancels or transfers it.",
+      "next_action": "Worker PR #261 closed after Trusted PR #176 and downstream gates succeeded.",
       "last_observed_head": "abfd649b510151a403ab97f728d0f045a7be6f88",
       "last_verified_push_at": "2026-09-27T04:53:39.773Z",
       "worker_pr": 261,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/261",
       "draft_pr": false,
-      "pr_state": "open_ready_unmerged",
+      "pr_state": "closed",
       "ci_run_id": 36295457879,
       "last_ci_run_id": 36295457879,
       "ci_result": "success",
@@ -28727,7 +29678,27 @@
       "open_limitations": [
         "Awaiting Trusted review and Trusted integration CI."
       ],
-      "trusted_follow_up": "Preserve CMS_CONTENT_MANAGE and category form/delete-route CSRF checks before mutations; keep non-empty-category deletion protection; run full Trusted CI."
+      "trusted_follow_up": "Preserve CMS_CONTENT_MANAGE and category form/delete-route CSRF checks before mutations; keep non-empty-category deletion protection; run full Trusted CI.",
+      "worker_pr_state": "closed",
+      "trusted_resolution": {
+        "status": "integrated",
+        "worker_pr": 261,
+        "worker_head": "abfd649b510151a403ab97f728d0f045a7be6f88",
+        "trusted_pr": 176,
+        "trusted_pr_ci_run_id": 36365364627,
+        "trusted_pr_ci_result": "success",
+        "trusted_merge_sha": "7f287dd166297691fcae4bfec9c26859581b39b4",
+        "final_trusted_main_sha": "7f287dd166297691fcae4bfec9c26859581b39b4",
+        "final_trusted_main_ci_run_id": 36365665398,
+        "final_trusted_main_ci_result": "success",
+        "worker_sync_run_id": 36365665408,
+        "worker_sync_result": "success",
+        "sanitized_worker_sync_sha": "4367c6d53b015cbff04837c136f9a9aead52f554",
+        "worker_ci_run_id": 36365677589,
+        "worker_ci_after_sync_result": "success",
+        "resolved_at": "2026-09-28T01:32:06.632Z",
+        "trusted_import_note": "Imported once through A15 Trusted PR #176; no Worker branch was merged wholesale."
+      }
     },
     {
       "priority": 469,
@@ -30404,7 +31375,7 @@
       "package_id": "WCP-478",
       "title": "Protect guild-rank deletion authorization, ownership and CSRF",
       "risk": "medium",
-      "execution_state": "worker_complete_awaiting_trusted_review",
+      "execution_state": "trusted_integrated",
       "dependencies": [
         "WCP-440"
       ],
@@ -30488,7 +31459,7 @@
       },
       "published_at": "2026-09-27T06:39:18.912Z",
       "claimed_on": "2026-09-27T06:39:18.912Z",
-      "claim_state": "locked_until_trusted_resolution",
+      "claim_state": "released_after_trusted_integration",
       "active_base_branch": "feature/wcp-440-guild-team-deletion-security-g1",
       "active_base_sha": "a44416a60ea7d1eb9e802a2cf240870d636abc58",
       "active_head": "9d47cc610702f8af891d70af90acc6a831c1a885",
@@ -30497,7 +31468,7 @@
         "claim_branch": "a44416a60ea7d1eb9e802a2cf240870d636abc58",
         "feature_branch": "9d47cc610702f8af891d70af90acc6a831c1a885"
       },
-      "next_action": "Await Trusted review and integration validation; keep this claim locked until Trusted explicitly integrates, cancels or transfers it. Continue autonomously from a separate claim.",
+      "next_action": "Worker PR #271 closed after Trusted PR #176 and downstream gates succeeded.",
       "last_observed_head": "9d47cc610702f8af891d70af90acc6a831c1a885",
       "last_checkpoint_at": "2026-09-27T06:42:55.491Z",
       "checkpoint_paths": [
@@ -30507,7 +31478,7 @@
       "worker_pr": 271,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/271",
       "draft_pr": false,
-      "pr_state": "open_ready_unmerged",
+      "pr_state": "closed",
       "ci_run_id": 36300928962,
       "last_ci_run_id": 36300928962,
       "ci_result": "success",
@@ -30570,14 +31541,34 @@
       "open_limitations": [
         "Awaiting Trusted review and Trusted integration CI; the cumulative PR includes WCP-440's predecessor test."
       ],
-      "trusted_follow_up": "Preserve CMS_GAMING_MANAGE, parent-guild ownership checks and the delete-rank CSRF token; verify both team and rank deletion tests on fresh Trusted CI."
+      "trusted_follow_up": "Preserve CMS_GAMING_MANAGE, parent-guild ownership checks and the delete-rank CSRF token; verify both team and rank deletion tests on fresh Trusted CI.",
+      "worker_pr_state": "closed",
+      "trusted_resolution": {
+        "status": "integrated",
+        "worker_pr": 271,
+        "worker_head": "9d47cc610702f8af891d70af90acc6a831c1a885",
+        "trusted_pr": 176,
+        "trusted_pr_ci_run_id": 36365364627,
+        "trusted_pr_ci_result": "success",
+        "trusted_merge_sha": "7f287dd166297691fcae4bfec9c26859581b39b4",
+        "final_trusted_main_sha": "7f287dd166297691fcae4bfec9c26859581b39b4",
+        "final_trusted_main_ci_run_id": 36365665398,
+        "final_trusted_main_ci_result": "success",
+        "worker_sync_run_id": 36365665408,
+        "worker_sync_result": "success",
+        "sanitized_worker_sync_sha": "4367c6d53b015cbff04837c136f9a9aead52f554",
+        "worker_ci_run_id": 36365677589,
+        "worker_ci_after_sync_result": "success",
+        "resolved_at": "2026-09-28T01:32:06.632Z",
+        "trusted_import_note": "Imported once through A15 Trusted PR #176; no Worker branch was merged wholesale. Its overlapping regression files were already byte-identical in Trusted main and were omitted to avoid duplicate content."
+      }
     },
     {
       "priority": 479,
       "package_id": "WCP-479",
       "title": "Protect guild application question deletion authorization, ownership and CSRF",
       "risk": "medium",
-      "execution_state": "worker_complete_awaiting_trusted_review",
+      "execution_state": "trusted_integrated",
       "dependencies": [
         "WCP-478"
       ],
@@ -30661,7 +31652,7 @@
       },
       "published_at": "2026-09-27T06:49:13.676Z",
       "claimed_on": "2026-09-27T06:49:13.676Z",
-      "claim_state": "locked_until_trusted_resolution",
+      "claim_state": "released_after_trusted_integration",
       "active_base_branch": "feature/wcp-478-guild-rank-deletion-security-g1",
       "active_base_sha": "9d47cc610702f8af891d70af90acc6a831c1a885",
       "active_head": "0dcba428821d44ad9081f04725aa01a58c2dfed7",
@@ -30670,7 +31661,7 @@
         "claim_branch": "9d47cc610702f8af891d70af90acc6a831c1a885",
         "feature_branch": "0dcba428821d44ad9081f04725aa01a58c2dfed7"
       },
-      "next_action": "Await Trusted review and integration validation; keep this claim locked until Trusted explicitly integrates, cancels or transfers it. Continue from a separate claim.",
+      "next_action": "Worker PR #272 closed after Trusted PR #176 and downstream gates succeeded.",
       "last_observed_head": "0dcba428821d44ad9081f04725aa01a58c2dfed7",
       "last_checkpoint_at": "2026-09-27T06:52:29.088Z",
       "checkpoint_paths": [
@@ -30680,7 +31671,7 @@
       "worker_pr": 272,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/272",
       "draft_pr": false,
-      "pr_state": "open_ready_unmerged",
+      "pr_state": "closed",
       "ci_run_id": 36301404016,
       "last_ci_run_id": 36301404016,
       "ci_result": "success",
@@ -30745,7 +31736,27 @@
       "open_limitations": [
         "Awaiting Trusted review and Trusted integration CI; cumulative PR includes WCP-440 and WCP-478 predecessor tests."
       ],
-      "trusted_follow_up": "Preserve CMS_GAMING_MANAGE, parent-guild ownership and delete-question CSRF; verify team, rank and question deletion tests on fresh Trusted CI."
+      "trusted_follow_up": "Preserve CMS_GAMING_MANAGE, parent-guild ownership and delete-question CSRF; verify team, rank and question deletion tests on fresh Trusted CI.",
+      "worker_pr_state": "closed",
+      "trusted_resolution": {
+        "status": "integrated",
+        "worker_pr": 272,
+        "worker_head": "0dcba428821d44ad9081f04725aa01a58c2dfed7",
+        "trusted_pr": 176,
+        "trusted_pr_ci_run_id": 36365364627,
+        "trusted_pr_ci_result": "success",
+        "trusted_merge_sha": "7f287dd166297691fcae4bfec9c26859581b39b4",
+        "final_trusted_main_sha": "7f287dd166297691fcae4bfec9c26859581b39b4",
+        "final_trusted_main_ci_run_id": 36365665398,
+        "final_trusted_main_ci_result": "success",
+        "worker_sync_run_id": 36365665408,
+        "worker_sync_result": "success",
+        "sanitized_worker_sync_sha": "4367c6d53b015cbff04837c136f9a9aead52f554",
+        "worker_ci_run_id": 36365677589,
+        "worker_ci_after_sync_result": "success",
+        "resolved_at": "2026-09-28T01:32:06.632Z",
+        "trusted_import_note": "Imported once through A15 Trusted PR #176; no Worker branch was merged wholesale. Its overlapping regression files were already byte-identical in Trusted main and were omitted to avoid duplicate content."
+      }
     },
     {
       "priority": 480,
@@ -30980,7 +31991,7 @@
       "package_id": "WCP-481",
       "title": "Keep one default guild rank when creating or editing ranks",
       "risk": "medium",
-      "execution_state": "worker_complete_awaiting_trusted_review",
+      "execution_state": "trusted_integrated",
       "dependencies": [
         "WCP-479"
       ],
@@ -31063,7 +32074,7 @@
       },
       "published_at": "2026-09-27T07:00:18.586Z",
       "claimed_on": "2026-09-27T07:00:18.586Z",
-      "claim_state": "locked_until_trusted_resolution",
+      "claim_state": "released_after_trusted_integration",
       "active_base_branch": "feature/wcp-479-guild-application-question-deletion-security-g1",
       "active_base_sha": "0dcba428821d44ad9081f04725aa01a58c2dfed7",
       "active_head": "9b113f4bec19cf47a6e7d894b978affafa19f1cb",
@@ -31072,7 +32083,7 @@
         "claim_branch": "0dcba428821d44ad9081f04725aa01a58c2dfed7",
         "feature_branch": "9b113f4bec19cf47a6e7d894b978affafa19f1cb"
       },
-      "next_action": "Await Trusted review and integration CI; keep the claim locked until Trusted explicitly resolves it.",
+      "next_action": "Worker PR #273 closed after Trusted PR #176 and downstream gates succeeded.",
       "last_observed_head": "9b113f4bec19cf47a6e7d894b978affafa19f1cb",
       "last_checkpoint_at": "2026-09-27T07:11:38.772Z",
       "checkpoint_paths": [
@@ -31089,7 +32100,7 @@
       "ci_result": "success",
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/273",
       "draft_pr": false,
-      "pr_state": "open",
+      "pr_state": "closed",
       "last_ci_run_id": 36302068286,
       "last_ci_result": "success",
       "ci_attempts": [
@@ -31148,14 +32159,34 @@
       "open_limitations": [
         "Awaiting Trusted review and Trusted integration CI; cumulative PR includes WCP-478/479 predecessor tests."
       ],
-      "trusted_follow_up": "Verify the default-rank create/edit invariant tests together with the cumulative WCP-478/479 guild tests on fresh Trusted CI; preserve at-most-one-default-per-guild and cross-guild isolation."
+      "trusted_follow_up": "Verify the default-rank create/edit invariant tests together with the cumulative WCP-478/479 guild tests on fresh Trusted CI; preserve at-most-one-default-per-guild and cross-guild isolation.",
+      "worker_pr_state": "closed",
+      "trusted_resolution": {
+        "status": "integrated",
+        "worker_pr": 273,
+        "worker_head": "9b113f4bec19cf47a6e7d894b978affafa19f1cb",
+        "trusted_pr": 176,
+        "trusted_pr_ci_run_id": 36365364627,
+        "trusted_pr_ci_result": "success",
+        "trusted_merge_sha": "7f287dd166297691fcae4bfec9c26859581b39b4",
+        "final_trusted_main_sha": "7f287dd166297691fcae4bfec9c26859581b39b4",
+        "final_trusted_main_ci_run_id": 36365665398,
+        "final_trusted_main_ci_result": "success",
+        "worker_sync_run_id": 36365665408,
+        "worker_sync_result": "success",
+        "sanitized_worker_sync_sha": "4367c6d53b015cbff04837c136f9a9aead52f554",
+        "worker_ci_run_id": 36365677589,
+        "worker_ci_after_sync_result": "success",
+        "resolved_at": "2026-09-28T01:32:06.632Z",
+        "trusted_import_note": "Imported once through A15 Trusted PR #176; no Worker branch was merged wholesale. Its overlapping regression files were already byte-identical in Trusted main and were omitted to avoid duplicate content."
+      }
     },
     {
       "priority": 482,
       "package_id": "WCP-482",
       "title": "Preserve page layouts after rejected content-type edits",
       "risk": "medium",
-      "execution_state": "worker_complete_awaiting_trusted_review",
+      "execution_state": "trusted_integrated",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -31228,7 +32259,7 @@
       },
       "published_at": "2026-09-27T07:17:44.859Z",
       "claimed_on": "2026-09-27T07:17:44.859Z",
-      "claim_state": "locked_until_trusted_resolution",
+      "claim_state": "released_after_trusted_integration",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
       "active_head": "1d200f2b66eeefc28e8ad224974c1f4de462458d",
@@ -31237,7 +32268,7 @@
         "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
         "feature_branch": "1d200f2b66eeefc28e8ad224974c1f4de462458d"
       },
-      "next_action": "Await Trusted review and integration CI; keep the claim locked until Trusted explicitly resolves it.",
+      "next_action": "Worker PR #275 closed after Trusted PR #176 and downstream gates succeeded.",
       "last_observed_head": "1d200f2b66eeefc28e8ad224974c1f4de462458d",
       "last_checkpoint_at": "2026-09-27T07:36:08.446Z",
       "checkpoint_paths": [
@@ -31249,7 +32280,7 @@
       "worker_pr": 275,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/275",
       "draft_pr": false,
-      "pr_state": "open",
+      "pr_state": "closed",
       "ci_run_id": 36303407921,
       "last_ci_run_id": 36303407921,
       "ci_result": "success",
@@ -31316,7 +32347,27 @@
       "open_limitations": [
         "Awaiting Trusted review and Trusted integration CI."
       ],
-      "trusted_follow_up": "Verify the stateless form-CSRF rejection and persisted page-layout preservation on fresh Trusted CI; preserve current Origin/Sec-Fetch-Site checks and page-layout cleanup semantics."
+      "trusted_follow_up": "Verify the stateless form-CSRF rejection and persisted page-layout preservation on fresh Trusted CI; preserve current Origin/Sec-Fetch-Site checks and page-layout cleanup semantics.",
+      "worker_pr_state": "closed",
+      "trusted_resolution": {
+        "status": "integrated",
+        "worker_pr": 275,
+        "worker_head": "1d200f2b66eeefc28e8ad224974c1f4de462458d",
+        "trusted_pr": 176,
+        "trusted_pr_ci_run_id": 36365364627,
+        "trusted_pr_ci_result": "success",
+        "trusted_merge_sha": "7f287dd166297691fcae4bfec9c26859581b39b4",
+        "final_trusted_main_sha": "7f287dd166297691fcae4bfec9c26859581b39b4",
+        "final_trusted_main_ci_run_id": 36365665398,
+        "final_trusted_main_ci_result": "success",
+        "worker_sync_run_id": 36365665408,
+        "worker_sync_result": "success",
+        "sanitized_worker_sync_sha": "4367c6d53b015cbff04837c136f9a9aead52f554",
+        "worker_ci_run_id": 36365677589,
+        "worker_ci_after_sync_result": "success",
+        "resolved_at": "2026-09-28T01:32:06.632Z",
+        "trusted_import_note": "Imported once through A15 Trusted PR #176; no Worker branch was merged wholesale."
+      }
     },
     {
       "priority": 483,
@@ -31542,7 +32593,7 @@
       "package_id": "WCP-484",
       "title": "Protect unpublished content previews from public exposure",
       "risk": "medium",
-      "execution_state": "worker_complete_awaiting_trusted_review",
+      "execution_state": "trusted_integrated",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -31616,7 +32667,7 @@
       },
       "published_at": "2026-09-27T07:43:33.674Z",
       "claimed_on": "2026-09-27T07:43:33.674Z",
-      "claim_state": "locked_until_trusted_resolution",
+      "claim_state": "released_after_trusted_integration",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
       "active_head": "c0f6b95629bbfe7f40712d1fca6ecc205fac0d00",
@@ -31625,7 +32676,7 @@
         "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
         "feature_branch": "c0f6b95629bbfe7f40712d1fca6ecc205fac0d00"
       },
-      "next_action": "Worker PR #277 is ready for Trusted review and remains unmerged. Exact final HEAD c0f6b95629bbfe7f40712d1fca6ecc205fac0d00 passed Worker CI run 36305000689: 431 tests, 1,865 assertions, zero failures; PHPStan level 8 reported no errors; PostgreSQL 18 executed all 39 migrations. Keep the claim locked until Trusted resolution.",
+      "next_action": "Worker PR #277 closed after Trusted PR #176 and downstream gates succeeded.",
       "last_observed_head": "c0f6b95629bbfe7f40712d1fca6ecc205fac0d00",
       "last_checkpoint_at": "2026-09-27T08:08:42.364Z",
       "checkpoint_paths": [
@@ -31637,7 +32688,7 @@
       "worker_pr": 277,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/277",
       "draft_pr": false,
-      "pr_state": "open",
+      "pr_state": "closed",
       "ci_run_id": 36305000689,
       "last_ci_run_id": 36305000689,
       "ci_result": "success",
@@ -31663,7 +32714,27 @@
           "head": "c0f6b95629bbfe7f40712d1fca6ecc205fac0d00",
           "result": "success"
         }
-      ]
+      ],
+      "worker_pr_state": "closed",
+      "trusted_resolution": {
+        "status": "integrated",
+        "worker_pr": 277,
+        "worker_head": "c0f6b95629bbfe7f40712d1fca6ecc205fac0d00",
+        "trusted_pr": 176,
+        "trusted_pr_ci_run_id": 36365364627,
+        "trusted_pr_ci_result": "success",
+        "trusted_merge_sha": "7f287dd166297691fcae4bfec9c26859581b39b4",
+        "final_trusted_main_sha": "7f287dd166297691fcae4bfec9c26859581b39b4",
+        "final_trusted_main_ci_run_id": 36365665398,
+        "final_trusted_main_ci_result": "success",
+        "worker_sync_run_id": 36365665408,
+        "worker_sync_result": "success",
+        "sanitized_worker_sync_sha": "4367c6d53b015cbff04837c136f9a9aead52f554",
+        "worker_ci_run_id": 36365677589,
+        "worker_ci_after_sync_result": "success",
+        "resolved_at": "2026-09-28T01:32:06.632Z",
+        "trusted_import_note": "Imported once through A15 Trusted PR #176; no Worker branch was merged wholesale."
+      }
     },
     {
       "priority": 485,
@@ -32015,7 +33086,7 @@
       "package_id": "WCP-487",
       "title": "Verify the least-privilege gaming administration workflow",
       "risk": "medium",
-      "execution_state": "worker_complete_awaiting_trusted_review",
+      "execution_state": "trusted_integrated",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -32089,7 +33160,7 @@
       },
       "published_at": "2026-09-27T08:43:14.636Z",
       "claimed_on": "2026-09-27T08:43:14.636Z",
-      "claim_state": "locked_until_trusted_resolution",
+      "claim_state": "released_after_trusted_integration",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
       "active_head": "e4f57f77c417048c911bb467ca6c79e665d69b74",
@@ -32103,7 +33174,7 @@
       "checkpoint_paths": [
         "tests/Controller/AdminGamingPermissionWorkflowTest.php"
       ],
-      "next_action": "Worker PR #280 is ready for Trusted review and remains unmerged. Exact final HEAD e4f57f77c417048c911bb467ca6c79e665d69b74 passed Worker CI run 36307374043: 430 tests and 1,868 assertions with zero failures; PHPStan reported no errors; PostgreSQL 18 executed all 39 migrations. Keep the claim locked until Trusted resolves it.",
+      "next_action": "Worker PR #280 closed after Trusted PR #176 and downstream gates succeeded.",
       "last_verified_push_at": "2026-09-27T08:52:35.962Z",
       "ci_attempts": [
         {
@@ -32130,7 +33201,7 @@
         "tests/Controller/AdminGamingPermissionWorkflowTest.php"
       ],
       "draft_pr": false,
-      "pr_state": "open",
+      "pr_state": "closed",
       "final_head": "e4f57f77c417048c911bb467ca6c79e665d69b74",
       "final_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
       "final_sanitized_main_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
@@ -32174,14 +33245,34 @@
       "open_limitations": [
         "Awaiting Trusted review and Trusted integration CI; no product source or configuration was changed."
       ],
-      "trusted_follow_up": "Run the least-privilege dashboard and game-creation workflow on a fresh Trusted feature branch and full Trusted CI; preserve the CMS_GAMING_MANAGE boundary and rendered form CSRF behavior."
+      "trusted_follow_up": "Run the least-privilege dashboard and game-creation workflow on a fresh Trusted feature branch and full Trusted CI; preserve the CMS_GAMING_MANAGE boundary and rendered form CSRF behavior.",
+      "worker_pr_state": "closed",
+      "trusted_resolution": {
+        "status": "integrated",
+        "worker_pr": 280,
+        "worker_head": "e4f57f77c417048c911bb467ca6c79e665d69b74",
+        "trusted_pr": 176,
+        "trusted_pr_ci_run_id": 36365364627,
+        "trusted_pr_ci_result": "success",
+        "trusted_merge_sha": "7f287dd166297691fcae4bfec9c26859581b39b4",
+        "final_trusted_main_sha": "7f287dd166297691fcae4bfec9c26859581b39b4",
+        "final_trusted_main_ci_run_id": 36365665398,
+        "final_trusted_main_ci_result": "success",
+        "worker_sync_run_id": 36365665408,
+        "worker_sync_result": "success",
+        "sanitized_worker_sync_sha": "4367c6d53b015cbff04837c136f9a9aead52f554",
+        "worker_ci_run_id": 36365677589,
+        "worker_ci_after_sync_result": "success",
+        "resolved_at": "2026-09-28T01:32:06.632Z",
+        "trusted_import_note": "Imported once through A15 Trusted PR #176; no Worker branch was merged wholesale."
+      }
     },
     {
       "priority": 488,
       "package_id": "WCP-488",
       "title": "Protect game deletion with rendered CSRF and persistence checks",
       "risk": "medium",
-      "execution_state": "worker_complete_awaiting_trusted_review",
+      "execution_state": "trusted_integrated",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -32254,7 +33345,7 @@
       },
       "published_at": "2026-09-27T08:56:05.245Z",
       "claimed_on": "2026-09-27T08:56:05.245Z",
-      "claim_state": "locked_until_trusted_resolution",
+      "claim_state": "released_after_trusted_integration",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
       "active_head": "8636294c754452b02702f4d5ece17c413a4218b4",
@@ -32268,12 +33359,12 @@
       "checkpoint_paths": [
         "tests/Controller/AdminGamingGameDeletionSecurityTest.php"
       ],
-      "next_action": "Worker PR #281 is ready for Trusted review and remains unmerged. Exact final HEAD 8636294c754452b02702f4d5ece17c413a4218b4 passed Worker CI run 36307855053: 430 tests, 1,869 assertions, zero failures; PHPStan reported no errors; PostgreSQL 18 executed all 39 migrations. Keep the claim locked until Trusted resolves it.",
+      "next_action": "Worker PR #281 closed after Trusted PR #176 and downstream gates succeeded.",
       "last_verified_push_at": "2026-09-27T09:01:25.906Z",
       "worker_pr": 281,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/281",
       "draft_pr": false,
-      "pr_state": "open",
+      "pr_state": "closed",
       "worker_pr_changed_paths": [
         "tests/Controller/AdminGamingGameDeletionSecurityTest.php"
       ],
@@ -32331,7 +33422,27 @@
       "open_limitations": [
         "Awaiting Trusted review and Trusted integration CI; no product source or configuration was changed."
       ],
-      "trusted_follow_up": "Verify game deletion token rejection and rendered-token success on a fresh Trusted branch and full Trusted CI; preserve the per-game CSRF identifier and state on rejection."
+      "trusted_follow_up": "Verify game deletion token rejection and rendered-token success on a fresh Trusted branch and full Trusted CI; preserve the per-game CSRF identifier and state on rejection.",
+      "worker_pr_state": "closed",
+      "trusted_resolution": {
+        "status": "integrated",
+        "worker_pr": 281,
+        "worker_head": "8636294c754452b02702f4d5ece17c413a4218b4",
+        "trusted_pr": 176,
+        "trusted_pr_ci_run_id": 36365364627,
+        "trusted_pr_ci_result": "success",
+        "trusted_merge_sha": "7f287dd166297691fcae4bfec9c26859581b39b4",
+        "final_trusted_main_sha": "7f287dd166297691fcae4bfec9c26859581b39b4",
+        "final_trusted_main_ci_run_id": 36365665398,
+        "final_trusted_main_ci_result": "success",
+        "worker_sync_run_id": 36365665408,
+        "worker_sync_result": "success",
+        "sanitized_worker_sync_sha": "4367c6d53b015cbff04837c136f9a9aead52f554",
+        "worker_ci_run_id": 36365677589,
+        "worker_ci_after_sync_result": "success",
+        "resolved_at": "2026-09-28T01:32:06.632Z",
+        "trusted_import_note": "Imported once through A15 Trusted PR #176; no Worker branch was merged wholesale."
+      }
     },
     {
       "priority": 489,
