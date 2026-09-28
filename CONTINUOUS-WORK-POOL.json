@@ -10,10 +10,10 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-28T19:56:56.389Z",
+  "published_at": "2026-09-28T19:58:56.469Z",
   "summary": {
-    "total_remaining_worker_tasks": 175,
-    "completed_worker_prs_awaiting_trusted_review": 314,
+    "total_remaining_worker_tasks": 174,
+    "completed_worker_prs_awaiting_trusted_review": 315,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
@@ -51638,7 +51638,7 @@
       "package_id": "WCP-586",
       "title": "Show public competition standings in Page Builder",
       "risk": "medium",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -51732,7 +51732,7 @@
       },
       "published_at": "2026-09-28T19:35:10.507Z",
       "claimed_on": "2026-09-28T19:35:10.507Z",
-      "claim_state": "active",
+      "claim_state": "locked_until_trusted_resolution",
       "active_base_branch": "main",
       "active_base_sha": "ebfeb6032548002846b9352ddb2b06b909b461c0",
       "active_head": "1e88bc6d5ea1cdb64b825b6ba117c0fd52f2044f",
@@ -51742,7 +51742,7 @@
         "feature_branch": "1e88bc6d5ea1cdb64b825b6ba117c0fd52f2044f"
       },
       "last_observed_head": "1e88bc6d5ea1cdb64b825b6ba117c0fd52f2044f",
-      "last_checkpoint_at": "2026-09-28T19:53:52.885Z",
+      "last_checkpoint_at": "2026-09-28T19:58:56.469Z",
       "checkpoint_paths": [
         "src/Controller/PublicCompetitionLeaderboardController.php",
         "src/Widget/CompetitionStandingsWidgetProvider.php",
@@ -51750,23 +51750,23 @@
         "src/Widget/CompetitionStandings/Templates/widget/competition_standings.html.twig",
         "tests/Widget/CompetitionStandingsWidgetProviderTest.php"
       ],
-      "next_action": "Inspect exact-head Worker CI run #965 on 1e88bc6d5ea1cdb64b825b6ba117c0fd52f2044f. Ensure the Twig template loads, the new widget integration test passes, and both PHP/Symfony and PostgreSQL 18 jobs are green.",
+      "next_action": "Await Trusted review of PR #381; continue autonomous Worker scheduling without merging or deploying.",
       "last_verified_push_at": "2026-09-28T19:53:52.885Z",
       "worker_pr": 381,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/381",
-      "worker_pr_state": "draft",
+      "worker_pr_state": "ready_for_review",
       "pr_state": "open",
-      "draft_pr": true,
+      "draft_pr": false,
       "worker_pr_base_branch": "main",
       "worker_pr_base_sha": "c3c7b14066d9f8b32925eb4381e30b6794f21027",
       "worker_pr_changed_paths": [
         "src/Controller/PublicCompetitionLeaderboardController.php",
-        "src/Widget/CompetitionStandingsWidgetProvider.php",
         "src/Widget/CompetitionStandings/CompetitionStandingsQuery.php",
         "src/Widget/CompetitionStandings/Templates/widget/competition_standings.html.twig",
+        "src/Widget/CompetitionStandingsWidgetProvider.php",
         "tests/Widget/CompetitionStandingsWidgetProviderTest.php"
       ],
-      "ci_result": "in_progress",
+      "ci_result": "success",
       "ci_attempts": [
         {
           "run_id": 36474342734,
@@ -51788,21 +51788,42 @@
           "run_number": 965,
           "head": "1e88bc6d5ea1cdb64b825b6ba117c0fd52f2044f",
           "base": "c3c7b14066d9f8b32925eb4381e30b6794f21027",
-          "result": "queued",
+          "result": "success",
           "validation_pr": 381,
-          "status": "queued",
-          "conclusion": null,
+          "status": "completed",
+          "conclusion": "success",
           "jobs": {
-            "postgres_18": "queued",
-            "php_symfony": "queued"
+            "php_symfony": "success",
+            "postgres_18": "success"
           },
-          "summary": "Exact-head CI #965 queued after registering the feature-local Twig template directory in the provider."
+          "summary": "Exact-head Worker CI #965 passed. PHPStan reported no errors; Composer, Symfony container, YAML, Twig, AssetMapper and Doctrine validation passed; PHPUnit 1,384 tests / 9,127 assertions / 0 failures or errors (1 deprecation, 8 notices). PostgreSQL 18 applied 57 migrations with 878 SQL queries and confirmed the latest migration."
         }
       ],
       "last_ci_run_id": 36475322011,
       "ci_run_id": 36475322011,
       "ci_validation_pr": 381,
-      "last_ci_result": "in_progress"
+      "last_ci_result": "success",
+      "final_head": "1e88bc6d5ea1cdb64b825b6ba117c0fd52f2044f",
+      "completion_head": "1e88bc6d5ea1cdb64b825b6ba117c0fd52f2044f",
+      "final_base_sha": "ebfeb6032548002846b9352ddb2b06b909b461c0",
+      "last_ci_run_number": 965,
+      "completed_at": "2026-09-28T19:58:56.469Z",
+      "completed_on": "2026-09-28T19:58:56.469Z",
+      "test_results": [
+        "Exact-head Worker CI #965 / 36475322011 succeeded on 1e88bc6d5ea1cdb64b825b6ba117c0fd52f2044f.",
+        "PHPStan level 8 reported no errors; Composer, Symfony container, YAML, Twig, AssetMapper and Doctrine checks passed.",
+        "PHPUnit: 1,384 tests, 9,127 assertions, zero failures or errors; one deprecation and eight notices.",
+        "PostgreSQL 18 migration chain passed: 57 migrations, 878 SQL queries; database confirmed at the latest migration."
+      ],
+      "completion_evidence": [
+        "Proposal base and active branch base are sanitized main@ebfeb6032548002846b9352ddb2b06b909b461c0; PR #381 targets current main@c3c7b14066d9f8b32925eb4381e30b6794f21027.",
+        "Final feature HEAD 1e88bc6d5ea1cdb64b825b6ba117c0fd52f2044f; PR #381 is open, ready for review, and changes exactly five allowlisted paths.",
+        "Shared standings query preserves confirmed-result-only scoring and existing tiebreak ordering; inactive participants do not contribute.",
+        "Page Builder widget discovers through WidgetProvider auto-tagging, uses Gaming module availability, reads only public competitions for enabled games, shows at most four competitions/top three standings, and links to the existing public leaderboard.",
+        "The provider adds only its fixed feature-local Twig template directory to the existing filesystem loader; no global service configuration, shared registry, entity, repository, schema, or migration was changed.",
+        "Exact-head Worker CI #965 / 36475322011 passed both PHP/Symfony and PostgreSQL 18 jobs."
+      ],
+      "worker_completion_summary": "WCP-586 completed on green exact Worker HEAD 1e88bc6d5ea1cdb64b825b6ba117c0fd52f2044f with PR #381 open and ready for Trusted review. Five allowlisted paths extract the existing confirmed standings query and expose bounded public competition rankings through the Page Builder. Exact-head CI #965 / 36475322011 passed: PHPStan and Symfony checks; PHPUnit 1,384 tests / 9,127 assertions / zero failures or errors; PostgreSQL 18 with 57 migrations / 878 SQL queries."
     },
     {
       "priority": 587,
