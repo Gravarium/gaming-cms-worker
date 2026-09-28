@@ -10,16 +10,16 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-28T21:22:14.450Z",
+  "published_at": "2026-09-28T21:30:59.803Z",
   "summary": {
-    "total_remaining_worker_tasks": 175,
+    "total_remaining_worker_tasks": 176,
     "completed_worker_prs_awaiting_trusted_review": 314,
     "recovery_tasks": 0,
-    "unclaimed": 5,
-    "immediately_claimable": 0,
-    "next_required_action": "WCP-592 PR #386 is ready for Trusted review at green exact HEAD 4d25cb43fb6849a9625e88f7f91797f5dc92ffc0; its claim remains locked. Re-evaluate the unclaimed dependency-blocked FCPs and derive the next independent module completion package.",
+    "unclaimed": 6,
+    "immediately_claimable": 1,
+    "next_required_action": "Immediately recheck the WCP-593 claim and feature branches against this exact pool revision, then reserve both from proposal base main@a19ed4bcf1203bba69de472613805d5fcdc978e6 and implement the subscription link in the upcoming-releases widget.",
     "composition_preparable": 0,
-    "immediately_actionable": 33,
+    "immediately_actionable": 34,
     "must_continue": true
   },
   "rules": {
@@ -53932,6 +53932,86 @@
           "dependency-container validation",
           "AssetMapper compilation",
           "Doctrine mapping validation"
+        ]
+      }
+    },
+    {
+      "priority": 593,
+      "package_id": "WCP-593",
+      "title": "Expose the release-calendar subscription from the upcoming-releases widget",
+      "risk": "low",
+      "execution_state": "unclaimed",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-593-game-release-widget-calendar-subscription-g1",
+      "suggested_branch": "feature/wcp-593-game-release-widget-calendar-subscription-g1",
+      "base_branch": "main",
+      "base_sha": "a19ed4bcf1203bba69de472613805d5fcdc978e6",
+      "objective": "Complete the game-release reader journey from the Page Builder's upcoming-releases widget. The widget lists future releases and links to the HTML release overview, while the existing trusted-integrated iCalendar feed at app_game_catalogue_release_calendar_feed has no subscription entry point from the widget. Add a clear, accessible subscription link that remains available for an empty release list; retain the widget's existing Gaming-module availability and the feed's existing fail-closed Gaming gate.",
+      "allowed_paths": [
+        "templates/widget/upcoming_game_releases.html.twig",
+        "tests/Widget/UpcomingGameReleaseWidgetProviderTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/",
+        "src/",
+        "templates/game_catalogue/",
+        "templates/gaming/"
+      ],
+      "deliverables": [
+        "The Page Builder upcoming-game-releases widget offers a labeled iCalendar subscription link to the existing public release calendar feed.",
+        "The subscription link renders when the widget has releases and in its useful empty state.",
+        "Focused widget rendering coverage proves the generated URL and label, while existing tests continue to cover the feed's Gaming gate and widget module availability.",
+        "No feed generation, release query, data model, module gate, schema, or route behavior changes."
+      ],
+      "tests": [
+        "Targeted UpcomingGameReleaseWidgetProviderTest renders populated and empty widget states and verifies the calendar subscription link.",
+        "Existing PublicGameReleaseCalendarFeedTest and module-availability coverage remain green.",
+        "Full exact-head Worker CI, including PHPStan, Twig/container checks and PostgreSQL 18 migration-chain validation."
+      ],
+      "completion_report": [
+        "Exact sanitized main base SHA, final Worker HEAD, changed paths and Worker PR URL/state.",
+        "Evidence that widget visitors can subscribe to the existing iCalendar release feed, including when no releases are listed.",
+        "Exact-head targeted tests, PHPStan, PHPUnit and PostgreSQL 18 results.",
+        "Any remaining game-release feed discovery gaps."
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-Trusted-review-and-exact-head-CI",
+        "preserve-existing-Gaming-module-availability-and-feed-visibility-gate",
+        "no-schema-or-migration-change",
+        "no-private-runtime-or-sensitive-data",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "no-direct-Trusted-integration-or-deployment"
+      ],
+      "proposal_kind": "worker_only",
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "a19ed4bcf1203bba69de472613805d5fcdc978e6",
+      "proposal_dependency_evidence": [],
+      "published_at": "2026-09-28T21:30:59.803Z",
+      "collision_check": {
+        "compared_against": "Fresh continuous/work-pool-v4 blob a3587b1e5bd2d8954bff1f3670ba661fe4d2339a; sanitized Worker main a19ed4bcf1203bba69de472613805d5fcdc978e6; all active and claim-locked allowed paths; WCP-593 branch/PR search; existing template/test on main.",
+        "result": "No allowed-path overlap with any active or claim-locked task. The candidate template and provider test already exist. WCP-518's matching template allowance belongs to an explicitly Trusted-integrated task whose claim is released. FCP-072 is unclaimed and dependency-blocked by FCP-035; its broad templates/ allowance overlaps the widget template as a nonblocking future hit.",
+        "paths": [
+          "templates/widget/upcoming_game_releases.html.twig",
+          "tests/Widget/UpcomingGameReleaseWidgetProviderTest.php"
+        ],
+        "observed_nonblocking_path_hits": [
+          "WCP-518 touched templates/widget/upcoming_game_releases.html.twig and is Trusted-integrated with released claim; existing code is on main.",
+          "FCP-072 is unclaimed and dependency-blocked by FCP-035; its broad templates/ allowance includes templates/widget/upcoming_game_releases.html.twig. Recheck before any later claim."
         ]
       }
     }
