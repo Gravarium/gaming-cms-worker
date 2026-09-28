@@ -48090,7 +48090,7 @@
       "package_id": "WCP-561",
       "title": "Paginate public video playlist pages",
       "risk": "medium",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -48181,26 +48181,26 @@
       },
       "published_at": "2026-09-27T17:37:23.962Z",
       "claimed_on": "2026-09-27T17:37:23.962Z",
-      "claim_state": "active",
+      "claim_state": "locked_until_trusted_resolution",
       "active_base_branch": "main",
       "active_base_sha": "7b2ca79405fc12d34bce1386157e929e4668f31a",
-      "active_head": "ce903250fe35710e11b5cf07f6c15ea7abe1d453",
+      "active_head": "afddb29025e33b1e550c3dc2c03eb31ff7ae9e8a",
       "branch_heads": {
         "claim_branch": "7b2ca79405fc12d34bce1386157e929e4668f31a",
-        "feature_branch": "ce903250fe35710e11b5cf07f6c15ea7abe1d453"
+        "feature_branch": "afddb29025e33b1e550c3dc2c03eb31ff7ae9e8a"
       },
-      "last_observed_head": "ce903250fe35710e11b5cf07f6c15ea7abe1d453",
-      "last_checkpoint_at": "2026-09-27T17:43:19.208Z",
-      "last_verified_push_at": "2026-09-27T17:43:19.208Z",
+      "last_observed_head": "afddb29025e33b1e550c3dc2c03eb31ff7ae9e8a",
+      "last_checkpoint_at": "2026-09-28T19:31:53.586Z",
+      "last_verified_push_at": "2026-09-28T19:31:53.586Z",
       "checkpoint_paths": [
         "src/Controller/VideoPlaylistController.php",
         "templates/video_playlist/show.html.twig",
         "tests/Controller/VideoPlaylistPaginationTest.php"
       ],
       "resume_branch": "feature/wcp-561-video-playlist-pagination-g1",
-      "next_action": "Monitor exact-head Worker CI run #905 / 36337964894 on ce903250fe35710e11b5cf07f6c15ea7abe1d453; diagnose any failure, fix only allowed paths on this branch, then rerun full CI.",
+      "next_action": "Keep PR #355 open, ready for Trusted review, and this claim locked until Trusted explicitly resolves it. Exact-head Worker CI #906 / 36338161546 passed on afddb29025e33b1e550c3dc2c03eb31ff7ae9e8a. Do not merge or deploy.",
       "worker_pr": 355,
-      "worker_pr_state": "draft",
+      "worker_pr_state": "ready_for_review",
       "worker_pr_changed_paths": [
         "src/Controller/VideoPlaylistController.php",
         "templates/video_playlist/show.html.twig",
@@ -48209,23 +48209,73 @@
       "worker_pr_base_branch": "main",
       "worker_pr_base_sha": "7b2ca79405fc12d34bce1386157e929e4668f31a",
       "pr_state": "open",
-      "draft_pr": true,
-      "ci_result": "in_progress",
-      "last_ci_result": "in_progress",
+      "draft_pr": false,
+      "ci_result": "success",
+      "last_ci_result": "success",
       "ci_attempts": [
         {
           "run_id": 36337964894,
           "run_number": 905,
           "head": "ce903250fe35710e11b5cf07f6c15ea7abe1d453",
           "base": "7b2ca79405fc12d34bce1386157e929e4668f31a",
-          "result": "in_progress",
-          "conclusion": null
+          "result": "failure",
+          "conclusion": "failure",
+          "diagnosis": "Malformed ?page=not-a-number raised HTTP 400 through Request::query->getInt; fixed page parsing to fall back to page 1."
+        },
+        {
+          "run_id": 36338161546,
+          "run_number": 906,
+          "head": "afddb29025e33b1e550c3dc2c03eb31ff7ae9e8a",
+          "base": "7b2ca79405fc12d34bce1386157e929e4668f31a",
+          "result": "success",
+          "validation_pr": 355,
+          "conclusion": "success"
         }
       ],
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/355",
-      "worker_pr_head": "ce903250fe35710e11b5cf07f6c15ea7abe1d453",
-      "ci_run_id": 36337964894,
-      "last_ci_run_id": 36337964894
+      "worker_pr_head": "afddb29025e33b1e550c3dc2c03eb31ff7ae9e8a",
+      "ci_run_id": 36338161546,
+      "last_ci_run_id": 36338161546,
+      "final_head": "afddb29025e33b1e550c3dc2c03eb31ff7ae9e8a",
+      "completion_head": "afddb29025e33b1e550c3dc2c03eb31ff7ae9e8a",
+      "completed_at": "2026-09-28T19:31:53.586Z",
+      "last_completed_at": "2026-09-28T19:31:53.586Z",
+      "completion_evidence": {
+        "proposal_base": "7b2ca79405fc12d34bce1386157e929e4668f31a",
+        "current_worker_main_base": "7b2ca79405fc12d34bce1386157e929e4668f31a",
+        "final_head": "afddb29025e33b1e550c3dc2c03eb31ff7ae9e8a",
+        "worker_pr": 355,
+        "worker_pr_state": "open_ready_for_review_unmerged",
+        "exact_head_ci": {
+          "run_number": 906,
+          "run_id": 36338161546,
+          "result": "success",
+          "php_symfony_job": "success",
+          "postgresql_18_migrations": "success"
+        },
+        "phpunit": {
+          "tests": 738,
+          "assertions": 4651,
+          "deprecations": 1,
+          "notices": 3
+        },
+        "changed_paths": [
+          "src/Controller/VideoPlaylistController.php",
+          "templates/video_playlist/show.html.twig",
+          "tests/Controller/VideoPlaylistPaginationTest.php"
+        ],
+        "behavior": [
+          "At most 24 enabled videos published at or before the current time per playlist page, reusing VideoLibraryBrowser visibility and stable featured/publication-date/ID order.",
+          "Visible published-video total with accessible previous/next navigation retaining the playlist slug.",
+          "Malformed, non-positive, array and other invalid page values fall back to page 1; a page beyond the last non-empty result is not found, while an empty playlist retains its page-1 explanation.",
+          "Video-module route gate remains in force; no schema, entity, migration, shared-library, or policy changes."
+        ],
+        "limitations": [
+          "Worker PR output is untrusted until Trusted review and integration.",
+          "Trusted must run full CI on its own integration commit; no Trusted integration or deployment is claimed."
+        ]
+      },
+      "worker_completion_summary": "Exact-head Worker CI #906 / 36338161546 passed on afddb29025e33b1e550c3dc2c03eb31ff7ae9e8a: 738 PHPUnit tests, 4,651 assertions, 1 deprecation and 3 notices; PHP/Symfony validation and the PostgreSQL 18 migration chain passed. PR #355 is open, ready for review, unmerged, and based on main@7b2ca79405fc12d34bce1386157e929e4668f31a. Playlist pages now use the existing 24-item visible-video boundary, stable ordering, visible totals, slug-preserving accessible navigation, and defined malformed/empty/out-of-range behavior."
     },
     {
       "priority": 562,
