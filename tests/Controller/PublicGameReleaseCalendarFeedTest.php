@@ -40,32 +40,32 @@ final class PublicGameReleaseCalendarFeedTest extends WebTestCase
         $client->disableReboot();
         $entityManager = $this->entityManager($client);
         $previousGamingState = $this->setGamingEnabled($entityManager, true);
-        $suffix = bin2hex(random_bytes(5));
-        $now = new \DateTimeImmutable('now', new \DateTimeZone('UTC'));
-        $visible = $this->createRelease(
-            $entityManager,
-            "Finale, R&D;\r\nBEGIN:VEVENT ".str_repeat('Ö', 25),
-            'feed-visible-'.$suffix,
-            "EU,\r\nX-ATTACK: injected",
-            $now->modify('+2 days'),
-            'announced',
-        );
-        $delayed = $this->createRelease(
-            $entityManager,
-            'Delayed Release '.$suffix,
-            'feed-delayed-'.$suffix,
-            'NA',
-            $now->modify('+3 days'),
-            'delayed',
-        );
-        $this->createRelease($entityManager, 'Cancelled Canary '.$suffix, 'feed-cancelled-'.$suffix, 'EU', $now->modify('+4 days'), 'cancelled');
-        $this->createRelease($entityManager, 'Released Canary '.$suffix, 'feed-released-'.$suffix, 'EU', $now->modify('+4 days'), 'released');
-        $this->createRelease($entityManager, 'Past Canary '.$suffix, 'feed-past-'.$suffix, 'EU', $now->modify('-2 days'), 'announced');
-        $this->createRelease($entityManager, 'Disabled Game Canary '.$suffix, 'feed-disabled-game-'.$suffix, 'EU', $now->modify('+4 days'), 'announced', false);
-        $this->createRelease($entityManager, 'Disabled Entry Canary '.$suffix, 'feed-disabled-entry-'.$suffix, 'EU', $now->modify('+4 days'), 'announced', true, false);
-        $this->createRelease($entityManager, 'Outside Window Canary '.$suffix, 'feed-outside-'.$suffix, 'EU', $now->modify('+20 months'), 'announced');
-
         try {
+            $suffix = bin2hex(random_bytes(5));
+            $now = new \DateTimeImmutable('now', new \DateTimeZone('UTC'));
+            $visible = $this->createRelease(
+                $entityManager,
+                "Finale, R&D;\r\nBEGIN:VEVENT ".str_repeat('Ö', 25),
+                'feed-visible-'.$suffix,
+                "EU,\r\nX-ATTACK: injected",
+                $now->modify('+2 days'),
+                'announced',
+            );
+            $delayed = $this->createRelease(
+                $entityManager,
+                'Delayed Release '.$suffix,
+                'feed-delayed-'.$suffix,
+                'NA',
+                $now->modify('+3 days'),
+                'delayed',
+            );
+            $this->createRelease($entityManager, 'Cancelled Canary '.$suffix, 'feed-cancelled-'.$suffix, 'EU', $now->modify('+4 days'), 'cancelled');
+            $this->createRelease($entityManager, 'Released Canary '.$suffix, 'feed-released-'.$suffix, 'EU', $now->modify('+4 days'), 'released');
+            $this->createRelease($entityManager, 'Past Canary '.$suffix, 'feed-past-'.$suffix, 'EU', $now->modify('-2 days'), 'announced');
+            $this->createRelease($entityManager, 'Disabled Game Canary '.$suffix, 'feed-disabled-game-'.$suffix, 'EU', $now->modify('+4 days'), 'announced', false);
+            $this->createRelease($entityManager, 'Disabled Entry Canary '.$suffix, 'feed-disabled-entry-'.$suffix, 'EU', $now->modify('+4 days'), 'announced', true, false);
+            $this->createRelease($entityManager, 'Outside Window Canary '.$suffix, 'feed-outside-'.$suffix, 'EU', $now->modify('+20 months'), 'announced');
+
             $client->request('GET', '/games/releases/calendar.ics');
 
             self::assertResponseIsSuccessful();
