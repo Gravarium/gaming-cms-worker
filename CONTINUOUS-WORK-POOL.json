@@ -10,16 +10,16 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-28T19:46:12.986Z",
+  "published_at": "2026-09-28T19:47:53.776Z",
   "summary": {
     "total_remaining_worker_tasks": 175,
     "completed_worker_prs_awaiting_trusted_review": 314,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-582 has a complete dashboard/widget/withdrawal checkpoint at 33a4773fdc466f23a7daa12dd3db66546dfd56a1; open the draft proposal PR and validate the exact HEAD with full Worker CI.",
+    "next_required_action": "WCP-587 is claimed on exact Worker main base c3c7b14066d9f8b32925eb4381e30b6794f21027. Complete the Downloads version metadata upload and public release-notes flow within its eight allowed paths.",
     "composition_preparable": 0,
-    "immediately_actionable": 30,
+    "immediately_actionable": 31,
     "must_continue": true
   },
   "rules": {
@@ -51716,6 +51716,146 @@
       "ci_run_id": 36474342734,
       "ci_validation_pr": 381,
       "last_ci_result": "in_progress"
+    },
+    {
+      "priority": 587,
+      "package_id": "WCP-587",
+      "title": "Complete download version metadata entry and public release notes",
+      "risk": "medium",
+      "execution_state": "worker_in_progress",
+      "dependencies": [
+        "FCP-063"
+      ],
+      "dependencies_integrated_at_publication": [
+        "FCP-063"
+      ],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-587-download-release-metadata-g1",
+      "suggested_branch": "feature/wcp-587-download-release-metadata-g1",
+      "base_branch": "main",
+      "base_sha": "c3c7b14066d9f8b32925eb4381e30b6794f21027",
+      "objective": "Complete the existing Downloads release-metadata workflow. The current admin upload accepts only a version and file although DownloadVersion already stores compatibility and changelog; the public package detail shows compatibility but omits release notes. Let a permitted administrator enter compatibility targets and a changelog while uploading a version, give clear validation/storage errors, persist those existing fields, and render them on the authorized public version detail. Keep private file storage, malware scan gating, visibility authorization, CSRF and Downloads module availability unchanged; do not add schema changes.",
+      "allowed_paths": [
+        "config/packages/download_release_metadata_templates.yaml",
+        "src/Downloads/Templates/admin/upload.html.twig",
+        "src/Downloads/Templates/download/show.html.twig",
+        "src/Form/DownloadCatalogue/DownloadVersionInput.php",
+        "src/Form/DownloadCatalogue/DownloadVersionType.php",
+        "src/Controller/AdminDownload/AdminDownloadController.php",
+        "src/Controller/Download/DownloadController.php",
+        "tests/Downloads/DownloadControllerTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "CONTINUOUS-WORKER.md",
+        "CONTINUOUS-WORK-POOL.json",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "src/Entity/",
+        "src/Repository/",
+        "templates/",
+        "src/Downloads/DownloadPrivateStorage.php",
+        "src/Downloads/DownloadScanService.php",
+        "src/Downloads/DownloadAuthorization.php",
+        "src/Downloads/DownloadModuleAvailability.php"
+      ],
+      "deliverables": [
+        "The authorized download-version upload form captures version, file, compatibility targets (one per line), and optional release notes with field-level validation.",
+        "Successful uploads preserve the current private staging/database/finalize and malware-scan flow while storing the compatibility and changelog values in the existing DownloadVersion columns.",
+        "The public package detail displays each version's compatibility and escaped release notes only after the existing package visibility and Downloads module gates pass.",
+        "No entity, schema, migration, scanner, authorization, CSRF, module policy, shared template, or storage-boundary changes."
+      ],
+      "tests": [
+        "Functional upload test submits a safe archive with compatibility targets and release notes, then confirms the version metadata is persisted and visible in the authorized package detail.",
+        "Validation and storage errors render understandable form messages without persisting a version; existing invalid-CSRF and executable-file rejection coverage remains green.",
+        "Public visibility authorization and Downloads-module-disabled behavior remain covered; complete Worker CI on exact final HEAD."
+      ],
+      "completion_report": [
+        "Exact current Worker main base, final feature HEAD, allowed changed paths and PR state.",
+        "Admin upload metadata fields, parsing and validation; public display behavior and authorization boundary.",
+        "Focused tests plus exact-head full Worker CI run and PHPUnit totals.",
+        "Remaining limitations; confirm no schema, migrations or download-storage/scanner changes."
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-Trusted-review-and-exact-head-CI",
+        "preserve-download-private-storage-staging-transaction-and-malware-scan",
+        "preserve-download-visibility-authorization-CSRF-and-module-gating",
+        "no-executable-public-uploads",
+        "no-schema-or-migration-change",
+        "no-edit-to-active-or-claim-locked-paths",
+        "no-direct-Trusted-integration-or-deployment"
+      ],
+      "proposal_kind": "worker_only",
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "c3c7b14066d9f8b32925eb4381e30b6794f21027",
+      "proposal_dependency_evidence": [
+        {
+          "id": "FCP-063",
+          "trusted_state": "trusted_integrated",
+          "worker_pr": 16,
+          "evidence": "FCP-063 is Trusted-integrated and its Downloads package/version, visibility and delivery workflow is present on the current sanitized Worker main base. This proposal completes the already modeled compatibility and changelog fields without changing its schema or storage contract."
+        }
+      ],
+      "collision_check": {
+        "compared_against": "Fresh continuous/work-pool-v4 @ da209a9d4cca95ca7ca1e522b22026ac6fe39335; Worker main @ c3c7b14066d9f8b32925eb4381e30b6794f21027; all active and claim-locked paths immediately before claim; WCP-587 claim and feature refs and PR search.",
+        "result": "No allowed-path overlap with any active or claim-locked package. The broad templates/ path reserved by unclaimed, dependency-blocked FCP-072 is avoided by placing the two new views under src/Downloads/Templates and registering that feature-local path in a dedicated config file. FCP-063 is Trusted-integrated with its claim released; its Downloads entities and storage services remain unchanged. The WCP-586 competition standings widget has disjoint controller/widget paths.",
+        "paths": [
+          "config/packages/download_release_metadata_templates.yaml",
+          "src/Downloads/Templates/admin/upload.html.twig",
+          "src/Downloads/Templates/download/show.html.twig",
+          "src/Form/DownloadCatalogue/DownloadVersionInput.php",
+          "src/Form/DownloadCatalogue/DownloadVersionType.php",
+          "src/Controller/AdminDownload/AdminDownloadController.php",
+          "src/Controller/Download/DownloadController.php",
+          "tests/Downloads/DownloadControllerTest.php"
+        ],
+        "observed_nonblocking_path_hits": [
+          {
+            "id": "FCP-072",
+            "state": "unclaimed",
+            "excluded": [
+              "templates/"
+            ],
+            "note": "Dependency-blocked and unclaimed; the new feature avoids the shared templates/ tree."
+          },
+          {
+            "id": "FCP-063",
+            "state": "trusted_integrated",
+            "excluded": [
+              "src/Entity/Download/",
+              "src/Downloads/DownloadPrivateStorage.php"
+            ],
+            "note": "Integrated predecessor; existing version columns and private storage are reused without modification."
+          }
+        ]
+      },
+      "published_at": "2026-09-28T19:47:53.776Z",
+      "claimed_on": "2026-09-28T19:47:53.776Z",
+      "claim_state": "active",
+      "active_base_branch": "main",
+      "active_base_sha": "c3c7b14066d9f8b32925eb4381e30b6794f21027",
+      "active_head": "c3c7b14066d9f8b32925eb4381e30b6794f21027",
+      "branch_heads": {
+        "claim_branch": "c3c7b14066d9f8b32925eb4381e30b6794f21027",
+        "feature_branch": "c3c7b14066d9f8b32925eb4381e30b6794f21027"
+      },
+      "last_observed_head": "c3c7b14066d9f8b32925eb4381e30b6794f21027",
+      "last_checkpoint_at": "2026-09-28T19:47:53.776Z",
+      "last_verified_push_at": "2026-09-28T19:47:53.776Z",
+      "checkpoint_paths": [],
+      "resume_branch": "feature/wcp-587-download-release-metadata-g1",
+      "next_action": "Implement the admin upload metadata form and public release-note view in only the eight allowed paths; preserve CSRF, package authorization, private staging/finalize and scan behavior, then run full Worker CI."
     }
   ],
   "recovery_queue": [],
