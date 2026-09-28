@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-28T20:43:59.152Z",
+  "published_at": "2026-09-28T20:45:04.013Z",
   "summary": {
     "total_remaining_worker_tasks": 175,
     "completed_worker_prs_awaiting_trusted_review": 316,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-590 CI #978 found a test-fixture EntityManager lifecycle error; repair within the test path and rerun complete exact-head Worker CI.",
+    "next_required_action": "WCP-590 corrected head 2ba433c7d53ccd1408818eaa50ba62fe975b8de8 is queued for full Worker CI run #980 after fixing the fixture lifecycle error from #978.",
     "composition_preparable": 0,
     "immediately_actionable": 32,
     "must_continue": true
@@ -53444,20 +53444,20 @@
       "claimed_on": "2026-09-28T20:31:54.978Z",
       "active_base_branch": "main",
       "active_base_sha": "b018c5ed9975c2ab3f606f822bf285036fe6983e",
-      "active_head": "3c3507f7c5c0f191d3a76311cb39d6f8ec7f227c",
+      "active_head": "2ba433c7d53ccd1408818eaa50ba62fe975b8de8",
       "resume_branch": "feature/wcp-590-content-discussion-entry-navigation-g1",
       "branch_heads": {
         "claim_branch": "b018c5ed9975c2ab3f606f822bf285036fe6983e",
-        "feature_branch": "3c3507f7c5c0f191d3a76311cb39d6f8ec7f227c"
+        "feature_branch": "2ba433c7d53ccd1408818eaa50ba62fe975b8de8"
       },
-      "last_observed_head": "3c3507f7c5c0f191d3a76311cb39d6f8ec7f227c",
-      "last_checkpoint_at": "2026-09-28T20:43:59.152Z",
+      "last_observed_head": "2ba433c7d53ccd1408818eaa50ba62fe975b8de8",
+      "last_checkpoint_at": "2026-09-28T20:45:04.013Z",
       "checkpoint_paths": [
         "templates/content/show.html.twig",
         "tests/Controller/ContentDiscussionEntryNavigationTest.php"
       ],
-      "next_action": "Create a new test-only commit with a fresh persisted author per requested content page, then rerun full exact-head Worker CI.",
-      "last_verified_push_at": "2026-09-28T20:37:35.070Z",
+      "next_action": "Inspect exact-head Worker CI #980 on 2ba433c7d53ccd1408818eaa50ba62fe975b8de8 and repair any new failures only within WCP-590 paths.",
+      "last_verified_push_at": "2026-09-28T20:45:04.013Z",
       "worker_pr": 385,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/385",
       "worker_pr_state": "draft",
@@ -53469,10 +53469,10 @@
         "templates/content/show.html.twig",
         "tests/Controller/ContentDiscussionEntryNavigationTest.php"
       ],
-      "ci_result": "failure",
-      "last_ci_result": "failure",
-      "ci_run_id": 36480707393,
-      "last_ci_run_id": 36480707393,
+      "ci_result": "in_progress",
+      "last_ci_result": "in_progress",
+      "ci_run_id": 36481319013,
+      "last_ci_run_id": 36481319013,
       "ci_validation_pr": 385,
       "ci_attempts": [
         {
@@ -53489,6 +53489,21 @@
             "postgres_18": "success"
           },
           "summary": "PHP/Symfony test suite reported one error in ContentDiscussionEntryNavigationTest because the test reused an author entity after a KernelBrowser request rebooted the EntityManager; PHPStan, Twig lint and PostgreSQL 18 passed."
+        },
+        {
+          "run_id": 36481319013,
+          "run_number": 980,
+          "head": "2ba433c7d53ccd1408818eaa50ba62fe975b8de8",
+          "base": "bb6ba0fd3dd9025be4f60c43a644117f96f71578",
+          "result": "in_progress",
+          "validation_pr": 385,
+          "status": "queued",
+          "conclusion": null,
+          "jobs": {
+            "php_symfony": "queued",
+            "postgres_18": "queued"
+          },
+          "summary": "Corrected exact head after CI #978 exposed a test fixture reusing a detached author; full exact-head CI #980 is queued."
         }
       ]
     }
