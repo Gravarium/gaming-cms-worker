@@ -52583,17 +52583,26 @@
       "claim_state": "active",
       "active_base_branch": "main",
       "active_base_sha": "c3c7b14066d9f8b32925eb4381e30b6794f21027",
-      "active_head": "c3c7b14066d9f8b32925eb4381e30b6794f21027",
+      "active_head": "0304a7a2b45078be84925ca17fcfd28e708a1447",
       "branch_heads": {
         "claim_branch": "c3c7b14066d9f8b32925eb4381e30b6794f21027",
-        "feature_branch": "c3c7b14066d9f8b32925eb4381e30b6794f21027"
+        "feature_branch": "0304a7a2b45078be84925ca17fcfd28e708a1447"
       },
-      "last_observed_head": "c3c7b14066d9f8b32925eb4381e30b6794f21027",
-      "last_checkpoint_at": "2026-09-28T19:47:53.776Z",
-      "last_verified_push_at": "2026-09-28T19:47:53.776Z",
-      "checkpoint_paths": [],
+      "last_observed_head": "0304a7a2b45078be84925ca17fcfd28e708a1447",
+      "last_checkpoint_at": "2026-09-28T19:59:40.868Z",
+      "last_verified_push_at": "2026-09-28T19:59:40.868Z",
+      "checkpoint_paths": [
+        "config/packages/download_release_metadata_templates.yaml",
+        "src/Downloads/Templates/admin/upload.html.twig",
+        "src/Downloads/Templates/download/show.html.twig",
+        "src/Form/DownloadCatalogue/DownloadVersionInput.php",
+        "src/Form/DownloadCatalogue/DownloadVersionType.php",
+        "src/Controller/AdminDownload/AdminDownloadController.php",
+        "src/Controller/Download/DownloadController.php",
+        "tests/Downloads/DownloadControllerTest.php"
+      ],
       "resume_branch": "feature/wcp-587-download-release-metadata-g1",
-      "next_action": "Implement the admin upload metadata form and public release-note view in only the eight allowed paths; preserve CSRF, package authorization, private staging/finalize and scan behavior, then run full Worker CI."
+      "next_action": "Open a draft PR against Worker main to run exact-head Worker CI, then fix any failing checks only within the eight allowed paths."
     },
     {
       "priority": 588,
