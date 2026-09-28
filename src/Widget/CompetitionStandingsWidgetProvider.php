@@ -9,6 +9,8 @@ use App\Entity\Competition\CompetitionParticipant;
 use App\Repository\PublicCompetitionBracketRepository;
 use App\Widget\CompetitionStandings\CompetitionStandingsQuery;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Twig\Environment;
+use Twig\Loader\FilesystemLoader;
 
 final readonly class CompetitionStandingsWidgetProvider implements WidgetProvider
 {
@@ -21,7 +23,14 @@ final readonly class CompetitionStandingsWidgetProvider implements WidgetProvide
         private PublicCompetitionBracketRepository $competitions,
         private CompetitionStandingsQuery $standings,
         private RequestStack $requests,
+        Environment $twig,
     ) {
+        $loader = $twig->getLoader();
+        if (!$loader instanceof FilesystemLoader) {
+            throw new \\LogicException('Competition standings widget requires a filesystem Twig loader.');
+        }
+
+        $loader->addPath(__DIR__.'/CompetitionStandings/Templates');
     }
 
     public function definitions(): array
