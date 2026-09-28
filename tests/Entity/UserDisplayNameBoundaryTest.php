@@ -5,6 +5,9 @@ declare(strict_types=1);
 namespace App\Tests\Entity;
 
 use App\Entity\User;
+use Doctrine\ORM\Mapping\HasLifecycleCallbacks;
+use Doctrine\ORM\Mapping\PrePersist;
+use Doctrine\ORM\Mapping\PreUpdate;
 use PHPUnit\Framework\TestCase;
 
 final class UserDisplayNameBoundaryTest extends TestCase
@@ -29,30 +32,42 @@ final class UserDisplayNameBoundaryTest extends TestCase
         self::assertSame('', $user->setDisplayName('   ')->getDisplayName());
     }
 
-    public function testRejectedDisplayNamesDoNotReplaceTheStoredValue(): void
+    public function testOverlongNamesRemainAvailableForValidationButAreRejectedBeforePersistence(): void
     {
-        $user = (new User())->setDisplayName('Player');
+        self::assertCount(1, (new \ReflectionClass(User::class))->getAttributes(HasLifecycleCallbacks::class));
+        $boundary = new \ReflectionMethod(User::class, 'assertDisplayNameColumnBoundary');
+        self::assertCount(1, $boundary->getAttributes(PrePersist::class));
+        self::assertCount(1, $boundary->getAttributes(PreUpdate::class));
 
-        foreach ([str_repeat('P', 81), str_repeat('é', 81), str_repeat('🎮', 81), "\xFFname", "\0name", "name\0"] as $candidate) {
-            $this->assertRejected(static function () use ($user, $candidate): void {
-                $user->setDisplayName($candidate);
-            });
+        $user = new User();
+        foreach ([str_repeat('P', 81), str_repeat('é', 81), str_repeat('🎮', 81)] as $candidate) {
+            $user->setDisplayName($candidate);
+            self::assertSame($candidate, $user->getDisplayName());
 
-            self::assertSame('Player', $user->getDisplayName());
+            try {
+                $user->assertDisplayNameColumnBoundary();
+                self::fail('An out-of-column display name reached persistence.');
+            } catch (\InvalidArgumentException) {
+                self::addToAssertionCount(1);
+            }
+
+            self::assertSame($candidate, $user->getDisplayName());
         }
     }
 
-    /** @param \Closure(): mixed $operation */
-    private function assertRejected(\Closure $operation): void
+    public function testMalformedUtf8AndNulAreRejectedWithoutReplacingTheStoredValue(): void
     {
-        try {
-            $operation();
-        } catch (\InvalidArgumentException) {
-            self::addToAssertionCount(1);
+        $user = (new User())->setDisplayName('Player');
 
-            return;
+        foreach (["\xFFname", "\0name", "name\0"] as $candidate) {
+            try {
+                $user->setDisplayName($candidate);
+                self::fail('Malformed UTF-8 or a NUL byte was accepted.');
+            } catch (\InvalidArgumentException) {
+                self::addToAssertionCount(1);
+            }
+
+            self::assertSame('Player', $user->getDisplayName());
         }
-
-        self::fail('An out-of-bound display name must be rejected.');
     }
 }

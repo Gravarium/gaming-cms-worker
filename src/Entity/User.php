@@ -18,6 +18,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: 'cms_user')]
 #[ORM\UniqueConstraint(name: 'uniq_cms_user_email', columns: ['email'])]
+#[ORM\HasLifecycleCallbacks]
 #[UniqueEntity(fields: ['email'], message: 'Diese E-Mail-Adresse wird bereits verwendet.')]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
@@ -190,9 +191,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             throw new \InvalidArgumentException('Display name is invalid or exceeds the allowed length.');
         }
 
-        $normalizedDisplayName = trim($displayName);
-        $this->assertDisplayNameColumnBoundary($normalizedDisplayName);
-        $this->displayName = $normalizedDisplayName;
+        $this->displayName = trim($displayName);
 
         return $this;
     }
@@ -220,9 +219,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function markSeen(): self { $this->lastSeenAt = new \DateTimeImmutable(); return $this; }
     public function getCreatedAt(): \DateTimeImmutable { return $this->createdAt; }
 
-    private function assertDisplayNameColumnBoundary(string $displayName): void
+    /** @internal Doctrine lifecycle callback. */
+    #[ORM\PrePersist]
+    #[ORM\PreUpdate]
+    public function assertDisplayNameColumnBoundary(): void
     {
-        if (strlen($displayName) > self::MAX_DISPLAY_NAME_BYTES || mb_strlen($displayName, 'UTF-8') > self::MAX_DISPLAY_NAME_LENGTH) {
+        if (strlen($this->displayName) > self::MAX_DISPLAY_NAME_BYTES || mb_strlen($this->displayName, 'UTF-8') > self::MAX_DISPLAY_NAME_LENGTH) {
             throw new \InvalidArgumentException('Display name is invalid or exceeds the allowed length.');
         }
     }

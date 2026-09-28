@@ -30,10 +30,8 @@ final class UserDisplayNameValidationTest extends TestCase
 
         self::assertCount(0, $validator->validateProperty($user, 'displayName'));
 
-        $invalidUser = (new User())->setDisplayName('Player');
-        // Check the Symfony length constraint independently from the entity setter guard.
-        (new \ReflectionProperty(User::class, 'displayName'))->setValue($invalidUser, str_repeat('é', 81));
-        $violations = $validator->validateProperty($invalidUser, 'displayName');
+        $user->setDisplayName(str_repeat('é', 81));
+        $violations = $validator->validateProperty($user, 'displayName');
 
         self::assertCount(1, $violations);
         self::assertSame('displayName', $violations[0]->getPropertyPath());
