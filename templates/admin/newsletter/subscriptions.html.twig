@@ -1,0 +1,62 @@
+{% extends 'base.html.twig' %}
+{% block title %}Abonnenten | Gaming CMS{% endblock %}
+{% block body %}
+<header class="topbar">
+    <a class="brand" href="{{ path('app_admin_notification_newsletter_admin_index') }}">Newsletter</a>
+    <a class="button-link" href="{{ path('app_admin_notification_newsletter_admin_new') }}">Neuer Newsletter</a>
+</header>
+<main class="dashboard">
+    <p class="eyebrow">Benachrichtigungen · Newsletter</p>
+    <h1>Abonnenten</h1>
+    <form method="get" action="{{ path('app_admin_notification_newsletter_admin_subscriptions') }}" class="content-form">
+        <label for="subscriber-email">E-Mail suchen</label>
+        <input id="subscriber-email" type="search" name="email" value="{{ directory.email }}" maxlength="180" autocomplete="off">
+        <label for="subscriber-status">Status</label>
+        <select id="subscriber-status" name="status">
+            <option value="" {% if directory.status == '' %}selected{% endif %}>Alle Status</option>
+            {% for status, label in statusLabels %}
+                <option value="{{ status }}" {% if directory.status == status %}selected{% endif %}>{{ label }}</option>
+            {% endfor %}
+        </select>
+        <button>Filtern</button>
+        {% if directory.email != '' or directory.status != '' %}
+            <a href="{{ path('app_admin_notification_newsletter_admin_subscriptions') }}">Filter zurücksetzen</a>
+        {% endif %}
+    </form>
+
+    <p class="muted" role="status">{{ directory.total }} Treffer</p>
+    <div class="table-wrap">
+        <table>
+            <thead>
+            <tr><th>E-Mail</th><th>Status</th><th>Einwilligung</th><th>Angelegt</th></tr>
+            </thead>
+            <tbody>
+            {% for subscription in directory.subscriptions %}
+                <tr>
+                    <td>{{ subscription.email }}</td>
+                    <td>{{ statusLabels[subscription.status] ?? subscription.status }}</td>
+                    <td>{{ subscription.confirmedAt ? subscription.confirmedAt|date('d.m.Y H:i') : 'Noch nicht bestätigt' }}</td>
+                    <td>{{ subscription.createdAt|date('d.m.Y H:i') }}</td>
+                </tr>
+            {% else %}
+                <tr><td colspan="4">Keine Abonnenten passen zu diesen Filtern.</td></tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    {% if directory.pages > 1 %}
+        {% set previousParams = {page: directory.page - 1} %}
+        {% if directory.email != '' %}{% set previousParams = previousParams|merge({email: directory.email}) %}{% endif %}
+        {% if directory.status != '' %}{% set previousParams = previousParams|merge({status: directory.status}) %}{% endif %}
+        {% set nextParams = {page: directory.page + 1} %}
+        {% if directory.email != '' %}{% set nextParams = nextParams|merge({email: directory.email}) %}{% endif %}
+        {% if directory.status != '' %}{% set nextParams = nextParams|merge({status: directory.status}) %}{% endif %}
+        <nav aria-label="Abonnenten-Seiten">
+            {% if directory.page > 1 %}<a rel="prev" href="{{ path('app_admin_notification_newsletter_admin_subscriptions', previousParams) }}">Zurück</a>{% endif %}
+            <span>Seite {{ directory.page }} von {{ directory.pages }}</span>
+            {% if directory.page < directory.pages %}<a rel="next" href="{{ path('app_admin_notification_newsletter_admin_subscriptions', nextParams) }}">Weiter</a>{% endif %}
+        </nav>
+    {% endif %}
+</main>
+{% endblock %}

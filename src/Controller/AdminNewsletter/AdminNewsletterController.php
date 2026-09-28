@@ -9,6 +9,7 @@ use App\Entity\Newsletter\NewsletterSubscription;
 use App\Entity\User;
 use App\Form\Newsletter\NewsletterCampaignType;
 use App\Newsletter\NewsletterDispatchService;
+use App\Newsletter\NewsletterSubscriptionDirectory;
 use App\Repository\Newsletter\NewsletterCampaignRepository;
 use App\Repository\Newsletter\NewsletterSubscriptionRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -39,6 +40,37 @@ final class AdminNewsletterController extends AbstractController
             'campaigns' => $this->campaigns->findBy([], ['createdAt' => 'DESC'], 100),
             'subscriptions' => $this->subscriptions->findBy([], ['createdAt' => 'DESC'], 100),
         ]);
+    }
+
+    #[Route('/subscriptions', name: 'subscriptions', methods: ['GET'])]
+    public function subscriptions(Request $request, NewsletterSubscriptionDirectory $directory): Response
+    {
+        $email = trim($request->query->getString('email'));
+        if (mb_strlen($email) > 180) {
+            throw new BadRequestHttpException('Die E-Mail-Suche darf höchstens 180 Zeichen lang sein.');
+        }
+
+        $status = $request->query->getString('status');
+        $statusLabels = [
+            NewsletterSubscription::STATUS_PENDING => 'Ausstehend',
+            NewsletterSubscription::STATUS_ACTIVE => 'Aktiv',
+            NewsletterSubscription::STATUS_UNSUBSCRIBED => 'Abgemeldet',
+            NewsletterSubscription::STATUS_SUPPRESSED => 'Unterdrückt',
+        ];
+        if ($status !== '' && !array_key_exists($status, $statusLabels)) {
+            throw new BadRequestHttpException('Unbekannter Abonnentenstatus.');
+        }
+
+        $directoryPage = $directory->search($email, $status, $request->query->getInt('page', 1));
+
+        $response = $this->render('admin/newsletter/subscriptions.html.twig', [
+            'directory' => $directoryPage,
+            'statusLabels' => $statusLabels,
+        ]);
+        $response->headers->set('Cache-Control', 'private, no-store');
+        $response->headers->set('X-Robots-Tag', 'noindex, nofollow');
+
+        return $response;
     }
 
     #[Route('/new', name: 'new', methods: ['GET', 'POST'])]
