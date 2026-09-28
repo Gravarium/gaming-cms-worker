@@ -51297,14 +51297,14 @@
       "claim_state": "active",
       "active_base_branch": "main",
       "active_base_sha": "ebfeb6032548002846b9352ddb2b06b909b461c0",
-      "active_head": "1053e68262b4d102f35dbaca3e1f00ba92be7a67",
+      "active_head": "ffd318308d3b827ca24de0171626733eed9b7f3f",
       "resume_branch": "feature/wcp-584-guild-event-signup-portal-g1",
       "branch_heads": {
         "claim_branch": "ebfeb6032548002846b9352ddb2b06b909b461c0",
-        "feature_branch": "1053e68262b4d102f35dbaca3e1f00ba92be7a67"
+        "feature_branch": "ffd318308d3b827ca24de0171626733eed9b7f3f"
       },
-      "last_observed_head": "1053e68262b4d102f35dbaca3e1f00ba92be7a67",
-      "last_checkpoint_at": "2026-09-28T18:54:15.020Z",
+      "last_observed_head": "ffd318308d3b827ca24de0171626733eed9b7f3f",
+      "last_checkpoint_at": "2026-09-28T18:57:41.819Z",
       "checkpoint_paths": [
         "config/packages/guild_event_signup_portal.yaml",
         "src/Controller/GuildEventSignupPortalController.php",
@@ -51316,8 +51316,8 @@
         "tests/Controller/GuildEventSignupPortalControllerTest.php",
         "tests/Widget/MyGuildEventSignupsWidgetProviderTest.php"
       ],
-      "next_action": "Await exact-head Worker CI #951 on 1053e68262b4d102f35dbaca3e1f00ba92be7a67; diagnose and repair any failure only within the nine allowed paths.",
-      "last_verified_push_at": "2026-09-28T18:54:15.020Z",
+      "next_action": "Await exact-head Worker CI #952 on ffd318308d3b827ca24de0171626733eed9b7f3f; diagnose and repair any remaining failures only within the nine allowed paths.",
+      "last_verified_push_at": "2026-09-28T18:57:41.819Z",
       "worker_pr": 378,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/378",
       "worker_pr_state": "draft",
@@ -51338,9 +51338,9 @@
       ],
       "ci_result": "in_progress",
       "last_ci_result": "in_progress",
-      "ci_run_id": 36468314885,
-      "last_ci_run_id": 36468314885,
-      "last_ci_run_number": 951,
+      "ci_run_id": 36468792803,
+      "last_ci_run_id": 36468792803,
+      "last_ci_run_number": 952,
       "ci_validation_pr": 378,
       "ci_attempts": [
         {
@@ -51348,11 +51348,22 @@
           "run_number": 951,
           "head": "1053e68262b4d102f35dbaca3e1f00ba92be7a67",
           "base": "ebfeb6032548002846b9352ddb2b06b909b461c0",
+          "result": "failure",
+          "validation_pr": 378,
+          "status": "completed",
+          "conclusion": "failure",
+          "summary": "PHPStan found two type issues in GuildEventSignupPortalController: is_string() was always true for the query parameter's inferred type, and a repeated GuildEvent instanceof check was redundant after narrowing. JavaScript 11/11 passed and PostgreSQL 18 migration validation passed; PHP/Symfony checks stopped after PHPStan."
+        },
+        {
+          "run_id": 36468792803,
+          "run_number": 952,
+          "head": "ffd318308d3b827ca24de0171626733eed9b7f3f",
+          "base": "ebfeb6032548002846b9352ddb2b06b909b461c0",
           "result": "in_progress",
           "validation_pr": 378,
           "status": "in_progress",
           "conclusion": null,
-          "summary": "Exact-head Worker CI started after opening draft PR #378; run results pending."
+          "summary": "Both PHPStan findings and a regression test for array-shaped page input were addressed on this head; exact-head CI is running."
         }
       ]
     }
