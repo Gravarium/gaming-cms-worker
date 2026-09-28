@@ -36,7 +36,6 @@ final class PublicGameReleaseCalendarFeedController extends AbstractController
         return new Response($body, Response::HTTP_OK, [
             'Content-Type' => 'text/calendar; charset=utf-8',
             'Content-Disposition' => 'inline; filename="game-releases.ics"',
-            'Cache-Control' => 'public, max-age=300',
             'X-Content-Type-Options' => 'nosniff',
         ]);
     }
