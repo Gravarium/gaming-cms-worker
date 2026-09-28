@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-28T20:45:04.013Z",
+  "published_at": "2026-09-28T20:49:33.513Z",
   "summary": {
-    "total_remaining_worker_tasks": 175,
-    "completed_worker_prs_awaiting_trusted_review": 316,
+    "total_remaining_worker_tasks": 174,
+    "completed_worker_prs_awaiting_trusted_review": 317,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-590 corrected head 2ba433c7d53ccd1408818eaa50ba62fe975b8de8 is queued for full Worker CI run #980 after fixing the fixture lifecycle error from #978.",
+    "next_required_action": "WCP-590 PR #385 is ready for Trusted review at green exact HEAD 2ba433c7d53ccd1408818eaa50ba62fe975b8de8; its claim remains locked. Re-evaluate unclaimed dependency-blocked FCPs and derive the next independent module completion package.",
     "composition_preparable": 0,
     "immediately_actionable": 32,
     "must_continue": true
@@ -53365,7 +53365,7 @@
       "package_id": "WCP-590",
       "title": "Link public content pages to their discussions",
       "risk": "low",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -53440,7 +53440,7 @@
           "FCP-072 has an unclaimed broad templates/ allowance and is dependency-blocked in this pool snapshot; its non-claim state is recorded for future collision checks."
         ]
       },
-      "claim_state": "active",
+      "claim_state": "locked_until_trusted_resolution",
       "claimed_on": "2026-09-28T20:31:54.978Z",
       "active_base_branch": "main",
       "active_base_sha": "b018c5ed9975c2ab3f606f822bf285036fe6983e",
@@ -53456,21 +53456,21 @@
         "templates/content/show.html.twig",
         "tests/Controller/ContentDiscussionEntryNavigationTest.php"
       ],
-      "next_action": "Inspect exact-head Worker CI #980 on 2ba433c7d53ccd1408818eaa50ba62fe975b8de8 and repair any new failures only within WCP-590 paths.",
+      "next_action": "Await independent Trusted review; keep this claim locked until Trusted resolves it.",
       "last_verified_push_at": "2026-09-28T20:45:04.013Z",
       "worker_pr": 385,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/385",
-      "worker_pr_state": "draft",
+      "worker_pr_state": "ready_for_review",
       "pr_state": "open",
-      "draft_pr": true,
+      "draft_pr": false,
       "worker_pr_base_branch": "main",
       "worker_pr_base_sha": "bb6ba0fd3dd9025be4f60c43a644117f96f71578",
       "worker_pr_changed_paths": [
         "templates/content/show.html.twig",
         "tests/Controller/ContentDiscussionEntryNavigationTest.php"
       ],
-      "ci_result": "in_progress",
-      "last_ci_result": "in_progress",
+      "ci_result": "success",
+      "last_ci_result": "success",
       "ci_run_id": 36481319013,
       "last_ci_run_id": 36481319013,
       "ci_validation_pr": 385,
@@ -53505,7 +53505,31 @@
           },
           "summary": "Corrected exact head after CI #978 exposed a test fixture reusing a detached author; full exact-head CI #980 is queued."
         }
-      ]
+      ],
+      "final_head": "2ba433c7d53ccd1408818eaa50ba62fe975b8de8",
+      "completed_at": "2026-09-28T20:49:33.513Z",
+      "completion_evidence": {
+        "exact_sanitized_base_sha": "b018c5ed9975c2ab3f606f822bf285036fe6983e",
+        "final_head": "2ba433c7d53ccd1408818eaa50ba62fe975b8de8",
+        "changed_paths": [
+          "templates/content/show.html.twig",
+          "tests/Controller/ContentDiscussionEntryNavigationTest.php"
+        ],
+        "worker_pr": "https://github.com/Gravarium/gaming-cms-worker/pull/385",
+        "exact_head_ci_run_id": 36481319013,
+        "exact_head_ci_run_number": 980,
+        "exact_head_ci_result": "success",
+        "phpunit": {
+          "tests": 1518,
+          "assertions": 10042,
+          "deprecations": 1,
+          "notices": 24
+        },
+        "jobs": {
+          "php_symfony": "success",
+          "postgres_18": "success"
+        }
+      }
     }
   ],
   "recovery_queue": [],
