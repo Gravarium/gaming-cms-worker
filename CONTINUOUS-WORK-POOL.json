@@ -51199,13 +51199,13 @@
       "base_sha": "ebfeb6032548002846b9352ddb2b06b909b461c0",
       "objective": "Complete member self-service for guild event registrations. Add a private personal dashboard and Gaming Page Builder widget that show only the signed-in user's active-character registrations for future planned events in enabled guilds, and let that user withdraw their own active RSVP by changing it to declined. Preserve the existing guild signup flow and capacity semantics; require route-specific CSRF, lock and recheck the event during withdrawal, and keep personalized responses private/no-store and noindex.",
       "allowed_paths": [
+        "config/packages/guild_event_signup_portal.yaml",
         "src/Controller/GuildEventSignupPortalController.php",
+        "src/EventSubscriber/GuildEventSignupWidgetCacheSubscriber.php",
+        "src/GuildEventSignupPortal/Templates/guild_event_signup_portal/index.html.twig",
+        "src/GuildEventSignupPortal/Templates/widget/my_event_signups.html.twig",
         "src/Repository/GuildEventSignupPortalRepository.php",
         "src/Widget/MyGuildEventSignupsWidgetProvider.php",
-        "src/EventSubscriber/GuildEventSignupWidgetCacheSubscriber.php",
-        "src/GuildEventSignupPortal/Templates/index.html.twig",
-        "src/GuildEventSignupPortal/Templates/widget/my_event_signups.html.twig",
-        "config/packages/guild_event_signup_portal.yaml",
         "tests/Controller/GuildEventSignupPortalControllerTest.php",
         "tests/Widget/MyGuildEventSignupsWidgetProviderTest.php"
       ],
@@ -51275,16 +51275,16 @@
       "proposal_base_sha": "ebfeb6032548002846b9352ddb2b06b909b461c0",
       "proposal_dependency_evidence": [],
       "collision_check": {
-        "compared_against": "Fresh continuous/work-pool-v4 @ a8e9bf24f79700904a9bf6ab9bbde8f91bbcd96b; sanitized Worker main @ ebfeb6032548002846b9352ddb2b06b909b461c0; all published, unclaimed, active and claim-locked allowed paths; branch and PR searches for WCP-584.",
+        "compared_against": "Fresh continuous/work-pool-v4 blob ab17c54a76dbfc81b0532fffd621f89d707caa92; sanitized Worker main ebfeb6032548002846b9352ddb2b06b909b461c0; all published, unclaimed, active and claim-locked allowed paths.",
         "result": "No allowed-path overlap with any existing published task. WCP-532 owns its separate upcoming-events widget files; WCP-583's completed but locked onboarding claim owns different controller/repository/template/test paths. This package reuses the existing event/signup entities and flow read-only, and leaves the existing signup controller, repositories, entities, module catalog, schema and migrations unchanged.",
         "paths": [
+          "config/packages/guild_event_signup_portal.yaml",
           "src/Controller/GuildEventSignupPortalController.php",
+          "src/EventSubscriber/GuildEventSignupWidgetCacheSubscriber.php",
+          "src/GuildEventSignupPortal/Templates/guild_event_signup_portal/index.html.twig",
+          "src/GuildEventSignupPortal/Templates/widget/my_event_signups.html.twig",
           "src/Repository/GuildEventSignupPortalRepository.php",
           "src/Widget/MyGuildEventSignupsWidgetProvider.php",
-          "src/EventSubscriber/GuildEventSignupWidgetCacheSubscriber.php",
-          "src/GuildEventSignupPortal/Templates/index.html.twig",
-          "src/GuildEventSignupPortal/Templates/widget/my_event_signups.html.twig",
-          "config/packages/guild_event_signup_portal.yaml",
           "tests/Controller/GuildEventSignupPortalControllerTest.php",
           "tests/Widget/MyGuildEventSignupsWidgetProviderTest.php"
         ],
@@ -51297,16 +51297,64 @@
       "claim_state": "active",
       "active_base_branch": "main",
       "active_base_sha": "ebfeb6032548002846b9352ddb2b06b909b461c0",
-      "active_head": "ebfeb6032548002846b9352ddb2b06b909b461c0",
+      "active_head": "1053e68262b4d102f35dbaca3e1f00ba92be7a67",
       "resume_branch": "feature/wcp-584-guild-event-signup-portal-g1",
       "branch_heads": {
         "claim_branch": "ebfeb6032548002846b9352ddb2b06b909b461c0",
-        "feature_branch": "ebfeb6032548002846b9352ddb2b06b909b461c0"
+        "feature_branch": "1053e68262b4d102f35dbaca3e1f00ba92be7a67"
       },
-      "last_observed_head": "ebfeb6032548002846b9352ddb2b06b909b461c0",
-      "last_checkpoint_at": "2026-09-28T18:34:54.389Z",
-      "checkpoint_paths": [],
-      "next_action": "Create both WCP-584 branches from exact main@ebfeb6032548002846b9352ddb2b06b909b461c0, implement the allowlisted member RSVP dashboard/widget/withdrawal flow, then validate exact-head Worker CI."
+      "last_observed_head": "1053e68262b4d102f35dbaca3e1f00ba92be7a67",
+      "last_checkpoint_at": "2026-09-28T18:54:15.020Z",
+      "checkpoint_paths": [
+        "config/packages/guild_event_signup_portal.yaml",
+        "src/Controller/GuildEventSignupPortalController.php",
+        "src/EventSubscriber/GuildEventSignupWidgetCacheSubscriber.php",
+        "src/GuildEventSignupPortal/Templates/guild_event_signup_portal/index.html.twig",
+        "src/GuildEventSignupPortal/Templates/widget/my_event_signups.html.twig",
+        "src/Repository/GuildEventSignupPortalRepository.php",
+        "src/Widget/MyGuildEventSignupsWidgetProvider.php",
+        "tests/Controller/GuildEventSignupPortalControllerTest.php",
+        "tests/Widget/MyGuildEventSignupsWidgetProviderTest.php"
+      ],
+      "next_action": "Await exact-head Worker CI #951 on 1053e68262b4d102f35dbaca3e1f00ba92be7a67; diagnose and repair any failure only within the nine allowed paths.",
+      "last_verified_push_at": "2026-09-28T18:54:15.020Z",
+      "worker_pr": 378,
+      "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/378",
+      "worker_pr_state": "draft",
+      "pr_state": "open",
+      "draft_pr": true,
+      "worker_pr_base_branch": "main",
+      "worker_pr_base_sha": "ebfeb6032548002846b9352ddb2b06b909b461c0",
+      "worker_pr_changed_paths": [
+        "config/packages/guild_event_signup_portal.yaml",
+        "src/Controller/GuildEventSignupPortalController.php",
+        "src/EventSubscriber/GuildEventSignupWidgetCacheSubscriber.php",
+        "src/GuildEventSignupPortal/Templates/guild_event_signup_portal/index.html.twig",
+        "src/GuildEventSignupPortal/Templates/widget/my_event_signups.html.twig",
+        "src/Repository/GuildEventSignupPortalRepository.php",
+        "src/Widget/MyGuildEventSignupsWidgetProvider.php",
+        "tests/Controller/GuildEventSignupPortalControllerTest.php",
+        "tests/Widget/MyGuildEventSignupsWidgetProviderTest.php"
+      ],
+      "ci_result": "in_progress",
+      "last_ci_result": "in_progress",
+      "ci_run_id": 36468314885,
+      "last_ci_run_id": 36468314885,
+      "last_ci_run_number": 951,
+      "ci_validation_pr": 378,
+      "ci_attempts": [
+        {
+          "run_id": 36468314885,
+          "run_number": 951,
+          "head": "1053e68262b4d102f35dbaca3e1f00ba92be7a67",
+          "base": "ebfeb6032548002846b9352ddb2b06b909b461c0",
+          "result": "in_progress",
+          "validation_pr": 378,
+          "status": "in_progress",
+          "conclusion": null,
+          "summary": "Exact-head Worker CI started after opening draft PR #378; run results pending."
+        }
+      ]
     }
   ],
   "recovery_queue": [],
