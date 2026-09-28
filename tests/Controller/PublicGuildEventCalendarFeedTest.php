@@ -7,6 +7,7 @@ namespace App\Tests\Controller;
 use App\Entity\CmsModuleState;
 use App\Entity\Game;
 use App\Entity\Guild;
+use App\Entity\GuildTeam;
 use App\Entity\GuildEvent;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
@@ -20,6 +21,7 @@ final class PublicGuildEventCalendarFeedTest extends WebTestCase
         [$game, $guild, $disabledGuild, $disabledGame, $disabledGameGuild] = $this->guildFixtures($client);
         $suffix = bin2hex(random_bytes(5));
         $startsAt = new \DateTimeImmutable('+1 hour');
+        $team = (new GuildTeam())->setGuild($guild)->setName('Private team '.$suffix);
         $visible = (new GuildEvent())
             ->setGuild($guild)
             ->setTitle('Public raid '.$suffix)
@@ -53,9 +55,16 @@ final class PublicGuildEventCalendarFeedTest extends WebTestCase
             ->setTitle('Disabled game event '.$suffix)
             ->setStartsAt($startsAt)
             ->setStatus(GuildEvent::STATUS_PLANNED);
+        $teamScopedEvent = (new GuildEvent())
+            ->setGuild($guild)
+            ->setTeam($team)
+            ->setTitle('Team-only event '.$suffix)
+            ->setStartsAt($startsAt)
+            ->setStatus(GuildEvent::STATUS_PLANNED);
 
         $em = $this->em($client);
-        $events = [$visible, $cancelled, $completed, $past, $hiddenGuildEvent, $disabledGameEvent];
+        $em->persist($team);
+        $events = [$visible, $cancelled, $completed, $past, $hiddenGuildEvent, $disabledGameEvent, $teamScopedEvent];
         foreach ($events as $event) {
             $em->persist($event);
         }
@@ -87,6 +96,7 @@ final class PublicGuildEventCalendarFeedTest extends WebTestCase
             self::assertStringNotContainsString('Past feed event '.$suffix, $body);
             self::assertStringNotContainsString('Disabled guild event '.$suffix, $body);
             self::assertStringNotContainsString('Disabled game event '.$suffix, $body);
+            self::assertStringNotContainsString('Team-only event '.$suffix, $body);
 
             $client->request('GET', '/gaming/guild/'.$guild->getSlug().'/events');
             self::assertResponseIsSuccessful();
