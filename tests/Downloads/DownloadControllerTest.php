@@ -32,7 +32,6 @@ final class DownloadControllerTest extends WebTestCase
     public function testDisabledDownloadModuleFailsClosed(): void
     {
         $client = static::createClient();
-        $client->disableReboot();
         $state = (new CmsModuleState())
             ->setModuleKey('downloads')
             ->updateVersion('1.0.0')
@@ -48,8 +47,12 @@ final class DownloadControllerTest extends WebTestCase
 
             self::assertResponseStatusCodeSame(404);
         } finally {
-            $this->em($client)->remove($state);
-            $this->em($client)->flush();
+            $entityManager = $this->em($client);
+            $managedState = $entityManager->find(CmsModuleState::class, 'downloads');
+            if ($managedState instanceof CmsModuleState) {
+                $entityManager->remove($managedState);
+                $entityManager->flush();
+            }
         }
     }
 
