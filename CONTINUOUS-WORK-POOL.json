@@ -54941,8 +54941,8 @@
       "proposal_dependency_evidence": [],
       "published_at": "2026-09-28T23:40:56.575Z",
       "collision_check": {
-        "compared_against": "Fresh continuous/work-pool-v4 @ e6d775d31fa3b994fa33983b528a83af48cd067b; Worker main @ eb235b1aaa0335349b283872f820f24f8b7da90b; fresh WCP-598 branch and PR searches; all current active and claim-locked path allowlists with directory-prefix overlap.",
-        "result": "No overlap with any active or claim-locked path; all five prepared FCPs remain dependency-blocked and no composition is preparable.",
+        "compared_against": "Fresh continuous/work-pool-v4 @ 853d8cc7394df583589b88119b56ed2d8613ba53; current Worker main @ eb235b1aaa0335349b283872f820f24f8b7da90b; all active and claim-locked path allowlists including directory-prefix overlap; WCP-598 feature head 113c0a0ebdb39db6ad31819ade3e044564251b63.",
+        "result": "No overlap with any other worker_in_progress or claim-locked path.",
         "paths": [
           "src/CommunityInteraction/ContentInteractionQuery.php",
           "src/Controller/AdminContentModerationController.php",
@@ -54955,22 +54955,22 @@
       "claim_state": "active",
       "active_base_branch": "main",
       "active_base_sha": "eb235b1aaa0335349b283872f820f24f8b7da90b",
-      "active_head": "eb235b1aaa0335349b283872f820f24f8b7da90b",
+      "active_head": "113c0a0ebdb39db6ad31819ade3e044564251b63",
       "resume_branch": "feature/wcp-598-community-moderation-queue-pages-g1",
       "branch_heads": {
         "claim_branch": "eb235b1aaa0335349b283872f820f24f8b7da90b",
-        "feature_branch": "eb235b1aaa0335349b283872f820f24f8b7da90b"
+        "feature_branch": "113c0a0ebdb39db6ad31819ade3e044564251b63"
       },
-      "last_observed_head": "eb235b1aaa0335349b283872f820f24f8b7da90b",
+      "last_observed_head": "113c0a0ebdb39db6ad31819ade3e044564251b63",
       "checkpoint_paths": [
         "src/CommunityInteraction/ContentInteractionQuery.php",
         "src/Controller/AdminContentModerationController.php",
         "src/CommunityInteraction/Templates/admin/moderation.html.twig",
         "tests/Controller/AdminContentModerationWorkflowTest.php"
       ],
-      "next_action": "Implement independent pagination for the open-report and hidden-comment moderation queues with clear page counts, accessible previous/next links, and focused large-queue tests.",
-      "last_checkpoint_at": "2026-09-28T23:40:56.575Z",
-      "last_verified_push_at": "2026-09-28T23:40:56.575Z"
+      "next_action": "Review the exact four-file diff against the claimed base, open a draft Worker PR, and complete exact-head CI; fix any concrete failures before marking ready.",
+      "last_checkpoint_at": "2026-09-28T23:48:07.674Z",
+      "last_verified_push_at": "2026-09-28T23:48:07.674Z"
     }
   ],
   "recovery_queue": [],
