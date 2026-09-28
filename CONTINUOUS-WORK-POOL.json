@@ -13,11 +13,11 @@
   "published_at": "2026-09-28 23:47:58 UTC",
   "summary": {
     "total_remaining_worker_tasks": 174,
-    "completed_worker_prs_awaiting_trusted_review": 319,
+    "completed_worker_prs_awaiting_trusted_review": 320,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-598 implementation is on Worker PR #392; complete exact-head CI and lock the claim when green.",
+    "next_required_action": "WCP-598 is complete on exact green Worker PR #392 and its claim is locked until Trusted resolution. Re-evaluate the five unclaimed FCPs; continue with a dependency-safe functional package or claim the next bounded independent WCP module completion.",
     "composition_preparable": 0,
     "immediately_actionable": 33,
     "must_continue": true
@@ -54868,7 +54868,7 @@
       "package_id": "WCP-598",
       "title": "Paginate the content moderation report and hidden comment queues",
       "risk": "medium",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -54920,10 +54920,13 @@
         "Complete exact-head Worker CI including PHPStan, Twig/container/AssetMapper checks, and PostgreSQL 18 migration-chain validation."
       ],
       "completion_report": [
-        "Exact sanitized Worker base, final feature HEAD, changed path list, Worker PR URL/state.",
-        "Evidence moderators can reach and decide every paginated open report and restore any paginated hidden content comment.",
-        "Focused large-queue, navigation, invalid-page, permission/module/CSRF/audit tests and exact-head full CI.",
-        "Remaining limitations in moderation queue search, filtering, or report retention."
+        "Exact sanitized Worker base: main@eb235b1aaa0335349b283872f820f24f8b7da90b.",
+        "Final feature HEAD: 113c0a0ebdb39db6ad31819ade3e044564251b63; Worker PR #392 is open and ready for review: https://github.com/Gravarium/gaming-cms-worker/pull/392.",
+        "Changed paths: src/CommunityInteraction/ContentInteractionQuery.php; src/Controller/AdminContentModerationController.php; src/CommunityInteraction/Templates/admin/moderation.html.twig; tests/Controller/AdminContentModerationWorkflowTest.php.",
+        "The admin moderation screen now paginates open/reviewing reports and hidden comments independently in 25-item pages, shows complete counts, preserves counterpart page state in navigation and forms, defaults malformed page parameters, and clamps out-of-range pages.",
+        "Tests seed 101 open reports and hidden comments to verify the final older items are reachable, plus independent navigation, counts, malformed parameters, and out-of-range clamping; the existing authorization, module-off, CSRF, decision, restore, and audit workflow tests pass.",
+        "Exact-head Worker CI run 36499924219 (#991) passed on 113c0a0ebdb39db6ad31819ade3e044564251b63: 1,558 PHPUnit tests, 10,579 assertions, 1 deprecation, 24 notices; PHP/Symfony and PostgreSQL 18 jobs green, including PHPStan level 8, Twig/container/AssetMapper/Doctrine checks.",
+        "Remaining boundary: the moderation queues are paginated but do not yet support search or filtering by author, report reason, or content entry."
       ],
       "immutable_constraints": [
         "trusted-main-is-the-only-integration-and-deployment-source",
@@ -54941,8 +54944,8 @@
       "proposal_dependency_evidence": [],
       "published_at": "2026-09-28T23:40:56.575Z",
       "collision_check": {
-        "compared_against": "Fresh continuous/work-pool-v4 @ 6be5a60d14381e250847acaf2fe380470c80197c; current Worker main @ eb235b1aaa0335349b283872f820f24f8b7da90b; PR #392 head 113c0a0ebdb39db6ad31819ade3e044564251b63; all active and claim-locked path allowlists including directory-prefix overlap.",
-        "result": "No overlap with any other worker_in_progress or claim-locked path.",
+        "compared_against": "Fresh pool blob 61c1b9f455ecd556ada20754a07fd77f4c114318; current Worker main @ eb235b1aaa0335349b283872f820f24f8b7da90b; PR #392 ready for review with head 113c0a0ebdb39db6ad31819ade3e044564251b63; exact-head CI run 36499924219; current active and claim-locked path allowlists.",
+        "result": "No overlap with any other active or claim-locked path.",
         "paths": [
           "src/CommunityInteraction/ContentInteractionQuery.php",
           "src/Controller/AdminContentModerationController.php",
@@ -54952,7 +54955,7 @@
         "observed_nonblocking_path_hits": []
       },
       "claimed_on": "2026-09-28T23:40:56.575Z",
-      "claim_state": "active",
+      "claim_state": "locked_until_trusted_resolution",
       "active_base_branch": "main",
       "active_base_sha": "eb235b1aaa0335349b283872f820f24f8b7da90b",
       "active_head": "113c0a0ebdb39db6ad31819ade3e044564251b63",
@@ -54968,13 +54971,15 @@
         "src/CommunityInteraction/Templates/admin/moderation.html.twig",
         "tests/Controller/AdminContentModerationWorkflowTest.php"
       ],
-      "next_action": "Wait for exact-head Worker CI run #991 on PR #392; diagnose and repair concrete failures before finishing and locking the claim.",
-      "last_checkpoint_at": "2026-09-28T23:49:03.964Z",
-      "last_verified_push_at": "2026-09-28T23:49:03.964Z",
+      "next_action": "Keep the claim locked until Trusted resolves PR #392. Reassess all five unclaimed FCPs; continue with the first dependency-safe package or publish and claim the next bounded WCP functional-gap proposal.",
+      "last_checkpoint_at": "2026-09-28T23:55:05.082Z",
+      "last_verified_push_at": "2026-09-28T23:55:05.082Z",
       "worker_pr_number": 392,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/392",
       "worker_ci_run_id": 36499924219,
-      "worker_ci_run_url": "https://github.com/Gravarium/gaming-cms-worker/actions/runs/36499924219"
+      "worker_ci_run_url": "https://github.com/Gravarium/gaming-cms-worker/actions/runs/36499924219",
+      "worker_ci_result": "success",
+      "completed_at": "2026-09-28T23:55:05.082Z"
     }
   ],
   "recovery_queue": [],
