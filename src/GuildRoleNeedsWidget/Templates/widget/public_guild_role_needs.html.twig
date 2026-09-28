@@ -5,8 +5,9 @@
         <ul>
             {% for row in needs %}
                 <li>
-                    <a href="{{ path('app_guild_apply', {slug: row.guild.slug}) }}">{{ row.guild.name }}</a>:
+                    <a href="{{ path('app_guild_show', {slug: row.guild.slug}) }}">{{ row.guild.name }}</a>:
                     {{ row.need.roleKey }} · {{ row.need.classKey }} — {{ row.need.desiredCount }} gesucht
+                    <a class="button-link button-secondary" href="{{ path('app_guild_role_need_apply', {slug: row.guild.slug, game: row.need.game.slug, role: row.need.roleKey, classKey: row.need.classKey}) }}">Für diese Rolle bewerben</a>
                 </li>
             {% endfor %}
         </ul>
