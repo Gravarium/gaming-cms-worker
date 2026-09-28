@@ -5806,7 +5806,7 @@
       "package_id": "WCP-113",
       "title": "Bound extension permission store persistence",
       "risk": "high",
-      "execution_state": "worker_complete_awaiting_trusted_review",
+      "execution_state": "trusted_integrated",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -5896,9 +5896,9 @@
       "final_head": "f6247efb947195b61d9688b758ee59d0f0fd6f06",
       "ci_run_id": 36237037834,
       "ci_result": "success",
-      "claim_state": "locked_until_trusted_resolution",
+      "claim_state": "released_after_trusted_integration",
       "completed_on": "2026-09-26T10:53:20.538Z",
-      "next_action": "Remain claim-locked while awaiting Trusted review; do not merge or deploy from the Worker repository.",
+      "next_action": "Worker PR #76 closed after Trusted PR #174 and all downstream gates succeeded.",
       "final_changed_paths": [
         "src/ExtensionPackage/ExtensionPermissionStore.php",
         "tests/ExtensionPackage/ExtensionPermissionStoreBoundaryTest.php"
@@ -5909,7 +5909,29 @@
         "Exact-head Worker CI run 36237037834 succeeded.",
         "PHP/Symfony validation and application-test job 108390584072 succeeded.",
         "PostgreSQL migration chain job 108390584276 succeeded."
-      ]
+      ],
+      "pr_state": "closed",
+      "worker_pr_state": "closed",
+      "draft_pr": false,
+      "trusted_resolution": {
+        "status": "integrated",
+        "worker_pr": 76,
+        "worker_head": "f6247efb947195b61d9688b758ee59d0f0fd6f06",
+        "trusted_pr": 174,
+        "trusted_pr_ci_run_id": 36362751650,
+        "trusted_pr_ci_result": "success",
+        "trusted_merge_sha": "0e1dcf0edeaaf2581eb7f498a2791ab81a7fc803",
+        "final_trusted_main_sha": "0e1dcf0edeaaf2581eb7f498a2791ab81a7fc803",
+        "final_trusted_main_ci_run_id": 36363087040,
+        "final_trusted_main_ci_result": "success",
+        "worker_sync_run_id": 36363087063,
+        "worker_sync_result": "success",
+        "sanitized_worker_sync_sha": "755bc27079fb50b291dd9be0524b4787ff7f43ed",
+        "worker_ci_run_id": 36363100372,
+        "worker_ci_after_sync_result": "success",
+        "resolved_at": "2026-09-28T00:46:45.924Z"
+      },
+      "completed_at": "2026-09-28T00:46:45.924Z"
     },
     {
       "priority": 64,
@@ -27337,7 +27359,7 @@
       "package_id": "WCP-461",
       "title": "Protect CMS module install, update and removal lifecycle actions",
       "risk": "medium",
-      "execution_state": "worker_complete_awaiting_trusted_review",
+      "execution_state": "trusted_integrated",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -27412,7 +27434,7 @@
       },
       "published_at": "2026-09-27T03:36:17.357Z",
       "claimed_on": "2026-09-27T03:36:17.357Z",
-      "claim_state": "locked_until_trusted_resolution",
+      "claim_state": "released_after_trusted_integration",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
       "active_head": "347cd2b86a355ace9908dc9de5b57a8bec0855ca",
@@ -27425,11 +27447,11 @@
         "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
         "feature_branch": "347cd2b86a355ace9908dc9de5b57a8bec0855ca"
       },
-      "next_action": "Await Trusted review and integration validation; keep claim locked until Trusted explicitly integrates, cancels or transfers it.",
+      "next_action": "Worker PR #255 closed after Trusted PR #174 and all downstream gates succeeded.",
       "last_verified_push_at": "2026-09-27T03:45:45.689Z",
       "worker_pr": 255,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/255",
-      "pr_state": "open_ready_unmerged",
+      "pr_state": "closed",
       "draft_pr": false,
       "ci_run_id": 36292124996,
       "last_ci_run_id": 36292124996,
@@ -27451,7 +27473,7 @@
       ],
       "last_observed_head": "347cd2b86a355ace9908dc9de5b57a8bec0855ca",
       "last_ci_result": "success",
-      "completed_at": "2026-09-27T03:45:45.689Z",
+      "completed_at": "2026-09-28T00:46:45.924Z",
       "test_results": {
         "phpunit": "432 tests, 1908 assertions, 0 failures; one deprecation and one notice.",
         "phpstan": "Level 8 passed with no errors.",
@@ -27481,7 +27503,26 @@
       "open_limitations": [
         "Awaiting Trusted review and Trusted integration CI."
       ],
-      "trusted_follow_up": "Preserve CMS_SETTINGS_MANAGE and route-specific CSRF validation before module lifecycle mutations; retain module state/data during removal; run full Trusted CI."
+      "trusted_follow_up": "Preserve CMS_SETTINGS_MANAGE and route-specific CSRF validation before module lifecycle mutations; retain module state/data during removal; run full Trusted CI.",
+      "worker_pr_state": "closed",
+      "trusted_resolution": {
+        "status": "integrated",
+        "worker_pr": 255,
+        "worker_head": "347cd2b86a355ace9908dc9de5b57a8bec0855ca",
+        "trusted_pr": 174,
+        "trusted_pr_ci_run_id": 36362751650,
+        "trusted_pr_ci_result": "success",
+        "trusted_merge_sha": "0e1dcf0edeaaf2581eb7f498a2791ab81a7fc803",
+        "final_trusted_main_sha": "0e1dcf0edeaaf2581eb7f498a2791ab81a7fc803",
+        "final_trusted_main_ci_run_id": 36363087040,
+        "final_trusted_main_ci_result": "success",
+        "worker_sync_run_id": 36363087063,
+        "worker_sync_result": "success",
+        "sanitized_worker_sync_sha": "755bc27079fb50b291dd9be0524b4787ff7f43ed",
+        "worker_ci_run_id": 36363100372,
+        "worker_ci_after_sync_result": "success",
+        "resolved_at": "2026-09-28T00:46:45.924Z"
+      }
     },
     {
       "priority": 462,
@@ -27829,8 +27870,8 @@
       "package_id": "WCP-464",
       "title": "Review and manage capabilities for signed external packages",
       "risk": "high",
-      "execution_state": "worker_complete_awaiting_trusted_review",
-      "claim_state": "locked_until_trusted_resolution",
+      "execution_state": "trusted_integrated",
+      "claim_state": "released_after_trusted_integration",
       "dependencies": [
         "WCP-113"
       ],
@@ -27953,12 +27994,34 @@
         "claim_branch": "f6247efb947195b61d9688b758ee59d0f0fd6f06",
         "suggested_branch": "1efbfb4ffd83ece13f138babe9184e89bbeed829"
       },
-      "next_action": "Await Trusted integration, cancellation or transfer with checkpoint evidence; keep this claim locked. Continue only on an independent proposal.",
+      "next_action": "Worker PR #259 closed after Trusted PR #174 and all downstream gates succeeded.",
       "last_observed_head": "1efbfb4ffd83ece13f138babe9184e89bbeed829",
       "worker_pr": 259,
       "final_head": "1efbfb4ffd83ece13f138babe9184e89bbeed829",
       "ci_run_id": 36295745906,
-      "ci_result": "success"
+      "ci_result": "success",
+      "pr_state": "closed",
+      "worker_pr_state": "closed",
+      "draft_pr": false,
+      "trusted_resolution": {
+        "status": "integrated",
+        "worker_pr": 259,
+        "worker_head": "1efbfb4ffd83ece13f138babe9184e89bbeed829",
+        "trusted_pr": 174,
+        "trusted_pr_ci_run_id": 36362751650,
+        "trusted_pr_ci_result": "success",
+        "trusted_merge_sha": "0e1dcf0edeaaf2581eb7f498a2791ab81a7fc803",
+        "final_trusted_main_sha": "0e1dcf0edeaaf2581eb7f498a2791ab81a7fc803",
+        "final_trusted_main_ci_run_id": 36363087040,
+        "final_trusted_main_ci_result": "success",
+        "worker_sync_run_id": 36363087063,
+        "worker_sync_result": "success",
+        "sanitized_worker_sync_sha": "755bc27079fb50b291dd9be0524b4787ff7f43ed",
+        "worker_ci_run_id": 36363100372,
+        "worker_ci_after_sync_result": "success",
+        "resolved_at": "2026-09-28T00:46:45.924Z"
+      },
+      "completed_at": "2026-09-28T00:46:45.924Z"
     },
     {
       "priority": 465,
@@ -28114,7 +28177,7 @@
       "package_id": "WCP-466",
       "title": "Protect website settings updates with permission and form CSRF",
       "risk": "medium",
-      "execution_state": "worker_complete_awaiting_trusted_review",
+      "execution_state": "trusted_integrated",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -28188,7 +28251,7 @@
       },
       "published_at": "2026-09-27T04:25:51.409Z",
       "claimed_on": "2026-09-27T04:25:51.409Z",
-      "claim_state": "locked_until_trusted_resolution",
+      "claim_state": "released_after_trusted_integration",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
       "active_head": "48db2ef83374c656c2666547d0639396b5c526c7",
@@ -28201,13 +28264,13 @@
         "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
         "feature_branch": "48db2ef83374c656c2666547d0639396b5c526c7"
       },
-      "next_action": "Await Trusted review and integration validation; keep this claim locked until Trusted explicitly integrates, cancels or transfers it.",
+      "next_action": "Worker PR #258 closed after Trusted PR #174 and all downstream gates succeeded.",
       "last_observed_head": "48db2ef83374c656c2666547d0639396b5c526c7",
       "last_verified_push_at": "2026-09-27T04:36:20.481Z",
       "worker_pr": 258,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/258",
       "draft_pr": false,
-      "pr_state": "open_ready_unmerged",
+      "pr_state": "closed",
       "ci_run_id": 36294630261,
       "last_ci_run_id": 36294630261,
       "ci_result": "success",
@@ -28233,7 +28296,7 @@
       "changed_paths": [
         "tests/Controller/AdminSettingsWriteSecurityTest.php"
       ],
-      "completed_at": "2026-09-27T04:36:20.481Z",
+      "completed_at": "2026-09-28T00:46:45.924Z",
       "test_results": {
         "phpunit": "432 tests, 1884 assertions, 0 failures; one deprecation and one notice.",
         "phpstan": "Level 8 passed with no errors.",
@@ -28263,7 +28326,26 @@
       "open_limitations": [
         "Awaiting Trusted review and Trusted integration CI."
       ],
-      "trusted_follow_up": "Preserve CMS_SETTINGS_MANAGE and Symfony form CSRF enforcement before settings persistence; keep media upload/storage rollback behavior unchanged; run full Trusted CI."
+      "trusted_follow_up": "Preserve CMS_SETTINGS_MANAGE and Symfony form CSRF enforcement before settings persistence; keep media upload/storage rollback behavior unchanged; run full Trusted CI.",
+      "worker_pr_state": "closed",
+      "trusted_resolution": {
+        "status": "integrated",
+        "worker_pr": 258,
+        "worker_head": "48db2ef83374c656c2666547d0639396b5c526c7",
+        "trusted_pr": 174,
+        "trusted_pr_ci_run_id": 36362751650,
+        "trusted_pr_ci_result": "success",
+        "trusted_merge_sha": "0e1dcf0edeaaf2581eb7f498a2791ab81a7fc803",
+        "final_trusted_main_sha": "0e1dcf0edeaaf2581eb7f498a2791ab81a7fc803",
+        "final_trusted_main_ci_run_id": 36363087040,
+        "final_trusted_main_ci_result": "success",
+        "worker_sync_run_id": 36363087063,
+        "worker_sync_result": "success",
+        "sanitized_worker_sync_sha": "755bc27079fb50b291dd9be0524b4787ff7f43ed",
+        "worker_ci_run_id": 36363100372,
+        "worker_ci_after_sync_result": "success",
+        "resolved_at": "2026-09-28T00:46:45.924Z"
+      }
     },
     {
       "priority": 467,
@@ -30018,7 +30100,7 @@
       "package_id": "WCP-477",
       "title": "Duplicate access roles into safe drafts",
       "risk": "medium",
-      "execution_state": "worker_complete_awaiting_trusted_review",
+      "execution_state": "trusted_integrated",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -30096,7 +30178,7 @@
       },
       "published_at": "2026-09-27T06:18:40.681Z",
       "claimed_on": "2026-09-27T06:18:40.681Z",
-      "claim_state": "locked_until_trusted_resolution",
+      "claim_state": "released_after_trusted_integration",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
       "active_head": "15054727e3bb3df90847fa61fede340290b6f717",
@@ -30111,13 +30193,13 @@
         "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
         "feature_branch": "15054727e3bb3df90847fa61fede340290b6f717"
       },
-      "next_action": "Continue to a separate dependency-safe module follow-up; inspect the optional rankName form-mapping regression recorded by WCP-476, check current active paths/branches/PRs, and claim a disjoint package before editing.",
+      "next_action": "Worker PR #270 closed after Trusted PR #174 and all downstream gates succeeded.",
       "last_observed_head": "15054727e3bb3df90847fa61fede340290b6f717",
       "last_verified_push_at": "2026-09-27T06:28:30.149Z",
       "worker_pr": 270,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/270",
       "draft_pr": false,
-      "pr_state": "open_ready_unmerged",
+      "pr_state": "closed",
       "ci_run_id": 36300168629,
       "last_ci_run_id": 36300168629,
       "ci_result": "success",
@@ -30142,7 +30224,7 @@
         "templates/admin/access_role/form.html.twig",
         "tests/Controller/AdminAccessRoleDuplicationTest.php"
       ],
-      "completed_at": "2026-09-27T06:33:30.519Z",
+      "completed_at": "2026-09-28T00:46:45.924Z",
       "test_results": {
         "phpunit": "434 tests, 1,905 assertions, 0 failures/errors; one deprecation and one notice.",
         "phpstan": "Level 8 passed with no errors.",
@@ -30176,7 +30258,26 @@
         "Awaiting Trusted queue mapping, review/port, and fresh Trusted CI before integration.",
         "No schema change; retain the separation between role copying and assignment and preserve PermissionDelegationPolicy through the later Fortress transition."
       ],
-      "trusted_follow_up": "Map this worker proposal into the canonical Trusted queue, review/port the permission-safe copy workflow, and run full Trusted CI. Keep copy creation separate from role assignment and preserve PermissionDelegationPolicy for the later Fortress transition."
+      "trusted_follow_up": "Map this worker proposal into the canonical Trusted queue, review/port the permission-safe copy workflow, and run full Trusted CI. Keep copy creation separate from role assignment and preserve PermissionDelegationPolicy for the later Fortress transition.",
+      "worker_pr_state": "closed",
+      "trusted_resolution": {
+        "status": "integrated",
+        "worker_pr": 270,
+        "worker_head": "15054727e3bb3df90847fa61fede340290b6f717",
+        "trusted_pr": 174,
+        "trusted_pr_ci_run_id": 36362751650,
+        "trusted_pr_ci_result": "success",
+        "trusted_merge_sha": "0e1dcf0edeaaf2581eb7f498a2791ab81a7fc803",
+        "final_trusted_main_sha": "0e1dcf0edeaaf2581eb7f498a2791ab81a7fc803",
+        "final_trusted_main_ci_run_id": 36363087040,
+        "final_trusted_main_ci_result": "success",
+        "worker_sync_run_id": 36363087063,
+        "worker_sync_result": "success",
+        "sanitized_worker_sync_sha": "755bc27079fb50b291dd9be0524b4787ff7f43ed",
+        "worker_ci_run_id": 36363100372,
+        "worker_ci_after_sync_result": "success",
+        "resolved_at": "2026-09-28T00:46:45.924Z"
+      }
     },
     {
       "priority": 478,
@@ -32117,7 +32218,7 @@
       "package_id": "WCP-489",
       "title": "Compare site themes from website settings",
       "risk": "medium",
-      "execution_state": "worker_complete_awaiting_trusted_review",
+      "execution_state": "trusted_integrated",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -32201,7 +32302,7 @@
         ]
       },
       "published_at": "2026-09-27T08:59:40.564Z",
-      "claim_state": "locked_until_trusted_resolution",
+      "claim_state": "released_after_trusted_integration",
       "claimed_on": "2026-09-27T08:59:53.343Z",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
@@ -32212,7 +32313,7 @@
         "feature_branch": "b789ffcf6088a1e9a3542cb0c23cd11f97e56c91"
       },
       "last_observed_head": "b789ffcf6088a1e9a3542cb0c23cd11f97e56c91",
-      "next_action": "Await Trusted review and integration CI; keep the claim locked until Trusted explicitly resolves it.",
+      "next_action": "Worker PR #283 closed after Trusted PR #174 and all downstream gates succeeded.",
       "last_checkpoint_at": "2026-09-27T09:16:00.012Z",
       "last_verified_push_at": "2026-09-27T09:16:00.012Z",
       "checkpoint_paths": [
@@ -32230,7 +32331,7 @@
         "tests/Controller/AdminThemePreviewTest.php"
       ],
       "draft_pr": false,
-      "pr_state": "open",
+      "pr_state": "closed",
       "ci_run_id": 36308561704,
       "last_ci_run_id": 36308561704,
       "ci_result": "success",
@@ -32272,7 +32373,7 @@
         "templates/admin/settings/theme_preview.html.twig",
         "tests/Controller/AdminThemePreviewTest.php"
       ],
-      "completed_at": "2026-09-27T09:16:00.012Z",
+      "completed_at": "2026-09-28T00:46:45.924Z",
       "test_results": {
         "phpunit": "433 tests, 1,953 assertions, zero failures (one PHPUnit deprecation and one notice).",
         "phpstan": "Level 8 passed with no errors.",
@@ -32313,7 +32414,26 @@
         "The new page is a compact sample of bundled theme tokens, not a full independent render of every page/layout; the existing Layout Workshop remains the full per-page preview.",
         "Third-party or dynamically installed themes are not executed or previewed by this worker change."
       ],
-      "trusted_follow_up": "Map WCP-489 into the canonical Trusted queue, review the CMS_SETTINGS_MANAGE route, static bundled-theme CSS classes, read-only persistence boundary and template links, then run full Trusted CI on a fresh Trusted feature branch. If dynamic themes are introduced later, validate a public token contract and preserve the no-code-execution boundary."
+      "trusted_follow_up": "Map WCP-489 into the canonical Trusted queue, review the CMS_SETTINGS_MANAGE route, static bundled-theme CSS classes, read-only persistence boundary and template links, then run full Trusted CI on a fresh Trusted feature branch. If dynamic themes are introduced later, validate a public token contract and preserve the no-code-execution boundary.",
+      "worker_pr_state": "closed",
+      "trusted_resolution": {
+        "status": "integrated",
+        "worker_pr": 283,
+        "worker_head": "b789ffcf6088a1e9a3542cb0c23cd11f97e56c91",
+        "trusted_pr": 174,
+        "trusted_pr_ci_run_id": 36362751650,
+        "trusted_pr_ci_result": "success",
+        "trusted_merge_sha": "0e1dcf0edeaaf2581eb7f498a2791ab81a7fc803",
+        "final_trusted_main_sha": "0e1dcf0edeaaf2581eb7f498a2791ab81a7fc803",
+        "final_trusted_main_ci_run_id": 36363087040,
+        "final_trusted_main_ci_result": "success",
+        "worker_sync_run_id": 36363087063,
+        "worker_sync_result": "success",
+        "sanitized_worker_sync_sha": "755bc27079fb50b291dd9be0524b4787ff7f43ed",
+        "worker_ci_run_id": 36363100372,
+        "worker_ci_after_sync_result": "success",
+        "resolved_at": "2026-09-28T00:46:45.924Z"
+      }
     },
     {
       "priority": 490,
