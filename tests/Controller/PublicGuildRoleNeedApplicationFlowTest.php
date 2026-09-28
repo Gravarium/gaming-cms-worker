@@ -237,6 +237,14 @@ final class PublicGuildRoleNeedApplicationFlowTest extends WebTestCase
         $em->clear();
     }
 
+    private function assertPrivateHeaders(KernelBrowser $client): void
+    {
+        $cacheControl = strtolower((string) $client->getResponse()->headers->get('Cache-Control'));
+        self::assertMatchesRegularExpression('/(?:^|,\\s*)private(?:,|$)/', $cacheControl);
+        self::assertMatchesRegularExpression('/(?:^|,\\s*)no-store(?:,|$)/', $cacheControl);
+        self::assertSame('noindex, nofollow', $client->getResponse()->headers->get('X-Robots-Tag'));
+    }
+
     private function cleanup(
         KernelBrowser $client,
         string $email,
