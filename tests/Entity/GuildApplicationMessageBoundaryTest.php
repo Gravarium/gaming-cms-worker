@@ -25,16 +25,28 @@ final class GuildApplicationMessageBoundaryTest extends TestCase
         self::assertSame(20000, strlen($application->getMessage()));
     }
 
-    public function testRejectedMessagesLeaveTheStoredValueUnchanged(): void
+    public function testOverlongMessagesRemainAvailableForValidationButAreRejectedBeforePersistence(): void
+    {
+        $application = new GuildApplication();
+
+        foreach ([str_repeat('x', 5001), str_repeat('🎮', 5001)] as $message) {
+            $application->setMessage($message);
+            self::assertSame($message, $application->getMessage());
+            $this->assertRejected(static function () use ($application): void {
+                $application->assertMessageColumnBoundary();
+            });
+        }
+    }
+
+    public function testMalformedMessagesRemainRejectedWithoutReplacingTheStoredValue(): void
     {
         $storedMessage = 'An existing application message with enough content.';
         $application = (new GuildApplication())->setMessage($storedMessage);
 
-        foreach ([str_repeat('x', 5001), str_repeat('🎮', 5001), "\xFFinvalid-utf8", "embedded\0nul"] as $message) {
+        foreach (["\xFFinvalid-utf8", "embedded\0nul"] as $message) {
             $this->assertRejected(static function () use ($application, $message): void {
                 $application->setMessage($message);
             });
-
             self::assertSame($storedMessage, $application->getMessage());
         }
     }

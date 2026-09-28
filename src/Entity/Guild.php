@@ -14,8 +14,12 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Table(name: 'guild')]
 #[ORM\UniqueConstraint(name: 'uniq_guild_slug', columns: ['slug'])]
 #[UniqueEntity(fields: ['slug'])]
+#[ORM\HasLifecycleCallbacks]
 class Guild
 {
+    private const MAX_SERVER_NAME_BYTES = 480;
+    private const MAX_SERVER_NAME_LENGTH = 120;
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -95,10 +99,6 @@ class Guild
         }
 
         $normalizedServerName = trim($serverName);
-        if (strlen($normalizedServerName) > 480 || mb_strlen($normalizedServerName, 'UTF-8') > 120) {
-            throw new \InvalidArgumentException('Guild server name must fit its 120-character storage column.');
-        }
-
         $this->serverName = $normalizedServerName;
 
         return $this;
@@ -121,5 +121,15 @@ class Guild
     {
         $value = $value === null ? null : trim($value);
         return $value === '' ? null : $value;
+    }
+
+    /** @internal Doctrine lifecycle callback. */
+    #[ORM\PrePersist]
+    #[ORM\PreUpdate]
+    public function assertServerNameColumnBoundary(): void
+    {
+        if (strlen($this->serverName) > self::MAX_SERVER_NAME_BYTES || !mb_check_encoding($this->serverName, 'UTF-8') || str_contains($this->serverName, "\0") || mb_strlen($this->serverName, 'UTF-8') > self::MAX_SERVER_NAME_LENGTH) {
+            throw new \InvalidArgumentException('Guild server name must fit its 120-character storage column.');
+        }
     }
 }

@@ -13,6 +13,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Table(name: 'module_storage_setting')]
 #[ORM\UniqueConstraint(name: 'uniq_module_storage_key', columns: ['module_key'])]
 #[UniqueEntity(fields: ['moduleKey'])]
+#[ORM\HasLifecycleCallbacks]
 class ModuleStorageSetting
 {
     public const MODE_INTERNAL = 'internal';
@@ -58,7 +59,7 @@ class ModuleStorageSetting
     public function setExternalBaseUrl(?string $externalBaseUrl): self
     {
         if ($externalBaseUrl !== null) {
-            $this->assertColumnBoundedUtf8($externalBaseUrl, self::MAX_EXTERNAL_BASE_URL_BYTES, self::MAX_EXTERNAL_BASE_URL_LENGTH, 'Die externe Basis-URL');
+            $this->assertValidUtf8WithoutNul($externalBaseUrl, 'Die externe Basis-URL');
             $externalBaseUrl = rtrim(trim($externalBaseUrl), '/');
         }
 
@@ -75,6 +76,23 @@ class ModuleStorageSetting
 
         if (str_contains($value, "\0") || mb_strlen($value, 'UTF-8') > $maxCharacters) {
             throw new \InvalidArgumentException($field.' ist ungültig oder überschreitet die zulässige Länge.');
+        }
+    }
+
+    private function assertValidUtf8WithoutNul(string $value, string $field): void
+    {
+        if (!mb_check_encoding($value, 'UTF-8') || str_contains($value, "\0")) {
+            throw new \InvalidArgumentException($field.' ist ungültig oder überschreitet die zulässige Länge.');
+        }
+    }
+
+    /** @internal Doctrine lifecycle callback. */
+    #[ORM\PrePersist]
+    #[ORM\PreUpdate]
+    public function assertExternalBaseUrlColumnBoundary(): void
+    {
+        if ($this->externalBaseUrl !== null) {
+            $this->assertColumnBoundedUtf8($this->externalBaseUrl, self::MAX_EXTERNAL_BASE_URL_BYTES, self::MAX_EXTERNAL_BASE_URL_LENGTH, 'Die externe Basis-URL');
         }
     }
 }

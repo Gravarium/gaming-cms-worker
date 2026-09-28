@@ -13,8 +13,12 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Entity(repositoryClass: MediaFolderRepository::class)]
 #[ORM\Table(name: 'media_folder')]
 #[ORM\UniqueConstraint(name: 'uniq_media_folder_slug', columns: ['slug'])]
+#[ORM\HasLifecycleCallbacks]
 class MediaFolder
 {
+    private const MAX_NAME_BYTES = 480;
+    private const MAX_NAME_LENGTH = 120;
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -54,10 +58,6 @@ class MediaFolder
         }
 
         $normalizedName = trim($name);
-        if (strlen($normalizedName) > 480 || mb_strlen($normalizedName, 'UTF-8') > 120) {
-            throw new \InvalidArgumentException('Media folder name must fit its 120-character storage column.');
-        }
-
         $this->name = $normalizedName;
 
         return $this;
@@ -118,5 +118,15 @@ class MediaFolder
         }
 
         return implode(' / ', $parts);
+    }
+
+    /** @internal Doctrine lifecycle callback. */
+    #[ORM\PrePersist]
+    #[ORM\PreUpdate]
+    public function assertNameColumnBoundary(): void
+    {
+        if (strlen($this->name) > self::MAX_NAME_BYTES || !mb_check_encoding($this->name, 'UTF-8') || str_contains($this->name, "\0") || mb_strlen($this->name, 'UTF-8') > self::MAX_NAME_LENGTH) {
+            throw new \InvalidArgumentException('Media folder name must fit its 120-character storage column.');
+        }
     }
 }

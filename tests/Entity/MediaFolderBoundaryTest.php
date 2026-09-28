@@ -24,15 +24,27 @@ final class MediaFolderBoundaryTest extends TestCase
         self::assertSame(480, strlen($folder->getName()));
     }
 
-    public function testRejectedNamesLeaveTheStoredValueUnchanged(): void
+    public function testOverlongNamesRemainAvailableForValidationButAreRejectedBeforePersistence(): void
+    {
+        $folder = new MediaFolder();
+
+        foreach ([str_repeat('x', 121), str_repeat('🎮', 121)] as $name) {
+            $folder->setName($name);
+            self::assertSame($name, $folder->getName());
+            $this->assertRejected(static function () use ($folder): void {
+                $folder->assertNameColumnBoundary();
+            });
+        }
+    }
+
+    public function testMalformedNamesRemainRejectedWithoutReplacingTheStoredValue(): void
     {
         $folder = (new MediaFolder())->setName('Existing folder');
 
-        foreach ([str_repeat('x', 121), str_repeat('🎮', 121), "\xFFinvalid-utf8", "embedded\0nul"] as $name) {
+        foreach (["\xFFinvalid-utf8", "embedded\0nul"] as $name) {
             $this->assertRejected(static function () use ($folder, $name): void {
                 $folder->setName($name);
             });
-
             self::assertSame('Existing folder', $folder->getName());
         }
     }

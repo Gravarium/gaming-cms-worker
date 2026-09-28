@@ -44,17 +44,16 @@ final class ModuleStorageSettingBoundaryTest extends TestCase
         self::assertSame($multibyteUrl, (new ModuleStorageSetting())->setExternalBaseUrl($multibyteUrl)->getExternalBaseUrl());
     }
 
-    public function testRejectedExternalBaseUrlsDoNotReplaceTheStoredUrl(): void
+    public function testOverlongExternalBaseUrlsRemainAvailableForValidationButAreRejectedBeforePersistence(): void
     {
-        $url = 'https://example.invalid/old';
-        $state = (new ModuleStorageSetting())->setExternalBaseUrl($url);
+        $setting = new ModuleStorageSetting();
 
-        foreach ([str_repeat(' ', 2001), str_repeat('a', 501), "https://example.invalid/\xFF", "https://example.invalid/\0suffix"] as $candidate) {
-            $this->assertRejected(static function () use ($state, $candidate): void {
-                $state->setExternalBaseUrl($candidate);
+        foreach ([str_repeat('a', 501), str_repeat('🎮', 501)] as $candidate) {
+            $setting->setExternalBaseUrl($candidate);
+            self::assertSame($candidate, $setting->getExternalBaseUrl());
+            $this->assertRejected(static function () use ($setting): void {
+                $setting->assertExternalBaseUrlColumnBoundary();
             });
-
-            self::assertSame($url, $state->getExternalBaseUrl());
         }
     }
 
@@ -64,6 +63,19 @@ final class ModuleStorageSettingBoundaryTest extends TestCase
         self::assertNull($state->setExternalBaseUrl(null)->getExternalBaseUrl());
         self::assertNull($state->setExternalBaseUrl('   ')->getExternalBaseUrl());
         self::assertSame('https://example.invalid/path', $state->setExternalBaseUrl('  https://example.invalid/path///  ')->getExternalBaseUrl());
+    }
+
+    public function testMalformedExternalBaseUrlsRemainRejectedWithoutReplacingTheStoredUrl(): void
+    {
+        $url = 'https://example.invalid/old';
+        $setting = (new ModuleStorageSetting())->setExternalBaseUrl($url);
+
+        foreach (["https://example.invalid/\xFF", "https://example.invalid/\0suffix"] as $candidate) {
+            $this->assertRejected(static function () use ($setting, $candidate): void {
+                $setting->setExternalBaseUrl($candidate);
+            });
+            self::assertSame($url, $setting->getExternalBaseUrl());
+        }
     }
 
     /** @param \Closure(): mixed $operation */

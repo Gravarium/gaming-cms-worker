@@ -24,15 +24,27 @@ final class GuildMemberCharacterNameBoundaryTest extends TestCase
         self::assertSame(480, strlen($member->getCharacterName()));
     }
 
-    public function testRejectedNamesLeaveTheStoredValueUnchanged(): void
+    public function testOverlongNamesRemainAvailableForValidationButAreRejectedBeforePersistence(): void
+    {
+        $member = new GuildMember();
+
+        foreach ([str_repeat('x', 121), str_repeat('🎮', 121)] as $name) {
+            $member->setCharacterName($name);
+            self::assertSame($name, $member->getCharacterName());
+            $this->assertRejected(static function () use ($member): void {
+                $member->assertCharacterNameColumnBoundary();
+            });
+        }
+    }
+
+    public function testMalformedNamesRemainRejectedWithoutReplacingTheStoredValue(): void
     {
         $member = (new GuildMember())->setCharacterName('Existing character');
 
-        foreach ([str_repeat('x', 121), str_repeat('🎮', 121), "\xFFinvalid-utf8", "embedded\0nul"] as $name) {
+        foreach (["\xFFinvalid-utf8", "embedded\0nul"] as $name) {
             $this->assertRejected(static function () use ($member, $name): void {
                 $member->setCharacterName($name);
             });
-
             self::assertSame('Existing character', $member->getCharacterName());
         }
     }

@@ -13,6 +13,7 @@ use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 #[ORM\Entity(repositoryClass: SiteSettingsRepository::class)]
 #[ORM\Table(name: 'site_settings')]
+#[ORM\HasLifecycleCallbacks]
 class SiteSettings
 {
     private const MAX_HOME_TITLE_BYTES = 720;
@@ -78,7 +79,9 @@ class SiteSettings
     public function getHomeTitle(): string { return $this->homeTitle; }
     public function setHomeTitle(string $homeTitle): self
     {
-        $this->assertHomeTitleColumnBoundary($homeTitle);
+        if (!mb_check_encoding($homeTitle, 'UTF-8') || str_contains($homeTitle, "\0")) {
+            throw new \InvalidArgumentException('Der Seitentitel ist ungültig oder überschreitet die zulässige Länge.');
+        }
 
         $this->homeTitle = trim($homeTitle);
 
@@ -131,13 +134,12 @@ class SiteSettings
         }
     }
 
-    private function assertHomeTitleColumnBoundary(string $homeTitle): void
+    /** @internal Doctrine lifecycle callback. */
+    #[ORM\PrePersist]
+    #[ORM\PreUpdate]
+    public function assertHomeTitleColumnBoundary(): void
     {
-        if (strlen($homeTitle) > self::MAX_HOME_TITLE_BYTES || !mb_check_encoding($homeTitle, 'UTF-8')) {
-            throw new \InvalidArgumentException('Der Seitentitel ist ungültig oder überschreitet die zulässige Länge.');
-        }
-
-        if (str_contains($homeTitle, "\0") || mb_strlen($homeTitle, 'UTF-8') > self::MAX_HOME_TITLE_LENGTH) {
+        if (strlen($this->homeTitle) > self::MAX_HOME_TITLE_BYTES || !mb_check_encoding($this->homeTitle, 'UTF-8') || str_contains($this->homeTitle, "\0") || mb_strlen($this->homeTitle, 'UTF-8') > self::MAX_HOME_TITLE_LENGTH) {
             throw new \InvalidArgumentException('Der Seitentitel ist ungültig oder überschreitet die zulässige Länge.');
         }
     }

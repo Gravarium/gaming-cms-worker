@@ -11,6 +11,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: GuildApplicationQuestionRepository::class)]
 #[ORM\Table(name: 'guild_application_question')]
+#[ORM\HasLifecycleCallbacks]
 class GuildApplicationQuestion
 {
     private const MAX_LABEL_BYTES = 1020;
@@ -56,7 +57,9 @@ class GuildApplicationQuestion
     public function getLabel(): string { return $this->label; }
     public function setLabel(string $label): self
     {
-        $this->assertLabelColumnBoundary($label);
+        if (!mb_check_encoding($label, 'UTF-8') || str_contains($label, "\0")) {
+            throw new \InvalidArgumentException('Die Fragebezeichnung ist ungültig oder überschreitet die zulässige Länge.');
+        }
 
         $this->label = trim($label);
 
@@ -73,13 +76,12 @@ class GuildApplicationQuestion
     public function isEnabled(): bool { return $this->enabled; }
     public function setEnabled(bool $enabled): self { $this->enabled = $enabled; return $this; }
 
-    private function assertLabelColumnBoundary(string $label): void
+    /** @internal Doctrine lifecycle callback. */
+    #[ORM\PrePersist]
+    #[ORM\PreUpdate]
+    public function assertLabelColumnBoundary(): void
     {
-        if (strlen($label) > self::MAX_LABEL_BYTES || !mb_check_encoding($label, 'UTF-8')) {
-            throw new \InvalidArgumentException('Die Fragebezeichnung ist ungültig oder überschreitet die zulässige Länge.');
-        }
-
-        if (str_contains($label, "\0") || mb_strlen($label, 'UTF-8') > self::MAX_LABEL_LENGTH) {
+        if (strlen($this->label) > self::MAX_LABEL_BYTES || mb_strlen($this->label, 'UTF-8') > self::MAX_LABEL_LENGTH) {
             throw new \InvalidArgumentException('Die Fragebezeichnung ist ungültig oder überschreitet die zulässige Länge.');
         }
     }

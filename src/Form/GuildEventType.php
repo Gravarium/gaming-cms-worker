@@ -16,6 +16,7 @@ use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\Length;
 
 /** @extends AbstractType<GuildEvent> */
 final class GuildEventType extends AbstractType
@@ -23,7 +24,11 @@ final class GuildEventType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $guild = $options['guild'];
-        $builder->add('title', null, ['label' => 'Titel'])
+        $builder->add('title', null, [
+            'label' => 'Titel',
+            'constraints' => [new Length(max: 180)],
+            'attr' => ['maxlength' => 180],
+        ])
             ->add('team', EntityType::class, [
                 'class' => GuildTeam::class,
                 'choice_label' => 'name',
@@ -37,9 +42,15 @@ final class GuildEventType extends AbstractType
             ->add('startsAt', DateTimeType::class, ['label' => 'Beginn', 'widget' => 'single_text'])
             ->add('endsAt', DateTimeType::class, ['label' => 'Ende', 'widget' => 'single_text', 'required' => false])
             ->add('maxParticipants', IntegerType::class, ['label' => 'Teilnehmerlimit', 'required' => false])
-            ->add('location', null, ['label' => 'Server, Treffpunkt oder Kanal', 'required' => false])
+            ->add('location', null, [
+                'label' => 'Server, Treffpunkt oder Kanal',
+                'required' => false,
+                'constraints' => [new Length(max: 140)],
+                'attr' => ['maxlength' => 140],
+            ])
             ->add('status', ChoiceType::class, ['label' => 'Status', 'choices' => ['Geplant' => 'planned', 'Abgeschlossen' => 'done', 'Abgesagt' => 'cancelled']]);
     }
+
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults(['data_class' => GuildEvent::class])->setRequired('guild')->setAllowedTypes('guild', Guild::class);

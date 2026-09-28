@@ -19,16 +19,16 @@ final class GuildRankBoundaryTest extends TestCase
         self::assertSame($multibyteName, (new GuildRank())->setName($multibyteName)->getName());
     }
 
-    public function testRejectedNamesDoNotReplaceTheStoredValue(): void
+    public function testOverlongNamesRemainAvailableForValidationButAreRejectedBeforePersistence(): void
     {
-        $state = (new GuildRank())->setName('Raider');
+        $rank = new GuildRank();
 
-        foreach ([str_repeat('R', 101), str_repeat('é', 101), str_repeat(' ', 401), "invalid\xFFutf8", "Rank\0suffix"] as $candidate) {
-            $this->assertRejected(static function () use ($state, $candidate): void {
-                $state->setName($candidate);
+        foreach ([str_repeat('R', 101), str_repeat('é', 101)] as $candidate) {
+            $rank->setName($candidate);
+            self::assertSame($candidate, $rank->getName());
+            $this->assertRejected(static function () use ($rank): void {
+                $rank->assertNameColumnBoundary();
             });
-
-            self::assertSame('Raider', $state->getName());
         }
     }
 
@@ -38,6 +38,18 @@ final class GuildRankBoundaryTest extends TestCase
 
         self::assertSame('Moderator', $state->setName('  Moderator  ')->getName());
         self::assertSame('', $state->setName('   ')->getName());
+    }
+
+    public function testMalformedNamesRemainRejectedWithoutReplacingTheStoredValue(): void
+    {
+        $rank = (new GuildRank())->setName('Raider');
+
+        foreach (["invalid\xFFutf8", "Rank\0suffix"] as $candidate) {
+            $this->assertRejected(static function () use ($rank, $candidate): void {
+                $rank->setName($candidate);
+            });
+            self::assertSame('Raider', $rank->getName());
+        }
     }
 
     /** @param \Closure(): mixed $operation */

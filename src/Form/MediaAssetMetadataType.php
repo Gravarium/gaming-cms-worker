@@ -18,7 +18,7 @@ final class MediaAssetMetadataType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('title', null, ['label' => 'Titel'])
+            ->add('title', null, ['label' => 'Titel', 'attr' => ['maxlength' => 180]])
             ->add('altText', null, ['label' => 'Alternativtext', 'required' => false])
             ->add('caption', TextareaType::class, ['label' => 'Beschreibung', 'required' => false, 'attr' => ['rows' => 4]])
             ->add('tagsText', null, ['label' => 'Schlagwörter', 'required' => false, 'help' => 'Mit Kommas trennen, maximal 30 Schlagwörter.'])

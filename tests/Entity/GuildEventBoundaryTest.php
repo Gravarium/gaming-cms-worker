@@ -27,15 +27,27 @@ final class GuildEventBoundaryTest extends TestCase
         self::assertNull($event->setLocation(null)->getLocation());
     }
 
-    public function testRejectedLocationsLeaveTheStoredValueUnchanged(): void
+    public function testOverlongLocationsRemainAvailableForValidationButAreRejectedBeforePersistence(): void
+    {
+        $event = new GuildEvent();
+
+        foreach ([str_repeat('x', 141), str_repeat('🎮', 141)] as $location) {
+            $event->setLocation($location);
+            self::assertSame($location, $event->getLocation());
+            $this->assertRejected(static function () use ($event): void {
+                $event->assertLocationColumnBoundary();
+            });
+        }
+    }
+
+    public function testMalformedLocationsRemainRejectedWithoutReplacingTheStoredValue(): void
     {
         $event = (new GuildEvent())->setLocation('Existing location');
 
-        foreach ([str_repeat('x', 141), str_repeat('🎮', 141), "\xFFinvalid-utf8", "embedded\0nul"] as $location) {
+        foreach (["\xFFinvalid-utf8", "embedded\0nul"] as $location) {
             $this->assertRejected(static function () use ($event, $location): void {
                 $event->setLocation($location);
             });
-
             self::assertSame('Existing location', $event->getLocation());
         }
     }

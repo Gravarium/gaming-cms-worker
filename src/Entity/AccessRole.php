@@ -15,6 +15,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Entity(repositoryClass: AccessRoleRepository::class)]
 #[ORM\Table(name: 'access_role')]
 #[ORM\UniqueConstraint(name: 'uniq_access_role_key', columns: ['role_key'])]
+#[ORM\HasLifecycleCallbacks]
 class AccessRole
 {
     private const MAX_KEY_BYTES = 320;
@@ -68,7 +69,6 @@ class AccessRole
         }
 
         $normalizedKey = mb_strtolower(trim($key));
-        $this->assertKeyColumnBoundary($normalizedKey);
         $this->key = $normalizedKey;
 
         return $this;
@@ -96,9 +96,12 @@ class AccessRole
     public function getUsers(): Collection { return $this->users; }
     public function getCreatedAt(): \DateTimeImmutable { return $this->createdAt; }
 
-    private function assertKeyColumnBoundary(string $key): void
+    /** @internal Doctrine lifecycle callback. */
+    #[ORM\PrePersist]
+    #[ORM\PreUpdate]
+    public function assertKeyColumnBoundary(): void
     {
-        if (strlen($key) > self::MAX_KEY_BYTES || mb_strlen($key, 'UTF-8') > self::MAX_KEY_LENGTH) {
+        if (strlen($this->key) > self::MAX_KEY_BYTES || !mb_check_encoding($this->key, 'UTF-8') || str_contains($this->key, "\0") || mb_strlen($this->key, 'UTF-8') > self::MAX_KEY_LENGTH) {
             throw new \InvalidArgumentException('Access role key is invalid or exceeds the allowed length.');
         }
     }

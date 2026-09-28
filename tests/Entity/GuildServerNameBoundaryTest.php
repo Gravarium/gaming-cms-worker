@@ -24,15 +24,27 @@ final class GuildServerNameBoundaryTest extends TestCase
         self::assertSame(480, strlen($guild->getServerName()));
     }
 
-    public function testRejectedNamesLeaveTheStoredValueUnchanged(): void
+    public function testOverlongNamesRemainAvailableForValidationButAreRejectedBeforePersistence(): void
+    {
+        $guild = new Guild();
+
+        foreach ([str_repeat('x', 121), str_repeat('🎮', 121)] as $serverName) {
+            $guild->setServerName($serverName);
+            self::assertSame($serverName, $guild->getServerName());
+            $this->assertRejected(static function () use ($guild): void {
+                $guild->assertServerNameColumnBoundary();
+            });
+        }
+    }
+
+    public function testMalformedNamesRemainRejectedWithoutReplacingTheStoredValue(): void
     {
         $guild = (new Guild())->setServerName('Existing server');
 
-        foreach ([str_repeat('x', 121), str_repeat('🎮', 121), "\xFFinvalid-utf8", "embedded\0nul"] as $serverName) {
+        foreach (["\xFFinvalid-utf8", "embedded\0nul"] as $serverName) {
             $this->assertRejected(static function () use ($guild, $serverName): void {
                 $guild->setServerName($serverName);
             });
-
             self::assertSame('Existing server', $guild->getServerName());
         }
     }

@@ -24,15 +24,27 @@ final class GuildTeamBoundaryTest extends TestCase
         self::assertSame(480, strlen($team->getName()));
     }
 
-    public function testRejectedNamesLeaveTheStoredValueUnchanged(): void
+    public function testOverlongNamesRemainAvailableForValidationButAreRejectedBeforePersistence(): void
+    {
+        $team = new GuildTeam();
+
+        foreach ([str_repeat('x', 121), str_repeat('🎮', 121)] as $name) {
+            $team->setName($name);
+            self::assertSame($name, $team->getName());
+            $this->assertRejected(static function () use ($team): void {
+                $team->assertNameColumnBoundary();
+            });
+        }
+    }
+
+    public function testMalformedNamesRemainRejectedWithoutReplacingTheStoredValue(): void
     {
         $team = (new GuildTeam())->setName('Existing team');
 
-        foreach ([str_repeat('x', 121), str_repeat('🎮', 121), "\xFFinvalid-utf8", "embedded\0nul"] as $name) {
+        foreach (["\xFFinvalid-utf8", "embedded\0nul"] as $name) {
             $this->assertRejected(static function () use ($team, $name): void {
                 $team->setName($name);
             });
-
             self::assertSame('Existing team', $team->getName());
         }
     }

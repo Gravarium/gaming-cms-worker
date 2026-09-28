@@ -28,15 +28,27 @@ final class AccessRoleKeyBoundaryTest extends TestCase
         self::assertSame('admin_role', $role->setKey('  Admin_Role  ')->getKey());
     }
 
-    public function testRejectedKeysDoNotReplaceTheStoredValue(): void
+    public function testOverlongKeysRemainAvailableForValidationButAreRejectedBeforePersistence(): void
+    {
+        $role = new AccessRole();
+
+        foreach ([str_repeat('r', 81), str_repeat('é', 81), str_repeat('🎮', 81)] as $candidate) {
+            $role->setKey($candidate);
+            self::assertSame($candidate, $role->getKey());
+            $this->assertRejected(static function () use ($role): void {
+                $role->assertKeyColumnBoundary();
+            });
+        }
+    }
+
+    public function testMalformedKeysRemainRejectedWithoutReplacingTheStoredValue(): void
     {
         $role = (new AccessRole())->setKey('editor_role');
 
-        foreach ([str_repeat('r', 81), str_repeat('é', 81), str_repeat('🎮', 81), "\xFFkey", "\0admin", "admin\0"] as $candidate) {
+        foreach (["\xFFkey", "\0admin", "admin\0"] as $candidate) {
             $this->assertRejected(static function () use ($role, $candidate): void {
                 $role->setKey($candidate);
             });
-
             self::assertSame('editor_role', $role->getKey());
         }
     }

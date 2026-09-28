@@ -24,15 +24,27 @@ final class GuildAnnouncementBoundaryTest extends TestCase
         self::assertSame('Guild update', (new GuildAnnouncement())->setTitle('  Guild update  ')->getTitle());
     }
 
-    public function testRejectedTitlesLeaveTheStoredTitleUnchanged(): void
+    public function testOverlongTitlesRemainAvailableForValidationButAreRejectedBeforePersistence(): void
+    {
+        $announcement = new GuildAnnouncement();
+
+        foreach ([str_repeat('a', 181), str_repeat('🎮', 181)] as $title) {
+            $announcement->setTitle($title);
+            self::assertSame($title, $announcement->getTitle());
+            $this->assertRejected(static function () use ($announcement): void {
+                $announcement->assertTitleColumnBoundary();
+            });
+        }
+    }
+
+    public function testMalformedTitlesRemainRejectedWithoutReplacingTheStoredValue(): void
     {
         $announcement = (new GuildAnnouncement())->setTitle('Existing title');
 
-        foreach ([str_repeat('a', 181), str_repeat('🎮', 181), "\xFFinvalid-utf8", "embedded\0nul"] as $title) {
+        foreach (["\xFFinvalid-utf8", "embedded\0nul"] as $title) {
             $this->assertRejected(static function () use ($announcement, $title): void {
                 $announcement->setTitle($title);
             });
-
             self::assertSame('Existing title', $announcement->getTitle());
         }
     }

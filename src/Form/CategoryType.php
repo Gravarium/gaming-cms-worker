@@ -13,7 +13,7 @@ final class CategoryType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        $builder->add('name', null, ['label' => 'Name'])
+        $builder->add('name', null, ['label' => 'Name', 'attr' => ['maxlength' => 100]])
             ->add('parent', EntityType::class, [
                 'label' => 'Übergeordnete Kategorie',
                 'class' => Category::class,

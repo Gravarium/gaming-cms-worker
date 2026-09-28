@@ -10,8 +10,12 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: GuildMemberRepository::class)]
 #[ORM\Table(name: 'guild_member')]
+#[ORM\HasLifecycleCallbacks]
 class GuildMember
 {
+    private const MAX_CHARACTER_NAME_BYTES = 480;
+    private const MAX_CHARACTER_NAME_LENGTH = 120;
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -89,10 +93,6 @@ class GuildMember
         }
 
         $normalizedName = trim($characterName);
-        if (strlen($normalizedName) > 480 || mb_strlen($normalizedName, 'UTF-8') > 120) {
-            throw new \InvalidArgumentException('Guild member character name must fit its 120-character storage column.');
-        }
-
         $this->characterName = $normalizedName;
 
         return $this;
@@ -117,5 +117,15 @@ class GuildMember
     {
         $value = $value === null ? null : trim($value);
         return $value === '' ? null : $value;
+    }
+
+    /** @internal Doctrine lifecycle callback. */
+    #[ORM\PrePersist]
+    #[ORM\PreUpdate]
+    public function assertCharacterNameColumnBoundary(): void
+    {
+        if (strlen($this->characterName) > self::MAX_CHARACTER_NAME_BYTES || !mb_check_encoding($this->characterName, 'UTF-8') || str_contains($this->characterName, "\0") || mb_strlen($this->characterName, 'UTF-8') > self::MAX_CHARACTER_NAME_LENGTH) {
+            throw new \InvalidArgumentException('Guild member character name must fit its 120-character storage column.');
+        }
     }
 }

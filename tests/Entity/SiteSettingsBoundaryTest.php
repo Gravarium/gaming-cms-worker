@@ -19,17 +19,16 @@ final class SiteSettingsBoundaryTest extends TestCase
         self::assertSame($multibyteTitle, (new SiteSettings())->setHomeTitle($multibyteTitle)->getHomeTitle());
     }
 
-    public function testRejectedHomeTitlesDoNotReplaceTheStoredTitle(): void
+    public function testOverlongHomeTitlesRemainAvailableForValidationButAreRejectedBeforePersistence(): void
     {
-        $state = new SiteSettings();
-        $originalTitle = $state->getHomeTitle();
+        $settings = new SiteSettings();
 
-        foreach ([str_repeat('a', 181), str_repeat('é', 181), str_repeat(' ', 721), "invalid\xFFutf8", "title\0suffix"] as $candidate) {
-            $this->assertRejected(static function () use ($state, $candidate): void {
-                $state->setHomeTitle($candidate);
+        foreach ([str_repeat('a', 181), str_repeat('é', 181)] as $candidate) {
+            $settings->setHomeTitle($candidate);
+            self::assertSame($candidate, $settings->getHomeTitle());
+            $this->assertRejected(static function () use ($settings): void {
+                $settings->assertHomeTitleColumnBoundary();
             });
-
-            self::assertSame($originalTitle, $state->getHomeTitle());
         }
     }
 
@@ -39,6 +38,19 @@ final class SiteSettingsBoundaryTest extends TestCase
 
         self::assertSame('Welcome', $state->setHomeTitle('  Welcome  ')->getHomeTitle());
         self::assertSame('', $state->setHomeTitle('   ')->getHomeTitle());
+    }
+
+    public function testMalformedHomeTitlesRemainRejectedWithoutReplacingTheStoredValue(): void
+    {
+        $settings = new SiteSettings();
+        $originalTitle = $settings->getHomeTitle();
+
+        foreach (["invalid\xFFutf8", "title\0suffix"] as $candidate) {
+            $this->assertRejected(static function () use ($settings, $candidate): void {
+                $settings->setHomeTitle($candidate);
+            });
+            self::assertSame($originalTitle, $settings->getHomeTitle());
+        }
     }
 
     /** @param \Closure(): mixed $operation */

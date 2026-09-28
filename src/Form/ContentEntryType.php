@@ -13,6 +13,7 @@ use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\Length;
 /** @extends AbstractType<ContentEntry> */
 final class ContentEntryType extends AbstractType
 {
@@ -21,7 +22,13 @@ final class ContentEntryType extends AbstractType
         $builder->add('type', ChoiceType::class, ['label' => 'Inhaltstyp', 'choices' => ['News-Beitrag' => ContentEntry::TYPE_NEWS, 'Seite' => ContentEntry::TYPE_PAGE]])
             ->add('title', null, ['label' => 'Titel'])
             ->add('subtitle', null, ['label' => 'Untertitel', 'required' => false])
-            ->add('slug', null, ['label' => 'Slug', 'required' => false, 'help' => 'Leer lassen für automatische Erzeugung. Bei Änderung bleibt der alte öffentliche Slug als Weiterleitung erhalten.'])
+            ->add('slug', null, [
+                'label' => 'Slug',
+                'required' => false,
+                'help' => 'Leer lassen für automatische Erzeugung. Bei Änderung bleibt der alte öffentliche Slug als Weiterleitung erhalten.',
+                'attr' => ['maxlength' => 180],
+                'constraints' => [new Length(max: 180)],
+            ])
             ->add('category', EntityType::class, ['label' => 'Kategorie', 'class' => Category::class, 'choice_label' => 'displayName', 'placeholder' => 'Keine Kategorie', 'required' => false])
             ->add('tags', EntityType::class, ['label' => 'Tags', 'class' => ContentTag::class, 'choice_label' => 'name', 'multiple' => true, 'expanded' => true, 'required' => false])
             ->add('excerpt', TextareaType::class, ['label' => 'Kurztext', 'required' => false, 'attr' => ['rows' => 3, 'maxlength' => 500]])

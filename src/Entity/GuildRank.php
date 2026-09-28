@@ -10,6 +10,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: GuildRankRepository::class)]
 #[ORM\Table(name: 'guild_rank')]
+#[ORM\HasLifecycleCallbacks]
 class GuildRank
 {
     private const MAX_NAME_BYTES = 400;
@@ -52,7 +53,9 @@ class GuildRank
     public function getName(): string { return $this->name; }
     public function setName(string $name): self
     {
-        $this->assertNameColumnBoundary($name);
+        if (!mb_check_encoding($name, 'UTF-8') || str_contains($name, "\0")) {
+            throw new \InvalidArgumentException('Der Gildenrangname ist ungültig oder überschreitet die zulässige Länge.');
+        }
 
         $this->name = trim($name);
 
@@ -72,13 +75,12 @@ class GuildRank
     public function setEnabled(bool $enabled): self { $this->enabled = $enabled; return $this; }
     public function __toString(): string { return $this->name; }
 
-    private function assertNameColumnBoundary(string $name): void
+    /** @internal Doctrine lifecycle callback. */
+    #[ORM\PrePersist]
+    #[ORM\PreUpdate]
+    public function assertNameColumnBoundary(): void
     {
-        if (strlen($name) > self::MAX_NAME_BYTES || !mb_check_encoding($name, 'UTF-8')) {
-            throw new \InvalidArgumentException('Der Gildenrangname ist ungültig oder überschreitet die zulässige Länge.');
-        }
-
-        if (str_contains($name, "\0") || mb_strlen($name, 'UTF-8') > self::MAX_NAME_LENGTH) {
+        if (strlen($this->name) > self::MAX_NAME_BYTES || !mb_check_encoding($this->name, 'UTF-8') || str_contains($this->name, "\0") || mb_strlen($this->name, 'UTF-8') > self::MAX_NAME_LENGTH) {
             throw new \InvalidArgumentException('Der Gildenrangname ist ungültig oder überschreitet die zulässige Länge.');
         }
     }

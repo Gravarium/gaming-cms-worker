@@ -30,8 +30,8 @@ final class AccountPasswordType extends AbstractType
                 'type' => PasswordType::class,
                 'mapped' => false,
                 'invalid_message' => 'Die beiden neuen Passwörter stimmen nicht überein.',
-                'first_options' => ['label' => 'Neues Passwort', 'attr' => ['autocomplete' => 'new-password']],
-                'second_options' => ['label' => 'Neues Passwort wiederholen', 'attr' => ['autocomplete' => 'new-password']],
+                'first_options' => ['label' => 'Neues Passwort', 'attr' => ['autocomplete' => 'new-password', 'maxlength' => 4096]],
+                'second_options' => ['label' => 'Neues Passwort wiederholen', 'attr' => ['autocomplete' => 'new-password', 'maxlength' => 4096]],
                 'constraints' => $strongPassword,
             ]);
     }

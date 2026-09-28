@@ -11,8 +11,12 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: GuildApplicationRepository::class)]
 #[ORM\Table(name: 'guild_application')]
+#[ORM\HasLifecycleCallbacks]
 class GuildApplication
 {
+    private const MAX_MESSAGE_BYTES = 20000;
+    private const MAX_MESSAGE_LENGTH = 5000;
+
     public const STATUS_PENDING = 'pending';
     public const STATUS_REVIEWING = 'reviewing';
     public const STATUS_ACCEPTED = 'accepted';
@@ -108,10 +112,6 @@ class GuildApplication
         }
 
         $normalizedMessage = trim($message);
-        if (strlen($normalizedMessage) > 20000 || mb_strlen($normalizedMessage, 'UTF-8') > 5000) {
-            throw new \InvalidArgumentException('Guild application message must not exceed 5,000 characters.');
-        }
-
         $this->message = $normalizedMessage;
 
         return $this;
@@ -132,5 +132,15 @@ class GuildApplication
     private function ensureOpen(): void
     {
         if (!$this->isOpen()) { throw new \DomainException('A decided guild application cannot be decided again.'); }
+    }
+
+    /** @internal Doctrine lifecycle callback. */
+    #[ORM\PrePersist]
+    #[ORM\PreUpdate]
+    public function assertMessageColumnBoundary(): void
+    {
+        if (strlen($this->message) > self::MAX_MESSAGE_BYTES || !mb_check_encoding($this->message, 'UTF-8') || str_contains($this->message, "\0") || mb_strlen($this->message, 'UTF-8') > self::MAX_MESSAGE_LENGTH) {
+            throw new \InvalidArgumentException('Guild application message must not exceed 5,000 characters.');
+        }
     }
 }

@@ -19,16 +19,16 @@ final class GuildApplicationQuestionBoundaryTest extends TestCase
         self::assertSame($multibyteLabel, (new GuildApplicationQuestion())->setLabel($multibyteLabel)->getLabel());
     }
 
-    public function testRejectedLabelsDoNotReplaceTheStoredValue(): void
+    public function testOverlongLabelsRemainAvailableForValidationButAreRejectedBeforePersistence(): void
     {
-        $state = (new GuildApplicationQuestion())->setLabel('Question');
+        $question = new GuildApplicationQuestion();
 
-        foreach ([str_repeat('Q', 256), str_repeat('é', 256), str_repeat(' ', 1021), "invalid\xFFutf8", "Question\0suffix"] as $candidate) {
-            $this->assertRejected(static function () use ($state, $candidate): void {
-                $state->setLabel($candidate);
+        foreach ([str_repeat('Q', 256), str_repeat('é', 256)] as $candidate) {
+            $question->setLabel($candidate);
+            self::assertSame($candidate, $question->getLabel());
+            $this->assertRejected(static function () use ($question): void {
+                $question->assertLabelColumnBoundary();
             });
-
-            self::assertSame('Question', $state->getLabel());
         }
     }
 
@@ -38,6 +38,18 @@ final class GuildApplicationQuestionBoundaryTest extends TestCase
 
         self::assertSame('Favorite class', $state->setLabel('  Favorite class  ')->getLabel());
         self::assertSame('', $state->setLabel('   ')->getLabel());
+    }
+
+    public function testMalformedLabelsRemainRejectedWithoutReplacingTheStoredValue(): void
+    {
+        $question = (new GuildApplicationQuestion())->setLabel('Question');
+
+        foreach (["invalid\xFFutf8", "Question\0suffix"] as $candidate) {
+            $this->assertRejected(static function () use ($question, $candidate): void {
+                $question->setLabel($candidate);
+            });
+            self::assertSame('Question', $question->getLabel());
+        }
     }
 
     /** @param \Closure(): mixed $operation */

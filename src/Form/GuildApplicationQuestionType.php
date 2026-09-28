@@ -12,6 +12,7 @@ use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\Length;
 
 /** @extends AbstractType<GuildApplicationQuestion> */
 final class GuildApplicationQuestionType extends AbstractType
@@ -19,7 +20,12 @@ final class GuildApplicationQuestionType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('label', null, ['label' => 'Frage'])
+            ->add('label', null, [
+                'label' => 'Frage',
+                'empty_data' => '',
+                'constraints' => [new Length(max: 255)],
+                'attr' => ['maxlength' => 255],
+            ])
             ->add('helpText', TextareaType::class, ['label' => 'Hilfetext', 'required' => false])
             ->add('type', ChoiceType::class, ['label' => 'Antworttyp', 'choices' => [
                 'Kurzer Text' => GuildApplicationQuestion::TYPE_TEXT,

@@ -11,8 +11,12 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: GuildAnnouncementRepository::class)]
 #[ORM\Table(name: 'guild_announcement')]
+#[ORM\HasLifecycleCallbacks]
 class GuildAnnouncement
 {
+    private const MAX_TITLE_BYTES = 720;
+    private const MAX_TITLE_LENGTH = 180;
+
     #[ORM\Id] #[ORM\GeneratedValue] #[ORM\Column]
     private ?int $id = null;
 
@@ -48,10 +52,6 @@ class GuildAnnouncement
         }
 
         $normalizedTitle = trim($title);
-        if (strlen($normalizedTitle) > 720 || mb_strlen($normalizedTitle, 'UTF-8') > 180) {
-            throw new \InvalidArgumentException('Guild announcement title must fit its 180-character storage column.');
-        }
-
         $this->title = $normalizedTitle;
 
         return $this;
@@ -61,4 +61,14 @@ class GuildAnnouncement
     public function isPinned(): bool { return $this->pinned; }
     public function setPinned(bool $pinned): self { $this->pinned = $pinned; return $this; }
     public function getPublishedAt(): \DateTimeImmutable { return $this->publishedAt; }
+
+    /** @internal Doctrine lifecycle callback. */
+    #[ORM\PrePersist]
+    #[ORM\PreUpdate]
+    public function assertTitleColumnBoundary(): void
+    {
+        if (strlen($this->title) > self::MAX_TITLE_BYTES || !mb_check_encoding($this->title, 'UTF-8') || str_contains($this->title, "\0") || mb_strlen($this->title, 'UTF-8') > self::MAX_TITLE_LENGTH) {
+            throw new \InvalidArgumentException('Guild announcement title must fit its 180-character storage column.');
+        }
+    }
 }

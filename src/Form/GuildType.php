@@ -15,6 +15,7 @@ use Symfony\Component\Form\Extension\Core\Type\UrlType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Image;
+use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\Url;
 
 /** @extends AbstractType<Guild> */
@@ -24,12 +25,35 @@ final class GuildType extends AbstractType
     {
         $builder
             ->add('game', EntityType::class, ['class' => Game::class, 'label' => 'Spiel', 'choice_label' => 'name'])
-            ->add('name', null, ['label' => 'Gilden- oder Clanname'])
-            ->add('serverName', null, ['label' => 'Server'])
-            ->add('region', null, ['label' => 'Region', 'required' => false, 'attr' => ['placeholder' => 'z. B. Europa']])
-            ->add('faction', null, ['label' => 'Fraktion', 'required' => false])
+            ->add('name', null, [
+                'label' => 'Gilden- oder Clanname',
+                'constraints' => [new Length(max: 120)],
+                'attr' => ['maxlength' => 120],
+            ])
+            ->add('serverName', null, [
+                'label' => 'Server',
+                'constraints' => [new Length(max: 120)],
+                'attr' => ['maxlength' => 120],
+            ])
+            ->add('region', null, [
+                'label' => 'Region',
+                'required' => false,
+                'attr' => ['placeholder' => 'z. B. Europa', 'maxlength' => 60],
+                'constraints' => [new Length(max: 60)],
+            ])
+            ->add('faction', null, [
+                'label' => 'Fraktion',
+                'required' => false,
+                'constraints' => [new Length(max: 80)],
+                'attr' => ['maxlength' => 80],
+            ])
             ->add('description', TextareaType::class, ['label' => 'Beschreibung', 'attr' => ['rows' => 8]])
-            ->add('websiteUrl', UrlType::class, ['label' => 'Externe Website', 'required' => false])
+            ->add('websiteUrl', UrlType::class, [
+                'label' => 'Externe Website',
+                'required' => false,
+                'constraints' => [new Length(max: 500)],
+                'attr' => ['maxlength' => 500],
+            ])
             ->add('logoFile', FileType::class, [
                 'label' => 'Gildenlogo hochladen',
                 'mapped' => false,
