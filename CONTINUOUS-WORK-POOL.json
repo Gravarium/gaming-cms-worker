@@ -10,7 +10,7 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-28T19:35:10.507Z",
+  "published_at": "2026-09-28T19:36:44.732Z",
   "summary": {
     "total_remaining_worker_tasks": 175,
     "completed_worker_prs_awaiting_trusted_review": 314,
@@ -51543,17 +51543,23 @@
       "claim_state": "active",
       "active_base_branch": "main",
       "active_base_sha": "ebfeb6032548002846b9352ddb2b06b909b461c0",
-      "active_head": "ebfeb6032548002846b9352ddb2b06b909b461c0",
+      "active_head": "b4784e96c439c656e8bd2e3f328a92c8b341e689",
       "resume_branch": "feature/wcp-585-game-release-calendar-feed-g1",
       "branch_heads": {
         "claim_branch": "ebfeb6032548002846b9352ddb2b06b909b461c0",
-        "feature_branch": "ebfeb6032548002846b9352ddb2b06b909b461c0"
+        "feature_branch": "b4784e96c439c656e8bd2e3f328a92c8b341e689"
       },
-      "last_observed_head": "ebfeb6032548002846b9352ddb2b06b909b461c0",
-      "last_checkpoint_at": "2026-09-28T19:25:42.849Z",
-      "checkpoint_paths": [],
-      "next_action": "Implement the bounded public iCalendar release feed within the five allowlisted paths; keep all existing catalogue/calendar files unchanged.",
-      "last_verified_push_at": "2026-09-28T19:25:42.849Z"
+      "last_observed_head": "b4784e96c439c656e8bd2e3f328a92c8b341e689",
+      "last_checkpoint_at": "2026-09-28T19:36:44.732Z",
+      "checkpoint_paths": [
+        "src/Controller/PublicGameReleaseCalendarFeedController.php",
+        "src/GameReleaseFeed/IcalendarBuilder.php",
+        "src/Repository/GameReleaseCalendarFeedRepository.php",
+        "tests/Controller/PublicGameReleaseCalendarFeedTest.php",
+        "tests/GameReleaseFeed/IcalendarBuilderTest.php"
+      ],
+      "next_action": "Open the draft Worker PR and validate this exact HEAD with complete Worker CI; fix any failures without widening the five-path allowlist or weakening checks.",
+      "last_verified_push_at": "2026-09-28T19:36:44.732Z"
     },
     {
       "priority": 586,
