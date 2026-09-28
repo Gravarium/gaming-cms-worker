@@ -54719,8 +54719,8 @@
       "proposal_dependency_evidence": [],
       "published_at": "2026-09-28T22:57:52.018Z",
       "collision_check": {
-        "compared_against": "Fresh continuous/work-pool-v4 @ 141aae7de72857f7a63340e0b0017bffa2510ccd; latest Worker main @ 29f1044353e92ba07a1378da558cd3b1dcf9b88c; current active and claim-locked path allowlists including directory-prefix overlap; WCP-597 feature head f465701ee006d9c8aa2c346476e4bf2abf7639f3.",
-        "result": "No overlap with any other worker_in_progress or claim-locked path. Worker main advanced by one sanitized-source sync commit with no WCP-597 path overlap.",
+        "compared_against": "Fresh continuous/work-pool-v4 @ c2d1479c45207ae66c1d791d9e2a437c8d58f1fe; latest Worker main @ 29f1044353e92ba07a1378da558cd3b1dcf9b88c; current active and claim-locked path allowlists including directory-prefix overlap; WCP-597 feature head 1a1b1d23c738e47e83e76e4f297d3e62eac2ad3a.",
+        "result": "No overlap with any other worker_in_progress or claim-locked path. Main's sanitized-source sync commit has no path overlap with WCP-597.",
         "paths": [
           "src/Controller/PublicGuildRoleNeedApplicationController.php",
           "src/GuildRoleNeedsWidget/Templates/widget/public_guild_role_needs.html.twig",
@@ -54739,13 +54739,13 @@
       "claim_state": "active",
       "active_base_branch": "main",
       "active_base_sha": "a19ed4bcf1203bba69de472613805d5fcdc978e6",
-      "active_head": "f465701ee006d9c8aa2c346476e4bf2abf7639f3",
+      "active_head": "1a1b1d23c738e47e83e76e4f297d3e62eac2ad3a",
       "resume_branch": "feature/wcp-597-guild-role-need-application-g1",
       "branch_heads": {
         "claim_branch": "a19ed4bcf1203bba69de472613805d5fcdc978e6",
-        "feature_branch": "f465701ee006d9c8aa2c346476e4bf2abf7639f3"
+        "feature_branch": "1a1b1d23c738e47e83e76e4f297d3e62eac2ad3a"
       },
-      "last_observed_head": "f465701ee006d9c8aa2c346476e4bf2abf7639f3",
+      "last_observed_head": "1a1b1d23c738e47e83e76e4f297d3e62eac2ad3a",
       "checkpoint_paths": [
         "src/Controller/PublicGuildRoleNeedApplicationController.php",
         "src/GuildRoleNeedsWidget/Templates/widget/public_guild_role_needs.html.twig",
@@ -54753,9 +54753,11 @@
         "tests/Controller/PublicGuildRoleNeedApplicationFlowTest.php",
         "config/packages/guild_role_need_application.yaml"
       ],
-      "next_action": "Open a draft Worker PR against main, verify the complete changed-file set and run exact-head CI; fix any concrete CI failures before marking ready.",
-      "last_checkpoint_at": "2026-09-28T23:14:39.378Z",
-      "last_verified_push_at": "2026-09-28T23:14:39.378Z"
+      "next_action": "Wait for complete exact-head CI on PR #391, diagnose and repair any failures, then record the final run and lock the claim for Trusted review.",
+      "last_checkpoint_at": "2026-09-28T23:21:46.790Z",
+      "last_verified_push_at": "2026-09-28T23:21:46.790Z",
+      "worker_pr_number": 391,
+      "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/391"
     }
   ],
   "recovery_queue": [],
