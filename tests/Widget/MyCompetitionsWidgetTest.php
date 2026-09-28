@@ -68,7 +68,7 @@ final class MyCompetitionsWidgetTest extends WebTestCase
             self::assertSelectorTextNotContains('body', 'Private competition '.$suffix);
             self::assertSelectorTextNotContains('body', 'Private entry '.$suffix);
             self::assertSelectorExists('a[href="/account/competitions"]');
-            self::assertSame('private, no-store, max-age=0', $client->getResponse()->headers->get('Cache-Control'));
+            $this->assertPersonalizedResponseIsNotCacheable($client);
 
             $registry = $client->getContainer()->get(WidgetRegistry::class);
             $definition = $registry->get(self::KEY);
@@ -77,9 +77,13 @@ final class MyCompetitionsWidgetTest extends WebTestCase
             self::assertTrue($registry->available(self::KEY));
             self::assertTrue($client->getContainer()->get(CmsModuleManager::class)->isEnabled('gaming'));
         } finally {
-            $this->removeHomeLayout($entityManager, $layoutSnapshot);
-            $this->removeFixtures($entityManager, $fixtures);
-            $this->restoreModuleStates($client, $moduleSnapshot);
+            try {
+                $cleanupEntityManager = $this->entityManager($client);
+                $this->removeHomeLayout($cleanupEntityManager, $layoutSnapshot);
+                $this->removeFixtures($cleanupEntityManager, $fixtures);
+            } finally {
+                $this->restoreModuleStates($client, $moduleSnapshot);
+            }
         }
     }
 
@@ -111,7 +115,7 @@ final class MyCompetitionsWidgetTest extends WebTestCase
             self::assertSelectorTextNotContains('body', 'Private entry '.$suffix);
             self::assertNull($client->getResponse()->headers->get('Cache-Control'));
 
-            $this->setModuleEnabled($entityManager, 'gaming', false);
+            $this->setModuleEnabled($this->entityManager($client), 'gaming', false);
             $client->request('GET', '/');
             self::assertResponseIsSuccessful();
             self::assertSelectorTextNotContains('body', 'Meine Competitions');
@@ -121,9 +125,13 @@ final class MyCompetitionsWidgetTest extends WebTestCase
             $client->request('GET', '/account/competitions');
             self::assertResponseStatusCodeSame(404);
         } finally {
-            $this->removeHomeLayout($entityManager, $layoutSnapshot);
-            $this->removeFixtures($entityManager, $fixtures);
-            $this->restoreModuleStates($client, $moduleSnapshot);
+            try {
+                $cleanupEntityManager = $this->entityManager($client);
+                $this->removeHomeLayout($cleanupEntityManager, $layoutSnapshot);
+                $this->removeFixtures($cleanupEntityManager, $fixtures);
+            } finally {
+                $this->restoreModuleStates($client, $moduleSnapshot);
+            }
         }
     }
 
@@ -161,7 +169,7 @@ final class MyCompetitionsWidgetTest extends WebTestCase
             self::assertSelectorTextContains('body', 'Aktive Anmeldungen: 6');
             self::assertSelectorTextContains('body', 'Team 26 '.$suffix);
             self::assertSelectorTextNotContains('body', 'Team 01 '.$suffix);
-            self::assertSame('private, no-store, max-age=0', $client->getResponse()->headers->get('Cache-Control'));
+            $this->assertPersonalizedResponseIsNotCacheable($client);
 
             $client->request('GET', '/account/competitions');
             self::assertResponseIsSuccessful();
@@ -169,11 +177,15 @@ final class MyCompetitionsWidgetTest extends WebTestCase
             self::assertSelectorTextContains('body', 'Team 03 '.$suffix);
             self::assertSelectorTextNotContains('body', 'Team 02 '.$suffix);
             self::assertSelectorTextNotContains('body', 'Team 01 '.$suffix);
-            self::assertSame('private, no-store, max-age=0', $client->getResponse()->headers->get('Cache-Control'));
+            $this->assertPersonalizedResponseIsNotCacheable($client);
         } finally {
-            $this->removeHomeLayout($entityManager, $layoutSnapshot);
-            $this->removeFixtures($entityManager, $fixtures);
-            $this->restoreModuleStates($client, $moduleSnapshot);
+            try {
+                $cleanupEntityManager = $this->entityManager($client);
+                $this->removeHomeLayout($cleanupEntityManager, $layoutSnapshot);
+                $this->removeFixtures($cleanupEntityManager, $fixtures);
+            } finally {
+                $this->restoreModuleStates($client, $moduleSnapshot);
+            }
         }
     }
 
@@ -264,7 +276,18 @@ final class MyCompetitionsWidgetTest extends WebTestCase
     private function removeFixtures(EntityManagerInterface $entityManager, array $fixtures): void
     {
         foreach (array_reverse($fixtures) as $fixture) {
-            $entityManager->remove($fixture);
+            $identifiers = $entityManager->getClassMetadata($fixture::class)->getIdentifierValues($fixture);
+            if (count($identifiers) !== 1) {
+                continue;
+            }
+            $identifier = array_values($identifiers)[0] ?? null;
+            if ($identifier === null) {
+                continue;
+            }
+            $managed = $entityManager->find($fixture::class, $identifier);
+            if ($managed !== null) {
+                $entityManager->remove($managed);
+            }
         }
         if ($fixtures !== []) {
             $entityManager->flush();
@@ -327,5 +350,13 @@ final class MyCompetitionsWidgetTest extends WebTestCase
     private function entityManager(KernelBrowser $client): EntityManagerInterface
     {
         return $client->getContainer()->get(EntityManagerInterface::class);
+    }
+
+    private function assertPersonalizedResponseIsNotCacheable(KernelBrowser $client): void
+    {
+        $directives = array_map('trim', explode(',', strtolower((string) $client->getResponse()->headers->get('Cache-Control'))));
+        self::assertContains('private', $directives);
+        self::assertContains('no-store', $directives);
+        self::assertContains('max-age=0', $directives);
     }
 }

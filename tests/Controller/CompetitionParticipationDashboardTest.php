@@ -12,7 +12,6 @@ use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 
 final class CompetitionParticipationDashboardTest extends WebTestCase
 {
@@ -52,10 +51,9 @@ final class CompetitionParticipationDashboardTest extends WebTestCase
             self::assertSelectorTextContains('main', 'My team '.$suffix);
             self::assertSelectorTextNotContains('main', 'Other '.$suffix);
             self::assertSelectorTextNotContains('main', 'Other team '.$suffix);
-            self::assertSame('private, no-store, max-age=0', $client->getResponse()->headers->get('Cache-Control'));
+            $this->assertPersonalizedResponseIsNotCacheable($client);
 
-            $token = $client->getContainer()->get(CsrfTokenManagerInterface::class)
-                ->getToken('competition-withdraw-'.$participant->getId())->getValue();
+            $token = $this->withdrawalToken($client, (int) $competition->getId(), (int) $participant->getId());
             $client->request('POST', '/account/competitions/'.$competition->getId().'/participant/'.$participant->getId().'/withdraw', [
                 '_token' => $token,
             ]);
@@ -67,12 +65,15 @@ final class CompetitionParticipationDashboardTest extends WebTestCase
             self::assertSelectorTextContains('main', 'Deine Anmeldung wurde zurückgezogen.');
             self::assertSame(
                 CompetitionParticipant::STATUS_WITHDRAWN,
-                $entityManager->getRepository(CompetitionParticipant::class)->find($participant->getId())?->getStatus(),
+                $this->entityManager($client)->getRepository(CompetitionParticipant::class)->find($participant->getId())?->getStatus(),
             );
-            self::assertSame('private, no-store, max-age=0', $client->getResponse()->headers->get('Cache-Control'));
+            $this->assertPersonalizedResponseIsNotCacheable($client);
         } finally {
-            $this->removeFixtures($entityManager, $fixtures);
-            $this->restoreModuleStates($client, $moduleSnapshot);
+            try {
+                $this->removeFixtures($this->entityManager($client), $fixtures);
+            } finally {
+                $this->restoreModuleStates($client, $moduleSnapshot);
+            }
         }
     }
 
@@ -100,9 +101,11 @@ final class CompetitionParticipationDashboardTest extends WebTestCase
             $fixtures[] = $otherCompetition;
             $entityManager->flush();
 
+            $client->loginUser($captain);
+            $client->request('GET', '/account/competitions');
+            $token = $this->withdrawalToken($client, (int) $competition->getId(), (int) $participant->getId());
+
             $client->loginUser($visitor);
-            $token = $client->getContainer()->get(CsrfTokenManagerInterface::class)
-                ->getToken('competition-withdraw-'.$participant->getId())->getValue();
             $client->request('POST', '/account/competitions/'.$competition->getId().'/participant/'.$participant->getId().'/withdraw', [
                 '_token' => $token,
             ]);
@@ -115,11 +118,14 @@ final class CompetitionParticipationDashboardTest extends WebTestCase
             self::assertResponseStatusCodeSame(404);
             self::assertSame(
                 CompetitionParticipant::STATUS_REGISTERED,
-                $entityManager->getRepository(CompetitionParticipant::class)->find($participant->getId())?->getStatus(),
+                $this->entityManager($client)->getRepository(CompetitionParticipant::class)->find($participant->getId())?->getStatus(),
             );
         } finally {
-            $this->removeFixtures($entityManager, $fixtures);
-            $this->restoreModuleStates($client, $moduleSnapshot);
+            try {
+                $this->removeFixtures($this->entityManager($client), $fixtures);
+            } finally {
+                $this->restoreModuleStates($client, $moduleSnapshot);
+            }
         }
     }
 
@@ -138,31 +144,47 @@ final class CompetitionParticipationDashboardTest extends WebTestCase
             $game = $this->game($entityManager, $suffix);
             $fixtures[] = $game;
             $closedCompetition = $this->competition($entityManager, $game, 'Started '.$suffix, $suffix.'-started');
-            $closedCompetition->start();
             $fixtures[] = $closedCompetition;
             $closedParticipant = $this->participant($entityManager, $closedCompetition, $captain, 'Still registered '.$suffix);
             $fixtures[] = $closedParticipant;
             $checkedInCompetition = $this->competition($entityManager, $game, 'Check-in '.$suffix, $suffix.'-checkin');
             $fixtures[] = $checkedInCompetition;
             $checkedInParticipant = $this->participant($entityManager, $checkedInCompetition, $captain, 'Checked in '.$suffix);
-            $checkedInParticipant->checkIn();
             $fixtures[] = $checkedInParticipant;
             $entityManager->flush();
 
             $client->loginUser($captain);
-            $client->request('POST', '/account/competitions/'.$checkedInCompetition->getId().'/participant/'.$checkedInParticipant->getId().'/withdraw', [
+            $client->request('GET', '/account/competitions');
+            $closedId = (int) $closedCompetition->getId();
+            $closedParticipantId = (int) $closedParticipant->getId();
+            $checkedInId = (int) $checkedInCompetition->getId();
+            $checkedInParticipantId = (int) $checkedInParticipant->getId();
+            $closedToken = $this->withdrawalToken($client, $closedId, $closedParticipantId);
+            $checkedInToken = $this->withdrawalToken($client, $checkedInId, $checkedInParticipantId);
+
+            $currentEntityManager = $this->entityManager($client);
+            $managedClosedCompetition = $currentEntityManager->getRepository(Competition::class)->find($closedId);
+            $managedCheckedInParticipant = $currentEntityManager->getRepository(CompetitionParticipant::class)->find($checkedInParticipantId);
+            self::assertInstanceOf(Competition::class, $managedClosedCompetition);
+            self::assertInstanceOf(CompetitionParticipant::class, $managedCheckedInParticipant);
+            $managedClosedCompetition->start();
+            $managedCheckedInParticipant->checkIn();
+            $currentEntityManager->flush();
+
+            $client->request('POST', '/account/competitions/'.$checkedInId.'/participant/'.$checkedInParticipantId.'/withdraw', [
                 '_token' => 'invalid-token',
             ]);
             self::assertResponseStatusCodeSame(403);
             self::assertSame(
                 CompetitionParticipant::STATUS_CHECKED_IN,
-                $entityManager->getRepository(CompetitionParticipant::class)->find($checkedInParticipant->getId())?->getStatus(),
+                $this->entityManager($client)->getRepository(CompetitionParticipant::class)->find($checkedInParticipantId)?->getStatus(),
             );
 
-            foreach ([[$closedCompetition, $closedParticipant], [$checkedInCompetition, $checkedInParticipant]] as [$competition, $participant]) {
-                $token = $client->getContainer()->get(CsrfTokenManagerInterface::class)
-                    ->getToken('competition-withdraw-'.$participant->getId())->getValue();
-                $client->request('POST', '/account/competitions/'.$competition->getId().'/participant/'.$participant->getId().'/withdraw', [
+            foreach ([
+                [$closedId, $closedParticipantId, $closedToken],
+                [$checkedInId, $checkedInParticipantId, $checkedInToken],
+            ] as [$competitionId, $participantId, $token]) {
+                $client->request('POST', '/account/competitions/'.$competitionId.'/participant/'.$participantId.'/withdraw', [
                     '_token' => $token,
                 ]);
                 self::assertResponseRedirects('/account/competitions');
@@ -172,15 +194,18 @@ final class CompetitionParticipationDashboardTest extends WebTestCase
 
             self::assertSame(
                 CompetitionParticipant::STATUS_REGISTERED,
-                $entityManager->getRepository(CompetitionParticipant::class)->find($closedParticipant->getId())?->getStatus(),
+                $this->entityManager($client)->getRepository(CompetitionParticipant::class)->find($closedParticipantId)?->getStatus(),
             );
             self::assertSame(
                 CompetitionParticipant::STATUS_CHECKED_IN,
-                $entityManager->getRepository(CompetitionParticipant::class)->find($checkedInParticipant->getId())?->getStatus(),
+                $this->entityManager($client)->getRepository(CompetitionParticipant::class)->find($checkedInParticipantId)?->getStatus(),
             );
         } finally {
-            $this->removeFixtures($entityManager, $fixtures);
-            $this->restoreModuleStates($client, $moduleSnapshot);
+            try {
+                $this->removeFixtures($this->entityManager($client), $fixtures);
+            } finally {
+                $this->restoreModuleStates($client, $moduleSnapshot);
+            }
         }
     }
 
@@ -214,11 +239,14 @@ final class CompetitionParticipationDashboardTest extends WebTestCase
             self::assertResponseStatusCodeSame(404);
             self::assertSame(
                 CompetitionParticipant::STATUS_REGISTERED,
-                $entityManager->getRepository(CompetitionParticipant::class)->find($participant->getId())?->getStatus(),
+                $this->entityManager($client)->getRepository(CompetitionParticipant::class)->find($participant->getId())?->getStatus(),
             );
         } finally {
-            $this->removeFixtures($entityManager, $fixtures);
-            $this->restoreModuleStates($client, $moduleSnapshot);
+            try {
+                $this->removeFixtures($this->entityManager($client), $fixtures);
+            } finally {
+                $this->restoreModuleStates($client, $moduleSnapshot);
+            }
         }
     }
 
@@ -265,11 +293,35 @@ final class CompetitionParticipationDashboardTest extends WebTestCase
         return $participant;
     }
 
+    private function withdrawalToken(KernelBrowser $client, int $competitionId, int $participantId): string
+    {
+        $action = '/account/competitions/'.$competitionId.'/participant/'.$participantId.'/withdraw';
+        $input = $client->getCrawler()->filter('form[action="'.$action.'"]')->filter('input[name="_token"]');
+        self::assertCount(1, $input);
+        $token = $input->attr('value');
+        if (!is_string($token)) {
+            throw new \LogicException('The withdrawal form does not contain a CSRF token.');
+        }
+
+        return $token;
+    }
+
     /** @param list<object> $fixtures */
     private function removeFixtures(EntityManagerInterface $entityManager, array $fixtures): void
     {
         foreach (array_reverse($fixtures) as $fixture) {
-            $entityManager->remove($fixture);
+            $identifiers = $entityManager->getClassMetadata($fixture::class)->getIdentifierValues($fixture);
+            if (count($identifiers) !== 1) {
+                continue;
+            }
+            $identifier = array_values($identifiers)[0] ?? null;
+            if ($identifier === null) {
+                continue;
+            }
+            $managed = $entityManager->find($fixture::class, $identifier);
+            if ($managed !== null) {
+                $entityManager->remove($managed);
+            }
         }
         if ($fixtures !== []) {
             $entityManager->flush();
@@ -332,5 +384,13 @@ final class CompetitionParticipationDashboardTest extends WebTestCase
     private function entityManager(KernelBrowser $client): EntityManagerInterface
     {
         return $client->getContainer()->get(EntityManagerInterface::class);
+    }
+
+    private function assertPersonalizedResponseIsNotCacheable(KernelBrowser $client): void
+    {
+        $directives = array_map('trim', explode(',', strtolower((string) $client->getResponse()->headers->get('Cache-Control'))));
+        self::assertContains('private', $directives);
+        self::assertContains('no-store', $directives);
+        self::assertContains('max-age=0', $directives);
     }
 }
