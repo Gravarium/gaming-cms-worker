@@ -10,7 +10,7 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-28T19:51:55.529Z",
+  "published_at": "2026-09-28T19:53:52.885Z",
   "summary": {
     "total_remaining_worker_tasks": 175,
     "completed_worker_prs_awaiting_trusted_review": 314,
@@ -51735,14 +51735,14 @@
       "claim_state": "active",
       "active_base_branch": "main",
       "active_base_sha": "ebfeb6032548002846b9352ddb2b06b909b461c0",
-      "active_head": "497026353d6991b97ce34873de5fe6af5d81b6d3",
+      "active_head": "1e88bc6d5ea1cdb64b825b6ba117c0fd52f2044f",
       "resume_branch": "feature/wcp-586-competition-standings-widget-g1",
       "branch_heads": {
         "claim_branch": "ebfeb6032548002846b9352ddb2b06b909b461c0",
-        "feature_branch": "497026353d6991b97ce34873de5fe6af5d81b6d3"
+        "feature_branch": "1e88bc6d5ea1cdb64b825b6ba117c0fd52f2044f"
       },
-      "last_observed_head": "497026353d6991b97ce34873de5fe6af5d81b6d3",
-      "last_checkpoint_at": "2026-09-28T19:51:55.529Z",
+      "last_observed_head": "1e88bc6d5ea1cdb64b825b6ba117c0fd52f2044f",
+      "last_checkpoint_at": "2026-09-28T19:53:52.885Z",
       "checkpoint_paths": [
         "src/Controller/PublicCompetitionLeaderboardController.php",
         "src/Widget/CompetitionStandingsWidgetProvider.php",
@@ -51750,8 +51750,8 @@
         "src/Widget/CompetitionStandings/Templates/widget/competition_standings.html.twig",
         "tests/Widget/CompetitionStandingsWidgetProviderTest.php"
       ],
-      "next_action": "Register the allowlisted feature template directory with Twig from the widget provider, keep the Page Builder definition template key under widget/, add a regression assertion if needed, and rerun full exact-head Worker CI.",
-      "last_verified_push_at": "2026-09-28T19:43:42.007Z",
+      "next_action": "Inspect exact-head Worker CI run #965 on 1e88bc6d5ea1cdb64b825b6ba117c0fd52f2044f. Ensure the Twig template loads, the new widget integration test passes, and both PHP/Symfony and PostgreSQL 18 jobs are green.",
+      "last_verified_push_at": "2026-09-28T19:53:52.885Z",
       "worker_pr": 381,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/381",
       "worker_pr_state": "draft",
@@ -51766,7 +51766,7 @@
         "src/Widget/CompetitionStandings/Templates/widget/competition_standings.html.twig",
         "tests/Widget/CompetitionStandingsWidgetProviderTest.php"
       ],
-      "ci_result": "failure",
+      "ci_result": "in_progress",
       "ci_attempts": [
         {
           "run_id": 36474342734,
@@ -51782,12 +51782,27 @@
             "php_symfony": "failure"
           },
           "summary": "Exact-head CI #961: PHPStan, Composer, Twig/config/container/AssetMapper/Doctrine validation passed; PostgreSQL 18 migration chain passed. PHPUnit had one error and one failure in the new widget test because Twig could not find widget/competition_standings.html.twig from the unregistered src/Widget/CompetitionStandings/Templates directory."
+        },
+        {
+          "run_id": 36475322011,
+          "run_number": 965,
+          "head": "1e88bc6d5ea1cdb64b825b6ba117c0fd52f2044f",
+          "base": "c3c7b14066d9f8b32925eb4381e30b6794f21027",
+          "result": "queued",
+          "validation_pr": 381,
+          "status": "queued",
+          "conclusion": null,
+          "jobs": {
+            "postgres_18": "queued",
+            "php_symfony": "queued"
+          },
+          "summary": "Exact-head CI #965 queued after registering the feature-local Twig template directory in the provider."
         }
       ],
-      "last_ci_run_id": 36474342734,
-      "ci_run_id": 36474342734,
+      "last_ci_run_id": 36475322011,
+      "ci_run_id": 36475322011,
       "ci_validation_pr": 381,
-      "last_ci_result": "failure"
+      "last_ci_result": "in_progress"
     },
     {
       "priority": 587,
