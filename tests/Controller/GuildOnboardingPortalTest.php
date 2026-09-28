@@ -62,9 +62,9 @@ final class GuildOnboardingPortalTest extends WebTestCase
             self::assertSame('noindex, nofollow, noarchive', $client->getResponse()->headers->get('X-Robots-Tag'));
             self::assertSelectorTextContains('body', 'Read the guild welcome guide');
             self::assertSelectorTextContains('body', 'My active character');
-            self::assertSelectorNotExists('body:contains("Inactive assignment canary")');
-            self::assertSelectorNotExists('body:contains("Foreign assignment canary")');
-            self::assertSelectorNotExists('body:contains("Disabled guild canary")');
+            self::assertSelectorTextNotContains('body', 'Inactive assignment canary');
+            self::assertSelectorTextNotContains('body', 'Foreign assignment canary');
+            self::assertSelectorTextNotContains('body', 'Disabled guild canary');
         } finally {
             $this->cleanup($client, $guildIds, $gameId, $userIds);
             $this->restoreGamingState($client, $previousGamingState);
@@ -158,8 +158,8 @@ final class GuildOnboardingPortalTest extends WebTestCase
             $client->request('GET', '/guild-area/onboarding');
             self::assertResponseIsSuccessful();
             self::assertSelectorTextContains('body', 'Keine Onboarding-Aufgaben vorhanden');
-            self::assertSelectorNotExists('body:contains("Other account private task")');
-            self::assertSelectorNotExists('body:contains("Inactive character private task")');
+            self::assertSelectorTextNotContains('body', 'Other account private task');
+            self::assertSelectorTextNotContains('body', 'Inactive character private task');
 
             $client->request('POST', '/guild-area/onboarding/task/'.$privateTaskId.'/complete');
             self::assertResponseStatusCodeSame(403);
