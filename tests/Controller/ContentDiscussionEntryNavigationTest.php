@@ -16,12 +16,12 @@ final class ContentDiscussionEntryNavigationTest extends WebTestCase
     public function testPublishedNewsAndPagesLinkToReadablePublicDiscussions(): void
     {
         $client = static::createClient();
-        $author = $this->user($client);
 
         foreach ([
             [ContentEntry::TYPE_NEWS, 'news'],
             [ContentEntry::TYPE_PAGE, 'page'],
         ] as [$type, $routePrefix]) {
+            $author = $this->user($client);
             $entry = $this->entry($client, $author, $type, ContentEntry::STATUS_PUBLISHED);
             $crawler = $client->request('GET', '/'.$routePrefix.'/'.$entry->getSlug());
             self::assertResponseIsSuccessful();
