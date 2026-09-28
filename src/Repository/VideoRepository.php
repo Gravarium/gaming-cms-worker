@@ -35,6 +35,35 @@ final class VideoRepository extends ServiceEntityRepository
         return $builder->getQuery()->getResult();
     }
 
+    /** @return list<Video> */
+    public function searchPublished(string $query, int $limit = 50): array
+    {
+        $query = trim($query);
+        if (!mb_check_encoding($query, 'UTF-8')) {
+            return [];
+        }
+
+        $length = mb_strlen($query, 'UTF-8');
+        if ($length < 2 || $length > 100) {
+            return [];
+        }
+
+        return $this->createQueryBuilder('video')
+            ->addSelect('category')
+            ->leftJoin('video.category', 'category')
+            ->andWhere('video.enabled = true')
+            ->andWhere('video.publishedAt IS NOT NULL')
+            ->andWhere('video.publishedAt <= :now')
+            ->andWhere('(LOWER(video.title) LIKE :query OR LOWER(video.description) LIKE :query)')
+            ->setParameter('now', new \DateTimeImmutable())
+            ->setParameter('query', '%'.mb_strtolower($query, 'UTF-8').'%')
+            ->orderBy('video.featured', 'DESC')
+            ->addOrderBy('video.publishedAt', 'DESC')
+            ->setMaxResults(max(1, min(100, $limit)))
+            ->getQuery()
+            ->getResult();
+    }
+
     public function findPublishedBySlug(string $slug): ?Video
     {
         return $this->createQueryBuilder('video')
