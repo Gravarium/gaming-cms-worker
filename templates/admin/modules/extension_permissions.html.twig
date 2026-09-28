@@ -1,0 +1,55 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Erweiterungsrechte | Gaming CMS{% endblock %}
+{% block head_meta %}<meta name="robots" content="noindex, nofollow">{% endblock %}
+
+{% block body %}
+<header class="topbar">
+    <a class="brand" href="{{ path('app_admin_dashboard') }}">Gaming CMS</a>
+    <nav class="top-actions">
+        <a class="button-link button-secondary" href="{{ path('app_admin_module_index') }}">Zur Modulpaketverwaltung</a>
+        <a class="button-link button-secondary" href="{{ path('app_admin_dashboard') }}">Übersicht</a>
+    </nav>
+</header>
+
+<main class="dashboard">
+    <p class="eyebrow">System · Externe Pakete</p>
+    <h1>Rechte prüfen: {{ package.name }}</h1>
+    <p>{{ package.typeLabel }} · Kennung <code>{{ package.key }}</code> · Version {{ package.version }}</p>
+
+    {% for message in app.flashes('success') %}<div class="notice">{{ message }}</div>{% endfor %}
+    {% for message in app.flashes('notice') %}<div class="notice">{{ message }}</div>{% endfor %}
+    {% for message in app.flashes('error') %}<div class="alert">{{ message }}</div>{% endfor %}
+
+    <div class="alert" role="note">
+        Eine Freigabe gilt für die Paketkennung <code>{{ package.type }}:{{ package.key }}</code> und bleibt bei Versionsupdates bestehen, bis sie widerrufen wird. Prüfe die angeforderte Wirkung nach jedem Update erneut.
+    </div>
+    <p class="muted">Signatur und Paketdateien werden vor dieser Anzeige und vor jeder Änderung erneut geprüft. Es erscheinen nur einzeln angeforderte, freigabefähige Rechte.</p>
+
+    {% if package.capabilities %}
+        <div class="table-wrap">
+            <table>
+                <thead><tr><th>Fähigkeit</th><th>Wirkung</th><th>Status</th><th>Aktion</th></tr></thead>
+                <tbody>
+                {% for capability in package.capabilities %}
+                    {% set action = capability.approved ? 'revoke' : 'grant' %}
+                    <tr>
+                        <td><strong>{{ capability.label }}</strong><br><code>{{ capability.key }}</code></td>
+                        <td>{{ capability.description }}</td>
+                        <td><span class="status {{ capability.approved ? 'status-ready' : 'status-disabled' }}">{{ capability.approved ? 'Freigegeben' : 'Nicht freigegeben' }}</span></td>
+                        <td>
+                            <form method="post" action="{{ path('app_admin_extension_capability_action', {type: package.type, key: package.key, capability: capability.key, action: action}) }}">
+                                <input type="hidden" name="_token" value="{{ csrf_token('extension-capability-' ~ action ~ '-' ~ package.type ~ '-' ~ package.key ~ '-' ~ capability.key) }}">
+                                <button type="submit">{{ capability.approved ? 'Widerrufen' : 'Einzeln freigeben' }}</button>
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <section class="panel"><h2>Keine Rechte angefordert</h2><p>Dieses verifizierte Paket fordert keine freigabefähigen Fähigkeiten an.</p></section>
+    {% endif %}
+</main>
+{% endblock %}
