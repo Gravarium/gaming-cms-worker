@@ -10,16 +10,16 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-28T21:01:59.868Z",
+  "published_at": "2026-09-28T21:09:17.237Z",
   "summary": {
-    "total_remaining_worker_tasks": 175,
+    "total_remaining_worker_tasks": 176,
     "completed_worker_prs_awaiting_trusted_review": 313,
     "recovery_tasks": 0,
-    "unclaimed": 5,
-    "immediately_claimable": 0,
-    "next_required_action": "WCP-591 is active on feature/wcp-591-team-competition-roster-g1 from exact green FCP-061 HEAD ec6bb200affc3e5a46d416e98f7a1b0621c38ded; implement the public team-roster join and captain management flow.",
+    "unclaimed": 6,
+    "immediately_claimable": 1,
+    "next_required_action": "Immediately recheck the WCP-592 claim and feature branches against this exact pool revision, then reserve both from proposal base main@a19ed4bcf1203bba69de472613805d5fcdc978e6 and implement the public Video Discovery entry flow.",
     "composition_preparable": 0,
-    "immediately_actionable": 33,
+    "immediately_actionable": 34,
     "must_continue": true
   },
   "rules": {
@@ -53770,6 +53770,90 @@
         "tests/Controller/CompetitionRosterControllerTest.php",
         "tests/Widget/CompetitionRostersWidgetTest.php"
       ]
+    },
+    {
+      "priority": 592,
+      "package_id": "WCP-592",
+      "title": "Connect public video browsing to Video Discovery",
+      "risk": "low",
+      "execution_state": "unclaimed",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-592-video-discovery-entry-navigation-g1",
+      "suggested_branch": "feature/wcp-592-video-discovery-entry-navigation-g1",
+      "base_branch": "main",
+      "base_sha": "a19ed4bcf1203bba69de472613805d5fcdc978e6",
+      "objective": "Complete the public reader journey into the existing Video Discovery module. Add accessible entry links from the canonical /videos/library listing and published /videos/{slug} detail page to app_video_discovery_index, then prove readers can follow each link to the discovery index. Reuse the existing video-module gate, published-video visibility and discovery visibility behavior; make no discovery data, permission, schema, cache or route changes.",
+      "allowed_paths": [
+        "src/Video/Library/Templates/index.html.twig",
+        "templates/video/show.html.twig",
+        "tests/Controller/VideoDiscoveryEntryNavigationTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/",
+        "src/Controller/",
+        "src/Video/Discovery/",
+        "src/Controller/VideoDiscovery/",
+        "templates/video_discovery/",
+        "templates/video/index.html.twig",
+        "tests/Video/Discovery/"
+      ],
+      "deliverables": [
+        "The public video library presents a clear, accessible Video-Entdeckung link to the existing discovery index.",
+        "Published video details expose the same discovery entry point alongside existing video navigation.",
+        "Focused functional coverage follows both entry points to the readable discovery index.",
+        "Coverage verifies that disabling the Video module keeps the discovery destination unavailable through its existing gate.",
+        "No discovery-owned templates/controllers, data model, route, module gate or visibility policy is changed."
+      ],
+      "tests": [
+        "Targeted VideoDiscoveryEntryNavigationTest verifies library and published-detail links, follows both to the discovery index, and confirms disabled-module 404 behavior.",
+        "Full exact-head Worker CI, including PHPUnit, PHPStan, Twig/container validation and PostgreSQL 18 migration-chain checks."
+      ],
+      "completion_report": [
+        "Exact sanitized main base SHA, final Worker HEAD, changed paths and Worker PR URL/state.",
+        "Evidence that readers can enter Video Discovery from the library and a published video detail.",
+        "Exact-head targeted tests, PHPStan, PHPUnit and PostgreSQL 18 results.",
+        "Unresolved assumptions and any remaining navigation gaps."
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-Trusted-review-and-exact-head-CI",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "preserve-existing-video-module-gate-published-video-visibility-and-discovery-visibility-checks",
+        "no-schema-or-migration-change",
+        "no-private-runtime-or-sensitive-data",
+        "no-direct-Trusted-integration-or-deployment"
+      ],
+      "proposal_kind": "worker_only",
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "a19ed4bcf1203bba69de472613805d5fcdc978e6",
+      "proposal_dependency_evidence": [],
+      "published_at": "2026-09-28T21:09:17.237Z",
+      "collision_check": {
+        "compared_against": "Fresh continuous/work-pool-v4 blob e5702d70f66c7f4fb23f020f75cfb58473cbf6fd; sanitized Worker main a19ed4bcf1203bba69de472613805d5fcdc978e6; all active and claim-locked allowed paths; WCP-592 branch/PR search; candidate test path on main.",
+        "result": "No allowed-path overlap with any active or claim-locked task. Both existing templates are present and the focused test path is absent from main. FCP-072 is unclaimed and blocked by FCP-035; its broad templates/ allowance overlaps templates/video/show.html.twig, recorded as a nonblocking future path hit.",
+        "paths": [
+          "src/Video/Library/Templates/index.html.twig",
+          "templates/video/show.html.twig",
+          "tests/Controller/VideoDiscoveryEntryNavigationTest.php"
+        ],
+        "observed_nonblocking_path_hits": [
+          "FCP-072 is unclaimed and dependency-blocked by FCP-035; its broad templates/ allowance includes templates/video/show.html.twig. Recheck before any later claim."
+        ]
+      }
     }
   ],
   "recovery_queue": [],
