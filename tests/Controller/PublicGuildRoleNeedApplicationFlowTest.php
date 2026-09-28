@@ -68,7 +68,6 @@ final class PublicGuildRoleNeedApplicationFlowTest extends WebTestCase
             $widget = new Crawler($widgetHtml);
             $applyLink = $widget->filter('a[href*="/gaming/guild/'.$guildSlug.'/apply/role-need"]');
             self::assertCount(1, $applyLink);
-            self::assertSelectorTextContains('body', ''); // Keep assertions scoped to the rendered widget below.
             self::assertStringContainsString('Für diese Rolle bewerben', $widgetHtml);
 
             $applyUrl = (string) $applyLink->attr('href');
@@ -105,7 +104,9 @@ final class PublicGuildRoleNeedApplicationFlowTest extends WebTestCase
                 'title' => $notificationTitle,
             ]));
 
-            $client->loginUser($officer);
+            $storedOfficer = $em->find(User::class, $officerId);
+            self::assertInstanceOf(User::class, $storedOfficer);
+            $client->loginUser($storedOfficer);
             $client->request('GET', '/admin/gaming/applications/'.$applicationId.'/review');
             self::assertResponseIsSuccessful();
             self::assertSelectorTextContains('body', 'Gesuchte Rolle');
@@ -260,18 +261,14 @@ final class PublicGuildRoleNeedApplicationFlowTest extends WebTestCase
                 $em->remove($notification);
             }
         }
-        if ($em->contains($em->getRepository(GuildRoleNeed::class)->findOneBy([
+        $need = $em->getRepository(GuildRoleNeed::class)->findOneBy([
             'guild' => $guildId,
             'game' => $gameId,
             'roleKey' => $foreignGuildSlug === null ? 'Tank' : 'Healer',
             'classKey' => $foreignGuildSlug === null ? 'Healer' : 'Priest',
-        ]))) {
-            $em->remove($em->getRepository(GuildRoleNeed::class)->findOneBy([
-                'guild' => $guildId,
-                'game' => $gameId,
-                'roleKey' => $foreignGuildSlug === null ? 'Tank' : 'Healer',
-                'classKey' => $foreignGuildSlug === null ? 'Healer' : 'Priest',
-            ]));
+        ]);
+        if ($need instanceof GuildRoleNeed) {
+            $em->remove($need);
         }
         if ($foreignGuildSlug !== null && $gameId !== null) {
             $foreignGuild = $em->getRepository(Guild::class)->findOneBy(['slug' => $foreignGuildSlug]);
