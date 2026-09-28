@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-28T20:01:28.522Z",
+  "published_at": "2026-09-28T20:03:02.590Z",
   "summary": {
     "total_remaining_worker_tasks": 174,
     "completed_worker_prs_awaiting_trusted_review": 315,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-582 corrections are checkpointed at 97d01ddc9c74c086d4aba346630e3788100a73c2; validate this exact HEAD with the complete Worker CI on draft PR #379.",
+    "next_required_action": "WCP-588 is implemented at e3f92859ad33ef9fc91bead9dccfd8bef665ff5b; open the stacked draft Worker PR and validate its exact HEAD with full CI.",
     "composition_preparable": 0,
     "immediately_actionable": 31,
     "must_continue": true
@@ -52753,17 +52753,22 @@
       "claim_state": "active",
       "active_base_branch": "feature/wcp-585-game-release-calendar-feed-g1",
       "active_base_sha": "aeff4ea30a268306cdfb52b5b266ddc17a5d343e",
-      "active_head": "aeff4ea30a268306cdfb52b5b266ddc17a5d343e",
+      "active_head": "e3f92859ad33ef9fc91bead9dccfd8bef665ff5b",
       "resume_branch": "feature/wcp-588-game-release-rss-feed-g1",
       "branch_heads": {
         "claim_branch": "aeff4ea30a268306cdfb52b5b266ddc17a5d343e",
-        "feature_branch": "aeff4ea30a268306cdfb52b5b266ddc17a5d343e"
+        "feature_branch": "e3f92859ad33ef9fc91bead9dccfd8bef665ff5b"
       },
-      "last_observed_head": "aeff4ea30a268306cdfb52b5b266ddc17a5d343e",
-      "last_checkpoint_at": "2026-09-28T19:56:56.389Z",
-      "checkpoint_paths": [],
-      "next_action": "Implement the RSS 2.0 builder, read-only endpoint and positive/negative coverage only within the four allowlisted paths; preserve WCP-585 filters and private cache policy.",
-      "last_verified_push_at": "2026-09-28T19:56:56.389Z"
+      "last_observed_head": "e3f92859ad33ef9fc91bead9dccfd8bef665ff5b",
+      "last_checkpoint_at": "2026-09-28T20:03:02.590Z",
+      "checkpoint_paths": [
+        "src/Controller/PublicGameReleaseRssFeedController.php",
+        "src/GameReleaseFeed/RssFeedBuilder.php",
+        "tests/Controller/PublicGameReleaseRssFeedTest.php",
+        "tests/GameReleaseFeed/RssFeedBuilderTest.php"
+      ],
+      "next_action": "Open the stacked draft PR against the exact WCP-585 green head, then validate this exact HEAD with complete Worker CI and repair failures without widening scope.",
+      "last_verified_push_at": "2026-09-28T20:03:02.590Z"
     }
   ],
   "recovery_queue": [],
