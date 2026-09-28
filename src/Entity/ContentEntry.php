@@ -189,7 +189,12 @@ class ContentEntry
 
     public function isPublished(): bool
     {
-        return $this->status === self::STATUS_PUBLISHED && $this->publishedAt !== null && $this->publishedAt <= new \DateTimeImmutable();
+        $now = new \DateTimeImmutable();
+
+        return $this->status === self::STATUS_PUBLISHED
+            && $this->publishedAt !== null
+            && $this->publishedAt <= $now
+            && ($this->scheduledUnpublishAt === null || $this->scheduledUnpublishAt > $now);
     }
 
     public function isPubliclyListed(): bool { return $this->isPublished() && !$this->unlisted; }

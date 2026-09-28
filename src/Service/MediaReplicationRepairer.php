@@ -103,6 +103,11 @@ final readonly class MediaReplicationRepairer
             throw new \DomainException('Das Medien-Reparaturverzeichnis darf keine symbolischen Links verwenden.');
         }
 
-        return $repairDirectory.'/'.$task->getStagedFilename();
+        $filename = $task->getStagedFilename();
+        if (preg_match('/\A[a-f0-9]{32}\.bin\z/', $filename) !== 1) {
+            throw new \DomainException('Der Medien-Reparaturdateiname ist ungültig.');
+        }
+
+        return $repairDirectory.'/'.$filename;
     }
 }

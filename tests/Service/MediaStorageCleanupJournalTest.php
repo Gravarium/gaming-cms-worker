@@ -55,6 +55,29 @@ final class MediaStorageCleanupJournalTest extends TestCase
         self::assertFileExists($path);
     }
 
+    public function testOversizedJournalPayloadIsIgnoredBeforeJsonDecode(): void
+    {
+        $root = $this->root();
+        $journal = new MediaStorageCleanupJournal($root);
+        $journal->recordLocal('/uploads/media/content/file.txt');
+
+        $pending = $journal->pending();
+        self::assertCount(1, $pending);
+        $path = $root.'/var/media-repair/cleanup-'.$pending[0]['id'].'.json';
+        file_put_contents($path, str_repeat('x', 16 * 1024 + 1));
+
+        self::assertSame([], $journal->pending());
+        self::assertFileExists($path);
+    }
+
+    public function testJournalRejectsMalformedUtf8CleanupValue(): void
+    {
+        $journal = new MediaStorageCleanupJournal($this->root());
+
+        $this->expectException(\InvalidArgumentException::class);
+        $journal->recordLocal('/uploads/media/content/'.chr(0xB1).'.txt');
+    }
+
     public function testJournalRejectsTraversalInsteadOfPersistingIt(): void
     {
         $journal = new MediaStorageCleanupJournal($this->root());
