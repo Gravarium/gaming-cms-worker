@@ -17,7 +17,7 @@
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-597 is claimed from exact Worker main HEAD a19ed4bcf1203bba69de472613805d5fcdc978e6; implement the disjoint public role-need application flow on feature/wcp-597-guild-role-need-application-g1.",
+    "next_required_action": "Complete WCP-597's focused public role-need application flow, finish exact-head Worker CI, and lock its claim for Trusted review.",
     "composition_preparable": 0,
     "immediately_actionable": 33,
     "must_continue": true
@@ -54692,7 +54692,7 @@
       "tests": [
         "Browser test renders the role-need widget action, follows it to the focused application page and verifies the selected role/class and class prefill.",
         "A valid submission records the selected need in GuildApplication answers and creates the existing admin notification.",
-        "Mismatched guild/need IDs and inactive, zero-count, closed, disabled-guild, disabled-game or disabled-Gaming needs cannot be applied through the focused route.",
+        "Mismatched guild/need identity and inactive, zero-count, closed, disabled-guild, disabled-game or disabled-Gaming needs cannot be applied through the focused route.",
         "Invalid application fields retain the existing validation status and the route continues to use the shared guild-application limiter and CSRF form.",
         "Complete exact-head Worker CI including PHPStan, Twig/container checks, AssetMapper and PostgreSQL 18 migration-chain validation."
       ],
@@ -54719,8 +54719,8 @@
       "proposal_dependency_evidence": [],
       "published_at": "2026-09-28T22:57:52.018Z",
       "collision_check": {
-        "compared_against": "Fresh continuous/work-pool-v4 @ 32da7c0d41d452a31cfb4fb78fd700fc42c40082; Worker main exact HEAD a19ed4bcf1203bba69de472613805d5fcdc978e6; all current active and claim-locked path allowlists; live WCP-597 branch and PR searches before claim.",
-        "result": "No overlap with any worker_in_progress or claim-locked path. The closest same-feature predecessors are locked WCP-359 (src/Form/GuildApplicationType.php), WCP-384 (src/Controller/GamingController.php), and WCP-541 (templates/gaming/apply.html.twig); all are explicitly excluded. This proposal uses a separate controller and template, and reuses the existing form class without editing it. WCP-511, WCP-588, WCP-589, WCP-591 and WCP-596 paths are also disjoint. The dormant FCP-072 templates/ allowance does not cover the module-local src/GuildRoleNeedsWidget template and is blocked by FCP-035. A fresh exact-path check confirmed the new module Twig registration file config/packages/guild_role_need_application.yaml has no active or claim-locked path overlap.",
+        "compared_against": "Fresh continuous/work-pool-v4 @ 141aae7de72857f7a63340e0b0017bffa2510ccd; latest Worker main @ 29f1044353e92ba07a1378da558cd3b1dcf9b88c; current active and claim-locked path allowlists including directory-prefix overlap; WCP-597 feature head f465701ee006d9c8aa2c346476e4bf2abf7639f3.",
+        "result": "No overlap with any other worker_in_progress or claim-locked path. Worker main advanced by one sanitized-source sync commit with no WCP-597 path overlap.",
         "paths": [
           "src/Controller/PublicGuildRoleNeedApplicationController.php",
           "src/GuildRoleNeedsWidget/Templates/widget/public_guild_role_needs.html.twig",
@@ -54739,13 +54739,13 @@
       "claim_state": "active",
       "active_base_branch": "main",
       "active_base_sha": "a19ed4bcf1203bba69de472613805d5fcdc978e6",
-      "active_head": "a19ed4bcf1203bba69de472613805d5fcdc978e6",
+      "active_head": "f465701ee006d9c8aa2c346476e4bf2abf7639f3",
       "resume_branch": "feature/wcp-597-guild-role-need-application-g1",
       "branch_heads": {
         "claim_branch": "a19ed4bcf1203bba69de472613805d5fcdc978e6",
-        "feature_branch": "a19ed4bcf1203bba69de472613805d5fcdc978e6"
+        "feature_branch": "f465701ee006d9c8aa2c346476e4bf2abf7639f3"
       },
-      "last_observed_head": "a19ed4bcf1203bba69de472613805d5fcdc978e6",
+      "last_observed_head": "f465701ee006d9c8aa2c346476e4bf2abf7639f3",
       "checkpoint_paths": [
         "src/Controller/PublicGuildRoleNeedApplicationController.php",
         "src/GuildRoleNeedsWidget/Templates/widget/public_guild_role_needs.html.twig",
@@ -54753,9 +54753,9 @@
         "tests/Controller/PublicGuildRoleNeedApplicationFlowTest.php",
         "config/packages/guild_role_need_application.yaml"
       ],
-      "next_action": "Implement the disjoint focused application route and template, connect each public role-need widget row to it, persist the selected public need in existing application answers, and add focused positive/negative controller tests.",
-      "last_checkpoint_at": "2026-09-28T23:00:35.625Z",
-      "last_verified_push_at": "2026-09-28T22:57:52.018Z"
+      "next_action": "Open a draft Worker PR against main, verify the complete changed-file set and run exact-head CI; fix any concrete CI failures before marking ready.",
+      "last_checkpoint_at": "2026-09-28T23:14:39.378Z",
+      "last_verified_push_at": "2026-09-28T23:14:39.378Z"
     }
   ],
   "recovery_queue": [],
