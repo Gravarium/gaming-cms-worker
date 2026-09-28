@@ -17,7 +17,7 @@
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-598 is claimed on exact Worker main eb235b1aaa0335349b283872f820f24f8b7da90b to make every open moderation report and hidden comment reachable through independent paginated queues.",
+    "next_required_action": "WCP-598 implementation is on Worker PR #392; complete exact-head CI and lock the claim when green.",
     "composition_preparable": 0,
     "immediately_actionable": 33,
     "must_continue": true
@@ -54941,7 +54941,7 @@
       "proposal_dependency_evidence": [],
       "published_at": "2026-09-28T23:40:56.575Z",
       "collision_check": {
-        "compared_against": "Fresh continuous/work-pool-v4 @ 853d8cc7394df583589b88119b56ed2d8613ba53; current Worker main @ eb235b1aaa0335349b283872f820f24f8b7da90b; all active and claim-locked path allowlists including directory-prefix overlap; WCP-598 feature head 113c0a0ebdb39db6ad31819ade3e044564251b63.",
+        "compared_against": "Fresh continuous/work-pool-v4 @ 6be5a60d14381e250847acaf2fe380470c80197c; current Worker main @ eb235b1aaa0335349b283872f820f24f8b7da90b; PR #392 head 113c0a0ebdb39db6ad31819ade3e044564251b63; all active and claim-locked path allowlists including directory-prefix overlap.",
         "result": "No overlap with any other worker_in_progress or claim-locked path.",
         "paths": [
           "src/CommunityInteraction/ContentInteractionQuery.php",
@@ -54968,9 +54968,13 @@
         "src/CommunityInteraction/Templates/admin/moderation.html.twig",
         "tests/Controller/AdminContentModerationWorkflowTest.php"
       ],
-      "next_action": "Review the exact four-file diff against the claimed base, open a draft Worker PR, and complete exact-head CI; fix any concrete failures before marking ready.",
-      "last_checkpoint_at": "2026-09-28T23:48:07.674Z",
-      "last_verified_push_at": "2026-09-28T23:48:07.674Z"
+      "next_action": "Wait for exact-head Worker CI run #991 on PR #392; diagnose and repair concrete failures before finishing and locking the claim.",
+      "last_checkpoint_at": "2026-09-28T23:49:03.964Z",
+      "last_verified_push_at": "2026-09-28T23:49:03.964Z",
+      "worker_pr_number": 392,
+      "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/392",
+      "worker_ci_run_id": 36499924219,
+      "worker_ci_run_url": "https://github.com/Gravarium/gaming-cms-worker/actions/runs/36499924219"
     }
   ],
   "recovery_queue": [],
