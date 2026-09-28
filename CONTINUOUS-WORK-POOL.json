@@ -26273,7 +26273,7 @@
       "package_id": "WCP-454",
       "title": "Verify login throttling after repeated invalid passwords",
       "risk": "medium",
-      "execution_state": "worker_complete_awaiting_trusted_review",
+      "execution_state": "trusted_integrated",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -26345,7 +26345,7 @@
         ]
       },
       "claimed_on": "2026-09-27T02:18:41.986Z",
-      "claim_state": "locked_until_trusted_resolution",
+      "claim_state": "released_after_trusted_integration",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
       "active_head": "66e5007255323b2475f7d7ef5ca794ed0850706e",
@@ -26358,12 +26358,12 @@
         "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
         "feature_branch": "66e5007255323b2475f7d7ef5ca794ed0850706e"
       },
-      "next_action": "Await Trusted review with the claim locked; exact final HEAD 66e5007255323b2475f7d7ef5ca794ed0850706e passed complete Worker CI run 36289122381.",
+      "next_action": "Worker PR #247 closed after Trusted PR #173 and all three downstream CI/sync gates succeeded.",
       "last_verified_push_at": "2026-09-27T02:44:44.637Z",
       "worker_pr": 247,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/247",
       "draft_pr": false,
-      "pr_state": "open_ready_unmerged",
+      "pr_state": "closed",
       "ci_attempts": [
         {
           "run_id": 36288211226,
@@ -26401,7 +26401,27 @@
         "php_symfony_job": "success: 430 tests, 1903 assertions; PHPStan level 8 no errors",
         "postgresql_job": "success: 39 migrations",
         "throttling_behavior": "TooManyLoginAttemptsAuthenticationException with the default /login failure redirect; user remains unauthenticated"
-      }
+      },
+      "worker_pr_state": "closed",
+      "trusted_resolution": {
+        "status": "integrated",
+        "worker_pr": 247,
+        "worker_head": "66e5007255323b2475f7d7ef5ca794ed0850706e",
+        "trusted_pr": 173,
+        "trusted_pr_ci_run_id": 36362288419,
+        "trusted_pr_ci_result": "success",
+        "trusted_merge_sha": "deb7417d3c0705f0c7fe1f5d0ed561a59e935325",
+        "final_trusted_main_sha": "deb7417d3c0705f0c7fe1f5d0ed561a59e935325",
+        "final_trusted_main_ci_run_id": 36362530101,
+        "final_trusted_main_ci_result": "success",
+        "worker_sync_run_id": 36362530147,
+        "worker_sync_result": "success",
+        "sanitized_worker_sync_sha": "8e33bba3db00dbf4eb6947a747fb2bc83fc87422",
+        "worker_ci_run_id": 36362543784,
+        "worker_ci_after_sync_result": "success",
+        "resolved_at": "2026-09-28T00:37:54.342Z"
+      },
+      "completed_at": "2026-09-28T00:37:54.342Z"
     },
     {
       "priority": 455,
@@ -26708,7 +26728,7 @@
       "package_id": "WCP-457",
       "title": "Verify global login throttling across distinct usernames",
       "risk": "medium",
-      "execution_state": "worker_complete_awaiting_trusted_review",
+      "execution_state": "trusted_integrated",
       "dependencies": [
         "WCP-454"
       ],
@@ -26791,7 +26811,7 @@
         ]
       },
       "claimed_on": "2026-09-27T02:49:22.204Z",
-      "claim_state": "locked_until_trusted_resolution",
+      "claim_state": "released_after_trusted_integration",
       "active_base_branch": "feature/wcp-454-login-throttling-g1",
       "active_base_sha": "66e5007255323b2475f7d7ef5ca794ed0850706e",
       "active_head": "94da6297e417b886d101dae6cc4ec2170538549c",
@@ -26805,11 +26825,11 @@
         "feature_branch": "94da6297e417b886d101dae6cc4ec2170538549c"
       },
       "last_verified_push_at": "2026-09-27T02:58:24.798Z",
-      "next_action": "Await Trusted review with the claim locked; exact final HEAD 94da6297e417b886d101dae6cc4ec2170538549c passed complete Worker CI run 36289843576.",
+      "next_action": "Worker PR #250 closed after Trusted PR #173 and all three downstream CI/sync gates succeeded.",
       "worker_pr": 250,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/250",
       "draft_pr": false,
-      "pr_state": "open_ready_unmerged",
+      "pr_state": "closed",
       "ci_attempts": [
         {
           "run_id": 36289843576,
@@ -26835,7 +26855,27 @@
         "postgresql_job": "success: 39 migrations",
         "global_throttle": "25 distinct failed usernames on one isolated IP, followed by TooManyLoginAttemptsAuthenticationException on attempt 26",
         "unauthenticated": "GET /account redirects to /login"
-      }
+      },
+      "worker_pr_state": "closed",
+      "trusted_resolution": {
+        "status": "integrated",
+        "worker_pr": 250,
+        "worker_head": "94da6297e417b886d101dae6cc4ec2170538549c",
+        "trusted_pr": 173,
+        "trusted_pr_ci_run_id": 36362288419,
+        "trusted_pr_ci_result": "success",
+        "trusted_merge_sha": "deb7417d3c0705f0c7fe1f5d0ed561a59e935325",
+        "final_trusted_main_sha": "deb7417d3c0705f0c7fe1f5d0ed561a59e935325",
+        "final_trusted_main_ci_run_id": 36362530101,
+        "final_trusted_main_ci_result": "success",
+        "worker_sync_run_id": 36362530147,
+        "worker_sync_result": "success",
+        "sanitized_worker_sync_sha": "8e33bba3db00dbf4eb6947a747fb2bc83fc87422",
+        "worker_ci_run_id": 36362543784,
+        "worker_ci_after_sync_result": "success",
+        "resolved_at": "2026-09-28T00:37:54.342Z"
+      },
+      "completed_at": "2026-09-28T00:37:54.342Z"
     },
     {
       "priority": 458,
@@ -26959,7 +26999,7 @@
       "package_id": "WCP-459",
       "title": "Keep login failures indistinguishable for unknown accounts",
       "risk": "medium",
-      "execution_state": "worker_complete_awaiting_trusted_review",
+      "execution_state": "trusted_integrated",
       "dependencies": [
         "WCP-457"
       ],
@@ -27041,7 +27081,7 @@
         ]
       },
       "claimed_on": "2026-09-27T03:01:56.704Z",
-      "claim_state": "locked_until_trusted_resolution",
+      "claim_state": "released_after_trusted_integration",
       "active_base_branch": "feature/wcp-457-login-throttling-global-ip-g1",
       "active_base_sha": "94da6297e417b886d101dae6cc4ec2170538549c",
       "active_head": "238b1fdabf381713cb1bc2ad34d93449a0fb967d",
@@ -27055,11 +27095,11 @@
         "feature_branch": "238b1fdabf381713cb1bc2ad34d93449a0fb967d"
       },
       "last_verified_push_at": "2026-09-27T03:15:59.948Z",
-      "next_action": "Await Trusted review with the claim locked; exact final HEAD 238b1fdabf381713cb1bc2ad34d93449a0fb967d passed complete Worker CI run 36290280807.",
+      "next_action": "Worker PR #252 closed after Trusted PR #173 and all three downstream CI/sync gates succeeded.",
       "worker_pr": 252,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/252",
       "draft_pr": false,
-      "pr_state": "open_ready_unmerged",
+      "pr_state": "closed",
       "ci_attempts": [
         {
           "run_id": 36290280807,
@@ -27084,7 +27124,27 @@
         "php_symfony_job": "success: 432 tests, 2125 assertions; PHPStan level 8 no errors",
         "postgresql_job": "success: 39 migrations",
         "disclosure_behavior": "wrong password and unknown email both redirect to /login and display the same generic message; account remains unauthenticated"
-      }
+      },
+      "worker_pr_state": "closed",
+      "trusted_resolution": {
+        "status": "integrated",
+        "worker_pr": 252,
+        "worker_head": "238b1fdabf381713cb1bc2ad34d93449a0fb967d",
+        "trusted_pr": 173,
+        "trusted_pr_ci_run_id": 36362288419,
+        "trusted_pr_ci_result": "success",
+        "trusted_merge_sha": "deb7417d3c0705f0c7fe1f5d0ed561a59e935325",
+        "final_trusted_main_sha": "deb7417d3c0705f0c7fe1f5d0ed561a59e935325",
+        "final_trusted_main_ci_run_id": 36362530101,
+        "final_trusted_main_ci_result": "success",
+        "worker_sync_run_id": 36362530147,
+        "worker_sync_result": "success",
+        "sanitized_worker_sync_sha": "8e33bba3db00dbf4eb6947a747fb2bc83fc87422",
+        "worker_ci_run_id": 36362543784,
+        "worker_ci_after_sync_result": "success",
+        "resolved_at": "2026-09-28T00:37:54.342Z"
+      },
+      "completed_at": "2026-09-28T00:37:54.342Z"
     },
     {
       "priority": 460,
@@ -29388,7 +29448,7 @@
       "package_id": "WCP-474",
       "title": "Self-service two-factor recovery-code rotation",
       "risk": "medium",
-      "execution_state": "worker_complete_awaiting_trusted_review",
+      "execution_state": "trusted_integrated",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -29468,7 +29528,7 @@
       },
       "published_at": "2026-09-27T05:51:04.811Z",
       "claimed_on": "2026-09-27T05:51:04.811Z",
-      "claim_state": "locked_until_trusted_resolution",
+      "claim_state": "released_after_trusted_integration",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
       "active_head": "c55d185dabf0343d923a2e30a89dc7ae6dc8656b",
@@ -29485,13 +29545,13 @@
         "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
         "feature_branch": "c55d185dabf0343d923a2e30a89dc7ae6dc8656b"
       },
-      "next_action": "Await Trusted review and integration validation; keep the claim locked until Trusted explicitly integrates, cancels or transfers it.",
+      "next_action": "Worker PR #267 closed after Trusted PR #173 and all three downstream CI/sync gates succeeded.",
       "last_observed_head": "c55d185dabf0343d923a2e30a89dc7ae6dc8656b",
       "last_verified_push_at": "2026-09-27T06:10:00.567Z",
       "worker_pr": 267,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/267",
       "draft_pr": false,
-      "pr_state": "open_ready_unmerged",
+      "pr_state": "closed",
       "ci_run_id": 36298952620,
       "last_ci_run_id": 36298952620,
       "ci_result": "success",
@@ -29511,7 +29571,7 @@
       ],
       "final_head": "c55d185dabf0343d923a2e30a89dc7ae6dc8656b",
       "final_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-      "completed_at": "2026-09-27T06:10:00.567Z",
+      "completed_at": "2026-09-28T00:37:54.342Z",
       "changed_paths": [
         "config/packages/rate_limiter.yaml",
         "src/Controller/TwoFactorController.php",
@@ -29561,7 +29621,26 @@
         "Rotation allows five attempts per account per 15 minutes.",
         "Awaiting Trusted review and fresh Trusted integration CI."
       ],
-      "trusted_follow_up": "On a fresh Trusted branch, port and review the controller operation, limiter configuration and UI; preserve encrypted-secret/hash separation, CSRF/password checks, one-time delivery and session-version behavior. Run full Trusted CI. Keep recovery-code storage behind the account-security boundary for Fortress."
+      "trusted_follow_up": "On a fresh Trusted branch, port and review the controller operation, limiter configuration and UI; preserve encrypted-secret/hash separation, CSRF/password checks, one-time delivery and session-version behavior. Run full Trusted CI. Keep recovery-code storage behind the account-security boundary for Fortress.",
+      "worker_pr_state": "closed",
+      "trusted_resolution": {
+        "status": "integrated",
+        "worker_pr": 267,
+        "worker_head": "c55d185dabf0343d923a2e30a89dc7ae6dc8656b",
+        "trusted_pr": 173,
+        "trusted_pr_ci_run_id": 36362288419,
+        "trusted_pr_ci_result": "success",
+        "trusted_merge_sha": "deb7417d3c0705f0c7fe1f5d0ed561a59e935325",
+        "final_trusted_main_sha": "deb7417d3c0705f0c7fe1f5d0ed561a59e935325",
+        "final_trusted_main_ci_run_id": 36362530101,
+        "final_trusted_main_ci_result": "success",
+        "worker_sync_run_id": 36362530147,
+        "worker_sync_result": "success",
+        "sanitized_worker_sync_sha": "8e33bba3db00dbf4eb6947a747fb2bc83fc87422",
+        "worker_ci_run_id": 36362543784,
+        "worker_ci_after_sync_result": "success",
+        "resolved_at": "2026-09-28T00:37:54.342Z"
+      }
     },
     {
       "priority": 475,
@@ -38088,7 +38167,7 @@
       "package_id": "WCP-527",
       "title": "Require CSRF for own-session revocation",
       "risk": "high",
-      "execution_state": "worker_complete_awaiting_trusted_review",
+      "execution_state": "trusted_integrated",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -38161,7 +38240,7 @@
       },
       "published_at": "2026-09-27T12:02:46.670Z",
       "claimed_on": "2026-09-27T12:02:46.670Z",
-      "claim_state": "locked_until_trusted_resolution",
+      "claim_state": "released_after_trusted_integration",
       "active_base_branch": "main",
       "active_base_sha": "b510875e7b0741b9b19f09429d2204a95df51198",
       "active_head": "6dfe70231a0b58f127e741ab5883047a52b08c58",
@@ -38175,15 +38254,15 @@
       "checkpoint_paths": [
         "tests/Controller/AccountSessionRevocationCsrfTest.php"
       ],
-      "next_action": "Worker PR #319 is complete on exact green HEAD 6dfe70231a0b58f127e741ab5883047a52b08c58; claim remains locked until Trusted resolution.",
+      "next_action": "Worker PR #319 closed after Trusted PR #173 and all three downstream CI/sync gates succeeded.",
       "worker_pr": 319,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/319",
       "worker_pr_changed_paths": [
         "tests/Controller/AccountSessionRevocationCsrfTest.php"
       ],
       "draft_pr": false,
-      "pr_state": "open",
-      "worker_pr_state": "ready_for_review",
+      "pr_state": "closed",
+      "worker_pr_state": "closed",
       "last_verified_push_at": "2026-09-27T12:06:00.891Z",
       "ci_run_id": 36317817075,
       "last_ci_run_id": 36317817075,
@@ -38198,7 +38277,25 @@
         }
       ],
       "final_head": "6dfe70231a0b58f127e741ab5883047a52b08c58",
-      "completed_at": "2026-09-27T12:08:21.300Z"
+      "completed_at": "2026-09-28T00:37:54.342Z",
+      "trusted_resolution": {
+        "status": "integrated",
+        "worker_pr": 319,
+        "worker_head": "6dfe70231a0b58f127e741ab5883047a52b08c58",
+        "trusted_pr": 173,
+        "trusted_pr_ci_run_id": 36362288419,
+        "trusted_pr_ci_result": "success",
+        "trusted_merge_sha": "deb7417d3c0705f0c7fe1f5d0ed561a59e935325",
+        "final_trusted_main_sha": "deb7417d3c0705f0c7fe1f5d0ed561a59e935325",
+        "final_trusted_main_ci_run_id": 36362530101,
+        "final_trusted_main_ci_result": "success",
+        "worker_sync_run_id": 36362530147,
+        "worker_sync_result": "success",
+        "sanitized_worker_sync_sha": "8e33bba3db00dbf4eb6947a747fb2bc83fc87422",
+        "worker_ci_run_id": 36362543784,
+        "worker_ci_after_sync_result": "success",
+        "resolved_at": "2026-09-28T00:37:54.342Z"
+      }
     },
     {
       "priority": 528,
@@ -38604,7 +38701,7 @@
       "package_id": "WCP-530",
       "title": "Protect passkey management ownership and CSRF",
       "risk": "high",
-      "execution_state": "worker_complete_awaiting_trusted_review",
+      "execution_state": "trusted_integrated",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -38679,7 +38776,7 @@
       },
       "published_at": "2026-09-27T12:14:02.922Z",
       "claimed_on": "2026-09-27T12:14:02.922Z",
-      "claim_state": "locked_until_trusted_resolution",
+      "claim_state": "released_after_trusted_integration",
       "active_base_branch": "main",
       "active_base_sha": "b510875e7b0741b9b19f09429d2204a95df51198",
       "active_head": "bb3a13459ac4ca12c12b6211b6371029d52c60c6",
@@ -38693,7 +38790,7 @@
       "checkpoint_paths": [
         "tests/Controller/PasskeyManagementOwnershipTest.php"
       ],
-      "next_action": "Worker PR #322 is complete on exact green HEAD bb3a13459ac4ca12c12b6211b6371029d52c60c6; claim remains locked until Trusted resolution.",
+      "next_action": "Worker PR #322 closed after Trusted PR #173 and all three downstream CI/sync gates succeeded.",
       "last_verified_push_at": "2026-09-27T12:27:17.329Z",
       "worker_pr": 322,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/322",
@@ -38701,8 +38798,8 @@
         "tests/Controller/PasskeyManagementOwnershipTest.php"
       ],
       "draft_pr": false,
-      "pr_state": "open",
-      "worker_pr_state": "ready_for_review",
+      "pr_state": "closed",
+      "worker_pr_state": "closed",
       "ci_run_id": 36318673858,
       "last_ci_run_id": 36318673858,
       "ci_result": "success",
@@ -38716,13 +38813,31 @@
         }
       ],
       "final_head": "bb3a13459ac4ca12c12b6211b6371029d52c60c6",
-      "completed_at": "2026-09-27T12:27:17.329Z",
+      "completed_at": "2026-09-28T00:37:54.342Z",
       "completion_evidence": [
         "Base b510875e7b0741b9b19f09429d2204a95df51198; final Worker HEAD bb3a13459ac4ca12c12b6211b6371029d52c60c6.",
         "Changed path: tests/Controller/PasskeyManagementOwnershipTest.php.",
         "The owner sees the passkey; a foreign user cannot see or mutate it (404 with no database change); missing, forged and cross-action CSRF tokens are rejected, while rendered rename and delete tokens authorize only their matching owner actions.",
         "Exact-head Worker CI run #792 / 36318673858: PHPStan passed with no errors; PHPUnit 539 tests and 2,262 assertions (1 deprecation, 1 notice); PostgreSQL 18 passed with 54 migrations and 750 SQL queries."
-      ]
+      ],
+      "trusted_resolution": {
+        "status": "integrated",
+        "worker_pr": 322,
+        "worker_head": "bb3a13459ac4ca12c12b6211b6371029d52c60c6",
+        "trusted_pr": 173,
+        "trusted_pr_ci_run_id": 36362288419,
+        "trusted_pr_ci_result": "success",
+        "trusted_merge_sha": "deb7417d3c0705f0c7fe1f5d0ed561a59e935325",
+        "final_trusted_main_sha": "deb7417d3c0705f0c7fe1f5d0ed561a59e935325",
+        "final_trusted_main_ci_run_id": 36362530101,
+        "final_trusted_main_ci_result": "success",
+        "worker_sync_run_id": 36362530147,
+        "worker_sync_result": "success",
+        "sanitized_worker_sync_sha": "8e33bba3db00dbf4eb6947a747fb2bc83fc87422",
+        "worker_ci_run_id": 36362543784,
+        "worker_ci_after_sync_result": "success",
+        "resolved_at": "2026-09-28T00:37:54.342Z"
+      }
     },
     {
       "priority": 531,
