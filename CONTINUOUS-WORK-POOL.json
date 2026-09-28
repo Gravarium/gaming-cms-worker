@@ -36665,7 +36665,7 @@
       "package_id": "WCP-519",
       "title": "Keep notification topics scoped to the signed-in account",
       "risk": "low",
-      "execution_state": "worker_complete_awaiting_trusted_review",
+      "execution_state": "trusted_integrated",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -36738,7 +36738,7 @@
       },
       "published_at": "2026-09-27T11:01:40.719Z",
       "claimed_on": "2026-09-27T11:01:40.719Z",
-      "claim_state": "locked_until_trusted_resolution",
+      "claim_state": "released_after_trusted_integration",
       "active_base_branch": "main",
       "active_base_sha": "b510875e7b0741b9b19f09429d2204a95df51198",
       "active_head": "005802d0be3ecd695e0a354824d45b86b646f69f",
@@ -36747,7 +36747,7 @@
         "claim_branch": "b510875e7b0741b9b19f09429d2204a95df51198",
         "feature_branch": "005802d0be3ecd695e0a354824d45b86b646f69f"
       },
-      "next_action": "Claim remains locked for Trusted resolution. Continue the autonomous Worker loop with the next independent, path-disjoint package; do not merge or deploy.",
+      "next_action": "Integrated into Trusted main via PR #171; Trusted PR CI, Trusted Main CI, Worker-Sync and post-sync Worker-CI succeeded.",
       "checkpoint_paths": [
         "tests/Controller/NotificationPreferences/NotificationSubscriptionOwnershipTest.php"
       ],
@@ -36757,8 +36757,8 @@
       "worker_pr": 309,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/309",
       "draft_pr": false,
-      "pr_state": "open",
-      "worker_pr_state": "ready",
+      "pr_state": "closed",
+      "worker_pr_state": "closed",
       "worker_pr_changed_paths": [
         "tests/Controller/NotificationPreferences/NotificationSubscriptionOwnershipTest.php"
       ],
@@ -36796,7 +36796,21 @@
       "final_changed_paths": [
         "tests/Controller/NotificationPreferences/NotificationSubscriptionOwnershipTest.php"
       ],
-      "completed_at": "2026-09-27T11:17:12.663Z"
+      "completed_at": "2026-09-28T00:24:29.595Z",
+      "trusted_resolution": {
+        "status": "integrated",
+        "worker_pr": 309,
+        "worker_head": "005802d0be3ecd695e0a354824d45b86b646f69f",
+        "trusted_pr": 171,
+        "trusted_pr_ci_run_id": 36361568875,
+        "trusted_pr_ci_result": "success",
+        "trusted_merge_sha": "8268ba5ffa882d966df69fa0476bd05c7b2e51ba",
+        "final_trusted_main_sha": "8268ba5ffa882d966df69fa0476bd05c7b2e51ba",
+        "final_trusted_main_ci_run_id": 36361834037,
+        "sanitized_worker_sync_sha": "df153d5a0e9e6ac09ccad7ecf18aed6f32aadda9",
+        "worker_ci_run_id": 36361846985,
+        "resolved_at": "2026-09-28T00:24:29.595Z"
+      }
     },
     {
       "priority": 520,
@@ -40226,7 +40240,7 @@
       "package_id": "WCP-539",
       "title": "Connect the newsletter dashboard to delivery reporting",
       "risk": "medium",
-      "execution_state": "worker_complete_awaiting_trusted_review",
+      "execution_state": "trusted_integrated",
       "dependencies": [
         "WCP-528"
       ],
@@ -40316,7 +40330,7 @@
       },
       "published_at": "2026-09-27T13:23:00.400Z",
       "claimed_on": "2026-09-27T13:23:00.400Z",
-      "claim_state": "locked_until_trusted_resolution",
+      "claim_state": "released_after_trusted_integration",
       "active_base_branch": "feature/wcp-528-newsletter-delivery-report-g1",
       "active_base_sha": "7b9ed0ef7b9cc3ec9ccefb7457ecd052a0b98c0e",
       "active_head": "b012538370954f9c71f4acc9198e2703929d5ad6",
@@ -40331,7 +40345,7 @@
         "templates/admin/newsletter/index.html.twig",
         "tests/Controller/NewsletterDeliveryReportNavigationTest.php"
       ],
-      "next_action": "Worker PR #329 is complete on exact green HEAD b012538370954f9c71f4acc9198e2703929d5ad6; keep this claim locked until Trusted resolution, and continue to the next independent package.",
+      "next_action": "Integrated into Trusted main via PR #171; Trusted PR CI, Trusted Main CI, Worker-Sync and post-sync Worker-CI succeeded.",
       "ci_attempts": [
         {
           "run_id": 36322375359,
@@ -40357,7 +40371,7 @@
           "sql_queries": 750
         }
       ],
-      "worker_pr_state": "ready_for_review",
+      "worker_pr_state": "closed",
       "last_ci_result": "success",
       "worker_pr_changed_paths": [
         "templates/admin/newsletter/index.html.twig",
@@ -40367,13 +40381,13 @@
       "worker_pr": 329,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/329",
       "last_verified_push_at": "2026-09-27T13:31:05.478Z",
-      "pr_state": "open",
+      "pr_state": "closed",
       "draft_pr": false,
       "ci_run_id": 36322647238,
       "last_ci_run_id": 36322647238,
       "ci_result": "success",
       "final_head": "b012538370954f9c71f4acc9198e2703929d5ad6",
-      "completed_at": "2026-09-27T13:33:45.432Z",
+      "completed_at": "2026-09-28T00:24:29.595Z",
       "completion_report_actual": {
         "base_sha": "7b9ed0ef7b9cc3ec9ccefb7457ecd052a0b98c0e",
         "final_head": "b012538370954f9c71f4acc9198e2703929d5ad6",
@@ -40398,6 +40412,20 @@
         "remaining_limitations": [
           "The report link uses its existing stable URL path because WCP-528 does not expose the intended exact route name as a route alias."
         ]
+      },
+      "trusted_resolution": {
+        "status": "integrated",
+        "worker_pr": 329,
+        "worker_head": "b012538370954f9c71f4acc9198e2703929d5ad6",
+        "trusted_pr": 171,
+        "trusted_pr_ci_run_id": 36361568875,
+        "trusted_pr_ci_result": "success",
+        "trusted_merge_sha": "8268ba5ffa882d966df69fa0476bd05c7b2e51ba",
+        "final_trusted_main_sha": "8268ba5ffa882d966df69fa0476bd05c7b2e51ba",
+        "final_trusted_main_ci_run_id": 36361834037,
+        "sanitized_worker_sync_sha": "df153d5a0e9e6ac09ccad7ecf18aed6f32aadda9",
+        "worker_ci_run_id": 36361846985,
+        "resolved_at": "2026-09-28T00:24:29.595Z"
       }
     },
     {
@@ -40986,7 +41014,7 @@
       "package_id": "WCP-543",
       "title": "Search and paginate newsletter subscribers",
       "risk": "medium",
-      "execution_state": "worker_complete_awaiting_trusted_review",
+      "execution_state": "trusted_integrated",
       "dependencies": [
         "WCP-522"
       ],
@@ -41098,7 +41126,7 @@
       },
       "published_at": "2026-09-27T14:11:31.643Z",
       "claimed_on": "2026-09-27T14:11:31.643Z",
-      "claim_state": "locked_until_trusted_resolution",
+      "claim_state": "released_after_trusted_integration",
       "active_base_branch": "feature/wcp-522-public-newsletter-signup-g1",
       "active_base_sha": "b1cecaeadc1b8378cf8626f52aa48396a569d8cb",
       "active_head": "ebb240a005c0b63818dbb21fa28d05c06bf10e1f",
@@ -41117,8 +41145,8 @@
         "templates/admin/newsletter/preview.html.twig",
         "tests/Controller/AdminNewsletterSubscriptionDirectoryTest.php"
       ],
-      "next_action": "PR #336 is ready for review with exact-head Worker CI #840 green; keep the claim locked until Trusted resolution, then continue with the next independent module gap.",
-      "worker_pr_state": "open",
+      "next_action": "Integrated into Trusted main via PR #171; Trusted PR CI, Trusted Main CI, Worker-Sync and post-sync Worker-CI succeeded.",
+      "worker_pr_state": "closed",
       "last_verified_push_at": "2026-09-27T14:28:11.005Z",
       "ci_result": "success",
       "last_ci_result": "success",
@@ -41177,13 +41205,27 @@
         "tests/Controller/AdminNewsletterSubscriptionDirectoryTest.php"
       ],
       "worker_pr_base_branch": "main",
-      "pr_state": "open",
+      "pr_state": "closed",
       "draft_pr": false,
       "worker_pr_base_sha": "b510875e7b0741b9b19f09429d2204a95df51198",
       "ci_run_id": 36326000973,
       "last_ci_run_id": 36326000973,
       "final_head": "ebb240a005c0b63818dbb21fa28d05c06bf10e1f",
-      "completed_at": "2026-09-27T14:30:41.165Z"
+      "completed_at": "2026-09-28T00:24:29.595Z",
+      "trusted_resolution": {
+        "status": "integrated",
+        "worker_pr": 336,
+        "worker_head": "ebb240a005c0b63818dbb21fa28d05c06bf10e1f",
+        "trusted_pr": 171,
+        "trusted_pr_ci_run_id": 36361568875,
+        "trusted_pr_ci_result": "success",
+        "trusted_merge_sha": "8268ba5ffa882d966df69fa0476bd05c7b2e51ba",
+        "final_trusted_main_sha": "8268ba5ffa882d966df69fa0476bd05c7b2e51ba",
+        "final_trusted_main_ci_run_id": 36361834037,
+        "sanitized_worker_sync_sha": "df153d5a0e9e6ac09ccad7ecf18aed6f32aadda9",
+        "worker_ci_run_id": 36361846985,
+        "resolved_at": "2026-09-28T00:24:29.595Z"
+      }
     },
     {
       "priority": 544,
