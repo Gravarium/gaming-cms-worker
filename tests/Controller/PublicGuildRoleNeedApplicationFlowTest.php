@@ -235,7 +235,10 @@ final class PublicGuildRoleNeedApplicationFlowTest extends WebTestCase
                 $crawler = $client->request('GET', $url);
                 self::assertResponseIsSuccessful();
                 $form = $crawler->selectButton('Bewerbung absenden')->form();
+                $form['guild_application[applicantName]'] = 'Applicant '.$suffix;
                 $form['guild_application[email]'] = 'not-an-email';
+                $form['guild_application[characterName]'] = 'Character '.$suffix;
+                $form['guild_application[characterClass]'] = 'Mage';
                 $form['guild_application[message]'] = 'Too short';
                 $client->submit($form);
                 self::assertResponseStatusCodeSame(422);
