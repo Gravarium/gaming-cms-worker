@@ -331,8 +331,23 @@ final class PublicContentReleaseWidgetProviderTest extends WebTestCase
                 $firstIds = array_column($first['releases'], 'id');
                 self::assertContains($this->contentReleaseId($release), $firstIds);
 
-                $release->setStatus(ContentRelease::STATUS_CANCELLED);
+                $lateEntry = $this->newEntry(
+                    $author,
+                    'Late cache entry',
+                    'news',
+                    'wcp533-'.$token.'-late-entry',
+                    new \DateTimeImmutable('-1 hour'),
+                );
+                $lateRelease = $this->newRelease(
+                    $author,
+                    'Late cache release',
+                    null,
+                    [$lateEntry],
+                    new \DateTimeImmutable('-1 hour'),
+                );
+                $this->persistRelease($client, $lateRelease, $releases, $entries);
                 $this->entityManager($client)->flush();
+                $lateReleaseId = $this->contentReleaseId($lateRelease);
                 $cached = $provider->data(PublicContentReleaseWidgetProvider::KEY, ['count' => 6]);
                 self::assertIsArray($cached['releases']);
                 self::assertSame($firstIds, array_column($cached['releases'], 'id'));
@@ -344,7 +359,8 @@ final class PublicContentReleaseWidgetProviderTest extends WebTestCase
             try {
                 $fresh = $provider->data(PublicContentReleaseWidgetProvider::KEY, ['count' => 6]);
                 self::assertIsArray($fresh['releases']);
-                self::assertNotContains($this->contentReleaseId($release), array_column($fresh['releases'], 'id'));
+                self::assertContains($lateReleaseId, array_column($fresh['releases'], 'id'));
+                self::assertContains($this->contentReleaseId($release), array_column($fresh['releases'], 'id'));
             } finally {
                 $requestStack->pop();
             }
@@ -420,10 +436,13 @@ final class PublicContentReleaseWidgetProviderTest extends WebTestCase
         foreach ($entries as $entry) {
             $release->addEntry($entry);
         }
-        $release->publish($publishedAt);
-        $release->setStatus($status);
         if ($scheduledAt !== null) {
             $release->setScheduledAt($scheduledAt);
+        }
+        if ($status === ContentRelease::STATUS_PUBLISHED) {
+            $release->publish($publishedAt);
+        } else {
+            $release->setStatus($status);
         }
 
         return $release;
@@ -467,9 +486,6 @@ final class PublicContentReleaseWidgetProviderTest extends WebTestCase
             }
             $release = $entityManager->find(ContentRelease::class, $releaseId);
             if ($release instanceof ContentRelease) {
-                foreach ($release->getEntries() as $entry) {
-                    $release->removeEntry($entry);
-                }
                 $entityManager->remove($release);
             }
         }

@@ -1,0 +1,221 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Tests\Controller\Competition;
+
+use App\Entity\Competition\Competition;
+use App\Entity\Competition\CompetitionParticipant;
+use App\Entity\Game;
+use App\Entity\User;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bundle\FrameworkBundle\KernelBrowser;
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+
+final class CompetitionRegistrationSecurityTest extends WebTestCase
+{
+    private ?KernelBrowser $fixtureClient = null;
+
+    /** @var list<string> */
+    private array $competitionSlugs = [];
+
+    /** @var list<string> */
+    private array $gameSlugs = [];
+
+    private ?string $fixtureUserEmail = null;
+
+    public function testPublicOpenCompetitionRegistrationPersistsOnceAndRejectsDuplicates(): void
+    {
+        $client = static::createClient();
+        $fixture = $this->fixture($client);
+        $client->loginUser($fixture['user']);
+
+        $path = '/competitions/'.$fixture['competitionId'].'/register';
+        $crawler = $client->request('GET', $path);
+        self::assertResponseIsSuccessful();
+        self::assertSelectorTextContains('main h1', $fixture['publicName']);
+
+        $form = $crawler->selectButton('Anmelden')->form([
+            'competition_registration[name]' => 'Solo participant '.$fixture['suffix'],
+            'competition_registration[kind]' => CompetitionParticipant::KIND_SOLO,
+        ]);
+        $client->submit($form);
+
+        self::assertResponseRedirects('/competitions/'.$fixture['competitionId']);
+        self::assertSame(1, $this->participantCount($client, $fixture['competitionId'], $fixture['userId']));
+
+        $client->request('GET', $path);
+        self::assertResponseRedirects('/competitions/'.$fixture['competitionId']);
+        self::assertSame(1, $this->participantCount($client, $fixture['competitionId'], $fixture['userId']));
+    }
+
+    public function testPrivateDraftInProgressAndDisabledGameCompetitionsCannotBeRegisteredFor(): void
+    {
+        $client = static::createClient();
+        $fixture = $this->fixture($client);
+        $client->loginUser($fixture['user']);
+
+        foreach ($fixture['hiddenIds'] as $id) {
+            $client->request('GET', '/competitions/'.$id.'/register');
+            self::assertResponseStatusCodeSame(404);
+        }
+    }
+
+    public function testInvalidRegistrationCsrfTokenDoesNotPersistParticipant(): void
+    {
+        $client = static::createClient();
+        $fixture = $this->fixture($client);
+        $client->loginUser($fixture['user']);
+
+        $crawler = $client->request('GET', '/competitions/'.$fixture['competitionId'].'/register');
+        self::assertResponseIsSuccessful();
+        $form = $crawler->selectButton('Anmelden')->form([
+            'competition_registration[name]' => 'Forged participant',
+            'competition_registration[kind]' => CompetitionParticipant::KIND_SOLO,
+            'competition_registration[_token]' => 'invalid-token',
+        ]);
+        $client->submit($form);
+
+        self::assertResponseStatusCodeSame(422);
+        self::assertSame(0, $this->participantCount($client, $fixture['competitionId'], $fixture['userId']));
+    }
+
+    protected function tearDown(): void
+    {
+        try {
+            if ($this->fixtureClient !== null) {
+                $entityManager = $this->fixtureClient->getContainer()->get(EntityManagerInterface::class);
+                foreach ($this->competitionSlugs as $slug) {
+                    $competition = $entityManager->getRepository(Competition::class)->findOneBy(['slug' => $slug]);
+                    if ($competition instanceof Competition) {
+                        foreach ($entityManager->getRepository(CompetitionParticipant::class)->findBy(['competition' => $competition]) as $participant) {
+                            $entityManager->remove($participant);
+                        }
+                        $entityManager->remove($competition);
+                    }
+                }
+                foreach ($this->gameSlugs as $slug) {
+                    $game = $entityManager->getRepository(Game::class)->findOneBy(['slug' => $slug]);
+                    if ($game instanceof Game) {
+                        $entityManager->remove($game);
+                    }
+                }
+                if ($this->fixtureUserEmail !== null) {
+                    $user = $entityManager->getRepository(User::class)->findOneBy(['email' => $this->fixtureUserEmail]);
+                    if ($user instanceof User) {
+                        $entityManager->remove($user);
+                    }
+                }
+                $entityManager->flush();
+            }
+        } finally {
+            parent::tearDown();
+        }
+    }
+
+    /**
+     * @return array{
+     *   competitionId: int,
+     *   publicName: string,
+     *   userId: int,
+     *   user: User,
+     *   suffix: string,
+     *   hiddenIds: list<int>
+     * }
+     */
+    private function fixture(KernelBrowser $client): array
+    {
+        $entityManager = $this->em($client);
+        $suffix = bin2hex(random_bytes(5));
+        $enabledGame = (new Game())
+            ->setName('Registration Game '.$suffix)
+            ->setSlug('registration-game-'.$suffix)
+            ->setEnabled(true);
+        $disabledGame = (new Game())
+            ->setName('Disabled Registration Game '.$suffix)
+            ->setSlug('disabled-registration-game-'.$suffix)
+            ->setEnabled(true);
+        $user = (new User())
+            ->setEmail('competition-registration-'.$suffix.'@example.test')
+            ->setDisplayName('Competition registration user')
+            ->setPermissions([])
+            ->verifyEmail();
+        $this->fixtureClient = $client;
+        $this->fixtureUserEmail = $user->getEmail();
+        $this->competitionSlugs = ['public-registration-'.$suffix, 'private-registration-'.$suffix, 'draft-registration-'.$suffix, 'started-registration-'.$suffix, 'disabled-game-registration-'.$suffix];
+        $this->gameSlugs = ['registration-game-'.$suffix, 'disabled-registration-game-'.$suffix];
+
+        $publicName = 'Public Registration Cup '.$suffix;
+        $public = (new Competition())
+            ->setGame($enabledGame)
+            ->setName($publicName)
+            ->setSlug('public-registration-'.$suffix)
+            ->open();
+        $private = (new Competition())
+            ->setGame($enabledGame)
+            ->setName('Private Registration Cup '.$suffix)
+            ->setSlug('private-registration-'.$suffix)
+            ->setVisibility(Competition::VISIBILITY_PRIVATE)
+            ->open();
+        $draft = (new Competition())
+            ->setGame($enabledGame)
+            ->setName('Draft Registration Cup '.$suffix)
+            ->setSlug('draft-registration-'.$suffix);
+        $inProgress = (new Competition())
+            ->setGame($enabledGame)
+            ->setName('Started Registration Cup '.$suffix)
+            ->setSlug('started-registration-'.$suffix)
+            ->open()
+            ->start();
+        $disabled = (new Competition())
+            ->setGame($disabledGame)
+            ->setName('Disabled Game Registration Cup '.$suffix)
+            ->setSlug('disabled-game-registration-'.$suffix)
+            ->open();
+        $disabledGame->setEnabled(false);
+
+        foreach ([$enabledGame, $disabledGame, $user, $public, $private, $draft, $inProgress, $disabled] as $entity) {
+            $entityManager->persist($entity);
+        }
+        $entityManager->flush();
+
+        $competitionId = $public->getId();
+        $privateId = $private->getId();
+        $draftId = $draft->getId();
+        $inProgressId = $inProgress->getId();
+        $disabledId = $disabled->getId();
+        $userId = $user->getId();
+        if ($competitionId === null || $privateId === null || $draftId === null || $inProgressId === null || $disabledId === null || $userId === null) {
+            throw new \LogicException('Competition registration fixture did not receive database identifiers.');
+        }
+
+        return [
+            'competitionId' => $competitionId,
+            'publicName' => $publicName,
+            'userId' => $userId,
+            'user' => $user,
+            'suffix' => $suffix,
+            'hiddenIds' => [$privateId, $draftId, $inProgressId, $disabledId],
+        ];
+    }
+
+    private function participantCount(KernelBrowser $client, int $competitionId, int $userId): int
+    {
+        $entityManager = $this->em($client);
+        $competition = $entityManager->find(Competition::class, $competitionId);
+        $user = $entityManager->find(User::class, $userId);
+        if (!$competition instanceof Competition || !$user instanceof User) {
+            throw new \LogicException('Competition registration fixture was not found.');
+        }
+
+        return $entityManager->getRepository(CompetitionParticipant::class)->count([
+            'competition' => $competition,
+            'captain' => $user,
+        ]);
+    }
+
+    private function em(KernelBrowser $client): EntityManagerInterface
+    {
+        return $client->getContainer()->get(EntityManagerInterface::class);
+    }
+}
