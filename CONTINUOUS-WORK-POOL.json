@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-28T21:52:26.199Z",
+  "published_at": "2026-09-28T21:54:21.426Z",
   "summary": {
     "total_remaining_worker_tasks": 176,
     "completed_worker_prs_awaiting_trusted_review": 315,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-594 is claimed on feature/wcp-594-public-guild-events-widget-schedule-link-g1 from exact sanitized main a19ed4bcf1203bba69de472613805d5fcdc978e6; complete the widget-to-public-schedule flow, then validate exact-head Worker CI. WCP-593 remains ready for Trusted review with its claim locked.",
+    "next_required_action": "WCP-594 is checkpointed at exact feature HEAD d71e34b493987ae5ffd99c331a01ebaf216a46fb; validate the public widget-to-schedule flow through PR CI. WCP-593 remains ready for Trusted review with its claim locked.",
     "composition_preparable": 0,
     "immediately_actionable": 33,
     "must_continue": true
@@ -54177,15 +54177,20 @@
       "claimed_on": "2026-09-28T21:52:26.199Z",
       "active_base_branch": "main",
       "active_base_sha": "a19ed4bcf1203bba69de472613805d5fcdc978e6",
-      "active_head": "a19ed4bcf1203bba69de472613805d5fcdc978e6",
+      "active_head": "d71e34b493987ae5ffd99c331a01ebaf216a46fb",
       "resume_branch": "feature/wcp-594-public-guild-events-widget-schedule-link-g1",
       "branch_heads": {
         "claim_branch": "a19ed4bcf1203bba69de472613805d5fcdc978e6",
-        "feature_branch": "a19ed4bcf1203bba69de472613805d5fcdc978e6"
+        "feature_branch": "d71e34b493987ae5ffd99c331a01ebaf216a46fb"
       },
-      "last_observed_head": "a19ed4bcf1203bba69de472613805d5fcdc978e6",
-      "checkpoint_paths": [],
-      "next_action": "Implement the widget-to-schedule navigation on the resume_branch; keep this claim locked through Trusted resolution."
+      "last_observed_head": "d71e34b493987ae5ffd99c331a01ebaf216a46fb",
+      "checkpoint_paths": [
+        "src/PublicGuildEventsWidget/Templates/widget/public_guild_events.html.twig",
+        "tests/Widget/PublicGuildEventsWidgetProviderTest.php"
+      ],
+      "next_action": "Open a draft Worker PR against main for exact-head CI, inspect test results, fix any failures, then mark ready for Trusted review.",
+      "last_checkpoint_at": "2026-09-28T21:54:21.426Z",
+      "last_verified_push_at": "2026-09-28T21:54:21.426Z"
     }
   ],
   "recovery_queue": [],
