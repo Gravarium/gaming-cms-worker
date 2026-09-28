@@ -14,6 +14,7 @@
                     {% if event.description %}<p>{{ event.description|nl2br }}</p>{% endif %}
                     {% if event.location %}<p class="muted">Treffpunkt: {{ event.location }}</p>{% endif %}
                     {% if event.maxParticipants is not null %}<p class="muted">Teilnehmerlimit: {{ event.maxParticipants }}</p>{% endif %}
+                    <a class="button-link button-secondary" href="{{ path('app_guild_event_index', {slug: event.guild.slug}) }}">Alle Termine von {{ event.guild.name }} anzeigen</a>
                 </article>
             {% endfor %}
         </div>
