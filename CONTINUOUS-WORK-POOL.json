@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-28T22:14:51.706Z",
+  "published_at": "2026-09-28T22:31:14.116Z",
   "summary": {
     "total_remaining_worker_tasks": 175,
     "completed_worker_prs_awaiting_trusted_review": 317,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-595 PR #389 is ready for independent Trusted review on exact green HEAD b5ac3b5fbc113bdfd128fc06050cfa50006cdd70 (CI #984/run 36490710686); its claim remains locked. Re-evaluate blocked FCPs and continue to the next independent functional module gap.",
+    "next_required_action": "WCP-596 is claimed on exact Worker main HEAD a19ed4bcf1203bba69de472613805d5fcdc978e6; implement the member signup editor on feature/wcp-596-guild-event-signup-editor-g1 with focused tests and complete exact-head CI.",
     "composition_preparable": 0,
     "immediately_actionable": 33,
     "must_continue": true
@@ -54440,6 +54440,128 @@
           "Existing WCP-557 tests retain public-genre visibility and Gaming-module gate coverage; existing search tests retain the search gate."
         ]
       }
+    },
+    {
+      "priority": 596,
+      "package_id": "WCP-596",
+      "title": "Let members update their guild event signups from the personal portal",
+      "risk": "medium",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-596-guild-event-signup-editor-g1",
+      "suggested_branch": "feature/wcp-596-guild-event-signup-editor-g1",
+      "base_branch": "main",
+      "base_sha": "a19ed4bcf1203bba69de472613805d5fcdc978e6",
+      "objective": "Complete the existing member event signup lifecycle. The personal upcoming-signups portal currently displays each member's event and response with a withdraw action, but no way to change an existing active response or role without re-finding the guild event. Add an owner-scoped update form in that portal that lets the signed-in member update the existing signup's response and role, preserves the private note and attendance evidence, and applies the same serialized event-capacity rule as the existing guild portal signup flow. Reuse the existing user/member/event visibility query, CSRF, audit, module gate, and private response behavior; no schema or migration change.",
+      "allowed_paths": [
+        "src/Controller/GuildEventSignupPortalController.php",
+        "src/Repository/GuildEventSignupPortalRepository.php",
+        "src/GuildEventSignupPortal/Templates/guild_event_signup_portal/index.html.twig",
+        "tests/Controller/GuildEventSignupPortalControllerTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "CONTINUOUS-WORKER.md",
+        "CONTINUOUS-WORK-POOL.json",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/",
+        "src/Entity/",
+        "src/Form/",
+        "src/Controller/GuildPortalController.php",
+        "templates/guild_portal/",
+        "src/Controller/AdminGuildEvent/",
+        "templates/admin/guild_event/",
+        "src/Repository/GuildEventSignupRepository.php",
+        "src/Widget/",
+        "src/GuildEventSignupPortal/Templates/widget/",
+        "tests/Gaming/",
+        "tests/Widget/"
+      ],
+      "deliverables": [
+        "The private upcoming-signups page renders a CSRF-protected response/role editor for each own active future signup and keeps the existing withdraw action.",
+        "A member can update their own response and role; private signup note and checked-in attendance evidence remain unchanged.",
+        "An attempted move to GOING respects the existing event row lock and participant capacity, placing the signup on WAITLIST if full.",
+        "Foreign, inactive, no-longer-upcoming, disabled-guild, malformed, and invalid-CSRF requests cannot mutate a signup; invalid editor values receive clear feedback.",
+        "The existing Gaming-module gate, owner-scoped result query, private/no-store headers, and no-schema boundary remain intact."
+      ],
+      "tests": [
+        "Focused controller tests cover rendering selected current response/role and successful owner update with note/attendance preservation.",
+        "Capacity regression covers moving a MAYBE signup to GOING when the event is full and expects WAITLIST without exceeding capacity.",
+        "Negative tests cover invalid CSRF, foreign signup ID, malformed response/role, inactive or no-longer-eligible signup, and disabled Gaming behavior.",
+        "Existing withdrawal and pagination tests remain green with selectors scoped to the withdrawal form.",
+        "Complete exact-head Worker CI including PHPUnit, PHPStan level 8, Twig/container validation, AssetMapper and PostgreSQL 18 migration-chain validation."
+      ],
+      "completion_report": [
+        "Exact sanitized main base SHA, final Worker HEAD, changed paths and Worker PR URL/state.",
+        "Member-visible update flow, ownership/visibility checks, capacity behavior and preserved private/attendance data.",
+        "Focused tests and exact-head full Worker CI results.",
+        "Remaining limits and deferred guild event lifecycle work."
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-Trusted-review-and-exact-head-CI",
+        "existing-user-member-event-scope-and-disabled-Gaming-gate-remain-enforced",
+        "every-signup-update-requires-CSRF-and-owner-revalidation-under-transaction",
+        "event-capacity-is-serialized-and-never-exceeded",
+        "preserve-private-signup-notes-and-attendance-evidence",
+        "personalized-responses-remain-private-no-store-and-noindex",
+        "no-schema-or-migration-change",
+        "no-security-test-phpstan-CI-auth-CSRF-validation-recovery-rollback-or-upload-protection-weakening",
+        "no-direct-Trusted-integration-or-deployment"
+      ],
+      "proposal_kind": "worker_only",
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "a19ed4bcf1203bba69de472613805d5fcdc978e6",
+      "proposal_dependency_evidence": [],
+      "published_at": "2026-09-28T22:31:14.116Z",
+      "collision_check": {
+        "compared_against": "Fresh continuous/work-pool-v4 blob 8ca3bbccda969134892411cad22e33bbeef51784; Worker main exact head a19ed4bcf1203bba69de472613805d5fcdc978e6; all 376 current task allowlists including worker_in_progress and claim-locked tasks; live WCP-596 branch and PR searches before reservation.",
+        "result": "No exact or prefix overlap with any active or claim-locked task path. WCP-511, WCP-588, WCP-589 and WCP-591 are disjoint. The dormant FCP-072 templates/ allowance does not cover this feature-local src/GuildEventSignupPortal/Templates path and remains blocked by FCP-035. This flow uses existing Worker main signup, membership and capacity code; no unresolved FCP dependency, schema change or new shared template is required. WCP-596 branch searches and PR search were empty before the claim branch was created.",
+        "paths": [
+          "src/Controller/GuildEventSignupPortalController.php",
+          "src/Repository/GuildEventSignupPortalRepository.php",
+          "src/GuildEventSignupPortal/Templates/guild_event_signup_portal/index.html.twig",
+          "tests/Controller/GuildEventSignupPortalControllerTest.php"
+        ],
+        "observed_nonblocking_path_hits": [
+          "FCP-072 has an unclaimed broad templates/ path but is dependency-blocked; all WCP-596 templates are under src/GuildEventSignupPortal/Templates/.",
+          "WCP-589 owns templates/gaming/events.html.twig and calendar-feed paths; none overlap WCP-596.",
+          "WCP-591 owns competition roster controller/account/widget paths; none overlap WCP-596."
+        ]
+      },
+      "claimed_on": "2026-09-28T22:31:14.116Z",
+      "claim_state": "active",
+      "active_base_branch": "main",
+      "active_base_sha": "a19ed4bcf1203bba69de472613805d5fcdc978e6",
+      "active_head": "a19ed4bcf1203bba69de472613805d5fcdc978e6",
+      "resume_branch": "feature/wcp-596-guild-event-signup-editor-g1",
+      "branch_heads": {
+        "claim_branch": "a19ed4bcf1203bba69de472613805d5fcdc978e6",
+        "feature_branch": "a19ed4bcf1203bba69de472613805d5fcdc978e6"
+      },
+      "last_observed_head": "a19ed4bcf1203bba69de472613805d5fcdc978e6",
+      "checkpoint_paths": [
+        "src/Controller/GuildEventSignupPortalController.php",
+        "src/Repository/GuildEventSignupPortalRepository.php",
+        "src/GuildEventSignupPortal/Templates/guild_event_signup_portal/index.html.twig",
+        "tests/Controller/GuildEventSignupPortalControllerTest.php"
+      ],
+      "next_action": "Implement the owner-scoped response and role editor in the personal upcoming-signups portal; preserve notes and attendance; keep the existing locked capacity policy; add focused positive/negative tests and run exact-head Worker CI.",
+      "last_checkpoint_at": "2026-09-28T22:31:14.116Z",
+      "last_verified_push_at": "2026-09-28T22:31:14.116Z"
     }
   ],
   "recovery_queue": [],
