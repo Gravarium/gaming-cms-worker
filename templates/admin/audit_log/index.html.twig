@@ -1,3 +1,60 @@
 {% extends 'base.html.twig' %}
 {% block title %}Änderungsprotokoll | Gaming CMS{% endblock %}
-{% block body %}<header class="topbar"><a class="brand" href="{{ path('app_admin_dashboard') }}">Gaming CMS</a><a class="button-link button-secondary" href="{{ path('app_admin_dashboard') }}">Zurück</a></header><main class="dashboard"><p class="eyebrow">Sicherheit</p><h1>Änderungsprotokoll</h1><p class="muted">Passwörter, Schlüssel und andere Geheimnisse werden nicht protokolliert.</p><div class="table-wrap"><table><thead><tr><th>Zeit</th><th>Benutzer</th><th>Aktion</th><th>Beschreibung</th><th>IP</th></tr></thead><tbody>{% for log in logs %}<tr><td>{{ log.createdAt|date('d.m.Y H:i:s') }}</td><td>{{ log.actor ? log.actor.email : 'System' }}</td><td>{{ log.action }}</td><td>{{ log.summary }}</td><td>{{ log.ipAddress ?: '–' }}</td></tr>{% else %}<tr><td colspan="5">Noch keine protokollierten Änderungen.</td></tr>{% endfor %}</tbody></table></div></main>{% endblock %}
+{% block body %}
+<header class="topbar">
+    <a class="brand" href="{{ path('app_admin_dashboard') }}">Gaming CMS</a>
+    <a class="button-link button-secondary" href="{{ path('app_admin_dashboard') }}">Zurück</a>
+</header>
+<main class="dashboard">
+    <p class="eyebrow">Sicherheit</p>
+    <h1>Änderungsprotokoll</h1>
+    <p class="muted">Passwörter, Schlüssel und andere Geheimnisse werden nicht protokolliert.</p>
+
+    <form method="get" action="{{ path('app_admin_audit_log') }}" class="media-filters" role="search">
+        <label>
+            <span>Suche</span>
+            <input type="search" name="q" value="{{ query }}" maxlength="100" placeholder="Aktion, Beschreibung oder Benutzer">
+        </label>
+        <button>Filtern</button>
+        {% if query %}<a class="button-link button-secondary" href="{{ path('app_admin_audit_log') }}">Zurücksetzen</a>{% endif %}
+    </form>
+
+    <p class="muted audit-log-count">
+        {{ total }} {{ total == 1 ? 'Änderung' : 'Änderungen' }}
+        {% if query %}für „{{ query }}“{% endif %}
+    </p>
+
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr><th>Zeit</th><th>Benutzer</th><th>Aktion</th><th>Beschreibung</th><th>IP</th></tr>
+            </thead>
+            <tbody>
+                {% for log in logs %}
+                    <tr>
+                        <td>{{ log.createdAt|date('d.m.Y H:i:s') }}</td>
+                        <td>{{ log.actor ? log.actor.email : 'System' }}</td>
+                        <td>{{ log.action }}</td>
+                        <td>{{ log.summary }}</td>
+                        <td>{{ log.ipAddress ?: '–' }}</td>
+                    </tr>
+                {% else %}
+                    <tr><td colspan="5">{{ query ? 'Keine passenden Änderungen gefunden.' : 'Noch keine protokollierten Änderungen.' }}</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    {% if pages > 1 %}
+        <nav class="pagination" aria-label="Seitennavigation">
+            {% if page > 1 %}
+                <a href="{{ path('app_admin_audit_log', {q: query, page: page - 1}) }}">Neuere Änderungen</a>
+            {% endif %}
+            <span>Seite {{ page }} von {{ pages }}</span>
+            {% if page < pages %}
+                <a href="{{ path('app_admin_audit_log', {q: query, page: page + 1}) }}">Ältere Änderungen</a>
+            {% endif %}
+        </nav>
+    {% endif %}
+</main>
+{% endblock %}

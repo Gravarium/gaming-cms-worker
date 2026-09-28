@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Controller\Competition;
 
 use App\Entity\Competition\Competition;
+use App\Entity\Game;
 use App\Entity\Competition\CompetitionDispute;
 use App\Entity\Competition\CompetitionMatch;
 use App\Entity\Competition\CompetitionMatchEvidence;
@@ -46,7 +47,9 @@ final class CompetitionController extends AbstractController
 
         $query = $request->query->all();
         $rawStatus = $query['status'] ?? '';
-        if (!is_string($rawStatus)) {
+        $rawGame = $query['game'] ?? '';
+        $rawMode = $query['mode'] ?? '';
+        if (!is_string($rawStatus) || !is_string($rawGame) || !is_string($rawMode)) {
             throw $this->createNotFoundException();
         }
 
@@ -60,9 +63,28 @@ final class CompetitionController extends AbstractController
             throw $this->createNotFoundException();
         }
 
+        $gameSlug = $rawGame === '' ? null : $rawGame;
+        if ($gameSlug !== null && strlen($gameSlug) > 140) {
+            throw $this->createNotFoundException();
+        }
+
+        $mode = $rawMode === '' ? null : $rawMode;
+        if ($mode !== null && !in_array($mode, [Competition::MODE_SOLO, Competition::MODE_TEAM], true)) {
+            throw $this->createNotFoundException();
+        }
+
+        $games = $this->competitions->publicCompetitionGames();
+        $availableGameSlugs = array_map(static fn (Game $game): string => $game->getSlug(), $games);
+        if ($gameSlug !== null && !in_array($gameSlug, $availableGameSlugs, true)) {
+            throw $this->createNotFoundException();
+        }
+
         return $this->render('competition/index.html.twig', [
-            'competitions' => $this->competitions->publicCompetitions($status),
+            'competitions' => $this->competitions->publicCompetitions($status, $gameSlug, $mode),
+            'games' => $games,
             'status' => $status,
+            'gameSlug' => $gameSlug,
+            'mode' => $mode,
         ]);
     }
 
@@ -183,6 +205,7 @@ final class CompetitionController extends AbstractController
         $participant = $this->participantFromRequest($match, (int) $request->request->get('participant'));
         if ($competition->getStatus() !== Competition::STATUS_IN_PROGRESS || !$participant->isCheckedIn() || !$participant->containsUser($user)) { throw $this->createAccessDeniedException(); }
         $locator = trim((string) $request->request->get('locator'));
+        if (mb_strlen($locator, 'UTF-8') > 500) { throw new BadRequestHttpException('Der Beleg darf höchstens 500 Zeichen lang sein.'); }
         $scheme = strtolower((string) parse_url($locator, PHP_URL_SCHEME));
         if (!filter_var($locator, FILTER_VALIDATE_URL) || !in_array($scheme, ['http', 'https'], true)) { throw new BadRequestHttpException('Der Beleg muss eine gültige HTTP(S)-URL sein.'); }
         $type = (string) $request->request->get('type', CompetitionMatchEvidence::TYPE_URL);
