@@ -1,0 +1,40 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Release-Notizen | {{ site.siteName }}{% endblock %}
+
+{% block body %}
+<header class="topbar">
+    <a class="brand" href="{{ path('app_home') }}">{{ site.siteName }}</a>
+    <nav class="top-actions" aria-label="Release-Navigation">
+        <a href="{{ path('app_news_index') }}">News</a>
+        <a href="{{ path('app_content_search') }}">Suche</a>
+    </nav>
+</header>
+<main class="dashboard">
+    <p class="eyebrow">Updates</p>
+    <h1>Release-Notizen</h1>
+    <p class="muted">{{ total }} veröffentlichte Releases</p>
+    <div class="news-grid">
+        {% for release in releases %}
+            <article class="card">
+                <p class="news-date">{{ release.publishedAt|date('d.m.Y H:i') }}</p>
+                <h2><a href="{{ path('app_public_content_release_show', {id: release.id}) }}">{{ release.name }}</a></h2>
+                {% if release.description %}<p>{{ release.description }}</p>{% endif %}
+            </article>
+        {% else %}
+            <p>Noch keine veröffentlichten Releases.</p>
+        {% endfor %}
+    </div>
+    {% if pages > 1 %}
+        <nav class="pagination" aria-label="Seitennavigation">
+            {% if page > 1 %}
+                <a href="{{ path('app_public_content_release_index', {page: page - 1}) }}">← Neuer</a>
+            {% endif %}
+            <span>Seite {{ page }} von {{ pages }}</span>
+            {% if page < pages %}
+                <a href="{{ path('app_public_content_release_index', {page: page + 1}) }}">Älter →</a>
+            {% endif %}
+        </nav>
+    {% endif %}
+</main>
+{% endblock %}
