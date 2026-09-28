@@ -14,6 +14,9 @@ use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 
 final class GuildEventSignupPortalControllerTest extends WebTestCase
 {
@@ -172,6 +175,19 @@ final class GuildEventSignupPortalControllerTest extends WebTestCase
             $validToken = $crawler->filter(sprintf('form[action="%s/%d/withdraw"] input[name="_token"]', self::INDEX_PATH, $signupId))->attr('value');
 
             $client->loginUser($user);
+            $client->request('GET', self::INDEX_PATH);
+            $request = $client->getRequest();
+            self::assertInstanceOf(Request::class, $request);
+            $requestStack = $client->getContainer()->get(RequestStack::class);
+            $requestStack->push($request);
+            try {
+                $tokenManager = $client->getContainer()->get(CsrfTokenManagerInterface::class);
+                $validToken = $tokenManager->getToken('guild-event-signup-withdraw-'.$signupId)->getValue();
+                $request->getSession()->save();
+            } finally {
+                $requestStack->pop();
+            }
+
             $client->request('POST', self::INDEX_PATH.'/'.$signupId.'/withdraw', ['_token' => 'invalid']);
             self::assertResponseStatusCodeSame(403);
 
