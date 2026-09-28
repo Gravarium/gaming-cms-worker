@@ -8,6 +8,7 @@ use App\Entity\AccountToken;
 use App\Entity\User;
 use App\Entity\UserSession;
 use App\Form\AccountPasswordType;
+use App\Form\AccountProfileType;
 use App\Repository\UserSessionRepository;
 use App\Security\CmsPermission;
 use App\Service\AccountTokenManager;
@@ -33,6 +34,41 @@ final class AccountController extends AbstractController
         }
 
         return $this->redirectToRoute('app_guild_portal_index');
+    }
+
+    #[Route('/account/profile', name: 'app_account_profile', methods: ['GET', 'POST'])]
+    public function profile(Request $request, EntityManagerInterface $entityManager, AuditLogger $audit): Response
+    {
+        $user = $this->getUser();
+        if (!$user instanceof User) { throw $this->createAccessDeniedException(); }
+
+        $form = $this->createForm(AccountProfileType::class);
+        $form->get('displayName')->setData($user->getDisplayName());
+        $form->handleRequest($request);
+        $invalidSubmission = false;
+
+        if ($form->isSubmitted()) {
+            if ($form->isValid()) {
+                $displayName = trim((string) $form->get('displayName')->getData());
+                if ($displayName !== $user->getDisplayName()) {
+                    $user->setDisplayName($displayName);
+                    $audit->record('account.profile.display_name.changed', $user, $user->getId(), 'Eigenen Anzeigenamen geändert.');
+                    $entityManager->flush();
+                }
+
+                $this->addFlash('success', 'Dein Anzeigename wurde aktualisiert.');
+                return $this->redirectToRoute('app_account_profile');
+            }
+
+            $invalidSubmission = true;
+        }
+
+        $response = $this->render('account/profile.html.twig', ['form' => $form]);
+        if ($invalidSubmission) {
+            $response->setStatusCode(Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+
+        return $response;
     }
 
     #[Route('/account/security', name: 'app_account_security', methods: ['GET', 'POST'])]

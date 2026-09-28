@@ -1,0 +1,27 @@
+{% extends 'base.html.twig' %}
+{% set site = site_settings() %}
+{% block title %}Profil bearbeiten | {{ site.siteName }}{% endblock %}
+{% block body %}
+<header class="topbar">
+    <a class="brand" href="{{ path('app_home') }}">{{ site.siteName }}</a>
+    <nav class="top-actions">
+        <a class="button-link button-secondary" href="{{ path('app_account_security') }}">Kontosicherheit</a>
+        <form method="post" action="{{ path('app_logout') }}"><input type="hidden" name="_csrf_token" value="{{ csrf_token('logout') }}"><button class="button-secondary">Abmelden</button></form>
+    </nav>
+</header>
+<main class="form-page">
+    <p class="eyebrow">Eigenes Konto</p>
+    <h1>Profil bearbeiten</h1>
+    <p class="muted">{{ app.user.displayName }} · {{ app.user.email }}</p>
+    {% for message in app.flashes('success') %}<div class="notice">{{ message }}</div>{% endfor %}
+    {% for message in app.flashes('error') %}<div class="alert">{{ message }}</div>{% endfor %}
+    <section class="panel">
+        <h2>Anzeigename</h2>
+        <p>Du kannst den Namen ändern, der in deinem Konto angezeigt wird. E-Mail-Adresse und Zugriffsrechte werden hier nicht geändert.</p>
+        {{ form_start(form) }}
+            {{ form_row(form.displayName) }}
+            <button>Anzeigename speichern</button>
+        {{ form_end(form) }}
+    </section>
+</main>
+{% endblock %}

@@ -5,6 +5,7 @@
 <header class="topbar">
     <a class="brand" href="{{ path('app_home') }}">{{ site.siteName }}</a>
     <nav class="top-actions">
+        <a class="button-link button-secondary" href="{{ path('app_account_profile') }}">Profil bearbeiten</a>
         <a class="button-link button-secondary" href="{{ path('app_account_home') }}">Zurück</a>
         <form method="post" action="{{ path('app_logout') }}"><input type="hidden" name="_csrf_token" value="{{ csrf_token('logout') }}"><button class="button-secondary">Abmelden</button></form>
     </nav>
