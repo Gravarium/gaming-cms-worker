@@ -10,7 +10,7 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-28T19:44:48.437Z",
+  "published_at": "2026-09-28T19:46:12.986Z",
   "summary": {
     "total_remaining_worker_tasks": 175,
     "completed_worker_prs_awaiting_trusted_review": 314,
@@ -51671,7 +51671,7 @@
         "feature_branch": "497026353d6991b97ce34873de5fe6af5d81b6d3"
       },
       "last_observed_head": "497026353d6991b97ce34873de5fe6af5d81b6d3",
-      "last_checkpoint_at": "2026-09-28T19:43:42.007Z",
+      "last_checkpoint_at": "2026-09-28T19:46:12.986Z",
       "checkpoint_paths": [
         "src/Controller/PublicCompetitionLeaderboardController.php",
         "src/Widget/CompetitionStandingsWidgetProvider.php",
@@ -51679,8 +51679,43 @@
         "src/Widget/CompetitionStandings/Templates/widget/competition_standings.html.twig",
         "tests/Widget/CompetitionStandingsWidgetProviderTest.php"
       ],
-      "next_action": "Review the exact diff and open a draft Worker PR against main; run and inspect complete exact-head Worker CI, fixing any failures without widening paths or weakening checks.",
-      "last_verified_push_at": "2026-09-28T19:43:42.007Z"
+      "next_action": "Inspect exact-head Worker CI run #961. PostgreSQL 18 migration validation passed; PHP/Symfony analysis and tests are running. Fix any failures without widening paths or weakening checks.",
+      "last_verified_push_at": "2026-09-28T19:43:42.007Z",
+      "worker_pr": 381,
+      "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/381",
+      "worker_pr_state": "draft",
+      "pr_state": "open",
+      "draft_pr": true,
+      "worker_pr_base_branch": "main",
+      "worker_pr_base_sha": "c3c7b14066d9f8b32925eb4381e30b6794f21027",
+      "worker_pr_changed_paths": [
+        "src/Controller/PublicCompetitionLeaderboardController.php",
+        "src/Widget/CompetitionStandingsWidgetProvider.php",
+        "src/Widget/CompetitionStandings/CompetitionStandingsQuery.php",
+        "src/Widget/CompetitionStandings/Templates/widget/competition_standings.html.twig",
+        "tests/Widget/CompetitionStandingsWidgetProviderTest.php"
+      ],
+      "ci_result": "in_progress",
+      "ci_attempts": [
+        {
+          "run_id": 36474342734,
+          "run_number": 961,
+          "head": "497026353d6991b97ce34873de5fe6af5d81b6d3",
+          "base": "c3c7b14066d9f8b32925eb4381e30b6794f21027",
+          "result": "in_progress",
+          "validation_pr": 381,
+          "status": "in_progress",
+          "conclusion": null,
+          "jobs": {
+            "postgres_18": "success",
+            "php_symfony": "in_progress"
+          }
+        }
+      ],
+      "last_ci_run_id": 36474342734,
+      "ci_run_id": 36474342734,
+      "ci_validation_pr": 381,
+      "last_ci_result": "in_progress"
     }
   ],
   "recovery_queue": [],
