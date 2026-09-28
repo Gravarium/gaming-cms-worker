@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-28T19:53:52.885Z",
+  "published_at": "2026-09-28T19:56:56.389Z",
   "summary": {
     "total_remaining_worker_tasks": 175,
     "completed_worker_prs_awaiting_trusted_review": 314,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-587 is claimed on exact Worker main base c3c7b14066d9f8b32925eb4381e30b6794f21027. Complete the Downloads version metadata upload and public release-notes flow within its eight allowed paths.",
+    "next_required_action": "WCP-588 is claimed on the exact green WCP-585 Worker head; implement the bounded game-release RSS feed. Do not modify the foreign active WCP-586 or WCP-587 claims.",
     "composition_preparable": 0,
     "immediately_actionable": 31,
     "must_continue": true
@@ -51943,6 +51943,129 @@
       "checkpoint_paths": [],
       "resume_branch": "feature/wcp-587-download-release-metadata-g1",
       "next_action": "Implement the admin upload metadata form and public release-note view in only the eight allowed paths; preserve CSRF, package authorization, private staging/finalize and scan behavior, then run full Worker CI."
+    },
+    {
+      "priority": 588,
+      "package_id": "WCP-588",
+      "title": "Subscribe to upcoming game releases by RSS",
+      "risk": "low",
+      "execution_state": "worker_in_progress",
+      "dependencies": [
+        "WCP-585"
+      ],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-588-game-release-rss-feed-g1",
+      "suggested_branch": "feature/wcp-588-game-release-rss-feed-g1",
+      "base_branch": "feature/wcp-585-game-release-calendar-feed-g1",
+      "base_sha": "aeff4ea30a268306cdfb52b5b266ddc17a5d343e",
+      "objective": "Add a read-only RSS 2.0 feed for upcoming public game releases, stacked on the exact green WCP-585 Worker proposal. Reuse its bounded release query and existing public game route without changing the parent feature or catalogue contracts.",
+      "allowed_paths": [
+        "src/Controller/PublicGameReleaseRssFeedController.php",
+        "src/GameReleaseFeed/RssFeedBuilder.php",
+        "tests/Controller/PublicGameReleaseRssFeedTest.php",
+        "tests/GameReleaseFeed/RssFeedBuilderTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "CONTINUOUS-WORKER.md",
+        "CONTINUOUS-WORK-POOL.json",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "templates/",
+        "src/Entity/",
+        "src/Controller/GameCatalogue/",
+        "src/Controller/AdminGameCatalogue/",
+        "src/Repository/GameCatalogue/"
+      ],
+      "deliverables": [
+        "GET /games/releases/feed.xml serves a valid RSS 2.0 document using the WCP-585 bounded upcoming-release query (maximum 200 items).",
+        "Only future announced or delayed releases for enabled catalogue entries and enabled games are included; cancelled, released, past, disabled and out-of-window releases remain excluded by the reused query.",
+        "RSS items include a stable non-permalink GUID, escaped title/description/URL text, UTC RFC 822 publication dates and the existing public game page link.",
+        "XML text is safely escaped and invalid XML control characters cannot introduce elements or corrupt the feed.",
+        "The route is read-only, GET-only, fails closed when Gaming is disabled, and returns a valid empty RSS feed when there are no eligible releases.",
+        "Preserve the existing private response-cache policy; do not force shared/public caching. No schema, migration, entity, existing feed, existing release route or catalogue change."
+      ],
+      "tests": [
+        "Positive and negative controller coverage for visible upcoming releases, exclusions, empty output, headers, GET-only behavior and disabled Gaming.",
+        "Builder coverage for XML parsing/escaping, CR/LF and tag injection, invalid XML controls, stable GUIDs, UTC RFC 822 dates and safe absolute URLs.",
+        "Verify bounded output through the reused 200-row release query without changing its existing filters or maximum.",
+        "PHPStan level 8 and complete exact-head Worker CI including PostgreSQL 18 migration-chain validation."
+      ],
+      "completion_report": [
+        "Exact proposal base dependency WCP-585, final Worker HEAD, changed-path list and Worker PR URL/state.",
+        "RSS eligibility, XML escaping, identifiers, timestamps and route-gate test evidence.",
+        "Exact-head PHPStan, PHPUnit, JavaScript and PostgreSQL 18 CI results.",
+        "Confirm no changes outside four allowed files and no entities/schema/migrations/templates."
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-Trusted-review-and-exact-head-CI",
+        "public-feed-contains-only-enabled-public-game-release-metadata",
+        "reuse-WCP-585-bounded-public-query-without-changing-its-filter-or-limit",
+        "feed-is-read-only-bounded-and-fails-closed-when-Gaming-is-disabled",
+        "preserve-existing-private-cache-policy-no-shared-public-cache-override",
+        "no-schema-or-migration-change",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "no-direct-Trusted-integration-or-deployment",
+        "no-private-runtime-or-sensitive-data"
+      ],
+      "proposal_kind": "worker_only",
+      "proposal_base_branch": "feature/wcp-585-game-release-calendar-feed-g1",
+      "proposal_base_sha": "aeff4ea30a268306cdfb52b5b266ddc17a5d343e",
+      "proposal_dependency_evidence": [
+        {
+          "package_id": "WCP-585",
+          "feature_branch": "feature/wcp-585-game-release-calendar-feed-g1",
+          "feature_head": "aeff4ea30a268306cdfb52b5b266ddc17a5d343e",
+          "worker_pr": 380,
+          "ci_run_id": 36474325466,
+          "ci_run_number": 960,
+          "ci_result": "success",
+          "trusted_integrated": false
+        }
+      ],
+      "collision_check": {
+        "compared_against": "Fresh continuous/work-pool-v4 pool blob fc1bfcf41df11a648d1cb6bef2631e258a35eb3e; sanitized Worker main 2f8179fe129c3071b68757f03a3e7099311179ef; green dependency base aeff4ea30a268306cdfb52b5b266ddc17a5d343e; all published active and claim-locked allowed paths; main and dependency-base file checks.",
+        "result": "No path overlap with any published task, including foreign active WCP-586/WCP-587; the four candidate files do not exist on current Worker main or the WCP-585 proposal base. This task adds a separate RSS controller/builder and tests, and reuses WCP-585's already-tested bounded repository read-only. No existing RSS/news/video feed, catalogue path, template, route, schema or migration is modified.",
+        "paths": [
+          "src/Controller/PublicGameReleaseRssFeedController.php",
+          "src/GameReleaseFeed/RssFeedBuilder.php",
+          "tests/Controller/PublicGameReleaseRssFeedTest.php",
+          "tests/GameReleaseFeed/RssFeedBuilderTest.php"
+        ],
+        "observed_nonblocking_path_hits": [
+          "Reads the existing GameReleaseCalendarFeedRepository::upcoming query from green WCP-585 without editing its file or query filters.",
+          "Uses the existing app_game_catalogue_show public route; creates a distinct RSS route.",
+          "WCP-585 remains the single exact green Worker dependency; its Trusted review and integration status are unchanged."
+        ]
+      },
+      "published_at": "2026-09-28T19:56:56.389Z",
+      "claimed_on": "2026-09-28T19:56:56.389Z",
+      "claim_state": "active",
+      "active_base_branch": "feature/wcp-585-game-release-calendar-feed-g1",
+      "active_base_sha": "aeff4ea30a268306cdfb52b5b266ddc17a5d343e",
+      "active_head": "aeff4ea30a268306cdfb52b5b266ddc17a5d343e",
+      "resume_branch": "feature/wcp-588-game-release-rss-feed-g1",
+      "branch_heads": {
+        "claim_branch": "aeff4ea30a268306cdfb52b5b266ddc17a5d343e",
+        "feature_branch": "aeff4ea30a268306cdfb52b5b266ddc17a5d343e"
+      },
+      "last_observed_head": "aeff4ea30a268306cdfb52b5b266ddc17a5d343e",
+      "last_checkpoint_at": "2026-09-28T19:56:56.389Z",
+      "checkpoint_paths": [],
+      "next_action": "Implement the RSS 2.0 builder, read-only endpoint and positive/negative coverage only within the four allowlisted paths; preserve WCP-585 filters and private cache policy.",
+      "last_verified_push_at": "2026-09-28T19:56:56.389Z"
     }
   ],
   "recovery_queue": [],
