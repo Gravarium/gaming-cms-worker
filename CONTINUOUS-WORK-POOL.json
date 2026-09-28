@@ -10,10 +10,10 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-28T20:16:07.232Z",
+  "published_at": "2026-09-28T20:22:38.699Z",
   "summary": {
-    "total_remaining_worker_tasks": 175,
-    "completed_worker_prs_awaiting_trusted_review": 315,
+    "total_remaining_worker_tasks": 174,
+    "completed_worker_prs_awaiting_trusted_review": 316,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
@@ -51853,7 +51853,7 @@
       "package_id": "WCP-582",
       "title": "Manage competition registrations from a personal dashboard",
       "risk": "medium",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [
         "FCP-061"
       ],
@@ -51972,7 +51972,7 @@
       },
       "published_at": "2026-09-27T22:01:15.723Z",
       "claimed_on": "2026-09-27T22:01:15.723Z",
-      "claim_state": "active",
+      "claim_state": "locked_until_trusted_resolution",
       "active_base_branch": "fix/fcp-061-phpstan-g1",
       "active_base_sha": "ec6bb200affc3e5a46d416e98f7a1b0621c38ded",
       "active_head": "f3118dbe8dbada145538a879efa43808a84d6b4e",
@@ -51982,9 +51982,9 @@
         "feature_branch": "f3118dbe8dbada145538a879efa43808a84d6b4e"
       },
       "last_observed_head": "f3118dbe8dbada145538a879efa43808a84d6b4e",
-      "last_checkpoint_at": "2026-09-28T20:17:21.664Z",
-      "last_verified_push_at": "2026-09-28T20:17:21.664Z",
-      "next_action": "Validate corrected exact feature HEAD f3118dbe8dbada145538a879efa43808a84d6b4e with complete Worker CI on draft PR #379; repair any remaining failures.",
+      "last_checkpoint_at": "2026-09-28T20:22:38.699Z",
+      "last_verified_push_at": "2026-09-28T20:22:38.699Z",
+      "next_action": "Await Trusted review or explicit integration/cancellation/transfer; keep the claim locked until then.",
       "checkpoint_paths": [
         "config/packages/competition_participation_widget.yaml",
         "src/CompetitionParticipation/Templates/account/dashboard.html.twig",
@@ -51997,11 +51997,17 @@
         "tests/Widget/MyCompetitionsWidgetTest.php"
       ],
       "last_ci_attempt": {
-        "head": "eaf6cdc710a4636c517e95018b07839b79b8fba6",
-        "run_id": 36476756813,
-        "result": "failure",
-        "summary": "PostgreSQL migrations, PHPStan and static checks passed; PHPUnit had 1 Doctrine fixture error in the noncaptain/cross-competition regression test because it reused a detached User entity. Reloaded the fixture user through the active EntityManager."
-      }
+        "head": "f3118dbe8dbada145538a879efa43808a84d6b4e",
+        "run_id": 36477925500,
+        "result": "success",
+        "summary": "Exact-head Worker CI run #974 passed: PHP/Symfony checks, PHPStan level 8, 1,403 PHPUnit tests / 9,352 assertions, and PostgreSQL 18 migration-chain validation."
+      },
+      "final_head": "f3118dbe8dbada145538a879efa43808a84d6b4e",
+      "worker_pr": 379,
+      "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/379",
+      "ci_run_id": 36477925500,
+      "ci_result": "success",
+      "completed_at": "2026-09-28T20:22:38.699Z"
     },
     {
       "priority": 583,
