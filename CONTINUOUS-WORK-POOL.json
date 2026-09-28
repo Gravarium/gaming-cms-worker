@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-28T20:07:52.298Z",
+  "published_at": "2026-09-28T20:09:39.488Z",
   "summary": {
     "total_remaining_worker_tasks": 175,
     "completed_worker_prs_awaiting_trusted_review": 315,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-589 is claimed from sanitized main@2f8179fe129c3071b68757f03a3e7099311179ef; implement the public guild event calendar feed on the dedicated branch while existing foreign claims remain untouched.",
+    "next_required_action": "WCP-588 exact HEAD e3f92859ad33ef9fc91bead9dccfd8bef665ff5b is under full Worker CI run #970; inspect and repair any failures. WCP-589 is a separate foreign active claim.",
     "composition_preparable": 0,
     "immediately_actionable": 32,
     "must_continue": true
@@ -53093,15 +53093,56 @@
         "feature_branch": "e3f92859ad33ef9fc91bead9dccfd8bef665ff5b"
       },
       "last_observed_head": "e3f92859ad33ef9fc91bead9dccfd8bef665ff5b",
-      "last_checkpoint_at": "2026-09-28T20:03:02.590Z",
+      "last_checkpoint_at": "2026-09-28T20:09:39.488Z",
       "checkpoint_paths": [
         "src/Controller/PublicGameReleaseRssFeedController.php",
         "src/GameReleaseFeed/RssFeedBuilder.php",
         "tests/Controller/PublicGameReleaseRssFeedTest.php",
         "tests/GameReleaseFeed/RssFeedBuilderTest.php"
       ],
-      "next_action": "Open the stacked draft PR against the exact WCP-585 green head, then validate this exact HEAD with complete Worker CI and repair failures without widening scope.",
-      "last_verified_push_at": "2026-09-28T20:03:02.590Z"
+      "next_action": "Inspect all jobs in exact-head CI run #970 and repair every failure without weakening checks or changing WCP-585 or foreign claims.",
+      "last_verified_push_at": "2026-09-28T20:03:02.590Z",
+      "worker_pr": 383,
+      "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/383",
+      "worker_pr_state": "draft",
+      "pr_state": "open",
+      "draft_pr": true,
+      "worker_pr_base_branch": "main",
+      "worker_pr_base_sha": "2f8179fe129c3071b68757f03a3e7099311179ef",
+      "worker_pr_changed_paths": [
+        "src/Controller/PublicGameReleaseCalendarFeedController.php",
+        "src/GameReleaseFeed/IcalendarBuilder.php",
+        "src/Repository/GameReleaseCalendarFeedRepository.php",
+        "tests/Controller/PublicGameReleaseCalendarFeedTest.php",
+        "tests/GameReleaseFeed/IcalendarBuilderTest.php",
+        "src/Controller/PublicGameReleaseRssFeedController.php",
+        "src/GameReleaseFeed/RssFeedBuilder.php",
+        "tests/Controller/PublicGameReleaseRssFeedTest.php",
+        "tests/GameReleaseFeed/RssFeedBuilderTest.php"
+      ],
+      "package_owned_changed_paths": [
+        "src/Controller/PublicGameReleaseRssFeedController.php",
+        "src/GameReleaseFeed/RssFeedBuilder.php",
+        "tests/Controller/PublicGameReleaseRssFeedTest.php",
+        "tests/GameReleaseFeed/RssFeedBuilderTest.php"
+      ],
+      "ci_validation_pr": 383,
+      "last_ci_result": "in_progress",
+      "last_ci_run_id": 36477077333,
+      "last_ci_run_number": 970,
+      "ci_attempts": [
+        {
+          "run_id": 36477077333,
+          "run_number": 970,
+          "head": "e3f92859ad33ef9fc91bead9dccfd8bef665ff5b",
+          "base": "2f8179fe129c3071b68757f03a3e7099311179ef",
+          "result": "in_progress",
+          "validation_pr": 383,
+          "status": "in_progress",
+          "conclusion": null,
+          "summary": "Full Worker CI run triggered by reopening draft PR #383 against main; exact head is e3f92859ad33ef9fc91bead9dccfd8bef665ff5b."
+        }
+      ]
     },
     {
       "priority": 589,
