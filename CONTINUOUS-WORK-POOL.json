@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-28T20:31:54.978Z",
+  "published_at": "2026-09-28T20:37:35.070Z",
   "summary": {
     "total_remaining_worker_tasks": 175,
     "completed_worker_prs_awaiting_trusted_review": 316,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-590 is claimed on its exact published main base; implement and test the public content discussion navigation.",
+    "next_required_action": "WCP-590 implementation is pushed at exact head 3c3507f7c5c0f191d3a76311cb39d6f8ec7f227c; review its two allowed paths and validate through full Worker CI.",
     "composition_preparable": 0,
     "immediately_actionable": 32,
     "must_continue": true
@@ -53444,16 +53444,20 @@
       "claimed_on": "2026-09-28T20:31:54.978Z",
       "active_base_branch": "main",
       "active_base_sha": "b018c5ed9975c2ab3f606f822bf285036fe6983e",
-      "active_head": "b018c5ed9975c2ab3f606f822bf285036fe6983e",
+      "active_head": "3c3507f7c5c0f191d3a76311cb39d6f8ec7f227c",
       "resume_branch": "feature/wcp-590-content-discussion-entry-navigation-g1",
       "branch_heads": {
         "claim_branch": "b018c5ed9975c2ab3f606f822bf285036fe6983e",
-        "feature_branch": "b018c5ed9975c2ab3f606f822bf285036fe6983e"
+        "feature_branch": "3c3507f7c5c0f191d3a76311cb39d6f8ec7f227c"
       },
-      "last_observed_head": "b018c5ed9975c2ab3f606f822bf285036fe6983e",
-      "last_checkpoint_at": "2026-09-28T20:31:54.978Z",
-      "checkpoint_paths": [],
-      "next_action": "Implement the accessible discussion entry link in the content detail template and add functional coverage for news and page routes."
+      "last_observed_head": "3c3507f7c5c0f191d3a76311cb39d6f8ec7f227c",
+      "last_checkpoint_at": "2026-09-28T20:37:35.070Z",
+      "checkpoint_paths": [
+        "templates/content/show.html.twig",
+        "tests/Controller/ContentDiscussionEntryNavigationTest.php"
+      ],
+      "next_action": "Review the feature diff, open the Worker PR and run full exact-head CI; repair any failures within WCP-590 paths.",
+      "last_verified_push_at": "2026-09-28T20:37:35.070Z"
     }
   ],
   "recovery_queue": [],
