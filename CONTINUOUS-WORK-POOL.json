@@ -12,7 +12,7 @@
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
   "published_at": "2026-09-27T22:29:43.529Z",
   "summary": {
-    "total_remaining_worker_tasks": 174,
+    "total_remaining_worker_tasks": 175,
     "completed_worker_prs_awaiting_trusted_review": 313,
     "recovery_tasks": 0,
     "unclaimed": 5,
@@ -50993,6 +50993,112 @@
         "tests/Controller/CompetitionParticipationDashboardTest.php",
         "tests/Widget/MyCompetitionsWidgetTest.php"
       ]
+    },
+    {
+      "priority": 583,
+      "package_id": "WCP-583",
+      "title": "Complete guild onboarding tasks from a member dashboard",
+      "risk": "medium",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-583-guild-onboarding-member-portal-g1",
+      "suggested_branch": "feature/wcp-583-guild-onboarding-member-portal-g1",
+      "base_branch": "main",
+      "base_sha": "ebfeb6032548002846b9352ddb2b06b909b461c0",
+      "objective": "Complete the Gaming module's onboarding flow with a private member-facing checklist. Signed-in users see onboarding tasks assigned to their own active guild characters and can mark their own open tasks complete; completion is attributed to that user and remains immutable. Keep other members' tasks private, preserve the existing Gaming module route gate, and make the checklist discoverable from the portal navigation.",
+      "allowed_paths": [
+        "src/Controller/GuildOnboardingPortalController.php",
+        "src/Repository/GuildOnboardingPortalRepository.php",
+        "templates/guild_portal/onboarding.html.twig",
+        "templates/layout/portal.html.twig",
+        "tests/Controller/GuildOnboardingPortalTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        "migrations/",
+        "src/Entity/Guild/GuildOnboardingTask.php",
+        "src/Controller/AdminGuildOnboardingController.php",
+        "src/Repository/GuildOnboardingTaskReadRepository.php",
+        "src/Form/GuildOnboardingTaskInput.php",
+        "src/Form/GuildOnboardingTaskType.php",
+        "templates/admin/gaming/onboarding/",
+        "templates/guild_portal/index.html.twig",
+        "templates/guild_portal/show.html.twig",
+        "src/Module/CmsModuleCatalog.php"
+      ],
+      "deliverables": [
+        "Add a signed-in member route and portal navigation link for a private onboarding checklist; use the existing Gaming route prefix so DisabledModuleSubscriber keeps the route unavailable when Gaming is disabled.",
+        "List tasks only for the current user's active GuildMember records and enabled guilds. Include task, character, guild, completion state, actor and timestamp; use stable, bounded pagination.",
+        "Allow a member to complete only an open task assigned to one of their own active characters. Require a route-specific CSRF token, attribute completion to the current user, and make repeated requests preserve the original completion evidence.",
+        "Return private/no-store and noindex headers. Keep all admin assignment/deletion behavior and completed evidence immutable.",
+        "Do not change schema, existing entities, the admin onboarding flow, or other chats' locked files. Change only the listed files."
+      ],
+      "tests": [
+        "Focused GuildOnboardingPortalTest covers authenticated own-task listing, private/no-store and noindex headers, disabled/inactive membership exclusion, other-user isolation, and empty state.",
+        "Valid member completion records the current user and timestamp; repeated completion preserves evidence; missing and invalid CSRF do not mutate the task.",
+        "Malformed page input is rejected, valid out-of-range pages clamp safely, stable pagination has no duplicate/gap, and the portal nav link is visible only to signed-in users while Gaming is enabled.",
+        "PHPStan level 8 and complete Worker CI on exact final HEAD, including PostgreSQL 18 migration-chain checks."
+      ],
+      "completion_report": [
+        "Exact sanitized main base SHA and final Worker HEAD SHA.",
+        "Changed paths and Worker PR.",
+        "Member ownership/privacy, active membership and guild filtering, completion evidence, idempotence, CSRF, pagination and module-disable results.",
+        "Exact-head PHPUnit, PHPStan and full Worker CI results; confirm no entity or migration changes.",
+        "Remaining Trusted review/integration work."
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "preserve-private-per-member-onboarding-task-visibility-and-active-membership-scope",
+        "preserve-route-specific-CSRF-and-user-attributed-immutable-completion-evidence",
+        "preserve-Gaming-module-disabled-route-404",
+        "no-schema-migration-or-existing-entity/admin-flow-changes",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
+      ],
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "ebfeb6032548002846b9352ddb2b06b909b461c0",
+      "proposal_kind": "worker_only",
+      "proposal_dependency_evidence": [],
+      "collision_check": {
+        "compared_against": "Fresh continuous/work-pool-v4 blob a49191041b416450c0753f33a342fe81c2b82b57, all current active and claim-locked allowlists, and current sanitized main ebfeb6032548002846b9352ddb2b06b909b461c0.",
+        "result": "No active or claim-locked package owns any proposed path. Active WCP-511, WCP-561, WCP-582 and all other locked scopes are disjoint. WCP-395 owns the existing guild portal index and notifications templates; WCP-405 owns the existing guild portal show template; this package adds a new template and changes only the free portal layout for discoverability. WCP-496's eight implemented admin onboarding paths are present byte-identically on current main and remain unchanged; the existing GuildOnboardingTask entity and admin workflow are reused. WCP-499's module catalog is not changed; the existing app_guild route prefix provides the Gaming disabled-module gate.",
+        "paths": [
+          "src/Controller/GuildOnboardingPortalController.php",
+          "src/Repository/GuildOnboardingPortalRepository.php",
+          "templates/guild_portal/onboarding.html.twig",
+          "templates/layout/portal.html.twig",
+          "tests/Controller/GuildOnboardingPortalTest.php"
+        ]
+      },
+      "published_at": "2026-09-28T17:43:29Z",
+      "claimed_on": "2026-09-28T17:43:29Z",
+      "claim_state": "active",
+      "active_base_branch": "main",
+      "active_base_sha": "ebfeb6032548002846b9352ddb2b06b909b461c0",
+      "active_head": "ebfeb6032548002846b9352ddb2b06b909b461c0",
+      "resume_branch": "feature/wcp-583-guild-onboarding-member-portal-g1",
+      "last_checkpoint_at": "2026-09-28T17:43:29Z",
+      "last_verified_push_at": "2026-09-28T17:43:29Z",
+      "checkpoint_paths": [],
+      "branch_heads": {
+        "claim_branch": "ebfeb6032548002846b9352ddb2b06b909b461c0",
+        "feature_branch": "ebfeb6032548002846b9352ddb2b06b909b461c0"
+      },
+      "next_action": "Create both claim and feature branches from exact main HEAD ebfeb6032548002846b9352ddb2b06b909b461c0; implement the member-facing guild onboarding checklist within the allowlist."
     }
   ],
   "recovery_queue": [],
