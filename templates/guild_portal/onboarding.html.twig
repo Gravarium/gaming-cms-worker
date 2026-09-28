@@ -1,0 +1,53 @@
+{% extends 'base.html.twig' %}
+{% set site = site_settings() %}
+{% block title %}Meine Onboarding-Aufgaben | {{ site.siteName }}{% endblock %}
+{% block body %}
+<header class="topbar">
+    <a class="brand" href="{{ path('app_guild_portal_index') }}">Mein Gildenbereich</a>
+    <nav class="top-actions">
+        <a href="{{ path('app_guild_portal_index') }}">Meine Gilden</a>
+        <form method="post" action="{{ path('app_logout') }}"><input type="hidden" name="_csrf_token" value="{{ csrf_token('logout') }}"><button class="button-secondary">Abmelden</button></form>
+    </nav>
+</header>
+<main class="dashboard">
+    <p class="eyebrow">Geschützter Mitgliederbereich</p>
+    <h1>Meine Onboarding-Aufgaben</h1>
+    {% for message in app.flashes('success') %}<div class="notice">{{ message }}</div>{% endfor %}
+    {% for message in app.flashes('notice') %}<div class="notice">{{ message }}</div>{% endfor %}
+    <p>Offene Schritte für deine aktiven Gildencharaktere. Erledigte Aufgaben bleiben als Nachweis sichtbar.</p>
+    <p class="muted">{{ total }} Aufgaben · Seite {{ page }} von {{ pageCount }}</p>
+    <div class="application-list">
+        {% for task in tasks %}
+            <article class="application-card">
+                <div>
+                    <p class="eyebrow"><a href="{{ path('app_guild_portal_show', {id: task.guildId}) }}">{{ task.guildName }}</a> · {{ task.characterName }}</p>
+                    <h2>{{ task.label }}</h2>
+                    {% if task.completed %}
+                        <p class="status status-ready">Erledigt</p>
+                        <p class="muted">Erledigt von {{ task.completedBy ?: 'Nicht mehr verfügbar' }}{% if task.completedAt %} am {{ task.completedAt|date('d.m.Y H:i') }}{% endif %}</p>
+                    {% else %}
+                        <p class="status">Offen</p>
+                    {% endif %}
+                </div>
+                {% if not task.completed %}
+                    <form method="post" action="{{ path('app_guild_onboarding_task_complete', {taskId: task.id}) }}">
+                        <input type="hidden" name="_token" value="{{ csrf_token('member-onboarding-complete-' ~ task.id) }}">
+                        <button type="submit">Als erledigt markieren</button>
+                    </form>
+                {% endif %}
+            </article>
+        {% else %}
+            <article class="panel">
+                <h2>Keine Onboarding-Aufgaben vorhanden</h2>
+                <p>Wenn dir deine Gilde einen Onboarding-Schritt zuweist, erscheint er hier.</p>
+            </article>
+        {% endfor %}
+    </div>
+    {% if pageCount > 1 %}
+        <nav class="top-actions" aria-label="Seitennavigation">
+            {% if page > 1 %}<a class="button-link button-secondary" rel="prev" href="{{ path('app_guild_onboarding_portal', {page: page - 1}) }}">Vorherige</a>{% endif %}
+            {% if page < pageCount %}<a class="button-link button-secondary" rel="next" href="{{ path('app_guild_onboarding_portal', {page: page + 1}) }}">Nächste</a>{% endif %}
+        </nav>
+    {% endif %}
+</main>
+{% endblock %}

@@ -6,6 +6,7 @@
 <div class="portal-meta"><span>{{ site.description ?: 'Deine Welt. Deine Community.' }}</span><span>GAMING · GILDEN · COMMUNITY</span></div>
 <header class="portal-navigation"><a class="portal-brand" href="{{ path('app_home') }}">{% if site.logoPath %}<img src="{{ site.logoPath }}" alt="{{ site.siteName }}">{% else %}<span class="brand-emblem" aria-hidden="true">G</span>{{ site.siteName }}{% endif %}</a>
 <nav aria-label="Hauptnavigation"><a href="{{ path('app_home') }}">Start</a>{% if cms_module_enabled('content') %}<a href="{{ path('app_news_index') }}">News</a>{% endif %}{% if cms_module_enabled('gaming') %}<a href="{{ path('app_gaming_index') }}">Gilden</a>{% endif %}{% if cms_module_enabled('video') %}<a href="{{ path('app_video_index') }}">Videos</a><a href="{{ path('app_video_playlist_index') }}">Playlists</a>{% endif %}
+{% if app.user and cms_module_enabled('gaming') %}<a href="{{ path('app_guild_onboarding_portal') }}">Meine Onboarding-Aufgaben</a>{% endif %}
 {% for item in main_navigation() %}<a href="{{ item.page ? path('app_page_show',{slug:item.page.slug}) : item.url }}" {% if item.openNewWindow %}target="_blank" rel="noopener noreferrer"{% endif %}>{{ item.label }}</a>{% endfor %}</nav>
 <a class="portal-account" href="{{ path(app.user ? 'app_admin_dashboard' : 'app_login') }}">{{ app.user ? 'Administration' : 'Anmelden' }} <span aria-hidden="true">↗</span></a></header>
 </div>
