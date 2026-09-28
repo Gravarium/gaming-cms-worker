@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-28T20:37:35.070Z",
+  "published_at": "2026-09-28T20:39:43.971Z",
   "summary": {
     "total_remaining_worker_tasks": 175,
     "completed_worker_prs_awaiting_trusted_review": 316,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-590 implementation is pushed at exact head 3c3507f7c5c0f191d3a76311cb39d6f8ec7f227c; review its two allowed paths and validate through full Worker CI.",
+    "next_required_action": "WCP-590 PR #385 exact HEAD 3c3507f7c5c0f191d3a76311cb39d6f8ec7f227c is under full Worker CI run #978; inspect both jobs.",
     "composition_preparable": 0,
     "immediately_actionable": 32,
     "must_continue": true
@@ -53451,13 +53451,42 @@
         "feature_branch": "3c3507f7c5c0f191d3a76311cb39d6f8ec7f227c"
       },
       "last_observed_head": "3c3507f7c5c0f191d3a76311cb39d6f8ec7f227c",
-      "last_checkpoint_at": "2026-09-28T20:37:35.070Z",
+      "last_checkpoint_at": "2026-09-28T20:39:43.971Z",
       "checkpoint_paths": [
         "templates/content/show.html.twig",
         "tests/Controller/ContentDiscussionEntryNavigationTest.php"
       ],
-      "next_action": "Review the feature diff, open the Worker PR and run full exact-head CI; repair any failures within WCP-590 paths.",
-      "last_verified_push_at": "2026-09-28T20:37:35.070Z"
+      "next_action": "Inspect exact-head Worker CI run #978, verify both PHP/Symfony and PostgreSQL 18 jobs, and repair any failures only within WCP-590 paths.",
+      "last_verified_push_at": "2026-09-28T20:37:35.070Z",
+      "worker_pr": 385,
+      "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/385",
+      "worker_pr_state": "draft",
+      "pr_state": "open",
+      "draft_pr": true,
+      "worker_pr_base_branch": "main",
+      "worker_pr_base_sha": "bb6ba0fd3dd9025be4f60c43a644117f96f71578",
+      "worker_pr_changed_paths": [
+        "templates/content/show.html.twig",
+        "tests/Controller/ContentDiscussionEntryNavigationTest.php"
+      ],
+      "ci_result": "in_progress",
+      "last_ci_result": "in_progress",
+      "ci_run_id": 36480707393,
+      "last_ci_run_id": 36480707393,
+      "ci_validation_pr": 385,
+      "ci_attempts": [
+        {
+          "run_id": 36480707393,
+          "run_number": 978,
+          "head": "3c3507f7c5c0f191d3a76311cb39d6f8ec7f227c",
+          "base": "bb6ba0fd3dd9025be4f60c43a644117f96f71578",
+          "result": "in_progress",
+          "validation_pr": 385,
+          "status": "in_progress",
+          "conclusion": null,
+          "summary": "Full exact-head Worker CI #978 is running for WCP-590 PR #385."
+        }
+      ]
     }
   ],
   "recovery_queue": [],
