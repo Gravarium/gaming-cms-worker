@@ -27,7 +27,7 @@ final readonly class CompetitionStandingsWidgetProvider implements WidgetProvide
     ) {
         $loader = $twig->getLoader();
         if (!$loader instanceof FilesystemLoader) {
-            throw new \\LogicException('Competition standings widget requires a filesystem Twig loader.');
+            throw new \LogicException('Competition standings widget requires a filesystem Twig loader.');
         }
 
         $loader->addPath(__DIR__.'/CompetitionStandings/Templates');
