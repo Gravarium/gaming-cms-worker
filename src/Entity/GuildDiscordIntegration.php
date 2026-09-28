@@ -12,6 +12,8 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Table(name: 'guild_discord_integration')]
 class GuildDiscordIntegration
 {
+    private const MAX_ENCRYPTED_WEBHOOK_BYTES = 8192;
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -49,7 +51,20 @@ class GuildDiscordIntegration
     public function getGuild(): ?Guild { return $this->guild; }
     public function setGuild(Guild $guild): self { $this->guild = $guild; return $this; }
     public function getEncryptedWebhookUrl(): string { return $this->encryptedWebhookUrl; }
-    public function setEncryptedWebhookUrl(string $encryptedWebhookUrl): self { $this->encryptedWebhookUrl = $encryptedWebhookUrl; $this->touch(); return $this; }
+    public function setEncryptedWebhookUrl(string $encryptedWebhookUrl): self
+    {
+        if (!mb_check_encoding($encryptedWebhookUrl, 'UTF-8')
+            || str_contains($encryptedWebhookUrl, "\0")
+            || strlen($encryptedWebhookUrl) > self::MAX_ENCRYPTED_WEBHOOK_BYTES
+        ) {
+            throw new \InvalidArgumentException('Encrypted Discord webhook payload is invalid or exceeds the storage limit.');
+        }
+
+        $this->encryptedWebhookUrl = $encryptedWebhookUrl;
+        $this->touch();
+
+        return $this;
+    }
     public function hasWebhook(): bool { return $this->encryptedWebhookUrl !== ''; }
     public function isEnabled(): bool { return $this->enabled; }
     public function setEnabled(bool $enabled): self { $this->enabled = $enabled; $this->touch(); return $this; }

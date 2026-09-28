@@ -110,6 +110,75 @@ final class AccountRecoveryControllerTest extends WebTestCase
         self::assertNotNull($manager->resolve($second, AccountToken::PURPOSE_PASSWORD_RESET));
     }
 
+    public function testForgotPasswordRateLimitsNormalizedEmailAcrossDifferentClientIps(): void
+    {
+        $client = static::createClient();
+        $entityManager = $client->getContainer()->get(EntityManagerInterface::class);
+        $email = 'recovery-email-limit-'.bin2hex(random_bytes(6)).'@example.test';
+        $user = (new User())
+            ->setEmail($email)
+            ->setDisplayName('Recovery Email Limit Test')
+            ->setPassword('not-used-in-this-test');
+        $entityManager->persist($user);
+        $entityManager->flush();
+
+        $ipPrefix = sprintf('10.%d.%d', random_int(0, 255), random_int(0, 255));
+        $ipStart = random_int(1, 240);
+        for ($attempt = 0; $attempt < 6; ++$attempt) {
+            $client->setServerParameter('REMOTE_ADDR', sprintf('%s.%d', $ipPrefix, $ipStart + $attempt));
+            $crawler = $client->request('GET', '/forgot-password');
+            $submittedEmail = $attempt % 2 === 0 ? $email : mb_strtoupper($email);
+            $client->submit($crawler->selectButton('Link anfordern')->form([
+                'forgot_password[email]' => $submittedEmail,
+            ]));
+
+            self::assertResponseRedirects('/forgot-password');
+        }
+
+        $tokenCount = $client->getContainer()->get(AccountTokenRepository::class)->count([
+            'user' => $user,
+            'purpose' => AccountToken::PURPOSE_PASSWORD_RESET,
+        ]);
+        self::assertSame(5, $tokenCount);
+    }
+
+    public function testForgotPasswordPerIpRateLimitStillAppliesAcrossAccounts(): void
+    {
+        $client = static::createClient();
+        $entityManager = $client->getContainer()->get(EntityManagerInterface::class);
+        $users = [];
+        for ($index = 0; $index < 6; ++$index) {
+            $user = (new User())
+                ->setEmail('recovery-ip-limit-'.$index.'-'.bin2hex(random_bytes(6)).'@example.test')
+                ->setDisplayName('Recovery IP Limit Test '.$index)
+                ->setPassword('not-used-in-this-test');
+            $entityManager->persist($user);
+            $users[] = $user;
+        }
+        $entityManager->flush();
+
+        $client->setServerParameter('REMOTE_ADDR', sprintf('10.%d.%d.%d', random_int(0, 255), random_int(0, 255), random_int(1, 254)));
+        foreach ($users as $user) {
+            $crawler = $client->request('GET', '/forgot-password');
+            $client->submit($crawler->selectButton('Link anfordern')->form([
+                'forgot_password[email]' => $user->getEmail(),
+            ]));
+
+            self::assertResponseRedirects('/forgot-password');
+        }
+
+        $tokenRepository = $client->getContainer()->get(AccountTokenRepository::class);
+        foreach ($users as $index => $user) {
+            self::assertSame(
+                $index < 5 ? 1 : 0,
+                $tokenRepository->count([
+                    'user' => $user,
+                    'purpose' => AccountToken::PURPOSE_PASSWORD_RESET,
+                ]),
+            );
+        }
+    }
+
     public function testForgotPasswordResponseDoesNotEnumerateAccountState(): void
     {
         $client = static::createClient();

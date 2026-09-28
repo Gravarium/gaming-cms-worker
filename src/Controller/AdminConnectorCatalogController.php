@@ -48,8 +48,16 @@ final class AdminConnectorCatalogController extends AbstractController
             throw $this->createAccessDeniedException();
         }
 
-        $choices = array_values(array_filter($request->request->all('providers'), 'is_string'));
+        $submittedProviders = $request->request->all('providers');
+        if (count($submittedProviders) > $planner->maximumChoiceCount()) {
+            return $this->rejectOversizedPlan();
+        }
+
+        $choices = array_values(array_filter($submittedProviders, 'is_string'));
         $result = $planner->plan($choices);
+        if ($result['rejected']) {
+            return $this->rejectOversizedPlan();
+        }
         if ($result['created'] > 0) {
             $audit->record(
                 'connector.catalog.plan',
@@ -66,6 +74,13 @@ final class AdminConnectorCatalogController extends AbstractController
             $result['created'],
             $result['skipped'],
         ));
+
+        return $this->redirectToRoute('app_admin_connector_index');
+    }
+
+    private function rejectOversizedPlan(): Response
+    {
+        $this->addFlash('warning', 'Zu viele Anbieter ausgewählt. Es wurden keine externen Ziele geändert.');
 
         return $this->redirectToRoute('app_admin_connector_index');
     }

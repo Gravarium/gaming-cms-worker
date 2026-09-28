@@ -23,8 +23,26 @@ final readonly class LocalBackupVerifier
 
     public function verify(string $backupId): bool
     {
+        $directory = $this->inventory->directory($backupId);
+        $snapshot = $this->inventory->read();
+        if (!$snapshot['available']) {
+            throw new \RuntimeException('Der lokale Backup-Bestand ist nicht verfügbar.');
+        }
+
+        $isListedBackup = false;
+        foreach ($snapshot['backups'] as $backup) {
+            if ($backup['id'] === $backupId) {
+                $isListedBackup = true;
+                break;
+            }
+        }
+
+        if (!$isListedBackup) {
+            throw new \InvalidArgumentException('Das ausgewählte Backup gehört nicht zum gültigen Bestand.');
+        }
+
         $process = new Process(
-            ['bash', $this->projectDir.'/bin/verify-backup', $this->inventory->directory($backupId)],
+            ['bash', $this->projectDir.'/bin/verify-backup', $directory],
             $this->projectDir,
             ['APP_DIR' => $this->projectDir, 'BACKUP_EXPECTED_ID' => $backupId],
             null,

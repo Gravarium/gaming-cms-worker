@@ -42,6 +42,8 @@ final class AdminStorageController extends AbstractController
         'downloads' => 'Downloads und Dokumente',
     ];
 
+    private const MAX_BULK_SELECTION = 200;
+
     public function __construct(
         private readonly ModuleStorageSettingRepository $settings,
         private readonly MediaAssetRepository $media,
@@ -192,7 +194,13 @@ final class AdminStorageController extends AbstractController
     public function bulk(Request $request): Response
     {
         if (!$this->isCsrfTokenValid('bulk-media', $request->request->getString('_token'))) { throw $this->createAccessDeniedException(); }
-        $ids = array_values(array_unique(array_filter((array) $request->request->all('assets'), static fn ($id): bool => ctype_digit((string) $id))));
+        $rawIds = (array) $request->request->all('assets');
+        if (count($rawIds) > self::MAX_BULK_SELECTION) {
+            $this->addFlash('error', 'Zu viele Medien ausgewählt. Es wurden keine Änderungen vorgenommen.');
+
+            return $this->redirectToRoute('app_admin_storage_index');
+        }
+        $ids = array_values(array_unique(array_filter($rawIds, static fn ($id): bool => ctype_digit((string) $id))));
         $assets = $ids === [] ? [] : array_values(array_filter(
             $this->media->findBy(['id' => array_map('intval', $ids)]),
             static fn (MediaAsset $asset): bool => !$asset->isDeletionPending(),
