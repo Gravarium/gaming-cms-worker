@@ -153,19 +153,46 @@ final class PublicGuildRoleNeedApplicationFlowTest extends WebTestCase
         $foreignGuildSlug = $foreignGuild->getSlug();
 
         try {
+            $publicUrl = $this->applyUrl($guildSlug, $game->getSlug(), 'Healer', 'Priest');
             $client->request('GET', $this->applyUrl($guildSlug, $game->getSlug(), $foreignNeed->getRoleKey(), $foreignNeed->getClassKey()));
             self::assertResponseStatusCodeSame(404);
 
             $need->setActive(false);
             $em->flush();
-            $client->request('GET', $this->applyUrl($guildSlug, $game->getSlug(), $need->getRoleKey(), $need->getClassKey()));
+            $client->request('GET', $publicUrl);
+            self::assertResponseStatusCodeSame(404);
+            $client->request('POST', $publicUrl, ['guild_application' => ['message' => 'stale need']]);
             self::assertResponseStatusCodeSame(404);
 
-            $need->setActive(true);
+            $need->setActive(true)->setDesiredCount(0);
+            $em->flush();
+            $client->request('GET', $publicUrl);
+            self::assertResponseStatusCodeSame(404);
+
+            $need->setDesiredCount(1);
+            $guild->setRecruitmentOpen(false);
+            $em->flush();
+            $client->request('GET', $publicUrl);
+            self::assertResponseStatusCodeSame(404);
+
+            $guild->setRecruitmentOpen(true)->setEnabled(false);
+            $em->flush();
+            $client->request('GET', $publicUrl);
+            self::assertResponseStatusCodeSame(404);
+
+            $guild->setEnabled(true);
+            $game->setEnabled(false);
+            $em->flush();
+            $client->request('GET', $publicUrl);
+            self::assertResponseStatusCodeSame(404);
+
+            $game->setEnabled(true);
             $em->flush();
             $this->setModuleState($client, 'gaming', false);
             $em->clear();
-            $client->request('GET', $this->applyUrl($guildSlug, $game->getSlug(), 'Healer', 'Priest'));
+            $client->request('GET', $publicUrl);
+            self::assertResponseStatusCodeSame(404);
+            $client->request('POST', $publicUrl, ['guild_application' => ['message' => 'disabled module']]);
             self::assertResponseStatusCodeSame(404);
 
             self::assertSame(0, $em->getRepository(GuildApplication::class)->count([
@@ -173,6 +200,61 @@ final class PublicGuildRoleNeedApplicationFlowTest extends WebTestCase
             ]));
         } finally {
             $this->cleanup($client, '', '', $guildId, $gameId, null, $foreignGuildSlug);
+            $this->restoreModuleSnapshot($client, $moduleSnapshot);
+        }
+    }
+
+    public function testFocusedRoutePreservesValidationAndSharedApplicationRateLimit(): void
+    {
+        $client = static::createClient();
+        $moduleSnapshot = $this->moduleSnapshot($client);
+        $this->enableGaming($client);
+        $em = $this->em($client);
+
+        $suffix = bin2hex(random_bytes(5));
+        $game = (new Game())->setName('Role limiter game '.$suffix)->setSlug('role-limiter-game-'.$suffix);
+        $guild = (new Guild())
+            ->setGame($game)
+            ->setName('Role limiter guild '.$suffix)
+            ->setSlug('role-limiter-guild-'.$suffix)
+            ->setServerName('EU')
+            ->setDescription('Role application validation and rate limit test')
+            ->setRecruitmentOpen(true);
+        $need = (new GuildRoleNeed($guild, $game, 'Damage', 'Mage'))->setDesiredCount(1);
+        foreach ([$game, $guild, $need] as $fixture) {
+            $em->persist($fixture);
+        }
+        $em->flush();
+        $gameId = $game->getId();
+        $guildId = $guild->getId();
+        $guildSlug = $guild->getSlug();
+        $url = $this->applyUrl($guildSlug, $game->getSlug(), $need->getRoleKey(), $need->getClassKey());
+
+        try {
+            for ($attempt = 0; $attempt < 5; ++$attempt) {
+                $crawler = $client->request('GET', $url);
+                self::assertResponseIsSuccessful();
+                $form = $crawler->selectButton('Bewerbung absenden')->form();
+                $form['guild_application[email]'] = 'not-an-email';
+                $form['guild_application[message]'] = 'Too short';
+                $client->submit($form);
+                self::assertResponseStatusCodeSame(422);
+                $this->assertPrivateHeaders($client);
+            }
+
+            $crawler = $client->request('GET', $url);
+            $form = $crawler->selectButton('Bewerbung absenden')->form();
+            $form['guild_application[applicantName]'] = 'Applicant '.$suffix;
+            $form['guild_application[email]'] = 'applicant-'.$suffix.'@example.test';
+            $form['guild_application[characterName]'] = 'Character '.$suffix;
+            $form['guild_application[characterClass]'] = 'Mage';
+            $form['guild_application[message]'] = 'This application is valid but must be rate limited.';
+            $client->submit($form);
+            self::assertResponseStatusCodeSame(429);
+            $this->assertPrivateHeaders($client);
+            self::assertSame(0, $em->getRepository(GuildApplication::class)->count(['guild' => $guildId]));
+        } finally {
+            $this->cleanup($client, '', '', $guildId, $gameId, null);
             $this->restoreModuleSnapshot($client, $moduleSnapshot);
         }
     }
