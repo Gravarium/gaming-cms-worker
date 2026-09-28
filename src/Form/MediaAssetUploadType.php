@@ -13,6 +13,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\File;
+use Symfony\Component\Validator\Constraints\Length;
 
 /** @extends AbstractType<array<string, mixed>> */
 final class MediaAssetUploadType extends AbstractType
@@ -44,8 +45,18 @@ final class MediaAssetUploadType extends AbstractType
                     mimeTypesMessage: 'Dieser Dateityp ist aus Sicherheitsgründen nicht erlaubt.',
                 )],
             ])
-            ->add('title', null, ['label' => 'Titel', 'required' => false, 'attr' => ['maxlength' => 180]])
-            ->add('altText', null, ['label' => 'Alternativtext', 'required' => false, 'attr' => ['maxlength' => 255]])
+            ->add('title', null, [
+                'label' => 'Titel',
+                'required' => false,
+                'attr' => ['maxlength' => 180],
+                'constraints' => [new Length(max: 180)],
+            ])
+            ->add('altText', null, [
+                'label' => 'Alternativtext',
+                'required' => false,
+                'attr' => ['maxlength' => 255],
+                'constraints' => [new Length(max: 255)],
+            ])
             ->add('caption', TextareaType::class, ['label' => 'Beschreibung', 'required' => false, 'attr' => ['rows' => 3]])
             ->add('tags', null, ['label' => 'Schlagwörter', 'required' => false, 'help' => 'Mit Kommas trennen.']);
     }
