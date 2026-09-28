@@ -1161,7 +1161,7 @@
       "package_id": "FCP-063",
       "title": "Downloads mods add-ons modpacks and version delivery",
       "risk": "critical",
-      "execution_state": "worker_pr_complete_awaiting_trusted_review",
+      "execution_state": "trusted_integrated",
       "dependencies": [
         "FCP-051",
         "FCP-010"
@@ -1230,7 +1230,34 @@
         "fortress-ready-replaceable-boundaries-no-private-runtime-reconstruction"
       ],
       "worker_pr": 16,
-      "completed_on_historical_pool": true
+      "completed_on_historical_pool": true,
+      "claim_state": "released_after_trusted_integration",
+      "pr_state": "closed",
+      "worker_pr_state": "closed",
+      "draft_pr": false,
+      "trusted_resolution": {
+        "status": "integrated",
+        "worker_pr": 16,
+        "worker_head": "a12735aa9b5aed93cfaca4455a6e58b86446a0d7",
+        "trusted_pr": 172,
+        "trusted_pr_ci_run_id": 36361920773,
+        "trusted_pr_ci_result": "success",
+        "trusted_merge_sha": "1c2eff190057077ae7038bb000076e8f7376d498",
+        "final_trusted_main_sha": "1c2eff190057077ae7038bb000076e8f7376d498",
+        "final_trusted_main_ci_run_id": 36362158196,
+        "final_trusted_main_ci_result": "success",
+        "worker_sync_run_id": 36362158137,
+        "worker_sync_result": "success",
+        "sanitized_worker_sync_sha": "018ad5af1316d82551b4d224f4e4b577c8a5db67",
+        "worker_ci_run_id": 36362169064,
+        "worker_ci_after_sync_result": "success",
+        "resolved_at": "2026-09-28T00:31:06.761Z",
+        "worker_exact_head_ci_run_id": 36066563329,
+        "worker_exact_head_ci_result": "success",
+        "trusted_import_note": "All 22 FCP-063 core paths were byte-identical in Trusted main before A10 and were not duplicated; A10 registered the Downloads module and imported related catalogue/widget additions."
+      },
+      "completed_at": "2026-09-28T00:31:06.761Z",
+      "next_action": "Worker PR #16 closed after Trusted PR #172, Trusted main CI, Worker-Sync and post-sync Worker CI succeeded."
     },
     {
       "priority": 15,
@@ -35217,7 +35244,7 @@
       "package_id": "WCP-510",
       "title": "Keep direct media actions behind the Media module",
       "risk": "low",
-      "execution_state": "worker_in_progress",
+      "execution_state": "trusted_integrated",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -35297,7 +35324,7 @@
       },
       "published_at": "2026-09-27T10:12:10.306Z",
       "claimed_on": "2026-09-27T10:12:10.306Z",
-      "claim_state": "active",
+      "claim_state": "released_after_trusted_integration",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
       "active_head": "d653bdb03a521b593cbc771c73421c51fd0dbfe9",
@@ -35311,15 +35338,35 @@
         "src/EventSubscriber/MediaStorageModuleSubscriber.php",
         "tests/Controller/MediaStorageModuleGateTest.php"
       ],
-      "next_action": "Monitor Worker CI 36311844636 on exact HEAD d653bdb03a521b593cbc771c73421c51fd0dbfe9; repair failures only within the two allowed paths, then record the final exact-head result.",
+      "next_action": "Worker PR #302 closed after Trusted PR #172, Trusted main CI, Worker-Sync and post-sync Worker CI succeeded.",
       "last_checkpoint_at": "2026-09-27T10:13:46.700Z",
       "last_verified_push_at": "2026-09-27T10:13:46.700Z",
       "worker_pr": 302,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/302",
-      "draft_pr": true,
-      "pr_state": "open",
+      "draft_pr": false,
+      "pr_state": "closed",
       "ci_run_id": 36311844636,
-      "ci_result": "in_progress"
+      "ci_result": "in_progress",
+      "worker_pr_state": "closed",
+      "trusted_resolution": {
+        "status": "integrated",
+        "worker_pr": 302,
+        "worker_head": "d653bdb03a521b593cbc771c73421c51fd0dbfe9",
+        "trusted_pr": 172,
+        "trusted_pr_ci_run_id": 36361920773,
+        "trusted_pr_ci_result": "success",
+        "trusted_merge_sha": "1c2eff190057077ae7038bb000076e8f7376d498",
+        "final_trusted_main_sha": "1c2eff190057077ae7038bb000076e8f7376d498",
+        "final_trusted_main_ci_run_id": 36362158196,
+        "final_trusted_main_ci_result": "success",
+        "worker_sync_run_id": 36362158137,
+        "worker_sync_result": "success",
+        "sanitized_worker_sync_sha": "018ad5af1316d82551b4d224f4e4b577c8a5db67",
+        "worker_ci_run_id": 36362169064,
+        "worker_ci_after_sync_result": "success",
+        "resolved_at": "2026-09-28T00:31:06.761Z"
+      },
+      "completed_at": "2026-09-28T00:31:06.761Z"
     },
     {
       "priority": 511,
@@ -37839,7 +37886,7 @@
       "package_id": "WCP-526",
       "title": "Show exact content and layout uses for media assets",
       "risk": "medium",
-      "execution_state": "worker_complete_awaiting_trusted_review",
+      "execution_state": "trusted_integrated",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -37944,7 +37991,7 @@
         ]
       },
       "published_at": "2026-09-27T11:47:00.836Z",
-      "claim_state": "locked_until_trusted_resolution",
+      "claim_state": "released_after_trusted_integration",
       "claimed_on": "2026-09-27T11:49:42.443Z",
       "active_base_branch": "main",
       "active_base_sha": "b510875e7b0741b9b19f09429d2204a95df51198",
@@ -37964,12 +38011,12 @@
         "templates/admin/storage/media_usage.html.twig",
         "tests/Controller/AdminMediaUsageBrowserTest.php"
       ],
-      "next_action": "Worker PR #323 is complete on exact green HEAD a484dabe7bdc32f7ee433a38267cc88dc9f3a3f2; claim remains locked until Trusted explicitly integrates, cancels or transfers it. Continue only with a separately claimed independent package; do not merge or deploy.",
+      "next_action": "Worker PR #323 closed after Trusted PR #172, Trusted main CI, Worker-Sync and post-sync Worker CI succeeded.",
       "worker_pr": 323,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/323",
       "draft_pr": false,
-      "pr_state": "open",
-      "worker_pr_state": "ready_for_review",
+      "pr_state": "closed",
+      "worker_pr_state": "closed",
       "worker_pr_changed_paths": [
         "src/Controller/AdminMediaUsageController.php",
         "src/Media/MediaAssetUsageBrowser.php",
@@ -38016,7 +38063,25 @@
       "ci_run_id": 36319939992,
       "last_ci_run_id": 36319939992,
       "final_head": "a484dabe7bdc32f7ee433a38267cc88dc9f3a3f2",
-      "completed_at": "2026-09-27T12:49:16.088Z"
+      "completed_at": "2026-09-28T00:31:06.761Z",
+      "trusted_resolution": {
+        "status": "integrated",
+        "worker_pr": 323,
+        "worker_head": "a484dabe7bdc32f7ee433a38267cc88dc9f3a3f2",
+        "trusted_pr": 172,
+        "trusted_pr_ci_run_id": 36361920773,
+        "trusted_pr_ci_result": "success",
+        "trusted_merge_sha": "1c2eff190057077ae7038bb000076e8f7376d498",
+        "final_trusted_main_sha": "1c2eff190057077ae7038bb000076e8f7376d498",
+        "final_trusted_main_ci_run_id": 36362158196,
+        "final_trusted_main_ci_result": "success",
+        "worker_sync_run_id": 36362158137,
+        "worker_sync_result": "success",
+        "sanitized_worker_sync_sha": "018ad5af1316d82551b4d224f4e4b577c8a5db67",
+        "worker_ci_run_id": 36362169064,
+        "worker_ci_after_sync_result": "success",
+        "resolved_at": "2026-09-28T00:31:06.761Z"
+      }
     },
     {
       "priority": 527,
@@ -39242,7 +39307,7 @@
       "package_id": "WCP-534",
       "title": "Administer controlled download packages",
       "risk": "medium",
-      "execution_state": "worker_complete_awaiting_trusted_review",
+      "execution_state": "trusted_integrated",
       "dependencies": [
         "FCP-063"
       ],
@@ -39377,7 +39442,7 @@
       },
       "published_at": "2026-09-27T12:44:34.437Z",
       "claimed_on": "2026-09-27T12:44:34.437Z",
-      "claim_state": "locked_until_trusted_resolution",
+      "claim_state": "released_after_trusted_integration",
       "active_base_branch": "feature/fcp-063-pool-g1",
       "active_base_sha": "a12735aa9b5aed93cfaca4455a6e58b86446a0d7",
       "active_head": "2ba2a5e936b4d50b7d485b0e1bd97d221d9252e8",
@@ -39396,7 +39461,7 @@
         "templates/admin/download_catalogue/form.html.twig",
         "tests/Controller/AdminDownloadCatalogueControllerTest.php"
       ],
-      "next_action": "Worker PR #326 is complete on exact green HEAD 2ba2a5e936b4d50b7d485b0e1bd97d221d9252e8; keep this claim locked until Trusted resolution, and continue to the next independent package.",
+      "next_action": "Worker PR #326 closed after Trusted PR #172, Trusted main CI, Worker-Sync and post-sync Worker CI succeeded.",
       "ci_attempts": [
         {
           "run_id": 36320672201,
@@ -39437,11 +39502,11 @@
           "postgresql_18_migrations": "passed"
         }
       ],
-      "worker_pr_state": "ready_for_review",
+      "worker_pr_state": "closed",
       "last_verified_push_at": "2026-09-27T13:04:34.050Z",
       "worker_pr": 326,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/326",
-      "pr_state": "open",
+      "pr_state": "closed",
       "draft_pr": false,
       "worker_pr_base_branch": "main",
       "worker_pr_changed_paths": [
@@ -39457,7 +39522,25 @@
       "ci_result": "success",
       "last_ci_result": "success",
       "final_head": "2ba2a5e936b4d50b7d485b0e1bd97d221d9252e8",
-      "completed_at": "2026-09-27T13:07:58.753Z"
+      "completed_at": "2026-09-28T00:31:06.761Z",
+      "trusted_resolution": {
+        "status": "integrated",
+        "worker_pr": 326,
+        "worker_head": "2ba2a5e936b4d50b7d485b0e1bd97d221d9252e8",
+        "trusted_pr": 172,
+        "trusted_pr_ci_run_id": 36361920773,
+        "trusted_pr_ci_result": "success",
+        "trusted_merge_sha": "1c2eff190057077ae7038bb000076e8f7376d498",
+        "final_trusted_main_sha": "1c2eff190057077ae7038bb000076e8f7376d498",
+        "final_trusted_main_ci_run_id": 36362158196,
+        "final_trusted_main_ci_result": "success",
+        "worker_sync_run_id": 36362158137,
+        "worker_sync_result": "success",
+        "sanitized_worker_sync_sha": "018ad5af1316d82551b4d224f4e4b577c8a5db67",
+        "worker_ci_run_id": 36362169064,
+        "worker_ci_after_sync_result": "success",
+        "resolved_at": "2026-09-28T00:31:06.761Z"
+      }
     },
     {
       "priority": 535,
@@ -41756,7 +41839,7 @@
       "package_id": "WCP-547",
       "title": "Place public Downloads in the Page Builder",
       "risk": "medium",
-      "execution_state": "worker_in_progress",
+      "execution_state": "trusted_integrated",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -41848,7 +41931,7 @@
       },
       "published_at": "2026-09-27T14:43:17.244Z",
       "claimed_on": "2026-09-27T14:43:17.244Z",
-      "claim_state": "active",
+      "claim_state": "released_after_trusted_integration",
       "active_base_branch": "main",
       "active_base_sha": "b510875e7b0741b9b19f09429d2204a95df51198",
       "active_head": "6e28d039d4959cb7d9a339255408029e82808e95",
@@ -41867,8 +41950,8 @@
         "config/packages/public_download_catalogue_widget.yaml",
         "tests/Widget/PublicDownloadCatalogueWidgetTest.php"
       ],
-      "next_action": "Keep PR #339 draft and WCP-547 claim locked. Do not change the WCP-499-owned src/Module/CmsModuleCatalog.php. Wait for Trusted to integrate, cancel or explicitly transfer WCP-499; then re-evaluate WCP-547 paths/base, continue on the existing feature branch, and rerun full exact-head Worker CI.",
-      "worker_pr_state": "draft",
+      "next_action": "Worker PR #339 closed after Trusted PR #172, Trusted main CI, Worker-Sync and post-sync Worker CI succeeded.",
+      "worker_pr_state": "closed",
       "ci_result": "failure",
       "last_ci_result": "failure",
       "ci_attempts": [
@@ -41901,8 +41984,8 @@
         "tests/Widget/PublicDownloadCatalogueWidgetTest.php"
       ],
       "worker_pr_base_branch": "main",
-      "pr_state": "open",
-      "draft_pr": true,
+      "pr_state": "closed",
+      "draft_pr": false,
       "ci_run_id": 36327485473,
       "last_ci_run_id": 36327485473,
       "blocker": {
@@ -41914,7 +41997,26 @@
         "claim_state": "locked_until_trusted_resolution",
         "reason": "The Downloads module is absent from CmsModuleCatalog, so the module-aware WidgetRegistry cannot make downloads.catalogue available. The feature's discovery and disabled-module regression tests fail without a real Downloads module definition.",
         "required_action": "Do not touch the WCP-499 path. Wait for Trusted to integrate, cancel or explicitly transfer the WCP-499 claim. Then refresh the sanitized base, update WCP-547's allowed-path and collision records, resume on its existing feature branch, fix the functional dependency and rerun complete exact-head Worker CI."
-      }
+      },
+      "trusted_resolution": {
+        "status": "integrated",
+        "worker_pr": 339,
+        "worker_head": "6e28d039d4959cb7d9a339255408029e82808e95",
+        "trusted_pr": 172,
+        "trusted_pr_ci_run_id": 36361920773,
+        "trusted_pr_ci_result": "success",
+        "trusted_merge_sha": "1c2eff190057077ae7038bb000076e8f7376d498",
+        "final_trusted_main_sha": "1c2eff190057077ae7038bb000076e8f7376d498",
+        "final_trusted_main_ci_run_id": 36362158196,
+        "final_trusted_main_ci_result": "success",
+        "worker_sync_run_id": 36362158137,
+        "worker_sync_result": "success",
+        "sanitized_worker_sync_sha": "018ad5af1316d82551b4d224f4e4b577c8a5db67",
+        "worker_ci_run_id": 36362169064,
+        "worker_ci_after_sync_result": "success",
+        "resolved_at": "2026-09-28T00:31:06.761Z"
+      },
+      "completed_at": "2026-09-28T00:31:06.761Z"
     },
     {
       "priority": 548,
