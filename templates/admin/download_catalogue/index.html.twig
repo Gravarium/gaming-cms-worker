@@ -1,0 +1,46 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Download-Pakete{% endblock %}
+
+{% block body %}
+<main class="content-shell">
+    <h1>Download-Pakete</h1>
+    <p>Verwalte Pakete und starte von hier aus den Upload einer neuen Version.</p>
+    <p><a class="button" href="{{ path('app_admin_download_catalogue_new') }}">Paket anlegen</a></p>
+
+    {% if packages is empty %}
+        <p>Es wurden noch keine Download-Pakete angelegt.</p>
+    {% else %}
+        <p>Es werden höchstens 200 Pakete angezeigt.</p>
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Paket</th>
+                        <th>Slug</th>
+                        <th>Typ</th>
+                        <th>Sichtbarkeit</th>
+                        <th>Status</th>
+                        <th>Aktionen</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for package in packages %}
+                        <tr>
+                            <th scope="row">{{ package.title }}</th>
+                            <td><code>{{ package.slug }}</code></td>
+                            <td>{{ package.type }}</td>
+                            <td>{{ package.visibility }}</td>
+                            <td>{{ package.enabled ? 'Aktiv' : 'Deaktiviert' }}</td>
+                            <td>
+                                <a href="{{ path('app_admin_download_catalogue_edit', {id: package.id}) }}">Einstellungen</a>
+                                <a href="{{ path('app_admin_download_upload_form', {id: package.id}) }}">Version hochladen</a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% endif %}
+</main>
+{% endblock %}

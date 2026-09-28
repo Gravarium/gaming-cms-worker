@@ -13,6 +13,7 @@ final class CmsModuleCatalog
             $this->module('media', 'Medien und Speicher', false, ['core'], ['app_admin_storage']),
             $this->module('gaming', 'Gaming, Gilden und Clans', false, ['core', 'content'], ['app_admin_gaming', 'app_admin_guild', 'app_gaming', 'app_guild']),
             $this->module('video', 'Videokatalog', false, ['core', 'media'], ['app_admin_video', 'app_video']),
+            $this->module('downloads', 'Downloads', false, ['core'], ['app_admin_download', 'app_download']),
             $this->module('integrations', 'Externe Ziele und Backups', false, ['core'], ['app_admin_connector', 'app_admin_backup']),
             $this->module('users', 'Benutzer und Rechte', false, ['core'], ['app_admin_user', 'app_admin_access_role']),
             $this->module('notifications', 'Benachrichtigungen', false, ['core'], ['app_admin_notification']),
