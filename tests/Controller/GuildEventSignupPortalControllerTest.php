@@ -14,7 +14,6 @@ use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 
 final class GuildEventSignupPortalControllerTest extends WebTestCase
 {
@@ -135,8 +134,7 @@ final class GuildEventSignupPortalControllerTest extends WebTestCase
             self::assertSame(0, $em->getRepository(GuildEventSignup::class)->count(['event' => $event->getId(), 'response' => GuildEventSignup::GOING]));
             self::assertSame(GuildEventSignup::WAITLIST, $em->find(GuildEventSignup::class, $this->requiredId($otherSignup->getId()))?->getResponse());
 
-            $tokenManager = $client->getContainer()->get(CsrfTokenManagerInterface::class);
-            $repeatToken = $tokenManager->getToken('guild-event-signup-withdraw-'.$signupId)->getValue();
+            $repeatToken = $token;
             $client->request('POST', self::INDEX_PATH.'/'.$signupId.'/withdraw', ['_token' => $repeatToken]);
             self::assertResponseStatusCodeSame(404);
             self::assertSame(GuildEventSignup::DECLINED, $em->find(GuildEventSignup::class, $signupId)?->getResponse());
@@ -169,13 +167,14 @@ final class GuildEventSignupPortalControllerTest extends WebTestCase
             }
             $em->flush();
             $signupId = $this->requiredId($signup->getId());
-            $client->loginUser($user);
+            $client->loginUser($otherUser);
+            $crawler = $client->request('GET', self::INDEX_PATH);
+            $validToken = $crawler->filter(sprintf('form[action="%s/%d/withdraw"] input[name="_token"]', self::INDEX_PATH, $signupId))->attr('value');
 
+            $client->loginUser($user);
             $client->request('POST', self::INDEX_PATH.'/'.$signupId.'/withdraw', ['_token' => 'invalid']);
             self::assertResponseStatusCodeSame(403);
 
-            $tokenManager = $client->getContainer()->get(CsrfTokenManagerInterface::class);
-            $validToken = $tokenManager->getToken('guild-event-signup-withdraw-'.$signupId)->getValue();
             $client->request('POST', self::INDEX_PATH.'/'.$signupId.'/withdraw', ['_token' => $validToken]);
             self::assertResponseStatusCodeSame(404);
             self::assertSame(GuildEventSignup::GOING, $em->find(GuildEventSignup::class, $signupId)?->getResponse());

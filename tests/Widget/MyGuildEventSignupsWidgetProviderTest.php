@@ -66,7 +66,8 @@ final class MyGuildEventSignupsWidgetProviderTest extends WebTestCase
             self::assertSame('gaming', $definition->module);
             self::assertTrue($registry->available(MyGuildEventSignupsWidgetProvider::KEY));
 
-            $request = new Request();
+            $request = $client->getRequest();
+            self::assertInstanceOf(Request::class, $request);
             $requestStack = $container->get(RequestStack::class);
             $requestStack->push($request);
             try {
@@ -128,11 +129,18 @@ final class MyGuildEventSignupsWidgetProviderTest extends WebTestCase
             $suffix = bin2hex(random_bytes(5));
             $user = $this->user($em, $suffix);
             $fixtures[] = $user;
+            $em->flush();
             $client->loginUser($user);
             $client->request('GET', '/guild-area/event-signups');
             self::assertResponseIsSuccessful();
 
-            $authenticatedRequest = new Request();
+            $container = $client->getContainer();
+            $registry = $container->get(WidgetRegistry::class);
+            $definition = $registry->get(MyGuildEventSignupsWidgetProvider::KEY);
+            self::assertInstanceOf(WidgetDefinition::class, $definition);
+            $requestStack = $container->get(RequestStack::class);
+            $authenticatedRequest = $client->getRequest();
+            self::assertInstanceOf(Request::class, $authenticatedRequest);
             $requestStack->push($authenticatedRequest);
             try {
                 $data = $registry->data(MyGuildEventSignupsWidgetProvider::KEY, []);
