@@ -12,8 +12,8 @@
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
   "published_at": "2026-09-27T22:29:43.529Z",
   "summary": {
-    "total_remaining_worker_tasks": 175,
-    "completed_worker_prs_awaiting_trusted_review": 313,
+    "total_remaining_worker_tasks": 174,
+    "completed_worker_prs_awaiting_trusted_review": 314,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
@@ -50999,7 +50999,7 @@
       "package_id": "WCP-583",
       "title": "Complete guild onboarding tasks from a member dashboard",
       "risk": "medium",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -51086,13 +51086,13 @@
       },
       "published_at": "2026-09-28T17:43:29Z",
       "claimed_on": "2026-09-28T17:43:29Z",
-      "claim_state": "active",
+      "claim_state": "locked_until_trusted_resolution",
       "active_base_branch": "main",
       "active_base_sha": "ebfeb6032548002846b9352ddb2b06b909b461c0",
-      "active_head": "76404765a4afa048460538bfcaf3ab277835d787",
+      "active_head": "625900544e6e775e663b51d655d0fee7b050ef58",
       "resume_branch": "feature/wcp-583-guild-onboarding-member-portal-g1",
-      "last_checkpoint_at": "2026-09-28T18:08:05Z",
-      "last_verified_push_at": "2026-09-28T18:08:05Z",
+      "last_checkpoint_at": "2026-09-28T18:23:31.499Z",
+      "last_verified_push_at": "2026-09-28T18:23:31.499Z",
       "checkpoint_paths": [
         "src/Controller/GuildOnboardingPortalController.php",
         "src/Repository/GuildOnboardingPortalRepository.php",
@@ -51102,15 +51102,15 @@
       ],
       "branch_heads": {
         "claim_branch": "ebfeb6032548002846b9352ddb2b06b909b461c0",
-        "feature_branch": "76404765a4afa048460538bfcaf3ab277835d787"
+        "feature_branch": "625900544e6e775e663b51d655d0fee7b050ef58"
       },
-      "next_action": "Monitor exact-head Worker CI run #948 / 36463014258 on 76404765a4afa048460538bfcaf3ab277835d787; run/confirm GuildOnboardingPortalTest and repair concrete failures on this branch before handoff.",
-      "last_observed_head": "76404765a4afa048460538bfcaf3ab277835d787",
+      "next_action": "Await Trusted review of ready-for-review PR #377; continue autonomous Worker scheduling without merging or deploying.",
+      "last_observed_head": "625900544e6e775e663b51d655d0fee7b050ef58",
       "worker_pr": 377,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/377",
-      "worker_pr_state": "draft",
-      "pr_state": "open_draft",
-      "draft_pr": true,
+      "worker_pr_state": "ready_for_review",
+      "pr_state": "open",
+      "draft_pr": false,
       "worker_pr_base_branch": "main",
       "worker_pr_base_sha": "ebfeb6032548002846b9352ddb2b06b909b461c0",
       "worker_pr_changed_paths": [
@@ -51120,25 +51120,69 @@
         "templates/layout/portal.html.twig",
         "tests/Controller/GuildOnboardingPortalTest.php"
       ],
-      "ci_result": "in_progress",
-      "last_ci_result": "in_progress",
+      "ci_result": "success",
+      "last_ci_result": "success",
       "ci_attempts": [
         {
           "run_id": 36463014258,
           "run_number": 948,
           "head": "76404765a4afa048460538bfcaf3ab277835d787",
           "base": "ebfeb6032548002846b9352ddb2b06b909b461c0",
-          "result": "in_progress",
+          "result": "failure",
           "validation_pr": 377,
-          "status": "in_progress",
-          "conclusion": null,
-          "summary": "Exact-head Worker CI #948 started for draft PR #377."
+          "status": "completed",
+          "conclusion": "failure",
+          "summary": "PHP/Symfony tests found four controller failures caused by unsupported direct association comparison in the new DQL; PHPStan and PostgreSQL 18 migration validation passed."
+        },
+        {
+          "run_id": 36463611841,
+          "run_number": 949,
+          "head": "cdc45501b68790b8d2155f3de5953ff193ca5410",
+          "base": "ebfeb6032548002846b9352ddb2b06b909b461c0",
+          "result": "failure",
+          "validation_pr": 377,
+          "status": "completed",
+          "conclusion": "failure",
+          "summary": "DQL endpoints passed; one test expected an exact Cache-Control ordering while Symfony added max-age/must-revalidate directives. PHPStan and PostgreSQL 18 migration validation passed."
+        },
+        {
+          "run_id": 36464103960,
+          "run_number": 950,
+          "head": "625900544e6e775e663b51d655d0fee7b050ef58",
+          "base": "ebfeb6032548002846b9352ddb2b06b909b461c0",
+          "result": "success",
+          "validation_pr": 377,
+          "status": "completed",
+          "conclusion": "success",
+          "jobs": {
+            "php_symfony": "success",
+            "postgres_18": "success"
+          },
+          "summary": "Exact-head CI passed: PHPStan no errors; PHPUnit 1,276 tests / 8,500 assertions / 0 failures (1 deprecation, 8 notices); JavaScript 11/11; PostgreSQL 18 applied 57 migrations / 878 SQL queries and confirmed latest version."
         }
       ],
-      "ci_run_id": 36463014258,
-      "last_ci_run_id": 36463014258,
-      "last_ci_run_number": 948,
-      "ci_validation_pr": 377
+      "ci_run_id": 36464103960,
+      "last_ci_run_id": 36464103960,
+      "last_ci_run_number": 950,
+      "ci_validation_pr": 377,
+      "test_results": [
+        "Exact-head Worker CI #950 / run 36464103960 passed on 625900544e6e775e663b51d655d0fee7b050ef58.",
+        "PHP/Symfony checks passed PHPStan, lint, container, AssetMapper, Doctrine mapping and full PHPUnit: 1,276 tests, 8,500 assertions, 0 failures; 1 deprecation and 8 notices.",
+        "Browser-side JavaScript tests: 11 passed, 0 failed.",
+        "PostgreSQL 18 migration-chain validation passed: 57 migrations, 878 SQL queries, 0 unavailable migrations, current at latest version."
+      ],
+      "completion_evidence": [
+        "Proposal and PR base are Worker main@ebfeb6032548002846b9352ddb2b06b909b461c0; final feature HEAD is 625900544e6e775e663b51d655d0fee7b050ef58.",
+        "PR #377 is open and ready for Trusted review with exactly the five WCP-583 allowlisted paths.",
+        "The private paginated checklist scopes tasks to the current user's active guild characters and enabled guilds; completion is route-CSRF-protected, user-attributed and immutable; Gaming-disabled routes remain gated; responses are private/no-store and noindex.",
+        "Exact-head Worker CI #950 / run 36464103960 passed both PHP/Symfony and PostgreSQL 18 jobs; see test_results for full counts.",
+        "No entity, schema or migration changes."
+      ],
+      "worker_completion_summary": "WCP-583 completed on exact green Worker HEAD 625900544e6e775e663b51d655d0fee7b050ef58 with PR #377 open and ready for Trusted review. The five allowlisted paths add a private member-facing Gaming guild onboarding checklist with active-member scoping, CSRF-protected own-task completion, immutable user/time evidence, pagination and module-gated portal navigation. Exact-head CI #950 / 36464103960 passed (1,276 PHPUnit tests / 8,500 assertions, JavaScript 11/11, PHPStan no errors, PostgreSQL 18 with 57 migrations / 878 SQL queries).",
+      "trusted_follow_up": [
+        "Review member-task privacy and completion ownership, the route-specific CSRF boundary, immutable completion evidence and Gaming module-disabled behavior."
+      ],
+      "open_limitations": []
     }
   ],
   "recovery_queue": [],
