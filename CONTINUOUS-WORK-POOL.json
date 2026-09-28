@@ -10,7 +10,7 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-28T20:14:38.364Z",
+  "published_at": "2026-09-28T20:16:07.232Z",
   "summary": {
     "total_remaining_worker_tasks": 175,
     "completed_worker_prs_awaiting_trusted_review": 315,
@@ -52789,7 +52789,7 @@
       "package_id": "WCP-587",
       "title": "Complete download version metadata entry and public release notes",
       "risk": "medium",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [
         "FCP-063"
       ],
@@ -52909,7 +52909,7 @@
       },
       "published_at": "2026-09-28T19:47:53.776Z",
       "claimed_on": "2026-09-28T19:47:53.776Z",
-      "claim_state": "active",
+      "claim_state": "locked_until_trusted_resolution",
       "active_base_branch": "main",
       "active_base_sha": "c3c7b14066d9f8b32925eb4381e30b6794f21027",
       "active_head": "02fbd8410eda8ded08f54a65cc76bcf36c36958d",
@@ -52918,8 +52918,8 @@
         "feature_branch": "02fbd8410eda8ded08f54a65cc76bcf36c36958d"
       },
       "last_observed_head": "02fbd8410eda8ded08f54a65cc76bcf36c36958d",
-      "last_checkpoint_at": "2026-09-28T20:11:28.600Z",
-      "last_verified_push_at": "2026-09-28T20:11:28.600Z",
+      "last_checkpoint_at": "2026-09-28T20:16:07.232Z",
+      "last_verified_push_at": "2026-09-28T20:16:07.232Z",
       "checkpoint_paths": [
         "config/packages/download_release_metadata_templates.yaml",
         "src/Downloads/Templates/admin/upload.html.twig",
@@ -52931,13 +52931,13 @@
         "tests/Downloads/DownloadControllerTest.php"
       ],
       "resume_branch": "feature/wcp-587-download-release-metadata-g1",
-      "next_action": "Monitor exact-head Worker CI run #971 / 36477366137 on 02fbd8410eda8ded08f54a65cc76bcf36c36958d; fix any failure on the same branch and within the eight allowed paths.",
+      "next_action": "Keep PR #382 and this claim locked until Trusted explicitly resolves it. Exact-head Worker CI #971 passed. Do not merge or deploy; continue with the next dependency-safe Worker package.",
       "worker_pr": 382,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/382",
       "worker_pr_head": "02fbd8410eda8ded08f54a65cc76bcf36c36958d",
       "worker_pr_base_branch": "main",
       "worker_pr_base_sha": "2f8179fe129c3071b68757f03a3e7099311179ef",
-      "worker_pr_state": "draft",
+      "worker_pr_state": "ready_for_review",
       "worker_pr_changed_paths": [
         "config/packages/download_release_metadata_templates.yaml",
         "src/Downloads/Templates/admin/upload.html.twig",
@@ -52949,9 +52949,9 @@
         "tests/Downloads/DownloadControllerTest.php"
       ],
       "pr_state": "open",
-      "draft_pr": true,
-      "ci_result": "in_progress",
-      "last_ci_result": "in_progress",
+      "draft_pr": false,
+      "ci_result": "success",
+      "last_ci_result": "success",
       "ci_run_id": 36477366137,
       "last_ci_run_id": 36477366137,
       "ci_attempts": [
@@ -52983,7 +52983,52 @@
           "result": "in_progress",
           "validation_pr": 382
         }
-      ]
+      ],
+      "final_head": "02fbd8410eda8ded08f54a65cc76bcf36c36958d",
+      "completion_head": "02fbd8410eda8ded08f54a65cc76bcf36c36958d",
+      "completed_at": "2026-09-28T20:16:07.232Z",
+      "last_completed_at": "2026-09-28T20:16:07.232Z",
+      "completion_evidence": {
+        "proposal_base": "c3c7b14066d9f8b32925eb4381e30b6794f21027",
+        "current_worker_main_base": "2f8179fe129c3071b68757f03a3e7099311179ef",
+        "final_head": "02fbd8410eda8ded08f54a65cc76bcf36c36958d",
+        "worker_pr": 382,
+        "worker_pr_state": "open_ready_for_review_unmerged",
+        "exact_head_ci": {
+          "run_number": 971,
+          "run_id": 36477366137,
+          "result": "success",
+          "php_symfony_job": "success",
+          "postgresql_18_migrations": "success"
+        },
+        "phpunit": {
+          "tests": 1385,
+          "assertions": 9125,
+          "deprecations": 1,
+          "notices": 8
+        },
+        "changed_paths": [
+          "config/packages/download_release_metadata_templates.yaml",
+          "src/Downloads/Templates/admin/upload.html.twig",
+          "src/Downloads/Templates/download/show.html.twig",
+          "src/Form/DownloadCatalogue/DownloadVersionInput.php",
+          "src/Form/DownloadCatalogue/DownloadVersionType.php",
+          "src/Controller/AdminDownload/AdminDownloadController.php",
+          "src/Controller/Download/DownloadController.php",
+          "tests/Downloads/DownloadControllerTest.php"
+        ],
+        "behavior": [
+          "Storage-manager version upload accepts a version, private file, compatibility targets on separate lines, and optional release notes; field and upload failures return a rendered 422 form.",
+          "Valid uploads persist the existing compatibility JSON and changelog text columns while retaining the private staging, DB transaction, finalization and malware-scan flow.",
+          "Authorized public package detail shows compatibility and escaped release notes for each version; existing visibility and Downloads module gates remain enforced.",
+          "No entity, schema, migration, scanner, authorization, storage service, or shared templates/ changes."
+        ],
+        "limitations": [
+          "Version metadata is supplied during upload; existing versions do not receive a new edit route in this package.",
+          "Worker PR output is untrusted until Trusted review and integration; no Trusted merge or deployment is claimed."
+        ]
+      },
+      "worker_completion_summary": "Exact-head Worker CI #971 / 36477366137 passed on 02fbd8410eda8ded08f54a65cc76bcf36c36958d: 1,385 tests, 9,125 assertions, 1 deprecation and 8 notices; PHP/Symfony validation and PostgreSQL 18 migration-chain jobs both passed. PR #382 is open, ready for review, unmerged and based on main@2f8179fe129c3071b68757f03a3e7099311179ef. The Downloads version-upload workflow now captures compatibility and release notes and shows them on authorized public package details."
     },
     {
       "priority": 588,
