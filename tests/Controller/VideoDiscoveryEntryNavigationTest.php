@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace App\\Tests\\Controller;
+namespace App\Tests\Controller;
 
-use App\\Entity\\CmsModuleState;
-use App\\Entity\\Video;
-use Doctrine\\ORM\\EntityManagerInterface;
-use Symfony\\Bundle\\FrameworkBundle\\KernelBrowser;
-use Symfony\\Bundle\\FrameworkBundle\\Test\\WebTestCase;
+use App\Entity\CmsModuleState;
+use App\Entity\Video;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bundle\FrameworkBundle\KernelBrowser;
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 final class VideoDiscoveryEntryNavigationTest extends WebTestCase
 {
@@ -60,7 +60,7 @@ final class VideoDiscoveryEntryNavigationTest extends WebTestCase
             ->setDescription('Video used in the discovery entry test.')
             ->setSourceType(Video::SOURCE_YOUTUBE)
             ->setSourceUrl('https://www.youtube.com/watch?v=abcdefghijk')
-            ->setPublishedAt(new \\DateTimeImmutable('-1 hour'))
+            ->setPublishedAt(new \DateTimeImmutable('-1 hour'))
             ->setEnabled(true);
 
         $this->entityManager($client)->persist($video);
