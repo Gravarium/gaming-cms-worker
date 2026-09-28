@@ -10,10 +10,10 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-28T23:34:33Z",
+  "published_at": "2026-09-28 23:47:58 UTC",
   "summary": {
     "total_remaining_worker_tasks": 174,
-    "completed_worker_prs_awaiting_trusted_review": 320,
+    "completed_worker_prs_awaiting_trusted_review": 319,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
@@ -54446,7 +54446,7 @@
       "package_id": "WCP-596",
       "title": "Let members update their guild event signups from the personal portal",
       "risk": "medium",
-      "execution_state": "worker_complete_awaiting_trusted_review",
+      "execution_state": "trusted_integrated",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -54541,7 +54541,7 @@
         ]
       },
       "claimed_on": "2026-09-28T22:31:14.116Z",
-      "claim_state": "locked_until_trusted_resolution",
+      "claim_state": "released_after_trusted_integration",
       "active_base_branch": "main",
       "active_base_sha": "a19ed4bcf1203bba69de472613805d5fcdc978e6",
       "active_head": "d8e85ed7e9cd14e2c6c04cec139660a463bcfff4",
@@ -54556,7 +54556,7 @@
         "src/GuildEventSignupPortal/Templates/guild_event_signup_portal/index.html.twig",
         "tests/Controller/GuildEventSignupPortalControllerTest.php"
       ],
-      "next_action": "Await independent Trusted review; keep the claim locked until Trusted explicitly integrates, cancels or transfers it.",
+      "next_action": "WCP-596 is integrated through Trusted PR #191. Exact-head Trusted CI, post-merge Main CI, sanitized Worker sync and post-sync Worker CI all passed; claim released.",
       "last_checkpoint_at": "2026-09-28T22:38:33.499Z",
       "last_verified_push_at": "2026-09-28T22:38:33.499Z",
       "worker_pr": 390,
@@ -54627,6 +54627,28 @@
           "Updates preserve private notes and attendance evidence; invalid values show an error and foreign/inactive signup updates are rejected.",
           "Existing Gaming gate, private/no-store/noindex response, withdrawal, pagination and visibility coverage remains in place."
         ]
+      },
+      "trusted_resolution": {
+        "status": "integrated",
+        "worker_pr": 390,
+        "worker_head": "d8e85ed7e9cd14e2c6c04cec139660a463bcfff4",
+        "worker_exact_head_ci_run_id": 36493648419,
+        "worker_exact_head_ci_result": "success",
+        "trusted_pr": 191,
+        "trusted_pr_head": "dab3e0214305d5ebf665321b1222e99a89f9e0c0",
+        "trusted_pr_ci_run_id": 36498530489,
+        "trusted_pr_ci_result": "success",
+        "trusted_merge_sha": "97dbf12b0868fd8bdc01e621e39e8c7a71e100e0",
+        "final_trusted_main_sha": "97dbf12b0868fd8bdc01e621e39e8c7a71e100e0",
+        "final_trusted_main_ci_run_id": 36499085141,
+        "final_trusted_main_ci_result": "success",
+        "worker_sync_run_id": 36499085190,
+        "worker_sync_result": "success",
+        "sanitized_worker_sync_sha": "eb235b1aaa0335349b283872f820f24f8b7da90b",
+        "worker_ci_run_id": 36499103725,
+        "worker_ci_after_sync_result": "success",
+        "resolved_at": "2026-09-28 23:47:58 UTC",
+        "trusted_import_note": "Trusted PR #191 selectively imported only the three reviewed WCP-596 source paths plus Trusted documentation. Exact-head CI, Main CI, sanitized sync and Worker CI all passed; no schema or migration was added."
       }
     },
     {
