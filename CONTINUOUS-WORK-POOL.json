@@ -10,7 +10,7 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-27T22:29:43.529Z",
+  "published_at": "2026-09-28T19:25:42.849Z",
   "summary": {
     "total_remaining_worker_tasks": 175,
     "completed_worker_prs_awaiting_trusted_review": 314,
@@ -51394,6 +51394,116 @@
       ],
       "final_head": "f6a322584bfe5f5e4dbbff52ea08d89c75be2528",
       "completed_on": "2026-09-28T19:18:26.304Z"
+    },
+    {
+      "priority": 585,
+      "package_id": "WCP-585",
+      "title": "Subscribe to the public game release calendar",
+      "risk": "low",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-585-game-release-calendar-feed-g1",
+      "suggested_branch": "feature/wcp-585-game-release-calendar-feed-g1",
+      "base_branch": "main",
+      "base_sha": "ebfeb6032548002846b9352ddb2b06b909b461c0",
+      "objective": "Add a public, bounded iCalendar subscription feed for upcoming releases of enabled games. Reuse existing public game and release contracts read-only; preserve existing release calendar routes, filters and Game Catalogue behavior.",
+      "allowed_paths": [
+        "src/Controller/PublicGameReleaseCalendarFeedController.php",
+        "src/GameReleaseFeed/IcalendarBuilder.php",
+        "src/Repository/GameReleaseCalendarFeedRepository.php",
+        "tests/Controller/PublicGameReleaseCalendarFeedTest.php",
+        "tests/GameReleaseFeed/IcalendarBuilderTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "CONTINUOUS-WORKER.md",
+        "CONTINUOUS-WORK-POOL.json",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "templates/",
+        "src/Entity/",
+        "src/Gaming/Catalogue/",
+        "src/Controller/GameCatalogue/",
+        "src/Controller/AdminGameCatalogue/",
+        "src/Repository/GameCatalogue/",
+        "src/Form/GameCatalogue/"
+      ],
+      "deliverables": [
+        "GET /games/releases/calendar.ics returns a valid text/calendar feed for a bounded upcoming time window and a fixed maximum number of public releases.",
+        "Only future announced or delayed releases whose catalogue entry and game are enabled are included; cancelled, released, past, disabled and out-of-window rows are excluded.",
+        "Calendar events have stable UIDs, UTC timestamps, useful game/platform/region summaries, safe iCalendar escaping and 75-octet UTF-8-safe line folding.",
+        "The route is read-only, requires Gaming to be enabled, and returns an empty but valid calendar when no public upcoming releases exist.",
+        "Existing game release pages, filters, catalogue repository, schema and migrations remain unchanged."
+      ],
+      "tests": [
+        "Functional positive and negative coverage for enabled/public releases, disabled games/entries, statuses, time window, empty feed, response headers, route method and disabled Gaming.",
+        "Verify escaping prevents CR/LF property injection, UTF-8 remains valid after folding, physical lines meet the iCalendar octet limit, and the feed never exceeds the bounded release cap.",
+        "PHPStan level 8 and complete exact-head Worker CI including PostgreSQL 18 migration-chain validation."
+      ],
+      "completion_report": [
+        "Exact sanitized main base SHA, final Worker HEAD SHA, changed-path list and Worker PR URL/state.",
+        "Feed inclusion/exclusion, time-window and result-bound evidence.",
+        "iCalendar escaping, folding, stable UID, MIME/cache headers and module-gate tests.",
+        "Exact-head PHPStan, PHPUnit, JavaScript and PostgreSQL 18 CI results.",
+        "Confirm no entity, schema, migration, existing calendar-route or catalogue-repository changes."
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-Trusted-review-and-exact-head-CI",
+        "public-feed-contains-only-enabled-public-game-release-metadata",
+        "feed-is-read-only-bounded-and-fails-closed-when-Gaming-is-disabled",
+        "no-change-to-existing-release-calendar-routes-filters-or-catalogue-repository",
+        "no-schema-or-migration-change",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "no-direct-Trusted-integration-or-deployment",
+        "no-private-runtime-or-sensitive-data"
+      ],
+      "proposal_kind": "worker_only",
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "ebfeb6032548002846b9352ddb2b06b909b461c0",
+      "proposal_dependency_evidence": [],
+      "collision_check": {
+        "compared_against": "Fresh continuous/work-pool-v4 pool blob 2678a6907cd88f315e9f11127c24279b0a1c9466; sanitized Worker main ebfeb6032548002846b9352ddb2b06b909b461c0; all published active and claim-locked allowed paths; main tree.",
+        "result": "No proposed file path overlaps any published task or existing file. FCP-056's locked Game Catalogue paths are specifically avoided: this adds a root-level public controller, a separate feed formatter/repository namespace, and dedicated Controller/ feed tests; it only reads existing public GameRelease/GameCatalogue contracts. No template, existing catalogue repository/controller, entity, schema or migration is changed.",
+        "paths": [
+          "src/Controller/PublicGameReleaseCalendarFeedController.php",
+          "src/GameReleaseFeed/IcalendarBuilder.php",
+          "src/Repository/GameReleaseCalendarFeedRepository.php",
+          "tests/Controller/PublicGameReleaseCalendarFeedTest.php",
+          "tests/GameReleaseFeed/IcalendarBuilderTest.php"
+        ],
+        "observed_nonblocking_path_hits": [
+          "Reads existing GameRelease, GameCatalogueEntry, Game, GamePlatform and app_game_catalogue_show contracts without editing their owned paths."
+        ]
+      },
+      "published_at": "2026-09-28T19:25:42.849Z",
+      "claimed_on": "2026-09-28T19:25:42.849Z",
+      "claim_state": "active",
+      "active_base_branch": "main",
+      "active_base_sha": "ebfeb6032548002846b9352ddb2b06b909b461c0",
+      "active_head": "ebfeb6032548002846b9352ddb2b06b909b461c0",
+      "resume_branch": "feature/wcp-585-game-release-calendar-feed-g1",
+      "branch_heads": {
+        "claim_branch": "ebfeb6032548002846b9352ddb2b06b909b461c0",
+        "feature_branch": "ebfeb6032548002846b9352ddb2b06b909b461c0"
+      },
+      "last_observed_head": "ebfeb6032548002846b9352ddb2b06b909b461c0",
+      "last_checkpoint_at": "2026-09-28T19:25:42.849Z",
+      "checkpoint_paths": [],
+      "next_action": "Implement the bounded public iCalendar release feed within the five allowlisted paths; keep all existing catalogue/calendar files unchanged.",
+      "last_verified_push_at": "2026-09-28T19:25:42.849Z"
     }
   ],
   "recovery_queue": [],
