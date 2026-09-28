@@ -64,12 +64,17 @@ final class GuildEventSignupPortalControllerTest extends WebTestCase
             $em->flush();
             $client->loginUser($user);
 
-            $client->request('GET', self::INDEX_PATH);
+            $crawler = $client->request('GET', self::INDEX_PATH);
 
             self::assertResponseIsSuccessful();
             $this->assertPrivateHeaders($client);
             self::assertSelectorTextContains('body', 'Visible signup '.$suffix);
             self::assertSelectorTextContains('body', 'Owned '.$suffix);
+            $ownSignupId = $this->requiredId($signups[0]->getId());
+            $updateForm = sprintf('form[action="%s/%d/update"]', self::INDEX_PATH, $ownSignupId);
+            self::assertCount(1, $crawler->filter($updateForm));
+            self::assertSame('going', $crawler->filter($updateForm.' select[name="response"] option[selected]')->attr('value'));
+            self::assertSame('other', $crawler->filter($updateForm.' select[name="role"] option[selected]')->attr('value'));
             self::assertStringNotContainsString('Foreign signup '.$suffix, (string) $client->getResponse()->getContent());
             self::assertStringNotContainsString('Inactive signup '.$suffix, (string) $client->getResponse()->getContent());
             self::assertStringNotContainsString('Disabled guild signup '.$suffix, (string) $client->getResponse()->getContent());
@@ -201,6 +206,234 @@ final class GuildEventSignupPortalControllerTest extends WebTestCase
         }
     }
 
+    public function testOwnerCanUpdateResponseAndRoleWithoutChangingPrivateNoteOrAttendanceEvidence(): void
+    {
+        $client = static::createClient();
+        $moduleSnapshot = $this->moduleSnapshot($client);
+        $this->enableGaming($client);
+
+        $em = $this->em($client);
+        $fixtures = [];
+        try {
+            $suffix = bin2hex(random_bytes(5));
+            $user = $this->user($em, $suffix);
+            $game = $this->game($em, $suffix);
+            $guild = $this->guild($em, $game, $suffix);
+            $member = (new GuildMember())->setGuild($guild)->setUser($user)->setCharacterName('Owner '.$suffix);
+            $event = $this->event($guild, 'Editable event '.$suffix)->setMaxParticipants(3);
+            $privateNote = 'A private strategy note '.$suffix;
+            $signup = (new GuildEventSignup())
+                ->setEvent($event)
+                ->setMember($member)
+                ->setUser($user)
+                ->setResponse(GuildEventSignup::GOING)
+                ->setRole('damage')
+                ->setNote($privateNote)
+                ->markAttendance(GuildEventSignup::ATTENDANCE_EXCUSED, $user);
+            $fixtures = [$user, $game, $guild, $member, $event, $signup];
+            foreach ($fixtures as $fixture) {
+                $em->persist($fixture);
+            }
+            $em->flush();
+            $signupId = $this->requiredId($signup->getId());
+            $attendanceAt = $signup->getAttendanceCheckedAt();
+            $client->loginUser($user);
+
+            $crawler = $client->request('GET', self::INDEX_PATH);
+            $formSelector = sprintf('form[action="%s/%d/update"]', self::INDEX_PATH, $signupId);
+            self::assertCount(1, $crawler->filter($formSelector));
+            self::assertSame('going', $crawler->filter($formSelector.' select[name="response"] option[selected]')->attr('value'));
+            self::assertSame('damage', $crawler->filter($formSelector.' select[name="role"] option[selected]')->attr('value'));
+            self::assertStringNotContainsString($privateNote, (string) $client->getResponse()->getContent());
+            $token = $crawler->filter($formSelector.' input[name="_token"]')->attr('value');
+
+            $client->request('POST', self::INDEX_PATH.'/'.$signupId.'/update', [
+                '_token' => $token,
+                'response' => GuildEventSignup::MAYBE,
+                'role' => 'support',
+            ]);
+
+            self::assertResponseRedirects(self::INDEX_PATH);
+            $this->assertPrivateHeaders($client);
+            $crawler = $client->followRedirect();
+            self::assertResponseIsSuccessful();
+            $this->assertPrivateHeaders($client);
+            self::assertSelectorTextContains('body', 'Deine Anmeldung wurde aktualisiert.');
+            self::assertStringNotContainsString($privateNote, (string) $client->getResponse()->getContent());
+
+            $em->clear();
+            $storedSignup = $em->find(GuildEventSignup::class, $signupId);
+            self::assertInstanceOf(GuildEventSignup::class, $storedSignup);
+            self::assertSame(GuildEventSignup::MAYBE, $storedSignup->getResponse());
+            self::assertSame('support', $storedSignup->getRole());
+            self::assertSame($privateNote, $storedSignup->getNote());
+            self::assertSame(GuildEventSignup::ATTENDANCE_EXCUSED, $storedSignup->getAttendance());
+            self::assertSame($user->getId(), $storedSignup->getAttendanceCheckedBy()?->getId());
+            self::assertSame($attendanceAt?->getTimestamp(), $storedSignup->getAttendanceCheckedAt()?->getTimestamp());
+        } finally {
+            $this->cleanupFixtures($em, $fixtures);
+            $this->restoreModuleSnapshot($client, $moduleSnapshot);
+        }
+    }
+
+    public function testUpdatePlacesSignupOnWaitlistWhenCapacityIsFull(): void
+    {
+        $client = static::createClient();
+        $moduleSnapshot = $this->moduleSnapshot($client);
+        $this->enableGaming($client);
+
+        $em = $this->em($client);
+        $fixtures = [];
+        try {
+            $suffix = bin2hex(random_bytes(5));
+            $user = $this->user($em, $suffix);
+            $otherUser = $this->user($em, $suffix.'-other');
+            $game = $this->game($em, $suffix);
+            $guild = $this->guild($em, $game, $suffix);
+            $member = (new GuildMember())->setGuild($guild)->setUser($user)->setCharacterName('Owner '.$suffix);
+            $otherMember = (new GuildMember())->setGuild($guild)->setUser($otherUser)->setCharacterName('Other '.$suffix);
+            $event = $this->event($guild, 'Full event '.$suffix)->setMaxParticipants(1);
+            $signup = (new GuildEventSignup())
+                ->setEvent($event)
+                ->setMember($member)
+                ->setUser($user)
+                ->setResponse(GuildEventSignup::MAYBE)
+                ->setRole('damage')
+                ->setNote('Keep this note.');
+            $confirmedSignup = (new GuildEventSignup())
+                ->setEvent($event)
+                ->setMember($otherMember)
+                ->setUser($otherUser)
+                ->setResponse(GuildEventSignup::GOING);
+            $fixtures = [$user, $otherUser, $game, $guild, $member, $otherMember, $event, $signup, $confirmedSignup];
+            foreach ($fixtures as $fixture) {
+                $em->persist($fixture);
+            }
+            $em->flush();
+            $signupId = $this->requiredId($signup->getId());
+            $client->loginUser($user);
+
+            $crawler = $client->request('GET', self::INDEX_PATH);
+            $formSelector = sprintf('form[action="%s/%d/update"]', self::INDEX_PATH, $signupId);
+            $token = $crawler->filter($formSelector.' input[name="_token"]')->attr('value');
+            $client->request('POST', self::INDEX_PATH.'/'.$signupId.'/update', [
+                '_token' => $token,
+                'response' => GuildEventSignup::GOING,
+                'role' => 'heal',
+            ]);
+
+            self::assertResponseRedirects(self::INDEX_PATH);
+            $client->followRedirect();
+            self::assertSelectorTextContains('body', 'Der Termin ist voll. Du stehst auf der Warteliste.');
+
+            $em->clear();
+            $storedSignup = $em->find(GuildEventSignup::class, $signupId);
+            self::assertInstanceOf(GuildEventSignup::class, $storedSignup);
+            self::assertSame(GuildEventSignup::WAITLIST, $storedSignup->getResponse());
+            self::assertSame('heal', $storedSignup->getRole());
+            self::assertSame('Keep this note.', $storedSignup->getNote());
+            self::assertSame(GuildEventSignup::GOING, $em->find(GuildEventSignup::class, $this->requiredId($confirmedSignup->getId()))?->getResponse());
+            self::assertSame(1, $em->getRepository(GuildEventSignup::class)->count([
+                'event' => $this->requiredId($event->getId()),
+                'response' => GuildEventSignup::GOING,
+            ]));
+        } finally {
+            $this->cleanupFixtures($em, $fixtures);
+            $this->restoreModuleSnapshot($client, $moduleSnapshot);
+        }
+    }
+
+    public function testUpdateRejectsInvalidCsrfForeignSignupAndInactiveMembership(): void
+    {
+        $client = static::createClient();
+        $moduleSnapshot = $this->moduleSnapshot($client);
+        $this->enableGaming($client);
+
+        $em = $this->em($client);
+        $fixtures = [];
+        try {
+            $suffix = bin2hex(random_bytes(5));
+            $user = $this->user($em, $suffix);
+            $otherUser = $this->user($em, $suffix.'-other');
+            $game = $this->game($em, $suffix);
+            $guild = $this->guild($em, $game, $suffix);
+            $member = (new GuildMember())->setGuild($guild)->setUser($user)->setCharacterName('Owner '.$suffix);
+            $foreignMember = (new GuildMember())->setGuild($guild)->setUser($otherUser)->setCharacterName('Foreign '.$suffix);
+            $event = $this->event($guild, 'Editable event '.$suffix);
+            $signup = (new GuildEventSignup())->setEvent($event)->setMember($member)->setUser($user)->setResponse(GuildEventSignup::GOING)->setRole('tank');
+            $foreignSignup = (new GuildEventSignup())->setEvent($event)->setMember($foreignMember)->setUser($otherUser)->setResponse(GuildEventSignup::GOING)->setRole('damage');
+            $fixtures = [$user, $otherUser, $game, $guild, $member, $foreignMember, $event, $signup, $foreignSignup];
+            foreach ($fixtures as $fixture) {
+                $em->persist($fixture);
+            }
+            $em->flush();
+            $signupId = $this->requiredId($signup->getId());
+            $foreignSignupId = $this->requiredId($foreignSignup->getId());
+            $client->loginUser($user);
+
+            $crawler = $client->request('GET', self::INDEX_PATH);
+            $formSelector = sprintf('form[action="%s/%d/update"]', self::INDEX_PATH, $signupId);
+            $token = $crawler->filter($formSelector.' input[name="_token"]')->attr('value');
+            $request = $client->getRequest();
+            self::assertInstanceOf(Request::class, $request);
+            $requestStack = $client->getContainer()->get(RequestStack::class);
+            $requestStack->push($request);
+            try {
+                $tokenManager = $client->getContainer()->get(CsrfTokenManagerInterface::class);
+                $foreignToken = $tokenManager->getToken('guild-event-signup-update-'.$foreignSignupId)->getValue();
+                $request->getSession()->save();
+            } finally {
+                $requestStack->pop();
+            }
+
+            $client->request('POST', self::INDEX_PATH.'/'.$signupId.'/update', [
+                '_token' => 'invalid',
+                'response' => GuildEventSignup::MAYBE,
+                'role' => 'heal',
+            ]);
+            self::assertResponseStatusCodeSame(403);
+
+            $client->request('POST', self::INDEX_PATH.'/'.$signupId.'/update', [
+                '_token' => $token,
+                'response' => ['maybe'],
+                'role' => 'heal',
+            ]);
+            self::assertResponseRedirects(self::INDEX_PATH);
+            $client->followRedirect();
+            self::assertSelectorTextContains('body', 'Bitte wähle eine gültige Antwort und Rolle.');
+
+            $em->clear();
+            self::assertSame(GuildEventSignup::GOING, $em->find(GuildEventSignup::class, $signupId)?->getResponse());
+            self::assertSame('tank', $em->find(GuildEventSignup::class, $signupId)?->getRole());
+
+            $client->request('POST', self::INDEX_PATH.'/'.$foreignSignupId.'/update', [
+                '_token' => $foreignToken,
+                'response' => GuildEventSignup::MAYBE,
+                'role' => 'support',
+            ]);
+            self::assertResponseStatusCodeSame(404);
+            self::assertSame(GuildEventSignup::GOING, $em->find(GuildEventSignup::class, $foreignSignupId)?->getResponse());
+            self::assertSame('damage', $em->find(GuildEventSignup::class, $foreignSignupId)?->getRole());
+
+            $managedMember = $em->find(GuildMember::class, $this->requiredId($member->getId()));
+            self::assertInstanceOf(GuildMember::class, $managedMember);
+            $managedMember->setActive(false);
+            $em->flush();
+            $client->request('POST', self::INDEX_PATH.'/'.$signupId.'/update', [
+                '_token' => $token,
+                'response' => GuildEventSignup::MAYBE,
+                'role' => 'heal',
+            ]);
+            self::assertResponseStatusCodeSame(404);
+            $em->clear();
+            self::assertSame(GuildEventSignup::GOING, $em->find(GuildEventSignup::class, $signupId)?->getResponse());
+            self::assertSame('tank', $em->find(GuildEventSignup::class, $signupId)?->getRole());
+        } finally {
+            $this->cleanupFixtures($em, $fixtures);
+            $this->restoreModuleSnapshot($client, $moduleSnapshot);
+        }
+    }
+
     public function testPaginationIsStableBoundedAndRejectsMalformedPages(): void
     {
         $client = static::createClient();
@@ -230,14 +463,14 @@ final class GuildEventSignupPortalControllerTest extends WebTestCase
 
             $firstPage = $client->request('GET', self::INDEX_PATH);
             self::assertResponseIsSuccessful();
-            self::assertCount(25, $firstPage->filter(sprintf('form[action^="%s/"]', self::INDEX_PATH)));
+            self::assertCount(25, $firstPage->filter('form[action$="/withdraw"]'));
             self::assertSelectorTextContains('body', 'Event 00 '.$suffix);
             self::assertSelectorTextContains('body', 'Event 24 '.$suffix);
             self::assertStringNotContainsString('Event 25 '.$suffix, (string) $client->getResponse()->getContent());
 
             $secondPage = $client->request('GET', self::INDEX_PATH.'?page=2');
             self::assertResponseIsSuccessful();
-            self::assertCount(2, $secondPage->filter(sprintf('form[action^="%s/"]', self::INDEX_PATH)));
+            self::assertCount(2, $secondPage->filter('form[action$="/withdraw"]'));
             self::assertSelectorTextContains('body', 'Event 25 '.$suffix);
             self::assertSelectorTextContains('body', 'Event 26 '.$suffix);
 
