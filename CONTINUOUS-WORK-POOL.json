@@ -10,7 +10,7 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-28T22:57:52.018Z",
+  "published_at": "2026-09-28T23:00:35.625Z",
   "summary": {
     "total_remaining_worker_tasks": 175,
     "completed_worker_prs_awaiting_trusted_review": 318,
@@ -54647,7 +54647,8 @@
         "src/Controller/PublicGuildRoleNeedApplicationController.php",
         "src/GuildRoleNeedsWidget/Templates/widget/public_guild_role_needs.html.twig",
         "src/GuildRoleNeedApplication/Templates/guild_role_need_application/apply.html.twig",
-        "tests/Controller/PublicGuildRoleNeedApplicationFlowTest.php"
+        "tests/Controller/PublicGuildRoleNeedApplicationFlowTest.php",
+        "config/packages/guild_role_need_application.yaml"
       ],
       "forbidden_paths": [
         "private/",
@@ -54665,7 +54666,6 @@
         ".worker-snapshot",
         ".github/workflows/",
         "migrations/",
-        "config/",
         "src/Entity/",
         "src/Repository/",
         "src/Form/",
@@ -54720,12 +54720,13 @@
       "published_at": "2026-09-28T22:57:52.018Z",
       "collision_check": {
         "compared_against": "Fresh continuous/work-pool-v4 @ 32da7c0d41d452a31cfb4fb78fd700fc42c40082; Worker main exact HEAD a19ed4bcf1203bba69de472613805d5fcdc978e6; all current active and claim-locked path allowlists; live WCP-597 branch and PR searches before claim.",
-        "result": "No overlap with any worker_in_progress or claim-locked path. The closest same-feature predecessors are locked WCP-359 (src/Form/GuildApplicationType.php), WCP-384 (src/Controller/GamingController.php), and WCP-541 (templates/gaming/apply.html.twig); all are explicitly excluded. This proposal uses a separate controller and template, and reuses the existing form class without editing it. WCP-511, WCP-588, WCP-589, WCP-591 and WCP-596 paths are also disjoint. The dormant FCP-072 templates/ allowance does not cover the module-local src/GuildRoleNeedsWidget template and is blocked by FCP-035.",
+        "result": "No overlap with any worker_in_progress or claim-locked path. The closest same-feature predecessors are locked WCP-359 (src/Form/GuildApplicationType.php), WCP-384 (src/Controller/GamingController.php), and WCP-541 (templates/gaming/apply.html.twig); all are explicitly excluded. This proposal uses a separate controller and template, and reuses the existing form class without editing it. WCP-511, WCP-588, WCP-589, WCP-591 and WCP-596 paths are also disjoint. The dormant FCP-072 templates/ allowance does not cover the module-local src/GuildRoleNeedsWidget template and is blocked by FCP-035. A fresh exact-path check confirmed the new module Twig registration file config/packages/guild_role_need_application.yaml has no active or claim-locked path overlap.",
         "paths": [
           "src/Controller/PublicGuildRoleNeedApplicationController.php",
           "src/GuildRoleNeedsWidget/Templates/widget/public_guild_role_needs.html.twig",
           "src/GuildRoleNeedApplication/Templates/guild_role_need_application/apply.html.twig",
-          "tests/Controller/PublicGuildRoleNeedApplicationFlowTest.php"
+          "tests/Controller/PublicGuildRoleNeedApplicationFlowTest.php",
+          "config/packages/guild_role_need_application.yaml"
         ],
         "observed_nonblocking_path_hits": [
           "WCP-359 owns src/Form/GuildApplicationType.php; WCP-597 only uses that class.",
@@ -54749,10 +54750,11 @@
         "src/Controller/PublicGuildRoleNeedApplicationController.php",
         "src/GuildRoleNeedsWidget/Templates/widget/public_guild_role_needs.html.twig",
         "src/GuildRoleNeedApplication/Templates/guild_role_need_application/apply.html.twig",
-        "tests/Controller/PublicGuildRoleNeedApplicationFlowTest.php"
+        "tests/Controller/PublicGuildRoleNeedApplicationFlowTest.php",
+        "config/packages/guild_role_need_application.yaml"
       ],
       "next_action": "Implement the disjoint focused application route and template, connect each public role-need widget row to it, persist the selected public need in existing application answers, and add focused positive/negative controller tests.",
-      "last_checkpoint_at": "2026-09-28T22:57:52.018Z",
+      "last_checkpoint_at": "2026-09-28T23:00:35.625Z",
       "last_verified_push_at": "2026-09-28T22:57:52.018Z"
     }
   ],
