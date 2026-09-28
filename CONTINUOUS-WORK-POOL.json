@@ -10,7 +10,7 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-28T19:25:42.849Z",
+  "published_at": "2026-09-28T19:35:10.507Z",
   "summary": {
     "total_remaining_worker_tasks": 175,
     "completed_worker_prs_awaiting_trusted_review": 314,
@@ -51554,6 +51554,120 @@
       "checkpoint_paths": [],
       "next_action": "Implement the bounded public iCalendar release feed within the five allowlisted paths; keep all existing catalogue/calendar files unchanged.",
       "last_verified_push_at": "2026-09-28T19:25:42.849Z"
+    },
+    {
+      "priority": 586,
+      "package_id": "WCP-586",
+      "title": "Show public competition standings in Page Builder",
+      "risk": "medium",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-586-competition-standings-widget-g1",
+      "suggested_branch": "feature/wcp-586-competition-standings-widget-g1",
+      "base_branch": "main",
+      "base_sha": "ebfeb6032548002846b9352ddb2b06b909b461c0",
+      "objective": "Add a Page Builder widget that surfaces recent public competition standings. Extract the existing leaderboard calculation into a shared read query used by both the public leaderboard page and the widget. The widget includes only public competitions for enabled games, confirmed match results, and active participants; it shows a bounded number of competitions and the top three standings per competition.",
+      "allowed_paths": [
+        "src/Controller/PublicCompetitionLeaderboardController.php",
+        "src/Widget/CompetitionStandingsWidgetProvider.php",
+        "src/Widget/CompetitionStandings/CompetitionStandingsQuery.php",
+        "src/Widget/CompetitionStandings/Templates/widget/competition_standings.html.twig",
+        "tests/Controller/PublicCompetitionLeaderboardTest.php",
+        "tests/Widget/CompetitionStandingsWidgetProviderTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "CONTINUOUS-WORKER.md",
+        "CONTINUOUS-WORK-POOL.json",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "src/Entity/Competition/",
+        "src/Repository/Competition/",
+        "src/Gaming/Competition/",
+        "src/Controller/Competition/",
+        "src/Widget/WidgetRegistry.php",
+        "src/Widget/CompetitionParticipationQuery.php",
+        "config/services.yaml",
+        "templates/"
+      ],
+      "deliverables": [
+        "Register gaming.competition-standings through the existing WidgetProvider auto-tagging and Gaming module gate without editing the shared registry or service configuration.",
+        "Reuse the same deterministic points, wins, score-difference, score-for and participant-name ordering on the existing public leaderboard page and in the widget.",
+        "Render up to four eligible public competitions and up to three active participants for each, linking each panel to the existing public leaderboard.",
+        "Exclude private competitions, disabled games, unconfirmed match results and inactive participants; render names and values through Twig auto-escaping.",
+        "Keep the feature read-only with no schema, entity, repository, migration or account changes."
+      ],
+      "tests": [
+        "Existing public leaderboard regressions continue to cover confirmed-result aggregation, private visibility and Gaming-disabled behavior after the calculation is shared.",
+        "Widget integration coverage verifies automatic discovery, standings and links, excludes private/disabled competitions and unconfirmed scores, and confirms the Gaming module gate.",
+        "PHPStan level 8 and complete exact-head Worker CI including PostgreSQL 18 migration-chain validation."
+      ],
+      "completion_report": [
+        "Exact sanitized main base SHA, final Worker HEAD SHA, complete changed-path list and Worker PR URL/state.",
+        "Shared leaderboard ordering and confirmed-result filtering with test evidence.",
+        "Widget discovery, public visibility, enabled-game and module-gate behavior.",
+        "Exact-head PHPStan, PHPUnit, JavaScript and PostgreSQL 18 CI results.",
+        "Confirm no entity, schema, repository, migration or shared registry changes."
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-Trusted-review-and-exact-head-CI",
+        "widget-shows-only-public-competition-data-for-enabled-games",
+        "only-confirmed-results-from-active-participants-contribute-to-standings",
+        "preserve-existing-leaderboard-visibility-and-Gaming-module-gate",
+        "no-schema-or-migration-change",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "no-direct-Trusted-integration-or-deployment",
+        "no-private-runtime-or-sensitive-data"
+      ],
+      "proposal_kind": "worker_only",
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "ebfeb6032548002846b9352ddb2b06b909b461c0",
+      "proposal_dependency_evidence": [],
+      "collision_check": {
+        "compared_against": "Fresh continuous/work-pool-v4 blob 5b34eef49ee3f3c3db605c1bd79d952aefa9054f; sanitized Worker main ebfeb6032548002846b9352ddb2b06b909b461c0; all published unclaimed, active and claim-locked allowed paths; current main tree.",
+        "result": "No allowed-path overlap with any published task or existing main file. WCP-582 owns separate personal competition registration widget/query paths; WCP-585 owns game-release feed paths; FCP-061's broad src/Gaming/Competition path is avoided. The feature reads existing competition repositories and entities but changes none of those contracts, migrations, shared widget registry or global service configuration.",
+        "paths": [
+          "src/Controller/PublicCompetitionLeaderboardController.php",
+          "src/Widget/CompetitionStandingsWidgetProvider.php",
+          "src/Widget/CompetitionStandings/CompetitionStandingsQuery.php",
+          "src/Widget/CompetitionStandings/Templates/widget/competition_standings.html.twig",
+          "tests/Controller/PublicCompetitionLeaderboardTest.php",
+          "tests/Widget/CompetitionStandingsWidgetProviderTest.php"
+        ],
+        "observed_nonblocking_path_hits": [
+          "Reads existing public-bracket, participant and match repositories/entities read-only.",
+          "Uses the existing app_competition_leaderboard route; no new route, write or schema change."
+        ]
+      },
+      "published_at": "2026-09-28T19:35:10.507Z",
+      "claimed_on": "2026-09-28T19:35:10.507Z",
+      "claim_state": "active",
+      "active_base_branch": "main",
+      "active_base_sha": "ebfeb6032548002846b9352ddb2b06b909b461c0",
+      "active_head": "ebfeb6032548002846b9352ddb2b06b909b461c0",
+      "resume_branch": "feature/wcp-586-competition-standings-widget-g1",
+      "branch_heads": {
+        "claim_branch": "ebfeb6032548002846b9352ddb2b06b909b461c0",
+        "feature_branch": "ebfeb6032548002846b9352ddb2b06b909b461c0"
+      },
+      "last_observed_head": "ebfeb6032548002846b9352ddb2b06b909b461c0",
+      "last_checkpoint_at": "2026-09-28T19:35:10.507Z",
+      "checkpoint_paths": [],
+      "next_action": "Implement the shared competition standings query, refactor the existing leaderboard controller to use it, add the bounded Page Builder widget and functional coverage only within the six allowlisted paths.",
+      "last_verified_push_at": "2026-09-28T19:35:10.507Z"
     }
   ],
   "recovery_queue": [],
