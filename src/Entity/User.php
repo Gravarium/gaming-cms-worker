@@ -21,6 +21,9 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[UniqueEntity(fields: ['email'], message: 'Diese E-Mail-Adresse wird bereits verwendet.')]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
+    private const MAX_DISPLAY_NAME_BYTES = 320;
+    private const MAX_DISPLAY_NAME_LENGTH = 80;
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -181,7 +184,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function getRecoveryCodeHashes(): array { return $this->twoFactorRecoveryCodes; }
     public function eraseCredentials(): void {}
     public function getDisplayName(): string { return $this->displayName; }
-    public function setDisplayName(string $displayName): self { $this->displayName = trim($displayName); return $this; }
+    public function setDisplayName(string $displayName): self
+    {
+        if (!mb_check_encoding($displayName, 'UTF-8') || str_contains($displayName, "\0")) {
+            throw new \InvalidArgumentException('Display name is invalid or exceeds the allowed length.');
+        }
+
+        $normalizedDisplayName = trim($displayName);
+        $this->assertDisplayNameColumnBoundary($normalizedDisplayName);
+        $this->displayName = $normalizedDisplayName;
+
+        return $this;
+    }
     public function isActive(): bool { return $this->isActive; }
     public function setActive(bool $isActive): self { $this->isActive = $isActive; return $this; }
     public function getLockedUntil(): ?\DateTimeImmutable { return $this->lockedUntil; }
@@ -205,4 +219,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function getLastSeenAt(): ?\DateTimeImmutable { return $this->lastSeenAt; }
     public function markSeen(): self { $this->lastSeenAt = new \DateTimeImmutable(); return $this; }
     public function getCreatedAt(): \DateTimeImmutable { return $this->createdAt; }
+
+    private function assertDisplayNameColumnBoundary(string $displayName): void
+    {
+        if (strlen($displayName) > self::MAX_DISPLAY_NAME_BYTES || mb_strlen($displayName, 'UTF-8') > self::MAX_DISPLAY_NAME_LENGTH) {
+            throw new \InvalidArgumentException('Display name is invalid or exceeds the allowed length.');
+        }
+    }
+
 }

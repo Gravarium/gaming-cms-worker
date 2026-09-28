@@ -21,9 +21,9 @@ final class AccountMailerTest extends TestCase
 {
     public function testVerificationUsesLocalFallbackWithBoundedEscapedDisplayName(): void
     {
-        $user = (new User())
-            ->setEmail('player@example.test')
-            ->setDisplayName('<'.str_repeat('A', 100));
+        $user = (new User())->setEmail('player@example.test');
+        // Model a legacy value so the mailer still proves its escaping and output bound.
+        (new \ReflectionProperty(User::class, 'displayName'))->setValue($user, '<'.str_repeat('A', 100));
         $urls = $this->createMock(UrlGeneratorInterface::class);
         $urls->expects(self::once())
             ->method('generate')

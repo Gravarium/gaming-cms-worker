@@ -59,7 +59,21 @@ class GuildTeam
         return $this;
     }
     public function getName(): string { return $this->name; }
-    public function setName(string $name): self { $this->name = trim($name); return $this; }
+    public function setName(string $name): self
+    {
+        if (!mb_check_encoding($name, 'UTF-8') || str_contains($name, "\0")) {
+            throw new \InvalidArgumentException('Guild team name must be valid UTF-8 without NUL bytes.');
+        }
+
+        $normalizedName = trim($name);
+        if (strlen($normalizedName) > 480 || mb_strlen($normalizedName, 'UTF-8') > 120) {
+            throw new \InvalidArgumentException('Guild team name must fit its 120-character storage column.');
+        }
+
+        $this->name = $normalizedName;
+
+        return $this;
+    }
     public function getDescription(): ?string { return $this->description; }
     public function setDescription(?string $value): self { $value = $value === null ? null : trim($value); $this->description = $value === '' ? null : $value; return $this; }
     public function getColor(): ?string { return $this->color; }

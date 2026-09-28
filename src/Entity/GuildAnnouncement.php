@@ -41,7 +41,21 @@ class GuildAnnouncement
     public function getAuthor(): ?User { return $this->author; }
     public function setAuthor(?User $author): self { $this->author = $author; return $this; }
     public function getTitle(): string { return $this->title; }
-    public function setTitle(string $title): self { $this->title = trim($title); return $this; }
+    public function setTitle(string $title): self
+    {
+        if (!mb_check_encoding($title, 'UTF-8') || str_contains($title, "\0")) {
+            throw new \InvalidArgumentException('Guild announcement title must be valid UTF-8 without NUL bytes.');
+        }
+
+        $normalizedTitle = trim($title);
+        if (strlen($normalizedTitle) > 720 || mb_strlen($normalizedTitle, 'UTF-8') > 180) {
+            throw new \InvalidArgumentException('Guild announcement title must fit its 180-character storage column.');
+        }
+
+        $this->title = $normalizedTitle;
+
+        return $this;
+    }
     public function getBody(): string { return $this->body; }
     public function setBody(string $body): self { $this->body = trim($body); return $this; }
     public function isPinned(): bool { return $this->pinned; }
