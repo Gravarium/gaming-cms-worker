@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-28T22:00:31.247Z",
+  "published_at": "2026-09-28T22:06:53.114Z",
   "summary": {
-    "total_remaining_worker_tasks": 175,
+    "total_remaining_worker_tasks": 176,
     "completed_worker_prs_awaiting_trusted_review": 316,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-594 PR #388 is ready for independent Trusted review on exact green HEAD d71e34b493987ae5ffd99c331a01ebaf216a46fb (CI #983/run 36489180581); its claim remains locked. Re-evaluate the five unclaimed dependency-blocked FCPs, then select the next independent functional module gap.",
+    "next_required_action": "WCP-595 is claimed from exact green WCP-557 HEAD b6188d22db5b6266d7b3fda49bcbc0e1382e3f3b (PR #351, CI #889). Complete and validate the search-to-genre-directory reader journey. WCP-594 remains ready for Trusted review on green exact HEAD d71e34b493987ae5ffd99c331a01ebaf216a46fb.",
     "composition_preparable": 0,
     "immediately_actionable": 33,
     "must_continue": true
@@ -54255,6 +54255,116 @@
           "Existing schedule tests continue to cover disabled Gaming, hidden guilds and non-public event visibility."
         ]
       }
+    },
+    {
+      "priority": 595,
+      "package_id": "WCP-595",
+      "title": "Connect public game search to genre browsing",
+      "risk": "low",
+      "execution_state": "worker_in_progress",
+      "dependencies": [
+        "WCP-557"
+      ],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-595-game-search-genre-directory-entry-g1",
+      "suggested_branch": "feature/wcp-595-game-search-genre-directory-entry-g1",
+      "base_branch": "feature/wcp-557-public-game-genre-directory-g1",
+      "base_sha": "b6188d22db5b6266d7b3fda49bcbc0e1382e3f3b",
+      "objective": "Complete the public Game Catalogue discovery journey. The public game search page currently lets readers search by genre text but does not link to the public genre directory introduced by the exact green WCP-557 proposal. Add a prominent, accessible genre-browsing link that is present before a query and with empty results. Keep the existing Gaming availability gates on search and genre browsing.",
+      "allowed_paths": [
+        "templates/game_search/index.html.twig",
+        "tests/Controller/PublicGameCatalogueGenreDirectoryNavigationTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/",
+        "src/Controller/",
+        "src/GameGenreDirectory/",
+        "tests/Controller/PublicGameCatalogueSearchTest.php",
+        "templates/game_genre_directory/"
+      ],
+      "deliverables": [
+        "The public game-search page exposes a labeled action to browse the public genre directory even when no search has been submitted or results are empty.",
+        "An integration test follows the rendered link to the genre index and confirms its expected heading.",
+        "Existing directory and search tests continue to cover their Gaming gates and public visibility behavior.",
+        "No search query semantics, game catalog visibility rules, schema or permission behavior changes."
+      ],
+      "tests": [
+        "Focused PublicGameCatalogueGenreDirectoryNavigationTest checks the route URL, follows the link and confirms the public genre index renders.",
+        "Existing PublicGameGenreDirectoryControllerTest covers public filters and disabled-Gaming behavior; existing search tests cover the search Gaming gate.",
+        "Full exact-head Worker CI, including PHPStan, Twig/container checks and PostgreSQL 18 migration-chain validation."
+      ],
+      "completion_report": [
+        "Exact proposal predecessor HEAD and CI evidence, final Worker HEAD, changed paths and Worker PR URL/state.",
+        "Evidence that readers can move from public game search to public genre browsing.",
+        "Exact-head focused tests, PHPStan, PHPUnit and PostgreSQL 18 results.",
+        "Any remaining Game Catalogue discovery gaps."
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-Trusted-review-and-exact-head-CI",
+        "preserve-existing-Gaming-module-availability-and-public-game-visibility-gates",
+        "no-schema-or-migration-change",
+        "no-private-runtime-or-sensitive-data",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "no-direct-Trusted-integration-or-deployment"
+      ],
+      "proposal_kind": "worker_only",
+      "proposal_base_branch": "feature/wcp-557-public-game-genre-directory-g1",
+      "proposal_base_sha": "b6188d22db5b6266d7b3fda49bcbc0e1382e3f3b",
+      "proposal_dependency_evidence": [
+        {
+          "package_id": "WCP-557",
+          "worker_pr": "https://github.com/Gravarium/gaming-cms-worker/pull/351",
+          "exact_head": "b6188d22db5b6266d7b3fda49bcbc0e1382e3f3b",
+          "ci_run_id": 36335398176,
+          "ci_run_number": 889,
+          "ci_result": "success",
+          "pr_state": "open",
+          "draft": false,
+          "mergeable": true
+        }
+      ],
+      "published_at": "2026-09-28T22:06:53.114Z",
+      "collision_check": {
+        "compared_against": "Fresh continuous/work-pool-v4 pool blob d708b02bd262e912d0d1ac05a8fda9b39a3b202d; current sanitized Worker main a19ed4bcf1203bba69de472613805d5fcdc978e6; all worker_in_progress and claim-locked paths; WCP-557 PR #351 exact head and CI #889; WCP-595 branch search and open PR search; candidate source template on WCP-557 predecessor.",
+        "result": "No overlap with worker_in_progress or claim-locked paths. The exact locked WCP-571 file tests/Controller/PublicGameCatalogueSearchTest.php is explicitly excluded; WCP-595 adds a distinct integration test file. WCP-557 is an exact green predecessor (PR #351, CI run 36335398176) and its genre route is available at the proposal base. Its nine owned paths are not changed. The PR is open, ready and mergeable. The source search template is from Trusted-integrated WCP-531 with its claim released.",
+        "paths": [
+          "templates/game_search/index.html.twig",
+          "tests/Controller/PublicGameCatalogueGenreDirectoryNavigationTest.php"
+        ],
+        "observed_nonblocking_path_hits": [
+          "WCP-571 owns tests/Controller/PublicGameCatalogueSearchTest.php; WCP-595 avoids that locked path and uses a new test file.",
+          "FCP-072 includes broad templates/ allowance but is unclaimed and blocked by FCP-035; WCP-595 must recheck before any future claim."
+        ]
+      },
+      "claim_state": "locked_until_trusted_resolution",
+      "claimed_on": "2026-09-28T22:06:53.114Z",
+      "active_base_branch": "feature/wcp-557-public-game-genre-directory-g1",
+      "active_base_sha": "b6188d22db5b6266d7b3fda49bcbc0e1382e3f3b",
+      "active_head": "b6188d22db5b6266d7b3fda49bcbc0e1382e3f3b",
+      "resume_branch": "feature/wcp-595-game-search-genre-directory-entry-g1",
+      "branch_heads": {
+        "claim_branch": "b6188d22db5b6266d7b3fda49bcbc0e1382e3f3b",
+        "feature_branch": "b6188d22db5b6266d7b3fda49bcbc0e1382e3f3b"
+      },
+      "last_observed_head": "b6188d22db5b6266d7b3fda49bcbc0e1382e3f3b",
+      "last_checkpoint_at": "2026-09-28T22:06:53.114Z",
+      "last_verified_push_at": "2026-09-28T22:06:53.114Z",
+      "checkpoint_paths": [],
+      "next_action": "Implement the public game-search to genre-directory link and its click-through test on resume_branch; keep this claim locked until Trusted resolution."
     }
   ],
   "recovery_queue": [],
