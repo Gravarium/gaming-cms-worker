@@ -17,7 +17,7 @@
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "Trusted coordinator: selectively review WCP-596/PR #390 and transferred WCP-597/PR #391; keep both claims locked until exact Trusted integration results are recorded.",
+    "next_required_action": "WCP-598 is claimed on exact Worker main eb235b1aaa0335349b283872f820f24f8b7da90b to make every open moderation report and hidden comment reachable through independent paginated queues.",
     "composition_preparable": 0,
     "immediately_actionable": 33,
     "must_continue": true
@@ -54840,6 +54840,115 @@
         "previous_worker_chat_stopped_by_owner": true,
         "claim_remains_locked": true
       }
+    },
+    {
+      "priority": 598,
+      "package_id": "WCP-598",
+      "title": "Paginate the content moderation report and hidden comment queues",
+      "risk": "medium",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-598-community-moderation-queue-pages-g1",
+      "suggested_branch": "feature/wcp-598-community-moderation-queue-pages-g1",
+      "base_branch": "main",
+      "base_sha": "eb235b1aaa0335349b283872f820f24f8b7da90b",
+      "objective": "Finish the existing Content Community Moderation workflow for large installations. The admin moderation controller currently renders only the first 100 unresolved reports and first 100 hidden comments, with no navigation or total count; older items become unreachable in the operator UI. Add independent, deterministic pagination and counts for both queues, preserve the current content permission/module gates, decision and restore forms, audit trail, and private responses. Do not change entities, schema, migrations, or unrelated discussion behavior.",
+      "allowed_paths": [
+        "src/CommunityInteraction/ContentInteractionQuery.php",
+        "src/Controller/AdminContentModerationController.php",
+        "src/CommunityInteraction/Templates/admin/moderation.html.twig",
+        "tests/Controller/AdminContentModerationWorkflowTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "CONTINUOUS-WORKER.md",
+        "CONTINUOUS-WORK-POOL.json",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "src/Entity/",
+        "src/Repository/",
+        "src/Form/",
+        "src/Community/Interaction/",
+        "tests/Entity/",
+        "tests/Form/"
+      ],
+      "deliverables": [
+        "The open/reviewing report queue shows a page size of 25, total count, current page, and previous/next navigation.",
+        "The hidden-comment restore queue has its own independent page, count, and navigation; changing one queue page preserves the other queue page.",
+        "Both query paths return deterministic pages ordered by their existing timestamps plus stable IDs, constrain all results to content interactions, and expose items beyond the current 100-row cap.",
+        "Malformed page parameters safely default to page 1 and out-of-range pages clamp to the final available page.",
+        "Existing content authorization, module-off behavior, CSRF, moderation decisions, restore actions, audit records, and private/no-store behavior remain intact; no schema or migration change."
+      ],
+      "tests": [
+        "Controller integration test seeds more than 100 open reports and hidden comments and verifies the final page is reachable in both queues.",
+        "Tests verify independent queue pagination, counterpart page preservation, total counts, deterministic navigation, malformed parameter fallback, and out-of-range clamping.",
+        "Existing permission, module-disabled, CSRF, decision, restore, audit, and privacy workflow checks remain green.",
+        "Complete exact-head Worker CI including PHPStan, Twig/container/AssetMapper checks, and PostgreSQL 18 migration-chain validation."
+      ],
+      "completion_report": [
+        "Exact sanitized Worker base, final feature HEAD, changed path list, Worker PR URL/state.",
+        "Evidence moderators can reach and decide every paginated open report and restore any paginated hidden content comment.",
+        "Focused large-queue, navigation, invalid-page, permission/module/CSRF/audit tests and exact-head full CI.",
+        "Remaining limitations in moderation queue search, filtering, or report retention."
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-Trusted-review-and-exact-head-CI",
+        "preserve-content-permission-and-module-availability-gates",
+        "preserve-moderation-CSRF-decision-restore-and-audit-behavior",
+        "preserve-private-no-store-admin-response",
+        "no-schema-or-migration-change",
+        "no-security-test-phpstan-CI-auth-CSRF-validation-recovery-rollback-or-upload-protection-weakening",
+        "no-direct-Trusted-integration-or-deployment"
+      ],
+      "proposal_kind": "worker_only",
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "eb235b1aaa0335349b283872f820f24f8b7da90b",
+      "proposal_dependency_evidence": [],
+      "published_at": "2026-09-28T23:40:56.575Z",
+      "collision_check": {
+        "compared_against": "Fresh continuous/work-pool-v4 @ e6d775d31fa3b994fa33983b528a83af48cd067b; Worker main @ eb235b1aaa0335349b283872f820f24f8b7da90b; fresh WCP-598 branch and PR searches; all current active and claim-locked path allowlists with directory-prefix overlap.",
+        "result": "No overlap with any active or claim-locked path; all five prepared FCPs remain dependency-blocked and no composition is preparable.",
+        "paths": [
+          "src/CommunityInteraction/ContentInteractionQuery.php",
+          "src/Controller/AdminContentModerationController.php",
+          "src/CommunityInteraction/Templates/admin/moderation.html.twig",
+          "tests/Controller/AdminContentModerationWorkflowTest.php"
+        ],
+        "observed_nonblocking_path_hits": []
+      },
+      "claimed_on": "2026-09-28T23:40:56.575Z",
+      "claim_state": "active",
+      "active_base_branch": "main",
+      "active_base_sha": "eb235b1aaa0335349b283872f820f24f8b7da90b",
+      "active_head": "eb235b1aaa0335349b283872f820f24f8b7da90b",
+      "resume_branch": "feature/wcp-598-community-moderation-queue-pages-g1",
+      "branch_heads": {
+        "claim_branch": "eb235b1aaa0335349b283872f820f24f8b7da90b",
+        "feature_branch": "eb235b1aaa0335349b283872f820f24f8b7da90b"
+      },
+      "last_observed_head": "eb235b1aaa0335349b283872f820f24f8b7da90b",
+      "checkpoint_paths": [
+        "src/CommunityInteraction/ContentInteractionQuery.php",
+        "src/Controller/AdminContentModerationController.php",
+        "src/CommunityInteraction/Templates/admin/moderation.html.twig",
+        "tests/Controller/AdminContentModerationWorkflowTest.php"
+      ],
+      "next_action": "Implement independent pagination for the open-report and hidden-comment moderation queues with clear page counts, accessible previous/next links, and focused large-queue tests.",
+      "last_checkpoint_at": "2026-09-28T23:40:56.575Z",
+      "last_verified_push_at": "2026-09-28T23:40:56.575Z"
     }
   ],
   "recovery_queue": [],
