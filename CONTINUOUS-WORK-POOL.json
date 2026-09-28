@@ -10,7 +10,7 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-28T20:06:02.653Z",
+  "published_at": "2026-09-28T20:06:43.556Z",
   "summary": {
     "total_remaining_worker_tasks": 174,
     "completed_worker_prs_awaiting_trusted_review": 315,
@@ -52912,14 +52912,14 @@
       "claim_state": "active",
       "active_base_branch": "main",
       "active_base_sha": "c3c7b14066d9f8b32925eb4381e30b6794f21027",
-      "active_head": "0304a7a2b45078be84925ca17fcfd28e708a1447",
+      "active_head": "20d089234fc2ccee12363616b161932fb29f254a",
       "branch_heads": {
         "claim_branch": "c3c7b14066d9f8b32925eb4381e30b6794f21027",
-        "feature_branch": "0304a7a2b45078be84925ca17fcfd28e708a1447"
+        "feature_branch": "20d089234fc2ccee12363616b161932fb29f254a"
       },
-      "last_observed_head": "0304a7a2b45078be84925ca17fcfd28e708a1447",
-      "last_checkpoint_at": "2026-09-28T19:59:40.868Z",
-      "last_verified_push_at": "2026-09-28T19:59:40.868Z",
+      "last_observed_head": "20d089234fc2ccee12363616b161932fb29f254a",
+      "last_checkpoint_at": "2026-09-28T20:06:43.556Z",
+      "last_verified_push_at": "2026-09-28T20:06:43.556Z",
       "checkpoint_paths": [
         "config/packages/download_release_metadata_templates.yaml",
         "src/Downloads/Templates/admin/upload.html.twig",
@@ -52931,10 +52931,10 @@
         "tests/Downloads/DownloadControllerTest.php"
       ],
       "resume_branch": "feature/wcp-587-download-release-metadata-g1",
-      "next_action": "Monitor exact-head Worker CI run #967 / 36476161450 on 0304a7a2b45078be84925ca17fcfd28e708a1447; diagnose failures and fix only within the eight allowed paths.",
+      "next_action": "Monitor exact-head Worker CI run #969 / 36476815238 on 20d089234fc2ccee12363616b161932fb29f254a; repair any failure on the same branch and only within allowed paths.",
       "worker_pr": 382,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/382",
-      "worker_pr_head": "0304a7a2b45078be84925ca17fcfd28e708a1447",
+      "worker_pr_head": "20d089234fc2ccee12363616b161932fb29f254a",
       "worker_pr_base_branch": "main",
       "worker_pr_base_sha": "2f8179fe129c3071b68757f03a3e7099311179ef",
       "worker_pr_state": "draft",
@@ -52952,15 +52952,25 @@
       "draft_pr": true,
       "ci_result": "in_progress",
       "last_ci_result": "in_progress",
-      "ci_run_id": 36476161450,
-      "last_ci_run_id": 36476161450,
+      "ci_run_id": 36476815238,
+      "last_ci_run_id": 36476815238,
       "ci_attempts": [
         {
           "run_id": 36476161450,
           "run_number": 967,
           "head": "0304a7a2b45078be84925ca17fcfd28e708a1447",
           "base": "2f8179fe129c3071b68757f03a3e7099311179ef",
-          "result": "in_progress",
+          "result": "failure",
+          "validation_pr": 382,
+          "conclusion": "failure",
+          "diagnosis": "CI #967 found optional textarea fields were submitted as null into string DTO properties, causing a 500 in upload error paths; also the disabled-module test removed a detached state after a second request reboot. Explicit empty_data values and stable test-client state now address both."
+        },
+        {
+          "run_id": 36476815238,
+          "run_number": 969,
+          "head": "20d089234fc2ccee12363616b161932fb29f254a",
+          "base": "2f8179fe129c3071b68757f03a3e7099311179ef",
+          "result": "queued",
           "validation_pr": 382
         }
       ]
