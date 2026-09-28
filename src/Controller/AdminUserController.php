@@ -43,7 +43,7 @@ final class AdminUserController extends AbstractController
     #[Route('', name: 'app_admin_user_index', methods: ['GET'])]
     public function index(Request $request): Response
     {
-        $query = trim($request->query->getString('q'));
+        $query = mb_substr(trim($request->query->getString('q')), 0, 190);
         $state = $request->query->getString('state');
         $state = in_array($state, ['active', 'locked', 'unverified'], true) ? $state : null;
         return $this->render('admin/user/index.html.twig', [
