@@ -1,0 +1,20 @@
+{% extends 'base.html.twig' %}
+{% block title %}Download-Version hochladen{% endblock %}
+{% block body %}
+<main class="content-shell">
+    <h1>Version für {{ package.title }} hochladen</h1>
+    {{ form_start(form, {
+        action: path('app_admin_download_upload', {id: package.id}),
+        method: 'POST',
+        attr: {enctype: 'multipart/form-data'}
+    }) }}
+        <input type="hidden" name="_token" value="{{ csrf_token('download-upload-' ~ package.id) }}">
+        {{ form_errors(form) }}
+        {{ form_row(form.version) }}
+        {{ form_row(form.file) }}
+        {{ form_row(form.compatibility) }}
+        {{ form_row(form.changelog) }}
+        {{ form_row(form.submit) }}
+    {{ form_end(form) }}
+</main>
+{% endblock %}

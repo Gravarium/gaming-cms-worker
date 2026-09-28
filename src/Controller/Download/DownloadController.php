@@ -55,7 +55,7 @@ final class DownloadController extends AbstractController
             throw $this->createNotFoundException();
         }
 
-        return $this->render('download/show.html.twig', [
+        return $this->render('@DownloadReleaseMetadata/download/show.html.twig', [
             'package' => $package,
             'versions' => $this->versions->forPackage($package),
         ]);
