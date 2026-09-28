@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-28T19:58:56.469Z",
+  "published_at": "2026-09-28T20:00:15.787Z",
   "summary": {
     "total_remaining_worker_tasks": 174,
     "completed_worker_prs_awaiting_trusted_review": 315,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-588 is claimed on the exact green WCP-585 Worker head; implement the bounded game-release RSS feed. Do not modify the foreign active WCP-586 or WCP-587 claims.",
+    "next_required_action": "WCP-582 corrections are checkpointed at 97d01ddc9c74c086d4aba346630e3788100a73c2; validate this exact HEAD with the complete Worker CI on draft PR #379.",
     "composition_preparable": 0,
     "immediately_actionable": 31,
     "must_continue": true
@@ -51652,16 +51652,16 @@
       "claim_state": "active",
       "active_base_branch": "fix/fcp-061-phpstan-g1",
       "active_base_sha": "ec6bb200affc3e5a46d416e98f7a1b0621c38ded",
-      "active_head": "33a4773fdc466f23a7daa12dd3db66546dfd56a1",
+      "active_head": "97d01ddc9c74c086d4aba346630e3788100a73c2",
       "resume_branch": "feature/wcp-582-social-competition-dashboard-g1",
       "branch_heads": {
         "claim_branch": "ec6bb200affc3e5a46d416e98f7a1b0621c38ded",
-        "feature_branch": "33a4773fdc466f23a7daa12dd3db66546dfd56a1"
+        "feature_branch": "97d01ddc9c74c086d4aba346630e3788100a73c2"
       },
-      "last_observed_head": "33a4773fdc466f23a7daa12dd3db66546dfd56a1",
-      "last_checkpoint_at": "2026-09-27T22:29:43.529Z",
-      "last_verified_push_at": "2026-09-27T22:29:43.529Z",
-      "next_action": "Open the exact-head draft PR against fix/fcp-061-phpstan-g1, run complete Worker CI, and repair any failing check without changing protections.",
+      "last_observed_head": "97d01ddc9c74c086d4aba346630e3788100a73c2",
+      "last_checkpoint_at": "2026-09-28T20:00:15.787Z",
+      "last_verified_push_at": "2026-09-28T20:00:15.787Z",
+      "next_action": "Validate the corrected exact feature HEAD 97d01ddc9c74c086d4aba346630e3788100a73c2 with the complete Worker CI on draft PR #379; fix any remaining failures.",
       "checkpoint_paths": [
         "config/packages/competition_participation_widget.yaml",
         "src/CompetitionParticipation/Templates/account/dashboard.html.twig",
@@ -51672,7 +51672,13 @@
         "src/Widget/MyCompetitionsWidgetProvider.php",
         "tests/Controller/CompetitionParticipationDashboardTest.php",
         "tests/Widget/MyCompetitionsWidgetTest.php"
-      ]
+      ],
+      "last_ci_attempt": {
+        "head": "33a4773fdc466f23a7daa12dd3db66546dfd56a1",
+        "run_id": 36472553213,
+        "result": "failure",
+        "summary": "PHP/Symfony static checks and PostgreSQL migrations passed; PHPUnit exposed widget Twig data-context mismatch, test CSRF session setup, and fixture cleanup against reset Doctrine managers. Corrected in the current checkpoint."
+      }
     },
     {
       "priority": 583,
