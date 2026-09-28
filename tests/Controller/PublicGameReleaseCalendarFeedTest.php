@@ -71,7 +71,9 @@ final class PublicGameReleaseCalendarFeedTest extends WebTestCase
             self::assertResponseIsSuccessful();
             self::assertSame('text/calendar; charset=utf-8', $client->getResponse()->headers->get('Content-Type'));
             self::assertSame('inline; filename="game-releases.ics"', $client->getResponse()->headers->get('Content-Disposition'));
-            self::assertSame('public, max-age=300', $client->getResponse()->headers->get('Cache-Control'));
+            $cacheControl = $client->getResponse()->headers->get('Cache-Control') ?? '';
+            self::assertStringContainsString('private', $cacheControl);
+            self::assertStringNotContainsString('public', $cacheControl);
             self::assertSame('nosniff', $client->getResponse()->headers->get('X-Content-Type-Options'));
 
             $body = $this->responseContent($client);
