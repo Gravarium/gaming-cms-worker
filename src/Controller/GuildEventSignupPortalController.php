@@ -144,7 +144,7 @@ final class GuildEventSignupPortalController extends AbstractController
         }
 
         $user = $this->currentUser();
-        $candidate = $this->signups->upcomingSignupForUser($signupId, $user, new \\DateTimeImmutable());
+        $candidate = $this->signups->upcomingSignupForUser($signupId, $user, new \DateTimeImmutable());
         if (!$candidate instanceof GuildEventSignup || !$candidate->getEvent() instanceof GuildEvent) {
             throw $this->createNotFoundException();
         }
@@ -163,7 +163,7 @@ final class GuildEventSignupPortalController extends AbstractController
             $entityManager->refresh($member, LockMode::PESSIMISTIC_READ);
             $entityManager->refresh($guild, LockMode::PESSIMISTIC_READ);
 
-            $now = new \\DateTimeImmutable();
+            $now = new \DateTimeImmutable();
             $ownsSignup = $candidate->getUser()?->getId() === $user->getId()
                 && $member->getUser()?->getId() === $user->getId()
                 && $member->isActive()
