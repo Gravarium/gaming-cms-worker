@@ -10,7 +10,7 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-28T22:31:14.116Z",
+  "published_at": "2026-09-28T22:32:47.290Z",
   "summary": {
     "total_remaining_worker_tasks": 175,
     "completed_worker_prs_awaiting_trusted_review": 317,
@@ -54457,7 +54457,6 @@
       "objective": "Complete the existing member event signup lifecycle. The personal upcoming-signups portal currently displays each member's event and response with a withdraw action, but no way to change an existing active response or role without re-finding the guild event. Add an owner-scoped update form in that portal that lets the signed-in member update the existing signup's response and role, preserves the private note and attendance evidence, and applies the same serialized event-capacity rule as the existing guild portal signup flow. Reuse the existing user/member/event visibility query, CSRF, audit, module gate, and private response behavior; no schema or migration change.",
       "allowed_paths": [
         "src/Controller/GuildEventSignupPortalController.php",
-        "src/Repository/GuildEventSignupPortalRepository.php",
         "src/GuildEventSignupPortal/Templates/guild_event_signup_portal/index.html.twig",
         "tests/Controller/GuildEventSignupPortalControllerTest.php"
       ],
@@ -54529,10 +54528,9 @@
       "published_at": "2026-09-28T22:31:14.116Z",
       "collision_check": {
         "compared_against": "Fresh continuous/work-pool-v4 blob 8ca3bbccda969134892411cad22e33bbeef51784; Worker main exact head a19ed4bcf1203bba69de472613805d5fcdc978e6; all 376 current task allowlists including worker_in_progress and claim-locked tasks; live WCP-596 branch and PR searches before reservation.",
-        "result": "No exact or prefix overlap with any active or claim-locked task path. WCP-511, WCP-588, WCP-589 and WCP-591 are disjoint. The dormant FCP-072 templates/ allowance does not cover this feature-local src/GuildEventSignupPortal/Templates path and remains blocked by FCP-035. This flow uses existing Worker main signup, membership and capacity code; no unresolved FCP dependency, schema change or new shared template is required. WCP-596 branch searches and PR search were empty before the claim branch was created.",
+        "result": "No exact or prefix overlap with any active or claim-locked task path. WCP-511, WCP-588, WCP-589 and WCP-591 are disjoint. The dormant FCP-072 templates/ allowance does not cover this feature-local src/GuildEventSignupPortal/Templates path and remains blocked by FCP-035. This flow uses existing Worker main signup, membership and capacity code; no unresolved FCP dependency, schema change or new shared template is required. WCP-596 branch searches and PR search were empty before the claim branch was created. The editor reuses the existing owner-scoped repository query, so WCP-596 was narrowed to the controller, feature-local template and controller test.",
         "paths": [
           "src/Controller/GuildEventSignupPortalController.php",
-          "src/Repository/GuildEventSignupPortalRepository.php",
           "src/GuildEventSignupPortal/Templates/guild_event_signup_portal/index.html.twig",
           "tests/Controller/GuildEventSignupPortalControllerTest.php"
         ],
@@ -54555,12 +54553,11 @@
       "last_observed_head": "a19ed4bcf1203bba69de472613805d5fcdc978e6",
       "checkpoint_paths": [
         "src/Controller/GuildEventSignupPortalController.php",
-        "src/Repository/GuildEventSignupPortalRepository.php",
         "src/GuildEventSignupPortal/Templates/guild_event_signup_portal/index.html.twig",
         "tests/Controller/GuildEventSignupPortalControllerTest.php"
       ],
       "next_action": "Implement the owner-scoped response and role editor in the personal upcoming-signups portal; preserve notes and attendance; keep the existing locked capacity policy; add focused positive/negative tests and run exact-head Worker CI.",
-      "last_checkpoint_at": "2026-09-28T22:31:14.116Z",
+      "last_checkpoint_at": "2026-09-28T22:32:47.290Z",
       "last_verified_push_at": "2026-09-28T22:31:14.116Z"
     }
   ],
