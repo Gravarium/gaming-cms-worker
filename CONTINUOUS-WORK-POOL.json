@@ -10,7 +10,7 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-28T19:47:53.776Z",
+  "published_at": "2026-09-28T19:50:53.543Z",
   "summary": {
     "total_remaining_worker_tasks": 175,
     "completed_worker_prs_awaiting_trusted_review": 314,
@@ -51450,7 +51450,7 @@
       "package_id": "WCP-585",
       "title": "Subscribe to the public game release calendar",
       "risk": "low",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -51540,7 +51540,7 @@
       },
       "published_at": "2026-09-28T19:25:42.849Z",
       "claimed_on": "2026-09-28T19:25:42.849Z",
-      "claim_state": "active",
+      "claim_state": "locked_until_trusted_resolution",
       "active_base_branch": "main",
       "active_base_sha": "ebfeb6032548002846b9352ddb2b06b909b461c0",
       "active_head": "aeff4ea30a268306cdfb52b5b266ddc17a5d343e",
@@ -51550,7 +51550,7 @@
         "feature_branch": "aeff4ea30a268306cdfb52b5b266ddc17a5d343e"
       },
       "last_observed_head": "aeff4ea30a268306cdfb52b5b266ddc17a5d343e",
-      "last_checkpoint_at": "2026-09-28T19:44:48.437Z",
+      "last_checkpoint_at": "2026-09-28T19:50:53.543Z",
       "checkpoint_paths": [
         "src/Controller/PublicGameReleaseCalendarFeedController.php",
         "src/GameReleaseFeed/IcalendarBuilder.php",
@@ -51558,9 +51558,80 @@
         "tests/Controller/PublicGameReleaseCalendarFeedTest.php",
         "tests/GameReleaseFeed/IcalendarBuilderTest.php"
       ],
-      "next_action": "Validate the exact post-fix PR #380 HEAD and complete Worker CI; resolve any remaining failures without weakening checks.",
-      "last_verified_push_at": "2026-09-28T19:44:48.437Z",
-      "worker_pr": 380
+      "next_action": "Await Trusted review of ready-for-review PR #380; continue autonomous Worker scheduling without merging or deploying.",
+      "last_verified_push_at": "2026-09-28T19:50:53.543Z",
+      "worker_pr": 380,
+      "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/380",
+      "worker_pr_state": "ready_for_review",
+      "pr_state": "open",
+      "draft_pr": false,
+      "worker_pr_base_branch": "main",
+      "worker_pr_base_sha": "ebfeb6032548002846b9352ddb2b06b909b461c0",
+      "worker_pr_changed_paths": [
+        "src/Controller/PublicGameReleaseCalendarFeedController.php",
+        "src/GameReleaseFeed/IcalendarBuilder.php",
+        "src/Repository/GameReleaseCalendarFeedRepository.php",
+        "tests/Controller/PublicGameReleaseCalendarFeedTest.php",
+        "tests/GameReleaseFeed/IcalendarBuilderTest.php"
+      ],
+      "ci_result": "success",
+      "last_ci_result": "success",
+      "ci_run_id": 36474325466,
+      "last_ci_run_id": 36474325466,
+      "last_ci_run_number": 960,
+      "ci_validation_pr": 380,
+      "final_head": "aeff4ea30a268306cdfb52b5b266ddc17a5d343e",
+      "completed_on": "2026-09-28T19:50:53.543Z",
+      "ci_attempts": [
+        {
+          "run_id": 36473465585,
+          "run_number": 956,
+          "head": "b4784e96c439c656e8bd2e3f328a92c8b341e689",
+          "base": "ebfeb6032548002846b9352ddb2b06b909b461c0",
+          "result": "failure",
+          "validation_pr": 380,
+          "status": "completed",
+          "conclusion": "failure",
+          "summary": "PHPStan, static checks and PostgreSQL migration validation passed; one controller test expected shared public cache while the existing response policy enforced private cache. Corrected to preserve the private policy."
+        },
+        {
+          "run_id": 36474156921,
+          "run_number": 958,
+          "head": "4c0f0e68feb74ce25677b3c1ffd2142ef4403e7f",
+          "base": "ebfeb6032548002846b9352ddb2b06b909b461c0",
+          "result": "cancelled",
+          "validation_pr": 380,
+          "status": "completed",
+          "conclusion": "cancelled",
+          "summary": "Superseded by a newer push; no validation conclusion."
+        },
+        {
+          "run_id": 36474257185,
+          "run_number": 959,
+          "head": "57cb5d0bee0353a81c951c3d8be3b67b063121b3",
+          "base": "ebfeb6032548002846b9352ddb2b06b909b461c0",
+          "result": "cancelled",
+          "validation_pr": 380,
+          "status": "completed",
+          "conclusion": "cancelled",
+          "summary": "Superseded by the final fixture-cleanup push; no validation conclusion."
+        },
+        {
+          "run_id": 36474325466,
+          "run_number": 960,
+          "head": "aeff4ea30a268306cdfb52b5b266ddc17a5d343e",
+          "base": "ebfeb6032548002846b9352ddb2b06b909b461c0",
+          "result": "success",
+          "validation_pr": 380,
+          "status": "completed",
+          "conclusion": "success",
+          "summary": "Exact-head Worker CI passed: PHP/Symfony analysis, static checks, security helper tests and full 1,276-test application suite passed; PostgreSQL 18 complete migration-chain validation passed.",
+          "jobs": {
+            "php_symfony": "success",
+            "postgres_18": "success"
+          }
+        }
+      ]
     },
     {
       "priority": 586,
