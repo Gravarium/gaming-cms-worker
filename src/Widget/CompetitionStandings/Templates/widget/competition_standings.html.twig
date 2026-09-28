@@ -1,0 +1,24 @@
+{% if data.items is not empty %}
+<div class="competition-standings-widget" aria-label="Competition-Ranglisten">
+    {% for item in data.items %}
+        <section class="panel">
+            <h3>
+                <a href="{{ path('app_competition_leaderboard', {id: item.competition.id}) }}">{{ item.competition.name }}</a>
+            </h3>
+            <p class="muted">{{ item.competition.game.name }}</p>
+            <ol>
+                {% for standing in item.standings %}
+                    <li>
+                        <span>{{ standing.participant.name }}</span>
+                        <span>{{ standing.points }} Punkte</span>
+                    </li>
+                {% endfor %}
+            </ol>
+        </section>
+    {% endfor %}
+</div>
+{% else %}
+<div class="panel competition-standings-widget" role="status">
+    <p class="muted">Noch keine bestätigten Competition-Ergebnisse verfügbar.</p>
+</div>
+{% endif %}
