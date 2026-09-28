@@ -4,8 +4,9 @@
 {% block body %}
 <header class="topbar">
     <a class="brand" href="{{ path('app_home') }}">{% if site.logoPath %}<img class="site-logo" src="{{ site.logoPath }}" alt="{{ site.siteName }}">{% else %}{{ site.siteName }}{% endif %}</a>
-    <nav class="top-actions">
+    <nav class="top-actions" aria-label="Videonavigation">
         <a href="{{ path('app_video_index') }}">Videos</a>
+        <a href="{{ path('app_video_discovery_index') }}">Video-Entdeckung</a>
         <a href="{{ path('app_news_index') }}">News</a>
     </nav>
 </header>
