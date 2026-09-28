@@ -51189,7 +51189,7 @@
       "package_id": "WCP-584",
       "title": "Manage personal upcoming guild event registrations",
       "risk": "medium",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -51294,7 +51294,7 @@
       },
       "published_at": "2026-09-28T18:34:54.389Z",
       "claimed_on": "2026-09-28T18:34:54.389Z",
-      "claim_state": "active",
+      "claim_state": "locked_until_trusted_resolution",
       "active_base_branch": "main",
       "active_base_sha": "ebfeb6032548002846b9352ddb2b06b909b461c0",
       "active_head": "f6a322584bfe5f5e4dbbff52ea08d89c75be2528",
@@ -51316,13 +51316,13 @@
         "tests/Controller/GuildEventSignupPortalControllerTest.php",
         "tests/Widget/MyGuildEventSignupsWidgetProviderTest.php"
       ],
-      "next_action": "Await exact-head Worker CI #954 on f6a322584bfe5f5e4dbbff52ea08d89c75be2528; diagnose any remaining failure only within the nine allowed paths.",
+      "next_action": "Await Trusted review of ready-for-review PR #378; continue autonomous Worker scheduling without merging or deploying.",
       "last_verified_push_at": "2026-09-28T19:10:54.426Z",
       "worker_pr": 378,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/378",
-      "worker_pr_state": "draft",
+      "worker_pr_state": "ready_for_review",
       "pr_state": "open",
-      "draft_pr": true,
+      "draft_pr": false,
       "worker_pr_base_branch": "main",
       "worker_pr_base_sha": "ebfeb6032548002846b9352ddb2b06b909b461c0",
       "worker_pr_changed_paths": [
@@ -51336,8 +51336,8 @@
         "tests/Controller/GuildEventSignupPortalControllerTest.php",
         "tests/Widget/MyGuildEventSignupsWidgetProviderTest.php"
       ],
-      "ci_result": "in_progress",
-      "last_ci_result": "in_progress",
+      "ci_result": "success",
+      "last_ci_result": "success",
       "ci_run_id": 36470301704,
       "last_ci_run_id": 36470301704,
       "last_ci_run_number": 954,
@@ -51381,13 +51381,19 @@
           "run_number": 954,
           "head": "f6a322584bfe5f5e4dbbff52ea08d89c75be2528",
           "base": "ebfeb6032548002846b9352ddb2b06b909b461c0",
-          "result": "in_progress",
+          "result": "success",
           "validation_pr": 378,
-          "status": "in_progress",
-          "conclusion": null,
-          "summary": "Retests the foreign-signup CSRF/authentication case without switching identities between requests; full exact-head Worker CI is running."
+          "status": "completed",
+          "conclusion": "success",
+          "summary": "Exact-head Worker CI passed: PHP/Symfony job completed all analysis, validation and application-test steps successfully; PostgreSQL 18 migration-chain validation also passed.",
+          "jobs": {
+            "php_symfony": "success",
+            "postgres_18": "success"
+          }
         }
-      ]
+      ],
+      "final_head": "f6a322584bfe5f5e4dbbff52ea08d89c75be2528",
+      "completed_on": "2026-09-28T19:18:26.304Z"
     }
   ],
   "recovery_queue": [],
