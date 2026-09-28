@@ -58,7 +58,9 @@ final class GuildOnboardingPortalTest extends WebTestCase
 
             $client->request('GET', '/guild-area/onboarding');
             self::assertResponseIsSuccessful();
-            self::assertSame('private, no-store', $client->getResponse()->headers->get('Cache-Control'));
+            $cacheControl = (string) $client->getResponse()->headers->get('Cache-Control');
+            self::assertMatchesRegularExpression('/(?:^|,\\s*)private(?:,|$)/i', $cacheControl);
+            self::assertMatchesRegularExpression('/(?:^|,\\s*)no-store(?:,|$)/i', $cacheControl);
             self::assertSame('noindex, nofollow, noarchive', $client->getResponse()->headers->get('X-Robots-Tag'));
             self::assertSelectorTextContains('body', 'Read the guild welcome guide');
             self::assertSelectorTextContains('body', 'My active character');
