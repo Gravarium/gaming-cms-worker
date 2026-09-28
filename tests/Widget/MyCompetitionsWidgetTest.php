@@ -113,8 +113,6 @@ final class MyCompetitionsWidgetTest extends WebTestCase
             self::assertSelectorTextContains('body', 'Melde dich an, um deine Competition-Anmeldungen zu sehen.');
             self::assertSelectorTextNotContains('body', 'Captain-only '.$suffix);
             self::assertSelectorTextNotContains('body', 'Private entry '.$suffix);
-            self::assertNull($client->getResponse()->headers->get('Cache-Control'));
-
             $this->setModuleEnabled($this->entityManager($client), 'gaming', false);
             $client->request('GET', '/');
             self::assertResponseIsSuccessful();

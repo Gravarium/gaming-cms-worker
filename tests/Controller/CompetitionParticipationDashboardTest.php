@@ -95,24 +95,28 @@ final class CompetitionParticipationDashboardTest extends WebTestCase
             $fixtures[] = $game;
             $competition = $this->competition($entityManager, $game, 'Competition A '.$suffix, $suffix.'-a');
             $fixtures[] = $competition;
-            $participant = $this->participant($entityManager, $competition, $captain, 'Captain team '.$suffix);
+            $participant = $this->participant($entityManager, $competition, $visitor, 'Captain team '.$suffix);
             $fixtures[] = $participant;
             $otherCompetition = $this->competition($entityManager, $game, 'Competition B '.$suffix, $suffix.'-b');
             $fixtures[] = $otherCompetition;
             $entityManager->flush();
 
-            $client->loginUser($captain);
+            $client->loginUser($visitor);
             $client->request('GET', '/account/competitions');
             $token = $this->withdrawalToken($client, (int) $competition->getId(), (int) $participant->getId());
 
-            $client->loginUser($visitor);
-            $client->request('POST', '/account/competitions/'.$competition->getId().'/participant/'.$participant->getId().'/withdraw', [
+            $client->request('POST', '/account/competitions/'.$otherCompetition->getId().'/participant/'.$participant->getId().'/withdraw', [
                 '_token' => $token,
             ]);
             self::assertResponseStatusCodeSame(404);
 
-            $client->loginUser($captain);
-            $client->request('POST', '/account/competitions/'.$otherCompetition->getId().'/participant/'.$participant->getId().'/withdraw', [
+            $currentEntityManager = $this->entityManager($client);
+            $managedParticipant = $currentEntityManager->getRepository(CompetitionParticipant::class)->find($participant->getId());
+            self::assertInstanceOf(CompetitionParticipant::class, $managedParticipant);
+            $managedParticipant->setCaptain($captain);
+            $currentEntityManager->flush();
+
+            $client->request('POST', '/account/competitions/'.$competition->getId().'/participant/'.$participant->getId().'/withdraw', [
                 '_token' => $token,
             ]);
             self::assertResponseStatusCodeSame(404);
