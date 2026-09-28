@@ -106,26 +106,26 @@ final class PublicGameReleaseCalendarFeedTest extends WebTestCase
         $client->disableReboot();
         $entityManager = $this->entityManager($client);
         $previousGamingState = $this->setGamingEnabled($entityManager, true);
-        $suffix = bin2hex(random_bytes(5));
-        $game = (new Game())->setName('Bounded Release Game '.$suffix)->setSlug('feed-bounded-'.$suffix);
-        $entry = new GameCatalogueEntry($game);
-        $platform = new GamePlatform('Platform '.$suffix, 'feed-platform-'.$suffix);
-        $entityManager->persist($game);
-        $entityManager->persist($entry);
-        $entityManager->persist($platform);
-        $this->cleanupEntities[] = $game;
-        $this->cleanupEntities[] = $entry;
-        $this->cleanupEntities[] = $platform;
-
-        $date = new \DateTimeImmutable('+1 day', new \DateTimeZone('UTC'));
-        for ($index = 0; $index < 205; ++$index) {
-            $release = new GameRelease($entry, $platform, 'EU', $date->modify('+'.$index.' minutes'));
-            $entityManager->persist($release);
-            $this->cleanupEntities[] = $release;
-        }
-        $entityManager->flush();
-
         try {
+            $suffix = bin2hex(random_bytes(5));
+            $game = (new Game())->setName('Bounded Release Game '.$suffix)->setSlug('feed-bounded-'.$suffix);
+            $entry = new GameCatalogueEntry($game);
+            $platform = new GamePlatform('Platform '.$suffix, 'feed-platform-'.$suffix);
+            $entityManager->persist($game);
+            $entityManager->persist($entry);
+            $entityManager->persist($platform);
+            $this->cleanupEntities[] = $game;
+            $this->cleanupEntities[] = $entry;
+            $this->cleanupEntities[] = $platform;
+
+            $date = new \DateTimeImmutable('+1 day', new \DateTimeZone('UTC'));
+            for ($index = 0; $index < 205; ++$index) {
+                $release = new GameRelease($entry, $platform, 'EU', $date->modify('+'.$index.' minutes'));
+                $entityManager->persist($release);
+                $this->cleanupEntities[] = $release;
+            }
+            $entityManager->flush();
+
             $client->request('GET', '/games/releases/calendar.ics');
 
             self::assertResponseIsSuccessful();
