@@ -21,12 +21,12 @@ final readonly class GuildOnboardingPortalRepository
         $count = $this->entityManager->createQueryBuilder()
             ->select('COUNT(task.id)')
             ->from(GuildOnboardingTask::class, 'task')
-            ->innerJoin('task.member', 'member')
+            ->innerJoin('task.member', 'guildMember')
             ->innerJoin('task.guild', 'guild')
-            ->where('member.user = :user')
-            ->andWhere('member.active = true')
+            ->where('guildMember.user = :user')
+            ->andWhere('guildMember.active = true')
             ->andWhere('guild.enabled = true')
-            ->andWhere('task.guild = member.guild')
+            ->andWhere('IDENTITY(task.guild) = IDENTITY(guildMember.guild)')
             ->setParameter('user', $user)
             ->getQuery()
             ->getSingleScalarResult();
@@ -45,24 +45,24 @@ final readonly class GuildOnboardingPortalRepository
                 'task.id AS id',
                 'IDENTITY(task.guild) AS guildId',
                 'guild.name AS guildName',
-                'member.characterName AS characterName',
+                'guildMember.characterName AS characterName',
                 'task.label AS label',
                 'task.completed AS completed',
                 'actor.displayName AS completedBy',
                 'task.completedAt AS completedAt',
             )
             ->from(GuildOnboardingTask::class, 'task')
-            ->innerJoin('task.member', 'member')
+            ->innerJoin('task.member', 'guildMember')
             ->innerJoin('task.guild', 'guild')
             ->leftJoin('task.completedBy', 'actor')
-            ->where('member.user = :user')
-            ->andWhere('member.active = true')
+            ->where('guildMember.user = :user')
+            ->andWhere('guildMember.active = true')
             ->andWhere('guild.enabled = true')
-            ->andWhere('task.guild = member.guild')
+            ->andWhere('IDENTITY(task.guild) = IDENTITY(guildMember.guild)')
             ->setParameter('user', $user)
             ->orderBy('task.completed', 'ASC')
             ->addOrderBy('guild.name', 'ASC')
-            ->addOrderBy('member.characterName', 'ASC')
+            ->addOrderBy('guildMember.characterName', 'ASC')
             ->addOrderBy('task.id', 'ASC')
             ->setFirstResult(($page - 1) * self::PAGE_SIZE)
             ->setMaxResults(self::PAGE_SIZE)
@@ -78,13 +78,13 @@ final readonly class GuildOnboardingPortalRepository
         $task = $this->entityManager->createQueryBuilder()
             ->select('task')
             ->from(GuildOnboardingTask::class, 'task')
-            ->innerJoin('task.member', 'member')
+            ->innerJoin('task.member', 'guildMember')
             ->innerJoin('task.guild', 'guild')
             ->where('task.id = :taskId')
-            ->andWhere('member.user = :user')
-            ->andWhere('member.active = true')
+            ->andWhere('guildMember.user = :user')
+            ->andWhere('guildMember.active = true')
             ->andWhere('guild.enabled = true')
-            ->andWhere('task.guild = member.guild')
+            ->andWhere('IDENTITY(task.guild) = IDENTITY(guildMember.guild)')
             ->setParameter('taskId', $taskId)
             ->setParameter('user', $user)
             ->getQuery()
