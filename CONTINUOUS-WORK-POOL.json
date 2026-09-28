@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-28T20:39:43.971Z",
+  "published_at": "2026-09-28T20:43:59.152Z",
   "summary": {
     "total_remaining_worker_tasks": 175,
     "completed_worker_prs_awaiting_trusted_review": 316,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-590 PR #385 exact HEAD 3c3507f7c5c0f191d3a76311cb39d6f8ec7f227c is under full Worker CI run #978; inspect both jobs.",
+    "next_required_action": "WCP-590 CI #978 found a test-fixture EntityManager lifecycle error; repair within the test path and rerun complete exact-head Worker CI.",
     "composition_preparable": 0,
     "immediately_actionable": 32,
     "must_continue": true
@@ -53451,12 +53451,12 @@
         "feature_branch": "3c3507f7c5c0f191d3a76311cb39d6f8ec7f227c"
       },
       "last_observed_head": "3c3507f7c5c0f191d3a76311cb39d6f8ec7f227c",
-      "last_checkpoint_at": "2026-09-28T20:39:43.971Z",
+      "last_checkpoint_at": "2026-09-28T20:43:59.152Z",
       "checkpoint_paths": [
         "templates/content/show.html.twig",
         "tests/Controller/ContentDiscussionEntryNavigationTest.php"
       ],
-      "next_action": "Inspect exact-head Worker CI run #978, verify both PHP/Symfony and PostgreSQL 18 jobs, and repair any failures only within WCP-590 paths.",
+      "next_action": "Create a new test-only commit with a fresh persisted author per requested content page, then rerun full exact-head Worker CI.",
       "last_verified_push_at": "2026-09-28T20:37:35.070Z",
       "worker_pr": 385,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/385",
@@ -53469,8 +53469,8 @@
         "templates/content/show.html.twig",
         "tests/Controller/ContentDiscussionEntryNavigationTest.php"
       ],
-      "ci_result": "in_progress",
-      "last_ci_result": "in_progress",
+      "ci_result": "failure",
+      "last_ci_result": "failure",
       "ci_run_id": 36480707393,
       "last_ci_run_id": 36480707393,
       "ci_validation_pr": 385,
@@ -53480,11 +53480,15 @@
           "run_number": 978,
           "head": "3c3507f7c5c0f191d3a76311cb39d6f8ec7f227c",
           "base": "bb6ba0fd3dd9025be4f60c43a644117f96f71578",
-          "result": "in_progress",
+          "result": "failure",
           "validation_pr": 385,
-          "status": "in_progress",
-          "conclusion": null,
-          "summary": "Full exact-head Worker CI #978 is running for WCP-590 PR #385."
+          "status": "completed",
+          "conclusion": "failure",
+          "jobs": {
+            "php_symfony": "failure",
+            "postgres_18": "success"
+          },
+          "summary": "PHP/Symfony test suite reported one error in ContentDiscussionEntryNavigationTest because the test reused an author entity after a KernelBrowser request rebooted the EntityManager; PHPStan, Twig lint and PostgreSQL 18 passed."
         }
       ]
     }
