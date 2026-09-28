@@ -51297,14 +51297,14 @@
       "claim_state": "active",
       "active_base_branch": "main",
       "active_base_sha": "ebfeb6032548002846b9352ddb2b06b909b461c0",
-      "active_head": "ffd318308d3b827ca24de0171626733eed9b7f3f",
+      "active_head": "08bd418ed317e5fac3e3054d08bd08bdff9a2240",
       "resume_branch": "feature/wcp-584-guild-event-signup-portal-g1",
       "branch_heads": {
         "claim_branch": "ebfeb6032548002846b9352ddb2b06b909b461c0",
-        "feature_branch": "ffd318308d3b827ca24de0171626733eed9b7f3f"
+        "feature_branch": "08bd418ed317e5fac3e3054d08bd08bdff9a2240"
       },
-      "last_observed_head": "ffd318308d3b827ca24de0171626733eed9b7f3f",
-      "last_checkpoint_at": "2026-09-28T18:57:41.819Z",
+      "last_observed_head": "08bd418ed317e5fac3e3054d08bd08bdff9a2240",
+      "last_checkpoint_at": "2026-09-28T19:04:15.260Z",
       "checkpoint_paths": [
         "config/packages/guild_event_signup_portal.yaml",
         "src/Controller/GuildEventSignupPortalController.php",
@@ -51316,8 +51316,8 @@
         "tests/Controller/GuildEventSignupPortalControllerTest.php",
         "tests/Widget/MyGuildEventSignupsWidgetProviderTest.php"
       ],
-      "next_action": "Await exact-head Worker CI #952 on ffd318308d3b827ca24de0171626733eed9b7f3f; diagnose and repair any remaining failures only within the nine allowed paths.",
-      "last_verified_push_at": "2026-09-28T18:57:41.819Z",
+      "next_action": "Await exact-head Worker CI #953 on 08bd418ed317e5fac3e3054d08bd08bdff9a2240; diagnose any remaining failure only within the nine allowed paths.",
+      "last_verified_push_at": "2026-09-28T19:04:15.260Z",
       "worker_pr": 378,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/378",
       "worker_pr_state": "draft",
@@ -51336,11 +51336,11 @@
         "tests/Controller/GuildEventSignupPortalControllerTest.php",
         "tests/Widget/MyGuildEventSignupsWidgetProviderTest.php"
       ],
-      "ci_result": "in_progress",
-      "last_ci_result": "in_progress",
-      "ci_run_id": 36468792803,
-      "last_ci_run_id": 36468792803,
-      "last_ci_run_number": 952,
+      "ci_result": "queued",
+      "last_ci_result": "queued",
+      "ci_run_id": 36469584382,
+      "last_ci_run_id": 36469584382,
+      "last_ci_run_number": 953,
       "ci_validation_pr": 378,
       "ci_attempts": [
         {
@@ -51364,6 +51364,17 @@
           "status": "in_progress",
           "conclusion": null,
           "summary": "Both PHPStan findings and a regression test for array-shaped page input were addressed on this head; exact-head CI is running."
+        },
+        {
+          "run_id": 36469584382,
+          "run_number": 953,
+          "head": "08bd418ed317e5fac3e3054d08bd08bdff9a2240",
+          "base": "ebfeb6032548002846b9352ddb2b06b909b461c0",
+          "result": "queued",
+          "validation_pr": 378,
+          "status": "queued",
+          "conclusion": null,
+          "summary": "PHPStan and the static validation steps passed on #952, but PHPUnit found three SessionNotFoundException errors from sessionless synthetic requests/CSRF service access and a 500 when a widget-test user was logged in before persistence. The tests now reuse real authenticated requests and form tokens, persist the user before login, and the corrected suite is queued on this head."
         }
       ]
     }
