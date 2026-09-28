@@ -75,6 +75,14 @@ final class PublicGuildEventsWidgetProviderTest extends WebTestCase
             $html = $client->getContainer()->get(Environment::class)->render($definition->template, $data);
             self::assertStringContainsString('Visible &lt;em&gt;raid&lt;/em&gt;', $html);
             self::assertStringContainsString($guild->getSlug(), $html);
+            $scheduleUrl = '/gaming/guild/'.$guild->getSlug().'/events';
+            self::assertStringContainsString('href="'.$scheduleUrl.'"', $html);
+            self::assertStringContainsString('Alle Termine von '.$guild->getName().' anzeigen', $html);
+
+            $client->request('GET', $scheduleUrl);
+            self::assertResponseIsSuccessful();
+            self::assertStringContainsString('Visible &lt;em&gt;raid&lt;/em&gt;', (string) $client->getResponse()->getContent());
+            self::assertStringNotContainsString('<em>raid</em>', (string) $client->getResponse()->getContent());
             self::assertStringNotContainsString('<em>raid</em>', $html);
             self::assertStringNotContainsString('Private team event', $html);
             self::assertStringNotContainsString('Disabled guild event', $html);
