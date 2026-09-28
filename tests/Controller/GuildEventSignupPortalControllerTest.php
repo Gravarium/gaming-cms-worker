@@ -232,6 +232,9 @@ final class GuildEventSignupPortalControllerTest extends WebTestCase
 
             $client->request('GET', self::INDEX_PATH.'?page=1.5');
             self::assertResponseStatusCodeSame(400);
+
+            $client->request('GET', self::INDEX_PATH.'?page%5B%5D=1');
+            self::assertResponseStatusCodeSame(400);
         } finally {
             $this->cleanupFixtures($em, $fixtures);
             $this->restoreModuleSnapshot($client, $moduleSnapshot);

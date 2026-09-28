@@ -34,7 +34,8 @@ final class GuildEventSignupPortalController extends AbstractController
     #[Route('', name: '_index', methods: ['GET'])]
     public function index(Request $request): Response
     {
-        $pageValue = $request->query->get('page', '1');
+        $query = $request->query->all();
+        $pageValue = $query['page'] ?? '1';
         if (!is_string($pageValue) || preg_match('/^[1-9][0-9]*$/D', $pageValue) !== 1) {
             throw new BadRequestHttpException('Ungültige Seitennummer.');
         }
@@ -71,9 +72,6 @@ final class GuildEventSignupPortalController extends AbstractController
 
         $this->entityManager->wrapInTransaction(function (EntityManagerInterface $entityManager) use ($candidate, $user, $signupId): void {
             $event = $candidate->getEvent();
-            if (!$event instanceof GuildEvent) {
-                throw $this->createNotFoundException();
-            }
 
             // The existing signup flow locks this event before checking capacity; use the same lock boundary.
             $entityManager->refresh($event, LockMode::PESSIMISTIC_WRITE);
