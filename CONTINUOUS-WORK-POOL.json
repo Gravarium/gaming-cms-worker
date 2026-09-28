@@ -12100,7 +12100,7 @@
       "package_id": "WCP-340",
       "title": "Reject oversized backup provider selections",
       "risk": "medium",
-      "execution_state": "worker_complete_awaiting_trusted_review",
+      "execution_state": "trusted_integrated",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -12181,8 +12181,8 @@
         ]
       },
       "claimed_on": "2026-09-26T14:52:52.734Z",
-      "claim_state": "locked_until_trusted_resolution",
-      "next_action": "Await Trusted review; keep the claim locked and do not merge or deploy.",
+      "claim_state": "released_after_trusted_integration",
+      "next_action": "Worker PR #134 closed after Trusted PR #175 and downstream gates succeeded.",
       "last_checkpoint_at": "2026-09-26T14:59:25.479Z",
       "last_verified_push_at": "2026-09-26T14:56:58.725Z",
       "checkpoint_paths": [
@@ -12192,7 +12192,7 @@
       ],
       "worker_pr": 134,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/134",
-      "pr_state": "ready_for_review",
+      "pr_state": "closed",
       "ci_run_id": 36250221072,
       "ci_result": "success",
       "final_head": "045b281ba77600e2fb4f35a82c3e9bcf3ae5a3e7",
@@ -12208,7 +12208,28 @@
         "PostgreSQL 18 job 108426770222 applied all 39 migrations successfully; the migration status check passed.",
         "PR #134 is open, ready for review and unmerged. Its exact changed-file list against sanitized main contains only the three allowed paths.",
         "Functional regression test submits the current catalog size plus one with valid CSRF, verifies a clear no-change notice, and confirms target rows, audit rows and selection-file content remain unchanged."
-      ]
+      ],
+      "worker_pr_state": "closed",
+      "draft_pr": false,
+      "trusted_resolution": {
+        "status": "integrated",
+        "worker_pr": 134,
+        "worker_head": "045b281ba77600e2fb4f35a82c3e9bcf3ae5a3e7",
+        "trusted_pr": 175,
+        "trusted_pr_ci_run_id": 36363130130,
+        "trusted_pr_ci_result": "success",
+        "trusted_merge_sha": "33183c1c59900e56e65db747649ec3cf4502c564",
+        "final_trusted_main_sha": "33183c1c59900e56e65db747649ec3cf4502c564",
+        "final_trusted_main_ci_run_id": 36363440210,
+        "final_trusted_main_ci_result": "success",
+        "worker_sync_run_id": 36363440177,
+        "worker_sync_result": "success",
+        "sanitized_worker_sync_sha": "4cdf3b910d31e6e51b18606073a433c2426d340a",
+        "worker_ci_run_id": 36363451106,
+        "worker_ci_after_sync_result": "success",
+        "resolved_at": "2026-09-28T00:51:27.475Z"
+      },
+      "completed_at": "2026-09-28T00:51:27.475Z"
     },
     {
       "priority": 122,
@@ -26013,7 +26034,7 @@
       "package_id": "WCP-452",
       "title": "Browse all failed messages with queue pagination",
       "risk": "medium",
-      "execution_state": "worker_complete_awaiting_trusted_review",
+      "execution_state": "trusted_integrated",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -26097,7 +26118,7 @@
         ]
       },
       "claimed_on": "2026-09-27T02:05:27.111Z",
-      "claim_state": "locked_until_trusted_resolution",
+      "claim_state": "released_after_trusted_integration",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
       "active_head": "990a040511df2cdea3380d8ba705ba2c87d5c6c8",
@@ -26114,10 +26135,10 @@
         "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
         "feature_branch": "990a040511df2cdea3380d8ba705ba2c87d5c6c8"
       },
-      "next_action": "Await Trusted review with the claim locked; do not merge or deploy. Continue with the next independent Worker-only task.",
+      "next_action": "Worker PR #248 closed after Trusted PR #175 and downstream gates succeeded.",
       "worker_pr": 248,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/248",
-      "pr_state": "ready_for_review",
+      "pr_state": "closed",
       "draft_pr": false,
       "ci_run_id": 36288660120,
       "last_ci_run_id": 36288660120,
@@ -26156,7 +26177,27 @@
         "Functional coverage checks CMS_SETTINGS_MANAGE, 25-row ID-descending pagination without gaps or duplicates, page clamping, malformed inputs without echo or queue mutation, payload privacy, both CSRF boundaries, preserved page on row retry and retry-all limited to the visible page.",
         "Earlier CI failures were diagnosed and corrected on the same branch; complete exact-head CI passed on the final commit.",
         "PR #248 is open and ready for review, unmerged, and changes only the four WCP-452 allowed paths."
-      ]
+      ],
+      "worker_pr_state": "closed",
+      "trusted_resolution": {
+        "status": "integrated",
+        "worker_pr": 248,
+        "worker_head": "990a040511df2cdea3380d8ba705ba2c87d5c6c8",
+        "trusted_pr": 175,
+        "trusted_pr_ci_run_id": 36363130130,
+        "trusted_pr_ci_result": "success",
+        "trusted_merge_sha": "33183c1c59900e56e65db747649ec3cf4502c564",
+        "final_trusted_main_sha": "33183c1c59900e56e65db747649ec3cf4502c564",
+        "final_trusted_main_ci_run_id": 36363440210,
+        "final_trusted_main_ci_result": "success",
+        "worker_sync_run_id": 36363440177,
+        "worker_sync_result": "success",
+        "sanitized_worker_sync_sha": "4cdf3b910d31e6e51b18606073a433c2426d340a",
+        "worker_ci_run_id": 36363451106,
+        "worker_ci_after_sync_result": "success",
+        "resolved_at": "2026-09-28T00:51:27.475Z"
+      },
+      "completed_at": "2026-09-28T00:51:27.475Z"
     },
     {
       "priority": 453,
@@ -26450,7 +26491,7 @@
       "package_id": "WCP-455",
       "title": "Search and paginate the complete backup inventory",
       "risk": "medium",
-      "execution_state": "worker_complete_awaiting_trusted_review",
+      "execution_state": "trusted_integrated",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -26528,7 +26569,7 @@
           "tests/Backup/BackupInventoryBrowserTest.php"
         ]
       },
-      "claim_state": "locked_until_trusted_resolution",
+      "claim_state": "released_after_trusted_integration",
       "claimed_on": "2026-09-27T02:27:49.835Z",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
@@ -26545,7 +26586,7 @@
         "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
         "feature_branch": "ca1ec308fba49a0da26f5ae98982aaff866ecaf4"
       },
-      "next_action": "Claim remains locked until Trusted explicitly integrates, cancels or transfers it; Trusted follow-up is described in Worker PR #249.",
+      "next_action": "Worker PR #249 closed after Trusted PR #175 and downstream gates succeeded.",
       "last_verified_push_at": "2026-09-27T02:40:55.750Z",
       "worker_pr": 249,
       "ci_run_id": 36289029003,
@@ -26560,7 +26601,29 @@
         }
       ],
       "final_head": "ca1ec308fba49a0da26f5ae98982aaff866ecaf4",
-      "final_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d"
+      "final_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "pr_state": "closed",
+      "worker_pr_state": "closed",
+      "draft_pr": false,
+      "trusted_resolution": {
+        "status": "integrated",
+        "worker_pr": 249,
+        "worker_head": "ca1ec308fba49a0da26f5ae98982aaff866ecaf4",
+        "trusted_pr": 175,
+        "trusted_pr_ci_run_id": 36363130130,
+        "trusted_pr_ci_result": "success",
+        "trusted_merge_sha": "33183c1c59900e56e65db747649ec3cf4502c564",
+        "final_trusted_main_sha": "33183c1c59900e56e65db747649ec3cf4502c564",
+        "final_trusted_main_ci_run_id": 36363440210,
+        "final_trusted_main_ci_result": "success",
+        "worker_sync_run_id": 36363440177,
+        "worker_sync_result": "success",
+        "sanitized_worker_sync_sha": "4cdf3b910d31e6e51b18606073a433c2426d340a",
+        "worker_ci_run_id": 36363451106,
+        "worker_ci_after_sync_result": "success",
+        "resolved_at": "2026-09-28T00:51:27.475Z"
+      },
+      "completed_at": "2026-09-28T00:51:27.475Z"
     },
     {
       "priority": 456,
@@ -28028,7 +28091,7 @@
       "package_id": "WCP-465",
       "title": "Protect connector catalogue planning actions",
       "risk": "medium",
-      "execution_state": "worker_complete_awaiting_trusted_review",
+      "execution_state": "trusted_integrated",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -28101,7 +28164,7 @@
       },
       "published_at": "2026-09-27T04:12:42.661Z",
       "claimed_on": "2026-09-27T04:12:42.661Z",
-      "claim_state": "locked_until_trusted_resolution",
+      "claim_state": "released_after_trusted_integration",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
       "active_head": "b023f910c5ce63bb3a83afa0eb1aec65293255c0",
@@ -28114,13 +28177,13 @@
         "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
         "feature_branch": "b023f910c5ce63bb3a83afa0eb1aec65293255c0"
       },
-      "next_action": "Await Trusted review and integration validation; keep this claim locked until Trusted explicitly integrates, cancels or transfers it.",
+      "next_action": "Worker PR #257 closed after Trusted PR #175 and downstream gates succeeded.",
       "last_observed_head": "b023f910c5ce63bb3a83afa0eb1aec65293255c0",
       "last_verified_push_at": "2026-09-27T04:19:33.581Z",
       "worker_pr": 257,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/257",
       "draft_pr": false,
-      "pr_state": "open_ready_unmerged",
+      "pr_state": "closed",
       "ci_run_id": 36293804064,
       "last_ci_run_id": 36293804064,
       "ci_result": "success",
@@ -28140,7 +28203,7 @@
       "changed_paths": [
         "tests/Controller/AdminConnectorCatalogPlanSecurityTest.php"
       ],
-      "completed_at": "2026-09-27T04:19:33.581Z",
+      "completed_at": "2026-09-28T00:51:27.475Z",
       "test_results": {
         "phpunit": "432 tests, 1897 assertions, 0 failures; one deprecation and one notice.",
         "phpstan": "Level 8 passed with no errors.",
@@ -28170,7 +28233,26 @@
       "open_limitations": [
         "Awaiting Trusted review and Trusted integration CI."
       ],
-      "trusted_follow_up": "Preserve CMS_CONNECTORS_MANAGE and connector-catalog-plan CSRF checks before planning; keep planned targets disabled and optional until private server configuration is set; run full Trusted CI."
+      "trusted_follow_up": "Preserve CMS_CONNECTORS_MANAGE and connector-catalog-plan CSRF checks before planning; keep planned targets disabled and optional until private server configuration is set; run full Trusted CI.",
+      "worker_pr_state": "closed",
+      "trusted_resolution": {
+        "status": "integrated",
+        "worker_pr": 257,
+        "worker_head": "b023f910c5ce63bb3a83afa0eb1aec65293255c0",
+        "trusted_pr": 175,
+        "trusted_pr_ci_run_id": 36363130130,
+        "trusted_pr_ci_result": "success",
+        "trusted_merge_sha": "33183c1c59900e56e65db747649ec3cf4502c564",
+        "final_trusted_main_sha": "33183c1c59900e56e65db747649ec3cf4502c564",
+        "final_trusted_main_ci_run_id": 36363440210,
+        "final_trusted_main_ci_result": "success",
+        "worker_sync_run_id": 36363440177,
+        "worker_sync_result": "success",
+        "sanitized_worker_sync_sha": "4cdf3b910d31e6e51b18606073a433c2426d340a",
+        "worker_ci_run_id": 36363451106,
+        "worker_ci_after_sync_result": "success",
+        "resolved_at": "2026-09-28T00:51:27.475Z"
+      }
     },
     {
       "priority": 466,
@@ -28652,7 +28734,7 @@
       "package_id": "WCP-469",
       "title": "Protect failed-message queue details from users without settings permission",
       "risk": "medium",
-      "execution_state": "worker_complete_awaiting_trusted_review",
+      "execution_state": "trusted_integrated",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -28724,7 +28806,7 @@
       },
       "published_at": "2026-09-27T04:57:02.819Z",
       "claimed_on": "2026-09-27T04:57:02.819Z",
-      "claim_state": "locked_until_trusted_resolution",
+      "claim_state": "released_after_trusted_integration",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
       "active_head": "a44c7c6f87fd9ae0a1b4c4bd9f5e26691b3ccc15",
@@ -28737,13 +28819,13 @@
         "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
         "feature_branch": "a44c7c6f87fd9ae0a1b4c4bd9f5e26691b3ccc15"
       },
-      "next_action": "Await Trusted review and integration validation; keep this claim locked until Trusted explicitly integrates, cancels or transfers it.",
+      "next_action": "Worker PR #262 closed after Trusted PR #175 and downstream gates succeeded.",
       "last_observed_head": "a44c7c6f87fd9ae0a1b4c4bd9f5e26691b3ccc15",
       "last_verified_push_at": "2026-09-27T05:01:38.888Z",
       "worker_pr": 262,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/262",
       "draft_pr": false,
-      "pr_state": "open_ready_unmerged",
+      "pr_state": "closed",
       "ci_run_id": 36295853852,
       "last_ci_run_id": 36295853852,
       "ci_result": "success",
@@ -28763,7 +28845,7 @@
       "changed_paths": [
         "tests/Controller/AdminQueueReadAccessSecurityTest.php"
       ],
-      "completed_at": "2026-09-27T05:01:38.888Z",
+      "completed_at": "2026-09-28T00:51:27.475Z",
       "test_results": {
         "phpunit": "430 tests, 1856 assertions, 0 failures; one deprecation and one notice.",
         "phpstan": "Level 8 passed with no errors.",
@@ -28793,7 +28875,26 @@
       "open_limitations": [
         "Awaiting Trusted review and Trusted integration CI."
       ],
-      "trusted_follow_up": "Preserve CMS_SETTINGS_MANAGE before reading or rendering failed-message details; retain existing retry CSRF behavior and run full Trusted CI."
+      "trusted_follow_up": "Preserve CMS_SETTINGS_MANAGE before reading or rendering failed-message details; retain existing retry CSRF behavior and run full Trusted CI.",
+      "worker_pr_state": "closed",
+      "trusted_resolution": {
+        "status": "integrated",
+        "worker_pr": 262,
+        "worker_head": "a44c7c6f87fd9ae0a1b4c4bd9f5e26691b3ccc15",
+        "trusted_pr": 175,
+        "trusted_pr_ci_run_id": 36363130130,
+        "trusted_pr_ci_result": "success",
+        "trusted_merge_sha": "33183c1c59900e56e65db747649ec3cf4502c564",
+        "final_trusted_main_sha": "33183c1c59900e56e65db747649ec3cf4502c564",
+        "final_trusted_main_ci_run_id": 36363440210,
+        "final_trusted_main_ci_result": "success",
+        "worker_sync_run_id": 36363440177,
+        "worker_sync_result": "success",
+        "sanitized_worker_sync_sha": "4cdf3b910d31e6e51b18606073a433c2426d340a",
+        "worker_ci_run_id": 36363451106,
+        "worker_ci_after_sync_result": "success",
+        "resolved_at": "2026-09-28T00:51:27.475Z"
+      }
     },
     {
       "priority": 470,
@@ -29172,7 +29273,7 @@
       "package_id": "WCP-472",
       "title": "Protect backup provider planning authorization and CSRF",
       "risk": "medium",
-      "execution_state": "worker_complete_awaiting_trusted_review",
+      "execution_state": "trusted_integrated",
       "dependencies": [
         "WCP-340"
       ],
@@ -29256,7 +29357,7 @@
       },
       "published_at": "2026-09-27T05:23:15.072Z",
       "claimed_on": "2026-09-27T05:23:15.072Z",
-      "claim_state": "locked_until_trusted_resolution",
+      "claim_state": "released_after_trusted_integration",
       "active_base_branch": "feature/wcp-340-backup-provider-selection-boundary-g1",
       "active_base_sha": "045b281ba77600e2fb4f35a82c3e9bcf3ae5a3e7",
       "active_head": "148c690c0444edf5d23891e1826b111791276eef",
@@ -29269,13 +29370,13 @@
         "claim_branch": "045b281ba77600e2fb4f35a82c3e9bcf3ae5a3e7",
         "feature_branch": "148c690c0444edf5d23891e1826b111791276eef"
       },
-      "next_action": "Await Trusted review and integration validation; keep the claim locked until Trusted explicitly integrates, cancels or transfers it. Continue autonomous work from a separate claim.",
+      "next_action": "Worker PR #265 closed after Trusted PR #175 and downstream gates succeeded.",
       "last_observed_head": "148c690c0444edf5d23891e1826b111791276eef",
       "last_verified_push_at": "2026-09-27T05:39:01.648Z",
       "worker_pr": 265,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/265",
       "draft_pr": false,
-      "pr_state": "open_ready_unmerged",
+      "pr_state": "closed",
       "ci_run_id": 36297643836,
       "last_ci_run_id": 36297643836,
       "ci_result": "success",
@@ -29308,7 +29409,7 @@
         "tests/Controller/AdminBackupProviderPlanningBoundaryTest.php",
         "tests/Controller/AdminBackupProviderPlanningSecurityTest.php"
       ],
-      "completed_at": "2026-09-27T05:39:01.648Z",
+      "completed_at": "2026-09-28T00:51:27.475Z",
       "test_results": {
         "phpunit": "432 tests, 1881 assertions, 0 failures; one deprecation and one notice.",
         "phpstan": "Level 8 passed with no errors.",
@@ -29348,7 +29449,26 @@
       "open_limitations": [
         "Awaiting Trusted review and Trusted integration CI; this stacked PR includes the WCP-340 predecessor changes."
       ],
-      "trusted_follow_up": "Preserve CMS_CONNECTORS_MANAGE and backup-provider-plan CSRF validation before planning, audit writes or selection synchronization; run full Trusted CI."
+      "trusted_follow_up": "Preserve CMS_CONNECTORS_MANAGE and backup-provider-plan CSRF validation before planning, audit writes or selection synchronization; run full Trusted CI.",
+      "worker_pr_state": "closed",
+      "trusted_resolution": {
+        "status": "integrated",
+        "worker_pr": 265,
+        "worker_head": "148c690c0444edf5d23891e1826b111791276eef",
+        "trusted_pr": 175,
+        "trusted_pr_ci_run_id": 36363130130,
+        "trusted_pr_ci_result": "success",
+        "trusted_merge_sha": "33183c1c59900e56e65db747649ec3cf4502c564",
+        "final_trusted_main_sha": "33183c1c59900e56e65db747649ec3cf4502c564",
+        "final_trusted_main_ci_run_id": 36363440210,
+        "final_trusted_main_ci_result": "success",
+        "worker_sync_run_id": 36363440177,
+        "worker_sync_result": "success",
+        "sanitized_worker_sync_sha": "4cdf3b910d31e6e51b18606073a433c2426d340a",
+        "worker_ci_run_id": 36363451106,
+        "worker_ci_after_sync_result": "success",
+        "resolved_at": "2026-09-28T00:51:27.475Z"
+      }
     },
     {
       "priority": 473,
@@ -33704,7 +33824,7 @@
       "package_id": "WCP-498",
       "title": "Expose a permission-protected connector health report",
       "risk": "medium",
-      "execution_state": "worker_complete_awaiting_trusted_review",
+      "execution_state": "trusted_integrated",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -33787,7 +33907,7 @@
       },
       "published_at": "2026-09-27T09:42:08.032Z",
       "claimed_on": "2026-09-27T09:42:08.032Z",
-      "claim_state": "locked_until_trusted_resolution",
+      "claim_state": "released_after_trusted_integration",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
       "active_head": "e4a4725684e7d03eec20a432c5e6e0e2f395d616",
@@ -33803,12 +33923,12 @@
         "src/ExternalConnector/ConnectorHealthReport.php",
         "tests/Controller/AdminConnectorHealthReportTest.php"
       ],
-      "next_action": "Worker PR #291 is ready for Trusted review at exact green HEAD e4a4725684e7d03eec20a432c5e6e0e2f395d616; keep WCP-498 claim locked and do not merge or deploy.",
+      "next_action": "Worker PR #291 closed after Trusted PR #175 and downstream gates succeeded.",
       "last_verified_push_at": "2026-09-27T09:56:59.809Z",
       "worker_pr": 291,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/291",
       "draft_pr": false,
-      "pr_state": "open",
+      "pr_state": "closed",
       "worker_pr_changed_paths": [
         "src/Controller/AdminConnectorHealthReportController.php",
         "src/ExternalConnector/ConnectorHealthReport.php",
@@ -33845,7 +33965,27 @@
         }
       ],
       "final_head": "e4a4725684e7d03eec20a432c5e6e0e2f395d616",
-      "completed_on": "2026-09-27T09:56:59.809Z"
+      "completed_on": "2026-09-27T09:56:59.809Z",
+      "worker_pr_state": "closed",
+      "trusted_resolution": {
+        "status": "integrated",
+        "worker_pr": 291,
+        "worker_head": "e4a4725684e7d03eec20a432c5e6e0e2f395d616",
+        "trusted_pr": 175,
+        "trusted_pr_ci_run_id": 36363130130,
+        "trusted_pr_ci_result": "success",
+        "trusted_merge_sha": "33183c1c59900e56e65db747649ec3cf4502c564",
+        "final_trusted_main_sha": "33183c1c59900e56e65db747649ec3cf4502c564",
+        "final_trusted_main_ci_run_id": 36363440210,
+        "final_trusted_main_ci_result": "success",
+        "worker_sync_run_id": 36363440177,
+        "worker_sync_result": "success",
+        "sanitized_worker_sync_sha": "4cdf3b910d31e6e51b18606073a433c2426d340a",
+        "worker_ci_run_id": 36363451106,
+        "worker_ci_after_sync_result": "success",
+        "resolved_at": "2026-09-28T00:51:27.475Z"
+      },
+      "completed_at": "2026-09-28T00:51:27.475Z"
     },
     {
       "priority": 499,
