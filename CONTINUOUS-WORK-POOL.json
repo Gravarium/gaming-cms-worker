@@ -10,16 +10,16 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-28T20:06:43.556Z",
+  "published_at": "2026-09-28T20:07:52.298Z",
   "summary": {
-    "total_remaining_worker_tasks": 174,
+    "total_remaining_worker_tasks": 175,
     "completed_worker_prs_awaiting_trusted_review": 315,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-582 test corrections are checkpointed at eaf6cdc710a4636c517e95018b07839b79b8fba6; validate this exact HEAD with complete Worker CI on draft PR #379.",
+    "next_required_action": "WCP-589 is claimed from sanitized main@2f8179fe129c3071b68757f03a3e7099311179ef; implement the public guild event calendar feed on the dedicated branch while existing foreign claims remain untouched.",
     "composition_preparable": 0,
-    "immediately_actionable": 31,
+    "immediately_actionable": 32,
     "must_continue": true
   },
   "rules": {
@@ -53102,6 +53102,119 @@
       ],
       "next_action": "Open the stacked draft PR against the exact WCP-585 green head, then validate this exact HEAD with complete Worker CI and repair failures without widening scope.",
       "last_verified_push_at": "2026-09-28T20:03:02.590Z"
+    },
+    {
+      "priority": 589,
+      "package_id": "WCP-589",
+      "title": "Subscribe to upcoming public guild events by iCalendar",
+      "risk": "low",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-589-public-guild-event-calendar-g1",
+      "suggested_branch": "feature/wcp-589-public-guild-event-calendar-g1",
+      "base_branch": "main",
+      "base_sha": "2f8179fe129c3071b68757f03a3e7099311179ef",
+      "objective": "Provide a bounded, public iCalendar subscription feed for upcoming guild-level events. Reuse the existing public event query so the feed contains only planned events from enabled guilds and games, excludes team-scoped events, and follows the existing two-hour overlap window. Add a subscription link to the public guild events page. Keep output read-only, public and non-personalized.",
+      "allowed_paths": [
+        "src/Controller/PublicGuildEventCalendarFeedController.php",
+        "src/GuildEventCalendarFeed/PublicGuildEventCalendarBuilder.php",
+        "templates/gaming/events.html.twig",
+        "tests/Controller/PublicGuildEventCalendarFeedTest.php",
+        "tests/GuildEventCalendarFeed/PublicGuildEventCalendarBuilderTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "CONTINUOUS-WORKER.md",
+        "CONTINUOUS-WORK-POOL.json",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/",
+        "src/Entity/",
+        "src/Repository/",
+        "src/Gaming/Event/",
+        "src/Widget/PublicGuildEventsQuery.php",
+        "src/Controller/GuildEvent/",
+        "src/Controller/AdminGuildEvent/",
+        "templates/admin/"
+      ],
+      "deliverables": [
+        "GET /gaming/events/calendar.ics returns a valid text/calendar feed containing at most 12 events from PublicGuildEventsQuery::upcoming().",
+        "Only planned guild-level events for enabled guilds and games appear; cancelled, completed, old, team-scoped, disabled-guild and disabled-game events are excluded.",
+        "UID values are stable from persisted event IDs; timestamps use UTC; empty feeds remain valid; all calendar text is escaped and UTF-8 folded at no more than 75 octets per physical line.",
+        "Gaming-disabled requests fail closed without event content. Public responses are non-personalized and may use a short public cache lifetime.",
+        "The existing public guild events page links to the subscription feed; no schema, migration, entity, repository or member/registration behavior changes."
+      ],
+      "tests": [
+        "Functional feed coverage verifies inclusion and exclusion rules, stable UID, MIME and public cache headers, empty feed, Gaming module gate and GET-only route.",
+        "Builder regression tests verify CR/LF/semicolon/comma escaping, UTF-8-safe 75-octet line folding, UTC timestamps, optional end time and the 12-event cap.",
+        "The public guild event page shows an accessible link to the calendar feed.",
+        "PHPStan level 8 and full exact-head Worker CI, including PostgreSQL 18 migration-chain validation."
+      ],
+      "completion_report": [
+        "Exact sanitized main base SHA, final Worker HEAD, all changed paths and Worker PR URL/state.",
+        "Feed inclusion/exclusion, 12-event bound, cache and disabled-module behavior.",
+        "iCalendar stable UID, UTC timestamps, injection escaping and UTF-8 line-folding evidence.",
+        "Exact-head PHPStan, PHPUnit and PostgreSQL 18 results.",
+        "Confirm no entity, repository, schema, migration or personal signup data changes."
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-Trusted-review-and-exact-head-CI",
+        "public-feed-contains-only-planned-guild-level-events-from-enabled-guilds-and-games",
+        "feed-is-read-only-bounded-and-excludes-member-signup-data",
+        "gaming-disabled-feed-fails-closed",
+        "no-schema-or-migration-change",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "no-direct-Trusted-integration-or-deployment",
+        "no-private-runtime-or-sensitive-data"
+      ],
+      "proposal_kind": "worker_only",
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "2f8179fe129c3071b68757f03a3e7099311179ef",
+      "proposal_dependency_evidence": [],
+      "collision_check": {
+        "compared_against": "Fresh continuous/work-pool-v4 blob 89d8c2979c725d1a7509d237231f37cf0cf59deb; sanitized main 2f8179fe129c3071b68757f03a3e7099311179ef; every active and claim-locked allowed path; main tree.",
+        "result": "No allowed-path overlap with active or claim-locked tasks. The public guild events page template is an existing path from WCP-506, which is Trusted-integrated with its claim released; the new link is independent of WCP-532/WCP-584 personal event paths. New controller, builder and test paths are absent from main.",
+        "paths": [
+          "src/Controller/PublicGuildEventCalendarFeedController.php",
+          "src/GuildEventCalendarFeed/PublicGuildEventCalendarBuilder.php",
+          "templates/gaming/events.html.twig",
+          "tests/Controller/PublicGuildEventCalendarFeedTest.php",
+          "tests/GuildEventCalendarFeed/PublicGuildEventCalendarBuilderTest.php"
+        ],
+        "observed_nonblocking_path_hits": [
+          "Reuses PublicGuildEventsQuery::upcoming() from the Trusted-integrated WCP-537 public widget to preserve its enabled guild/game, planned status, team exclusion, ordering, overlap window and result bound.",
+          "Adds one subscription link to templates/gaming/events.html.twig, introduced by Trusted-integrated WCP-506; no active or claim-locked task owns this path."
+        ]
+      },
+      "published_at": "2026-09-28T20:07:52.298Z",
+      "claimed_on": "2026-09-28T20:07:52.298Z",
+      "claim_state": "active",
+      "active_base_branch": "main",
+      "active_base_sha": "2f8179fe129c3071b68757f03a3e7099311179ef",
+      "active_head": "2f8179fe129c3071b68757f03a3e7099311179ef",
+      "resume_branch": "feature/wcp-589-public-guild-event-calendar-g1",
+      "branch_heads": {
+        "claim_branch": "2f8179fe129c3071b68757f03a3e7099311179ef",
+        "feature_branch": "2f8179fe129c3071b68757f03a3e7099311179ef"
+      },
+      "last_observed_head": "2f8179fe129c3071b68757f03a3e7099311179ef",
+      "last_checkpoint_at": "2026-09-28T20:07:52.298Z",
+      "checkpoint_paths": [],
+      "next_action": "Implement the bounded calendar controller and UTF-8-safe iCalendar builder, add the public-page subscription link and focused unit/functional tests only in the five allowed paths; then run full exact-head Worker CI.",
+      "last_verified_push_at": "2026-09-28T20:07:52.298Z"
     }
   ],
   "recovery_queue": [],
