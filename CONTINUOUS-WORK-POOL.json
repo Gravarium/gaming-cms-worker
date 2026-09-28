@@ -10,16 +10,16 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-28T20:30:06.757Z",
+  "published_at": "2026-09-28T20:31:54.978Z",
   "summary": {
     "total_remaining_worker_tasks": 175,
     "completed_worker_prs_awaiting_trusted_review": 316,
     "recovery_tasks": 0,
-    "unclaimed": 6,
-    "immediately_claimable": 1,
-    "next_required_action": "WCP-590 is published and dependency-free; atomically claim its exact main base, then implement the public content discussion entry link.",
+    "unclaimed": 5,
+    "immediately_claimable": 0,
+    "next_required_action": "WCP-590 is claimed on its exact published main base; implement and test the public content discussion navigation.",
     "composition_preparable": 0,
-    "immediately_actionable": 33,
+    "immediately_actionable": 32,
     "must_continue": true
   },
   "rules": {
@@ -53365,7 +53365,7 @@
       "package_id": "WCP-590",
       "title": "Link public content pages to their discussions",
       "risk": "low",
-      "execution_state": "unclaimed",
+      "execution_state": "worker_in_progress",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -53439,7 +53439,21 @@
           "The content detail template is an existing path; it does not contain a link to app_content_discussion.",
           "FCP-072 has an unclaimed broad templates/ allowance and is dependency-blocked in this pool snapshot; its non-claim state is recorded for future collision checks."
         ]
-      }
+      },
+      "claim_state": "active",
+      "claimed_on": "2026-09-28T20:31:54.978Z",
+      "active_base_branch": "main",
+      "active_base_sha": "b018c5ed9975c2ab3f606f822bf285036fe6983e",
+      "active_head": "b018c5ed9975c2ab3f606f822bf285036fe6983e",
+      "resume_branch": "feature/wcp-590-content-discussion-entry-navigation-g1",
+      "branch_heads": {
+        "claim_branch": "b018c5ed9975c2ab3f606f822bf285036fe6983e",
+        "feature_branch": "b018c5ed9975c2ab3f606f822bf285036fe6983e"
+      },
+      "last_observed_head": "b018c5ed9975c2ab3f606f822bf285036fe6983e",
+      "last_checkpoint_at": "2026-09-28T20:31:54.978Z",
+      "checkpoint_paths": [],
+      "next_action": "Implement the accessible discussion entry link in the content detail template and add functional coverage for news and page routes."
     }
   ],
   "recovery_queue": [],
