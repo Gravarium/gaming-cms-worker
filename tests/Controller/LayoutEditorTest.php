@@ -4,7 +4,9 @@ declare(strict_types=1);
 namespace App\Tests\Controller;
 
 use App\Entity\PageLayout;
+use App\Entity\Category;
 use App\Entity\CmsModuleState;
+use App\Entity\ContentEntry;
 use App\Entity\User;
 use App\Layout\LayoutValidator;
 use App\Security\CmsPermission;
@@ -70,4 +72,149 @@ final class LayoutEditorTest extends WebTestCase
             $em=$client->getContainer()->get(EntityManagerInterface::class);$state=$em->find(CmsModuleState::class,'video');if($state!==null)$em->remove($state);$em->flush();$this->clearLayout($client);
         }
     }
+
+    public function testNewsWidgetCanFilterPublishedItemsByCategoryFromLayoutEditor(): void
+    {
+        $client = $this->client();
+        $this->clearLayout($client);
+        $em = $client->getContainer()->get(EntityManagerInterface::class);
+        $suffix = bin2hex(random_bytes(5));
+        $author = (new User())
+            ->setEmail('widget-news-'.$suffix.'@example.test')
+            ->setDisplayName('Widget news author')
+            ->verifyEmail();
+        $categoryAlpha = (new Category())->setName('News Alpha '.$suffix)->setSlug('news-alpha-'.$suffix);
+        $categoryBeta = (new Category())->setName('News Beta '.$suffix)->setSlug('news-beta-'.$suffix);
+        $entryIds = [];
+        $categoryIds = [];
+        $authorId = null;
+
+        try {
+            $em->persist($author);
+            $em->persist($categoryAlpha);
+            $em->persist($categoryBeta);
+            $em->flush();
+
+            $authorId = $author->getId();
+            $categoryAlphaId = (int) $categoryAlpha->getId();
+            $categoryBetaId = (int) $categoryBeta->getId();
+            $categoryIds = [$categoryAlphaId, $categoryBetaId];
+            if ($authorId === null || $categoryAlphaId < 1 || $categoryBetaId < 1) {
+                self::fail('The news widget fixture must have persisted category and author IDs.');
+            }
+
+            $alphaTitle = 'Alpha published '.$suffix;
+            $betaTitle = 'Beta published '.$suffix;
+            $draftTitle = 'Alpha draft '.$suffix;
+            $publishedAt = new \DateTimeImmutable('-1 hour');
+            $createNews = static function (string $title, string $slug, Category $category, string $status) use ($author, $publishedAt): ContentEntry {
+                return (new ContentEntry())
+                    ->setType(ContentEntry::TYPE_NEWS)
+                    ->setTitle($title)
+                    ->setSlug($slug)
+                    ->setBody('News widget category fixture.')
+                    ->setStatus($status)
+                    ->setPublishedAt($status === ContentEntry::STATUS_PUBLISHED ? $publishedAt : null)
+                    ->setAuthor($author)
+                    ->setCategory($category);
+            };
+            $entries = [
+                $createNews($alphaTitle, 'alpha-'.$suffix, $categoryAlpha, ContentEntry::STATUS_PUBLISHED),
+                $createNews($betaTitle, 'beta-'.$suffix, $categoryBeta, ContentEntry::STATUS_PUBLISHED),
+                $createNews($draftTitle, 'alpha-draft-'.$suffix, $categoryAlpha, ContentEntry::STATUS_DRAFT),
+            ];
+            foreach ($entries as $entry) {
+                $em->persist($entry);
+            }
+            $em->flush();
+            foreach ($entries as $entry) {
+                if ($entry->getId() !== null) {
+                    $entryIds[] = $entry->getId();
+                }
+            }
+            self::assertCount(3, $entryIds);
+
+            $crawler = $client->request('GET', '/admin/layout/home');
+            self::assertResponseIsSuccessful();
+            $editor = json_decode((string) $crawler->filter('[data-layout-editor-state-value]')->attr('data-layout-editor-state-value'), true, 512, JSON_THROW_ON_ERROR);
+            self::assertIsArray($editor);
+            $newsCategories = $editor['newsCategories'] ?? null;
+            self::assertIsArray($newsCategories);
+            self::assertContains(['id' => $categoryAlphaId, 'name' => $categoryAlpha->getDisplayName()], $newsCategories);
+            self::assertContains(['id' => $categoryBetaId, 'name' => $categoryBeta->getDisplayName()], $newsCategories);
+
+            $definitions = $editor['widgets'] ?? null;
+            self::assertIsArray($definitions);
+            $newsSchema = null;
+            foreach ($definitions as $definition) {
+                if (is_array($definition) && ($definition['key'] ?? null) === 'content.news') {
+                    $newsSchema = $definition['schema'] ?? null;
+                    break;
+                }
+            }
+            self::assertIsArray($newsSchema);
+            self::assertSame(0, $newsSchema['categoryId']['default'] ?? null);
+
+            $validator = $client->getContainer()->get(LayoutValidator::class);
+            $document = $validator->defaults('nebula')->toArray();
+            $region = $document['widgets'][0]['region'] ?? 'hero';
+            $document['widgets'] = [
+                ['id' => 'news-alpha-000001', 'type' => 'content.news', 'region' => $region, 'enabled' => true, 'config' => ['count' => 12, 'categoryId' => $categoryAlphaId]],
+                ['id' => 'news-beta-000001', 'type' => 'content.news', 'region' => $region, 'enabled' => true, 'config' => ['count' => 12, 'categoryId' => $categoryBetaId]],
+                ['id' => 'news-all-000001', 'type' => 'content.news', 'region' => $region, 'enabled' => true, 'config' => ['count' => 12]],
+                ['id' => 'news-missing-000001', 'type' => 'content.news', 'region' => $region, 'enabled' => true, 'config' => ['count' => 12, 'categoryId' => 2147483647]],
+            ];
+            $invalidDocument = $document;
+            $invalidDocument['widgets'][0]['config']['categoryId'] = 'not-an-integer';
+            $invalidRejected = false;
+            try {
+                $validator->validate($invalidDocument);
+            } catch (\DomainException) {
+                $invalidRejected = true;
+            }
+            self::assertTrue($invalidRejected, 'Malformed category IDs must not be accepted by layout validation.');
+
+            $token = (string) $crawler->filter('[data-layout-editor-token-value]')->attr('data-layout-editor-token-value');
+            $payload = json_encode(['version' => 0, 'document' => $document], JSON_THROW_ON_ERROR);
+            $client->request('POST', '/admin/layout/home/save', [], [], ['CONTENT_TYPE' => 'application/json', 'HTTP_X_CSRF_TOKEN' => $token], $payload);
+            self::assertResponseIsSuccessful();
+
+            $client->request('GET', '/');
+            self::assertResponseIsSuccessful();
+            self::assertSelectorTextContains('#widget-news-alpha-000001', $alphaTitle);
+            self::assertSelectorTextNotContains('#widget-news-alpha-000001', $betaTitle);
+            self::assertSelectorTextNotContains('#widget-news-alpha-000001', $draftTitle);
+            self::assertSelectorTextContains('#widget-news-beta-000001', $betaTitle);
+            self::assertSelectorTextNotContains('#widget-news-beta-000001', $alphaTitle);
+            self::assertSelectorTextContains('#widget-news-all-000001', $alphaTitle);
+            self::assertSelectorTextContains('#widget-news-all-000001', $betaTitle);
+            self::assertSelectorTextNotContains('#widget-news-all-000001', $draftTitle);
+            self::assertSelectorTextNotContains('#widget-news-missing-000001', $alphaTitle);
+            self::assertSelectorTextNotContains('#widget-news-missing-000001', $betaTitle);
+        } finally {
+            $this->clearLayout($client);
+            $em = $client->getContainer()->get(EntityManagerInterface::class);
+            foreach ($entryIds as $id) {
+                $entry = $em->find(ContentEntry::class, $id);
+                if ($entry !== null) {
+                    $em->remove($entry);
+                }
+            }
+            foreach ($categoryIds as $id) {
+                $category = $em->find(Category::class, $id);
+                if ($category !== null) {
+                    $em->remove($category);
+                }
+            }
+            if ($authorId !== null) {
+                $author = $em->find(User::class, $authorId);
+                if ($author !== null) {
+                    $em->remove($author);
+                }
+            }
+            $em->flush();
+        }
+    }
+
+
 }
