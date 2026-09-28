@@ -21,7 +21,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\RateLimiter\RateLimiterFactory;
 use Symfony\Component\Routing\Attribute\Route;
 
-#[Route('/gaming/guild/{slug}/apply/role-need', name: 'app_guild_role_need_apply', methods: ['GET', 'POST'])]
 final class PublicGuildRoleNeedApplicationController extends AbstractController
 {
     public function __construct(
@@ -35,6 +34,7 @@ final class PublicGuildRoleNeedApplicationController extends AbstractController
     ) {
     }
 
+    #[Route('/gaming/guild/{slug}/apply/role-need', name: 'app_guild_role_need_apply', methods: ['GET', 'POST'])]
     public function __invoke(string $slug, Request $request): Response
     {
         if (!$this->modules->isEnabled('gaming')) {
