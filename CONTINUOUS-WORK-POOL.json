@@ -10,7 +10,7 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-28T20:11:28.600Z",
+  "published_at": "2026-09-28T20:12:44.383Z",
   "summary": {
     "total_remaining_worker_tasks": 175,
     "completed_worker_prs_awaiting_trusted_review": 315,
@@ -53255,17 +53255,23 @@
       "claim_state": "active",
       "active_base_branch": "main",
       "active_base_sha": "2f8179fe129c3071b68757f03a3e7099311179ef",
-      "active_head": "2f8179fe129c3071b68757f03a3e7099311179ef",
+      "active_head": "2e56763ff4935877d16d1b3fbcc1e2e173779386",
       "resume_branch": "feature/wcp-589-public-guild-event-calendar-g1",
       "branch_heads": {
         "claim_branch": "2f8179fe129c3071b68757f03a3e7099311179ef",
-        "feature_branch": "2f8179fe129c3071b68757f03a3e7099311179ef"
+        "feature_branch": "2e56763ff4935877d16d1b3fbcc1e2e173779386"
       },
-      "last_observed_head": "2f8179fe129c3071b68757f03a3e7099311179ef",
-      "last_checkpoint_at": "2026-09-28T20:07:52.298Z",
-      "checkpoint_paths": [],
-      "next_action": "Implement the bounded calendar controller and UTF-8-safe iCalendar builder, add the public-page subscription link and focused unit/functional tests only in the five allowed paths; then run full exact-head Worker CI.",
-      "last_verified_push_at": "2026-09-28T20:07:52.298Z"
+      "last_observed_head": "2e56763ff4935877d16d1b3fbcc1e2e173779386",
+      "last_checkpoint_at": "2026-09-28T20:12:44.383Z",
+      "checkpoint_paths": [
+        "src/Controller/PublicGuildEventCalendarFeedController.php",
+        "src/GuildEventCalendarFeed/PublicGuildEventCalendarBuilder.php",
+        "templates/gaming/events.html.twig",
+        "tests/Controller/PublicGuildEventCalendarFeedTest.php",
+        "tests/GuildEventCalendarFeed/PublicGuildEventCalendarBuilderTest.php"
+      ],
+      "next_action": "Review the exact diff, run focused unit/functional coverage and open a draft Worker PR against main; inspect complete exact-head Worker CI and fix any failures without widening paths or weakening checks.",
+      "last_verified_push_at": "2026-09-28T20:12:44.383Z"
     }
   ],
   "recovery_queue": [],
