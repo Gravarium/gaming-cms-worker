@@ -21,6 +21,7 @@ final class DownloadVersionType extends AbstractType
             ->add('version', TextType::class, [
                 'label' => 'Version',
                 'trim' => true,
+                'empty_data' => '',
                 'attr' => ['maxlength' => 80],
             ])
             ->add('file', FileType::class, [
@@ -30,12 +31,14 @@ final class DownloadVersionType extends AbstractType
             ->add('compatibility', TextareaType::class, [
                 'label' => 'Kompatibilität',
                 'required' => false,
+                'empty_data' => '',
                 'help' => 'Eine kompatible Spiel- oder Paketversion pro Zeile.',
                 'attr' => ['rows' => 4, 'maxlength' => 2000],
             ])
             ->add('changelog', TextareaType::class, [
                 'label' => 'Änderungsnotizen',
                 'required' => false,
+                'empty_data' => '',
                 'help' => 'Optionale Versionshinweise für die öffentliche Paketansicht.',
                 'attr' => ['rows' => 8, 'maxlength' => 12000],
             ])

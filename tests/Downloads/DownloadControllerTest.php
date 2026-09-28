@@ -32,6 +32,7 @@ final class DownloadControllerTest extends WebTestCase
     public function testDisabledDownloadModuleFailsClosed(): void
     {
         $client = static::createClient();
+        $client->disableReboot();
         $state = (new CmsModuleState())
             ->setModuleKey('downloads')
             ->updateVersion('1.0.0')
