@@ -10,8 +10,8 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "9e083c63e7d888af36f93a23eb924c89fad2b971",
-  "published_at": "2026-09-29T16:32:22.297Z",
-  "summary": "WCP-606 completed on exact HEAD f2d29a242a1ba1f5094835021c181cd6cc94e9c0; Worker PR #401 is open and ready for Trusted review, with exact-head CI #1052 / 36600400885 green and its claim locked. No unclaimed, unblocked package remains: the five unclaimed FCPs are dependency-blocked, while WCP-511, WCP-589, and WCP-599 are active claims and remain untouched.",
+  "published_at": "2026-09-29T16:58:34.494Z",
+  "summary": "WCP-605 is complete on exact HEAD e0144706a3e9df5996af17d644f293afdb702aa7 with PR #400 awaiting Trusted review; WCP-607 is actively claimed from sanitized main 9e083c63e7d888af36f93a23eb924c89fad2b971 for a bounded Content accessibility report. WCP-606 remains independently active.",
   "rules": {
     "choose": "Resume the current chat's unfinished claimed branch first. Otherwise atomically claim an eligible published task. If no published task is eligible, independently derive and publish a bounded worker-only CMS proposal from approved product goals and observed code gaps; do not ask the owner for the next FCP number.",
     "atomic_reservation": "Create the exact claim_branch and suggested feature branch from that task's published proposal_base_sha. If the claim already exists, treat it as a hard lock; the owning continuation resumes it and every other AI skips it.",
@@ -57008,6 +57008,122 @@
         "PHPUnit reported 1 deprecation and 24 notices; the complete CI run remained successful."
       ],
       "worker_completion_summary": "Read-only CMS content quality and SEO readiness report completed with actionable issue summaries, scoped filters, bounded pagination, direct edit links, CMS permission and Content module gates, and no schema or migration changes."
+    },
+    {
+      "priority": 607,
+      "package_id": "WCP-607",
+      "title": "Build an actionable CMS content accessibility report",
+      "risk": "medium",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-607-content-accessibility-audit-g1",
+      "suggested_branch": "feature/wcp-607-content-accessibility-audit-g1",
+      "base_branch": "main",
+      "base_sha": "9e083c63e7d888af36f93a23eb924c89fad2b971",
+      "objective": "Give content managers a bounded, read-only report of accessibility issues in non-trashed CMS content. Identify image blocks without explicit alternative text and skipped heading levels, summarize findings, support strict filters and deterministic pagination, and link directly to each affected content entry for correction.",
+      "allowed_paths": [
+        "src/Controller/AdminContentAccessibilityController.php",
+        "src/Accessibility/Content/",
+        "templates/admin/content_accessibility/",
+        "templates/base.html.twig",
+        "tests/Accessibility/Content/",
+        "tests/Controller/ContentAccessibilityAuditTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "CONTINUOUS-WORKER.md",
+        "CONTINUOUS-WORK-POOL.json",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "src/Entity/",
+        "src/Repository/",
+        "src/Module/CmsModuleCatalog.php",
+        "src/Controller/AdminContentController.php",
+        "src/Controller/PublicContentController.php",
+        "src/Controller/AdminContentQualityController.php",
+        "src/ContentQuality/",
+        "templates/admin/content/",
+        "templates/content/",
+        "templates/admin/dashboard.html.twig",
+        "assets/",
+        "public/"
+      ],
+      "deliverables": [
+        "A CMS_CONTENT_MANAGE-protected, Content-module-gated report identifies content with image blocks missing an explicit alternative text and content with skipped heading levels; malformed block documents are reported as a bounded issue.",
+        "Managers can filter by content status, type, issue and a bounded title query, with aggregate counts, deterministic bounded pagination and direct edit links.",
+        "The report and its navigation link are visible only to authorized content managers while the Content module is enabled; responses are private, no-store and noindex.",
+        "Report requests are read-only: they do not change content, create revisions or write audit events. No schema or migration change is introduced."
+      ],
+      "tests": [
+        "Accessibility issue classification covers media alt text, heading sequence, legacy text and malformed editor documents.",
+        "Report summaries, status/type/issue/title filters, deterministic pagination, strict malformed inputs and the scan cap.",
+        "Anonymous and insufficient-permission denial, disabled Content module 404, method boundary, private/no-store/noindex headers and authorized navigation visibility.",
+        "Report requests do not modify content, create revisions or add audit records; rendered titles and issue data remain escaped."
+      ],
+      "completion_report": [
+        "Exact sanitized Worker main base SHA, final HEAD, changed paths and Worker PR URL/state.",
+        "Issue classification, summary counts, filters, pagination and scan-cap evidence.",
+        "Authorization, module gate, privacy headers, navigation visibility and read-only behavior.",
+        "Exact-head PHPUnit, PHPStan, PostgreSQL 18 and complete Worker CI results; confirm no schema or migration change."
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-Trusted-review-and-exact-head-CI",
+        "accessibility-report-requires-CMS_CONTENT_MANAGE-and-content-module-enabled",
+        "report-is-read-only-and-must-not-mutate-content-create-revisions-or-create-audit-events",
+        "bounded-scan-filters-and-pagination-with-strict-input-validation",
+        "no-schema-or-migration-change",
+        "no-security-test-phpstan-CI-auth-CSRF-validation-recovery-rollback-or-upload-protection-weakening",
+        "no-secrets-or-trusted-private-runtime-in-worker-source",
+        "no-direct-Trusted-integration-or-deployment"
+      ],
+      "proposal_kind": "worker_only",
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "9e083c63e7d888af36f93a23eb924c89fad2b971",
+      "proposal_dependency_evidence": [],
+      "collision_check": {
+        "compared_against": "Fresh continuous/work-pool-v4 commit 0e31930916ff203616f590cd436b0e7f4acae981; exact Worker main 9e083c63e7d888af36f93a23eb924c89fad2b971; every active and claim-locked package allowlist.",
+        "result": "No active or claim-locked package owns these paths. WCP-606 owns the separate ContentQuality report paths and covers SEO/content metadata, not image-block alternative text or heading hierarchy. FCP-072 is still unclaimed and blocked by FCP-035; this proposal addresses a bounded content-accessibility slice without clearing or changing that FCP's dependencies. Its broad unclaimed templates/ and src/Accessibility/ scopes must be revalidated by a future FCP-072 claimant.",
+        "paths": [
+          "src/Controller/AdminContentAccessibilityController.php",
+          "src/Accessibility/Content/",
+          "templates/admin/content_accessibility/",
+          "templates/base.html.twig",
+          "tests/Accessibility/Content/",
+          "tests/Controller/ContentAccessibilityAuditTest.php"
+        ]
+      },
+      "published_at": "2026-09-29T16:58:34.493Z",
+      "claimed_on": "2026-09-29T16:58:34.493Z",
+      "claim_state": "active",
+      "active_base_branch": "main",
+      "active_base_sha": "9e083c63e7d888af36f93a23eb924c89fad2b971",
+      "active_head": "9e083c63e7d888af36f93a23eb924c89fad2b971",
+      "resume_branch": "feature/wcp-607-content-accessibility-audit-g1",
+      "branch_heads": {
+        "claim_branch": "9e083c63e7d888af36f93a23eb924c89fad2b971",
+        "feature_branch": "9e083c63e7d888af36f93a23eb924c89fad2b971"
+      },
+      "last_observed_head": "9e083c63e7d888af36f93a23eb924c89fad2b971",
+      "last_checkpoint_at": "2026-09-29T16:58:34.493Z",
+      "last_verified_push_at": "2026-09-29T16:58:34.493Z",
+      "checkpoint_paths": [],
+      "next_action": "Implement the bounded read-only accessibility analyzer, report, navigation link and functional/security tests within the allowlist.",
+      "ci_result": "pending",
+      "last_ci_result": "pending",
+      "last_ci_run_id": null
     }
   ],
   "recovery_queue": [],
