@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %}
+{% set site = site_settings() %}
+{% set labels = {name: 'Name', server: 'Server', region: 'Region', class: 'Klasse', role: 'Rolle', level: 'Stufe', builds: 'Builds', professions: 'Berufe', progression: 'Fortschritt', collections: 'Sammlungen'} %}
+{% block title %}{{ profile.name }} | Charaktere{% endblock %}
+{% block body %}
+<header class="topbar"><a class="brand" href="{{ path('app_home') }}">{{ site.siteName }}</a><nav class="top-actions"><a href="{{ path('app_character_index') }}">Alle Charaktere</a></nav></header>
+<main class="public-shell">
+    <p class="eyebrow">{{ profile.game.name }} · {{ profile.account.displayName }}</p>
+    <h1>{{ profile.name }}</h1>
+    <p class="hero-copy">Importquelle: {{ profile.source }}</p>
+    <dl class="detail-list">
+        {% for key, value in fields %}
+            <dt>{{ labels[key] }}</dt>
+            <dd>{% if value is iterable %}{{ value|json_encode }}{% else %}{{ value is null ? 'Nicht veröffentlicht' : value }}{% endif %}</dd>
+        {% endfor %}
+    </dl>
+</main>
+{% endblock %}

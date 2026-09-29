@@ -97,7 +97,21 @@ class ExternalConnectorTarget
     public function getProviderKey(): string { return $this->providerKey; }
     public function setProviderKey(string $providerKey): self { $this->providerKey = strtolower(trim($providerKey)); return $this; }
     public function getDisplayName(): string { return $this->displayName; }
-    public function setDisplayName(string $displayName): self { $this->displayName = trim($displayName); return $this; }
+    public function setDisplayName(string $displayName): self
+    {
+        if (!mb_check_encoding($displayName, 'UTF-8') || str_contains($displayName, "\0")) {
+            throw new \InvalidArgumentException('Display name is invalid or exceeds the allowed length.');
+        }
+
+        $normalizedDisplayName = trim($displayName);
+        if (mb_strlen($normalizedDisplayName, 'UTF-8') > 120 || strlen($normalizedDisplayName) > 480) {
+            throw new \InvalidArgumentException('Display name is invalid or exceeds the allowed length.');
+        }
+
+        $this->displayName = $normalizedDisplayName;
+
+        return $this;
+    }
     public function isEnabled(): bool { return $this->enabled; }
     public function setEnabled(bool $enabled): self { $this->enabled = $enabled; return $this; }
     public function isRequired(): bool { return $this->required; }

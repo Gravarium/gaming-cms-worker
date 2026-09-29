@@ -1,0 +1,51 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Wettbewerbskalender{% endblock %}
+
+{% block body %}
+<header class="topbar">
+    <a class="brand" href="{{ path('app_home') }}">{{ site.siteName }}</a>
+    <nav class="top-actions">
+        <a href="{{ path('app_gaming_index') }}">Gilden</a>
+        <a href="{{ path('app_competition_index') }}">Wettbewerbe</a>
+    </nav>
+</header>
+<main class="public-shell">
+    <p class="eyebrow">Gaming</p>
+    <h1>Wettbewerbskalender</h1>
+    <p class="hero-copy">Finde kommende öffentliche Wettbewerbe oder abonniere den Kalender in deiner Kalender-App.</p>
+
+    <form method="get" action="{{ path('app_competition_calendar') }}" class="game-filter">
+        <label for="calendar-game">Spiel</label>
+        <select id="calendar-game" name="game">
+            <option value="">Alle Spiele</option>
+            {% for game in games %}
+                <option value="{{ game.slug }}" {% if selectedGame and selectedGame.id == game.id %}selected{% endif %}>{{ game.name }}</option>
+            {% endfor %}
+        </select>
+        <button type="submit">Filtern</button>
+    </form>
+
+    {% if selectedGame %}
+        <p><a class="button-link button-secondary" href="{{ path('app_competition_calendar_ics', {game: selectedGame.slug}) }}">Kalender abonnieren (.ics)</a></p>
+    {% else %}
+        <p><a class="button-link button-secondary" href="{{ path('app_competition_calendar_ics') }}">Kalender abonnieren (.ics)</a></p>
+    {% endif %}
+
+    <section class="guild-grid" aria-label="Kommende öffentliche Wettbewerbe">
+        {% for competition in competitions %}
+            <article class="guild-card">
+                <p class="eyebrow">{{ competition.game.name }}</p>
+                <h2><a href="{{ path('app_competition_show', {id: competition.id}) }}">{{ competition.name }}</a></h2>
+                <p>{{ competition.description }}</p>
+                <time datetime="{{ competition.startsAt|date('c') }}">Beginn: {{ competition.startsAt|date('d.m.Y H:i') }}</time>
+                {% if competition.endsAt %}
+                    <time datetime="{{ competition.endsAt|date('c') }}"> · Ende: {{ competition.endsAt|date('d.m.Y H:i') }}</time>
+                {% endif %}
+            </article>
+        {% else %}
+            <p class="muted">Für diese Auswahl sind noch keine kommenden Wettbewerbe veröffentlicht.</p>
+        {% endfor %}
+    </section>
+</main>
+{% endblock %}

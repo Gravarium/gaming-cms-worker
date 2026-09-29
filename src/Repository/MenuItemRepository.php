@@ -19,6 +19,13 @@ final class MenuItemRepository extends ServiceEntityRepository
     /** @return list<MenuItem> */
     public function activeNavigation(): array
     {
-        return $this->findBy(['enabled' => true], ['position' => 'ASC', 'id' => 'ASC']);
+        return $this->createQueryBuilder('item')
+            ->addSelect('page')
+            ->leftJoin('item.page', 'page')
+            ->andWhere('item.enabled = true')
+            ->orderBy('item.position', 'ASC')
+            ->addOrderBy('item.id', 'ASC')
+            ->getQuery()
+            ->getResult();
     }
 }

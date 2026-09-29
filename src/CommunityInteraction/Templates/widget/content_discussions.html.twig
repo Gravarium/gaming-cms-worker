@@ -1,0 +1,14 @@
+<section class="panel" aria-label="Aktuelle Diskussionen">
+    <h2>Aktuelle Diskussionen</h2>
+    <div class="application-list">
+        {% for item in items %}
+            <article>
+                <h3><a href="{{ path('app_content_discussion', {slug: item.entry.slug}) }}">{{ item.entry.title }}</a></h3>
+                <p>{{ item.entry.excerpt ?: item.entry.body|striptags|slice(0, 160) }}</p>
+                <p class="muted">{{ item.commentCount }} Kommentare · <a href="{{ path('app_content_discussion', {slug: item.entry.slug}) }}">Diskussion öffnen</a></p>
+            </article>
+        {% else %}
+            <p class="muted">Noch keine öffentlichen Inhalte für Diskussionen vorhanden.</p>
+        {% endfor %}
+    </div>
+</section>

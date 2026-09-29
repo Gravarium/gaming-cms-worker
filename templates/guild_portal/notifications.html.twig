@@ -1,0 +1,64 @@
+{% extends 'base.html.twig' %}
+{% set site = site_settings() %}
+{% block title %}Meine Benachrichtigungen | {{ site.siteName }}{% endblock %}
+{% block body %}
+<header class="topbar">
+    <a class="brand" href="{{ path('app_home') }}">{{ site.siteName }}</a>
+    <nav class="top-actions" aria-label="Kontonavigation">
+        <a href="{{ path('app_guild_portal_index') }}">Gildenbereich</a>
+        <a href="{{ path('app_account_security') }}">Kontosicherheit</a>
+        <form method="post" action="{{ path('app_logout') }}">
+            <input type="hidden" name="_csrf_token" value="{{ csrf_token('logout') }}">
+            <button class="button-secondary">Abmelden</button>
+        </form>
+    </nav>
+</header>
+<main class="dashboard">
+    <p class="eyebrow">Geschützter Mitgliederbereich</p>
+    <div class="top-actions">
+        <div>
+            <h1>Meine Benachrichtigungen{% if unreadNotifications %} ({{ unreadNotifications }} neu){% endif %}</h1>
+            <p>{{ totalNotifications }} insgesamt · Seite {{ page }} von {{ pageCount }}</p>
+        </div>
+        {% if unreadNotifications %}
+            <form method="post" action="{{ path('app_member_notification_inbox_read_all') }}">
+                <input type="hidden" name="_token" value="{{ csrf_token('member-notification-inbox-read-all') }}">
+                <button class="button-secondary">Alle als gelesen markieren</button>
+            </form>
+        {% endif %}
+    </div>
+
+    {% if notifications %}
+        <div class="application-list">
+            {% for notification in notifications %}
+                <article class="application-card">
+                    <div>
+                        <p class="eyebrow">{{ notification.createdAt|date('d.m.Y H:i') }} · {{ notification.guild.name }}{% if not notification.read %} · Neu{% endif %}</p>
+                        <h2>{{ notification.title }}</h2>
+                        <p>{{ notification.message }}</p>
+                    </div>
+                    <form method="post" action="{{ path('app_member_notification_inbox_read', {id: notification.id}) }}">
+                        <input type="hidden" name="_token" value="{{ csrf_token('member-notification-inbox-' ~ notification.id) }}">
+                        <button>{{ notification.link ? 'Öffnen und als gelesen markieren' : 'Als gelesen markieren' }}</button>
+                    </form>
+                </article>
+            {% endfor %}
+        </div>
+    {% else %}
+        <section class="panel">
+            <h2>Keine Benachrichtigungen</h2>
+            <p>Hier erscheinen neue Hinweise zu deinen Gilden und Charakteren.</p>
+        </section>
+    {% endif %}
+
+    <nav class="top-actions" aria-label="Benachrichtigungsseiten">
+        {% if page > 1 %}
+            <a class="button-secondary" href="{{ path('app_member_notification_inbox', {page: page - 1}) }}">Neuere Benachrichtigungen</a>
+        {% endif %}
+        <span aria-current="page">Seite {{ page }} von {{ pageCount }}</span>
+        {% if page < pageCount %}
+            <a class="button-secondary" href="{{ path('app_member_notification_inbox', {page: page + 1}) }}">Ältere Benachrichtigungen</a>
+        {% endif %}
+    </nav>
+</main>
+{% endblock %}

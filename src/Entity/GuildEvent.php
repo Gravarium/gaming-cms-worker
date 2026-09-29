@@ -11,8 +11,12 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: GuildEventRepository::class)]
 #[ORM\Table(name: 'guild_event')]
+#[ORM\HasLifecycleCallbacks]
 class GuildEvent
 {
+    private const MAX_LOCATION_BYTES = 560;
+    private const MAX_LOCATION_LENGTH = 140;
+
     public const TYPE_RAID = 'raid';
     public const TYPE_MEETING = 'meeting';
     public const TYPE_TRAINING = 'training';
@@ -102,8 +106,40 @@ class GuildEvent
     /** @param array<string, int> $limits */
     public function setRoleLimits(array $limits): self { $this->roleLimits = $limits; return $this; }
     public function getLocation(): ?string { return $this->location; }
-    public function setLocation(?string $location): self { $this->location = $location === null || trim($location) === '' ? null : trim($location); return $this; }
+    public function setLocation(?string $location): self
+    {
+        if ($location === null) {
+            $this->location = null;
+
+            return $this;
+        }
+
+        if (!mb_check_encoding($location, 'UTF-8') || str_contains($location, "\0")) {
+            throw new \InvalidArgumentException('Guild event location must be valid UTF-8 without NUL bytes.');
+        }
+
+        $normalizedLocation = trim($location);
+        if ($normalizedLocation === '') {
+            $this->location = null;
+
+            return $this;
+        }
+
+        $this->location = $normalizedLocation;
+
+        return $this;
+    }
     public function getStatus(): string { return $this->status; }
     public function setStatus(string $status): self { $this->status = $status; return $this; }
     public function getCreatedAt(): \DateTimeImmutable { return $this->createdAt; }
+
+    /** @internal Doctrine lifecycle callback. */
+    #[ORM\PrePersist]
+    #[ORM\PreUpdate]
+    public function assertLocationColumnBoundary(): void
+    {
+        if ($this->location !== null && (strlen($this->location) > self::MAX_LOCATION_BYTES || !mb_check_encoding($this->location, 'UTF-8') || str_contains($this->location, "\0") || mb_strlen($this->location, 'UTF-8') > self::MAX_LOCATION_LENGTH)) {
+            throw new \InvalidArgumentException('Guild event location must fit its 140-character storage column.');
+        }
+    }
 }

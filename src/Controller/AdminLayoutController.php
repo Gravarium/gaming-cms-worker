@@ -5,6 +5,7 @@ namespace App\Controller;
 
 use App\Entity\ContentEntry;
 use App\Entity\PageLayout;
+use App\Repository\CategoryRepository;
 use App\Layout\LayoutRenderer;
 use App\Layout\LayoutImages;
 use App\Layout\LayoutStore;
@@ -27,7 +28,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 #[IsGranted('CMS_SETTINGS_MANAGE')]
 final class AdminLayoutController extends AbstractController
 {
-    public function __construct(private readonly LayoutStore $store, private readonly LayoutValidator $validator, private readonly LayoutRenderer $renderer, private readonly ThemeRegistry $themes, private readonly WidgetRegistry $widgets, private readonly EntityManagerInterface $em, private readonly AuditLogger $audit, private readonly LayoutImages $images) {}
+    public function __construct(private readonly LayoutStore $store, private readonly LayoutValidator $validator, private readonly LayoutRenderer $renderer, private readonly ThemeRegistry $themes, private readonly WidgetRegistry $widgets, private readonly CategoryRepository $categories, private readonly EntityManagerInterface $em, private readonly AuditLogger $audit, private readonly LayoutImages $images) {}
 
     #[Route('/{context}', name: 'app_admin_layout', defaults: ['context'=>'home'], requirements: ['context'=>'home|page-[1-9][0-9]*'], methods: ['GET'])]
     public function edit(string $context): Response
@@ -39,9 +40,14 @@ final class AdminLayoutController extends AbstractController
         $available=[];
         foreach($this->widgets->availableDefinitions() as $definition) $available[]=['key'=>$definition->key,'label'=>$definition->label,'regions'=>$definition->regions,'multiple'=>$definition->multiple,'schema'=>$this->validator->widgetSchema($definition->key)];
         $pages=$this->em->getRepository(ContentEntry::class)->findBy(['type'=>ContentEntry::TYPE_PAGE],['title'=>'ASC'],200);
+        $newsCategories=[];
+        foreach($this->categories->findBy([],['name'=>'ASC'],100) as $category) {
+            if($category->getId()===null) continue;
+            $newsCategories[]=['id'=>$category->getId(),'name'=>$category->getDisplayName()];
+        }
         $response=$this->render('admin/layout/edit.html.twig',[
             'context'=>$context,'pages'=>$pages,
-            'editor'=>['document'=>$document->toArray(),'version'=>$this->store->record($context)?->getVersion()??0,'themes'=>$themes,'widgets'=>$available,'images'=>$this->images->choices(),'optionSchema'=>$this->validator->optionSchema(),'widgetSchema'=>$this->validator->widgetSchema()],
+            'editor'=>['document'=>$document->toArray(),'version'=>$this->store->record($context)?->getVersion()??0,'themes'=>$themes,'widgets'=>$available,'images'=>$this->images->choices(),'newsCategories'=>$newsCategories,'optionSchema'=>$this->validator->optionSchema(),'widgetSchema'=>$this->validator->widgetSchema()],
         ]);
         $response->headers->set('Cache-Control','private, no-store');
         return $response;

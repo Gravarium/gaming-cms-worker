@@ -1,0 +1,28 @@
+{% extends 'base.html.twig' %}
+{% block title %}Forumverwaltung{% endblock %}
+{% block body %}
+<main class="dashboard">
+    <p class="eyebrow">Gaming-Verwaltung</p>
+    <h1>Forumräume</h1>
+    {% for message in app.flashes('forum_success') %}<p role="status" class="notice notice-success">{{ message }}</p>{% endfor %}
+    <p><a class="button" href="{{ path('app_admin_gaming_forum_room_new') }}">Forumraum erstellen</a></p>
+    {% if rooms is empty %}
+        <p>Es wurden noch keine Forumräume erstellt.</p>
+    {% else %}
+        <table>
+            <thead><tr><th>Raum</th><th>Sichtbarkeit</th><th>Gilde</th><th>Themen</th><th>Aktion</th></tr></thead>
+            <tbody>
+                {% for room in rooms %}
+                    <tr>
+                        <td>{{ room.title }}</td>
+                        <td>{{ room.visibility }}</td>
+                        <td>{{ room.guild_name|default('—') }}</td>
+                        <td>{{ room.thread_count }}</td>
+                        <td><a href="{{ path('app_admin_gaming_forum_room_edit', {id: room.id}) }}">Bearbeiten</a></td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+</main>
+{% endblock %}

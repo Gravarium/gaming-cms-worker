@@ -1,0 +1,47 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Social{% endblock %}
+
+{% block body %}
+<main>
+    <h1>Social</h1>
+    <p>
+        <a href="{{ path('app_social_conversation_new') }}">Neue Unterhaltung</a> ·
+        <a href="{{ path('app_social_relationship_request') }}">Beziehungen</a> ·
+        <a href="{{ path('app_social_privacy') }}">Privatsphäre</a> ·
+        <a href="{{ path('app_social_export') }}">Daten exportieren</a>
+    </p>
+
+    <h2>Unterhaltungen</h2>
+    {% if conversations is empty %}
+        <p>Noch keine Unterhaltungen.</p>
+    {% else %}
+        <ul>
+            {% for conversation in conversations %}
+                <li>
+                    <a href="{{ path('app_social_conversation', {id: conversation.id}) }}">
+                        {{ conversation.title ?: 'Direkte Nachricht' }}
+                    </a>
+                    <small>{{ conversation.type }}</small>
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+    <h2>Beziehungen</h2>
+    {% if relationships is empty %}
+        <p>Keine offenen oder bestätigten Beziehungen.</p>
+    {% else %}
+        <ul>
+            {% for relationship in relationships %}
+                <li>{{ relationship.type }} · {{ relationship.state }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+    <form method="post" action="{{ path('app_social_delete') }}">
+        <input type="hidden" name="_token" value="{{ csrf_token('social-data-delete') }}">
+        <button type="submit">Social-Daten zur Löschung markieren</button>
+    </form>
+</main>
+{% endblock %}

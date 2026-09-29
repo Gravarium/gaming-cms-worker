@@ -32,6 +32,8 @@ final class TwoFactorController extends AbstractController
         private readonly UserRepository $users,
         #[Autowire(service: 'limiter.two_factor_account')]
         private readonly RateLimiterFactory $twoFactorAccountLimiter,
+        #[Autowire(service: 'limiter.two_factor_recovery_rotation')]
+        private readonly RateLimiterFactory $recoveryCodeRotationLimiter,
     ) {}
 
     #[Route('/login/2fa', name: 'app_two_factor_challenge', methods: ['GET', 'POST'])]
@@ -140,7 +142,74 @@ final class TwoFactorController extends AbstractController
         $codes = $request->getSession()->get('two_factor_new_recovery_codes');
         if (!is_array($codes) || $codes === []) { return $this->redirectToRoute('app_account_security'); }
         $request->getSession()->remove('two_factor_new_recovery_codes');
-        return $this->render('account/two_factor_recovery_codes.html.twig', ['codes' => $codes]);
+        $response = $this->render('account/two_factor_recovery_codes.html.twig', ['codes' => $codes]);
+        $response->headers->set('Cache-Control', 'private, no-store');
+
+        return $response;
+    }
+
+    #[Route('/account/security/2fa/recovery-codes/manage', name: 'app_two_factor_recovery_manage', methods: ['GET'])]
+    public function manageRecoveryCodes(): Response
+    {
+        $user = $this->currentUser();
+        if (!$user->isTwoFactorEnabled() || $user->getTwoFactorSecret() === null) {
+            return $this->redirectToRoute('app_account_security');
+        }
+
+        $response = $this->render('account/two_factor_recovery_manage.html.twig', [
+            'remainingCodes' => $user->recoveryCodeCount(),
+        ]);
+        $response->headers->set('Cache-Control', 'private, no-store');
+
+        return $response;
+    }
+
+    #[Route('/account/security/2fa/recovery-codes/rotate', name: 'app_two_factor_recovery_rotate', methods: ['POST'])]
+    public function rotateRecoveryCodes(Request $request, UserPasswordHasherInterface $passwordHasher): Response
+    {
+        $user = $this->currentUser();
+        $encryptedSecret = $user->getTwoFactorSecret();
+        if (!$user->isTwoFactorEnabled() || $encryptedSecret === null) {
+            throw $this->createAccessDeniedException();
+        }
+
+        $parameters = $request->request->all();
+        $csrfToken = $parameters['_token'] ?? null;
+        if (!is_string($csrfToken) || !$this->isCsrfTokenValid('two-factor-recovery-rotate', $csrfToken)) {
+            throw $this->createAccessDeniedException();
+        }
+
+        $limiter = $this->recoveryCodeRotationLimiter->create('user-'.$user->getId());
+        if (!$limiter->consume(1)->isAccepted()) {
+            $this->addFlash('error', 'Zu viele Versuche. Bitte versuche es später erneut.');
+            return $this->redirectToRoute('app_two_factor_recovery_manage');
+        }
+
+        $password = $parameters['password'] ?? null;
+        if (!is_string($password) || $password === '' || strlen($password) > 1024 || !$passwordHasher->isPasswordValid($user, $password)) {
+            $this->addFlash('error', 'Das Passwort ist nicht korrekt. Die Wiederherstellungscodes blieben unverändert.');
+            return $this->redirectToRoute('app_two_factor_recovery_manage');
+        }
+
+        $recoveryCodes = $this->totp->generateRecoveryCodes();
+        $user->enableTwoFactor($encryptedSecret, array_map(
+            static fn (string $code): string => password_hash($code, PASSWORD_DEFAULT),
+            $recoveryCodes,
+        ));
+        $this->keepCurrentSession($user, $request);
+        $this->audit->record(
+            'security.2fa.recovery_codes_rotated',
+            $user,
+            $user->getId(),
+            'Wiederherstellungscodes erneuert.',
+        );
+        $this->entityManager->flush();
+
+        $request->getSession()->set('two_factor_verified', true);
+        $request->getSession()->set('two_factor_new_recovery_codes', $recoveryCodes);
+        $limiter->reset();
+
+        return $this->redirectToRoute('app_two_factor_recovery_codes');
     }
 
     #[Route('/account/security/2fa/disable', name: 'app_two_factor_disable', methods: ['POST'])]

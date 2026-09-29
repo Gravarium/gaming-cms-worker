@@ -1,0 +1,16 @@
+<section class="portal-cards upcoming-game-releases-widget" aria-label="Nächste Spielveröffentlichungen">
+    {% for release in data.items %}
+        <article class="portal-card">
+            <div class="portal-card-copy">
+                <p class="portal-kicker">{{ release.releaseAt|date('d.m.Y H:i') }} Uhr · {{ release.platform.name }} · {{ release.region }}</p>
+                <h3><a href="{{ path('app_game_catalogue_show', {slug: release.entry.game.slug}) }}">{{ release.entry.game.name }}</a></h3>
+                {% if release.edition %}
+                    <p>{{ release.edition.name }}</p>
+                {% endif %}
+            </div>
+        </article>
+    {% else %}
+        <p class="portal-empty">Aktuell sind keine kommenden Spielveröffentlichungen angekündigt.</p>
+    {% endfor %}
+    <p><a class="portal-read" href="{{ path('app_game_catalogue_releases') }}">Alle Spielveröffentlichungen ansehen <span aria-hidden="true">↗</span></a></p>
+</section>

@@ -1,0 +1,60 @@
+{% extends 'base.html.twig' %}
+{% block title %}Rollenbedarf verwalten | Gaming CMS{% endblock %}
+{% block body %}
+<header class="topbar">
+    <a class="brand" href="{{ path('app_admin_dashboard') }}">Gaming CMS</a>
+    <a class="button-link button-secondary" href="{{ path('app_admin_guild_application_index') }}">Bewerbungen</a>
+</header>
+<main class="dashboard">
+    <p class="eyebrow">{{ guild.name }} · {{ guild.game.name }}</p>
+    <h1>Rollenbedarf verwalten</h1>
+    <p class="muted">Lege Rollen- und Klassenbedarf für das Spiel dieser Gilde fest. Öffentliche Interessenten sehen nur aktive Bedarfe mit einer gesuchten Anzahl größer null.</p>
+
+    <section class="panel">
+        <h2>Bedarf hinzufügen</h2>
+        {{ form_start(createForm, {action: path('app_admin_guild_role_need_create', {guild: guild.id}), attr: {class: 'content-form'}}) }}
+            {{ form_widget(createForm) }}
+            <button type="submit">Bedarf anlegen</button>
+        {{ form_end(createForm) }}
+    </section>
+
+    {% if editForm and editNeed %}
+        <section class="panel">
+            <h2>{{ editNeed.roleKey }} · {{ editNeed.classKey }} bearbeiten</h2>
+            {{ form_start(editForm, {action: path('app_admin_guild_role_need_edit', {guild: guild.id, needId: editNeed.id}), attr: {class: 'content-form'}}) }}
+                {{ form_widget(editForm) }}
+                <button type="submit">Änderungen speichern</button>
+                <a class="button-link button-secondary" href="{{ path('app_admin_guild_role_need_index', {guild: guild.id}) }}">Abbrechen</a>
+            {{ form_end(editForm) }}
+        </section>
+    {% endif %}
+
+    <section class="panel">
+        <h2>Vorhandene Bedarfe</h2>
+        {% if needs %}
+            <div class="table-wrap"><table>
+                <thead><tr><th>Rolle</th><th>Klasse</th><th>Gesucht</th><th>Status</th><th>Aktionen</th></tr></thead>
+                <tbody>
+                {% for need in needs %}
+                    <tr>
+                        <td>{{ need.roleKey }}</td>
+                        <td>{{ need.classKey }}</td>
+                        <td>{{ need.desiredCount }}</td>
+                        <td>{{ need.active ? 'Aktiv' : 'Inaktiv' }}</td>
+                        <td class="row-actions">
+                            <a href="{{ path('app_admin_guild_role_need_edit', {guild: guild.id, needId: need.id}) }}">Bearbeiten</a>
+                            <form method="post" action="{{ path('app_admin_guild_role_need_delete', {guild: guild.id, needId: need.id}) }}">
+                                <input type="hidden" name="_token" value="{{ csrf_token('delete-guild-role-need-' ~ need.id) }}">
+                                <button class="button-secondary" type="submit">Löschen</button>
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table></div>
+        {% else %}
+            <p class="muted">Für diese Gilde sind noch keine Rollenbedarfe angelegt.</p>
+        {% endif %}
+    </section>
+</main>
+{% endblock %}

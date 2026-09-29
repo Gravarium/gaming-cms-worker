@@ -1,0 +1,32 @@
+{% extends 'base.html.twig' %}
+{% block title %}{{ category.displayName }} | Seiten | {{ site.siteName }}{% endblock %}
+{% block body %}
+<header class="topbar"><a class="brand" href="{{ path('app_home') }}">{{ site.siteName }}</a><nav class="top-actions"><a href="{{ path('app_content_page_category_directory') }}">Alle Seitenkategorien</a></nav></header>
+<main class="dashboard">
+    <p class="eyebrow">Seitenkategorie</p>
+    <p><a href="{{ path('app_content_page_category_directory') }}">← Alle Seitenkategorien</a></p>
+    <h1>{{ category.displayName }}</h1>
+    {% if category.description %}<p class="muted">{{ category.description }}</p>{% endif %}
+    <p class="muted">{{ total }} veröffentlichte Seite{% if total != 1 %}n{% endif %}</p>
+    <div class="news-grid">
+        {% for entry in entries %}
+            <article class="card">
+                {% if entry.pinned %}<p class="eyebrow">Angeheftet</p>{% endif %}
+                {% if entry.publishedAt %}<p class="news-date">{{ entry.publishedAt|date('d.m.Y H:i') }}</p>{% endif %}
+                <h2><a href="{{ path('app_page_show', {slug: entry.slug}) }}">{{ entry.title }}</a></h2>
+                {% if entry.subtitle %}<p><strong>{{ entry.subtitle }}</strong></p>{% endif %}
+                {% if entry.excerpt %}<p>{{ entry.excerpt }}</p>{% endif %}
+            </article>
+        {% else %}
+            <p>In dieser Kategorie gibt es derzeit keine veröffentlichten Seiten.</p>
+        {% endfor %}
+    </div>
+    {% if pages > 1 %}
+        <nav class="pagination" aria-label="Seitennavigation">
+            {% if page > 1 %}<a href="{{ path('app_content_page_category_archive', {slug: category.slug, page: page - 1}) }}">← Vorherige</a>{% endif %}
+            <span>Seite {{ page }} von {{ pages }}</span>
+            {% if page < pages %}<a href="{{ path('app_content_page_category_archive', {slug: category.slug, page: page + 1}) }}">Weitere →</a>{% endif %}
+        </nav>
+    {% endif %}
+</main>
+{% endblock %}

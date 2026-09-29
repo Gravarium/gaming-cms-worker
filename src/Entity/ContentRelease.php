@@ -50,20 +50,75 @@ class ContentRelease
     public function __construct() { $this->entries = new ArrayCollection(); $this->createdAt = new \DateTimeImmutable(); }
     public function getId(): ?int { return $this->id; }
     public function getName(): string { return $this->name; }
-    public function setName(string $name): self { $this->name = trim($name); return $this; }
+    public function setName(string $name): self
+    {
+        $this->assertUnpublished();
+        $this->name = trim($name);
+
+        return $this;
+    }
     public function getDescription(): ?string { return $this->description; }
-    public function setDescription(?string $description): self { $description = $description === null ? null : trim($description); $this->description = $description === '' ? null : $description; return $this; }
+    public function setDescription(?string $description): self
+    {
+        $this->assertUnpublished();
+        $description = $description === null ? null : trim($description);
+        $this->description = $description === '' ? null : $description;
+
+        return $this;
+    }
     public function getStatus(): string { return $this->status; }
-    public function setStatus(string $status): self { $this->status = $status; return $this; }
+    public function setStatus(string $status): self
+    {
+        $this->assertUnpublished();
+        if ($status === self::STATUS_PUBLISHED) {
+            throw new \DomainException('Ein Release muss über den Veröffentlichungsablauf veröffentlicht werden.');
+        }
+        $this->status = $status;
+
+        return $this;
+    }
     public function getScheduledAt(): ?\DateTimeImmutable { return $this->scheduledAt; }
-    public function setScheduledAt(?\DateTimeImmutable $at): self { $this->scheduledAt = $at; return $this; }
+    public function setScheduledAt(?\DateTimeImmutable $at): self
+    {
+        $this->assertUnpublished();
+        $this->scheduledAt = $at;
+
+        return $this;
+    }
     public function getPublishedAt(): ?\DateTimeImmutable { return $this->publishedAt; }
     public function getCreatedBy(): ?User { return $this->createdBy; }
-    public function setCreatedBy(User $user): self { $this->createdBy = $user; return $this; }
+    public function setCreatedBy(User $user): self
+    {
+        $this->assertUnpublished();
+        $this->createdBy = $user;
+
+        return $this;
+    }
     /** @return Collection<int, ContentEntry> */
-    public function getEntries(): Collection { return $this->entries; }
-    public function addEntry(ContentEntry $entry): self { if (!$this->entries->contains($entry)) { $this->entries->add($entry); } return $this; }
-    public function removeEntry(ContentEntry $entry): self { $this->entries->removeElement($entry); return $this; }
+    public function getEntries(): Collection
+    {
+        return $this->status === self::STATUS_PUBLISHED
+            ? new ArrayCollection($this->entries->toArray())
+            : $this->entries;
+    }
+
+    public function addEntry(ContentEntry $entry): self
+    {
+        $this->assertUnpublished();
+        if (!$this->entries->contains($entry)) {
+            $this->entries->add($entry);
+        }
+
+        return $this;
+    }
+
+    public function removeEntry(ContentEntry $entry): self
+    {
+        $this->assertUnpublished();
+        $this->entries->removeElement($entry);
+
+        return $this;
+    }
     public function getCreatedAt(): \DateTimeImmutable { return $this->createdAt; }
     public function synchronizeSchedule(): void
     {
@@ -89,6 +144,13 @@ class ContentRelease
         $this->publishedAt = $now;
         $this->scheduledAt = null;
         return $count;
+    }
+
+    private function assertUnpublished(): void
+    {
+        if ($this->status === self::STATUS_PUBLISHED) {
+            throw new \DomainException('Veröffentlichte Releases sind unveränderlich.');
+        }
     }
 
     /** @return list<ContentEntry> */

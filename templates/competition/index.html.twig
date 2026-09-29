@@ -1,0 +1,45 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Competitions{% endblock %}
+
+{% block body %}
+<main class="container">
+    <h1>Competitions</h1>
+    <form method="get" action="{{ path('app_competition_index') }}">
+        <label for="competition-status">Status</label>
+        <select id="competition-status" name="status">
+            <option value=""{% if status is null %} selected{% endif %}>Alle Status</option>
+            <option value="open"{% if status == 'open' %} selected{% endif %}>Anmeldung offen</option>
+            <option value="in_progress"{% if status == 'in_progress' %} selected{% endif %}>Läuft</option>
+            <option value="completed"{% if status == 'completed' %} selected{% endif %}>Abgeschlossen</option>
+            <option value="archived"{% if status == 'archived' %} selected{% endif %}>Archiviert</option>
+        </select>
+        <label for="competition-game">Spiel</label>
+        <select id="competition-game" name="game">
+            <option value=""{% if gameSlug is null %} selected{% endif %}>Alle Spiele</option>
+            {% for gameOption in games %}
+                <option value="{{ gameOption.slug }}"{% if gameSlug == gameOption.slug %} selected{% endif %}>{{ gameOption.name }}</option>
+            {% endfor %}
+        </select>
+        <label for="competition-mode">Teilnahmemodus</label>
+        <select id="competition-mode" name="mode">
+            <option value=""{% if mode is null %} selected{% endif %}>Alle Modi</option>
+            <option value="solo"{% if mode == 'solo' %} selected{% endif %}>Solo</option>
+            <option value="team"{% if mode == 'team' %} selected{% endif %}>Team</option>
+        </select>
+        <button type="submit">Filtern</button>
+        {% if status is not null or gameSlug is not null or mode is not null %}
+            <a href="{{ path('app_competition_index') }}">Filter zurücksetzen</a>
+        {% endif %}
+    </form>
+    {% for competition in competitions %}
+        <article>
+            <h2><a href="{{ path('app_competition_show', {id: competition.id}) }}">{{ competition.name }}</a></h2>
+            <p>{{ competition.game.name }} · {{ competition.format }} · {{ competition.mode }}</p>
+            <time datetime="{{ competition.startsAt|date('c') }}">{{ competition.startsAt|date('d.m.Y H:i') }}</time>
+        </article>
+    {% else %}
+        <p>Noch keine öffentlichen Competitions.</p>
+    {% endfor %}
+</main>
+{% endblock %}

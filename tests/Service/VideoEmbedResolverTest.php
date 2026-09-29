@@ -61,6 +61,34 @@ final class VideoEmbedResolverTest extends TestCase
         self::assertNull($resolver->resolve($twitch, 'example.test'));
     }
 
+    public function testProviderSubdomainsAreRejected(): void
+    {
+        $resolver = $this->resolver();
+
+        $youtube = (new Video())->setSourceType(Video::SOURCE_YOUTUBE)->setSourceUrl('https://evil.youtube.com/watch?v=abcdefghijk');
+        $vimeo = (new Video())->setSourceType(Video::SOURCE_VIMEO)->setSourceUrl('https://evil.vimeo.com/123456789');
+        $twitch = (new Video())->setSourceType(Video::SOURCE_TWITCH)->setSourceUrl('https://evil.twitch.tv/videos/987654321');
+        $clip = (new Video())->setSourceType(Video::SOURCE_TWITCH)->setSourceUrl('https://evil.clips.twitch.tv/clip-token');
+
+        self::assertNull($resolver->resolve($youtube, 'example.test'));
+        self::assertNull($resolver->resolve($vimeo, 'example.test'));
+        self::assertNull($resolver->resolve($twitch, 'example.test'));
+        self::assertNull($resolver->resolve($clip, 'example.test'));
+    }
+
+    public function testMalformedTwitchParentHostIsRejected(): void
+    {
+        $resolver = $this->resolver();
+
+        foreach (['-invalid.example', 'example..test', 'example.test:0', 'example.test:65536', 'https://example.test'] as $parentHost) {
+            $video = (new Video())
+                ->setSourceType(Video::SOURCE_TWITCH)
+                ->setSourceUrl('https://www.twitch.tv/videos/987654321');
+
+            self::assertNull($resolver->resolve($video, $parentHost), $parentHost);
+        }
+    }
+
     public function testExternalVideoRejectsActiveOrLocalUrls(): void
     {
         $resolver = $this->resolver();

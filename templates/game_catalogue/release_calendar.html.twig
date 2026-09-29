@@ -1,0 +1,90 @@
+{% extends 'base.html.twig' %}
+{% block title %}Release-Kalender | Gaming CMS{% endblock %}
+{% block body %}
+<main class="content-shell">
+    <header class="page-header">
+        <p class="eyebrow">Release Centre</p>
+        <h1>Release-Kalender entdecken</h1>
+        <p>{{ from|date('d.m.Y') }} bis {{ to|date('d.m.Y') }}</p>
+        <a href="{{ path('app_game_catalogue_releases') }}">Zur Release-Übersicht</a>
+    </header>
+
+    <section class="panel" aria-labelledby="release-filter-heading">
+        <h2 id="release-filter-heading">Releases filtern</h2>
+        <form method="get" action="{{ path('app_game_catalogue_release_calendar') }}" class="form-stack">
+            <label for="release-search">Spielname</label>
+            <input id="release-search" type="search" name="q" maxlength="100" value="{{ filters.q }}" autocomplete="off">
+
+            <label for="release-platform">Plattform</label>
+            <select id="release-platform" name="platform">
+                <option value="">Alle Plattformen</option>
+                {% for platform in platforms %}
+                    <option value="{{ platform.id }}" {{ filters.platform == platform.id ? 'selected' : '' }}>{{ platform.name }}</option>
+                {% endfor %}
+            </select>
+
+            <label for="release-region">Region</label>
+            <select id="release-region" name="region">
+                <option value="">Alle Regionen</option>
+                {% for region in regions %}
+                    <option value="{{ region }}" {{ filters.region == region ? 'selected' : '' }}>{{ region }}</option>
+                {% endfor %}
+            </select>
+
+            <label for="release-status">Status</label>
+            <select id="release-status" name="status">
+                <option value="">Alle Status</option>
+                {% for key, label in statuses %}
+                    <option value="{{ key }}" {{ filters.status == key ? 'selected' : '' }}>{{ label }}</option>
+                {% endfor %}
+            </select>
+
+            <label for="release-year">Jahr</label>
+            <select id="release-year" name="year">
+                <option value="">Nächste 18 Monate</option>
+                {% for year in years %}
+                    <option value="{{ year }}" {{ filters.year == year ? 'selected' : '' }}>{{ year }}</option>
+                {% endfor %}
+            </select>
+
+            <div class="row-actions">
+                <button>Filter anwenden</button>
+                <a class="button-link button-secondary" href="{{ path('app_game_catalogue_release_calendar') }}">Filter zurücksetzen</a>
+            </div>
+        </form>
+    </section>
+
+    <p class="muted" role="status">{{ total }} {{ total == 1 ? 'Veröffentlichung' : 'Veröffentlichungen' }} gefunden.</p>
+    <div class="table-wrap">
+        <table>
+            <thead><tr><th>Datum</th><th>Spiel</th><th>Edition</th><th>Plattform</th><th>Region</th><th>Status</th></tr></thead>
+            <tbody>
+            {% for release in releases %}
+                <tr class="release-row">
+                    <td>{{ release.releaseAt|date('d.m.Y') }}</td>
+                    <td><a href="{{ path('app_game_catalogue_show', {slug: release.entry.game.slug}) }}">{{ release.entry.game.name }}</a></td>
+                    <td>{{ release.edition ? release.edition.name : 'Standard' }}</td>
+                    <td>{{ release.platform.name }}</td>
+                    <td>{{ release.region }}</td>
+                    <td>{{ statuses[release.status]|default(release.status) }}</td>
+                </tr>
+            {% else %}
+                <tr><td colspan="6">Keine passenden Veröffentlichungen gefunden.</td></tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    {% if pages > 1 %}
+        <nav class="pagination" aria-label="Seitennavigation">
+            {% if page > 1 %}
+                <a href="{{ path('app_game_catalogue_release_calendar', paginationFilters|merge({page: page - 1})) }}">Zurück</a>
+            {% endif %}
+            <span>Seite {{ page }} von {{ pages }}</span>
+            {% if page < pages %}
+                <a href="{{ path('app_game_catalogue_release_calendar', paginationFilters|merge({page: page + 1})) }}">Weiter</a>
+            {% endif %}
+        </nav>
+    {% endif %}
+</main>
+{% endblock %}

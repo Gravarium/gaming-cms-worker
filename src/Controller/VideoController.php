@@ -8,6 +8,7 @@ use App\Repository\VideoCategoryRepository;
 use App\Repository\VideoPlaylistRepository;
 use App\Repository\VideoRepository;
 use App\Service\VideoEmbedResolver;
+use App\Service\VideoIndexFilterPolicy;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -31,12 +32,20 @@ final class VideoController extends AbstractController
 
         $categorySlug = $request->query->getString('category');
         if ($categorySlug !== '') {
+            if (!VideoIndexFilterPolicy::acceptsCategorySlug($categorySlug)) {
+                throw $this->createNotFoundException();
+            }
+
             $category = $this->categories->findOneBy(['slug' => $categorySlug, 'enabled' => true]);
             if ($category === null) { throw $this->createNotFoundException(); }
         }
 
         $playlistSlug = $request->query->getString('playlist');
         if ($playlistSlug !== '') {
+            if (!VideoIndexFilterPolicy::acceptsPlaylistSlug($playlistSlug)) {
+                throw $this->createNotFoundException();
+            }
+
             $playlist = $this->playlists->findEnabledBySlug($playlistSlug);
             if ($playlist === null) { throw $this->createNotFoundException(); }
         }

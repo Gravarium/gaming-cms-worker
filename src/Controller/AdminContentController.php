@@ -28,6 +28,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\ConflictHttpException;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\String\Slugger\SluggerInterface;
@@ -36,6 +37,8 @@ use Symfony\Component\String\Slugger\SluggerInterface;
 #[IsGranted('CMS_CONTENT_MANAGE')]
 final class AdminContentController extends AbstractController
 {
+    public const MAX_EDITOR_PAYLOAD_BYTES = 524288;
+
     public function __construct(
         private readonly ContentEntryRepository $entries,
         private readonly ContentRevisionRepository $revisions,
@@ -321,7 +324,12 @@ final class AdminContentController extends AbstractController
     /** @return array<string,mixed> */
     private function editorPayload(Request $request): array
     {
-        $payload = json_decode($request->getContent(), true, 32, JSON_THROW_ON_ERROR);
+        $body = $request->getContent();
+        if (strlen($body) > self::MAX_EDITOR_PAYLOAD_BYTES) {
+            throw new HttpException(Response::HTTP_REQUEST_ENTITY_TOO_LARGE, 'Editor-Anfrage ist zu groß.');
+        }
+
+        $payload = json_decode($body, true, 32, JSON_THROW_ON_ERROR);
         if (!is_array($payload)) {
             throw new \InvalidArgumentException('Ungültige Editor-Anfrage.');
         }

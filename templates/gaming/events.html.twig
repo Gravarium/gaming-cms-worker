@@ -1,0 +1,36 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Termine von {{ guild.name }} | {{ site.siteName }}{% endblock %}
+
+{% block body %}
+{% set eventTypes = {raid: 'Raid', meeting: 'Besprechung', training: 'Training', other: 'Sonstiges'} %}
+<header class="topbar">
+    <a class="brand" href="{{ path('app_home') }}">{{ site.siteName }}</a>
+    <nav class="top-actions">
+        <a href="{{ path('app_guild_show', {slug: guild.slug}) }}">Zur Gilde</a>
+        <a href="{{ path('app_gaming_index') }}">Alle Gilden</a>
+    </nav>
+</header>
+<main class="public-shell">
+    <p class="eyebrow">{{ guild.name }}</p>
+    <h1>Anstehende Termine</h1>
+    <p class="hero-copy">Öffentliche Termine und Aktivitäten dieser Gilde.</p>
+    <section class="news-grid" aria-label="Anstehende Gildentermine">
+        {% for event in events %}
+            <article class="card">
+                <p class="eyebrow">{{ eventTypes[event.type]|default(event.type) }}</p>
+                <h2>{{ event.title }}</h2>
+                <p>
+                    <time datetime="{{ event.startsAt|date('c') }}">{{ event.startsAt|date('d.m.Y H:i') }} Uhr</time>
+                    {% if event.endsAt %}– <time datetime="{{ event.endsAt|date('c') }}">{{ event.endsAt|date('d.m.Y H:i') }} Uhr</time>{% endif %}
+                </p>
+                {% if event.description %}<p>{{ event.description|nl2br }}</p>{% endif %}
+                {% if event.location %}<p class="muted">Ort: {{ event.location }}</p>{% endif %}
+                {% if event.maxParticipants %}<p class="muted">Teilnehmerlimit: {{ event.maxParticipants }}</p>{% endif %}
+            </article>
+        {% else %}
+            <p class="muted">Für diese Gilde sind derzeit keine anstehenden Termine veröffentlicht.</p>
+        {% endfor %}
+    </section>
+</main>
+{% endblock %}

@@ -10,7 +10,14 @@
     <p class="eyebrow">Community</p>
     <h1>Spiele und Gilden</h1>
     <p class="hero-copy">Entdecke die Spiele, Gilden und Clans unserer Community.</p>
-    {% if games %}<div class="game-filter" aria-label="Aktive Spiele">{% for game in games %}<span class="status">{{ game.name }}</span>{% endfor %}</div>{% endif %}
+    <nav class="game-filter top-actions" aria-label="Gilden nach Spiel filtern">
+        {% set allGamesSelected = selectedGame is null and not invalidGameFilter %}
+        <a class="status {{ allGamesSelected ? 'status-ready' : '' }}" href="{{ path('app_gaming_index') }}" {% if allGamesSelected %}aria-current="page"{% endif %}>Alle Spiele</a>
+        {% for game in games %}
+            {% set gameSelected = selectedGame is not null and selectedGame.slug == game.slug %}
+            <a class="status {{ gameSelected ? 'status-ready' : '' }}" href="{{ path('app_gaming_index', {game: game.slug}) }}" {% if gameSelected %}aria-current="page"{% endif %}>{{ game.name }}</a>
+        {% endfor %}
+    </nav>
     <section class="guild-grid" aria-label="Gilden und Clans">
         {% for guild in guilds %}
             <article class="guild-card">
@@ -21,7 +28,13 @@
                 <div class="guild-meta"><span>{{ guild.serverName }}</span>{% if guild.region %}<span>{{ guild.region }}</span>{% endif %}{% if guild.faction %}<span>{{ guild.faction }}</span>{% endif %}</div>
                 <span class="status {{ guild.recruitmentOpen ? 'status-ready' : 'status-disabled' }}">{{ guild.recruitmentOpen ? 'Mitglieder gesucht' : 'Rekrutierung geschlossen' }}</span>
             </article>
-        {% else %}<p class="muted">Noch keine öffentlichen Gilden vorhanden.</p>{% endfor %}
+        {% else %}
+            <p class="muted" role="status">
+                {% if invalidGameFilter %}Dieses Spiel ist nicht verfügbar oder hat keine öffentlichen Gilden.
+                {% elseif selectedGame %}Für {{ selectedGame.name }} sind keine öffentlichen Gilden vorhanden.
+                {% else %}Noch keine öffentlichen Gilden vorhanden.{% endif %}
+            </p>
+        {% endfor %}
     </section>
 </main>
 {% endblock %}

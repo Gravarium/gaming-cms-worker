@@ -14,8 +14,12 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Table(name: 'guild')]
 #[ORM\UniqueConstraint(name: 'uniq_guild_slug', columns: ['slug'])]
 #[UniqueEntity(fields: ['slug'])]
+#[ORM\HasLifecycleCallbacks]
 class Guild
 {
+    private const MAX_SERVER_NAME_BYTES = 480;
+    private const MAX_SERVER_NAME_LENGTH = 120;
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -88,7 +92,17 @@ class Guild
     public function getSlug(): string { return $this->slug; }
     public function setSlug(string $slug): self { $this->slug = $slug; return $this; }
     public function getServerName(): string { return $this->serverName; }
-    public function setServerName(string $serverName): self { $this->serverName = trim($serverName); return $this; }
+    public function setServerName(string $serverName): self
+    {
+        if (!mb_check_encoding($serverName, 'UTF-8') || str_contains($serverName, "\0")) {
+            throw new \InvalidArgumentException('Guild server name must be valid UTF-8 without NUL bytes.');
+        }
+
+        $normalizedServerName = trim($serverName);
+        $this->serverName = $normalizedServerName;
+
+        return $this;
+    }
     public function getRegion(): ?string { return $this->region; }
     public function setRegion(?string $region): self { $this->region = $this->optional($region); return $this; }
     public function getFaction(): ?string { return $this->faction; }
@@ -107,5 +121,15 @@ class Guild
     {
         $value = $value === null ? null : trim($value);
         return $value === '' ? null : $value;
+    }
+
+    /** @internal Doctrine lifecycle callback. */
+    #[ORM\PrePersist]
+    #[ORM\PreUpdate]
+    public function assertServerNameColumnBoundary(): void
+    {
+        if (strlen($this->serverName) > self::MAX_SERVER_NAME_BYTES || !mb_check_encoding($this->serverName, 'UTF-8') || str_contains($this->serverName, "\0") || mb_strlen($this->serverName, 'UTF-8') > self::MAX_SERVER_NAME_LENGTH) {
+            throw new \InvalidArgumentException('Guild server name must fit its 120-character storage column.');
+        }
     }
 }

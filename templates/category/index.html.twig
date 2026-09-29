@@ -1,0 +1,29 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Kategorien | {{ site.siteName }}{% endblock %}
+
+{% block body %}
+<header class="topbar">
+    <a class="brand" href="{{ path('app_home') }}">{{ site.siteName }}</a>
+    <nav class="top-actions">
+        <a href="{{ path('app_news_index') }}">Alle News</a>
+        <a href="{{ path('app_home') }}">Startseite</a>
+    </nav>
+</header>
+<main class="dashboard">
+    <p class="eyebrow">News</p>
+    <h1>Kategorien</h1>
+    <p class="muted">Durchsuche veröffentlichte Beiträge nach Themen.</p>
+    <section class="news-grid" aria-label="News-Kategorien">
+        {% for category in categories %}
+            <article class="card">
+                <p class="eyebrow">Kategorie</p>
+                <h2><a href="{{ path('app_news_category', {slug: category.slug}) }}">{{ category.displayName }}</a></h2>
+                {% if category.description %}<p>{{ category.description }}</p>{% endif %}
+            </article>
+        {% else %}
+            <p class="muted">Noch keine Kategorien vorhanden.</p>
+        {% endfor %}
+    </section>
+</main>
+{% endblock %}

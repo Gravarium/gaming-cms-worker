@@ -10,6 +10,12 @@
     <p class="eyebrow">Mediathek</p>
     <h1>Videos</h1>
     <p class="hero-copy">Streams, Guides, Highlights und Community-Videos an einem Ort.</p>
+    <form action="{{ path('app_video_library_search') }}" method="get" role="search" class="content-form">
+        <label for="video-library-search">Videos durchsuchen
+            <input id="video-library-search" type="search" name="q" minlength="2" maxlength="100" required>
+        </label>
+        <button type="submit">Suchen</button>
+    </form>
 
     <div class="video-filters">
         <a class="status {{ not activeCategory and not activePlaylist ? 'status-ready' : '' }}" href="{{ path('app_video_index') }}">Alle Videos</a>

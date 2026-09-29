@@ -1,0 +1,70 @@
+{% extends 'base.html.twig' %}
+{% set site = site_settings() %}
+{% block title %}Meine Gildentermine | {{ site.siteName }}{% endblock %}
+{% block body %}
+<header class="topbar">
+    <a class="brand" href="{{ path('app_guild_portal_index') }}">Mein Gildenbereich</a>
+    <nav class="top-actions">
+        <a href="{{ path('app_account_security') }}">Kontosicherheit</a>
+        <form method="post" action="{{ path('app_logout') }}">
+            <input type="hidden" name="_csrf_token" value="{{ csrf_token('logout') }}">
+            <button class="button-secondary">Abmelden</button>
+        </form>
+    </nav>
+</header>
+<main class="dashboard">
+    <p class="eyebrow">Geschützter Mitgliederbereich</p>
+    <h1>Meine kommenden Gildentermine</h1>
+    {% for message in app.flashes('success') %}<div class="notice">{{ message }}</div>{% endfor %}
+    {% for message in app.flashes('error') %}<div class="notice" role="alert">{{ message }}</div>{% endfor %}
+    <p class="muted">Du siehst hier nur künftige Anmeldungen deiner aktiven Charaktere.</p>
+    <div class="application-list">
+        {% for signup in signups %}
+            <article class="application-card">
+                <div>
+                    <p class="eyebrow">{{ signup.guildName }} · {{ signup.characterName }} · {{ signup.startsAt|date('d.m.Y H:i') }}</p>
+                    <h2>{{ signup.eventTitle }}</h2>
+                    <p>Antwort: {% if signup.response == 'going' %}Zusage{% elseif signup.response == 'maybe' %}Vielleicht{% else %}Warteliste{% endif %} · Rolle: {{ signup.role }}</p>
+                </div>
+                <form class="content-form" method="post" action="{{ path('app_guild_event_signup_portal_update', {signupId: signup.id}) }}">
+                    <input type="hidden" name="_token" value="{{ csrf_token('guild-event-signup-update-' ~ signup.id) }}">
+                    <label>Antwort
+                        <select name="response" required>
+                            <option value="going" {% if signup.response in ['going', 'waitlist'] %}selected{% endif %}>Zusage</option>
+                            <option value="maybe" {% if signup.response == 'maybe' %}selected{% endif %}>Vielleicht</option>
+                            <option value="declined">Absage</option>
+                        </select>
+                    </label>
+                    <label>Rolle
+                        <select name="role" required>
+                            <option value="tank" {% if signup.role == 'tank' %}selected{% endif %}>Tank</option>
+                            <option value="heal" {% if signup.role == 'heal' %}selected{% endif %}>Heiler</option>
+                            <option value="damage" {% if signup.role == 'damage' %}selected{% endif %}>Schaden</option>
+                            <option value="support" {% if signup.role == 'support' %}selected{% endif %}>Unterstützung</option>
+                            <option value="other" {% if signup.role == 'other' %}selected{% endif %}>Andere</option>
+                        </select>
+                    </label>
+                    <button>Antwort und Rolle speichern</button>
+                </form>
+                <form method="post" action="{{ path('app_guild_event_signup_portal_withdraw', {signupId: signup.id}) }}">
+                    <input type="hidden" name="_token" value="{{ csrf_token('guild-event-signup-withdraw-' ~ signup.id) }}">
+                    <button class="button-secondary">Anmeldung zurückziehen</button>
+                </form>
+            </article>
+        {% else %}
+            <article class="panel">
+                <h2>Keine kommenden Anmeldungen</h2>
+                <p>Deine künftigen Zusagen, Vielleicht-Antworten und Wartelistenplätze werden hier angezeigt.</p>
+            </article>
+        {% endfor %}
+    </div>
+    {% if lastPage > 1 %}
+        <nav class="pagination" aria-label="Seiten">
+            {% if page > 1 %}<a href="{{ path('app_guild_event_signup_portal_index', {page: page - 1}) }}">Zurück</a>{% endif %}
+            <span>Seite {{ page }} von {{ lastPage }}</span>
+            {% if page < lastPage %}<a href="{{ path('app_guild_event_signup_portal_index', {page: page + 1}) }}">Weiter</a>{% endif %}
+        </nav>
+    {% endif %}
+    <p class="muted">{{ total }} kommende Anmeldungen</p>
+</main>
+{% endblock %}

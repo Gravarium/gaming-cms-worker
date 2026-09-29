@@ -1,0 +1,7 @@
+{% extends 'base.html.twig' %}
+{% block title %}Charakterprofil anlegen{% endblock %}
+{% block body %}
+<main class="admin-shell"><h1>Charakterprofil anlegen</h1>
+{% if error %}<div class="notice notice-error">{{ error }}</div>{% endif %}
+<form method="post"><input type="hidden" name="_token" value="{{ csrf_token('character-profile-new') }}"><label>Account<select name="account_id" required>{% for account in accounts %}<option value="{{ account.id }}">{{ account.displayName }} · {{ account.game.name }}</option>{% endfor %}</select></label><label>Name<input name="name" maxlength="160" required></label><label>Server<input name="server" maxlength="120"></label><label>Region<input name="region" maxlength="80"></label><label>Klasse<input name="character_class" maxlength="100"></label><label>Rolle<input name="role" maxlength="80"></label><label>Stufe<input name="level" type="number" min="1" max="10000"></label><button type="submit">Speichern</button></form></main>
+{% endblock %}

@@ -3,7 +3,7 @@
 {% block body %}
 <header class="topbar">
     <a class="brand" href="{{ path('app_admin_dashboard') }}">Gaming CMS</a>
-    <a class="button-link button-secondary" href="{{ path('app_admin_video_index') }}">Zurück</a>
+    <a class="button-link button-secondary" href="{{ path('app_admin_video_index', listQuery) }}">Zurück</a>
 </header>
 <main class="editor-shell">
     <p class="eyebrow">Video-Modul</p>
@@ -15,7 +15,15 @@
     {% if video.mediaAsset %}
         <div class="notice">Aktuelle Datei: <a href="{{ video.mediaAsset.location }}" target="_blank" rel="noopener noreferrer">{{ video.mediaAsset.originalName }}</a></div>
     {% endif %}
-    {{ form_start(form, {attr: {class: 'content-form'}}) }}
+    {% if video.id is not null %}
+        <div class="storage-hint">
+            <strong>Gespeicherte Vorschau</strong>
+            <span>Öffnet die zuletzt gespeicherte Fassung in einem neuen Tab.</span>
+            <a class="button-link button-secondary" href="{{ path('app_admin_video_preview', {id: video.id}) }}" target="_blank" rel="noopener noreferrer">Vorschau ansehen</a>
+        </div>
+    {% endif %}
+    {% set formAction = video.id ? path('app_admin_video_edit', {id: video.id}|merge(listQuery)) : path('app_admin_video_new', listQuery) %}
+    {{ form_start(form, {action: formAction, attr: {class: 'content-form'}}) }}
         {{ form_widget(form) }}
         <button type="submit">Video speichern</button>
     {{ form_end(form) }}

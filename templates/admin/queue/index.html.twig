@@ -15,32 +15,49 @@
     <article class="panel">
         <h2>{{ total }} fehlgeschlagene Nachricht{{ total == 1 ? '' : 'en' }}</h2>
         {% if total > 0 %}
-            <form method="post" action="{{ path('app_admin_queue_retry_all') }}" onsubmit="return confirm('Bis zu 100 fehlgeschlagene Nachrichten erneut einplanen?');">
+            <p>Einträge {{ first }}–{{ last }} von {{ total }} · Seite {{ page }} von {{ pageCount }}</p>
+        {% endif %}
+        {% if messages %}
+            <form method="post" action="{{ path('app_admin_queue_retry_all', {page: page}) }}" onsubmit="return confirm('{{ messages|length }} fehlgeschlagene Nachrichten dieser Seite erneut einplanen?');">
                 <input type="hidden" name="_token" value="{{ csrf_token('queue-retry-all') }}">
-                <button type="submit">Alle angezeigten erneut versuchen</button>
+                <button type="submit">Alle {{ messages|length }} angezeigten erneut versuchen</button>
             </form>
-        {% else %}
+        {% elseif total == 0 %}
             <p><span class="status status-ready">Keine endgültig fehlgeschlagenen Nachrichten</span></p>
+        {% else %}
+            <p>Auf dieser Seite sind keine Nachrichten mehr verfügbar.</p>
         {% endif %}
     </article>
 
     {% if messages %}
         <section class="dashboard-grid">
             {% for failed in messages %}
-                <article class="panel">
+                <article class="panel" data-message-id="{{ failed.id }}">
                     <p class="eyebrow">Nachricht {{ failed.id }}</p>
                     <h2>{{ failed.type }}</h2>
                     <p>
                         Fehlgeschlagen seit: {{ failed.createdAt|date('d.m.Y H:i', 'UTC') }} UTC<br>
                         Interne Nachrichtengröße: {{ (failed.bytes / 1024)|number_format(1, ',', '.') }} KiB
                     </p>
-                    <form method="post" action="{{ path('app_admin_queue_retry', {id: failed.id}) }}">
+                    <form method="post" action="{{ path('app_admin_queue_retry', {id: failed.id, page: page}) }}">
                         <input type="hidden" name="_token" value="{{ csrf_token('queue-retry-' ~ failed.id) }}">
                         <button type="submit">Erneut versuchen</button>
                     </form>
                 </article>
             {% endfor %}
         </section>
+    {% endif %}
+
+    {% if total > 0 %}
+        <nav class="panel" aria-label="Seitennavigation fehlgeschlagener Nachrichten">
+            {% if page > 1 %}
+                <a class="button-link button-secondary" rel="prev" href="{{ path('app_admin_queue_index', {page: page - 1}) }}">Vorherige Seite</a>
+            {% endif %}
+            <span>Seite {{ page }} von {{ pageCount }}</span>
+            {% if page < pageCount %}
+                <a class="button-link button-secondary" rel="next" href="{{ path('app_admin_queue_index', {page: page + 1}) }}">Nächste Seite</a>
+            {% endif %}
+        </nav>
     {% endif %}
 </main>
 {% endblock %}

@@ -32,6 +32,17 @@ final class ContentEntryWorkflowTest extends TestCase
     {
         $now = new \DateTimeImmutable('2026-09-20 10:00:00 UTC'); $entry = (new ContentEntry())->setStatus(ContentEntry::STATUS_PUBLISHED)->setPublishedAt($now->modify('-1 day'))->setScheduledUnpublishAt($now); self::assertTrue($entry->unpublishIfDue($now)); self::assertSame(ContentEntry::STATUS_ARCHIVED, $entry->getStatus()); self::assertNull($entry->getScheduledUnpublishAt()); self::assertFalse($entry->unpublishIfDue($now));
     }
+    public function testScheduledUnpublishDateImmediatelyEndsPublicVisibility(): void
+    {
+        $boundary = new \DateTimeImmutable();
+        $expired = (new ContentEntry())->setStatus(ContentEntry::STATUS_PUBLISHED)->setPublishedAt($boundary->modify('-1 hour'))->setScheduledUnpublishAt($boundary);
+        self::assertFalse($expired->isPublished());
+        self::assertFalse($expired->isPubliclyListed());
+
+        $future = (new ContentEntry())->setStatus(ContentEntry::STATUS_PUBLISHED)->setPublishedAt(new \DateTimeImmutable('-1 hour'))->setScheduledUnpublishAt(new \DateTimeImmutable('+1 hour'));
+        self::assertTrue($future->isPublished());
+        self::assertTrue($future->isPubliclyListed());
+    }
     public function testTrashIsFailClosedAndRestoreReturnsDraft(): void
     {
         $entry = (new ContentEntry())->setStatus(ContentEntry::STATUS_PUBLISHED)->setPublishedAt(new \DateTimeImmutable('-1 hour'))->setScheduledUnpublishAt(new \DateTimeImmutable('+1 day')); $entry->trash(); self::assertSame(ContentEntry::STATUS_TRASHED, $entry->getStatus()); self::assertNotNull($entry->getTrashedAt()); self::assertNull($entry->getPublishedAt()); self::assertNull($entry->getScheduledUnpublishAt()); $entry->restoreFromTrash(); self::assertSame(ContentEntry::STATUS_DRAFT, $entry->getStatus()); self::assertNull($entry->getTrashedAt());

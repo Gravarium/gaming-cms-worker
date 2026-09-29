@@ -1,0 +1,49 @@
+{% extends 'base.html.twig' %}
+{% block title %}Onboarding | {{ guild.name }}{% endblock %}
+{% block body %}
+<header class="topbar">
+    <a class="brand" href="{{ path('app_admin_dashboard') }}">Gaming CMS</a>
+    <a class="button-link button-secondary" href="{{ path('app_admin_guild_edit', {id: guild.id}) }}">Zur Gilde</a>
+</header>
+<main class="editor-shell">
+    <p class="eyebrow">{{ guild.name }}</p>
+    <h1>Onboarding-Checkliste</h1>
+    {% for message in app.flashes('success') %}<div class="notice">{{ message }}</div>{% endfor %}
+    {% for message in app.flashes('notice') %}<div class="notice">{{ message }}</div>{% endfor %}
+    {% for message in app.flashes('error') %}<div class="notice notice-error">{{ message }}</div>{% endfor %}
+    <p>Hier verwaltest du die offenen Schritte für die aktiven Gildenmitglieder.</p>
+    <p><a class="button-link" href="{{ path('app_admin_guild_onboarding_new', {guild: guild.id}) }}">Aufgabe hinzufügen</a></p>
+    <div class="table-wrap">
+        <table>
+            <thead><tr><th>Aufgabe</th><th>Charakter</th><th>Status</th><th>Erledigt von</th><th>Erledigt am</th><th>Aktionen</th></tr></thead>
+            <tbody>
+            {% for task in tasks %}
+                <tr>
+                    <td>{{ task.label }}</td>
+                    <td>{{ task.characterName }}</td>
+                    <td>{{ task.completed ? 'Erledigt' : 'Offen' }}</td>
+                    <td>{{ task.completed ? (task.completedBy ?: 'Nicht mehr verfügbar') : '–' }}</td>
+                    <td>{{ task.completedAt ? task.completedAt|date('Y-m-d H:i') : '–' }}</td>
+                    <td class="row-actions">
+                        {% if not task.completed %}
+                            <form method="post" action="{{ path('app_admin_guild_onboarding_complete', {guild: guild.id, taskId: task.id}) }}">
+                                <input type="hidden" name="_token" value="{{ csrf_token('complete-onboarding-task-' ~ guild.id ~ '-' ~ task.id) }}">
+                                <button type="submit">Als erledigt markieren</button>
+                            </form>
+                            <form method="post" action="{{ path('app_admin_guild_onboarding_delete', {guild: guild.id, taskId: task.id}) }}" onsubmit="return confirm('Offene Aufgabe wirklich löschen?');">
+                                <input type="hidden" name="_token" value="{{ csrf_token('delete-onboarding-task-' ~ guild.id ~ '-' ~ task.id) }}">
+                                <button class="text-danger" type="submit">Löschen</button>
+                            </form>
+                        {% else %}
+                            <span>Nachweis bleibt erhalten</span>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% else %}
+                <tr><td colspan="6">Für diese Gilde sind noch keine Onboarding-Aufgaben angelegt.</td></tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</main>
+{% endblock %}

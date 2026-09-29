@@ -1,0 +1,50 @@
+{% extends 'base.html.twig' %}
+{% set site = site_settings() %}
+{% block title %}Videosuche | {{ site.siteName }}{% endblock %}
+{% block body %}
+<header class="topbar">
+    <a class="brand" href="{{ path('app_home') }}">{% if site.logoPath %}<img class="site-logo" src="{{ site.logoPath }}" alt="{{ site.siteName }}">{% else %}{{ site.siteName }}{% endif %}</a>
+    <a class="button-link button-secondary" href="{{ path('app_video_index') }}">Alle Videos</a>
+</header>
+<main class="public-shell video-library">
+    <p class="eyebrow">Mediathek</p>
+    <h1>Videos durchsuchen</h1>
+
+    <form action="{{ path('app_video_library_search') }}" method="get" role="search" class="content-form">
+        <label for="video-search-query">Suchbegriff
+            <input id="video-search-query" type="search" name="q" value="{{ query }}" minlength="2" maxlength="100" required>
+        </label>
+        <button type="submit">Suchen</button>
+    </form>
+
+    {% if submitted and not valid %}
+        <p class="notice" role="status">Bitte gib einen Suchbegriff mit 2 bis 100 Zeichen ein.</p>
+    {% elseif valid %}
+        <p class="muted" role="status">{{ videos|length }} Treffer für „{{ query }}“</p>
+    {% else %}
+        <p class="muted">Suche veröffentlichte Videos nach Titel oder Beschreibung.</p>
+    {% endif %}
+
+    <section class="video-grid">
+        {% for video in videos %}
+            <article class="video-card {{ video.featured ? 'video-card-featured' : '' }}">
+                <a class="video-thumbnail" href="{{ path('app_video_show', {slug: video.slug}) }}">
+                    {% if video.thumbnailUrl %}<img src="{{ video.thumbnailUrl }}" alt="{{ video.title }}" loading="lazy">
+                    {% else %}<span class="video-play-symbol">▶</span>{% endif %}
+                    {% if video.durationLabel %}<span class="video-duration">{{ video.durationLabel }}</span>{% endif %}
+                </a>
+                <div class="video-card-body">
+                    <p class="eyebrow">{{ video.category and video.category.enabled ? video.category.name : video.sourceType|capitalize }}</p>
+                    <h2><a href="{{ path('app_video_show', {slug: video.slug}) }}">{{ video.title }}</a></h2>
+                    <p>{{ video.description|striptags|slice(0, 180) }}{% if video.description|length > 180 %}…{% endif %}</p>
+                    <span class="video-date">{{ video.publishedAt|date('d.m.Y H:i') }} Uhr</span>
+                </div>
+            </article>
+        {% else %}
+            {% if valid %}
+                <div class="panel"><h2>Keine Videos gefunden</h2><p>Versuche einen anderen Suchbegriff.</p></div>
+            {% endif %}
+        {% endfor %}
+    </section>
+</main>
+{% endblock %}

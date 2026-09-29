@@ -1,0 +1,56 @@
+{% extends 'base.html.twig' %}
+{% block title %}Revision #{{ revision.revisionNumber }} vergleichen | Gaming CMS{% endblock %}
+{% block body %}
+<header class="topbar">
+    <a class="brand" href="{{ path('app_admin_dashboard') }}">Gaming CMS</a>
+    <nav class="top-actions">
+        <a class="button-link" href="{{ path('app_admin_content_history', {id: entry.id}) }}">Zur Versionshistorie</a>
+        <a class="button-link button-secondary" href="{{ path('app_admin_content_edit', {id: entry.id}) }}">Inhalt bearbeiten</a>
+    </nav>
+</header>
+<main class="dashboard">
+    <p class="eyebrow">Inhalte · Versionsvergleich</p>
+    <h1>Revision #{{ revision.revisionNumber }} vergleichen</h1>
+    <p class="muted">Der Snapshot wird mit dem aktuellen Stand von „{{ entry.title }}“ verglichen. Diese Ansicht ist nur lesend; Änderungen werden erst beim Bearbeiten oder Wiederherstellen gespeichert.</p>
+    <p class="muted">Gespeichert am {{ revision.createdAt|date('d.m.Y H:i:s') }} von {{ revision.createdBy.email }}.</p>
+
+    <section aria-labelledby="revision-fields-heading">
+        <h2 id="revision-fields-heading">Felder</h2>
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr><th scope="col">Feld</th><th scope="col">Revision #{{ revision.revisionNumber }}</th><th scope="col">Aktueller Stand</th><th scope="col">Vergleich</th></tr>
+                </thead>
+                <tbody>
+                    {% for field in fields %}
+                        <tr>
+                            <th scope="row">{{ field.label }}</th>
+                            <td>{{ field.revision }}</td>
+                            <td>{{ field.current }}</td>
+                            <td>{% if field.changed %}<strong>Geändert</strong>{% else %}<span>Unverändert</span>{% endif %}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <section aria-labelledby="revision-body-heading">
+        <h2 id="revision-body-heading">Inhalt</h2>
+        <p>{% if bodyChanged %}<strong>Geändert</strong>{% else %}<span>Unverändert</span>{% endif %}</p>
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr><th scope="col">Revision #{{ revision.revisionNumber }}</th><th scope="col">Aktueller Stand</th></tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><div class="article-body">{{ revisionBody|content_blocks_render }}</div></td>
+                        <td><div class="article-body">{{ currentBody|content_blocks_render }}</div></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+</main>
+{% endblock %}

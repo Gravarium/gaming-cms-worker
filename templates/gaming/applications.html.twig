@@ -1,0 +1,62 @@
+{% extends 'base.html.twig' %}
+{% set site = site_settings() %}
+{% set status_labels = {
+    'pending': 'Eingegangen',
+    'reviewing': 'Wird geprüft',
+    'accepted': 'Angenommen',
+    'rejected': 'Abgelehnt'
+} %}
+{% set status_classes = {
+    'pending': 'status-ready',
+    'reviewing': 'status',
+    'accepted': 'status-ready',
+    'rejected': 'status-disabled'
+} %}
+{% block title %}Meine Bewerbungen | {{ site.siteName }}{% endblock %}
+{% block body %}
+<header class="topbar">
+    <a class="brand" href="{{ path('app_home') }}">{% if site.logoPath %}<img class="site-logo" src="{{ site.logoPath }}" alt="{{ site.siteName }}">{% else %}{{ site.siteName }}{% endif %}</a>
+    <nav class="top-actions" aria-label="Hauptnavigation">
+        <a href="{{ path('app_gaming_index') }}">Alle Gilden</a>
+        <a href="{{ path('app_account_home') }}">Konto</a>
+    </nav>
+</header>
+<main class="public-shell">
+    <p class="eyebrow">Gildenportal</p>
+    <h1>Meine Bewerbungen</h1>
+    <p class="muted">Hier siehst du den aktuellen Stand deiner Bewerbungen. Angezeigt werden nur Bewerbungen, die mit der bestätigten E-Mail-Adresse deines Kontos eingereicht wurden.</p>
+
+    {% if totalCount > 0 %}
+        <p class="muted">{{ totalCount }} Bewerbung{{ totalCount == 1 ? '' : 'en' }} · Seite {{ currentPage }} von {{ totalPages }}</p>
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr><th>Gilde</th><th>Charakter</th><th>Status</th><th>Eingereicht</th><th>Entschieden</th></tr>
+                </thead>
+                <tbody>
+                {% for application in applications %}
+                    <tr data-application-row>
+                        <td>{{ application.guild.name }}</td>
+                        <td>{{ application.characterName }}</td>
+                        <td><span class="{{ status_classes[application.status]|default('status') }}">{{ status_labels[application.status]|default('Status wird aktualisiert') }}</span></td>
+                        <td><time datetime="{{ application.createdAt|date('c') }}">{{ application.createdAt|date('d.m.Y H:i') }}</time></td>
+                        <td>{% if application.reviewedAt %}<time datetime="{{ application.reviewedAt|date('c') }}">{{ application.reviewedAt|date('d.m.Y H:i') }}</time>{% else %}–{% endif %}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        {% if totalPages > 1 %}
+            <nav class="pagination" aria-label="Seiten der Bewerbungen">
+                {% if currentPage > 1 %}<a rel="prev" href="{{ path('app_guild_application_status', {page: currentPage - 1}) }}">Vorherige</a>{% endif %}
+                <span>Seite {{ currentPage }} von {{ totalPages }}</span>
+                {% if currentPage < totalPages %}<a rel="next" href="{{ path('app_guild_application_status', {page: currentPage + 1}) }}">Nächste</a>{% endif %}
+            </nav>
+        {% endif %}
+    {% else %}
+        <p class="muted">Zu deinem Konto wurden noch keine Gildenbewerbungen gefunden.</p>
+        <a class="button-link" href="{{ path('app_gaming_index') }}">Gilden entdecken</a>
+    {% endif %}
+</main>
+{% endblock %}

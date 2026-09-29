@@ -11,8 +11,12 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: GuildApplicationRepository::class)]
 #[ORM\Table(name: 'guild_application')]
+#[ORM\HasLifecycleCallbacks]
 class GuildApplication
 {
+    private const MAX_MESSAGE_BYTES = 20000;
+    private const MAX_MESSAGE_LENGTH = 5000;
+
     public const STATUS_PENDING = 'pending';
     public const STATUS_REVIEWING = 'reviewing';
     public const STATUS_ACCEPTED = 'accepted';
@@ -101,7 +105,17 @@ class GuildApplication
     public function getCharacterClass(): ?string { return $this->characterClass; }
     public function setCharacterClass(?string $value): self { $value = $value === null ? null : trim($value); $this->characterClass = $value === '' ? null : $value; return $this; }
     public function getMessage(): string { return $this->message; }
-    public function setMessage(string $message): self { $this->message = trim($message); return $this; }
+    public function setMessage(string $message): self
+    {
+        if (!mb_check_encoding($message, 'UTF-8') || str_contains($message, "\0")) {
+            throw new \InvalidArgumentException('Guild application message must be valid UTF-8 without NUL bytes.');
+        }
+
+        $normalizedMessage = trim($message);
+        $this->message = $normalizedMessage;
+
+        return $this;
+    }
     /** @return list<array{question: string, answer: string}> */
     public function getAnswers(): array { return $this->answers; }
     /** @param list<array{question: string, answer: string}> $answers */
@@ -118,5 +132,15 @@ class GuildApplication
     private function ensureOpen(): void
     {
         if (!$this->isOpen()) { throw new \DomainException('A decided guild application cannot be decided again.'); }
+    }
+
+    /** @internal Doctrine lifecycle callback. */
+    #[ORM\PrePersist]
+    #[ORM\PreUpdate]
+    public function assertMessageColumnBoundary(): void
+    {
+        if (strlen($this->message) > self::MAX_MESSAGE_BYTES || !mb_check_encoding($this->message, 'UTF-8') || str_contains($this->message, "\0") || mb_strlen($this->message, 'UTF-8') > self::MAX_MESSAGE_LENGTH) {
+            throw new \InvalidArgumentException('Guild application message must not exceed 5,000 characters.');
+        }
     }
 }

@@ -14,8 +14,12 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Entity(repositoryClass: GuildTeamRepository::class)]
 #[ORM\Table(name: 'guild_team')]
 #[ORM\UniqueConstraint(name: 'uniq_guild_team_name', columns: ['guild_id', 'name'])]
+#[ORM\HasLifecycleCallbacks]
 class GuildTeam
 {
+    private const MAX_NAME_BYTES = 480;
+    private const MAX_NAME_LENGTH = 120;
+
     #[ORM\Id] #[ORM\GeneratedValue] #[ORM\Column]
     private ?int $id = null;
 
@@ -59,7 +63,17 @@ class GuildTeam
         return $this;
     }
     public function getName(): string { return $this->name; }
-    public function setName(string $name): self { $this->name = trim($name); return $this; }
+    public function setName(string $name): self
+    {
+        if (!mb_check_encoding($name, 'UTF-8') || str_contains($name, "\0")) {
+            throw new \InvalidArgumentException('Guild team name must be valid UTF-8 without NUL bytes.');
+        }
+
+        $normalizedName = trim($name);
+        $this->name = $normalizedName;
+
+        return $this;
+    }
     public function getDescription(): ?string { return $this->description; }
     public function setDescription(?string $value): self { $value = $value === null ? null : trim($value); $this->description = $value === '' ? null : $value; return $this; }
     public function getColor(): ?string { return $this->color; }
@@ -79,6 +93,16 @@ class GuildTeam
     {
         if ($this->guild !== null && $member->getGuild() !== null && $member->getGuild() !== $this->guild) {
             throw new \DomainException('A guild team cannot contain members from another guild.');
+        }
+    }
+
+    /** @internal Doctrine lifecycle callback. */
+    #[ORM\PrePersist]
+    #[ORM\PreUpdate]
+    public function assertNameColumnBoundary(): void
+    {
+        if (strlen($this->name) > self::MAX_NAME_BYTES || !mb_check_encoding($this->name, 'UTF-8') || str_contains($this->name, "\0") || mb_strlen($this->name, 'UTF-8') > self::MAX_NAME_LENGTH) {
+            throw new \InvalidArgumentException('Guild team name must fit its 120-character storage column.');
         }
     }
 }

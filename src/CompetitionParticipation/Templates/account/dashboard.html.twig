@@ -1,0 +1,29 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Meine Competitions{% endblock %}
+
+{% block body %}
+<main class="content-shell">
+    <h1>Meine Competitions</h1>
+    {% for message in app.flashes('success') %}<div class="notice">{{ message }}</div>{% endfor %}
+    {% for message in app.flashes('error') %}<div class="notice text-danger">{{ message }}</div>{% endfor %}
+
+    {% set statusLabels = {'registered': 'Angemeldet', 'checked_in': 'Eingecheckt', 'withdrawn': 'Zurückgezogen', 'disqualified': 'Disqualifiziert'} %}
+    {% for participant in entries %}
+        {% set competition = participant.competition %}
+        <article class="portal-card">
+            <h2><a href="{{ path('app_competition_show', {id: competition.id}) }}">{{ competition.name }}</a></h2>
+            <p>{{ participant.name }} · {{ statusLabels[participant.status] ?? participant.status }}</p>
+            <p>{{ competition.startsAt|date('d.m.Y H:i') }}</p>
+            {% if participant.status == 'registered' and competition.registrationOpen %}
+                <form method="post" action="{{ path('app_competition_participation_withdraw', {competitionId: competition.id, participantId: participant.id}) }}">
+                    <input type="hidden" name="_token" value="{{ csrf_token('competition-withdraw-' ~ participant.id) }}">
+                    <button type="submit" class="text-danger">Anmeldung zurückziehen</button>
+                </form>
+            {% endif %}
+        </article>
+    {% else %}
+        <p>Du hast noch keine Competition-Anmeldungen.</p>
+    {% endfor %}
+</main>
+{% endblock %}

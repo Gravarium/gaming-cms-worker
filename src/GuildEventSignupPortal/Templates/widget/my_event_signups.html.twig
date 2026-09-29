@@ -1,0 +1,14 @@
+{% if signups %}
+    <ul class="widget-list">
+        {% for signup in signups %}
+            <li>
+                <strong>{{ signup.eventTitle }}</strong>
+                <span>{{ signup.guildName }} · {{ signup.characterName }} · {{ signup.startsAt|date('d.m.Y H:i') }}</span>
+                <span>{% if signup.response == 'going' %}Zusage{% elseif signup.response == 'maybe' %}Vielleicht{% else %}Warteliste{% endif %}</span>
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p class="muted">Keine kommenden Gildentermine angemeldet.</p>
+{% endif %}
+<a class="button-link button-secondary" href="{{ path('app_guild_event_signup_portal_index') }}">Alle meine Anmeldungen</a>

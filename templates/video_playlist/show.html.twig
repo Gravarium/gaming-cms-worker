@@ -1,0 +1,34 @@
+{% extends 'base.html.twig' %}
+{% set site = site_settings() %}
+{% block title %}{{ playlist.title }} | {{ site.siteName }}{% endblock %}
+{% block meta_description %}{{ playlist.description ? playlist.description|striptags|slice(0, 180) : 'Öffentliche Videos aus der Playlist ' ~ playlist.title }}{% endblock %}
+{% block body %}
+<header class="topbar">
+    <a class="brand" href="{{ path('app_home') }}">{% if site.logoPath %}<img class="site-logo" src="{{ site.logoPath }}" alt="{{ site.siteName }}">{% else %}{{ site.siteName }}{% endif %}</a>
+    <nav class="top-actions"><a href="{{ path('app_video_playlist_index') }}">Alle Playlists</a><a href="{{ path('app_video_index') }}">Alle Videos</a></nav>
+</header>
+<main class="public-shell video-library">
+    <p class="eyebrow">Playlist</p>
+    <h1>{{ playlist.title }}</h1>
+    {% if playlist.description %}<div class="article-body">{{ playlist.description|nl2br }}</div>{% endif %}
+    <section class="video-grid">
+        {% for video in videos %}
+            <article class="video-card {{ video.featured ? 'video-card-featured' : '' }}">
+                <a class="video-thumbnail" href="{{ path('app_video_show', {slug: video.slug}) }}">
+                    {% if video.thumbnailUrl %}<img src="{{ video.thumbnailUrl }}" alt="{{ video.title }}" loading="lazy">
+                    {% else %}<span class="video-play-symbol">▶</span>{% endif %}
+                    {% if video.durationLabel %}<span class="video-duration">{{ video.durationLabel }}</span>{% endif %}
+                </a>
+                <div class="video-card-body">
+                    <p class="eyebrow">{{ video.category and video.category.enabled ? video.category.name : video.sourceType|capitalize }}</p>
+                    <h2><a href="{{ path('app_video_show', {slug: video.slug}) }}">{{ video.title }}</a></h2>
+                    <p>{{ video.description|striptags|slice(0, 180) }}{% if video.description|length > 180 %}…{% endif %}</p>
+                    <span class="video-date">{{ video.publishedAt|date('d.m.Y H:i') }} Uhr</span>
+                </div>
+            </article>
+        {% else %}
+            <div class="panel"><h2>Noch keine veröffentlichten Videos</h2><p>In dieser Playlist sind derzeit keine öffentlichen Videos verfügbar.</p></div>
+        {% endfor %}
+    </section>
+</main>
+{% endblock %}

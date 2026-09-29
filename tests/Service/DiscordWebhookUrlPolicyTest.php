@@ -18,6 +18,7 @@ final class DiscordWebhookUrlPolicyTest extends TestCase
             'https://discord.com:443/api/webhooks/123456/Abc_DEF-123.token',
             'https://canary.discord.com/api/webhooks/1/token',
             'https://ptb.discordapp.com/api/webhooks/987654/token_value',
+            'HTTPS://DISCORD.COM/api/webhooks/1/token',
         ] as $url) {
             $policy->assertAllowed($url);
             self::addToAssertionCount(1);
@@ -41,6 +42,28 @@ final class DiscordWebhookUrlPolicyTest extends TestCase
             try {
                 $policy->assertAllowed($url);
                 self::fail('Unsafe Discord webhook accepted: '.$url);
+            } catch (\DomainException) {
+                self::addToAssertionCount(1);
+            }
+        }
+    }
+
+    public function testRejectsNonCanonicalAuthorityAndEncodedOrAmbiguousSeparators(): void
+    {
+        $policy = new DiscordWebhookUrlPolicy();
+
+        foreach ([
+            'https://discord.com./api/webhooks/1/token',
+            'https://discord.com:0443/api/webhooks/1/token',
+            'https://discord.com:/api/webhooks/1/token',
+            'https://discord.com\\@evil.test/api/webhooks/1/token',
+            'https://discord.com%2e/api/webhooks/1/token',
+            'https://discord.com/api/webhooks/1/token%2Fextra',
+            'https://discord.com/api/webhooks/1/token with-space',
+        ] as $url) {
+            try {
+                $policy->assertAllowed($url);
+                self::fail('Ambiguous Discord webhook accepted: '.$url);
             } catch (\DomainException) {
                 self::addToAssertionCount(1);
             }

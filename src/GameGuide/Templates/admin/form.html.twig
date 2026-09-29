@@ -1,0 +1,49 @@
+{% extends 'base.html.twig' %}
+{% block title %}Guide-Entwurf{% endblock %}
+{% block body %}
+<main class="editor-shell">
+    <p class="eyebrow">Gaming · Guides</p>
+    <h1>{% if new %}Guide-Entwurf anlegen{% else %}Guide-Entwurf bearbeiten{% endif %}</h1>
+    <p><a href="{{ path('app_admin_gaming_guide_index') }}">Zur Guide-Übersicht</a></p>
+    {% if error %}<div class="notice text-danger" role="alert">{{ error }}</div>{% endif %}
+    <form method="post" class="content-form" action="{% if new %}{{ path('app_admin_gaming_guide_new') }}{% else %}{{ path('app_admin_gaming_guide_edit', {id: values.id}) }}{% endif %}">
+        <input type="hidden" name="_token" value="{{ csrf_token(new ? 'game-guide-new' : 'game-guide-edit-' ~ values.id) }}">
+        <label for="guide-title">Titel</label>
+        <input id="guide-title" name="title" maxlength="180" required value="{{ values.title ?? '' }}">
+        <label for="guide-game">Spiel</label>
+        <select id="guide-game" name="game_id" required>
+            <option value="">Spiel auswählen</option>
+            {% for game in games %}<option value="{{ game.id }}" {% if game.id == values.game_id %}selected{% endif %}>{{ game.name }}</option>{% endfor %}
+        </select>
+        <label for="guide-type">Inhaltstyp</label>
+        <select id="guide-type" name="guide_type" required>
+            <option value="build" {% if (values.guide_type ?? 'build') == 'build' %}selected{% endif %}>Strukturierter Build</option>
+            <option value="tier_list" {% if values.guide_type == 'tier_list' %}selected{% endif %}>Tier-Liste</option>
+        </select>
+        <label for="guide-version">Spielversion</label>
+        <input id="guide-version" name="game_version" maxlength="80" required value="{{ values.game_version ?? '' }}">
+        <label for="guide-season">Saison</label>
+        <input id="guide-season" name="season" maxlength="80" required value="{{ values.season ?? '' }}">
+        <label for="guide-valid-from">Gültig ab</label>
+        <input id="guide-valid-from" type="date" name="valid_from" required value="{{ values.valid_from ?? '' }}">
+        <label for="guide-valid-until">Gültig bis (optional)</label>
+        <input id="guide-valid-until" type="date" name="valid_until" value="{{ values.valid_until ?? '' }}">
+
+        <h2>Build-Daten</h2>
+        <p>Verwende den validierten Textcode aus dem Build-Editor. Die Struktur wird beim Speichern geprüft.</p>
+        <label for="guide-build-code">Build-Code</label>
+        <textarea id="guide-build-code" name="build_code" rows="5" maxlength="50000">{{ values.build_code ?? '' }}</textarea>
+
+        <h2>Tier-Listen-Daten</h2>
+        <p>Für Tier-Listen Kriterien, Herkunft und eine JSON-Liste aus key, tier und reason angeben.</p>
+        <label for="guide-tier-criteria">Kriterien</label>
+        <textarea id="guide-tier-criteria" name="tier_criteria" rows="3" maxlength="2000">{{ values.tier_criteria ?? '' }}</textarea>
+        <label for="guide-tier-provenance">Herkunft</label>
+        <textarea id="guide-tier-provenance" name="tier_provenance" rows="3" maxlength="1000">{{ values.tier_provenance ?? '' }}</textarea>
+        <label for="guide-tier-entries">Tier-Einträge (JSON)</label>
+        <textarea id="guide-tier-entries" name="tier_entries_json" rows="8" maxlength="32000">{{ values.tier_entries_json ?? '' }}</textarea>
+        <button type="submit">Entwurf speichern</button>
+        <a href="{{ path('app_admin_gaming_guide_index') }}">Abbrechen</a>
+    </form>
+</main>
+{% endblock %}

@@ -18,6 +18,10 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[UniqueEntity(fields: ['slug'])]
 class VideoPlaylist
 {
+    private const MAX_RAW_SLUG_BYTES = 512;
+    private const MAX_SLUG_LENGTH = 180;
+    private const SLUG_PATTERN = '/\A[a-z0-9]+(?:-[a-z0-9]+)*\z/';
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -25,6 +29,7 @@ class VideoPlaylist
 
     #[ORM\Column(length: 160)]
     #[Assert\NotBlank]
+    #[Assert\Length(max: 160)]
     private string $title = '';
 
     #[ORM\Column(length: 180)]
@@ -47,7 +52,12 @@ class VideoPlaylist
     public function getTitle(): string { return $this->title; }
     public function setTitle(string $title): self { $this->title = trim($title); return $this; }
     public function getSlug(): string { return $this->slug; }
-    public function setSlug(string $slug): self { $this->slug = $slug; return $this; }
+    public function setSlug(string $slug): self
+    {
+        $this->slug = $this->normalizeSlug($slug);
+
+        return $this;
+    }
     public function getDescription(): ?string { return $this->description; }
     public function setDescription(?string $description): self { $this->description = $description === null || trim($description) === '' ? null : trim($description); return $this; }
     public function isEnabled(): bool { return $this->enabled; }
@@ -55,4 +65,21 @@ class VideoPlaylist
     /** @return Collection<int, Video> */
     public function getVideos(): Collection { return $this->videos; }
     public function __toString(): string { return $this->title; }
+
+    private function normalizeSlug(string $slug): string
+    {
+        if (strlen($slug) > self::MAX_RAW_SLUG_BYTES || !mb_check_encoding($slug, 'UTF-8')) {
+            throw new \InvalidArgumentException('Der Playlist-Slug ist ungültig oder überschreitet die zulässige Länge.');
+        }
+
+        $normalized = trim(mb_strtolower($slug, 'UTF-8'));
+        if ($normalized === ''
+            || strlen($normalized) > self::MAX_SLUG_LENGTH
+            || preg_match(self::SLUG_PATTERN, $normalized) !== 1
+        ) {
+            throw new \InvalidArgumentException('Der Playlist-Slug ist ungültig oder überschreitet die zulässige Länge.');
+        }
+
+        return $normalized;
+    }
 }

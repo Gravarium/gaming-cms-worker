@@ -513,7 +513,8 @@ final class MediaStorageManager
     {
         if (!str_starts_with($location, '/uploads/media/')
             || str_contains($location, '\\')
-            || preg_match('/[\x00-\x1F\x7F]/u', $location) === 1
+            || preg_match('//u', $location) !== 1
+            || preg_match('/[\x00-\x1F\x7F]/', $location) === 1
         ) {
             throw new \DomainException('Der gespeicherte lokale Medienpfad ist ungültig.');
         }

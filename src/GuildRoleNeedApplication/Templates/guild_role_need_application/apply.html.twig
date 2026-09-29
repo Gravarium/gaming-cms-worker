@@ -1,0 +1,24 @@
+{% extends 'base.html.twig' %}
+{% set site = site_settings() %}
+{% block title %}Für eine Rolle bei {{ guild.name }} bewerben | {{ site.siteName }}{% endblock %}
+{% block body %}
+<header class="topbar">
+    <a class="brand" href="{{ path('app_home') }}">{{ site.siteName }}</a>
+    <a class="button-link button-secondary" href="{{ path('app_guild_show', {slug: guild.slug}) }}">Zur Gilde</a>
+</header>
+<main class="editor-shell">
+    <p class="eyebrow">Mitglied werden</p>
+    <h1>Bei {{ guild.name }} bewerben</h1>
+    <section class="panel" aria-labelledby="selected-role-need">
+        <h2 id="selected-role-need">Deine gewünschte Rolle</h2>
+        <p><strong>{{ need.roleKey }} · {{ need.classKey }}</strong></p>
+        <p class="muted">{{ need.desiredCount }} gesucht für {{ need.game.name }}</p>
+    </section>
+    <p class="muted">Die ausgewählte Rolle wird deiner Bewerbung hinzugefügt. Deine Angaben werden ausschließlich für die Bearbeitung dieser Bewerbung verwendet.</p>
+    {{ form_start(form, {attr: {class: 'content-form'}}) }}
+        {{ form_errors(form) }}
+        {{ form_widget(form) }}
+        <button type="submit">Bewerbung absenden</button>
+    {{ form_end(form) }}
+</main>
+{% endblock %}

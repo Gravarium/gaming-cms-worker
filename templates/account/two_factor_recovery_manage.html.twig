@@ -1,0 +1,29 @@
+{% extends 'base.html.twig' %}
+{% set site = site_settings() %}
+{% block title %}Wiederherstellungscodes | {{ site.siteName }}{% endblock %}
+{% block body %}
+<header class="topbar">
+    <a class="brand" href="{{ path('app_home') }}">{{ site.siteName }}</a>
+    <nav class="top-actions"><a class="button-link button-secondary" href="{{ path('app_account_security') }}">Zurück zur Kontosicherheit</a></nav>
+</header>
+<main class="form-page">
+    <p class="eyebrow">Kontosicherheit</p>
+    <h1>Wiederherstellungscodes verwalten</h1>
+    {% for message in app.flashes('error') %}<div class="alert">{{ message }}</div>{% endfor %}
+    <section class="panel">
+        <h2>Neue Codes erstellen</h2>
+        {% if remainingCodes == 0 %}
+            <p class="alert">Du hast keine Wiederherstellungscodes mehr. Erstelle neue Codes, bevor du dich abmeldest.</p>
+        {% else %}
+            <p>Du hast noch {{ remainingCodes }} Wiederherstellungscodes. Jeder Code kann nur einmal verwendet werden.</p>
+        {% endif %}
+        <p>Die neuen Codes ersetzen alle bisherigen Codes. Dein Authenticator und der Zwei-Faktor-Schutz bleiben aktiv. Die neuen Codes werden nach dem Erstellen genau einmal angezeigt.</p>
+        <form method="post" action="{{ path('app_two_factor_recovery_rotate') }}" class="form-stack">
+            <label for="recovery-rotate-password">Aktuelles Passwort</label>
+            <input id="recovery-rotate-password" type="password" name="password" autocomplete="current-password" maxlength="1024" required>
+            <input type="hidden" name="_token" value="{{ csrf_token('two-factor-recovery-rotate') }}">
+            <button>Wiederherstellungscodes erneuern</button>
+        </form>
+    </section>
+</main>
+{% endblock %}

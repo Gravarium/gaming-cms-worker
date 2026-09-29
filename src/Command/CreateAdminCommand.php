@@ -23,6 +23,9 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 )]
 final class CreateAdminCommand extends Command
 {
+    private const MAX_EMAIL_LENGTH = 180;
+    private const MAX_DISPLAY_NAME_LENGTH = 80;
+
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
         private readonly UserRepository $users,
@@ -50,8 +53,20 @@ final class CreateAdminCommand extends Command
             return Command::INVALID;
         }
 
+        if (mb_strlen($email) > self::MAX_EMAIL_LENGTH) {
+            $output->writeln('<error>Die E-Mail-Adresse darf höchstens 180 Zeichen lang sein.</error>');
+
+            return Command::INVALID;
+        }
+
         if ($displayName === '') {
             $output->writeln('<error>Der Anzeigename darf nicht leer sein.</error>');
+
+            return Command::INVALID;
+        }
+
+        if (mb_strlen($displayName) > self::MAX_DISPLAY_NAME_LENGTH) {
+            $output->writeln('<error>Der Anzeigename darf höchstens 80 Zeichen lang sein.</error>');
 
             return Command::INVALID;
         }

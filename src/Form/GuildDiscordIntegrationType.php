@@ -10,6 +10,7 @@ use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\Regex;
 use Symfony\Component\Validator\Constraints\Url;
 
@@ -24,10 +25,12 @@ final class GuildDiscordIntegrationType extends AbstractType
                 'mapped' => false,
                 'required' => false,
                 'always_empty' => true,
+                'attr' => ['maxlength' => 1000],
                 'help' => $options['has_webhook'] ? 'Leer lassen, um die bereits verschlüsselt gespeicherte Adresse zu behalten.' : 'In Discord unter Integrationen einen Webhook anlegen und die Adresse hier einfügen.',
                 'constraints' => [
                     new Url(protocols: ['https'], requireTld: true),
                     new Regex(pattern: '#^https://(?:canary\.|ptb\.)?(?:discord(?:app)?\.com)/api/webhooks/\d+/[A-Za-z0-9._-]+$#', message: 'Bitte eine gültige Discord-Webhook-Adresse verwenden.'),
+                    new Length(max: 1000),
                 ],
             ])
             ->add('enabled', CheckboxType::class, ['label' => 'Discord-Benachrichtigungen aktivieren', 'required' => false])

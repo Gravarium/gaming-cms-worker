@@ -21,10 +21,14 @@ final readonly class MediaStorageCleanupRepairer
     /** @return array{repaired:int,failed:int} */
     public function repairPending(int $limit = 100): array
     {
+        if ($limit <= 0) {
+            return ['repaired' => 0, 'failed' => 0];
+        }
+
         $repaired = 0;
         $failed = 0;
 
-        foreach ($this->journal->pending($limit) as $entry) {
+        foreach ($this->journal->pending(min(500, $limit)) as $entry) {
             try {
                 if ($entry['kind'] === MediaStorageCleanupJournal::KIND_CONNECTOR) {
                     if ($entry['targetKey'] === null) {
@@ -54,7 +58,8 @@ final readonly class MediaStorageCleanupRepairer
     {
         if (!str_starts_with($location, '/uploads/media/')
             || str_contains($location, '\\')
-            || preg_match('/[\x00-\x1F\x7F]/u', $location) === 1
+            || preg_match('//u', $location) !== 1
+            || preg_match('/[\x00-\x1F\x7F]/', $location) === 1
         ) {
             throw new \RuntimeException('Invalid local cleanup location.');
         }

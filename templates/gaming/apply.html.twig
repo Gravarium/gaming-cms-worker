@@ -10,6 +10,17 @@
     <p class="eyebrow">Mitglied werden</p>
     <h1>Bei {{ guild.name }} bewerben</h1>
     <p class="muted">Deine Angaben werden ausschließlich für die Bearbeitung dieser Bewerbung verwendet.</p>
+    {% set roleNeeds = public_guild_role_needs(guild) %}
+    {% if roleNeeds %}
+        <section class="panel" aria-labelledby="guild-role-needs-title">
+            <h2 id="guild-role-needs-title">Aktuell gesucht</h2>
+            <ul>
+                {% for need in roleNeeds %}
+                    <li>{{ need.roleKey }} · {{ need.classKey }}: {{ need.desiredCount }} gesucht</li>
+                {% endfor %}
+            </ul>
+        </section>
+    {% endif %}
     {{ form_start(form, {attr: {class: 'content-form'}}) }}
         {{ form_widget(form) }}
         <button type="submit">Bewerbung absenden</button>

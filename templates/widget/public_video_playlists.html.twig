@@ -1,0 +1,15 @@
+<div class="portal-cards">
+    {% for item in data.items %}
+        <article class="portal-card">
+            <div class="portal-card-art video-art" aria-hidden="true"><span>▶</span></div>
+            <div class="portal-card-copy">
+                <p class="portal-kicker">VIDEO-PLAYLIST</p>
+                <h3><a href="{{ path('app_video_index', {playlist: item.slug}) }}">{{ item.title }}</a></h3>
+                {% if item.description %}<p>{{ item.description }}</p>{% endif %}
+                <a class="portal-read" href="{{ path('app_video_index', {playlist: item.slug}) }}">Videos ansehen ↗</a>
+            </div>
+        </article>
+    {% else %}
+        <p class="portal-empty">Derzeit sind keine öffentlichen Video-Playlists verfügbar.</p>
+    {% endfor %}
+</div>

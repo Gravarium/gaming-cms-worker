@@ -1,0 +1,17 @@
+{% extends 'base.html.twig' %}
+{% block title %}{{ stream.title }} | Live{% endblock %}
+{% block body %}
+<main class="content-page">
+    <p><a href="{{ path('app_video_discovery_index') }}">Zur Video-Entdeckung</a></p>
+    <h1>{{ stream.title }}</h1>
+    {% if player %}
+        <iframe src="{{ player.url }}" title="{{ stream.title }}" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen loading="eager" referrerpolicy="strict-origin-when-cross-origin"></iframe>
+    {% else %}
+        {% if consented %}<p>Diese Quelle konnte aus Sicherheitsgründen nicht geladen werden.</p>{% else %}<p>Der externe Livestream wird erst nach deiner Zustimmung geladen.</p>{% endif %}
+        <form method="post" action="{{ path('app_video_discovery_live_consent', {id: stream.id}) }}">
+            <input type="hidden" name="_token" value="{{ csrf_token('video-live-consent-' ~ stream.id) }}">
+            <button type="submit">Externen Stream laden</button>
+        </form>
+    {% endif %}
+</main>
+{% endblock %}

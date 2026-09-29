@@ -18,6 +18,10 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[UniqueEntity(fields: ['slug'])]
 class Video
 {
+    private const MAX_RAW_SLUG_BYTES = 512;
+    private const MAX_SLUG_LENGTH = 200;
+    private const SLUG_PATTERN = '/\A[a-z0-9]+(?:-[a-z0-9]+)*\z/';
+
     public const SOURCE_UPLOAD = 'upload';
     public const SOURCE_YOUTUBE = 'youtube';
     public const SOURCE_VIMEO = 'vimeo';
@@ -110,7 +114,12 @@ class Video
     public function getTitle(): string { return $this->title; }
     public function setTitle(string $title): self { $this->title = trim($title); return $this; }
     public function getSlug(): string { return $this->slug; }
-    public function setSlug(string $slug): self { $this->slug = $slug; return $this; }
+    public function setSlug(string $slug): self
+    {
+        $this->slug = $this->normalizeSlug($slug);
+
+        return $this;
+    }
     public function getDescription(): string { return $this->description; }
     public function setDescription(string $description): self { $this->description = trim($description); return $this; }
     public function getSourceType(): string { return $this->sourceType; }
@@ -130,4 +139,21 @@ class Video
     public function getCreatedAt(): \DateTimeImmutable { return $this->createdAt; }
     public function isPublished(): bool { return $this->enabled && $this->publishedAt !== null && $this->publishedAt <= new \DateTimeImmutable(); }
     public function getPlaybackUrl(): ?string { return $this->sourceType === self::SOURCE_UPLOAD ? $this->mediaAsset?->getLocation() : $this->sourceUrl; }
+
+    private function normalizeSlug(string $slug): string
+    {
+        if (strlen($slug) > self::MAX_RAW_SLUG_BYTES || !mb_check_encoding($slug, 'UTF-8')) {
+            throw new \InvalidArgumentException('Der Video-Slug ist ungültig oder überschreitet die zulässige Länge.');
+        }
+
+        $normalized = trim(mb_strtolower($slug, 'UTF-8'));
+        if ($normalized === ''
+            || strlen($normalized) > self::MAX_SLUG_LENGTH
+            || preg_match(self::SLUG_PATTERN, $normalized) !== 1
+        ) {
+            throw new \InvalidArgumentException('Der Video-Slug ist ungültig oder überschreitet die zulässige Länge.');
+        }
+
+        return $normalized;
+    }
 }

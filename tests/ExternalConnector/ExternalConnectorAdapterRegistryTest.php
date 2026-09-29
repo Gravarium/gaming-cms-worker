@@ -50,6 +50,43 @@ final class ExternalConnectorAdapterRegistryTest extends TestCase
         ]);
     }
 
+    public function testRejectsUnsafeOrOverlongProviderKeys(): void
+    {
+        foreach (['', 'bad key', "pcloud\x00", "pcloud\r\n", "pcloud\xFF", str_repeat('a', 65)] as $providerKey) {
+            try {
+                new ExternalConnectorAdapterRegistry([
+                    $this->adapter($providerKey, [ExternalConnectorTarget::CAPABILITY_BACKUP]),
+                ]);
+            } catch (\LogicException) {
+                self::addToAssertionCount(1);
+
+                continue;
+            }
+
+            self::fail('The unsafe provider key was accepted.');
+        }
+    }
+
+    public function testFailsClosedForUnsafeProviderLookups(): void
+    {
+        $registry = new ExternalConnectorAdapterRegistry([
+            $this->adapter('pcloud', [ExternalConnectorTarget::CAPABILITY_BACKUP]),
+        ]);
+
+        self::assertFalse($registry->has(str_repeat('a', 65)));
+        self::assertFalse($registry->has("pcloud\x00"));
+
+        try {
+            $registry->forProvider("pcloud\xFF");
+        } catch (\RuntimeException) {
+            self::addToAssertionCount(1);
+
+            return;
+        }
+
+        self::fail('The unsafe provider lookup was accepted.');
+    }
+
     /** @param list<string> $capabilities */
     private function adapter(string $providerKey, array $capabilities): ExternalConnectorAdapter
     {

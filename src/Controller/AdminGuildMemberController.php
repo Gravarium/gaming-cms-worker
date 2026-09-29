@@ -12,6 +12,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
@@ -19,15 +20,63 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 #[IsGranted('CMS_GAMING_MANAGE')]
 final class AdminGuildMemberController extends AbstractController
 {
+    private const PAGE_SIZE = 25;
+    private const MAX_QUERY_LENGTH = 120;
+
     public function __construct(private readonly GuildMemberRepository $members, private readonly EntityManagerInterface $entityManager) {}
 
     #[Route('', name: 'app_admin_guild_member_index', methods: ['GET'])]
-    public function index(Guild $guild): Response
+    public function index(Guild $guild, Request $request): Response
     {
-        return $this->render('admin/gaming/member/index.html.twig', [
+        $parameters = $request->query->all();
+        $rawQuery = $parameters['q'] ?? '';
+        $rawStatus = $parameters['status'] ?? '';
+        $rawPage = $parameters['page'] ?? '1';
+
+        if (
+            !is_string($rawQuery)
+            || !mb_check_encoding($rawQuery, 'UTF-8')
+            || mb_strlen($rawQuery) > self::MAX_QUERY_LENGTH
+            || preg_match('/[\x00-\x1F\x7F]/', $rawQuery) === 1
+            || !is_string($rawStatus)
+            || !in_array($rawStatus, ['', 'active', 'inactive'], true)
+            || !is_string($rawPage)
+            || preg_match('/^[1-9][0-9]{0,8}$/D', $rawPage) !== 1
+        ) {
+            throw new BadRequestHttpException('Ungültige Mitgliedersuche.');
+        }
+
+        $query = trim($rawQuery);
+        $status = $rawStatus === '' ? null : $rawStatus;
+        $active = match ($status) {
+            'active' => true,
+            'inactive' => false,
+            default => null,
+        };
+        $total = $this->members->countForAdminGuild($guild, $query, $active);
+        $pageCount = max(1, (int) ceil($total / self::PAGE_SIZE));
+        $currentPage = min((int) $rawPage, $pageCount);
+        $members = $this->members->findForAdminGuild(
+            $guild,
+            $query,
+            $active,
+            self::PAGE_SIZE,
+            ($currentPage - 1) * self::PAGE_SIZE,
+        );
+
+        $response = $this->render('admin/gaming/member/index.html.twig', [
             'guild' => $guild,
-            'members' => $this->members->findBy(['guild' => $guild], ['leader' => 'DESC', 'position' => 'ASC', 'characterName' => 'ASC']),
+            'members' => $members,
+            'memberQuery' => $query,
+            'memberStatus' => $status,
+            'memberTotal' => $total,
+            'memberCurrentPage' => $currentPage,
+            'memberPageCount' => $pageCount,
         ]);
+        $response->headers->set('Cache-Control', 'private, no-store');
+        $response->headers->set('X-Robots-Tag', 'noindex, nofollow');
+
+        return $response;
     }
 
     #[Route('/new', name: 'app_admin_guild_member_new', methods: ['GET', 'POST'])]

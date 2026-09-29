@@ -6,6 +6,10 @@ final readonly class ContentBlockRenderer
     public function __construct(private ContentBlockDocument $documents,private OwnedMediaReferenceGateway $media){}
     public function render(string $body): string
     {
+        if (strlen($body) > ContentBlockDocument::MAX_DOCUMENT_BYTES) {
+            return '<p>Inhalt kann nicht angezeigt werden.</p>';
+        }
+
         try{$blocks=$this->documents->decode($body)['blocks'];}catch(\InvalidArgumentException){return '<p>'.$this->multiline($body).'</p>';}
         $html=[];foreach($blocks as $block)$html[]=$this->renderBlock($block);return implode("\n",array_filter($html,static fn(string $item):bool=>$item!==''));
     }

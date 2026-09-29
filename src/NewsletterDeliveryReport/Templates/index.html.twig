@@ -1,0 +1,59 @@
+{% extends 'base.html.twig' %}
+{% block title %}Newsletter-Versandübersicht | Gaming CMS{% endblock %}
+{% block body %}
+<header class="topbar">
+    <a class="brand" href="{{ path('app_admin_notification_newsletter_admin_index') }}">Newsletter</a>
+</header>
+<main class="dashboard">
+    <p class="eyebrow">Benachrichtigungen · Newsletter</p>
+    <h1>Versandübersicht</h1>
+    <p>Hier siehst du die Zustellstände der letzten 100 Kampagnen. Empfängeradressen und einzelne Zustellvorgänge werden nicht angezeigt.</p>
+
+    {% if campaigns is empty %}
+        <section class="panel" role="status">
+            <h2>Noch keine Newsletter-Kampagnen</h2>
+            <p>Nach dem Anlegen einer Kampagne erscheinen hier ihre Zustellstände.</p>
+        </section>
+    {% else %}
+        {% set campaignStatusLabels = {
+            draft: 'Entwurf',
+            scheduled: 'Geplant',
+            sending: 'Versand läuft',
+            sent: 'Abgeschlossen',
+            failed: 'Fehlgeschlagen',
+            cancelled: 'Abgebrochen'
+        } %}
+        <div class="table-wrap">
+            <table>
+                <caption>Versandstände je Kampagne</caption>
+                <thead>
+                    <tr>
+                        <th scope="col">Kampagne</th>
+                        <th scope="col">Kampagnenstatus</th>
+                        <th scope="col">Abgeschlossen am</th>
+                        <th scope="col">Gesendet</th>
+                        <th scope="col">Ausstehend</th>
+                        <th scope="col">Wiederholung</th>
+                        <th scope="col">Fehlgeschlagen</th>
+                        <th scope="col">Unterdrückt</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for campaign in campaigns %}
+                    <tr>
+                        <th scope="row">{{ campaign.title }}</th>
+                        <td>{{ campaignStatusLabels[campaign.status] ?? campaign.status }}</td>
+                        <td>{{ campaign.sentAt ? campaign.sentAt|date('d.m.Y H:i') : '—' }}</td>
+                        <td>{{ campaign.counts.sent }}</td>
+                        <td>{{ campaign.counts.pending }}</td>
+                        <td>{{ campaign.counts.retry }}</td>
+                        <td>{{ campaign.counts.failed }}</td>
+                        <td>{{ campaign.counts.suppressed }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% endif %}
+</main>
+{% endblock %}

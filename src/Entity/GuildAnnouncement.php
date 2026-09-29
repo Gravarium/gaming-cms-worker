@@ -11,8 +11,12 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: GuildAnnouncementRepository::class)]
 #[ORM\Table(name: 'guild_announcement')]
+#[ORM\HasLifecycleCallbacks]
 class GuildAnnouncement
 {
+    private const MAX_TITLE_BYTES = 720;
+    private const MAX_TITLE_LENGTH = 180;
+
     #[ORM\Id] #[ORM\GeneratedValue] #[ORM\Column]
     private ?int $id = null;
 
@@ -41,10 +45,30 @@ class GuildAnnouncement
     public function getAuthor(): ?User { return $this->author; }
     public function setAuthor(?User $author): self { $this->author = $author; return $this; }
     public function getTitle(): string { return $this->title; }
-    public function setTitle(string $title): self { $this->title = trim($title); return $this; }
+    public function setTitle(string $title): self
+    {
+        if (!mb_check_encoding($title, 'UTF-8') || str_contains($title, "\0")) {
+            throw new \InvalidArgumentException('Guild announcement title must be valid UTF-8 without NUL bytes.');
+        }
+
+        $normalizedTitle = trim($title);
+        $this->title = $normalizedTitle;
+
+        return $this;
+    }
     public function getBody(): string { return $this->body; }
     public function setBody(string $body): self { $this->body = trim($body); return $this; }
     public function isPinned(): bool { return $this->pinned; }
     public function setPinned(bool $pinned): self { $this->pinned = $pinned; return $this; }
     public function getPublishedAt(): \DateTimeImmutable { return $this->publishedAt; }
+
+    /** @internal Doctrine lifecycle callback. */
+    #[ORM\PrePersist]
+    #[ORM\PreUpdate]
+    public function assertTitleColumnBoundary(): void
+    {
+        if (strlen($this->title) > self::MAX_TITLE_BYTES || !mb_check_encoding($this->title, 'UTF-8') || str_contains($this->title, "\0") || mb_strlen($this->title, 'UTF-8') > self::MAX_TITLE_LENGTH) {
+            throw new \InvalidArgumentException('Guild announcement title must fit its 180-character storage column.');
+        }
+    }
 }

@@ -1,0 +1,36 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Beziehungen{% endblock %}
+
+{% block body %}
+<main>
+    <h1>Beziehungen</h1>
+    {{ form_start(form) }}
+        {{ form_row(form.targetId) }}
+        {{ form_row(form.type) }}
+        <button type="submit">Anfrage senden</button>
+    {{ form_end(form) }}
+
+    <h2>Meine Beziehungen</h2>
+    <ul>
+        {% for relationship in relationships %}
+            <li>
+                {{ relationship.type }} · {{ relationship.state }}
+                {% if relationship.state == 'pending' and relationship.recipient.id == app.user.id %}
+                    <form method="post" action="{{ path('app_social_relationship_respond', {id: relationship.id, decision: 'accept'}) }}">
+                        <input type="hidden" name="_token" value="{{ csrf_token('social-relationship-' ~ relationship.id) }}">
+                        <button type="submit">Annehmen</button>
+                    </form>
+                    <form method="post" action="{{ path('app_social_relationship_respond', {id: relationship.id, decision: 'reject'}) }}">
+                        <input type="hidden" name="_token" value="{{ csrf_token('social-relationship-' ~ relationship.id) }}">
+                        <button type="submit">Ablehnen</button>
+                    </form>
+                {% endif %}
+            </li>
+        {% else %}
+            <li>Keine Beziehungen.</li>
+        {% endfor %}
+    </ul>
+    <p><a href="{{ path('app_social_index') }}">Zurück zu Social</a></p>
+</main>
+{% endblock %}

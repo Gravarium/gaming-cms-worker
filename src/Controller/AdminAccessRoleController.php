@@ -50,6 +50,20 @@ final class AdminAccessRoleController extends AbstractController
         return $this->handle($role, $request, 'Rolle bearbeiten');
     }
 
+    #[Route('/{id}/duplicate', name: 'app_admin_access_role_duplicate', requirements: ['id' => '\\d+'], methods: ['GET'])]
+    public function duplicate(AccessRole $role, Request $request): Response
+    {
+        $this->ensureCanManageRole($role);
+        $copy = (new AccessRole())
+            ->setKey($this->uniqueCopyKey($role->getKey()))
+            ->setName(mb_substr($role->getName(), 0, 112).' (Kopie)')
+            ->setDescription($role->getDescription())
+            ->setPermissions($role->getPermissions())
+            ->setActive(false);
+
+        return $this->handle($copy, $request, 'Rolle kopieren', $this->generateUrl('app_admin_access_role_new'));
+    }
+
     #[Route('/{id}/delete', name: 'app_admin_access_role_delete', requirements: ['id' => '\\d+'], methods: ['POST'])]
     public function delete(AccessRole $role, Request $request): Response
     {
@@ -67,7 +81,7 @@ final class AdminAccessRoleController extends AbstractController
         return $this->redirectToRoute('app_admin_access_role_index');
     }
 
-    private function handle(AccessRole $role, Request $request, string $heading): Response
+    private function handle(AccessRole $role, Request $request, string $heading, ?string $formAction = null): Response
     {
         $new = $role->getId() === null;
         $oldKey = $role->getKey();
@@ -75,7 +89,9 @@ final class AdminAccessRoleController extends AbstractController
         $oldActive = $role->isActive();
         $actor = $this->getUser();
         $assignedToActor = !$new && $actor instanceof User && $actor->getAccessRoles()->contains($role);
-        $form = $this->createForm(AccessRoleType::class, $role, ['key_locked' => !$new])->handleRequest($request);
+        $formOptions = ['key_locked' => !$new];
+        if ($formAction !== null) { $formOptions['action'] = $formAction; }
+        $form = $this->createForm(AccessRoleType::class, $role, $formOptions)->handleRequest($request);
         if ($form->isSubmitted() && $assignedToActor && ($oldPermissions !== $role->getPermissions() || $oldActive !== $role->isActive())) {
             $role->setPermissions($oldPermissions)->setActive($oldActive);
             $form->get('permissions')->addError(new FormError('Du kannst Rechte oder Status einer dir selbst zugewiesenen Rolle nicht ändern.'));
@@ -102,6 +118,22 @@ final class AdminAccessRoleController extends AbstractController
         }
 
         return $response;
+    }
+
+    private function uniqueCopyKey(string $sourceKey): string
+    {
+        $base = trim(mb_substr($sourceKey, 0, 70), '-_');
+        if (mb_strlen($base) < 3) { $base = 'role'; }
+
+        for ($sequence = 1; $sequence <= 1000; ++$sequence) {
+            $suffix = $sequence === 1 ? '-copy' : '-copy-'.$sequence;
+            $candidate = mb_substr($base, 0, 80 - mb_strlen($suffix)).$suffix;
+            if ($this->roles->findOneBy(['key' => $candidate]) === null) {
+                return $candidate;
+            }
+        }
+
+        throw new \RuntimeException('A unique access-role key could not be generated.');
     }
 
     private function ensureCanManageRole(AccessRole $role): void

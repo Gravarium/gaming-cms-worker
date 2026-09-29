@@ -1,0 +1,15 @@
+<div class="public-competition-brackets">
+    {% set statusLabels = {'in_progress': 'Läuft', 'completed': 'Abgeschlossen'} %}
+    {% for competition in data.competitions|default([]) %}
+        <article class="public-competition-bracket-card">
+            <h3>{{ competition.name }}</h3>
+            <p>Status: {{ statusLabels[competition.status]|default('Status offen') }}</p>
+            {% if competition.game %}
+                <p>{{ competition.game.name }} · {{ competition.startsAt|date('d.m.Y') }}</p>
+            {% endif %}
+            <a href="{{ path('app_competition_bracket', {id: competition.id}) }}">Bracket ansehen</a>
+        </article>
+    {% else %}
+        <p>Aktuell gibt es keine öffentlichen Turniere mit Paarungen.</p>
+    {% endfor %}
+</div>

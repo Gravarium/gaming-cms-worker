@@ -18,12 +18,14 @@ use App\Repository\VideoRepository;
 use App\Service\MediaStorageManager;
 use App\Service\MediaUrlPolicy;
 use App\Service\VideoEmbedResolver;
+use App\Video\AdminVideoBrowser;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\String\Slugger\SluggerInterface;
@@ -47,31 +49,41 @@ final class AdminVideoController extends AbstractController
     }
 
     #[Route('', name: 'app_admin_video_index', methods: ['GET'])]
-    public function index(): Response
+    public function index(Request $request, AdminVideoBrowser $browser): Response
     {
-        return $this->render('admin/video/index.html.twig', [
-            'videos' => $this->videos->findBy([], ['createdAt' => 'DESC']),
+        try {
+            $listing = $browser->browse($request);
+        } catch (\InvalidArgumentException) {
+            return $this->privateVideoBrowserResponse(new Response('Ungültige Video-Filter.', Response::HTTP_BAD_REQUEST));
+        }
+
+        $response = $this->render('admin/video/index.html.twig', [
+            'videos' => $listing['rows'],
+            'videoBrowser' => $listing,
             'categories' => $this->categories->findBy([], ['name' => 'ASC']),
             'playlists' => $this->playlists->findBy([], ['title' => 'ASC']),
             'storageMode' => $this->mediaStorage->modeFor(self::MODULE_KEY),
         ]);
+
+        return $this->privateVideoBrowserResponse($response);
     }
 
     #[Route('/new', name: 'app_admin_video_new', methods: ['GET', 'POST'])]
-    public function new(Request $request): Response
+    public function new(Request $request, AdminVideoBrowser $browser): Response
     {
-        return $this->videoForm(new Video(), $request, 'Video anlegen');
+        return $this->videoForm(new Video(), $request, 'Video anlegen', $this->normalizedListContext($request, $browser));
     }
 
     #[Route('/{id}/edit', name: 'app_admin_video_edit', requirements: ['id' => '\d+'], methods: ['GET', 'POST'])]
-    public function edit(Video $video, Request $request): Response
+    public function edit(Video $video, Request $request, AdminVideoBrowser $browser): Response
     {
-        return $this->videoForm($video, $request, 'Video bearbeiten');
+        return $this->videoForm($video, $request, 'Video bearbeiten', $this->normalizedListContext($request, $browser));
     }
 
     #[Route('/{id}/delete', name: 'app_admin_video_delete', requirements: ['id' => '\d+'], methods: ['POST'])]
-    public function delete(Video $video, Request $request): Response
+    public function delete(Video $video, Request $request, AdminVideoBrowser $browser): Response
     {
+        $listQuery = $this->normalizedListContext($request, $browser);
         if (!$this->isCsrfTokenValid('delete-video-'.$video->getId(), (string) $request->request->get('_token'))) {
             throw $this->createAccessDeniedException();
         }
@@ -79,7 +91,7 @@ final class AdminVideoController extends AbstractController
         $this->entityManager->flush();
         $this->addFlash('success', 'Das Video wurde gelöscht. Die Mediendatei bleibt zur Sicherheit in der Medienbibliothek.');
 
-        return $this->redirectToRoute('app_admin_video_index');
+        return $this->redirectToRoute('app_admin_video_index', $listQuery);
     }
 
     #[Route('/category/new', name: 'app_admin_video_category_new', methods: ['GET', 'POST'])]
@@ -132,7 +144,8 @@ final class AdminVideoController extends AbstractController
         return $this->redirectToRoute('app_admin_video_index');
     }
 
-    private function videoForm(Video $video, Request $request, string $heading): Response
+    /** @param array<string, int|string> $listQuery */
+    private function videoForm(Video $video, Request $request, string $heading, array $listQuery): Response
     {
         $form = $this->createForm(VideoType::class, $video)->handleRequest($request);
         $storageMode = $this->mediaStorage->modeFor(self::MODULE_KEY);
@@ -180,7 +193,7 @@ final class AdminVideoController extends AbstractController
                     $this->mediaStorage->flushWithRollback(...$newAssets);
                     $this->addFlash('success', 'Das Video wurde gespeichert.');
 
-                    return $this->redirectToRoute('app_admin_video_index');
+                    return $this->redirectToRoute('app_admin_video_index', $listQuery);
                 } catch (\DomainException|\RuntimeException $exception) {
                     $this->mediaStorage->discardUncommitted(...$newAssets);
                     $form->addError(new FormError($exception->getMessage()));
@@ -194,14 +207,35 @@ final class AdminVideoController extends AbstractController
             'video' => $video,
             'storageMode' => $storageMode,
             'externalStorageReady' => $externalReady,
+            'listQuery' => $listQuery,
         ]);
+    }
+
+    /**
+     * @return array<string, int|string>
+     */
+    private function normalizedListContext(Request $request, AdminVideoBrowser $browser): array
+    {
+        try {
+            return $browser->queryFor($request);
+        } catch (\InvalidArgumentException $exception) {
+            throw new BadRequestHttpException('Invalid video list filters.', $exception);
+        }
+    }
+
+    private function privateVideoBrowserResponse(Response $response): Response
+    {
+        $response->headers->set('Cache-Control', 'private, no-store');
+        $response->headers->set('X-Robots-Tag', 'noindex, nofollow');
+
+        return $response;
     }
 
     private function categoryForm(VideoCategory $category, Request $request, string $heading): Response
     {
         $form = $this->createForm(VideoCategoryType::class, $category)->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $category->setSlug($this->uniqueSlug($category->getName(), $category->getId(), fn (string $slug, ?int $id): bool => $this->categories->slugExists($slug, $id)));
+            $category->setSlug($this->uniqueSlug($category->getName(), $category->getId(), fn (string $slug, ?int $id): bool => $this->categories->slugExists($slug, $id), 140));
             if ($category->getId() === null) { $this->entityManager->persist($category); }
             $this->entityManager->flush();
             $this->addFlash('success', 'Die Videokategorie wurde gespeichert.');
@@ -216,7 +250,7 @@ final class AdminVideoController extends AbstractController
     {
         $form = $this->createForm(VideoPlaylistType::class, $playlist)->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $playlist->setSlug($this->uniqueSlug($playlist->getTitle(), $playlist->getId(), fn (string $slug, ?int $id): bool => $this->playlists->slugExists($slug, $id)));
+            $playlist->setSlug($this->uniqueSlug($playlist->getTitle(), $playlist->getId(), fn (string $slug, ?int $id): bool => $this->playlists->slugExists($slug, $id), 180));
             if ($playlist->getId() === null) { $this->entityManager->persist($playlist); }
             $this->entityManager->flush();
             $this->addFlash('success', 'Die Playlist wurde gespeichert.');
@@ -229,16 +263,37 @@ final class AdminVideoController extends AbstractController
 
     private function uniqueVideoSlug(string $title, ?int $exceptId): string
     {
-        return $this->uniqueSlug($title, $exceptId, fn (string $slug, ?int $id): bool => $this->videos->slugExists($slug, $id));
+        return $this->uniqueSlug($title, $exceptId, fn (string $slug, ?int $id): bool => $this->videos->slugExists($slug, $id), 200);
     }
 
     /** @param callable(string, ?int): bool $exists */
-    private function uniqueSlug(string $value, ?int $exceptId, callable $exists): string
+    private function uniqueSlug(string $value, ?int $exceptId, callable $exists, int $maxLength): string
     {
+        if ($maxLength < 1) {
+            throw new \InvalidArgumentException('The video slug storage limit must be positive.');
+        }
+
         $base = mb_strtolower($this->slugger->slug($value)->toString()) ?: 'video';
+        $base = rtrim(mb_substr($base, 0, $maxLength), '-');
+        if ($base === '') {
+            $base = mb_substr('video', 0, $maxLength);
+        }
+
         $slug = $base;
         $number = 2;
-        while ($exists($slug, $exceptId)) { $slug = $base.'-'.$number++; }
+        while ($exists($slug, $exceptId)) {
+            $tail = '-'.$number++;
+            $remaining = $maxLength - mb_strlen($tail);
+            if ($remaining < 1) {
+                throw new \RuntimeException('A unique video slug cannot fit within its storage limit.');
+            }
+
+            $prefix = rtrim(mb_substr($base, 0, $remaining), '-');
+            if ($prefix === '') {
+                $prefix = mb_substr('video', 0, $remaining);
+            }
+            $slug = $prefix.$tail;
+        }
 
         return $slug;
     }

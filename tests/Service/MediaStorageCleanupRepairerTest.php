@@ -51,6 +51,30 @@ final class MediaStorageCleanupRepairerTest extends TestCase
         self::assertSame([], $journal->pending());
     }
 
+    public function testNonPositiveRepairLimitDoesNotConsumeJournal(): void
+    {
+        $root = $this->root();
+        self::assertTrue(mkdir($root, 0777, true));
+        $journal = new MediaStorageCleanupJournal($root);
+        $journal->recordLocal('/uploads/media/content/file.txt');
+
+        self::assertSame(
+            ['repaired' => 0, 'failed' => 0],
+            $this->repairer($journal, $root)->repairPending(0),
+        );
+        self::assertCount(1, $journal->pending());
+    }
+
+    public function testMalformedUtf8LocalLocationFailsClosed(): void
+    {
+        $root = $this->root();
+        $journal = new MediaStorageCleanupJournal($root);
+        $repairer = $this->repairer($journal, $root);
+        $method = new \ReflectionMethod(MediaStorageCleanupRepairer::class, 'localPath');
+        $this->expectException(\RuntimeException::class);
+        $method->invoke($repairer, "/uploads/media/content/\xC3\x28.txt");
+    }
+
     public function testLocalCleanupDoesNotFollowSymlinkedParentDirectory(): void
     {
         $root = $this->root();

@@ -8,6 +8,11 @@ use App\Entity\Video;
 
 final readonly class VideoEmbedResolver
 {
+    private const YOUTUBE_HOSTS = ['youtube.com', 'www.youtube.com', 'm.youtube.com'];
+    private const SHORT_YOUTUBE_HOSTS = ['youtu.be', 'www.youtu.be'];
+    private const VIMEO_HOSTS = ['vimeo.com', 'www.vimeo.com'];
+    private const TWITCH_HOSTS = ['twitch.tv', 'www.twitch.tv'];
+
     public function __construct(private MediaUrlPolicy $urlPolicy)
     {
     }
@@ -41,20 +46,20 @@ final readonly class VideoEmbedResolver
         if (!is_array($parts)) {
             return null;
         }
+
         $host = $this->normalizedHost((string) ($parts['host'] ?? ''));
         $id = null;
-
-        if ($host === 'youtu.be' || $host === 'www.youtu.be') {
+        if (in_array($host, self::SHORT_YOUTUBE_HOSTS, true)) {
             $id = trim((string) ($parts['path'] ?? ''), '/');
-        } elseif ($this->hostMatches($host, 'youtube.com')) {
+        } elseif (in_array($host, self::YOUTUBE_HOSTS, true)) {
             parse_str((string) ($parts['query'] ?? ''), $query);
             $id = $query['v'] ?? null;
-            if ($id === null && preg_match('~/(?:shorts|embed)/([A-Za-z0-9_-]+)~', (string) ($parts['path'] ?? ''), $match)) {
+            if ($id === null && preg_match('~/(?:shorts|embed)/([A-Za-z0-9_-]{6,20})(?:/|$)~', (string) ($parts['path'] ?? ''), $match)) {
                 $id = $match[1];
             }
         }
 
-        if (!is_string($id) || !preg_match('/^[A-Za-z0-9_-]{6,20}$/', $id)) {
+        if (!is_string($id) || preg_match('/\A[A-Za-z0-9_-]{6,20}\z/', $id) !== 1) {
             return null;
         }
 
@@ -72,13 +77,14 @@ final readonly class VideoEmbedResolver
         if (!is_array($parts)) {
             return null;
         }
+
         $host = $this->normalizedHost((string) ($parts['host'] ?? ''));
-        if (!$this->hostMatches($host, 'vimeo.com')) {
+        if (!in_array($host, self::VIMEO_HOSTS, true)) {
             return null;
         }
 
         $path = (string) ($parts['path'] ?? '');
-        if (!preg_match('~/(\d+)(?:$|/)~', $path, $match)) {
+        if (preg_match('~/(\d{1,20})(?:$|/)~', $path, $match) !== 1) {
             return null;
         }
 
@@ -96,22 +102,22 @@ final readonly class VideoEmbedResolver
         if (!is_array($parts)) {
             return null;
         }
+
         $host = $this->normalizedHost((string) ($parts['host'] ?? ''));
         $path = trim((string) ($parts['path'] ?? ''), '/');
-        $parentHost = $this->normalizedHost(preg_replace('/:\d+$/', '', $parentHost) ?: 'localhost');
-        if (preg_match('/^[a-z0-9.-]+$/', $parentHost) !== 1) {
-            $parentHost = 'localhost';
+        $parent = $this->normalizedParentHost($parentHost);
+        if ($parent === null) {
+            return null;
         }
-        $parent = rawurlencode($parentHost);
 
-        if ($host === 'clips.twitch.tv' && preg_match('/^([A-Za-z0-9_-]+)$/', $path, $match)) {
-            return ['mode' => 'iframe', 'url' => 'https://clips.twitch.tv/embed?clip='.$match[1].'&parent='.$parent];
+        if ($host === 'clips.twitch.tv' && preg_match('/\A[A-Za-z0-9_-]{1,100}\z/', $path) === 1) {
+            return ['mode' => 'iframe', 'url' => 'https://clips.twitch.tv/embed?clip='.$path.'&parent='.rawurlencode($parent)];
         }
-        if ($this->hostMatches($host, 'twitch.tv') && preg_match('~^videos/(\d+)$~', $path, $match)) {
-            return ['mode' => 'iframe', 'url' => 'https://player.twitch.tv/?video=v'.$match[1].'&parent='.$parent];
+        if (in_array($host, self::TWITCH_HOSTS, true) && preg_match('~\Avideos/(\d{1,20})\z~', $path, $match) === 1) {
+            return ['mode' => 'iframe', 'url' => 'https://player.twitch.tv/?video=v'.$match[1].'&parent='.rawurlencode($parent)];
         }
-        if ($this->hostMatches($host, 'twitch.tv') && preg_match('/^([A-Za-z0-9_]+)$/', $path, $match)) {
-            return ['mode' => 'iframe', 'url' => 'https://player.twitch.tv/?channel='.$match[1].'&parent='.$parent];
+        if (in_array($host, self::TWITCH_HOSTS, true) && preg_match('/\A[A-Za-z0-9_]{1,100}\z/', $path) === 1) {
+            return ['mode' => 'iframe', 'url' => 'https://player.twitch.tv/?channel='.$path.'&parent='.rawurlencode($parent)];
         }
 
         return null;
@@ -122,8 +128,24 @@ final readonly class VideoEmbedResolver
         return strtolower(rtrim(trim($host), '.'));
     }
 
-    private function hostMatches(string $host, string $expected): bool
+    private function normalizedParentHost(string $parentHost): ?string
     {
-        return $host === $expected || str_ends_with($host, '.'.$expected);
+        $parentHost = trim($parentHost);
+        if (preg_match('/:(\d+)\z/', $parentHost, $portMatch) === 1) {
+            $port = (int) $portMatch[1];
+            if ($port < 1 || $port > 65535) {
+                return null;
+            }
+            $parentHost = substr($parentHost, 0, -strlen($portMatch[0]));
+        }
+
+        $parentHost = strtolower(rtrim($parentHost, '.'));
+        if ($parentHost === '' || strlen($parentHost) > 253) {
+            return null;
+        }
+
+        return preg_match('/\A[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?(?:\.[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?)*\z/i', $parentHost) === 1
+            ? $parentHost
+            : null;
     }
 }

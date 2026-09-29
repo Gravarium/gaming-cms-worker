@@ -1,0 +1,10 @@
+{% extends 'base.html.twig' %}
+{% block title %}{{ clip.title }} | Video-Entdeckung{% endblock %}
+{% block body %}
+<main class="content-page">
+    <p><a href="{{ path('app_video_discovery_index') }}">Zur Video-Entdeckung</a></p>
+    <h1>{{ clip.title }}</h1>
+    <p>{{ clip.video.title }} · {{ clip.startSeconds }}–{{ clip.endSeconds }} Sekunden</p>
+    <p><a href="{{ path('app_video_show', {slug: clip.video.slug}) }}">Originalvideo öffnen</a></p>
+</main>
+{% endblock %}

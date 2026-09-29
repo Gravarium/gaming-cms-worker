@@ -6,6 +6,9 @@ namespace App\ExtensionPackage;
 
 final class ExtensionCapabilityPolicy
 {
+    private const MAX_REQUESTED_CAPABILITIES = 32;
+    private const MAX_CAPABILITY_LENGTH = 64;
+
     /** @var list<string> */
     public const DECLARABLE = [
         'content.read',
@@ -33,13 +36,20 @@ final class ExtensionCapabilityPolicy
      */
     public function normalize(mixed $requested): array
     {
-        if (!is_array($requested) || !array_is_list($requested)) {
-            throw new \DomainException('Extension capabilities must be a JSON list.');
+        if (
+            !is_array($requested)
+            || !array_is_list($requested)
+            || count($requested) > self::MAX_REQUESTED_CAPABILITIES
+        ) {
+            throw new \DomainException('Extension capabilities must be a bounded JSON list.');
         }
 
         $capabilities = [];
         foreach ($requested as $capability) {
-            if (!is_string($capability)
+            if (
+                !is_string($capability)
+                || strlen($capability) > self::MAX_CAPABILITY_LENGTH
+                || !$this->isSafeText($capability)
                 || in_array($capability, self::NEVER_GRANT, true)
                 || !in_array($capability, self::DECLARABLE, true)
             ) {
@@ -49,11 +59,18 @@ final class ExtensionCapabilityPolicy
         }
 
         sort($capabilities);
+
         return array_values(array_unique($capabilities));
     }
 
     public function isGrantable(string $capability): bool
     {
         return in_array($capability, self::DECLARABLE, true);
+    }
+
+    private function isSafeText(string $value): bool
+    {
+        return preg_match('//u', $value) === 1
+            && preg_match('/[\p{Cc}\p{Cf}]/u', $value) !== 1;
     }
 }

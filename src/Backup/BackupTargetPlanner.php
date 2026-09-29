@@ -17,14 +17,21 @@ final readonly class BackupTargetPlanner
     ) {
     }
 
-    /** @param list<string> $providerKeys
-     *  @return array{created: int, skipped: int, keys: list<string>}
+    /** @param array<array-key, mixed> $providerKeys
+     *  @return array{created: int, skipped: int, keys: list<string>, rejected: bool}
      */
     public function plan(array $providerKeys): array
     {
         $catalog = $this->catalog->indexed();
+        if (count($providerKeys) > count($catalog)) {
+            return ['created' => 0, 'skipped' => 0, 'keys' => [], 'rejected' => true];
+        }
+
         $selected = [];
         foreach ($providerKeys as $key) {
+            if (!is_string($key)) {
+                continue;
+            }
             $key = strtolower(trim($key));
             if (isset($catalog[$key])) {
                 $selected[$key] = $catalog[$key];
@@ -64,6 +71,6 @@ final readonly class BackupTargetPlanner
             $this->entityManager->flush();
         }
 
-        return ['created' => $created, 'skipped' => $skipped, 'keys' => $keys];
+        return ['created' => $created, 'skipped' => $skipped, 'keys' => $keys, 'rejected' => false];
     }
 }

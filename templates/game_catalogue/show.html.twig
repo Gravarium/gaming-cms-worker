@@ -9,6 +9,7 @@
         {% if entry.publisher %}<p>Publisher: {{ entry.publisher.name }}</p>{% endif %}
         {% if entry.summary %}<p>{{ entry.summary }}</p>{% endif %}
         {% if entry.game.websiteUrl %}<a href="{{ entry.game.websiteUrl }}" rel="noopener noreferrer">Offizielle Website</a>{% endif %}
+        {% if is_granted('CMS_GAMING_MANAGE') %}<p><a class="button-link" href="{{ path('app_admin_gaming_game_hub_guild_links', {entryId: entry.id}) }}">Gilden verwalten</a></p>{% endif %}
     </header>
 
     {% if entry.genres|length %}
@@ -26,7 +27,16 @@
     </section>
 
     {% if links %}
-    <section><h2>Verknüpfte Bereiche</h2><ul>{% for link in links %}<li>{{ link.targetType|capitalize }}: {{ link.label }}</li>{% endfor %}</ul></section>
+    <section><h2>Verknüpfte Bereiche</h2><ul>
+        {% for link in links %}
+            {% if link.targetType == 'guild' %}
+                {% set linkedGuild = game_hub_public_guild_link(link, entry) %}
+                {% if linkedGuild %}<li>Gilde: <a href="{{ linkedGuild.url }}">{{ linkedGuild.label }}</a></li>{% endif %}
+            {% else %}
+                <li>{{ link.targetType|capitalize }}: {{ link.label }}</li>
+            {% endif %}
+        {% endfor %}
+    </ul></section>
     {% endif %}
 </main>
 {% endblock %}
