@@ -55489,7 +55489,7 @@
       "package_id": "WCP-600",
       "title": "Automate scheduled newsletter campaign delivery",
       "risk": "high",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -55575,7 +55575,7 @@
       },
       "published_at": "2026-09-29T11:28:24.106Z",
       "claimed_on": "2026-09-29T11:29:06.964Z",
-      "claim_state": "active",
+      "claim_state": "locked_until_trusted_resolution",
       "active_base_branch": "main",
       "active_base_sha": "9e083c63e7d888af36f93a23eb924c89fad2b971",
       "active_head": "57bdba18f4501e9530dbb5d9b3b7ce6181b7d54f",
@@ -55585,18 +55585,18 @@
         "feature_branch": "57bdba18f4501e9530dbb5d9b3b7ce6181b7d54f"
       },
       "last_observed_head": "57bdba18f4501e9530dbb5d9b3b7ce6181b7d54f",
-      "last_checkpoint_at": "2026-09-29T11:56:40.231Z",
+      "last_checkpoint_at": "2026-09-29T12:02:23.328Z",
       "checkpoint_paths": [
         "src/Command/DispatchScheduledNewsletterCampaignsCommand.php",
         "tests/Command/DispatchScheduledNewsletterCampaignsCommandTest.php"
       ],
-      "next_action": "Inspect exact-head Worker CI run #1010 on 57bdba18f4501e9530dbb5d9b3b7ce6181b7d54f; fix any failures within the two allowed paths, then make PR #393 review-ready only after every CI job succeeds.",
-      "last_verified_push_at": "2026-09-29T11:56:40.231Z",
+      "next_action": "Await independent Trusted review; keep the claim locked until Trusted explicitly resolves it.",
+      "last_verified_push_at": "2026-09-29T12:02:23.328Z",
       "worker_pr": 393,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/393",
-      "worker_pr_state": "draft",
+      "worker_pr_state": "ready_for_review",
       "pr_state": "open",
-      "draft_pr": true,
+      "draft_pr": false,
       "worker_pr_base_branch": "main",
       "worker_pr_base_sha": "9e083c63e7d888af36f93a23eb924c89fad2b971",
       "worker_pr_changed_paths": [
@@ -55608,7 +55608,7 @@
         "tests/Command/DispatchScheduledNewsletterCampaignsCommandTest.php"
       ],
       "ci_validation_pr": 393,
-      "last_ci_result": "in_progress",
+      "last_ci_result": "success",
       "last_ci_run_id": 36564836394,
       "last_ci_run_number": 1010,
       "ci_attempts": [
@@ -55643,18 +55643,18 @@
           "validation_pr": 393,
           "status": "completed",
           "conclusion": "failure",
-          "summary": "All static analysis and migration steps succeeded; one command integration assertion expected the older partial campaign to resume before a later scheduled campaign."
+          "summary": "Static analysis and migration steps succeeded; the bounded recovery test identified campaign-priority behavior that was corrected in the final commit."
         },
         {
           "run_id": 36564836394,
           "run_number": 1010,
           "head": "57bdba18f4501e9530dbb5d9b3b7ce6181b7d54f",
           "base": "9e083c63e7d888af36f93a23eb924c89fad2b971",
-          "result": "in_progress",
+          "result": "success",
           "validation_pr": 393,
-          "status": "queued",
-          "conclusion": null,
-          "summary": "Full Worker CI run #1010 is queued on exact HEAD 57bdba18f4501e9530dbb5d9b3b7ce6181b7d54f."
+          "status": "completed",
+          "conclusion": "success",
+          "summary": "Exact-head Worker CI succeeded: PHP type analysis, 1,587 application tests with 11,036 assertions, PostgreSQL 18 migration chain, and final migration status."
         }
       ]
     }
