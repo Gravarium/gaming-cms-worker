@@ -74,7 +74,7 @@ final readonly class CompetitionRosterQuery
         }
         $allIds = array_values(array_unique(array_filter(
             $allIds,
-            static fn (mixed $id): bool => is_int($id) && $id > 0,
+            static fn (mixed $id): bool => self::isPositiveUserId($id),
         )));
 
         /** @var array<int, array{id: int, name: string}> $memberMap */
@@ -111,7 +111,7 @@ final readonly class CompetitionRosterQuery
             }
             $memberIds = array_values(array_unique(array_filter(
                 $memberIds,
-                static fn (mixed $id): bool => is_int($id) && $id > 0,
+                static fn (mixed $id): bool => self::isPositiveUserId($id),
             )));
 
             $members = [];
@@ -132,5 +132,10 @@ final readonly class CompetitionRosterQuery
         }
 
         return $rows;
+    }
+
+    private static function isPositiveUserId(mixed $value): bool
+    {
+        return is_int($value) && $value > 0;
     }
 }

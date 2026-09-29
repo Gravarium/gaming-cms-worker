@@ -186,7 +186,7 @@ final readonly class CompetitionRosterInviteLink
         }
         $memberIds = array_values(array_unique(array_filter(
             $memberIds,
-            static fn (mixed $id): bool => is_int($id) && $id > 0,
+            static fn (mixed $id): bool => self::isPositiveUserId($id),
         )));
         sort($memberIds, SORT_NUMERIC);
 
@@ -203,6 +203,11 @@ final readonly class CompetitionRosterInviteLink
     private function cacheKey(string $nonce): string
     {
         return 'competition_roster_invite_'.hash('sha256', $nonce);
+    }
+
+    private static function isPositiveUserId(mixed $value): bool
+    {
+        return is_int($value) && $value > 0;
     }
 
     private static function base64UrlEncode(string $value): string

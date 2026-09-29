@@ -19,6 +19,8 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\FlashBagAwareSessionInterface;
+use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
@@ -106,7 +108,7 @@ final class CompetitionRosterController extends AbstractController
             'participantId' => $participantId,
             'token' => $token,
         ], UrlGeneratorInterface::ABSOLUTE_URL);
-        $request->getSession()->getFlashBag()->add('competition_roster_invite_link', $url);
+        $this->flashBag($request)->add('competition_roster_invite_link', $url);
         $this->addFlash('success', 'Der einmalige Einladungslink ist eine Stunde gültig. Teile ihn nur mit dem eingeladenen Teammitglied.');
 
         return $this->dashboardRedirect();
@@ -266,7 +268,7 @@ final class CompetitionRosterController extends AbstractController
             return true;
         });
 
-        $request->getSession()->getFlashBag()->add('competition_roster_join_result_'.$participantId, $accepted ? 'joined' : 'failed');
+        $this->flashBag($request)->add('competition_roster_join_result_'.$participantId, $accepted ? 'joined' : 'failed');
 
         return $this->privateResponse($this->redirectToRoute('app_competition_roster_join_result', [
             'competitionId' => $competitionId,
@@ -286,7 +288,7 @@ final class CompetitionRosterController extends AbstractController
         $user = $this->currentUser();
         [$competition, $participant] = $this->loadPublicTeam($competitionId, $participantId);
 
-        $messages = $request->getSession()->getFlashBag()->get('competition_roster_join_result_'.$participantId);
+        $messages = $this->flashBag($request)->get('competition_roster_join_result_'.$participantId);
         if (!in_array($messages[0] ?? null, ['joined', 'failed'], true)) {
             throw $this->createNotFoundException();
         }
@@ -319,6 +321,16 @@ final class CompetitionRosterController extends AbstractController
         }
 
         return $user;
+    }
+
+    private function flashBag(Request $request): FlashBagInterface
+    {
+        $session = $request->getSession();
+        if (!$session instanceof FlashBagAwareSessionInterface) {
+            throw new \LogicException('The session cannot store flash messages.');
+        }
+
+        return $session->getFlashBag();
     }
 
     /** @return array{Competition, CompetitionParticipant} */
@@ -362,7 +374,7 @@ final class CompetitionRosterController extends AbstractController
         }
         $ids = array_values(array_unique(array_filter(
             $ids,
-            static fn (mixed $id): bool => is_int($id) && $id > 0,
+            static fn (mixed $id): bool => self::isPositiveUserId($id),
         )));
 
         return max(0, $competition->getTeamSize() - count($ids));
@@ -381,5 +393,10 @@ final class CompetitionRosterController extends AbstractController
         $response->headers->set('Referrer-Policy', 'no-referrer');
 
         return $response;
+    }
+
+    private static function isPositiveUserId(mixed $value): bool
+    {
+        return is_int($value) && $value > 0;
     }
 }
