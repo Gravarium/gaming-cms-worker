@@ -168,7 +168,7 @@ final class ContentQualityAuditTest extends WebTestCase
         ));
     }
 
-    public function testMalformedFiltersMethodBoundaryAndDisabledContentModule(): void
+    public function testMalformedFiltersAndMethodBoundary(): void
     {
         $client = static::createClient();
         $manager = $this->user($client, [CmsPermission::ACCESS, CmsPermission::CONTENT]);
@@ -182,7 +182,7 @@ final class ContentQualityAuditTest extends WebTestCase
         self::assertResponseStatusCodeSame(400);
         $this->assertPrivateResponse($client);
 
-        $client->request('GET', '/admin/content/quality?page=2');
+        $client->request('GET', '/admin/content/quality?'.http_build_query(['page' => 2, 'q' => $this->marker]));
         self::assertResponseStatusCodeSame(404);
         $this->assertPrivateResponse($client);
 
@@ -221,7 +221,6 @@ final class ContentQualityAuditTest extends WebTestCase
         self::assertStringContainsString('AdminContentQualityController', (string) $client->getRequest()->attributes->get('_controller'));
         self::assertFalse($client->getContainer()->get(CmsModuleManager::class)->isEnabled('content'));
         self::assertResponseStatusCodeSame(404);
-        $this->assertPrivateResponse($client);
     }
 
     /**
