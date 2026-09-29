@@ -80,8 +80,8 @@ final readonly class EditorialWorkQueue
             throw new \InvalidArgumentException('Editorial work queue title query is too long.');
         }
 
-        $staleBefore = $now->modify('-14 days');
-        $horizon = $now->modify('+7 days');
+        $staleBefore = $now->sub(new \DateInterval('P14D'));
+        $horizon = $now->add(new \DateInterval('P7D'));
         $counts = [];
 
         foreach (array_keys(self::WORK_TYPE_LABELS) as $workType) {

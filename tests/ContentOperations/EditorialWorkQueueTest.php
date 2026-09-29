@@ -27,11 +27,11 @@ final class EditorialWorkQueueTest extends WebTestCase
         try {
             $entries[] = $this->entry($author, $marker.' review', $slugPrefix.'-review', ContentEntry::STATUS_REVIEW);
             $entries[] = $this->entry($author, $marker.' stale draft', $slugPrefix.'-draft', ContentEntry::STATUS_DRAFT);
-            $entries[] = $this->entry($author, $marker.' due publication', $slugPrefix.'-publication-due', ContentEntry::STATUS_SCHEDULED, ContentEntry::TYPE_NEWS, $now->modify('-1 second'));
-            $entries[] = $this->entry($author, $marker.' upcoming publication', $slugPrefix.'-publication-upcoming', ContentEntry::STATUS_SCHEDULED, ContentEntry::TYPE_PAGE, $now->modify('+7 days'));
+            $entries[] = $this->entry($author, $marker.' due publication', $slugPrefix.'-publication-due', ContentEntry::STATUS_SCHEDULED, ContentEntry::TYPE_NEWS, $now->sub(new \DateInterval('PT1S')));
+            $entries[] = $this->entry($author, $marker.' upcoming publication', $slugPrefix.'-publication-upcoming', ContentEntry::STATUS_SCHEDULED, ContentEntry::TYPE_PAGE, $now->add(new \DateInterval('P7D')));
             $entries[] = $this->entry($author, $marker.' due unpublication', $slugPrefix.'-unpublication-due', ContentEntry::STATUS_PUBLISHED, ContentEntry::TYPE_NEWS, null, $now->modify('-1 second'));
             $entries[] = $this->entry($author, $marker.' upcoming unpublication', $slugPrefix.'-unpublication-upcoming', ContentEntry::STATUS_PUBLISHED, ContentEntry::TYPE_NEWS, null, $now->modify('+7 days'));
-            $entries[] = $this->entry($author, $marker.' too far in future', $slugPrefix.'-future', ContentEntry::STATUS_SCHEDULED, ContentEntry::TYPE_NEWS, $now->modify('+8 days'));
+            $entries[] = $this->entry($author, $marker.' too far in future', $slugPrefix.'-future', ContentEntry::STATUS_SCHEDULED, ContentEntry::TYPE_NEWS, $now->add(new \DateInterval('P8D')));
             $entries[] = $this->entry($author, $marker.' archived control', $slugPrefix.'-archived', ContentEntry::STATUS_ARCHIVED);
 
             for ($index = 0; $index < 25; ++$index) {
