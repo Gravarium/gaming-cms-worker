@@ -1,0 +1,67 @@
+{% extends 'base.html.twig' %}
+{% block title %}Veröffentlichungskalender | Gaming CMS{% endblock %}
+{% block body %}
+<header class="topbar">
+    <a class="brand" href="{{ path('app_admin_dashboard') }}">Gaming CMS</a>
+    <nav class="top-actions" aria-label="Redaktion">
+        <a href="{{ path('app_admin_content_index') }}">Alle Inhalte</a>
+    </nav>
+</header>
+<main class="dashboard">
+    <p class="eyebrow">Content-Modul</p>
+    <h1>Veröffentlichungskalender</h1>
+    {% for message in app.flashes('success') %}<div class="notice">{{ message }}</div>{% endfor %}
+    {% for message in app.flashes('error') %}<div class="notice text-danger">{{ message }}</div>{% endfor %}
+    <form method="get" action="{{ path('app_admin_content_schedule_index') }}">
+        <label for="content-schedule-month">Monat</label>
+        <input id="content-schedule-month" type="month" name="month" value="{{ calendar.month }}">
+        <button type="submit">Anzeigen</button>
+    </form>
+    <nav class="pagination" aria-label="Monate">
+        <a rel="prev" href="{{ path('app_admin_content_schedule_index', {month: calendar.previousMonth}) }}">Vorheriger Monat</a>
+        <span aria-current="date">{{ calendar.month }}</span>
+        <a rel="next" href="{{ path('app_admin_content_schedule_index', {month: calendar.nextMonth}) }}">Nächster Monat</a>
+    </nav>
+    <p class="muted">
+        {% if calendar.total > 0 %}
+            Termine {{ calendar.firstResult }}–{{ calendar.lastResult }} von {{ calendar.total }}
+        {% else %}
+            Keine geplanten Veröffentlichungstermine in diesem Monat.
+        {% endif %}
+        · Seite {{ calendar.page }} von {{ calendar.pageCount }}
+    </p>
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr><th>Zeitpunkt</th><th>Aktion</th><th>Inhalt</th><th>Aktion</th></tr>
+            </thead>
+            <tbody>
+                {% for event in calendar.events %}
+                    <tr data-schedule-kind="{{ event.kind }}" data-schedule-entry="{{ event.entryId }}">
+                        <td>{{ event.at|date('d.m.Y H:i') }}</td>
+                        <td>{{ event.kind == 'publication' ? 'Veröffentlichung' : 'Veröffentlichung beenden' }}</td>
+                        <td><strong>{{ event.title }}</strong></td>
+                        <td>
+                            <a href="{{ path('app_admin_content_schedule_edit', {id: event.entryId, kind: event.kind, month: calendar.month}) }}">Termin ändern</a>
+                            <a href="{{ path('app_admin_content_edit', {id: event.entryId}) }}">Inhalt bearbeiten</a>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr><td colspan="4">In diesem Monat sind keine Termine vorhanden.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% if calendar.pageCount > 1 %}
+        <nav aria-label="Kalenderseiten" class="pagination">
+            {% if calendar.page > 1 %}
+                <a rel="prev" href="{{ path('app_admin_content_schedule_index', {month: calendar.month, page: calendar.page - 1}) }}">Vorherige</a>
+            {% endif %}
+            <span aria-current="page">{{ calendar.page }} / {{ calendar.pageCount }}</span>
+            {% if calendar.page < calendar.pageCount %}
+                <a rel="next" href="{{ path('app_admin_content_schedule_index', {month: calendar.month, page: calendar.page + 1}) }}">Nächste</a>
+            {% endif %}
+        </nav>
+    {% endif %}
+</main>
+{% endblock %}
