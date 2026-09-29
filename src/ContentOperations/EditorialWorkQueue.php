@@ -91,6 +91,9 @@ final readonly class EditorialWorkQueue
             $counts[$workType] = (int) $countBuilder->getQuery()->getSingleScalarResult();
         }
 
+        $total = (int) array_sum($counts);
+        $filteredTotal = $kind === null ? $total : $counts[$kind];
+
         $builder = $this->baseBuilder($status, $type, $titleQuery);
         $workTypes = $kind === null ? array_keys(self::WORK_TYPE_LABELS) : [$kind];
         $conditions = $builder->expr()->orX();
@@ -133,13 +136,11 @@ final readonly class EditorialWorkQueue
             ];
         }
 
-        $total = (int) array_sum($counts);
-
         return [
             'items' => $items,
             'counts' => $counts,
             'total' => $total,
-            'filtered_total' => $kind === null ? $total : $counts[$kind],
+            'filtered_total' => $filteredTotal,
             'has_next' => $hasNext,
             'page' => $page,
             'page_size' => self::PAGE_SIZE,
