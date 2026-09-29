@@ -7,11 +7,16 @@ namespace App\Controller\AdminDownload;
 use App\Downloads\DownloadModuleAvailability;
 use App\Downloads\DownloadPrivateStorage;
 use App\Downloads\DownloadScanService;
+use App\Downloads\DownloadStorageUnavailable;
 use App\Entity\Download\DownloadPackage;
 use App\Entity\Download\DownloadVersion;
+use App\Form\DownloadCatalogue\DownloadVersionInput;
+use App\Form\DownloadCatalogue\DownloadVersionType;
 use Doctrine\DBAL\Connection;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\FormError;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -39,8 +44,9 @@ final class AdminDownloadController extends AbstractController
     public function uploadForm(DownloadPackage $package): Response
     {
         $this->assertAvailable();
+        $form = $this->createForm(DownloadVersionType::class, new DownloadVersionInput());
 
-        return $this->render('admin/download/upload.html.twig', ['package' => $package]);
+        return $this->uploadFormResponse($package, $form, Response::HTTP_OK);
     }
 
     #[Route(
@@ -59,9 +65,32 @@ final class AdminDownloadController extends AbstractController
             throw $this->createAccessDeniedException();
         }
 
-        $file = $request->files->get('file');
+        $input = new DownloadVersionInput();
+        $form = $this->createForm(DownloadVersionType::class, $input)->handleRequest($request);
+        if (!$form->isSubmitted()) {
+            $form->addError(new FormError('Sende das Uploadformular erneut ab.'));
+
+            return $this->uploadFormResponse($package, $form, Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+        if (!$form->isValid()) {
+            return $this->uploadFormResponse($package, $form, Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+
+        $file = $input->file;
         if (!$file instanceof UploadedFile) {
-            throw $this->createNotFoundException();
+            $form->get('file')->addError(new FormError('Wähle eine Datei aus.'));
+
+            return $this->uploadFormResponse($package, $form, Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+
+        $existing = $this->em->getRepository(DownloadVersion::class)->findOneBy([
+            'package' => $package,
+            'version' => $input->version,
+        ]);
+        if ($existing instanceof DownloadVersion) {
+            $form->get('version')->addError(new FormError('Diese Version existiert bereits für dieses Paket.'));
+
+            return $this->uploadFormResponse($package, $form, Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
         /** @var array{reference: string, staged_reference: string, filename: string, sha256: string, scan: string}|null $stored */
@@ -74,24 +103,34 @@ final class AdminDownloadController extends AbstractController
 
             $record = (new DownloadVersion(
                 $package,
-                $request->request->getString('version'),
+                $input->version,
                 $stored['filename'],
                 $stored['sha256'],
                 $stored['reference'],
-            ))->markScan($stored['scan']);
+            ))
+                ->setCompatibility($input->compatibilityValues())
+                ->setChangelog($input->changelog)
+                ->markScan($stored['scan']);
 
             $this->em->persist($record);
             $this->em->flush();
             $this->storage->finalize($stored);
             $connection->commit();
-        } catch (\DomainException|\InvalidArgumentException $exception) {
+        } catch (\InvalidArgumentException $exception) {
             $this->rollbackAndDiscard($connection, $stored);
+            $form->get('version')->addError(new FormError($exception->getMessage()));
 
-            return new Response(
-                $exception->getMessage(),
-                Response::HTTP_UNPROCESSABLE_ENTITY,
-                ['Content-Type' => 'text/plain; charset=utf-8'],
-            );
+            return $this->uploadFormResponse($package, $form, Response::HTTP_UNPROCESSABLE_ENTITY);
+        } catch (DownloadStorageUnavailable) {
+            $this->rollbackAndDiscard($connection, $stored);
+            $form->get('file')->addError(new FormError('Der private Download-Speicher ist vorübergehend nicht verfügbar.'));
+
+            return $this->uploadFormResponse($package, $form, Response::HTTP_SERVICE_UNAVAILABLE);
+        } catch (\DomainException $exception) {
+            $this->rollbackAndDiscard($connection, $stored);
+            $form->get('file')->addError(new FormError($exception->getMessage()));
+
+            return $this->uploadFormResponse($package, $form, Response::HTTP_UNPROCESSABLE_ENTITY);
         } catch (\Throwable $exception) {
             $this->rollbackAndDiscard($connection, $stored);
 
@@ -131,6 +170,23 @@ final class AdminDownloadController extends AbstractController
         return $this->redirectToRoute('app_download_show', [
             'slug' => $version->getPackage()->getSlug(),
         ]);
+    }
+
+    /**
+     * @param FormInterface<DownloadVersionInput> $form
+     */
+    private function uploadFormResponse(
+        DownloadPackage $package,
+        FormInterface $form,
+        int $status,
+    ): Response {
+        $response = $this->render('@DownloadReleaseMetadata/admin/upload.html.twig', [
+            'package' => $package,
+            'form' => $form->createView(),
+        ]);
+        $response->setStatusCode($status);
+
+        return $response;
     }
 
     private function assertAvailable(): void
