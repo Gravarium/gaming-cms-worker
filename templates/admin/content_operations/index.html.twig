@@ -1,0 +1,98 @@
+{% extends 'base.html.twig' %}
+{% block title %}Editorial Work Queue | Gaming CMS{% endblock %}
+{% block body %}
+<header class="topbar">
+    <a class="brand" href="{{ path('app_admin_dashboard') }}">Gaming CMS</a>
+    <nav class="top-actions">
+        <a href="{{ path('app_admin_content_index') }}">Editorial Workspace</a>
+        <a class="button-link" href="{{ path('app_admin_content_new') }}">Neuer Inhalt</a>
+    </nav>
+</header>
+<main class="dashboard">
+    <p class="eyebrow">Administration · Inhalte</p>
+    <h1>Editorial Work Queue</h1>
+    <p class="muted">Hier stehen Inhalte, die eine redaktionelle Entscheidung oder einen baldigen Termin benötigen.</p>
+
+    {% set keptFilters = {'q': filters.q, 'status': filters.status, 'type': filters.type} %}
+    <section aria-label="Offene redaktionelle Aufgaben">
+        <ul class="work-queue-summary">
+            <li>
+                <a href="{{ path('app_admin_content_operations', keptFilters|merge({'page': 1})) }}">
+                    Alle <strong>{{ queue.total }}</strong>
+                </a>
+            </li>
+            {% for kind, label in work_type_labels %}
+                <li>
+                    <a href="{{ path('app_admin_content_operations', keptFilters|merge({'kind': kind, 'page': 1})) }}">
+                        {{ label }} <strong>{{ queue.counts[kind] }}</strong>
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
+    </section>
+
+    <form method="get" class="content-form" role="search">
+        <label for="queue-q">Titel
+            <input id="queue-q" name="q" value="{{ filters.q }}" maxlength="120" placeholder="Titel enthält …">
+        </label>
+        <label for="queue-status">Status
+            <select id="queue-status" name="status">
+                <option value="">Alle passenden Status</option>
+                {% for value, label in {'draft': 'Entwurf', 'review': 'Zur Freigabe', 'scheduled': 'Geplant', 'published': 'Veröffentlicht'} %}
+                    <option value="{{ value }}" {{ filters.status == value ? 'selected' }}>{{ label }}</option>
+                {% endfor %}
+            </select>
+        </label>
+        <label for="queue-type">Inhaltstyp
+            <select id="queue-type" name="type">
+                <option value="">Alle</option>
+                <option value="news" {{ filters.type == 'news' ? 'selected' }}>News</option>
+                <option value="page" {{ filters.type == 'page' ? 'selected' }}>Seite</option>
+            </select>
+        </label>
+        <label for="queue-kind">Aufgabenart
+            <select id="queue-kind" name="kind">
+                <option value="">Alle</option>
+                {% for kind, label in work_type_labels %}
+                    <option value="{{ kind }}" {{ filters.kind == kind ? 'selected' }}>{{ label }}</option>
+                {% endfor %}
+            </select>
+        </label>
+        <button type="submit">Filtern</button>
+    </form>
+
+    {% set statusLabels = {'draft': 'Entwurf', 'review': 'Zur Freigabe', 'scheduled': 'Geplant', 'published': 'Veröffentlicht'} %}
+    <p class="muted">{{ queue.filtered_total }} passende Einträge · Seite {{ queue.page }}</p>
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr><th>Aufgabe</th><th>Titel</th><th>Typ</th><th>Status</th><th>Termin / letzte Änderung</th><th>Aktion</th></tr>
+            </thead>
+            <tbody>
+                {% for item in queue.items %}
+                    <tr>
+                        <td>{{ item.kind_label }}</td>
+                        <td><strong>{{ item.entry.title }}</strong></td>
+                        <td>{{ item.entry.type == 'news' ? 'News' : 'Seite' }}</td>
+                        <td>{{ statusLabels[item.entry.status] ?? item.entry.status }}</td>
+                        <td>{{ item.action_at|date('d.m.Y H:i') }}</td>
+                        <td><a href="{{ path('app_admin_content_edit', {'id': item.entry.id}) }}">Bearbeiten</a></td>
+                    </tr>
+                {% else %}
+                    <tr><td colspan="6">Für diese Filter gibt es keine offenen redaktionellen Aufgaben.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    {% set pageFilters = {'q': filters.q, 'status': filters.status, 'type': filters.type, 'kind': filters.kind} %}
+    <nav aria-label="Seiten">
+        {% if queue.page > 1 %}
+            <a class="button-link button-secondary" rel="prev" href="{{ path('app_admin_content_operations', pageFilters|merge({'page': queue.page - 1})) }}">Zurück</a>
+        {% endif %}
+        {% if queue.has_next %}
+            <a class="button-link" rel="next" href="{{ path('app_admin_content_operations', pageFilters|merge({'page': queue.page + 1})) }}">Weiter</a>
+        {% endif %}
+    </nav>
+</main>
+{% endblock %}
