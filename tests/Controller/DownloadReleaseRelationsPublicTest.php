@@ -55,7 +55,9 @@ final class DownloadReleaseRelationsPublicTest extends WebTestCase
         self::assertStringNotContainsString('secret-component-'.$suffix, $content);
         self::assertStringContainsString('https://trusted.example.test/'.$suffix.'.zip', $content);
         self::assertStringNotContainsString('untrusted.example.test', $content);
-            self::assertSame('private, no-store', $client->getResponse()->headers->get('Cache-Control'));
+            $cacheControl = (string) $client->getResponse()->headers->get('Cache-Control');
+            self::assertStringContainsString('private', $cacheControl);
+            self::assertStringContainsString('no-store', $cacheControl);
             self::assertSelectorNotExists('a[href^="/admin/downloads/versions/"]');
         } finally {
             foreach ($entityManager->getRepository(DownloadDependency::class)->findBy(['version' => $version]) as $dependency) {
