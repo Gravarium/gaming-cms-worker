@@ -1,0 +1,32 @@
+{% extends 'base.html.twig' %}
+{% block title %}{{ account ? 'Charakteraccount bearbeiten' : 'Charakteraccount anlegen' }}{% endblock %}
+{% block body %}
+<main class="form-page">
+    <p><a href="{{ path('app_character_owner_index') }}">← Meine Spielcharaktere</a></p>
+    <h1>{{ account ? 'Accountname bearbeiten' : 'Charakteraccount anlegen' }}</h1>
+    {% if error %}<div class="alert" role="alert">{{ error }}</div>{% endif %}
+    {% if not account and games is empty %}
+        <p>Zurzeit ist kein Spiel für neue Charakteraccounts verfügbar.</p>
+    {% else %}
+        <form method="post" class="form-stack">
+            <input type="hidden" name="_token" value="{{ csrf_token(account ? 'character-owner-account-edit-' ~ account.id : 'character-owner-account-new') }}">
+            {% if account %}
+                <p>{{ account.game.name }} · {{ account.source }}</p>
+            {% else %}
+                <label>Spiel
+                    <select name="game_id" required>
+                        <option value="">Spiel wählen</option>
+                        {% for game in games %}
+                            <option value="{{ game.id }}" {{ values.game_id == game.id ? 'selected' : '' }}>{{ game.name }}</option>
+                        {% endfor %}
+                    </select>
+                </label>
+                <label>Account-Schlüssel<input name="account_key" maxlength="160" required autocomplete="off"></label>
+                <label><input type="checkbox" name="consent" value="1" required> Ich möchte diesen Account und seine Charakterprofile im CMS speichern.</label>
+            {% endif %}
+            <label>Anzeigename<input name="display_name" maxlength="160" value="{{ values.display_name }}" required></label>
+            <button type="submit">Speichern</button>
+        </form>
+    {% endif %}
+</main>
+{% endblock %}
