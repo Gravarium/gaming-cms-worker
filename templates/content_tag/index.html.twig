@@ -1,0 +1,29 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Tags | {{ site.siteName }}{% endblock %}
+
+{% block body %}
+<header class="topbar">
+    <a class="brand" href="{{ path('app_home') }}">{{ site.siteName }}</a>
+    <nav class="top-actions" aria-label="Hauptnavigation">
+        <a href="{{ path('app_news_index') }}">Alle News</a>
+        <a href="{{ path('app_home') }}">Startseite</a>
+    </nav>
+</header>
+<main class="dashboard">
+    <p class="eyebrow">News</p>
+    <h1>Tags</h1>
+    <p class="muted">Durchsuche veröffentlichte Beiträge nach Schlagworten.</p>
+    <section class="news-grid" aria-label="News-Tags">
+        {% for tag in tags %}
+            <article class="card tag-directory-item">
+                <p class="eyebrow">Tag</p>
+                <h2><a href="{{ path('app_news_tag', {slug: tag.slug}) }}">{{ tag.name }}</a></h2>
+                {% if tag.description %}<p class="tag-description">{{ tag.description }}</p>{% endif %}
+            </article>
+        {% else %}
+            <p class="muted">Noch keine Tags vorhanden.</p>
+        {% endfor %}
+    </section>
+</main>
+{% endblock %}
