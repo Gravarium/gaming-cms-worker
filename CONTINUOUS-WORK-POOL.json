@@ -56457,7 +56457,7 @@
       "package_id": "WCP-604",
       "title": "Export and import CMS content as safe, versioned bundles",
       "risk": "high",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -56518,10 +56518,12 @@
         "Anonymous and insufficient-permission users are denied; disabled Content returns 404; exports and form responses are private/no-store/noindex; mutating routes are POST-only."
       ],
       "completion_report": [
-        "Exact sanitized Worker main base SHA, exact final HEAD, complete changed-path list, and Worker PR URL/state.",
-        "Export privacy/schema/bounds and strict import all-or-nothing/draft-only/taxonomy behavior evidence.",
-        "Exact-head PHPUnit, PHPStan, PostgreSQL 18, and complete Worker CI results.",
-        "Confirm no schema or migration change and list any intentionally excluded content/media capabilities."
+        "Exact sanitized Worker base: 9e083c63e7d888af36f93a23eb924c89fad2b971; final HEAD: 612fcdf431b72dc174ccd40b82c3f1af18321d33; PR #399 is open and ready for Trusted review.",
+        "Export uses deterministic bounded version-1 JSON for up to 20 entries and includes supported text, SEO fields including canonical URL, and category/tag slugs; excludes IDs, author, lifecycle/schedule state, media references, and editor documents.",
+        "Import checks the whole bundle and all entries before writing, resolves local taxonomy by slug, rejects missing/duplicate references and unsupported fields, and creates current-manager drafts with no publication/schedule state, no elevated flags, and collision-safe slugs.",
+        "Import/export require CMS_CONTENT_MANAGE, CSRF and the Content module; responses are private, no-store and noindex; exports are JSON attachments with nosniff; successful operations are audited.",
+        "Exact-head Worker CI run #1042 / 36592192902 succeeded: 1,593 PHPUnit tests / 11,108 assertions, PHPStan and Symfony/Twig/YAML/container/AssetMapper/Doctrine checks, and PostgreSQL 18 migration-chain validation.",
+        "No schema or migration changes. Local media references and editor documents are intentionally outside the portable bundle."
       ],
       "immutable_constraints": [
         "trusted-main-is-the-only-integration-and-deployment-source",
@@ -56553,7 +56555,7 @@
       },
       "published_at": "2026-09-29T15:10:31.672Z",
       "claimed_on": "2026-09-29T15:10:31.672Z",
-      "claim_state": "active",
+      "claim_state": "locked_until_trusted_resolution",
       "active_base_branch": "main",
       "active_base_sha": "9e083c63e7d888af36f93a23eb924c89fad2b971",
       "active_head": "612fcdf431b72dc174ccd40b82c3f1af18321d33",
@@ -56563,7 +56565,7 @@
         "feature_branch": "612fcdf431b72dc174ccd40b82c3f1af18321d33"
       },
       "last_observed_head": "612fcdf431b72dc174ccd40b82c3f1af18321d33",
-      "last_checkpoint_at": "2026-09-29T15:42:09.148Z",
+      "last_checkpoint_at": "2026-09-29T15:47:13.949Z",
       "checkpoint_paths": [
         "src/Controller/AdminContentTransferController.php",
         "src/ContentTransfer/",
@@ -56572,9 +56574,12 @@
         "tests/Controller/ContentTransferWorkflowTest.php",
         "tests/ContentTransfer/"
       ],
-      "next_action": "Run exact-head Worker CI on PR 399 at 612fcdf431b72dc174ccd40b82c3f1af18321d33; verify all controller tests, PHPStan, PostgreSQL 18, and all CI jobs.",
-      "last_verified_push_at": "2026-09-29T15:42:09.148Z",
-      "worker_pr": 399
+      "next_action": "Await Trusted review and resolution for Worker PR 399; keep the claim locked and do not integrate or deploy.",
+      "last_verified_push_at": "2026-09-29T15:47:13.949Z",
+      "worker_pr": 399,
+      "final_head": "612fcdf431b72dc174ccd40b82c3f1af18321d33",
+      "ci_run_id": 36592192902,
+      "ci_result": "success"
     },
     {
       "priority": 605,
