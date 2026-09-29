@@ -276,24 +276,6 @@ final class ContentTransferWorkflowTest extends WebTestCase
     }
 
     public function testInvalidCsrfSelectionMethodAndDisabledContentModuleAreRejected(): void
-        $unknownField['internalId'] = 9;
-        $invalidPayloads = [
-            'malformed JSON' => '{',
-            'unsupported entry field' => $this->bundle([$unknownField]),
-            'too many entries' => $this->bundle(array_fill(0, 21, $this->record('too-many-entry'))),
-        ];
-        foreach ($invalidPayloads as $payload) {
-            $this->submitImport($client, $payload);
-            self::assertResponseStatusCodeSame(422);
-            $this->assertPrivateResponse($client);
-        }
-
-        $this->submitImport($client, $this->bundle([$this->record('invalid-csrf')]), 'invalid-token');
-        self::assertResponseStatusCodeSame(422);
-        $this->assertPrivateResponse($client);
-    }
-
-    public function testInvalidCsrfSelectionMethodAndDisabledContentModuleAreRejected(): void
     {
         $client = static::createClient();
         $manager = $this->user($client, [CmsPermission::ACCESS, CmsPermission::CONTENT]);
