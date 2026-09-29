@@ -53967,16 +53967,16 @@
       "claim_state": "active",
       "active_base_branch": "fix/fcp-061-phpstan-g1",
       "active_base_sha": "ec6bb200affc3e5a46d416e98f7a1b0621c38ded",
-      "active_head": "5099d313fb312ca86c02a2228369690b10c768df",
+      "active_head": "b116456673f937fa8357e341496d12d46426a33e",
       "resume_branch": "feature/wcp-591-team-competition-roster-g1",
       "branch_heads": {
         "claim_branch": "ec6bb200affc3e5a46d416e98f7a1b0621c38ded",
-        "feature_branch": "5099d313fb312ca86c02a2228369690b10c768df"
+        "feature_branch": "b116456673f937fa8357e341496d12d46426a33e"
       },
-      "last_observed_head": "5099d313fb312ca86c02a2228369690b10c768df",
-      "last_checkpoint_at": "2026-09-29T12:55:06.522Z",
-      "last_verified_push_at": "2026-09-29T12:55:06.522Z",
-      "next_action": "Monitor complete Worker CI #1021 on exact HEAD 5099d313fb312ca86c02a2228369690b10c768df; address any findings.",
+      "last_observed_head": "b116456673f937fa8357e341496d12d46426a33e",
+      "last_checkpoint_at": "2026-09-29T13:02:39.279Z",
+      "last_verified_push_at": "2026-09-29T13:02:39.279Z",
+      "next_action": "Monitor complete Worker CI #1022 on exact HEAD b116456673f937fa8357e341496d12d46426a33e; address any findings.",
       "checkpoint_paths": [
         "config/packages/competition_rosters_widget.yaml",
         "src/CompetitionRoster/CompetitionRosterInviteLink.php",
@@ -54011,9 +54011,9 @@
         "tests/Widget/CompetitionRostersWidgetTest.php"
       ],
       "ci_result": "in_progress",
-      "ci_run_id": 36571339107,
-      "ci_run_number": 1021,
-      "ci_head": "5099d313fb312ca86c02a2228369690b10c768df",
+      "ci_run_id": 36572210003,
+      "ci_run_number": 1022,
+      "ci_head": "b116456673f937fa8357e341496d12d46426a33e",
       "ci_attempts": [
         {
           "run_id": 36564325245,
@@ -54170,12 +54170,24 @@
           "run_number": 1021,
           "head": "5099d313fb312ca86c02a2228369690b10c768df",
           "base": "9e083c63e7d888af36f93a23eb924c89fad2b971",
+          "result": "failure",
+          "validation_pr": 395,
+          "status": "completed",
+          "conclusion": "failure",
+          "jobs": {},
+          "summary": "This run was superseded by the test harness change before its result was used: WebTestCase::createClient() is limited to one client per test, so additional sessions now use separate KernelBrowser cookie jars on the existing kernel."
+        },
+        {
+          "run_id": 36572210003,
+          "run_number": 1022,
+          "head": "b116456673f937fa8357e341496d12d46426a33e",
+          "base": "9e083c63e7d888af36f93a23eb924c89fad2b971",
           "result": "in_progress",
           "validation_pr": 395,
           "status": "in_progress",
           "conclusion": null,
           "jobs": {},
-          "summary": "Full exact-head CI after isolating authenticated actors and expected-404 transactions in separate browser clients."
+          "summary": "Exact-head CI after switching to separate BrowserKit instances with distinct cookie jars while retaining the single permitted test kernel."
         }
       ],
       "last_ci_result": "failure"
