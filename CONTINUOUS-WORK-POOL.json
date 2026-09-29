@@ -10,8 +10,8 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "9e083c63e7d888af36f93a23eb924c89fad2b971",
-  "published_at": "2026-09-29T21:57:32.269Z",
-  "summary": "WCP-511 has been reclaimed by generation 2 from its preserved exact feature HEAD 4d2ef8bd45ab09ad0f0c1af564967157ff655873 after its seven-hour lease expired. WCP-589 is complete awaiting Trusted review, WCP-599 is unclaimed, and WCP-608 remains active. Trusted main remains the only integration and deployment source.",
+  "published_at": "2026-09-29T22:00:10.568Z",
+  "summary": "WCP-511 is active on Worker PR #404 at exact HEAD e6f77f1dfa236a0a4709c8b3a6c260a2c3730341; full Worker CI is running. WCP-589 is complete awaiting Trusted review, WCP-599 is unclaimed, and WCP-608 remains active. Trusted main remains the only integration and deployment source.",
   "rules": {
     "choose": "Resume the current chat's unfinished claimed branch first. Otherwise atomically claim an eligible published task. If no published task is eligible, independently derive and publish a bounded worker-only CMS proposal from approved product goals and observed code gaps; do not ask the owner for the next FCP number.",
     "atomic_reservation": "Create the exact claim_branch and suggested feature branch from that task's published proposal_base_sha. If the claim already exists, treat it as a hard lock; the owning continuation resumes it and every other AI skips it.",
@@ -39271,20 +39271,20 @@
         ]
       },
       "published_at": "2026-09-27T10:12:57.878Z",
-      "active_head": "4d2ef8bd45ab09ad0f0c1af564967157ff655873",
+      "active_head": "e6f77f1dfa236a0a4709c8b3a6c260a2c3730341",
       "resume_branch": "feature/wcp-511-public-content-tag-directory-g1",
       "branch_heads": {
         "claim_branch": "4d2ef8bd45ab09ad0f0c1af564967157ff655873",
-        "feature_branch": "4d2ef8bd45ab09ad0f0c1af564967157ff655873"
+        "feature_branch": "e6f77f1dfa236a0a4709c8b3a6c260a2c3730341"
       },
-      "last_observed_head": "4d2ef8bd45ab09ad0f0c1af564967157ff655873",
+      "last_observed_head": "e6f77f1dfa236a0a4709c8b3a6c260a2c3730341",
       "checkpoint_paths": [
         "src/Controller/PublicContentTagDirectoryController.php",
         "templates/content_tag/index.html.twig",
         "tests/Controller/PublicContentTagDirectoryTest.php"
       ],
-      "next_action": "Resume only feature/wcp-511-public-content-tag-directory-g1 from the verified live HEAD 4d2ef8bd45ab09ad0f0c1af564967157ff655873. Inspect exact changed paths and current CI; finish the public content-tag directory and disabled-content regression coverage within the allowlist, push a meaningful checkpoint, then complete the Worker PR with full exact-head CI.",
-      "lease_expires_at": "2026-09-30T04:57:32.269Z",
+      "next_action": "Controller includes SiteSettingsRepository::current() for the shared base template. Inspect full exact-head Worker CI on PR #404, fix any remaining issues within the three allowed paths, and finish only after full green CI.",
+      "lease_expires_at": "2026-09-30T05:00:07.000Z",
       "previous_claim": {
         "claim_branch": "claim/wcp-511-public-content-tag-directory-g1",
         "expired_at": "2026-09-29T21:51:49.000Z",
@@ -39299,10 +39299,14 @@
       "lease_expired_at": "2026-09-29T21:51:49.000Z",
       "claim_state": "active",
       "claimed_on": "2026-09-29T21:57:32.269Z",
-      "last_checkpoint_at": "2026-09-29T21:57:32.269Z",
-      "last_verified_push_at": null,
+      "last_checkpoint_at": "2026-09-29T22:00:07Z",
+      "last_verified_push_at": "2026-09-29T22:00:07Z",
       "active_base_branch": "feature/wcp-511-public-content-tag-directory-g1",
-      "active_base_sha": "4d2ef8bd45ab09ad0f0c1af564967157ff655873"
+      "active_base_sha": "4d2ef8bd45ab09ad0f0c1af564967157ff655873",
+      "worker_pr": 404,
+      "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/404",
+      "pr_state": "open_draft",
+      "worker_pr_state": "draft"
     },
     {
       "priority": 512,
