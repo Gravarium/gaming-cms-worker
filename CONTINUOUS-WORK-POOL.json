@@ -53967,16 +53967,16 @@
       "claim_state": "active",
       "active_base_branch": "fix/fcp-061-phpstan-g1",
       "active_base_sha": "ec6bb200affc3e5a46d416e98f7a1b0621c38ded",
-      "active_head": "b01930f691c09b77458567a665e0b3c1c8f68a07",
+      "active_head": "56fb902061169d6f17d65110c6dc232af2540e26",
       "resume_branch": "feature/wcp-591-team-competition-roster-g1",
       "branch_heads": {
         "claim_branch": "ec6bb200affc3e5a46d416e98f7a1b0621c38ded",
-        "feature_branch": "b01930f691c09b77458567a665e0b3c1c8f68a07"
+        "feature_branch": "56fb902061169d6f17d65110c6dc232af2540e26"
       },
-      "last_observed_head": "b01930f691c09b77458567a665e0b3c1c8f68a07",
-      "last_checkpoint_at": "2026-09-29T12:30:36.493Z",
-      "last_verified_push_at": "2026-09-29T12:30:36.493Z",
-      "next_action": "Monitor complete Worker CI #1018 on exact HEAD b01930f691c09b77458567a665e0b3c1c8f68a07; address remaining findings.",
+      "last_observed_head": "56fb902061169d6f17d65110c6dc232af2540e26",
+      "last_checkpoint_at": "2026-09-29T12:37:35.378Z",
+      "last_verified_push_at": "2026-09-29T12:37:35.378Z",
+      "next_action": "Monitor complete Worker CI #1019 on exact HEAD 56fb902061169d6f17d65110c6dc232af2540e26; address remaining findings.",
       "checkpoint_paths": [
         "config/packages/competition_rosters_widget.yaml",
         "src/CompetitionRoster/CompetitionRosterInviteLink.php",
@@ -54011,9 +54011,9 @@
         "tests/Widget/CompetitionRostersWidgetTest.php"
       ],
       "ci_result": "in_progress",
-      "ci_run_id": 36568539264,
-      "ci_run_number": 1018,
-      "ci_head": "b01930f691c09b77458567a665e0b3c1c8f68a07",
+      "ci_run_id": 36569337195,
+      "ci_run_number": 1019,
+      "ci_head": "56fb902061169d6f17d65110c6dc232af2540e26",
       "ci_attempts": [
         {
           "run_id": 36564325245,
@@ -54125,12 +54125,27 @@
           "run_number": 1018,
           "head": "b01930f691c09b77458567a665e0b3c1c8f68a07",
           "base": "9e083c63e7d888af36f93a23eb924c89fad2b971",
+          "result": "failure",
+          "validation_pr": 395,
+          "status": "completed",
+          "conclusion": "failure",
+          "jobs": {
+            "php_symfony": "failure",
+            "postgres_18": "success"
+          },
+          "summary": "PHPStan, static validation and PostgreSQL 18 passed; 1,590 tests ran with 3 authorization-route assertions redirecting to /login. The CSRF helper generated a token through a synthetic request but did not save the session outside the kernel lifecycle. It now saves the browser session after token generation."
+        },
+        {
+          "run_id": 36569337195,
+          "run_number": 1019,
+          "head": "56fb902061169d6f17d65110c6dc232af2540e26",
+          "base": "9e083c63e7d888af36f93a23eb924c89fad2b971",
           "result": "in_progress",
           "validation_pr": 395,
           "status": "in_progress",
           "conclusion": null,
           "jobs": {},
-          "summary": "Exact-head CI started after switching the CSRF helper to KernelBrowser::getSession()."
+          "summary": "Exact-head CI after persisting CSRF tokens and browser login state in the active test session."
         }
       ],
       "last_ci_result": "failure"
