@@ -10,8 +10,8 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "9e083c63e7d888af36f93a23eb924c89fad2b971",
-  "published_at": "2026-09-29T13:40:06.259Z",
-  "summary": "WCP-591 remains complete awaiting Trusted review. WCP-602 implementation checkpoint advanced to 133a5af652119a49dc1091eeba5bc5472ac34d95; the feature branch remains disjoint from all other active and completed-awaiting-Trusted allowlists. Exact-head CI is being rerun.",
+  "published_at": "2026-09-29T13:41:17.486Z",
+  "summary": "WCP-591 remains complete awaiting Trusted review. WCP-602 implementation checkpoint advanced to 67ade10c7c976daeec339d6073096d7c5aa63d90; anonymous and POST-only route coverage is included, with no active path collisions. Exact-head CI is running.",
   "rules": {
     "choose": "Resume the current chat's unfinished claimed branch first. Otherwise atomically claim an eligible published task. If no published task is eligible, independently derive and publish a bounded worker-only CMS proposal from approved product goals and observed code gaps; do not ask the owner for the next FCP number.",
     "atomic_reservation": "Create the exact claim_branch and suggested feature branch from that task's published proposal_base_sha. If the claim already exists, treat it as a hard lock; the owning continuation resumes it and every other AI skips it.",
@@ -56213,14 +56213,14 @@
       "claim_state": "active",
       "active_base_branch": "main",
       "active_base_sha": "9e083c63e7d888af36f93a23eb924c89fad2b971",
-      "active_head": "133a5af652119a49dc1091eeba5bc5472ac34d95",
+      "active_head": "67ade10c7c976daeec339d6073096d7c5aa63d90",
       "resume_branch": "feature/wcp-602-content-review-lifecycle-g1",
       "branch_heads": {
         "claim_branch": "9e083c63e7d888af36f93a23eb924c89fad2b971",
-        "feature_branch": "133a5af652119a49dc1091eeba5bc5472ac34d95"
+        "feature_branch": "67ade10c7c976daeec339d6073096d7c5aa63d90"
       },
-      "last_observed_head": "133a5af652119a49dc1091eeba5bc5472ac34d95",
-      "last_checkpoint_at": "2026-09-29T13:40:06.259Z",
+      "last_observed_head": "67ade10c7c976daeec339d6073096d7c5aa63d90",
+      "last_checkpoint_at": "2026-09-29T13:41:17.486Z",
       "checkpoint_paths": [
         "src/Controller/AdminContentReviewController.php",
         "src/ContentReview/",
@@ -56230,7 +56230,7 @@
         "templates/admin/dashboard.html.twig"
       ],
       "next_action": "Run exact-head Worker CI for the updated draft PR; fix any failures only within WCP-602 paths.",
-      "last_verified_push_at": "2026-09-29T13:40:06.259Z"
+      "last_verified_push_at": "2026-09-29T13:41:17.486Z"
     }
   ],
   "recovery_queue": [],
