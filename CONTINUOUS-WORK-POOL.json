@@ -53967,16 +53967,16 @@
       "claim_state": "active",
       "active_base_branch": "fix/fcp-061-phpstan-g1",
       "active_base_sha": "ec6bb200affc3e5a46d416e98f7a1b0621c38ded",
-      "active_head": "c558ba6cf6ce3de582af6a20f5cc22cab68b20ae",
+      "active_head": "9ff40edabbf9d01402cd7b01a0f6922679c4c969",
       "resume_branch": "feature/wcp-591-team-competition-roster-g1",
       "branch_heads": {
         "claim_branch": "ec6bb200affc3e5a46d416e98f7a1b0621c38ded",
-        "feature_branch": "c558ba6cf6ce3de582af6a20f5cc22cab68b20ae"
+        "feature_branch": "9ff40edabbf9d01402cd7b01a0f6922679c4c969"
       },
-      "last_observed_head": "c558ba6cf6ce3de582af6a20f5cc22cab68b20ae",
-      "last_checkpoint_at": "2026-09-29T12:20:32.180Z",
-      "last_verified_push_at": "2026-09-29T12:17:36Z",
-      "next_action": "Monitor Worker CI #1015 on exact HEAD c558ba6cf6ce3de582af6a20f5cc22cab68b20ae; address any test findings and rerun complete CI.",
+      "last_observed_head": "9ff40edabbf9d01402cd7b01a0f6922679c4c969",
+      "last_checkpoint_at": "2026-09-29T12:23:49.043Z",
+      "last_verified_push_at": "2026-09-29T12:23:49.043Z",
+      "next_action": "Await exact-head Worker CI registration for 9ff40edabbf9d01402cd7b01a0f6922679c4c969; then resolve any remaining test findings.",
       "checkpoint_paths": [
         "config/packages/competition_rosters_widget.yaml",
         "src/CompetitionRoster/CompetitionRosterInviteLink.php",
@@ -54010,9 +54010,9 @@
         "tests/Controller/CompetitionRosterControllerTest.php",
         "tests/Widget/CompetitionRostersWidgetTest.php"
       ],
-      "ci_result": "in_progress",
-      "ci_run_id": 36567156546,
-      "ci_run_number": 1015,
+      "ci_result": "pending",
+      "ci_run_id": null,
+      "ci_run_number": null,
       "ci_head": "c558ba6cf6ce3de582af6a20f5cc22cab68b20ae",
       "ci_attempts": [
         {
@@ -54095,15 +54095,15 @@
           "run_number": 1015,
           "head": "c558ba6cf6ce3de582af6a20f5cc22cab68b20ae",
           "base": "9e083c63e7d888af36f93a23eb924c89fad2b971",
-          "result": "in_progress",
+          "result": "failure",
           "validation_pr": 395,
-          "status": "in_progress",
-          "conclusion": null,
+          "status": "completed",
+          "conclusion": "failure",
           "jobs": {
-            "php_symfony": "in_progress",
+            "php_symfony": "failure",
             "postgres_18": "success"
           },
-          "summary": "Complete controller test source restored; PHPStan, lint, Twig/container, AssetMapper, Doctrine and PostgreSQL 18 validation passed; focused/full PHPUnit job is running."
+          "summary": "Static validation and PostgreSQL 18 passed; 1,590 tests ran with 3 CSRF-helper errors because the private session service was requested directly from the test container. Helper now reads the session from the browser's prior Request."
         }
       ],
       "last_ci_result": "failure"
