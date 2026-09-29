@@ -55,7 +55,7 @@ final class SocialConversationMembershipController extends AbstractController
         $choices = $canManage ? $this->membership->recipientChoices($actor) : [];
         $choices = array_filter(
             $choices,
-            static fn (mixed $memberId): bool => is_int($memberId) && !isset($activeIds[$memberId]),
+            static fn (int $memberId): bool => !isset($activeIds[$memberId]),
         );
         $maxRecipients = min(
             SocialRateLimitPolicy::MAX_GROUP_PARTICIPANTS - 1,
@@ -70,7 +70,7 @@ final class SocialConversationMembershipController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $recipientIds = $form->get('recipientIds')->getData();
             try {
-                $this->membership->addMembers($actor, $conversation, is_array($recipientIds) ? $recipientIds : []);
+                $this->membership->addMembers($actor, $conversation, is_array($recipientIds) ? array_values($recipientIds) : []);
                 $this->addFlash('success', 'Mitglied wurde zur Gruppe hinzugefügt.');
 
                 return $this->privateResponse($this->redirectToRoute('app_social_conversation_members', ['id' => $id]));

@@ -71,9 +71,7 @@ final readonly class SocialConversationMembershipService
 
             $visibleIds = [];
             foreach ($this->recipientQuery->choicesFor($actor) as $visibleId) {
-                if (is_int($visibleId)) {
-                    $visibleIds[$visibleId] = true;
-                }
+                $visibleIds[$visibleId] = true;
             }
 
             $existingParticipants = $this->participants->activeParticipants($conversation);
