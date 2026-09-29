@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Form\DownloadRelations;
 
 use App\Entity\Download\DownloadPackage;
-use App\Repository\Download\DownloadPackageRepository;
+use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -31,7 +31,7 @@ final class DownloadDependencyType extends AbstractType
                 'choice_label' => 'title',
                 'label' => 'Zielpaket',
                 'placeholder' => 'Paket auswählen',
-                'query_builder' => static function (DownloadPackageRepository $repository) use ($sourcePackage): QueryBuilder {
+                'query_builder' => /** @param EntityRepository<DownloadPackage> $repository */ static function (EntityRepository $repository) use ($sourcePackage): QueryBuilder {
                     $query = $repository->createQueryBuilder('package');
                     if ($sourcePackage->getId() !== null) {
                         $query->andWhere('package.id != :sourceId')->setParameter('sourceId', $sourcePackage->getId());

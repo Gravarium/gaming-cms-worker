@@ -43,18 +43,32 @@ final class DownloadReleaseRelationsPublicTest extends WebTestCase
         $entityManager->persist(new DownloadMirror($version, 'https://untrusted.example.test/'.$suffix.'.zip', false));
         $entityManager->flush();
 
-        $client->request('GET', '/downloads/'.$source->getSlug());
+        try {
+            $client->request('GET', '/downloads/'.$source->getSlug());
 
-        self::assertResponseIsSuccessful();
+            self::assertResponseIsSuccessful();
         $content = $client->getResponse()->getContent();
         self::assertIsString($content);
         self::assertStringContainsString('Visible library '.$suffix, $content);
-        self::assertStringContainsString('>=1.0.0', $content);
+        self::assertSelectorTextContains('body', '>=1.0.0');
         self::assertStringNotContainsString('Secret component '.$suffix, $content);
         self::assertStringNotContainsString('secret-component-'.$suffix, $content);
         self::assertStringContainsString('https://trusted.example.test/'.$suffix.'.zip', $content);
         self::assertStringNotContainsString('untrusted.example.test', $content);
-        self::assertStringContainsString('Cache-Control: private, no-store', (string) $client->getResponse()->headers);
-        self::assertSelectorNotExists('a[href*="app_admin_download_relations"]');
+            self::assertSame('private, no-store', $client->getResponse()->headers->get('Cache-Control'));
+            self::assertSelectorNotExists('a[href^="/admin/downloads/versions/"]');
+        } finally {
+            foreach ($entityManager->getRepository(DownloadDependency::class)->findBy(['version' => $version]) as $dependency) {
+                $entityManager->remove($dependency);
+            }
+            foreach ($entityManager->getRepository(DownloadMirror::class)->findBy(['version' => $version]) as $mirror) {
+                $entityManager->remove($mirror);
+            }
+            $entityManager->remove($version);
+            $entityManager->remove($source);
+            $entityManager->remove($visibleTarget);
+            $entityManager->remove($hiddenTarget);
+            $entityManager->flush();
+        }
     }
 }

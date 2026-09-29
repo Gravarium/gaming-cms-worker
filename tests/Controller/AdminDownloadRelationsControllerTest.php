@@ -17,6 +17,49 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 final class AdminDownloadRelationsControllerTest extends WebTestCase
 {
+    /** @var list<int> */
+    private array $createdPackageIds = [];
+
+    /** @var list<int> */
+    private array $createdVersionIds = [];
+
+    protected function tearDown(): void
+    {
+        try {
+            if ($this->createdPackageIds !== [] || $this->createdVersionIds !== []) {
+                self::ensureKernelShutdown();
+                $client = static::createClient();
+                $entityManager = $client->getContainer()->get(EntityManagerInterface::class);
+
+                foreach ($this->createdVersionIds as $versionId) {
+                    $version = $entityManager->find(DownloadVersion::class, $versionId);
+                    if (!$version instanceof DownloadVersion) {
+                        continue;
+                    }
+
+                    foreach ($entityManager->getRepository(DownloadDependency::class)->findBy(['version' => $version]) as $dependency) {
+                        $entityManager->remove($dependency);
+                    }
+                    foreach ($entityManager->getRepository(DownloadMirror::class)->findBy(['version' => $version]) as $mirror) {
+                        $entityManager->remove($mirror);
+                    }
+                    $entityManager->remove($version);
+                }
+
+                foreach ($this->createdPackageIds as $packageId) {
+                    $package = $entityManager->find(DownloadPackage::class, $packageId);
+                    if ($package instanceof DownloadPackage) {
+                        $entityManager->remove($package);
+                    }
+                }
+
+                $entityManager->flush();
+                self::ensureKernelShutdown();
+            }
+        } finally {
+            parent::tearDown();
+        }
+    }
     public function testAdminCanManageDependenciesAndTrustedMirrorsAndCyclesFailClosed(): void
     {
         $client = static::createClient();
@@ -192,6 +235,10 @@ final class AdminDownloadRelationsControllerTest extends WebTestCase
         $package = new DownloadPackage($title.' '.$slug, $slug, 'mod');
         $this->entityManager($client)->persist($package);
         $this->entityManager($client)->flush();
+        $packageId = $package->getId();
+        if ($packageId !== null) {
+            $this->createdPackageIds[] = $packageId;
+        }
 
         return $package;
     }
@@ -207,6 +254,10 @@ final class AdminDownloadRelationsControllerTest extends WebTestCase
         ))->markScan(DownloadVersion::SCAN_CLEAN);
         $this->entityManager($client)->persist($record);
         $this->entityManager($client)->flush();
+        $versionId = $record->getId();
+        if ($versionId !== null) {
+            $this->createdVersionIds[] = $versionId;
+        }
 
         return $record;
     }

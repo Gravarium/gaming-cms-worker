@@ -45,8 +45,21 @@ final class DownloadDependencyGraphPolicyTest extends KernelTestCase
         }
         $entityManager->flush();
 
-        $policy = self::getContainer()->get(DownloadDependencyGraphPolicy::class);
-        $this->expectException(\DomainException::class);
-        $policy->assertAcyclic($packages[0], $packages[1]);
+        try {
+            $policy = self::getContainer()->get(DownloadDependencyGraphPolicy::class);
+            $this->expectException(\DomainException::class);
+            $policy->assertAcyclic($packages[0], $packages[1]);
+        } finally {
+            foreach ($versions as $version) {
+                foreach ($entityManager->getRepository(DownloadDependency::class)->findBy(['version' => $version]) as $dependency) {
+                    $entityManager->remove($dependency);
+                }
+                $entityManager->remove($version);
+            }
+            foreach ($packages as $package) {
+                $entityManager->remove($package);
+            }
+            $entityManager->flush();
+        }
     }
 }
