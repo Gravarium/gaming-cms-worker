@@ -11,7 +11,7 @@
   "baseline_branch": "main",
   "base_sha": "9e083c63e7d888af36f93a23eb924c89fad2b971",
   "published_at": "2026-09-29T19:47:35.850Z",
-  "summary": "WCP-591 is trusted_integrated via PR #200 and Worker PR #395 is closed unmerged after green post-sync checks. WCP-602 is trusted_integrated via PR #202 and Worker PR #397 is closed unmerged after green post-sync checks. WCP-589 remains complete awaiting Trusted review at open PR #384, exact HEAD 5df493cfa58e46a3f8b5c57a3e6a3deeec95c814 with Worker CI #1061 green. Trusted main remains the only integration and deployment source.",
+  "summary": "WCP-591 is trusted_integrated via PR #200; WCP-602 via PR #202; both post-sync chains are green and their Worker PRs are closed unmerged. WCP-588 has Trusted PR #203 open on exact head ddd447d45674191ce520d9ca356b6728b01fd12b; full Trusted CI #675 is running. WCP-589 remains complete awaiting Trusted review at open Worker PR #384, exact HEAD 5df493cfa58e46a3f8b5c57a3e6a3deeec95c814 with Worker CI #1061 green. Trusted main remains the only integration and deployment source.",
   "rules": {
     "choose": "Resume the current chat's unfinished claimed branch first. Otherwise atomically claim an eligible published task. If no published task is eligible, independently derive and publish a bounded worker-only CMS proposal from approved product goals and observed code gaps; do not ask the owner for the next FCP number.",
     "atomic_reservation": "Create the exact claim_branch and suggested feature branch from that task's published proposal_base_sha. If the claim already exists, treat it as a hard lock; the owning continuation resumes it and every other AI skips it.",
@@ -53418,7 +53418,7 @@
         "tests/Controller/PublicGameReleaseRssFeedTest.php",
         "tests/GameReleaseFeed/RssFeedBuilderTest.php"
       ],
-      "next_action": "Await independent Trusted review of open ready-for-review PR #383 at exact HEAD e3f92859ad33ef9fc91bead9dccfd8bef665ff5b; keep this claim locked until Trusted explicitly integrates, cancels, or transfers it, then choose one dependency-safe large functional package.",
+      "next_action": "Await exact-head Trusted CI #675 on PR #203; merge only after all Trusted checks pass, then verify Main CI, sanitized Worker sync and exact post-sync Worker CI before marking WCP-588 integrated or closing Worker PR #383.",
       "last_verified_push_at": "2026-09-28T20:03:02.590Z",
       "worker_pr": 383,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/383",
@@ -53514,6 +53514,27 @@
           "The route remains GET-only, fails closed when Gaming is disabled and preserves the existing private cache policy."
         ],
         "inherited_paths_note": "PR #383 also contains the five unchanged WCP-585 files because it targets main for CI; this package owns only the four paths listed above. WCP-585 remains separately tracked."
+      },
+      "trusted_intake": {
+        "trusted_pr": 203,
+        "trusted_pr_url": "https://github.com/Gravarium/gaming-cms/pull/203",
+        "trusted_branch": "integration/wcp588-release-rss-trusted-20260929",
+        "trusted_head": "ddd447d45674191ce520d9ca356b6728b01fd12b",
+        "trusted_base": "d8797bd48fbe99ebf966c68bd513bdec977719de",
+        "trusted_ci_run_id": 36631241267,
+        "trusted_ci_run_number": 675,
+        "trusted_ci_status": "in_progress",
+        "trusted_ci_conclusion": null,
+        "worker_source_pr": 383,
+        "worker_source_head": "e3f92859ad33ef9fc91bead9dccfd8bef665ff5b",
+        "worker_source_ci_run_id": 36477077333,
+        "imported_paths": [
+          "src/Controller/PublicGameReleaseRssFeedController.php",
+          "src/GameReleaseFeed/RssFeedBuilder.php",
+          "tests/Controller/PublicGameReleaseRssFeedTest.php",
+          "tests/GameReleaseFeed/RssFeedBuilderTest.php"
+        ],
+        "wcp585_inherited_paths_identical": 5
       }
     },
     {
