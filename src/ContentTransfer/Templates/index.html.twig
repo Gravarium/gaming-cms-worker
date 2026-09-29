@@ -1,0 +1,51 @@
+{% extends 'base.html.twig' %}
+{% block title %}Content übertragen | Gaming CMS{% endblock %}
+{% block body %}
+<header class="topbar">
+    <a class="brand" href="{{ path('app_admin_dashboard') }}">Gaming CMS</a>
+    <nav class="top-actions" aria-label="Content">
+        <a href="{{ path('app_admin_content_index') }}">Alle Inhalte</a>
+    </nav>
+</header>
+<main class="dashboard">
+    <p class="eyebrow">Content-Modul</p>
+    <h1>Content übertragen</h1>
+    <p class="muted">Exportiere Inhalte als versioniertes JSON-Bundle oder importiere Inhalte als neue Entwürfe.</p>
+    {% for message in app.flashes('success') %}<div class="notice">{{ message }}</div>{% endfor %}
+    <section class="panel" aria-labelledby="content-export-heading">
+        <h2 id="content-export-heading">Inhalte exportieren</h2>
+        <p class="muted">Wähle bis zu {{ maxEntries }} Inhalte. Status, Autor, Veröffentlichungszeiten und lokale Medienreferenzen werden nicht übertragen.</p>
+        <form method="post" action="{{ path('app_admin_content_transfer_export') }}">
+            <input type="hidden" name="_token" value="{{ exportToken }}">
+            <div class="table-wrap">
+                <table>
+                    <thead><tr><th>Auswahl</th><th>Inhalt</th><th>Typ</th><th>Status</th><th>Zuletzt geändert</th></tr></thead>
+                    <tbody>
+                    {% for entry in entries %}
+                        <tr data-content-transfer-entry="{{ entry.id }}">
+                            <td><input type="checkbox" name="ids[]" value="{{ entry.id }}" id="transfer-entry-{{ entry.id }}"></td>
+                            <td><label for="transfer-entry-{{ entry.id }}">{{ entry.title }}</label></td>
+                            <td>{{ entry.type == 'news' ? 'News' : 'Seite' }}</td>
+                            <td>{{ entry.status }}</td>
+                            <td>{{ entry.updatedAt|date('d.m.Y H:i') }}</td>
+                        </tr>
+                    {% else %}
+                        <tr><td colspan="5">Es sind keine exportierbaren Inhalte vorhanden.</td></tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <button type="submit">Auswahl exportieren</button>
+        </form>
+    </section>
+    <section class="panel" aria-labelledby="content-import-heading">
+        <h2 id="content-import-heading">Bundle importieren</h2>
+        <p class="muted">Jeder Inhalt wird vor dem Speichern validiert. Der Import erstellt ausschließlich Entwürfe und ordnet Kategorien und Schlagwörter anhand ihrer Slugs zu.</p>
+        {{ form_errors(form) }}
+        {{ form_start(form) }}
+            {{ form_row(form.file) }}
+            <button type="submit">Entwürfe importieren</button>
+        {{ form_end(form) }}
+    </section>
+</main>
+{% endblock %}
