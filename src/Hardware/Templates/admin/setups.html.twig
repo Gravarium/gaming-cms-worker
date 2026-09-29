@@ -1,0 +1,24 @@
+{% extends 'base.html.twig' %}
+{% block title %}Community-Setups moderieren{% endblock %}
+{% block body %}
+<main class="content-shell">
+    <header class="page-header"><p class="eyebrow">Gaming · Hardware</p><h1>Community-Setups moderieren</h1><p><a href="{{ path('app_admin_gaming_hardware_index') }}">Zur Hardware-Verwaltung</a></p></header>
+    {% for message in app.flashes('success') %}<p class="notice" role="status">{{ message }}</p>{% endfor %}
+    <section aria-label="Eingereichte Setups">
+        {% for setup in setups %}
+            <article class="portal-card">
+                <h2>Setup #{{ setup.id }}</h2>
+                <p>Eingereicht von {{ setup.owner ? setup.owner.displayName : 'Konto gelöscht' }} am {{ setup.createdAt|date('d.m.Y H:i') }}.</p>
+                <p>{{ setup.productIds|length }} Produkte · {{ setup.notes }}</p>
+                <p role="status">{{ setup.moderated ? 'Öffentlich freigegeben' : 'Wartet auf Moderation' }}</p>
+                <form method="post" action="{{ path('app_admin_gaming_hardware_setup_moderation', {id: setup.id}) }}">
+                    {% set action = setup.moderated ? 'hide' : 'approve' %}
+                    <input type="hidden" name="_token" value="{{ csrf_token('hardware-setup-' ~ action ~ '-' ~ setup.id) }}">
+                    <input type="hidden" name="action" value="{{ action }}">
+                    <button type="submit">{{ setup.moderated ? 'Öffentlichkeit entziehen' : 'Öffentlich freigeben' }}</button>
+                </form>
+            </article>
+        {% else %}<p role="status">Keine offenen Setups zur Moderation.</p>{% endfor %}
+    </section>
+</main>
+{% endblock %}

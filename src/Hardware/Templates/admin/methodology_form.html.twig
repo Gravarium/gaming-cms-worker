@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+{% block title %}Benchmark-Testmethode anlegen{% endblock %}
+{% block body %}
+<main class="editor-shell">
+    <p class="eyebrow">Gaming · Hardware</p><h1>Benchmark-Testmethode anlegen</h1>
+    <p>Beschreibe Testablauf, Testsystem und mögliche Sponsoring- oder Herstellerunterstützung.</p>
+    {{ form_start(form, {attr: {class: 'content-form'}}) }}
+        {{ form_widget(form) }}
+        <button type="submit">Testmethode speichern</button>
+    {{ form_end(form) }}
+    <p><a href="{{ path('app_admin_gaming_hardware_index') }}">Zur Verwaltung</a></p>
+</main>
+{% endblock %}

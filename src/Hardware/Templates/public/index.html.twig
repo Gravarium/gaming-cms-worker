@@ -1,0 +1,28 @@
+{% extends 'base.html.twig' %}
+{% block title %}Hardware-Katalog{% endblock %}
+{% block body %}
+<main class="content-shell">
+    <header class="page-header"><p class="eyebrow">Gaming · Hardware</p><h1>Hardware-Katalog</h1><p>Produkte, technische Daten und nachvollziehbare Testergebnisse.</p>{% if is_granted('CMS_GAMING_MANAGE') %}<a href="{{ path('app_admin_gaming_hardware_index') }}">Katalog verwalten</a>{% endif %}{% if is_granted('ROLE_USER') %}<a href="{{ path('app_gaming_hardware_account_setups') }}">Meine Community-Setups</a>{% endif %}</header>
+    <form action="{{ path('app_gaming_hardware_index') }}" method="get" class="content-form" aria-label="Hardware filtern">
+        <label for="hardware-query">Name oder Hersteller <input id="hardware-query" type="search" name="q" maxlength="100" value="{{ query }}"></label>
+        <label for="hardware-category">Kategorie <select id="hardware-category" name="category"><option value="">Alle Kategorien</option>{% for item in categories %}<option value="{{ item }}" {{ category == item ? 'selected' : '' }}>{{ item }}</option>{% endfor %}</select></label>
+        <button type="submit">Filtern</button><a href="{{ path('app_gaming_hardware_index') }}">Filter zurücksetzen</a>
+    </form>
+    {% if invalidFilter %}<p class="notice" role="status">Ein Filterwert war ungültig. Die Ergebnisse wurden zurückgesetzt.</p>{% endif %}
+    <p class="muted" role="status">{{ total }} Produkte gefunden.</p>
+    <form action="{{ path('app_gaming_hardware_compare') }}" method="get">
+        <div class="portal-cards">
+            {% for product in products %}
+            <article class="portal-card">
+                <label><input type="checkbox" name="ids[]" value="{{ product.id }}" aria-label="{{ product.name }} zum Vergleich auswählen"> Zum Vergleich</label>
+                <p class="portal-kicker">{{ product.category }} · {{ product.manufacturer }}</p>
+                <h2><a href="{{ path('app_gaming_hardware_show', {id: product.id}) }}">{{ product.name }}</a></h2>
+                <p>{{ product.disclosure }}</p>
+            </article>
+            {% else %}<p>Keine veröffentlichten Produkte gefunden.</p>{% endfor %}
+        </div>
+        {% if products %}<button type="submit">Ausgewählte Produkte vergleichen (2–4)</button>{% endif %}
+    </form>
+    {% if pages > 1 %}<nav class="pagination" aria-label="Hardware-Seitennavigation">{% if page > 1 %}<a href="{{ path('app_gaming_hardware_index', {q: query, category: category, page: page - 1}) }}">Zurück</a>{% endif %}<span>Seite {{ page }} von {{ pages }}</span>{% if page < pages %}<a href="{{ path('app_gaming_hardware_index', {q: query, category: category, page: page + 1}) }}">Weiter</a>{% endif %}</nav>{% endif %}
+</main>
+{% endblock %}
