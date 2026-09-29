@@ -93,7 +93,7 @@ final class HardwareWorkflowTest extends WebTestCase
                 '_token' => $token,
             ],
         ]);
-        self::assertResponseIsSuccessful();
+        self::assertResponseStatusCodeSame(422);
         self::assertSelectorTextContains('body', 'Specification values must be scalar.');
         self::assertNull($entityManager->getRepository(HardwareProduct::class)->findOneBy(['name' => $invalidName]));
     }
@@ -127,27 +127,28 @@ final class HardwareWorkflowTest extends WebTestCase
         self::assertResponseIsSuccessful();
         self::assertSelectorTextNotContains('body', $notes);
 
-        $moderator = $this->manager($ownerClient);
-        $ownerClient->loginUser($moderator);
-        $queue = $ownerClient->request('GET', '/admin/gaming/hardware/setups');
+        $moderatorClient = static::createClient();
+        $moderator = $this->manager($moderatorClient);
+        $moderatorClient->loginUser($moderator);
+        $queue = $moderatorClient->request('GET', '/admin/gaming/hardware/setups');
         self::assertResponseIsSuccessful();
         self::assertSelectorTextContains('body', $notes);
         $setup = $entityManager->getRepository(\App\Entity\Hardware\HardwareCommunitySetup::class)->findOneBy(['owner' => $owner]);
         self::assertNotNull($setup);
         $moderationPath = '/admin/gaming/hardware/setups/'.$setup->getId().'/moderation';
         $token = (string) $queue->filter('form[action="'.$moderationPath.'"] input[name="_token"]')->attr('value');
-        $ownerClient->request('POST', $moderationPath, ['_token' => 'invalid-token', 'action' => 'approve']);
+        $moderatorClient->request('POST', $moderationPath, ['_token' => 'invalid-token', 'action' => 'approve']);
         self::assertResponseStatusCodeSame(403);
-        $queue = $ownerClient->request('GET', '/admin/gaming/hardware/setups');
+        $queue = $moderatorClient->request('GET', '/admin/gaming/hardware/setups');
         $token = (string) $queue->filter('form[action="'.$moderationPath.'"] input[name="_token"]')->attr('value');
-        $ownerClient->request('POST', $moderationPath, ['_token' => $token, 'action' => 'approve']);
+        $moderatorClient->request('POST', $moderationPath, ['_token' => $token, 'action' => 'approve']);
         self::assertResponseRedirects();
         $ownerClient->request('GET', '/gaming/hardware/products/'.$product->getId());
         self::assertSelectorTextContains('body', $notes);
 
-        $queue = $ownerClient->request('GET', '/admin/gaming/hardware/setups');
+        $queue = $moderatorClient->request('GET', '/admin/gaming/hardware/setups');
         $token = (string) $queue->filter('form[action="'.$moderationPath.'"] input[name="_token"]')->attr('value');
-        $ownerClient->request('POST', $moderationPath, ['_token' => $token, 'action' => 'hide']);
+        $moderatorClient->request('POST', $moderationPath, ['_token' => $token, 'action' => 'hide']);
         self::assertResponseRedirects();
         $ownerClient->request('GET', '/gaming/hardware/products/'.$product->getId());
         self::assertSelectorTextNotContains('body', $notes);
