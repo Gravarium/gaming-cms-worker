@@ -9,19 +9,9 @@
   },
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
-  "base_sha": "785720f82e2190630eea58fde153ebe4c8514a30",
-  "published_at": "2026-09-29T02:22:28Z",
-  "summary": {
-    "total_remaining_worker_tasks": 174,
-    "completed_worker_prs_awaiting_trusted_review": 318,
-    "recovery_tasks": 0,
-    "unclaimed": 5,
-    "immediately_claimable": 0,
-    "next_required_action": "Owner-authorized Trusted intake for WCP-552 / Worker PR #347 is in progress at the exact green source head. Keep its Worker claim locked through Trusted review and downstream CI. Leave active WCP-588, WCP-589 and WCP-591 claims untouched.",
-    "composition_preparable": 0,
-    "immediately_actionable": 33,
-    "must_continue": true
-  },
+  "base_sha": "9e083c63e7d888af36f93a23eb924c89fad2b971",
+  "published_at": "2026-09-29T02:58:01Z",
+  "summary": "Trusted main after PR #198. WCP-556 and WCP-552 are integrated and released after exact Trusted/Main/sanitized-sync/Worker gates. FCP-061 competition paths are already present in Trusted via PR #161 and reinforced by PR #189; do not reimport Worker PR #32. Owner-authorized transfer of completed FCP-077 Worker PR #41 to Trusted review is recorded; its claim stays locked until all Trusted and post-sync gates pass.",
   "rules": {
     "choose": "Resume the current chat's unfinished claimed branch first. Otherwise atomically claim an eligible published task. If no published task is eligible, independently derive and publish a bounded worker-only CMS proposal from approved product goals and observed code gaps; do not ask the owner for the next FCP number.",
     "atomic_reservation": "Create the exact claim_branch and suggested feature branch from that task's published proposal_base_sha. If the claim already exists, treat it as a hard lock; the owning continuation resumes it and every other AI skips it.",
@@ -965,7 +955,7 @@
       "package_id": "FCP-061",
       "title": "Tournaments leagues brackets matches and scrims",
       "risk": "high",
-      "execution_state": "worker_complete_awaiting_trusted_review",
+      "execution_state": "trusted_integrated",
       "dependencies": [
         "FCP-053",
         "FCP-056"
@@ -1052,7 +1042,7 @@
           "ci_result": "success"
         }
       ],
-      "claim_state": "locked_until_trusted_resolution",
+      "claim_state": "released_after_trusted_integration",
       "claimed_on": "2026-09-25T05:18:33Z",
       "worker_pr": 32,
       "resume_branch": "feature/fcp-061-pool-g1",
@@ -1064,7 +1054,33 @@
       "corrective_head": "ec6bb200affc3e5a46d416e98f7a1b0621c38ded",
       "corrective_ci_run_id": 36200833419,
       "corrective_ci_result": "success",
-      "integrated_worker_main_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d"
+      "integrated_worker_main_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "next_action": "Integrated as already-present Trusted competition code via PR #161; current Trusted has the full allowed competition paths, with safer bounds and public-list filters from PR #189. Do not reimport Worker PR #32; its noncompetition composition files are out of scope.",
+      "trusted_resolution": {
+        "status": "integrated_as_existing_trusted_code",
+        "worker_pr": 32,
+        "worker_head": "655c31e59914f5d99013bee85beb9edb8166fee1",
+        "worker_exact_head_ci_run_id": 36191815415,
+        "worker_exact_head_ci_result": "success",
+        "source_worker_pr": 185,
+        "source_worker_head": "9988284a0536acb5b3ac0b5b91d3205bfd2019cb",
+        "source_worker_exact_head_ci_run_id": 36267727456,
+        "source_worker_exact_head_ci_result": "success",
+        "trusted_pr": 161,
+        "trusted_pr_head": "7fc0ff49c92fbf0615ae70ac68309fb1be2e90b9",
+        "trusted_pr_ci_run_id": 36331833371,
+        "trusted_pr_ci_result": "success",
+        "trusted_merge_sha": "bc4abf162c76ccfae8c391395326a3ff83b7449b",
+        "trusted_main_sha": "5a049cd79309ff6ac43906759e77603b6fa4ec04",
+        "trusted_main_ci_run_id": 36333260284,
+        "trusted_main_ci_result": "success",
+        "sanitized_worker_sync_sha": "d05a736b0e02c7382213772c3b1d6e99f2fd60d7",
+        "post_sync_worker_ci_run_id": 36333275334,
+        "post_sync_worker_ci_result": "success",
+        "current_trusted_main_sha": "034e3030723f9376720fedc32c0d4091dcf6e08e",
+        "current_worker_main_sha": "9e083c63e7d888af36f93a23eb924c89fad2b971",
+        "resolution_note": "FCP-061 code paths already exist on Trusted through PR #161 and were reinforced by PR #189; the current versions match the Worker source or include stricter/more complete validation and public-list filters. The Worker PR #32 full diff carries unrelated Game Catalogue, Guild, workflow and Worker manifest changes; none were reimported."
+      }
     },
     {
       "priority": 13,
@@ -2493,7 +2509,7 @@
         }
       ],
       "composition_required": true,
-      "next_action": "Remain claim-locked while awaiting Trusted review; do not merge or deploy from the Worker repository.",
+      "next_action": "Owner-authorized Trusted review is in progress for Worker PR #41 exact head 4e7c1e12dcd6e8c3584d786c27f1d3ddbbd3e666; exact Worker CI #312/run 36231332045 passed. Selectively intake only the 22 allowlisted FCP-077 paths; preserve fail-closed behavior for unavailable sources; require exact-head Trusted CI and post-merge Main/sanitized-sync/Worker gates before release.",
       "composition_pr": 39,
       "composition_ci_run_id": 36230385948,
       "composition_ci_result": "success",
@@ -2556,6 +2572,21 @@
         "postgres_migration_result": "success",
         "php_symfony_job": 108374932961,
         "php_symfony_result": "success"
+      },
+      "trusted_transfer": {
+        "status": "owner_authorized_to_trusted",
+        "recorded_at": "2026-09-29T02:58:01Z",
+        "from": "Worker chat holding the FCP-077 claim",
+        "to": "Trusted integration coordinator",
+        "exact_feature_branch": "feature/fcp-077-pool-g1",
+        "exact_remote_head": "4e7c1e12dcd6e8c3584d786c27f1d3ddbbd3e666",
+        "worker_pr": 41,
+        "worker_ci_run_id": 36231332045,
+        "worker_ci_result": "success",
+        "previous_worker_chat_stopped_by_owner": true,
+        "owner_authorized": true,
+        "claim_remains_locked": true,
+        "intake_scope": "Review and selectively transfer only the 22 FCP-077 allowlisted files; exclude 45 unrelated changed paths. Never merge Worker PR #41."
       }
     },
     {
@@ -46963,7 +46994,7 @@
       "package_id": "WCP-552",
       "title": "Make patch-aware game guides authorable, reviewable, and public",
       "risk": "high",
-      "execution_state": "worker_complete_awaiting_trusted_review",
+      "execution_state": "trusted_integrated",
       "dependencies": [
         "FCP-058"
       ],
@@ -47137,7 +47168,7 @@
       },
       "published_at": "2026-09-27T15:37:43.134Z",
       "claimed_on": "2026-09-27T15:37:43.134Z",
-      "claim_state": "locked_until_trusted_resolution",
+      "claim_state": "released_after_trusted_integration",
       "active_base_branch": "feature/fcp-058-pool-g1",
       "active_base_sha": "4cd14680657e1b038f2037de07160e54aa86b809",
       "active_head": "5c9907e3a60885050b48c04b55d8502f6de45ca2",
@@ -47171,7 +47202,7 @@
         "src/Entity/GameGuide/GameGuideTierEntry.php",
         "src/Entity/GameGuide/GameGuideReviewAudit.php"
       ],
-      "next_action": "Owner-authorized Trusted intake is in progress from Worker PR #347 exact head 5c9907e3a60885050b48c04b55d8502f6de45ca2; Worker CI #883/run 36334837257 passed. Keep the Worker claim and all 20 source paths locked until Trusted integration, Main CI, sanitized Worker sync and Worker CI pass. WCP-401 is integrated; add and test the direct guide link on the Gaming dashboard.",
+      "next_action": "Integrated through Trusted PR #198; exact Trusted CI #660, Main CI #661, sanitized Worker sync #108 and exact post-sync Worker CI #998 passed. Claim released; Worker PR #347 remains unmerged.",
       "worker_pr_state": "open",
       "worker_pr_changed_paths": [
         "src/Controller/AdminGameGuideController.php",
@@ -47322,6 +47353,28 @@
         "worker_ci_result": "success",
         "previous_worker_chat_stopped_by_owner": true,
         "claim_remains_locked": true
+      },
+      "trusted_resolution": {
+        "status": "integrated",
+        "worker_pr": 347,
+        "worker_head": "5c9907e3a60885050b48c04b55d8502f6de45ca2",
+        "worker_exact_head_ci_run_id": 36334837257,
+        "worker_exact_head_ci_result": "success",
+        "trusted_pr": 198,
+        "trusted_pr_head": "fc9c94309e19b0b7546647b86b4b191da9a1f0a3",
+        "trusted_pr_ci_run_id": 36512615152,
+        "trusted_pr_ci_result": "success",
+        "trusted_merge_sha": "034e3030723f9376720fedc32c0d4091dcf6e08e",
+        "final_trusted_main_sha": "034e3030723f9376720fedc32c0d4091dcf6e08e",
+        "final_trusted_main_ci_run_id": 36513064669,
+        "final_trusted_main_ci_result": "success",
+        "worker_sync_run_id": 36513064522,
+        "worker_sync_result": "success",
+        "sanitized_worker_sync_sha": "9e083c63e7d888af36f93a23eb924c89fad2b971",
+        "post_sync_worker_ci_run_id": 36513084307,
+        "post_sync_worker_ci_result": "success",
+        "resolved_at": "2026-09-29T02:58:01Z",
+        "trusted_import_note": "Trusted PR #198 selectively integrated the 20 WCP-552 source paths plus the dashboard Game Guides link and its test. Trusted CI, Main CI, sanitized Worker sync and post-sync Worker CI passed; Worker PR #347 remains unmerged."
       }
     },
     {
