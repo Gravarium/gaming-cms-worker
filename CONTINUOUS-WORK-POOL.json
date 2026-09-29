@@ -10,8 +10,8 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "9e083c63e7d888af36f93a23eb924c89fad2b971",
-  "published_at": "2026-09-29T14:12:55Z",
-  "summary": "WCP-601 PHPUnit expectations and owner/moderator session isolation are fixed on PR #396 at 6407f78f449bba8327289405cd51c8642805dde7; exact-head CI run 1032 is in progress. WCP-602 remains independently active.",
+  "published_at": "2026-09-29T14:16:34.953Z",
+  "summary": "WCP-602 is complete awaiting Trusted review. With no eligible unclaimed published task and all remaining FCPs dependency-blocked, WCP-603 is independently reserved from sanitized main 9e083c63e7d888af36f93a23eb924c89fad2b971 for the missing CMS editorial schedule calendar. Its allowlist is disjoint from all active and completed-awaiting-Trusted claims.",
   "rules": {
     "choose": "Resume the current chat's unfinished claimed branch first. Otherwise atomically claim an eligible published task. If no published task is eligible, independently derive and publish a bounded worker-only CMS proposal from approved product goals and observed code gaps; do not ask the owner for the next FCP number.",
     "atomic_reservation": "Create the exact claim_branch and suggested feature branch from that task's published proposal_base_sha. If the claim already exists, treat it as a hard lock; the owning continuation resumes it and every other AI skips it.",
@@ -56270,6 +56270,128 @@
           "summary": "Exact-head Worker CI passed: PHPStan level 8, 1,592 PHPUnit tests/11,043 assertions, Symfony/Twig/container/AssetMapper/Doctrine checks, and all 57 PostgreSQL 18 migrations."
         }
       ]
+    },
+    {
+      "priority": 603,
+      "package_id": "WCP-603",
+      "title": "Add an editorial publishing calendar with safe schedule changes",
+      "risk": "high",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-603-content-schedule-g1",
+      "suggested_branch": "feature/wcp-603-content-schedule-g1",
+      "base_branch": "main",
+      "base_sha": "9e083c63e7d888af36f93a23eb924c89fad2b971",
+      "objective": "Complete the editorial publishing workflow with a private month calendar of scheduled ContentEntry publication and unpublication events, and safe, auditable rescheduling without schema changes.",
+      "allowed_paths": [
+        "src/Controller/AdminContentScheduleController.php",
+        "src/ContentSchedule/",
+        "src/Form/ContentScheduleChangeType.php",
+        "config/packages/content_schedule.yaml",
+        "tests/Controller/ContentScheduleWorkflowTest.php",
+        "tests/ContentSchedule/"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "CONTINUOUS-WORKER.md",
+        "CONTINUOUS-WORK-POOL.json",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "src/Entity/ContentEntry.php",
+        "src/Repository/ContentEntryRepository.php",
+        "src/Controller/AdminContentController.php",
+        "src/Controller/AdminContentBrowserController.php",
+        "src/Repository/AdminContentBrowserRepository.php",
+        "src/Form/ContentEntryType.php",
+        "src/Service/ContentRevisionManager.php",
+        "src/Module/CmsModuleCatalog.php",
+        "templates/",
+        "assets/",
+        "public/"
+      ],
+      "deliverables": [
+        "A CMS_CONTENT_MANAGE-protected monthly calendar shows only scheduled publication and scheduled unpublication events for the selected month, with deterministic ordering and bounded pagination.",
+        "Strict month and page parsing fails closed; the default month is current, and links retain the selected period.",
+        "Rescheduling a publication or unpublication uses a CSRF-protected form with a bounded nonblank reason, locks and rechecks the current content state, and preserves ContentEntry publication-window invariants.",
+        "Successful schedule changes capture the pre-change ContentRevision and write an AuditLog record; stale, malformed, past, or contradictory changes leave the entry unchanged.",
+        "The existing Content route-prefix gate still returns 404 while the module is disabled. Calendar responses are private, no-store, and noindex.",
+        "Use feature-local Twig templates under src/ContentSchedule/Templates and config/packages/content_schedule.yaml. Do not edit shared content entities, repositories, controllers, forms, module catalog, global templates, or migrations."
+      ],
+      "tests": [
+        "Functional coverage for monthly publication/unpublication filtering, page boundaries, stable order, and exclusion of drafts/review entries.",
+        "Security coverage for anonymous and insufficient-permission denial, invalid CSRF, POST-only changes, disabled Content, stale-state changes, and private/no-store/noindex headers.",
+        "Validation covers malformed month/page input, past timestamps, publication after scheduled unpublication, and unpublication before scheduled publication.",
+        "Successful rescheduling asserts the schedule/status, revision snapshot, and audit decision/reason."
+      ],
+      "completion_report": [
+        "Exact sanitized Worker main base SHA, exact final HEAD, complete changed-path list, and Worker PR URL/state.",
+        "Calendar filtering/pagination, publish/unpublish event transitions, invalid-window and stale-state behavior, CSRF/permission/module/privacy evidence.",
+        "Exact-head PHPUnit, PHPStan, PostgreSQL 18 and complete Worker CI results.",
+        "Confirm no schema or migration change and list remaining Trusted integration follow-up."
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-Trusted-review-and-exact-head-CI",
+        "calendar-and-rescheduling-require-CMS_CONTENT_MANAGE-and-content-module-enabled",
+        "schedule-changes-require-CSRF-and-a-bounded-reason",
+        "only-current-scheduled-or-published-state-may-be-rescheduled-through-a-locked-transaction",
+        "preserve-content-publication-scheduling-and-preview-visibility-invariants",
+        "no-schema-or-migration-change",
+        "no-security-test-phpstan-CI-auth-CSRF-validation-recovery-rollback-or-upload-protection-weakening",
+        "no-secrets-or-trusted-private-runtime-in-worker-source",
+        "no-direct-Trusted-integration-or-deployment"
+      ],
+      "proposal_kind": "worker_only",
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "9e083c63e7d888af36f93a23eb924c89fad2b971",
+      "proposal_dependency_evidence": [],
+      "collision_check": {
+        "compared_against": "Fresh continuous/work-pool-v4 blob d5d4d3dfaa088f7c61e1f303d4c8a0367f0d1950; exact sanitized Worker main 9e083c63e7d888af36f93a23eb924c89fad2b971; all worker_in_progress and worker_*_awaiting_trusted_review allowlists.",
+        "result": "No path overlap with any active or completed-awaiting-Trusted package. No schema, migration, entity, shared repository/controller/form, global template, module catalog, security, or CI paths are included. Existing Content schedule fields and audit/revision services are read-only dependencies; the package adds a separate calendar and safe rescheduling surface. No current Content schedule calendar route was found in worker/main.",
+        "paths": [
+          "src/Controller/AdminContentScheduleController.php",
+          "src/ContentSchedule/",
+          "src/Form/ContentScheduleChangeType.php",
+          "config/packages/content_schedule.yaml",
+          "tests/Controller/ContentScheduleWorkflowTest.php",
+          "tests/ContentSchedule/"
+        ]
+      },
+      "published_at": "2026-09-29T14:16:34.953Z",
+      "claimed_on": "2026-09-29T14:16:34.953Z",
+      "claim_state": "active",
+      "active_base_branch": "main",
+      "active_base_sha": "9e083c63e7d888af36f93a23eb924c89fad2b971",
+      "active_head": "9e083c63e7d888af36f93a23eb924c89fad2b971",
+      "resume_branch": "feature/wcp-603-content-schedule-g1",
+      "branch_heads": {
+        "claim_branch": "9e083c63e7d888af36f93a23eb924c89fad2b971",
+        "feature_branch": "9e083c63e7d888af36f93a23eb924c89fad2b971"
+      },
+      "last_observed_head": "9e083c63e7d888af36f93a23eb924c89fad2b971",
+      "last_checkpoint_at": "2026-09-29T14:16:34.953Z",
+      "checkpoint_paths": [
+        "src/Controller/AdminContentScheduleController.php",
+        "src/ContentSchedule/",
+        "src/Form/ContentScheduleChangeType.php",
+        "config/packages/content_schedule.yaml",
+        "tests/Controller/ContentScheduleWorkflowTest.php",
+        "tests/ContentSchedule/"
+      ],
+      "next_action": "Implement the bounded monthly calendar and locked, audited schedule-change workflow within the exclusive allowlist.",
+      "last_verified_push_at": "2026-09-29T14:16:34.953Z"
     }
   ],
   "recovery_queue": [],
