@@ -8,6 +8,7 @@ use App\Entity\CmsModuleState;
 use App\Entity\Profile\MemberProfile;
 use App\Entity\Social\SocialConversation;
 use App\Entity\Social\SocialConversationParticipant;
+use App\Entity\Social\SocialBlock;
 use App\Entity\Social\SocialMessage;
 use App\Entity\Social\SocialPrivacySettings;
 use App\Entity\User;
@@ -146,6 +147,143 @@ final class SocialConversationMembershipTest extends WebTestCase
             $body = (string) $client->getResponse()->getContent();
             self::assertStringNotContainsString('private-before-rejoin', $body);
             self::assertStringContainsString('visible-after-rejoin', $body);
+        } finally {
+            $this->cleanup($client, $users);
+        }
+    }
+
+    public function testInactiveLockedAndPolicyConflictingRecipientsCannotBeAdded(): void
+    {
+        $client = static::createClient();
+        $em = $this->em($client);
+        $owner = $this->user($em, 'WCP-599 Eligibility Owner');
+        $member = $this->user($em, 'WCP-599 Eligibility Member');
+        $inactive = $this->user($em, 'WCP-599 Inactive Candidate');
+        $locked = $this->user($em, 'WCP-599 Locked Candidate');
+        $blocked = $this->user($em, 'WCP-599 Blocked Candidate');
+        $users = [$owner, $member, $inactive, $locked, $blocked];
+        foreach ([$member, $inactive, $locked, $blocked] as $candidate) {
+            $this->profile($em, $candidate);
+        }
+        $inactive->setActive(false);
+        $locked->lockUntil(new \DateTimeImmutable('+1 day'), 'WCP-599 test');
+        $em->persist(new SocialBlock($member, $blocked));
+        $conversation = $this->group($em, $owner, [$member]);
+        $conversationId = $this->id($conversation);
+        $candidateIds = [
+            $this->id($inactive),
+            $this->id($locked),
+            $this->id($blocked),
+        ];
+
+        try {
+            $client->loginUser($owner);
+            $crawler = $client->request('GET', '/social/conversations/'.$conversationId.'/members');
+            self::assertResponseIsSuccessful();
+            $body = (string) $client->getResponse()->getContent();
+            self::assertStringNotContainsString($inactive->getDisplayName(), $body);
+            self::assertStringNotContainsString($locked->getDisplayName(), $body);
+            self::assertStringContainsString($blocked->getDisplayName(), $body);
+
+            foreach ($candidateIds as $candidateId) {
+                $crawler = $client->request('GET', '/social/conversations/'.$conversationId.'/members');
+                $form = $crawler->selectButton('Mitglied hinzufügen')->form();
+                $form['social_conversation_member[recipientIds]'] = [(string) $candidateId];
+                $client->submit($form);
+                self::assertResponseStatusCodeSame(422);
+            }
+
+            $em = $this->em($client);
+            $storedConversation = $em->find(SocialConversation::class, $conversationId);
+            self::assertInstanceOf(SocialConversation::class, $storedConversation);
+            foreach ($candidateIds as $candidateId) {
+                $candidate = $em->find(User::class, $candidateId);
+                self::assertInstanceOf(User::class, $candidate);
+                self::assertNull($em->getRepository(SocialConversationParticipant::class)->findOneBy([
+                    'conversation' => $storedConversation,
+                    'user' => $candidate,
+                ]));
+            }
+        } finally {
+            $this->cleanup($client, $users);
+        }
+    }
+
+    public function testDuplicateRecipientIdsAreRejected(): void
+    {
+        $client = static::createClient();
+        $em = $this->em($client);
+        $owner = $this->user($em, 'WCP-599 Duplicate Owner');
+        $member = $this->user($em, 'WCP-599 Duplicate Existing');
+        $candidate = $this->user($em, 'WCP-599 Duplicate Candidate');
+        $users = [$owner, $member, $candidate];
+        $this->profile($em, $candidate);
+        $conversation = $this->group($em, $owner, [$member]);
+        $conversationId = $this->id($conversation);
+        $candidateId = $this->id($candidate);
+
+        try {
+            $client->loginUser($owner);
+            $crawler = $client->request('GET', '/social/conversations/'.$conversationId.'/members');
+            self::assertResponseIsSuccessful();
+            $token = (string) $crawler->filter('input[name="social_conversation_member[_token]"]')->attr('value');
+            $client->request('POST', '/social/conversations/'.$conversationId.'/members', [
+                'social_conversation_member' => [
+                    '_token' => $token,
+                    'recipientIds' => [(string) $candidateId, (string) $candidateId],
+                ],
+            ]);
+            self::assertResponseStatusCodeSame(422);
+
+            $em = $this->em($client);
+            $storedConversation = $em->find(SocialConversation::class, $conversationId);
+            $storedCandidate = $em->find(User::class, $candidateId);
+            self::assertInstanceOf(SocialConversation::class, $storedConversation);
+            self::assertInstanceOf(User::class, $storedCandidate);
+            self::assertNull($em->getRepository(SocialConversationParticipant::class)->findOneBy([
+                'conversation' => $storedConversation,
+                'user' => $storedCandidate,
+            ]));
+        } finally {
+            $this->cleanup($client, $users);
+        }
+    }
+
+    public function testParticipantFromAnotherConversationCannotBeRemoved(): void
+    {
+        $client = static::createClient();
+        $em = $this->em($client);
+        $owner = $this->user($em, 'WCP-599 Foreign Owner');
+        $member = $this->user($em, 'WCP-599 Foreign Member');
+        $foreignOwner = $this->user($em, 'WCP-599 Foreign Group Owner');
+        $foreignMember = $this->user($em, 'WCP-599 Foreign Group Member');
+        $users = [$owner, $member, $foreignOwner, $foreignMember];
+        $conversation = $this->group($em, $owner, [$member]);
+        $foreignConversation = $this->group($em, $foreignOwner, [$foreignMember]);
+        $conversationId = $this->id($conversation);
+        $foreignParticipantId = $this->participantId($em, $this->id($foreignConversation), $this->id($foreignMember));
+
+        try {
+            $csrf = $client->getContainer()->get(CsrfTokenManagerInterface::class);
+            self::assertInstanceOf(CsrfTokenManagerInterface::class, $csrf);
+            $token = $csrf->getToken('social-members-remove-'.$conversationId.'-'.$foreignParticipantId)->getValue();
+            $client->loginUser($owner);
+            $client->request('POST', '/social/conversations/'.$conversationId.'/members/'.$foreignParticipantId.'/remove', [
+                '_token' => $token,
+            ]);
+            self::assertResponseStatusCodeSame(404);
+
+            $em = $this->em($client);
+            $storedForeignConversation = $em->find(SocialConversation::class, $this->id($foreignConversation));
+            $storedForeignMember = $em->find(User::class, $this->id($foreignMember));
+            self::assertInstanceOf(SocialConversation::class, $storedForeignConversation);
+            self::assertInstanceOf(User::class, $storedForeignMember);
+            $foreignParticipant = $em->getRepository(SocialConversationParticipant::class)->findOneBy([
+                'conversation' => $storedForeignConversation,
+                'user' => $storedForeignMember,
+            ]);
+            self::assertInstanceOf(SocialConversationParticipant::class, $foreignParticipant);
+            self::assertTrue($foreignParticipant->isActive());
         } finally {
             $this->cleanup($client, $users);
         }

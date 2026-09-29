@@ -234,6 +234,9 @@ final readonly class SocialConversationMembershipService
             } else {
                 throw new \InvalidArgumentException('Die Mitgliederauswahl ist ungültig.');
             }
+            if (isset($ids[$id])) {
+                throw new \InvalidArgumentException('Mitglieder können nur einmal ausgewählt werden.');
+            }
             $ids[$id] = $id;
         }
 
