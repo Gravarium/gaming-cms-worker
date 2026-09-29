@@ -53967,16 +53967,16 @@
       "claim_state": "active",
       "active_base_branch": "fix/fcp-061-phpstan-g1",
       "active_base_sha": "ec6bb200affc3e5a46d416e98f7a1b0621c38ded",
-      "active_head": "56fb902061169d6f17d65110c6dc232af2540e26",
+      "active_head": "f2a7bad0001305e9454edd17c62574e43c4792f0",
       "resume_branch": "feature/wcp-591-team-competition-roster-g1",
       "branch_heads": {
         "claim_branch": "ec6bb200affc3e5a46d416e98f7a1b0621c38ded",
-        "feature_branch": "56fb902061169d6f17d65110c6dc232af2540e26"
+        "feature_branch": "f2a7bad0001305e9454edd17c62574e43c4792f0"
       },
-      "last_observed_head": "56fb902061169d6f17d65110c6dc232af2540e26",
-      "last_checkpoint_at": "2026-09-29T12:37:35.378Z",
-      "last_verified_push_at": "2026-09-29T12:37:35.378Z",
-      "next_action": "Monitor complete Worker CI #1019 on exact HEAD 56fb902061169d6f17d65110c6dc232af2540e26; address remaining findings.",
+      "last_observed_head": "f2a7bad0001305e9454edd17c62574e43c4792f0",
+      "last_checkpoint_at": "2026-09-29T12:44:21.792Z",
+      "last_verified_push_at": "2026-09-29T12:44:21.792Z",
+      "next_action": "Monitor complete Worker CI #1020 on exact HEAD f2a7bad0001305e9454edd17c62574e43c4792f0; address any findings.",
       "checkpoint_paths": [
         "config/packages/competition_rosters_widget.yaml",
         "src/CompetitionRoster/CompetitionRosterInviteLink.php",
@@ -54011,9 +54011,9 @@
         "tests/Widget/CompetitionRostersWidgetTest.php"
       ],
       "ci_result": "in_progress",
-      "ci_run_id": 36569337195,
-      "ci_run_number": 1019,
-      "ci_head": "56fb902061169d6f17d65110c6dc232af2540e26",
+      "ci_run_id": 36570101036,
+      "ci_run_number": 1020,
+      "ci_head": "f2a7bad0001305e9454edd17c62574e43c4792f0",
       "ci_attempts": [
         {
           "run_id": 36564325245,
@@ -54140,12 +54140,27 @@
           "run_number": 1019,
           "head": "56fb902061169d6f17d65110c6dc232af2540e26",
           "base": "9e083c63e7d888af36f93a23eb924c89fad2b971",
+          "result": "failure",
+          "validation_pr": 395,
+          "status": "completed",
+          "conclusion": "failure",
+          "jobs": {
+            "php_symfony": "failure",
+            "postgres_18": "success"
+          },
+          "summary": "Static validation and PostgreSQL 18 passed; 1,590 tests ran with the same 3 /login redirects. Using KernelBrowser::getSession() in a synthetic request and saving still diverged from Symfony's actual request session. The helper now first makes a real dashboard request under the logged-in actor, then issues and saves the token through that request."
+        },
+        {
+          "run_id": 36570101036,
+          "run_number": 1020,
+          "head": "f2a7bad0001305e9454edd17c62574e43c4792f0",
+          "base": "9e083c63e7d888af36f93a23eb924c89fad2b971",
           "result": "in_progress",
           "validation_pr": 395,
           "status": "in_progress",
           "conclusion": null,
           "jobs": {},
-          "summary": "Exact-head CI after persisting CSRF tokens and browser login state in the active test session."
+          "summary": "Exact-head CI with CSRF token generated and saved from a real dashboard Request for the current actor."
         }
       ],
       "last_ci_result": "failure"
