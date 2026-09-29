@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Controller;
 
+use App\ContentTransfer\ContentTransferArchive;
 use App\Entity\AuditLog;
 use App\Entity\Category;
 use App\Entity\CmsModuleState;
@@ -53,10 +54,6 @@ final class ContentTransferWorkflowTest extends WebTestCase
                 'DELETE FROM audit_log WHERE actor_id IN (SELECT id FROM cms_user WHERE email LIKE ?)',
                 [$this->marker.'-%@example.test'],
             );
-            $this->connection->executeStatement(
-                'DELETE FROM content_entry_tag WHERE entry_id IN (SELECT id FROM content_entry WHERE title LIKE ?)',
-                [$this->marker.'-%'],
-            );
             $this->connection->executeStatement('DELETE FROM content_entry WHERE title LIKE ?', [$this->marker.'-%']);
             $this->connection->executeStatement('DELETE FROM content_category WHERE slug LIKE ?', [$this->marker.'-%']);
             $this->connection->executeStatement('DELETE FROM content_tag WHERE slug LIKE ?', [$this->marker.'-%']);
@@ -72,13 +69,11 @@ final class ContentTransferWorkflowTest extends WebTestCase
         $client->request('GET', '/admin/content/transfer');
         self::assertResponseRedirects('/login');
 
-        $client = static::createClient();
         $reader = $this->user($client, [CmsPermission::ACCESS]);
         $client->loginUser($reader);
         $client->request('GET', '/admin/content/transfer');
         self::assertResponseStatusCodeSame(403);
 
-        $client = static::createClient();
         $manager = $this->user($client, [CmsPermission::ACCESS, CmsPermission::CONTENT]);
         $client->loginUser($manager);
         $client->request('GET', '/admin/content/transfer');
@@ -94,17 +89,20 @@ final class ContentTransferWorkflowTest extends WebTestCase
         $manager = $this->user($client, [CmsPermission::ACCESS, CmsPermission::CONTENT]);
         [$category, $tag] = $this->taxonomy($client);
         $entry = $this->entry($manager, 'exported', 'portable-article', $category, $tag);
+        $secondEntry = $this->entry($manager, 'exported-secondary', 'portable-secondary');
         $em = $this->em($client);
         $em->persist($entry);
+        $em->persist($secondEntry);
         $em->flush();
         $entryId = $this->entryId($entry);
+        $secondEntryId = $this->entryId($secondEntry);
         $client->loginUser($manager);
 
         $crawler = $client->request('GET', '/admin/content/transfer');
         $token = (string) $crawler->filter('input[name="_token"]')->attr('value');
         $client->request('POST', '/admin/content/transfer/export', [
             '_token' => $token,
-            'ids' => [(string) $entryId],
+            'ids' => [(string) $entryId, (string) $secondEntryId],
         ]);
 
         self::assertResponseIsSuccessful();
@@ -116,7 +114,7 @@ final class ContentTransferWorkflowTest extends WebTestCase
         $exportJson = (string) $client->getResponse()->getContent();
         $client->request('POST', '/admin/content/transfer/export', [
             '_token' => $token,
-            'ids' => [(string) $entryId],
+            'ids' => [(string) $secondEntryId, (string) $entryId],
         ]);
         self::assertResponseIsSuccessful();
         $this->assertPrivateResponse($client);
@@ -125,16 +123,17 @@ final class ContentTransferWorkflowTest extends WebTestCase
         $bundle = json_decode($exportJson, true, 32, JSON_THROW_ON_ERROR);
         self::assertSame('gaming-cms-content', $bundle['format']);
         self::assertSame(1, $bundle['version']);
-        self::assertCount(1, $bundle['entries']);
+        self::assertCount(2, $bundle['entries']);
         self::assertSame([
             'type', 'title', 'subtitle', 'slug', 'excerpt', 'body', 'categorySlug',
-            'tagSlugs', 'seoTitle', 'seoDescription', 'noIndex',
+            'tagSlugs', 'seoTitle', 'seoDescription', 'canonicalUrl', 'noIndex',
         ], array_keys($bundle['entries'][0]));
         self::assertSame($this->marker.'-exported', $bundle['entries'][0]['title']);
         self::assertSame('portable-article', $bundle['entries'][0]['slug']);
         self::assertSame($this->marker.'-category', $bundle['entries'][0]['categorySlug']);
         self::assertSame([$this->marker.'-tag'], $bundle['entries'][0]['tagSlugs']);
         self::assertSame('Readable body exported', $bundle['entries'][0]['body']);
+        self::assertSame('https://source.example.test/portable-article', $bundle['entries'][0]['canonicalUrl']);
         self::assertSame(true, $bundle['entries'][0]['noIndex']);
         self::assertArrayNotHasKey('id', $bundle['entries'][0]);
         self::assertArrayNotHasKey('status', $bundle['entries'][0]);
@@ -190,6 +189,7 @@ final class ContentTransferWorkflowTest extends WebTestCase
                 $entry->getTags()->toArray(),
             ));
             self::assertSame('Imported SEO title', $entry->getSeoTitle());
+            self::assertSame('https://import.example.test/portable-article', $entry->getCanonicalUrl());
         }
 
         self::assertSame(1, (int) $em->getConnection()->fetchOne(
@@ -227,7 +227,55 @@ final class ContentTransferWorkflowTest extends WebTestCase
         self::assertResponseStatusCodeSame(422);
         $this->assertPrivateResponse($client);
 
+        $this->taxonomy($client);
+        $duplicateTag = $this->record(
+            $this->marker.'-duplicate-tag',
+            $this->marker.'-category',
+            [$this->marker.'-tag', $this->marker.'-tag'],
+        );
+        $this->submitImport($client, $this->bundle([$duplicateTag]));
+        self::assertResponseStatusCodeSame(422);
+        $this->assertPrivateResponse($client);
+
+        $longBody = $this->record($this->marker.'-long-body');
+        $longBody['body'] = str_repeat('x', 60001);
         $unknownField = $this->record('unknown-field');
+        $unknownField['internalId'] = 9;
+        $invalidPayloads = [
+            'malformed JSON' => '{',
+            'unsupported entry field' => $this->bundle([$unknownField]),
+            'too many entries' => $this->bundle(array_fill(0, 21, $this->record('too-many-entry'))),
+            'oversized body' => $this->bundle([$longBody]),
+        ];
+        foreach ($invalidPayloads as $payload) {
+            $this->submitImport($client, $payload);
+            self::assertResponseStatusCodeSame(422);
+            $this->assertPrivateResponse($client);
+        }
+
+        $this->submitImport($client, $this->bundle([$this->record('invalid-csrf')]), 'invalid-token');
+        self::assertResponseStatusCodeSame(422);
+        $this->assertPrivateResponse($client);
+    }
+
+    public function testUploadOverBundleSizeLimitIsRejectedWithoutAudit(): void
+    {
+        $client = static::createClient();
+        $manager = $this->user($client, [CmsPermission::ACCESS, CmsPermission::CONTENT]);
+        $client->loginUser($manager);
+
+        $this->submitImport($client, str_repeat(' ', ContentTransferArchive::MAX_BUNDLE_BYTES + 1));
+        self::assertResponseStatusCodeSame(422);
+        $this->assertPrivateResponse($client);
+
+        $em = $this->em($client);
+        self::assertSame(0, (int) $em->getConnection()->fetchOne(
+            'SELECT COUNT(*) FROM audit_log WHERE actor_id = ? AND action = ?',
+            [$manager->getId(), 'content.transfer.import'],
+        ));
+    }
+
+    public function testInvalidCsrfSelectionMethodAndDisabledContentModuleAreRejected(): void
         $unknownField['internalId'] = 9;
         $invalidPayloads = [
             'malformed JSON' => '{',
@@ -330,6 +378,7 @@ final class ContentTransferWorkflowTest extends WebTestCase
             ->setEditorDocument('{"version":1,"blocks":[{"type":"paragraph","text":"private editor data"}]}')
             ->setSeoTitle('Source SEO title')
             ->setSeoDescription('Source SEO description')
+            ->setCanonicalUrl('https://source.example.test/'.$slug)
             ->setNoIndex(true)
             ->setCategory($category);
         if ($tag !== null) {
@@ -355,6 +404,7 @@ final class ContentTransferWorkflowTest extends WebTestCase
             'tagSlugs' => $tagSlugs,
             'seoTitle' => 'Imported SEO title',
             'seoDescription' => 'Imported SEO description',
+            'canonicalUrl' => 'https://import.example.test/'.$slug,
             'noIndex' => true,
         ];
     }

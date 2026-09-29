@@ -75,6 +75,7 @@ final readonly class ContentTransferArchive
                 'tagSlugs' => $tagSlugs,
                 'seoTitle' => $entry->getSeoTitle(),
                 'seoDescription' => $entry->getSeoDescription(),
+                'canonicalUrl' => $entry->getCanonicalUrl(),
                 'noIndex' => $entry->isNoIndex(),
             ];
         }
@@ -166,7 +167,7 @@ final readonly class ContentTransferArchive
     {
         $allowed = [
             'type', 'title', 'subtitle', 'slug', 'excerpt', 'body',
-            'categorySlug', 'tagSlugs', 'seoTitle', 'seoDescription', 'noIndex',
+            'categorySlug', 'tagSlugs', 'seoTitle', 'seoDescription', 'canonicalUrl', 'noIndex',
         ];
         $this->assertKeys($data, $allowed);
 
@@ -190,6 +191,7 @@ final readonly class ContentTransferArchive
         $excerpt = $this->optionalText($data, 'excerpt', 500);
         $seoTitle = $this->optionalText($data, 'seoTitle', 180);
         $seoDescription = $this->optionalText($data, 'seoDescription', 320);
+        $canonicalUrl = $this->optionalText($data, 'canonicalUrl', 500);
         $noIndex = $data['noIndex'] ?? true;
         if (!is_bool($noIndex)) {
             throw new \InvalidArgumentException('Ein Bundle-Inhalt hat ungültige SEO-Metadaten.');
@@ -210,6 +212,7 @@ final readonly class ContentTransferArchive
             ->setCategory($category)
             ->setSeoTitle($seoTitle)
             ->setSeoDescription($seoDescription)
+            ->setCanonicalUrl($canonicalUrl)
             ->setNoIndex($noIndex)
             ->setStatus(ContentEntry::STATUS_DRAFT)
             ->setPublishedAt(null)
