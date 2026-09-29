@@ -113,7 +113,16 @@ final class ContentTransferWorkflowTest extends WebTestCase
         self::assertStringContainsString('attachment', (string) $client->getResponse()->headers->get('Content-Disposition'));
         self::assertSame('nosniff', $client->getResponse()->headers->get('X-Content-Type-Options'));
 
-        $bundle = json_decode((string) $client->getResponse()->getContent(), true, 32, JSON_THROW_ON_ERROR);
+        $exportJson = (string) $client->getResponse()->getContent();
+        $client->request('POST', '/admin/content/transfer/export', [
+            '_token' => $token,
+            'ids' => [(string) $entryId],
+        ]);
+        self::assertResponseIsSuccessful();
+        $this->assertPrivateResponse($client);
+        self::assertSame($exportJson, (string) $client->getResponse()->getContent());
+        /** @var array{format: string, version: int, entries: list<array<string, mixed>>} $bundle */
+        $bundle = json_decode($exportJson, true, 32, JSON_THROW_ON_ERROR);
         self::assertSame('gaming-cms-content', $bundle['format']);
         self::assertSame(1, $bundle['version']);
         self::assertCount(1, $bundle['entries']);
@@ -134,7 +143,7 @@ final class ContentTransferWorkflowTest extends WebTestCase
         self::assertArrayNotHasKey('publishedAt', $bundle['entries'][0]);
 
         $em = $this->em($client);
-        self::assertSame(1, (int) $em->getConnection()->fetchOne(
+        self::assertSame(2, (int) $em->getConnection()->fetchOne(
             'SELECT COUNT(*) FROM audit_log WHERE actor_id = ? AND action = ?',
             [$manager->getId(), 'content.transfer.export'],
         ));
@@ -217,6 +226,23 @@ final class ContentTransferWorkflowTest extends WebTestCase
         $this->submitImport($client, '{"format":"gaming-cms-content","version":2,"entries":[]}');
         self::assertResponseStatusCodeSame(422);
         $this->assertPrivateResponse($client);
+
+        $unknownField = $this->record('unknown-field');
+        $unknownField['internalId'] = 9;
+        $invalidPayloads = [
+            'malformed JSON' => '{',
+            'unsupported entry field' => $this->bundle([$unknownField]),
+            'too many entries' => $this->bundle(array_fill(0, 21, $this->record('too-many-entry'))),
+        ];
+        foreach ($invalidPayloads as $payload) {
+            $this->submitImport($client, $payload);
+            self::assertResponseStatusCodeSame(422);
+            $this->assertPrivateResponse($client);
+        }
+
+        $this->submitImport($client, $this->bundle([$this->record('invalid-csrf')]), 'invalid-token');
+        self::assertResponseStatusCodeSame(422);
+        $this->assertPrivateResponse($client);
     }
 
     public function testInvalidCsrfSelectionMethodAndDisabledContentModuleAreRejected(): void
@@ -231,6 +257,9 @@ final class ContentTransferWorkflowTest extends WebTestCase
         $crawler = $client->request('GET', '/admin/content/transfer');
         $token = (string) $crawler->filter('input[name="_token"]')->attr('value');
         $client->request('POST', '/admin/content/transfer/export', ['_token' => $token, 'ids' => []]);
+        self::assertResponseStatusCodeSame(400);
+        $this->assertPrivateResponse($client);
+        $client->request('POST', '/admin/content/transfer/export', ['_token' => $token, 'ids' => array_map('strval', range(1, 21))]);
         self::assertResponseStatusCodeSame(400);
         $this->assertPrivateResponse($client);
 
@@ -340,11 +369,11 @@ final class ContentTransferWorkflowTest extends WebTestCase
         ], JSON_THROW_ON_ERROR);
     }
 
-    private function submitImport(KernelBrowser $client, string $payload): void
+    private function submitImport(KernelBrowser $client, string $payload, ?string $tokenOverride = null): void
     {
         $crawler = $client->request('GET', '/admin/content/transfer');
         self::assertResponseIsSuccessful();
-        $token = (string) $crawler->filter('input[name="content_transfer[_token]"]')->attr('value');
+        $token = $tokenOverride ?? (string) $crawler->filter('input[name="content_transfer[_token]"]')->attr('value');
         $path = tempnam(sys_get_temp_dir(), 'content-transfer-');
         if ($path === false || file_put_contents($path, $payload) === false) {
             throw new \RuntimeException('Unable to prepare temporary content bundle.');
