@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "cd2fbd988bdfb7fe83a98d0c177ecfeadbd8859c",
-  "published_at": "2026-09-29 01:30:13 UTC",
+  "published_at": "2026-09-29 01:31:07 UTC",
   "summary": {
     "total_remaining_worker_tasks": 174,
     "completed_worker_prs_awaiting_trusted_review": 318,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-587 is Trusted-integrated with all post-merge gates green and its claim released. WCP-598 is complete on exact green Worker PR #392 with its claim locked; review it next. WCP-552 and WCP-556 are also completed high-risk Worker proposals awaiting separate Trusted review; preserve each claim until its own Trusted resolution.",
+    "next_required_action": "WCP-598 has an owner-authorized Trusted transfer at exact green Worker PR #392; keep its claim locked until all Trusted gates pass. WCP-552 / PR #347 and WCP-556 / PR #350 are separate completed high-risk packages for subsequent Trusted review.",
     "composition_preparable": 0,
     "immediately_actionable": 33,
     "must_continue": true
@@ -55054,7 +55054,7 @@
         "src/CommunityInteraction/Templates/admin/moderation.html.twig",
         "tests/Controller/AdminContentModerationWorkflowTest.php"
       ],
-      "next_action": "Keep the claim locked until Trusted resolves PR #392. Reassess all five unclaimed FCPs; continue with the first dependency-safe package or publish and claim the next bounded WCP functional-gap proposal.",
+      "next_action": "Owner-authorized Trusted review is in progress at the exact Worker head. Keep the claim locked until exact-head Trusted CI, merge, Main CI, sanitized sync and Worker CI pass.",
       "last_checkpoint_at": "2026-09-28T23:55:05.082Z",
       "last_verified_push_at": "2026-09-28T23:55:05.082Z",
       "worker_pr_number": 392,
@@ -55062,7 +55062,20 @@
       "worker_ci_run_id": 36499924219,
       "worker_ci_run_url": "https://github.com/Gravarium/gaming-cms-worker/actions/runs/36499924219",
       "worker_ci_result": "success",
-      "completed_at": "2026-09-28T23:55:05.082Z"
+      "completed_at": "2026-09-28T23:55:05.082Z",
+      "trusted_transfer": {
+        "status": "owner_authorized_to_trusted",
+        "recorded_at": "2026-09-29T01:31:07Z",
+        "from": "Worker chat holding GravariumDev claim",
+        "to": "Trusted integration coordinator",
+        "exact_feature_branch": "feature/wcp-598-community-moderation-queue-pages-g1",
+        "exact_remote_head": "113c0a0ebdb39db6ad31819ade3e044564251b63",
+        "worker_pr": 392,
+        "worker_ci_run_id": 36499924219,
+        "worker_ci_result": "success",
+        "previous_worker_chat_stopped_by_owner": true,
+        "claim_remains_locked": true
+      }
     }
   ],
   "recovery_queue": [],
