@@ -10,7 +10,7 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "9e083c63e7d888af36f93a23eb924c89fad2b971",
-  "published_at": "2026-09-29T22:12:43.145Z",
+  "published_at": "2026-09-29T22:16:40.494Z",
   "summary": "WCP-511 is complete awaiting Trusted review on Worker PR #404 at exact HEAD e6f77f1dfa236a0a4709c8b3a6c260a2c3730341; exact-head Worker CI #1068 is green. Trusted main remains the only integration and deployment source.",
   "rules": {
     "choose": "Resume the current chat's unfinished claimed branch first. Otherwise atomically claim an eligible published task. If no published task is eligible, independently derive and publish a bounded worker-only CMS proposal from approved product goals and observed code gaps; do not ask the owner for the next FCP number.",
@@ -57862,15 +57862,24 @@
       "claimed_on": "2026-09-29T22:12:43.145Z",
       "active_base_branch": "main",
       "active_base_sha": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
-      "active_head": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "active_head": "d693e0c50d670ae79ee2adcbf77c6869a58ecaa6",
       "branch_heads": {
         "claim_branch": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
-        "feature_branch": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4"
+        "feature_branch": "d693e0c50d670ae79ee2adcbf77c6869a58ecaa6"
       },
-      "last_observed_head": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
-      "last_checkpoint_at": "2026-09-29T22:12:43.145Z",
-      "last_verified_push_at": "2026-09-29T22:12:43.145Z",
-      "next_action": "Implement newsletter lifecycle in six reserved paths, push checkpoint and run exact-head Worker CI."
+      "last_observed_head": "d693e0c50d670ae79ee2adcbf77c6869a58ecaa6",
+      "last_checkpoint_at": "2026-09-29T22:16:40.494Z",
+      "last_verified_push_at": "2026-09-29T22:16:40.494Z",
+      "next_action": "Monitor full exact-head Worker CI for draft PR #405 at d693e0c50d670ae79ee2adcbf77c6869a58ecaa6; repair concrete failures within the WCP-609 allowlist.",
+      "worker_pr": 405,
+      "draft_pr": true,
+      "checkpoint_paths": [
+        "src/Controller/AdminNewsletterCampaignLifecycleController.php",
+        "src/Entity/Newsletter/NewsletterDelivery.php",
+        "src/Repository/Newsletter/NewsletterDeliveryRepository.php",
+        "templates/admin/newsletter/index.html.twig",
+        "tests/Controller/AdminNewsletterCampaignLifecycleTest.php"
+      ]
     }
   ],
   "recovery_queue": [],
