@@ -53417,7 +53417,7 @@
         "tests/Controller/PublicGameReleaseRssFeedTest.php",
         "tests/GameReleaseFeed/RssFeedBuilderTest.php"
       ],
-      "next_action": "Await independent Trusted review; keep this claim locked until Trusted resolves it.",
+      "next_action": "Await independent Trusted review of open ready-for-review PR #383 at exact HEAD e3f92859ad33ef9fc91bead9dccfd8bef665ff5b; keep this claim locked until Trusted explicitly integrates, cancels, or transfers it, then choose one dependency-safe large functional package.",
       "last_verified_push_at": "2026-09-28T20:03:02.590Z",
       "worker_pr": 383,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/383",
@@ -53457,7 +53457,7 @@
           "validation_pr": 383,
           "status": "completed",
           "conclusion": "success",
-          "summary": "Exact-head Worker CI run #970 succeeded on e3f92859ad33ef9fc91bead9dccfd8bef665ff5b. PHP/Symfony validation and PostgreSQL 18 migration-chain jobs passed.",
+          "summary": "Exact-head Worker CI #970 passed on e3f92859ad33ef9fc91bead9dccfd8bef665ff5b; PHP/Symfony and PostgreSQL 18 jobs both succeeded.",
           "jobs": {
             "php_symfony": "success",
             "postgres_18": "success"
@@ -53467,7 +53467,53 @@
       "ci_result": "success",
       "ci_run_id": 36477077333,
       "final_head": "e3f92859ad33ef9fc91bead9dccfd8bef665ff5b",
-      "completed_at": "2026-09-29T11:05:01.747Z"
+      "completed_at": "2026-09-29T11:06:55.715Z",
+      "final_base_sha": "2f8179fe129c3071b68757f03a3e7099311179ef",
+      "final_sanitized_main_sha": "2f8179fe129c3071b68757f03a3e7099311179ef",
+      "final_changed_paths": [
+        "src/Controller/PublicGameReleaseRssFeedController.php",
+        "src/GameReleaseFeed/RssFeedBuilder.php",
+        "tests/Controller/PublicGameReleaseRssFeedTest.php",
+        "tests/GameReleaseFeed/RssFeedBuilderTest.php"
+      ],
+      "completion_evidence": {
+        "exact_sanitized_base_sha": "2f8179fe129c3071b68757f03a3e7099311179ef",
+        "proposal_base_branch": "feature/wcp-585-game-release-calendar-feed-g1",
+        "proposal_base_sha": "aeff4ea30a268306cdfb52b5b266ddc17a5d343e",
+        "final_head": "e3f92859ad33ef9fc91bead9dccfd8bef665ff5b",
+        "changed_paths": [
+          "src/Controller/PublicGameReleaseRssFeedController.php",
+          "src/GameReleaseFeed/RssFeedBuilder.php",
+          "tests/Controller/PublicGameReleaseRssFeedTest.php",
+          "tests/GameReleaseFeed/RssFeedBuilderTest.php"
+        ],
+        "worker_pr": 383,
+        "worker_pr_state": "ready_for_review",
+        "exact_head_ci_run_id": 36477077333,
+        "exact_head_ci_run_number": 970,
+        "exact_head_ci_result": "success",
+        "jobs": {
+          "php_symfony": "success",
+          "postgres_18": "success"
+        },
+        "coverage": [
+          "PHPStan level 8",
+          "security helper tests",
+          "dependency audit",
+          "Twig lint",
+          "dependency-container validation",
+          "AssetMapper compilation",
+          "Doctrine mapping validation",
+          "PostgreSQL 18 complete migration-chain validation"
+        ],
+        "functional_evidence": [
+          "GET /games/releases/feed.xml emits a read-only RSS 2.0 feed and a valid empty feed when no upcoming releases qualify.",
+          "The feed reuses the green WCP-585 bounded query, limited to eligible future public releases within 18 months and at most 200 rows.",
+          "RSS fields are escaped; invalid XML controls are excluded; stable non-permalink GUIDs, UTC RFC 822 dates and validated absolute HTTP(S) links are emitted.",
+          "The route remains GET-only, fails closed when Gaming is disabled and preserves the existing private cache policy."
+        ],
+        "inherited_paths_note": "PR #383 also contains the five unchanged WCP-585 files because it targets main for CI; this package owns only the four paths listed above. WCP-585 remains separately tracked."
+      }
     },
     {
       "priority": 589,
