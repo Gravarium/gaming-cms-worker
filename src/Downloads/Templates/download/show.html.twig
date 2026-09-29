@@ -7,7 +7,7 @@
     <div class="table-wrap">
         <table>
             <thead>
-                <tr><th>Version</th><th>Kompatibilität</th><th>SHA-256</th><th>Status</th><th></th></tr>
+                <tr><th>Version</th><th>Kompatibilität</th><th>SHA-256</th><th>Status</th><th>Beziehungen</th><th></th></tr>
             </thead>
             <tbody>
             {% for version in versions %}
@@ -24,10 +24,39 @@
                     <td>{% if version.compatibility %}{{ version.compatibility|join(', ') }}{% else %}Keine Angaben{% endif %}</td>
                     <td><code>{{ version.sha256 }}</code></td>
                     <td>{{ version.obsolete ? 'ersetzt' : version.scanStatus }}</td>
+                    <td>
+                        {% set relations = relationsByVersion[version.id] ?? {dependencies: [], mirrors: []} %}
+                        {% if version.deliverable and (relations.dependencies or relations.mirrors) %}
+                            <details>
+                                <summary>Abhängigkeiten und Spiegel</summary>
+                                {% if relations.dependencies %}
+                                    <ul>
+                                        {% for dependency in relations.dependencies %}
+                                            <li>
+                                                {% if dependency.kind == 'requires' %}Erfordert{% elseif dependency.kind == 'optional' %}Optional{% else %}Konflikt mit{% endif %}
+                                                <a href="{{ path('app_download_show', {slug: dependency.targetPackage.slug}) }}">{{ dependency.targetPackage.title }}</a>
+                                                {% if dependency.constraintExpression %}<code>{{ dependency.constraintExpression }}</code>{% endif %}
+                                            </li>
+                                        {% endfor %}
+                                    </ul>
+                                {% endif %}
+                                {% if relations.mirrors %}
+                                    <ul>
+                                        {% for mirror in relations.mirrors %}
+                                            <li><a href="{{ mirror.url }}" target="_blank" rel="noopener noreferrer nofollow">Geprüfter externer Mirror</a></li>
+                                        {% endfor %}
+                                    </ul>
+                                {% endif %}
+                            </details>
+                        {% endif %}
+                        {% if is_granted('CMS_STORAGE_MANAGE') %}
+                            <a href="{{ path('app_admin_download_relations_version', {version: version.id}) }}">Beziehungen verwalten</a>
+                        {% endif %}
+                    </td>
                     <td>{% if version.deliverable %}<a href="{{ path('app_download_file',{slug:package.slug,id:version.id}) }}">Herunterladen</a>{% endif %}</td>
                 </tr>
             {% else %}
-                <tr><td colspan="5">Keine Versionen.</td></tr>
+                <tr><td colspan="6">Keine Versionen.</td></tr>
             {% endfor %}
             </tbody>
         </table>

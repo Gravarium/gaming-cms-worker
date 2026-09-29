@@ -1,0 +1,57 @@
+{% extends 'base.html.twig' %}
+{% block title %}Beziehungen für {{ version.package.title }} {{ version.version }}{% endblock %}
+{% block body %}
+<main class="content-shell">
+    <nav>
+        <a href="{{ path('app_admin_download_relations_package', {package: version.package.id}) }}">Alle Versionen</a>
+        <a href="{{ path('app_admin_download_catalogue_index') }}">Download-Pakete</a>
+    </nav>
+    <h1>Abhängigkeiten und Spiegel</h1>
+    <p>{{ version.package.title }} · Version {{ version.version }}</p>
+    <p>
+        <a class="button" href="{{ path('app_admin_download_relations_dependency_new', {version: version.id}) }}">Abhängigkeit hinzufügen</a>
+        <a class="button" href="{{ path('app_admin_download_relations_mirror_new', {version: version.id}) }}">Mirror hinzufügen</a>
+    </p>
+
+    <section>
+        <h2>Paketbeziehungen</h2>
+        {% if dependencies %}
+            <ul>
+                {% for dependency in dependencies %}
+                    <li>
+                        {% if dependency.kind == 'requires' %}Erforderlich{% elseif dependency.kind == 'optional' %}Optional{% else %}Konflikt{% endif %}:
+                        {{ dependency.targetPackage.title }}
+                        {% if dependency.constraintExpression %}<code>{{ dependency.constraintExpression }}</code>{% endif %}
+                        <form method="post" action="{{ path('app_admin_download_relations_dependency_delete', {version: version.id, dependency: dependency.id}) }}">
+                            <input type="hidden" name="_token" value="{{ csrf_token('download-dependency-delete-' ~ version.id ~ '-' ~ dependency.id) }}">
+                            <button type="submit" class="text-danger">Beziehung entfernen</button>
+                        </form>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>Für diese Version sind keine Paketbeziehungen hinterlegt.</p>
+        {% endif %}
+    </section>
+
+    <section>
+        <h2>Download-Mirror</h2>
+        {% if mirrors %}
+            <ul>
+                {% for mirror in mirrors %}
+                    <li>
+                        <code>{{ mirror.url }}</code>
+                        <span class="status {{ mirror.trusted ? 'status-ready' : '' }}">{{ mirror.trusted ? 'Geprüft und öffentlich' : 'Nicht öffentlich' }}</span>
+                        <form method="post" action="{{ path('app_admin_download_relations_mirror_delete', {version: version.id, mirror: mirror.id}) }}">
+                            <input type="hidden" name="_token" value="{{ csrf_token('download-mirror-delete-' ~ version.id ~ '-' ~ mirror.id) }}">
+                            <button type="submit" class="text-danger">Mirror entfernen</button>
+                        </form>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>Für diese Version sind keine Mirrors hinterlegt.</p>
+        {% endif %}
+    </section>
+</main>
+{% endblock %}

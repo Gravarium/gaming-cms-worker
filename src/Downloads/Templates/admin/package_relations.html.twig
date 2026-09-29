@@ -1,0 +1,29 @@
+{% extends 'base.html.twig' %}
+{% block title %}Versionen und Beziehungen | {{ package.title }}{% endblock %}
+{% block body %}
+<main class="content-shell">
+    <nav><a href="{{ path('app_admin_download_catalogue_index') }}">Download-Pakete</a></nav>
+    <h1>Versionen und Beziehungen</h1>
+    <p>{{ package.title }} · <code>{{ package.slug }}</code></p>
+    <p><a class="button" href="{{ path('app_admin_download_upload_form', {id: package.id}) }}">Neue Version hochladen</a></p>
+    {% if versions is empty %}
+        <p>Für dieses Paket gibt es noch keine Versionen.</p>
+    {% else %}
+        <div class="table-wrap">
+            <table>
+                <thead><tr><th>Version</th><th>Prüfstatus</th><th>Verfügbarkeit</th><th>Aktionen</th></tr></thead>
+                <tbody>
+                {% for version in versions %}
+                    <tr>
+                        <th scope="row">{{ version.version }}</th>
+                        <td>{{ version.scanStatus }}</td>
+                        <td>{{ version.deliverable ? 'Herunterladbar' : 'Nicht herunterladbar' }}</td>
+                        <td><a href="{{ path('app_admin_download_relations_version', {version: version.id}) }}">Abhängigkeiten und Spiegel verwalten</a></td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% endif %}
+</main>
+{% endblock %}
