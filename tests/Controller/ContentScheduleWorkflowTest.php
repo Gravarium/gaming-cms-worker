@@ -11,6 +11,8 @@ use App\Entity\ContentRevision;
 use App\Entity\User;
 use App\Security\CmsPermission;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\ParameterType;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
@@ -102,6 +104,12 @@ final class ContentScheduleWorkflowTest extends WebTestCase
             $em->persist($entry);
         }
         $em->flush();
+        // Legacy rows can carry stale dates, but lifecycle status must still exclude them.
+        $em->getConnection()->executeStatement(
+            'UPDATE content_entry SET scheduled_at = ? WHERE id IN (?, ?)',
+            [$selectedAt, $this->entryId($draft), $this->entryId($review)],
+            [Types::DATETIME_IMMUTABLE, ParameterType::INTEGER, ParameterType::INTEGER],
+        );
 
         $expectedIds = array_map(fn (ContentEntry $entry): int => $this->entryId($entry), $scheduled);
         $expectedIds[] = $this->entryId($unpublication);
