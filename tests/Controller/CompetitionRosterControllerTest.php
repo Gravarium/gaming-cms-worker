@@ -581,15 +581,13 @@ final class CompetitionRosterControllerTest extends WebTestCase
         if (!$requestStack instanceof RequestStack) {
             throw new \LogicException('The request stack is unavailable.');
         }
-        $request = $client->getRequest();
-        if (!$request instanceof Request || !$request->hasSession()) {
-            throw new \LogicException('The browser request session is unavailable.');
-        }
-        $session = $request->getSession();
+        $session = $client->getSession();
         if (!$session instanceof SessionInterface) {
-            throw new \LogicException('The browser request session is unavailable.');
+            throw new \LogicException('The browser session is unavailable.');
         }
 
+        $request = Request::create('http://localhost/');
+        $request->setSession($session);
         $requestStack->push($request);
         try {
             return $manager->getToken($tokenId)->getValue();
