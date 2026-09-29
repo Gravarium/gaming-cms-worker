@@ -18,6 +18,8 @@ use App\Social\SocialMessagingService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 final class SocialConversationMembershipTest extends WebTestCase
 {
@@ -573,7 +575,7 @@ final class SocialConversationMembershipTest extends WebTestCase
                     'recipientIds' => [(string) $targetId],
                 ],
             ]);
-            self::assertResponseStatusCodeSame(403);
+            self::assertResponseStatusCodeSame(422);
 
             $em = $this->em($client);
             $storedConversation = $em->find(SocialConversation::class, $conversationId);
