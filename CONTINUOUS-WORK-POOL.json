@@ -10,7 +10,7 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "9e083c63e7d888af36f93a23eb924c89fad2b971",
-  "published_at": "2026-09-29T22:16:40.494Z",
+  "published_at": "2026-09-29T22:21:53.130Z",
   "summary": "WCP-511 is complete awaiting Trusted review on Worker PR #404 at exact HEAD e6f77f1dfa236a0a4709c8b3a6c260a2c3730341; exact-head Worker CI #1068 is green. Trusted main remains the only integration and deployment source.",
   "rules": {
     "choose": "Resume the current chat's unfinished claimed branch first. Otherwise atomically claim an eligible published task. If no published task is eligible, independently derive and publish a bounded worker-only CMS proposal from approved product goals and observed code gaps; do not ask the owner for the next FCP number.",
@@ -57862,15 +57862,15 @@
       "claimed_on": "2026-09-29T22:12:43.145Z",
       "active_base_branch": "main",
       "active_base_sha": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
-      "active_head": "d693e0c50d670ae79ee2adcbf77c6869a58ecaa6",
+      "active_head": "fed927265415cceba4a84ff1ead7ebc8402305c5",
       "branch_heads": {
         "claim_branch": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
-        "feature_branch": "d693e0c50d670ae79ee2adcbf77c6869a58ecaa6"
+        "feature_branch": "fed927265415cceba4a84ff1ead7ebc8402305c5"
       },
-      "last_observed_head": "d693e0c50d670ae79ee2adcbf77c6869a58ecaa6",
-      "last_checkpoint_at": "2026-09-29T22:16:40.494Z",
-      "last_verified_push_at": "2026-09-29T22:16:40.494Z",
-      "next_action": "Monitor full exact-head Worker CI for draft PR #405 at d693e0c50d670ae79ee2adcbf77c6869a58ecaa6; repair concrete failures within the WCP-609 allowlist.",
+      "last_observed_head": "fed927265415cceba4a84ff1ead7ebc8402305c5",
+      "last_checkpoint_at": "2026-09-29T22:21:53.130Z",
+      "last_verified_push_at": "2026-09-29T22:21:53.130Z",
+      "next_action": "Monitor exact-head Worker CI at fed927265415cceba4a84ff1ead7ebc8402305c5; fix only concrete failures in WCP-609 allowlist.",
       "worker_pr": 405,
       "draft_pr": true,
       "checkpoint_paths": [
@@ -57879,6 +57879,18 @@
         "src/Repository/Newsletter/NewsletterDeliveryRepository.php",
         "templates/admin/newsletter/index.html.twig",
         "tests/Controller/AdminNewsletterCampaignLifecycleTest.php"
+      ],
+      "ci_attempts": [
+        {
+          "head": "d693e0c50d670ae79ee2adcbf77c6869a58ecaa6",
+          "run_id": 36638587282,
+          "result": "failure",
+          "jobs": [
+            "109645181963:failure",
+            "109645181509:success"
+          ],
+          "diagnosis": "Full PHPUnit 1646 tests had one test-session failure: switching from a denied viewer to admin in the same browser yielded /login. PHPStan, Twig, Doctrine and PostgreSQL migration chain passed."
+        }
       ]
     }
   ],
