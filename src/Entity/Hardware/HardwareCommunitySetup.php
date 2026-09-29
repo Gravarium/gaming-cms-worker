@@ -41,7 +41,7 @@ class HardwareCommunitySetup
     /** @return list<int> */
     public function getProductIds(): array { return $this->productIds; }
     /** @param list<int> $productIds */
-    public function setProductIds(array $productIds): self { $this->productIds = array_values($productIds); return $this; }
+    public function setProductIds(array $productIds): self { $this->productIds = $productIds; return $this; }
     public function getNotes(): string { return $this->notes; }
     public function setNotes(string $notes): self { $this->notes = trim($notes); return $this; }
     public function isModerated(): bool { return $this->moderated; }
