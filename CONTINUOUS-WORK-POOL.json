@@ -55277,7 +55277,7 @@
       "suggested_branch": "feature/wcp-599-social-group-conversation-membership-g1",
       "base_branch": "feature/wcp-558-social-group-conversation-creation-g1",
       "base_sha": "bbbf5fda44cd9d2b6a2b1dd957a8c10290685793",
-      "objective": "Complete the existing Social group-chat lifecycle on the exact green WCP-558 proposal. Let an active group owner manage its member roster, add recipients only from currently visible active profiles and only when every member can exchange messages under existing privacy/block policies, remove non-owner members, and let participants leave. On owner departure, promote the earliest remaining active participant. Reset membership join/read state for a returning participant and scope message reads to the current join time so earlier private messages are never revealed after joining or rejoining. Keep the 20-member limit, Social module gate, CSRF, private response policy, existing direct-message behavior, and no-schema boundary.",
+      "objective": "Complete the existing Social group-chat lifecycle on the exact green WCP-558 proposal. Let an active group owner manage its member roster, add recipients only from currently visible active profiles and only when every member can exchange messages under existing privacy/block policies, remove non-owner members, and let participants leave. On owner departure, promote the earliest remaining active participant. Reset membership join/read state for a returning participant and scope message reads to the current join time so earlier private messages are never revealed after joining or rejoining. Keep the 20-member limit, Social module gate, CSRF, private response policy, existing direct-message behavior, and no-schema boundary. Also prevent newly added or returning members from reading or downloading pre-join message history or attachments.",
       "allowed_paths": [
         "src/Controller/Social/SocialConversationMembershipController.php",
         "src/Form/Social/SocialConversationMemberType.php",
@@ -55288,7 +55288,8 @@
         "src/Repository/Social/SocialMessageRepository.php",
         "templates/social/conversation.html.twig",
         "templates/social/conversation_members.html.twig",
-        "tests/Controller/SocialConversationMembershipTest.php"
+        "tests/Controller/SocialConversationMembershipTest.php",
+        "src/Social/SocialAccessPolicy.php"
       ],
       "forbidden_paths": [
         "private/",
@@ -55320,13 +55321,15 @@
         "The owner can add up to the existing 20-person limit using only active members with a currently visible display name; the existing message privacy, block, relationship, and module policies are rechecked for all current and added members.",
         "An owner/admin can remove only an active non-owner from that same group. Any active group participant can leave; when an owner leaves, the earliest remaining active participant becomes owner.",
         "Rejoining a left or removed participant resets joinedAt and lastReadAt. Conversation reads return only messages at or after that participant's current joinedAt, so old private group history is not exposed to added or returning participants.",
-        "Direct-message membership remains unchanged; no schema, entity mapping, migration, or unrelated Social creation-flow change."
+        "Direct-message membership remains unchanged; no schema, entity mapping, migration, or unrelated Social creation-flow change.",
+        "Message and attachment access follows the participant's current joinedAt boundary, preserving history privacy after add/rejoin."
       ],
       "tests": [
         "Functional coverage for group roster rendering, owner add/remove, participant leave, automatic owner transfer, direct-message leave, CSRF rejection, disabled Social, and private/no-store/noindex headers.",
         "Negative coverage for hidden/inactive/locked recipients, message-policy or block conflicts, duplicate or foreign participant IDs, and the 20-participant limit.",
         "History-privacy regression adds or re-adds a participant after messages exist and verifies older messages are absent while later messages are visible; removed/left users cannot read or write.",
-        "PHPStan level 8 and complete exact-head Worker CI, including PostgreSQL 18 migration-chain validation."
+        "PHPStan level 8 and complete exact-head Worker CI, including PostgreSQL 18 migration-chain validation.",
+        "History-privacy coverage verifies earlier message content and attachments are inaccessible to newly added or returning members."
       ],
       "completion_report": [
         "Exact WCP-558 proposal base and final Worker HEAD, changed paths, Worker PR URL/state.",
@@ -55364,7 +55367,7 @@
       ],
       "collision_check": {
         "compared_against": "Fresh continuous/work-pool-v4 commit ecc2bb13f24ea50fb730d3478d5d2919dad85220; worker main 9e083c63e7d888af36f93a23eb924c89fad2b971; all 379 current task allowlists and active/claim-locked claims; WCP-599 branch and PR search; WCP-558 PR #352 and exact-head CI run #896.",
-        "result": "No path overlap with active or claim-locked tasks. WCP-558's claim is preserved; its five creation-flow files are not edited. WCP-581 owns separate widget paths. The package uses the existing group, profile-visibility and Social policy contracts, adds no migration, and changes only the ten listed membership/read-path files.",
+        "result": "No path overlap with active or claim-locked tasks. WCP-558's claim is preserved; its five creation-flow files are not edited. WCP-581 owns separate widget paths. The package uses the existing group, profile-visibility and Social policy contracts, adds no migration, and changes only the ten listed membership/read-path files. The existing Social access-policy path is also free of active or claim-locked overlaps and is needed to enforce the same join-time boundary for message attachments.",
         "paths": [
           "src/Controller/Social/SocialConversationMembershipController.php",
           "src/Form/Social/SocialConversationMemberType.php",
@@ -55375,7 +55378,8 @@
           "src/Repository/Social/SocialMessageRepository.php",
           "templates/social/conversation.html.twig",
           "templates/social/conversation_members.html.twig",
-          "tests/Controller/SocialConversationMembershipTest.php"
+          "tests/Controller/SocialConversationMembershipTest.php",
+          "src/Social/SocialAccessPolicy.php"
         ],
         "observed_nonblocking_path_hits": [
           "FCP-066 Social core is already Trusted-integrated and its claim is released.",
@@ -55395,7 +55399,7 @@
         "feature_branch": "bbbf5fda44cd9d2b6a2b1dd957a8c10290685793"
       },
       "last_observed_head": "bbbf5fda44cd9d2b6a2b1dd957a8c10290685793",
-      "last_checkpoint_at": "2026-09-29T11:23:10.373Z",
+      "last_checkpoint_at": "2026-09-29T11:24:42.820Z",
       "checkpoint_paths": [],
       "next_action": "Implement the group membership management flow and joinedAt-scoped message reads across only the allowlisted paths; then push a meaningful checkpoint and open/refresh the Worker PR.",
       "last_verified_push_at": "2026-09-29T11:23:10.373Z"
