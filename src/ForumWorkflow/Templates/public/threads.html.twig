@@ -1,0 +1,46 @@
+{% extends 'base.html.twig' %}
+{% block title %}{{ room.title }} | Forum{% endblock %}
+{% block body %}
+<main class="dashboard">
+    <p><a href="{{ path('app_gaming_forum_index') }}">Forum</a></p>
+    <p class="eyebrow">Forenraum</p>
+    <h1>{{ room.title }}</h1>
+    {% for message in app.flashes('forum_error') %}<p role="alert" class="notice notice-error">{{ message }}</p>{% endfor %}
+    {% for message in app.flashes('forum_success') %}<p role="status" class="notice notice-success">{{ message }}</p>{% endfor %}
+    {% if threads is empty %}
+        <p>In diesem Raum gibt es noch keine Themen.</p>
+    {% else %}
+        <section aria-label="Themen">
+            {% for thread in threads %}
+                <article class="panel">
+                    <h2><a href="{{ path('app_gaming_forum_thread', {id: thread.id}) }}">{{ thread.title }}</a></h2>
+                    <p>Status: {{ thread.state }} · {{ thread.post_count }} Beiträge</p>
+                    {% if thread.solved_post_id %}<p>Eine Antwort wurde als Lösung markiert.</p>{% endif %}
+                </article>
+            {% endfor %}
+        </section>
+    {% endif %}
+    {% if pages > 1 %}
+        <nav aria-label="Themenseiten">
+            {% if page > 1 %}<a href="{{ path('app_gaming_forum_room', {id: room.id, page: page - 1}) }}">Zurück</a>{% endif %}
+            <span>Seite {{ page }} von {{ pages }}</span>
+            {% if page < pages %}<a href="{{ path('app_gaming_forum_room', {id: room.id, page: page + 1}) }}">Weiter</a>{% endif %}
+        </nav>
+    {% endif %}
+    <section class="panel">
+        <h2>Eine Frage stellen</h2>
+        {% if is_granted('ROLE_USER') %}
+            <form method="post" action="{{ path('app_gaming_forum_thread_create', {id: room.id}) }}">
+                <input type="hidden" name="_token" value="{{ csrf_token('forum_thread_' ~ room.id) }}">
+                <label for="forum-title">Titel</label>
+                <input id="forum-title" name="title" maxlength="180" required>
+                <label for="forum-body">Frage</label>
+                <textarea id="forum-body" name="body" maxlength="20000" rows="7" required></textarea>
+                <button type="submit">Frage veröffentlichen</button>
+            </form>
+        {% else %}
+            <p>Melde dich an, um eine Frage zu stellen.</p>
+        {% endif %}
+    </section>
+</main>
+{% endblock %}
