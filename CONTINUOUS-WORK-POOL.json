@@ -10,7 +10,7 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "9e083c63e7d888af36f93a23eb924c89fad2b971",
-  "published_at": "2026-09-29T22:08:56.701Z",
+  "published_at": "2026-09-29T22:12:43.145Z",
   "summary": "WCP-511 is complete awaiting Trusted review on Worker PR #404 at exact HEAD e6f77f1dfa236a0a4709c8b3a6c260a2c3730341; exact-head Worker CI #1068 is green. Trusted main remains the only integration and deployment source.",
   "rules": {
     "choose": "Resume the current chat's unfinished claimed branch first. Otherwise atomically claim an eligible published task. If no published task is eligible, independently derive and publish a bounded worker-only CMS proposal from approved product goals and observed code gaps; do not ask the owner for the next FCP number.",
@@ -57770,6 +57770,107 @@
       "last_verified_push_at": null,
       "next_action": "Implement the queue only within the six allowlisted paths, run targeted checks and complete Worker CI on the exact final feature HEAD, then open a Worker PR. Keep the claim locked until Trusted resolves it.",
       "lease_expires_at": "2026-09-30T02:29:00Z"
+    },
+    {
+      "priority": 609,
+      "package_id": "WCP-609",
+      "title": "Complete scheduled newsletter cancellation and failed-delivery recovery",
+      "risk": "medium",
+      "execution_state": "worker_in_progress",
+      "claim_state": "active",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-609-newsletter-campaign-recovery-g1",
+      "suggested_branch": "feature/wcp-609-newsletter-campaign-recovery-g1",
+      "base_branch": "main",
+      "base_sha": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "objective": "Complete the existing newsletter campaign operations lifecycle. Editors can currently schedule campaigns and inspect delivery reports but have no UI to cancel a pending schedule, change its time, or deliberately recover deliveries after a campaign has failed. Add an authorized, CSRF-protected lifecycle controller and index actions for cancellation, rescheduling and retry of terminal failed deliveries. Reuse existing campaign/delivery records, segment/consent policies and the current dispatch engine; never resend sent deliveries or reactivate suppressed deliveries, and never alter a campaign already sending or sent. No schema change.",
+      "allowed_paths": [
+        "src/Controller/AdminNewsletterCampaignLifecycleController.php",
+        "src/Entity/Newsletter/NewsletterCampaign.php",
+        "src/Entity/Newsletter/NewsletterDelivery.php",
+        "src/Repository/Newsletter/NewsletterDeliveryRepository.php",
+        "templates/admin/newsletter/index.html.twig",
+        "tests/Controller/AdminNewsletterCampaignLifecycleTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "CONTINUOUS-WORKER.md",
+        "CONTINUOUS-WORK-POOL.json",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/",
+        "src/Controller/AdminNewsletter/AdminNewsletterController.php",
+        "src/Newsletter/NewsletterDispatchService.php",
+        "src/Command/",
+        "src/Entity/Newsletter/NewsletterSubscription.php",
+        "src/Repository/Newsletter/NewsletterSubscriptionRepository.php",
+        "templates/admin/newsletter/preview.html.twig"
+      ],
+      "deliverables": [
+        "CMS_CONTENT_MANAGE editors can cancel a draft or scheduled campaign, and reschedule an existing scheduled campaign to a validated future time, through CSRF-protected actions on the campaign index.",
+        "A failed campaign with terminal failed deliveries can be explicitly requeued for another bounded dispatch attempt; previously sent or suppressed deliveries are unchanged and recipient consent is rechecked by the existing dispatch service.",
+        "Invalid states, missing campaigns and invalid dates return understandable non-success responses without persisting partial transitions; scheduled sending cannot be bypassed by a premature manual dispatch from the new UI.",
+        "The campaign list clearly labels available actions and preserves existing creation, editing, scheduling and dispatch routes."
+      ],
+      "tests": [
+        "Functional tests for permissions, CSRF, cancel/reschedule, invalid states/times, failed recovery, sent/suppressed immutability and disabled notifications module.",
+        "Domain tests ensure retry affects only terminal failed deliveries and does not reset previously sent or suppressed rows.",
+        "Full exact-head Worker CI: PHPStan level 8, PHPUnit, Symfony/Twig/container/Doctrine, PostgreSQL 18 migration chain."
+      ],
+      "completion_report": [
+        "Exact Worker main base and final HEAD; Worker PR; changed paths and usable lifecycle.",
+        "Exact-head CI run and both jobs, tests and remaining gaps; Trusted review needed."
+      ],
+      "immutable_constraints": [
+        "worker-output-is-untrusted-until-Trusted-review-and-exact-head-CI",
+        "CMS_CONTENT_MANAGE-and-CSRF-required",
+        "never-resend-sent-or-reactivate-suppressed-deliveries",
+        "never-transition-sending-or-sent-campaign-to-mutable-state",
+        "respect-current-subscriber-consent-and-module-gates",
+        "no-schema-migration-or-dispatch-safety-weakening",
+        "no-direct-Trusted-integration-or-deployment"
+      ],
+      "proposal_kind": "worker_only",
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "proposal_dependency_evidence": [],
+      "collision_check": {
+        "compared_against": "Fresh continuous/work-pool-v4 at 2026-09-29T22:08:56.701Z and live Worker main 1d03d4947f15dc3e0fe4b79a990bd45468c761e4; all active and locked path scopes, WCP-609 branch/PR absence.",
+        "result": "No active or locked proposal owns the six paths. WCP-600 owns only the scheduled-dispatch command and test, WCP-608 owns content operations; both remain untouched. Existing newsletter dispatch and subscriber consent services are reused without edits.",
+        "paths": [
+          "src/Controller/AdminNewsletterCampaignLifecycleController.php",
+          "src/Entity/Newsletter/NewsletterCampaign.php",
+          "src/Entity/Newsletter/NewsletterDelivery.php",
+          "src/Repository/Newsletter/NewsletterDeliveryRepository.php",
+          "templates/admin/newsletter/index.html.twig",
+          "tests/Controller/AdminNewsletterCampaignLifecycleTest.php"
+        ]
+      },
+      "published_at": "2026-09-29T22:12:43.145Z",
+      "claimed_on": "2026-09-29T22:12:43.145Z",
+      "active_base_branch": "main",
+      "active_base_sha": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "active_head": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "branch_heads": {
+        "claim_branch": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+        "feature_branch": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4"
+      },
+      "last_observed_head": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "last_checkpoint_at": "2026-09-29T22:12:43.145Z",
+      "last_verified_push_at": "2026-09-29T22:12:43.145Z",
+      "next_action": "Implement newsletter lifecycle in six reserved paths, push checkpoint and run exact-head Worker CI."
     }
   ],
   "recovery_queue": [],
