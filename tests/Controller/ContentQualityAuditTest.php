@@ -153,7 +153,10 @@ final class ContentQualityAuditTest extends WebTestCase
         self::assertSame([$target->getTitle()], $this->rowTitles($filtered));
         self::assertSame([$targetId], $this->rowIds($filtered));
 
-        $publishedView = $client->request('GET', '/admin/content/quality?status=published&issue=published_noindex');
+        $publishedView = $client->request(
+            'GET',
+            '/admin/content/quality?status=published&issue=published_noindex&q='.rawurlencode($this->marker),
+        );
         self::assertResponseIsSuccessful();
         self::assertSame([$publishedId], $this->rowIds($publishedView));
 
@@ -189,7 +192,11 @@ final class ContentQualityAuditTest extends WebTestCase
 
         $client->request('PUT', '/admin/content/quality');
         self::assertResponseStatusCodeSame(405);
+    }
 
+    public function testDisabledContentModuleHidesQualityReport(): void
+    {
+        $client = static::createClient();
         $em = $this->em($client);
         $state = $em->getRepository(CmsModuleState::class)->find('content');
         $this->contentStateSnapshotTaken = true;
@@ -204,8 +211,10 @@ final class ContentQualityAuditTest extends WebTestCase
             ['content'],
         ));
         $em->clear();
-        $modules = $client->getContainer()->get(CmsModuleManager::class);
-        self::assertFalse($modules->isEnabled('content'));
+
+        $manager = $this->user($client, [CmsPermission::ACCESS, CmsPermission::CONTENT]);
+        $client->loginUser($manager);
+        self::assertFalse($client->getContainer()->get(CmsModuleManager::class)->isEnabled('content'));
 
         $client->request('GET', '/admin/content/quality');
         self::assertSame('app_admin_content_quality_index', $client->getRequest()->attributes->get('_route'));
