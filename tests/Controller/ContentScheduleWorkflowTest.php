@@ -66,7 +66,7 @@ final class ContentScheduleWorkflowTest extends WebTestCase
         $client = static::createClient();
         $manager = $this->user($client, [CmsPermission::ACCESS, CmsPermission::CONTENT]);
         $em = $this->em($client);
-        $selectedAt = (new \DateTimeImmutable('first day of next month'))->setTime(12, 0);
+        $selectedAt = new \DateTimeImmutable('2098-10-01 12:00:00');
         $scheduled = [];
 
         for ($number = 1; $number <= 51; ++$number) {
@@ -240,7 +240,7 @@ final class ContentScheduleWorkflowTest extends WebTestCase
         $this->submitChange($client, $form, $publicationAt->modify('+20 days'), 'A valid reason for change.', 'invalid-csrf-token');
         self::assertResponseStatusCodeSame(422);
 
-        $this->submitRejectedChange($client, $ordinaryId, 'publication', $publicationAt->format('Y-m'), $publicationAt->modify('-1 day'), 'A valid reason for change.');
+        $this->submitRejectedChange($client, $ordinaryId, 'publication', $publicationAt->format('Y-m'), (new \DateTimeImmutable('-1 day'))->setTime(12, 0), 'A valid reason for change.');
         $this->submitRejectedChange($client, $ordinaryId, 'publication', $publicationAt->format('Y-m'), $publicationAt->modify('+20 days'), '');
         $this->submitRejectedChange($client, $ordinaryId, 'publication', $publicationAt->format('Y-m'), $publicationAt->modify('+20 days'), str_repeat('r', 301));
         $this->submitRejectedChange($client, $boundedId, 'publication', $publicationAt->format('Y-m'), $boundedEnd->modify('+1 minute'), 'This publication would occur after unpublishing.');
