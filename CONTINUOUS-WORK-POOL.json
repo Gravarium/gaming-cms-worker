@@ -10,10 +10,10 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-28 23:47:58 UTC",
+  "published_at": "2026-09-29 00:03:24 UTC",
   "summary": {
     "total_remaining_worker_tasks": 174,
-    "completed_worker_prs_awaiting_trusted_review": 320,
+    "completed_worker_prs_awaiting_trusted_review": 319,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
@@ -54656,7 +54656,7 @@
       "package_id": "WCP-597",
       "title": "Connect public guild role needs to focused applications",
       "risk": "medium",
-      "execution_state": "worker_complete_awaiting_trusted_review",
+      "execution_state": "trusted_integrated",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -54761,7 +54761,7 @@
         ]
       },
       "claimed_on": "2026-09-28T22:57:52.018Z",
-      "claim_state": "locked_until_trusted_resolution",
+      "claim_state": "released_after_trusted_integration",
       "active_base_branch": "main",
       "active_base_sha": "a19ed4bcf1203bba69de472613805d5fcdc978e6",
       "active_head": "c5f470c6b76c88eab21bdd9c7925ca1f0373dbd1",
@@ -54778,7 +54778,7 @@
         "tests/Controller/PublicGuildRoleNeedApplicationFlowTest.php",
         "config/packages/guild_role_need_application.yaml"
       ],
-      "next_action": "Trusted has accepted the owner's transfer at exact feature HEAD c5f470c6b76c88eab21bdd9c7925ca1f0373dbd1; selectively review PR #391 against current Trusted main, then resolve the locked claim only after Trusted main evidence.",
+      "next_action": "WCP-597 is integrated through Trusted PR #192. Exact-head Trusted CI, post-merge Main CI, sanitized Worker sync and post-sync Worker CI all passed; claim released.",
       "last_checkpoint_at": "2026-09-28T23:33:19.811Z",
       "last_verified_push_at": "2026-09-28T23:33:19.811Z",
       "worker_pr_number": 391,
@@ -54861,6 +54861,28 @@
         "worker_ci_result": "success",
         "previous_worker_chat_stopped_by_owner": true,
         "claim_remains_locked": true
+      },
+      "trusted_resolution": {
+        "status": "integrated",
+        "worker_pr": 391,
+        "worker_head": "c5f470c6b76c88eab21bdd9c7925ca1f0373dbd1",
+        "worker_exact_head_ci_run_id": 36497989986,
+        "worker_exact_head_ci_result": "success",
+        "trusted_pr": 192,
+        "trusted_pr_head": "7794d0ff40bbf7a2f006e3d872558e43a587e18a",
+        "trusted_pr_ci_run_id": 36500204082,
+        "trusted_pr_ci_result": "success",
+        "trusted_merge_sha": "aeb3fb6a560f302c5b6ff4cef4992ba9d0724c84",
+        "final_trusted_main_sha": "aeb3fb6a560f302c5b6ff4cef4992ba9d0724c84",
+        "final_trusted_main_ci_run_id": 36500659074,
+        "final_trusted_main_ci_result": "success",
+        "worker_sync_run_id": 36500659114,
+        "worker_sync_result": "success",
+        "sanitized_worker_sync_sha": "31230d073e93bfc17bfb26461a5d520b8571d5c1",
+        "worker_ci_run_id": 36500678856,
+        "worker_ci_after_sync_result": "success",
+        "resolved_at": "2026-09-29 00:03:24 UTC",
+        "trusted_import_note": "Trusted PR #192 imported only the five WCP-597 application/widget paths plus Trusted documentation. Exact-head Trusted CI, Main CI, sanitized sync and exact post-sync Worker CI passed; no schema or migration was added."
       }
     },
     {
