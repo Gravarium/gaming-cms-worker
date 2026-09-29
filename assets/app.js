@@ -5,3 +5,4 @@ import './styles/gaming.css';
 import './styles/video.css';
 
 import './styles/portal.css';
+import './styles/modules/compositions.css';

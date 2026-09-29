@@ -10,6 +10,11 @@
     <p class="eyebrow">Community</p>
     <h1>Spiele und Gilden</h1>
     <p class="hero-copy">Entdecke die Spiele, Gilden und Clans unserer Community.</p>
+    {% if moduleView %}
+        <section class="gaming-module-dashboard" aria-label="Gaming-Übersicht">
+            {% include moduleView.template with {composition: moduleView.composition, regions: moduleView.regions} only %}
+        </section>
+    {% endif %}
     <nav class="game-filter top-actions" aria-label="Gilden nach Spiel filtern">
         {% set allGamesSelected = selectedGame is null and not invalidGameFilter %}
         <a class="status {{ allGamesSelected ? 'status-ready' : '' }}" href="{{ path('app_gaming_index') }}" {% if allGamesSelected %}aria-current="page"{% endif %}>Alle Spiele</a>

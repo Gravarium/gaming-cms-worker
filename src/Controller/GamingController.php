@@ -7,7 +7,14 @@ namespace App\Controller;
 use App\Entity\AdminNotification;
 use App\Entity\Guild;
 use App\Entity\GuildApplication;
+use App\Entity\User;
 use App\Form\GuildApplicationType;
+use App\Layout\Module\ModuleLayoutComposer;
+use App\Repository\SiteSettingsRepository;
+use App\Theme\Module\ModuleThemeCompositionRegistry;
+use App\Widget\Module\ModuleWidgetGuildPresenceQuery;
+use App\Widget\Module\ModuleWidgetRegistry;
+use App\Widget\Module\ModuleWidgetViewer;
 use App\Repository\GameRepository;
 use App\Repository\GuildApplicationQuestionRepository;
 use App\Repository\GuildMemberRepository;
@@ -27,6 +34,11 @@ final class GamingController extends AbstractController
         private readonly GuildRepository $guilds,
         private readonly GuildMemberRepository $members,
         private readonly GuildApplicationQuestionRepository $questions,
+        private readonly SiteSettingsRepository $siteSettings,
+        private readonly ModuleThemeCompositionRegistry $compositions,
+        private readonly ModuleLayoutComposer $moduleLayouts,
+        private readonly ModuleWidgetRegistry $moduleWidgets,
+        private readonly ModuleWidgetGuildPresenceQuery $modulePresence,
         private readonly EntityManagerInterface $entityManager,
         #[Autowire(service: 'limiter.guild_application')]
         private readonly RateLimiterFactory $applicationLimiter,
@@ -59,12 +71,40 @@ final class GamingController extends AbstractController
             }
         }
 
-        return $this->render('gaming/index.html.twig', [
+        $viewer = ModuleWidgetViewer::anonymous();
+        $moduleView = null;
+        if ($selectedGame === null && !$invalidGameFilter) {
+            $user = $this->getUser();
+            $userId = $user instanceof User ? $user->getId() : null;
+            if ($user instanceof User && $userId !== null && $user->isActive() && !$user->isLocked()) {
+                $viewer = new ModuleWidgetViewer(
+                    authenticated: true,
+                    userId: $userId,
+                    guildIds: $this->modulePresence->guildIdsForUser($userId),
+                );
+            }
+
+            $composition = $this->compositions->get($this->siteSettings->current()->getThemeKey());
+            $widgetKeys = array_values(array_unique(array_merge($composition->contentWidgets, $composition->sidebarWidgets)));
+            $moduleView = $this->moduleLayouts->compose(
+                $composition,
+                $this->moduleWidgets->renderAll($viewer, $widgetKeys),
+            );
+        }
+
+        $response = $this->render('gaming/index.html.twig', [
             'games' => $this->games->findEnabled(),
             'guilds' => $guilds,
             'selectedGame' => $selectedGame,
             'invalidGameFilter' => $invalidGameFilter,
+            'moduleView' => $moduleView,
         ]);
+        if ($viewer->authenticated) {
+            $response->setPrivate();
+            $response->headers->addCacheControlDirective('no-store');
+        }
+
+        return $response;
     }
 
     #[Route('/gaming/guild/{slug}', name: 'app_guild_show', methods: ['GET'])]
