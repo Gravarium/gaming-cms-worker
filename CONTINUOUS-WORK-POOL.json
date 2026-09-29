@@ -11,7 +11,7 @@
   "baseline_branch": "main",
   "base_sha": "9e083c63e7d888af36f93a23eb924c89fad2b971",
   "published_at": "2026-09-29T21:55:55.841Z",
-  "summary": "WCP-588, WCP-591 and WCP-602 are Trusted-integrated with green recorded gates; WCP-589 is complete awaiting Trusted review with green Worker CI and remains locked. WCP-511 and WCP-599 are available after their seven-hour no-progress leases expired, with existing work preserved. WCP-608 remains active. Trusted main remains the only integration and deployment source.",
+  "summary": "WCP-588 is trusted_integrated via PR #203 (merge 35099480874a8312efac0ab1312ceeb4462bd2f2), with Trusted Main CI #676, sanitized sync #113 and Worker CI #1063 green; Worker PR #383 is closed unmerged. WCP-589 is trusted_integrated via PR #204 (merge 8852e024d89611291fc83214c1f0c1d4a758c9d8), with Trusted Main CI #678, sanitized sync #114 and Worker CI #1064 green; Worker PR #384 is pending close unmerged. WCP-591 via #200 and WCP-602 via #202 are integrated; their Worker PRs are closed unmerged. Trusted main remains the only integration and deployment source.",
   "rules": {
     "choose": "Resume the current chat's unfinished claimed branch first. Otherwise atomically claim an eligible published task. If no published task is eligible, independently derive and publish a bounded worker-only CMS proposal from approved product goals and observed code gaps; do not ask the owner for the next FCP number.",
     "atomic_reservation": "Create the exact claim_branch and suggested feature branch from that task's published proposal_base_sha. If the claim already exists, treat it as a hard lock; the owning continuation resumes it and every other AI skips it.",
@@ -53616,7 +53616,7 @@
       "package_id": "WCP-589",
       "title": "Subscribe to upcoming public guild events by iCalendar",
       "risk": "low",
-      "execution_state": "worker_complete_awaiting_trusted_review",
+      "execution_state": "trusted_integrated",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -53722,10 +53722,10 @@
         "tests/Controller/PublicGuildEventCalendarFeedTest.php",
         "tests/GuildEventCalendarFeed/PublicGuildEventCalendarBuilderTest.php"
       ],
-      "next_action": "Await independent Trusted review of open ready-for-review PR #384 at exact HEAD 5df493cfa58e46a3f8b5c57a3e6a3deeec95c814; keep this claim locked until Trusted explicitly integrates, cancels, or transfers it.",
+      "next_action": "Close Worker PR #384 unmerged, then mark the released claim complete.",
       "worker_pr": 384,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/384",
-      "worker_pr_state": "ready_for_review",
+      "worker_pr_state": "open",
       "pr_state": "open",
       "draft_pr": false,
       "worker_pr_base_branch": "main",
@@ -53790,7 +53790,7 @@
       },
       "claim_generation": 2,
       "lease_expired_at": "2026-09-29T03:13:51.030Z",
-      "claim_state": "locked_until_trusted_resolution",
+      "claim_state": "released_after_trusted_integration",
       "claimed_on": "2026-09-29T20:34:55.844Z",
       "active_base_branch": "main",
       "active_base_sha": "2f8179fe129c3071b68757f03a3e7099311179ef",
@@ -53798,7 +53798,7 @@
       "last_checkpoint_at": "2026-09-29T20:50:53.086Z",
       "final_head": "5df493cfa58e46a3f8b5c57a3e6a3deeec95c814",
       "final_base_sha": "2f8179fe129c3071b68757f03a3e7099311179ef",
-      "final_sanitized_main_sha": "2f8179fe129c3071b68757f03a3e7099311179ef",
+      "final_sanitized_main_sha": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
       "final_changed_paths": [
         "src/Controller/PublicGuildEventCalendarFeedController.php",
         "src/GuildEventCalendarFeed/PublicGuildEventCalendarBuilder.php",
@@ -53806,7 +53806,7 @@
         "tests/Controller/PublicGuildEventCalendarFeedTest.php",
         "tests/GuildEventCalendarFeed/PublicGuildEventCalendarBuilderTest.php"
       ],
-      "completed_at": "2026-09-29T20:50:53.086Z",
+      "completed_at": "2026-09-29T21:56:11.969Z",
       "ci_run_number": 1061,
       "last_ci_run_number": 1061,
       "ci_head": "5df493cfa58e46a3f8b5c57a3e6a3deeec95c814",
@@ -53845,6 +53845,93 @@
           "Route is GET-only, fails closed when Gaming is disabled, preserves the private cache policy and sends nosniff; the public schedule page links to the feed."
         ],
         "scope": "All five allowed paths only; no entity, repository, schema, migration, signup data, or global configuration changes."
+      },
+      "trusted_resolution": {
+        "trusted_pr": 204,
+        "trusted_pr_url": "https://github.com/Gravarium/gaming-cms/pull/204",
+        "trusted_pr_head": "085620c0cb6584367e9fff5d8a249581f79847bf",
+        "trusted_merge_commit": "8852e024d89611291fc83214c1f0c1d4a758c9d8",
+        "trusted_pr_ci": {
+          "run_id": 36634347465,
+          "run_number": 677,
+          "result": "success",
+          "jobs": {
+            "php_symfony": "success",
+            "postgres_18": "success"
+          }
+        },
+        "trusted_main_sha": "8852e024d89611291fc83214c1f0c1d4a758c9d8",
+        "trusted_main_ci": {
+          "run_id": 36635102792,
+          "run_number": 678,
+          "result": "success",
+          "jobs": {
+            "php_symfony": "success",
+            "postgres_18": "success"
+          }
+        },
+        "sanitized_sync": {
+          "run_id": 36635102833,
+          "run_number": 114,
+          "trusted_head": "8852e024d89611291fc83214c1f0c1d4a758c9d8",
+          "result": "success"
+        },
+        "post_sync_worker_sha": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+        "post_sync_worker_ci": {
+          "run_id": 36635128687,
+          "run_number": 1064,
+          "result": "success",
+          "jobs": {
+            "php_symfony": "success",
+            "postgres_18": "success"
+          }
+        },
+        "worker_source_pr": 384,
+        "worker_source_head": "5df493cfa58e46a3f8b5c57a3e6a3deeec95c814",
+        "worker_source_base": "da6c2009c87911ecdba316ae93844eb6d38462f4",
+        "worker_source_ci_run_id": 36627432282,
+        "worker_source_ci_run_number": 1061,
+        "worker_source_ci_result": "success",
+        "exact_path_match_count": 5,
+        "worker_pr_close_pending": true,
+        "worker_pr_state": "open",
+        "worker_pr_merged": false,
+        "source_pr_reviews": [],
+        "source_pr_comments": []
+      },
+      "trusted_intake": {
+        "trusted_pr": 204,
+        "trusted_pr_url": "https://github.com/Gravarium/gaming-cms/pull/204",
+        "trusted_head": "085620c0cb6584367e9fff5d8a249581f79847bf",
+        "trusted_base": "35099480874a8312efac0ab1312ceeb4462bd2f2",
+        "trusted_pr_ci_run_id": 36634347465,
+        "trusted_pr_ci_run_number": 677,
+        "trusted_pr_ci_status": "success",
+        "trusted_merge_commit": "8852e024d89611291fc83214c1f0c1d4a758c9d8",
+        "trusted_main_ci_run_id": 36635102792,
+        "trusted_main_ci_run_number": 678,
+        "trusted_main_ci_status": "success",
+        "sanitized_sync_run_id": 36635102833,
+        "sanitized_sync_run_number": 114,
+        "sanitized_sync_status": "success",
+        "post_sync_worker_sha": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+        "post_sync_worker_ci_run_id": 36635128687,
+        "post_sync_worker_ci_run_number": 1064,
+        "post_sync_worker_ci_status": "success",
+        "worker_source_pr": 384,
+        "worker_source_head": "5df493cfa58e46a3f8b5c57a3e6a3deeec95c814",
+        "worker_source_ci_run_id": 36627432282,
+        "imported_paths": [
+          "src/Controller/PublicGuildEventCalendarFeedController.php",
+          "src/GuildEventCalendarFeed/PublicGuildEventCalendarBuilder.php",
+          "templates/gaming/events.html.twig",
+          "tests/Controller/PublicGuildEventCalendarFeedTest.php",
+          "tests/GuildEventCalendarFeed/PublicGuildEventCalendarBuilderTest.php"
+        ],
+        "exact_path_match_count": 5,
+        "worker_pr_close_pending": true,
+        "worker_pr_state": "open",
+        "worker_pr_merged": false
       }
     },
     {
