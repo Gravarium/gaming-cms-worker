@@ -53967,16 +53967,16 @@
       "claim_state": "active",
       "active_base_branch": "fix/fcp-061-phpstan-g1",
       "active_base_sha": "ec6bb200affc3e5a46d416e98f7a1b0621c38ded",
-      "active_head": "19fe335c597f494e55decdd068a7584970a5cd54",
+      "active_head": "e2c3ce7615c536096206eb3ca7251e486bfedd3e",
       "resume_branch": "feature/wcp-591-team-competition-roster-g1",
       "branch_heads": {
         "claim_branch": "ec6bb200affc3e5a46d416e98f7a1b0621c38ded",
-        "feature_branch": "19fe335c597f494e55decdd068a7584970a5cd54"
+        "feature_branch": "e2c3ce7615c536096206eb3ca7251e486bfedd3e"
       },
-      "last_observed_head": "19fe335c597f494e55decdd068a7584970a5cd54",
-      "last_checkpoint_at": "2026-09-29T11:55:14.326Z",
-      "last_verified_push_at": "2026-09-29T11:55:14.326Z",
-      "next_action": "Monitor Worker CI #1008 on exact HEAD 19fe335c597f494e55decdd068a7584970a5cd54 and repair any remaining findings before completion.",
+      "last_observed_head": "e2c3ce7615c536096206eb3ca7251e486bfedd3e",
+      "last_checkpoint_at": "2026-09-29T12:01:38.519Z",
+      "last_verified_push_at": "2026-09-29T12:01:38.519Z",
+      "next_action": "Monitor Worker CI #1011 on exact HEAD e2c3ce7615c536096206eb3ca7251e486bfedd3e; fix any remaining findings and rerun the complete workflow.",
       "checkpoint_paths": [
         "config/packages/competition_rosters_widget.yaml",
         "src/CompetitionRoster/CompetitionRosterInviteLink.php",
@@ -54011,9 +54011,9 @@
         "tests/Widget/CompetitionRostersWidgetTest.php"
       ],
       "ci_result": "in_progress",
-      "ci_run_id": 36564689017,
-      "ci_run_number": 1008,
-      "ci_head": "19fe335c597f494e55decdd068a7584970a5cd54",
+      "ci_run_id": 36565364768,
+      "ci_run_number": 1011,
+      "ci_head": "e2c3ce7615c536096206eb3ca7251e486bfedd3e",
       "ci_attempts": [
         {
           "run_id": 36564325245,
@@ -54028,19 +54028,34 @@
             "php_symfony": "failure",
             "postgres_18": "success"
           },
-          "summary": "PHPStan reported 7 findings: four redundant is_int checks on phpdoc-known integer IDs and three FlashBag calls typed through SessionInterface. PostgreSQL 18 migration-chain validation passed."
+          "summary": "PHPStan reported 7 type findings; the PostgreSQL 18 migration-chain job passed."
         },
         {
           "run_id": 36564689017,
           "run_number": 1008,
           "head": "19fe335c597f494e55decdd068a7584970a5cd54",
           "base": "9e083c63e7d888af36f93a23eb924c89fad2b971",
+          "result": "failure",
+          "validation_pr": 395,
+          "status": "completed",
+          "conclusion": "failure",
+          "jobs": {
+            "php_symfony": "failure",
+            "postgres_18": "success"
+          },
+          "summary": "PHPStan passed and PostgreSQL 18 migration-chain validation passed. Application tests found the reserved DQL alias `member` and a CSRF test token requested after the sessionless disabled-module 404; the full-capacity used-link replay was also reordered to fail closed."
+        },
+        {
+          "run_id": 36565364768,
+          "run_number": 1011,
+          "head": "e2c3ce7615c536096206eb3ca7251e486bfedd3e",
+          "base": "9e083c63e7d888af36f93a23eb924c89fad2b971",
           "result": "in_progress",
           "validation_pr": 395,
-          "status": "queued",
+          "status": "in_progress",
           "conclusion": null,
           "jobs": {},
-          "summary": "Exact-head Worker CI #1008 is queued after addressing all PHPStan findings."
+          "summary": "Exact-head Worker CI #1011 is running after the DQL and CSRF test fixes."
         }
       ]
     },
