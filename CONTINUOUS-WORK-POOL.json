@@ -10,8 +10,8 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "9e083c63e7d888af36f93a23eb924c89fad2b971",
-  "published_at": "2026-09-29T21:55:55.841Z",
-  "summary": "WCP-588 is trusted_integrated via PR #203 (merge 35099480874a8312efac0ab1312ceeb4462bd2f2), with Trusted Main CI #676, sanitized sync #113 and Worker CI #1063 green; Worker PR #383 is closed unmerged. WCP-589 is trusted_integrated via PR #204 (merge 8852e024d89611291fc83214c1f0c1d4a758c9d8), with Trusted Main CI #678, sanitized sync #114 and Worker CI #1064 green; Worker PR #384 is closed unmerged. WCP-591 via #200 and WCP-602 via #202 are integrated; their Worker PRs are closed unmerged. Trusted main remains the only integration and deployment source.",
+  "published_at": "2026-09-29T21:57:32.269Z",
+  "summary": "WCP-511 has been reclaimed by generation 2 from its preserved exact feature HEAD 4d2ef8bd45ab09ad0f0c1af564967157ff655873 after its seven-hour lease expired. WCP-589 is complete awaiting Trusted review, WCP-599 is unclaimed, and WCP-608 remains active. Trusted main remains the only integration and deployment source.",
   "rules": {
     "choose": "Resume the current chat's unfinished claimed branch first. Otherwise atomically claim an eligible published task. If no published task is eligible, independently derive and publish a bounded worker-only CMS proposal from approved product goals and observed code gaps; do not ask the owner for the next FCP number.",
     "atomic_reservation": "Create the exact claim_branch and suggested feature branch from that task's published proposal_base_sha. If the claim already exists, treat it as a hard lock; the owning continuation resumes it and every other AI skips it.",
@@ -39180,7 +39180,7 @@
       "package_id": "WCP-511",
       "title": "Expose the public content-tag directory",
       "risk": "low",
-      "execution_state": "unclaimed",
+      "execution_state": "worker_in_progress",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -39274,7 +39274,7 @@
       "active_head": "4d2ef8bd45ab09ad0f0c1af564967157ff655873",
       "resume_branch": "feature/wcp-511-public-content-tag-directory-g1",
       "branch_heads": {
-        "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+        "claim_branch": "4d2ef8bd45ab09ad0f0c1af564967157ff655873",
         "feature_branch": "4d2ef8bd45ab09ad0f0c1af564967157ff655873"
       },
       "last_observed_head": "4d2ef8bd45ab09ad0f0c1af564967157ff655873",
@@ -39283,8 +39283,8 @@
         "templates/content_tag/index.html.twig",
         "tests/Controller/PublicContentTagDirectoryTest.php"
       ],
-      "next_action": "Lease expired after seven hours without a verified push. Reclaim with new generation claim branch claim/wcp-511-public-content-tag-directory-g2; resume feature/wcp-511-public-content-tag-directory-g1 from exact live HEAD 4d2ef8bd45ab09ad0f0c1af564967157ff655873. Preserve existing work and inspect current CI before continuing, only within the allowlist.",
-      "lease_expires_at": "2026-09-29T21:51:49Z",
+      "next_action": "Resume only feature/wcp-511-public-content-tag-directory-g1 from the verified live HEAD 4d2ef8bd45ab09ad0f0c1af564967157ff655873. Inspect exact changed paths and current CI; finish the public content-tag directory and disabled-content regression coverage within the allowlist, push a meaningful checkpoint, then complete the Worker PR with full exact-head CI.",
+      "lease_expires_at": "2026-09-30T04:57:32.269Z",
       "previous_claim": {
         "claim_branch": "claim/wcp-511-public-content-tag-directory-g1",
         "expired_at": "2026-09-29T21:51:49.000Z",
@@ -39296,7 +39296,13 @@
         "ci_result": null
       },
       "claim_generation": 2,
-      "lease_expired_at": "2026-09-29T21:51:49.000Z"
+      "lease_expired_at": "2026-09-29T21:51:49.000Z",
+      "claim_state": "active",
+      "claimed_on": "2026-09-29T21:57:32.269Z",
+      "last_checkpoint_at": "2026-09-29T21:57:32.269Z",
+      "last_verified_push_at": null,
+      "active_base_branch": "feature/wcp-511-public-content-tag-directory-g1",
+      "active_base_sha": "4d2ef8bd45ab09ad0f0c1af564967157ff655873"
     },
     {
       "priority": 512,
