@@ -41,8 +41,14 @@ final class PublicCompetitionBracketWidgetTest extends WebTestCase
             $game = $this->createGame($em, true);
             $start = new \DateTimeImmutable('2200-01-01 00:00:00 UTC');
             $public = [];
+            $fixtureName = 'Bracket fixture '.bin2hex(random_bytes(8));
             for ($index = 0; $index < 9; ++$index) {
-                $competition = $this->createCompetition($em, $game, 'Public Cup '.$index, $start->modify('+'.$index.' hours'));
+                $competition = $this->createCompetition(
+                    $em,
+                    $game,
+                    $fixtureName.' Public Cup '.$index,
+                    $start->modify('+'.$index.' hours'),
+                );
                 if ($index === 8) {
                     $competition->complete();
                 }
@@ -110,10 +116,10 @@ final class PublicCompetitionBracketWidgetTest extends WebTestCase
             self::assertResponseIsSuccessful();
             self::assertSame(8, $crawler->filter('.public-competition-brackets a')->count());
             $html = (string) $client->getResponse()->getContent();
-            self::assertStringContainsString('Public Cup 8', $html);
+            self::assertStringContainsString($fixtureName.' Public Cup 8', $html);
             self::assertStringContainsString('Status: Abgeschlossen', $html);
             self::assertStringContainsString('Status: Läuft', $html);
-            self::assertStringNotContainsString('Public Cup 0', $html);
+            self::assertStringNotContainsString($fixtureName.' Public Cup 0', $html);
             self::assertStringNotContainsString('Private Widget Cup', $html);
             self::assertStringNotContainsString('Draft Widget Cup', $html);
             self::assertStringNotContainsString('Disabled Game Cup', $html);
