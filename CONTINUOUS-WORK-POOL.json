@@ -55392,17 +55392,29 @@
       "claim_state": "active",
       "active_base_branch": "feature/wcp-558-social-group-conversation-creation-g1",
       "active_base_sha": "bbbf5fda44cd9d2b6a2b1dd957a8c10290685793",
-      "active_head": "bbbf5fda44cd9d2b6a2b1dd957a8c10290685793",
+      "active_head": "9a0927ca29360bf54c294568d57593fb748d5db2",
       "resume_branch": "feature/wcp-599-social-group-conversation-membership-g1",
       "branch_heads": {
         "claim_branch": "bbbf5fda44cd9d2b6a2b1dd957a8c10290685793",
-        "feature_branch": "bbbf5fda44cd9d2b6a2b1dd957a8c10290685793"
+        "feature_branch": "9a0927ca29360bf54c294568d57593fb748d5db2"
       },
-      "last_observed_head": "bbbf5fda44cd9d2b6a2b1dd957a8c10290685793",
-      "last_checkpoint_at": "2026-09-29T11:24:42.820Z",
-      "checkpoint_paths": [],
-      "next_action": "Implement the group membership management flow and joinedAt-scoped message reads across only the allowlisted paths; then push a meaningful checkpoint and open/refresh the Worker PR.",
-      "last_verified_push_at": "2026-09-29T11:23:10.373Z"
+      "last_observed_head": "9a0927ca29360bf54c294568d57593fb748d5db2",
+      "last_checkpoint_at": "2026-09-29T11:48:22.074Z",
+      "checkpoint_paths": [
+        "src/Controller/Social/SocialConversationMembershipController.php",
+        "src/Form/Social/SocialConversationMemberType.php",
+        "src/Social/SocialConversationMembershipService.php",
+        "src/Social/SocialMessagingService.php",
+        "src/Entity/Social/SocialConversationParticipant.php",
+        "src/Repository/Social/SocialConversationParticipantRepository.php",
+        "src/Repository/Social/SocialMessageRepository.php",
+        "templates/social/conversation.html.twig",
+        "templates/social/conversation_members.html.twig",
+        "tests/Controller/SocialConversationMembershipTest.php",
+        "src/Social/SocialAccessPolicy.php"
+      ],
+      "next_action": "Wait for exact-head Worker CI run #1001 on PR #394; fix any failures, then publish the green PR for trusted review and mark this claim complete.",
+      "last_verified_push_at": "2026-09-29T11:48:22.074Z"
     },
     {
       "priority": 600,
