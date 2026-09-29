@@ -82,6 +82,32 @@ class SocialConversationParticipant
         return $this;
     }
 
+    public function rejoin(\DateTimeImmutable $at): self
+    {
+        if (!in_array($this->status, [self::STATUS_LEFT, self::STATUS_REMOVED], true)) {
+            throw new \DomainException('Only a left or removed participant can rejoin.');
+        }
+
+        $this->role = self::ROLE_MEMBER;
+        $this->status = self::STATUS_ACTIVE;
+        $this->joinedAt = $at;
+        $this->leftAt = null;
+        $this->lastReadAt = null;
+
+        return $this;
+    }
+
+    public function promoteToOwner(): self
+    {
+        if (!$this->isActive()) {
+            throw new \DomainException('Only an active participant can own a conversation.');
+        }
+
+        $this->role = self::ROLE_OWNER;
+
+        return $this;
+    }
+
     public function remove(\DateTimeImmutable $at): self
     {
         if (!$this->isActive()) {

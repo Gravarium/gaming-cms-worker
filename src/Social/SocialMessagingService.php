@@ -121,11 +121,12 @@ final readonly class SocialMessagingService
     public function read(User $actor, SocialConversation $conversation, int $limit = 100): array
     {
         $this->assertEnabled();
-        if (!$this->access->canReadConversation($actor, $conversation)) {
+        $participant = $this->participants->activeFor($conversation, $actor);
+        if (!$this->access->canReadConversation($actor, $conversation) || !$participant instanceof SocialConversationParticipant) {
             throw new \Symfony\Component\Security\Core\Exception\AccessDeniedException('Conversation membership is required.');
         }
 
-        return $this->messages->forConversation($conversation, $limit);
+        return $this->messages->forConversationSince($conversation, $participant->getJoinedAt(), $limit);
     }
 
     public function markRead(User $actor, SocialConversation $conversation): void

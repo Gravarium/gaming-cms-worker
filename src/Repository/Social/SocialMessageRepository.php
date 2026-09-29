@@ -30,6 +30,24 @@ final class SocialMessageRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+    /** @return list<SocialMessage> */
+    public function forConversationSince(
+        SocialConversation $conversation,
+        \DateTimeImmutable $joinedAt,
+        int $limit = 100,
+    ): array {
+        return $this->createQueryBuilder('message')
+            ->andWhere('message.conversation = :conversation')
+            ->andWhere('message.createdAt >= :joinedAt')
+            ->setParameter('conversation', $conversation)
+            ->setParameter('joinedAt', $joinedAt)
+            ->orderBy('message.createdAt', 'DESC')
+            ->addOrderBy('message.id', 'DESC')
+            ->setMaxResults(max(1, min(200, $limit)))
+            ->getQuery()
+            ->getResult();
+    }
+
     public function countByAuthorSince(User $author, \DateTimeImmutable $since): int
     {
         return (int) $this->createQueryBuilder('message')
