@@ -7,6 +7,7 @@ namespace App\Tests\Controller;
 use App\Entity\CmsModuleState;
 use App\Entity\ContentEntry;
 use App\Entity\User;
+use App\Module\CmsModuleManager;
 use App\Security\CmsPermission;
 use Doctrine\DBAL\Connection;
 use Doctrine\ORM\EntityManagerInterface;
@@ -149,7 +150,11 @@ final class ContentQualityAuditTest extends WebTestCase
         self::assertResponseIsSuccessful();
         $this->assertPrivateResponse($client);
         self::assertSame($target->getTitle(), $filtered->filter('input[name="q"]')->attr('value'));
-        self::assertSame([$targetId], $this->rowIds($filtered));
+        self::assertSame(
+            [$targetId],
+            $this->rowIds($filtered),
+            sprintf('Title filter "%s" returned [%s].', $target->getTitle(), implode(' | ', $this->rowTitles($filtered))),
+        );
 
         $publishedView = $client->request('GET', '/admin/content/quality?status=published&issue=published_noindex');
         self::assertResponseIsSuccessful();
@@ -202,6 +207,8 @@ final class ContentQualityAuditTest extends WebTestCase
             ['content'],
         ));
         $em->clear();
+        $modules = $client->getContainer()->get(CmsModuleManager::class);
+        self::assertFalse($modules->isEnabled('content'));
 
         $client->request('GET', '/admin/content/quality');
         self::assertResponseStatusCodeSame(404);
@@ -263,6 +270,17 @@ final class ContentQualityAuditTest extends WebTestCase
         }
 
         return $ids;
+    }
+
+    /** @return list<string> */
+    private function rowTitles(Crawler $crawler): array
+    {
+        $titles = [];
+        foreach ($crawler->filter('tr[data-content-quality-entry] td:first-child') as $cell) {
+            $titles[] = trim($cell->textContent);
+        }
+
+        return $titles;
     }
 
     private function entryId(ContentEntry $entry): int
