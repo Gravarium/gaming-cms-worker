@@ -53967,16 +53967,16 @@
       "claim_state": "active",
       "active_base_branch": "fix/fcp-061-phpstan-g1",
       "active_base_sha": "ec6bb200affc3e5a46d416e98f7a1b0621c38ded",
-      "active_head": "f2a7bad0001305e9454edd17c62574e43c4792f0",
+      "active_head": "5099d313fb312ca86c02a2228369690b10c768df",
       "resume_branch": "feature/wcp-591-team-competition-roster-g1",
       "branch_heads": {
         "claim_branch": "ec6bb200affc3e5a46d416e98f7a1b0621c38ded",
-        "feature_branch": "f2a7bad0001305e9454edd17c62574e43c4792f0"
+        "feature_branch": "5099d313fb312ca86c02a2228369690b10c768df"
       },
-      "last_observed_head": "f2a7bad0001305e9454edd17c62574e43c4792f0",
-      "last_checkpoint_at": "2026-09-29T12:44:21.792Z",
-      "last_verified_push_at": "2026-09-29T12:44:21.792Z",
-      "next_action": "Monitor complete Worker CI #1020 on exact HEAD f2a7bad0001305e9454edd17c62574e43c4792f0; address any findings.",
+      "last_observed_head": "5099d313fb312ca86c02a2228369690b10c768df",
+      "last_checkpoint_at": "2026-09-29T12:55:06.522Z",
+      "last_verified_push_at": "2026-09-29T12:55:06.522Z",
+      "next_action": "Monitor complete Worker CI #1021 on exact HEAD 5099d313fb312ca86c02a2228369690b10c768df; address any findings.",
       "checkpoint_paths": [
         "config/packages/competition_rosters_widget.yaml",
         "src/CompetitionRoster/CompetitionRosterInviteLink.php",
@@ -54011,9 +54011,9 @@
         "tests/Widget/CompetitionRostersWidgetTest.php"
       ],
       "ci_result": "in_progress",
-      "ci_run_id": 36570101036,
-      "ci_run_number": 1020,
-      "ci_head": "f2a7bad0001305e9454edd17c62574e43c4792f0",
+      "ci_run_id": 36571339107,
+      "ci_run_number": 1021,
+      "ci_head": "5099d313fb312ca86c02a2228369690b10c768df",
       "ci_attempts": [
         {
           "run_id": 36564325245,
@@ -54155,12 +54155,27 @@
           "run_number": 1020,
           "head": "f2a7bad0001305e9454edd17c62574e43c4792f0",
           "base": "9e083c63e7d888af36f93a23eb924c89fad2b971",
+          "result": "failure",
+          "validation_pr": 395,
+          "status": "completed",
+          "conclusion": "failure",
+          "jobs": {
+            "php_symfony": "failure",
+            "postgres_18": "success"
+          },
+          "summary": "CSRF/session failures changed shape, but 1,590 tests showed 3 /login redirects after switching users on one KernelBrowser; a 404 inside the removal transaction also closed its EntityManager before later fixture writes. Tests now keep actors and expected-404 transaction cases on isolated clients."
+        },
+        {
+          "run_id": 36571339107,
+          "run_number": 1021,
+          "head": "5099d313fb312ca86c02a2228369690b10c768df",
+          "base": "9e083c63e7d888af36f93a23eb924c89fad2b971",
           "result": "in_progress",
           "validation_pr": 395,
           "status": "in_progress",
           "conclusion": null,
           "jobs": {},
-          "summary": "Exact-head CI with CSRF token generated and saved from a real dashboard Request for the current actor."
+          "summary": "Full exact-head CI after isolating authenticated actors and expected-404 transactions in separate browser clients."
         }
       ],
       "last_ci_result": "failure"
