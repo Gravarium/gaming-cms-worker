@@ -174,6 +174,9 @@ final class ContentReviewWorkflowTest extends WebTestCase
             $this->assertPrivateNoStore($client);
             self::assertStringContainsString('Private queue marker', (string) $client->getResponse()->getContent());
 
+            $client->request('GET', '/admin/content/review/'.$entryId.'/decision');
+            self::assertResponseStatusCodeSame(405);
+
             $detailCrawler = $client->request('GET', '/admin/content/review/'.$entryId);
             self::assertResponseIsSuccessful();
             $this->assertPrivateNoStore($client);

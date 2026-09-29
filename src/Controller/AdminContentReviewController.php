@@ -68,7 +68,7 @@ final class AdminContentReviewController extends AbstractController
         }
 
         $decision = $form->getData();
-        if (!$decision instanceof ReviewDecision || $decision->decision === null) {
+        if ($decision->decision === null) {
             $form->addError(new FormError('Bitte wähle eine gültige Entscheidung.'));
             return $this->renderDetail($entry, $form, Response::HTTP_UNPROCESSABLE_ENTITY);
         }
