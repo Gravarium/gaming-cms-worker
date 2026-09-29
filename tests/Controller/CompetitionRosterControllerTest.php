@@ -55,14 +55,14 @@ final class CompetitionRosterControllerTest extends WebTestCase
             $this->assertPrivateResponse($client);
 
             $inviteAction = '/account/competition-rosters/'.$competition->getId().'/participants/'.$participant->getId().'/invite';
-            $client->loginUser($wrongUser);
-            $client->request('POST', $inviteAction, [
-                '_token' => $this->csrfToken($client, 'competition-roster-invite-'.$participant->getId()),
+            $wrongActorClient = static::createClient();
+            $wrongActorClient->loginUser($wrongUser);
+            $wrongActorClient->request('POST', $inviteAction, [
+                '_token' => $this->csrfToken($wrongActorClient, 'competition-roster-invite-'.$participant->getId()),
                 'email' => $inviteeA->getEmail(),
             ]);
             self::assertResponseStatusCodeSame(404);
 
-            $client->loginUser($captain);
             $pathA = $this->createInvite($client, $competition, $participant, $inviteeA->getEmail());
             $pathB = $this->createInvite($client, $competition, $participant, $inviteeB->getEmail());
             self::assertNotSame($pathA, $pathB);
@@ -84,28 +84,32 @@ final class CompetitionRosterControllerTest extends WebTestCase
             self::assertSame(3600, $expiresAt - $issuedAt);
             self::assertNotSame($inviteeA->getEmail(), $decodedClaims['email'] ?? null);
 
-            $client->loginUser($wrongUser);
-            $client->request('GET', $pathA);
+            $wrongInviteClient = static::createClient();
+            $wrongInviteClient->loginUser($wrongUser);
+            $wrongInviteClient->request('GET', $pathA);
             self::assertResponseStatusCodeSame(404);
 
-            $client->loginUser($inviteeA);
-            $client->request('GET', $pathA);
+            $inviteeAClient = static::createClient();
+            $inviteeAClient->loginUser($inviteeA);
+            $inviteeAClient->request('GET', $pathA);
             self::assertResponseIsSuccessful();
-            $client->request('POST', $pathA, ['_token' => 'invalid']);
+            $inviteeAClient->request('POST', $pathA, ['_token' => 'invalid']);
             self::assertResponseStatusCodeSame(403);
 
-            $crawler = $client->request('GET', $pathA);
+            $crawler = $inviteeAClient->request('GET', $pathA);
             self::assertResponseIsSuccessful();
             self::assertSelectorTextContains('body', 'Team '.$suffix);
             self::assertSelectorTextNotContains('body', $inviteeA->getEmail());
-            $this->assertPrivateResponse($client);
+            $this->assertPrivateResponse($inviteeAClient);
             $form = $crawler->filter('form[method="post"]')->form();
-            $client->submit($form);
+            $inviteeAClient->submit($form);
             self::assertResponseRedirects('/account/competition-rosters/'.$competition->getId().'/participants/'.$participant->getId().'/join-result');
-            $crawler = $client->followRedirect();
+            $crawler = $inviteeAClient->followRedirect();
             self::assertSelectorTextContains('body', 'Du bist jetzt Mitglied des Competition-Teams.');
-            $this->assertPrivateResponse($client);
+            $this->assertPrivateResponse($inviteeAClient);
 
+            $client->request('GET', '/account/competition-rosters');
+            self::assertResponseIsSuccessful();
             $entityManager = $this->entityManager($client);
             $entityManager->clear();
             $savedParticipant = $entityManager->find(CompetitionParticipant::class, $participant->getId());
@@ -115,24 +119,26 @@ final class CompetitionRosterControllerTest extends WebTestCase
             self::assertTrue($savedParticipant->containsUser($inviteeA));
 
             // The second link was issued against the old roster fingerprint and cannot use a remaining slot.
-            $client->loginUser($inviteeB);
-            $client->request('GET', $pathB);
+            $inviteeBClient = static::createClient();
+            $inviteeBClient->loginUser($inviteeB);
+            $inviteeBClient->request('GET', $pathB);
             self::assertResponseStatusCodeSame(404);
 
             // A fresh captain-issued link can fill the remaining slot.
-            $client->loginUser($captain);
             $pathC = $this->createInvite($client, $competition, $participant, $inviteeC->getEmail());
-            $client->loginUser($inviteeC);
-            $crawler = $client->request('GET', $pathC);
+            $inviteeCClient = static::createClient();
+            $inviteeCClient->loginUser($inviteeC);
+            $crawler = $inviteeCClient->request('GET', $pathC);
             self::assertResponseIsSuccessful();
-            $client->submit($crawler->filter('form[method="post"]')->form());
+            $inviteeCClient->submit($crawler->filter('form[method="post"]')->form());
             self::assertResponseRedirects('/account/competition-rosters/'.$competition->getId().'/participants/'.$participant->getId().'/join-result');
-            $client->followRedirect();
+            $inviteeCClient->followRedirect();
 
             // A successful link remains unusable after its one acceptance.
-            $client->loginUser($inviteeA);
-            $client->request('GET', $pathA);
+            $inviteeAClient->request('GET', $pathA);
             self::assertResponseStatusCodeSame(404);
+            $client->request('GET', '/account/competition-rosters');
+            self::assertResponseIsSuccessful();
 
             $entityManager->clear();
             $savedParticipant = $entityManager->find(CompetitionParticipant::class, $participant->getId());
@@ -190,9 +196,10 @@ final class CompetitionRosterControllerTest extends WebTestCase
             self::assertInstanceOf(CompetitionParticipant::class, $savedParticipant);
             self::assertSame([$captain->getId()], $savedParticipant->getRosterUserIds());
 
-            $client->loginUser($other);
-            $client->request('POST', $removeAction, [
-                '_token' => $this->csrfToken($client, 'competition-roster-remove-'.$participant->getId().'-'.$member->getId()),
+            $otherClient = static::createClient();
+            $otherClient->loginUser($other);
+            $otherClient->request('POST', $removeAction, [
+                '_token' => $this->csrfToken($otherClient, 'competition-roster-remove-'.$participant->getId().'-'.$member->getId()),
             ]);
             self::assertResponseStatusCodeSame(404);
 
@@ -204,10 +211,15 @@ final class CompetitionRosterControllerTest extends WebTestCase
             $crawler = $client->followRedirect();
             self::assertSelectorTextContains('body', 'Die Teamleitung kann sich nicht selbst aus dem Team entfernen.');
 
-            $client->request('POST', '/account/competition-rosters/'.$otherCompetition->getId().'/participants/'.$participant->getId().'/members/'.$member->getId().'/remove', [
-                '_token' => $this->csrfToken($client, 'competition-roster-remove-'.$participant->getId().'-'.$member->getId()),
+            $mismatchClient = static::createClient();
+            $mismatchClient->loginUser($captain);
+            $mismatchClient->request('POST', '/account/competition-rosters/'.$otherCompetition->getId().'/participants/'.$participant->getId().'/members/'.$member->getId().'/remove', [
+                '_token' => $this->csrfToken($mismatchClient, 'competition-roster-remove-'.$participant->getId().'-'.$member->getId()),
             ]);
             self::assertResponseStatusCodeSame(404);
+
+            $client->request('GET', '/account/competition-rosters');
+            self::assertResponseIsSuccessful();
 
             $entityManager = $this->entityManager($client);
             $savedParticipant = $entityManager->find(CompetitionParticipant::class, $participant->getId());
@@ -290,20 +302,23 @@ final class CompetitionRosterControllerTest extends WebTestCase
             $entityManager->flush();
             $validPath = $this->createInvite($client, $team, $teamEntry, $verifiedTeammate->getEmail());
             $expiredPath = $this->expiredInvitePath($client, $team, $teamEntry, $captain, $verifiedTeammate);
-            $client->loginUser($verifiedTeammate);
-            $client->request('GET', $expiredPath);
+            $inviteeClient = static::createClient();
+            $inviteeClient->loginUser($verifiedTeammate);
+            $inviteeClient->request('GET', $expiredPath);
             self::assertResponseStatusCodeSame(404);
 
             $lastSignatureCharacter = substr($validPath, -1);
             $forgedPath = substr($validPath, 0, -1).($lastSignatureCharacter === '0' ? '1' : '0');
-            $client->request('GET', $forgedPath);
+            $inviteeClient->request('GET', $forgedPath);
             self::assertResponseStatusCodeSame(404);
 
             $wrongCompetitionPath = str_replace('/competitions/'.$team->getId().'/', '/competitions/'.$privateTeam->getId().'/', $validPath);
             self::assertNotSame($validPath, $wrongCompetitionPath);
-            $client->request('GET', $wrongCompetitionPath);
+            $inviteeClient->request('GET', $wrongCompetitionPath);
             self::assertResponseStatusCodeSame(404);
-            $client->loginUser($captain);
+
+            $client->request('GET', '/account/competition-rosters');
+            self::assertResponseIsSuccessful();
 
             foreach ([
                 [$privateTeam, $privateEntry],
