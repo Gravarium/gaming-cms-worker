@@ -4,20 +4,20 @@
   "source_queue": {
     "repository": "Gravarium/gaming-cms",
     "path": "docs/ai-work-queue.json",
-    "blob_sha": "ac6977914355b97d1cafd0874435eeb599f3ca40",
-    "updated_at": "2026-09-24T09:20:00Z"
+    "blob_sha": "13c4f499444f6c1e67ee53cffb15914b460548ce",
+    "updated_at": "2026-09-27T10:51:00Z"
   },
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
-  "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-  "published_at": "2026-09-29 00:33:50 UTC",
+  "base_sha": "cd2fbd988bdfb7fe83a98d0c177ecfeadbd8859c",
+  "published_at": "2026-09-29 01:30:13 UTC",
   "summary": {
     "total_remaining_worker_tasks": 174,
     "completed_worker_prs_awaiting_trusted_review": 318,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-598 is complete on exact green Worker PR #392 and its claim is locked until Trusted resolution. Re-evaluate the five unclaimed FCPs; continue with a dependency-safe functional package or claim the next bounded independent WCP module completion.",
+    "next_required_action": "WCP-587 is Trusted-integrated with all post-merge gates green and its claim released. WCP-598 is complete on exact green Worker PR #392 with its claim locked; review it next. WCP-552 and WCP-556 are also completed high-risk Worker proposals awaiting separate Trusted review; preserve each claim until its own Trusted resolution.",
     "composition_preparable": 0,
     "immediately_actionable": 33,
     "must_continue": true
@@ -52907,7 +52907,7 @@
       "package_id": "WCP-587",
       "title": "Complete download version metadata entry and public release notes",
       "risk": "medium",
-      "execution_state": "worker_complete_awaiting_trusted_review",
+      "execution_state": "trusted_integrated",
       "dependencies": [
         "FCP-063"
       ],
@@ -53027,7 +53027,7 @@
       },
       "published_at": "2026-09-28T19:47:53.776Z",
       "claimed_on": "2026-09-28T19:47:53.776Z",
-      "claim_state": "locked_until_trusted_resolution",
+      "claim_state": "released_after_trusted_integration",
       "active_base_branch": "main",
       "active_base_sha": "c3c7b14066d9f8b32925eb4381e30b6794f21027",
       "active_head": "02fbd8410eda8ded08f54a65cc76bcf36c36958d",
@@ -53049,7 +53049,7 @@
         "tests/Downloads/DownloadControllerTest.php"
       ],
       "resume_branch": "feature/wcp-587-download-release-metadata-g1",
-      "next_action": "Keep PR #382 and this claim locked until Trusted explicitly resolves it. Exact-head Worker CI #971 passed. Do not merge or deploy; continue with the next dependency-safe Worker package.",
+      "next_action": "Trusted integration is complete. Keep the reviewed proposal and exact gate evidence for audit; do not reopen this claim.",
       "worker_pr": 382,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/382",
       "worker_pr_head": "02fbd8410eda8ded08f54a65cc76bcf36c36958d",
@@ -53146,7 +53146,46 @@
           "Worker PR output is untrusted until Trusted review and integration; no Trusted merge or deployment is claimed."
         ]
       },
-      "worker_completion_summary": "Exact-head Worker CI #971 / 36477366137 passed on 02fbd8410eda8ded08f54a65cc76bcf36c36958d: 1,385 tests, 9,125 assertions, 1 deprecation and 8 notices; PHP/Symfony validation and PostgreSQL 18 migration-chain jobs both passed. PR #382 is open, ready for review, unmerged and based on main@2f8179fe129c3071b68757f03a3e7099311179ef. The Downloads version-upload workflow now captures compatibility and release notes and shows them on authorized public package details."
+      "worker_completion_summary": "Exact-head Worker CI #971 / 36477366137 passed on 02fbd8410eda8ded08f54a65cc76bcf36c36958d: 1,385 tests, 9,125 assertions, 1 deprecation and 8 notices; PHP/Symfony validation and PostgreSQL 18 migration-chain jobs both passed. PR #382 is open, ready for review, unmerged and based on main@2f8179fe129c3071b68757f03a3e7099311179ef. The Downloads version-upload workflow now captures compatibility and release notes and shows them on authorized public package details.",
+      "trusted_transfer": {
+        "status": "owner_authorized_to_trusted",
+        "recorded_at": "2026-09-29T01:30:13Z",
+        "from": "Worker chat holding GravariumDev claim",
+        "to": "Trusted integration coordinator",
+        "exact_feature_branch": "feature/wcp-587-download-release-metadata-g1",
+        "exact_remote_head": "02fbd8410eda8ded08f54a65cc76bcf36c36958d",
+        "worker_pr": 382,
+        "worker_ci_run_id": 36477366137,
+        "worker_ci_result": "success",
+        "previous_worker_chat_stopped_by_owner": true,
+        "claim_remains_locked": true
+      },
+      "trusted_resolution": {
+        "status": "integrated",
+        "worker_pr": 382,
+        "worker_head": "02fbd8410eda8ded08f54a65cc76bcf36c36958d",
+        "worker_exact_head_ci_run_id": 36477366137,
+        "worker_exact_head_ci_result": "success",
+        "trusted_pr": 194,
+        "trusted_pr_head": "6f1320b21fef993d87f182e5130c951b96450bdb",
+        "trusted_pr_ci_run_id": 36505740367,
+        "trusted_pr_ci_result": "success",
+        "trusted_merge_sha": "a433f63cf219004dfe8d4e3f39efd9c7f9644c74",
+        "validation_repair_pr": 195,
+        "validation_repair_head": "c4ad1cf78c1947b507101f5ade2dddc23bf04ef8",
+        "validation_repair_ci_run_id": 36507183286,
+        "validation_repair_ci_result": "success",
+        "final_trusted_main_sha": "3ec54cfb1dbd0af94f72bd1ec0eac991bcfa5949",
+        "final_trusted_main_ci_run_id": 36507630792,
+        "final_trusted_main_ci_result": "success",
+        "worker_sync_run_id": 36507630812,
+        "worker_sync_result": "success",
+        "sanitized_worker_sync_sha": "cd2fbd988bdfb7fe83a98d0c177ecfeadbd8859c",
+        "worker_ci_run_id": 36507647897,
+        "worker_ci_after_sync_result": "success",
+        "resolved_at": "2026-09-29 01:30:13 UTC",
+        "trusted_import_note": "Trusted PR #194 imported the eight reviewed WCP-587 source paths. Exact PR CI passed; Main CI initially exposed a randomized widget-fixture assertion collision, fixed test-only in PR #195. Exact PR #195 CI, resulting Main CI, sanitized Worker sync and post-sync Worker CI all passed. No deployment or schema change."
+      }
     },
     {
       "priority": 588,
