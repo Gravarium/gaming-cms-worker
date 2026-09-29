@@ -55,8 +55,7 @@ final class CompetitionRosterControllerTest extends WebTestCase
             $this->assertPrivateResponse($client);
 
             $inviteAction = '/account/competition-rosters/'.$competition->getId().'/participants/'.$participant->getId().'/invite';
-            $wrongActorClient = static::createClient();
-            $wrongActorClient->loginUser($wrongUser);
+            $wrongActorClient = $this->newAuthenticatedBrowser($client, $wrongUser);
             $wrongActorClient->request('POST', $inviteAction, [
                 '_token' => $this->csrfToken($wrongActorClient, 'competition-roster-invite-'.$participant->getId()),
                 'email' => $inviteeA->getEmail(),
@@ -84,13 +83,11 @@ final class CompetitionRosterControllerTest extends WebTestCase
             self::assertSame(3600, $expiresAt - $issuedAt);
             self::assertNotSame($inviteeA->getEmail(), $decodedClaims['email'] ?? null);
 
-            $wrongInviteClient = static::createClient();
-            $wrongInviteClient->loginUser($wrongUser);
+            $wrongInviteClient = $this->newAuthenticatedBrowser($client, $wrongUser);
             $wrongInviteClient->request('GET', $pathA);
             self::assertResponseStatusCodeSame(404);
 
-            $inviteeAClient = static::createClient();
-            $inviteeAClient->loginUser($inviteeA);
+            $inviteeAClient = $this->newAuthenticatedBrowser($client, $inviteeA);
             $inviteeAClient->request('GET', $pathA);
             self::assertResponseIsSuccessful();
             $inviteeAClient->request('POST', $pathA, ['_token' => 'invalid']);
@@ -108,6 +105,7 @@ final class CompetitionRosterControllerTest extends WebTestCase
             self::assertSelectorTextContains('body', 'Du bist jetzt Mitglied des Competition-Teams.');
             $this->assertPrivateResponse($inviteeAClient);
 
+            self::getClient($client);
             $client->request('GET', '/account/competition-rosters');
             self::assertResponseIsSuccessful();
             $entityManager = $this->entityManager($client);
@@ -119,15 +117,13 @@ final class CompetitionRosterControllerTest extends WebTestCase
             self::assertTrue($savedParticipant->containsUser($inviteeA));
 
             // The second link was issued against the old roster fingerprint and cannot use a remaining slot.
-            $inviteeBClient = static::createClient();
-            $inviteeBClient->loginUser($inviteeB);
+            $inviteeBClient = $this->newAuthenticatedBrowser($client, $inviteeB);
             $inviteeBClient->request('GET', $pathB);
             self::assertResponseStatusCodeSame(404);
 
             // A fresh captain-issued link can fill the remaining slot.
             $pathC = $this->createInvite($client, $competition, $participant, $inviteeC->getEmail());
-            $inviteeCClient = static::createClient();
-            $inviteeCClient->loginUser($inviteeC);
+            $inviteeCClient = $this->newAuthenticatedBrowser($client, $inviteeC);
             $crawler = $inviteeCClient->request('GET', $pathC);
             self::assertResponseIsSuccessful();
             $inviteeCClient->submit($crawler->filter('form[method="post"]')->form());
@@ -135,8 +131,10 @@ final class CompetitionRosterControllerTest extends WebTestCase
             $inviteeCClient->followRedirect();
 
             // A successful link remains unusable after its one acceptance.
+            self::getClient($inviteeAClient);
             $inviteeAClient->request('GET', $pathA);
             self::assertResponseStatusCodeSame(404);
+            self::getClient($client);
             $client->request('GET', '/account/competition-rosters');
             self::assertResponseIsSuccessful();
 
@@ -196,14 +194,13 @@ final class CompetitionRosterControllerTest extends WebTestCase
             self::assertInstanceOf(CompetitionParticipant::class, $savedParticipant);
             self::assertSame([$captain->getId()], $savedParticipant->getRosterUserIds());
 
-            $otherClient = static::createClient();
-            $otherClient->loginUser($other);
+            $otherClient = $this->newAuthenticatedBrowser($client, $other);
             $otherClient->request('POST', $removeAction, [
                 '_token' => $this->csrfToken($otherClient, 'competition-roster-remove-'.$participant->getId().'-'.$member->getId()),
             ]);
             self::assertResponseStatusCodeSame(404);
 
-            $client->loginUser($captain);
+            self::getClient($client);
             $client->request('POST', '/account/competition-rosters/'.$competition->getId().'/participants/'.$participant->getId().'/members/'.$captain->getId().'/remove', [
                 '_token' => $this->csrfToken($client, 'competition-roster-remove-'.$participant->getId().'-'.$captain->getId()),
             ]);
@@ -211,13 +208,13 @@ final class CompetitionRosterControllerTest extends WebTestCase
             $crawler = $client->followRedirect();
             self::assertSelectorTextContains('body', 'Die Teamleitung kann sich nicht selbst aus dem Team entfernen.');
 
-            $mismatchClient = static::createClient();
-            $mismatchClient->loginUser($captain);
+            $mismatchClient = $this->newAuthenticatedBrowser($client, $captain);
             $mismatchClient->request('POST', '/account/competition-rosters/'.$otherCompetition->getId().'/participants/'.$participant->getId().'/members/'.$member->getId().'/remove', [
                 '_token' => $this->csrfToken($mismatchClient, 'competition-roster-remove-'.$participant->getId().'-'.$member->getId()),
             ]);
             self::assertResponseStatusCodeSame(404);
 
+            self::getClient($client);
             $client->request('GET', '/account/competition-rosters');
             self::assertResponseIsSuccessful();
 
@@ -302,8 +299,7 @@ final class CompetitionRosterControllerTest extends WebTestCase
             $entityManager->flush();
             $validPath = $this->createInvite($client, $team, $teamEntry, $verifiedTeammate->getEmail());
             $expiredPath = $this->expiredInvitePath($client, $team, $teamEntry, $captain, $verifiedTeammate);
-            $inviteeClient = static::createClient();
-            $inviteeClient->loginUser($verifiedTeammate);
+            $inviteeClient = $this->newAuthenticatedBrowser($client, $verifiedTeammate);
             $inviteeClient->request('GET', $expiredPath);
             self::assertResponseStatusCodeSame(404);
 
@@ -317,6 +313,7 @@ final class CompetitionRosterControllerTest extends WebTestCase
             $inviteeClient->request('GET', $wrongCompetitionPath);
             self::assertResponseStatusCodeSame(404);
 
+            self::getClient($client);
             $client->request('GET', '/account/competition-rosters');
             self::assertResponseIsSuccessful();
 
@@ -362,6 +359,7 @@ final class CompetitionRosterControllerTest extends WebTestCase
 
     private function createInvite(KernelBrowser $client, Competition $competition, CompetitionParticipant $participant, string $email): string
     {
+        self::getClient($client);
         $crawler = $client->request('GET', '/account/competition-rosters');
         self::assertResponseIsSuccessful();
         $action = '/account/competition-rosters/'.$competition->getId().'/participants/'.$participant->getId().'/invite';
@@ -585,6 +583,7 @@ final class CompetitionRosterControllerTest extends WebTestCase
 
     private function csrfToken(KernelBrowser $client, string $tokenId): string
     {
+        self::getClient($client);
         $client->request('GET', '/account/competition-rosters');
         $request = $client->getRequest();
         if (!$request instanceof Request || !$request->hasSession()) {
@@ -611,6 +610,15 @@ final class CompetitionRosterControllerTest extends WebTestCase
         } finally {
             $requestStack->pop();
         }
+    }
+
+    private function newAuthenticatedBrowser(KernelBrowser $origin, User $user): KernelBrowser
+    {
+        $browser = new KernelBrowser($origin->getKernel());
+        $browser->loginUser($user);
+        self::getClient($browser);
+
+        return $browser;
     }
 
     private function assertPrivateResponse(KernelBrowser $client): void
