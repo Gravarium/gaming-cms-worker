@@ -28,20 +28,20 @@ Trusted prüft und integriert fertige Vorschläge später. Ein offener Trusted-R
 
 ## Autonomer Dauerlauf
 
-Nach jedem vollständig grünen Worker-PR ohne Rückfrage sofort:
+Vor jeder Fortsetzung und vor jedem neuen Claim:
 
-1. Vor weiterer Arbeit die Lease und den Live-HEAD prüfen. Nach sieben Stunden ohne verifizierten Push ist ein `worker_in_progress`-Claim abgelaufen; wiederveröffentliche ihn als `unclaimed` mit neuer Claim-Generation und erhalte Branch, PR, HEAD und CI-Nachweise.
-2. Den eigenen Pool-Eintrag nach vollständig grüner Exact-Head-CI auf `worker_complete_awaiting_trusted_review` setzen und Worker-PR, finalen HEAD sowie CI-Run eintragen.
-3. Den Claim einer abgeschlossenen grünen PR als `locked_until_trusted_resolution` bestehen lassen.
-4. Alle unbeanspruchten Pakete in Prioritätsreihenfolge neu bewerten. Eine Abhängigkeit gilt für Worker-Vorschlagsarbeit als erfüllt, wenn sie Trusted-integriert ist oder ein exakter grüner Worker-PR-HEAD vorliegt.
-5. Den ersten dependency-sicheren Auftrag auswählen. Nicht darauf warten, dass der Nutzer eine FCP-Nummer nennt.
-6. Bei genau einem fertigen Vorgänger dessen exakten grünen HEAD als Vorschlagsbasis verwenden.
-7. Bei mehreren fertigen Vorgängern selbst eine Worker-only-Composition-Branch erstellen, ausschließlich die belegten exakten grünen HEADs konfliktfrei zusammenführen, einen Draft-PR gegen Worker-`main` öffnen und die vollständige Exact-Head-Worker-CI abwarten.
-8. Nur bei vollständig grüner Composition-CI deren exakten HEAD im Pool als Proposal-Basis veröffentlichen.
-9. Claim-Branch mit neuer Generation atomar; bei einer Wiederaufnahme den bestehenden Feature-Branch unverändert fortsetzen. Den Pool auf `worker_in_progress` setzen und sofort mit der Implementierung beginnen. von genau dieser Basis erstellen, den Pool auf `worker_in_progress` setzen und sofort mit der Implementierung beginnen.
-10. Sind alle vorbereiteten FCPs tatsächlich blockiert, selbst einen begrenzten unabhängigen CMS-Teilauftrag aus dem genehmigten Ziel herleiten, als Worker-only-WCP im Pool mit eindeutiger Kennung und Sicherheits-/Pfad-/Testnachweisen veröffentlichen, atomar claimen und bearbeiten. Danach diesen Ablauf wiederholen. Nicht nach jedem Paket stoppen und keine neue Nutzeranweisung verlangen.
-
-Wenn der zuerst geprüfte Auftrag echte unerfüllte Abhängigkeiten besitzt, den nächsten Auftrag prüfen. Der gesamte Pool darf nicht pauschal beendet werden, solange irgendein Auftrag mit nachweisbaren grünen Abhängigkeiten vorbereitet werden kann.
+1. Den aktuellen Pool-Eintrag, die Live-Branch, den exakten HEAD und den CI-Status prüfen.
+2. Für `worker_in_progress` gilt eine Lease von sieben Stunden nach dem letzten verifizierten Push. Vor dem ersten Push läuft sie sieben Stunden nach `claimed_on` ab.
+3. Nach Lease-Ablauf die Aufgabe als `unclaimed` behandeln. Branch, PR, exakten HEAD und CI-Nachweise behalten; den Pool-Eintrag mit neuer Claim-Generation aktualisieren. Danach auf dem bestehenden `resume_branch` exakt am Live-HEAD weiterarbeiten. Den alten Claim-Branch nicht als aktive Sperre werten.
+4. Ein Chat mit abgelaufener Lease darf nicht weiter schreiben, bis er die Aufgabe neu beansprucht hat. Vor jeder Schreibaktion den aktuellen Pool erneut prüfen.
+5. Eine vollständig grüne Worker-PR wird auf `worker_complete_awaiting_trusted_review` gesetzt und bleibt als `locked_until_trusted_resolution` gesperrt. Diese Review-Sperre läuft nicht ab.
+6. Alle unbeanspruchten Pakete in Prioritätsreihenfolge neu bewerten. Eine Abhängigkeit gilt für Worker-Vorschlagsarbeit als erfüllt, wenn sie Trusted-integriert ist oder ein exakter grüner Worker-PR-HEAD vorliegt.
+7. Den ersten dependency-sicheren Auftrag auswählen. Nicht darauf warten, dass der Nutzer eine FCP-Nummer nennt.
+8. Bei genau einem fertigen Vorgänger dessen exakten grünen HEAD als Vorschlagsbasis verwenden.
+9. Bei mehreren fertigen Vorgängern selbst eine Worker-only-Composition-Branch erstellen, ausschließlich die belegten exakten grünen HEADs konfliktfrei zusammenführen, einen Draft-PR gegen Worker-`main` öffnen und die vollständige Exact-Head-Worker-CI abwarten.
+10. Nur bei vollständig grüner Composition-CI deren exakten HEAD im Pool als Proposal-Basis veröffentlichen.
+11. Einen neuen Claim mit einer freien Generation atomar sichern. Bei Wiederaufnahme den bestehenden Feature-Branch vom exakten Live-HEAD fortsetzen. Den Pool auf `worker_in_progress` setzen und sofort mit der Implementierung beginnen.
+12. Sind alle vorbereiteten FCPs tatsächlich blockiert, selbst einen begrenzten unabhängigen CMS-Teilauftrag aus dem genehmigten Ziel herleiten, als Worker-only-WCP im Pool mit eindeutiger Kennung und Sicherheits-/Pfad-/Testnachweisen veröffentlichen, atomar claimen und bearbeiten. Danach diesen Ablauf wiederholen. Nicht nach jedem Paket stoppen und keine neue Nutzeranweisung verlangen.
 
 ## Zulässige Stop-Gründe
 
