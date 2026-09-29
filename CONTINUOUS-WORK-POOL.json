@@ -55563,20 +55563,20 @@
       "claim_state": "active",
       "active_base_branch": "main",
       "active_base_sha": "9e083c63e7d888af36f93a23eb924c89fad2b971",
-      "active_head": "cdab8282debb4ff58702ab2a2f9fb869ec27bc49",
+      "active_head": "57bdba18f4501e9530dbb5d9b3b7ce6181b7d54f",
       "resume_branch": "feature/wcp-600-newsletter-scheduled-dispatch-g1",
       "branch_heads": {
         "claim_branch": "9e083c63e7d888af36f93a23eb924c89fad2b971",
-        "feature_branch": "cdab8282debb4ff58702ab2a2f9fb869ec27bc49"
+        "feature_branch": "57bdba18f4501e9530dbb5d9b3b7ce6181b7d54f"
       },
-      "last_observed_head": "cdab8282debb4ff58702ab2a2f9fb869ec27bc49",
-      "last_checkpoint_at": "2026-09-29T11:52:53.023Z",
+      "last_observed_head": "57bdba18f4501e9530dbb5d9b3b7ce6181b7d54f",
+      "last_checkpoint_at": "2026-09-29T11:56:40.231Z",
       "checkpoint_paths": [
         "src/Command/DispatchScheduledNewsletterCampaignsCommand.php",
         "tests/Command/DispatchScheduledNewsletterCampaignsCommandTest.php"
       ],
-      "next_action": "Inspect exact-head Worker CI run #1004 on cdab8282debb4ff58702ab2a2f9fb869ec27bc49; resolve any failures within the two allowed paths, then mark PR #393 review-ready only after all jobs are green.",
-      "last_verified_push_at": "2026-09-29T11:52:53.023Z",
+      "next_action": "Inspect exact-head Worker CI run #1010 on 57bdba18f4501e9530dbb5d9b3b7ce6181b7d54f; fix any failures within the two allowed paths, then make PR #393 review-ready only after every CI job succeeds.",
+      "last_verified_push_at": "2026-09-29T11:56:40.231Z",
       "worker_pr": 393,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/393",
       "worker_pr_state": "draft",
@@ -55594,8 +55594,8 @@
       ],
       "ci_validation_pr": 393,
       "last_ci_result": "in_progress",
-      "last_ci_run_id": 36564230159,
-      "last_ci_run_number": 1004,
+      "last_ci_run_id": 36564836394,
+      "last_ci_run_number": 1010,
       "ci_attempts": [
         {
           "run_id": 36563187163,
@@ -55624,11 +55624,22 @@
           "run_number": 1004,
           "head": "cdab8282debb4ff58702ab2a2f9fb869ec27bc49",
           "base": "9e083c63e7d888af36f93a23eb924c89fad2b971",
+          "result": "failure",
+          "validation_pr": 393,
+          "status": "completed",
+          "conclusion": "failure",
+          "summary": "All static analysis and migration steps succeeded; one command integration assertion expected the older partial campaign to resume before a later scheduled campaign."
+        },
+        {
+          "run_id": 36564836394,
+          "run_number": 1010,
+          "head": "57bdba18f4501e9530dbb5d9b3b7ce6181b7d54f",
+          "base": "9e083c63e7d888af36f93a23eb924c89fad2b971",
           "result": "in_progress",
           "validation_pr": 393,
-          "status": "in_progress",
+          "status": "queued",
           "conclusion": null,
-          "summary": "Full Worker CI is running on the final split-query candidate at exact HEAD cdab8282debb4ff58702ab2a2f9fb869ec27bc49."
+          "summary": "Full Worker CI run #1010 is queued on exact HEAD 57bdba18f4501e9530dbb5d9b3b7ce6181b7d54f."
         }
       ]
     }
