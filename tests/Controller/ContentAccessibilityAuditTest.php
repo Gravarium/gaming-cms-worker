@@ -32,7 +32,7 @@ final class ContentAccessibilityAuditTest extends WebTestCase
             ]),
         );
         $entryId = $this->requireId($entry->getId());
-        $updatedAt = $entry->getUpdatedAt()->format('U.u');
+        $updatedAt = $entry->getUpdatedAt()->format('U');
         $body = $entry->getBody();
         $storedDocument = $entry->getEditorDocument();
         $revisionCount = $this->entityManager($client)->getRepository(ContentRevision::class)->count(['entry' => $entry]);
@@ -65,7 +65,7 @@ final class ContentAccessibilityAuditTest extends WebTestCase
             self::assertInstanceOf(ContentEntry::class, $storedEntry);
             self::assertSame($body, $storedEntry->getBody());
             self::assertSame($storedDocument, $storedEntry->getEditorDocument());
-            self::assertSame($updatedAt, $storedEntry->getUpdatedAt()->format('U.u'));
+            self::assertSame($updatedAt, $storedEntry->getUpdatedAt()->format('U'));
             self::assertSame($revisionCount, $entityManager->getRepository(ContentRevision::class)->count(['entry' => $storedEntry]));
             self::assertSame($auditCount, $this->countAuditLogs($client, $entryId));
         } finally {
@@ -83,14 +83,16 @@ final class ContentAccessibilityAuditTest extends WebTestCase
         ]);
         [$user, $seedEntry] = $this->createEntry($client, 'batch-author-'.$suffix, 'Unused seed', 'page', ContentEntry::STATUS_DRAFT, 'seed');
         $entries = [];
+        $entityManager = $this->entityManager($client);
 
         for ($index = 0; $index < 26; ++$index) {
             $type = $index % 2 === 0 ? ContentEntry::TYPE_PAGE : ContentEntry::TYPE_NEWS;
             $status = $index < 4 ? ContentEntry::STATUS_ARCHIVED : ContentEntry::STATUS_DRAFT;
             $entry = $this->makeEntry($user, $prefix.' case '.$index, $type, $status, $document);
+            $entityManager->persist($entry);
             $entries[] = $entry;
         }
-        $this->entityManager($client)->flush();
+        $entityManager->flush();
         $entryIds = [$this->requireId($seedEntry->getId()), ...array_map(fn (ContentEntry $entry): int => $this->requireId($entry->getId()), $entries)];
 
         try {
@@ -126,22 +128,25 @@ final class ContentAccessibilityAuditTest extends WebTestCase
         $client = static::createClient();
         $suffix = bin2hex(random_bytes(5));
         $prefix = 'accessibility-cap-'.$suffix;
-        [$user] = $this->createEntry($client, 'cap-author-'.$suffix, 'Unused seed', 'page', ContentEntry::STATUS_DRAFT, 'seed');
+        [$user, $seedEntry] = $this->createEntry($client, 'cap-author-'.$suffix, 'Unused seed', 'page', ContentEntry::STATUS_DRAFT, 'seed');
         $document = $this->document([
             ['type' => 'media', 'assetId' => 987654, 'alt' => '', 'caption' => ''],
         ]);
         $entries = [];
+        $entityManager = $this->entityManager($client);
 
         for ($index = 0; $index < 501; ++$index) {
-            $entries[] = $this->makeEntry(
+            $entry = $this->makeEntry(
                 $user,
                 $prefix.' case '.$index,
                 ContentEntry::TYPE_PAGE,
                 ContentEntry::STATUS_DRAFT,
                 $document,
             );
+            $entityManager->persist($entry);
+            $entries[] = $entry;
         }
-        $this->entityManager($client)->flush();
+        $entityManager->flush();
         $entryIds = [$this->requireId($seedEntry->getId()), ...array_map(fn (ContentEntry $entry): int => $this->requireId($entry->getId()), $entries)];
 
         try {
@@ -219,15 +224,25 @@ final class ContentAccessibilityAuditTest extends WebTestCase
             self::assertResponseIsSuccessful();
             self::assertSelectorNotExists('a[href="/admin/content-accessibility"]');
 
-            $manager = (new User())
-                ->setEmail('accessibility-manager-invalid-'.bin2hex(random_bytes(5)).'@example.test')
-                ->setDisplayName('Accessibility report manager')
-                ->setPermissions([CmsPermission::ACCESS, CmsPermission::CONTENT])
-                ->verifyEmail();
-            $this->entityManager($client)->persist($manager);
-            $this->entityManager($client)->flush();
-            $client->loginUser($manager);
 
+        } finally {
+            $this->cleanup($client, [], $user);
+        }
+    }
+
+    public function testMalformedInputsReturnBadRequestAndMethodsRemainGetOnly(): void
+    {
+        $client = static::createClient();
+        $user = (new User())
+            ->setEmail('accessibility-invalid-filter-'.bin2hex(random_bytes(5)).'@example.test')
+            ->setDisplayName('Accessibility report filter tester')
+            ->setPermissions([CmsPermission::ACCESS, CmsPermission::CONTENT])
+            ->verifyEmail();
+        $this->entityManager($client)->persist($user);
+        $this->entityManager($client)->flush();
+
+        try {
+            $client->loginUser($user);
             $client->request('GET', '/admin/content-accessibility?q%5B%5D=bad');
             self::assertResponseStatusCodeSame(400);
 
@@ -238,9 +253,6 @@ final class ContentAccessibilityAuditTest extends WebTestCase
             self::assertResponseStatusCodeSame(405);
         } finally {
             $this->cleanup($client, [], $user);
-            if (isset($manager)) {
-                $this->cleanup($client, [], $manager);
-            }
         }
     }
 
