@@ -10,8 +10,8 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "9e083c63e7d888af36f93a23eb924c89fad2b971",
-  "published_at": "2026-09-29T13:12:20Z",
-  "summary": "Trusted main after PR #198. WCP-556 and WCP-552 are integrated and released after exact Trusted/Main/sanitized-sync/Worker gates. FCP-061 competition paths are already present in Trusted via PR #161 and reinforced by PR #189; do not reimport Worker PR #32. Owner-authorized transfer of completed FCP-077 Worker PR #41 to Trusted review is recorded; its claim stays locked until all Trusted and post-sync gates pass. WCP-601 is a Worker-only Hardware catalogue and moderation workflow proposal stacked on the exact green FCP-073 head; no Trusted integration or deployment is authorized.",
+  "published_at": "2026-09-29T13:21:38.704Z",
+  "summary": "WCP-591 is complete awaiting Trusted review. No unclaimed published CMS package is currently dependency-safe to start. WCP-602 is a new worker-only Content editorial review lifecycle proposal, reserved on sanitized main@9e083c63e7d888af36f93a23eb924c89fad2b971 with disjoint new paths and no schema change; active and completed claims remain untouched.",
   "rules": {
     "choose": "Resume the current chat's unfinished claimed branch first. Otherwise atomically claim an eligible published task. If no published task is eligible, independently derive and publish a bounded worker-only CMS proposal from approved product goals and observed code gaps; do not ask the owner for the next FCP number.",
     "atomic_reservation": "Create the exact claim_branch and suggested feature branch from that task's published proposal_base_sha. If the claim already exists, treat it as a hard lock; the owning continuation resumes it and every other AI skips it.",
@@ -56102,6 +56102,122 @@
       ],
       "ci_result": "pending",
       "last_ci_result": "pending"
+    },
+    {
+      "priority": 602,
+      "package_id": "WCP-602",
+      "title": "Complete the editorial review workflow for CMS content",
+      "risk": "high",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-602-content-review-lifecycle-g1",
+      "suggested_branch": "feature/wcp-602-content-review-lifecycle-g1",
+      "base_branch": "main",
+      "base_sha": "9e083c63e7d888af36f93a23eb924c89fad2b971",
+      "objective": "Turn the existing Content `review` status into a complete, auditable editorial decision workflow without changing the schema or shared content data contracts. Provide a dedicated review queue and controlled decisions to publish now, schedule publication, or return an entry to draft for changes.",
+      "allowed_paths": [
+        "src/Controller/AdminContentReviewController.php",
+        "src/ContentReview/",
+        "src/Form/ContentReviewDecisionType.php",
+        "config/packages/content_review.yaml",
+        "tests/Controller/ContentReviewWorkflowTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "CONTINUOUS-WORKER.md",
+        "CONTINUOUS-WORK-POOL.json",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "src/Entity/ContentEntry.php",
+        "src/Repository/ContentEntryRepository.php",
+        "src/Controller/AdminContentController.php",
+        "src/Controller/AdminContentBrowserController.php",
+        "src/Repository/AdminContentBrowserRepository.php",
+        "src/Form/ContentEntryType.php",
+        "src/Service/ContentRevisionManager.php",
+        "src/Module/CmsModuleCatalog.php",
+        "templates/",
+        "assets/",
+        "public/"
+      ],
+      "deliverables": [
+        "A CMS_CONTENT_MANAGE-protected, paginated review inbox lists only ContentEntry records in STATUS_REVIEW with deterministic updatedAt/id ordering and a bounded page size.",
+        "A private review detail links to the existing protected preview and presents explicit decisions: publish now, schedule at a validated future time, or request changes by returning to draft.",
+        "Each decision requires a bounded nonblank reason, uses Symfony CSRF protection, rechecks STATUS_REVIEW inside a pessimistically locked transaction, and records an audit event plus a ContentRevision snapshot.",
+        "Publication and scheduling use ContentEntry::synchronizePublication() so existing visibility and schedule invariants remain authoritative; duplicate or stale decisions leave the entry unchanged.",
+        "The content route prefix keeps the existing disabled-module 404 behavior. Private/no-store/noindex headers prevent review content from entering shared caches or search indexes.",
+        "Use feature-local Twig templates under src/ContentReview/Templates and a dedicated config/packages/content_review.yaml path; do not edit shared content controllers, repositories, entities, forms, migration, module catalog, or global templates."
+      ],
+      "tests": [
+        "Functional tests cover the paginated review-only queue, deterministic order, detail/preview link, publish-now, future scheduling, return-to-draft, mandatory reason, invalid schedule, stale state, and audit/revision effects.",
+        "Security tests cover unauthenticated and insufficient-permission denial, invalid CSRF with unchanged state, POST-only decisions, disabled Content returning 404, and private/no-store/noindex headers.",
+        "PHPStan level 8 and complete exact-head Worker CI, including PostgreSQL 18 migration-chain validation."
+      ],
+      "completion_report": [
+        "Exact sanitized Worker main base SHA, exact final HEAD, complete changed-path list, and Worker PR URL/state.",
+        "Queue filtering/pagination, each decision state transition, schedule validation, locking, audit, revision, CSRF, permission, module-off, and privacy-header evidence.",
+        "Exact-head PHPUnit, PHPStan, PostgreSQL 18 and complete Worker CI results.",
+        "Confirm no schema/migration change and list any remaining Trusted integration follow-up."
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-Trusted-review-and-exact-head-CI",
+        "review-queue-and-decisions-require-CMS_CONTENT_MANAGE-and-content-module-enabled",
+        "decisions-require-CSRF-and-a-bounded-reason",
+        "only-current-review-state-may-transition-through-a-locked-decision",
+        "preserve-content-publication-scheduling-and-preview-visibility-invariants",
+        "no-schema-or-migration-change",
+        "no-security-test-phpstan-CI-auth-CSRF-validation-recovery-rollback-or-upload-protection-weakening",
+        "no-secrets-or-trusted-private-runtime-in-worker-source",
+        "no-direct-Trusted-integration-or-deployment"
+      ],
+      "proposal_kind": "worker_only",
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "9e083c63e7d888af36f93a23eb924c89fad2b971",
+      "proposal_dependency_evidence": [],
+      "collision_check": {
+        "compared_against": "Fresh continuous/work-pool-v4 pool blob 24e7721cad7aacb4e7a452f542989aef26fa273e; exact sanitized Worker main 9e083c63e7d888af36f93a23eb924c89fad2b971; all in-progress and completed-awaiting-Trusted allowlists; WCP-602/content-review branch and PR searches.",
+        "result": "No path overlap with any in-progress or completed-awaiting-Trusted package. Existing WCP-428 owns the general content browser and shared content index paths; FCP-074 owns Support paths; both remain untouched. Templates are feature-local under src/ContentReview/Templates, outside FCP-072's broad unclaimed templates scope. No entity, repository, shared content controller/form, migration, module catalog, security, or CI changes.",
+        "paths": [
+          "src/Controller/AdminContentReviewController.php",
+          "src/ContentReview/",
+          "src/Form/ContentReviewDecisionType.php",
+          "config/packages/content_review.yaml",
+          "tests/Controller/ContentReviewWorkflowTest.php"
+        ],
+        "observed_nonblocking_path_hits": [
+          "Reads ContentEntry STATUS_REVIEW and existing publication states, CmsModuleManager, AuditLogger, and ContentRevisionManager without editing their paths.",
+          "The new app_admin_content_review_* route names fall under the existing app_admin_content module route prefix, preserving DisabledModuleSubscriber behavior.",
+          "The existing content editor can mark entries for review and the general content browser can filter them; neither offers an explicit reasoned publish/schedule/request-changes decision workflow."
+        ]
+      },
+      "published_at": "2026-09-29T13:21:38.704Z",
+      "claimed_on": "2026-09-29T13:21:38.704Z",
+      "claim_state": "active",
+      "active_base_branch": "main",
+      "active_base_sha": "9e083c63e7d888af36f93a23eb924c89fad2b971",
+      "active_head": "9e083c63e7d888af36f93a23eb924c89fad2b971",
+      "resume_branch": "feature/wcp-602-content-review-lifecycle-g1",
+      "branch_heads": {
+        "claim_branch": "9e083c63e7d888af36f93a23eb924c89fad2b971",
+        "feature_branch": "9e083c63e7d888af36f93a23eb924c89fad2b971"
+      },
+      "last_observed_head": "9e083c63e7d888af36f93a23eb924c89fad2b971",
+      "last_checkpoint_at": "2026-09-29T13:21:38.704Z",
+      "checkpoint_paths": [],
+      "next_action": "Implement the bounded content-review inbox and audited decisions on this exclusive branch, then run exact-head Worker CI before a review handoff."
     }
   ],
   "recovery_queue": [],
