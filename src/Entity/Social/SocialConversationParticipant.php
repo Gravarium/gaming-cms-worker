@@ -49,15 +49,19 @@ class SocialConversationParticipant
     #[ORM\Column(type: Types::DATETIME_IMMUTABLE, nullable: true)]
     private ?\DateTimeImmutable $lastReadAt = null;
 
-    public function __construct(SocialConversation $conversation, User $user, string $role = self::ROLE_MEMBER)
-    {
+    public function __construct(
+        SocialConversation $conversation,
+        User $user,
+        string $role = self::ROLE_MEMBER,
+        ?\DateTimeImmutable $joinedAt = null,
+    ) {
         if (!in_array($role, [self::ROLE_OWNER, self::ROLE_MEMBER], true)) {
             throw new \InvalidArgumentException('Unknown conversation participant role.');
         }
         $this->conversation = $conversation;
         $this->user = $user;
         $this->role = $role;
-        $this->joinedAt = new \DateTimeImmutable();
+        $this->joinedAt = $joinedAt ?? new \DateTimeImmutable();
     }
 
     public function getId(): ?int { return $this->id; }

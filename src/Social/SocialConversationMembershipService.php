@@ -6,8 +6,10 @@ namespace App\Social;
 
 use App\Entity\Social\SocialConversation;
 use App\Entity\Social\SocialConversationParticipant;
+use App\Entity\Social\SocialMessage;
 use App\Entity\User;
 use App\Repository\Social\SocialConversationParticipantRepository;
+use App\Repository\Social\SocialMessageRepository;
 use App\Repository\UserRepository;
 use Doctrine\DBAL\LockMode;
 use Doctrine\ORM\EntityManagerInterface;
@@ -22,6 +24,7 @@ final readonly class SocialConversationMembershipService
         private SocialConversationRecipientQuery $recipientQuery,
         private SocialRateLimitPolicy $rateLimits,
         private SocialConversationParticipantRepository $participants,
+        private SocialMessageRepository $messages,
         private UserRepository $users,
         private EntityManagerInterface $entityManager,
     ) {
@@ -124,7 +127,7 @@ final readonly class SocialConversationMembershipService
                 }
             }
 
-            $joinedAt = new \DateTimeImmutable();
+            $joinedAt = $this->joinBoundaryAfterLatestMessage($conversation);
             foreach ($newUsers as $recipientId => $recipient) {
                 $existing = $existingRows[$recipientId];
                 if ($existing instanceof SocialConversationParticipant) {
@@ -136,6 +139,7 @@ final readonly class SocialConversationMembershipService
                     $conversation,
                     $recipient,
                     SocialConversationParticipant::ROLE_MEMBER,
+                    $joinedAt,
                 ));
             }
             $this->entityManager->flush();
@@ -205,6 +209,30 @@ final readonly class SocialConversationMembershipService
 
             return $transferredOwnership;
         });
+    }
+
+    private function joinBoundaryAfterLatestMessage(SocialConversation $conversation): \DateTimeImmutable
+    {
+        $now = new \DateTimeImmutable();
+        $boundary = $this->nextSecond($now);
+        $latestMessage = $this->messages->forConversation($conversation, 1)[0] ?? null;
+
+        if ($latestMessage instanceof SocialMessage && $latestMessage->getCreatedAt() >= $boundary) {
+            $boundary = $this->nextSecond($latestMessage->getCreatedAt());
+        }
+
+        return $boundary;
+    }
+
+    private function nextSecond(\DateTimeImmutable $value): \DateTimeImmutable
+    {
+        return $value
+            ->setTime(
+                (int) $value->format('H'),
+                (int) $value->format('i'),
+                (int) $value->format('s'),
+            )
+            ->modify('+1 second');
     }
 
     private function assertCanManage(User $actor, SocialConversation $conversation): void

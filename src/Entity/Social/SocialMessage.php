@@ -44,14 +44,19 @@ class SocialMessage
     #[ORM\Column(length: 500, nullable: true)]
     private ?string $deletionReason = null;
 
-    public function __construct(SocialConversation $conversation, User $author, string $body)
-    {
+    public function __construct(
+        SocialConversation $conversation,
+        User $author,
+        string $body,
+        ?\DateTimeImmutable $createdAt = null,
+    ) {
         $body = (new SocialRateLimitPolicy())->assertMessage($body);
-        $conversation->touchMessage(new \DateTimeImmutable());
+        $createdAt ??= new \DateTimeImmutable();
+        $conversation->touchMessage($createdAt);
         $this->conversation = $conversation;
         $this->author = $author;
         $this->body = $body;
-        $this->createdAt = new \DateTimeImmutable();
+        $this->createdAt = $createdAt;
     }
 
     public function getId(): ?int { return $this->id; }

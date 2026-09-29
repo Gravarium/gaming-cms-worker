@@ -66,7 +66,8 @@ final class SocialConversationMembershipTest extends WebTestCase
 
             $storedExisting = $em->find(User::class, $this->id($existing));
             self::assertInstanceOf(User::class, $storedExisting);
-            $em->persist(new SocialMessage($storedConversation, $storedExisting, 'visible-after-new-member'));
+            $messagingForWrite = $client->getContainer()->get(SocialMessagingService::class);
+            $messagingForWrite->send($storedExisting, $storedConversation, 'visible-after-new-member');
             $em->flush();
 
             $storedOldMessage = $em->find(SocialMessage::class, $oldMessageId);
@@ -139,8 +140,8 @@ final class SocialConversationMembershipTest extends WebTestCase
 
             $storedOther = $em->find(User::class, $this->id($other));
             self::assertInstanceOf(User::class, $storedOther);
-            $newMessage = new SocialMessage($storedConversation, $storedOther, 'visible-after-rejoin');
-            $em->persist($newMessage);
+            $messagingForWrite = $client->getContainer()->get(SocialMessagingService::class);
+            $messagingForWrite->send($storedOther, $storedConversation, 'visible-after-rejoin');
             $em->flush();
 
             $messaging = $client->getContainer()->get(SocialMessagingService::class);

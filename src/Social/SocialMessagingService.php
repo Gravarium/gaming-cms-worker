@@ -90,7 +90,13 @@ final readonly class SocialMessagingService
         }
         $now = new \DateTimeImmutable();
         $this->rateLimits->assertMessageWindow($this->messages->countByAuthorSince($actor, $now->modify('-1 hour')));
-        $message = new SocialMessage($conversation, $actor, $body);
+        $createdAt = new \DateTimeImmutable();
+        foreach ($this->participants->activeParticipants($conversation) as $participant) {
+            if ($participant->getJoinedAt() > $createdAt) {
+                $createdAt = $participant->getJoinedAt();
+            }
+        }
+        $message = new SocialMessage($conversation, $actor, $body, $createdAt);
         $this->entityManager->persist($message);
 
         return $message;
