@@ -63,17 +63,9 @@ final class ContentTransferWorkflowTest extends WebTestCase
         parent::tearDown();
     }
 
-    public function testIndexIsPrivateAndRequiresCmsContentPermission(): void
+    public function testIndexIsPrivateForContentManager(): void
     {
         $client = static::createClient();
-        $client->request('GET', '/admin/content/transfer');
-        self::assertResponseRedirects('/login');
-
-        $reader = $this->user($client, [CmsPermission::ACCESS]);
-        $client->loginUser($reader);
-        $client->request('GET', '/admin/content/transfer');
-        self::assertResponseStatusCodeSame(403);
-
         $manager = $this->user($client, [CmsPermission::ACCESS, CmsPermission::CONTENT]);
         $client->loginUser($manager);
         $client->request('GET', '/admin/content/transfer');
@@ -81,6 +73,22 @@ final class ContentTransferWorkflowTest extends WebTestCase
         $this->assertPrivateResponse($client);
         self::assertSelectorTextContains('h1', 'Content übertragen');
         self::assertSelectorExists('form[name="content_transfer"]');
+    }
+
+    public function testAnonymousCannotViewTransferPage(): void
+    {
+        $client = static::createClient();
+        $client->request('GET', '/admin/content/transfer');
+        self::assertResponseRedirects('/login');
+    }
+
+    public function testUserWithoutContentPermissionCannotViewTransferPage(): void
+    {
+        $client = static::createClient();
+        $reader = $this->user($client, [CmsPermission::ACCESS]);
+        $client->loginUser($reader);
+        $client->request('GET', '/admin/content/transfer');
+        self::assertResponseStatusCodeSame(403);
     }
 
     public function testExportContainsOnlyPortableContentAndRecordsAudit(): void
