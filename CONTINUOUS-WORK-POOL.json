@@ -55548,20 +55548,20 @@
       "claim_state": "active",
       "active_base_branch": "main",
       "active_base_sha": "9e083c63e7d888af36f93a23eb924c89fad2b971",
-      "active_head": "5d8353a0e4671443889d6ca55637c1012d1defea",
+      "active_head": "cdab8282debb4ff58702ab2a2f9fb869ec27bc49",
       "resume_branch": "feature/wcp-600-newsletter-scheduled-dispatch-g1",
       "branch_heads": {
         "claim_branch": "9e083c63e7d888af36f93a23eb924c89fad2b971",
-        "feature_branch": "5d8353a0e4671443889d6ca55637c1012d1defea"
+        "feature_branch": "cdab8282debb4ff58702ab2a2f9fb869ec27bc49"
       },
-      "last_observed_head": "5d8353a0e4671443889d6ca55637c1012d1defea",
-      "last_checkpoint_at": "2026-09-29T11:40:52.913Z",
+      "last_observed_head": "cdab8282debb4ff58702ab2a2f9fb869ec27bc49",
+      "last_checkpoint_at": "2026-09-29T11:52:53.023Z",
       "checkpoint_paths": [
         "src/Command/DispatchScheduledNewsletterCampaignsCommand.php",
         "tests/Command/DispatchScheduledNewsletterCampaignsCommandTest.php"
       ],
-      "next_action": "Inspect all jobs in exact-head CI run #999; repair failures without weakening checks, then mark the PR review-ready only after the exact HEAD is fully green.",
-      "last_verified_push_at": "2026-09-29T11:39:57.004Z",
+      "next_action": "Inspect exact-head Worker CI run #1004 on cdab8282debb4ff58702ab2a2f9fb869ec27bc49; resolve any failures within the two allowed paths, then mark PR #393 review-ready only after all jobs are green.",
+      "last_verified_push_at": "2026-09-29T11:52:53.023Z",
       "worker_pr": 393,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/393",
       "worker_pr_state": "draft",
@@ -55579,19 +55579,41 @@
       ],
       "ci_validation_pr": 393,
       "last_ci_result": "in_progress",
-      "last_ci_run_id": 36563187163,
-      "last_ci_run_number": 999,
+      "last_ci_run_id": 36564230159,
+      "last_ci_run_number": 1004,
       "ci_attempts": [
         {
           "run_id": 36563187163,
           "run_number": 999,
           "head": "5d8353a0e4671443889d6ca55637c1012d1defea",
           "base": "9e083c63e7d888af36f93a23eb924c89fad2b971",
+          "result": "failure",
+          "validation_pr": 393,
+          "status": "completed",
+          "conclusion": "failure",
+          "summary": "PHP/Symfony tests rejected COALESCE as an unknown DQL function; PostgreSQL 18 migration-chain job succeeded."
+        },
+        {
+          "run_id": 36563952728,
+          "run_number": 1002,
+          "head": "55ea443bd1b74e17c210667419dd792fc30c4e07",
+          "base": "9e083c63e7d888af36f93a23eb924c89fad2b971",
+          "result": "cancelled",
+          "validation_pr": 393,
+          "status": "completed",
+          "conclusion": "cancelled",
+          "summary": "Superseded by the next exact-head correction; migration job succeeded and PHP analysis passed before cancellation."
+        },
+        {
+          "run_id": 36564230159,
+          "run_number": 1004,
+          "head": "cdab8282debb4ff58702ab2a2f9fb869ec27bc49",
+          "base": "9e083c63e7d888af36f93a23eb924c89fad2b971",
           "result": "in_progress",
           "validation_pr": 393,
-          "status": "queued",
+          "status": "in_progress",
           "conclusion": null,
-          "summary": "Full Worker CI run #999 is queued on exact HEAD 5d8353a0e4671443889d6ca55637c1012d1defea."
+          "summary": "Full Worker CI is running on the final split-query candidate at exact HEAD cdab8282debb4ff58702ab2a2f9fb869ec27bc49."
         }
       ]
     }
