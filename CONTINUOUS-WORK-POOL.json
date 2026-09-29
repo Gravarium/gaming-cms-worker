@@ -56122,7 +56122,8 @@
         "src/ContentReview/",
         "src/Form/ContentReviewDecisionType.php",
         "config/packages/content_review.yaml",
-        "tests/Controller/ContentReviewWorkflowTest.php"
+        "tests/Controller/ContentReviewWorkflowTest.php",
+        "templates/admin/dashboard.html.twig"
       ],
       "forbidden_paths": [
         "private/",
@@ -56148,9 +56149,12 @@
         "src/Form/ContentEntryType.php",
         "src/Service/ContentRevisionManager.php",
         "src/Module/CmsModuleCatalog.php",
-        "templates/",
         "assets/",
-        "public/"
+        "public/",
+        "templates/admin/content/",
+        "templates/content/",
+        "templates/layout/",
+        "templates/base.html.twig"
       ],
       "deliverables": [
         "A CMS_CONTENT_MANAGE-protected, paginated review inbox lists only ContentEntry records in STATUS_REVIEW with deterministic updatedAt/id ordering and a bounded page size.",
@@ -56188,14 +56192,15 @@
       "proposal_base_sha": "9e083c63e7d888af36f93a23eb924c89fad2b971",
       "proposal_dependency_evidence": [],
       "collision_check": {
-        "compared_against": "Fresh continuous/work-pool-v4 pool blob 24e7721cad7aacb4e7a452f542989aef26fa273e; exact sanitized Worker main 9e083c63e7d888af36f93a23eb924c89fad2b971; all in-progress and completed-awaiting-Trusted allowlists; WCP-602/content-review branch and PR searches.",
-        "result": "No path overlap with any in-progress or completed-awaiting-Trusted package. Existing WCP-428 owns the general content browser and shared content index paths; FCP-074 owns Support paths; both remain untouched. Templates are feature-local under src/ContentReview/Templates, outside FCP-072's broad unclaimed templates scope. No entity, repository, shared content controller/form, migration, module catalog, security, or CI changes.",
+        "compared_against": "Fresh continuous/work-pool-v4 pool blob 21dcde181d5108a9921af8d3844afa67aceeb1a9; exact sanitized Worker main 9e083c63e7d888af36f93a23eb924c89fad2b971; all in-progress and completed-awaiting-Trusted allowlists; WCP-602/content-review branch and PR searches.",
+        "result": "No path overlap with any in-progress or completed-awaiting-Trusted package. The new review controller, queue, form, feature-local templates, config, and workflow test are new paths. The existing admin dashboard template is not in an active or claim-locked allowlist; it receives one Content-enabled, CMS_CONTENT_MANAGE-gated link so editors can discover the review inbox. WCP-428's content browser and shared content index, FCP-074 Support, and FCP-072's broad but unclaimed templates scope remain untouched. No entity, repository, shared content controller/form, migration, module catalog, security, or CI changes.",
         "paths": [
           "src/Controller/AdminContentReviewController.php",
           "src/ContentReview/",
           "src/Form/ContentReviewDecisionType.php",
           "config/packages/content_review.yaml",
-          "tests/Controller/ContentReviewWorkflowTest.php"
+          "tests/Controller/ContentReviewWorkflowTest.php",
+          "templates/admin/dashboard.html.twig"
         ],
         "observed_nonblocking_path_hits": [
           "Reads ContentEntry STATUS_REVIEW and existing publication states, CmsModuleManager, AuditLogger, and ContentRevisionManager without editing their paths.",
