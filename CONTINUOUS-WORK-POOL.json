@@ -11,7 +11,7 @@
   "baseline_branch": "main",
   "base_sha": "9e083c63e7d888af36f93a23eb924c89fad2b971",
   "published_at": "2026-09-29T19:47:35.850Z",
-  "summary": "WCP-607 is complete awaiting Trusted review (PR #402, exact HEAD 7d1d8d97bc565a89b7933d6499d280f98a9766b3, exact-head CI #1057 passed). WCP-608 is active. WCP-589 is complete awaiting Trusted review (ready PR #384, exact HEAD 5df493cfa58e46a3f8b5c57a3e6a3deeec95c814, exact-head Worker CI #1061 passed); WCP-599 remains available after lease expiry; WCP-511 remains active. Trusted main remains the only integration and deployment source.",
+  "summary": "WCP-591 is trusted_integrated via Trusted PR #200; all 11 source paths match Worker HEAD b116456673f937fa8357e341496d12d46426a33e, and post-merge Trusted Main, sanitized sync and Worker CI are green. WCP-602 is trusted_integrated via Trusted PR #202 at merge d8797bd48fbe99ebf966c68bd513bdec977719de; post-merge Trusted Main, sanitized sync and Worker CI are green. WCP-589 remains complete awaiting Trusted review (ready PR #384, exact HEAD 5df493cfa58e46a3f8b5c57a3e6a3deeec95c814, exact-head Worker CI #1061 passed). Trusted main remains the only integration and deployment source.",
   "rules": {
     "choose": "Resume the current chat's unfinished claimed branch first. Otherwise atomically claim an eligible published task. If no published task is eligible, independently derive and publish a bounded worker-only CMS proposal from approved product goals and observed code gaps; do not ask the owner for the next FCP number.",
     "atomic_reservation": "Create the exact claim_branch and suggested feature branch from that task's published proposal_base_sha. If the claim already exists, treat it as a hard lock; the owning continuation resumes it and every other AI skips it.",
@@ -53928,7 +53928,7 @@
       "package_id": "WCP-591",
       "title": "Complete team competition rosters with teammate invitations",
       "risk": "medium",
-      "execution_state": "worker_complete_awaiting_trusted_review",
+      "execution_state": "trusted_integrated",
       "dependencies": [
         "FCP-061"
       ],
@@ -54047,7 +54047,7 @@
         "observed_nonblocking_path_hits": []
       },
       "claimed_on": "2026-09-28T21:01:59.868Z",
-      "claim_state": "locked_until_trusted_resolution",
+      "claim_state": "released_after_trusted_integration",
       "active_base_branch": "fix/fcp-061-phpstan-g1",
       "active_base_sha": "ec6bb200affc3e5a46d416e98f7a1b0621c38ded",
       "active_head": "b116456673f937fa8357e341496d12d46426a33e",
@@ -54059,7 +54059,7 @@
       "last_observed_head": "b116456673f937fa8357e341496d12d46426a33e",
       "last_checkpoint_at": "2026-09-29T13:08:39.580Z",
       "last_verified_push_at": "2026-09-29T13:08:39.580Z",
-      "next_action": "Await independent Trusted review; keep the claim locked until Trusted explicitly resolves it.",
+      "next_action": "Trusted integration and post-sync checks are complete via PR #200; Worker PR #395 is now redundant and may be closed without merging it.",
       "checkpoint_paths": [
         "config/packages/competition_rosters_widget.yaml",
         "src/CompetitionRoster/CompetitionRosterInviteLink.php",
@@ -54330,6 +54330,66 @@
         "remaining_limits": [
           "The invitation flow reuses the existing roster JSON and membership policy; no entity or migration change was made."
         ]
+      },
+      "final_changed_paths": [
+        "config/packages/competition_rosters_widget.yaml",
+        "src/CompetitionRoster/CompetitionRosterInviteLink.php",
+        "src/CompetitionRoster/CompetitionRosterQuery.php",
+        "src/CompetitionRoster/Templates/account/dashboard.html.twig",
+        "src/CompetitionRoster/Templates/account/join.html.twig",
+        "src/CompetitionRoster/Templates/widget/my_rosters.html.twig",
+        "src/Controller/CompetitionRosterController.php",
+        "src/EventSubscriber/CompetitionRostersWidgetCacheSubscriber.php",
+        "src/Widget/MyCompetitionRostersWidgetProvider.php",
+        "tests/Controller/CompetitionRosterControllerTest.php",
+        "tests/Widget/CompetitionRostersWidgetTest.php"
+      ],
+      "final_sanitized_main_sha": "052b01d4f42df13166b28d9f1413c7f626cce3de",
+      "trusted_integrated_at": "2026-09-29T21:04:15.700Z",
+      "trusted_resolution": {
+        "trusted_pr": 200,
+        "trusted_pr_url": "https://github.com/Gravarium/gaming-cms/pull/200",
+        "trusted_pr_head": "724e31d11d16c5d2b09e07d68fef69cf236bb4b0",
+        "trusted_merge_commit": "6e9942cc3232d58a8c3f3b9f570294427c7821f8",
+        "trusted_pr_ci": {
+          "run_id": 36613012155,
+          "run_number": 667,
+          "result": "success",
+          "jobs": {
+            "php_symfony": "success",
+            "postgres_18": "success"
+          }
+        },
+        "trusted_main_sha": "d8797bd48fbe99ebf966c68bd513bdec977719de",
+        "trusted_main_ci": {
+          "run_id": 36629370367,
+          "run_number": 674,
+          "result": "success",
+          "jobs": {
+            "php_symfony": "success",
+            "postgres_18": "success"
+          }
+        },
+        "sanitized_sync": {
+          "run_id": 36629370498,
+          "run_number": 112,
+          "trusted_head": "d8797bd48fbe99ebf966c68bd513bdec977719de",
+          "result": "success"
+        },
+        "post_sync_worker_sha": "052b01d4f42df13166b28d9f1413c7f626cce3de",
+        "post_sync_worker_ci": {
+          "run_id": 36629393722,
+          "run_number": 1062,
+          "result": "success",
+          "jobs": {
+            "php_symfony": "success",
+            "postgres_18": "success"
+          }
+        },
+        "worker_source_head": "b116456673f937fa8357e341496d12d46426a33e",
+        "worker_source_ci_run_id": 36572210003,
+        "exact_path_match_count": 11,
+        "worker_pr_close_pending": true
       }
     },
     {
@@ -56198,7 +56258,7 @@
       "package_id": "WCP-602",
       "title": "Complete the editorial review workflow for CMS content",
       "risk": "high",
-      "execution_state": "worker_complete_awaiting_trusted_review",
+      "execution_state": "trusted_integrated",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -56300,7 +56360,7 @@
       },
       "published_at": "2026-09-29T13:21:38.704Z",
       "claimed_on": "2026-09-29T13:21:38.704Z",
-      "claim_state": "locked_until_trusted_resolution",
+      "claim_state": "released_after_trusted_integration",
       "active_base_branch": "main",
       "active_base_sha": "9e083c63e7d888af36f93a23eb924c89fad2b971",
       "active_head": "5dc0175868d509182ecbb72910009e159a31fd1e",
@@ -56319,7 +56379,7 @@
         "tests/Controller/ContentReviewWorkflowTest.php",
         "templates/admin/dashboard.html.twig"
       ],
-      "next_action": "Await independent Trusted review; keep this claim locked until Trusted resolution. Do not merge or deploy.",
+      "next_action": "Trusted integration and post-sync checks are complete via PR #202; Worker PR #397 is now redundant and may be closed without merging it.",
       "last_verified_push_at": "2026-09-29T13:56:48.365Z",
       "worker_pr": 397,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/397",
@@ -56357,7 +56417,69 @@
           },
           "summary": "Exact-head Worker CI passed: PHPStan level 8, 1,592 PHPUnit tests/11,043 assertions, Symfony/Twig/container/AssetMapper/Doctrine checks, and all 57 PostgreSQL 18 migrations."
         }
-      ]
+      ],
+      "pr_state": "open",
+      "draft_pr": false,
+      "final_head": "5dc0175868d509182ecbb72910009e159a31fd1e",
+      "final_changed_paths": [
+        "src/Controller/AdminContentReviewController.php",
+        "src/ContentReview/",
+        "src/Form/ContentReviewDecisionType.php",
+        "config/packages/content_review.yaml",
+        "tests/Controller/ContentReviewWorkflowTest.php",
+        "templates/admin/dashboard.html.twig"
+      ],
+      "final_sanitized_main_sha": "052b01d4f42df13166b28d9f1413c7f626cce3de",
+      "trusted_integrated_at": "2026-09-29T21:04:15.700Z",
+      "trusted_resolution": {
+        "trusted_pr": 202,
+        "trusted_pr_url": "https://github.com/Gravarium/gaming-cms/pull/202",
+        "trusted_pr_head": "50137d40fda7db4604118cb9b75c761793733d04",
+        "trusted_merge_commit": "d8797bd48fbe99ebf966c68bd513bdec977719de",
+        "trusted_pr_ci": {
+          "run_id": 36627984311,
+          "run_number": 673,
+          "result": "success",
+          "jobs": {
+            "php_symfony": "success",
+            "postgres_18": "success"
+          }
+        },
+        "trusted_main_sha": "d8797bd48fbe99ebf966c68bd513bdec977719de",
+        "trusted_main_ci": {
+          "run_id": 36629370367,
+          "run_number": 674,
+          "result": "success",
+          "jobs": {
+            "php_symfony": "success",
+            "postgres_18": "success"
+          }
+        },
+        "sanitized_sync": {
+          "run_id": 36629370498,
+          "run_number": 112,
+          "trusted_head": "d8797bd48fbe99ebf966c68bd513bdec977719de",
+          "result": "success"
+        },
+        "post_sync_worker_sha": "052b01d4f42df13166b28d9f1413c7f626cce3de",
+        "post_sync_worker_ci": {
+          "run_id": 36629393722,
+          "run_number": 1062,
+          "result": "success",
+          "jobs": {
+            "php_symfony": "success",
+            "postgres_18": "success"
+          }
+        },
+        "worker_source_pr": 397,
+        "worker_source_head": "5dc0175868d509182ecbb72910009e159a31fd1e",
+        "worker_source_ci_run_id": 36578913462,
+        "trusted_owned_stale_review_guard_commit": "73293640f70e02820b6e9d8968b0fdff296594f6",
+        "trusted_owned_missing_token_validation_commit": "50137d40fda7db4604118cb9b75c761793733d04",
+        "source_pr_reviews": [],
+        "source_pr_inline_comments": [],
+        "worker_pr_close_pending": true
+      }
     },
     {
       "priority": 603,
