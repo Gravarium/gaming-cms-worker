@@ -53846,7 +53846,7 @@
       "package_id": "WCP-591",
       "title": "Complete team competition rosters with teammate invitations",
       "risk": "medium",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [
         "FCP-061"
       ],
@@ -53913,10 +53913,11 @@
         "PHPStan level 8 and complete exact-head Worker CI including PostgreSQL 18 migration-chain validation."
       ],
       "completion_report": [
-        "Exact FCP-061 proposal base SHA, final Worker HEAD, changed paths and Worker PR URL/state.",
-        "Roster invitation, acceptance and removal semantics, capacity checks, visibility/module behavior, and verified-email boundary.",
-        "Targeted PHPUnit results and exact-head CI run including PHPStan, Symfony/Twig/container checks and PostgreSQL migration chain.",
-        "Remaining limits, including one-time link behavior and the existing competition registration/team-roster model."
+        "Exact FCP-061 proposal base ec6bb200affc3e5a46d416e98f7a1b0621c38ded, final Worker HEAD b116456673f937fa8357e341496d12d46426a33e",
+        "Worker PR #395 is open and ready for independent review; exactly the 11 allowlisted paths changed.",
+        "Captains can manage open public team rosters from a private dashboard and personalized widget; one-hour single-use invitations bind verified emails, current roster state and capacity; captains can remove non-captains before check-in.",
+        "Exact-head Worker CI #1022 passed, including PHPStan level 8, the full 1,590-test/11,136-assertion PHPUnit suite, Symfony/Twig/container/AssetMapper/Doctrine validation, and PostgreSQL 18 migration-chain validation.",
+        "No entity, schema or migration changes; no Trusted integration or deployment."
       ],
       "immutable_constraints": [
         "trusted-main-is-the-only-integration-and-deployment-source",
@@ -53964,7 +53965,7 @@
         "observed_nonblocking_path_hits": []
       },
       "claimed_on": "2026-09-28T21:01:59.868Z",
-      "claim_state": "active",
+      "claim_state": "locked_until_trusted_resolution",
       "active_base_branch": "fix/fcp-061-phpstan-g1",
       "active_base_sha": "ec6bb200affc3e5a46d416e98f7a1b0621c38ded",
       "active_head": "b116456673f937fa8357e341496d12d46426a33e",
@@ -53974,9 +53975,9 @@
         "feature_branch": "b116456673f937fa8357e341496d12d46426a33e"
       },
       "last_observed_head": "b116456673f937fa8357e341496d12d46426a33e",
-      "last_checkpoint_at": "2026-09-29T13:02:39.279Z",
-      "last_verified_push_at": "2026-09-29T13:02:39.279Z",
-      "next_action": "Monitor complete Worker CI #1022 on exact HEAD b116456673f937fa8357e341496d12d46426a33e; address any findings.",
+      "last_checkpoint_at": "2026-09-29T13:08:39.580Z",
+      "last_verified_push_at": "2026-09-29T13:08:39.580Z",
+      "next_action": "Await independent Trusted review; keep the claim locked until Trusted explicitly resolves it.",
       "checkpoint_paths": [
         "config/packages/competition_rosters_widget.yaml",
         "src/CompetitionRoster/CompetitionRosterInviteLink.php",
@@ -53992,9 +53993,9 @@
       ],
       "worker_pr": 395,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/395",
-      "worker_pr_state": "draft",
+      "worker_pr_state": "ready_for_review",
       "pr_state": "open",
-      "draft_pr": true,
+      "draft_pr": false,
       "worker_pr_base_branch": "main",
       "worker_pr_base_sha": "9e083c63e7d888af36f93a23eb924c89fad2b971",
       "worker_pr_changed_paths": [
@@ -54010,7 +54011,7 @@
         "tests/Controller/CompetitionRosterControllerTest.php",
         "tests/Widget/CompetitionRostersWidgetTest.php"
       ],
-      "ci_result": "in_progress",
+      "ci_result": "success",
       "ci_run_id": 36572210003,
       "ci_run_number": 1022,
       "ci_head": "b116456673f937fa8357e341496d12d46426a33e",
@@ -54182,15 +54183,72 @@
           "run_number": 1022,
           "head": "b116456673f937fa8357e341496d12d46426a33e",
           "base": "9e083c63e7d888af36f93a23eb924c89fad2b971",
-          "result": "in_progress",
+          "result": "success",
           "validation_pr": 395,
-          "status": "in_progress",
-          "conclusion": null,
-          "jobs": {},
-          "summary": "Exact-head CI after switching to separate BrowserKit instances with distinct cookie jars while retaining the single permitted test kernel."
+          "status": "completed",
+          "conclusion": "success",
+          "jobs": {
+            "php_symfony": "success",
+            "postgres_18": "success"
+          },
+          "summary": "Exact-head Worker CI passed: PHPStan level 8, 1,590 PHPUnit tests/11,136 assertions, Symfony/Twig/container/AssetMapper/Doctrine validation, and the complete PostgreSQL 18 migration chain."
         }
       ],
-      "last_ci_result": "failure"
+      "last_ci_result": "success",
+      "final_head": "b116456673f937fa8357e341496d12d46426a33e",
+      "completed_at": "2026-09-29T13:08:39.580Z",
+      "last_ci_run_id": 36572210003,
+      "ci_validation_pr": 395,
+      "completion_evidence": {
+        "exact_sanitized_base_sha": "ec6bb200affc3e5a46d416e98f7a1b0621c38ded",
+        "final_head": "b116456673f937fa8357e341496d12d46426a33e",
+        "changed_paths": [
+          "config/packages/competition_rosters_widget.yaml",
+          "src/CompetitionRoster/CompetitionRosterInviteLink.php",
+          "src/CompetitionRoster/CompetitionRosterQuery.php",
+          "src/CompetitionRoster/Templates/account/dashboard.html.twig",
+          "src/CompetitionRoster/Templates/account/join.html.twig",
+          "src/CompetitionRoster/Templates/widget/my_rosters.html.twig",
+          "src/Controller/CompetitionRosterController.php",
+          "src/EventSubscriber/CompetitionRostersWidgetCacheSubscriber.php",
+          "src/Widget/MyCompetitionRostersWidgetProvider.php",
+          "tests/Controller/CompetitionRosterControllerTest.php",
+          "tests/Widget/CompetitionRostersWidgetTest.php"
+        ],
+        "worker_pr": "https://github.com/Gravarium/gaming-cms-worker/pull/395",
+        "exact_head_ci_run_id": 36572210003,
+        "exact_head_ci_run_number": 1022,
+        "exact_head_ci_result": "success",
+        "phpunit": {
+          "tests": 1590,
+          "assertions": 11136,
+          "deprecations": 1,
+          "notices": 24
+        },
+        "jobs": {
+          "php_symfony": "success",
+          "postgres_18": "success"
+        },
+        "coverage": [
+          "PHPStan level 8",
+          "Composer metadata and dependency audit",
+          "Twig and YAML lint",
+          "Symfony container validation",
+          "AssetMapper compilation",
+          "Doctrine mapping validation",
+          "complete PostgreSQL 18 migration-chain validation"
+        ],
+        "functional_evidence": [
+          "Private captain dashboard and personalized Page Builder widget show only bounded open public team registrations and active member display names.",
+          "Signed one-hour single-use invitation links bind competition, participant, captain, verified email fingerprint and roster state without exposing raw email.",
+          "Authenticated verified teammates can accept invitations; CSRF, owner, route binding, Gaming module, visibility, status, capacity and serialized participant locking are enforced.",
+          "Fresh invitations fill the next slot; stale, forged, expired, used, wrong-email, hidden, closed, solo and disabled-module flows fail closed.",
+          "Captains can remove only non-captain members before check-in; personalized responses use private/no-store headers."
+        ],
+        "remaining_limits": [
+          "The invitation flow reuses the existing roster JSON and membership policy; no entity or migration change was made."
+        ]
+      }
     },
     {
       "priority": 592,
