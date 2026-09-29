@@ -108,6 +108,26 @@ final class DispatchScheduledNewsletterCampaignsCommand extends Command
     /** @return list<NewsletterCampaign> */
     private function dueCampaigns(\DateTimeImmutable $now, int $limit): array
     {
+        $scheduledQuery = $this->entityManager->createQueryBuilder();
+        $scheduledQuery
+            ->select('campaign')
+            ->from(NewsletterCampaign::class, 'campaign')
+            ->andWhere('campaign.status = :scheduled')
+            ->andWhere('campaign.scheduledAt IS NOT NULL')
+            ->andWhere('campaign.scheduledAt <= :now')
+            ->setParameter('scheduled', NewsletterCampaign::STATUS_SCHEDULED)
+            ->setParameter('now', $now)
+            ->orderBy('campaign.scheduledAt', 'ASC')
+            ->addOrderBy('campaign.id', 'ASC')
+            ->setMaxResults($limit);
+
+        /** @var list<NewsletterCampaign> $scheduledCampaigns */
+        $scheduledCampaigns = $scheduledQuery->getQuery()->getResult();
+        $remaining = $limit - count($scheduledCampaigns);
+        if ($remaining === 0) {
+            return $scheduledCampaigns;
+        }
+
         $readyDelivery = $this->entityManager->createQueryBuilder()
             ->select('delivery.id')
             ->from(NewsletterDelivery::class, 'delivery')
@@ -116,35 +136,24 @@ final class DispatchScheduledNewsletterCampaignsCommand extends Command
                 '(delivery.status = :pending OR (delivery.status = :retry AND delivery.retryAt <= :now))',
             );
 
-        $query = $this->entityManager->createQueryBuilder();
-        $scheduled = $query->expr()->andX(
-            'campaign.status = :scheduled',
-            'campaign.scheduledAt IS NOT NULL',
-            'campaign.scheduledAt <= :now',
-        );
-        $resumable = $query->expr()->andX(
-            'campaign.status = :sending',
-            $query->expr()->exists($readyDelivery->getDQL()),
-        );
-
-        $query
+        $resumableQuery = $this->entityManager->createQueryBuilder();
+        $resumableQuery
             ->select('campaign')
             ->from(NewsletterCampaign::class, 'campaign')
-            ->andWhere($query->expr()->orX($scheduled, $resumable))
-            ->setParameter('scheduled', NewsletterCampaign::STATUS_SCHEDULED)
+            ->andWhere('campaign.status = :sending')
+            ->andWhere($resumableQuery->expr()->exists($readyDelivery->getDQL()))
             ->setParameter('sending', NewsletterCampaign::STATUS_SENDING)
             ->setParameter('pending', NewsletterDelivery::STATUS_PENDING)
             ->setParameter('retry', NewsletterDelivery::STATUS_RETRY)
             ->setParameter('now', $now)
-            ->orderBy('campaign.scheduledAt', 'ASC')
-            ->addOrderBy('campaign.updatedAt', 'ASC')
+            ->orderBy('campaign.updatedAt', 'ASC')
             ->addOrderBy('campaign.id', 'ASC')
-            ->setMaxResults($limit);
+            ->setMaxResults($remaining);
 
-        /** @var list<NewsletterCampaign> $campaigns */
-        $campaigns = $query->getQuery()->getResult();
+        /** @var list<NewsletterCampaign> $resumableCampaigns */
+        $resumableCampaigns = $resumableQuery->getQuery()->getResult();
 
-        return $campaigns;
+        return [...$scheduledCampaigns, ...$resumableCampaigns];
     }
 
     private function positiveInteger(mixed $value, int $maximum): ?int
