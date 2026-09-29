@@ -282,12 +282,15 @@ final class ContentScheduleWorkflowTest extends WebTestCase
         }
     }
 
-    public function testAnonymousAndInsufficientPermissionCannotViewCalendar(): void
+    public function testAnonymousCannotViewCalendar(): void
     {
-        $anonymous = static::createClient();
-        $anonymous->request('GET', '/admin/content/schedule');
+        $client = static::createClient();
+        $client->request('GET', '/admin/content/schedule');
         self::assertResponseRedirects('/login');
+    }
 
+    public function testUserWithoutContentPermissionCannotViewCalendar(): void
+    {
         $client = static::createClient();
         $reader = $this->user($client, [CmsPermission::ACCESS]);
         $client->loginUser($reader);
