@@ -184,6 +184,7 @@ final class ContentReviewWorkflowTest extends WebTestCase
         $manager = $this->user($client, [CmsPermission::ACCESS, CmsPermission::CONTENT]);
         $entry = $this->entry($client, $manager, ContentEntry::STATUS_REVIEW, 'Private queue marker');
         $entryId = $this->requireId($entry->getId());
+        $entryTitle = $entry->getTitle();
         $userIds = [$this->requireId($manager->getId())];
 
         $client->loginUser($manager);
@@ -192,7 +193,7 @@ final class ContentReviewWorkflowTest extends WebTestCase
             $crawler = $client->request('GET', '/admin/content/review');
             self::assertResponseIsSuccessful();
             $this->assertPrivateNoStore($client);
-            self::assertStringContainsString('Private queue marker', (string) $client->getResponse()->getContent());
+            self::assertStringContainsString($entryTitle, (string) $client->getResponse()->getContent());
 
             $client->request('GET', '/admin/content/review/'.$entryId.'/decision');
             self::assertResponseStatusCodeSame(405);
@@ -210,7 +211,7 @@ final class ContentReviewWorkflowTest extends WebTestCase
             try {
                 $client->request('GET', '/admin/content/review');
                 self::assertResponseStatusCodeSame(404);
-                self::assertStringNotContainsString('Private queue marker', (string) $client->getResponse()->getContent());
+                self::assertStringNotContainsString($entryTitle, (string) $client->getResponse()->getContent());
             } finally {
                 $this->restoreContentEnabled($client, $previous);
             }
