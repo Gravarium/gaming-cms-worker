@@ -10,8 +10,8 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "9e083c63e7d888af36f93a23eb924c89fad2b971",
-  "published_at": "2026-09-29T13:59:43Z",
-  "summary": "WCP-601 PHPUnit fix is on PR #396 at 73ce314b82a6c5a49b8a7d094e51591ace4b1350; exact-head CI run 1030 is queued. WCP-602 remains independently active with disjoint paths.",
+  "published_at": "2026-09-29T14:03:17.497Z",
+  "summary": "WCP-602 is complete awaiting Trusted review. PR #397 is ready for review at 5dc0175868d509182ecbb72910009e159a31fd1e; exact-head Worker CI #1029 passed. Its claim remains locked. The next package must be selected from a fresh dependency and path-collision check.",
   "rules": {
     "choose": "Resume the current chat's unfinished claimed branch first. Otherwise atomically claim an eligible published task. If no published task is eligible, independently derive and publish a bounded worker-only CMS proposal from approved product goals and observed code gaps; do not ask the owner for the next FCP number.",
     "atomic_reservation": "Create the exact claim_branch and suggested feature branch from that task's published proposal_base_sha. If the claim already exists, treat it as a hard lock; the owning continuation resumes it and every other AI skips it.",
@@ -56110,7 +56110,7 @@
       "package_id": "WCP-602",
       "title": "Complete the editorial review workflow for CMS content",
       "risk": "high",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -56212,7 +56212,7 @@
       },
       "published_at": "2026-09-29T13:21:38.704Z",
       "claimed_on": "2026-09-29T13:21:38.704Z",
-      "claim_state": "active",
+      "claim_state": "locked_until_trusted_resolution",
       "active_base_branch": "main",
       "active_base_sha": "9e083c63e7d888af36f93a23eb924c89fad2b971",
       "active_head": "5dc0175868d509182ecbb72910009e159a31fd1e",
@@ -56222,7 +56222,7 @@
         "feature_branch": "5dc0175868d509182ecbb72910009e159a31fd1e"
       },
       "last_observed_head": "5dc0175868d509182ecbb72910009e159a31fd1e",
-      "last_checkpoint_at": "2026-09-29T13:56:48.365Z",
+      "last_checkpoint_at": "2026-09-29T14:03:17.497Z",
       "checkpoint_paths": [
         "src/Controller/AdminContentReviewController.php",
         "src/ContentReview/",
@@ -56231,8 +56231,45 @@
         "tests/Controller/ContentReviewWorkflowTest.php",
         "templates/admin/dashboard.html.twig"
       ],
-      "next_action": "Run exact-head Worker CI; fix any remaining failures only within WCP-602 paths.",
-      "last_verified_push_at": "2026-09-29T13:56:48.365Z"
+      "next_action": "Await independent Trusted review; keep this claim locked until Trusted resolution. Do not merge or deploy.",
+      "last_verified_push_at": "2026-09-29T13:56:48.365Z",
+      "worker_pr": 397,
+      "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/397",
+      "worker_pr_state": "ready_for_review",
+      "worker_pr_base_branch": "main",
+      "worker_pr_base_sha": "9e083c63e7d888af36f93a23eb924c89fad2b971",
+      "worker_pr_changed_paths": [
+        "config/packages/content_review.yaml",
+        "src/ContentReview/ReviewDecision.php",
+        "src/ContentReview/ReviewQueue.php",
+        "src/ContentReview/Templates/review_detail.html.twig",
+        "src/ContentReview/Templates/review_queue.html.twig",
+        "src/Controller/AdminContentReviewController.php",
+        "src/Form/ContentReviewDecisionType.php",
+        "templates/admin/dashboard.html.twig",
+        "tests/Controller/ContentReviewWorkflowTest.php"
+      ],
+      "ci_result": "success",
+      "ci_run_id": 36578913462,
+      "ci_run_number": 1029,
+      "ci_head": "5dc0175868d509182ecbb72910009e159a31fd1e",
+      "ci_attempts": [
+        {
+          "run_id": 36578913462,
+          "run_number": 1029,
+          "head": "5dc0175868d509182ecbb72910009e159a31fd1e",
+          "base": "9e083c63e7d888af36f93a23eb924c89fad2b971",
+          "result": "success",
+          "validation_pr": 397,
+          "status": "completed",
+          "conclusion": "success",
+          "jobs": {
+            "php_symfony": "success",
+            "postgres_18": "success"
+          },
+          "summary": "Exact-head Worker CI passed: PHPStan level 8, 1,592 PHPUnit tests/11,043 assertions, Symfony/Twig/container/AssetMapper/Doctrine checks, and all 57 PostgreSQL 18 migrations."
+        }
+      ]
     }
   ],
   "recovery_queue": [],
