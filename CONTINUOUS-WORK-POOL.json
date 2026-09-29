@@ -10,7 +10,7 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "9e083c63e7d888af36f93a23eb924c89fad2b971",
-  "published_at": "2026-09-29T14:44:29.772Z",
+  "published_at": "2026-09-29T14:46:14.354Z",
   "summary": "WCP-601 Hardware workflows are worker-complete on exact green HEAD 6e7caab9c501b0b4db66c3f38a06ad2cc5e58f08 (PR #396, CI run 1033). WCP-602 remains independently active with disjoint paths; the completed WCP-601 claim stays locked pending Trusted resolution.",
   "rules": {
     "choose": "Resume the current chat's unfinished claimed branch first. Otherwise atomically claim an eligible published task. If no published task is eligible, independently derive and publish a bounded worker-only CMS proposal from approved product goals and observed code gaps; do not ask the owner for the next FCP number.",
@@ -56374,14 +56374,14 @@
       "claim_state": "active",
       "active_base_branch": "main",
       "active_base_sha": "9e083c63e7d888af36f93a23eb924c89fad2b971",
-      "active_head": "5c69c5afbbbd2e4f64418fac33dcf2e8ef06afa0",
+      "active_head": "aa7b8f940f4bae64e6582b888f046d8cb40da385",
       "resume_branch": "feature/wcp-603-content-schedule-g1",
       "branch_heads": {
         "claim_branch": "9e083c63e7d888af36f93a23eb924c89fad2b971",
-        "feature_branch": "5c69c5afbbbd2e4f64418fac33dcf2e8ef06afa0"
+        "feature_branch": "aa7b8f940f4bae64e6582b888f046d8cb40da385"
       },
-      "last_observed_head": "5c69c5afbbbd2e4f64418fac33dcf2e8ef06afa0",
-      "last_checkpoint_at": "2026-09-29T14:44:29.772Z",
+      "last_observed_head": "aa7b8f940f4bae64e6582b888f046d8cb40da385",
+      "last_checkpoint_at": "2026-09-29T14:46:14.354Z",
       "checkpoint_paths": [
         "src/Controller/AdminContentScheduleController.php",
         "src/ContentSchedule/",
@@ -56390,8 +56390,13 @@
         "tests/Controller/ContentScheduleWorkflowTest.php",
         "tests/ContentSchedule/"
       ],
-      "next_action": "Run complete Worker CI on the exact feature head, then open or update the Worker PR for Trusted review.",
-      "last_verified_push_at": "2026-09-29T14:44:29.772Z"
+      "next_action": "Complete exact-head Worker CI for draft PR #398; fix findings only within the exclusive WCP-603 allowlist.",
+      "last_verified_push_at": "2026-09-29T14:46:14.354Z",
+      "worker_pr": 398,
+      "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/398",
+      "draft_pr": 398,
+      "pr_state": "draft",
+      "worker_pr_state": "open"
     }
   ],
   "recovery_queue": [],
