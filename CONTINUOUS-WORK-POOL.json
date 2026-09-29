@@ -10,7 +10,7 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "9e083c63e7d888af36f93a23eb924c89fad2b971",
-  "published_at": "2026-09-29T22:08:39Z",
+  "published_at": "2026-09-29T22:08:56.701Z",
   "summary": "WCP-511 is complete awaiting Trusted review on Worker PR #404 at exact HEAD e6f77f1dfa236a0a4709c8b3a6c260a2c3730341; exact-head Worker CI #1068 is green. Trusted main remains the only integration and deployment source.",
   "rules": {
     "choose": "Resume the current chat's unfinished claimed branch first. Otherwise atomically claim an eligible published task. If no published task is eligible, independently derive and publish a bounded worker-only CMS proposal from approved product goals and observed code gaps; do not ask the owner for the next FCP number.",
@@ -55901,7 +55901,7 @@
       "package_id": "WCP-599",
       "title": "Complete the Social group-conversation membership lifecycle",
       "risk": "medium",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [
         "WCP-558"
       ],
@@ -56047,7 +56047,7 @@
         "src/Social/SocialAccessPolicy.php",
         "src/Entity/Social/SocialMessage.php"
       ],
-      "next_action": "Monitor full exact-head Worker CI for draft PR #394 at c78c95092965cc22f3122b39746b65bcb451f93a; fix concrete failures within allowlist.",
+      "next_action": "PR #394 is ready for Trusted review at exact green HEAD c78c95092965cc22f3122b39746b65bcb451f93a; keep claim locked until Trusted explicitly resolves it. WCP-558 remains a separate exact-green unintegrated predecessor.",
       "previous_claim": {
         "claim_branch": "claim/wcp-599-social-group-conversation-membership-g1",
         "expired_at": "2026-09-29T19:24:17.921Z",
@@ -56060,12 +56060,12 @@
       },
       "claim_generation": 2,
       "lease_expired_at": "2026-09-29T19:24:17.921Z",
-      "claim_state": "active",
+      "claim_state": "locked_until_trusted_resolution",
       "claimed_on": "2026-09-29T22:01:02.573Z",
       "last_verified_push_at": "2026-09-29T22:02:56.939Z",
       "last_checkpoint_at": "2026-09-29T22:02:56.939Z",
       "worker_pr": 394,
-      "draft_pr": true,
+      "draft_pr": false,
       "ci_attempts": [
         {
           "head": "2d06af7f8146ba6aa84b18422c9f38136faaa6b4",
@@ -56076,8 +56076,25 @@
             "109404070521:success"
           ],
           "diagnosis": "PHPUnit test used unimported NotFoundHttpException and AccessDeniedException catches; invalid form CSRF token returned 422, not asserted 403. PHPStan and PostgreSQL migration validation passed."
+        },
+        {
+          "head": "c78c95092965cc22f3122b39746b65bcb451f93a",
+          "run_id": 36637161739,
+          "run_number": 1070,
+          "result": "success",
+          "jobs": [
+            "109640506729:success",
+            "109640506963:success"
+          ],
+          "test_summary": "PHPUnit 1660 tests, 12134 assertions, no errors/failures; PHPStan 8 and PostgreSQL 18 migration chain passed."
         }
-      ]
+      ],
+      "worker_pr_state": "ready_for_review",
+      "pr_state": "open",
+      "final_head": "c78c95092965cc22f3122b39746b65bcb451f93a",
+      "ci_run_id": 36637161739,
+      "ci_result": "success",
+      "completed_at": "2026-09-29T22:08:56.701Z"
     },
     {
       "priority": 600,
