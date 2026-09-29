@@ -10,8 +10,8 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "9e083c63e7d888af36f93a23eb924c89fad2b971",
-  "published_at": "2026-09-29T15:10:31.672Z",
-  "summary": "WCP-602 and WCP-603 are complete awaiting Trusted review with green exact-head CI. No published unclaimed task is dependency-eligible; WCP-604 is independently reserved for safe, schema-free CMS content portability.",
+  "published_at": "2026-09-29T15:32:34.954Z",
+  "summary": "WCP-604 content portability and WCP-605 Downloads release relationships are independently reserved on disjoint paths; both use exact sanitized main. WCP-602/603 remain worker-complete awaiting Trusted review with green exact-head CI.",
   "rules": {
     "choose": "Resume the current chat's unfinished claimed branch first. Otherwise atomically claim an eligible published task. If no published task is eligible, independently derive and publish a bounded worker-only CMS proposal from approved product goals and observed code gaps; do not ask the owner for the next FCP number.",
     "atomic_reservation": "Create the exact claim_branch and suggested feature branch from that task's published proposal_base_sha. If the claim already exists, treat it as a hard lock; the owning continuation resumes it and every other AI skips it.",
@@ -56575,6 +56575,143 @@
       "next_action": "Run full exact-head Worker CI on PR 399 at eb22162acb4f33bcaafac9cd11b169ce9f522c64; confirm PHPStan, PostgreSQL 18, application tests, and all downstream checks before trusted-review handoff.",
       "last_verified_push_at": "2026-09-29T15:28:17.207Z",
       "worker_pr": 399
+    },
+    {
+      "priority": 605,
+      "package_id": "WCP-605",
+      "title": "Complete version dependency and mirror workflows for Downloads",
+      "risk": "high",
+      "execution_state": "worker_in_progress",
+      "dependencies": [
+        "FCP-063",
+        "WCP-587"
+      ],
+      "dependencies_integrated_at_publication": [
+        "FCP-063",
+        "WCP-587"
+      ],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-605-download-release-relations-g1",
+      "suggested_branch": "feature/wcp-605-download-release-relations-g1",
+      "base_branch": "main",
+      "base_sha": "9e083c63e7d888af36f93a23eb924c89fad2b971",
+      "objective": "Finish the Downloads module's existing release-relationship model with CMS-managed per-version package dependencies and HTTPS mirrors, public release disclosure that respects download authorization, and safe handling of required-dependency cycles.",
+      "allowed_paths": [
+        "src/Controller/AdminDownloadRelationsController.php",
+        "src/Controller/AdminDownloadCatalogueController.php",
+        "src/Controller/Download/DownloadController.php",
+        "src/Downloads/Relations/",
+        "src/Downloads/Templates/admin/upload.html.twig",
+        "src/Downloads/Templates/admin/package_relations.html.twig",
+        "src/Downloads/Templates/admin/release_relations.html.twig",
+        "src/Downloads/Templates/download/show.html.twig",
+        "src/Entity/Download/DownloadDependency.php",
+        "src/Entity/Download/DownloadMirror.php",
+        "src/Form/DownloadRelations/",
+        "src/Repository/Download/DownloadDependencyRepository.php",
+        "src/Repository/Download/DownloadMirrorRepository.php",
+        "templates/admin/download_catalogue/index.html.twig",
+        "tests/Controller/AdminDownloadRelationsControllerTest.php",
+        "tests/Controller/DownloadReleaseRelationsPublicTest.php",
+        "tests/Downloads/Relations/"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "CONTINUOUS-WORKER.md",
+        "CONTINUOUS-WORK-POOL.json",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "src/Downloads/DownloadPrivateStorage.php",
+        "src/Downloads/DownloadScanService.php"
+      ],
+      "deliverables": [
+        "Admins with CMS_STORAGE_MANAGE can reach package release relations from the download catalogue and add or remove per-version requires, optional, and conflicts package relationships and HTTPS mirrors using CSRF-protected forms.",
+        "Reject self-dependencies, duplicate relationships, and cycles in required-package relationships; bound graph traversal and fail closed when the safety bound is reached.",
+        "Mirror URLs must be valid credential-free HTTPS URLs; only explicitly trusted mirrors are rendered as external links to authorized download viewers.",
+        "Public release details show dependency targets only when those packages are enabled and the viewer may download them, without leaking hidden package names or slugs.",
+        "Relationship administration and public display respect the Downloads module's existing availability gate and visibility policy; private file delivery, scan and storage boundaries remain untouched.",
+        "Reuse the existing download_dependency and download_mirror tables; do not add or alter schema."
+      ],
+      "tests": [
+        "Domain and repository tests for duplicate/self/cycle rejection, traversal bounds, mirror HTTPS/credential validation, and package scoping.",
+        "Admin functional tests for authorized relation creation and removal, CSRF, permission denial, foreign-version ownership, invalid mirrors, and disabled Downloads module.",
+        "Public download-detail tests prove only accessible dependency targets and trusted mirrors are rendered; private targets and untrusted mirrors do not leak.",
+        "Complete Worker CI on the exact final HEAD, including PostgreSQL 18 migration-chain validation without introducing a migration."
+      ],
+      "completion_report": [
+        "Exact sanitized main base SHA and final HEAD; Worker PR URL/state and complete changed-path list.",
+        "Exact-head domain, functional, and CI results for relation CRUD, cycle/duplicate safeguards, mirror trust, and visibility-aware public output.",
+        "Confirm no schema/migration changes and that private file delivery, scan, and storage boundaries remain unchanged.",
+        "Unresolved risks and intentionally deferred dependency-version evaluation behavior."
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-Trusted-review-and-exact-head-CI",
+        "all-relation-admin-actions-require-CMS_STORAGE_MANAGE-and-downloads-module-enabled",
+        "dependency-targets-must-respect-existing-package-visibility-and-enabled-state",
+        "public-external-mirrors-must-be-valid-credential-free-HTTPS-and-explicitly-trusted",
+        "no-self-or-cyclic-required-package-relationships;bounded-validation-fails-closed",
+        "CSRF-protected-state-changing-actions",
+        "no-schema-or-migration-change",
+        "no-security-test-phpstan-CI-auth-CSRF-validation-recovery-rollback-or-upload-protection-weakening",
+        "no-secrets-or-trusted-private-runtime-in-worker-source",
+        "no-direct-Trusted-integration-or-deployment"
+      ],
+      "proposal_kind": "worker_only",
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "9e083c63e7d888af36f93a23eb924c89fad2b971",
+      "proposal_dependency_evidence": [
+        "FCP-063 is trusted_integrated on worker main. Its existing DownloadDependency and DownloadMirror entities define release relationships, but GitHub code search on main finds references only in the entity files and DownloadDomainTest; there are no admin or public relationship workflows.",
+        "WCP-587 is trusted_integrated on worker main with green CI (PR #382, exact head 02fbd8410eda8ded08f54a65cc76bcf36c36958d, run 36477366137). Its release-notes detail page is the safe existing presentation seam."
+      ],
+      "collision_check": {
+        "compared_against": "Fresh continuous/work-pool-v4 at 7f2b2474cdab4efa582bbba3264c4074a98bf0fc, exact main 9e083c63e7d888af36f93a23eb924c89fad2b971, and every worker_in_progress or worker_*_awaiting_trusted_review allowlist.",
+        "result": "No path overlap with any active or claim-locked package. No migration path is claimed. FCP-063 and WCP-587 are trusted-integrated predecessors already present in main.",
+        "paths": [
+          "src/Controller/AdminDownloadRelationsController.php",
+          "src/Controller/AdminDownloadCatalogueController.php",
+          "src/Controller/Download/DownloadController.php",
+          "src/Downloads/Relations/",
+          "src/Downloads/Templates/admin/upload.html.twig",
+          "src/Downloads/Templates/admin/package_relations.html.twig",
+          "src/Downloads/Templates/admin/release_relations.html.twig",
+          "src/Downloads/Templates/download/show.html.twig",
+          "src/Entity/Download/DownloadDependency.php",
+          "src/Entity/Download/DownloadMirror.php",
+          "src/Form/DownloadRelations/",
+          "src/Repository/Download/DownloadDependencyRepository.php",
+          "src/Repository/Download/DownloadMirrorRepository.php",
+          "templates/admin/download_catalogue/index.html.twig",
+          "tests/Controller/AdminDownloadRelationsControllerTest.php",
+          "tests/Controller/DownloadReleaseRelationsPublicTest.php",
+          "tests/Downloads/Relations/"
+        ]
+      },
+      "published_at": "2026-09-29T15:32:34.954Z",
+      "claimed_on": "2026-09-29T15:32:34.954Z",
+      "claim_state": "active",
+      "active_base_branch": "main",
+      "active_base_sha": "9e083c63e7d888af36f93a23eb924c89fad2b971",
+      "active_head": "9e083c63e7d888af36f93a23eb924c89fad2b971",
+      "resume_branch": "feature/wcp-605-download-release-relations-g1",
+      "branch_heads": {
+        "claim_branch": "9e083c63e7d888af36f93a23eb924c89fad2b971",
+        "feature_branch": "9e083c63e7d888af36f93a23eb924c89fad2b971"
+      },
+      "last_observed_head": "9e083c63e7d888af36f93a23eb924c89fad2b971",
+      "last_checkpoint_at": "2026-09-29T15:32:34.954Z",
+      "checkpoint_paths": [],
+      "next_action": "Implement the admin and public release-relationship lifecycle on the reserved feature branch, preserving package visibility, module gating, and private download storage boundaries."
     }
   ],
   "recovery_queue": [],
