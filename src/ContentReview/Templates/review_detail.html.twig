@@ -1,0 +1,34 @@
+{% extends 'base.html.twig' %}
+{% block title %}Inhalt prüfen: {{ entry.title }} | Gaming CMS{% endblock %}
+{% block body %}
+<header class="topbar">
+    <a class="brand" href="{{ path('app_admin_dashboard') }}">Gaming CMS</a>
+    <nav class="top-actions" aria-label="Redaktion">
+        <a href="{{ path('app_admin_content_review_index') }}">Zur Freigabe-Warteschlange</a>
+        <a href="{{ path('app_admin_content_preview', {id: entry.id}) }}" target="_blank" rel="noopener">Geschützte Vorschau</a>
+    </nav>
+</header>
+<main class="dashboard">
+    <p class="eyebrow">Content-Modul · Zur Freigabe</p>
+    <h1>Inhalt prüfen</h1>
+    <section class="panel" aria-label="Inhaltsmetadaten">
+        <h2>{{ entry.title }}</h2>
+        {% if entry.subtitle %}<p>{{ entry.subtitle }}</p>{% endif %}
+        <dl>
+            <dt>Typ</dt><dd>{{ entry.type == 'news' ? 'News' : 'Seite' }}</dd>
+            <dt>Autor</dt><dd>{{ entry.author.displayName }}</dd>
+            <dt>Zuletzt geändert</dt><dd>{{ entry.updatedAt|date('d.m.Y H:i') }}</dd>
+        </dl>
+    </section>
+    <section class="panel" aria-labelledby="decision-heading">
+        <h2 id="decision-heading">Entscheidung</h2>
+        {{ form_errors(form) }}
+        {{ form_start(form) }}
+            {{ form_row(form.decision) }}
+            {{ form_row(form.reason) }}
+            {{ form_row(form.scheduledAt) }}
+            <button type="submit">Entscheidung speichern</button>
+        {{ form_end(form) }}
+    </section>
+</main>
+{% endblock %}
