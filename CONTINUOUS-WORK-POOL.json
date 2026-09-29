@@ -10,7 +10,7 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "9e083c63e7d888af36f93a23eb924c89fad2b971",
-  "published_at": "2026-09-29T22:26:38.926Z",
+  "published_at": "2026-09-29T22:29:07.954Z",
   "summary": "WCP-511 is complete awaiting Trusted review on Worker PR #404 at exact HEAD e6f77f1dfa236a0a4709c8b3a6c260a2c3730341; exact-head Worker CI #1068 is green. Trusted main remains the only integration and deployment source.",
   "rules": {
     "choose": "Resume the current chat's unfinished claimed branch first. Otherwise atomically claim an eligible published task. If no published task is eligible, independently derive and publish a bounded worker-only CMS proposal from approved product goals and observed code gaps; do not ask the owner for the next FCP number.",
@@ -57909,6 +57909,106 @@
       "ci_run_id": 36639111793,
       "ci_result": "success",
       "completed_at": "2026-09-29T22:26:38.926Z"
+    },
+    {
+      "priority": 610,
+      "package_id": "WCP-610",
+      "title": "Let members manage their own private character accounts and profiles",
+      "risk": "medium",
+      "execution_state": "worker_in_progress",
+      "claim_state": "active",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-610-character-self-service-g1",
+      "suggested_branch": "feature/wcp-610-character-self-service-g1",
+      "base_branch": "main",
+      "base_sha": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "objective": "Complete the existing Game Character module's missing owner workflow. Admin routes can create accounts/profiles, public routes can read consented profiles, and repositories already provide activeForOwner/finding helpers, but signed-in members cannot create, edit or retire their own character data. Add a dedicated private self-service portal for owner accounts and manual profiles with account creation and renaming, profile creation and editing, and soft deletion of profiles/accounts. Owner checks, CSRF, field bounds, enabled-game and gaming-module checks must apply. New profiles remain private by default; do not add publication controls while the locked FCP-060 public templates and consent boundaries are outside this claim. Do not edit FCP-060 paths or its entities, repositories, public/admin controllers and templates.",
+      "allowed_paths": [
+        "src/Controller/CharacterSelfServiceController.php",
+        "templates/account/characters/",
+        "tests/Controller/CharacterSelfServiceTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "CONTINUOUS-WORKER.md",
+        "CONTINUOUS-WORK-POOL.json",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/",
+        "src/Controller/Character/",
+        "src/Controller/AdminCharacter/",
+        "src/Entity/GameCharacter/",
+        "src/Repository/GameCharacter/",
+        "src/Gaming/Character/",
+        "src/Form/GameCharacter/",
+        "templates/character/",
+        "templates/admin/character/",
+        "templates/account/profile.html.twig",
+        "templates/account/security.html.twig",
+        "src/Controller/AccountController.php"
+      ],
+      "deliverables": [
+        "Signed-in active members can list only their own active character accounts and profiles and create an account for an enabled game, including bounded account key/display name and consent; new profiles are private by default.",
+        "Owners can rename their own active accounts, add/edit manual character fields on their own active profiles and retire a profile or account through CSRF-protected actions.",
+        "Foreign, deleted, disabled-game, unauthenticated and disabled-gaming requests fail without disclosing private account keys or changing records; imported profiles are read-only in this manual editor.",
+        "The dedicated portal presents usable forms, per-field errors and clear empty states. Existing public and administrative character controllers and visibility policy remain unchanged."
+      ],
+      "tests": [
+        "Functional tests for owner create/edit/delete, foreign access, manual/imported distinction, invalid values/CSRF, disabled game/module and private default.",
+        "PHPStan level 8, full exact-head Worker CI and PostgreSQL 18 migration-chain validation."
+      ],
+      "completion_report": [
+        "Exact Worker main base/head, changed paths and Worker PR.",
+        "Usable owner workflow, privacy boundaries and focused browser tests.",
+        "Exact-head CI evidence, remaining public-visibility/navigation limitations and Trusted integration follow-up."
+      ],
+      "immutable_constraints": [
+        "worker-output-is-untrusted-until-Trusted-review-and-exact-head-CI",
+        "owner-only-character-data-access",
+        "private-by-default-new-profiles-no-publication-controls-in-this-claim",
+        "never-change-locked-FCP-060-paths",
+        "no-schema-or-migration-change",
+        "no-security-test-phpstan-CI-auth-CSRF-validation-weakening",
+        "no-direct-Trusted-integration-or-deployment"
+      ],
+      "proposal_kind": "worker_only",
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "proposal_dependency_evidence": [],
+      "collision_check": {
+        "compared_against": "Fresh continuous/work-pool-v4 at 2026-09-29T22:26:38.926Z and live Worker main 1d03d4947f15dc3e0fe4b79a990bd45468c761e4; current active/locked path scopes, WCP-610 branch/PR absence.",
+        "result": "Three new root-level paths are disjoint from FCP-060's locked Character subtrees and WCP-390's locked AccountController/account profile/security templates. WCP-608 owns ContentOperations only. Existing character entities/repositories/controllers/templates are read-only dependencies; no shared layout, schema or migration change.",
+        "paths": [
+          "src/Controller/CharacterSelfServiceController.php",
+          "templates/account/characters/",
+          "tests/Controller/CharacterSelfServiceTest.php"
+        ]
+      },
+      "published_at": "2026-09-29T22:29:07.954Z",
+      "claimed_on": "2026-09-29T22:29:07.954Z",
+      "active_base_branch": "main",
+      "active_base_sha": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "active_head": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "branch_heads": {
+        "claim_branch": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+        "feature_branch": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4"
+      },
+      "last_observed_head": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "last_checkpoint_at": "2026-09-29T22:29:07.954Z",
+      "last_verified_push_at": "2026-09-29T22:29:07.954Z",
+      "next_action": "Implement owner account/profile portal within three reserved paths, push checkpoint and run exact-head Worker CI."
     }
   ],
   "recovery_queue": [],
