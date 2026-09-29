@@ -55409,7 +55409,7 @@
       "package_id": "WCP-600",
       "title": "Automate scheduled newsletter campaign delivery",
       "risk": "high",
-      "execution_state": "unclaimed",
+      "execution_state": "worker_in_progress",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -55493,7 +55493,22 @@
           "The due-selection query lives in the new command because changing the locked NewsletterCampaignRepository would overlap FCP-068; it selects only scheduled-due and SENDING-with-ready-delivery states."
         ]
       },
-      "published_at": "2026-09-29T11:28:24.106Z"
+      "published_at": "2026-09-29T11:28:24.106Z",
+      "claimed_on": "2026-09-29T11:29:06.964Z",
+      "claim_state": "active",
+      "active_base_branch": "main",
+      "active_base_sha": "9e083c63e7d888af36f93a23eb924c89fad2b971",
+      "active_head": "9e083c63e7d888af36f93a23eb924c89fad2b971",
+      "resume_branch": "feature/wcp-600-newsletter-scheduled-dispatch-g1",
+      "branch_heads": {
+        "claim_branch": "9e083c63e7d888af36f93a23eb924c89fad2b971",
+        "feature_branch": "9e083c63e7d888af36f93a23eb924c89fad2b971"
+      },
+      "last_observed_head": "9e083c63e7d888af36f93a23eb924c89fad2b971",
+      "last_checkpoint_at": "2026-09-29T11:29:06.964Z",
+      "checkpoint_paths": [],
+      "next_action": "Implement the bounded due/recovery selector and console command in the two allowlisted paths; then run focused tests and full exact-head Worker CI.",
+      "last_verified_push_at": "2026-09-29T11:29:06.964Z"
     }
   ],
   "recovery_queue": [],
