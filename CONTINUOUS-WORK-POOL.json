@@ -10,8 +10,8 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "9e083c63e7d888af36f93a23eb924c89fad2b971",
-  "published_at": "2026-09-29T13:41:17.486Z",
-  "summary": "WCP-591 remains complete awaiting Trusted review. WCP-602 implementation checkpoint advanced to 67ade10c7c976daeec339d6073096d7c5aa63d90; anonymous and POST-only route coverage is included, with no active path collisions. Exact-head CI is running.",
+  "published_at": "2026-09-29T13:45:31Z",
+  "summary": "WCP-601 PR #396 is merge-conflict-free at fbf6140ccb774f9314a0d0cf38d6c6f6c03b136a; exact-head CI run 1026 is in progress. WCP-602 remains independently active with disjoint paths.",
   "rules": {
     "choose": "Resume the current chat's unfinished claimed branch first. Otherwise atomically claim an eligible published task. If no published task is eligible, independently derive and publish a bounded worker-only CMS proposal from approved product goals and observed code gaps; do not ask the owner for the next FCP number.",
     "atomic_reservation": "Create the exact claim_branch and suggested feature branch from that task's published proposal_base_sha. If the claim already exists, treat it as a hard lock; the owning continuation resumes it and every other AI skips it.",
@@ -55966,14 +55966,14 @@
       "claim_state": "locked_until_trusted_resolution",
       "active_base_branch": "feature/fcp-073-pool-g1",
       "active_base_sha": "7f129ec40b9c03ecbefc2abe14c03b79940af1eb",
-      "active_head": "5a6b4be089ffb0561a22acb06804d251584ebe8c",
+      "active_head": "fbf6140ccb774f9314a0d0cf38d6c6f6c03b136a",
       "resume_branch": "feature/wcp-601-hardware-workflows-g1",
       "branch_heads": {
         "claim_branch": "7f129ec40b9c03ecbefc2abe14c03b79940af1eb",
-        "feature_branch": "5a6b4be089ffb0561a22acb06804d251584ebe8c"
+        "feature_branch": "fbf6140ccb774f9314a0d0cf38d6c6f6c03b136a"
       },
-      "last_observed_head": "5a6b4be089ffb0561a22acb06804d251584ebe8c",
-      "last_checkpoint_at": "2026-09-29T13:12:20Z",
+      "last_observed_head": "fbf6140ccb774f9314a0d0cf38d6c6f6c03b136a",
+      "last_checkpoint_at": "2026-09-29T13:45:31Z",
       "checkpoint_paths": [
         "config/packages/hardware.yaml",
         "src/Controller/AdminHardware/AdminHardwareController.php",
@@ -56005,7 +56005,7 @@
         "tests/Controller/Hardware/HardwareWorkflowTest.php",
         "tests/Hardware/Workflow/HardwareDomainTest.php"
       ],
-      "next_action": "Check for exact-head Worker CI on 5a6b4be089ffb0561a22acb06804d251584ebe8c; repair concrete findings and rerun CI before completion.",
+      "next_action": "Check exact-head Worker CI run 1026 for fbf6140ccb774f9314a0d0cf38d6c6f6c03b136a; repair concrete findings and rerun before completion.",
       "last_verified_push_at": "2026-09-29T13:12:20Z",
       "worker_pr": 396,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/396",
@@ -56101,7 +56101,9 @@
         "tests/Hardware/Workflow/HardwareDomainTest.php"
       ],
       "ci_result": "pending",
-      "last_ci_result": "pending"
+      "last_ci_result": "pending",
+      "ci_run_id": 36577483721,
+      "ci_run_number": 1026
     },
     {
       "priority": 602,
