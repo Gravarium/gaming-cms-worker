@@ -162,6 +162,9 @@ final class ContentReviewWorkflowTest extends WebTestCase
         $entry = $this->entry($client, $manager, ContentEntry::STATUS_REVIEW, 'Private queue marker');
         $entryId = $this->requireId($entry->getId());
         $userIds = [$this->requireId($manager->getId()), $this->requireId($visitor->getId())];
+
+        $client->request('GET', '/admin/content/review');
+        self::assertResponseRedirects();
         $client->loginUser($visitor);
 
         try {
