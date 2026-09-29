@@ -1,0 +1,44 @@
+{% extends 'base.html.twig' %}
+{% block title %}Redaktionelle Freigaben | Gaming CMS{% endblock %}
+{% block body %}
+<header class="topbar">
+    <a class="brand" href="{{ path('app_admin_dashboard') }}">Gaming CMS</a>
+    <nav class="top-actions" aria-label="Redaktion">
+        <a href="{{ path('app_admin_content_index') }}">Alle Inhalte</a>
+    </nav>
+</header>
+<main class="dashboard">
+    <p class="eyebrow">Content-Modul</p>
+    <h1>Redaktionelle Freigaben</h1>
+    <p class="muted">{{ queue.total }} Inhalte warten auf eine Entscheidung.</p>
+    {% for message in app.flashes('success') %}<div class="notice">{{ message }}</div>{% endfor %}
+    {% for message in app.flashes('error') %}<div class="notice text-danger">{{ message }}</div>{% endfor %}
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr><th>Titel</th><th>Typ</th><th>Autor</th><th>Zuletzt geändert</th><th>Aktion</th></tr>
+            </thead>
+            <tbody>
+                {% for entry in queue.entries %}
+                    <tr>
+                        <td><strong>{{ entry.title }}</strong>{% if entry.subtitle %}<small>{{ entry.subtitle }}</small>{% endif %}</td>
+                        <td>{{ entry.type == 'news' ? 'News' : 'Seite' }}</td>
+                        <td>{{ entry.author.displayName }}</td>
+                        <td>{{ entry.updatedAt|date('d.m.Y H:i') }}</td>
+                        <td><a data-review-entry="{{ entry.id }}" href="{{ path('app_admin_content_review_show', {id: entry.id}) }}">Prüfen</a></td>
+                    </tr>
+                {% else %}
+                    <tr><td colspan="5">Zurzeit warten keine Inhalte auf Freigabe.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% if queue.pageCount > 1 %}
+        <nav aria-label="Seiten der redaktionellen Freigaben" class="pagination">
+            {% if queue.page > 1 %}<a rel="prev" href="{{ path('app_admin_content_review_index', {page: queue.page - 1}) }}">Vorherige</a>{% endif %}
+            <span aria-current="page">{{ queue.page }} / {{ queue.pageCount }}</span>
+            {% if queue.page < queue.pageCount %}<a rel="next" href="{{ path('app_admin_content_review_index', {page: queue.page + 1}) }}">Nächste</a>{% endif %}
+        </nav>
+    {% endif %}
+</main>
+{% endblock %}
