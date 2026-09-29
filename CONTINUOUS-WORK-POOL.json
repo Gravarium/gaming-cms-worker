@@ -10,8 +10,8 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "9e083c63e7d888af36f93a23eb924c89fad2b971",
-  "published_at": "2026-09-29T02:58:01Z",
-  "summary": "Trusted main after PR #198. WCP-556 and WCP-552 are integrated and released after exact Trusted/Main/sanitized-sync/Worker gates. FCP-061 competition paths are already present in Trusted via PR #161 and reinforced by PR #189; do not reimport Worker PR #32. Owner-authorized transfer of completed FCP-077 Worker PR #41 to Trusted review is recorded; its claim stays locked until all Trusted and post-sync gates pass.",
+  "published_at": "2026-09-29T12:26:58Z",
+  "summary": "Trusted main after PR #198. WCP-556 and WCP-552 are integrated and released after exact Trusted/Main/sanitized-sync/Worker gates. FCP-061 competition paths are already present in Trusted via PR #161 and reinforced by PR #189; do not reimport Worker PR #32. Owner-authorized transfer of completed FCP-077 Worker PR #41 to Trusted review is recorded; its claim stays locked until all Trusted and post-sync gates pass. WCP-601 is a Worker-only Hardware catalogue and moderation workflow proposal stacked on the exact green FCP-073 head; no Trusted integration or deployment is authorized.",
   "rules": {
     "choose": "Resume the current chat's unfinished claimed branch first. Otherwise atomically claim an eligible published task. If no published task is eligible, independently derive and publish a bounded worker-only CMS proposal from approved product goals and observed code gaps; do not ask the owner for the next FCP number.",
     "atomic_reservation": "Create the exact claim_branch and suggested feature branch from that task's published proposal_base_sha. If the claim already exists, treat it as a hard lock; the owning continuation resumes it and every other AI skips it.",
@@ -55723,6 +55723,129 @@
           "summary": "Exact-head Worker CI succeeded: PHP type analysis, 1,587 application tests with 11,036 assertions, PostgreSQL 18 migration chain, and final migration status."
         }
       ]
+    },
+    {
+      "priority": 601,
+      "package_id": "WCP-601",
+      "title": "Make the Hardware module usable end to end",
+      "risk": "high",
+      "execution_state": "worker_in_progress",
+      "dependencies": [
+        "FCP-073"
+      ],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-601-hardware-workflows-g1",
+      "suggested_branch": "feature/wcp-601-hardware-workflows-g1",
+      "base_branch": "feature/fcp-073-pool-g1",
+      "base_sha": "7f129ec40b9c03ecbefc2abe14c03b79940af1eb",
+      "objective": "Turn the green FCP-073 hardware data foundation into a usable gaming CMS module: manage and publish products and typed specifications, record disclosed editorial benchmark methodologies and measurements, let visitors browse and compare published products using accessible tables, and let members submit community setups for moderator approval.",
+      "allowed_paths": [
+        "src/Entity/Hardware/",
+        "src/Repository/Hardware/",
+        "src/Form/Hardware/",
+        "src/Controller/AdminHardware/",
+        "src/Controller/Hardware/",
+        "src/Hardware/",
+        "src/Hardware/Templates/",
+        "config/packages/hardware.yaml",
+        "tests/Hardware/Workflow/",
+        "tests/Controller/Hardware/"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "templates/",
+        "src/Module/"
+      ],
+      "deliverables": [
+        "Doctrine entities and repositories map only the existing FCP-073 hardware tables; do not add or alter schema.",
+        "Register hardware routes under the existing Gaming module gate; disabled Gaming returns 404 before reads or mutations.",
+        "CMS_GAMING_MANAGE admin flows create, edit, publish and browse products with validated typed specifications, benchmark methodologies and editorial measurements; product revision history is recorded using the existing revision table.",
+        "Public directory supports bounded search/category filters and pagination; only published products and their disclosed editorial data are visible.",
+        "Public product details and comparisons show units, methodology and disclosures; compare at most four published products and only measurements with matching series and units in accessible HTML tables.",
+        "Signed-in members can submit bounded setups referencing published products; submissions remain private until CMS_GAMING_MANAGE moderators approve them, and only approved setups appear publicly.",
+        "Namespaced Twig templates and functional tests cover module-off behavior, authorization, CSRF, unpublished visibility, invalid specs, comparison limits, methodology boundaries, setup ownership and moderation."
+      ],
+      "tests": [
+        "Targeted Hardware domain, repository, controller and module-gate PHPUnit tests.",
+        "Doctrine mapping validation against the exact FCP-073 migration schema.",
+        "Complete Worker CI on the exact final HEAD, including PostgreSQL 18 migration-chain validation."
+      ],
+      "completion_report": [
+        "Exact FCP-073 base HEAD and CI evidence; exact WCP-601 final HEAD.",
+        "Worker PR and complete changed-path list.",
+        "Targeted test results and exact-head Worker CI runs.",
+        "Remaining limitations and Trusted review follow-up."
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "use-only-FCP-073-existing-tables-and-preserve-the-published-migration-chain",
+        "no-security-test-phpstan-ci-auth-csrf-validation-or-module-gate-weakening",
+        "never-expose-unpublished-products-or-unapproved-community-setups",
+        "preserve-explicit-methodology-source-and-advertising-disclosures",
+        "no-secrets-or-trusted-private-runtime-in-worker-source",
+        "no-direct-Trusted-integration-or-deployment"
+      ],
+      "proposal_base_branch": "feature/fcp-073-pool-g1",
+      "proposal_base_sha": "7f129ec40b9c03ecbefc2abe14c03b79940af1eb",
+      "proposal_kind": "worker_only",
+      "proposal_dependency_evidence": [
+        {
+          "package_id": "FCP-073",
+          "feature_branch": "feature/fcp-073-pool-g1",
+          "worker_pr": 28,
+          "exact_head": "7f129ec40b9c03ecbefc2abe14c03b79940af1eb",
+          "ci_run_id": 36059508392,
+          "ci_run_number": 253,
+          "ci_result": "success",
+          "status": "worker_complete_awaiting_trusted_review",
+          "claim_state": "locked_until_trusted_resolution"
+        }
+      ],
+      "collision_check": {
+        "compared_against": "Fresh continuous/work-pool-v4 commit 5bc458a60eb03a13538b82c9944fe5e45318b2b0, all active and claim-locked task allowlists, exact FCP-073 feature branch and exact-head CI, and WCP-601 branches/PRs immediately before reservation.",
+        "result": "No collision with any other task path or branch. FCP-073 is the sole prerequisite and exact proposal base. WCP-601 avoids the broad templates/ path used by blocked FCP-072 by keeping Twig templates under src/Hardware/Templates; it adds no migration and touches no foreign active claim.",
+        "paths": [
+          "src/Entity/Hardware/",
+          "src/Repository/Hardware/",
+          "src/Form/Hardware/",
+          "src/Controller/AdminHardware/",
+          "src/Controller/Hardware/",
+          "src/Hardware/",
+          "src/Hardware/Templates/",
+          "config/packages/hardware.yaml",
+          "tests/Hardware/Workflow/",
+          "tests/Controller/Hardware/"
+        ]
+      },
+      "published_at": "2026-09-29T12:26:58Z",
+      "claimed_on": "2026-09-29T12:26:58Z",
+      "claim_state": "locked_until_trusted_resolution",
+      "active_base_branch": "feature/fcp-073-pool-g1",
+      "active_base_sha": "7f129ec40b9c03ecbefc2abe14c03b79940af1eb",
+      "active_head": "7f129ec40b9c03ecbefc2abe14c03b79940af1eb",
+      "resume_branch": "feature/wcp-601-hardware-workflows-g1",
+      "branch_heads": {
+        "claim_branch": "7f129ec40b9c03ecbefc2abe14c03b79940af1eb",
+        "feature_branch": "7f129ec40b9c03ecbefc2abe14c03b79940af1eb"
+      },
+      "last_observed_head": "7f129ec40b9c03ecbefc2abe14c03b79940af1eb",
+      "last_checkpoint_at": "2026-09-29T12:26:58Z",
+      "checkpoint_paths": [],
+      "next_action": "Implement the scoped admin/public Hardware workflows on top of the exact green FCP-073 head, then open a Worker PR to main for exact-head CI."
     }
   ],
   "recovery_queue": [],
