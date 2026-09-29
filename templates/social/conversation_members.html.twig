@@ -1,0 +1,45 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Gruppenmitglieder{% endblock %}
+
+{% block body %}
+<main>
+    <h1>{{ conversation.title }} — Mitglieder</h1>
+    <p><a href="{{ path('app_social_conversation', {id: conversation.id}) }}">Zur Unterhaltung</a></p>
+
+    <h2>Aktive Mitglieder</h2>
+    <ul>
+        {% for participant in participants %}
+            <li>
+                {{ participant.user.displayName }}
+                {% if participant.isOwner %}<strong>(Gruppenleitung)</strong>{% endif %}
+                {% if canManage and not participant.isOwner and participant.user.id != actor.id %}
+                    <form method="post" action="{{ path('app_social_conversation_member_remove', {id: conversation.id, participantId: participant.id}) }}">
+                        <input type="hidden" name="_token" value="{{ csrf_token('social-members-remove-' ~ conversation.id ~ '-' ~ participant.id) }}">
+                        <button type="submit">Entfernen</button>
+                    </form>
+                {% endif %}
+            </li>
+        {% endfor %}
+    </ul>
+
+    {% if canManage %}
+        <h2>Mitglied hinzufügen</h2>
+        {% if not hasRecipientChoices %}
+            <p class="muted" role="status">Es gibt keine weiteren aktiven Mitglieder mit einem für dich sichtbaren Anzeigenamen.</p>
+        {% elseif maxRecipients == 0 %}
+            <p class="muted" role="status">Die Gruppe hat bereits 20 aktive Mitglieder.</p>
+        {% endif %}
+        {{ form_start(form) }}
+            {{ form_errors(form) }}
+            {{ form_row(form.recipientIds) }}
+            <button type="submit" {% if not hasRecipientChoices or maxRecipients == 0 %}disabled{% endif %}>Mitglied hinzufügen</button>
+        {{ form_end(form) }}
+    {% endif %}
+
+    <form method="post" action="{{ path('app_social_conversation_leave', {id: conversation.id}) }}">
+        <input type="hidden" name="_token" value="{{ csrf_token('social-members-leave-' ~ conversation.id) }}">
+        <button type="submit">Gruppe verlassen</button>
+    </form>
+</main>
+{% endblock %}

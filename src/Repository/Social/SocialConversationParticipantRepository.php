@@ -32,7 +32,7 @@ final class SocialConversationParticipantRepository extends ServiceEntityReposit
     {
         return $this->findBy(
             ['conversation' => $conversation, 'status' => SocialConversationParticipant::STATUS_ACTIVE],
-            ['joinedAt' => 'ASC'],
+            ['joinedAt' => 'ASC', 'id' => 'ASC'],
         );
     }
 

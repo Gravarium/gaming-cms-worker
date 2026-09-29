@@ -19,6 +19,7 @@ final readonly class SocialMessagingService
     public function __construct(
         private SocialModuleAvailability $availability,
         private SocialAccessPolicy $access,
+        private SocialConversationMembershipService $membership,
         private SocialRateLimitPolicy $rateLimits,
         private SocialRetentionPolicy $retention,
         private SocialConversationRepository $conversations,
@@ -89,7 +90,13 @@ final readonly class SocialMessagingService
         }
         $now = new \DateTimeImmutable();
         $this->rateLimits->assertMessageWindow($this->messages->countByAuthorSince($actor, $now->modify('-1 hour')));
-        $message = new SocialMessage($conversation, $actor, $body);
+        $createdAt = new \DateTimeImmutable();
+        foreach ($this->participants->activeParticipants($conversation) as $participant) {
+            if ($participant->getJoinedAt() > $createdAt) {
+                $createdAt = $participant->getJoinedAt();
+            }
+        }
+        $message = new SocialMessage($conversation, $actor, $body, $createdAt);
         $this->entityManager->persist($message);
 
         return $message;
@@ -121,11 +128,12 @@ final readonly class SocialMessagingService
     public function read(User $actor, SocialConversation $conversation, int $limit = 100): array
     {
         $this->assertEnabled();
-        if (!$this->access->canReadConversation($actor, $conversation)) {
+        $participant = $this->participants->activeFor($conversation, $actor);
+        if (!$this->access->canReadConversation($actor, $conversation) || !$participant instanceof SocialConversationParticipant) {
             throw new \Symfony\Component\Security\Core\Exception\AccessDeniedException('Conversation membership is required.');
         }
 
-        return $this->messages->forConversation($conversation, $limit);
+        return $this->messages->forConversationSince($conversation, $participant->getJoinedAt(), $limit);
     }
 
     public function markRead(User $actor, SocialConversation $conversation): void
@@ -140,12 +148,7 @@ final readonly class SocialMessagingService
 
     public function leave(User $actor, SocialConversation $conversation): void
     {
-        $this->assertEnabled();
-        $participant = $this->participants->activeFor($conversation, $actor);
-        if ($participant === null) {
-            throw new \Symfony\Component\Security\Core\Exception\AccessDeniedException('Conversation membership is required.');
-        }
-        $participant->leave(new \DateTimeImmutable());
+        $this->membership->leave($actor, $conversation);
     }
 
     public function pruneExpired(int $limit = 500): int
