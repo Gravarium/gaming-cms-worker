@@ -157,15 +157,29 @@ final class HardwareWorkflowTest extends WebTestCase
     {
         $client = static::createClient();
         $entityManager = $this->entityManager($client);
-        $state = (new CmsModuleState())->setModuleKey('gaming')->updateVersion('1.0.0')->setEnabled(false);
+        $existing = $entityManager->find(CmsModuleState::class, 'gaming');
+        $created = !$existing instanceof CmsModuleState;
+        $originalEnabled = $existing?->isEnabled() ?? true;
+        $state = $existing ?? (new CmsModuleState())->setModuleKey('gaming')->updateVersion('1.0.0');
+        $state->setEnabled(false);
         $entityManager->persist($state);
         $entityManager->flush();
 
-        $client->request('GET', '/gaming/hardware');
-        self::assertResponseStatusCodeSame(404);
-
-        $state->setEnabled(true);
-        $entityManager->flush();
+        try {
+            $client->request('GET', '/gaming/hardware');
+            self::assertResponseStatusCodeSame(404);
+        } finally {
+            $entityManager->clear();
+            $current = $entityManager->find(CmsModuleState::class, 'gaming');
+            if ($current instanceof CmsModuleState) {
+                if ($created) {
+                    $entityManager->remove($current);
+                } else {
+                    $current->setEnabled($originalEnabled);
+                }
+                $entityManager->flush();
+            }
+        }
     }
 
     private function product(string $name, bool $published): HardwareProduct
