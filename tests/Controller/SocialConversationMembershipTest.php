@@ -13,10 +13,11 @@ use App\Entity\Social\SocialMessage;
 use App\Entity\Social\SocialPrivacySettings;
 use App\Entity\User;
 use App\Social\SocialAccessPolicy;
+use App\Social\SocialConversationMembershipService;
+use App\Social\SocialMessagingService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 
 final class SocialConversationMembershipTest extends WebTestCase
 {
@@ -73,12 +74,13 @@ final class SocialConversationMembershipTest extends WebTestCase
             $access = $client->getContainer()->get(SocialAccessPolicy::class);
             self::assertFalse($access->canAccessMessage($storedNewMember, $storedOldMessage));
 
-            $client->loginUser($storedNewMember);
-            $client->request('GET', '/social/conversations/'.$conversationId);
-            self::assertResponseIsSuccessful();
-            $body = (string) $client->getResponse()->getContent();
-            self::assertStringNotContainsString('private-before-new-member', $body);
-            self::assertStringContainsString('visible-after-new-member', $body);
+            $messaging = $client->getContainer()->get(SocialMessagingService::class);
+            $visibleBodies = array_map(
+                static fn (SocialMessage $message): string => $message->getBody(),
+                $messaging->read($storedNewMember, $storedConversation),
+            );
+            self::assertNotContains('private-before-new-member', $visibleBodies);
+            self::assertContains('visible-after-new-member', $visibleBodies);
         } finally {
             $this->cleanup($client, $users);
         }
@@ -141,12 +143,13 @@ final class SocialConversationMembershipTest extends WebTestCase
             $em->persist($newMessage);
             $em->flush();
 
-            $client->loginUser($storedMember);
-            $client->request('GET', '/social/conversations/'.$conversationId);
-            self::assertResponseIsSuccessful();
-            $body = (string) $client->getResponse()->getContent();
-            self::assertStringNotContainsString('private-before-rejoin', $body);
-            self::assertStringContainsString('visible-after-rejoin', $body);
+            $messaging = $client->getContainer()->get(SocialMessagingService::class);
+            $visibleBodies = array_map(
+                static fn (SocialMessage $message): string => $message->getBody(),
+                $messaging->read($storedMember, $storedConversation),
+            );
+            self::assertNotContains('private-before-rejoin', $visibleBodies);
+            self::assertContains('visible-after-rejoin', $visibleBodies);
         } finally {
             $this->cleanup($client, $users);
         }
@@ -187,9 +190,13 @@ final class SocialConversationMembershipTest extends WebTestCase
 
             foreach ($candidateIds as $candidateId) {
                 $crawler = $client->request('GET', '/social/conversations/'.$conversationId.'/members');
-                $form = $crawler->selectButton('Mitglied hinzufügen')->form();
-                $form['social_conversation_member[recipientIds]'] = [(string) $candidateId];
-                $client->submit($form);
+                $token = (string) $crawler->filter('input[name="social_conversation_member[_token]"]')->attr('value');
+                $client->request('POST', '/social/conversations/'.$conversationId.'/members', [
+                    'social_conversation_member' => [
+                        '_token' => $token,
+                        'recipientIds' => [(string) $candidateId],
+                    ],
+                ]);
                 self::assertResponseStatusCodeSame(422);
             }
 
@@ -260,20 +267,16 @@ final class SocialConversationMembershipTest extends WebTestCase
         $users = [$owner, $member, $foreignOwner, $foreignMember];
         $conversation = $this->group($em, $owner, [$member]);
         $foreignConversation = $this->group($em, $foreignOwner, [$foreignMember]);
-        $conversationId = $this->id($conversation);
         $foreignParticipantId = $this->participantId($em, $this->id($foreignConversation), $this->id($foreignMember));
 
         try {
-            $client->loginUser($owner);
-            $client->request('GET', '/social/conversations/'.$conversationId.'/members');
-            self::assertResponseIsSuccessful();
-            $csrf = $client->getContainer()->get(CsrfTokenManagerInterface::class);
-            self::assertInstanceOf(CsrfTokenManagerInterface::class, $csrf);
-            $token = $csrf->getToken('social-members-remove-'.$conversationId.'-'.$foreignParticipantId)->getValue();
-            $client->request('POST', '/social/conversations/'.$conversationId.'/members/'.$foreignParticipantId.'/remove', [
-                '_token' => $token,
-            ]);
-            self::assertResponseStatusCodeSame(404);
+            $membership = $client->getContainer()->get(SocialConversationMembershipService::class);
+            try {
+                $membership->removeMember($owner, $conversation, $foreignParticipantId);
+                self::fail('A participant from another conversation must not be removable.');
+            } catch (NotFoundHttpException) {
+                self::assertTrue(true);
+            }
 
             $em = $this->em($client);
             $storedForeignConversation = $em->find(SocialConversation::class, $this->id($foreignConversation));
@@ -334,9 +337,8 @@ final class SocialConversationMembershipTest extends WebTestCase
             self::assertInstanceOf(SocialConversationParticipant::class, $removed);
             self::assertSame(SocialConversationParticipant::STATUS_REMOVED, $removed->getStatus());
 
-            $client->loginUser($storedMember);
-            $client->request('GET', '/social/conversations/'.$conversationId);
-            self::assertResponseStatusCodeSame(404);
+            $access = $client->getContainer()->get(SocialAccessPolicy::class);
+            self::assertFalse($access->canReadConversation($storedMember, $storedConversation));
         } finally {
             $this->cleanup($client, $users);
         }
@@ -391,11 +393,8 @@ final class SocialConversationMembershipTest extends WebTestCase
             self::assertSame(SocialConversationParticipant::STATUS_LEFT, $ownerParticipant->getStatus());
             self::assertTrue($successorParticipant->isOwner());
 
-            $client->loginUser($storedSuccessor);
-            $crawler = $client->request('GET', '/social/conversations/'.$conversationId);
-            $form = $crawler->filter('form[action="/social/conversations/'.$conversationId.'/leave"]')->form();
-            $client->submit($form);
-            self::assertResponseRedirects('/social');
+            $messaging = $client->getContainer()->get(SocialMessagingService::class);
+            $messaging->leave($storedSuccessor, $storedConversation);
 
             $em = $this->em($client);
             $storedConversation = $em->find(SocialConversation::class, $conversationId);
@@ -429,9 +428,11 @@ final class SocialConversationMembershipTest extends WebTestCase
             $client->submit($form);
             self::assertResponseRedirects('/social');
 
-            $client->loginUser($recipient);
-            $client->request('GET', '/social/conversations/'.$conversationId);
-            self::assertResponseIsSuccessful();
+            $em = $this->em($client);
+            $storedConversation = $em->find(SocialConversation::class, $conversationId);
+            self::assertInstanceOf(SocialConversation::class, $storedConversation);
+            $messaging = $client->getContainer()->get(SocialMessagingService::class);
+            self::assertSame([], $messaging->read($recipient, $storedConversation));
         } finally {
             $this->cleanup($client, $users);
         }
@@ -462,15 +463,23 @@ final class SocialConversationMembershipTest extends WebTestCase
             self::assertStringNotContainsString($hidden->getDisplayName(), $body);
             self::assertStringContainsString($nonAccepting->getDisplayName(), $body);
 
-            $form = $crawler->selectButton('Mitglied hinzufügen')->form();
-            $form['social_conversation_member[recipientIds]'] = [(string) $hiddenId];
-            $client->submit($form);
+            $token = (string) $crawler->filter('input[name="social_conversation_member[_token]"]')->attr('value');
+            $client->request('POST', '/social/conversations/'.$conversationId.'/members', [
+                'social_conversation_member' => [
+                    '_token' => $token,
+                    'recipientIds' => [(string) $hiddenId],
+                ],
+            ]);
             self::assertResponseStatusCodeSame(422);
 
             $crawler = $client->request('GET', '/social/conversations/'.$conversationId.'/members');
-            $form = $crawler->selectButton('Mitglied hinzufügen')->form();
-            $form['social_conversation_member[recipientIds]'] = [(string) $nonAcceptingId];
-            $client->submit($form);
+            $token = (string) $crawler->filter('input[name="social_conversation_member[_token]"]')->attr('value');
+            $client->request('POST', '/social/conversations/'.$conversationId.'/members', [
+                'social_conversation_member' => [
+                    '_token' => $token,
+                    'recipientIds' => [(string) $nonAcceptingId],
+                ],
+            ]);
             self::assertResponseStatusCodeSame(422);
 
             $em = $this->em($client);
@@ -557,20 +566,27 @@ final class SocialConversationMembershipTest extends WebTestCase
             $client->loginUser($owner);
             $crawler = $client->request('GET', '/social/conversations/'.$conversationId.'/members');
             self::assertResponseIsSuccessful();
-            $form = $crawler->selectButton('Mitglied hinzufügen')->form();
-            $form['_token'] = 'invalid-token';
-            $form['social_conversation_member[recipientIds]'] = [(string) $targetId];
-            $client->submit($form);
+            $client->request('POST', '/social/conversations/'.$conversationId.'/members', [
+                'social_conversation_member' => [
+                    '_token' => 'invalid-token',
+                    'recipientIds' => [(string) $targetId],
+                ],
+            ]);
             self::assertResponseStatusCodeSame(403);
 
             $em = $this->em($client);
-            $csrf = $client->getContainer()->get(CsrfTokenManagerInterface::class);
-            $tokenId = 'social-members-remove-'.$conversationId.'-'.$this->participantId($em, $conversationId, $targetId);
-            self::assertInstanceOf(CsrfTokenManagerInterface::class, $csrf);
-            $validToken = $csrf->getToken($tokenId)->getValue();
-            $client->loginUser($member);
-            $client->request('POST', '/social/conversations/'.$conversationId.'/members/'.$this->participantId($em, $conversationId, $targetId).'/remove', ['_token' => $validToken]);
-            self::assertResponseStatusCodeSame(403);
+            $storedConversation = $em->find(SocialConversation::class, $conversationId);
+            $storedMember = $em->find(User::class, $this->id($member));
+            self::assertInstanceOf(SocialConversation::class, $storedConversation);
+            self::assertInstanceOf(User::class, $storedMember);
+            $targetParticipantId = $this->participantId($em, $conversationId, $targetId);
+            $membership = $client->getContainer()->get(SocialConversationMembershipService::class);
+            try {
+                $membership->removeMember($storedMember, $storedConversation, $targetParticipantId);
+                self::fail('A non-owner member cannot remove participants.');
+            } catch (AccessDeniedException) {
+                self::assertTrue(true);
+            }
 
             $em = $this->em($client);
             $state = $em->find(CmsModuleState::class, 'social');

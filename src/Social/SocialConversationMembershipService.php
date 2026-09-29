@@ -59,8 +59,8 @@ final readonly class SocialConversationMembershipService
     {
         $this->assertEnabled();
 
-        $this->entityManager->wrapInTransaction(function (EntityManagerInterface $entityManager) use ($actor, $conversation, $rawRecipientIds): void {
-            $entityManager->refresh($conversation, LockMode::PESSIMISTIC_WRITE);
+        $this->entityManager->getConnection()->transactional(function () use ($actor, $conversation, $rawRecipientIds): void {
+            $this->entityManager->refresh($conversation, LockMode::PESSIMISTIC_WRITE);
             $this->assertGroupConversation($conversation);
             $this->assertCanManage($actor, $conversation);
 
@@ -132,12 +132,13 @@ final readonly class SocialConversationMembershipService
                     continue;
                 }
 
-                $entityManager->persist(new SocialConversationParticipant(
+                $this->entityManager->persist(new SocialConversationParticipant(
                     $conversation,
                     $recipient,
                     SocialConversationParticipant::ROLE_MEMBER,
                 ));
             }
+            $this->entityManager->flush();
         });
     }
 
@@ -145,8 +146,8 @@ final readonly class SocialConversationMembershipService
     {
         $this->assertEnabled();
 
-        $this->entityManager->wrapInTransaction(function (EntityManagerInterface $entityManager) use ($actor, $conversation, $participantId): void {
-            $entityManager->refresh($conversation, LockMode::PESSIMISTIC_WRITE);
+        $this->entityManager->getConnection()->transactional(function () use ($actor, $conversation, $participantId): void {
+            $this->entityManager->refresh($conversation, LockMode::PESSIMISTIC_WRITE);
             $this->assertGroupConversation($conversation);
             $this->assertCanManage($actor, $conversation);
 
@@ -168,6 +169,7 @@ final readonly class SocialConversationMembershipService
             }
 
             $participant->remove(new \DateTimeImmutable());
+            $this->entityManager->flush();
         });
     }
 
@@ -175,8 +177,8 @@ final readonly class SocialConversationMembershipService
     {
         $this->assertEnabled();
 
-        return $this->entityManager->wrapInTransaction(function (EntityManagerInterface $entityManager) use ($actor, $conversation): bool {
-            $entityManager->refresh($conversation, LockMode::PESSIMISTIC_WRITE);
+        return $this->entityManager->getConnection()->transactional(function () use ($actor, $conversation): bool {
+            $this->entityManager->refresh($conversation, LockMode::PESSIMISTIC_WRITE);
             if (!$this->access->canReadConversation($actor, $conversation)) {
                 throw new AccessDeniedException('Conversation membership is required.');
             }
@@ -199,6 +201,7 @@ final readonly class SocialConversationMembershipService
             }
 
             $participant->leave(new \DateTimeImmutable());
+            $this->entityManager->flush();
 
             return $transferredOwnership;
         });
