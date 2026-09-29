@@ -148,6 +148,72 @@ final class AdminContentModerationWorkflowTest extends WebTestCase
         self::assertSame('The report did not show a policy violation.', $dismissal->getReason());
     }
 
+    public function testModerationQueuesPaginateIndependentlyPastOneHundredItems(): void
+    {
+        $client = static::createClient();
+        $manager = $this->user($client, [CmsPermission::CONTENT]);
+        $author = $this->user($client);
+        $reporter = $this->user($client);
+        $entry = $this->entry($client, $author);
+        $em = $this->em($client);
+
+        for ($index = 1; $index <= 101; ++$index) {
+            $comment = new CommunityComment(
+                ContentEntryTargetProvider::TYPE,
+                (int) $entry->getId(),
+                $author,
+                sprintf('Bulk moderation comment %03d', $index),
+            );
+            $comment->softDelete($manager, 'Bulk pagination fixture');
+            $em->persist($comment);
+            $em->persist(new CommunityReport($comment, $reporter, 'spam', sprintf('Bulk report %03d', $index)));
+        }
+        $em->flush();
+        $client->loginUser($manager);
+
+        $crawler = $client->request('GET', '/admin/community/moderation');
+        self::assertResponseIsSuccessful();
+        self::assertSelectorCount(25, '#open-reports article');
+        self::assertSelectorCount(25, '#hidden-comments article');
+        self::assertSelectorTextContains('nav[aria-label="Seiten offener Berichte"]', 'Seite 1 von 5');
+        self::assertSelectorTextContains('nav[aria-label="Seiten offener Berichte"]', '101 Berichte');
+        self::assertSelectorTextContains('nav[aria-label="Seiten ausgeblendeter Kommentare"]', 'Seite 1 von 5');
+        self::assertSelectorTextContains('nav[aria-label="Seiten ausgeblendeter Kommentare"]', '101 Kommentare');
+
+        $crawler = $client->request('GET', '/admin/community/moderation?reports_page=2&hidden_page=5');
+        self::assertResponseIsSuccessful();
+        self::assertSelectorCount(25, '#open-reports article');
+        self::assertSelectorCount(1, '#hidden-comments article');
+        self::assertSelectorTextContains('nav[aria-label="Seiten offener Berichte"]', 'Seite 2 von 5');
+        self::assertSelectorTextContains('nav[aria-label="Seiten ausgeblendeter Kommentare"]', 'Seite 5 von 5');
+
+        $nextReportHref = (string) $crawler->filter('nav[aria-label="Seiten offener Berichte"] a[rel="next"]')->attr('href');
+        parse_str((string) parse_url($nextReportHref, PHP_URL_QUERY), $nextReportQuery);
+        self::assertSame('3', (string) ($nextReportQuery['reports_page'] ?? ''));
+        self::assertSame('5', (string) ($nextReportQuery['hidden_page'] ?? ''));
+
+        $previousHiddenHref = (string) $crawler->filter('nav[aria-label="Seiten ausgeblendeter Kommentare"] a[rel="prev"]')->attr('href');
+        parse_str((string) parse_url($previousHiddenHref, PHP_URL_QUERY), $previousHiddenQuery);
+        self::assertSame('2', (string) ($previousHiddenQuery['reports_page'] ?? ''));
+        self::assertSame('4', (string) ($previousHiddenQuery['hidden_page'] ?? ''));
+
+        $client->request('GET', '/admin/community/moderation?reports_page=999999&hidden_page=999999');
+        self::assertResponseIsSuccessful();
+        self::assertSelectorCount(1, '#open-reports article');
+        self::assertSelectorCount(1, '#hidden-comments article');
+        self::assertSelectorTextContains('nav[aria-label="Seiten offener Berichte"]', 'Seite 5 von 5');
+        self::assertSelectorTextContains('nav[aria-label="Seiten ausgeblendeter Kommentare"]', 'Seite 5 von 5');
+        self::assertSelectorTextContains('#open-reports', 'Bulk moderation comment 001');
+        self::assertSelectorTextContains('#hidden-comments', 'Bulk moderation comment 001');
+
+        $client->request('GET', '/admin/community/moderation?reports_page[]=5&hidden_page=invalid');
+        self::assertResponseIsSuccessful();
+        self::assertSelectorCount(25, '#open-reports article');
+        self::assertSelectorCount(25, '#hidden-comments article');
+        self::assertSelectorTextContains('nav[aria-label="Seiten offener Berichte"]', 'Seite 1 von 5');
+        self::assertSelectorTextContains('nav[aria-label="Seiten ausgeblendeter Kommentare"]', 'Seite 1 von 5');
+    }
+
     public function testModerationRequiresContentPermissionAndIsHiddenWhenContentIsDisabled(): void
     {
         $client = static::createClient();

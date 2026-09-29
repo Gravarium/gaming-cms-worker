@@ -14,6 +14,8 @@ use Doctrine\ORM\EntityManagerInterface;
 
 final readonly class ContentInteractionQuery
 {
+    public const MODERATION_PAGE_SIZE = 25;
+
     private const COMMENT_PAGE_SIZE = 25;
 
     public function __construct(private EntityManagerInterface $entityManager)
@@ -260,8 +262,22 @@ final readonly class ContentInteractionQuery
         return $report instanceof CommunityReport ? $report : null;
     }
 
+    public function countReportsForModeration(): int
+    {
+        return (int) $this->entityManager->createQueryBuilder()
+            ->select('COUNT(report.id)')
+            ->from(CommunityReport::class, 'report')
+            ->join('report.comment', 'comment')
+            ->andWhere('comment.targetType = :targetType')
+            ->andWhere('report.status IN (:statuses)')
+            ->setParameter('targetType', 'content')
+            ->setParameter('statuses', [ReportRecord::STATUS_OPEN, ReportRecord::STATUS_REVIEWING])
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
     /** @return list<CommunityReport> */
-    public function reportsForModeration(): array
+    public function reportsForModeration(int $page = 1): array
     {
         $reports = $this->entityManager->createQueryBuilder()
             ->select('report', 'comment', 'author', 'reporter')
@@ -275,7 +291,8 @@ final readonly class ContentInteractionQuery
             ->setParameter('statuses', [ReportRecord::STATUS_OPEN, ReportRecord::STATUS_REVIEWING])
             ->orderBy('report.createdAt', 'DESC')
             ->addOrderBy('report.id', 'DESC')
-            ->setMaxResults(100)
+            ->setFirstResult((max(1, $page) - 1) * self::MODERATION_PAGE_SIZE)
+            ->setMaxResults(self::MODERATION_PAGE_SIZE)
             ->getQuery()
             ->getResult();
 
@@ -283,8 +300,20 @@ final readonly class ContentInteractionQuery
         return $reports;
     }
 
+    public function countHiddenContentComments(): int
+    {
+        return (int) $this->entityManager->createQueryBuilder()
+            ->select('COUNT(comment.id)')
+            ->from(CommunityComment::class, 'comment')
+            ->andWhere('comment.targetType = :targetType')
+            ->andWhere('comment.deletedAt IS NOT NULL')
+            ->setParameter('targetType', 'content')
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
     /** @return list<CommunityComment> */
-    public function hiddenContentComments(): array
+    public function hiddenContentComments(int $page = 1): array
     {
         $comments = $this->entityManager->createQueryBuilder()
             ->select('comment', 'author')
@@ -293,8 +322,10 @@ final readonly class ContentInteractionQuery
             ->andWhere('comment.targetType = :targetType')
             ->andWhere('comment.deletedAt IS NOT NULL')
             ->setParameter('targetType', 'content')
-            ->orderBy('comment.id', 'DESC')
-            ->setMaxResults(100)
+            ->orderBy('comment.createdAt', 'DESC')
+            ->addOrderBy('comment.id', 'DESC')
+            ->setFirstResult((max(1, $page) - 1) * self::MODERATION_PAGE_SIZE)
+            ->setMaxResults(self::MODERATION_PAGE_SIZE)
             ->getQuery()
             ->getResult();
 

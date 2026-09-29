@@ -6,8 +6,21 @@
     <p class="eyebrow">Content-Modul</p><h1>Community-Moderation</h1>
     {% for message in app.flashes('success') %}<div class="notice">{{ message }}</div>{% endfor %}
     {% for message in app.flashes('error') %}<div class="alert">{{ message }}</div>{% endfor %}
-    <h2>Offene Berichte</h2>
-    <div class="application-list">
+    <h2>Offene Berichte <span class="muted">({{ reportCount }})</span></h2>
+    <nav aria-label="Seiten offener Berichte" class="pagination">
+        <span aria-current="page">Seite {{ reportPage }} von {{ reportPages }} · {{ reportCount }} Berichte</span>
+        {% if reportPages > 1 %}
+            <div class="top-actions">
+                {% if reportPage > 1 %}
+                    <a rel="prev" href="{{ path('app_admin_content_moderation', {reports_page: reportPage - 1, hidden_page: hiddenPage}) }}">Vorherige</a>
+                {% endif %}
+                {% if reportPage < reportPages %}
+                    <a rel="next" href="{{ path('app_admin_content_moderation', {reports_page: reportPage + 1, hidden_page: hiddenPage}) }}">Nächste</a>
+                {% endif %}
+            </div>
+        {% endif %}
+    </nav>
+    <div id="open-reports" class="application-list">
         {% for report in reports %}
             {% set comment = report.comment %}
             <article class="application-card">
@@ -21,10 +34,14 @@
                 {% if report.status == 'open' %}
                     <form method="post" action="{{ path('app_admin_content_moderation_review', {reportId: report.id}) }}">
                         <input type="hidden" name="_token" value="{{ csrf_token('content-report-review-' ~ report.id) }}">
+                        <input type="hidden" name="reports_page" value="{{ reportPage }}">
+                        <input type="hidden" name="hidden_page" value="{{ hiddenPage }}">
                         <button class="button-secondary">Prüfung übernehmen</button>
                     </form>
                 {% endif %}
                 {{ form_start(decisionForms[report.id], {action: path('app_admin_content_moderation_decide', {reportId: report.id})}) }}
+                    <input type="hidden" name="reports_page" value="{{ reportPage }}">
+                    <input type="hidden" name="hidden_page" value="{{ hiddenPage }}">
                     {{ form_row(decisionForms[report.id].action) }}
                     {{ form_row(decisionForms[report.id].reason) }}
                     {{ form_errors(decisionForms[report.id]) }}
@@ -36,14 +53,29 @@
         {% endfor %}
     </div>
 
-    <h2 class="section-heading">Ausgeblendete Kommentare</h2>
-    <div class="application-list">
+    <h2 class="section-heading">Ausgeblendete Kommentare <span class="muted">({{ hiddenCount }})</span></h2>
+    <nav aria-label="Seiten ausgeblendeter Kommentare" class="pagination">
+        <span aria-current="page">Seite {{ hiddenPage }} von {{ hiddenPages }} · {{ hiddenCount }} Kommentare</span>
+        {% if hiddenPages > 1 %}
+            <div class="top-actions">
+                {% if hiddenPage > 1 %}
+                    <a rel="prev" href="{{ path('app_admin_content_moderation', {reports_page: reportPage, hidden_page: hiddenPage - 1}) }}">Vorherige</a>
+                {% endif %}
+                {% if hiddenPage < hiddenPages %}
+                    <a rel="next" href="{{ path('app_admin_content_moderation', {reports_page: reportPage, hidden_page: hiddenPage + 1}) }}">Nächste</a>
+                {% endif %}
+            </div>
+        {% endif %}
+    </nav>
+    <div id="hidden-comments" class="application-list">
         {% for comment in hiddenComments %}
             <article class="application-card">
                 <p class="eyebrow">Kommentar #{{ comment.id }} · Inhalt #{{ comment.targetId }} · {{ comment.author.displayName }}</p>
                 <p>Kommentartext bleibt nur für Moderatoren sichtbar: {{ comment.body|nl2br }}</p>
                 {% if comment.deletionReason %}<p>Ausblendungsgrund: {{ comment.deletionReason }}</p>{% endif %}
                 {{ form_start(restoreForms[comment.id], {action: path('app_admin_content_moderation_restore', {commentId: comment.id})}) }}
+                    <input type="hidden" name="reports_page" value="{{ reportPage }}">
+                    <input type="hidden" name="hidden_page" value="{{ hiddenPage }}">
                     {{ form_row(restoreForms[comment.id].action) }}
                     {{ form_row(restoreForms[comment.id].reason) }}
                     {{ form_errors(restoreForms[comment.id]) }}
