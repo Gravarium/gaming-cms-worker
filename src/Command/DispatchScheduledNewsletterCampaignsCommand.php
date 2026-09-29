@@ -123,10 +123,6 @@ final class DispatchScheduledNewsletterCampaignsCommand extends Command
 
         /** @var list<NewsletterCampaign> $scheduledCampaigns */
         $scheduledCampaigns = $scheduledQuery->getQuery()->getResult();
-        $remaining = $limit - count($scheduledCampaigns);
-        if ($remaining === 0) {
-            return $scheduledCampaigns;
-        }
 
         $readyDelivery = $this->entityManager->createQueryBuilder()
             ->select('delivery.id')
@@ -148,12 +144,22 @@ final class DispatchScheduledNewsletterCampaignsCommand extends Command
             ->setParameter('now', $now)
             ->orderBy('campaign.updatedAt', 'ASC')
             ->addOrderBy('campaign.id', 'ASC')
-            ->setMaxResults($remaining);
+            ->setMaxResults($limit);
 
         /** @var list<NewsletterCampaign> $resumableCampaigns */
         $resumableCampaigns = $resumableQuery->getQuery()->getResult();
 
-        return [...$scheduledCampaigns, ...$resumableCampaigns];
+        $candidates = [...$scheduledCampaigns, ...$resumableCampaigns];
+        usort($candidates, static function (NewsletterCampaign $left, NewsletterCampaign $right): int {
+            $dateOrder = ($left->getScheduledAt() ?? $left->getUpdatedAt()) <=> ($right->getScheduledAt() ?? $right->getUpdatedAt());
+            if ($dateOrder !== 0) {
+                return $dateOrder;
+            }
+
+            return ($left->getId() ?? 0) <=> ($right->getId() ?? 0);
+        });
+
+        return array_slice($candidates, 0, $limit);
     }
 
     private function positiveInteger(mixed $value, int $maximum): ?int
