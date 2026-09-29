@@ -10,7 +10,7 @@ use App\Entity\Hardware\HardwareBenchmarkMethodology;
 use App\Entity\Hardware\HardwareProduct;
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Test\KernelBrowser;
+use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 final class HardwareWorkflowTest extends WebTestCase
