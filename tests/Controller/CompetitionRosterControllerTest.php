@@ -1,6 +1,3 @@
-Warning: truncated output (original token count: 7578)
-Total output lines: 607
-
 <?php
 
 declare(strict_types=1);
@@ -253,7 +250,34 @@ final class CompetitionRosterControllerTest extends WebTestCase
             $captain = $this->user($entityManager, 'reject-captain-'.$suffix);
             $unverified = $this->user($entityManager, 'unverified-'.$suffix, false);
             $otherCaptain = $this->user($entityManager, 'reject-other-'.$suffix);
-            arra…578 tokens truncated…tusCodeSame(403);
+            array_push($fixtures, $captain, $unverified, $otherCaptain);
+            $game = $this->game($entityManager, $suffix);
+            $disabledGame = $this->game($entityManager, $suffix.'-disabled');
+            array_push($fixtures, $game, $disabledGame);
+            $team = $this->competition($entityManager, $game, $suffix, Competition::MODE_TEAM, 3);
+            $privateTeam = $this->competition($entityManager, $game, $suffix.'-private', Competition::MODE_TEAM, 3, Competition::VISIBILITY_PRIVATE);
+            $solo = $this->competition($entityManager, $game, $suffix.'-solo', Competition::MODE_SOLO, 1);
+            $closed = $this->competition($entityManager, $game, $suffix.'-closed', Competition::MODE_TEAM, 3);
+            $closed->archive();
+            $disabled = $this->competition($entityManager, $disabledGame, $suffix.'-disabled', Competition::MODE_TEAM, 3);
+            $disabledGame->setEnabled(false);
+            array_push($fixtures, $team, $privateTeam, $solo, $closed, $disabled);
+            $entityManager->flush();
+            $teamEntry = $this->participant($entityManager, $team, $captain, 'Open team '.$suffix, [$captain]);
+            $privateEntry = $this->participant($entityManager, $privateTeam, $captain, 'Private team '.$suffix, [$captain]);
+            $soloEntry = $this->participant($entityManager, $solo, $captain, 'Solo entry '.$suffix, [$captain]);
+            $closedEntry = $this->participant($entityManager, $closed, $captain, 'Closed team '.$suffix, [$captain]);
+            $disabledEntry = $this->participant($entityManager, $disabled, $captain, 'Disabled-game team '.$suffix, [$captain]);
+            array_push($fixtures, $teamEntry, $privateEntry, $soloEntry, $closedEntry, $disabledEntry);
+            $entityManager->flush();
+
+            $client->loginUser($captain);
+            $inviteAction = '/account/competition-rosters/'.$team->getId().'/participants/'.$teamEntry->getId().'/invite';
+            $client->request('GET', '/account/competition-rosters');
+            self::assertResponseIsSuccessful();
+            $validToken = $this->csrfToken($client, 'competition-roster-invite-'.$teamEntry->getId());
+            $client->request('POST', $inviteAction, ['_token' => 'invalid', 'email' => $unverified->getEmail()]);
+            self::assertResponseStatusCodeSame(403);
 
             $client->request('POST', $inviteAction, ['_token' => $validToken, 'email' => $unverified->getEmail()]);
             self::assertResponseRedirects('/account/competition-rosters');
@@ -580,4 +604,3 @@ final class CompetitionRosterControllerTest extends WebTestCase
         self::assertContains('max-age=0', $directives);
     }
 }
-
