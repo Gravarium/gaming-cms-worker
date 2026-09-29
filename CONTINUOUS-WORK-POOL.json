@@ -53967,16 +53967,16 @@
       "claim_state": "active",
       "active_base_branch": "fix/fcp-061-phpstan-g1",
       "active_base_sha": "ec6bb200affc3e5a46d416e98f7a1b0621c38ded",
-      "active_head": "8a2f15fd8f79a90a0bebd107b1f542fe52140fc8",
+      "active_head": "c558ba6cf6ce3de582af6a20f5cc22cab68b20ae",
       "resume_branch": "feature/wcp-591-team-competition-roster-g1",
       "branch_heads": {
         "claim_branch": "ec6bb200affc3e5a46d416e98f7a1b0621c38ded",
-        "feature_branch": "8a2f15fd8f79a90a0bebd107b1f542fe52140fc8"
+        "feature_branch": "c558ba6cf6ce3de582af6a20f5cc22cab68b20ae"
       },
-      "last_observed_head": "8a2f15fd8f79a90a0bebd107b1f542fe52140fc8",
-      "last_checkpoint_at": "2026-09-29T12:14:15.821Z",
-      "last_verified_push_at": "2026-09-29T12:14:15.821Z",
-      "next_action": "Monitor Worker CI #1014 on exact HEAD 8a2f15fd8f79a90a0bebd107b1f542fe52140fc8; fix any remaining findings and rerun complete CI.",
+      "last_observed_head": "c558ba6cf6ce3de582af6a20f5cc22cab68b20ae",
+      "last_checkpoint_at": "2026-09-29T12:20:32.180Z",
+      "last_verified_push_at": "2026-09-29T12:17:36Z",
+      "next_action": "Monitor Worker CI #1015 on exact HEAD c558ba6cf6ce3de582af6a20f5cc22cab68b20ae; address any test findings and rerun complete CI.",
       "checkpoint_paths": [
         "config/packages/competition_rosters_widget.yaml",
         "src/CompetitionRoster/CompetitionRosterInviteLink.php",
@@ -54011,9 +54011,9 @@
         "tests/Widget/CompetitionRostersWidgetTest.php"
       ],
       "ci_result": "in_progress",
-      "ci_run_id": 36566722397,
-      "ci_run_number": 1014,
-      "ci_head": "8a2f15fd8f79a90a0bebd107b1f542fe52140fc8",
+      "ci_run_id": 36567156546,
+      "ci_run_number": 1015,
+      "ci_head": "c558ba6cf6ce3de582af6a20f5cc22cab68b20ae",
       "ci_attempts": [
         {
           "run_id": 36564325245,
@@ -54080,14 +54080,33 @@
           "run_number": 1014,
           "head": "8a2f15fd8f79a90a0bebd107b1f542fe52140fc8",
           "base": "9e083c63e7d888af36f93a23eb924c89fad2b971",
+          "result": "failure",
+          "validation_pr": 395,
+          "status": "completed",
+          "conclusion": "failure",
+          "jobs": {
+            "php_symfony": "failure",
+            "postgres_18": "success"
+          },
+          "summary": "PHPStan and static validation passed; PHPUnit could not start because the uploaded controller test source was truncated and had a syntax error."
+        },
+        {
+          "run_id": 36567156546,
+          "run_number": 1015,
+          "head": "c558ba6cf6ce3de582af6a20f5cc22cab68b20ae",
+          "base": "9e083c63e7d888af36f93a23eb924c89fad2b971",
           "result": "in_progress",
           "validation_pr": 395,
-          "status": "queued",
+          "status": "in_progress",
           "conclusion": null,
-          "jobs": {},
-          "summary": "Exact-head Worker CI #1014 queued after changing the test helper to temporarily push a request carrying the existing test session."
+          "jobs": {
+            "php_symfony": "in_progress",
+            "postgres_18": "success"
+          },
+          "summary": "Complete controller test source restored; PHPStan, lint, Twig/container, AssetMapper, Doctrine and PostgreSQL 18 validation passed; focused/full PHPUnit job is running."
         }
-      ]
+      ],
+      "last_ci_result": "failure"
     },
     {
       "priority": 592,
