@@ -29,7 +29,7 @@ final readonly class ContentTransferArchive
     /** @param list<int> $entryIds */
     public function export(array $entryIds): string
     {
-        if ($entryIds === [] || count($entryIds) > self::MAX_ENTRIES || !array_is_list($entryIds)) {
+        if ($entryIds === [] || count($entryIds) > self::MAX_ENTRIES) {
             throw new \InvalidArgumentException('Die Auswahl ist ungültig.');
         }
 
@@ -155,10 +155,6 @@ final readonly class ContentTransferArchive
 
             return $count;
         });
-        if (!is_int($result)) {
-            throw new \LogicException('Der Content-Import wurde nicht abgeschlossen.');
-        }
-
         return $result;
     }
 
@@ -256,8 +252,8 @@ final readonly class ContentTransferArchive
         return $value;
     }
 
-    /** @param array<string, mixed> $data
-     *  @param list<string> $allowed
+    /** @param array<array-key, mixed> $data
+     * @param list<string> $allowed
      */
     private function assertKeys(array $data, array $allowed): void
     {
