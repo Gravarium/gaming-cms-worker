@@ -10,8 +10,8 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "9e083c63e7d888af36f93a23eb924c89fad2b971",
-  "published_at": "2026-09-29T18:45:10.878Z",
-  "summary": "WCP-607 is complete awaiting Trusted review: Worker PR #402 is ready at exact HEAD 7d1d8d97bc565a89b7933d6499d280f98a9766b3 and exact-head Worker CI #1057 passed. Its claim remains locked until Trusted resolution; autonomous selection of the next eligible large CMS package is continuing.",
+  "published_at": "2026-09-29T19:29:00Z",
+  "summary": "WCP-607 is complete awaiting Trusted review: Worker PR #402 is ready at exact HEAD 7d1d8d97bc565a89b7933d6499d280f98a9766b3 and exact-head CI #1057 passed. WCP-608 is claimed on Worker main 1bb9f4762ec113e77856a7d3202af3b53dfb1d18 to build the read-only editorial content operations queue. All six target paths were checked against active and locked claims before reservation. Trusted main remains the only integration and deployment source.",
   "rules": {
     "choose": "Resume the current chat's unfinished claimed branch first. Otherwise atomically claim an eligible published task. If no published task is eligible, independently derive and publish a bounded worker-only CMS proposal from approved product goals and observed code gaps; do not ask the owner for the next FCP number.",
     "atomic_reservation": "Create the exact claim_branch and suggested feature branch from that task's published proposal_base_sha. If the claim already exists, treat it as a hard lock; the owning continuation resumes it and every other AI skips it.",
@@ -57176,6 +57176,118 @@
         "postgres_migration_result": "success",
         "schema_or_migration_changes": "none"
       }
+    },
+    {
+      "priority": 608,
+      "package_id": "WCP-608",
+      "title": "Prioritize editorial follow-up in a unified content work queue",
+      "risk": "medium",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-608-editorial-content-queue-g1",
+      "suggested_branch": "feature/wcp-608-editorial-content-queue-g1",
+      "base_branch": "main",
+      "base_sha": "1bb9f4762ec113e77856a7d3202af3b53dfb1d18",
+      "objective": "Give content managers one bounded, read-only editorial work queue for CMS entries needing follow-up. Group pending review, stale drafts, due and upcoming publication, and due and upcoming unpublication using the existing ContentEntry status, updatedAt, scheduledAt and scheduledUnpublishAt fields. Include per-work-type summary counts, strict status/type/work-type/title filters, deterministic bounded pagination, and direct edit links. Require CMS_CONTENT_MANAGE and an enabled Content module; send private/no-store/noindex responses. Do not write content, revisions, audit records, schema or migrations, and leave existing content lifecycle handlers unchanged.",
+      "allowed_paths": [
+        "src/ContentOperations/",
+        "src/Controller/AdminContentOperationsController.php",
+        "templates/admin/content_operations/",
+        "templates/admin/content/history.html.twig",
+        "tests/ContentOperations/",
+        "tests/Controller/AdminContentOperationsControllerTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "CONTINUOUS-WORKER.md",
+        "CONTINUOUS-WORK-POOL.json",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/",
+        "src/Entity/",
+        "src/Form/",
+        "src/Repository/",
+        "src/Module/",
+        "src/Controller/AdminContentController.php",
+        "templates/base.html.twig",
+        "templates/admin/content/index.html.twig",
+        "tests/Controller/AdminContentControllerTest.php"
+      ],
+      "deliverables": [
+        "A CMS_CONTENT_MANAGE-protected, Content-module-gated GET page groups review-pending entries, stale drafts, due/upcoming publication and due/upcoming unpublication without changing existing content lifecycle behavior.",
+        "Queue summary counts and strict status, content-type, work-type and bounded title filters are accurate; results are deterministically ordered and paginated within fixed limits.",
+        "Each work item links directly to the existing content edit route; malformed scalar filters/pages fail with a client error.",
+        "The queue does not persist changes, create revisions or audit records, and all responses are private, no-store and noindex.",
+        "A discoverable link from the existing content history view opens the queue; no schema, migration, entity, repository, shared layout or configuration change is required."
+      ],
+      "tests": [
+        "Focused functional coverage verifies each work type, due/upcoming boundaries, summary counts, filters, deterministic pagination and direct edit links.",
+        "Anonymous and insufficient-permission requests are denied; disabling the Content module returns 404; non-GET methods are rejected; malformed and oversized query parameters are bounded.",
+        "Read-only behavior, no revision/audit mutation, private/no-store/noindex headers and the history-view navigation link are verified.",
+        "Run targeted PHPUnit and PHPStan level 8, then complete Worker CI including PostgreSQL 18 migration-chain validation on the exact final HEAD."
+      ],
+      "completion_report": [
+        "Exact Worker main/base SHA, final feature HEAD SHA, changed paths and Worker PR URL/state.",
+        "Evidence for all queue categories, due/upcoming time boundaries, summary counts, strict filters, deterministic pagination and edit links.",
+        "Authorization, Content-module gate, GET-only behavior, response privacy headers, navigation and read-only state.",
+        "Exact-head targeted tests, PHPStan and full Worker CI job/run results; note that Trusted review remains required."
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-Trusted-review-and-exact-head-CI",
+        "queue-requires-CMS_CONTENT_MANAGE-and-enabled-content-module",
+        "queue-is-read-only-and-creates-no-revisions-or-audit-records",
+        "existing-content-review-scheduling-and-publication-handlers-remain-unchanged",
+        "no-schema-or-migration-change",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "red-CI-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment",
+        "no-private-runtime-or-sensitive-data"
+      ],
+      "proposal_kind": "worker_only",
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "1bb9f4762ec113e77856a7d3202af3b53dfb1d18",
+      "proposal_dependency_evidence": [],
+      "collision_check": {
+        "compared_against": "Fresh continuous/work-pool-v4 head 0bdea49ad6160cb517694587fa3f98952f99c5c1; exact Worker main 1bb9f4762ec113e77856a7d3202af3b53dfb1d18; all active and claim-locked task allowlists.",
+        "result": "No active or claim-locked task owns or encloses the six proposed paths. WCP-602 through WCP-607 are claim-locked for separate review, scheduling, transfer, quality and accessibility work; their allowlists do not overlap. The older blocked FCP-072 has an unclaimed broad templates scope, so any future claimant must revalidate this exact navigation/template path before reservation.",
+        "paths": [
+          "src/ContentOperations/",
+          "src/Controller/AdminContentOperationsController.php",
+          "templates/admin/content_operations/",
+          "templates/admin/content/history.html.twig",
+          "tests/ContentOperations/",
+          "tests/Controller/AdminContentOperationsControllerTest.php"
+        ]
+      },
+      "published_at": "2026-09-29T19:29:00Z",
+      "claimed_on": "2026-09-29T19:29:00Z",
+      "claim_state": "active",
+      "active_base_branch": "main",
+      "active_base_sha": "1bb9f4762ec113e77856a7d3202af3b53dfb1d18",
+      "active_head": "1bb9f4762ec113e77856a7d3202af3b53dfb1d18",
+      "resume_branch": "feature/wcp-608-editorial-content-queue-g1",
+      "branch_heads": {
+        "claim_branch": "1bb9f4762ec113e77856a7d3202af3b53dfb1d18",
+        "feature_branch": "1bb9f4762ec113e77856a7d3202af3b53dfb1d18"
+      },
+      "last_observed_head": "1bb9f4762ec113e77856a7d3202af3b53dfb1d18",
+      "last_checkpoint_at": "2026-09-29T19:29:00Z",
+      "checkpoint_paths": [],
+      "last_verified_push_at": null,
+      "next_action": "Implement the queue only within the six allowlisted paths, run targeted checks and complete Worker CI on the exact final feature HEAD, then open a Worker PR. Keep the claim locked until Trusted resolves it."
     }
   ],
   "recovery_queue": [],
