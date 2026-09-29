@@ -90,7 +90,7 @@ final class AdminContentQualityController extends AbstractController
         $type = $this->selectFilter($query['type'] ?? 'all', self::TYPE_LABELS);
         $issueLabels = ['all' => 'Alle Probleme'] + ContentQualityAudit::ISSUE_LABELS;
         $issue = $this->selectFilter($query['issue'] ?? 'all', $issueLabels);
-        $title = $request->query->get('q', '');
+        $title = $query['q'] ?? '';
         if (!is_string($title) || !mb_check_encoding($title, 'UTF-8') || mb_strlen($title, 'UTF-8') > 120) {
             throw new \InvalidArgumentException('Die Titelsuche ist ungültig.');
         }
