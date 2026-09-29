@@ -94,6 +94,7 @@ final class AdminContentTransferController extends AbstractController
         return $this->privateResponse($response);
     }
 
+    /** @return FormInterface<ContentTransferUpload> */
     private function importForm(): FormInterface
     {
         return $this->createForm(ContentTransferType::class, new ContentTransferUpload(), [
