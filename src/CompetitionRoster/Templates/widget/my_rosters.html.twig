@@ -1,0 +1,22 @@
+<section class="portal-card" aria-labelledby="my-competition-rosters-title">
+    <h2 id="my-competition-rosters-title">Meine Competition-Teams</h2>
+    {% if not data.authenticated %}
+        <p><a href="{{ path('app_login') }}">Melde dich an, um deinen Teamkader zu sehen.</a></p>
+    {% elseif data.teams is empty %}
+        <p>Du hast keine offenen öffentlichen Team-Competitions.</p>
+        <a href="{{ path('app_competition_index') }}">Competitions ansehen</a>
+    {% else %}
+        <ul>
+            {% for team in data.teams %}
+                <li>
+                    <a href="{{ path('app_competition_show', {id: team.competition.id}) }}">{{ team.competition.name }} · {{ team.participant.name }}</a>
+                    <span>{{ team.rosterCount }}/{{ team.teamSize }} Teammitglieder</span>
+                    <ul>
+                        {% for member in team.members %}<li>{{ member.name }}</li>{% endfor %}
+                    </ul>
+                </li>
+            {% endfor %}
+        </ul>
+        <a href="{{ path('app_competition_roster_dashboard') }}">Teamkader verwalten</a>
+    {% endif %}
+</section>

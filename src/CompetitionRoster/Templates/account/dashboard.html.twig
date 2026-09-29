@@ -1,0 +1,58 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Meine Competition-Teams{% endblock %}
+
+{% block body %}
+<main class="content-shell">
+    <h1>Meine Competition-Teams</h1>
+    {% for message in app.flashes('success') %}<div class="notice">{{ message }}</div>{% endfor %}
+    {% for message in app.flashes('error') %}<div class="notice text-danger">{{ message }}</div>{% endfor %}
+    {% for link in app.flashes('competition_roster_invite_link') %}
+        <section class="portal-card" aria-label="Einladungslink">
+            <p>Kopiere den Link und teile ihn mit dem eingeladenen Teammitglied:</p>
+            <p><a data-invitation-link href="{{ link }}">{{ link }}</a></p>
+        </section>
+    {% endfor %}
+
+    {% for team in teams %}
+        {% set competition = team.competition %}
+        {% set participant = team.participant %}
+        <article class="portal-card">
+            <h2><a href="{{ path('app_competition_show', {id: competition.id}) }}">{{ competition.name }}</a></h2>
+            <p>{{ participant.name }} · {{ team.rosterCount }}/{{ team.teamSize }} Teammitglieder · {{ team.openSlots }} freie Plätze</p>
+            <h3>Aktuelle Teammitglieder</h3>
+            <ul>
+                {% for member in team.members %}
+                    <li>
+                        {{ member.name }}
+                        {% if member.id != participant.captain.id and participant.status == 'registered' %}
+                            <form method="post" action="{{ path('app_competition_roster_remove_member', {competitionId: competition.id, participantId: participant.id, memberId: member.id}) }}">
+                                <input type="hidden" name="_token" value="{{ csrf_token('competition-roster-remove-' ~ participant.id ~ '-' ~ member.id) }}">
+                                <button type="submit">Mitglied entfernen</button>
+                            </form>
+                        {% endif %}
+                    </li>
+                {% else %}
+                    <li>Keine aktiven Konten im Teamkader.</li>
+                {% endfor %}
+            </ul>
+
+            {% if participant.status == 'registered' and team.openSlots > 0 %}
+                <form method="post" action="{{ path('app_competition_roster_invite', {competitionId: competition.id, participantId: participant.id}) }}">
+                    <input type="hidden" name="_token" value="{{ csrf_token('competition-roster-invite-' ~ participant.id) }}">
+                    <label for="teammate-email-{{ participant.id }}">Bestätigte E-Mail des Teammitglieds</label>
+                    <input id="teammate-email-{{ participant.id }}" name="email" type="email" maxlength="180" required autocomplete="email">
+                    <button type="submit">Einladungslink erstellen</button>
+                </form>
+            {% elseif participant.status != 'registered' %}
+                <p>Der Kader kann nach dem Check-in nicht mehr geändert werden.</p>
+            {% else %}
+                <p>Das Team ist vollständig.</p>
+            {% endif %}
+        </article>
+    {% else %}
+        <p>Du hast noch keine offenen öffentlichen Team-Competitions angemeldet.</p>
+        <a href="{{ path('app_competition_index') }}">Öffentliche Competitions ansehen</a>
+    {% endfor %}
+</main>
+{% endblock %}

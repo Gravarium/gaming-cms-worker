@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Competition-Team beitreten{% endblock %}
+
+{% block body %}
+<main class="content-shell">
+    <h1>Competition-Team beitreten</h1>
+    <article class="portal-card">
+        <h2>{{ participant.name }}</h2>
+        <p>Competition: {{ competition.name }}</p>
+        {% if result is defined and result == 'joined' %}
+            <p>Du bist jetzt Mitglied des Competition-Teams.</p>
+            <a href="{{ path('app_competition_show', {id: competition.id}) }}">Zur Competition</a>
+        {% elseif result is defined %}
+            <p>Die Einladung konnte nicht angenommen werden. Sie ist möglicherweise abgelaufen, bereits verwendet, für ein anderes Konto bestimmt oder der Teamplatz ist nicht mehr frei.</p>
+            <a href="{{ path('app_competition_show', {id: competition.id}) }}">Zur Competition</a>
+        {% else %}
+            <p>Diese Einladung gilt für die bestätigte E-Mail-Adresse deines angemeldeten Kontos. Der Link kann nur einmal verwendet werden und verfällt nach einer Stunde.</p>
+            <form method="post">
+                <input type="hidden" name="_token" value="{{ csrf_token('competition-roster-accept-' ~ participant.id) }}">
+                <button type="submit">Team beitreten</button>
+            </form>
+        {% endif %}
+    </article>
+</main>
+{% endblock %}
