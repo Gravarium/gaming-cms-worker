@@ -264,10 +264,12 @@ final class SocialConversationMembershipTest extends WebTestCase
         $foreignParticipantId = $this->participantId($em, $this->id($foreignConversation), $this->id($foreignMember));
 
         try {
+            $client->loginUser($owner);
+            $client->request('GET', '/social/conversations/'.$conversationId.'/members');
+            self::assertResponseIsSuccessful();
             $csrf = $client->getContainer()->get(CsrfTokenManagerInterface::class);
             self::assertInstanceOf(CsrfTokenManagerInterface::class, $csrf);
             $token = $csrf->getToken('social-members-remove-'.$conversationId.'-'.$foreignParticipantId)->getValue();
-            $client->loginUser($owner);
             $client->request('POST', '/social/conversations/'.$conversationId.'/members/'.$foreignParticipantId.'/remove', [
                 '_token' => $token,
             ]);
