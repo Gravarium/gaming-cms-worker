@@ -55403,6 +55403,97 @@
       "checkpoint_paths": [],
       "next_action": "Implement the group membership management flow and joinedAt-scoped message reads across only the allowlisted paths; then push a meaningful checkpoint and open/refresh the Worker PR.",
       "last_verified_push_at": "2026-09-29T11:23:10.373Z"
+    },
+    {
+      "priority": 600,
+      "package_id": "WCP-600",
+      "title": "Automate scheduled newsletter campaign delivery",
+      "risk": "high",
+      "execution_state": "unclaimed",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-600-newsletter-scheduled-dispatch-g1",
+      "suggested_branch": "feature/wcp-600-newsletter-scheduled-dispatch-g1",
+      "base_branch": "main",
+      "base_sha": "9e083c63e7d888af36f93a23eb924c89fad2b971",
+      "objective": "Complete the scheduled-send path already exposed by the Newsletter admin. Add a bounded console runner that selects due scheduled campaigns and safely resumes SENDING campaigns only when pending deliveries or retries are due. Reuse the existing dispatch service, consent, suppression, unsubscribe, delivery uniqueness and retry behavior. Do not touch the locked newsletter controller, repository, service, entity, form or template scopes.",
+      "allowed_paths": [
+        "src/Command/DispatchScheduledNewsletterCampaignsCommand.php",
+        "tests/Command/DispatchScheduledNewsletterCampaignsCommandTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "CONTINUOUS-WORKER.md",
+        "CONTINUOUS-WORK-POOL.json",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/",
+        "templates/",
+        "src/Controller/",
+        "src/Entity/",
+        "src/Form/",
+        "src/Repository/",
+        "src/Newsletter/",
+        "tests/Newsletter/",
+        "tests/Controller/",
+        "tests/ExternalConnector/",
+        "tests/Entity/"
+      ],
+      "deliverables": [
+        "The app:newsletter:dispatch-due command processes only campaigns that are due: scheduled time has passed, or an existing SENDING campaign has an eligible pending delivery or due retry.",
+        "Campaign selection and per-campaign recipient processing have explicit positive upper bounds; invalid option values fail before any external dispatch.",
+        "The notifications module gate is checked before dispatch. Command output contains aggregate counts and campaign IDs only, never recipient addresses or message bodies.",
+        "Use NewsletterDispatchService for delivery so double opt-in, suppression, unsubscribe-token, idempotent delivery, and retry policies remain authoritative; a failure in one campaign does not prevent processing other selected campaigns."
+      ],
+      "tests": [
+        "Integration tests cover due/future/cancelled campaigns, partial SENDING recovery, due versus future retries, campaign/delivery bounds, reruns, disabled notifications, malformed options, and privacy-safe command output.",
+        "PHPStan level 8 and full exact-head Worker CI, including PostgreSQL 18 migration-chain validation."
+      ],
+      "completion_report": [
+        "Exact sanitized Worker main base SHA, final HEAD, exact changed paths and Worker PR state.",
+        "Evidence for due campaign selection, retry recovery, processing bounds, module-off behavior, idempotency, and no PII in output.",
+        "Focused tests, PHPStan and complete exact-head Worker CI results.",
+        "Unresolved risks and the Trusted-only operational step for scheduling the command in production."
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-Trusted-review-and-exact-head-CI",
+        "disabled-notifications-module-fails-closed-with-no-provider-calls",
+        "preserve-newsletter-consent-suppression-unsubscribe-and-delivery-idempotency",
+        "never-print-recipient-identifiers-or-newsletter-content",
+        "bound-campaign-selection-and-delivery-work-per-run",
+        "no-security-test-phpstan-CI-auth-CSRF-validation-recovery-rollback-or-upload-protection-weakening",
+        "no-production-cron-private-runtime-secrets-or-Trusted-changes",
+        "no-direct-Trusted-integration-or-deployment"
+      ],
+      "proposal_kind": "worker_only",
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "9e083c63e7d888af36f93a23eb924c89fad2b971",
+      "proposal_dependency_evidence": [],
+      "collision_check": {
+        "compared_against": "Fresh continuous/work-pool-v4 pool blob c838abb5421549e5bdf2d51c9ba99251446ce0b6; exact sanitized Worker main 9e083c63e7d888af36f93a23eb924c89fad2b971; all active and claim-locked allowlists; current WCP-600 branch and PR search.",
+        "result": "Both proposed files are new exact files outside all active and claim-locked scopes. In particular FCP-068 locks src/Newsletter/, src/Repository/Newsletter/, src/Controller/AdminNewsletter/, templates/admin/newsletter/, and tests/Newsletter/; this task edits only a new command and tests/Command file. No overlap.",
+        "paths": [
+          "src/Command/DispatchScheduledNewsletterCampaignsCommand.php",
+          "tests/Command/DispatchScheduledNewsletterCampaignsCommandTest.php"
+        ],
+        "observed_nonblocking_path_hits": [
+          "Reads the existing NewsletterCampaign, NewsletterDelivery, NewsletterCampaignRepository, and NewsletterDispatchService contracts without editing their paths.",
+          "The due-selection query lives in the new command because changing the locked NewsletterCampaignRepository would overlap FCP-068; it selects only scheduled-due and SENDING-with-ready-delivery states."
+        ]
+      },
+      "published_at": "2026-09-29T11:28:24.106Z"
     }
   ],
   "recovery_queue": [],
