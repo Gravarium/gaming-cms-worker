@@ -15,8 +15,7 @@ final class PublicContentTagDirectoryController extends AbstractController
     public function __construct(
         private readonly ContentTagRepository $tags,
         private readonly SiteSettingsRepository $siteSettings,
-    )
-    {
+    ) {
     }
 
     #[Route('/news/tags', name: 'app_news_tag_directory', methods: ['GET'])]
