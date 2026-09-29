@@ -90,20 +90,33 @@ final class ContentQualityAuditTest extends WebTestCase
         $em->flush();
         $completeId = $this->entryId($complete);
         $trashedId = $this->entryId($trashed);
+        $connection = $em->getConnection();
+        $expectedContentTotal = (int) $connection->fetchOne(
+            'SELECT COUNT(*) FROM content_entry WHERE status <> ?',
+            [ContentEntry::STATUS_TRASHED],
+        );
+        $expectedMissingExcerpt = (int) $connection->fetchOne(
+            'SELECT COUNT(*) FROM content_entry WHERE status <> ? AND (excerpt IS NULL OR excerpt = ?)',
+            [ContentEntry::STATUS_TRASHED, ''],
+        );
+        $expectedPublishedNoIndex = (int) $connection->fetchOne(
+            'SELECT COUNT(*) FROM content_entry WHERE status = ? AND no_index = TRUE',
+            [ContentEntry::STATUS_PUBLISHED],
+        );
         $client->loginUser($manager);
 
-        $first = $client->request('GET', '/admin/content/quality');
+        $first = $client->request('GET', '/admin/content/quality?q='.rawurlencode($this->marker));
         self::assertResponseIsSuccessful();
         $this->assertPrivateResponse($client);
         self::assertSame(50, $first->filter('tr[data-content-quality-entry]')->count());
-        self::assertSelectorTextContains('[data-quality-issue="missing_excerpt"] .summary-value', '52');
-        self::assertSelectorTextContains('[data-quality-issue="published_noindex"] .summary-value', '1');
-        self::assertSelectorTextContains('.panel', '54 Inhalte insgesamt');
+        self::assertSame((string) $expectedMissingExcerpt, trim($first->filter('[data-quality-issue="missing_excerpt"] .summary-value')->text()));
+        self::assertSame((string) $expectedPublishedNoIndex, trim($first->filter('[data-quality-issue="published_noindex"] .summary-value')->text()));
+        self::assertSelectorTextContains('.panel', $expectedContentTotal.' Inhalte insgesamt');
         $firstIds = $this->rowIds($first);
         self::assertNotContains($completeId, $firstIds);
         self::assertNotContains($trashedId, $firstIds);
 
-        $second = $client->request('GET', '/admin/content/quality?page=2');
+        $second = $client->request('GET', '/admin/content/quality?'.http_build_query(['q' => $this->marker, 'page' => 2]));
         self::assertResponseIsSuccessful();
         $this->assertPrivateResponse($client);
         self::assertSame(3, $second->filter('tr[data-content-quality-entry]')->count());
@@ -131,10 +144,11 @@ final class ContentQualityAuditTest extends WebTestCase
 
         $filtered = $client->request(
             'GET',
-            '/admin/content/quality?status=draft&type=news&issue=missing_seo_title&q='.rawurlencode($this->marker.'-needle'),
+            '/admin/content/quality?status=draft&type=news&issue=missing_seo_title&q='.rawurlencode($target->getTitle()),
         );
         self::assertResponseIsSuccessful();
         $this->assertPrivateResponse($client);
+        self::assertSame($target->getTitle(), $filtered->filter('input[name="q"]')->attr('value'));
         self::assertSame([$targetId], $this->rowIds($filtered));
 
         $publishedView = $client->request('GET', '/admin/content/quality?status=published&issue=published_noindex');
@@ -183,9 +197,15 @@ final class ContentQualityAuditTest extends WebTestCase
         $state->setEnabled(false);
         $em->persist($state);
         $em->flush();
+        self::assertSame(1, (int) $em->getConnection()->fetchOne(
+            'SELECT COUNT(*) FROM cms_module_state WHERE module_key = ? AND enabled = FALSE',
+            ['content'],
+        ));
+        $em->clear();
 
         $client->request('GET', '/admin/content/quality');
         self::assertResponseStatusCodeSame(404);
+        $this->assertPrivateResponse($client);
     }
 
     /**

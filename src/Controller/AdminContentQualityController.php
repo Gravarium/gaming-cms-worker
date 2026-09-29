@@ -6,6 +6,7 @@ namespace App\Controller;
 
 use App\ContentQuality\ContentQualityAudit;
 use App\Entity\ContentEntry;
+use App\Module\CmsModuleManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -33,13 +34,19 @@ final class AdminContentQualityController extends AbstractController
         ContentEntry::TYPE_PAGE => 'Seite',
     ];
 
-    public function __construct(private readonly ContentQualityAudit $audit)
-    {
+    public function __construct(
+        private readonly ContentQualityAudit $audit,
+        private readonly CmsModuleManager $modules,
+    ) {
     }
 
     #[Route('', name: 'index', methods: ['GET'])]
     public function index(Request $request): Response
     {
+        if (!$this->modules->isEnabled('content')) {
+            return $this->privateResponse(new Response('Nicht gefunden.', Response::HTTP_NOT_FOUND));
+        }
+
         try {
             $filters = $this->parseFilters($request);
             $report = $this->audit->report(
@@ -83,7 +90,7 @@ final class AdminContentQualityController extends AbstractController
         $type = $this->selectFilter($query['type'] ?? 'all', self::TYPE_LABELS);
         $issueLabels = ['all' => 'Alle Probleme'] + ContentQualityAudit::ISSUE_LABELS;
         $issue = $this->selectFilter($query['issue'] ?? 'all', $issueLabels);
-        $title = $query['q'] ?? '';
+        $title = $request->query->get('q', '');
         if (!is_string($title) || !mb_check_encoding($title, 'UTF-8') || mb_strlen($title, 'UTF-8') > 120) {
             throw new \InvalidArgumentException('Die Titelsuche ist ungültig.');
         }
