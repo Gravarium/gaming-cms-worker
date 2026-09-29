@@ -11,7 +11,7 @@
   "baseline_branch": "main",
   "base_sha": "9e083c63e7d888af36f93a23eb924c89fad2b971",
   "published_at": "2026-09-29T19:47:35.850Z",
-  "summary": "WCP-591 is trusted_integrated via Trusted PR #200; all 11 source paths match Worker HEAD b116456673f937fa8357e341496d12d46426a33e, and post-merge Trusted Main, sanitized sync and Worker CI are green. WCP-602 is trusted_integrated via Trusted PR #202 at merge d8797bd48fbe99ebf966c68bd513bdec977719de; post-merge Trusted Main, sanitized sync and Worker CI are green. WCP-589 remains complete awaiting Trusted review (ready PR #384, exact HEAD 5df493cfa58e46a3f8b5c57a3e6a3deeec95c814, exact-head Worker CI #1061 passed). Trusted main remains the only integration and deployment source.",
+  "summary": "WCP-591 is trusted_integrated via PR #200 and Worker PR #395 is closed unmerged after green post-sync checks. WCP-602 is trusted_integrated via PR #202 and Worker PR #397 is closed unmerged after green post-sync checks. WCP-589 remains complete awaiting Trusted review at open PR #384, exact HEAD 5df493cfa58e46a3f8b5c57a3e6a3deeec95c814 with Worker CI #1061 green. Trusted main remains the only integration and deployment source.",
   "rules": {
     "choose": "Resume the current chat's unfinished claimed branch first. Otherwise atomically claim an eligible published task. If no published task is eligible, independently derive and publish a bounded worker-only CMS proposal from approved product goals and observed code gaps; do not ask the owner for the next FCP number.",
     "atomic_reservation": "Create the exact claim_branch and suggested feature branch from that task's published proposal_base_sha. If the claim already exists, treat it as a hard lock; the owning continuation resumes it and every other AI skips it.",
@@ -54059,7 +54059,7 @@
       "last_observed_head": "b116456673f937fa8357e341496d12d46426a33e",
       "last_checkpoint_at": "2026-09-29T13:08:39.580Z",
       "last_verified_push_at": "2026-09-29T13:08:39.580Z",
-      "next_action": "Trusted integration and post-sync checks are complete via PR #200; Worker PR #395 is now redundant and may be closed without merging it.",
+      "next_action": "Trusted integration is complete; source Worker PR #395 is closed unmerged after the verified post-sync CI chain.",
       "checkpoint_paths": [
         "config/packages/competition_rosters_widget.yaml",
         "src/CompetitionRoster/CompetitionRosterInviteLink.php",
@@ -54075,8 +54075,8 @@
       ],
       "worker_pr": 395,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/395",
-      "worker_pr_state": "ready_for_review",
-      "pr_state": "open",
+      "worker_pr_state": "closed",
+      "pr_state": "closed",
       "draft_pr": false,
       "worker_pr_base_branch": "main",
       "worker_pr_base_sha": "9e083c63e7d888af36f93a23eb924c89fad2b971",
@@ -54389,7 +54389,10 @@
         "worker_source_head": "b116456673f937fa8357e341496d12d46426a33e",
         "worker_source_ci_run_id": 36572210003,
         "exact_path_match_count": 11,
-        "worker_pr_close_pending": true
+        "worker_pr_close_pending": false,
+        "worker_pr_state": "closed",
+        "worker_pr_merged": false,
+        "worker_pr_closed_at": "2026-09-29T21:04:33Z"
       }
     },
     {
@@ -56379,11 +56382,11 @@
         "tests/Controller/ContentReviewWorkflowTest.php",
         "templates/admin/dashboard.html.twig"
       ],
-      "next_action": "Trusted integration and post-sync checks are complete via PR #202; Worker PR #397 is now redundant and may be closed without merging it.",
+      "next_action": "Trusted integration is complete; source Worker PR #397 is closed unmerged after the verified post-sync CI chain.",
       "last_verified_push_at": "2026-09-29T13:56:48.365Z",
       "worker_pr": 397,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/397",
-      "worker_pr_state": "ready_for_review",
+      "worker_pr_state": "closed",
       "worker_pr_base_branch": "main",
       "worker_pr_base_sha": "9e083c63e7d888af36f93a23eb924c89fad2b971",
       "worker_pr_changed_paths": [
@@ -56418,7 +56421,7 @@
           "summary": "Exact-head Worker CI passed: PHPStan level 8, 1,592 PHPUnit tests/11,043 assertions, Symfony/Twig/container/AssetMapper/Doctrine checks, and all 57 PostgreSQL 18 migrations."
         }
       ],
-      "pr_state": "open",
+      "pr_state": "closed",
       "draft_pr": false,
       "final_head": "5dc0175868d509182ecbb72910009e159a31fd1e",
       "final_changed_paths": [
@@ -56478,7 +56481,10 @@
         "trusted_owned_missing_token_validation_commit": "50137d40fda7db4604118cb9b75c761793733d04",
         "source_pr_reviews": [],
         "source_pr_inline_comments": [],
-        "worker_pr_close_pending": true
+        "worker_pr_close_pending": false,
+        "worker_pr_state": "closed",
+        "worker_pr_merged": false,
+        "worker_pr_closed_at": "2026-09-29T21:04:34Z"
       }
     },
     {
