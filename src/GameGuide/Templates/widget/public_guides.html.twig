@@ -1,0 +1,14 @@
+<section class="widget widget-game-guides" aria-label="Öffentliche Gaming-Guides">
+    <h2>Gaming-Guides</h2>
+    <ul>
+        {% for guide in guides %}
+            <li>
+                <a href="{{ path('app_gaming_guide_show', {id: guide.id}) }}">{{ guide.title }}</a>
+                <span>{{ guide.game_name }} · {{ guide.game_version }} · {{ guide.season }}</span>
+                {% if guide.is_outdated %}<span class="status status-disabled">Gültigkeitszeitraum abgelaufen</span>{% endif %}
+            </li>
+        {% else %}
+            <li class="muted">Zurzeit gibt es keine öffentlichen Gaming-Guides.</li>
+        {% endfor %}
+    </ul>
+</section>

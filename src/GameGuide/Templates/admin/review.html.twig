@@ -1,0 +1,40 @@
+{% extends 'base.html.twig' %}
+{% block title %}Guide prüfen{% endblock %}
+{% block body %}
+<main class="editor-shell">
+    <p class="eyebrow">Gaming · Unabhängige Prüfung</p>
+    <h1>{{ guide.title }}</h1>
+    <p><a href="{{ path('app_admin_gaming_guide_index') }}">Zur Guide-Übersicht</a></p>
+    {% if error %}<div class="notice text-danger" role="alert">{{ error }}</div>{% endif %}
+    <dl>
+        <dt>Spiel</dt><dd>{{ guide.game_name }}</dd>
+        <dt>Typ</dt><dd>{{ guide.guide_type }}</dd>
+        <dt>Version / Saison</dt><dd>{{ guide.game_version }} / {{ guide.season }}</dd>
+        <dt>Gültigkeit</dt><dd>{{ guide.valid_from }}{% if guide.valid_until %} – {{ guide.valid_until }}{% endif %}</dd>
+    </dl>
+    {% if guide.components %}
+        <h2>Build-Komponenten</h2>
+        <ol>
+            {% for component in guide.components %}
+                <li>{{ component.type }}: {{ component.key }}
+                    {% if component.alternatives %}<span>Alternativen: {{ component.alternatives|join(', ') }}</span>{% endif %}
+                </li>
+            {% endfor %}
+        </ol>
+    {% endif %}
+    {% if guide.tiers %}
+        <h2>Tier-Liste</h2>
+        <p><strong>Kriterien:</strong> {{ guide.tiers[0].criteria }}</p>
+        <p><strong>Herkunft:</strong> {{ guide.tiers[0].provenance }}</p>
+        <ul>{% for entry in guide.tiers %}<li><strong>{{ entry.tier }}</strong> · {{ entry.key }} — {{ entry.reason }}</li>{% endfor %}</ul>
+    {% endif %}
+    <form method="post" class="content-form" action="{{ path('app_admin_gaming_guide_review', {id: guide.id}) }}">
+        <input type="hidden" name="_token" value="{{ csrf_token('game-guide-review-' ~ guide.id) }}">
+        <label for="review-reason">Prüfbegründung</label>
+        <textarea id="review-reason" name="reason" maxlength="500" required>{{ app.request.request.get('reason', '') }}</textarea>
+        <button type="submit" name="decision" value="publish">Veröffentlichen</button>
+        <button type="submit" name="decision" value="reject">Zur Überarbeitung zurückgeben</button>
+    </form>
+    <p><a href="{{ path('app_admin_gaming_guide_index') }}">Zur Übersicht</a></p>
+</main>
+{% endblock %}
