@@ -53967,16 +53967,16 @@
       "claim_state": "active",
       "active_base_branch": "fix/fcp-061-phpstan-g1",
       "active_base_sha": "ec6bb200affc3e5a46d416e98f7a1b0621c38ded",
-      "active_head": "1ad9b8c3726dc0f37e426a6c8bbc928628134090",
+      "active_head": "8a2f15fd8f79a90a0bebd107b1f542fe52140fc8",
       "resume_branch": "feature/wcp-591-team-competition-roster-g1",
       "branch_heads": {
         "claim_branch": "ec6bb200affc3e5a46d416e98f7a1b0621c38ded",
-        "feature_branch": "1ad9b8c3726dc0f37e426a6c8bbc928628134090"
+        "feature_branch": "8a2f15fd8f79a90a0bebd107b1f542fe52140fc8"
       },
-      "last_observed_head": "1ad9b8c3726dc0f37e426a6c8bbc928628134090",
-      "last_checkpoint_at": "2026-09-29T12:08:20.905Z",
-      "last_verified_push_at": "2026-09-29T12:08:20.905Z",
-      "next_action": "Monitor Worker CI #1012 on exact HEAD 1ad9b8c3726dc0f37e426a6c8bbc928628134090; repair any remaining findings and rerun the complete workflow.",
+      "last_observed_head": "8a2f15fd8f79a90a0bebd107b1f542fe52140fc8",
+      "last_checkpoint_at": "2026-09-29T12:14:15.821Z",
+      "last_verified_push_at": "2026-09-29T12:14:15.821Z",
+      "next_action": "Monitor Worker CI #1014 on exact HEAD 8a2f15fd8f79a90a0bebd107b1f542fe52140fc8; fix any remaining findings and rerun complete CI.",
       "checkpoint_paths": [
         "config/packages/competition_rosters_widget.yaml",
         "src/CompetitionRoster/CompetitionRosterInviteLink.php",
@@ -54011,9 +54011,9 @@
         "tests/Widget/CompetitionRostersWidgetTest.php"
       ],
       "ci_result": "in_progress",
-      "ci_run_id": 36566094901,
-      "ci_run_number": 1012,
-      "ci_head": "1ad9b8c3726dc0f37e426a6c8bbc928628134090",
+      "ci_run_id": 36566722397,
+      "ci_run_number": 1014,
+      "ci_head": "8a2f15fd8f79a90a0bebd107b1f542fe52140fc8",
       "ci_attempts": [
         {
           "run_id": 36564325245,
@@ -54058,19 +54058,34 @@
             "php_symfony": "failure",
             "postgres_18": "success"
           },
-          "summary": "DQL alias and CSRF issues were fixed. Tests exposed ambiguous unqualified `account/dashboard.html.twig` resolution to the CompetitionParticipation template and the same CSRF test-session setup; templates now have an explicit namespace and the test establishes its session with a dashboard GET before fetching a token."
+          "summary": "DQL alias and initial CSRF setup fixed. Twig resolved the roster controller's unqualified dashboard name to CompetitionParticipation's same-named template; the test-session fix was incomplete."
         },
         {
           "run_id": 36566094901,
           "run_number": 1012,
           "head": "1ad9b8c3726dc0f37e426a6c8bbc928628134090",
           "base": "9e083c63e7d888af36f93a23eb924c89fad2b971",
+          "result": "failure",
+          "validation_pr": 395,
+          "status": "completed",
+          "conclusion": "failure",
+          "jobs": {
+            "php_symfony": "failure",
+            "postgres_18": "success"
+          },
+          "summary": "Twig namespace collision was fixed. Three tests still hit SessionNotFoundException because the CSRF test helper ran after the browser request popped its request from RequestStack."
+        },
+        {
+          "run_id": 36566722397,
+          "run_number": 1014,
+          "head": "8a2f15fd8f79a90a0bebd107b1f542fe52140fc8",
+          "base": "9e083c63e7d888af36f93a23eb924c89fad2b971",
           "result": "in_progress",
           "validation_pr": 395,
           "status": "queued",
           "conclusion": null,
           "jobs": {},
-          "summary": "Exact-head Worker CI #1012 queued after fixing Twig template namespace collisions and establishing a session before CSRF token generation."
+          "summary": "Exact-head Worker CI #1014 queued after changing the test helper to temporarily push a request carrying the existing test session."
         }
       ]
     },
