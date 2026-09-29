@@ -590,7 +590,10 @@ final class CompetitionRosterControllerTest extends WebTestCase
         $request->setSession($session);
         $requestStack->push($request);
         try {
-            return $manager->getToken($tokenId)->getValue();
+            $token = $manager->getToken($tokenId)->getValue();
+            $session->save();
+
+            return $token;
         } finally {
             $requestStack->pop();
         }
