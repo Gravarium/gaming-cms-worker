@@ -99,9 +99,6 @@ final class AdminContentScheduleController extends AbstractController
         }
 
         $entryId = $entry->getId();
-        if ($entryId === null) {
-            return $this->privateResponse(new Response('Inhalt nicht gefunden.', Response::HTTP_NOT_FOUND));
-        }
 
         $outcome = $this->entityManager->wrapInTransaction(function (EntityManagerInterface $entityManager) use ($entry, $entryId, $kind, $change, $actor): string {
             $entityManager->refresh($entry, LockMode::PESSIMISTIC_WRITE);
