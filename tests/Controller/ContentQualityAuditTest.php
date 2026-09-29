@@ -150,11 +150,8 @@ final class ContentQualityAuditTest extends WebTestCase
         self::assertResponseIsSuccessful();
         $this->assertPrivateResponse($client);
         self::assertSame($target->getTitle(), $filtered->filter('input[name="q"]')->attr('value'));
-        self::assertSame(
-            [$targetId],
-            $this->rowIds($filtered),
-            sprintf('Title filter "%s" returned [%s].', $target->getTitle(), implode(' | ', $this->rowTitles($filtered))),
-        );
+        self::assertSame([$target->getTitle()], $this->rowTitles($filtered));
+        self::assertSame([$targetId], $this->rowIds($filtered));
 
         $publishedView = $client->request('GET', '/admin/content/quality?status=published&issue=published_noindex');
         self::assertResponseIsSuccessful();
@@ -211,6 +208,9 @@ final class ContentQualityAuditTest extends WebTestCase
         self::assertFalse($modules->isEnabled('content'));
 
         $client->request('GET', '/admin/content/quality');
+        self::assertSame('app_admin_content_quality_index', $client->getRequest()->attributes->get('_route'));
+        self::assertStringContainsString('AdminContentQualityController', (string) $client->getRequest()->attributes->get('_controller'));
+        self::assertFalse($client->getContainer()->get(CmsModuleManager::class)->isEnabled('content'));
         self::assertResponseStatusCodeSame(404);
         $this->assertPrivateResponse($client);
     }
