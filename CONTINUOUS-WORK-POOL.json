@@ -11,7 +11,7 @@
   "baseline_branch": "main",
   "base_sha": "9e083c63e7d888af36f93a23eb924c89fad2b971",
   "published_at": "2026-09-29T21:55:55.841Z",
-  "summary": "WCP-588 is trusted_integrated via PR #203 (merge 35099480874a8312efac0ab1312ceeb4462bd2f2), with Trusted Main CI #676, sanitized sync #113 and Worker CI #1063 green; Worker PR #383 is closed unmerged. WCP-589 is trusted_integrated via PR #204 (merge 8852e024d89611291fc83214c1f0c1d4a758c9d8), with Trusted Main CI #678, sanitized sync #114 and Worker CI #1064 green; Worker PR #384 is pending close unmerged. WCP-591 via #200 and WCP-602 via #202 are integrated; their Worker PRs are closed unmerged. Trusted main remains the only integration and deployment source.",
+  "summary": "WCP-588 is trusted_integrated via PR #203 (merge 35099480874a8312efac0ab1312ceeb4462bd2f2), with Trusted Main CI #676, sanitized sync #113 and Worker CI #1063 green; Worker PR #383 is closed unmerged. WCP-589 is trusted_integrated via PR #204 (merge 8852e024d89611291fc83214c1f0c1d4a758c9d8), with Trusted Main CI #678, sanitized sync #114 and Worker CI #1064 green; Worker PR #384 is closed unmerged. WCP-591 via #200 and WCP-602 via #202 are integrated; their Worker PRs are closed unmerged. Trusted main remains the only integration and deployment source.",
   "rules": {
     "choose": "Resume the current chat's unfinished claimed branch first. Otherwise atomically claim an eligible published task. If no published task is eligible, independently derive and publish a bounded worker-only CMS proposal from approved product goals and observed code gaps; do not ask the owner for the next FCP number.",
     "atomic_reservation": "Create the exact claim_branch and suggested feature branch from that task's published proposal_base_sha. If the claim already exists, treat it as a hard lock; the owning continuation resumes it and every other AI skips it.",
@@ -53722,11 +53722,11 @@
         "tests/Controller/PublicGuildEventCalendarFeedTest.php",
         "tests/GuildEventCalendarFeed/PublicGuildEventCalendarBuilderTest.php"
       ],
-      "next_action": "Close Worker PR #384 unmerged, then mark the released claim complete.",
+      "next_action": "No further Worker work; Trusted integration and post-sync checks are complete.",
       "worker_pr": 384,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/384",
-      "worker_pr_state": "open",
-      "pr_state": "open",
+      "worker_pr_state": "closed",
+      "pr_state": "closed",
       "draft_pr": false,
       "worker_pr_base_branch": "main",
       "worker_pr_base_sha": "da6c2009c87911ecdba316ae93844eb6d38462f4",
@@ -53825,7 +53825,7 @@
         ],
         "worker_pr": 384,
         "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/384",
-        "worker_pr_state": "ready_for_review",
+        "worker_pr_state": "closed",
         "worker_pr_base_sha": "da6c2009c87911ecdba316ae93844eb6d38462f4",
         "exact_head_ci_run_id": 36627432282,
         "exact_head_ci_run_number": 1061,
@@ -53893,11 +53893,12 @@
         "worker_source_ci_run_number": 1061,
         "worker_source_ci_result": "success",
         "exact_path_match_count": 5,
-        "worker_pr_close_pending": true,
-        "worker_pr_state": "open",
+        "worker_pr_close_pending": false,
+        "worker_pr_state": "closed",
         "worker_pr_merged": false,
         "source_pr_reviews": [],
-        "source_pr_comments": []
+        "source_pr_comments": [],
+        "worker_pr_closed_at": "2026-09-29T21:56:34Z"
       },
       "trusted_intake": {
         "trusted_pr": 204,
@@ -53929,9 +53930,10 @@
           "tests/GuildEventCalendarFeed/PublicGuildEventCalendarBuilderTest.php"
         ],
         "exact_path_match_count": 5,
-        "worker_pr_close_pending": true,
-        "worker_pr_state": "open",
-        "worker_pr_merged": false
+        "worker_pr_close_pending": false,
+        "worker_pr_state": "closed",
+        "worker_pr_merged": false,
+        "worker_pr_closed_at": "2026-09-29T21:56:34Z"
       }
     },
     {
