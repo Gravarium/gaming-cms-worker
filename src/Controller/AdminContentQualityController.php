@@ -79,10 +79,10 @@ final class AdminContentQualityController extends AbstractController
     private function parseFilters(Request $request): array
     {
         $query = $request->query->all();
-        $status = $this->selectFilter('status', $query['status'] ?? 'all', self::STATUS_LABELS);
-        $type = $this->selectFilter('type', $query['type'] ?? 'all', self::TYPE_LABELS);
+        $status = $this->selectFilter($query['status'] ?? 'all', self::STATUS_LABELS);
+        $type = $this->selectFilter($query['type'] ?? 'all', self::TYPE_LABELS);
         $issueLabels = ['all' => 'Alle Probleme'] + ContentQualityAudit::ISSUE_LABELS;
-        $issue = $this->selectFilter('issue', $query['issue'] ?? 'all', $issueLabels);
+        $issue = $this->selectFilter($query['issue'] ?? 'all', $issueLabels);
         $title = $query['q'] ?? '';
         if (!is_string($title) || !mb_check_encoding($title, 'UTF-8') || mb_strlen($title, 'UTF-8') > 120) {
             throw new \InvalidArgumentException('Die Titelsuche ist ungültig.');
@@ -101,7 +101,7 @@ final class AdminContentQualityController extends AbstractController
     }
 
     /** @param array<string, string> $allowed */
-    private function selectFilter(string $key, mixed $raw, array $allowed): string
+    private function selectFilter(mixed $raw, array $allowed): string
     {
         if (!is_string($raw) || !array_key_exists($raw, $allowed)) {
             throw new \InvalidArgumentException('Ein Berichtsfilter ist ungültig.');

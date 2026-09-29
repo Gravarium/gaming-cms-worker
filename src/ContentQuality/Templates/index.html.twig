@@ -16,11 +16,13 @@
         <h2 id="quality-summary-heading">Probleme in nicht gelöschten Inhalten</h2>
         <p class="muted">{{ report.contentTotal }} Inhalte insgesamt · {{ report.total }} passende Einträge in dieser Ansicht</p>
         <div class="summary-grid">
-            {% for code, label in issueLabels|filter((label, code) => code != 'all') %}
+            {% for code, label in issueLabels %}
+                {% if code != 'all' %}
                 <div class="summary-card" data-quality-issue="{{ code }}">
                     <span>{{ label }}</span>
                     <strong class="summary-value">{{ report.summary[code] }}</strong>
                 </div>
+                {% endif %}
             {% endfor %}
         </div>
     </section>

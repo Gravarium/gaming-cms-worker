@@ -57,12 +57,15 @@ final class ContentQualityAuditTest extends WebTestCase
         parent::tearDown();
     }
 
-    public function testAnonymousAndInsufficientUsersAreDenied(): void
+    public function testAnonymousCannotViewQualityReport(): void
     {
         $client = static::createClient();
         $client->request('GET', '/admin/content/quality');
         self::assertResponseRedirects('/login');
+    }
 
+    public function testUserWithoutContentPermissionCannotViewQualityReport(): void
+    {
         $client = static::createClient();
         $reader = $this->user($client, [CmsPermission::ACCESS]);
         $client->loginUser($reader);
@@ -75,11 +78,8 @@ final class ContentQualityAuditTest extends WebTestCase
         $client = static::createClient();
         $manager = $this->user($client, [CmsPermission::ACCESS, CmsPermission::CONTENT]);
         $em = $this->em($client);
-        $flagged = [];
         for ($number = 1; $number <= 52; ++$number) {
-            $entry = $this->entry($manager, sprintf('flagged-%02d', $number));
-            $flagged[] = $entry;
-            $em->persist($entry);
+            $em->persist($this->entry($manager, sprintf('flagged-%02d', $number)));
         }
         $complete = $this->entry($manager, 'complete', ContentEntry::STATUS_DRAFT, ContentEntry::TYPE_PAGE, true);
         $publishedNoIndex = $this->entry($manager, 'published-noindex', ContentEntry::STATUS_PUBLISHED, ContentEntry::TYPE_NEWS, true, true);
@@ -108,7 +108,7 @@ final class ContentQualityAuditTest extends WebTestCase
         $this->assertPrivateResponse($client);
         self::assertSame(3, $second->filter('tr[data-content-quality-entry]')->count());
         self::assertSelectorTextContains('.pagination', 'Seite 2 von 2');
-        self::assertContains($completeId, $this->rowIds($second)) === false;
+        self::assertNotContains($completeId, $this->rowIds($second));
         self::assertNotContains($trashedId, $this->rowIds($second));
     }
 
@@ -239,11 +239,7 @@ final class ContentQualityAuditTest extends WebTestCase
     {
         $ids = [];
         foreach ($crawler->filter('tr[data-content-quality-entry]') as $row) {
-            $id = $row->getAttribute('data-content-quality-entry');
-            if (!is_string($id)) {
-                throw new \LogicException('A report row is missing its content ID.');
-            }
-            $ids[] = (int) $id;
+            $ids[] = (int) $row->getAttribute('data-content-quality-entry');
         }
 
         return $ids;
