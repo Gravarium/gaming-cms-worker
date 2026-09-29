@@ -10,7 +10,7 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "9e083c63e7d888af36f93a23eb924c89fad2b971",
-  "published_at": "2026-09-29T22:21:53.130Z",
+  "published_at": "2026-09-29T22:26:38.926Z",
   "summary": "WCP-511 is complete awaiting Trusted review on Worker PR #404 at exact HEAD e6f77f1dfa236a0a4709c8b3a6c260a2c3730341; exact-head Worker CI #1068 is green. Trusted main remains the only integration and deployment source.",
   "rules": {
     "choose": "Resume the current chat's unfinished claimed branch first. Otherwise atomically claim an eligible published task. If no published task is eligible, independently derive and publish a bounded worker-only CMS proposal from approved product goals and observed code gaps; do not ask the owner for the next FCP number.",
@@ -57776,8 +57776,8 @@
       "package_id": "WCP-609",
       "title": "Complete scheduled newsletter cancellation and failed-delivery recovery",
       "risk": "medium",
-      "execution_state": "worker_in_progress",
-      "claim_state": "active",
+      "execution_state": "worker_complete_awaiting_trusted_review",
+      "claim_state": "locked_until_trusted_resolution",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -57870,9 +57870,9 @@
       "last_observed_head": "fed927265415cceba4a84ff1ead7ebc8402305c5",
       "last_checkpoint_at": "2026-09-29T22:21:53.130Z",
       "last_verified_push_at": "2026-09-29T22:21:53.130Z",
-      "next_action": "Monitor exact-head Worker CI at fed927265415cceba4a84ff1ead7ebc8402305c5; fix only concrete failures in WCP-609 allowlist.",
+      "next_action": "PR #405 is ready for Trusted review at exact green HEAD fed927265415cceba4a84ff1ead7ebc8402305c5; keep claim locked until Trusted explicitly resolves it. No merge or deployment.",
       "worker_pr": 405,
-      "draft_pr": true,
+      "draft_pr": false,
       "checkpoint_paths": [
         "src/Controller/AdminNewsletterCampaignLifecycleController.php",
         "src/Entity/Newsletter/NewsletterDelivery.php",
@@ -57890,8 +57890,25 @@
             "109645181509:success"
           ],
           "diagnosis": "Full PHPUnit 1646 tests had one test-session failure: switching from a denied viewer to admin in the same browser yielded /login. PHPStan, Twig, Doctrine and PostgreSQL migration chain passed."
+        },
+        {
+          "head": "fed927265415cceba4a84ff1ead7ebc8402305c5",
+          "run_id": 36639111793,
+          "run_number": 1072,
+          "result": "success",
+          "jobs": [
+            "109646897396:success",
+            "109646897610:success"
+          ],
+          "test_summary": "PHPUnit 1646 tests, 11990 assertions, no errors/failures; PHPStan 8 and PostgreSQL 18 migration chain passed."
         }
-      ]
+      ],
+      "worker_pr_state": "ready_for_review",
+      "pr_state": "open",
+      "final_head": "fed927265415cceba4a84ff1ead7ebc8402305c5",
+      "ci_run_id": 36639111793,
+      "ci_result": "success",
+      "completed_at": "2026-09-29T22:26:38.926Z"
     }
   ],
   "recovery_queue": [],
