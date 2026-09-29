@@ -1,0 +1,111 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Barrierefreiheit der Inhalte{% endblock %}
+
+{% block body %}
+<main class="editor-shell">
+    <p class="eyebrow">Inhalte</p>
+    <h1>Barrierefreiheitsbericht</h1>
+    <p>Der Bericht prüft gespeicherte Inhaltsblöcke auf fehlende Bildalternativtexte und übersprungene Überschriften. Er ändert keine Inhalte.</p>
+
+    <dl class="report-summary" aria-label="Zusammenfassung der Prüfung">
+        <div><dt>Einträge geprüft</dt><dd>{{ report.scannedEntries }}</dd></div>
+        <div><dt>Einträge mit Befund</dt><dd>{{ report.summary.entries_with_issues }}</dd></div>
+        <div><dt>Bilder ohne Alternativtext</dt><dd>{{ report.summary.missing_media_alt }}</dd></div>
+        <div><dt>Übersprungene Überschriftenstufen</dt><dd>{{ report.summary.heading_order }}</dd></div>
+        <div><dt>Ungültige Editor-Dokumente</dt><dd>{{ report.summary.invalid_document }}</dd></div>
+    </dl>
+
+    <form method="get" action="{{ path('app_admin_content_accessibility') }}" class="content-form" aria-label="Bericht filtern">
+        <div>
+            <label for="accessibility-query">Titel enthält</label>
+            <input id="accessibility-query" name="q" type="search" maxlength="80" value="{{ report.filters.q }}">
+        </div>
+        <div>
+            <label for="accessibility-status">Status</label>
+            <select id="accessibility-status" name="status">
+                <option value="">Alle nicht gelöschten</option>
+                {% set statuses = {
+                    'draft': 'Entwurf',
+                    'review': 'In Prüfung',
+                    'scheduled': 'Geplant',
+                    'published': 'Veröffentlicht',
+                    'archived': 'Archiviert'
+                } %}
+                {% for value,label in statuses %}
+                    <option value="{{ value }}" {{ report.filters.status == value ? 'selected' : '' }}>{{ label }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div>
+            <label for="accessibility-type">Inhaltstyp</label>
+            <select id="accessibility-type" name="type">
+                <option value="">Alle Typen</option>
+                <option value="page" {{ report.filters.type == 'page' ? 'selected' : '' }}>Seite</option>
+                <option value="news" {{ report.filters.type == 'news' ? 'selected' : '' }}>News</option>
+            </select>
+        </div>
+        <div>
+            <label for="accessibility-issue">Befund</label>
+            <select id="accessibility-issue" name="issue">
+                <option value="">Alle Befunde</option>
+                <option value="missing_media_alt" {{ report.filters.issue == 'missing_media_alt' ? 'selected' : '' }}>Bildalternativtext fehlt</option>
+                <option value="heading_order" {{ report.filters.issue == 'heading_order' ? 'selected' : '' }}>Überschriftenstufe übersprungen</option>
+                <option value="invalid_document" {{ report.filters.issue == 'invalid_document' ? 'selected' : '' }}>Editor-Dokument ungültig</option>
+            </select>
+        </div>
+        <button type="submit">Bericht filtern</button>
+    </form>
+
+    {% if report.scanTruncated %}
+        <p role="status" data-scan-limit-warning>Die Prüfung ist auf {{ report.scannedEntries }} passende Einträge begrenzt. Die Zusammenfassung kann weitere Einträge enthalten, die hier noch nicht geprüft wurden. Verwende die Filter, um den Bereich einzugrenzen.</p>
+    {% endif %}
+
+    <p data-report-summary>{{ report.matchedEntries }} Einträge mit Befunden · Seite {{ report.page }} von {{ report.pages }}</p>
+
+    {% if report.items is not empty %}
+        <div class="table-scroll">
+            <table>
+                <caption>Inhalte mit Barrierefreiheitsbefunden</caption>
+                <thead>
+                    <tr><th scope="col">Titel</th><th scope="col">Typ</th><th scope="col">Status</th><th scope="col">Befunde</th><th scope="col">Zuletzt geändert</th><th scope="col">Aktion</th></tr>
+                </thead>
+                <tbody>
+                    {% for item in report.items %}
+                        <tr>
+                            <th scope="row">{{ item.title }}</th>
+                            <td>{{ item.type == 'page' ? 'Seite' : 'News' }}</td>
+                            <td>{{ statuses[item.status]|default(item.status) }}</td>
+                            <td>
+                                <ul>
+                                    {% if item.issueCounts.missing_media_alt > 0 %}<li>Bildalternativtext fehlt: {{ item.issueCounts.missing_media_alt }}</li>{% endif %}
+                                    {% if item.issueCounts.heading_order > 0 %}<li>Überschriftenstufe übersprungen: {{ item.issueCounts.heading_order }}</li>{% endif %}
+                                    {% if item.issueCounts.invalid_document > 0 %}<li>Editor-Dokument ungültig</li>{% endif %}
+                                </ul>
+                            </td>
+                            <td><time datetime="{{ item.updatedAt|date('c') }}">{{ item.updatedAt|date('Y-m-d H:i') }}</time></td>
+                            <td><a href="{{ path('app_admin_content_edit', {id: item.id}) }}">Inhalt bearbeiten</a></td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <p>Für diese Filter wurden keine Inhalte mit Befunden gefunden.</p>
+    {% endif %}
+
+    {% if report.pages > 1 %}
+        <nav aria-label="Seiten des Barrierefreiheitsberichts">
+            <p data-report-pagination>Seite {{ report.page }} von {{ report.pages }}</p>
+            <ul>
+                {% if report.page > 1 %}
+                    <li><a rel="prev" href="{{ path('app_admin_content_accessibility', report.filters|merge({page: report.page - 1})) }}">Vorherige Seite</a></li>
+                {% endif %}
+                {% if report.page < report.pages %}
+                    <li><a rel="next" href="{{ path('app_admin_content_accessibility', report.filters|merge({page: report.page + 1})) }}">Nächste Seite</a></li>
+                {% endif %}
+            </ul>
+        </nav>
+    {% endif %}
+</main>
+{% endblock %}
