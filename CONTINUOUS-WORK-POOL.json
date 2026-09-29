@@ -11,7 +11,7 @@
   "baseline_branch": "main",
   "base_sha": "9e083c63e7d888af36f93a23eb924c89fad2b971",
   "published_at": "2026-09-29T13:21:38.704Z",
-  "summary": "WCP-591 is complete awaiting Trusted review. No unclaimed published CMS package is currently dependency-safe to start. WCP-602 is a new worker-only Content editorial review lifecycle proposal, reserved on sanitized main@9e083c63e7d888af36f93a23eb924c89fad2b971 with disjoint new paths and no schema change; active and completed claims remain untouched.",
+  "summary": "WCP-591 is complete awaiting Trusted review. No unclaimed published CMS package is dependency-safe to start. WCP-602 is reserved and now has an implementation checkpoint at c042cf962b6ddc4026c2bc81d98bd9655873f417; its new-path scope remains disjoint and schema-free. Active and completed claims remain untouched.",
   "rules": {
     "choose": "Resume the current chat's unfinished claimed branch first. Otherwise atomically claim an eligible published task. If no published task is eligible, independently derive and publish a bounded worker-only CMS proposal from approved product goals and observed code gaps; do not ask the owner for the next FCP number.",
     "atomic_reservation": "Create the exact claim_branch and suggested feature branch from that task's published proposal_base_sha. If the claim already exists, treat it as a hard lock; the owning continuation resumes it and every other AI skips it.",
@@ -56192,7 +56192,7 @@
       "proposal_base_sha": "9e083c63e7d888af36f93a23eb924c89fad2b971",
       "proposal_dependency_evidence": [],
       "collision_check": {
-        "compared_against": "Fresh continuous/work-pool-v4 pool blob 21dcde181d5108a9921af8d3844afa67aceeb1a9; exact sanitized Worker main 9e083c63e7d888af36f93a23eb924c89fad2b971; all in-progress and completed-awaiting-Trusted allowlists; WCP-602/content-review branch and PR searches.",
+        "compared_against": "Fresh continuous/work-pool-v4 pool blob c88bf5058224900cb497afc06caa608dd813f149; exact sanitized Worker main 9e083c63e7d888af36f93a23eb924c89fad2b971; all in-progress and completed-awaiting-Trusted allowlists after checkpoint.",
         "result": "No path overlap with any in-progress or completed-awaiting-Trusted package. The new review controller, queue, form, feature-local templates, config, and workflow test are new paths. The existing admin dashboard template is not in an active or claim-locked allowlist; it receives one Content-enabled, CMS_CONTENT_MANAGE-gated link so editors can discover the review inbox. WCP-428's content browser and shared content index, FCP-074 Support, and FCP-072's broad but unclaimed templates scope remain untouched. No entity, repository, shared content controller/form, migration, module catalog, security, or CI changes.",
         "paths": [
           "src/Controller/AdminContentReviewController.php",
@@ -56213,16 +56213,27 @@
       "claim_state": "active",
       "active_base_branch": "main",
       "active_base_sha": "9e083c63e7d888af36f93a23eb924c89fad2b971",
-      "active_head": "9e083c63e7d888af36f93a23eb924c89fad2b971",
+      "active_head": "c042cf962b6ddc4026c2bc81d98bd9655873f417",
       "resume_branch": "feature/wcp-602-content-review-lifecycle-g1",
       "branch_heads": {
         "claim_branch": "9e083c63e7d888af36f93a23eb924c89fad2b971",
-        "feature_branch": "9e083c63e7d888af36f93a23eb924c89fad2b971"
+        "feature_branch": "c042cf962b6ddc4026c2bc81d98bd9655873f417"
       },
-      "last_observed_head": "9e083c63e7d888af36f93a23eb924c89fad2b971",
-      "last_checkpoint_at": "2026-09-29T13:21:38.704Z",
-      "checkpoint_paths": [],
-      "next_action": "Implement the bounded content-review inbox and audited decisions on this exclusive branch, then run exact-head Worker CI before a review handoff."
+      "last_observed_head": "c042cf962b6ddc4026c2bc81d98bd9655873f417",
+      "last_checkpoint_at": "2026-09-29T13:34:36.158Z",
+      "checkpoint_paths": [
+        "src/ContentReview/ReviewDecision.php",
+        "src/ContentReview/ReviewQueue.php",
+        "src/Form/ContentReviewDecisionType.php",
+        "src/Controller/AdminContentReviewController.php",
+        "src/ContentReview/Templates/review_queue.html.twig",
+        "src/ContentReview/Templates/review_detail.html.twig",
+        "config/packages/content_review.yaml",
+        "templates/admin/dashboard.html.twig",
+        "tests/Controller/ContentReviewWorkflowTest.php"
+      ],
+      "next_action": "Open a draft Worker PR to main and run full exact-head Worker CI; fix any failures only within WCP-602 paths.",
+      "last_verified_push_at": "2026-09-29T13:34:36.158Z"
     }
   ],
   "recovery_queue": [],
