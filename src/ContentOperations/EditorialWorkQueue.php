@@ -111,7 +111,7 @@ final readonly class EditorialWorkQueue
             ->setParameter('queueNow', $now)
             ->setParameter('queueHorizon', $horizon)
             ->orderBy('queuePriority', 'ASC')
-            ->addOrderBy('COALESCE(entry.scheduledUnpublishAt, entry.scheduledAt, entry.updatedAt)', 'ASC')
+            ->addOrderBy('CASE WHEN entry.scheduledUnpublishAt IS NOT NULL THEN entry.scheduledUnpublishAt WHEN entry.scheduledAt IS NOT NULL THEN entry.scheduledAt ELSE entry.updatedAt END', 'ASC')
             ->addOrderBy('entry.updatedAt', 'ASC')
             ->addOrderBy('entry.id', 'ASC')
             ->setFirstResult(($page - 1) * self::PAGE_SIZE)
