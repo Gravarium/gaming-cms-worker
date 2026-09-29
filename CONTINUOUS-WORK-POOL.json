@@ -10,14 +10,14 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "785720f82e2190630eea58fde153ebe4c8514a30",
-  "published_at": "2026-09-29T02:19:18Z",
+  "published_at": "2026-09-29T02:22:28Z",
   "summary": {
     "total_remaining_worker_tasks": 174,
     "completed_worker_prs_awaiting_trusted_review": 318,
     "recovery_tasks": 0,
     "unclaimed": 5,
     "immediately_claimable": 0,
-    "next_required_action": "WCP-556 is integrated through Trusted PR #197; exact Trusted CI #658, Main CI #659, sanitized Worker sync #107 and post-sync Worker CI #997 passed. Review WCP-552 / Worker PR #347 next and add its Gaming dashboard entry. Leave active WCP-588, WCP-589 and WCP-591 claims untouched.",
+    "next_required_action": "Owner-authorized Trusted intake for WCP-552 / Worker PR #347 is in progress at the exact green source head. Keep its Worker claim locked through Trusted review and downstream CI. Leave active WCP-588, WCP-589 and WCP-591 claims untouched.",
     "composition_preparable": 0,
     "immediately_actionable": 33,
     "must_continue": true
@@ -47171,7 +47171,7 @@
         "src/Entity/GameGuide/GameGuideTierEntry.php",
         "src/Entity/GameGuide/GameGuideReviewAudit.php"
       ],
-      "next_action": "Await Trusted resolution of Worker PR #347. Keep claim and all 20 paths locked; Trusted follow-up is the direct Gaming dashboard entry after WCP-401 resolves, then fresh-branch Trusted CI.",
+      "next_action": "Owner-authorized Trusted intake is in progress from Worker PR #347 exact head 5c9907e3a60885050b48c04b55d8502f6de45ca2; Worker CI #883/run 36334837257 passed. Keep the Worker claim and all 20 source paths locked until Trusted integration, Main CI, sanitized Worker sync and Worker CI pass. WCP-401 is integrated; add and test the direct guide link on the Gaming dashboard.",
       "worker_pr_state": "open",
       "worker_pr_changed_paths": [
         "src/Controller/AdminGameGuideController.php",
@@ -47309,6 +47309,19 @@
           "FCP-058-owned paths, DDL, and migrations unchanged.",
           "No Trusted merge or deployment."
         ]
+      },
+      "trusted_transfer": {
+        "status": "owner_authorized_to_trusted",
+        "recorded_at": "2026-09-29T02:22:28Z",
+        "from": "Worker chat holding GravariumDev claim",
+        "to": "Trusted integration coordinator",
+        "exact_feature_branch": "feature/wcp-552-game-guide-workflow-g1",
+        "exact_remote_head": "5c9907e3a60885050b48c04b55d8502f6de45ca2",
+        "worker_pr": 347,
+        "worker_ci_run_id": 36334837257,
+        "worker_ci_result": "success",
+        "previous_worker_chat_stopped_by_owner": true,
+        "claim_remains_locked": true
       }
     },
     {
