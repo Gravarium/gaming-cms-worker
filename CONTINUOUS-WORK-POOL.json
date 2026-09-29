@@ -10,7 +10,7 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "9e083c63e7d888af36f93a23eb924c89fad2b971",
-  "published_at": "2026-09-29T22:33:00.888Z",
+  "published_at": "2026-09-29T22:36:51.941Z",
   "summary": "WCP-511 is complete awaiting Trusted review on Worker PR #404 at exact HEAD e6f77f1dfa236a0a4709c8b3a6c260a2c3730341; exact-head Worker CI #1068 is green. Trusted main remains the only integration and deployment source.",
   "rules": {
     "choose": "Resume the current chat's unfinished claimed branch first. Otherwise atomically claim an eligible published task. If no published task is eligible, independently derive and publish a bounded worker-only CMS proposal from approved product goals and observed code gaps; do not ask the owner for the next FCP number.",
@@ -57915,8 +57915,8 @@
       "package_id": "WCP-610",
       "title": "Let members manage their own private character accounts and profiles",
       "risk": "medium",
-      "execution_state": "worker_in_progress",
-      "claim_state": "active",
+      "execution_state": "worker_complete_awaiting_trusted_review",
+      "claim_state": "locked_until_trusted_resolution",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -58008,15 +58008,34 @@
       "last_observed_head": "60008ccb6431540187e5c8833094883c7fa9b656",
       "last_checkpoint_at": "2026-09-29T22:33:00.888Z",
       "last_verified_push_at": "2026-09-29T22:33:00.888Z",
-      "next_action": "Monitor exact-head Worker CI for draft PR #406 at 60008ccb6431540187e5c8833094883c7fa9b656; fix concrete failures only within the WCP-610 allowlist.",
+      "next_action": "PR #406 is ready for Trusted review at exact green HEAD 60008ccb6431540187e5c8833094883c7fa9b656; keep claim locked until Trusted explicitly resolves it. Coordinate later public visibility/navigation with locked FCP-060; no merge/deployment.",
       "worker_pr": 406,
-      "draft_pr": true,
+      "draft_pr": false,
       "checkpoint_paths": [
         "src/Controller/CharacterSelfServiceController.php",
         "templates/account/characters/index.html.twig",
         "templates/account/characters/account_form.html.twig",
         "templates/account/characters/profile_form.html.twig",
         "tests/Controller/CharacterSelfServiceTest.php"
+      ],
+      "worker_pr_state": "ready_for_review",
+      "pr_state": "open",
+      "final_head": "60008ccb6431540187e5c8833094883c7fa9b656",
+      "ci_run_id": 36640209485,
+      "ci_result": "success",
+      "completed_at": "2026-09-29T22:36:51.941Z",
+      "ci_attempts": [
+        {
+          "head": "60008ccb6431540187e5c8833094883c7fa9b656",
+          "run_id": 36640209485,
+          "run_number": 1073,
+          "result": "success",
+          "jobs": [
+            "109650446325:success",
+            "109650446549:success"
+          ],
+          "test_summary": "PHPUnit 1645 tests, 11990 assertions, no errors/failures; PHPStan 8 and PostgreSQL 18 migration chain passed."
+        }
       ]
     }
   ],
