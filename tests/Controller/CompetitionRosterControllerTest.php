@@ -270,10 +270,12 @@ final class CompetitionRosterControllerTest extends WebTestCase
 
             $client->loginUser($captain);
             $inviteAction = '/account/competition-rosters/'.$team->getId().'/participants/'.$teamEntry->getId().'/invite';
+            $client->request('GET', '/account/competition-rosters');
+            self::assertResponseIsSuccessful();
+            $validToken = $this->csrfToken($client, 'competition-roster-invite-'.$teamEntry->getId());
             $client->request('POST', $inviteAction, ['_token' => 'invalid', 'email' => $unverified->getEmail()]);
             self::assertResponseStatusCodeSame(403);
 
-            $validToken = $this->csrfToken($client, 'competition-roster-invite-'.$teamEntry->getId());
             $client->request('POST', $inviteAction, ['_token' => $validToken, 'email' => $unverified->getEmail()]);
             self::assertResponseRedirects('/account/competition-rosters');
             $crawler = $client->followRedirect();

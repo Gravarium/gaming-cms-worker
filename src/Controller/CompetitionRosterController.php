@@ -45,7 +45,7 @@ final class CompetitionRosterController extends AbstractController
         $this->assertAvailable($request);
         $captain = $this->currentUser();
 
-        return $this->privateResponse($this->render('account/dashboard.html.twig', [
+        return $this->privateResponse($this->render('@CompetitionRoster/account/dashboard.html.twig', [
             'teams' => $this->rosters->forCaptain($captain),
         ]));
     }
@@ -221,7 +221,7 @@ final class CompetitionRosterController extends AbstractController
                 return $this->privateResponse($this->redirectToRoute('app_competition_show', ['id' => $competitionId]));
             }
 
-            return $this->privateResponse($this->render('account/join.html.twig', [
+            return $this->privateResponse($this->render('@CompetitionRoster/account/join.html.twig', [
                 'competition' => $competition,
                 'participant' => $participant,
             ]));
@@ -298,7 +298,7 @@ final class CompetitionRosterController extends AbstractController
             && $participant->getCaptain()?->getId() !== $userId
             && in_array($userId, $participant->getRosterUserIds(), true);
 
-        return $this->privateResponse($this->render('account/join.html.twig', [
+        return $this->privateResponse($this->render('@CompetitionRoster/account/join.html.twig', [
             'competition' => $competition,
             'participant' => $participant,
             'result' => $joined ? 'joined' : 'failed',
