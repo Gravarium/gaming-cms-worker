@@ -10,20 +10,20 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "9e083c63e7d888af36f93a23eb924c89fad2b971",
-  "published_at": "2026-09-29T19:29:00Z",
-  "summary": "WCP-607 is complete awaiting Trusted review: Worker PR #402 is ready at exact HEAD 7d1d8d97bc565a89b7933d6499d280f98a9766b3 and exact-head CI #1057 passed. WCP-608 is claimed on Worker main 1bb9f4762ec113e77856a7d3202af3b53dfb1d18 to build the read-only editorial content operations queue. All six target paths were checked against active and locked claims before reservation. Trusted main remains the only integration and deployment source.",
+  "published_at": "2026-09-29T19:47:35.850Z",
+  "summary": "WCP-607 is complete awaiting Trusted review (PR #402, exact HEAD 7d1d8d97bc565a89b7933d6499d280f98a9766b3, exact-head CI #1057 passed). WCP-608 is active. WCP-589 and WCP-599 exceeded the seven-hour no-progress lease and are available for a new claim from their preserved exact feature heads; WCP-511 has a newer live push and remains leased. Trusted main remains the only integration and deployment source.",
   "rules": {
     "choose": "Resume the current chat's unfinished claimed branch first. Otherwise atomically claim an eligible published task. If no published task is eligible, independently derive and publish a bounded worker-only CMS proposal from approved product goals and observed code gaps; do not ask the owner for the next FCP number.",
     "atomic_reservation": "Create the exact claim_branch and suggested feature branch from that task's published proposal_base_sha. If the claim already exists, treat it as a hard lock; the owning continuation resumes it and every other AI skips it.",
     "no_worker_numbers": "Worker numbers are not assignment identities. Any authorized Worker AI uses the same shared pool.",
     "one_at_a_time": "Exactly one feature package per continuation chat may be actively edited. Different chats may work concurrently only with distinct exclusive claim branches, disjoint allowed paths and no unresolved shared migration, DI or template conflict. A shared GitHub login is not a global one-package lock.",
-    "lease": "Reservation lasts seven hours after the last verified push; the task remains in the pool.",
+    "lease": "An in-progress reservation expires seven hours after the last verified push; before the first push, it expires seven hours after claimed_on. After expiry the task becomes unclaimed and may be reclaimed with a new claim generation. Preserve its feature branch, PR, exact HEAD and CI evidence; a new owner resumes that work. A completed green Worker PR awaiting Trusted resolution remains locked and does not expire.",
     "dependencies": "For Worker proposal sequencing, a dependency is satisfied by either Trusted integration in worker/main or a completed Worker PR with green CI on its exact HEAD. This only authorizes stacked untrusted proposal work; it never marks the dependency integrated and never authorizes Trusted merge or deployment.",
     "final_authority": "Never merge to Trusted and never deploy.",
     "resume_before_claim": "Before looking for an unclaimed task, resume any package in recovery_queue in listed order. Existing own work is never skipped merely because its claim branch exists.",
     "self_reconcile": "After a Worker PR has green CI on its exact final HEAD, the owning Worker updates its own package to worker_complete_awaiting_trusted_review with PR, HEAD and CI evidence. It may then update exactly one still-unclaimed dependent package with a deterministic proposal_base_branch/proposal_base_sha and clear only dependencies proven by exact green Worker CI or Trusted integration. It must never set integrated, release/delete claims, modify another active claim, merge to Trusted or deploy.",
-    "claim_lock": "A claim survives errors, chat loss, limits and Worker completion. It blocks every other AI until Trusted explicitly integrates, cancels or transfers it with checkpoint evidence.",
-    "continue_after_interrupt": "On any recoverable tool/model/chat interruption, fetch the same feature branch and continue from the verified remote HEAD. Do not abandon or duplicate work.",
+    "claim_lock": "The current claim blocks other chats only while its seven-hour lease is valid. At expiry, the task is reclaimable; an old chat loses write authority and must re-read the live pool before any continuation. The prior branch is retained as recovery evidence, not as an active lock.",
+    "continue_after_interrupt": "On interruption, re-read the live pool and branch. Resume the same work only if its claim lease is still valid. If expired, do not write under the old claim; reclaim the task with a new claim generation, then continue from the exact remote HEAD without resetting or discarding work.",
     "proposal_stacking": "A single completed dependency uses that dependency's exact green feature HEAD as proposal base. Multiple completed dependencies require an explicitly published Worker-only composition base with complete green CI before the next claim. Never guess or blind-merge a composition base.",
     "no_account_baselines": "New work uses worker/main or an explicitly published exact green predecessor/composition HEAD. Retired numbered account baselines are not assignment sources.",
     "autonomous_continuation": "After every green exact-head Worker PR, self-reconcile and continue to the next dependency-safe package. If the finite task list is exhausted or blocked, plan a new small worker-only proposal from the approved CMS scope, record scope, dependencies, base SHA, path collision checks, tests and Fortress/privacy impact in this pool, reserve an exclusive claim, then implement without another owner instruction. A proposal is never a Trusted FCP integration.",
@@ -39275,21 +39275,22 @@
       "claim_state": "active",
       "active_base_branch": "main",
       "active_base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-      "active_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
+      "active_head": "4d2ef8bd45ab09ad0f0c1af564967157ff655873",
       "resume_branch": "feature/wcp-511-public-content-tag-directory-g1",
       "branch_heads": {
         "claim_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-        "feature_branch": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d"
+        "feature_branch": "4d2ef8bd45ab09ad0f0c1af564967157ff655873"
       },
-      "last_observed_head": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-      "last_checkpoint_at": "2026-09-27T10:12:57.878Z",
+      "last_observed_head": "4d2ef8bd45ab09ad0f0c1af564967157ff655873",
+      "last_checkpoint_at": "2026-09-29T14:51:49Z",
       "checkpoint_paths": [
         "src/Controller/PublicContentTagDirectoryController.php",
         "templates/content_tag/index.html.twig",
         "tests/Controller/PublicContentTagDirectoryTest.php"
       ],
       "next_action": "Implement the public content-tag directory and focused disabled-content coverage, then push a meaningful feature checkpoint and create the Worker PR.",
-      "last_verified_push_at": "2026-09-27T10:12:57.878Z"
+      "last_verified_push_at": "2026-09-29T14:51:49Z",
+      "lease_expires_at": "2026-09-29T21:51:49Z"
     },
     {
       "priority": 512,
@@ -53520,11 +53521,11 @@
       "package_id": "WCP-589",
       "title": "Subscribe to upcoming public guild events by iCalendar",
       "risk": "low",
-      "execution_state": "worker_in_progress",
+      "execution_state": "unclaimed",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
-      "claim_branch": "claim/wcp-589-public-guild-event-calendar-g1",
+      "claim_branch": "claim/wcp-589-public-guild-event-calendar-g2",
       "suggested_branch": "feature/wcp-589-public-guild-event-calendar-g1",
       "base_branch": "main",
       "base_sha": "2f8179fe129c3071b68757f03a3e7099311179ef",
@@ -53612,10 +53613,6 @@
         ]
       },
       "published_at": "2026-09-28T20:07:52.298Z",
-      "claimed_on": "2026-09-28T20:07:52.298Z",
-      "claim_state": "active",
-      "active_base_branch": "main",
-      "active_base_sha": "2f8179fe129c3071b68757f03a3e7099311179ef",
       "active_head": "52acf5e6cecbc0f6e424e5f558510dbd170a63fe",
       "resume_branch": "feature/wcp-589-public-guild-event-calendar-g1",
       "branch_heads": {
@@ -53623,7 +53620,6 @@
         "feature_branch": "52acf5e6cecbc0f6e424e5f558510dbd170a63fe"
       },
       "last_observed_head": "52acf5e6cecbc0f6e424e5f558510dbd170a63fe",
-      "last_checkpoint_at": "2026-09-28T20:14:38.364Z",
       "checkpoint_paths": [
         "src/Controller/PublicGuildEventCalendarFeedController.php",
         "src/GuildEventCalendarFeed/PublicGuildEventCalendarBuilder.php",
@@ -53631,8 +53627,7 @@
         "tests/Controller/PublicGuildEventCalendarFeedTest.php",
         "tests/GuildEventCalendarFeed/PublicGuildEventCalendarBuilderTest.php"
       ],
-      "next_action": "Inspect exact-head Worker CI run #973. Verify the public feed integration and builder tests, inspect both PHP/Symfony and PostgreSQL 18 jobs, and fix failures only within WCP-589 paths.",
-      "last_verified_push_at": "2026-09-28T20:13:51.030Z",
+      "next_action": "Lease expired after seven hours without a verified push. Reclaim with the new generation claim branch claim/wcp-589-public-guild-event-calendar-g2; resume feature/wcp-589-public-guild-event-calendar-g1 from exact live HEAD 52acf5e6cecbc0f6e424e5f558510dbd170a63fe. Preserve the existing work and PR; inspect current CI, then fix only within the allowlist.",
       "worker_pr": 384,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/384",
       "worker_pr_state": "draft",
@@ -53668,7 +53663,19 @@
       "ci_run_id": 36477748042,
       "last_ci_run_id": 36477748042,
       "ci_validation_pr": 384,
-      "last_ci_result": "in_progress"
+      "last_ci_result": "in_progress",
+      "previous_claim": {
+        "claim_branch": "claim/wcp-589-public-guild-event-calendar-g1",
+        "expired_at": "2026-09-29T03:13:51.030Z",
+        "last_verified_push_at": "2026-09-28T20:13:51.030Z",
+        "last_checkpoint_at": "2026-09-28T20:14:38.364Z",
+        "active_head": "52acf5e6cecbc0f6e424e5f558510dbd170a63fe",
+        "worker_pr": 384,
+        "ci_run_id": 36477748042,
+        "ci_result": "in_progress"
+      },
+      "claim_generation": 2,
+      "lease_expired_at": "2026-09-29T03:13:51.030Z"
     },
     {
       "priority": 590,
@@ -55526,13 +55533,13 @@
       "package_id": "WCP-599",
       "title": "Complete the Social group-conversation membership lifecycle",
       "risk": "medium",
-      "execution_state": "worker_in_progress",
+      "execution_state": "unclaimed",
       "dependencies": [
         "WCP-558"
       ],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
-      "claim_branch": "claim/wcp-599-social-group-conversation-membership-g1",
+      "claim_branch": "claim/wcp-599-social-group-conversation-membership-g2",
       "suggested_branch": "feature/wcp-599-social-group-conversation-membership-g1",
       "base_branch": "feature/wcp-558-social-group-conversation-creation-g1",
       "base_sha": "bbbf5fda44cd9d2b6a2b1dd957a8c10290685793",
@@ -55651,10 +55658,6 @@
         ]
       },
       "published_at": "2026-09-29T11:23:10.373Z",
-      "claimed_on": "2026-09-29T11:23:10.373Z",
-      "claim_state": "active",
-      "active_base_branch": "feature/wcp-558-social-group-conversation-creation-g1",
-      "active_base_sha": "bbbf5fda44cd9d2b6a2b1dd957a8c10290685793",
       "active_head": "2d06af7f8146ba6aa84b18422c9f38136faaa6b4",
       "resume_branch": "feature/wcp-599-social-group-conversation-membership-g1",
       "branch_heads": {
@@ -55662,7 +55665,6 @@
         "feature_branch": "2d06af7f8146ba6aa84b18422c9f38136faaa6b4"
       },
       "last_observed_head": "2d06af7f8146ba6aa84b18422c9f38136faaa6b4",
-      "last_checkpoint_at": "2026-09-29T12:24:17.921Z",
       "checkpoint_paths": [
         "src/Controller/Social/SocialConversationMembershipController.php",
         "src/Form/Social/SocialConversationMemberType.php",
@@ -55677,8 +55679,19 @@
         "src/Social/SocialAccessPolicy.php",
         "src/Entity/Social/SocialMessage.php"
       ],
-      "next_action": "The join boundary now clears all existing second-precision message timestamps and new group sends are stamped at or after the latest active join boundary without schema changes. Wait for exact-head Worker CI run #1017 and repair any remaining tests.",
-      "last_verified_push_at": "2026-09-29T12:24:17.921Z"
+      "next_action": "Lease expired after seven hours without a verified push. Reclaim with the new generation claim branch claim/wcp-599-social-group-conversation-membership-g2; resume feature/wcp-599-social-group-conversation-membership-g1 from exact live HEAD 2d06af7f8146ba6aa84b18422c9f38136faaa6b4. Preserve the existing work and PR; inspect current CI, then fix only within the allowlist.",
+      "previous_claim": {
+        "claim_branch": "claim/wcp-599-social-group-conversation-membership-g1",
+        "expired_at": "2026-09-29T19:24:17.921Z",
+        "last_verified_push_at": "2026-09-29T12:24:17.921Z",
+        "last_checkpoint_at": "2026-09-29T12:24:17.921Z",
+        "active_head": "2d06af7f8146ba6aa84b18422c9f38136faaa6b4",
+        "worker_pr": null,
+        "ci_run_id": null,
+        "ci_result": null
+      },
+      "claim_generation": 2,
+      "lease_expired_at": "2026-09-29T19:24:17.921Z"
     },
     {
       "priority": 600,
@@ -57287,7 +57300,8 @@
       "last_checkpoint_at": "2026-09-29T19:29:00Z",
       "checkpoint_paths": [],
       "last_verified_push_at": null,
-      "next_action": "Implement the queue only within the six allowlisted paths, run targeted checks and complete Worker CI on the exact final feature HEAD, then open a Worker PR. Keep the claim locked until Trusted resolves it."
+      "next_action": "Implement the queue only within the six allowlisted paths, run targeted checks and complete Worker CI on the exact final feature HEAD, then open a Worker PR. Keep the claim locked until Trusted resolves it.",
+      "lease_expires_at": "2026-09-30T02:29:00Z"
     }
   ],
   "recovery_queue": [],
