@@ -10,7 +10,7 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "9e083c63e7d888af36f93a23eb924c89fad2b971",
-  "published_at": "2026-09-29T22:01:02.573Z",
+  "published_at": "2026-09-29T22:02:56.939Z",
   "summary": "WCP-511 is active on Worker PR #404 at exact HEAD e6f77f1dfa236a0a4709c8b3a6c260a2c3730341; full Worker CI is running. WCP-589 is complete awaiting Trusted review, WCP-599 is unclaimed, and WCP-608 remains active. Trusted main remains the only integration and deployment source.",
   "rules": {
     "choose": "Resume the current chat's unfinished claimed branch first. Otherwise atomically claim an eligible published task. If no published task is eligible, independently derive and publish a bounded worker-only CMS proposal from approved product goals and observed code gaps; do not ask the owner for the next FCP number.",
@@ -55990,13 +55990,13 @@
         ]
       },
       "published_at": "2026-09-29T11:23:10.373Z",
-      "active_head": "2d06af7f8146ba6aa84b18422c9f38136faaa6b4",
+      "active_head": "c78c95092965cc22f3122b39746b65bcb451f93a",
       "resume_branch": "feature/wcp-599-social-group-conversation-membership-g1",
       "branch_heads": {
         "claim_branch": "2d06af7f8146ba6aa84b18422c9f38136faaa6b4",
-        "feature_branch": "2d06af7f8146ba6aa84b18422c9f38136faaa6b4"
+        "feature_branch": "c78c95092965cc22f3122b39746b65bcb451f93a"
       },
-      "last_observed_head": "2d06af7f8146ba6aa84b18422c9f38136faaa6b4",
+      "last_observed_head": "c78c95092965cc22f3122b39746b65bcb451f93a",
       "checkpoint_paths": [
         "src/Controller/Social/SocialConversationMembershipController.php",
         "src/Form/Social/SocialConversationMemberType.php",
@@ -56011,7 +56011,7 @@
         "src/Social/SocialAccessPolicy.php",
         "src/Entity/Social/SocialMessage.php"
       ],
-      "next_action": "Resume PR #394 at exact existing HEAD; diagnose red PHP/Symfony job and repair only the WCP-599 allowlist.",
+      "next_action": "Monitor full exact-head Worker CI for draft PR #394 at c78c95092965cc22f3122b39746b65bcb451f93a; fix concrete failures within allowlist.",
       "previous_claim": {
         "claim_branch": "claim/wcp-599-social-group-conversation-membership-g1",
         "expired_at": "2026-09-29T19:24:17.921Z",
@@ -56026,8 +56026,22 @@
       "lease_expired_at": "2026-09-29T19:24:17.921Z",
       "claim_state": "active",
       "claimed_on": "2026-09-29T22:01:02.573Z",
-      "last_verified_push_at": "2026-09-29T22:01:02.573Z",
-      "last_checkpoint_at": "2026-09-29T22:01:02.573Z"
+      "last_verified_push_at": "2026-09-29T22:02:56.939Z",
+      "last_checkpoint_at": "2026-09-29T22:02:56.939Z",
+      "worker_pr": 394,
+      "draft_pr": true,
+      "ci_attempts": [
+        {
+          "head": "2d06af7f8146ba6aa84b18422c9f38136faaa6b4",
+          "run_id": 36567834343,
+          "result": "failure",
+          "jobs": [
+            "109404071196:failure",
+            "109404070521:success"
+          ],
+          "diagnosis": "PHPUnit test used unimported NotFoundHttpException and AccessDeniedException catches; invalid form CSRF token returned 422, not asserted 403. PHPStan and PostgreSQL migration validation passed."
+        }
+      ]
     },
     {
       "priority": 600,
