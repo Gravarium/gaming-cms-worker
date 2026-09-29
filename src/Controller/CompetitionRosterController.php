@@ -210,15 +210,15 @@ final class CompetitionRosterController extends AbstractController
 
                 return $this->privateResponse($this->redirectToRoute('app_competition_show', ['id' => $competitionId]));
             }
-            if ($this->openSlots($competition, $participant) < 1) {
-                $this->addFlash('error', 'Das Team ist bereits vollständig.');
-
-                return $this->privateResponse($this->redirectToRoute('app_competition_show', ['id' => $competitionId]));
-            }
             if (
                 !$this->inviteLinks->isValid($token, $competition, $participant, $user)
             ) {
                 throw $this->createNotFoundException('Diese Einladung ist ungültig oder nicht mehr verfügbar.');
+            }
+            if ($this->openSlots($competition, $participant) < 1) {
+                $this->addFlash('error', 'Das Team ist bereits vollständig.');
+
+                return $this->privateResponse($this->redirectToRoute('app_competition_show', ['id' => $competitionId]));
             }
 
             return $this->privateResponse($this->render('account/join.html.twig', [

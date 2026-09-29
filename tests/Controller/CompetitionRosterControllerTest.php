@@ -323,11 +323,12 @@ final class CompetitionRosterControllerTest extends WebTestCase
             $crawler = $client->followRedirect();
             self::assertSelectorTextContains('body', 'Einladungen können nur vor dem Check-in');
 
+            $disabledModuleToken = $this->csrfToken($client, 'competition-roster-invite-'.$teamEntry->getId());
             $this->setModuleEnabled($this->entityManager($client), 'gaming', false);
             $client->request('GET', '/account/competition-rosters');
             self::assertResponseStatusCodeSame(404);
             $client->request('POST', $inviteAction, [
-                '_token' => $this->csrfToken($client, 'competition-roster-invite-'.$teamEntry->getId()),
+                '_token' => $disabledModuleToken,
                 'email' => $captain->getEmail(),
             ]);
             self::assertResponseStatusCodeSame(404);

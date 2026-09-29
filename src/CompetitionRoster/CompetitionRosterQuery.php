@@ -81,9 +81,9 @@ final readonly class CompetitionRosterQuery
         $memberMap = [];
         if ($allIds !== []) {
             /** @var list<User> $users */
-            $users = $this->users->createQueryBuilder('member')
-                ->andWhere('member.id IN (:ids)')
-                ->andWhere('member.isActive = :active')
+            $users = $this->users->createQueryBuilder('rosterMember')
+                ->andWhere('rosterMember.id IN (:ids)')
+                ->andWhere('rosterMember.isActive = :active')
                 ->setParameter('ids', $allIds)
                 ->setParameter('active', true)
                 ->getQuery()
