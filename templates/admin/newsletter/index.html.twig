@@ -16,11 +16,31 @@
 <tr><td>{{ campaign.title }}</td><td>{{ campaign.status }}</td><td>{{ campaign.segment }}</td><td>{{ campaign.maxRecipients }}</td><td>
 <a href="{{ path('app_admin_notification_newsletter_admin_preview',{id:campaign.id}) }}">Vorschau</a>
 {% if not campaign.final and campaign.status != 'sending' %}<a href="{{ path('app_admin_notification_newsletter_admin_edit',{id:campaign.id}) }}">Bearbeiten</a>{% endif %}
-{% if campaign.status in ['draft','scheduled','sending'] %}
+{% if campaign.status in ['draft','sending'] or (campaign.status == 'scheduled' and campaign.scheduledAt and campaign.scheduledAt <= date()) %}
 <form method="post" action="{{ path('app_admin_notification_newsletter_admin_dispatch',{id:campaign.id}) }}"><input type="hidden" name="_token" value="{{ csrf_token('newsletter-dispatch-'~campaign.id) }}"><input type="number" name="quota" min="1" max="1000" value="100"><button>Versandlauf</button></form>
 {% endif %}
 {% if campaign.status == 'draft' %}
 <form method="post" action="{{ path('app_admin_notification_newsletter_admin_schedule',{id:campaign.id}) }}"><input type="hidden" name="_token" value="{{ csrf_token('newsletter-schedule-'~campaign.id) }}"><input type="datetime-local" name="scheduled_at" required><button>Planen</button></form>
+{% endif %}
+{% if campaign.status == 'scheduled' %}
+<form method="post" action="{{ path('app_admin_notification_newsletter_lifecycle_reschedule',{id:campaign.id}) }}">
+<input type="hidden" name="_token" value="{{ csrf_token('newsletter-reschedule-'~campaign.id) }}">
+<label>Neuer Zeitpunkt (UTC)<input type="datetime-local" name="scheduled_at" value="{{ campaign.scheduledAt|date('Y-m-d\\TH:i', 'UTC') }}" required></label>
+<button>Umplanen</button>
+</form>
+{% endif %}
+{% if campaign.status in ['draft', 'scheduled'] %}
+<form method="post" action="{{ path('app_admin_notification_newsletter_lifecycle_cancel',{id:campaign.id}) }}">
+<input type="hidden" name="_token" value="{{ csrf_token('newsletter-cancel-'~campaign.id) }}">
+<button>Absagen</button>
+</form>
+{% endif %}
+{% if campaign.status == 'failed' %}
+<form method="post" action="{{ path('app_admin_notification_newsletter_lifecycle_retry',{id:campaign.id}) }}">
+<input type="hidden" name="_token" value="{{ csrf_token('newsletter-retry-'~campaign.id) }}">
+<label>Neuer Versuch ab (UTC)<input type="datetime-local" name="scheduled_at" required></label>
+<button>Fehlgeschlagene Zustellungen erneut einplanen</button>
+</form>
 {% endif %}
 </td></tr>
 {% else %}<tr><td colspan="5">Noch keine Kampagnen.</td></tr>{% endfor %}
