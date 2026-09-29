@@ -10,8 +10,8 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "9e083c63e7d888af36f93a23eb924c89fad2b971",
-  "published_at": "2026-09-29T15:59:05.706Z",
-  "summary": "WCP-605 is actively reserved with PR #400 at exact HEAD 5ef6ef847996a4a629a4d58982b5eeb5f2225366; exact-head CI is pending. WCP-604 remains independently active on disjoint content-transfer paths.",
+  "published_at": "2026-09-29T16:17:42.918Z",
+  "summary": "WCP-605 is actively reserved with PR #400 at exact HEAD ba7780b5c296996446696d890c612fef3f18f76c; exact-head Worker CI run 36596401274 is queued. WCP-604 and WCP-606 remain independently active on disjoint paths.",
   "rules": {
     "choose": "Resume the current chat's unfinished claimed branch first. Otherwise atomically claim an eligible published task. If no published task is eligible, independently derive and publish a bounded worker-only CMS proposal from approved product goals and observed code gaps; do not ask the owner for the next FCP number.",
     "atomic_reservation": "Create the exact claim_branch and suggested feature branch from that task's published proposal_base_sha. If the claim already exists, treat it as a hard lock; the owning continuation resumes it and every other AI skips it.",
@@ -56711,14 +56711,14 @@
       "claim_state": "active",
       "active_base_branch": "main",
       "active_base_sha": "9e083c63e7d888af36f93a23eb924c89fad2b971",
-      "active_head": "5ef6ef847996a4a629a4d58982b5eeb5f2225366",
+      "active_head": "ba7780b5c296996446696d890c612fef3f18f76c",
       "resume_branch": "feature/wcp-605-download-release-relations-g1",
       "branch_heads": {
         "claim_branch": "9e083c63e7d888af36f93a23eb924c89fad2b971",
-        "feature_branch": "5ef6ef847996a4a629a4d58982b5eeb5f2225366"
+        "feature_branch": "ba7780b5c296996446696d890c612fef3f18f76c"
       },
-      "last_observed_head": "5ef6ef847996a4a629a4d58982b5eeb5f2225366",
-      "last_checkpoint_at": "2026-09-29T15:59:05.706Z",
+      "last_observed_head": "ba7780b5c296996446696d890c612fef3f18f76c",
+      "last_checkpoint_at": "2026-09-29T16:17:42.918Z",
       "checkpoint_paths": [
         "src/Repository/Download/DownloadDependencyRepository.php",
         "src/Repository/Download/DownloadMirrorRepository.php",
@@ -56743,8 +56743,8 @@
         "tests/Controller/DownloadReleaseRelationsPublicTest.php",
         "tests/Downloads/Relations/DownloadDependencyGraphPolicyTest.php"
       ],
-      "next_action": "Run and inspect exact-head Worker CI on PR #400 at 5ef6ef847996a4a629a4d58982b5eeb5f2225366; fix any failures and re-run all required checks without weakening protections.",
-      "last_verified_push_at": "2026-09-29T15:59:05.706Z",
+      "next_action": "Inspect exact-head Worker CI run 36596401274 for HEAD ba7780b5c296996446696d890c612fef3f18f76c; fix any findings, push a new exact HEAD, and rerun all required checks.",
+      "last_verified_push_at": "2026-09-29T16:17:42.918Z",
       "worker_pr": 400,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/400",
       "worker_pr_state": "open",
@@ -56801,7 +56801,9 @@
         "tests/Downloads/Relations/DownloadDependencyGraphPolicyTest.php"
       ],
       "ci_result": "pending",
-      "last_ci_result": "pending"
+      "last_ci_result": "pending",
+      "ci_run_id": 36596401274,
+      "last_ci_run_id": 36596401274
     },
     {
       "priority": 606,
@@ -56901,14 +56903,14 @@
       "claim_state": "active",
       "active_base_branch": "main",
       "active_base_sha": "9e083c63e7d888af36f93a23eb924c89fad2b971",
-      "active_head": "5f4fd9a6e4225994355c3782f932a2d8717967a3",
+      "active_head": "a0db563560f85fcdff3894113427828d57f449aa",
       "resume_branch": "feature/wcp-606-content-quality-g1",
       "branch_heads": {
         "claim_branch": "9e083c63e7d888af36f93a23eb924c89fad2b971",
-        "feature_branch": "5f4fd9a6e4225994355c3782f932a2d8717967a3"
+        "feature_branch": "a0db563560f85fcdff3894113427828d57f449aa"
       },
-      "last_observed_head": "5f4fd9a6e4225994355c3782f932a2d8717967a3",
-      "last_checkpoint_at": "2026-09-29T16:16:29.916Z",
+      "last_observed_head": "a0db563560f85fcdff3894113427828d57f449aa",
+      "last_checkpoint_at": "2026-09-29T16:00:53.575Z",
       "checkpoint_paths": [
         "src/Controller/AdminContentQualityController.php",
         "src/ContentQuality/",
@@ -56916,8 +56918,8 @@
         "tests/Controller/ContentQualityAuditTest.php",
         "tests/ContentQuality/"
       ],
-      "next_action": "Await exact-head Worker CI run 1045 on 5f4fd9a6e4225994355c3782f932a2d8717967a3; inspect report, search, module-gate tests, PHPStan, Symfony checks, and PostgreSQL 18; resolve every finding before handoff.",
-      "last_verified_push_at": "2026-09-29T16:16:29.916Z",
+      "next_action": "Await exact-head Worker CI for PR 401; inspect PHPStan, Twig/YAML/container validation, the report tests and PostgreSQL 18 migration check, then fix and checkpoint any finding.",
+      "last_verified_push_at": "2026-09-29T16:00:23.227Z",
       "worker_pr": 401
     }
   ],
