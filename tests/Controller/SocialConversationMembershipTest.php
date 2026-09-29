@@ -102,8 +102,8 @@ final class SocialConversationMembershipTest extends WebTestCase
         $em->persist($oldMessage);
         $em->flush();
         $oldMessageId = $this->id($oldMessage);
-        $memberParticipant->markRead(new \\DateTimeImmutable());
-        $memberParticipant->leave(new \\DateTimeImmutable());
+        $memberParticipant->markRead(new \DateTimeImmutable());
+        $memberParticipant->leave(new \DateTimeImmutable());
         $em->flush();
         $memberId = $this->id($member);
 
