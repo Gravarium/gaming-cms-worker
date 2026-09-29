@@ -53521,7 +53521,7 @@
       "package_id": "WCP-589",
       "title": "Subscribe to upcoming public guild events by iCalendar",
       "risk": "low",
-      "execution_state": "unclaimed",
+      "execution_state": "worker_in_progress",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -53570,7 +53570,7 @@
         "The existing public guild events page links to the subscription feed; no schema, migration, entity, repository or member/registration behavior changes."
       ],
       "tests": [
-        "Functional feed coverage verifies inclusion and exclusion rules, stable UID, MIME and public cache headers, empty feed, Gaming module gate and GET-only route.",
+        "Functional feed coverage verifies inclusion and exclusion rules, stable UID, MIME, preservation of the application's private cache policy without shared/public caching, empty feed, Gaming module gate and GET-only route.",
         "Builder regression tests verify CR/LF/semicolon/comma escaping, UTF-8-safe 75-octet line folding, UTC timestamps, optional end time and the 12-event cap.",
         "The public guild event page shows an accessible link to the calendar feed.",
         "PHPStan level 8 and full exact-head Worker CI, including PostgreSQL 18 migration-chain validation."
@@ -53627,7 +53627,7 @@
         "tests/Controller/PublicGuildEventCalendarFeedTest.php",
         "tests/GuildEventCalendarFeed/PublicGuildEventCalendarBuilderTest.php"
       ],
-      "next_action": "Lease expired after seven hours without a verified push. Reclaim with the new generation claim branch claim/wcp-589-public-guild-event-calendar-g2; resume feature/wcp-589-public-guild-event-calendar-g1 from exact live HEAD 52acf5e6cecbc0f6e424e5f558510dbd170a63fe. Preserve the existing work and PR; inspect current CI, then fix only within the allowlist.",
+      "next_action": "Fix the WCP-589 cache-policy mismatch only within the allowlist: preserve the existing private response-cache policy and test that it is not public. Push the correction, verify the exact-head Worker CI, and keep PR #384 draft until both jobs pass.",
       "worker_pr": 384,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/384",
       "worker_pr_state": "draft",
@@ -53642,28 +53642,28 @@
         "tests/Controller/PublicGuildEventCalendarFeedTest.php",
         "tests/GuildEventCalendarFeed/PublicGuildEventCalendarBuilderTest.php"
       ],
-      "ci_result": "in_progress",
+      "ci_result": "failure",
       "ci_attempts": [
         {
           "run_id": 36477748042,
           "run_number": 973,
           "head": "52acf5e6cecbc0f6e424e5f558510dbd170a63fe",
           "base": "da6c2009c87911ecdba316ae93844eb6d38462f4",
-          "result": "in_progress",
+          "result": "failure",
           "validation_pr": 384,
-          "status": "in_progress",
-          "conclusion": null,
+          "status": "completed",
+          "conclusion": "failure",
           "jobs": {
-            "php_symfony": "in_progress",
-            "postgres_18": "in_progress"
+            "php_symfony": "failure",
+            "postgres_18": "success"
           },
-          "summary": "Exact-head Worker CI #973 is running on the current PR head."
+          "summary": "Exact-head Worker CI #973 failed in the PHP/Symfony job because the test expected public/max-age=300 while the application returned max-age=0, must-revalidate, private; PostgreSQL 18 passed."
         }
       ],
       "ci_run_id": 36477748042,
       "last_ci_run_id": 36477748042,
       "ci_validation_pr": 384,
-      "last_ci_result": "in_progress",
+      "last_ci_result": "failure",
       "previous_claim": {
         "claim_branch": "claim/wcp-589-public-guild-event-calendar-g1",
         "expired_at": "2026-09-29T03:13:51.030Z",
@@ -53675,7 +53675,13 @@
         "ci_result": "in_progress"
       },
       "claim_generation": 2,
-      "lease_expired_at": "2026-09-29T03:13:51.030Z"
+      "lease_expired_at": "2026-09-29T03:13:51.030Z",
+      "claim_state": "active",
+      "claimed_on": "2026-09-29T20:34:55.844Z",
+      "active_base_branch": "main",
+      "active_base_sha": "1bb9f4762ec113e77856a7d3202af3b53dfb1d18",
+      "last_verified_push_at": null,
+      "lease_expires_at": "2026-09-30T03:34:55.844Z"
     },
     {
       "priority": 590,
