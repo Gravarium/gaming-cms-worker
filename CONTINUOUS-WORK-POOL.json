@@ -53967,16 +53967,16 @@
       "claim_state": "active",
       "active_base_branch": "fix/fcp-061-phpstan-g1",
       "active_base_sha": "ec6bb200affc3e5a46d416e98f7a1b0621c38ded",
-      "active_head": "c95951c6ccb34e3724e1494e4990435e49b2f713",
+      "active_head": "19fe335c597f494e55decdd068a7584970a5cd54",
       "resume_branch": "feature/wcp-591-team-competition-roster-g1",
       "branch_heads": {
         "claim_branch": "ec6bb200affc3e5a46d416e98f7a1b0621c38ded",
-        "feature_branch": "c95951c6ccb34e3724e1494e4990435e49b2f713"
+        "feature_branch": "19fe335c597f494e55decdd068a7584970a5cd54"
       },
-      "last_observed_head": "c95951c6ccb34e3724e1494e4990435e49b2f713",
-      "last_checkpoint_at": "2026-09-29T11:50:56.162Z",
-      "last_verified_push_at": "2026-09-29T11:50:56.162Z",
-      "next_action": "Monitor Worker CI #1005 on exact HEAD c95951c6ccb34e3724e1494e4990435e49b2f713; fix any findings on this feature branch and rerun CI.",
+      "last_observed_head": "19fe335c597f494e55decdd068a7584970a5cd54",
+      "last_checkpoint_at": "2026-09-29T11:55:14.326Z",
+      "last_verified_push_at": "2026-09-29T11:55:14.326Z",
+      "next_action": "Monitor Worker CI #1008 on exact HEAD 19fe335c597f494e55decdd068a7584970a5cd54 and repair any remaining findings before completion.",
       "checkpoint_paths": [
         "config/packages/competition_rosters_widget.yaml",
         "src/CompetitionRoster/CompetitionRosterInviteLink.php",
@@ -54011,21 +54011,36 @@
         "tests/Widget/CompetitionRostersWidgetTest.php"
       ],
       "ci_result": "in_progress",
-      "ci_run_id": 36564325245,
-      "ci_run_number": 1005,
-      "ci_head": "c95951c6ccb34e3724e1494e4990435e49b2f713",
+      "ci_run_id": 36564689017,
+      "ci_run_number": 1008,
+      "ci_head": "19fe335c597f494e55decdd068a7584970a5cd54",
       "ci_attempts": [
         {
           "run_id": 36564325245,
           "run_number": 1005,
           "head": "c95951c6ccb34e3724e1494e4990435e49b2f713",
           "base": "9e083c63e7d888af36f93a23eb924c89fad2b971",
+          "result": "failure",
+          "validation_pr": 395,
+          "status": "completed",
+          "conclusion": "failure",
+          "jobs": {
+            "php_symfony": "failure",
+            "postgres_18": "success"
+          },
+          "summary": "PHPStan reported 7 findings: four redundant is_int checks on phpdoc-known integer IDs and three FlashBag calls typed through SessionInterface. PostgreSQL 18 migration-chain validation passed."
+        },
+        {
+          "run_id": 36564689017,
+          "run_number": 1008,
+          "head": "19fe335c597f494e55decdd068a7584970a5cd54",
+          "base": "9e083c63e7d888af36f93a23eb924c89fad2b971",
           "result": "in_progress",
           "validation_pr": 395,
           "status": "queued",
           "conclusion": null,
           "jobs": {},
-          "summary": "Exact-head Worker CI #1005 is queued on the current PR head."
+          "summary": "Exact-head Worker CI #1008 is queued after addressing all PHPStan findings."
         }
       ]
     },
