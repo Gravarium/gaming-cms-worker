@@ -10,8 +10,8 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "9e083c63e7d888af36f93a23eb924c89fad2b971",
-  "published_at": "2026-09-29T16:58:34.494Z",
-  "summary": "WCP-605 is complete on exact HEAD e0144706a3e9df5996af17d644f293afdb702aa7 with PR #400 awaiting Trusted review; WCP-607 is actively claimed from sanitized main 9e083c63e7d888af36f93a23eb924c89fad2b971 for a bounded Content accessibility report. WCP-606 remains independently active.",
+  "published_at": "2026-09-29T17:35:53.938Z",
+  "summary": "WCP-605 remains complete with PR #400 awaiting Trusted review. WCP-606 is complete on exact HEAD f2d29a242a1ba1f5094835021c181cd6cc94e9c0 with PR #401 awaiting Trusted review. WCP-607 is actively claimed; PR #402 is a draft at bdabde3003fa7006d47a83d5f210fe6e442a3b7a with exact-head Worker CI running.",
   "rules": {
     "choose": "Resume the current chat's unfinished claimed branch first. Otherwise atomically claim an eligible published task. If no published task is eligible, independently derive and publish a bounded worker-only CMS proposal from approved product goals and observed code gaps; do not ask the owner for the next FCP number.",
     "atomic_reservation": "Create the exact claim_branch and suggested feature branch from that task's published proposal_base_sha. If the claim already exists, treat it as a hard lock; the owning continuation resumes it and every other AI skips it.",
@@ -57110,20 +57110,44 @@
       "claim_state": "active",
       "active_base_branch": "main",
       "active_base_sha": "9e083c63e7d888af36f93a23eb924c89fad2b971",
-      "active_head": "9e083c63e7d888af36f93a23eb924c89fad2b971",
+      "active_head": "bdabde3003fa7006d47a83d5f210fe6e442a3b7a",
       "resume_branch": "feature/wcp-607-content-accessibility-audit-g1",
       "branch_heads": {
         "claim_branch": "9e083c63e7d888af36f93a23eb924c89fad2b971",
-        "feature_branch": "9e083c63e7d888af36f93a23eb924c89fad2b971"
+        "feature_branch": "bdabde3003fa7006d47a83d5f210fe6e442a3b7a"
       },
-      "last_observed_head": "9e083c63e7d888af36f93a23eb924c89fad2b971",
-      "last_checkpoint_at": "2026-09-29T16:58:34.493Z",
-      "last_verified_push_at": "2026-09-29T16:58:34.493Z",
-      "checkpoint_paths": [],
-      "next_action": "Implement the bounded read-only accessibility analyzer, report, navigation link and functional/security tests within the allowlist.",
+      "last_observed_head": "bdabde3003fa7006d47a83d5f210fe6e442a3b7a",
+      "last_checkpoint_at": "2026-09-29T17:35:53.938Z",
+      "last_verified_push_at": "2026-09-29T17:35:53.938Z",
+      "checkpoint_paths": [
+        "src/Accessibility/Content/ContentAccessibilityAnalyzer.php",
+        "src/Accessibility/Content/ContentAccessibilityReport.php",
+        "src/Controller/AdminContentAccessibilityController.php",
+        "templates/admin/content_accessibility/index.html.twig",
+        "templates/base.html.twig",
+        "tests/Accessibility/Content/ContentAccessibilityAnalyzerTest.php",
+        "tests/Controller/ContentAccessibilityAuditTest.php"
+      ],
+      "next_action": "PR #402 is open as a draft at exact HEAD bdabde3003fa7006d47a83d5f210fe6e442a3b7a. Worker CI run #1053 (36605714661) is in progress; inspect exact-head results, fix any failures, and complete only after all jobs pass.",
       "ci_result": "pending",
       "last_ci_result": "pending",
-      "last_ci_run_id": null
+      "last_ci_run_id": 36605714661,
+      "worker_pr": 402,
+      "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/402",
+      "pr_state": "open_draft",
+      "worker_pr_state": "draft",
+      "worker_pr_base_branch": "main",
+      "worker_pr_base_sha": "9e083c63e7d888af36f93a23eb924c89fad2b971",
+      "worker_pr_changed_paths": [
+        "src/Accessibility/Content/ContentAccessibilityAnalyzer.php",
+        "src/Accessibility/Content/ContentAccessibilityReport.php",
+        "src/Controller/AdminContentAccessibilityController.php",
+        "templates/admin/content_accessibility/index.html.twig",
+        "templates/base.html.twig",
+        "tests/Accessibility/Content/ContentAccessibilityAnalyzerTest.php",
+        "tests/Controller/ContentAccessibilityAuditTest.php"
+      ],
+      "ci_run_id": 36605714661
     }
   ],
   "recovery_queue": [],
