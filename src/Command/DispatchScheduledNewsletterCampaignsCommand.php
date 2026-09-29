@@ -136,7 +136,8 @@ final class DispatchScheduledNewsletterCampaignsCommand extends Command
             ->setParameter('pending', NewsletterDelivery::STATUS_PENDING)
             ->setParameter('retry', NewsletterDelivery::STATUS_RETRY)
             ->setParameter('now', $now)
-            ->orderBy('COALESCE(campaign.scheduledAt, campaign.updatedAt)', 'ASC')
+            ->orderBy('campaign.scheduledAt', 'ASC')
+            ->addOrderBy('campaign.updatedAt', 'ASC')
             ->addOrderBy('campaign.id', 'ASC')
             ->setMaxResults($limit);
 
