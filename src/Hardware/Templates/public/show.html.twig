@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+{% block title %}{{ product.name }} | Hardware{% endblock %}
+{% block body %}
+<main class="content-shell">
+    <header class="page-header"><p class="eyebrow">{{ product.category }} · {{ product.manufacturer }}</p><h1>{{ product.name }}</h1><p>{{ product.disclosure }}</p><nav class="row-actions"><a href="{{ path('app_gaming_hardware_index') }}">Zum Hardware-Katalog</a><a href="{{ path('app_gaming_hardware_account_setups') }}">Community-Setup einreichen</a></nav></header>
+    <section aria-labelledby="hardware-specifications-heading"><h2 id="hardware-specifications-heading">Technische Daten</h2><div class="table-wrap"><table><thead><tr><th>Merkmal</th><th>Wert</th><th>Einheit</th></tr></thead><tbody>{% for spec in product.specifications %}<tr><th scope="row">{{ spec.specKey }}</th><td>{{ spec.value is same as(true) ? 'Ja' : (spec.value is same as(false) ? 'Nein' : spec.value) }}</td><td>{{ spec.unit }}</td></tr>{% else %}<tr><td colspan="3">Keine technischen Daten hinterlegt.</td></tr>{% endfor %}</tbody></table></div></section>
+    <section aria-labelledby="hardware-benchmarks-heading"><h2 id="hardware-benchmarks-heading">Benchmark-Ergebnisse</h2>
+        {% for measurement in measurements %}<article class="panel"><h3>{{ measurement.series }}: {{ measurement.value }} {{ measurement.unit }}</h3><p>{{ measurement.methodology.name }} · Version {{ measurement.methodology.version }} · {{ measurement.sampleCount }} Messungen · {{ measurement.measuredAt|date('d.m.Y') }}</p><p>{{ measurement.methodology.procedure }}</p><h4>Testsystem</h4><dl>{% for part, value in measurement.methodology.testSystem %}<dt>{{ part }}</dt><dd>{{ value }}</dd>{% endfor %}</dl><p>{{ measurement.methodology.disclosure }}</p></article>{% else %}<p>Noch keine redaktionellen Benchmarks veröffentlicht.</p>{% endfor %}
+    </section>
+    <section aria-labelledby="hardware-community-setups-heading"><h2 id="hardware-community-setups-heading">Freigegebene Community-Setups</h2>
+        {% for setup in setups %}<article class="portal-card"><h3>Setup #{{ setup.id }}</h3><p>{{ setup.notes }}</p><p>{{ setup.productIds|length }} Produkte · {{ setup.owner ? setup.owner.displayName : 'Konto gelöscht' }}</p></article>{% else %}<p>Noch keine freigegebenen Setups für dieses Produkt.</p>{% endfor %}
+    </section>
+</main>
+{% endblock %}

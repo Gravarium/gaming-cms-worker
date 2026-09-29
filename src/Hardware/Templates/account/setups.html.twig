@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+{% block title %}Meine Hardware-Setups{% endblock %}
+{% block body %}
+<main class="content-shell">
+    <header class="page-header"><p class="eyebrow">Gaming · Hardware</p><h1>Meine Community-Setups</h1><p>Neue Beiträge bleiben bis zur Moderatorfreigabe nur für dich sichtbar.</p><a href="{{ path('app_gaming_hardware_index') }}">Zum Hardware-Katalog</a></header>
+    {% for message in app.flashes('success') %}<p class="notice" role="status">{{ message }}</p>{% endfor %}
+    <section aria-labelledby="hardware-setup-submit-heading"><h2 id="hardware-setup-submit-heading">Setup einreichen</h2>
+        {{ form_start(form, {attr: {class: 'content-form'}}) }}{{ form_widget(form) }}<button type="submit">Zur Moderation einreichen</button>{{ form_end(form) }}
+    </section>
+    <section aria-labelledby="hardware-my-setups-heading"><h2 id="hardware-my-setups-heading">Meine Einreichungen</h2>
+        {% for setup in setups %}<article class="portal-card"><h3>Setup #{{ setup.id }}</h3><p>{{ setup.productIds|length }} Produkte · {{ setup.createdAt|date('d.m.Y H:i') }}</p><p>{{ setup.notes }}</p><p role="status">{{ setup.moderated ? 'Öffentlich freigegeben' : 'Wird moderiert und ist privat' }}</p></article>
+        {% else %}<p>Noch keine Setups eingereicht.</p>{% endfor %}
+    </section>
+</main>
+{% endblock %}

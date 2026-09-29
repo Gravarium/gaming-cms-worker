@@ -1,0 +1,52 @@
+{% extends 'base.html.twig' %}
+{% block title %}Hardware-Katalog verwalten{% endblock %}
+{% block body %}
+<main class="content-shell">
+    <header class="page-header">
+        <p class="eyebrow">Gaming · Hardware</p>
+        <h1>Hardware-Katalog verwalten</h1>
+        <p>Produkte, Testmethoden, veröffentlichte Benchmarks und Community-Setups.</p>
+        <nav class="row-actions" aria-label="Hardware-Aktionen">
+            <a class="button-link" href="{{ path('app_admin_gaming_hardware_product_new') }}">Produkt anlegen</a>
+            <a class="button-link button-secondary" href="{{ path('app_admin_gaming_hardware_methodology_new') }}">Testmethode anlegen</a>
+            <a class="button-link button-secondary" href="{{ path('app_admin_gaming_hardware_measurement_new') }}">Benchmark erfassen</a>
+            <a class="button-link button-secondary" href="{{ path('app_admin_gaming_hardware_setups') }}">Setups moderieren ({{ pendingSetups|length }})</a>
+            <a class="button-link button-secondary" href="{{ path('app_gaming_hardware_index') }}">Öffentlichen Katalog ansehen</a>
+        </nav>
+    </header>
+
+    {% for message in app.flashes('success') %}<p class="notice" role="status">{{ message }}</p>{% endfor %}
+
+    <section aria-labelledby="hardware-products-heading">
+        <h2 id="hardware-products-heading">Produkte</h2>
+        <div class="table-wrap"><table>
+            <thead><tr><th>Produkt</th><th>Kategorie</th><th>Hersteller</th><th>Status</th><th>Revisionen</th><th>Aktionen</th></tr></thead>
+            <tbody>
+            {% for product in products %}
+                <tr>
+                    <td>{{ product.name }}</td><td>{{ product.category }}</td><td>{{ product.manufacturer }}</td>
+                    <td>{{ product.published ? 'Veröffentlicht' : 'Entwurf' }}</td><td>{{ product.revisions|length }}</td>
+                    <td class="row-actions"><a href="{{ path('app_admin_gaming_hardware_product_edit', {id: product.id}) }}">Bearbeiten</a>{% if product.published %}<a href="{{ path('app_gaming_hardware_show', {id: product.id}) }}">Öffentlich ansehen</a>{% endif %}</td>
+                </tr>
+            {% else %}<tr><td colspan="6">Noch keine Produkte eingetragen.</td></tr>{% endfor %}
+            </tbody>
+        </table></div>
+    </section>
+
+    <section aria-labelledby="hardware-methodologies-heading">
+        <h2 id="hardware-methodologies-heading">Testmethoden</h2>
+        <div class="table-wrap"><table><thead><tr><th>Name</th><th>Version</th><th>Testsystem</th><th>Offenlegung</th></tr></thead><tbody>
+        {% for methodology in methodologies %}<tr><td>{{ methodology.name }}</td><td>{{ methodology.version }}</td><td>{{ methodology.testSystem|length }} Komponenten</td><td>{{ methodology.disclosure }}</td></tr>
+        {% else %}<tr><td colspan="4">Noch keine Testmethode vorhanden.</td></tr>{% endfor %}
+        </tbody></table></div>
+    </section>
+
+    <section aria-labelledby="hardware-measurements-heading">
+        <h2 id="hardware-measurements-heading">Redaktionelle Messungen</h2>
+        <div class="table-wrap"><table><thead><tr><th>Produkt</th><th>Serie</th><th>Ergebnis</th><th>Methode</th><th>Erfasst</th></tr></thead><tbody>
+        {% for measurement in measurements %}<tr><td>{{ measurement.product.name }}</td><td>{{ measurement.series }}</td><td>{{ measurement.value }} {{ measurement.unit }} ({{ measurement.sampleCount }} Messungen)</td><td>{{ measurement.methodology.name }} {{ measurement.methodology.version }}</td><td>{{ measurement.measuredAt|date('d.m.Y') }}</td>
+        {% else %}<tr><td colspan="5">Noch keine Benchmarks erfasst.</td></tr>{% endfor %}
+        </tbody></table></div>
+    </section>
+</main>
+{% endblock %}

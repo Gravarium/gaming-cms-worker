@@ -1,0 +1,24 @@
+{% extends 'base.html.twig' %}
+{% block title %}{{ product.id ? 'Hardware-Produkt bearbeiten' : 'Hardware-Produkt anlegen' }}{% endblock %}
+{% block body %}
+<main class="editor-shell">
+    <p class="eyebrow">Gaming · Hardware</p>
+    <h1>{{ product.id ? 'Hardware-Produkt bearbeiten' : 'Hardware-Produkt anlegen' }}</h1>
+    <p><a href="{{ path('app_admin_gaming_hardware_index') }}">Zur Verwaltung</a></p>
+    {% for message in app.flashes('success') %}<p class="notice" role="status">{{ message }}</p>{% endfor %}
+    <p>Technische Daten als JSON-Objekt mit skalaren Werten und Einheiten eingeben, zum Beispiel <code>{"memory": {"value": 16, "unit": "GB"}}</code>.</p>
+    {{ form_start(form, {attr: {class: 'content-form'}}) }}
+        {{ form_row(form.name) }}{{ form_row(form.category) }}{{ form_row(form.manufacturer) }}{{ form_row(form.disclosure) }}
+        {{ form_row(form.specificationsJson) }}{{ form_row(form.published) }}{{ form_row(form.revisionSummary) }}
+        {{ form_errors(form) }}
+        <button type="submit">Speichern und Revision anlegen</button>
+    {{ form_end(form) }}
+
+    {% if revisions %}
+    <section aria-labelledby="hardware-revisions-heading">
+        <h2 id="hardware-revisions-heading">Änderungsverlauf</h2>
+        <ol>{% for revision in revisions %}<li>Version {{ revision.version }} · {{ revision.createdAt|date('d.m.Y H:i') }} · {{ revision.actor ? revision.actor.displayName : 'Konto gelöscht' }} · {{ revision.summary }}</li>{% endfor %}</ol>
+    </section>
+    {% endif %}
+</main>
+{% endblock %}

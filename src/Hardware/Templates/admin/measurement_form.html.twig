@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+{% block title %}Benchmark erfassen{% endblock %}
+{% block body %}
+<main class="editor-shell">
+    <p class="eyebrow">Gaming · Hardware</p><h1>Redaktionellen Benchmark erfassen</h1>
+    <p>Nur redaktionelle Ergebnisse werden im öffentlichen Produktvergleich berücksichtigt. Hersteller- oder Werbewerte sind hier nicht erfassbar.</p>
+    {{ form_start(form, {attr: {class: 'content-form'}}) }}
+        {{ form_widget(form) }}
+        <button type="submit">Benchmark speichern</button>
+    {{ form_end(form) }}
+    <p><a href="{{ path('app_admin_gaming_hardware_index') }}">Zur Verwaltung</a></p>
+</main>
+{% endblock %}

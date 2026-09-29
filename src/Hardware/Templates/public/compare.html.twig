@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+{% block title %}Hardware vergleichen{% endblock %}
+{% block body %}
+<main class="content-shell">
+    <header class="page-header"><p class="eyebrow">Gaming · Hardware</p><h1>Hardware vergleichen</h1><p>Es werden höchstens vier veröffentlichte Produkte verglichen. Messwerte erscheinen nur zusammen, wenn Testmethode, Serie und Einheit übereinstimmen.</p></header>
+    {% if invalidSelection %}<p class="notice" role="status">Wähle zwei bis vier veröffentlichte Produkte aus.</p>{% else %}
+        <section aria-labelledby="hardware-compare-products-heading"><h2 id="hardware-compare-products-heading">Produkte</h2><ul>{% for product in products %}<li><a href="{{ path('app_gaming_hardware_show', {id: product.id}) }}">{{ product.name }}</a> · {{ product.manufacturer }} · {{ product.disclosure }}</li>{% endfor %}</ul></section>
+        <section aria-labelledby="hardware-compare-results-heading"><h2 id="hardware-compare-results-heading">Vergleichsergebnisse</h2>
+        {% for comparison in comparisons %}<article class="panel"><h3>{{ comparison.series }} ({{ comparison.unit }})</h3><p>{{ comparison.methodology }} · Version {{ comparison.version }}</p><p>{{ comparison.procedure }}</p><dl>{% for part, value in comparison.testSystem %}<dt>{{ part }}</dt><dd>{{ value }}</dd>{% endfor %}</dl><p>{{ comparison.disclosure }}</p><div class="table-wrap"><table><caption>{{ comparison.series }} nach {{ comparison.methodology }} Version {{ comparison.version }}</caption><thead><tr><th scope="col">Produkt</th><th scope="col">Ergebnis ({{ comparison.unit }})</th></tr></thead><tbody>{% for row in comparison.rows %}<tr><th scope="row">{{ row.product }}</th><td>{{ row.value }}</td></tr>{% endfor %}</tbody></table></div></article>
+        {% else %}<p>Für diese Produkte gibt es keine Benchmarks mit derselben Serie, Einheit und Testmethode.</p>{% endfor %}
+        </section>
+    {% endif %}
+    <p><a href="{{ path('app_gaming_hardware_index') }}">Zurück zum Katalog</a></p>
+</main>
+{% endblock %}
