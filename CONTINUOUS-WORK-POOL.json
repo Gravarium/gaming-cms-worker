@@ -53967,16 +53967,16 @@
       "claim_state": "active",
       "active_base_branch": "fix/fcp-061-phpstan-g1",
       "active_base_sha": "ec6bb200affc3e5a46d416e98f7a1b0621c38ded",
-      "active_head": "e2c3ce7615c536096206eb3ca7251e486bfedd3e",
+      "active_head": "1ad9b8c3726dc0f37e426a6c8bbc928628134090",
       "resume_branch": "feature/wcp-591-team-competition-roster-g1",
       "branch_heads": {
         "claim_branch": "ec6bb200affc3e5a46d416e98f7a1b0621c38ded",
-        "feature_branch": "e2c3ce7615c536096206eb3ca7251e486bfedd3e"
+        "feature_branch": "1ad9b8c3726dc0f37e426a6c8bbc928628134090"
       },
-      "last_observed_head": "e2c3ce7615c536096206eb3ca7251e486bfedd3e",
-      "last_checkpoint_at": "2026-09-29T12:01:38.519Z",
-      "last_verified_push_at": "2026-09-29T12:01:38.519Z",
-      "next_action": "Monitor Worker CI #1011 on exact HEAD e2c3ce7615c536096206eb3ca7251e486bfedd3e; fix any remaining findings and rerun the complete workflow.",
+      "last_observed_head": "1ad9b8c3726dc0f37e426a6c8bbc928628134090",
+      "last_checkpoint_at": "2026-09-29T12:08:20.905Z",
+      "last_verified_push_at": "2026-09-29T12:08:20.905Z",
+      "next_action": "Monitor Worker CI #1012 on exact HEAD 1ad9b8c3726dc0f37e426a6c8bbc928628134090; repair any remaining findings and rerun the complete workflow.",
       "checkpoint_paths": [
         "config/packages/competition_rosters_widget.yaml",
         "src/CompetitionRoster/CompetitionRosterInviteLink.php",
@@ -54011,9 +54011,9 @@
         "tests/Widget/CompetitionRostersWidgetTest.php"
       ],
       "ci_result": "in_progress",
-      "ci_run_id": 36565364768,
-      "ci_run_number": 1011,
-      "ci_head": "e2c3ce7615c536096206eb3ca7251e486bfedd3e",
+      "ci_run_id": 36566094901,
+      "ci_run_number": 1012,
+      "ci_head": "1ad9b8c3726dc0f37e426a6c8bbc928628134090",
       "ci_attempts": [
         {
           "run_id": 36564325245,
@@ -54028,7 +54028,7 @@
             "php_symfony": "failure",
             "postgres_18": "success"
           },
-          "summary": "PHPStan reported 7 type findings; the PostgreSQL 18 migration-chain job passed."
+          "summary": "PHPStan reported 7 type findings; PostgreSQL 18 migration-chain validation passed."
         },
         {
           "run_id": 36564689017,
@@ -54043,19 +54043,34 @@
             "php_symfony": "failure",
             "postgres_18": "success"
           },
-          "summary": "PHPStan passed and PostgreSQL 18 migration-chain validation passed. Application tests found the reserved DQL alias `member` and a CSRF test token requested after the sessionless disabled-module 404; the full-capacity used-link replay was also reordered to fail closed."
+          "summary": "PHPStan passed and migration validation passed; tests exposed reserved DQL alias `member` and a CSRF test requesting a token without an active session."
         },
         {
           "run_id": 36565364768,
           "run_number": 1011,
           "head": "e2c3ce7615c536096206eb3ca7251e486bfedd3e",
           "base": "9e083c63e7d888af36f93a23eb924c89fad2b971",
+          "result": "failure",
+          "validation_pr": 395,
+          "status": "completed",
+          "conclusion": "failure",
+          "jobs": {
+            "php_symfony": "failure",
+            "postgres_18": "success"
+          },
+          "summary": "DQL alias and CSRF issues were fixed. Tests exposed ambiguous unqualified `account/dashboard.html.twig` resolution to the CompetitionParticipation template and the same CSRF test-session setup; templates now have an explicit namespace and the test establishes its session with a dashboard GET before fetching a token."
+        },
+        {
+          "run_id": 36566094901,
+          "run_number": 1012,
+          "head": "1ad9b8c3726dc0f37e426a6c8bbc928628134090",
+          "base": "9e083c63e7d888af36f93a23eb924c89fad2b971",
           "result": "in_progress",
           "validation_pr": 395,
-          "status": "in_progress",
+          "status": "queued",
           "conclusion": null,
           "jobs": {},
-          "summary": "Exact-head Worker CI #1011 is running after the DQL and CSRF test fixes."
+          "summary": "Exact-head Worker CI #1012 queued after fixing Twig template namespace collisions and establishing a session before CSRF token generation."
         }
       ]
     },
