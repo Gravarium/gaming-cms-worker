@@ -17,7 +17,6 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 final class CompetitionRosterControllerTest extends WebTestCase
 {
@@ -571,6 +570,12 @@ final class CompetitionRosterControllerTest extends WebTestCase
 
     private function csrfToken(KernelBrowser $client, string $tokenId): string
     {
+        $client->request('GET', '/account/competition-rosters');
+        $request = $client->getRequest();
+        if (!$request instanceof Request || !$request->hasSession()) {
+            throw new \LogicException('The browser request session is unavailable.');
+        }
+
         $container = $client->getContainer();
         $manager = $container->get('security.csrf.token_manager');
         if (!$manager instanceof CsrfTokenManagerInterface) {
@@ -581,17 +586,11 @@ final class CompetitionRosterControllerTest extends WebTestCase
         if (!$requestStack instanceof RequestStack) {
             throw new \LogicException('The request stack is unavailable.');
         }
-        $session = $client->getSession();
-        if (!$session instanceof SessionInterface) {
-            throw new \LogicException('The browser session is unavailable.');
-        }
 
-        $request = Request::create('http://localhost/');
-        $request->setSession($session);
         $requestStack->push($request);
         try {
             $token = $manager->getToken($tokenId)->getValue();
-            $session->save();
+            $request->getSession()->save();
 
             return $token;
         } finally {
