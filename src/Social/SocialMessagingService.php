@@ -19,6 +19,7 @@ final readonly class SocialMessagingService
     public function __construct(
         private SocialModuleAvailability $availability,
         private SocialAccessPolicy $access,
+        private SocialConversationMembershipService $membership,
         private SocialRateLimitPolicy $rateLimits,
         private SocialRetentionPolicy $retention,
         private SocialConversationRepository $conversations,
@@ -141,12 +142,7 @@ final readonly class SocialMessagingService
 
     public function leave(User $actor, SocialConversation $conversation): void
     {
-        $this->assertEnabled();
-        $participant = $this->participants->activeFor($conversation, $actor);
-        if ($participant === null) {
-            throw new \Symfony\Component\Security\Core\Exception\AccessDeniedException('Conversation membership is required.');
-        }
-        $participant->leave(new \DateTimeImmutable());
+        $this->membership->leave($actor, $conversation);
     }
 
     public function pruneExpired(int $limit = 500): int
