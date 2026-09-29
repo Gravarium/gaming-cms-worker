@@ -32,6 +32,7 @@ final class ContentReviewDecisionType extends AbstractType
                 'required' => true,
                 'trim' => true,
                 'attr' => ['rows' => 4, 'maxlength' => 300],
+                'empty_data' => '',
                 'help' => 'Bitte gib eine kurze Begründung für die Entscheidung an.',
             ])
             ->add('scheduledAt', DateTimeType::class, [

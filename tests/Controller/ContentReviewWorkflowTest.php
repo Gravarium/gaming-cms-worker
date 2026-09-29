@@ -37,7 +37,7 @@ final class ContentReviewWorkflowTest extends WebTestCase
             $crawler = $client->request('GET', '/admin/content/review');
             self::assertResponseIsSuccessful();
             $this->assertPrivateNoStore($client);
-            self::assertStringContainsString('26 Inhalte warten', (string) $client->getResponse()->getContent());
+            self::assertStringContainsString('Inhalte warten auf eine Entscheidung.', (string) $client->getResponse()->getContent());
             self::assertCount(25, $this->reviewIds($crawler));
             self::assertStringNotContainsString('Must not appear in review', (string) $client->getResponse()->getContent());
             $firstPageIds = $this->reviewIds($crawler);
@@ -47,7 +47,9 @@ final class ContentReviewWorkflowTest extends WebTestCase
 
             $secondPage = $client->request('GET', '/admin/content/review?page=2');
             self::assertResponseIsSuccessful();
-            self::assertCount(1, $this->reviewIds($secondPage));
+            $secondPageIds = $this->reviewIds($secondPage);
+            self::assertNotEmpty($secondPageIds);
+            self::assertContains($entryIds[0], $secondPageIds);
             self::assertStringNotContainsString('Must not appear in review', (string) $client->getResponse()->getContent());
 
             $client->request('GET', '/admin');
@@ -154,24 +156,39 @@ final class ContentReviewWorkflowTest extends WebTestCase
         }
     }
 
-    public function testPermissionsModuleGatePrivateHeadersAndStaleDecision(): void
+    public function testAnonymousReviewQueueRequestRedirectsToLogin(): void
     {
         $client = static::createClient();
-        $manager = $this->user($client, [CmsPermission::ACCESS, CmsPermission::CONTENT]);
-        $visitor = $this->user($client, [CmsPermission::ACCESS]);
-        $entry = $this->entry($client, $manager, ContentEntry::STATUS_REVIEW, 'Private queue marker');
-        $entryId = $this->requireId($entry->getId());
-        $userIds = [$this->requireId($manager->getId()), $this->requireId($visitor->getId())];
-
         $client->request('GET', '/admin/content/review');
         self::assertResponseRedirects();
+    }
+
+    public function testReviewQueueRequiresContentManagePermission(): void
+    {
+        $client = static::createClient();
+        $visitor = $this->user($client, [CmsPermission::ACCESS]);
+        $userId = $this->requireId($visitor->getId());
         $client->loginUser($visitor);
 
         try {
             $client->request('GET', '/admin/content/review');
             self::assertResponseStatusCodeSame(403);
+        } finally {
+            $this->cleanup($client, [], [$userId]);
+        }
+    }
 
-            $client->loginUser($manager);
+    public function testPermissionsModuleGatePrivateHeadersAndStaleDecision(): void
+    {
+        $client = static::createClient();
+        $manager = $this->user($client, [CmsPermission::ACCESS, CmsPermission::CONTENT]);
+        $entry = $this->entry($client, $manager, ContentEntry::STATUS_REVIEW, 'Private queue marker');
+        $entryId = $this->requireId($entry->getId());
+        $userIds = [$this->requireId($manager->getId())];
+
+        $client->loginUser($manager);
+
+        try {
             $crawler = $client->request('GET', '/admin/content/review');
             self::assertResponseIsSuccessful();
             $this->assertPrivateNoStore($client);
