@@ -80,8 +80,8 @@ final class PublicGuildEventCalendarFeedTest extends WebTestCase
             self::assertResponseIsSuccessful();
             self::assertSame('text/calendar; charset=utf-8', $client->getResponse()->headers->get('Content-Type'));
             $cacheControl = strtolower((string) $client->getResponse()->headers->get('Cache-Control'));
-            self::assertStringContainsString('public', $cacheControl);
-            self::assertStringContainsString('max-age=300', $cacheControl);
+            self::assertStringContainsString('private', $cacheControl);
+            self::assertStringNotContainsString('public', $cacheControl);
             self::assertSame('nosniff', $client->getResponse()->headers->get('X-Content-Type-Options'));
 
             $body = (string) $client->getResponse()->getContent();

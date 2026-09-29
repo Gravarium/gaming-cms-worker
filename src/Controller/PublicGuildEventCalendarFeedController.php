@@ -36,7 +36,6 @@ final class PublicGuildEventCalendarFeedController extends AbstractController
 
         return new Response($this->calendar->build($events), Response::HTTP_OK, [
             'Content-Type' => 'text/calendar; charset=utf-8',
-            'Cache-Control' => 'public, max-age=300',
             'X-Content-Type-Options' => 'nosniff',
         ]);
     }
