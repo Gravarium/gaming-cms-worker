@@ -10,8 +10,8 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "9e083c63e7d888af36f93a23eb924c89fad2b971",
-  "published_at": "2026-09-29T14:25:12Z",
-  "summary": "WCP-601 BrowserKit session reset is on PR #396 at 6e7caab9c501b0b4db66c3f38a06ad2cc5e58f08; exact-head CI run 1033 is in progress. WCP-602 remains independently active.",
+  "published_at": "2026-09-29T14:28:27Z",
+  "summary": "WCP-601 Hardware workflows are worker-complete on exact green HEAD 6e7caab9c501b0b4db66c3f38a06ad2cc5e58f08 (PR #396, CI run 1033). WCP-602 remains independently active with disjoint paths; the completed WCP-601 claim stays locked pending Trusted resolution.",
   "rules": {
     "choose": "Resume the current chat's unfinished claimed branch first. Otherwise atomically claim an eligible published task. If no published task is eligible, independently derive and publish a bounded worker-only CMS proposal from approved product goals and observed code gaps; do not ask the owner for the next FCP number.",
     "atomic_reservation": "Create the exact claim_branch and suggested feature branch from that task's published proposal_base_sha. If the claim already exists, treat it as a hard lock; the owning continuation resumes it and every other AI skips it.",
@@ -55859,7 +55859,7 @@
       "package_id": "WCP-601",
       "title": "Make the Hardware module usable end to end",
       "risk": "high",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [
         "FCP-073"
       ],
@@ -55973,7 +55973,7 @@
         "feature_branch": "6e7caab9c501b0b4db66c3f38a06ad2cc5e58f08"
       },
       "last_observed_head": "6e7caab9c501b0b4db66c3f38a06ad2cc5e58f08",
-      "last_checkpoint_at": "2026-09-29T14:25:12Z",
+      "last_checkpoint_at": "2026-09-29T14:28:27Z",
       "checkpoint_paths": [
         "config/packages/hardware.yaml",
         "src/Controller/AdminHardware/AdminHardwareController.php",
@@ -56005,7 +56005,7 @@
         "tests/Controller/Hardware/HardwareWorkflowTest.php",
         "tests/Hardware/Workflow/HardwareDomainTest.php"
       ],
-      "next_action": "Check exact-head Worker CI run 1033 for 6e7caab9c501b0b4db66c3f38a06ad2cc5e58f08; repair concrete findings and rerun before completion.",
+      "next_action": "Await Trusted review and resolution; no Trusted merge or deployment was performed.",
       "last_verified_push_at": "2026-09-29T13:12:20Z",
       "worker_pr": 396,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/396",
@@ -56100,7 +56100,7 @@
         "tests/Controller/Hardware/HardwareWorkflowTest.php",
         "tests/Hardware/Workflow/HardwareDomainTest.php"
       ],
-      "ci_result": "pending",
+      "ci_result": "success",
       "last_ci_result": "pending",
       "ci_run_id": 36582540225,
       "ci_run_number": 1033
