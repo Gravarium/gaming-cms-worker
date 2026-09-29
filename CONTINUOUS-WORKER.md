@@ -8,7 +8,7 @@ Das Ziel ist ein nutzbares, sicheres Gaming-CMS. Der Eigentümer nennt nicht nac
 
 ## Wichtigste Regel
 
-**Bestehende eigene Arbeit kommt immer vor einem neuen Claim.** Ein Claim bleibt bei Fehlern, Limits, Chatverlust und Worker-Abschluss eine harte Sperre gegen andere Chats. Nach jeder Unterbrechung wird derselbe Feature-Branch vom letzten bestätigten Remote-HEAD fortgesetzt. Ein gemeinsames GitHub-Konto sperrt unabhängige, disjunkte Chats nicht global.
+**Bestehende eigene Arbeit kommt immer vor einem neuen Claim, solange die Lease gültig ist.** Ein `worker_in_progress`-Claim läuft sieben Stunden nach dem letzten verifizierten Push ab; vor dem ersten Push sieben Stunden nach `claimed_on`. Danach wird die Aufgabe wieder `unclaimed` und ist mit einer neuen Claim-Generation übernehmbar. Die bisherige Feature-Branch, der exakte HEAD, PR und CI-Nachweise bleiben erhalten; der neue Claim setzt dort fort. Ein Chat mit abgelaufener Lease hat keine Schreibberechtigung mehr und muss vor jeder Fortsetzung den aktuellen Pool lesen. Eine abgeschlossene grüne Worker-PR, die auf Trusted wartet, bleibt gesperrt und läuft nicht ab. Ein gemeinsames GitHub-Konto sperrt unabhängige, disjunkte Chats nicht global.
 
 ## GitHub-Zugriff
 
@@ -18,9 +18,9 @@ Für Schreibvorgänge die GitHub-Plugin-Funktionen verwenden, insbesondere Datei
 
 ## Aktive Arbeit
 
-Der aktuelle Pool-Eintrag ist die einzige Wahrheit. Wenn ein Paket als `worker_in_progress` markiert ist, seinen dort genannten `resume_branch`, `active_base_branch`, `active_base_sha` und `active_head` verwenden und es vollständig abschließen.
+Der aktuelle Pool-Eintrag und die Live-Branch sind maßgeblich. Prüfe vor jedem Resume den letzten tatsächlichen Commit und die Lease. Ist die Lease abgelaufen, behandle `previous_claim` nur als Wiederherstellungsnachweis: neue Claim-Generation sichern, dann `resume_branch` am exakten Live-HEAD fortsetzen. Das alte Claim-Branch-Objekt allein hält die Aufgabe nicht gesperrt.
 
-FCP-069 ist auf grünem exaktem Worker-HEAD abgeschlossen und sein Claim bleibt gesperrt. Das blockiert keine andere Arbeit. Der aktuelle JSON-Pool weist die Vorbereitung von FCP-077 als sofort auszuführende Worker-Arbeit aus: die belegten Vorgänger-HEADs in einer Worker-only-Composition prüfen, danach bei grüner vollständiger CI die Vorschlagsbasis veröffentlichen und FCP-077 claimen. Die Live-Abnahme von FCP-049 bleibt als Betriebsnachweis offen; dessen Produktcode ist bereits geprüft und im Worker-Snapshot vorhanden. Bei Abweichung gilt immer der neuere JSON-Pool.
+Abgeschlossene grüne Worker-PRs bleiben bis zur Trusted-Entscheidung gesperrt. In-progress-Leases laufen nach sieben Stunden ohne verifizierten Push ab. Bei Abweichung gilt immer der neuere JSON-Pool und der tatsächliche Live-Branch-HEAD.
 
 ## Trusted ist kein Worker-Scheduler
 
@@ -30,15 +30,16 @@ Trusted prüft und integriert fertige Vorschläge später. Ein offener Trusted-R
 
 Nach jedem vollständig grünen Worker-PR ohne Rückfrage sofort:
 
-1. Den eigenen Pool-Eintrag auf `worker_complete_awaiting_trusted_review` setzen und Worker-PR, finalen HEAD sowie Exact-Head-CI-Run eintragen.
-2. Den Claim als `locked_until_trusted_resolution` bestehen lassen.
-3. Alle unbeanspruchten Pakete in Prioritätsreihenfolge neu bewerten. Eine Abhängigkeit gilt für Worker-Vorschlagsarbeit als erfüllt, wenn sie Trusted-integriert ist oder ein exakter grüner Worker-PR-HEAD vorliegt.
-4. Den ersten dependency-sicheren Auftrag auswählen. Nicht darauf warten, dass der Nutzer eine FCP-Nummer nennt.
-5. Bei genau einem fertigen Vorgänger dessen exakten grünen HEAD als Vorschlagsbasis verwenden.
-6. Bei mehreren fertigen Vorgängern selbst eine Worker-only-Composition-Branch erstellen, ausschließlich die belegten exakten grünen HEADs konfliktfrei zusammenführen, einen Draft-PR gegen Worker-`main` öffnen und die vollständige Exact-Head-Worker-CI abwarten.
-7. Nur bei vollständig grüner Composition-CI deren exakten HEAD im Pool als Proposal-Basis veröffentlichen.
-8. Claim- und Feature-Branch atomar von genau dieser Basis erstellen, den Pool auf `worker_in_progress` setzen und sofort mit der Implementierung beginnen.
-9. Sind alle vorbereiteten FCPs tatsächlich blockiert, selbst einen begrenzten unabhängigen CMS-Teilauftrag aus dem genehmigten Ziel herleiten, als Worker-only-WCP im Pool mit eindeutiger Kennung und Sicherheits-/Pfad-/Testnachweisen veröffentlichen, atomar claimen und bearbeiten. Danach diesen Ablauf wiederholen. Nicht nach jedem Paket stoppen und keine neue Nutzeranweisung verlangen.
+1. Vor weiterer Arbeit die Lease und den Live-HEAD prüfen. Nach sieben Stunden ohne verifizierten Push ist ein `worker_in_progress`-Claim abgelaufen; wiederveröffentliche ihn als `unclaimed` mit neuer Claim-Generation und erhalte Branch, PR, HEAD und CI-Nachweise.
+2. Den eigenen Pool-Eintrag nach vollständig grüner Exact-Head-CI auf `worker_complete_awaiting_trusted_review` setzen und Worker-PR, finalen HEAD sowie CI-Run eintragen.
+3. Den Claim einer abgeschlossenen grünen PR als `locked_until_trusted_resolution` bestehen lassen.
+4. Alle unbeanspruchten Pakete in Prioritätsreihenfolge neu bewerten. Eine Abhängigkeit gilt für Worker-Vorschlagsarbeit als erfüllt, wenn sie Trusted-integriert ist oder ein exakter grüner Worker-PR-HEAD vorliegt.
+5. Den ersten dependency-sicheren Auftrag auswählen. Nicht darauf warten, dass der Nutzer eine FCP-Nummer nennt.
+6. Bei genau einem fertigen Vorgänger dessen exakten grünen HEAD als Vorschlagsbasis verwenden.
+7. Bei mehreren fertigen Vorgängern selbst eine Worker-only-Composition-Branch erstellen, ausschließlich die belegten exakten grünen HEADs konfliktfrei zusammenführen, einen Draft-PR gegen Worker-`main` öffnen und die vollständige Exact-Head-Worker-CI abwarten.
+8. Nur bei vollständig grüner Composition-CI deren exakten HEAD im Pool als Proposal-Basis veröffentlichen.
+9. Claim-Branch mit neuer Generation atomar; bei einer Wiederaufnahme den bestehenden Feature-Branch unverändert fortsetzen. Den Pool auf `worker_in_progress` setzen und sofort mit der Implementierung beginnen. von genau dieser Basis erstellen, den Pool auf `worker_in_progress` setzen und sofort mit der Implementierung beginnen.
+10. Sind alle vorbereiteten FCPs tatsächlich blockiert, selbst einen begrenzten unabhängigen CMS-Teilauftrag aus dem genehmigten Ziel herleiten, als Worker-only-WCP im Pool mit eindeutiger Kennung und Sicherheits-/Pfad-/Testnachweisen veröffentlichen, atomar claimen und bearbeiten. Danach diesen Ablauf wiederholen. Nicht nach jedem Paket stoppen und keine neue Nutzeranweisung verlangen.
 
 Wenn der zuerst geprüfte Auftrag echte unerfüllte Abhängigkeiten besitzt, den nächsten Auftrag prüfen. Der gesamte Pool darf nicht pauschal beendet werden, solange irgendein Auftrag mit nachweisbaren grünen Abhängigkeiten vorbereitet werden kann.
 
