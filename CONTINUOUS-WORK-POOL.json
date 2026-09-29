@@ -10,7 +10,7 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "9e083c63e7d888af36f93a23eb924c89fad2b971",
-  "published_at": "2026-09-29T22:00:10.568Z",
+  "published_at": "2026-09-29T22:01:02.573Z",
   "summary": "WCP-511 is active on Worker PR #404 at exact HEAD e6f77f1dfa236a0a4709c8b3a6c260a2c3730341; full Worker CI is running. WCP-589 is complete awaiting Trusted review, WCP-599 is unclaimed, and WCP-608 remains active. Trusted main remains the only integration and deployment source.",
   "rules": {
     "choose": "Resume the current chat's unfinished claimed branch first. Otherwise atomically claim an eligible published task. If no published task is eligible, independently derive and publish a bounded worker-only CMS proposal from approved product goals and observed code gaps; do not ask the owner for the next FCP number.",
@@ -55865,7 +55865,7 @@
       "package_id": "WCP-599",
       "title": "Complete the Social group-conversation membership lifecycle",
       "risk": "medium",
-      "execution_state": "unclaimed",
+      "execution_state": "worker_in_progress",
       "dependencies": [
         "WCP-558"
       ],
@@ -55993,7 +55993,7 @@
       "active_head": "2d06af7f8146ba6aa84b18422c9f38136faaa6b4",
       "resume_branch": "feature/wcp-599-social-group-conversation-membership-g1",
       "branch_heads": {
-        "claim_branch": "bbbf5fda44cd9d2b6a2b1dd957a8c10290685793",
+        "claim_branch": "2d06af7f8146ba6aa84b18422c9f38136faaa6b4",
         "feature_branch": "2d06af7f8146ba6aa84b18422c9f38136faaa6b4"
       },
       "last_observed_head": "2d06af7f8146ba6aa84b18422c9f38136faaa6b4",
@@ -56011,7 +56011,7 @@
         "src/Social/SocialAccessPolicy.php",
         "src/Entity/Social/SocialMessage.php"
       ],
-      "next_action": "Lease expired after seven hours without a verified push. Reclaim with the new generation claim branch claim/wcp-599-social-group-conversation-membership-g2; resume feature/wcp-599-social-group-conversation-membership-g1 from exact live HEAD 2d06af7f8146ba6aa84b18422c9f38136faaa6b4. Preserve the existing work and PR; inspect current CI, then fix only within the allowlist.",
+      "next_action": "Resume PR #394 at exact existing HEAD; diagnose red PHP/Symfony job and repair only the WCP-599 allowlist.",
       "previous_claim": {
         "claim_branch": "claim/wcp-599-social-group-conversation-membership-g1",
         "expired_at": "2026-09-29T19:24:17.921Z",
@@ -56023,7 +56023,11 @@
         "ci_result": null
       },
       "claim_generation": 2,
-      "lease_expired_at": "2026-09-29T19:24:17.921Z"
+      "lease_expired_at": "2026-09-29T19:24:17.921Z",
+      "claim_state": "active",
+      "claimed_on": "2026-09-29T22:01:02.573Z",
+      "last_verified_push_at": "2026-09-29T22:01:02.573Z",
+      "last_checkpoint_at": "2026-09-29T22:01:02.573Z"
     },
     {
       "priority": 600,
