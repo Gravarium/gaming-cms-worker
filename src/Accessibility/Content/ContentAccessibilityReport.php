@@ -159,7 +159,7 @@ final readonly class ContentAccessibilityReport
     {
         $allowedKeys = ['q', 'status', 'type', 'issue', 'page'];
         foreach (array_keys($rawFilters) as $key) {
-            if (!is_string($key) || !in_array($key, $allowedKeys, true)) {
+            if (!in_array($key, $allowedKeys, true)) {
                 throw new \InvalidArgumentException('Unbekannter Filter.');
             }
         }
@@ -205,7 +205,7 @@ final readonly class ContentAccessibilityReport
         }
 
         $rawPage = array_key_exists('page', $rawFilters) ? $readString($rawFilters, 'page') : '1';
-        if (preg_match('/^(?:[1-9]|1[0-9]|20)$/D', $rawPage) !== 1) {
+        if (preg_match('/^[1-9][0-9]*$/D', $rawPage) !== 1 || (int) $rawPage > self::MAX_PAGE) {
             throw new \InvalidArgumentException('Ungültige Berichtsseite.');
         }
 
