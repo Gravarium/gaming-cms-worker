@@ -134,7 +134,10 @@ final class AdminNewsletterCampaignLifecycleTest extends WebTestCase
         $client->request('POST', $action);
         self::assertResponseStatusCodeSame(403);
 
+        $client->restart();
         $client->loginUser($admin);
+        $client->request('GET', '/admin/newsletter');
+        self::assertResponseIsSuccessful();
         $client->request('POST', $action);
         self::assertResponseStatusCodeSame(403);
         self::assertSame(NewsletterCampaign::STATUS_DRAFT, $campaign->getStatus());
