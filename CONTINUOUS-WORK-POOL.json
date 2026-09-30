@@ -10,8 +10,8 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "9e083c63e7d888af36f93a23eb924c89fad2b971",
-  "published_at": "2026-09-30T17:23:35.224Z",
-  "summary": "WCP-624 is complete with green exact-head CI and Worker PR #419; other in-progress claims remain separate.",
+  "published_at": "2026-09-30T18:01:15.213Z",
+  "summary": "WCP-624 complete; WCP-625 room-scoped forum search in progress alongside separate claims.",
   "rules": {
     "choose": "Resume the current chat's unfinished claimed branch first. Otherwise atomically claim an eligible published task. If no published task is eligible, independently derive and publish a bounded worker-only CMS proposal from approved product goals and observed code gaps; do not ask the owner for the next FCP number.",
     "atomic_reservation": "Create the exact claim_branch and suggested feature branch from that task's published proposal_base_sha. If the claim already exists, treat it as a hard lock; the owning continuation resumes it and every other AI skips it.",
@@ -60306,6 +60306,106 @@
         "postgres_migration_result": "success",
         "reviews": "No submitted reviews at handoff."
       }
+    },
+    {
+      "priority": 625,
+      "package_id": "WCP-625",
+      "title": "Search visible forum room threads and replies",
+      "risk": "medium_privacy",
+      "execution_state": "worker_in_progress",
+      "claim_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-625-room-forum-search-g1",
+      "suggested_branch": "feature/wcp-625-room-forum-search-g1",
+      "base_branch": "main",
+      "base_sha": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "objective": "Add a bounded, room-scoped search over thread titles and reply bodies. Resolve the room through the existing forum visibility gateway before any query, preserving public/member/guild/moderator boundaries. Return only thread titles and links, never private reply snippets. Keep deterministic pagination, exact count, Gaming module gate, safe literal search terms, private no-store/noindex response, and no schema or migration changes.",
+      "allowed_paths": [
+        "src/ForumSearch/RoomThreadSearch.php",
+        "src/Controller/PublicForumSearchController.php",
+        "src/ForumWorkflow/Templates/public/search.html.twig",
+        "src/ForumWorkflow/Templates/public/threads.html.twig",
+        "tests/Controller/PublicForumSearchTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "CONTINUOUS-WORKER.md",
+        "CONTINUOUS-WORK-POOL.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "src/ForumWorkflow/ForumWorkflowGateway.php",
+        "src/Controller/PublicForumWorkflowController.php",
+        "src/Forum/",
+        "src/Entity/",
+        "src/Repository/"
+      ],
+      "deliverables": [
+        "Search is accessible only after the existing room visibility check; inaccessible rooms return 404 without search results.",
+        "Literal UTF-8 search terms match thread title or post body in one room, with 20-row stable pages, exact totals and strict page/query bounds.",
+        "Results show only thread titles, status, link and counts, without body excerpts or other rooms.",
+        "Forum room page links to its search; response is private, no-store and noindex."
+      ],
+      "tests": [
+        "Integration tests cover title/body matches, literal wildcard handling, stable pagination and invalid inputs.",
+        "Access tests cover private guild/member room denial, module disabled, anonymous/public access and no reply text in results.",
+        "Exact-head Worker CI passes PHPStan, full PHPUnit suite and PostgreSQL 18 migrations."
+      ],
+      "completion_report": [
+        "Exact base/head, PR, changed paths, CI jobs and visibility tests.",
+        "No schema/migration or Trusted integration/deployment."
+      ],
+      "immutable_constraints": [
+        "existing-ForumRoomPolicy-authority",
+        "authorize-room-before-query",
+        "no-cross-room-or-post-body-disclosure",
+        "bounded-literal-search",
+        "private-no-store-noindex",
+        "no-security-or-CI-weakening",
+        "worker-output-untrusted-no-Trusted-merge-or-deployment"
+      ],
+      "proposal_kind": "worker_only",
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "proposal_dependency_evidence": [],
+      "collision_check": {
+        "compared_against": "Current Worker main and live pool, all active and locked Worker claims",
+        "result": "No active or locked scope overlaps five exact paths. Forum workflow gateway and existing controller remain unchanged.",
+        "paths": [
+          "src/ForumSearch/RoomThreadSearch.php",
+          "src/Controller/PublicForumSearchController.php",
+          "src/ForumWorkflow/Templates/public/search.html.twig",
+          "src/ForumWorkflow/Templates/public/threads.html.twig",
+          "tests/Controller/PublicForumSearchTest.php"
+        ]
+      },
+      "published_at": "2026-09-30T18:01:15.213Z",
+      "claimed_on": "2026-09-30T18:01:15.213Z",
+      "lease_expires_at": "2026-10-01T01:01:15.213Z",
+      "claim_generation": 1,
+      "active_base_branch": "main",
+      "active_base_sha": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "active_head": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "resume_branch": "feature/wcp-625-room-forum-search-g1",
+      "last_observed_head": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "last_checkpoint_at": null,
+      "checkpoint_paths": [],
+      "last_verified_push_at": null,
+      "branch_heads": {
+        "claim_branch": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+        "feature_branch": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4"
+      },
+      "next_action": "Implement room-scoped search and focused visibility tests; push a checkpoint promptly."
     }
   ],
   "recovery_queue": [],
