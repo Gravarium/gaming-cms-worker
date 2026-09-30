@@ -4,14 +4,14 @@
   "source_queue": {
     "repository": "Gravarium/gaming-cms",
     "path": "docs/ai-work-queue.json",
-    "blob_sha": "13c4f499444f6c1e67ee53cffb15914b460548ce",
-    "updated_at": "2026-09-27T10:51:00Z"
+    "blob_sha": "4f5c73ba69758d9780e5bbbab92abda360fb1e62",
+    "updated_at": "2026-09-29T03:51:11Z"
   },
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "9e083c63e7d888af36f93a23eb924c89fad2b971",
-  "published_at": "2026-09-30T07:06:00Z",
-  "summary": "WCP-511 and WCP-608 are complete awaiting Trusted review (PRs #404 and #403; exact-head CI green). WCP-608 was reclaimed as generation 2 and remains locked until Trusted resolution. Trusted main remains the only integration and deployment source.",
+  "published_at": "2026-09-30T07:25:26.488Z",
+  "summary": "WCP-511, WCP-608, WCP-609 and WCP-610 are complete Worker proposals awaiting Trusted review; their claims remain locked. WCP-611 is claimed from Worker main for the independent public content-tag widget. Trusted main remains the only integration and deployment source.",
   "rules": {
     "choose": "Resume the current chat's unfinished claimed branch first. Otherwise atomically claim an eligible published task. If no published task is eligible, independently derive and publish a bounded worker-only CMS proposal from approved product goals and observed code gaps; do not ask the owner for the next FCP number.",
     "atomic_reservation": "Create the exact claim_branch and suggested feature branch from that task's published proposal_base_sha. If the claim already exists, treat it as a hard lock; the owning continuation resumes it and every other AI skips it.",
@@ -58101,6 +58101,121 @@
           "test_summary": "PHPUnit 1645 tests, 11990 assertions, no errors/failures; PHPStan 8 and PostgreSQL 18 migration chain passed."
         }
       ]
+    },
+    {
+      "priority": 611,
+      "package_id": "WCP-611",
+      "title": "Add a public content-tag widget to the Page Builder",
+      "risk": "medium",
+      "execution_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-611-public-content-tag-widget-g1",
+      "suggested_branch": "feature/wcp-611-public-content-tag-widget-g1",
+      "base_branch": "main",
+      "base_sha": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "objective": "Add an auto-discovered, read-only Page Builder widget for existing content tags. List only tags attached to currently visible, published News or Page entries; link each tag to the existing app_content_tag_archive route. Keep output deterministic and bounded, support the shared count setting, escape names and optional descriptions, show an accessible empty state, and leave the existing archive, administration, schema, migrations and shared templates unchanged.",
+      "allowed_paths": [
+        "src/Widget/PublicContentTagWidgetProvider.php",
+        "src/Widget/Content/PublicContentTagQuery.php",
+        "templates/widget/public_content_tags.html.twig",
+        "tests/Widget/PublicContentTagWidgetProviderTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "CONTINUOUS-WORKER.md",
+        "CONTINUOUS-WORK-POOL.json",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/",
+        "assets/",
+        "public/",
+        "src/Entity/",
+        "src/Form/",
+        "src/Repository/",
+        "src/Controller/",
+        "src/Widget/WidgetRegistry.php",
+        "src/Widget/PublicContentCategoryWidgetProvider.php",
+        "src/Widget/Content/PublicContentCategoryQuery.php",
+        "templates/widget/public_content_categories.html.twig",
+        "tests/Widget/PublicContentCategoryWidgetProviderTest.php",
+        "src/Controller/PublicContentTagArchiveController.php",
+        "src/Repository/PublicContentTagArchiveRepository.php",
+        "src/Repository/ContentTagRepository.php",
+        "src/Entity/ContentTag.php",
+        "tests/Controller/PublicContentTagArchiveTest.php",
+        "templates/content_tag/",
+        "templates/base.html.twig"
+      ],
+      "deliverables": [
+        "The Page Builder discovers content.tags through the existing WidgetProvider service tag and gates it with the existing Content module availability policy.",
+        "The query returns distinct tags attached to published News or Page entries published by now, listed publicly and not past scheduled unpublication; orphan tags and tags used only by hidden entries are excluded.",
+        "Results are sorted by tag name then ID and bounded to 12, with the shared default of 6 and validated count setting.",
+        "The template links to app_content_tag_archive, renders optional descriptions with Twig escaping and provides an accessible empty state.",
+        "No write action, schema, migration, entity, repository, archive, administration, registry, configuration, shared navigation or base-template change."
+      ],
+      "tests": [
+        "Focused PHPUnit coverage verifies provider discovery, Page Builder definition, Content module gating, shared count bounds, route links, escaped name/description and empty state.",
+        "Query tests include both News and Page entries and exclude draft, review, scheduled, future, archived, trashed, unlisted and past-scheduled-unpublication content; they also verify distinct results, stable ordering and the 12-item cap.",
+        "Fixtures are synthetic and removed in finally blocks; no production or private-runtime data is used.",
+        "Run targeted PHPUnit and PHPStan level 8, then full Worker CI including PostgreSQL 18 migration-chain validation on the exact final HEAD."
+      ],
+      "completion_report": [
+        "Exact Worker main/base SHA, final Worker HEAD SHA, Worker PR and complete changed-path list.",
+        "Focused provider, module-gate, escaping, route, empty-state, visibility, deterministic-order and limit test evidence.",
+        "Explicit no-schema/migration and Fortress boundary impact; unresolved risks and deferred behavior.",
+        "Exact-head Worker CI run and job results; Trusted review remains required and no Trusted merge or deployment is authorized."
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-Trusted-review-and-exact-head-CI",
+        "public-widget-exposes-only-tags-linked-to-currently-visible-public-content",
+        "content-module-disabled-hides-the-widget-through-the-existing-registry",
+        "existing-content-tag-archive-administration-and-publication-behavior-remain-unchanged",
+        "no-schema-or-migration-change",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "red-CI-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment",
+        "no-private-runtime-or-sensitive-data"
+      ],
+      "proposal_kind": "worker_only",
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "proposal_dependency_evidence": [],
+      "collision_check": {
+        "compared_against": "Fresh continuous/work-pool-v4 head 13bdc0487176cc8d1fb8e2f37b1f503d0592c405; exact Worker main 1d03d4947f15dc3e0fe4b79a990bd45468c761e4; current Trusted queue blob 4f5c73ba69758d9780e5bbbab92abda360fb1e62; all active and claim-locked allowlists, including WCP-511 (#404).",
+        "result": "No active or claim-locked task owns or encloses the four exact paths. WCP-511's public tag directory uses separate controller, directory template and controller-test paths; existing tag archive controller/repository paths are forbidden and untouched. The blocked, unclaimed FCP-072 has a broad templates scope, so any future FCP-072 claimant must recheck this exact widget template before reserving it.",
+        "paths": [
+          "src/Widget/PublicContentTagWidgetProvider.php",
+          "src/Widget/Content/PublicContentTagQuery.php",
+          "templates/widget/public_content_tags.html.twig",
+          "tests/Widget/PublicContentTagWidgetProviderTest.php"
+        ]
+      },
+      "published_at": "2026-09-30T07:25:26.488Z",
+      "claimed_on": "2026-09-30T07:25:26.488Z",
+      "lease_expires_at": "2026-09-30T14:25:26.488Z",
+      "claim_generation": 1,
+      "claim_state": "active",
+      "active_base_branch": "main",
+      "active_base_sha": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "active_head": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "resume_branch": "feature/wcp-611-public-content-tag-widget-g1",
+      "last_observed_head": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "last_checkpoint_at": "2026-09-30T07:25:26.488Z",
+      "checkpoint_paths": [],
+      "next_action": "Create the claim and feature branches from the exact Worker main SHA, implement the four allowed files, run focused tests and full exact-head Worker CI, then lock this proposal for Trusted review. Do not merge or deploy."
     }
   ],
   "recovery_queue": [],
