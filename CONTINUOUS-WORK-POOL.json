@@ -11,7 +11,7 @@
   "baseline_branch": "main",
   "base_sha": "9e083c63e7d888af36f93a23eb924c89fad2b971",
   "published_at": "2026-09-30T18:01:15.213Z",
-  "summary": "WCP-624 complete; WCP-625 room-scoped forum search in progress alongside separate claims.",
+  "summary": "WCP-624 and WCP-625 complete with green exact-head Worker CI and ready PRs; separate active claims remain untouched.",
   "rules": {
     "choose": "Resume the current chat's unfinished claimed branch first. Otherwise atomically claim an eligible published task. If no published task is eligible, independently derive and publish a bounded worker-only CMS proposal from approved product goals and observed code gaps; do not ask the owner for the next FCP number.",
     "atomic_reservation": "Create the exact claim_branch and suggested feature branch from that task's published proposal_base_sha. If the claim already exists, treat it as a hard lock; the owning continuation resumes it and every other AI skips it.",
@@ -60312,8 +60312,8 @@
       "package_id": "WCP-625",
       "title": "Search visible forum room threads and replies",
       "risk": "medium_privacy",
-      "execution_state": "worker_in_progress",
-      "claim_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
+      "claim_state": "locked_until_trusted_resolution",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -60391,7 +60391,7 @@
       },
       "published_at": "2026-09-30T18:01:15.213Z",
       "claimed_on": "2026-09-30T18:01:15.213Z",
-      "lease_expires_at": "2026-10-01T01:04:55.814Z",
+      "lease_expires_at": null,
       "claim_generation": 1,
       "active_base_branch": "main",
       "active_base_sha": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
@@ -60411,7 +60411,47 @@
         "claim_branch": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
         "feature_branch": "bae69c40549135125bb2a72c273a20a5563ba985"
       },
-      "next_action": "Inspect exact-head Worker CI and fix any failure on the same branch."
+      "next_action": "Worker PR #420 is ready for Trusted review at green exact head; claim remains locked until explicit resolution.",
+      "worker_pr": 420,
+      "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/420",
+      "pr_state": "open_ready_for_review",
+      "worker_pr_state": "ready_for_review",
+      "worker_pr_head_sha": "bae69c40549135125bb2a72c273a20a5563ba985",
+      "worker_pr_base_branch": "main",
+      "worker_pr_base_sha": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "worker_pr_changed_paths": [
+        "src/ForumSearch/RoomThreadSearch.php",
+        "src/Controller/PublicForumSearchController.php",
+        "src/ForumWorkflow/Templates/public/search.html.twig",
+        "src/ForumWorkflow/Templates/public/threads.html.twig",
+        "tests/Controller/PublicForumSearchTest.php"
+      ],
+      "ci_run_id": 36756040382,
+      "last_ci_run_id": 36756040382,
+      "ci_result": "success",
+      "last_ci_result": "success",
+      "php_symfony_job_id": 110026409012,
+      "php_symfony_result": "success",
+      "postgres_migration_job_id": 110026409607,
+      "postgres_migration_result": "success",
+      "completed_on": "2026-09-30T18:10:28.131Z",
+      "final_head": "bae69c40549135125bb2a72c273a20a5563ba985",
+      "final_changed_paths": [
+        "src/ForumSearch/RoomThreadSearch.php",
+        "src/Controller/PublicForumSearchController.php",
+        "src/ForumWorkflow/Templates/public/search.html.twig",
+        "src/ForumWorkflow/Templates/public/threads.html.twig",
+        "tests/Controller/PublicForumSearchTest.php"
+      ],
+      "test_evidence": {
+        "visibility": "Anonymous can search public room but cannot search member room; authenticated member can search member room. Room authorization precedes query.",
+        "search": "Title/body matches, literal wildcard, exact count and stable two-page results; no body text in result markup.",
+        "phpunit": "1,644 tests; 11,979 assertions; 0 failures; 1 deprecation and 26 notices.",
+        "exact_head_ci_run_id": 36756040382,
+        "php_symfony_result": "success",
+        "postgres_migration_result": "success",
+        "reviews": "No submitted reviews at handoff."
+      }
     }
   ],
   "recovery_queue": [],
