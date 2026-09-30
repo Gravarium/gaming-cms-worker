@@ -11,7 +11,7 @@
   "baseline_branch": "main",
   "base_sha": "9e083c63e7d888af36f93a23eb924c89fad2b971",
   "published_at": "2026-09-30T18:01:15.213Z",
-  "summary": "WCP-624 and WCP-625 complete with green exact-head Worker CI and ready PRs; separate active claims remain untouched.",
+  "summary": "WCP-627 complete with green exact-head Worker CI and ready PR; separate active claims remain untouched.",
   "rules": {
     "choose": "Resume the current chat's unfinished claimed branch first. Otherwise atomically claim an eligible published task. If no published task is eligible, independently derive and publish a bounded worker-only CMS proposal from approved product goals and observed code gaps; do not ask the owner for the next FCP number.",
     "atomic_reservation": "Create the exact claim_branch and suggested feature branch from that task's published proposal_base_sha. If the claim already exists, treat it as a hard lock; the owning continuation resumes it and every other AI skips it.",
@@ -60599,8 +60599,8 @@
       "package_id": "WCP-627",
       "title": "Show captains their upcoming and completed competition matches",
       "risk": "medium",
-      "execution_state": "worker_in_progress",
-      "claim_state": "active_lease",
+      "execution_state": "worker_complete_awaiting_trusted_review",
+      "claim_state": "locked_until_trusted_resolution",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -60676,11 +60676,11 @@
         "claim_branch": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
         "feature_branch": "dc4b37fa07fd4bdce40c37d04b8ccdaa26dbc33f"
       },
-      "next_action": "Wait for exact-head Worker CI and repair any failure.",
+      "next_action": "Worker PR #422 is ready for Trusted review at the exact green head; no merge or deployment.",
       "last_observed_head": "dc4b37fa07fd4bdce40c37d04b8ccdaa26dbc33f",
       "last_checkpoint_at": "2026-09-30T19:16:41.411Z",
       "last_verified_push_at": "2026-09-30T19:16:41.411Z",
-      "lease_expires_at": "2026-10-01T02:16:41.411Z",
+      "lease_expires_at": null,
       "checkpoint_paths": [
         "src/CompetitionMatchInbox/CaptainMatchInbox.php",
         "src/Controller/CompetitionMatchInboxController.php",
@@ -60691,7 +60691,32 @@
       "worker_pr": 422,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/422",
       "worker_pr_head_sha": "dc4b37fa07fd4bdce40c37d04b8ccdaa26dbc33f",
-      "worker_pr_state": "draft"
+      "worker_pr_state": "ready_for_review",
+      "ci_run_id": 36764527153,
+      "ci_result": "success",
+      "last_ci_run_id": 36764527153,
+      "last_ci_result": "success",
+      "php_symfony_job_id": 110055219895,
+      "php_symfony_result": "success",
+      "postgres_migration_job_id": 110055220547,
+      "postgres_migration_result": "success",
+      "completed_on": "2026-09-30T19:21:41.030Z",
+      "final_head": "dc4b37fa07fd4bdce40c37d04b8ccdaa26dbc33f",
+      "final_changed_paths": [
+        "src/CompetitionMatchInbox/CaptainMatchInbox.php",
+        "src/Controller/CompetitionMatchInboxController.php",
+        "templates/competition_match_inbox/index.html.twig",
+        "tests/Controller/CompetitionMatchInboxTest.php",
+        "src/CompetitionParticipation/Templates/account/dashboard.html.twig"
+      ],
+      "pr_state": "open_ready_for_review",
+      "test_evidence": {
+        "positive": "Captain sees own fixture and personalized response headers.",
+        "negative": "Anonymous user redirects to login; another captain's fixture is absent; disabled Gaming module returns 404.",
+        "exact_head_ci_run_id": 36764527153,
+        "php_symfony_result": "success",
+        "postgres_migration_result": "success"
+      }
     }
   ],
   "recovery_queue": [],
