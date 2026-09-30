@@ -10,8 +10,8 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "9e083c63e7d888af36f93a23eb924c89fad2b971",
-  "published_at": "2026-09-30T19:31:48.156Z",
-  "summary": "WCP-628 complete with green exact-head Worker CI and ready PR; separate active claims remain untouched.",
+  "published_at": "2026-09-30T19:33:34.751Z",
+  "summary": "WCP-628 complete with green exact-head Worker CI; WCP-630 match scheduling board claimed independently.",
   "rules": {
     "choose": "Resume the current chat's unfinished claimed branch first. Otherwise atomically claim an eligible published task. If no published task is eligible, independently derive and publish a bounded worker-only CMS proposal from approved product goals and observed code gaps; do not ask the owner for the next FCP number.",
     "atomic_reservation": "Create the exact claim_branch and suggested feature branch from that task's published proposal_base_sha. If the claim already exists, treat it as a hard lock; the owning continuation resumes it and every other AI skips it.",
@@ -60932,6 +60932,88 @@
       "worker_pr_state": "draft",
       "last_ci_run_id": 36765748940,
       "last_ci_result": "failure"
+    },
+    {
+      "priority": 630,
+      "package_id": "WCP-630",
+      "title": "Manage competition match schedules from an admin board",
+      "risk": "medium",
+      "execution_state": "worker_in_progress",
+      "claim_state": "active_lease",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-630-competition-match-scheduling-g1",
+      "suggested_branch": "feature/wcp-630-competition-match-scheduling-g1",
+      "base_branch": "main",
+      "base_sha": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "objective": "Give gaming managers a bounded board of pending and upcoming matches with scheduling forms that use the existing CSRF-protected scheduling endpoint.",
+      "allowed_paths": [
+        "src/CompetitionSchedule/AdminMatchSchedule.php",
+        "src/Controller/AdminCompetitionMatchScheduleController.php",
+        "templates/admin/competition_match_schedule/index.html.twig",
+        "tests/Controller/AdminCompetitionMatchScheduleTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "CONTINUOUS-WORKER.md",
+        "CONTINUOUS-WORK-POOL.json",
+        ".github/workflows/",
+        "migrations/"
+      ],
+      "deliverables": [
+        "GET-only admin schedule board, deterministic and bounded to 50 matches.",
+        "Existing CSRF-protected scheduling action exposed for eligible matches.",
+        "Gaming permission and module gate, private no-store and noindex response."
+      ],
+      "tests": [
+        "Functional positive, permission, module, form token and cache-header tests.",
+        "Exact-head complete Worker CI including PHPStan, PHPUnit and PostgreSQL 18 migrations."
+      ],
+      "completion_report": [
+        "Exact base/head, PR, paths and CI jobs; no Trusted merge or deployment."
+      ],
+      "immutable_constraints": [
+        "worker-output-untrusted",
+        "admin-permission-and-module-gates",
+        "private-no-store",
+        "no-security-test-or-CI-weakening",
+        "no-Trusted-merge-or-deployment"
+      ],
+      "proposal_kind": "worker_only",
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "proposal_dependency_evidence": [],
+      "collision_check": {
+        "compared_against": "Current pool active and locked allowed paths and live Worker main",
+        "result": "Four new paths have no overlap with active or locked claims, including WCP-629 season admin; no schema or shared template edits.",
+        "paths": [
+          "src/CompetitionSchedule/AdminMatchSchedule.php",
+          "src/Controller/AdminCompetitionMatchScheduleController.php",
+          "templates/admin/competition_match_schedule/index.html.twig",
+          "tests/Controller/AdminCompetitionMatchScheduleTest.php"
+        ]
+      },
+      "published_at": "2026-09-30T19:33:34.751Z",
+      "claimed_on": "2026-09-30T19:33:34.751Z",
+      "claim_generation": 1,
+      "active_base_branch": "main",
+      "active_base_sha": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "active_head": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "resume_branch": "feature/wcp-630-competition-match-scheduling-g1",
+      "branch_heads": {
+        "claim_branch": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+        "feature_branch": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4"
+      },
+      "next_action": "Implement schedule board and tests, then run exact-head Worker CI.",
+      "last_observed_head": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "lease_expires_at": "2026-10-01T02:33:34.751Z"
     }
   ],
   "recovery_queue": [],
