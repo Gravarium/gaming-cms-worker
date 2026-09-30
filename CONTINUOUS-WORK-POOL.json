@@ -10,8 +10,8 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "9e083c63e7d888af36f93a23eb924c89fad2b971",
-  "published_at": "2026-09-30T16:08:15.000Z",
-  "summary": "WCP-620 and WCP-623 are in progress; WCP-621 and WCP-622 are complete pending Trusted review. No Trusted integration or deployment is implied.",
+  "published_at": "2026-09-30T17:23:35.224Z",
+  "summary": "WCP-624 single-elimination progression claimed; WCP-620 and WCP-623 remain separate in-progress claims.",
   "rules": {
     "choose": "Resume the current chat's unfinished claimed branch first. Otherwise atomically claim an eligible published task. If no published task is eligible, independently derive and publish a bounded worker-only CMS proposal from approved product goals and observed code gaps; do not ask the owner for the next FCP number.",
     "atomic_reservation": "Create the exact claim_branch and suggested feature branch from that task's published proposal_base_sha. If the claim already exists, treat it as a hard lock; the owning continuation resumes it and every other AI skips it.",
@@ -60123,6 +60123,104 @@
         "tests/Controller/PublicCompetitionBracketControllerTest.php",
         "tests/Controller/PublicCompetitionLeaderboardTest.php"
       ]
+    },
+    {
+      "priority": 624,
+      "package_id": "WCP-624",
+      "title": "Advance confirmed single-elimination competition rounds",
+      "risk": "medium",
+      "execution_state": "worker_in_progress",
+      "claim_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-624-single-elimination-progression-g1",
+      "suggested_branch": "feature/wcp-624-single-elimination-progression-g1",
+      "base_branch": "main",
+      "base_sha": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "objective": "Complete the existing single-elimination competition lifecycle by advancing only fully confirmed current-round winners into the next round or completing a two-person final. Preserve standings, result confirmation, disputes, module gates and authorization. Reject incomplete, duplicate, stale and unsupported-format promotion; no schema or migration changes.",
+      "allowed_paths": [
+        "src/CompetitionProgression/SingleEliminationProgression.php",
+        "src/Controller/AdminCompetitionRoundProgressionController.php",
+        "templates/admin/competition/index.html.twig",
+        "tests/Controller/CompetitionRoundProgressionTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "CONTINUOUS-WORKER.md",
+        "CONTINUOUS-WORK-POOL.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "src/Controller/PublicCompetitionLeaderboardController.php",
+        "src/Controller/PublicCompetitionBracketController.php",
+        "tests/Controller/PublicCompetitionLeaderboardTest.php",
+        "tests/Controller/PublicCompetitionBracketControllerTest.php"
+      ],
+      "deliverables": [
+        "Manager-only, Gaming-module-gated POST action with per-competition CSRF token advances confirmed single-elimination winners in stable match order.",
+        "A transaction locks and rechecks competition state and current round, rejects incomplete or disputed results, duplicate promotion and unsupported formats.",
+        "A final confirmed match completes the competition; other rounds generate exactly one subsequent round with valid participants.",
+        "Admin listing offers the action only for active single-elimination competitions; no public visibility or result-submission behavior changes."
+      ],
+      "tests": [
+        "Functional tests for four-player advancement, final completion, repeat submission and incomplete or disputed rounds.",
+        "Negative tests for CSRF, permission, disabled Gaming module and non-single-elimination formats.",
+        "Exact-head Worker CI including PHPStan, full PHPUnit and PostgreSQL 18 migrations."
+      ],
+      "completion_report": [
+        "Exact base/head, PR, changed paths and CI jobs.",
+        "Promotion and denial evidence; no schema, Trusted merge or deployment."
+      ],
+      "immutable_constraints": [
+        "worker-output-untrusted",
+        "CMS_GAMING_MANAGE-and-module-gate",
+        "POST-only-CSRF",
+        "atomic-lock-and-recheck",
+        "confirmed-results-only",
+        "no-double-promotion",
+        "no-security-test-or-CI-weakening",
+        "no-Trusted-merge-or-deployment"
+      ],
+      "proposal_kind": "worker_only",
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "proposal_dependency_evidence": [],
+      "collision_check": {
+        "compared_against": "Live Worker main and pool, all active and locked claims at claim time",
+        "result": "No active/locked claim overlaps the four exact paths; WCP-623 owns separate public competition controllers and tests.",
+        "paths": [
+          "src/CompetitionProgression/SingleEliminationProgression.php",
+          "src/Controller/AdminCompetitionRoundProgressionController.php",
+          "templates/admin/competition/index.html.twig",
+          "tests/Controller/CompetitionRoundProgressionTest.php"
+        ]
+      },
+      "published_at": "2026-09-30T17:23:35.224Z",
+      "claimed_on": "2026-09-30T17:23:35.224Z",
+      "lease_expires_at": "2026-10-01T00:23:35.224Z",
+      "claim_generation": 1,
+      "active_base_branch": "main",
+      "active_base_sha": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "active_head": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "resume_branch": "feature/wcp-624-single-elimination-progression-g1",
+      "last_observed_head": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "last_checkpoint_at": null,
+      "checkpoint_paths": [],
+      "last_verified_push_at": null,
+      "branch_heads": {
+        "claim_branch": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+        "feature_branch": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4"
+      },
+      "next_action": "Implement transaction-safe progression and focused functional tests on the exact Worker main base."
     }
   ],
   "recovery_queue": [],
