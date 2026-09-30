@@ -247,6 +247,32 @@ final readonly class AdminGameGuideWorkflow
         });
     }
 
+    public function withdrawPublished(int $id, int $editorId, string $reason): bool
+    {
+        if ($id < 1 || $editorId < 1) {
+            throw new \InvalidArgumentException('A persisted guide and editor are required.');
+        }
+        $reason = trim($reason);
+        if ($reason === '' || mb_strlen($reason) > 500) {
+            throw new \InvalidArgumentException('A withdrawal reason of at most 500 characters is required.');
+        }
+
+        return $this->connection->transactional(function (Connection $connection) use ($id, $editorId, $reason): bool {
+            $changed = $connection->executeStatement(
+                "UPDATE game_guide SET review_status = 'draft', published_at = NULL
+                 WHERE id = :id AND review_status = 'published' AND author_id IS NOT NULL",
+                ['id' => $id],
+            );
+            if ($changed !== 1) {
+                return false;
+            }
+
+            $this->appendAudit($connection, $id, $editorId, 'draft', $reason, new \DateTimeImmutable());
+
+            return true;
+        });
+    }
+
     /** @param array<string, mixed> $row
      * @return array<string, mixed>
      */
