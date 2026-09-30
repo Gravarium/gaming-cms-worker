@@ -20,23 +20,28 @@ final class AdminMediaAccessibilityReportTest extends WebTestCase
         $asset = $this->asset($client);
         $assetId = $asset->getId();
         self::assertNotNull($assetId);
-        $client->loginUser($this->user($client, [CmsPermission::ACCESS, CmsPermission::STORAGE]));
+        $user = $this->user($client, [CmsPermission::ACCESS, CmsPermission::STORAGE]);
+        $client->loginUser($user);
 
-        $client->request('GET', '/admin/storage/accessibility');
+        try {
+            $client->request('GET', '/admin/storage/accessibility');
 
-        self::assertResponseIsSuccessful();
-        self::assertResponseHeaderSame('Cache-Control', 'private, no-store, max-age=0');
-        self::assertResponseHeaderSame('X-Robots-Tag', 'noindex, nofollow, noarchive');
-        self::assertSelectorTextContains('main', 'Bildalternativtexte prüfen');
-        self::assertSelectorExists('a[href="/admin/storage/media/'.$assetId.'/edit"]');
-        $body = (string) $client->getResponse()->getContent();
-        self::assertStringContainsString('dekorativen Bildern', $body);
-        self::assertStringNotContainsString('/uploads/media/private-storage-', $body);
-        self::assertStringNotContainsString('private-original-', $body);
+            self::assertResponseIsSuccessful();
+            self::assertResponseHeaderSame('Cache-Control', 'private, no-store, max-age=0');
+            self::assertResponseHeaderSame('X-Robots-Tag', 'noindex, nofollow, noarchive');
+            self::assertSelectorTextContains('main', 'Bildalternativtexte prüfen');
+            self::assertSelectorExists('a[href="/admin/storage/media/'.$assetId.'/edit"]');
+            $body = (string) $client->getResponse()->getContent();
+            self::assertStringContainsString('dekorativen Bildern', $body);
+            self::assertStringNotContainsString('/uploads/media/private-storage-', $body);
+            self::assertStringNotContainsString('private-original-', $body);
 
-        $client->request('GET', '/admin');
-        self::assertResponseIsSuccessful();
-        self::assertSelectorExists('a[href="/admin/storage/accessibility"]');
+            $client->request('GET', '/admin');
+            self::assertResponseIsSuccessful();
+            self::assertSelectorExists('a[href="/admin/storage/accessibility"]');
+        } finally {
+            $this->cleanup($client, $asset, $user);
+        }
     }
 
     public function testReportRequiresStoragePermission(): void
@@ -49,7 +54,7 @@ final class AdminMediaAccessibilityReportTest extends WebTestCase
             $client->request('GET', '/admin/storage/accessibility');
             self::assertResponseStatusCodeSame(403);
         } finally {
-            $this->cleanup($client, $asset, $user);
+            $this->cleanup($client, null, $user);
         }
     }
 
