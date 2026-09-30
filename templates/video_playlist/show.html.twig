@@ -11,7 +11,8 @@
     <p class="eyebrow">Playlist</p>
     <h1>{{ playlist.title }}</h1>
     {% if playlist.description %}<div class="article-body">{{ playlist.description|nl2br }}</div>{% endif %}
-    <section class="video-grid">
+    <p class="muted">{{ total }} veröffentlichte Videos{% if pages > 1 %} · Seite {{ page }} von {{ pages }}{% endif %}</p>
+    <section class="video-grid" aria-label="Veröffentlichte Playlist-Videos">
         {% for video in videos %}
             <article class="video-card {{ video.featured ? 'video-card-featured' : '' }}">
                 <a class="video-thumbnail" href="{{ path('app_video_show', {slug: video.slug}) }}">
@@ -30,5 +31,17 @@
             <div class="panel"><h2>Noch keine veröffentlichten Videos</h2><p>In dieser Playlist sind derzeit keine öffentlichen Videos verfügbar.</p></div>
         {% endfor %}
     </section>
+
+    {% if pages > 1 %}
+        <nav class="pagination" aria-label="Seitennavigation">
+            {% if page > 1 %}
+                <a rel="prev" href="{{ path('app_video_playlist_show', {slug: playlist.slug, page: page - 1}) }}">← Neuere</a>
+            {% endif %}
+            <span>Seite {{ page }} von {{ pages }}</span>
+            {% if page < pages %}
+                <a rel="next" href="{{ path('app_video_playlist_show', {slug: playlist.slug, page: page + 1}) }}">Ältere →</a>
+            {% endif %}
+        </nav>
+    {% endif %}
 </main>
 {% endblock %}
