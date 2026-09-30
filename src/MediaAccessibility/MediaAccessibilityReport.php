@@ -42,7 +42,7 @@ final readonly class MediaAccessibilityReport
 
         $query = $this->query()
             ->select('asset')
-            ->orderBy('asset.id', 'ASC')
+            ->orderBy('asset.id', 'DESC')
             ->setFirstResult(($page - 1) * self::PAGE_SIZE)
             ->setMaxResults(self::PAGE_SIZE);
 

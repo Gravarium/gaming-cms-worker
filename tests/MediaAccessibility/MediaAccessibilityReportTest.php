@@ -46,12 +46,12 @@ final class MediaAccessibilityReportTest extends KernelTestCase
 
             $firstIds = $this->ids($first['assets']);
             $secondIds = $this->ids($second['assets']);
-            self::assertSame($firstIds, [...$firstIds]);
             self::assertSame([], array_values(array_intersect($firstIds, $secondIds)));
-            self::assertSame($firstIds, $this->sorted($firstIds));
-            self::assertSame($secondIds, $this->sorted($secondIds));
+            self::assertSame($firstIds, $this->sortedDescending($firstIds));
+            self::assertSame($secondIds, $this->sortedDescending($secondIds));
 
             $reportedIds = [...$firstIds, ...$secondIds];
+            self::assertCount(26, array_intersect($this->ids($missing), $reportedIds));
             self::assertNotContains($withAltText->getId(), $reportedIds);
             self::assertNotContains($pending->getId(), $reportedIds);
             self::assertNotContains($nonImage->getId(), $reportedIds);
@@ -61,6 +61,19 @@ final class MediaAccessibilityReportTest extends KernelTestCase
             }
             $entityManager->flush();
         }
+    }
+
+    public function testReportRejectsPagePastTheLastPage(): void
+    {
+        self::bootKernel();
+        $report = static::getContainer()->get(MediaAccessibilityReport::class);
+        $first = $report->page(1);
+        if ($first['pages'] === MediaAccessibilityReport::MAX_PAGE) {
+            self::markTestSkipped('The test database exceeds the report page cap.');
+        }
+
+        $this->expectException(\OutOfRangeException::class);
+        $report->page($first['pages'] + 1);
     }
 
     #[DataProvider('invalidPages')]
@@ -114,9 +127,9 @@ final class MediaAccessibilityReportTest extends KernelTestCase
     /** @param list<int> $ids
      * @return list<int>
      */
-    private function sorted(array $ids): array
+    private function sortedDescending(array $ids): array
     {
-        sort($ids, SORT_NUMERIC);
+        rsort($ids, SORT_NUMERIC);
 
         return $ids;
     }

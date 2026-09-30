@@ -49,7 +49,7 @@ final class AdminMediaAccessibilityReportTest extends WebTestCase
             $client->request('GET', '/admin/storage/accessibility');
             self::assertResponseStatusCodeSame(403);
         } finally {
-            $this->cleanup($client, null, $user);
+            $this->cleanup($client, $asset, $user);
         }
     }
 
@@ -85,11 +85,14 @@ final class AdminMediaAccessibilityReportTest extends WebTestCase
             $client->request('GET', '/admin/storage/accessibility?page%5B%5D=1');
             self::assertResponseStatusCodeSame(400);
             self::assertResponseHeaderSame('Cache-Control', 'private, no-store, max-age=0');
+            $client->request('GET', '/admin/storage/accessibility?page=10001');
+            self::assertResponseStatusCodeSame(400);
         } finally {
             $this->cleanup($client, null, $user);
         }
     }
 
+    /** @param list<string> $permissions */
     private function user(KernelBrowser $client, array $permissions): User
     {
         $user = (new User())
@@ -118,12 +121,6 @@ final class AdminMediaAccessibilityReportTest extends WebTestCase
         $this->em($client)->flush();
 
         return $asset;
-    }
-
-    /** @param list<string> $permissions */
-    private function userWithPermissions(KernelBrowser $client, array $permissions): User
-    {
-        return $this->user($client, $permissions);
     }
 
     /** @param array{exists: bool, enabled: bool} $snapshot */
