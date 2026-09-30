@@ -10,8 +10,8 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "9e083c63e7d888af36f93a23eb924c89fad2b971",
-  "published_at": "2026-09-30T07:34:40.505Z",
-  "summary": "WCP-511, WCP-608, WCP-609 and WCP-610 are complete Worker proposals awaiting Trusted review; their claims remain locked. WCP-611 is active from Worker main for the public content-tag widget. Trusted main remains the only integration and deployment source.",
+  "published_at": "2026-09-30T07:39:44.830Z",
+  "summary": "WCP-511, WCP-608, WCP-609, WCP-610 and WCP-611 are complete Worker proposals awaiting Trusted review; their claims remain locked. Trusted main remains the only integration and deployment source.",
   "rules": {
     "choose": "Resume the current chat's unfinished claimed branch first. Otherwise atomically claim an eligible published task. If no published task is eligible, independently derive and publish a bounded worker-only CMS proposal from approved product goals and observed code gaps; do not ask the owner for the next FCP number.",
     "atomic_reservation": "Create the exact claim_branch and suggested feature branch from that task's published proposal_base_sha. If the claim already exists, treat it as a hard lock; the owning continuation resumes it and every other AI skips it.",
@@ -58107,7 +58107,7 @@
       "package_id": "WCP-611",
       "title": "Add a public content-tag widget to the Page Builder",
       "risk": "medium",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -58205,9 +58205,9 @@
       },
       "published_at": "2026-09-30T07:25:26.488Z",
       "claimed_on": "2026-09-30T07:25:26.488Z",
-      "lease_expires_at": "2026-09-30T14:32:07.649Z",
+      "lease_expires_at": null,
       "claim_generation": 1,
-      "claim_state": "active",
+      "claim_state": "locked_until_trusted_resolution",
       "active_base_branch": "main",
       "active_base_sha": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
       "active_head": "4a1a05e97aa501d39a941ae92dbf21c06f5feb72",
@@ -58220,7 +58220,7 @@
         "templates/widget/public_content_tags.html.twig",
         "tests/Widget/PublicContentTagWidgetProviderTest.php"
       ],
-      "next_action": "Worker PR #407 is open as a draft at exact HEAD 4a1a05e97aa501d39a941ae92dbf21c06f5feb72. Exact-head Worker CI #1074 is running; inspect the focused PHPUnit, PHPStan and PostgreSQL 18 results, fix any issue without weakening protections, then mark ready and lock only after all exact-head gates pass.",
+      "next_action": "Worker PR #407 is ready for Trusted review at exact HEAD 4a1a05e97aa501d39a941ae92dbf21c06f5feb72 with exact-head CI #1074 green. Keep this claim locked until Trusted explicitly integrates, cancels or transfers it. No Trusted merge or deployment was performed.",
       "last_verified_push_at": "2026-09-30T07:32:07.649Z",
       "branch_heads": {
         "claim_branch": "4a1a05e97aa501d39a941ae92dbf21c06f5feb72",
@@ -58228,8 +58228,8 @@
       },
       "worker_pr": 407,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/407",
-      "pr_state": "open_draft",
-      "worker_pr_state": "draft",
+      "pr_state": "open_ready_for_review",
+      "worker_pr_state": "ready_for_review",
       "worker_pr_base_branch": "main",
       "worker_pr_base_sha": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
       "worker_pr_head_sha": "4a1a05e97aa501d39a941ae92dbf21c06f5feb72",
@@ -58241,8 +58241,36 @@
       ],
       "ci_run_id": 36684284005,
       "last_ci_run_id": 36684284005,
-      "ci_result": "in_progress",
-      "last_ci_result": "in_progress"
+      "ci_result": "success",
+      "last_ci_result": "success",
+      "final_head": "4a1a05e97aa501d39a941ae92dbf21c06f5feb72",
+      "final_changed_paths": [
+        "src/Widget/Content/PublicContentTagQuery.php",
+        "src/Widget/PublicContentTagWidgetProvider.php",
+        "templates/widget/public_content_tags.html.twig",
+        "tests/Widget/PublicContentTagWidgetProviderTest.php"
+      ],
+      "php_symfony_job_id": 109786443142,
+      "php_symfony_result": "success",
+      "postgres_migration_job_id": 109786442744,
+      "postgres_migration_result": "success",
+      "completed_on": "2026-09-30T07:39:44.830Z",
+      "test_evidence": {
+        "targeted_tests": [
+          "PublicContentTagWidgetProviderTest"
+        ],
+        "public_visibility": "Lists distinct tags attached to visible, published News or Page entries; excludes draft, review, scheduled/future, archived, trashed, unlisted, past-scheduled-unpublication and orphan-only tags.",
+        "widget": "Auto-discovered content.tags widget, existing Content module gate, archive route links, 6-item default and 12-item cap, deterministic name/ID ordering.",
+        "output_safety": "Twig-escaped names and optional descriptions; accessible empty state.",
+        "schema_or_migration_changes": "none",
+        "exact_head_ci_run_id": 36684284005,
+        "exact_head_ci_result": "success",
+        "php_symfony_job_id": 109786443142,
+        "php_symfony_result": "success",
+        "phpunit": "1,645 tests; 12,016 assertions; 1 deprecation and 26 notices (same deprecation/notice counts as exact-base PR #404; 53 additional assertions).",
+        "postgres_migration_job_id": 109786442744,
+        "postgres_migration_result": "success"
+      }
     }
   ],
   "recovery_queue": [],
