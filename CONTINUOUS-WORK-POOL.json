@@ -10,8 +10,8 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "9e083c63e7d888af36f93a23eb924c89fad2b971",
-  "published_at": "2026-09-30T07:57:21.393Z",
-  "summary": "WCP-511, WCP-608, WCP-609, WCP-610, WCP-611 and WCP-612 are complete Worker proposals awaiting Trusted review; their claims remain locked. Trusted main remains the only integration and deployment source.",
+  "published_at": "2026-09-30T08:00:53.681Z",
+  "summary": "WCP-511, WCP-608, WCP-609, WCP-610, WCP-611 and WCP-612 are complete Worker proposals awaiting Trusted review; their claims remain locked. WCP-613 is active from Worker main for the public gaming-guide RSS feed. Trusted main remains the only integration and deployment source.",
   "rules": {
     "choose": "Resume the current chat's unfinished claimed branch first. Otherwise atomically claim an eligible published task. If no published task is eligible, independently derive and publish a bounded worker-only CMS proposal from approved product goals and observed code gaps; do not ask the owner for the next FCP number.",
     "atomic_reservation": "Create the exact claim_branch and suggested feature branch from that task's published proposal_base_sha. If the claim already exists, treat it as a hard lock; the owning continuation resumes it and every other AI skips it.",
@@ -58435,6 +58435,118 @@
         "postgres_migration_job_id": 109792207949,
         "postgres_migration_result": "success"
       }
+    },
+    {
+      "priority": 613,
+      "package_id": "WCP-613",
+      "title": "Publish a public RSS feed for gaming guides",
+      "risk": "low",
+      "execution_state": "worker_in_progress",
+      "claim_state": "active",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-613-public-game-guide-rss-feed-g1",
+      "suggested_branch": "feature/wcp-613-public-game-guide-rss-feed-g1",
+      "base_branch": "main",
+      "base_sha": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "objective": "Make public gaming guides subscribable by publishing a bounded RSS 2.0 feed of the latest public guides and linking the feed from the existing public guide directory. Reuse PublicGameGuideQuery::latest() so the existing gaming-module, enabled-game and published-at visibility filters remain in force. Escape XML fields, use absolute public guide URLs, and leave guide administration, schema, migrations and shared templates unchanged.",
+      "allowed_paths": [
+        "src/Controller/PublicGameGuideFeedController.php",
+        "src/GameGuide/Templates/public/feed.xml.twig",
+        "src/GameGuide/Templates/public/index.html.twig",
+        "tests/Controller/PublicGameGuideFeedControllerTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "CONTINUOUS-WORKER.md",
+        "CONTINUOUS-WORK-POOL.json",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/",
+        "assets/",
+        "public/",
+        "templates/",
+        "src/Entity/",
+        "src/Form/",
+        "src/Repository/",
+        "src/Widget/",
+        "src/GameGuide/PublicGameGuideQuery.php",
+        "src/Controller/PublicGameGuideController.php",
+        "src/GameGuide/Templates/public/show.html.twig",
+        "tests/Controller/PublicGameGuideControllerTest.php"
+      ],
+      "deliverables": [
+        "GET /gaming/guides.xml returns a well-formed RSS 2.0 feed with the existing public guide query's latest bounded results.",
+        "Feed titles, URLs, descriptions, timestamps and language are XML-safe; entries link to the existing public guide detail route and expose no author/reviewer metadata.",
+        "The public guide directory includes a visible subscription link to the RSS feed.",
+        "The feed returns 404 when the Gaming module is disabled and sets an RSS content type plus nosniff.",
+        "No schema, migration, entity, repository, administration, root-template or shared-navigation changes."
+      ],
+      "tests": [
+        "Focused PHPUnit parses the response as XML and verifies RSS headers, feed discovery from the guide directory, absolute detail links and XML-escaped text.",
+        "Synthetic fixtures verify only published guides from enabled games are included, hidden/future rows are excluded, author data is absent and the feed is capped at twelve entries.",
+        "Disabled Gaming module hides the feed route; full exact-head Worker CI including PHPStan and PostgreSQL 18 migration validation passes."
+      ],
+      "completion_report": [
+        "Exact Worker main/base SHA, final Worker HEAD SHA, Worker PR and complete changed-path list.",
+        "XML validity, public visibility, module gate, bounded result count and escaping test evidence.",
+        "Explicit no-write, no-schema/migration and Trusted boundary impact; unresolved risks and deferred behavior.",
+        "Exact-head Worker CI run and job results; Trusted review remains required and no Trusted merge or deployment is authorized."
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-Trusted-review-and-exact-head-CI",
+        "feed-contains-only-public-guides-from-enabled-games",
+        "reuse-existing-public-visibility-query",
+        "XML-output-is-escaped-and-bounded",
+        "no-schema-or-migration-change",
+        "no-security-test-phpstan-ci-validation-or-protection-weakening",
+        "red-CI-stops-integration",
+        "worker-code-is-untrusted-no-direct-Trusted-integration-or-deployment",
+        "no-private-runtime-or-sensitive-data"
+      ],
+      "proposal_kind": "worker_only",
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "proposal_dependency_evidence": [],
+      "collision_check": {
+        "compared_against": "Worker main 1d03d4947f15dc3e0fe4b79a990bd45468c761e4; fresh continuous/work-pool-v4 blob 22ef0891a81090ad169f402dc91fd4067229901d; Trusted main 8852e024d89611291fc83214c1f0c1d4a758c9d8; Trusted queue blob 4f5c73ba69758d9780e5bbbab92abda360fb1e62; active Trusted FCP-049 and FCP-077; every active and locked Worker claim.",
+        "result": "No path overlap with active/locked Worker or active Trusted claims. Feed template stays in the existing module-local src/GameGuide/Templates path, outside the root templates/ claim. FCP-072 remains blocked and its future broad templates claim does not contain these src-prefixed files. No existing Worker game-guide RSS feed or WCP-613 task/PR/branch was found; all five prepared FCP task specs remain blocked by unintegrated prerequisites.",
+        "paths": [
+          "src/Controller/PublicGameGuideFeedController.php",
+          "src/GameGuide/Templates/public/feed.xml.twig",
+          "src/GameGuide/Templates/public/index.html.twig",
+          "tests/Controller/PublicGameGuideFeedControllerTest.php"
+        ]
+      },
+      "published_at": "2026-09-30T08:00:53.681Z",
+      "claimed_on": "2026-09-30T08:00:53.681Z",
+      "lease_expires_at": "2026-09-30T15:00:53.681Z",
+      "claim_generation": 1,
+      "active_base_branch": "main",
+      "active_base_sha": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "active_head": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "resume_branch": "feature/wcp-613-public-game-guide-rss-feed-g1",
+      "last_observed_head": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "last_checkpoint_at": "2026-09-30T08:00:53.681Z",
+      "checkpoint_paths": [],
+      "last_verified_push_at": null,
+      "branch_heads": {
+        "claim_branch": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+        "feature_branch": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4"
+      },
+      "next_action": "Implement the public RSS route, module-local feed template, directory link and synthetic visibility/XML tests within the four reserved paths. Push a coherent checkpoint, open a draft Worker PR and run focused PHPUnit/PHPStan plus full exact-head Worker CI including PostgreSQL 18 migration validation. Keep green output locked for Trusted review; do not merge or deploy."
     }
   ],
   "recovery_queue": [],
