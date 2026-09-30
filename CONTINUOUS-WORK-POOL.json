@@ -10,8 +10,8 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "9e083c63e7d888af36f93a23eb924c89fad2b971",
-  "published_at": "2026-09-30T23:17:30.000Z",
-  "summary": "WCP-633 admin competition participant lifecycle published and claimed on disjoint Worker paths.",
+  "published_at": "2026-09-30T23:21:00.000Z",
+  "summary": "WCP-633 draft Worker PR #427 open on exact head with Worker CI #1108 queued.",
   "rules": {
     "choose": "Resume the current chat's unfinished claimed branch first. Otherwise atomically claim an eligible published task. If no published task is eligible, independently derive and publish a bounded worker-only CMS proposal from approved product goals and observed code gaps; do not ask the owner for the next FCP number.",
     "atomic_reservation": "Create the exact claim_branch and suggested feature branch from that task's published proposal_base_sha. If the claim already exists, treat it as a hard lock; the owning continuation resumes it and every other AI skips it.",
@@ -61584,24 +61584,32 @@
       "code_gap_evidence": "On exact Worker main, CompetitionParticipant defines seed, withdraw and disqualify operations, while AdminCompetitionController exposes creation, opening, seeding matches, scheduling and disputes but no participant board or participant lifecycle actions.",
       "claimed_on": "2026-09-30T23:17:30.000Z",
       "claim_generation": 1,
-      "lease_expires_at": "2026-10-01T06:17:30.000Z",
-      "active_head": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
-      "last_observed_head": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
-      "checkpoint_commit_sha": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "lease_expires_at": "2026-10-01T06:21:00.000Z",
+      "active_head": "ab00ee5e071c4e2f2fecabf86eac1efe959a912f",
+      "last_observed_head": "ab00ee5e071c4e2f2fecabf86eac1efe959a912f",
+      "checkpoint_commit_sha": "ab00ee5e071c4e2f2fecabf86eac1efe959a912f",
       "branch_heads": {
         "claim_branch": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
-        "feature_branch": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4"
+        "feature_branch": "ab00ee5e071c4e2f2fecabf86eac1efe959a912f"
       },
-      "checkpoint_paths": [],
-      "worker_pr_state": "not_created",
-      "pr_state": "not_created",
-      "last_ci_run_id": null,
-      "last_ci_result": "pending",
-      "last_ci_head": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "checkpoint_paths": [
+        "src/CompetitionParticipantAdmin/ParticipantManagement.php",
+        "src/Controller/AdminCompetitionParticipantController.php",
+        "templates/admin/competition_participant/index.html.twig",
+        "tests/Controller/AdminCompetitionParticipantTest.php"
+      ],
+      "worker_pr_state": "open_draft",
+      "pr_state": "open_draft",
+      "last_ci_run_id": 36790572593,
+      "last_ci_result": "queued",
+      "last_ci_head": "ab00ee5e071c4e2f2fecabf86eac1efe959a912f",
       "ci_history": [],
-      "next_action": "Implement the participant management service, protected controller, private board and focused security/state tests; then open a draft Worker PR and run exact-head CI.",
-      "last_checkpoint_at": "2026-09-30T23:17:30.000Z",
-      "last_verified_push_at": "2026-09-30T23:17:30.000Z"
+      "next_action": "Wait for Worker CI #1108 on exact head; fix failures on the same feature branch.",
+      "last_checkpoint_at": "2026-09-30T23:21:00.000Z",
+      "last_verified_push_at": "2026-09-30T23:21:00.000Z",
+      "worker_pr": 427,
+      "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/427",
+      "worker_pr_head_sha": "ab00ee5e071c4e2f2fecabf86eac1efe959a912f"
     }
   ],
   "recovery_queue": [],
