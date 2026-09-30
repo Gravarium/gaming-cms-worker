@@ -60178,7 +60178,8 @@
         "src/CompetitionProgression/SingleEliminationProgression.php",
         "src/Controller/AdminCompetitionRoundProgressionController.php",
         "templates/admin/competition/index.html.twig",
-        "tests/Controller/CompetitionRoundProgressionTest.php"
+        "tests/Controller/CompetitionRoundProgressionTest.php",
+        "src/Entity/Competition/CompetitionMatch.php"
       ],
       "forbidden_paths": [
         "private/",
@@ -60204,12 +60205,14 @@
         "Manager-only, Gaming-module-gated POST action with per-competition CSRF token advances confirmed single-elimination winners in stable match order.",
         "A transaction locks and rechecks competition state and current round, rejects incomplete or disputed results, duplicate promotion and unsupported formats.",
         "A final confirmed match completes the competition; other rounds generate exactly one subsequent round with valid participants.",
-        "Admin listing offers the action only for active single-elimination competitions; no public visibility or result-submission behavior changes."
+        "Admin listing offers the action only for active single-elimination competitions; no public visibility or result-submission behavior changes.",
+        "Odd winner counts receive one deterministic confirmed bye fixture so previously permitted even-size fields such as six entrants can finish."
       ],
       "tests": [
         "Functional tests for four-player advancement, final completion, repeat submission and incomplete or disputed rounds.",
         "Negative tests for CSRF, permission, disabled Gaming module and non-single-elimination formats.",
-        "Exact-head Worker CI including PHPStan, full PHPUnit and PostgreSQL 18 migrations."
+        "Exact-head Worker CI including PHPStan, full PHPUnit and PostgreSQL 18 migrations.",
+        "Six-player tournament advances through a bye to a real final without a duplicate or missing entrant."
       ],
       "completion_report": [
         "Exact base/head, PR, changed paths and CI jobs.",
@@ -60231,12 +60234,13 @@
       "proposal_dependency_evidence": [],
       "collision_check": {
         "compared_against": "Live Worker main and pool, all active and locked claims at claim time",
-        "result": "No active/locked claim overlaps the four exact paths; WCP-623 owns separate public competition controllers and tests.",
+        "result": "No active/locked claim overlaps the four exact paths; WCP-623 owns separate public competition controllers and tests. CompetitionMatch.php is additionally reserved for a strictly bounded single-elimination bye transition; no other active or locked claim owns it.",
         "paths": [
           "src/CompetitionProgression/SingleEliminationProgression.php",
           "src/Controller/AdminCompetitionRoundProgressionController.php",
           "templates/admin/competition/index.html.twig",
-          "tests/Controller/CompetitionRoundProgressionTest.php"
+          "tests/Controller/CompetitionRoundProgressionTest.php",
+          "src/Entity/Competition/CompetitionMatch.php"
         ]
       },
       "published_at": "2026-09-30T17:23:35.224Z",
@@ -60260,7 +60264,7 @@
         "claim_branch": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
         "feature_branch": "9ce736b063528c3b3230e4b6b7a55f0513349b9d"
       },
-      "next_action": "Verify exact-head Worker CI after browser identity separation; finish handoff only on green.",
+      "next_action": "Implement bye transition, test six-player progression, then verify exact-head Worker CI.",
       "worker_pr": 419,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/419",
       "ci_run_id": 36753496457,
