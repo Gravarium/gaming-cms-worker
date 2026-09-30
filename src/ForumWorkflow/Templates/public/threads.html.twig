@@ -5,6 +5,11 @@
     <p><a href="{{ path('app_gaming_forum_index') }}">Forum</a></p>
     <p class="eyebrow">Forenraum</p>
     <h1>{{ room.title }}</h1>
+    <form method="get" action="{{ path('app_gaming_forum_room_search', {id: room.id}) }}">
+        <label for="forum-room-search">Themen und Beiträge in diesem Raum suchen</label>
+        <input id="forum-room-search" name="q" minlength="2" maxlength="100" required>
+        <button type="submit">Suchen</button>
+    </form>
     {% for message in app.flashes('forum_error') %}<p role="alert" class="notice notice-error">{{ message }}</p>{% endfor %}
     {% for message in app.flashes('forum_success') %}<p role="status" class="notice notice-success">{{ message }}</p>{% endfor %}
     {% if threads is empty %}
