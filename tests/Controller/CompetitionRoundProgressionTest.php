@@ -13,7 +13,6 @@ use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 
 final class CompetitionRoundProgressionTest extends WebTestCase
 {
@@ -59,7 +58,7 @@ final class CompetitionRoundProgressionTest extends WebTestCase
             $url = '/admin/gaming/competitions/'.$competition->getId().'/advance';
             $client->loginUser($users[0]);
             $client->request('POST', $url, ['_token' => 'invalid']);
-            self::assertResponseRedirects('/login');
+            self::assertResponseStatusCodeSame(403);
 
             $client->loginUser($manager);
             $client->request('POST', $url, ['_token' => 'invalid']);
@@ -82,8 +81,9 @@ final class CompetitionRoundProgressionTest extends WebTestCase
 
         try {
             $client->loginUser($manager);
-            $token = $client->getContainer()->get(CsrfTokenManagerInterface::class)
-                ->getToken('competition-advance-'.$competition->getId())->getValue();
+            $crawler = $client->request('GET', '/admin/gaming/competitions');
+            self::assertResponseIsSuccessful();
+            $token = (string) $crawler->filter('form[action="/admin/gaming/competitions/'.$competition->getId().'/advance"] input[name="_token"]')->attr('value');
             $client->request('POST', '/admin/gaming/competitions/'.$competition->getId().'/advance', ['_token' => $token]);
             self::assertResponseRedirects('/admin/gaming/competitions');
 
