@@ -10,6 +10,7 @@ use App\Repository\Search\SearchDocumentRepository;
 use App\Search\SearchFilters;
 use App\Search\SearchIndexer;
 use App\Search\SearchResult;
+use App\Search\SearchResultsPage;
 use App\Search\SearchService;
 use App\Search\SearchViewerFactory;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -36,21 +37,29 @@ final class SearchController extends AbstractController
     {
         $filters = $this->filters($request);
         $rawQuery = trim($request->query->getString('q'));
+        $requestedPage = $this->requestedPage($request);
         $viewer = $this->viewers->fromUser($this->currentUser());
         $hasQuery = $rawQuery !== '';
         $query = null;
         if ($hasQuery) {
             $query = $this->searchQuery($rawQuery);
-            $results = $this->search->search($query, $filters, $viewer);
+            $resultPage = $this->search->searchPage($query, $filters, $viewer, $requestedPage);
         } else {
-            $results = $this->search->discover($filters, $viewer);
+            $resultPage = $this->search->discoverPage($filters, $viewer, $requestedPage);
         }
 
-        return $this->render('search/index.html.twig', [
+        if ($resultPage->page !== $requestedPage) {
+            return $this->redirectToRoute(
+                'app_search_global',
+                $this->pageParameters($rawQuery, $filters, $resultPage->page),
+            );
+        }
+
+        return $this->render('search/paginated_index.html.twig', [
             'query' => $rawQuery,
             'parsedQuery' => $query,
             'filters' => $filters,
-            'results' => $results,
+            'resultPage' => $resultPage,
             'hasQuery' => $hasQuery,
         ]);
     }
@@ -99,10 +108,38 @@ final class SearchController extends AbstractController
             ? $this->search->discover($filters, $viewer, 50)
             : $this->search->search($this->searchQuery($rawQuery), $filters, $viewer, 50);
 
-        $response = $this->render('search/feed.xml.twig', [
-            'results' => $results,
-            'request' => $request,
-        ]);
+        $baseUrl = $request->getSchemeAndHttpHost();
+        $xml = [
+            '<?xml version="1.0" encoding="UTF-8" ?>',
+            '<rss version="2.0"><channel>',
+            '<title>Discovery</title>',
+            '<link>'.$this->escapeXml($baseUrl.$this->generateUrl('app_search_global')).'</link>',
+            '<description>Sichtbare Discovery-Ergebnisse</description>',
+        ];
+
+        foreach ($results as $result) {
+            $document = $result->document;
+            $route = $document->getRoute();
+            $link = $route !== null
+                ? $baseUrl.$route
+                : $this->generateUrl('app_search_item', ['id' => $document->getId()], UrlGeneratorInterface::ABSOLUTE_URL);
+            $description = mb_substr(
+                strip_tags((string) ($document->getExcerpt() ?: $document->getBody())),
+                0,
+                320,
+            );
+
+            $xml[] = '<item>';
+            $xml[] = '<title>'.$this->escapeXml($document->getTitle()).'</title>';
+            $xml[] = '<link>'.$this->escapeXml($link).'</link>';
+            $xml[] = '<guid isPermaLink="false">'.$this->escapeXml($document->getSourceType().':'.$document->getSourceId()).'</guid>';
+            $xml[] = '<description>'.$this->escapeXml($description).'</description>';
+            $xml[] = '<pubDate>'.$this->escapeXml($document->getSourceUpdatedAt()->format('r')).'</pubDate>';
+            $xml[] = '</item>';
+        }
+
+        $xml[] = '</channel></rss>';
+        $response = new Response(implode("\n", $xml));
         $response->headers->set('Content-Type', 'application/rss+xml; charset=UTF-8');
         $response->headers->set('Cache-Control', 'private, no-store');
 
@@ -138,6 +175,53 @@ final class SearchController extends AbstractController
         ));
 
         return $this->redirectToRoute('app_search_global');
+    }
+
+    private function requestedPage(Request $request): int
+    {
+        $page = $request->query->all()['page'] ?? null;
+        if ($page === null) {
+            return 1;
+        }
+
+        if (is_int($page)) {
+            if ($page < 1 || $page > SearchResultsPage::MAX_REQUESTED_PAGE) {
+                throw new BadRequestHttpException('Die Suchseite ist ungültig.');
+            }
+
+            return $page;
+        }
+
+        if (!is_string($page) || preg_match('/^[1-9][0-9]{0,3}$/D', $page) !== 1) {
+            throw new BadRequestHttpException('Die Suchseite ist ungültig.');
+        }
+
+        $pageNumber = (int) $page;
+        if ($pageNumber > SearchResultsPage::MAX_REQUESTED_PAGE) {
+            throw new BadRequestHttpException('Die Suchseite ist ungültig.');
+        }
+
+        return $pageNumber;
+    }
+
+    /** @return array<string, int|string> */
+    private function pageParameters(string $query, SearchFilters $filters, int $page): array
+    {
+        $parameters = [];
+        if ($query !== '') {
+            $parameters['q'] = $query;
+        }
+        if ($filters->moduleKey !== null) {
+            $parameters['module'] = $filters->moduleKey;
+        }
+        if ($filters->documentType !== null) {
+            $parameters['type'] = $filters->documentType;
+        }
+        if ($page > 1) {
+            $parameters['page'] = $page;
+        }
+
+        return $parameters;
     }
 
     private function filters(Request $request): SearchFilters
@@ -176,6 +260,14 @@ final class SearchController extends AbstractController
         }
 
         return mb_substr(strip_tags($document->getBody()), 0, 320);
+    }
+
+    private function escapeXml(string $value): string
+    {
+        $escaped = htmlspecialchars($value, ENT_QUOTES | ENT_SUBSTITUTE | ENT_XML1, 'UTF-8');
+        $validXml = preg_replace('/[\\x00-\\x08\\x0B\\x0C\\x0E-\\x1F\\x{FFFE}\\x{FFFF}]/u', '', $escaped);
+
+        return $validXml ?? '';
     }
 
     private function documentUrl(Request $request, SearchResult $result): string
