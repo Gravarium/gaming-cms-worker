@@ -59,6 +59,22 @@ final class PublicGameReleaseCalendarFeedTest extends WebTestCase
                 $now->modify('+3 days'),
                 'delayed',
             );
+            $nearWindowStart = $this->createRelease(
+                $entityManager,
+                'Soon UTC Window Canary '.$suffix,
+                'feed-soon-'.$suffix,
+                'EU',
+                $now->modify('+6 hours'),
+                'announced',
+            );
+            $this->createRelease(
+                $entityManager,
+                'Beyond UTC Window Canary '.$suffix,
+                'feed-utc-boundary-'.$suffix,
+                'EU',
+                $now->modify('+18 months')->modify('+6 hours'),
+                'announced',
+            );
             $this->createRelease($entityManager, 'Cancelled Canary '.$suffix, 'feed-cancelled-'.$suffix, 'EU', $now->modify('+4 days'), 'cancelled');
             $this->createRelease($entityManager, 'Released Canary '.$suffix, 'feed-released-'.$suffix, 'EU', $now->modify('+4 days'), 'released');
             $this->createRelease($entityManager, 'Past Canary '.$suffix, 'feed-past-'.$suffix, 'EU', $now->modify('-2 days'), 'announced');
@@ -66,7 +82,13 @@ final class PublicGameReleaseCalendarFeedTest extends WebTestCase
             $this->createRelease($entityManager, 'Disabled Entry Canary '.$suffix, 'feed-disabled-entry-'.$suffix, 'EU', $now->modify('+4 days'), 'announced', true, false);
             $this->createRelease($entityManager, 'Outside Window Canary '.$suffix, 'feed-outside-'.$suffix, 'EU', $now->modify('+20 months'), 'announced');
 
-            $client->request('GET', '/games/releases/calendar.ics');
+            $previousTimezone = date_default_timezone_get();
+            self::assertTrue(date_default_timezone_set('Pacific/Kiritimati'));
+            try {
+                $client->request('GET', '/games/releases/calendar.ics');
+            } finally {
+                date_default_timezone_set($previousTimezone);
+            }
 
             self::assertResponseIsSuccessful();
             self::assertSame('text/calendar; charset=utf-8', $client->getResponse()->headers->get('Content-Type'));
@@ -79,6 +101,7 @@ final class PublicGameReleaseCalendarFeedTest extends WebTestCase
             $body = $this->responseContent($client);
             self::assertStringContainsString('UID:game-release-'.$visible->getId().'@gaming-cms', $body);
             self::assertStringContainsString('UID:game-release-'.$delayed->getId().'@gaming-cms', $body);
+            self::assertStringContainsString('UID:game-release-'.$nearWindowStart->getId().'@gaming-cms', $body);
             self::assertStringContainsString('SUMMARY:Finale\, R&D\;\nBEGIN:VEVENT', $body);
             self::assertStringContainsString('DTSTART:'.$visible->getReleaseAt()->setTimezone(new \DateTimeZone('UTC'))->format('Ymd\\THis\\Z'), $body);
             self::assertStringContainsString('\\nX-ATTACK: injected', $body);
@@ -88,7 +111,8 @@ final class PublicGameReleaseCalendarFeedTest extends WebTestCase
             self::assertStringNotContainsString('Disabled Game Canary '.$suffix, $body);
             self::assertStringNotContainsString('Disabled Entry Canary '.$suffix, $body);
             self::assertStringNotContainsString('Outside Window Canary '.$suffix, $body);
-            self::assertSame(2, substr_count($body, "\r\nBEGIN:VEVENT\r\n"));
+            self::assertStringNotContainsString('Beyond UTC Window Canary '.$suffix, $body);
+            self::assertSame(3, substr_count($body, "\r\nBEGIN:VEVENT\r\n"));
 
             foreach (explode("\r\n", $body) as $line) {
                 if ($line !== '') {
