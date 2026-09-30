@@ -11,7 +11,7 @@
   "baseline_branch": "main",
   "base_sha": "9e083c63e7d888af36f93a23eb924c89fad2b971",
   "published_at": "2026-09-30T16:08:15.000Z",
-  "summary": "WCP-608 through WCP-619 remain complete Worker proposals awaiting Trusted review; WCP-620 and WCP-621 are the only in-progress Worker proposals. No Trusted integration or deployment is implied.",
+  "summary": "WCP-620 and WCP-622 are in progress; WCP-608 through WCP-621 are complete or awaiting Trusted review according to their recorded task states. No Trusted integration or deployment is implied.",
   "rules": {
     "choose": "Resume the current chat's unfinished claimed branch first. Otherwise atomically claim an eligible published task. If no published task is eligible, independently derive and publish a bounded worker-only CMS proposal from approved product goals and observed code gaps; do not ask the owner for the next FCP number.",
     "atomic_reservation": "Create the exact claim_branch and suggested feature branch from that task's published proposal_base_sha. If the claim already exists, treat it as a hard lock; the owning continuation resumes it and every other AI skips it.",
@@ -59850,6 +59850,115 @@
         "postgres_migration_result": "success",
         "reviews": "No submitted reviews or review comments as of completion."
       }
+    },
+    {
+      "priority": 622,
+      "package_id": "WCP-622",
+      "title": "Recognize media blocks when assetId is the final JSON field",
+      "risk": "low_read_only",
+      "execution_state": "worker_in_progress",
+      "claim_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-622-media-usage-block-match-g1",
+      "suggested_branch": "feature/wcp-622-media-usage-block-match-g1",
+      "base_branch": "main",
+      "base_sha": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "objective": "Fix the bounded media-usage browser's editor-document prefilter so a valid media block is found when its assetId property is last in the JSON object. The current search requires a comma after the ID; ContentBlockDocument accepts and decodes the same block when it ends with a closing brace. Preserve the exact decoded-block check, existing candidate/result caps, access controls, and read-only behavior.",
+      "allowed_paths": [
+        "src/Media/MediaAssetUsageBrowser.php",
+        "tests/Controller/AdminMediaUsageBrowserTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "CONTINUOUS-WORKER.md",
+        "CONTINUOUS-WORK-POOL.json",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "src/Entity/MediaAsset.php",
+        "src/Repository/MediaAssetRepository.php",
+        "src/Controller/AdminStorageController.php",
+        "src/Controller/AdminStorageLibraryController.php",
+        "src/Controller/AdminMediaAccessibilityController.php",
+        "src/Service/MediaStorageManager.php",
+        "src/Form/MediaAssetUploadType.php",
+        "src/Form/MediaAssetMetadataType.php",
+        "src/Form/MediaAssetReplacementType.php",
+        "templates/",
+        "config/"
+      ],
+      "deliverables": [
+        "A persisted valid media block with assetId as its final JSON field appears in the existing read-only media usage page.",
+        "Exact media block decoding still filters false candidates; the existing 200 candidate and 50 result bounds remain enforced.",
+        "No asset metadata, storage path, URL, upload, replacement, deletion, delivery, permission, or module-gate behavior changes."
+      ],
+      "tests": [
+        "Regression integration test writes an editor document with reordered media-block fields and confirms the usage is found.",
+        "Existing exact-reference, false-match, escaping, permission, module-gate, POST rejection, and 50-result/candidate-bound tests remain green.",
+        "Full exact-head Worker CI passes PHPStan, application tests, and PostgreSQL 18 migration validation without weakening any check."
+      ],
+      "completion_report": [
+        "Exact Worker main/base SHA, final Worker HEAD, Worker PR and complete changed path list.",
+        "Regression evidence for final-field assetId recognition and unchanged exact decoded-block filtering.",
+        "Evidence that existing candidate/result bounds and authorization/module gates remain intact.",
+        "No schema/migration or upload, replacement, deletion, or delivery changes.",
+        "Exact-head Worker CI run and both job results; no Trusted integration or deployment."
+      ],
+      "immutable_constraints": [
+        "read-only-media-usage-discovery",
+        "assetId-order-independent-prefilter",
+        "retain-decoded-block-validation",
+        "retain-candidate-and-result-bounds",
+        "retain-storage-and-content-permission-gates",
+        "no-storage-url-or-path-disclosure",
+        "no-upload-replacement-deletion-or-delivery-changes",
+        "no-schema-or-migration-change",
+        "no-security-test-phpstan-CI-or-upload-protection-weakening",
+        "worker-output-is-untrusted-no-Trusted-merge-or-deployment"
+      ],
+      "proposal_kind": "worker_only",
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "proposal_dependency_evidence": [],
+      "collision_check": {
+        "compared_against": "Worker main 1d03d4947f15dc3e0fe4b79a990bd45468c761e4; Worker pool commit ead2d32b6da86a62c4bdb0cdf2857978036b6ad3; all active and locked Worker claims, including WCP-620 and completed WCP-621.",
+        "result": "No active or locked Worker claim overlaps either exact allowed path. WCP-621 owns the separate MediaAccessibility report files; WCP-620 owns game-guide withdrawal files. No schema, migration, upload, replacement, deletion, delivery, or template path is included.",
+        "paths": [
+          "src/Media/MediaAssetUsageBrowser.php",
+          "tests/Controller/AdminMediaUsageBrowserTest.php"
+        ]
+      },
+      "published_at": "2026-09-30T16:57:57Z",
+      "claimed_on": "2026-09-30T16:57:57Z",
+      "lease_expires_at": "2026-09-30T23:57:57.000Z",
+      "claim_generation": 1,
+      "active_base_branch": "main",
+      "active_base_sha": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "active_head": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "resume_branch": "feature/wcp-622-media-usage-block-match-g1",
+      "last_observed_head": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "last_checkpoint_at": "2026-09-30T16:57:57Z",
+      "checkpoint_paths": [
+        "src/Media/MediaAssetUsageBrowser.php",
+        "tests/Controller/AdminMediaUsageBrowserTest.php"
+      ],
+      "last_verified_push_at": null,
+      "branch_heads": {
+        "claim_branch": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+        "feature_branch": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4"
+      },
+      "next_action": "Add a regression test that stores a valid media block with assetId as its last JSON property; update the prefilter to recognize the closing-brace form while preserving decoded exact-match validation and all bounds."
     }
   ],
   "recovery_queue": [],
