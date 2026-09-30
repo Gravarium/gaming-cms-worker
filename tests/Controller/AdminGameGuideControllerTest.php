@@ -589,13 +589,21 @@ final class AdminGameGuideControllerTest extends WebTestCase
             $token = $values['_token'] ?? null;
             self::assertIsString($token);
 
+            $client->getCookieJar()->clear();
             $client->loginUser($reader);
             $client->request('POST', $action, ['_token' => $token, 'reason' => 'Unauthorized withdrawal']);
             self::assertResponseStatusCodeSame(403);
             self::assertSame('published', $connection->fetchOne('SELECT review_status FROM game_guide WHERE id = :id', ['id' => $id]));
             self::assertSame(1, (int) $connection->fetchOne('SELECT COUNT(*) FROM game_guide_review_audit WHERE guide_id = :id', ['id' => $id]));
 
+            $client->getCookieJar()->clear();
             $client->loginUser($editor);
+            $editorCrawler = $client->request('GET', '/admin/gaming/guides');
+            $editorForm = $editorCrawler->filter('form[action="'.$action.'"]')->form();
+            $editorValues = $editorForm->getValues();
+            $token = $editorValues['_token'] ?? null;
+            self::assertIsString($token);
+
             $this->setModules($client, false);
             $client->request('POST', $action, ['_token' => $token, 'reason' => 'Gaming module disabled']);
             self::assertResponseStatusCodeSame(404);
