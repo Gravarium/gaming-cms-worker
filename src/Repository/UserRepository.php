@@ -50,7 +50,7 @@ final class UserRepository extends ServiceEntityRepository
             $builder->andWhere('LOWER(user.email) LIKE :query OR LOWER(user.displayName) LIKE :query')
                 ->setParameter('query', '%'.mb_strtolower($query).'%');
         }
-        if ($state === 'active') { $builder->andWhere('user.isActive = true')->andWhere('user.lockedUntil IS NULL OR user.lockedUntil <= :now')->setParameter('now', new \DateTimeImmutable()); }
+        if ($state === 'active') { $builder->andWhere('user.isActive = true')->andWhere('(user.lockedUntil IS NULL OR user.lockedUntil <= :now)')->setParameter('now', new \DateTimeImmutable()); }
         if ($state === 'locked') { $builder->andWhere('user.isActive = false OR user.lockedUntil > :now')->setParameter('now', new \DateTimeImmutable()); }
         if ($state === 'unverified') { $builder->andWhere('user.emailVerifiedAt IS NULL'); }
 
