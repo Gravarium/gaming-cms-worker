@@ -43,6 +43,7 @@ final class AdminCompetitionSeasonTest extends WebTestCase
             self::assertResponseStatusCodeSame(403);
 
             $client->restart();
+            $em = $client->getContainer()->get(EntityManagerInterface::class);
             $client->loginUser($manager);
             $client->request('GET', '/admin/gaming/competition-seasons');
             self::assertResponseIsSuccessful();
@@ -77,16 +78,27 @@ final class AdminCompetitionSeasonTest extends WebTestCase
             self::assertInstanceOf(CompetitionSeason::class, $season);
             self::assertSame($game->getId(), $season->getGame()?->getId());
 
+            $module = $em->find(CmsModuleState::class, 'gaming');
+            self::assertInstanceOf(CmsModuleState::class, $module);
             $module->setEnabled(false);
             $em->flush();
             $client->request('GET', '/admin/gaming/competition-seasons');
             self::assertResponseStatusCodeSame(404);
         } finally {
+            $em = $client->getContainer()->get(EntityManagerInterface::class);
             $season = $em->getRepository(CompetitionSeason::class)->findOneBy(['name' => 'Spring '.$suffix]);
             if ($season instanceof CompetitionSeason) { $em->remove($season); }
-            foreach ([$game, $manager, $outsider] as $fixture) { $em->remove($fixture); }
-            if ($previous === null) { $em->remove($module); }
-            else { $module->setEnabled($previous); }
+            $managedGame = $em->find(Game::class, $game->getId());
+            if ($managedGame instanceof Game) { $em->remove($managedGame); }
+            foreach ([$manager, $outsider] as $user) {
+                $managedUser = $em->find(User::class, $user->getId());
+                if ($managedUser instanceof User) { $em->remove($managedUser); }
+            }
+            $module = $em->find(CmsModuleState::class, 'gaming');
+            if ($module instanceof CmsModuleState) {
+                if ($previous === null) { $em->remove($module); }
+                else { $module->setEnabled($previous); }
+            }
             $em->flush();
         }
     }
