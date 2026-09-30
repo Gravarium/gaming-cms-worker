@@ -10,8 +10,8 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "9e083c63e7d888af36f93a23eb924c89fad2b971",
-  "published_at": "2026-09-30T07:05:11Z",
-  "summary": "WCP-511 awaits Trusted review; WCP-608 is reclaimed as generation 2 on Worker PR #403 at exact HEAD bc62a45dfa1ca3289ad3f55f1830214eb71cbbb1 after its prior seven-hour lease expired. Exact-head Worker CI #1069 is green. Trusted main remains the only integration and deployment source.",
+  "published_at": "2026-09-30T07:06:00Z",
+  "summary": "WCP-511 and WCP-608 are complete awaiting Trusted review (PRs #404 and #403; exact-head CI green). WCP-608 was reclaimed as generation 2 and remains locked until Trusted resolution. Trusted main remains the only integration and deployment source.",
   "rules": {
     "choose": "Resume the current chat's unfinished claimed branch first. Otherwise atomically claim an eligible published task. If no published task is eligible, independently derive and publish a bounded worker-only CMS proposal from approved product goals and observed code gaps; do not ask the owner for the next FCP number.",
     "atomic_reservation": "Create the exact claim_branch and suggested feature branch from that task's published proposal_base_sha. If the claim already exists, treat it as a hard lock; the owning continuation resumes it and every other AI skips it.",
@@ -57663,7 +57663,7 @@
       "package_id": "WCP-608",
       "title": "Prioritize editorial follow-up in a unified content work queue",
       "risk": "medium",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -57755,7 +57755,7 @@
       },
       "published_at": "2026-09-29T19:29:00Z",
       "claimed_on": "2026-09-30T07:05:11Z",
-      "claim_state": "active",
+      "claim_state": "locked_until_trusted_resolution",
       "active_base_branch": "main",
       "active_base_sha": "1bb9f4762ec113e77856a7d3202af3b53dfb1d18",
       "active_head": "bc62a45dfa1ca3289ad3f55f1830214eb71cbbb1",
@@ -57765,7 +57765,7 @@
         "feature_branch": "bc62a45dfa1ca3289ad3f55f1830214eb71cbbb1"
       },
       "last_observed_head": "bc62a45dfa1ca3289ad3f55f1830214eb71cbbb1",
-      "last_checkpoint_at": "2026-09-30T07:05:11Z",
+      "last_checkpoint_at": "2026-09-30T07:06:00Z",
       "checkpoint_paths": [
         "src/ContentOperations/EditorialWorkQueue.php",
         "src/Controller/AdminContentOperationsController.php",
@@ -57774,9 +57774,8 @@
         "tests/ContentOperations/EditorialWorkQueueTest.php",
         "tests/Controller/AdminContentOperationsControllerTest.php"
       ],
-      "last_verified_push_at": null,
-      "next_action": "Generation 2 owns the resumed feature branch at exact HEAD bc62a45dfa1ca3289ad3f55f1830214eb71cbbb1. Exact-head CI #1069 is green; update PR #403 to its completed handoff and lock it for Trusted review.",
-      "lease_expires_at": "2026-09-30T14:05:11.000Z",
+      "last_verified_push_at": "2026-09-29T22:00:48Z",
+      "next_action": "Worker PR #403 is ready for Trusted review at exact HEAD bc62a45dfa1ca3289ad3f55f1830214eb71cbbb1 with exact-head CI #1069 green. Keep this claim locked until Trusted resolution; do not merge or deploy.",
       "claim_generation": 2,
       "lease_expired_at": "2026-09-30T05:00:48Z",
       "previous_claim": {
@@ -57791,8 +57790,8 @@
       },
       "worker_pr": 403,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/403",
-      "pr_state": "open_draft",
-      "worker_pr_state": "draft",
+      "pr_state": "open_ready_for_review",
+      "worker_pr_state": "ready_for_review",
       "worker_pr_base_branch": "main",
       "worker_pr_base_sha": "1bb9f4762ec113e77856a7d3202af3b53dfb1d18",
       "worker_pr_changed_paths": [
@@ -57811,7 +57810,30 @@
       "php_symfony_job_id": 109639865715,
       "php_symfony_result": "success",
       "postgres_migration_job_id": 109639866211,
-      "postgres_migration_result": "success"
+      "postgres_migration_result": "success",
+      "completed_on": "2026-09-30T07:06:00Z",
+      "final_changed_paths": [
+        "src/ContentOperations/EditorialWorkQueue.php",
+        "src/Controller/AdminContentOperationsController.php",
+        "templates/admin/content/history.html.twig",
+        "templates/admin/content_operations/index.html.twig",
+        "tests/ContentOperations/EditorialWorkQueueTest.php",
+        "tests/Controller/AdminContentOperationsControllerTest.php"
+      ],
+      "test_evidence": {
+        "exact_head_ci_run_id": 36636970424,
+        "exact_head_ci_result": "success",
+        "php_symfony_job_id": 109639865715,
+        "php_symfony_result": "success",
+        "postgres_migration_job_id": 109639866211,
+        "postgres_migration_result": "success",
+        "authorization": "CMS_CONTENT_MANAGE; anonymous and insufficient permissions denied",
+        "module_boundary": "Content module disabled returns 404",
+        "read_only": "No content, revision, or audit mutation",
+        "privacy": "private, no-store, noindex response headers",
+        "validation": "GET-only; malformed and oversized scalar filters rejected",
+        "queue_behavior": "six work types, due/upcoming boundaries, counts, filters, deterministic bounded pagination, direct edit links"
+      }
     },
     {
       "priority": 609,
