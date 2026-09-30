@@ -1,0 +1,20 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ season.name }} · Competition-Saison{% endblock %}
+
+{% block body %}
+<main class="container">
+    <a href="{{ path('app_public_competition_seasons') }}">Alle Saisons</a>
+    <h1>{{ season.name }}</h1>
+    <p>{{ season.game.name }}</p>
+    {% for competition in competitions %}
+        <article>
+            <h2><a href="{{ path('app_competition_show', {id: competition.id}) }}">{{ competition.name }}</a></h2>
+            <p>{{ competition.format }} · {{ competition.mode }}</p>
+            <time datetime="{{ competition.startsAt|date('c') }}">{{ competition.startsAt|date('d.m.Y H:i') }}</time>
+        </article>
+    {% endfor %}
+    {% if page > 1 %}<a href="{{ path('app_public_competition_season_show', {id: season.id, page: page - 1}) }}">Zurück</a>{% endif %}
+    {% if page * pageSize < total %}<a href="{{ path('app_public_competition_season_show', {id: season.id, page: page + 1}) }}">Weiter</a>{% endif %}
+</main>
+{% endblock %}

@@ -1,0 +1,19 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Competition-Saisons{% endblock %}
+
+{% block body %}
+<main class="container">
+    <h1>Competition-Saisons</h1>
+    {% for row in seasons %}
+        <article>
+            <h2><a href="{{ path('app_public_competition_season_show', {id: row.season.id}) }}">{{ row.season.name }}</a></h2>
+            <p>{{ row.season.game.name }} · {{ row.count }} öffentliche Competitions</p>
+        </article>
+    {% else %}
+        <p>Noch keine öffentlichen Saisons.</p>
+    {% endfor %}
+    {% if page > 1 %}<a href="{{ path('app_public_competition_seasons', {page: page - 1}) }}">Zurück</a>{% endif %}
+    {% if page * pageSize < total %}<a href="{{ path('app_public_competition_seasons', {page: page + 1}) }}">Weiter</a>{% endif %}
+</main>
+{% endblock %}
