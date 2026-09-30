@@ -10,8 +10,8 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "9e083c63e7d888af36f93a23eb924c89fad2b971",
-  "published_at": "2026-09-30T08:00:53.681Z",
-  "summary": "WCP-511, WCP-608, WCP-609, WCP-610, WCP-611 and WCP-612 are complete Worker proposals awaiting Trusted review; their claims remain locked. WCP-613 is active from Worker main for the public gaming-guide RSS feed. Trusted main remains the only integration and deployment source.",
+  "published_at": "2026-09-30T08:07:17.707Z",
+  "summary": "WCP-511, WCP-608, WCP-609, WCP-610, WCP-611 and WCP-612 are complete Worker proposals awaiting Trusted review; their claims remain locked. WCP-613 is active on feature/wcp-613-public-game-guide-rss-feed-g1 at 39fb45d5ecc330d26055c812b7ef0d365d2dde3a. Trusted main remains the only integration and deployment source.",
   "rules": {
     "choose": "Resume the current chat's unfinished claimed branch first. Otherwise atomically claim an eligible published task. If no published task is eligible, independently derive and publish a bounded worker-only CMS proposal from approved product goals and observed code gaps; do not ask the owner for the next FCP number.",
     "atomic_reservation": "Create the exact claim_branch and suggested feature branch from that task's published proposal_base_sha. If the claim already exists, treat it as a hard lock; the owning continuation resumes it and every other AI skips it.",
@@ -58436,7 +58436,7 @@
         "postgres_migration_result": "success"
       }
     },
-    {
+        {
       "priority": 613,
       "package_id": "WCP-613",
       "title": "Publish a public RSS feed for gaming guides",
@@ -58532,21 +58532,26 @@
       },
       "published_at": "2026-09-30T08:00:53.681Z",
       "claimed_on": "2026-09-30T08:00:53.681Z",
-      "lease_expires_at": "2026-09-30T15:00:53.681Z",
+      "lease_expires_at": "2026-09-30T15:07:17.707Z",
       "claim_generation": 1,
       "active_base_branch": "main",
       "active_base_sha": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
-      "active_head": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "active_head": "39fb45d5ecc330d26055c812b7ef0d365d2dde3a",
       "resume_branch": "feature/wcp-613-public-game-guide-rss-feed-g1",
-      "last_observed_head": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
-      "last_checkpoint_at": "2026-09-30T08:00:53.681Z",
-      "checkpoint_paths": [],
-      "last_verified_push_at": null,
+      "last_observed_head": "39fb45d5ecc330d26055c812b7ef0d365d2dde3a",
+      "last_checkpoint_at": "2026-09-30T08:07:17.707Z",
+      "checkpoint_paths": [
+        "src/Controller/PublicGameGuideFeedController.php",
+        "src/GameGuide/Templates/public/feed.xml.twig",
+        "src/GameGuide/Templates/public/index.html.twig",
+        "tests/Controller/PublicGameGuideFeedControllerTest.php"
+      ],
+      "last_verified_push_at": "2026-09-30T08:07:17.707Z",
       "branch_heads": {
-        "claim_branch": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
-        "feature_branch": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4"
+        "claim_branch": "39fb45d5ecc330d26055c812b7ef0d365d2dde3a",
+        "feature_branch": "39fb45d5ecc330d26055c812b7ef0d365d2dde3a"
       },
-      "next_action": "Implement the public RSS route, module-local feed template, directory link and synthetic visibility/XML tests within the four reserved paths. Push a coherent checkpoint, open a draft Worker PR and run focused PHPUnit/PHPStan plus full exact-head Worker CI including PostgreSQL 18 migration validation. Keep green output locked for Trusted review; do not merge or deploy."
+      "next_action": "Open a draft Worker PR against main and validate the exact-head CI; inspect any failures and repair only within the four reserved paths. Keep the proposal locked for Trusted review and do not merge or deploy."
     }
   ],
   "recovery_queue": [],
