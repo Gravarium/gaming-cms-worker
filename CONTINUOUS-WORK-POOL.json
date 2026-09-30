@@ -10,8 +10,8 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "9e083c63e7d888af36f93a23eb924c89fad2b971",
-  "published_at": "2026-09-30T08:17:23.376Z",
-  "summary": "WCP-511, WCP-608, WCP-609, WCP-610, WCP-611 and WCP-612 are complete Worker proposals awaiting Trusted review; their claims remain locked. WCP-613 is complete in ready PR #409 at 39fb45d5ecc330d26055c812b7ef0d365d2dde3a with exact-head CI green and its claim locked for Trusted resolution. Trusted main remains the only integration and deployment source.",
+  "published_at": "2026-09-30T08:27:28.711Z",
+  "summary": "WCP-511, WCP-608, WCP-609, WCP-610, WCP-611, WCP-612 and WCP-613 are complete Worker proposals awaiting Trusted review; their claims remain locked. WCP-614 is active on feature/wcp-614-public-game-catalogue-pagination-g1 from Worker main for bounded public Game Catalogue pagination. Trusted main remains the only integration and deployment source.",
   "rules": {
     "choose": "Resume the current chat's unfinished claimed branch first. Otherwise atomically claim an eligible published task. If no published task is eligible, independently derive and publish a bounded worker-only CMS proposal from approved product goals and observed code gaps; do not ask the owner for the next FCP number.",
     "atomic_reservation": "Create the exact claim_branch and suggested feature branch from that task's published proposal_base_sha. If the claim already exists, treat it as a hard lock; the owning continuation resumes it and every other AI skips it.",
@@ -58598,6 +58598,114 @@
         "postgres_migration_job_id": 109797583331,
         "postgres_migration_result": "success"
       }
+    },
+    {
+      "priority": 614,
+      "package_id": "WCP-614",
+      "title": "Paginate the public Game Catalogue",
+      "risk": "medium",
+      "execution_state": "worker_in_progress",
+      "claim_state": "active",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-614-public-game-catalogue-pagination-g1",
+      "suggested_branch": "feature/wcp-614-public-game-catalogue-pagination-g1",
+      "base_branch": "main",
+      "base_sha": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "objective": "The public /games catalogue currently loads every enabled game entry into one response. Add bounded 20-entry pagination with stable name/id ordering while preserving genre and platform filters. Keep enabled-entry and enabled-game visibility checks in both count and page queries. Render through a module-local Twig path so the active Trusted root-template claim remains untouched.",
+      "allowed_paths": [
+        "src/Controller/GameCatalogue/GameCatalogueController.php",
+        "src/Repository/GameCatalogue/GameCatalogueEntryRepository.php",
+        "config/packages/game_catalogue_pagination.yaml",
+        "src/GameCatalogue/Templates/public/index.html.twig",
+        "tests/Controller/GameCataloguePaginationTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "templates/",
+        "config/services.yaml",
+        "src/Controller/PublicGameCatalogueSearchController.php",
+        "src/Repository/PublicGameCatalogueSearchRepository.php",
+        "src/Entity/GameCatalogue/",
+        "src/Entity/Game.php",
+        "src/Form/",
+        "src/Controller/AdminGameCatalogue/"
+      ],
+      "deliverables": [
+        "Public /games responses contain at most 20 visible catalogue entries per page, ordered by game name and entry ID.",
+        "Counts and page results apply the same enabled-entry, enabled-game, genre and platform filters; joined genres/releases do not duplicate or skip entries across page boundaries.",
+        "Pagination links preserve selected filters; page input is bounded and malformed values are rejected.",
+        "The Gaming module gate and current public visibility behavior remain in force.",
+        "No migrations or changes to the locked game-search screen."
+      ],
+      "tests": [
+        "Focused PHPUnit verifies stable first/next-page results, exact page bounds, filter retention and filtered totals.",
+        "Synthetic fixtures verify disabled games/entries are excluded and multi-genre entries do not shift page boundaries.",
+        "Invalid, out-of-range and disabled-module requests are covered.",
+        "Full exact-head Worker CI including PHPStan and PostgreSQL 18 migration validation passes."
+      ],
+      "completion_report": [
+        "Exact Worker main/base SHA, final Worker HEAD SHA, Worker PR and complete changed paths.",
+        "Pagination, filter, order, hidden-entry and module-gate test evidence.",
+        "No schema/migration changes and no Trusted integration or deployment.",
+        "Exact-head Worker CI run and job results; unresolved risks and assumptions."
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-Trusted-review-and-exact-head-CI",
+        "public-game-catalogue-shows-only-enabled-entries-for-enabled-games",
+        "count-and-page-query-visibility-filters-match",
+        "pagination-is-bounded-and-stable",
+        "no-schema-or-migration-change",
+        "no-security-test-phpstan-ci-validation-or-protection-weakening",
+        "red-CI-stops-integration",
+        "worker-code-is-untrusted-no-direct-Trusted-integration-or-deployment",
+        "no-private-runtime-or-sensitive-data"
+      ],
+      "proposal_kind": "worker_only",
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "proposal_dependency_evidence": [],
+      "collision_check": {
+        "compared_against": "Worker main 1d03d4947f15dc3e0fe4b79a990bd45468c761e4; continuous/work-pool-v4 blob f68e690758449eb18fd0c44fd53b05955d175cc0; Trusted main 8852e024d89611291fc83214c1f0c1d4a758c9d8; Trusted queue blob 4f5c73ba69758d9780e5bbbab92abda360fb1e62; all active and locked Worker claims and Trusted FCP claims.",
+        "result": "No active/locked Worker or active Trusted path overlap. The active Trusted FCP-049 root templates/ claim is avoided by using a new src/GameCatalogue/Templates path and a separate config/packages file; the locked WCP-595 game-search template/repository/controller paths are distinct. All five prepared FCP tasks still have at least one dependency that is neither Trusted-integrated nor backed by a green exact-head Worker PR.",
+        "paths": [
+          "src/Controller/GameCatalogue/GameCatalogueController.php",
+          "src/Repository/GameCatalogue/GameCatalogueEntryRepository.php",
+          "config/packages/game_catalogue_pagination.yaml",
+          "src/GameCatalogue/Templates/public/index.html.twig",
+          "tests/Controller/GameCataloguePaginationTest.php"
+        ]
+      },
+      "published_at": "2026-09-30T08:27:28.711Z",
+      "claimed_on": "2026-09-30T08:27:28.711Z",
+      "lease_expires_at": "2026-09-30T15:27:28.711Z",
+      "claim_generation": 1,
+      "active_base_branch": "main",
+      "active_base_sha": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "active_head": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "resume_branch": "feature/wcp-614-public-game-catalogue-pagination-g1",
+      "last_observed_head": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "last_checkpoint_at": "2026-09-30T08:27:28.711Z",
+      "checkpoint_paths": [],
+      "last_verified_push_at": null,
+      "branch_heads": {
+        "claim_branch": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+        "feature_branch": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4"
+      },
+      "next_action": "Implement count and page queries, strict page validation, preserved filters and module-local pagination view within the five reserved paths. Push a coherent checkpoint, open a draft Worker PR and run exact-head CI. Keep all output untrusted; do not merge to Trusted or deploy."
     }
   ],
   "recovery_queue": [],
