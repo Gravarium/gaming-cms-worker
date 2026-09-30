@@ -49,7 +49,7 @@ final class AdminCompetitionParticipantController extends AbstractController
         }
         $this->perform(fn () => $this->management->assignSeed((int) $competition->getId(), (int) $participant->getId(), (int) $raw));
 
-        return $this->redirect($competition);
+        return $this->redirectToBoard($competition);
     }
 
     #[Route('/{participant}/withdraw', name: 'app_admin_competition_participant_withdraw', requirements: ['participant' => '\\d+'], methods: ['POST'])]
@@ -58,7 +58,7 @@ final class AdminCompetitionParticipantController extends AbstractController
         $this->assertMutation($competition, $participant, $request, 'withdraw');
         $this->perform(fn () => $this->management->withdraw((int) $competition->getId(), (int) $participant->getId(), $this->rawReason($request)));
 
-        return $this->redirect($competition);
+        return $this->redirectToBoard($competition);
     }
 
     #[Route('/{participant}/disqualify', name: 'app_admin_competition_participant_disqualify', requirements: ['participant' => '\\d+'], methods: ['POST'])]
@@ -67,7 +67,7 @@ final class AdminCompetitionParticipantController extends AbstractController
         $this->assertMutation($competition, $participant, $request, 'disqualify');
         $this->perform(fn () => $this->management->disqualify((int) $competition->getId(), (int) $participant->getId(), $this->rawReason($request)));
 
-        return $this->redirect($competition);
+        return $this->redirectToBoard($competition);
     }
 
     private function assertMutation(Competition $competition, CompetitionParticipant $participant, Request $request, string $action): void
@@ -108,7 +108,7 @@ final class AdminCompetitionParticipantController extends AbstractController
         }
     }
 
-    private function redirect(Competition $competition): Response
+    private function redirectToBoard(Competition $competition): Response
     {
         return $this->redirectToRoute('app_admin_competition_participants', ['competition' => $competition->getId()]);
     }
