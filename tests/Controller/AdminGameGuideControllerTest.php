@@ -516,6 +516,32 @@ final class AdminGameGuideControllerTest extends WebTestCase
                 'SELECT COUNT(*) FROM game_guide_review_audit WHERE guide_id = :id',
                 ['id' => $id],
             ));
+
+            $client->getCookieJar()->clear();
+            $client->loginUser($author);
+            $crawler = $client->request('GET', '/admin/gaming/guides/'.$id.'/edit');
+            self::assertResponseIsSuccessful();
+            $editForm = $crawler->selectButton('Entwurf speichern')->form(['title' => 'Withdrawn guide corrected']);
+            $client->submit($editForm);
+            self::assertResponseRedirects('/admin/gaming/guides');
+            self::assertSame('Withdrawn guide corrected', $connection->fetchOne(
+                'SELECT title FROM game_guide WHERE id = :id AND author_id = :author AND review_status = :status',
+                ['id' => $id, 'author' => $authorId, 'status' => 'draft'],
+            ));
+            self::assertSame(1, (int) $connection->fetchOne(
+                'SELECT COUNT(*) FROM game_guide_component WHERE guide_id = :id AND component_key = :key',
+                ['id' => $id, 'key' => 'arcane-barrage'],
+            ));
+
+            $crawler = $client->request('GET', '/admin/gaming/guides');
+            $submitForm = $crawler->filter('form[action="/admin/gaming/guides/'.$id.'/submit"]')->form();
+            $client->submit($submitForm);
+            self::assertResponseRedirects('/admin/gaming/guides');
+            self::assertSame('review', $connection->fetchOne('SELECT review_status FROM game_guide WHERE id = :id', ['id' => $id]));
+            self::assertSame(1, (int) $connection->fetchOne(
+                "SELECT COUNT(*) FROM game_guide_review_audit WHERE guide_id = :id AND status = 'review'",
+                ['id' => $id],
+            ));
         } finally {
             $this->cleanup($client, $guideIds, [$authorId, $publisherId, $editorId], [$gameId]);
         }
@@ -530,12 +556,15 @@ final class AdminGameGuideControllerTest extends WebTestCase
         $game = $this->game($em);
         $author = $this->user($em, CmsPermission::GAMING, 'withdraw-validation-author');
         $editor = $this->user($em, CmsPermission::GAMING, 'withdraw-validation-editor');
+        $reader = $this->user($em, CmsPermission::CONTENT, 'withdraw-validation-reader');
         $gameId = $game->getId();
         $authorId = $author->getId();
         $editorId = $editor->getId();
+        $readerId = $reader->getId();
         self::assertNotNull($gameId);
         self::assertNotNull($authorId);
         self::assertNotNull($editorId);
+        self::assertNotNull($readerId);
         $guideIds = [];
 
         try {
@@ -560,6 +589,20 @@ final class AdminGameGuideControllerTest extends WebTestCase
             $token = $values['_token'] ?? null;
             self::assertIsString($token);
 
+            $client->loginUser($reader);
+            $client->request('POST', $action, ['_token' => $token, 'reason' => 'Unauthorized withdrawal']);
+            self::assertResponseStatusCodeSame(403);
+            self::assertSame('published', $connection->fetchOne('SELECT review_status FROM game_guide WHERE id = :id', ['id' => $id]));
+            self::assertSame(1, (int) $connection->fetchOne('SELECT COUNT(*) FROM game_guide_review_audit WHERE guide_id = :id', ['id' => $id]));
+
+            $client->loginUser($editor);
+            $this->setModules($client, false);
+            $client->request('POST', $action, ['_token' => $token, 'reason' => 'Gaming module disabled']);
+            self::assertResponseStatusCodeSame(404);
+            self::assertSame('published', $connection->fetchOne('SELECT review_status FROM game_guide WHERE id = :id', ['id' => $id]));
+            self::assertSame(1, (int) $connection->fetchOne('SELECT COUNT(*) FROM game_guide_review_audit WHERE guide_id = :id', ['id' => $id]));
+            $this->setModules($client, true);
+
             $client->request('POST', $action, ['_token' => 'forged', 'reason' => 'Patch correction']);
             self::assertResponseStatusCodeSame(403);
             $client->request('POST', $action, ['_token' => $token, 'reason' => '   ']);
@@ -580,7 +623,7 @@ final class AdminGameGuideControllerTest extends WebTestCase
                 ['id' => $id],
             ));
         } finally {
-            $this->cleanup($client, $guideIds, [$authorId, $editorId], [$gameId]);
+            $this->cleanup($client, $guideIds, [$authorId, $editorId, $readerId], [$gameId]);
         }
     }
 
