@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+    <channel>
+        <title>Upcoming game releases</title>
+        <link>{{ absolute_url(path('app_game_catalogue_releases'))|e('html') }}</link>
+        <description>Public game releases from today through the next 18 months.</description>
+        <language>{{ app.request.locale|replace({'_': '-'})|e('html') }}</language>
+        {% for release in releases %}
+            {% set gameUrl = absolute_url(path('app_game_catalogue_show', {slug: release.entry.game.slug})) %}
+            {% set editionName = release.edition ? release.edition.name : 'Standard' %}
+            <item>
+                <title>{{ (release.entry.game.name ~ ' — ' ~ editionName ~ ' — ' ~ release.platform.name ~ ' — ' ~ release.region)|e('html') }}</title>
+                <link>{{ gameUrl|e('html') }}</link>
+                <guid isPermaLink="false">urn:gaming-cms:game-release:{{ release.id }}</guid>
+                <pubDate>{{ release.releaseAt|date('r') }}</pubDate>
+                <description>{{ ('Release status: ' ~ release.status)|e('html') }}</description>
+            </item>
+        {% endfor %}
+    </channel>
+</rss>
