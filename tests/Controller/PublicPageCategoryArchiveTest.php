@@ -96,7 +96,7 @@ final class PublicPageCategoryArchiveTest extends WebTestCase
         }
     }
 
-    public function testArchivePaginatesInPinnedPublishedAndIdOrder(): void
+    public function testArchivePaginatesInPinnedPublishedAndIdOrderAndRejectsMalformedPages(): void
     {
         $client = static::createClient();
         $entityManager = $this->entityManager($client);
@@ -156,6 +156,20 @@ final class PublicPageCategoryArchiveTest extends WebTestCase
 
             $client->request('GET', '/pages/category/'.$categorySlug.'?page=3');
             self::assertResponseStatusCodeSame(404);
+
+            $paths = ['/pages/categories', '/pages/category/'.$categorySlug];
+            foreach ($paths as $path) {
+                $client->request('GET', $path.'?page=1');
+                self::assertResponseIsSuccessful();
+
+                foreach (['page=', 'page=0', 'page=-1', 'page=abc', 'page=1.5', 'page=01', 'page[]=1'] as $query) {
+                    $client->request('GET', $path.'?'.$query);
+                    self::assertResponseStatusCodeSame(400, 'Expected malformed query to be rejected: '.$path.'?'.$query);
+                }
+
+                $client->request('GET', $path.'?page=10001');
+                self::assertResponseStatusCodeSame(404);
+            }
         } finally {
             $this->cleanup($entityManager, $entrySlugs, [$categorySlug], $authorEmail);
         }
