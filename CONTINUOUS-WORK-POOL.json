@@ -61610,6 +61610,101 @@
       "worker_pr": 427,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/427",
       "worker_pr_head_sha": "ab00ee5e071c4e2f2fecabf86eac1efe959a912f"
+    },
+    {
+      "priority": 634,
+      "package_id": "WCP-634",
+      "title": "Let forum authors correct their questions and replies",
+      "risk": "medium_authorization",
+      "execution_state": "worker_in_progress",
+      "claim_state": "active_lease",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-634-forum-author-edit-g1",
+      "suggested_branch": "feature/wcp-634-forum-author-edit-g1",
+      "resume_branch": "feature/wcp-634-forum-author-edit-g1",
+      "base_branch": "main",
+      "base_sha": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "active_base_branch": "main",
+      "active_base_sha": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "proposal_kind": "worker_only",
+      "objective": "Complete the existing forum author workflow: an author can reopen an edit form for their own question title/body or reply, submit a corrected bounded text with current thread version, and see an edited marker. Preserve room visibility, open/unsolved state, quote and answer ownership, CSRF, and Gaming module gate. Use existing forum_post.edited_at; no schema change.",
+      "allowed_paths": [
+        "src/Controller/PublicForumEditController.php",
+        "src/ForumWorkflow/ForumWorkflowGateway.php",
+        "src/ForumWorkflow/Templates/public/thread.html.twig",
+        "src/ForumWorkflow/Templates/public/edit.html.twig",
+        "tests/Controller/PublicForumEditTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "CONTINUOUS-WORKER.md",
+        "CONTINUOUS-WORK-POOL.json",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "src/Forum/",
+        "src/Controller/AdminForumWorkflowController.php",
+        "src/ForumWorkflow/Templates/public/rooms.html.twig",
+        "src/ForumWorkflow/Templates/public/threads.html.twig"
+      ],
+      "deliverables": [
+        "Owners can edit the original question title/body or their own reply through a discoverable form in the visible thread; edited_at is shown.",
+        "Only authors in visible rooms and open unsolved threads may edit; no edits across hidden guild rooms, after moderation closure or solve, or by another user.",
+        "All writes require POST, CSRF and current thread version; stale edits do not change either title or body.",
+        "Existing quote relationships, solved answer, subscriptions and moderation remain intact; module disable hides all edit routes."
+      ],
+      "tests": [
+        "Controller and DB tests cover original question and reply correction, edited marker, ownership and room visibility, CSRF, stale version, closed/solved state, invalid text and disabled Gaming.",
+        "Full exact-head Worker CI with PHPStan, Twig/Doctrine, PHPUnit and PostgreSQL 18 migration chain."
+      ],
+      "completion_report": [
+        "Exact base and final commit, changed files, Worker PR and exact-head CI.",
+        "Successful correction and negative boundary evidence; remaining limitations."
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-Trusted-review-and-exact-head-CI",
+        "author-only-visible-open-unsolved-edit",
+        "POST-CSRF-optimistic-thread-version",
+        "no-schema-or-migration-change",
+        "no-security-or-test-weakening",
+        "no-Trusted-merge-or-deployment"
+      ],
+      "proposal_dependency_evidence": [],
+      "collision_check": {
+        "compared_against": "Live pool blob cef5e8dbf5e550342cb7eef0ccddb4df5e7fb43a and all active Worker claims; main 1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+        "result": "Five paths are disjoint from active WCP-630/631/633 and locked WCP-625/626. Gateway/thread template are from Trusted-integrated WCP-556; FCP-065 owns separate namespace.",
+        "paths": [
+          "src/Controller/PublicForumEditController.php",
+          "src/ForumWorkflow/ForumWorkflowGateway.php",
+          "src/ForumWorkflow/Templates/public/thread.html.twig",
+          "src/ForumWorkflow/Templates/public/edit.html.twig",
+          "tests/Controller/PublicForumEditTest.php"
+        ]
+      },
+      "published_at": "2026-09-30T23:22:14.421Z",
+      "claimed_on": "2026-09-30T23:22:14.421Z",
+      "claim_generation": 1,
+      "active_head": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "last_observed_head": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "branch_heads": {
+        "claim_branch": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+        "feature_branch": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4"
+      },
+      "next_action": "Implement forum author correction and push checkpoint."
     }
   ],
   "recovery_queue": [],
