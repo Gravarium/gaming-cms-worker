@@ -33,8 +33,11 @@ final class PublicCompetitionSeasonTest extends WebTestCase
             $client->request('GET', '/competition-seasons/'.$hiddenSeason->getId());
             self::assertResponseStatusCodeSame(404);
 
-            $game->setEnabled(false);
-            $this->em($client)->flush();
+            $em = $this->em($client);
+            $managedGame = $em->find(Game::class, $game->getId());
+            self::assertInstanceOf(Game::class, $managedGame);
+            $managedGame->setEnabled(false);
+            $em->flush();
             $client->request('GET', '/competition-seasons/'.$publicSeason->getId());
             self::assertResponseStatusCodeSame(404);
         } finally {
