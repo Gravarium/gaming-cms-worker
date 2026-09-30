@@ -436,4 +436,57 @@ final class AccountRecoveryControllerTest extends WebTestCase
             ['action' => 'security.email.verified', 'subject' => $userId],
         );
     }
+
+    public function testExpiredRevokedAndWrongPurposeVerificationTokensShowNeutralPage(): void
+    {
+        $client = static::createClient();
+        $container = $client->getContainer();
+        $entityManager = $container->get(EntityManagerInterface::class);
+        $user = (new User())
+            ->setEmail('verification-token-state-'.bin2hex(random_bytes(6)).'@example.test')
+            ->setDisplayName('Verification Token State Test')
+            ->setPassword('not-used-in-this-test');
+        $entityManager->persist($user);
+        $entityManager->flush();
+        $userId = $user->getId();
+        self::assertNotNull($userId);
+
+        $manager = $container->get(AccountTokenManager::class);
+        [$expired, $expiredPlain] = $manager->issue(
+            $user,
+            AccountToken::PURPOSE_EMAIL_VERIFICATION,
+            new \\DateInterval('P1D'),
+        );
+        $expired->setExpiresAt(new \\DateTimeImmutable('-1 minute'));
+        $entityManager->flush();
+
+        $client->request('GET', '/verify-email/'.$expiredPlain);
+        self::assertResponseIsSuccessful();
+        self::assertSelectorTextContains('.alert', 'ungültig');
+        self::assertNull($manager->resolve($expiredPlain, AccountToken::PURPOSE_EMAIL_VERIFICATION));
+
+        [, $revokedPlain] = $manager->issue($user, AccountToken::PURPOSE_EMAIL_VERIFICATION, new \\DateInterval('P1D'));
+        $entityManager->flush();
+        [, $currentEmailToken] = $manager->issue($user, AccountToken::PURPOSE_EMAIL_VERIFICATION, new \\DateInterval('P1D'));
+        $entityManager->flush();
+
+        $client->request('GET', '/verify-email/'.$revokedPlain);
+        self::assertResponseIsSuccessful();
+        self::assertSelectorTextContains('.alert', 'ungültig');
+        self::assertNull($manager->resolve($revokedPlain, AccountToken::PURPOSE_EMAIL_VERIFICATION));
+        self::assertNotNull($manager->resolve($currentEmailToken, AccountToken::PURPOSE_EMAIL_VERIFICATION));
+
+        [, $passwordToken] = $manager->issue($user, AccountToken::PURPOSE_PASSWORD_RESET, new \\DateInterval('PT1H'));
+        $entityManager->flush();
+        $client->request('GET', '/verify-email/'.$passwordToken);
+        self::assertResponseIsSuccessful();
+        self::assertSelectorTextContains('.alert', 'ungültig');
+        self::assertNotNull($manager->resolve($passwordToken, AccountToken::PURPOSE_PASSWORD_RESET));
+
+        $entityManager->clear();
+        $stored = $entityManager->find(User::class, $userId);
+        self::assertInstanceOf(User::class, $stored);
+        self::assertFalse($stored->isEmailVerified());
+        self::assertSame(0, $this->verificationAuditCount($entityManager, $userId));
+    }
 }
