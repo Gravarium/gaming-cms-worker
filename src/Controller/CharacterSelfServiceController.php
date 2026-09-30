@@ -118,7 +118,7 @@ final class CharacterSelfServiceController extends AbstractController
     {
         $this->assertAvailable();
         $owner = $this->owner();
-        $account = $this->account($owner, $id);
+        $account = $this->account($owner, $id, false);
         $this->assertCsrf($request, 'character-owner-account-delete-'.$id);
         $account->revokeConsent()->markDeleted();
         $this->entityManager->flush();
@@ -209,7 +209,7 @@ final class CharacterSelfServiceController extends AbstractController
     public function deleteProfile(int $id, Request $request): Response
     {
         $this->assertAvailable();
-        $profile = $this->profile($this->owner(), $id);
+        $profile = $this->profile($this->owner(), $id, false);
         $this->assertCsrf($request, 'character-owner-profile-delete-'.$id);
         $profile->markDeleted();
         $this->entityManager->flush();
@@ -218,20 +218,20 @@ final class CharacterSelfServiceController extends AbstractController
         return $this->privateResponse($this->redirectToRoute('app_character_owner_index'));
     }
 
-    private function account(User $owner, int $id): CharacterAccount
+    private function account(User $owner, int $id, bool $requireEnabled = true): CharacterAccount
     {
         $account = $this->accounts->find($id);
-        if (!$account instanceof CharacterAccount || $account->isDeleted() || !$account->isOwnedBy($owner) || !$account->getGame()->isEnabled()) {
+        if (!$account instanceof CharacterAccount || $account->isDeleted() || !$account->isOwnedBy($owner) || ($requireEnabled && !$account->getGame()->isEnabled())) {
             throw $this->createNotFoundException();
         }
 
         return $account;
     }
 
-    private function profile(User $owner, int $id): CharacterProfile
+    private function profile(User $owner, int $id, bool $requireEnabled = true): CharacterProfile
     {
         $profile = $this->profiles->findActiveForOwner($owner, $id);
-        if (!$profile instanceof CharacterProfile || !$profile->getGame()->isEnabled()) {
+        if (!$profile instanceof CharacterProfile || ($requireEnabled && !$profile->getGame()->isEnabled())) {
             throw $this->createNotFoundException();
         }
 
