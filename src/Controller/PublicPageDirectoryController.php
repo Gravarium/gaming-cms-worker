@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Entity\ContentEntry;
-use App\Repository\ContentEntryRepository;
+use App\PageDirectory\PublicPageDirectoryQuery;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -13,9 +13,7 @@ use Symfony\Component\Routing\Attribute\Route;
 
 final class PublicPageDirectoryController extends AbstractController
 {
-    private const PAGE_SIZE = 20;
-
-    public function __construct(private readonly ContentEntryRepository $entries)
+    public function __construct(private readonly PublicPageDirectoryQuery $pages)
     {
     }
 
@@ -23,30 +21,21 @@ final class PublicPageDirectoryController extends AbstractController
     public function index(Request $request): Response
     {
         $page = $request->query->getInt('page', 1);
-        if ($page < 1 || $page > 10000) {
+        if ($page < 1 || $page > PublicPageDirectoryQuery::MAX_PAGES) {
             throw $this->createNotFoundException();
         }
 
-        $pages = array_values(array_filter(
-            $this->entries->findPublishedAll(5000),
-            static fn (ContentEntry $entry): bool => $entry->getType() === ContentEntry::TYPE_PAGE,
-        ));
-        usort($pages, static function (ContentEntry $left, ContentEntry $right): int {
-            $publishedComparison = ($right->getPublishedAt()?->getTimestamp() ?? 0) <=> ($left->getPublishedAt()?->getTimestamp() ?? 0);
-            if ($publishedComparison !== 0) {
-                return $publishedComparison;
-            }
-
-            return ($right->getId() ?? 0) <=> ($left->getId() ?? 0);
-        });
-
-        $total = count($pages);
-        $pageCount = max(1, (int) ceil($total / self::PAGE_SIZE));
+        $now = new \DateTimeImmutable();
+        $total = $this->pages->countPublicPages($now);
+        $pageCount = min(
+            PublicPageDirectoryQuery::MAX_PAGES,
+            max(1, (int) ceil($total / PublicPageDirectoryQuery::PAGE_SIZE)),
+        );
         if ($page > $pageCount) {
             throw $this->createNotFoundException();
         }
 
-        $entries = array_slice($pages, ($page - 1) * self::PAGE_SIZE, self::PAGE_SIZE);
+        $entries = $this->pages->findPage($page, $now);
         $response = $this->render('page/index.html.twig', [
             'entries' => $entries,
             'page' => $page,
