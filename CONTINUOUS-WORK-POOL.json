@@ -10,8 +10,8 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "9e083c63e7d888af36f93a23eb924c89fad2b971",
-  "published_at": "2026-09-30T22:42:08.252Z",
-  "summary": "WCP-632 public competition season browser complete with green exact-head Worker CI.",
+  "published_at": "2026-09-30T23:17:30.000Z",
+  "summary": "WCP-633 admin competition participant lifecycle published and claimed on disjoint Worker paths.",
   "rules": {
     "choose": "Resume the current chat's unfinished claimed branch first. Otherwise atomically claim an eligible published task. If no published task is eligible, independently derive and publish a bounded worker-only CMS proposal from approved product goals and observed code gaps; do not ask the owner for the next FCP number.",
     "atomic_reservation": "Create the exact claim_branch and suggested feature branch from that task's published proposal_base_sha. If the claim already exists, treat it as a hard lock; the owning continuation resumes it and every other AI skips it.",
@@ -61495,6 +61495,113 @@
       ],
       "completed_on": "2026-09-30T22:42:08.252Z",
       "test_evidence": "Exact-head Worker CI #1107 passed both jobs; PHP/Symfony 1,645 tests plus PHPStan/lints/container/Doctrine; PostgreSQL 18 migration chain passed."
+    },
+    {
+      "priority": 633,
+      "package_id": "WCP-633",
+      "title": "Manage competition participants, seeding and removals",
+      "risk": "medium_authorization",
+      "execution_state": "worker_in_progress",
+      "claim_state": "active_lease",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-633-admin-competition-participants-g1",
+      "suggested_branch": "feature/wcp-633-admin-competition-participants-g1",
+      "resume_branch": "feature/wcp-633-admin-competition-participants-g1",
+      "base_branch": "main",
+      "base_sha": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "active_base_branch": "main",
+      "active_base_sha": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "proposal_kind": "worker_only",
+      "objective": "Complete the missing administration workflow for competition registrations. Gaming managers can inspect a bounded participant board per competition, assign unique positive seeds before pairings exist, withdraw active registrations with an optional bounded reason, and disqualify active registrations only with a required bounded reason. Every mutation is POST-only, CSRF-protected, competition-scoped and rejected once pairings exist or the participant is already terminal. No schema or migration changes.",
+      "allowed_paths": [
+        "src/CompetitionParticipantAdmin/ParticipantManagement.php",
+        "src/Controller/AdminCompetitionParticipantController.php",
+        "templates/admin/competition_participant/index.html.twig",
+        "tests/Controller/AdminCompetitionParticipantTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "CONTINUOUS-WORKER.md",
+        "CONTINUOUS-WORK-POOL.json",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "src/Entity/",
+        "src/Repository/",
+        "templates/admin/competition/index.html.twig",
+        "src/Controller/AdminCompetition/AdminCompetitionController.php"
+      ],
+      "deliverables": [
+        "Private no-store/noindex participant board for one competition, gated by CMS_GAMING_MANAGE and the Gaming module.",
+        "Unique positive seed assignment before any competition match exists; malformed, duplicate, cross-competition and post-seeding writes are denied.",
+        "CSRF-protected withdrawal with optional reason and disqualification with required reason, both bounded to 500 characters and active participants.",
+        "No schema, migration, existing competition controller, scheduling, bracket, result or Trusted changes."
+      ],
+      "tests": [
+        "Functional tests for board visibility, permission and module gates, private cache headers, valid seed/withdraw/disqualify flows, and unchanged unrelated participants.",
+        "Negative tests for forged CSRF, cross-competition IDs, duplicate or malformed seed, terminal replay, missing/oversized reasons, and mutation after pairings exist.",
+        "Complete exact-head Worker CI including PHPStan, full PHPUnit suite and PostgreSQL 18 migration validation."
+      ],
+      "completion_report": [
+        "Exact Worker base, final Worker HEAD, PR and complete changed-path list.",
+        "Authorization, CSRF, competition-boundary, replay and state-integrity evidence.",
+        "Exact-head Worker CI and confirmation of no Trusted merge or deployment."
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-Trusted-review-and-exact-head-CI",
+        "participant-mutations-require-CMS_GAMING_MANAGE-POST-and-CSRF",
+        "cross-competition-and-post-bracket-mutations-fail-closed",
+        "no-auth-csrf-validation-or-test-weakening",
+        "no-schema-or-migration-change",
+        "no-Trusted-merge-or-deployment"
+      ],
+      "proposal_dependency_evidence": [],
+      "collision_check": {
+        "compared_against": "All active and locked Worker claims in pool blob 164adda21b70a33683d22e66b156f45ef0d86b15; sanitized Worker main 1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+        "result": "All four paths are new and disjoint from active WCP-630 scheduling, active WCP-631 email verification, and every locked Worker proposal. Existing locked admin competition index/controller paths are explicitly forbidden.",
+        "paths": [
+          "src/CompetitionParticipantAdmin/ParticipantManagement.php",
+          "src/Controller/AdminCompetitionParticipantController.php",
+          "templates/admin/competition_participant/index.html.twig",
+          "tests/Controller/AdminCompetitionParticipantTest.php"
+        ]
+      },
+      "priority_rationale": "No dependency-safe published FCP exists. The base domain already supports withdrawn/disqualified states and seeds, but no manager workflow exposes them; completing participant administration has direct functional value for the Competition module.",
+      "code_gap_evidence": "On exact Worker main, CompetitionParticipant defines seed, withdraw and disqualify operations, while AdminCompetitionController exposes creation, opening, seeding matches, scheduling and disputes but no participant board or participant lifecycle actions.",
+      "claimed_on": "2026-09-30T23:17:30.000Z",
+      "claim_generation": 1,
+      "lease_expires_at": "2026-10-01T06:17:30.000Z",
+      "active_head": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "last_observed_head": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "checkpoint_commit_sha": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "branch_heads": {
+        "claim_branch": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+        "feature_branch": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4"
+      },
+      "checkpoint_paths": [],
+      "worker_pr_state": "not_created",
+      "pr_state": "not_created",
+      "last_ci_run_id": null,
+      "last_ci_result": "pending",
+      "last_ci_head": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "ci_history": [],
+      "next_action": "Implement the participant management service, protected controller, private board and focused security/state tests; then open a draft Worker PR and run exact-head CI.",
+      "last_checkpoint_at": "2026-09-30T23:17:30.000Z",
+      "last_verified_push_at": "2026-09-30T23:17:30.000Z"
     }
   ],
   "recovery_queue": [],
