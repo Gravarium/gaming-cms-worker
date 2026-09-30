@@ -12,6 +12,7 @@ final readonly class PublicGameGuideQuery
 {
     public const PAGE_SIZE = 24;
     public const MAX_RESULTS = 12;
+    public const RELATED_GUIDES_LIMIT = 3;
 
     public function __construct(
         private Connection $connection,
@@ -151,6 +152,35 @@ final readonly class PublicGameGuideQuery
                 $tierRows,
             ),
         ];
+    }
+
+    /**
+     * @return list<array{id:int,title:string,guide_type:string,game_version:string,season:string,valid_from:string,valid_until:?string,published_at:string,game_name:string,game_slug:string,is_outdated:bool}>
+     */
+    public function relatedPublic(int $guideId, string $gameSlug, int $limit = self::RELATED_GUIDES_LIMIT): array
+    {
+        if (!$this->modules->isEnabled('gaming') || $guideId < 1 || $gameSlug === '') {
+            return [];
+        }
+
+        $limit = max(1, min(self::RELATED_GUIDES_LIMIT, $limit));
+        $rows = $this->connection->fetchAllAssociative(
+            "SELECT guide.id, guide.title, guide.guide_type, guide.game_version, guide.season,
+                    guide.valid_from, guide.valid_until, guide.published_at, game.name AS game_name, game.slug AS game_slug
+             FROM game_guide guide
+             INNER JOIN game ON game.id = guide.game_id
+             WHERE guide.id <> :id
+               AND guide.review_status = 'published'
+               AND guide.published_at IS NOT NULL
+               AND guide.published_at <= CURRENT_TIMESTAMP
+               AND game.enabled = true
+               AND game.slug = :game_slug
+             ORDER BY guide.published_at DESC, guide.id DESC
+             LIMIT ".$limit,
+            ['id' => $guideId, 'game_slug' => $gameSlug],
+        );
+
+        return array_map(fn (array $row): array => $this->summary($row), $rows);
     }
 
     /** @param array<string, mixed> $params */
