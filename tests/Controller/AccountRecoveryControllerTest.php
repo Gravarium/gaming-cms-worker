@@ -321,7 +321,7 @@ final class AccountRecoveryControllerTest extends WebTestCase
         self::assertNotNull($userId);
 
         $manager = $container->get(AccountTokenManager::class);
-        [, $plainToken] = $manager->issue($user, AccountToken::PURPOSE_EMAIL_VERIFICATION, new \\DateInterval('P1D'));
+        [, $plainToken] = $manager->issue($user, AccountToken::PURPOSE_EMAIL_VERIFICATION, new \DateInterval('P1D'));
         $entityManager->flush();
 
         $crawler = $client->request('GET', '/verify-email/'.$plainToken);
@@ -372,7 +372,7 @@ final class AccountRecoveryControllerTest extends WebTestCase
         self::assertNotNull($userId);
 
         $manager = $container->get(AccountTokenManager::class);
-        [, $plainToken] = $manager->issue($user, AccountToken::PURPOSE_EMAIL_VERIFICATION, new \\DateInterval('P1D'));
+        [, $plainToken] = $manager->issue($user, AccountToken::PURPOSE_EMAIL_VERIFICATION, new \DateInterval('P1D'));
         $entityManager->flush();
 
         $client->request('GET', '/verify-email/'.$plainToken);
@@ -403,7 +403,7 @@ final class AccountRecoveryControllerTest extends WebTestCase
         self::assertNotNull($userId);
 
         $manager = $container->get(AccountTokenManager::class);
-        [, $plainToken] = $manager->issue($user, AccountToken::PURPOSE_EMAIL_VERIFICATION, new \\DateInterval('P1D'));
+        [, $plainToken] = $manager->issue($user, AccountToken::PURPOSE_EMAIL_VERIFICATION, new \DateInterval('P1D'));
         $entityManager->flush();
 
         $crawler = $client->request('GET', '/verify-email/'.$plainToken);
@@ -436,6 +436,4 @@ final class AccountRecoveryControllerTest extends WebTestCase
             ['action' => 'security.email.verified', 'subject' => $userId],
         );
     }
-
-
 }
