@@ -11,7 +11,7 @@
   "baseline_branch": "main",
   "base_sha": "9e083c63e7d888af36f93a23eb924c89fad2b971",
   "published_at": "2026-09-30T09:11:17.950Z",
-  "summary": "WCP-608 through WCP-618 are complete Worker proposals awaiting Trusted review; their claims remain locked. WCP-619 is active on feature/wcp-619-admin-redirect-page-bound-g1 from Worker main for bounded admin content redirect pagination. Trusted main remains the only integration and deployment source.",
+  "summary": "WCP-608 through WCP-619 are complete Worker proposals awaiting Trusted review; their claims remain locked. Trusted main remains the only integration and deployment source.",
   "rules": {
     "choose": "Resume the current chat's unfinished claimed branch first. Otherwise atomically claim an eligible published task. If no published task is eligible, independently derive and publish a bounded worker-only CMS proposal from approved product goals and observed code gaps; do not ask the owner for the next FCP number.",
     "atomic_reservation": "Create the exact claim_branch and suggested feature branch from that task's published proposal_base_sha. If the claim already exists, treat it as a hard lock; the owning continuation resumes it and every other AI skips it.",
@@ -59372,8 +59372,8 @@
       "package_id": "WCP-619",
       "title": "Bound admin content redirect pagination",
       "risk": "low",
-      "execution_state": "worker_in_progress",
-      "claim_state": "active",
+      "execution_state": "worker_complete_awaiting_trusted_review",
+      "claim_state": "locked_until_trusted_resolution",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -59445,24 +59445,69 @@
       },
       "published_at": "2026-09-30T10:09:12.263Z",
       "claimed_on": "2026-09-30T10:09:12.263Z",
-      "lease_expires_at": "2026-09-30T17:10:49.333Z",
+      "lease_expires_at": null,
       "claim_generation": 1,
       "active_base_branch": "main",
       "active_base_sha": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
       "active_head": "ede71a272283c6b008ea11d19202b77bbf821d7c",
       "resume_branch": "feature/wcp-619-admin-redirect-page-bound-g1",
       "last_observed_head": "ede71a272283c6b008ea11d19202b77bbf821d7c",
-      "last_checkpoint_at": "2026-09-30T10:10:49.333Z",
+      "last_checkpoint_at": "2026-09-30T10:16:49.614Z",
       "checkpoint_paths": [
         "src/Controller/AdminContentRedirectController.php",
         "tests/Controller/AdminContentRedirectBrowserTest.php"
       ],
-      "last_verified_push_at": "2026-09-30T10:10:49.333Z",
+      "last_verified_push_at": "2026-09-30T10:16:49.614Z",
       "branch_heads": {
         "claim_branch": "ede71a272283c6b008ea11d19202b77bbf821d7c",
         "feature_branch": "ede71a272283c6b008ea11d19202b77bbf821d7c"
       },
-      "next_action": "Open a draft Worker PR for exact HEAD ede71a272283c6b008ea11d19202b77bbf821d7c and run exact-head Worker CI. Once both required jobs pass, update the PR with test results and mark it ready for Trusted review. Keep output untrusted; do not merge to Trusted or deploy."
+      "next_action": "Worker PR #415 is ready for Trusted review at exact HEAD ede71a272283c6b008ea11d19202b77bbf821d7c with exact-head Worker CI run #1083 green. Keep this claim locked until Trusted explicitly integrates, cancels or transfers it. No Trusted merge or deployment was performed.",
+      "worker_pr": 415,
+      "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/415",
+      "pr_state": "open_ready_for_review",
+      "worker_pr_state": "ready_for_review",
+      "worker_pr_base_branch": "main",
+      "worker_pr_base_sha": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "worker_pr_head_sha": "ede71a272283c6b008ea11d19202b77bbf821d7c",
+      "worker_pr_changed_paths": [
+        "src/Controller/AdminContentRedirectController.php",
+        "tests/Controller/AdminContentRedirectBrowserTest.php"
+      ],
+      "ci_run_id": 36700857070,
+      "last_ci_run_id": 36700857070,
+      "ci_result": "success",
+      "last_ci_result": "success",
+      "php_symfony_job_id": 109839700339,
+      "php_symfony_result": "success",
+      "postgres_migration_job_id": 109839700669,
+      "postgres_migration_result": "success",
+      "completed_on": "2026-09-30T10:16:49.614Z",
+      "final_head": "ede71a272283c6b008ea11d19202b77bbf821d7c",
+      "final_changed_paths": [
+        "src/Controller/AdminContentRedirectController.php",
+        "tests/Controller/AdminContentRedirectBrowserTest.php"
+      ],
+      "test_evidence": {
+        "targeted_tests": [
+          "AdminContentRedirectBrowserTest::testPageCountRoundsUpAndNeverExceedsTheAcceptedPageMaximum",
+          "AdminContentRedirectBrowserTest::testNegativeRedirectPageCountsAreRejected",
+          "AdminContentRedirectBrowserTest::testInvalidFiltersReturnPrivateBadRequest",
+          "AdminContentRedirectBrowserTest::testInventoryPaginatesAllMatchingRedirectsWithoutGapsOrDuplicates"
+        ],
+        "page_count": "The shared MAX_PAGE is used by parseFilters and displayed page count. Integer division plus remainder rounds up safely; the exact result total and 25-row page size are unchanged.",
+        "boundaries": "Covered totals 0, 1, 25, 26, 249,975 (9,999 pages), 249,999, 250,000, 250,001, and PHP_INT_MAX.",
+        "invalid_input": "Negative totals throw InvalidArgumentException. MAX_PAGE + 1 request remains an HTTP 400.",
+        "security_and_behavior": "The existing 55-row integration test still verifies stable ordering, no gaps or duplicates, filter preservation, and last-page clamping. Permission checks and private no-store behavior are unchanged.",
+        "schema_or_migration_changes": "none",
+        "exact_head_ci_run_id": 36700857070,
+        "exact_head_ci_result": "success",
+        "php_symfony_job_id": 109839700339,
+        "php_symfony_result": "success",
+        "phpunit": "1,644 tests; 11,958 assertions; 1 PHPUnit deprecation and 26 notices.",
+        "postgres_migration_job_id": 109839700669,
+        "postgres_migration_result": "success"
+      }
     }
   ],
   "recovery_queue": [],
