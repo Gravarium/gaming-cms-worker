@@ -59225,6 +59225,101 @@
         "postgres_migration_job_id": 109828092689,
         "postgres_migration_result": "success"
       }
+    },
+    {
+      "priority": 618,
+      "package_id": "WCP-618",
+      "title": "Bound admin video browser pagination",
+      "risk": "low",
+      "execution_state": "worker_in_progress",
+      "claim_state": "active",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-618-admin-video-page-bound-g1",
+      "suggested_branch": "feature/wcp-618-admin-video-page-bound-g1",
+      "base_branch": "main",
+      "base_sha": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "objective": "AdminVideoBrowser rejects page inputs above 999,999, but computes pageCount from the total number of videos without that cap. Above 24,999,975 video rows the admin template exposes a next-page URL for page 1,000,000, which the browser validator rejects with HTTP 400. Tie the displayed page count and accepted page range to one shared maximum while preserving the exact total and 25-row page size.",
+      "allowed_paths": [
+        "src/Video/AdminVideoBrowser.php",
+        "tests/Controller/AdminVideoDirectoryBrowserTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "templates/",
+        "config/services.yaml",
+        "src/Repository/VideoRepository.php",
+        "src/Controller/VideoSearchController.php",
+        "src/Entity/"
+      ],
+      "deliverables": [
+        "Admin video page-count calculation never exceeds the same maximum accepted by its page-input validator.",
+        "The exact result total, 25-row page size, filters, row ordering and current last-page clamping remain unchanged.",
+        "Pure boundary tests cover empty, exact, rounded, capped, over-cap and PHP_INT_MAX totals, plus negative input rejection.",
+        "Existing admin browser validation continues to reject MAX_PAGE + 1; no template, schema or migration changes."
+      ],
+      "tests": [
+        "Focused tests prove page counts at 0, 1, PAGE_SIZE, PAGE_SIZE + 1, the 999,999-page edge, larger totals and PHP_INT_MAX.",
+        "Negative totals are rejected without changing request validation.",
+        "Run the full exact-head Worker CI without weakening access control, private cache, CSRF, PHPStan or CI checks."
+      ],
+      "completion_report": [
+        "Exact Worker main/base SHA, final Worker HEAD SHA, Worker PR and complete changed-path list.",
+        "Evidence displayed page count is bounded by the highest accepted page and exact result total is unchanged.",
+        "No schema or migration change; the separate public /videos search and VideoRepository remain untouched.",
+        "Exact-head Worker CI run and PHP/Symfony and PostgreSQL job results; unresolved risks."
+      ],
+      "immutable_constraints": [
+        "admin-video-pagination-never-links-to-rejected-page",
+        "exact-video-result-count-and-25-row-page-size-remain-unchanged",
+        "admin-auth-private-cache-and-existing-video-filter-rules-remain-unchanged",
+        "no-schema-or-migration-change",
+        "no-security-test-phpstan-ci-validation-or-protection-weakening",
+        "red-CI-stops-integration",
+        "worker-code-is-untrusted-no-direct-Trusted-integration-or-deployment",
+        "no-private-runtime-or-sensitive-data"
+      ],
+      "proposal_kind": "worker_only",
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "proposal_dependency_evidence": [],
+      "collision_check": {
+        "compared_against": "Worker main 1d03d4947f15dc3e0fe4b79a990bd45468c761e4; current Worker pool; Trusted main 8852e024d89611291fc83214c1f0c1d4a758c9d8 and queue blob 4f5c73ba69758d9780e5bbbab92abda360fb1e62; all active and locked Worker claims and active Trusted FCP claims.",
+        "result": "No active/locked Worker or active Trusted path overlap. WCP-381's public /videos search path and VideoRepository are explicitly excluded. Active Trusted FCP-049's templates/ claim is avoided; no template edit is needed because the existing template already derives the next link from pageCount. All five prepared Worker FCPs still have at least one dependency without Trusted integration or a green exact-head Worker PR.",
+        "paths": [
+          "src/Video/AdminVideoBrowser.php",
+          "tests/Controller/AdminVideoDirectoryBrowserTest.php"
+        ]
+      },
+      "published_at": "2026-09-30T09:47:00.897Z",
+      "claimed_on": "2026-09-30T09:47:00.897Z",
+      "lease_expires_at": "2026-09-30T16:47:00.897Z",
+      "claim_generation": 1,
+      "active_base_branch": "main",
+      "active_base_sha": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "active_head": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "resume_branch": "feature/wcp-618-admin-video-page-bound-g1",
+      "last_observed_head": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "last_checkpoint_at": "2026-09-30T09:47:00.897Z",
+      "checkpoint_paths": [],
+      "last_verified_push_at": null,
+      "branch_heads": {
+        "claim_branch": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+        "feature_branch": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4"
+      },
+      "next_action": "Use one shared MAX_PAGE for validation and displayed page count, add pure boundary tests and keep the existing page-size/filter behavior. Push a coherent checkpoint, open a draft Worker PR and run exact-head Worker CI. Keep output untrusted; do not merge to Trusted or deploy."
     }
   ],
   "recovery_queue": [],
