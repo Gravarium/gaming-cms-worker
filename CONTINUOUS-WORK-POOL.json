@@ -60593,6 +60593,87 @@
         "php_symfony_result": "success",
         "postgres_migration_result": "success"
       }
+    },
+    {
+      "priority": 627,
+      "package_id": "WCP-627",
+      "title": "Show captains their upcoming and completed competition matches",
+      "risk": "medium",
+      "execution_state": "worker_in_progress",
+      "claim_state": "active_lease",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-627-competition-match-inbox-g1",
+      "suggested_branch": "feature/wcp-627-competition-match-inbox-g1",
+      "base_branch": "main",
+      "base_sha": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "objective": "Give signed-in competition captains a private, bounded match inbox with upcoming fixtures and confirmed results across competitions, while rechecking module and per-match visibility.",
+      "allowed_paths": [
+        "src/CompetitionMatchInbox/CaptainMatchInbox.php",
+        "src/Controller/CompetitionMatchInboxController.php",
+        "src/CompetitionMatchInbox/Templates/account/index.html.twig",
+        "tests/Controller/CompetitionMatchInboxTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "CONTINUOUS-WORKER.md",
+        "CONTINUOUS-WORK-POOL.json",
+        ".github/workflows/",
+        "migrations/"
+      ],
+      "deliverables": [
+        "Captain-only GET page lists upcoming and confirmed matches in deterministic bounded order.",
+        "Current Gaming-module and competition/match visibility gates apply; no private fixture leaks.",
+        "Personalized responses cannot be cached or indexed; no new mutation or schema."
+      ],
+      "tests": [
+        "Functional positive and negative auth, visibility, module and cache-header tests.",
+        "Exact-head complete Worker CI including PHPStan, PHPUnit and PostgreSQL 18 migration chain."
+      ],
+      "completion_report": [
+        "Exact base/head, PR, paths and CI jobs.",
+        "Visibility and denial evidence; no Trusted merge or deployment."
+      ],
+      "immutable_constraints": [
+        "worker-output-untrusted",
+        "current-visibility-policy",
+        "personalized-no-store",
+        "no-security-test-or-CI-weakening",
+        "no-Trusted-merge-or-deployment"
+      ],
+      "proposal_kind": "worker_only",
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "proposal_dependency_evidence": [],
+      "collision_check": {
+        "compared_against": "Current pool active and locked allowed paths and live Worker main",
+        "result": "All four paths are new and disjoint from every active or locked claim; no migration or shared template edits.",
+        "paths": [
+          "src/CompetitionMatchInbox/CaptainMatchInbox.php",
+          "src/Controller/CompetitionMatchInboxController.php",
+          "src/CompetitionMatchInbox/Templates/account/index.html.twig",
+          "tests/Controller/CompetitionMatchInboxTest.php"
+        ]
+      },
+      "published_at": "2026-09-30T19:13:27.078Z",
+      "claimed_on": "2026-09-30T19:13:27.078Z",
+      "claim_generation": 1,
+      "active_base_branch": "main",
+      "active_base_sha": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "active_head": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "resume_branch": "feature/wcp-627-competition-match-inbox-g1",
+      "branch_heads": {
+        "claim_branch": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+        "feature_branch": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4"
+      },
+      "next_action": "Implement bounded personal match inbox on the feature branch."
     }
   ],
   "recovery_queue": [],
