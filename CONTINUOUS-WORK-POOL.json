@@ -60799,6 +60799,92 @@
       "next_action": "Implement queue and functional security tests, then run exact-head Worker CI.",
       "last_observed_head": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
       "lease_expires_at": "2026-10-01T02:24:00Z"
+    },
+    {
+      "priority": 629,
+      "package_id": "WCP-629",
+      "title": "Create and manage competition seasons from the admin",
+      "risk": "medium",
+      "execution_state": "worker_in_progress",
+      "claim_state": "active_lease",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-629-competition-season-admin-g1",
+      "suggested_branch": "feature/wcp-629-competition-season-admin-g1",
+      "base_branch": "main",
+      "base_sha": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "objective": "Make the existing CompetitionSeason entity usable: gaming managers can create validated seasons, browse them and archive them with existing CSRF-protected action; the competition form links to season management.",
+      "allowed_paths": [
+        "src/Controller/AdminCompetitionSeasonController.php",
+        "src/Form/Competition/CompetitionSeasonType.php",
+        "templates/admin/competition/season_index.html.twig",
+        "templates/admin/competition/form.html.twig",
+        "tests/Controller/AdminCompetitionSeasonTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "CONTINUOUS-WORKER.md",
+        "CONTINUOUS-WORK-POOL.json",
+        ".github/workflows/",
+        "migrations/",
+        "src/Controller/AdminCompetition/AdminCompetitionController.php",
+        "templates/admin/competition/index.html.twig"
+      ],
+      "deliverables": [
+        "Manager-only, Gaming-module-gated season creation with CSRF-protected form and game/date validation.",
+        "List active and archived seasons with bounded ordering; existing archive action remains the sole archive mutation.",
+        "A discoverable link from the competition edit form; no schema or migration change."
+      ],
+      "tests": [
+        "Functional creation, invalid dates, permission, disabled-module, and CSRF tests.",
+        "Exact-head Worker CI including PHPStan, PHPUnit and PostgreSQL 18 migration chain."
+      ],
+      "completion_report": [
+        "Exact base/head, PR, paths and CI jobs.",
+        "Positive and denial evidence; no Trusted merge or deployment."
+      ],
+      "immutable_constraints": [
+        "worker-output-untrusted",
+        "CMS_GAMING_MANAGE-and-module-gate",
+        "CSRF",
+        "date-and-game-validation",
+        "no-security-test-or-CI-weakening",
+        "no-Trusted-merge-or-deployment"
+      ],
+      "proposal_kind": "worker_only",
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "proposal_dependency_evidence": [],
+      "collision_check": {
+        "compared_against": "Current pool active and locked paths and live Worker main, plus WCP-628 branch name",
+        "result": "All five paths are disjoint; WCP-628 uses a dispute-queue branch, WCP-624 owns the separate competition index template. No migration or shared entity edits.",
+        "paths": [
+          "src/Controller/AdminCompetitionSeasonController.php",
+          "src/Form/Competition/CompetitionSeasonType.php",
+          "templates/admin/competition/season_index.html.twig",
+          "templates/admin/competition/form.html.twig",
+          "tests/Controller/AdminCompetitionSeasonTest.php"
+        ]
+      },
+      "published_at": "2026-09-30T19:24:23.930Z",
+      "claimed_on": "2026-09-30T19:24:23.930Z",
+      "claim_generation": 1,
+      "active_base_branch": "main",
+      "active_base_sha": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "active_head": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "resume_branch": "feature/wcp-629-competition-season-admin-g1",
+      "branch_heads": {
+        "claim_branch": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+        "feature_branch": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4"
+      },
+      "next_action": "Implement season admin workflow on the feature branch."
     }
   ],
   "recovery_queue": [],
