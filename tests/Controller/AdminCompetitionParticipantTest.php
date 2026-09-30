@@ -13,6 +13,7 @@ use App\Entity\User;
 use App\Module\CmsModuleManager;
 use App\Security\CmsPermission;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
@@ -273,6 +274,18 @@ final class AdminCompetitionParticipantTest extends WebTestCase
 
     private function em(KernelBrowser $client): EntityManagerInterface
     {
-        return $client->getContainer()->get(EntityManagerInterface::class);
+        $entityManager = $client->getContainer()->get(EntityManagerInterface::class);
+        if ($entityManager->isOpen()) {
+            return $entityManager;
+        }
+
+        $registry = $client->getContainer()->get(ManagerRegistry::class);
+        $registry->resetManager();
+        $entityManager = $registry->getManager();
+        if (!$entityManager instanceof EntityManagerInterface) {
+            throw new \LogicException('Doctrine did not reset the EntityManager.');
+        }
+
+        return $entityManager;
     }
 }
