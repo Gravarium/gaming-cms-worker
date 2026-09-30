@@ -213,6 +213,48 @@ final class PublicGameCatalogueSearchTest extends WebTestCase
         }
     }
 
+    public function testSearchEscapesPublisherDeveloperAndSummaryMetadata(): void
+    {
+        $client = static::createClient();
+        $moduleSnapshot = $this->captureGamingModuleState($client);
+        $this->setGamingModuleEnabled($client, true);
+        $token = bin2hex(random_bytes(8));
+        $fixtures = [];
+
+        try {
+            $publisherPayload = '<script>alert("publisher-'.$token.'")</script>';
+            $developerPayload = '<img src=x onerror="alert(1)">';
+            $summaryPayload = '<svg onload="alert(1)"></svg>';
+            $fixtures[] = $this->createEntry(
+                $client,
+                $token,
+                'metadata-escaping',
+                'Public result '.$token,
+                summary: $summaryPayload,
+                developer: $developerPayload,
+                publisherName: $publisherPayload,
+            );
+
+            $client->request('GET', '/game-search?q='.rawurlencode('Public result '.$token));
+
+            self::assertResponseIsSuccessful();
+            self::assertSelectorCount(1, '.game-search-result');
+            $result = $client->getCrawler()->filter('.game-search-result');
+            self::assertSame(0, $result->filter('script, img, svg')->count());
+
+            $content = (string) $client->getResponse()->getContent();
+            $resultText = $result->text('', true);
+            foreach ([$publisherPayload, $developerPayload, $summaryPayload] as $payload) {
+                self::assertStringNotContainsString($payload, $content);
+                self::assertStringContainsString(htmlspecialchars($payload, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'), $content);
+                self::assertStringContainsString($payload, $resultText);
+            }
+        } finally {
+            $this->removeFixtures($client, $fixtures);
+            $this->restoreGamingModuleState($client, $moduleSnapshot);
+        }
+    }
+
     public function testDisabledGamingHidesThePublicSearchRoute(): void
     {
         $client = static::createClient();
