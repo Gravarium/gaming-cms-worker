@@ -11,7 +11,7 @@
   "baseline_branch": "main",
   "base_sha": "9e083c63e7d888af36f93a23eb924c89fad2b971",
   "published_at": "2026-09-30T16:08:15.000Z",
-  "summary": "WCP-620 and WCP-622 are in progress; WCP-608 through WCP-621 are complete or awaiting Trusted review according to their recorded task states. No Trusted integration or deployment is implied.",
+  "summary": "WCP-620 and WCP-623 are in progress; WCP-621 and WCP-622 are complete pending Trusted review. No Trusted integration or deployment is implied.",
   "rules": {
     "choose": "Resume the current chat's unfinished claimed branch first. Otherwise atomically claim an eligible published task. If no published task is eligible, independently derive and publish a bounded worker-only CMS proposal from approved product goals and observed code gaps; do not ask the owner for the next FCP number.",
     "atomic_reservation": "Create the exact claim_branch and suggested feature branch from that task's published proposal_base_sha. If the claim already exists, treat it as a hard lock; the owning continuation resumes it and every other AI skips it.",
@@ -60002,6 +60002,114 @@
         "postgres_migration_result": "success",
         "reviews": "No submitted reviews or review comments as of completion."
       }
+    },
+    {
+      "priority": 623,
+      "package_id": "WCP-623",
+      "title": "Prevent caching and indexing of private competition views",
+      "risk": "low_read_only",
+      "execution_state": "worker_in_progress",
+      "claim_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-623-private-competition-cache-g1",
+      "suggested_branch": "feature/wcp-623-private-competition-cache-g1",
+      "base_branch": "main",
+      "base_sha": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "objective": "For private competitions that their creator or a gaming administrator may view through the public bracket and leaderboard routes, mark the rendered response private, no-store, and noindex. Keep existing visibility and module checks unchanged, and leave public-competition response behavior unchanged.",
+      "allowed_paths": [
+        "src/Controller/PublicCompetitionLeaderboardController.php",
+        "src/Controller/PublicCompetitionBracketController.php",
+        "tests/Controller/PublicCompetitionLeaderboardTest.php",
+        "tests/Controller/PublicCompetitionBracketControllerTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "CONTINUOUS-WORKER.md",
+        "CONTINUOUS-WORK-POOL.json",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "src/Entity/Competition/",
+        "src/Gaming/Competition/CompetitionVisibilityPolicy.php",
+        "src/Controller/AdminGamingController.php",
+        "templates/",
+        "config/"
+      ],
+      "deliverables": [
+        "Authorized owners/admins can still view private competition brackets and leaderboards.",
+        "Those private responses carry private no-store cache directives and noindex/nofollow/noarchive.",
+        "Anonymous viewers still receive the existing not-found response for private competitions.",
+        "Public competition pages and gaming-module gates retain their current behavior."
+      ],
+      "tests": [
+        "Integration tests cover the owner viewing a private leaderboard and bracket with private no-store/noindex headers.",
+        "Existing tests continue to prove private competitions are hidden from anonymous viewers and gaming-module-disabled routes fail closed.",
+        "Exact cache directives are asserted semantically so harmless framework-added directives do not mask a missing private/no-store/max-age=0 requirement.",
+        "Full exact-head Worker CI passes PHPStan, all application tests and PostgreSQL 18 migration validation."
+      ],
+      "completion_report": [
+        "Exact Worker main/base SHA, final Worker HEAD, Worker PR and complete changed-path list.",
+        "Evidence private competition owners/admins retain access while anonymous users remain denied.",
+        "Evidence private response cache/index headers are applied and public behavior is unchanged.",
+        "No schema/migration changes and no Trusted integration/deployment."
+      ],
+      "immutable_constraints": [
+        "private-competition-views-are-private-no-store-noindex",
+        "do-not-change-competition-visibility-policy",
+        "anonymous-private-competition-access-remains-denied",
+        "public-competition-response-behavior-unchanged",
+        "gaming-module-gate-remains-fail-closed",
+        "no-schema-or-migration-change",
+        "no-security-test-phpstan-CI-or-upload-protection-weakening",
+        "worker-output-is-untrusted-no-Trusted-merge-or-deployment"
+      ],
+      "proposal_kind": "worker_only",
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "proposal_dependency_evidence": [],
+      "collision_check": {
+        "compared_against": "Worker main 1d03d4947f15dc3e0fe4b79a990bd45468c761e4; Worker pool commit 4569e777c08fe41ae13f15949fe185eb6a49b9a6; all active and locked Worker claims, including WCP-620, WCP-621 and WCP-622.",
+        "result": "No active or locked Worker claim overlaps the four exact allowed paths. No entity, visibility policy, template, schema, migration, upload, recovery, or rollback file is included.",
+        "paths": [
+          "src/Controller/PublicCompetitionLeaderboardController.php",
+          "src/Controller/PublicCompetitionBracketController.php",
+          "tests/Controller/PublicCompetitionLeaderboardTest.php",
+          "tests/Controller/PublicCompetitionBracketControllerTest.php"
+        ]
+      },
+      "published_at": "2026-09-30T17:15:34Z",
+      "claimed_on": "2026-09-30T17:15:34Z",
+      "lease_expires_at": "2026-10-01T00:15:34.000Z",
+      "claim_generation": 1,
+      "active_base_branch": "main",
+      "active_base_sha": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "active_head": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "resume_branch": "feature/wcp-623-private-competition-cache-g1",
+      "last_observed_head": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "last_checkpoint_at": "2026-09-30T17:15:34Z",
+      "checkpoint_paths": [
+        "src/Controller/PublicCompetitionLeaderboardController.php",
+        "src/Controller/PublicCompetitionBracketController.php",
+        "tests/Controller/PublicCompetitionLeaderboardTest.php",
+        "tests/Controller/PublicCompetitionBracketControllerTest.php"
+      ],
+      "last_verified_push_at": null,
+      "branch_heads": {
+        "claim_branch": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+        "feature_branch": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4"
+      },
+      "next_action": "Add private no-store/noindex headers only to responses for non-public competitions in the bracket and leaderboard controllers; add owner-access integration tests for both paths."
     }
   ],
   "recovery_queue": [],
