@@ -11,7 +11,7 @@
   "baseline_branch": "main",
   "base_sha": "9e083c63e7d888af36f93a23eb924c89fad2b971",
   "published_at": "2026-09-30T09:11:17.950Z",
-  "summary": "WCP-511, WCP-608, WCP-609, WCP-610, WCP-611, WCP-612, WCP-613, WCP-614 and WCP-615 are complete Worker proposals awaiting Trusted review; their claims remain locked. WCP-616 is active on feature/wcp-616-public-video-search-page-bound-g1 from Worker main for bounded public video search navigation. Trusted main remains the only integration and deployment source.",
+  "summary": "WCP-608 through WCP-618 are complete Worker proposals awaiting Trusted review; their claims remain locked. WCP-619 is active on feature/wcp-619-admin-redirect-page-bound-g1 from Worker main for bounded admin content redirect pagination. Trusted main remains the only integration and deployment source.",
   "rules": {
     "choose": "Resume the current chat's unfinished claimed branch first. Otherwise atomically claim an eligible published task. If no published task is eligible, independently derive and publish a bounded worker-only CMS proposal from approved product goals and observed code gaps; do not ask the owner for the next FCP number.",
     "atomic_reservation": "Create the exact claim_branch and suggested feature branch from that task's published proposal_base_sha. If the claim already exists, treat it as a hard lock; the owning continuation resumes it and every other AI skips it.",
@@ -59366,6 +59366,100 @@
         "postgres_migration_job_id": 109834942777,
         "postgres_migration_result": "success"
       }
+    },
+    {
+      "priority": 619,
+      "package_id": "WCP-619",
+      "title": "Bound admin content redirect pagination",
+      "risk": "low",
+      "execution_state": "worker_in_progress",
+      "claim_state": "active",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-619-admin-redirect-page-bound-g1",
+      "suggested_branch": "feature/wcp-619-admin-redirect-page-bound-g1",
+      "base_branch": "main",
+      "base_sha": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "objective": "AdminContentRedirectController accepts page inputs only through MAX_PAGE (10,000), but calculates the displayed pages without that cap. With more than 250,000 matching redirects, the inventory displays a next link for page 10,001, which parseFilters rejects with HTTP 400. Tie the displayed page count to the accepted-page ceiling while preserving the exact result total, 25-row page size, filters, ordering, and current past-end clamping.",
+      "allowed_paths": [
+        "src/Controller/AdminContentRedirectController.php",
+        "tests/Controller/AdminContentRedirectBrowserTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "templates/",
+        "config/services.yaml",
+        "src/Repository/ContentRedirectRepository.php",
+        "src/Entity/"
+      ],
+      "deliverables": [
+        "Admin redirect page count never exceeds the same MAX_PAGE accepted by request validation.",
+        "The exact redirect total, 25-row page size, filters, stable ordering, private no-store responses, permission checks, and current last-page clamping remain unchanged.",
+        "Pure boundary tests cover empty, exact, rounded, capped, over-cap, PHP_INT_MAX, and negative totals.",
+        "The existing malformed-page integration test proves MAX_PAGE + 1 remains HTTP 400; no template, schema, or migration changes."
+      ],
+      "tests": [
+        "Focused tests prove page counts at 0, 1, PAGE_SIZE, PAGE_SIZE + 1, the 10,000-page edge, larger totals, and PHP_INT_MAX.",
+        "Negative totals are rejected without changing request validation.",
+        "Run the complete exact-head Worker CI without weakening access control, private cache, redirect safety, PHPStan, or CI checks."
+      ],
+      "completion_report": [
+        "Exact Worker main/base SHA, final Worker HEAD SHA, Worker PR, and complete changed-path list.",
+        "Evidence the displayed page count is bounded by the highest accepted page while the exact result count remains unchanged.",
+        "No schema or migration changes; the redirect repository and template remain untouched.",
+        "Exact-head Worker CI run plus PHP/Symfony and PostgreSQL job results; unresolved risks."
+      ],
+      "immutable_constraints": [
+        "admin-redirect-pagination-never-links-to-a-rejected-page",
+        "exact-redirect-result-count-and-25-row-page-size-remain-unchanged",
+        "admin-content-permission-private-cache-search-type-and-target-safety-remain-unchanged",
+        "no-schema-or-migration-change",
+        "no-security-test-phpstan-ci-validation-or-protection-weakening",
+        "red-CI-stops-integration",
+        "worker-code-is-untrusted-no-direct-Trusted-integration-or-deployment",
+        "no-private-runtime-or-sensitive-data"
+      ],
+      "proposal_kind": "worker_only",
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "proposal_dependency_evidence": [],
+      "collision_check": {
+        "compared_against": "Worker main 1d03d4947f15dc3e0fe4b79a990bd45468c761e4; Worker pool 154e7fcc6f1c05d70acb8dd6ca38d2fbd080c707; Trusted main 8852e024d89611291fc83214c1f0c1d4a758c9d8 and queue blob 4f5c73ba69758d9780e5bbbab92abda360fb1e62; all active and locked Worker claims and active Trusted FCP claims.",
+        "result": "No active/locked Worker or active Trusted path overlap for either allowed file. The prior WCP-460 path claim is released after Trusted integration. FCP-049's templates claim is avoided because the existing template already renders next-page links from the supplied pages value; no template edit is required.",
+        "paths": [
+          "src/Controller/AdminContentRedirectController.php",
+          "tests/Controller/AdminContentRedirectBrowserTest.php"
+        ]
+      },
+      "published_at": "2026-09-30T10:09:12.263Z",
+      "claimed_on": "2026-09-30T10:09:12.263Z",
+      "lease_expires_at": "2026-09-30T17:09:12.263Z",
+      "claim_generation": 1,
+      "active_base_branch": "main",
+      "active_base_sha": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "active_head": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "resume_branch": "feature/wcp-619-admin-redirect-page-bound-g1",
+      "last_observed_head": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "last_checkpoint_at": "2026-09-30T10:09:12.263Z",
+      "checkpoint_paths": [],
+      "last_verified_push_at": null,
+      "branch_heads": {
+        "claim_branch": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+        "feature_branch": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4"
+      },
+      "next_action": "Use one shared MAX_PAGE for page input validation and displayed page count, add pure boundary tests, and preserve current redirect inventory filters, private cache, stable ordering, and last-page clamping. Push a coherent checkpoint, open a draft Worker PR, and run exact-head Worker CI. Keep output untrusted; do not merge to Trusted or deploy."
     }
   ],
   "recovery_queue": [],
