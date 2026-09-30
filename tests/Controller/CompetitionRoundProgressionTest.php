@@ -11,7 +11,9 @@ use App\Entity\Competition\CompetitionParticipant;
 use App\Entity\Game;
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 
 final class CompetitionRoundProgressionTest extends WebTestCase
 {
@@ -64,6 +66,38 @@ final class CompetitionRoundProgressionTest extends WebTestCase
             self::assertResponseStatusCodeSame(403);
             self::assertCount(1, $this->em($client)->getRepository(CompetitionMatch::class)->findBy(['competition' => $competition]));
         } finally {
+            $this->removeFixtures($this->em($client), $competition, $game, [...$users, $manager]);
+        }
+    }
+
+    public function testIncompleteRoundDoesNotAdvanceWithValidManagerToken(): void
+    {
+        $client = static::createClient();
+        $em = $client->getContainer()->get(EntityManagerInterface::class);
+        [$competition, , , $game, $users] = $this->fixtures($em, 4);
+        $manager = (new User())->setEmail('round-incomplete-'.bin2hex(random_bytes(6)).'@example.test')
+            ->setDisplayName('Round manager')->setPermissions(['CMS_GAMING_MANAGE'])->verifyEmail();
+        $em->persist($manager);
+        $em->flush();
+
+        try {
+            $client->loginUser($manager);
+            $token = $client->getContainer()->get(CsrfTokenManagerInterface::class)
+                ->getToken('competition-advance-'.$competition->getId())->getValue();
+            $client->request('POST', '/admin/gaming/competitions/'.$competition->getId().'/advance', ['_token' => $token]);
+            self::assertResponseRedirects('/admin/gaming/competitions');
+
+            // A rejected transaction closes its manager; read back through a fresh one.
+            $registry = $client->getContainer()->get(ManagerRegistry::class);
+            $registry->resetManager();
+            $fresh = $this->em($client);
+            $managed = $fresh->find(Competition::class, $competition->getId());
+            self::assertInstanceOf(Competition::class, $managed);
+            self::assertSame(Competition::STATUS_IN_PROGRESS, $managed->getStatus());
+            self::assertCount(2, $fresh->getRepository(CompetitionMatch::class)->findBy(['competition' => $managed]));
+        } finally {
+            $registry = $client->getContainer()->get(ManagerRegistry::class);
+            $registry->resetManager();
             $this->removeFixtures($this->em($client), $competition, $game, [...$users, $manager]);
         }
     }
