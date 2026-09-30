@@ -10,7 +10,7 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "9e083c63e7d888af36f93a23eb924c89fad2b971",
-  "published_at": "2026-09-30T07:50:42.158Z",
+  "published_at": "2026-09-30T07:51:26.265Z",
   "summary": "WCP-511, WCP-608, WCP-609, WCP-610 and WCP-611 are complete Worker proposals awaiting Trusted review; their claims remain locked. WCP-612 is active from Worker main for related public gaming-guide recommendations. Trusted main remains the only integration and deployment source.",
   "rules": {
     "choose": "Resume the current chat's unfinished claimed branch first. Otherwise atomically claim an eligible published task. If no published task is eligible, independently derive and publish a bounded worker-only CMS proposal from approved product goals and observed code gaps; do not ask the owner for the next FCP number.",
@@ -58388,7 +58388,24 @@
         "claim_branch": "ce8c3d099c60cbf3bb3f48a3376c72ca17c3e027",
         "feature_branch": "ce8c3d099c60cbf3bb3f48a3376c72ca17c3e027"
       },
-      "next_action": "Feature checkpoint ce8c3d099c60cbf3bb3f48a3376c72ca17c3e027 is on both reserved branches. Review the exact diff, run focused PHPUnit and PHPStan, then open a draft Worker PR and complete exact-head Worker CI including PostgreSQL 18 migration validation."
+      "next_action": "Worker PR #408 is open as a draft at exact HEAD ce8c3d099c60cbf3bb3f48a3376c72ca17c3e027. Exact-head Worker CI #1075 is queued; inspect its PHPUnit/PHPStan and PostgreSQL 18 results, repair failures without weakening protections, then mark ready and lock after all gates pass.",
+      "worker_pr": 408,
+      "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/408",
+      "pr_state": "open_draft",
+      "worker_pr_state": "draft",
+      "worker_pr_base_branch": "main",
+      "worker_pr_base_sha": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "worker_pr_head_sha": "ce8c3d099c60cbf3bb3f48a3376c72ca17c3e027",
+      "worker_pr_changed_paths": [
+        "src/GameGuide/PublicGameGuideQuery.php",
+        "src/Controller/PublicGameGuideController.php",
+        "src/GameGuide/Templates/public/show.html.twig",
+        "tests/Controller/PublicGameGuideControllerTest.php"
+      ],
+      "ci_run_id": 36686098497,
+      "last_ci_run_id": 36686098497,
+      "ci_result": "in_progress",
+      "last_ci_result": "in_progress"
     }
   ],
   "recovery_queue": [],
