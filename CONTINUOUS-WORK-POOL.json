@@ -59765,21 +59765,29 @@
       },
       "published_at": "2026-09-30T16:08:15.000Z",
       "claimed_on": "2026-09-30T16:08:15.000Z",
-      "lease_expires_at": "2026-09-30T23:08:15.000Z",
+      "lease_expires_at": "2026-09-30T23:16:41.000Z",
       "claim_generation": 1,
       "active_base_branch": "main",
       "active_base_sha": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
-      "active_head": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "active_head": "fa42c0c82c234ac5e58d2cb5c531bc98a5da776b",
       "resume_branch": "feature/wcp-621-media-alt-text-audit-g1",
-      "last_observed_head": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
-      "last_checkpoint_at": null,
-      "checkpoint_paths": [],
-      "last_verified_push_at": null,
+      "last_observed_head": "fa42c0c82c234ac5e58d2cb5c531bc98a5da776b",
+      "last_checkpoint_at": "2026-09-30T16:16:41Z",
+      "checkpoint_paths": [
+        "config/packages/twig.yaml",
+        "src/Controller/AdminMediaAccessibilityController.php",
+        "src/MediaAccessibility/MediaAccessibilityReport.php",
+        "src/MediaAccessibility/Templates/admin/index.html.twig",
+        "templates/admin/dashboard.html.twig",
+        "tests/Controller/AdminMediaAccessibilityReportTest.php",
+        "tests/MediaAccessibility/MediaAccessibilityReportTest.php"
+      ],
+      "last_verified_push_at": "2026-09-30T16:16:41Z",
       "branch_heads": {
         "claim_branch": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
-        "feature_branch": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4"
+        "feature_branch": "fa42c0c82c234ac5e58d2cb5c531bc98a5da776b"
       },
-      "next_action": "Implement the read-only Media image alt-text review page, gated by CMS_STORAGE_MANAGE and the Media module; checkpoint source and focused tests promptly."
+      "next_action": "Remote checkpoint fa42c0c contains the report, route, Twig namespace, dashboard entry and focused tests in the exact allowlist. Review tests, then open a draft Worker PR and await exact-head CI."
     }
   ],
   "recovery_queue": [],
