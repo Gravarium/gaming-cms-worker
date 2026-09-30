@@ -59231,8 +59231,8 @@
       "package_id": "WCP-618",
       "title": "Bound admin video browser pagination",
       "risk": "low",
-      "execution_state": "worker_in_progress",
-      "claim_state": "active",
+      "execution_state": "worker_complete_awaiting_trusted_review",
+      "claim_state": "locked_until_trusted_resolution",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -59305,24 +59305,67 @@
       },
       "published_at": "2026-09-30T09:47:00.897Z",
       "claimed_on": "2026-09-30T09:47:00.897Z",
-      "lease_expires_at": "2026-09-30T16:56:44.929Z",
+      "lease_expires_at": null,
       "claim_generation": 1,
       "active_base_branch": "main",
       "active_base_sha": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
       "active_head": "6cccd64368f61fe48cd32ce1db9deb9fa683e821",
       "resume_branch": "feature/wcp-618-admin-video-page-bound-g1",
       "last_observed_head": "6cccd64368f61fe48cd32ce1db9deb9fa683e821",
-      "last_checkpoint_at": "2026-09-30T09:56:44.929Z",
+      "last_checkpoint_at": "2026-09-30T10:03:39.968Z",
       "checkpoint_paths": [
         "src/Video/AdminVideoBrowser.php",
         "tests/Controller/AdminVideoDirectoryBrowserTest.php"
       ],
-      "last_verified_push_at": "2026-09-30T09:56:44.929Z",
+      "last_verified_push_at": "2026-09-30T10:03:39.968Z",
       "branch_heads": {
         "claim_branch": "6cccd64368f61fe48cd32ce1db9deb9fa683e821",
         "feature_branch": "6cccd64368f61fe48cd32ce1db9deb9fa683e821"
       },
-      "next_action": "Open a draft Worker PR for exact HEAD 6cccd64368f61fe48cd32ce1db9deb9fa683e821 and run exact-head Worker CI. After both required jobs pass, update the PR with test results and mark it ready for Trusted review. Keep output untrusted; do not merge to Trusted or deploy."
+      "next_action": "Worker PR #414 is ready for Trusted review at exact HEAD 6cccd64368f61fe48cd32ce1db9deb9fa683e821 with exact-head Worker CI run #1082 green. Keep this claim locked until Trusted explicitly integrates, cancels or transfers it. No Trusted merge or deployment was performed.",
+      "worker_pr": 414,
+      "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/414",
+      "pr_state": "open_ready_for_review",
+      "worker_pr_state": "ready_for_review",
+      "worker_pr_base_branch": "main",
+      "worker_pr_base_sha": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "worker_pr_head_sha": "6cccd64368f61fe48cd32ce1db9deb9fa683e821",
+      "worker_pr_changed_paths": [
+        "src/Video/AdminVideoBrowser.php",
+        "tests/Controller/AdminVideoDirectoryBrowserTest.php"
+      ],
+      "ci_run_id": 36699379648,
+      "last_ci_run_id": 36699379648,
+      "ci_result": "success",
+      "last_ci_result": "success",
+      "php_symfony_job_id": 109834943067,
+      "php_symfony_result": "success",
+      "postgres_migration_job_id": 109834942777,
+      "postgres_migration_result": "success",
+      "completed_on": "2026-09-30T10:03:39.968Z",
+      "final_head": "6cccd64368f61fe48cd32ce1db9deb9fa683e821",
+      "final_changed_paths": [
+        "src/Video/AdminVideoBrowser.php",
+        "tests/Controller/AdminVideoDirectoryBrowserTest.php"
+      ],
+      "test_evidence": {
+        "targeted_tests": [
+          "AdminVideoDirectoryBrowserTest::testPageCountRoundsUpAndNeverExceedsTheAcceptedPageMaximum",
+          "AdminVideoDirectoryBrowserTest::testNegativePageCountsAreRejected",
+          "AdminVideoDirectoryBrowserTest::testMalformedFiltersReturnPrivateBadRequestsWithoutChangingVideos"
+        ],
+        "page_count": "The shared MAX_PAGE is used by input validation and displayed page count. Integer division plus remainder rounds up without floating-point overflow; the exact result total and 25-row page size are unchanged.",
+        "boundaries": "Covered totals 0, 1, 25, 26, 24,999,950 (999,998 pages), 24,999,974, 24,999,975, 24,999,976, and PHP_INT_MAX.",
+        "invalid_input": "Negative totals throw InvalidArgumentException. MAX_PAGE + 1 request remains an HTTP 400.",
+        "schema_or_migration_changes": "none",
+        "exact_head_ci_run_id": 36699379648,
+        "exact_head_ci_result": "success",
+        "php_symfony_job_id": 109834943067,
+        "php_symfony_result": "success",
+        "phpunit": "1,644 tests; 11,953 assertions; 1 PHPUnit deprecation and 26 notices.",
+        "postgres_migration_job_id": 109834942777,
+        "postgres_migration_result": "success"
+      }
     }
   ],
   "recovery_queue": [],
