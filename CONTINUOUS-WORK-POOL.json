@@ -61255,6 +61255,115 @@
       "next_action": "Implement schedule board and tests, then run exact-head Worker CI.",
       "last_observed_head": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
       "lease_expires_at": "2026-10-01T02:33:34.751Z"
+    },
+    {
+      "priority": 631,
+      "package_id": "WCP-631",
+      "title": "Make email verification explicit and safe from link prefetch",
+      "risk": "medium",
+      "execution_state": "worker_in_progress",
+      "claim_state": "active_lease",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-631-explicit-email-verification-g1",
+      "suggested_branch": "feature/wcp-631-explicit-email-verification-g1",
+      "resume_branch": "feature/wcp-631-explicit-email-verification-g1",
+      "base_branch": "main",
+      "base_sha": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "active_base_branch": "main",
+      "active_base_sha": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "proposal_kind": "worker_only",
+      "objective": "Make email-verification links safe for automated mail-link prefetchers. GET /verify-email/{token} must only validate and display an explicit confirmation form; it must never consume the token, verify the account, or write an audit event. A CSRF-protected POST performs one-time token consumption, verifies only an active user, revokes remaining verification tokens, and records the existing audit event. Keep invalid, expired, revoked, replayed, and inactive-account outcomes neutral, with no schema or migration changes.",
+      "allowed_paths": [
+        "src/Controller/AccountRecoveryController.php",
+        "templates/security/email_verified.html.twig",
+        "tests/Controller/AccountRecoveryControllerTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "CONTINUOUS-WORKER.md",
+        "CONTINUOUS-WORK-POOL.json",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "src/Entity/",
+        "src/Repository/",
+        "templates/base.html.twig",
+        "src/Controller/AdminGameGuideController.php",
+        "src/GameGuide/",
+        "tests/Controller/AdminGameGuideControllerTest.php"
+      ],
+      "deliverables": [
+        "GET validates an email-verification token without consuming it or changing user/audit state and renders an explicit confirmation form.",
+        "POST uses a CSRF token and consumes the verification token once; only an active account is verified and audited.",
+        "Forged CSRF, invalid/expired/revoked/replayed token, and account deactivation between GET and POST do not verify an account or add audit evidence.",
+        "The confirmation page preserves a neutral result for invalid tokens and does not disclose account identity or state.",
+        "No schema, migration, authentication-policy, token-hash, rate-limit, or unrelated account-recovery changes."
+      ],
+      "tests": [
+        "Controller tests prove GET is side-effect free for valid, invalid, and already-used tokens.",
+        "Tests cover valid confirmation POST, CSRF rejection without mutation, one-time replay denial, and account deactivation after confirmation-page GET.",
+        "Complete exact-head Worker CI including PHPStan, full PHPUnit suite, and PostgreSQL 18 migration validation."
+      ],
+      "completion_report": [
+        "Exact Worker base, final Worker HEAD, PR and complete changed-path list.",
+        "GET no-write evidence and successful/denied POST token/CSRF evidence.",
+        "Exact-head Worker CI result and residual limitations.",
+        "Confirmation that no schema/migration change or Trusted integration/deployment occurred."
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-Trusted-review-and-exact-head-CI",
+        "email-verification-GET-is-read-only",
+        "state-changing-email-verification-requires-POST-and-CSRF",
+        "one-time-token-consumption-remains-atomic-and-purpose-bound",
+        "inactive-accounts-cannot-be-verified-by-stale-links",
+        "no-auth-csrf-validation-rate-limit-or-test-weakening",
+        "no-schema-or-migration-change",
+        "no-Trusted-merge-or-deployment"
+      ],
+      "proposal_dependency_evidence": [],
+      "collision_check": {
+        "compared_against": "all active and locked Worker claims in pool blob 2ab50e3d8c9992d7d627593cca9acba5d3f4230a; sanitized Worker main 1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+        "result": "No active or locked Worker claim overlaps any of the three exact allowed paths. All currently unclaimed FCP packages are still blocked by at least one unclaimed dependency; this proposal is independent.",
+        "paths": [
+          "src/Controller/AccountRecoveryController.php",
+          "templates/security/email_verified.html.twig",
+          "tests/Controller/AccountRecoveryControllerTest.php"
+        ]
+      },
+      "priority_rationale": "Re-evaluation found no dependency-safe published FCP. This independent Worker-only proposal addresses an observed account-security gap with a narrow, disjoint path set.",
+      "code_gap_evidence": "On exact Worker main, AccountRecoveryController::verifyEmail is GET-only and calls AccountTokenManager::consume(), verifies the user, revokes tokens, and writes an audit event. Automated mail link scanning can trigger that action before the person follows the link.",
+      "claimed_on": "2026-09-30T22:22:06.486Z",
+      "claim_generation": 1,
+      "lease_expires_at": "2026-10-01T05:22:06.486Z",
+      "active_head": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "last_observed_head": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "checkpoint_commit_sha": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "branch_heads": {
+        "claim_branch": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+        "feature_branch": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4"
+      },
+      "checkpoint_paths": [],
+      "worker_pr_state": "not_created",
+      "pr_state": "not_created",
+      "last_ci_run_id": null,
+      "last_ci_result": "not_run",
+      "last_ci_head": null,
+      "ci_history": [],
+      "next_action": "Implement explicit CSRF-protected POST confirmation on feature/wcp-631-explicit-email-verification-g1; keep GET side-effect free."
     }
   ],
   "recovery_queue": [],
