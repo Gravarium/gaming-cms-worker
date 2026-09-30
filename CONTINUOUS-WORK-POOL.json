@@ -10,8 +10,8 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "9e083c63e7d888af36f93a23eb924c89fad2b971",
-  "published_at": "2026-09-30T19:24:00Z",
-  "summary": "WCP-628 open competition dispute queue claimed; WCP-627 completed with green exact-head Worker CI.",
+  "published_at": "2026-09-30T19:31:48.156Z",
+  "summary": "WCP-628 complete with green exact-head Worker CI and ready PR; separate active claims remain untouched.",
   "rules": {
     "choose": "Resume the current chat's unfinished claimed branch first. Otherwise atomically claim an eligible published task. If no published task is eligible, independently derive and publish a bounded worker-only CMS proposal from approved product goals and observed code gaps; do not ask the owner for the next FCP number.",
     "atomic_reservation": "Create the exact claim_branch and suggested feature branch from that task's published proposal_base_sha. If the claim already exists, treat it as a hard lock; the owning continuation resumes it and every other AI skips it.",
@@ -60736,8 +60736,8 @@
       "package_id": "WCP-628",
       "title": "Review open competition disputes in one admin queue",
       "risk": "medium",
-      "execution_state": "worker_in_progress",
-      "claim_state": "active_lease",
+      "execution_state": "worker_complete_awaiting_trusted_review",
+      "claim_state": "locked_until_trusted_resolution",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -60796,9 +60796,9 @@
         "claim_branch": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
         "feature_branch": "4233a5155c1cd6fcf3dcbfeabe5bcc79fd0f71ba"
       },
-      "next_action": "Wait for exact-head Worker CI #1100 and repair any failure.",
+      "next_action": "Await independent Worker/Trusted review; do not merge Worker code automatically.",
       "last_observed_head": "4233a5155c1cd6fcf3dcbfeabe5bcc79fd0f71ba",
-      "lease_expires_at": "2026-10-01T02:27:44.486Z",
+      "lease_expires_at": null,
       "last_checkpoint_at": "2026-09-30T19:27:44.486Z",
       "last_verified_push_at": "2026-09-30T19:27:44.486Z",
       "checkpoint_paths": [
@@ -60810,7 +60810,25 @@
       "worker_pr": 424,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/424",
       "worker_pr_head_sha": "4233a5155c1cd6fcf3dcbfeabe5bcc79fd0f71ba",
-      "worker_pr_state": "draft"
+      "worker_pr_state": "open_ready_for_review",
+      "pr_state": "open_ready_for_review",
+      "ci_result": "success",
+      "last_ci_result": "success",
+      "ci_run_id": 36765761520,
+      "last_ci_run_id": 36765761520,
+      "final_head": "4233a5155c1cd6fcf3dcbfeabe5bcc79fd0f71ba",
+      "php_symfony_job_id": 110059390746,
+      "php_symfony_result": "success",
+      "postgres_migration_job_id": 110059390515,
+      "postgres_migration_result": "success",
+      "final_changed_paths": [
+        "src/CompetitionDisputeQueue/OpenDisputeQueue.php",
+        "src/Controller/AdminCompetitionDisputeQueueController.php",
+        "templates/admin/competition_dispute_queue/index.html.twig",
+        "tests/Controller/AdminCompetitionDisputeQueueTest.php"
+      ],
+      "completed_on": "2026-09-30T19:31:48.156Z",
+      "test_evidence": "Exact-head Worker CI #1100 passed both jobs; PHP/Symfony 1,646 tests, 11,958 assertions; PostgreSQL 18 migration chain passed."
     },
     {
       "priority": 629,
