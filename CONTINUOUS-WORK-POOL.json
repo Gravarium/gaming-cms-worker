@@ -10,8 +10,8 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "9e083c63e7d888af36f93a23eb924c89fad2b971",
-  "published_at": "2026-09-30T08:51:32.415Z",
-  "summary": "WCP-511, WCP-608, WCP-609, WCP-610, WCP-611, WCP-612, WCP-613 and WCP-614 are complete Worker proposals awaiting Trusted review; their claims remain locked. Trusted main remains the only integration and deployment source.",
+  "published_at": "2026-09-30T08:57:08.768Z",
+  "summary": "WCP-511, WCP-608, WCP-609, WCP-610, WCP-611, WCP-612, WCP-613 and WCP-614 are complete Worker proposals awaiting Trusted review; their claims remain locked. WCP-615 is active on feature/wcp-615-public-video-category-pagination-g1 from Worker main for bounded public video category pagination. Trusted main remains the only integration and deployment source.",
   "rules": {
     "choose": "Resume the current chat's unfinished claimed branch first. Otherwise atomically claim an eligible published task. If no published task is eligible, independently derive and publish a bounded worker-only CMS proposal from approved product goals and observed code gaps; do not ask the owner for the next FCP number.",
     "atomic_reservation": "Create the exact claim_branch and suggested feature branch from that task's published proposal_base_sha. If the claim already exists, treat it as a hard lock; the owning continuation resumes it and every other AI skips it.",
@@ -58762,6 +58762,115 @@
         "postgres_migration_job_id": 109810011520,
         "postgres_migration_result": "success"
       }
+    },
+    {
+      "priority": 615,
+      "package_id": "WCP-615",
+      "title": "Paginate public video category pages",
+      "risk": "medium",
+      "execution_state": "worker_in_progress",
+      "claim_state": "active",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-615-public-video-category-pagination-g1",
+      "suggested_branch": "feature/wcp-615-public-video-category-pagination-g1",
+      "base_branch": "main",
+      "base_sha": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "objective": "The public /videos/categories/{slug} route currently loads every published video for a category through VideoRepository::findPublished(). Add bounded 20-video pagination with stable featured/publishedAt/ID ordering. Keep the enabled-category 404 behavior, video enabled/published visibility checks, and video module gate. Use a dedicated query class instead of the locked VideoRepository path, and a module-local Twig template instead of root templates.",
+      "allowed_paths": [
+        "src/Controller/VideoCategoryController.php",
+        "src/VideoCategory/PublicVideoCategoryVideosQuery.php",
+        "config/packages/video_category_pagination.yaml",
+        "src/VideoCategory/Templates/public/show.html.twig",
+        "tests/Controller/VideoCategoryPaginationTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "templates/",
+        "config/services.yaml",
+        "src/Repository/VideoRepository.php",
+        "src/Repository/VideoSearchRepository.php",
+        "src/Controller/VideoController.php",
+        "src/Controller/VideoSearchController.php",
+        "src/Entity/",
+        "src/Form/VideoCategoryType.php",
+        "src/Controller/AdminVideoCategoryController.php"
+      ],
+      "deliverables": [
+        "Public video category pages return at most 20 published, enabled videos per page, ordered by featured descending, publication time descending, and video ID descending.",
+        "Count and page queries share the selected category and the same enabled/published-at visibility constraints; collection joins do not duplicate or shift videos.",
+        "Pagination links retain the category route, page input is bounded and malformed values return 400, and pages beyond the category results return 404.",
+        "Disabled or unknown categories remain 404 and the existing video-module gate remains in force.",
+        "No schema or migration changes, and no edits to the locked VideoRepository or root templates."
+      ],
+      "tests": [
+        "Focused PHPUnit verifies stable first/next-page results, exact 20-item bounds, category isolation, enabled/published visibility and filter retention.",
+        "Synthetic fixtures cover tied sort values, disabled videos, drafts, future publications and videos from another category.",
+        "Invalid page, out-of-range page, disabled/unknown category and disabled-module behavior are covered.",
+        "Full exact-head Worker CI including PHPStan and PostgreSQL 18 migration validation passes."
+      ],
+      "completion_report": [
+        "Exact Worker main/base SHA, final Worker HEAD SHA, Worker PR and complete changed-path list.",
+        "Pagination ordering, count, visibility, bounds and category/module-gate test evidence.",
+        "No schema or migration changes; no edit to VideoRepository or root templates.",
+        "Exact-head Worker CI run and job results; unresolved risks and assumptions."
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-Trusted-review-and-exact-head-CI",
+        "public-category-pages-show-only-videos-enabled-and-published-by-the-current-time",
+        "count-and-page-query-visibility-filters-match",
+        "pagination-is-bounded-and-stable",
+        "no-schema-or-migration-change",
+        "no-security-test-phpstan-ci-validation-or-protection-weakening",
+        "red-CI-stops-integration",
+        "worker-code-is-untrusted-no-direct-Trusted-integration-or-deployment",
+        "no-private-runtime-or-sensitive-data"
+      ],
+      "proposal_kind": "worker_only",
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "proposal_dependency_evidence": [],
+      "collision_check": {
+        "compared_against": "Worker main 1d03d4947f15dc3e0fe4b79a990bd45468c761e4; continuous/work-pool-v4 blob eb14bd1b133d28fc0bf6418124a1a70d679e48c6; Trusted main 8852e024d89611291fc83214c1f0c1d4a758c9d8; Trusted queue blob 4f5c73ba69758d9780e5bbbab92abda360fb1e62; all active and locked Worker claims and active Trusted FCP claims.",
+        "result": "No active/locked Worker or active Trusted path overlap. The candidate avoids WCP-381's locked VideoRepository and video-search paths by adding a dedicated query class, and avoids active Trusted FCP-049's root templates/ claim with a module-local Twig view. Existing VideoCategory form paths remain untouched. All five prepared Worker FCPs still have at least one dependency without Trusted integration or a green exact-head Worker PR.",
+        "paths": [
+          "src/Controller/VideoCategoryController.php",
+          "src/VideoCategory/PublicVideoCategoryVideosQuery.php",
+          "config/packages/video_category_pagination.yaml",
+          "src/VideoCategory/Templates/public/show.html.twig",
+          "tests/Controller/VideoCategoryPaginationTest.php"
+        ]
+      },
+      "published_at": "2026-09-30T08:57:08.768Z",
+      "claimed_on": "2026-09-30T08:57:08.768Z",
+      "lease_expires_at": "2026-09-30T15:57:08.768Z",
+      "claim_generation": 1,
+      "active_base_branch": "main",
+      "active_base_sha": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "active_head": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "resume_branch": "feature/wcp-615-public-video-category-pagination-g1",
+      "last_observed_head": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "last_checkpoint_at": "2026-09-30T08:57:08.768Z",
+      "checkpoint_paths": [],
+      "last_verified_push_at": null,
+      "branch_heads": {
+        "claim_branch": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+        "feature_branch": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4"
+      },
+      "next_action": "Implement a bounded page/count query with the existing enabled/published filters, strict page validation, and module-local pagination template within the five reserved paths. Push a coherent checkpoint, open a draft Worker PR, and run exact-head CI. Keep output untrusted; do not merge to Trusted or deploy."
     }
   ],
   "recovery_queue": [],
