@@ -10,8 +10,8 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "9e083c63e7d888af36f93a23eb924c89fad2b971",
-  "published_at": "2026-09-30T23:34:30.000Z",
-  "summary": "WCP-633 competition participant administration complete in Worker PR #427 with green exact-head CI #1111.",
+  "published_at": "2026-09-30T23:36:30.000Z",
+  "summary": "WCP-635 competition evidence review board published and claimed on disjoint Worker paths.",
   "rules": {
     "choose": "Resume the current chat's unfinished claimed branch first. Otherwise atomically claim an eligible published task. If no published task is eligible, independently derive and publish a bounded worker-only CMS proposal from approved product goals and observed code gaps; do not ask the owner for the next FCP number.",
     "atomic_reservation": "Create the exact claim_branch and suggested feature branch from that task's published proposal_base_sha. If the claim already exists, treat it as a hard lock; the owning continuation resumes it and every other AI skips it.",
@@ -61744,6 +61744,111 @@
         "feature_branch": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4"
       },
       "next_action": "Implement forum author correction and push checkpoint."
+    },
+    {
+      "priority": 635,
+      "package_id": "WCP-635",
+      "title": "Review competition match evidence in a private admin board",
+      "risk": "medium_privacy",
+      "execution_state": "worker_in_progress",
+      "claim_state": "active_lease",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-635-competition-evidence-review-g1",
+      "suggested_branch": "feature/wcp-635-competition-evidence-review-g1",
+      "resume_branch": "feature/wcp-635-competition-evidence-review-g1",
+      "base_branch": "main",
+      "base_sha": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "active_base_branch": "main",
+      "active_base_sha": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "proposal_kind": "worker_only",
+      "objective": "Complete the evidence side of competition dispute operations with a private, read-only manager board per competition. List at most 100 newest match evidence records with exact count, strict type/page filters, match and participant context, submitter display name but no email, and only validated HTTP(S) outbound links. Enforce competition isolation, Gaming module and CMS_GAMING_MANAGE, private/no-store/noindex responses and GET-only behavior. No evidence mutation, schema or migration change.",
+      "allowed_paths": [
+        "src/CompetitionEvidenceAdmin/EvidenceReviewBoard.php",
+        "src/Controller/AdminCompetitionEvidenceController.php",
+        "templates/admin/competition_evidence/index.html.twig",
+        "tests/Controller/AdminCompetitionEvidenceTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "CONTINUOUS-WORKER.md",
+        "CONTINUOUS-WORK-POOL.json",
+        ".github/workflows/",
+        "migrations/",
+        "src/Entity/",
+        "src/Repository/",
+        "src/Controller/Competition/CompetitionController.php",
+        "src/Controller/AdminCompetition/AdminCompetitionController.php",
+        "templates/admin/competition/index.html.twig"
+      ],
+      "deliverables": [
+        "Bounded, stable, read-only evidence board scoped to one competition, with exact count and strict filters.",
+        "Show match round/sequence, participant names, evidence type, timestamp and submitter display name without exposing email or unrelated records.",
+        "Render an outbound link only when the persisted locator remains valid HTTP(S), with safe rel attributes; malformed legacy locators are redacted.",
+        "Permission/module gates, private cache and robots headers, GET-only routing, no writes, no schema or migration."
+      ],
+      "tests": [
+        "Functional tests for isolation, stable bounds/filters, permission/module gates, private headers and absence of emails.",
+        "Negative coverage for invalid filters/pages, POST rejection, malformed legacy locator redaction and foreign competition evidence.",
+        "Complete exact-head Worker CI including PHPStan, full PHPUnit and PostgreSQL 18 migration chain."
+      ],
+      "completion_report": [
+        "Exact Worker base/head, PR, complete paths and both CI jobs.",
+        "Privacy, outbound-link, isolation, read-only and denial evidence.",
+        "Confirmation of no Trusted merge or deployment."
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-Trusted-review-and-exact-head-CI",
+        "evidence-board-is-read-only-and-manager-only",
+        "no-private-evidence-or-account-email-leak",
+        "outbound-links-require-current-http-or-https-validation",
+        "no-auth-csrf-validation-or-test-weakening",
+        "no-schema-or-migration-change",
+        "no-Trusted-merge-or-deployment"
+      ],
+      "proposal_dependency_evidence": [],
+      "collision_check": {
+        "compared_against": "All active and locked claims in pool blob ad40cfaef6bb30c28235a193f4188edce19afcaa; Worker main 1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+        "result": "All four paths are new and disjoint from WCP-630 scheduling, WCP-631 email verification, WCP-634 forum editing and every locked proposal.",
+        "paths": [
+          "src/CompetitionEvidenceAdmin/EvidenceReviewBoard.php",
+          "src/Controller/AdminCompetitionEvidenceController.php",
+          "templates/admin/competition_evidence/index.html.twig",
+          "tests/Controller/AdminCompetitionEvidenceTest.php"
+        ]
+      },
+      "priority_rationale": "Evidence can be submitted today but has no manager review surface, leaving dispute operations incomplete. This read-only board closes that visible Competition module gap without touching locked controllers or state transitions.",
+      "code_gap_evidence": "Worker main persists CompetitionMatchEvidence through CompetitionController, while no controller or template reads those records for managers; searches find only submission tests and public non-disclosure checks.",
+      "claimed_on": "2026-09-30T23:36:30.000Z",
+      "claim_generation": 1,
+      "lease_expires_at": "2026-10-01T06:36:30.000Z",
+      "active_head": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "last_observed_head": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "checkpoint_commit_sha": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "branch_heads": {
+        "claim_branch": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+        "feature_branch": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4"
+      },
+      "checkpoint_paths": [],
+      "worker_pr_state": "not_created",
+      "pr_state": "not_created",
+      "last_ci_run_id": null,
+      "last_ci_result": "pending",
+      "last_ci_head": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "ci_history": [],
+      "next_action": "Implement bounded evidence query, protected private controller/template and privacy/isolation tests; then open draft PR and run exact-head CI.",
+      "last_checkpoint_at": "2026-09-30T23:36:30.000Z",
+      "last_verified_push_at": "2026-09-30T23:36:30.000Z"
     }
   ],
   "recovery_queue": [],
