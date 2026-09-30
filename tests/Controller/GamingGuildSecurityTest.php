@@ -251,6 +251,24 @@ final class GamingGuildSecurityTest extends WebTestCase
         self::assertResponseStatusCodeSame(403);
     }
 
+    public function testPublicGuildDescriptionEscapesStoredHtml(): void
+    {
+        $client = static::createClient();
+        [$guild] = $this->guilds($client);
+        $payload = '<script>alert(1)</script><img src=x onerror=alert(1)>';
+        $guild->setDescription($payload);
+        $this->em($client)->flush();
+
+        $client->request('GET', '/gaming/guild/'.$guild->getSlug());
+
+        self::assertResponseIsSuccessful();
+        $html = (string) $client->getResponse()->getContent();
+        self::assertStringNotContainsString('<script>alert(1)</script>', $html);
+        self::assertStringNotContainsString('<img src=x onerror=alert(1)>', $html);
+        self::assertStringContainsString('&lt;script&gt;alert(1)&lt;/script&gt;', $html);
+        self::assertStringContainsString('&lt;img src=x onerror=alert(1)&gt;', $html);
+    }
+
     private function user(KernelBrowser $client, array $permissions = []): User
     {
         $user = (new User())
