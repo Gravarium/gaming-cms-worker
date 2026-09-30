@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Öffentliche Mitglieder | Gaming CMS{% endblock %}
+
+{% block body %}
+<main class="article-shell">
+    <p class="eyebrow">Mitglieder</p>
+    <h1>Öffentliche Mitglieder</h1>
+    <p class="muted">Hier erscheinen nur Profile, deren Anzeigename öffentlich sichtbar ist.</p>
+
+    {% if members is not empty %}
+        <div class="roster-grid">
+            {% for member in members %}
+                <article class="member-card public-member-card">
+                    <h2><a href="{{ path('app_profile_show', {id: member.id}) }}">{{ member.displayName }}</a></h2>
+                </article>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p class="muted">Zurzeit gibt es keine öffentlichen Mitgliederprofile.</p>
+    {% endif %}
+
+    {% if pageCount > 1 %}
+        <nav class="row-actions" aria-label="Mitgliederseiten">
+            {% if page > 1 %}
+                <a class="button-link button-secondary" href="{{ path('app_public_member_directory', {page: page - 1}) }}">Zurück</a>
+            {% endif %}
+            <span>Seite {{ page }} von {{ pageCount }}</span>
+            {% if page < pageCount %}
+                <a class="button-link button-secondary" href="{{ path('app_public_member_directory', {page: page + 1}) }}">Weiter</a>
+            {% endif %}
+        </nav>
+    {% endif %}
+</main>
+{% endblock %}
