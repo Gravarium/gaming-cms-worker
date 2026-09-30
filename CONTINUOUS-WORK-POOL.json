@@ -10,8 +10,8 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "9e083c63e7d888af36f93a23eb924c89fad2b971",
-  "published_at": "2026-09-30T07:39:44.830Z",
-  "summary": "WCP-511, WCP-608, WCP-609, WCP-610 and WCP-611 are complete Worker proposals awaiting Trusted review; their claims remain locked. Trusted main remains the only integration and deployment source.",
+  "published_at": "2026-09-30T07:45:27.758Z",
+  "summary": "WCP-511, WCP-608, WCP-609, WCP-610 and WCP-611 are complete Worker proposals awaiting Trusted review; their claims remain locked. WCP-612 is active from Worker main for related public gaming-guide recommendations. Trusted main remains the only integration and deployment source.",
   "rules": {
     "choose": "Resume the current chat's unfinished claimed branch first. Otherwise atomically claim an eligible published task. If no published task is eligible, independently derive and publish a bounded worker-only CMS proposal from approved product goals and observed code gaps; do not ask the owner for the next FCP number.",
     "atomic_reservation": "Create the exact claim_branch and suggested feature branch from that task's published proposal_base_sha. If the claim already exists, treat it as a hard lock; the owning continuation resumes it and every other AI skips it.",
@@ -58102,7 +58102,7 @@
         }
       ]
     },
-            {
+    {
       "priority": 611,
       "package_id": "WCP-611",
       "title": "Add a public content-tag widget to the Page Builder",
@@ -58271,6 +58271,119 @@
         "postgres_migration_job_id": 109786442744,
         "postgres_migration_result": "success"
       }
+    },
+    {
+      "priority": 612,
+      "package_id": "WCP-612",
+      "title": "Recommend related public game guides on guide detail pages",
+      "risk": "low",
+      "execution_state": "worker_in_progress",
+      "claim_state": "active",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-612-related-public-game-guides-g1",
+      "suggested_branch": "feature/wcp-612-related-public-game-guides-g1",
+      "base_branch": "main",
+      "base_sha": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "objective": "Improve discovery from a public game-guide detail page by showing up to three other publicly visible guides for the same enabled game. Exclude the current guide and unpublished, future, draft, review or disabled-game guides. Keep ordering deterministic, output escaped, queries read-only and bounded, and leave the public index, editorial workflow, schema, migrations and shared templates unchanged.",
+      "allowed_paths": [
+        "src/GameGuide/PublicGameGuideQuery.php",
+        "src/Controller/PublicGameGuideController.php",
+        "src/GameGuide/Templates/public/show.html.twig",
+        "tests/Controller/PublicGameGuideControllerTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "CONTINUOUS-WORKER.md",
+        "CONTINUOUS-WORK-POOL.json",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "config/",
+        "assets/",
+        "public/",
+        "templates/",
+        "src/Entity/",
+        "src/Form/",
+        "src/Repository/",
+        "src/Widget/",
+        "src/Gaming/Guide/",
+        "src/Controller/AdminGameGuideController.php",
+        "src/GameGuide/Templates/admin/",
+        "tests/Gaming/Guide/"
+      ],
+      "deliverables": [
+        "PublicGameGuideQuery returns no more than three related rows for the current guide's enabled game, excludes the current guide, and applies the existing public publication predicates.",
+        "Related rows are ordered by published_at descending then guide ID descending and expose only the same public summary fields used by the guide directory.",
+        "PublicGameGuideController passes related guides only after the requested detail itself has passed the existing public visibility query.",
+        "The detail template adds an accessible related-guides section with links to existing public detail routes and omits the section when no related guides exist.",
+        "No writes, schema, migration, entity, repository, administration, public-index, root-template or shared-navigation changes."
+      ],
+      "tests": [
+        "Focused PHPUnit coverage verifies same-game related links, current-guide exclusion, deterministic ordering and the three-item bound.",
+        "Visibility fixtures verify that draft, review, scheduled/future, disabled-game and cross-game guides are excluded while published guides are included.",
+        "Twig output remains escaped and exposes no author, reviewer or private workflow metadata.",
+        "Existing public detail visibility, module-gate, focused PHPStan and full exact-head Worker CI including PostgreSQL 18 migration validation pass."
+      ],
+      "completion_report": [
+        "Exact Worker main/base SHA, final Worker HEAD SHA, Worker PR and complete changed-path list.",
+        "Focused visibility, ordering, bound, route and output-escaping test evidence.",
+        "Explicit no-write, no-schema/migration and Trusted boundary impact; unresolved risks and deferred behavior.",
+        "Exact-head Worker CI run and job results; Trusted review remains required and no Trusted merge or deployment is authorized."
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-Trusted-review-and-exact-head-CI",
+        "show-only-public-guides-for-enabled-games",
+        "do-not-expose-authors-reviewers-or-private-review-metadata",
+        "related-query-is-read-only-bounded-and-deterministically-ordered",
+        "no-schema-or-migration-change",
+        "no-security-test-phpstan-ci-validation-or-protection-weakening",
+        "red-CI-stops-integration",
+        "worker-code-is-untrusted-no-direct-Trusted-integration-or-deployment",
+        "no-private-runtime-or-sensitive-data"
+      ],
+      "proposal_kind": "worker_only",
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "proposal_dependency_evidence": [],
+      "collision_check": {
+        "compared_against": "Worker main 1d03d4947f15dc3e0fe4b79a990bd45468c761e4; fresh continuous/work-pool-v4 blob 75c86390d13a0ffa3e262fe337fd4409c7407d6d after WCP-611 completion; Trusted main 8852e024d89611291fc83214c1f0c1d4a758c9d8 and current queue blob 4f5c73ba69758d9780e5bbbab92abda360fb1e62; active Trusted FCP-049 and FCP-077; all active and locked Worker claims.",
+        "result": "No path overlap with active/locked Worker claims or active Trusted FCP claims. The new module-local template is under src/GameGuide/Templates, outside FCP-072's root templates/ claim. The five prepared FCP task specs remain blocked by unintegrated prerequisites; none has an exact-green Worker predecessor proposal.",
+        "paths": [
+          "src/GameGuide/PublicGameGuideQuery.php",
+          "src/Controller/PublicGameGuideController.php",
+          "src/GameGuide/Templates/public/show.html.twig",
+          "tests/Controller/PublicGameGuideControllerTest.php"
+        ]
+      },
+      "published_at": "2026-09-30T07:45:27.758Z",
+      "claimed_on": "2026-09-30T07:45:27.758Z",
+      "lease_expires_at": "2026-09-30T14:45:27.758Z",
+      "claim_generation": 1,
+      "active_base_branch": "main",
+      "active_base_sha": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "active_head": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "resume_branch": "feature/wcp-612-related-public-game-guides-g1",
+      "last_observed_head": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "last_checkpoint_at": "2026-09-30T07:45:27.758Z",
+      "checkpoint_paths": [],
+      "last_verified_push_at": null,
+      "branch_heads": {
+        "claim_branch": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+        "feature_branch": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4"
+      },
+      "next_action": "Implement the read-only related-guides query, detail-page section and focused tests within the four reserved paths. Push a coherent checkpoint, open a draft Worker PR and run focused PHPStan/PHPUnit plus full exact-head CI including PostgreSQL 18 migration validation. Keep the proposal locked for Trusted review after green CI; do not merge or deploy."
     }
   ],
   "recovery_queue": [],
