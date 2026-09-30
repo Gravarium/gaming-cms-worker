@@ -60452,6 +60452,102 @@
         "postgres_migration_result": "success",
         "reviews": "No submitted reviews at handoff."
       }
+    },
+    {
+      "priority": 626,
+      "package_id": "WCP-626",
+      "title": "Browse personal forum subscriptions with current access checks",
+      "risk": "medium_privacy",
+      "execution_state": "worker_in_progress",
+      "claim_state": "worker_in_progress",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-626-forum-subscriptions-g1",
+      "suggested_branch": "feature/wcp-626-forum-subscriptions-g1",
+      "base_branch": "main",
+      "base_sha": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "objective": "Give signed-in members a paginated overview of threads they follow. Recheck each room with the existing ForumWorkflowGateway visibility authority before displaying title or link; hide inaccessible subscriptions and do not expose post bodies. Preserve module gate and private no-store/noindex, with strict page bounds and exact visible totals. No schema/migrations.",
+      "allowed_paths": [
+        "src/ForumSubscription/VisibleSubscriptions.php",
+        "src/Controller/PublicForumSubscriptionController.php",
+        "src/ForumWorkflow/Templates/public/subscriptions.html.twig",
+        "src/ForumWorkflow/Templates/public/rooms.html.twig",
+        "tests/Controller/PublicForumSubscriptionTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "CONTINUOUS-WORKER.md",
+        "CONTINUOUS-WORK-POOL.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "src/ForumWorkflow/ForumWorkflowGateway.php",
+        "src/Controller/PublicForumWorkflowController.php",
+        "src/Entity/"
+      ],
+      "deliverables": [
+        "Authenticated members can browse their own subscribed threads in stable 20-item pages, linked from the forum index.",
+        "The existing forum room visibility check applies to each subscription, including member/guild and moderator access changes.",
+        "Missing Gaming module, anonymous users, invalid/out-of-range pages and inaccessible subscriptions never expose private titles.",
+        "Response is private, no-store and noindex; no post bodies, schema or migration changes."
+      ],
+      "tests": [
+        "Integration tests cover own subscriptions, other users' subscriptions, visibility changes, pagination, invalid pages and anonymous access.",
+        "Exact-head Worker CI passes full PHP/Symfony and PostgreSQL jobs."
+      ],
+      "completion_report": [
+        "Exact base/head, PR, changed paths and CI jobs.",
+        "Visibility/privacy tests and no Trusted integration/deployment."
+      ],
+      "immutable_constraints": [
+        "existing-ForumRoomPolicy-authority",
+        "user-scoped-subscriptions",
+        "private-no-store-noindex",
+        "bounded-pages",
+        "no-security-or-CI-weakening",
+        "worker-output-untrusted-no-Trusted-merge-or-deployment"
+      ],
+      "proposal_kind": "worker_only",
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "proposal_dependency_evidence": [],
+      "collision_check": {
+        "compared_against": "Live pool and all active/locked Worker claims at c20bc1c685b6676961cacf2368c9afc997edf106",
+        "result": "Five selected paths do not overlap active WCP-620 or locked packages; existing gateway/controller unchanged.",
+        "paths": [
+          "src/ForumSubscription/VisibleSubscriptions.php",
+          "src/Controller/PublicForumSubscriptionController.php",
+          "src/ForumWorkflow/Templates/public/subscriptions.html.twig",
+          "src/ForumWorkflow/Templates/public/rooms.html.twig",
+          "tests/Controller/PublicForumSubscriptionTest.php"
+        ]
+      },
+      "published_at": "2026-09-30T18:15:26.629Z",
+      "claimed_on": "2026-09-30T18:15:26.629Z",
+      "lease_expires_at": "2026-10-01T01:15:26.629Z",
+      "claim_generation": 1,
+      "active_base_branch": "main",
+      "active_base_sha": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "active_head": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "resume_branch": "feature/wcp-626-forum-subscriptions-g1",
+      "last_observed_head": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "last_checkpoint_at": null,
+      "checkpoint_paths": [],
+      "last_verified_push_at": null,
+      "branch_heads": {
+        "claim_branch": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+        "feature_branch": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4"
+      },
+      "next_action": "Implement visible personal subscription overview and integration tests, then push checkpoint and open Worker PR."
     }
   ],
   "recovery_queue": [],
