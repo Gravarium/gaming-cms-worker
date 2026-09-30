@@ -60613,7 +60613,8 @@
         "src/CompetitionMatchInbox/CaptainMatchInbox.php",
         "src/Controller/CompetitionMatchInboxController.php",
         "templates/competition_match_inbox/index.html.twig",
-        "tests/Controller/CompetitionMatchInboxTest.php"
+        "tests/Controller/CompetitionMatchInboxTest.php",
+        "src/CompetitionParticipation/Templates/account/dashboard.html.twig"
       ],
       "forbidden_paths": [
         "private/",
@@ -60631,7 +60632,8 @@
       "deliverables": [
         "Captain-only GET page lists upcoming and confirmed matches in deterministic bounded order.",
         "Current Gaming-module and competition/match visibility gates apply; no private fixture leaks.",
-        "Personalized responses cannot be cached or indexed; no new mutation or schema."
+        "Personalized responses cannot be cached or indexed; no new mutation or schema.",
+        "Existing personal competition dashboard links to the inbox."
       ],
       "tests": [
         "Functional positive and negative auth, visibility, module and cache-header tests.",
@@ -60654,12 +60656,13 @@
       "proposal_dependency_evidence": [],
       "collision_check": {
         "compared_against": "Current pool active and locked allowed paths and live Worker main",
-        "result": "All four paths are new and disjoint from every active or locked claim; no migration or shared template edits.",
+        "result": "All five paths are disjoint from active and locked claims; the existing personal dashboard gains only a navigation link. No migration or shared admin template edits.",
         "paths": [
           "src/CompetitionMatchInbox/CaptainMatchInbox.php",
           "src/Controller/CompetitionMatchInboxController.php",
           "templates/competition_match_inbox/index.html.twig",
-          "tests/Controller/CompetitionMatchInboxTest.php"
+          "tests/Controller/CompetitionMatchInboxTest.php",
+          "src/CompetitionParticipation/Templates/account/dashboard.html.twig"
         ]
       },
       "published_at": "2026-09-30T19:13:27.078Z",
