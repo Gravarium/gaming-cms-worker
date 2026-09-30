@@ -6,9 +6,13 @@
 <main>
     <h1>Neue Unterhaltung</h1>
     {{ form_start(form) }}
-        {{ form_row(form.recipientId) }}
+        {{ form_errors(form) }}
+        {% if not hasRecipientChoices %}
+            <p class="muted" role="status">Zurzeit gibt es keine aktiven Mitglieder mit einem für dich sichtbaren Anzeigenamen.</p>
+        {% endif %}
+        {{ form_row(form.recipientIds) }}
         {{ form_row(form.title) }}
-        <button type="submit">Erstellen</button>
+        <button type="submit" {% if not hasRecipientChoices %}disabled{% endif %}>Erstellen</button>
     {{ form_end(form) }}
     <p><a href="{{ path('app_social_index') }}">Zurück zu Social</a></p>
 </main>
