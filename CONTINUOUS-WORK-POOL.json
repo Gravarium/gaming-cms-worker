@@ -10,8 +10,8 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "9e083c63e7d888af36f93a23eb924c89fad2b971",
-  "published_at": "2026-09-30T08:09:03.328Z",
-  "summary": "WCP-511, WCP-608, WCP-609, WCP-610, WCP-611 and WCP-612 are complete Worker proposals awaiting Trusted review; their claims remain locked. WCP-613 is in draft PR #409 at 39fb45d5ecc330d26055c812b7ef0d365d2dde3a; exact-head CI run 36687804895 is pending. Trusted main remains the only integration and deployment source.",
+  "published_at": "2026-09-30T08:17:23.376Z",
+  "summary": "WCP-511, WCP-608, WCP-609, WCP-610, WCP-611 and WCP-612 are complete Worker proposals awaiting Trusted review; their claims remain locked. WCP-613 is complete in ready PR #409 at 39fb45d5ecc330d26055c812b7ef0d365d2dde3a with exact-head CI green and its claim locked for Trusted resolution. Trusted main remains the only integration and deployment source.",
   "rules": {
     "choose": "Resume the current chat's unfinished claimed branch first. Otherwise atomically claim an eligible published task. If no published task is eligible, independently derive and publish a bounded worker-only CMS proposal from approved product goals and observed code gaps; do not ask the owner for the next FCP number.",
     "atomic_reservation": "Create the exact claim_branch and suggested feature branch from that task's published proposal_base_sha. If the claim already exists, treat it as a hard lock; the owning continuation resumes it and every other AI skips it.",
@@ -58436,13 +58436,13 @@
         "postgres_migration_result": "success"
       }
     },
-            {
+                {
       "priority": 613,
       "package_id": "WCP-613",
       "title": "Publish a public RSS feed for gaming guides",
       "risk": "low",
-      "execution_state": "worker_in_progress",
-      "claim_state": "active",
+      "execution_state": "worker_complete_awaiting_trusted_review",
+      "claim_state": "locked_until_trusted_resolution",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -58532,14 +58532,14 @@
       },
       "published_at": "2026-09-30T08:00:53.681Z",
       "claimed_on": "2026-09-30T08:00:53.681Z",
-      "lease_expires_at": "2026-09-30T15:07:17.707Z",
+      "lease_expires_at": null,
       "claim_generation": 1,
       "active_base_branch": "main",
       "active_base_sha": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
       "active_head": "39fb45d5ecc330d26055c812b7ef0d365d2dde3a",
       "resume_branch": "feature/wcp-613-public-game-guide-rss-feed-g1",
       "last_observed_head": "39fb45d5ecc330d26055c812b7ef0d365d2dde3a",
-      "last_checkpoint_at": "2026-09-30T08:07:17.707Z",
+      "last_checkpoint_at": "2026-09-30T08:17:23.376Z",
       "checkpoint_paths": [
         "src/Controller/PublicGameGuideFeedController.php",
         "src/GameGuide/Templates/public/feed.xml.twig",
@@ -58551,11 +58551,11 @@
         "claim_branch": "39fb45d5ecc330d26055c812b7ef0d365d2dde3a",
         "feature_branch": "39fb45d5ecc330d26055c812b7ef0d365d2dde3a"
       },
-      "next_action": "Monitor exact-head Worker CI run #1076 (36687804895) for PR #409 at 39fb45d5ecc330d26055c812b7ef0d365d2dde3a. Diagnose and repair any failures only within the reserved paths; mark ready only after all exact-head jobs pass. Keep this proposal untrusted; do not merge to Trusted or deploy.",
+      "next_action": "Worker PR #409 is ready for Trusted review at exact HEAD 39fb45d5ecc330d26055c812b7ef0d365d2dde3a with exact-head CI run #1076 green. Keep this claim locked until Trusted explicitly integrates, cancels or transfers it. No Trusted merge or deployment was performed.",
       "worker_pr": 409,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/409",
-      "pr_state": "open_draft",
-      "worker_pr_state": "draft",
+      "pr_state": "open_ready_for_review",
+      "worker_pr_state": "ready_for_review",
       "worker_pr_base_branch": "main",
       "worker_pr_base_sha": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
       "worker_pr_head_sha": "39fb45d5ecc330d26055c812b7ef0d365d2dde3a",
@@ -58567,8 +58567,37 @@
       ],
       "ci_run_id": 36687804895,
       "last_ci_run_id": 36687804895,
-      "ci_result": "pending",
-      "last_ci_result": "pending"
+      "ci_result": "success",
+      "last_ci_result": "success",
+      "final_head": "39fb45d5ecc330d26055c812b7ef0d365d2dde3a",
+      "final_changed_paths": [
+        "src/Controller/PublicGameGuideFeedController.php",
+        "src/GameGuide/Templates/public/feed.xml.twig",
+        "src/GameGuide/Templates/public/index.html.twig",
+        "tests/Controller/PublicGameGuideFeedControllerTest.php"
+      ],
+      "php_symfony_job_id": 109797583526,
+      "php_symfony_result": "success",
+      "postgres_migration_job_id": 109797583331,
+      "postgres_migration_result": "success",
+      "completed_on": "2026-09-30T08:17:23.376Z",
+      "test_evidence": {
+        "targeted_tests": [
+          "PublicGameGuideFeedControllerTest::testFeedIsValidBoundedXmlAndContainsOnlyPublishedGuides"
+        ],
+        "feed": "Well-formed RSS 2.0; visible directory subscription link; absolute detail URLs; RSS MIME and nosniff.",
+        "visibility": "Only latest public guides from enabled games; draft, review, scheduled, future and disabled-game rows excluded; maximum 12 entries.",
+        "xml_safety": "XML parser accepts feed; title containing &, <, > and quotes is escaped; feed contains no author email.",
+        "module_gate": "Gaming-disabled request returns 404.",
+        "schema_or_migration_changes": "none",
+        "exact_head_ci_run_id": 36687804895,
+        "exact_head_ci_result": "success",
+        "php_symfony_job_id": 109797583526,
+        "php_symfony_result": "success",
+        "phpunit": "1,643 tests; 11,970 assertions; 1 PHPUnit deprecation and 26 notices (same deprecation/notice counts as prior exact-base PR #408).",
+        "postgres_migration_job_id": 109797583331,
+        "postgres_migration_result": "success"
+      }
     }
   ],
   "recovery_queue": [],
