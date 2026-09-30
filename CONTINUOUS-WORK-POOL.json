@@ -10,8 +10,8 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "9e083c63e7d888af36f93a23eb924c89fad2b971",
-  "published_at": "2026-09-30T09:08:17.786Z",
-  "summary": "WCP-511, WCP-608, WCP-609, WCP-610, WCP-611, WCP-612, WCP-613, WCP-614 and WCP-615 are complete Worker proposals awaiting Trusted review; their claims remain locked. Trusted main remains the only integration and deployment source.",
+  "published_at": "2026-09-30T09:11:17.950Z",
+  "summary": "WCP-511, WCP-608, WCP-609, WCP-610, WCP-611, WCP-612, WCP-613, WCP-614 and WCP-615 are complete Worker proposals awaiting Trusted review; their claims remain locked. WCP-616 is active on feature/wcp-616-public-video-search-page-bound-g1 from Worker main for bounded public video search navigation. Trusted main remains the only integration and deployment source.",
   "rules": {
     "choose": "Resume the current chat's unfinished claimed branch first. Otherwise atomically claim an eligible published task. If no published task is eligible, independently derive and publish a bounded worker-only CMS proposal from approved product goals and observed code gaps; do not ask the owner for the next FCP number.",
     "atomic_reservation": "Create the exact claim_branch and suggested feature branch from that task's published proposal_base_sha. If the claim already exists, treat it as a hard lock; the owning continuation resumes it and every other AI skips it.",
@@ -58927,6 +58927,108 @@
         "postgres_migration_job_id": 109816148633,
         "postgres_migration_result": "success"
       }
+    },
+    {
+      "priority": 616,
+      "package_id": "WCP-616",
+      "title": "Cap public video search page navigation",
+      "risk": "low",
+      "execution_state": "worker_in_progress",
+      "claim_state": "active",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-616-public-video-search-page-bound-g1",
+      "suggested_branch": "feature/wcp-616-public-video-search-page-bound-g1",
+      "base_branch": "main",
+      "base_sha": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "objective": "The public /video-search controller rejects requested pages above PublicVideoSearchRepository::MAX_PAGE (1000), but its displayed totalPages currently grows without that cap. Searches with more than 20,000 matches therefore expose next-page links that immediately return HTTP 400. Clamp displayed pages to the supported maximum while keeping the actual match count intact, and cover ceiling, limit and integer-overflow boundaries.",
+      "allowed_paths": [
+        "src/Controller/PublicVideoSearchController.php",
+        "src/Repository/PublicVideoSearchRepository.php",
+        "tests/VideoSearch/PublicVideoSearchPageCountTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "templates/",
+        "config/services.yaml",
+        "src/Controller/VideoSearchController.php",
+        "src/Repository/VideoRepository.php",
+        "src/Controller/PublicVideoCategoryController.php",
+        "src/VideoCategory/",
+        "src/Entity/",
+        "src/Form/"
+      ],
+      "deliverables": [
+        "Controller pagination uses a single bounded total-page calculation tied to the repository's PAGE_SIZE and MAX_PAGE constants.",
+        "The total result count remains the exact match count; only reachable page count is capped to the supported page range.",
+        "The pagination UI never links to a page that the request validator rejects.",
+        "No changes to the separate /videos search screen, module-local Twig templates, schema or migrations."
+      ],
+      "tests": [
+        "Focused PHPUnit covers empty, exact-boundary and round-up page counts, the 1,000-page ceiling, totals beyond the ceiling and PHP_INT_MAX without integer overflow.",
+        "Negative result totals are rejected.",
+        "Existing controller tests and full exact-head Worker CI pass without weakening search validation."
+      ],
+      "completion_report": [
+        "Exact Worker main/base SHA, final Worker HEAD SHA, Worker PR and complete changed paths.",
+        "Page-count boundary, maximum page, output count and existing search validation evidence.",
+        "No schema or migration change; the separate /videos search route remains untouched.",
+        "Exact-head Worker CI run and job results; unresolved risks and assumptions."
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-Trusted-review-and-exact-head-CI",
+        "public-video-search-remains-published-and-enabled-only",
+        "displayed-pages-never-exceed-the-supported-page-bound",
+        "actual-match-count-remains-accurate",
+        "no-schema-or-migration-change",
+        "no-security-test-phpstan-ci-validation-or-protection-weakening",
+        "red-CI-stops-integration",
+        "worker-code-is-untrusted-no-direct-Trusted-integration-or-deployment",
+        "no-private-runtime-or-sensitive-data"
+      ],
+      "proposal_kind": "worker_only",
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "proposal_dependency_evidence": [],
+      "collision_check": {
+        "compared_against": "Worker main 1d03d4947f15dc3e0fe4b79a990bd45468c761e4; continuous/work-pool-v4 blob 4f37a9807462aedead290ee81265cdd5eaf22dd8; Trusted main 8852e024d89611291fc83214c1f0c1d4a758c9d8; Trusted queue blob 4f5c73ba69758d9780e5bbbab92abda360fb1e62; all active and locked Worker claims and active Trusted FCP claims.",
+        "result": "No active/locked Worker or active Trusted path overlap. The candidate only changes the separate /video-search controller and repository, plus a new pure page-count test. It avoids WCP-381's VideoSearchController/VideoRepository search screen and active Trusted FCP-049's root templates/ claim. All five prepared Worker FCPs still have at least one dependency without Trusted integration or a green exact-head Worker PR.",
+        "paths": [
+          "src/Controller/PublicVideoSearchController.php",
+          "src/Repository/PublicVideoSearchRepository.php",
+          "tests/VideoSearch/PublicVideoSearchPageCountTest.php"
+        ]
+      },
+      "published_at": "2026-09-30T09:11:17.950Z",
+      "claimed_on": "2026-09-30T09:11:17.950Z",
+      "lease_expires_at": "2026-09-30T16:11:17.950Z",
+      "claim_generation": 1,
+      "active_base_branch": "main",
+      "active_base_sha": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "active_head": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "resume_branch": "feature/wcp-616-public-video-search-page-bound-g1",
+      "last_observed_head": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "last_checkpoint_at": "2026-09-30T09:11:17.950Z",
+      "checkpoint_paths": [],
+      "last_verified_push_at": null,
+      "branch_heads": {
+        "claim_branch": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+        "feature_branch": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4"
+      },
+      "next_action": "Add a bounded page-count helper using the existing public video search limits, call it from the controller, and add focused arithmetic boundary tests within the three reserved paths. Push a coherent checkpoint, open a draft Worker PR, and run exact-head CI. Keep output untrusted; do not merge to Trusted or deploy."
     }
   ],
   "recovery_queue": [],
