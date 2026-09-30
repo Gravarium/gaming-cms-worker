@@ -136,6 +136,54 @@ final class CharacterSelfServiceTest extends WebTestCase
         self::assertFalse($account->isDeleted());
     }
 
+    public function testOwnersCanWithdrawConsentAndRetireProfilesWhenGameIsDisabled(): void
+    {
+        $client = static::createClient();
+        $em = $this->em($client);
+        $owner = $this->user($em);
+        $game = $this->game($em);
+        $game->setEnabled(false);
+        $account = (new CharacterAccount($owner, $game, 'disabled-game-key', 'Disabled game account'))->grantConsent();
+        $profile = (new CharacterProfile($account, 'Disabled game profile'))->setPubliclyVisible(true);
+        $em->persist($account);
+        $em->persist($profile);
+        $em->flush();
+        $accountId = $account->getId();
+        $profileId = $profile->getId();
+        self::assertIsInt($accountId);
+        self::assertIsInt($profileId);
+        $client->loginUser($owner);
+
+        $client->request('GET', '/account/characters');
+        self::assertResponseIsSuccessful();
+        $profilePath = '/account/characters/profiles/'.$profileId.'/delete';
+        $crawler = $client->getCrawler();
+        $profileToken = (string) $crawler->filter('form[action="'.$profilePath.'"] input[name="_token"]')->attr('value');
+        $client->request('POST', $profilePath, ['_token' => $profileToken]);
+        self::assertResponseRedirects('/account/characters');
+
+        $em = $this->em($client);
+        $em->clear();
+        $profile = $em->find(CharacterProfile::class, $profileId);
+        self::assertInstanceOf(CharacterProfile::class, $profile);
+        self::assertTrue($profile->isDeleted());
+        self::assertFalse($profile->isPubliclyVisible());
+
+        $client->request('GET', '/account/characters');
+        $crawler = $client->getCrawler();
+        $accountPath = '/account/characters/accounts/'.$accountId.'/delete';
+        $accountToken = (string) $crawler->filter('form[action="'.$accountPath.'"] input[name="_token"]')->attr('value');
+        $client->request('POST', $accountPath, ['_token' => $accountToken]);
+        self::assertResponseRedirects('/account/characters');
+
+        $em = $this->em($client);
+        $em->clear();
+        $account = $em->find(CharacterAccount::class, $accountId);
+        self::assertInstanceOf(CharacterAccount::class, $account);
+        self::assertTrue($account->isDeleted());
+        self::assertFalse($account->hasConsent());
+    }
+
     public function testInvalidInputAndDisabledGameOrGamingModuleFailClosed(): void
     {
         $client = static::createClient();
