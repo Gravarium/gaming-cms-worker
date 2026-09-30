@@ -59559,8 +59559,8 @@
       "package_id": "WCP-620",
       "title": "Allow editors to withdraw published gaming guides safely",
       "risk": "medium",
-      "execution_state": "worker_in_progress",
-      "claim_state": "active_lease",
+      "execution_state": "worker_complete_awaiting_trusted_review",
+      "claim_state": "locked_until_trusted_resolution",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -59649,7 +59649,6 @@
       },
       "published_at": "2026-09-30T12:20:16.357Z",
       "claimed_on": "2026-09-30T21:40:30.616Z",
-      "lease_expires_at": "2026-10-01T05:09:11.745Z",
       "claim_generation": 2,
       "active_base_branch": "main",
       "active_base_sha": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
@@ -59668,16 +59667,16 @@
         "claim_branch": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
         "feature_branch": "6f1c032ff23870d26745a0c829102ab3af6864ee"
       },
-      "next_action": "Wait for complete exact-head Worker CI run 36783844723 on 6f1c032ff23870d26745a0c829102ab3af6864ee; fix failures without weakening checks.",
+      "next_action": "Await Trusted review and resolution. Do not merge this Worker PR or deploy.",
       "checkpoint_commit_sha": "6f1c032ff23870d26745a0c829102ab3af6864ee",
       "worker_pr": 425,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/425",
       "worker_pr_head_sha": "6f1c032ff23870d26745a0c829102ab3af6864ee",
       "worker_pr_state": "open",
       "pr_state": "open",
-      "draft": true,
+      "draft": false,
       "last_ci_run_id": 36783844723,
-      "last_ci_result": "in_progress",
+      "last_ci_result": "success",
       "last_ci_head": "6f1c032ff23870d26745a0c829102ab3af6864ee",
       "ci_history": [
         {
@@ -59719,8 +59718,176 @@
           "head": "6f1c032ff23870d26745a0c829102ab3af6864ee",
           "run_id": 36783844723,
           "result": "in_progress"
+        },
+        {
+          "head": "6f1c032ff23870d26745a0c829102ab3af6864ee",
+          "run_id": 36783844723,
+          "result": "success"
         }
-      ]
+      ],
+      "final_head": "6f1c032ff23870d26745a0c829102ab3af6864ee",
+      "final_base_sha": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "final_changed_paths": [
+        "src/Controller/AdminGameGuideController.php",
+        "src/GameGuide/AdminGameGuideWorkflow.php",
+        "src/GameGuide/Templates/admin/index.html.twig",
+        "tests/Controller/AdminGameGuideControllerTest.php"
+      ],
+      "ci_run_id": 36783844723,
+      "ci_result": "success",
+      "completed_on": "2026-09-30T22:15:25.840Z",
+      "locked_until_trusted_resolution": true,
+      "completion_evidence": {
+        "exact_worker_head": "6f1c032ff23870d26745a0c829102ab3af6864ee",
+        "exact_worker_base": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+        "changed_paths": [
+          "src/Controller/AdminGameGuideController.php",
+          "src/GameGuide/AdminGameGuideWorkflow.php",
+          "src/GameGuide/Templates/admin/index.html.twig",
+          "tests/Controller/AdminGameGuideControllerTest.php"
+        ],
+        "ci_run_id": 36783844723,
+        "ci_run_url": "https://github.com/Gravarium/gaming-cms-worker/actions/runs/36783844723",
+        "jobs": [
+          {
+            "name": "Validate worker-visible PostgreSQL 18 migration chain",
+            "conclusion": "success",
+            "steps": [
+              {
+                "name": "Set up job",
+                "conclusion": "success"
+              },
+              {
+                "name": "Initialize containers",
+                "conclusion": "success"
+              },
+              {
+                "name": "Check out repository",
+                "conclusion": "success"
+              },
+              {
+                "name": "Set up PHP 8.5",
+                "conclusion": "success"
+              },
+              {
+                "name": "Install dependencies",
+                "conclusion": "success"
+              },
+              {
+                "name": "Apply complete migration chain",
+                "conclusion": "success"
+              },
+              {
+                "name": "Confirm migration status",
+                "conclusion": "success"
+              },
+              {
+                "name": "Post Check out repository",
+                "conclusion": "success"
+              },
+              {
+                "name": "Stop containers",
+                "conclusion": "success"
+              },
+              {
+                "name": "Complete job",
+                "conclusion": "success"
+              }
+            ]
+          },
+          {
+            "name": "Validate worker-visible PHP and Symfony",
+            "conclusion": "success",
+            "steps": [
+              {
+                "name": "Set up job",
+                "conclusion": "success"
+              },
+              {
+                "name": "Check out repository",
+                "conclusion": "success"
+              },
+              {
+                "name": "Test browser-side security helpers",
+                "conclusion": "success"
+              },
+              {
+                "name": "Set up PHP 8.5",
+                "conclusion": "success"
+              },
+              {
+                "name": "Validate Composer metadata",
+                "conclusion": "success"
+              },
+              {
+                "name": "Install dependencies",
+                "conclusion": "success"
+              },
+              {
+                "name": "Warm Symfony analysis container",
+                "conclusion": "success"
+              },
+              {
+                "name": "Analyse application types",
+                "conclusion": "success"
+              },
+              {
+                "name": "Audit locked dependencies",
+                "conclusion": "success"
+              },
+              {
+                "name": "Lint migration PHP",
+                "conclusion": "success"
+              },
+              {
+                "name": "Lint YAML configuration",
+                "conclusion": "success"
+              },
+              {
+                "name": "Lint Twig templates",
+                "conclusion": "success"
+              },
+              {
+                "name": "Validate dependency container",
+                "conclusion": "success"
+              },
+              {
+                "name": "Compile AssetMapper assets",
+                "conclusion": "success"
+              },
+              {
+                "name": "Validate Doctrine mappings",
+                "conclusion": "success"
+              },
+              {
+                "name": "Create test database schema",
+                "conclusion": "success"
+              },
+              {
+                "name": "Run worker-visible application tests with coverage visibility",
+                "conclusion": "success"
+              },
+              {
+                "name": "Post Check out repository",
+                "conclusion": "success"
+              },
+              {
+                "name": "Complete job",
+                "conclusion": "success"
+              }
+            ]
+          }
+        ],
+        "phpunit": {
+          "tests": 1644,
+          "assertions": 11996,
+          "failures": 0,
+          "deprecations": 1,
+          "notices": 26
+        },
+        "reviews_at_ready": 0,
+        "trusted_merge_or_deployment": false
+      }
     },
     {
       "priority": 621,
