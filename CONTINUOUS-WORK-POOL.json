@@ -10,8 +10,8 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "9e083c63e7d888af36f93a23eb924c89fad2b971",
-  "published_at": "2026-09-30T08:07:17.707Z",
-  "summary": "WCP-511, WCP-608, WCP-609, WCP-610, WCP-611 and WCP-612 are complete Worker proposals awaiting Trusted review; their claims remain locked. WCP-613 is active on feature/wcp-613-public-game-guide-rss-feed-g1 at 39fb45d5ecc330d26055c812b7ef0d365d2dde3a. Trusted main remains the only integration and deployment source.",
+  "published_at": "2026-09-30T08:09:03.328Z",
+  "summary": "WCP-511, WCP-608, WCP-609, WCP-610, WCP-611 and WCP-612 are complete Worker proposals awaiting Trusted review; their claims remain locked. WCP-613 is in draft PR #409 at 39fb45d5ecc330d26055c812b7ef0d365d2dde3a; exact-head CI run 36687804895 is pending. Trusted main remains the only integration and deployment source.",
   "rules": {
     "choose": "Resume the current chat's unfinished claimed branch first. Otherwise atomically claim an eligible published task. If no published task is eligible, independently derive and publish a bounded worker-only CMS proposal from approved product goals and observed code gaps; do not ask the owner for the next FCP number.",
     "atomic_reservation": "Create the exact claim_branch and suggested feature branch from that task's published proposal_base_sha. If the claim already exists, treat it as a hard lock; the owning continuation resumes it and every other AI skips it.",
@@ -58436,7 +58436,7 @@
         "postgres_migration_result": "success"
       }
     },
-        {
+            {
       "priority": 613,
       "package_id": "WCP-613",
       "title": "Publish a public RSS feed for gaming guides",
@@ -58551,7 +58551,24 @@
         "claim_branch": "39fb45d5ecc330d26055c812b7ef0d365d2dde3a",
         "feature_branch": "39fb45d5ecc330d26055c812b7ef0d365d2dde3a"
       },
-      "next_action": "Open a draft Worker PR against main and validate the exact-head CI; inspect any failures and repair only within the four reserved paths. Keep the proposal locked for Trusted review and do not merge or deploy."
+      "next_action": "Monitor exact-head Worker CI run #1076 (36687804895) for PR #409 at 39fb45d5ecc330d26055c812b7ef0d365d2dde3a. Diagnose and repair any failures only within the reserved paths; mark ready only after all exact-head jobs pass. Keep this proposal untrusted; do not merge to Trusted or deploy.",
+      "worker_pr": 409,
+      "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/409",
+      "pr_state": "open_draft",
+      "worker_pr_state": "draft",
+      "worker_pr_base_branch": "main",
+      "worker_pr_base_sha": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "worker_pr_head_sha": "39fb45d5ecc330d26055c812b7ef0d365d2dde3a",
+      "worker_pr_changed_paths": [
+        "src/Controller/PublicGameGuideFeedController.php",
+        "src/GameGuide/Templates/public/feed.xml.twig",
+        "src/GameGuide/Templates/public/index.html.twig",
+        "tests/Controller/PublicGameGuideFeedControllerTest.php"
+      ],
+      "ci_run_id": 36687804895,
+      "last_ci_run_id": 36687804895,
+      "ci_result": "pending",
+      "last_ci_result": "pending"
     }
   ],
   "recovery_queue": [],
