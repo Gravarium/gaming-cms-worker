@@ -10,7 +10,7 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "9e083c63e7d888af36f93a23eb924c89fad2b971",
-  "published_at": "2026-09-30T07:32:07.651Z",
+  "published_at": "2026-09-30T07:34:40.505Z",
   "summary": "WCP-511, WCP-608, WCP-609 and WCP-610 are complete Worker proposals awaiting Trusted review; their claims remain locked. WCP-611 is active from Worker main for the public content-tag widget. Trusted main remains the only integration and deployment source.",
   "rules": {
     "choose": "Resume the current chat's unfinished claimed branch first. Otherwise atomically claim an eligible published task. If no published task is eligible, independently derive and publish a bounded worker-only CMS proposal from approved product goals and observed code gaps; do not ask the owner for the next FCP number.",
@@ -58102,7 +58102,7 @@
         }
       ]
     },
-        {
+            {
       "priority": 611,
       "package_id": "WCP-611",
       "title": "Add a public content-tag widget to the Page Builder",
@@ -58220,12 +58220,29 @@
         "templates/widget/public_content_tags.html.twig",
         "tests/Widget/PublicContentTagWidgetProviderTest.php"
       ],
-      "next_action": "Open a draft Worker PR for this exact HEAD and complete focused PHPUnit/PHPStan plus full exact-head Worker CI, including PostgreSQL 18 migration validation. Fix any failures without weakening protections, then record the exact green CI evidence and keep the proposal locked for Trusted review.",
+      "next_action": "Worker PR #407 is open as a draft at exact HEAD 4a1a05e97aa501d39a941ae92dbf21c06f5feb72. Exact-head Worker CI #1074 is running; inspect the focused PHPUnit, PHPStan and PostgreSQL 18 results, fix any issue without weakening protections, then mark ready and lock only after all exact-head gates pass.",
       "last_verified_push_at": "2026-09-30T07:32:07.649Z",
       "branch_heads": {
         "claim_branch": "4a1a05e97aa501d39a941ae92dbf21c06f5feb72",
         "feature_branch": "4a1a05e97aa501d39a941ae92dbf21c06f5feb72"
-      }
+      },
+      "worker_pr": 407,
+      "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/407",
+      "pr_state": "open_draft",
+      "worker_pr_state": "draft",
+      "worker_pr_base_branch": "main",
+      "worker_pr_base_sha": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "worker_pr_head_sha": "4a1a05e97aa501d39a941ae92dbf21c06f5feb72",
+      "worker_pr_changed_paths": [
+        "src/Widget/Content/PublicContentTagQuery.php",
+        "src/Widget/PublicContentTagWidgetProvider.php",
+        "templates/widget/public_content_tags.html.twig",
+        "tests/Widget/PublicContentTagWidgetProviderTest.php"
+      ],
+      "ci_run_id": 36684284005,
+      "last_ci_run_id": 36684284005,
+      "ci_result": "in_progress",
+      "last_ci_result": "in_progress"
     }
   ],
   "recovery_queue": [],
