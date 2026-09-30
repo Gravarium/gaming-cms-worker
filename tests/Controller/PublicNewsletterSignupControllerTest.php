@@ -78,6 +78,37 @@ final class PublicNewsletterSignupControllerTest extends WebTestCase
         self::assertResponseStatusCodeSame(404);
     }
 
+    public function testInvalidEmailIsEscapedWhenReflectedInTheForm(): void
+    {
+        $client = $this->enabledClient();
+        $messages = $this->sentMessages();
+        $this->replaceMailDispatcher($client, $messages);
+        $token = $this->formToken($client);
+        $suffix = bin2hex(random_bytes(5));
+        $payload = '"><script>alert("newsletter-'.$suffix.'")</script><input value="';
+
+        $client->request('POST', '/newsletter/subscribe', [
+            '_token' => $token,
+            'email' => $payload,
+            'consent' => 'yes',
+        ]);
+
+        self::assertResponseStatusCodeSame(Response::HTTP_UNPROCESSABLE_ENTITY);
+        $content = (string) $client->getResponse()->getContent();
+        self::assertStringNotContainsString($payload, $content);
+        self::assertStringContainsString(htmlspecialchars($payload, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'), $content);
+
+        $form = $client->getCrawler()->filter('form.newsletter-signup-form');
+        $emailInput = $form->filter('input[name="email"]');
+        self::assertSame(1, $emailInput->count());
+        self::assertSame($payload, $emailInput->attr('value'));
+        self::assertNull($emailInput->attr('onfocus'));
+        self::assertNull($emailInput->attr('oninput'));
+        self::assertSame(0, $form->filter('script')->count());
+        self::assertNull($this->subscriptions($client)->findByEmail($payload));
+        self::assertCount(0, $messages);
+    }
+
     public function testInvalidEmailAndMissingConsentDoNotCreateSubscriptionsOrSendMail(): void
     {
         $client = $this->enabledClient();
