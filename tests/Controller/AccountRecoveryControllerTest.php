@@ -355,6 +355,11 @@ final class AccountRecoveryControllerTest extends WebTestCase
         self::assertResponseIsSuccessful();
         self::assertSelectorTextContains('.alert', 'ungültig');
         self::assertSame(1, $this->verificationAuditCount($entityManager, $userId));
+
+        $client->request('GET', '/verify-email/'.$plainToken);
+        self::assertResponseIsSuccessful();
+        self::assertSelectorTextContains('.alert', 'ungültig');
+        self::assertSame(1, $this->verificationAuditCount($entityManager, $userId));
     }
 
     public function testEmailVerificationPostRequiresCsrfAndKeepsTheTokenOnFailure(): void
