@@ -60458,8 +60458,8 @@
       "package_id": "WCP-626",
       "title": "Browse personal forum subscriptions with current access checks",
       "risk": "medium_privacy",
-      "execution_state": "worker_in_progress",
-      "claim_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
+      "claim_state": "locked_until_trusted_resolution",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -60533,7 +60533,7 @@
       },
       "published_at": "2026-09-30T18:15:26.629Z",
       "claimed_on": "2026-09-30T18:15:26.629Z",
-      "lease_expires_at": "2026-10-01T01:18:31.315Z",
+      "lease_expires_at": null,
       "claim_generation": 1,
       "active_base_branch": "main",
       "active_base_sha": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
@@ -60553,7 +60553,46 @@
         "claim_branch": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
         "feature_branch": "b7865c65dc555784651965fb195d51e7a13b2b12"
       },
-      "next_action": "Open draft PR and verify exact-head CI; repair failures before ready review."
+      "next_action": "Worker PR #421 ready for Trusted review at green exact head; claim remains locked until explicit resolution.",
+      "worker_pr": 421,
+      "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/421",
+      "pr_state": "open_ready_for_review",
+      "worker_pr_state": "ready_for_review",
+      "worker_pr_head_sha": "b7865c65dc555784651965fb195d51e7a13b2b12",
+      "worker_pr_base_branch": "main",
+      "worker_pr_base_sha": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "worker_pr_changed_paths": [
+        "src/ForumSubscription/VisibleSubscriptions.php",
+        "src/Controller/PublicForumSubscriptionController.php",
+        "src/ForumWorkflow/Templates/public/subscriptions.html.twig",
+        "src/ForumWorkflow/Templates/public/rooms.html.twig",
+        "tests/Controller/PublicForumSubscriptionTest.php"
+      ],
+      "ci_run_id": 36757681389,
+      "last_ci_run_id": 36757681389,
+      "ci_result": "success",
+      "last_ci_result": "success",
+      "php_symfony_job_id": 110031964763,
+      "php_symfony_result": "success",
+      "postgres_migration_job_id": 110031965190,
+      "postgres_migration_result": "success",
+      "completed_on": "2026-09-30T18:23:56.908Z",
+      "final_head": "b7865c65dc555784651965fb195d51e7a13b2b12",
+      "final_changed_paths": [
+        "src/ForumSubscription/VisibleSubscriptions.php",
+        "src/Controller/PublicForumSubscriptionController.php",
+        "src/ForumWorkflow/Templates/public/subscriptions.html.twig",
+        "src/ForumWorkflow/Templates/public/rooms.html.twig",
+        "tests/Controller/PublicForumSubscriptionTest.php"
+      ],
+      "test_evidence": {
+        "visibility": "Authenticated owner sees only own subscriptions; member room becomes hidden after visibility changes to moderators. Anonymous request redirects to login; no post bodies rendered.",
+        "pagination": "Exact visible total, 20-row page and one-row second page for 21 subscriptions; malformed or out-of-range pages return 404.",
+        "phpunit": "1,644 tests; 11,979 assertions; 0 failures; 1 deprecation and 26 notices.",
+        "exact_head_ci_run_id": 36757681389,
+        "php_symfony_result": "success",
+        "postgres_migration_result": "success"
+      }
     }
   ],
   "recovery_queue": [],
