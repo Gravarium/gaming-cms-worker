@@ -59670,8 +59670,8 @@
       "package_id": "WCP-621",
       "title": "Audit media-library images without alternative text",
       "risk": "low_read_only",
-      "execution_state": "worker_in_progress",
-      "claim_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
+      "claim_state": "locked_until_trusted_resolution",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -59730,9 +59730,11 @@
         "Full exact-head Worker CI passes PHPStan, Twig/container/Doctrine checks, all PHPUnit tests and PostgreSQL 18 migration validation; no upload or deletion behavior changes."
       ],
       "completion_report": [
-        "Exact current Worker main/base SHA, final Worker HEAD, Worker PR and complete changed paths.",
-        "Evidence of filtering, paging, privacy and module/permission behavior; note that decorative images are review-only.",
-        "Exact-head Worker CI run and both jobs, unresolved risks, and confirmation of no schema/migration or Trusted integration/deployment."
+        "Exact Worker main/base SHA, final Worker HEAD, Worker PR and complete changed-path list.",
+        "The private report includes only active images with no stored alt text, in stable bounded pages with exact totals; MediaAsset trims text on save.",
+        "The view shows IDs and existing metadata-editor links only; it explains decorative images and does not modify metadata.",
+        "No schema/migration or upload, replacement, deletion or delivery changes.",
+        "Exact-head Worker CI #1087 plus PHP/Symfony and PostgreSQL 18 job results; no open CI failures. PR is open and ready for review; no Trusted integration or deployment."
       ],
       "immutable_constraints": [
         "read-only-media-metadata-audit",
@@ -59765,14 +59767,14 @@
       },
       "published_at": "2026-09-30T16:08:15.000Z",
       "claimed_on": "2026-09-30T16:08:15.000Z",
-      "lease_expires_at": "2026-09-30T23:33:48.000Z",
+      "lease_expires_at": null,
       "claim_generation": 1,
       "active_base_branch": "main",
       "active_base_sha": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
       "active_head": "e5f6d498bdba7147c10675f7ef69c5e107b1ef48",
       "resume_branch": "feature/wcp-621-media-alt-text-audit-g1",
       "last_observed_head": "e5f6d498bdba7147c10675f7ef69c5e107b1ef48",
-      "last_checkpoint_at": "2026-09-30T16:33:48Z",
+      "last_checkpoint_at": "2026-09-30T16:43:08Z",
       "checkpoint_paths": [
         "config/packages/twig.yaml",
         "src/Controller/AdminMediaAccessibilityController.php",
@@ -59787,7 +59789,67 @@
         "claim_branch": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
         "feature_branch": "e5f6d498bdba7147c10675f7ef69c5e107b1ef48"
       },
-      "next_action": "Wait for exact-head Worker CI run 1087 on e5f6d498bdba7147c10675f7ef69c5e107b1ef48; confirm PHP/Symfony and PostgreSQL 18 jobs, then reconcile PR and checkpoint."
+      "next_action": "Worker PR #416 is ready for Trusted review at exact HEAD e5f6d498bdba7147c10675f7ef69c5e107b1ef48; exact-head Worker CI run #1087 is green. Keep this claim locked until Trusted explicitly integrates, cancels or transfers it. No Trusted merge or deployment was performed.",
+      "worker_pr": 416,
+      "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/416",
+      "pr_state": "open_ready_for_review",
+      "worker_pr_state": "ready_for_review",
+      "worker_pr_base_branch": "main",
+      "worker_pr_base_sha": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "worker_pr_head_sha": "e5f6d498bdba7147c10675f7ef69c5e107b1ef48",
+      "worker_pr_changed_paths": [
+        "config/packages/twig.yaml",
+        "src/Controller/AdminMediaAccessibilityController.php",
+        "src/MediaAccessibility/MediaAccessibilityReport.php",
+        "src/MediaAccessibility/Templates/admin/index.html.twig",
+        "templates/admin/dashboard.html.twig",
+        "tests/Controller/AdminMediaAccessibilityReportTest.php",
+        "tests/MediaAccessibility/MediaAccessibilityReportTest.php"
+      ],
+      "ci_run_id": 36745124505,
+      "last_ci_run_id": 36745124505,
+      "ci_result": "success",
+      "last_ci_result": "success",
+      "php_symfony_job_id": 109989250670,
+      "php_symfony_result": "success",
+      "postgres_migration_job_id": 109989251040,
+      "postgres_migration_result": "success",
+      "completed_on": "2026-09-30T16:43:08Z",
+      "final_head": "e5f6d498bdba7147c10675f7ef69c5e107b1ef48",
+      "final_changed_paths": [
+        "config/packages/twig.yaml",
+        "src/Controller/AdminMediaAccessibilityController.php",
+        "src/MediaAccessibility/MediaAccessibilityReport.php",
+        "src/MediaAccessibility/Templates/admin/index.html.twig",
+        "templates/admin/dashboard.html.twig",
+        "tests/Controller/AdminMediaAccessibilityReportTest.php",
+        "tests/MediaAccessibility/MediaAccessibilityReportTest.php"
+      ],
+      "test_evidence": {
+        "targeted_tests": [
+          "MediaAccessibilityReportTest::testReportCountsOnlyActiveImagesAndUsesStableBoundedPages",
+          "MediaAccessibilityReportTest::testReportRejectsPagePastTheLastPage",
+          "MediaAccessibilityReportTest::testReportRejectsInvalidPageBounds",
+          "AdminMediaAccessibilityReportTest::testAuthorizedReportIsPrivateAndLinksToMetadataEditorWithoutStorageDetails",
+          "AdminMediaAccessibilityReportTest::testReportRequiresStoragePermission",
+          "AdminMediaAccessibilityReportTest::testDisabledMediaModuleHidesDashboardLinkAndReturnsNotFound",
+          "AdminMediaAccessibilityReportTest::testInvalidPageInputIsRejected"
+        ],
+        "filtering": "Only active image MIME types with NULL/empty altText are counted. MediaAsset trims altText on write. Tests exclude text-bearing, non-image and deletion-pending assets.",
+        "pagination": "Stable descending asset ID order; 25 rows per page, exact total, 10,000-page cap; invalid and out-of-range inputs are rejected.",
+        "access_and_privacy": "CMS_STORAGE_MANAGE and enabled Media module are required. Report and dashboard link are gated. Cache-Control retains private, no-store and max-age=0; X-Robots-Tag is noindex. Report renders asset IDs and editor links only, without names, paths, URLs or file bytes.",
+        "editorial": "Empty alt text is a review prompt; decorative images may correctly have no text. No automatic metadata writes.",
+        "schema_or_migration_changes": "none",
+        "upload_replacement_deletion_or_delivery_changes": "none",
+        "exact_head_ci_run_id": 36745124505,
+        "exact_head_ci_result": "success",
+        "php_symfony_job_id": 109989250670,
+        "php_symfony_result": "success",
+        "phpunit": "1,651 tests; 11,984 assertions; 0 failures; 1 PHPUnit deprecation and 26 notices.",
+        "postgres_migration_job_id": 109989251040,
+        "postgres_migration_result": "success",
+        "reviews": "No submitted reviews or review comments as of completion."
+      }
     }
   ],
   "recovery_queue": [],
