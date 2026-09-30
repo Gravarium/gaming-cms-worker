@@ -72,12 +72,14 @@ final class PublicCompetitionSeasonTest extends WebTestCase
             $client->request('GET', '/competition-seasons/1');
             self::assertResponseStatusCodeSame(404);
         } finally {
-            if ($created) {
-                $em->remove($state);
-            } else {
-                $state->setEnabled($wasEnabled);
+            $restoreManager = $this->em($client);
+            $currentState = $restoreManager->find(CmsModuleState::class, 'gaming');
+            if ($created && $currentState instanceof CmsModuleState) {
+                $restoreManager->remove($currentState);
+            } elseif ($currentState instanceof CmsModuleState) {
+                $currentState->setEnabled($wasEnabled);
             }
-            $em->flush();
+            $restoreManager->flush();
         }
     }
 

@@ -25,7 +25,7 @@ final readonly class PublicSeasonBrowser
             ->getQuery()->getSingleScalarResult();
 
         $results = $this->visibleCompetitions()
-            ->select('season', 'COUNT(competition.id) AS competitionCount')
+            ->select('season.id AS seasonId', 'COUNT(competition.id) AS competitionCount')
             ->groupBy('season.id')
             ->orderBy('season.startsAt', 'DESC')
             ->addOrderBy('season.id', 'DESC')
@@ -35,10 +35,13 @@ final readonly class PublicSeasonBrowser
 
         $rows = [];
         foreach ($results as $result) {
-            if (!is_array($result) || !($result[0] ?? null) instanceof CompetitionSeason) {
+            if (!is_array($result)) {
                 continue;
             }
-            $rows[] = ['season' => $result[0], 'count' => (int) $result['competitionCount']];
+            $season = $this->entityManager->find(CompetitionSeason::class, (int) $result['seasonId']);
+            if ($season instanceof CompetitionSeason) {
+                $rows[] = ['season' => $season, 'count' => (int) $result['competitionCount']];
+            }
         }
 
         return ['rows' => $rows, 'total' => $total];
