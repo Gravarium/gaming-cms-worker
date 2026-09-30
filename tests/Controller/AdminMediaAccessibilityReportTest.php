@@ -27,7 +27,7 @@ final class AdminMediaAccessibilityReportTest extends WebTestCase
             $client->request('GET', '/admin/storage/accessibility');
 
             self::assertResponseIsSuccessful();
-            self::assertResponseHeaderSame('Cache-Control', 'private, no-store, max-age=0');
+            self::assertPrivateNoStore($client);
             self::assertResponseHeaderSame('X-Robots-Tag', 'noindex, nofollow, noarchive');
             self::assertSelectorTextContains('main', 'Bildalternativtexte prüfen');
             self::assertSelectorExists('a[href="/admin/storage/media/'.$assetId.'/edit"]');
@@ -89,7 +89,7 @@ final class AdminMediaAccessibilityReportTest extends WebTestCase
         try {
             $client->request('GET', '/admin/storage/accessibility?page%5B%5D=1');
             self::assertResponseStatusCodeSame(400);
-            self::assertResponseHeaderSame('Cache-Control', 'private, no-store, max-age=0');
+            self::assertPrivateNoStore($client);
             $client->request('GET', '/admin/storage/accessibility?page=10001');
             self::assertResponseStatusCodeSame(400);
         } finally {
@@ -176,6 +176,16 @@ final class AdminMediaAccessibilityReportTest extends WebTestCase
         }
         $entityManager->flush();
         $entityManager->clear();
+    }
+
+    private function assertPrivateNoStore(KernelBrowser $client): void
+    {
+        $headers = $client->getResponse()->headers;
+        $cacheControl = (string) $headers->get('Cache-Control', '');
+
+        self::assertTrue($headers->hasCacheControlDirective('private'), 'Cache-Control must remain private. Actual: '.$cacheControl);
+        self::assertTrue($headers->hasCacheControlDirective('no-store'), 'Cache-Control must prevent storage. Actual: '.$cacheControl);
+        self::assertSame('0', (string) $headers->getCacheControlDirective('max-age'), 'Cache-Control must expire immediately. Actual: '.$cacheControl);
     }
 
     private function em(KernelBrowser $client): EntityManagerInterface
