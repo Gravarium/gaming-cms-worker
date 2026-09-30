@@ -1,0 +1,95 @@
+{% extends 'base.html.twig' %}
+{% block title %}Inhaltsqualität | Gaming CMS{% endblock %}
+{% block body %}
+<header class="topbar">
+    <a class="brand" href="{{ path('app_admin_dashboard') }}">Gaming CMS</a>
+    <nav class="top-actions" aria-label="Content">
+        <a class="button-link" href="{{ path('app_admin_content_index') }}">Alle Inhalte</a>
+    </nav>
+</header>
+<main class="dashboard">
+    <p class="eyebrow">Content-Modul · Qualität und SEO</p>
+    <h1>Inhaltsqualität</h1>
+    <p class="muted">Der Bericht ist schreibgeschützt und zeigt fehlende Metadaten sowie veröffentlichte Inhalte, die auf noindex stehen.</p>
+
+    <section class="panel" aria-labelledby="quality-summary-heading">
+        <h2 id="quality-summary-heading">Probleme in nicht gelöschten Inhalten</h2>
+        <p class="muted">{{ report.contentTotal }} Inhalte insgesamt · {{ report.total }} passende Einträge in dieser Ansicht</p>
+        <div class="summary-grid">
+            {% for code, label in issueLabels %}
+                {% if code != 'all' %}
+                <div class="summary-card" data-quality-issue="{{ code }}">
+                    <span>{{ label }}</span>
+                    <strong class="summary-value">{{ report.summary[code] }}</strong>
+                </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+    </section>
+
+    <section class="panel" aria-labelledby="quality-results-heading">
+        <h2 id="quality-results-heading">Inhalte prüfen</h2>
+        <form method="get" action="{{ path('app_admin_content_quality_index') }}">
+            <label>Status
+                <select name="status">
+                    {% for value, label in statusLabels %}
+                        <option value="{{ value }}" {{ filters.status == value ? 'selected' : '' }}>{{ label }}</option>
+                    {% endfor %}
+                </select>
+            </label>
+            <label>Typ
+                <select name="type">
+                    {% for value, label in typeLabels %}
+                        <option value="{{ value }}" {{ filters.type == value ? 'selected' : '' }}>{{ label }}</option>
+                    {% endfor %}
+                </select>
+            </label>
+            <label>Problem
+                <select name="issue">
+                    {% for value, label in issueLabels %}
+                        <option value="{{ value }}" {{ filters.issue == value ? 'selected' : '' }}>{{ label }}</option>
+                    {% endfor %}
+                </select>
+            </label>
+            <label>Titel enthält
+                <input type="search" name="q" maxlength="120" value="{{ filters.q }}">
+            </label>
+            <button type="submit">Bericht filtern</button>
+        </form>
+
+        <div class="table-wrap">
+            <table>
+                <thead><tr><th>Inhalt</th><th>Typ</th><th>Status</th><th>Probleme</th><th>Aktion</th></tr></thead>
+                <tbody>
+                {% for row in report.rows %}
+                    <tr data-content-quality-entry="{{ row.entry.id }}">
+                        <td>{{ row.entry.title }}</td>
+                        <td>{{ row.entry.type == 'news' ? 'News' : 'Seite' }}</td>
+                        <td>{{ row.entry.status }}</td>
+                        <td>
+                            {% for issue in row.issues %}
+                                <span class="notice">{{ issueLabels[issue] }}</span>
+                            {% endfor %}
+                        </td>
+                        <td><a href="{{ path('app_admin_content_edit', {id: row.entry.id}) }}">Bearbeiten</a></td>
+                    </tr>
+                {% else %}
+                    <tr><td colspan="5">Keine passenden Qualitätsprobleme gefunden.</td></tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% if report.pages > 1 %}
+            <nav class="pagination" aria-label="Berichtsseiten">
+                {% if report.page > 1 %}
+                    <a rel="prev" href="{{ path('app_admin_content_quality_index', filters|merge({page: report.page - 1})) }}">Zurück</a>
+                {% endif %}
+                <span>Seite {{ report.page }} von {{ report.pages }}</span>
+                {% if report.page < report.pages %}
+                    <a rel="next" href="{{ path('app_admin_content_quality_index', filters|merge({page: report.page + 1})) }}">Weiter</a>
+                {% endif %}
+            </nav>
+        {% endif %}
+    </section>
+</main>
+{% endblock %}
