@@ -59160,21 +59160,26 @@
       },
       "published_at": "2026-09-30T09:33:26.177Z",
       "claimed_on": "2026-09-30T09:33:26.177Z",
-      "lease_expires_at": "2026-09-30T16:33:26.177Z",
+      "lease_expires_at": "2026-09-30T16:36:51.729Z",
       "claim_generation": 1,
       "active_base_branch": "main",
       "active_base_sha": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
-      "active_head": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "active_head": "f249ab4607b27eece2da5b512c28171638696032",
       "resume_branch": "feature/wcp-617-game-release-feed-utc-window-g1",
-      "last_observed_head": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
-      "last_checkpoint_at": "2026-09-30T09:33:26.177Z",
-      "checkpoint_paths": [],
-      "last_verified_push_at": null,
+      "last_observed_head": "f249ab4607b27eece2da5b512c28171638696032",
+      "last_checkpoint_at": "2026-09-30T09:36:51.729Z",
+      "checkpoint_paths": [
+        "src/Controller/PublicGameReleaseCalendarFeedController.php",
+        "src/Controller/PublicGameReleaseRssFeedController.php",
+        "tests/Controller/PublicGameReleaseCalendarFeedTest.php",
+        "tests/Controller/PublicGameReleaseRssFeedTest.php"
+      ],
+      "last_verified_push_at": "2026-09-30T09:36:51.729Z",
       "branch_heads": {
-        "claim_branch": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
-        "feature_branch": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4"
+        "claim_branch": "f249ab4607b27eece2da5b512c28171638696032",
+        "feature_branch": "f249ab4607b27eece2da5b512c28171638696032"
       },
-      "next_action": "Set both controller clocks explicitly to UTC and add regression assertions under Pacific/Kiritimati in the existing calendar and RSS integration tests. Push a coherent checkpoint, open a draft Worker PR, and await exact-head CI. Keep output untrusted; do not merge to Trusted or deploy."
+      "next_action": "Open a draft Worker PR for exact HEAD f249ab4607b27eece2da5b512c28171638696032; run targeted release-feed tests and the full exact-head Worker CI. Fix red checks only within the four reserved paths. No Trusted merge or deployment."
     }
   ],
   "recovery_queue": [],
