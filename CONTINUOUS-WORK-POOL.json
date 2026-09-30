@@ -59077,6 +59077,104 @@
         "postgres_migration_job_id": 109821763247,
         "postgres_migration_result": "success"
       }
+    },
+    {
+      "priority": 617,
+      "package_id": "WCP-617",
+      "title": "Use UTC for public game release feed windows",
+      "risk": "low",
+      "execution_state": "worker_in_progress",
+      "claim_state": "active",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-617-game-release-feed-utc-window-g1",
+      "suggested_branch": "feature/wcp-617-game-release-feed-utc-window-g1",
+      "base_branch": "main",
+      "base_sha": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "objective": "Both public game release feeds create their 18-month query window with new DateTimeImmutable() in the process default timezone. Their feed builders serialize timestamps as UTC and the database stores zone-less datetimes, so a non-UTC PHP default can shift the repository's inclusive-from/exclusive-until bounds and include or omit releases near the window edges. Use an explicit UTC clock for both feed queries, keep the 18-month window, release limit and visibility rules unchanged, and add regression coverage under a non-UTC process timezone.",
+      "allowed_paths": [
+        "src/Controller/PublicGameReleaseCalendarFeedController.php",
+        "src/Controller/PublicGameReleaseRssFeedController.php",
+        "tests/Controller/PublicGameReleaseCalendarFeedTest.php",
+        "tests/Controller/PublicGameReleaseRssFeedTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "templates/",
+        "config/services.yaml",
+        "src/GameReleaseFeed/",
+        "src/Repository/GameReleaseCalendarFeedRepository.php",
+        "src/Entity/"
+      ],
+      "deliverables": [
+        "Both game release feed controllers compute now explicitly in UTC before deriving the existing 18-month upper bound.",
+        "The existing repository query, result cap, release states, module gate, response headers and UTC serialization remain unchanged.",
+        "Calendar and RSS regression tests demonstrate the same window boundary under a non-UTC PHP default timezone and restore the previous timezone even if assertions fail.",
+        "No schema, migration, repository, feed builder or template changes."
+      ],
+      "tests": [
+        "Extend the iCalendar and RSS integration tests with a release just beyond the UTC 18-month boundary that would be admitted by a Pacific/Kiritimati server-local upper bound.",
+        "Assert the boundary release is absent while currently eligible announced/delayed releases remain present.",
+        "Run targeted feed tests and complete exact-head Worker CI without weakening security, validation, PHPStan or CI checks."
+      ],
+      "completion_report": [
+        "Exact Worker main/base SHA, final Worker HEAD SHA, Worker PR and complete changed-path list.",
+        "Evidence that feed inclusion bounds are independent of PHP default timezone.",
+        "No schema or migration change; existing release visibility, ordering and result cap preserved.",
+        "Exact-head Worker CI run and PHP/Symfony and PostgreSQL job results; unresolved risks."
+      ],
+      "immutable_constraints": [
+        "public-game-release-feeds-use-utc-query-bounds",
+        "feed-release-visibility-status-order-and-result-cap-remain-unchanged",
+        "no-schema-or-migration-change",
+        "no-security-test-phpstan-ci-validation-or-protection-weakening",
+        "red-CI-stops-integration",
+        "worker-code-is-untrusted-no-direct-Trusted-integration-or-deployment",
+        "no-private-runtime-or-sensitive-data"
+      ],
+      "proposal_kind": "worker_only",
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "proposal_dependency_evidence": [],
+      "collision_check": {
+        "compared_against": "Worker main 1d03d4947f15dc3e0fe4b79a990bd45468c761e4; current Worker pool; Trusted main 8852e024d89611291fc83214c1f0c1d4a758c9d8 and queue blob 4f5c73ba69758d9780e5bbbab92abda360fb1e62; all active and locked Worker claims and active Trusted FCP claims.",
+        "result": "No active/locked Worker or active Trusted path overlap. The four controller and integration-test paths are free. The task leaves the shared calendar repository, RSS/iCalendar builders, module configuration, templates, schema and migrations untouched. All five prepared Worker FCPs remain blocked by dependencies without Trusted integration or a green exact-head Worker PR.",
+        "paths": [
+          "src/Controller/PublicGameReleaseCalendarFeedController.php",
+          "src/Controller/PublicGameReleaseRssFeedController.php",
+          "tests/Controller/PublicGameReleaseCalendarFeedTest.php",
+          "tests/Controller/PublicGameReleaseRssFeedTest.php"
+        ]
+      },
+      "published_at": "2026-09-30T09:33:26.177Z",
+      "claimed_on": "2026-09-30T09:33:26.177Z",
+      "lease_expires_at": "2026-09-30T16:33:26.177Z",
+      "claim_generation": 1,
+      "active_base_branch": "main",
+      "active_base_sha": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "active_head": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "resume_branch": "feature/wcp-617-game-release-feed-utc-window-g1",
+      "last_observed_head": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "last_checkpoint_at": "2026-09-30T09:33:26.177Z",
+      "checkpoint_paths": [],
+      "last_verified_push_at": null,
+      "branch_heads": {
+        "claim_branch": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+        "feature_branch": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4"
+      },
+      "next_action": "Set both controller clocks explicitly to UTC and add regression assertions under Pacific/Kiritimati in the existing calendar and RSS integration tests. Push a coherent checkpoint, open a draft Worker PR, and await exact-head CI. Keep output untrusted; do not merge to Trusted or deploy."
     }
   ],
   "recovery_queue": [],
