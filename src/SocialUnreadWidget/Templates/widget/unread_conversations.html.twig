@@ -1,0 +1,13 @@
+{% if data.authenticated %}
+    <section aria-label="Ungelesene Social-Nachrichten">
+        {% if data.unreadConversations > 0 %}
+            <p>Ungelesene Unterhaltungen: <strong>{{ data.unreadConversations }}</strong></p>
+            <p>Ungelesene Nachrichten: <strong>{{ data.unreadMessages }}</strong></p>
+        {% else %}
+            <p>Du hast keine ungelesenen Nachrichten.</p>
+        {% endif %}
+        <a href="{{ path('app_social_index') }}">Posteingang öffnen</a>
+    </section>
+{% else %}
+    <p class="muted">Melde dich an, um deine Social-Nachrichten zu sehen. <a href="{{ path('app_login') }}">Anmelden</a></p>
+{% endif %}
