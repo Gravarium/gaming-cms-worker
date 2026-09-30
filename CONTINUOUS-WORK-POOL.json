@@ -11,7 +11,7 @@
   "baseline_branch": "main",
   "base_sha": "9e083c63e7d888af36f93a23eb924c89fad2b971",
   "published_at": "2026-09-30T17:23:35.224Z",
-  "summary": "WCP-624 single-elimination progression claimed; WCP-620 and WCP-623 remain separate in-progress claims.",
+  "summary": "WCP-620 remains in progress; WCP-621 through WCP-623 are complete pending Trusted review. No Trusted integration or deployment is implied.",
   "rules": {
     "choose": "Resume the current chat's unfinished claimed branch first. Otherwise atomically claim an eligible published task. If no published task is eligible, independently derive and publish a bounded worker-only CMS proposal from approved product goals and observed code gaps; do not ask the owner for the next FCP number.",
     "atomic_reservation": "Create the exact claim_branch and suggested feature branch from that task's published proposal_base_sha. If the claim already exists, treat it as a hard lock; the owning continuation resumes it and every other AI skips it.",
@@ -60008,8 +60008,8 @@
       "package_id": "WCP-623",
       "title": "Prevent caching and indexing of private competition views",
       "risk": "low_read_only",
-      "execution_state": "worker_in_progress",
-      "claim_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
+      "claim_state": "locked_until_trusted_resolution",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -60060,9 +60060,10 @@
       ],
       "completion_report": [
         "Exact Worker main/base SHA, final Worker HEAD, Worker PR and complete changed-path list.",
-        "Evidence private competition owners/admins retain access while anonymous users remain denied.",
-        "Evidence private response cache/index headers are applied and public behavior is unchanged.",
-        "No schema/migration changes and no Trusted integration/deployment."
+        "Private competition owners/admins retain access; anonymous viewers remain denied.",
+        "Private responses are no-store and noindex on both bracket and leaderboard pages; public behavior is unchanged.",
+        "No schema/migration changes and no write, upload, replacement, deletion, or delivery changes.",
+        "Exact-head Worker CI #1089 and both jobs are green. PR is open and ready for review; no Trusted merge or deployment."
       ],
       "immutable_constraints": [
         "private-competition-views-are-private-no-store-noindex",
@@ -60090,14 +60091,14 @@
       },
       "published_at": "2026-09-30T17:15:34Z",
       "claimed_on": "2026-09-30T17:15:34Z",
-      "lease_expires_at": "2026-10-01T00:17:44.000Z",
+      "lease_expires_at": null,
       "claim_generation": 1,
       "active_base_branch": "main",
       "active_base_sha": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
       "active_head": "3a01dd7d38c8cc98a8ffef756d842cbb2fdaa0c5",
       "resume_branch": "feature/wcp-623-private-competition-cache-g1",
       "last_observed_head": "3a01dd7d38c8cc98a8ffef756d842cbb2fdaa0c5",
-      "last_checkpoint_at": "2026-09-30T17:17:44Z",
+      "last_checkpoint_at": "2026-09-30T17:25:03Z",
       "checkpoint_paths": [
         "src/Controller/PublicCompetitionLeaderboardController.php",
         "src/Controller/PublicCompetitionBracketController.php",
@@ -60109,20 +60110,54 @@
         "claim_branch": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
         "feature_branch": "3a01dd7d38c8cc98a8ffef756d842cbb2fdaa0c5"
       },
-      "next_action": "Wait for exact-head Worker CI on PR #418; verify the PHP/Symfony and PostgreSQL 18 jobs, then reconcile the final PR and pool state.",
+      "next_action": "Worker PR #418 is ready for Trusted review at exact HEAD 3a01dd7d38c8cc98a8ffef756d842cbb2fdaa0c5; exact-head Worker CI run #1089 is green. Keep this claim locked until Trusted explicitly integrates, cancels or transfers it. No Trusted merge or deployment was performed.",
       "worker_pr": 418,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/418",
-      "pr_state": "open_draft",
-      "worker_pr_state": "draft",
+      "pr_state": "open_ready_for_review",
+      "worker_pr_state": "ready_for_review",
       "worker_pr_base_branch": "main",
       "worker_pr_base_sha": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
       "worker_pr_head_sha": "3a01dd7d38c8cc98a8ffef756d842cbb2fdaa0c5",
       "worker_pr_changed_paths": [
-        "src/Controller/PublicCompetitionBracketController.php",
         "src/Controller/PublicCompetitionLeaderboardController.php",
-        "tests/Controller/PublicCompetitionBracketControllerTest.php",
-        "tests/Controller/PublicCompetitionLeaderboardTest.php"
-      ]
+        "src/Controller/PublicCompetitionBracketController.php",
+        "tests/Controller/PublicCompetitionLeaderboardTest.php",
+        "tests/Controller/PublicCompetitionBracketControllerTest.php"
+      ],
+      "ci_run_id": 36750501162,
+      "last_ci_run_id": 36750501162,
+      "ci_result": "success",
+      "last_ci_result": "success",
+      "php_symfony_job_id": 110007587404,
+      "php_symfony_result": "success",
+      "postgres_migration_job_id": 110007587148,
+      "postgres_migration_result": "success",
+      "completed_on": "2026-09-30T17:25:03Z",
+      "final_head": "3a01dd7d38c8cc98a8ffef756d842cbb2fdaa0c5",
+      "final_changed_paths": [
+        "src/Controller/PublicCompetitionLeaderboardController.php",
+        "src/Controller/PublicCompetitionBracketController.php",
+        "tests/Controller/PublicCompetitionLeaderboardTest.php",
+        "tests/Controller/PublicCompetitionBracketControllerTest.php"
+      ],
+      "test_evidence": {
+        "targeted_tests": [
+          "PublicCompetitionLeaderboardTest::testCreatorCanViewPrivateLeaderboardWithoutCachingOrIndexing",
+          "PublicCompetitionBracketControllerTest::testCreatorCanViewPrivateBracketWithoutCachingOrIndexing"
+        ],
+        "cache_and_indexing": "Private competition responses now carry private, no-store, max-age=0 and noindex, nofollow, noarchive. Public-competition response behavior is unchanged.",
+        "authorization": "Owners retain access to private competitions; existing anonymous 404, visibility policy, and gaming-module fail-closed behavior remain unchanged.",
+        "schema_or_migration_changes": "none",
+        "write_or_delivery_changes": "none",
+        "exact_head_ci_run_id": 36750501162,
+        "exact_head_ci_result": "success",
+        "php_symfony_job_id": 110007587404,
+        "php_symfony_result": "success",
+        "phpunit": "1,644 tests; 11,954 assertions; 0 failures; 1 PHPUnit deprecation and 26 notices.",
+        "postgres_migration_job_id": 110007587148,
+        "postgres_migration_result": "success",
+        "reviews": "No submitted reviews or review comments as of completion."
+      }
     },
     {
       "priority": 624,
