@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Bildalternativtexte prüfen | Gaming CMS{% endblock %}
+
+{% block body %}
+<main class="dashboard">
+    <p><a href="{{ path('app_admin_storage_index') }}">Zur Medienverwaltung</a></p>
+    <p class="eyebrow">Medien und Barrierefreiheit</p>
+    <h1>Bildalternativtexte prüfen</h1>
+    <p class="muted">Diese Prüfliste zeigt aktive Bilder ohne gespeicherten Alternativtext. Bei dekorativen Bildern kann ein leerer Alternativtext richtig sein; prüfe deshalb den Einsatzzweck, bevor du Metadaten änderst.</p>
+    <p>{{ total }} aktive Bilder ohne Alternativtext · Seite {{ page }} von {{ pages }}</p>
+
+    {% if limitReached %}
+        <p role="status">Die Liste ist auf {{ pageSize * pages }} Einträge begrenzt. Die Gesamtzahl oben umfasst alle passenden Bilder.</p>
+    {% endif %}
+
+    {% if assets is empty %}
+        <p>Keine aktiven Bilder ohne Alternativtext gefunden.</p>
+    {% else %}
+        <ul>
+            {% for asset in assets %}
+                <li>
+                    <h2>Bildasset #{{ asset.id }}</h2>
+                    <p>Alternativtext nicht gesetzt; redaktionelle Prüfung erforderlich.</p>
+                    <a href="{{ path('app_admin_media_edit', {'id': asset.id}) }}">Metadaten prüfen</a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+    <nav aria-label="Seitennavigation">
+        {% if page > 1 %}
+            <a href="{{ path('app_admin_storage_accessibility_report', {'page': page - 1}) }}">Vorherige Seite</a>
+        {% endif %}
+        <span>Seite {{ page }} von {{ pages }}</span>
+        {% if page < pages %}
+            <a href="{{ path('app_admin_storage_accessibility_report', {'page': page + 1}) }}">Nächste Seite</a>
+        {% endif %}
+    </nav>
+</main>
+{% endblock %}
