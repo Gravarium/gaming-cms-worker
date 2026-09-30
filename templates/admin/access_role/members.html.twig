@@ -1,0 +1,54 @@
+{% extends 'base.html.twig' %}
+{% block title %}Mitglieder: {{ role.name }} | Gaming CMS{% endblock %}
+{% block body %}
+<header class="topbar"><a class="brand" href="{{ path('app_admin_dashboard') }}">Gaming CMS</a><nav class="top-actions"><a class="button-link" href="{{ path('app_admin_user_new') }}">Neuer Benutzer</a><a class="button-link button-secondary" href="{{ path('app_admin_access_role_index') }}">Zurück zu Rollen</a></nav></header>
+<main class="dashboard">
+<p class="eyebrow">Zugriffsverwaltung · <code>{{ role.key }}</code></p>
+<h1>Mitglieder: {{ role.name }}</h1>
+{% if role.description %}<p class="muted">{{ role.description }}</p>{% endif %}
+{% if not role.active %}<div class="alert">Diese Rolle ist deaktiviert. Zugewiesene Mitglieder erhalten ihre Berechtigungen derzeit nicht über diese Rolle.</div>{% endif %}
+<p class="muted">Mitgliedschaften werden über das bestehende Benutzerformular verwaltet. Öffne ein Benutzerkonto, um die Rollenzuweisung zu ändern.</p>
+<form method="get" action="{{ path('app_admin_access_role_members', {id: role.id}) }}" class="media-filters" role="search">
+<label><span>Suche</span><input type="search" name="q" maxlength="100" value="{{ query }}" placeholder="Name oder E-Mail" autocomplete="off"></label>
+<label><span>Kontostatus</span><select name="state">
+<option value="all" {{ state == 'all' ? 'selected' : '' }}>Alle</option>
+<option value="active" {{ state == 'active' ? 'selected' : '' }}>Aktiv</option>
+<option value="locked" {{ state == 'locked' ? 'selected' : '' }}>Gesperrt</option>
+<option value="unverified" {{ state == 'unverified' ? 'selected' : '' }}>E-Mail offen</option>
+</select></label>
+<button type="submit">Filtern</button>
+{% if query != '' or state != 'all' %}<a class="button-link button-secondary" href="{{ path('app_admin_access_role_members', {id: role.id}) }}">Zurücksetzen</a>{% endif %}
+</form>
+<p class="muted" aria-live="polite">{{ total }} Treffer</p>
+<div class="table-wrap"><table>
+<thead><tr><th>Name</th><th>E-Mail</th><th>Status</th><th>Zuletzt aktiv</th><th>Aktion</th></tr></thead>
+<tbody>
+{% for member in members %}
+{% set memberStatus = not member.active ? 'Deaktiviert' : (member.locked ? 'Gesperrt' : (member.emailVerified ? 'Aktiv' : 'E-Mail offen')) %}
+<tr>
+<td>{{ member.displayName }}{% if app.user == member %} <span class="muted">(du)</span>{% endif %}</td>
+<td>{{ member.email }}</td>
+<td><span class="status {{ member.active and not member.locked and member.emailVerified ? 'status-ready' : 'status-disabled' }}">{{ memberStatus }}</span></td>
+<td>{{ member.lastSeenAt ? member.lastSeenAt|date('d.m.Y H:i') : 'Noch keine Aktivität' }}</td>
+<td>{% if canManageAdmins or not member.admin %}<a href="{{ path('app_admin_user_edit', {id: member.id}) }}">Benutzer bearbeiten</a>{% else %}<span class="muted">Nur Volladministrator</span>{% endif %}</td>
+</tr>
+{% else %}
+<tr><td colspan="5" class="muted">Keine Benutzer mit dieser Rolle und diesen Filtern gefunden.</td></tr>
+{% endfor %}
+</tbody>
+</table></div>
+{% if pages > 1 %}
+{% set firstVisiblePage = max(1, page - 2) %}
+{% set lastVisiblePage = min(pages, page + 2) %}
+<nav aria-label="Seiten der Rollenmitglieder">
+<div class="row-actions">
+{% if page > 1 %}<a class="button-link button-secondary" aria-label="Vorherige Seite" href="{{ path('app_admin_access_role_members', {id: role.id, q: query, state: state, page: page - 1}) }}">Zurück</a>{% endif %}
+{% for pageNumber in firstVisiblePage..lastVisiblePage %}
+{% if pageNumber == page %}<span aria-current="page">{{ pageNumber }}</span>{% else %}<a class="button-link button-secondary" href="{{ path('app_admin_access_role_members', {id: role.id, q: query, state: state, page: pageNumber}) }}">{{ pageNumber }}</a>{% endif %}
+{% endfor %}
+{% if page < pages %}<a class="button-link button-secondary" aria-label="Nächste Seite" href="{{ path('app_admin_access_role_members', {id: role.id, q: query, state: state, page: page + 1}) }}">Weiter</a>{% endif %}
+</div>
+</nav>
+{% endif %}
+</main>
+{% endblock %}
