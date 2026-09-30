@@ -17,6 +17,20 @@ final readonly class PublicVideoSearchRepository
     {
     }
 
+    public static function boundedPageCount(int $totalMatches): int
+    {
+        if ($totalMatches < 0) {
+            throw new \InvalidArgumentException('The total match count cannot be negative.');
+        }
+
+        $pages = intdiv($totalMatches, self::PAGE_SIZE);
+        if ($totalMatches % self::PAGE_SIZE !== 0) {
+            ++$pages;
+        }
+
+        return min(self::MAX_PAGE, max(1, $pages));
+    }
+
     public function countMatches(string $query, \DateTimeImmutable $now): int
     {
         if (trim($query) === '') {
