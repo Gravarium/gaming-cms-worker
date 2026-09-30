@@ -58064,15 +58064,15 @@
       "claimed_on": "2026-09-29T22:29:07.954Z",
       "active_base_branch": "main",
       "active_base_sha": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
-      "active_head": "60008ccb6431540187e5c8833094883c7fa9b656",
+      "active_head": "46213f01699b11395d000450ced68fa4d0d335c0",
       "branch_heads": {
         "claim_branch": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
-        "feature_branch": "60008ccb6431540187e5c8833094883c7fa9b656"
+        "feature_branch": "46213f01699b11395d000450ced68fa4d0d335c0"
       },
-      "last_observed_head": "60008ccb6431540187e5c8833094883c7fa9b656",
-      "last_checkpoint_at": "2026-09-29T22:33:00.888Z",
-      "last_verified_push_at": "2026-09-29T22:33:00.888Z",
-      "next_action": "PR #406 is ready for Trusted review at exact green HEAD 60008ccb6431540187e5c8833094883c7fa9b656; keep claim locked until Trusted explicitly resolves it. Coordinate later public visibility/navigation with locked FCP-060; no merge/deployment.",
+      "last_observed_head": "46213f01699b11395d000450ced68fa4d0d335c0",
+      "last_checkpoint_at": "2026-09-30T12:30:21Z",
+      "last_verified_push_at": "2026-09-30T12:30:21Z",
+      "next_action": "Worker PR #406 is open and ready for Trusted review at exact HEAD 46213f01699b11395d000450ced68fa4d0d335c0; exact-head Worker CI #1084 (36715167268) is green for PHP/Symfony and PostgreSQL 18. Keep this claim locked until Trusted explicitly resolves it. No Trusted merge or deployment was performed.",
       "worker_pr": 406,
       "draft_pr": false,
       "checkpoint_paths": [
@@ -58084,10 +58084,10 @@
       ],
       "worker_pr_state": "ready_for_review",
       "pr_state": "open",
-      "final_head": "60008ccb6431540187e5c8833094883c7fa9b656",
-      "ci_run_id": 36640209485,
+      "final_head": "46213f01699b11395d000450ced68fa4d0d335c0",
+      "ci_run_id": 36715167268,
       "ci_result": "success",
-      "completed_at": "2026-09-29T22:36:51.941Z",
+      "completed_at": "2026-09-30T12:30:21Z",
       "ci_attempts": [
         {
           "head": "60008ccb6431540187e5c8833094883c7fa9b656",
@@ -58099,8 +58099,53 @@
             "109650446549:success"
           ],
           "test_summary": "PHPUnit 1645 tests, 11990 assertions, no errors/failures; PHPStan 8 and PostgreSQL 18 migration chain passed."
+        },
+        {
+          "head": "46213f01699b11395d000450ced68fa4d0d335c0",
+          "run_id": 36715167268,
+          "run_number": 1084,
+          "result": "success",
+          "jobs": [
+            "109886194918:success",
+            "109886195346:success"
+          ],
+          "test_summary": "PHPUnit 1,646 tests, 12,003 assertions; PHPStan 8 and PostgreSQL 18 migration chain passed."
         }
-      ]
+      ],
+      "worker_pr_head_sha": "46213f01699b11395d000450ced68fa4d0d335c0",
+      "worker_pr_base_sha": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "worker_pr_base_branch": "main",
+      "worker_pr_changed_paths": [
+        "src/Controller/CharacterSelfServiceController.php",
+        "templates/account/characters/account_form.html.twig",
+        "templates/account/characters/index.html.twig",
+        "templates/account/characters/profile_form.html.twig",
+        "tests/Controller/CharacterSelfServiceTest.php"
+      ],
+      "final_changed_paths": [
+        "src/Controller/CharacterSelfServiceController.php",
+        "templates/account/characters/account_form.html.twig",
+        "templates/account/characters/index.html.twig",
+        "templates/account/characters/profile_form.html.twig",
+        "tests/Controller/CharacterSelfServiceTest.php"
+      ],
+      "last_ci_run_id": 36715167268,
+      "last_ci_result": "success",
+      "php_symfony_job_id": 109886195346,
+      "php_symfony_result": "success",
+      "postgres_migration_job_id": 109886194918,
+      "postgres_migration_result": "success",
+      "test_evidence": {
+        "exact_head_ci_run_id": 36715167268,
+        "exact_head_ci_result": "success",
+        "php_symfony_job_id": 109886195346,
+        "php_symfony_result": "success",
+        "phpunit": "1,646 tests; 12,003 assertions; 1 deprecation and 26 notices.",
+        "checks": "PHPStan 8, Twig, container, Doctrine, AssetMapper and dependency audit passed.",
+        "postgres_migration_job_id": 109886194918,
+        "postgres_migration_result": "success",
+        "reviews": "No submitted reviews or inline review threads."
+      }
     },
     {
       "priority": 611,
