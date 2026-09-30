@@ -10,8 +10,8 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "9e083c63e7d888af36f93a23eb924c89fad2b971",
-  "published_at": "2026-09-30T07:25:26.488Z",
-  "summary": "WCP-511, WCP-608, WCP-609 and WCP-610 are complete Worker proposals awaiting Trusted review; their claims remain locked. WCP-611 is claimed from Worker main for the independent public content-tag widget. Trusted main remains the only integration and deployment source.",
+  "published_at": "2026-09-30T07:32:07.651Z",
+  "summary": "WCP-511, WCP-608, WCP-609 and WCP-610 are complete Worker proposals awaiting Trusted review; their claims remain locked. WCP-611 is active from Worker main for the public content-tag widget. Trusted main remains the only integration and deployment source.",
   "rules": {
     "choose": "Resume the current chat's unfinished claimed branch first. Otherwise atomically claim an eligible published task. If no published task is eligible, independently derive and publish a bounded worker-only CMS proposal from approved product goals and observed code gaps; do not ask the owner for the next FCP number.",
     "atomic_reservation": "Create the exact claim_branch and suggested feature branch from that task's published proposal_base_sha. If the claim already exists, treat it as a hard lock; the owning continuation resumes it and every other AI skips it.",
@@ -58102,7 +58102,7 @@
         }
       ]
     },
-    {
+        {
       "priority": 611,
       "package_id": "WCP-611",
       "title": "Add a public content-tag widget to the Page Builder",
@@ -58205,17 +58205,27 @@
       },
       "published_at": "2026-09-30T07:25:26.488Z",
       "claimed_on": "2026-09-30T07:25:26.488Z",
-      "lease_expires_at": "2026-09-30T14:25:26.488Z",
+      "lease_expires_at": "2026-09-30T14:32:07.649Z",
       "claim_generation": 1,
       "claim_state": "active",
       "active_base_branch": "main",
       "active_base_sha": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
-      "active_head": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "active_head": "4a1a05e97aa501d39a941ae92dbf21c06f5feb72",
       "resume_branch": "feature/wcp-611-public-content-tag-widget-g1",
-      "last_observed_head": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
-      "last_checkpoint_at": "2026-09-30T07:25:26.488Z",
-      "checkpoint_paths": [],
-      "next_action": "Create the claim and feature branches from the exact Worker main SHA, implement the four allowed files, run focused tests and full exact-head Worker CI, then lock this proposal for Trusted review. Do not merge or deploy."
+      "last_observed_head": "4a1a05e97aa501d39a941ae92dbf21c06f5feb72",
+      "last_checkpoint_at": "2026-09-30T07:32:07.649Z",
+      "checkpoint_paths": [
+        "src/Widget/Content/PublicContentTagQuery.php",
+        "src/Widget/PublicContentTagWidgetProvider.php",
+        "templates/widget/public_content_tags.html.twig",
+        "tests/Widget/PublicContentTagWidgetProviderTest.php"
+      ],
+      "next_action": "Open a draft Worker PR for this exact HEAD and complete focused PHPUnit/PHPStan plus full exact-head Worker CI, including PostgreSQL 18 migration validation. Fix any failures without weakening protections, then record the exact green CI evidence and keep the proposal locked for Trusted review.",
+      "last_verified_push_at": "2026-09-30T07:32:07.649Z",
+      "branch_heads": {
+        "claim_branch": "4a1a05e97aa501d39a941ae92dbf21c06f5feb72",
+        "feature_branch": "4a1a05e97aa501d39a941ae92dbf21c06f5feb72"
+      }
     }
   ],
   "recovery_queue": [],
