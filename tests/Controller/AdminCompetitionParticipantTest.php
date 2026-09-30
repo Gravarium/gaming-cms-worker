@@ -111,10 +111,10 @@ final class AdminCompetitionParticipantTest extends WebTestCase
 
         $crawler = $client->request('GET', $base);
         $withdrawPath = $base.'/'.$secondId.'/withdraw';
-        $client->request('POST', $withdrawPath, ['_token' => $this->token($crawler, $withdrawPath)]);
+        $withdrawToken = $this->token($crawler, $withdrawPath);
+        $client->request('POST', $withdrawPath, ['_token' => $withdrawToken]);
         self::assertResponseRedirects($base);
-        $crawler = $client->request('GET', $base);
-        $client->request('POST', $withdrawPath, ['_token' => $this->token($crawler, $withdrawPath)]);
+        $client->request('POST', $withdrawPath, ['_token' => $withdrawToken]);
         self::assertResponseStatusCodeSame(400);
         self::assertSame(CompetitionParticipant::STATUS_WITHDRAWN, $this->participant($client, $secondId)->getStatus());
     }
