@@ -59856,8 +59856,8 @@
       "package_id": "WCP-622",
       "title": "Recognize media blocks when assetId is the final JSON field",
       "risk": "low_read_only",
-      "execution_state": "worker_in_progress",
-      "claim_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
+      "claim_state": "locked_until_trusted_resolution",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -59910,10 +59910,10 @@
       ],
       "completion_report": [
         "Exact Worker main/base SHA, final Worker HEAD, Worker PR and complete changed path list.",
-        "Regression evidence for final-field assetId recognition and unchanged exact decoded-block filtering.",
-        "Evidence that existing candidate/result bounds and authorization/module gates remain intact.",
-        "No schema/migration or upload, replacement, deletion, or delivery changes.",
-        "Exact-head Worker CI run and both job results; no Trusted integration or deployment."
+        "Regression test proves a valid decoded media block remains discoverable when assetId is the last JSON field.",
+        "Exact decoded-block validation, candidate/result caps, access gates and private read-only behavior are unchanged.",
+        "No schema/migration or upload, replacement, deletion, metadata-write, storage-path or delivery changes.",
+        "Exact-head Worker CI #1088 and both job results are green. PR is open and ready for review; no Trusted merge or deployment."
       ],
       "immutable_constraints": [
         "read-only-media-usage-discovery",
@@ -59941,14 +59941,14 @@
       },
       "published_at": "2026-09-30T16:57:57Z",
       "claimed_on": "2026-09-30T16:57:57Z",
-      "lease_expires_at": "2026-09-30T23:59:35.000Z",
+      "lease_expires_at": null,
       "claim_generation": 1,
       "active_base_branch": "main",
       "active_base_sha": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
       "active_head": "092eea054458226dd1aaef40b80068f8712fb002",
       "resume_branch": "feature/wcp-622-media-usage-block-match-g1",
       "last_observed_head": "092eea054458226dd1aaef40b80068f8712fb002",
-      "last_checkpoint_at": "2026-09-30T16:59:35Z",
+      "last_checkpoint_at": "2026-09-30T17:06:55Z",
       "checkpoint_paths": [
         "src/Media/MediaAssetUsageBrowser.php",
         "tests/Controller/AdminMediaUsageBrowserTest.php"
@@ -59958,18 +59958,50 @@
         "claim_branch": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
         "feature_branch": "092eea054458226dd1aaef40b80068f8712fb002"
       },
-      "next_action": "Wait for exact-head Worker CI run on PR #417; review both PHP/Symfony and PostgreSQL 18 jobs, then update the PR and pool from the exact final head.",
+      "next_action": "Worker PR #417 is ready for Trusted review at exact HEAD 092eea054458226dd1aaef40b80068f8712fb002; exact-head Worker CI run #1088 is green. Keep this claim locked until Trusted explicitly integrates, cancels or transfers it. No Trusted merge or deployment was performed.",
       "worker_pr": 417,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/417",
-      "pr_state": "open_draft",
-      "worker_pr_state": "draft",
+      "pr_state": "open_ready_for_review",
+      "worker_pr_state": "ready_for_review",
       "worker_pr_base_branch": "main",
       "worker_pr_base_sha": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
       "worker_pr_head_sha": "092eea054458226dd1aaef40b80068f8712fb002",
       "worker_pr_changed_paths": [
         "src/Media/MediaAssetUsageBrowser.php",
         "tests/Controller/AdminMediaUsageBrowserTest.php"
-      ]
+      ],
+      "ci_run_id": 36748447257,
+      "last_ci_run_id": 36748447257,
+      "ci_result": "success",
+      "last_ci_result": "success",
+      "php_symfony_job_id": 110000547648,
+      "php_symfony_result": "success",
+      "postgres_migration_job_id": 110000547247,
+      "postgres_migration_result": "success",
+      "completed_on": "2026-09-30T17:06:55Z",
+      "final_head": "092eea054458226dd1aaef40b80068f8712fb002",
+      "final_changed_paths": [
+        "src/Media/MediaAssetUsageBrowser.php",
+        "tests/Controller/AdminMediaUsageBrowserTest.php"
+      ],
+      "test_evidence": {
+        "targeted_tests": [
+          "AdminMediaUsageBrowserTest::testMediaBlockIsFoundWhenAssetIdIsLastJsonField"
+        ],
+        "filtering": "The prefilter now recognizes the closing-brace form for a final assetId field. The existing decoded-block check remains authoritative and filters false candidates.",
+        "bounds": "The 200-candidate query cap and 50-item result cap and truncation behavior are unchanged.",
+        "access_and_privacy": "Existing storage/content permission checks, Media and Content module gates, private no-store behavior, HTML escaping, and no-storage-path output remain covered.",
+        "write_behavior": "GET-only usage view; POST still returns 405. No upload, replacement, deletion, metadata write, or public delivery changes.",
+        "schema_or_migration_changes": "none",
+        "exact_head_ci_run_id": 36748447257,
+        "exact_head_ci_result": "success",
+        "php_symfony_job_id": 110000547648,
+        "php_symfony_result": "success",
+        "phpunit": "1,643 tests; 11,952 assertions; 0 failures; 1 PHPUnit deprecation and 26 notices.",
+        "postgres_migration_job_id": 110000547247,
+        "postgres_migration_result": "success",
+        "reviews": "No submitted reviews or review comments as of completion."
+      }
     }
   ],
   "recovery_queue": [],
