@@ -60,6 +60,7 @@ final class CompetitionRoundProgressionTest extends WebTestCase
             $client->request('POST', $url, ['_token' => 'invalid']);
             self::assertResponseStatusCodeSame(403);
 
+            $client->restart();
             $client->loginUser($manager);
             $client->request('POST', $url, ['_token' => 'invalid']);
             self::assertResponseStatusCodeSame(403);
