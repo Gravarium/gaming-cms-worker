@@ -49,7 +49,7 @@ final class CompetitionRoundProgressionTest extends WebTestCase
         $em = $client->getContainer()->get(EntityManagerInterface::class);
         [$competition, , , $game, $users] = $this->fixtures($em, 2);
         $manager = (new User())->setEmail('round-manager-'.bin2hex(random_bytes(6)).'@example.test')
-            ->setDisplayName('Round manager')->setPermissions(['CMS_GAMING_MANAGE']);
+            ->setDisplayName('Round manager')->setPermissions(['CMS_GAMING_MANAGE'])->verifyEmail();
         $em->persist($manager);
         $em->flush();
 
@@ -57,7 +57,7 @@ final class CompetitionRoundProgressionTest extends WebTestCase
             $url = '/admin/gaming/competitions/'.$competition->getId().'/advance';
             $client->loginUser($users[0]);
             $client->request('POST', $url, ['_token' => 'invalid']);
-            self::assertResponseStatusCodeSame(403);
+            self::assertResponseRedirects('/login');
 
             $client->loginUser($manager);
             $client->request('POST', $url, ['_token' => 'invalid']);
@@ -113,11 +113,18 @@ final class CompetitionRoundProgressionTest extends WebTestCase
     private function removeFixtures(EntityManagerInterface $em, Competition $competition, Game $game, array $users): void
     {
         if (!$em->isOpen()) { return; }
-        foreach ($em->getRepository(CompetitionMatch::class)->findBy(['competition' => $competition]) as $match) { $em->remove($match); }
-        foreach ($em->getRepository(CompetitionParticipant::class)->findBy(['competition' => $competition]) as $participant) { $em->remove($participant); }
-        $em->remove($competition);
-        $em->remove($game);
-        foreach ($users as $user) { $em->remove($user); }
+        $managedCompetition = $em->find(Competition::class, $competition->getId());
+        if ($managedCompetition instanceof Competition) {
+            foreach ($em->getRepository(CompetitionMatch::class)->findBy(['competition' => $managedCompetition]) as $match) { $em->remove($match); }
+            foreach ($em->getRepository(CompetitionParticipant::class)->findBy(['competition' => $managedCompetition]) as $participant) { $em->remove($participant); }
+            $em->remove($managedCompetition);
+        }
+        $managedGame = $em->find(Game::class, $game->getId());
+        if ($managedGame instanceof Game) { $em->remove($managedGame); }
+        foreach ($users as $user) {
+            $managedUser = $em->find(User::class, $user->getId());
+            if ($managedUser instanceof User) { $em->remove($managedUser); }
+        }
         $em->flush();
     }
 }
