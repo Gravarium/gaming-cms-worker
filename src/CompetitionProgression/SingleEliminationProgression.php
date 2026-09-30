@@ -60,10 +60,11 @@ final readonly class SingleEliminationProgression
                 $competition->complete();
                 return null;
             }
-            if (count($winners) < 2 || count($winners) % 2 !== 0) {
+            if (count($winners) < 2) {
                 throw new \DomainException('The current round cannot form complete next-round pairings.');
             }
 
+            $bye = count($winners) % 2 === 0 ? null : array_pop($winners);
             foreach ($this->brackets->nextEliminationPairings($competition, $round + 1, $winners) as $pairing) {
                 $match = (new CompetitionMatch())
                     ->setCompetition($competition)
@@ -72,6 +73,15 @@ final readonly class SingleEliminationProgression
                     ->setSequence($pairing['sequence'])
                     ->setParticipants($pairing['participantA'], $pairing['participantB']);
                 $entityManager->persist($match->markReady());
+            }
+            if ($bye !== null) {
+                $entityManager->persist((new CompetitionMatch())
+                    ->setCompetition($competition)
+                    ->setRoundNumber($round + 1)
+                    ->setBracket(CompetitionMatch::BRACKET_WINNERS)
+                    ->setSequence(intdiv(count($winners), 2) + 1)
+                    ->setParticipants($bye, null)
+                    ->awardSingleEliminationBye());
             }
 
             return $round + 1;

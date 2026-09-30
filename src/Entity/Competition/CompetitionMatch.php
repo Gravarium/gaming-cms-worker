@@ -159,6 +159,26 @@ class CompetitionMatch
         return $this;
     }
 
+    public function awardSingleEliminationBye(): self
+    {
+        if ($this->competition?->getStatus() !== Competition::STATUS_IN_PROGRESS
+            || $this->competition->getFormat() !== Competition::FORMAT_SINGLE_ELIMINATION
+            || $this->bracket !== self::BRACKET_WINNERS
+            || $this->status !== self::STATUS_SCHEDULED
+            || $this->participantA === null
+            || !$this->participantA->isCheckedIn()
+            || $this->participantB !== null) {
+            throw new \DomainException('Only an active checked-in entrant may receive a single-elimination bye.');
+        }
+
+        $this->winner = $this->participantA;
+        $this->participantAConfirmed = true;
+        $this->status = self::STATUS_CONFIRMED;
+        $this->confirmedAt = new \DateTimeImmutable();
+
+        return $this;
+    }
+
     public function submitResult(CompetitionParticipant $by, int $scoreA, int $scoreB, User $submittedBy): self
     {
         if ($this->competition?->getStatus() !== Competition::STATUS_IN_PROGRESS) { throw new \DomainException('Only active competitions accept results.'); }

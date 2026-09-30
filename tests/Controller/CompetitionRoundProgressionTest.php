@@ -70,6 +70,45 @@ final class CompetitionRoundProgressionTest extends WebTestCase
         }
     }
 
+    public function testSixEntrantsReceiveOneByeAndCanReachARealFinal(): void
+    {
+        $client = static::createClient();
+        $em = $client->getContainer()->get(EntityManagerInterface::class);
+        [$competition, $participants, $matches, $game, $users] = $this->fixtures($em, 6);
+
+        try {
+            foreach ($matches as $index => $match) {
+                $this->confirm($match, $participants[$index * 2], $participants[$index * 2 + 1], $users[$index * 2]);
+            }
+            $em->flush();
+            $service = $client->getContainer()->get(SingleEliminationProgression::class);
+            self::assertSame(2, $service->advance($competition));
+            $roundTwo = array_values(array_filter(
+                $em->getRepository(CompetitionMatch::class)->findBy(['competition' => $competition]),
+                static fn (CompetitionMatch $match): bool => $match->getRoundNumber() === 2,
+            ));
+            self::assertCount(2, $roundTwo);
+            $play = array_values(array_filter($roundTwo, static fn (CompetitionMatch $match): bool => $match->getParticipantB() !== null))[0];
+            $bye = array_values(array_filter($roundTwo, static fn (CompetitionMatch $match): bool => $match->getParticipantB() === null))[0];
+            self::assertTrue($bye->isConfirmed());
+            self::assertSame($participants[4], $bye->getWinner());
+            $this->confirm($play, $participants[0], $participants[2], $users[0]);
+            $em->flush();
+
+            self::assertSame(3, $service->advance($competition));
+            $final = $em->getRepository(CompetitionMatch::class)->findOneBy(['competition' => $competition, 'roundNumber' => 3]);
+            self::assertInstanceOf(CompetitionMatch::class, $final);
+            self::assertSame($participants[0], $final->getParticipantA());
+            self::assertSame($participants[4], $final->getParticipantB());
+            $this->confirm($final, $participants[0], $participants[4], $users[0]);
+            $em->flush();
+            self::assertNull($service->advance($competition));
+            self::assertSame(Competition::STATUS_COMPLETED, $competition->getStatus());
+        } finally {
+            $this->removeFixtures($em, $competition, $game, $users);
+        }
+    }
+
     public function testIncompleteRoundDoesNotAdvanceWithValidManagerToken(): void
     {
         $client = static::createClient();
