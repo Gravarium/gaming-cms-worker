@@ -10,8 +10,8 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "9e083c63e7d888af36f93a23eb924c89fad2b971",
-  "published_at": "2026-09-30T22:18:52.372Z",
-  "summary": "WCP-628 complete with green exact-head Worker CI; WCP-630 match scheduling board claimed independently.",
+  "published_at": "2026-09-30T22:24:47.858Z",
+  "summary": "WCP-629 complete on green exact-head CI; WCP-632 public season browser claimed independently.",
   "rules": {
     "choose": "Resume the current chat's unfinished claimed branch first. Otherwise atomically claim an eligible published task. If no published task is eligible, independently derive and publish a bounded worker-only CMS proposal from approved product goals and observed code gaps; do not ask the owner for the next FCP number.",
     "atomic_reservation": "Create the exact claim_branch and suggested feature branch from that task's published proposal_base_sha. If the claim already exists, treat it as a hard lock; the owning continuation resumes it and every other AI skips it.",
@@ -61364,6 +61364,99 @@
       "last_ci_head": null,
       "ci_history": [],
       "next_action": "Implement explicit CSRF-protected POST confirmation on feature/wcp-631-explicit-email-verification-g1; keep GET side-effect free."
+    },
+    {
+      "priority": 632,
+      "package_id": "WCP-632",
+      "title": "Browse public competition seasons and their visible competitions",
+      "risk": "medium_privacy",
+      "execution_state": "worker_in_progress",
+      "claim_state": "active_lease",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-632-public-competition-seasons-g1",
+      "suggested_branch": "feature/wcp-632-public-competition-seasons-g1",
+      "base_branch": "main",
+      "base_sha": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "objective": "Give visitors a bounded public season directory and per-season competition page. Show a season only when it has at least one public non-draft competition in an enabled game; apply the existing CompetitionVisibilityPolicy semantics to every listed competition. Link from the public competition index. Do not expose private or draft competitions, add mutations, or change schema.",
+      "allowed_paths": [
+        "src/CompetitionSeason/PublicSeasonBrowser.php",
+        "src/Controller/PublicCompetitionSeasonController.php",
+        "templates/competition_season/index.html.twig",
+        "templates/competition_season/show.html.twig",
+        "templates/competition/index.html.twig",
+        "tests/Controller/PublicCompetitionSeasonTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "CONTINUOUS-WORKER.md",
+        "CONTINUOUS-WORK-POOL.json",
+        ".github/workflows/",
+        "migrations/",
+        "src/Entity/",
+        "src/Repository/"
+      ],
+      "deliverables": [
+        "GET season directory and detail with bounded stable pagination and exact public counts.",
+        "No season title is shown when every associated competition is draft or private, or the game is disabled.",
+        "Every linked competition follows current public visibility; Gaming module gate and safe query bounds apply.",
+        "Link from existing public competition index; no schema, mutation or private data exposure."
+      ],
+      "tests": [
+        "Functional visibility, disabled-game, module-gate, pagination and malformed-input tests.",
+        "Exact-head full Worker CI including PHPStan, PHPUnit and PostgreSQL 18 migration chain."
+      ],
+      "completion_report": [
+        "Exact base/head, PR, paths and CI jobs.",
+        "Visibility and denial evidence; no Trusted merge or deployment."
+      ],
+      "immutable_constraints": [
+        "worker-output-untrusted",
+        "current-competition-visibility-policy",
+        "no-private-or-draft-leak",
+        "no-security-test-or-CI-weakening",
+        "no-Trusted-merge-or-deployment"
+      ],
+      "proposal_kind": "worker_only",
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "proposal_dependency_evidence": [],
+      "collision_check": {
+        "compared_against": "Current pool active and locked allowed paths plus live Worker main",
+        "result": "Six paths are disjoint from active WCP-630 and WCP-631; existing public competition index gains only a navigation link.",
+        "paths": [
+          "src/CompetitionSeason/PublicSeasonBrowser.php",
+          "src/Controller/PublicCompetitionSeasonController.php",
+          "templates/competition_season/index.html.twig",
+          "templates/competition_season/show.html.twig",
+          "templates/competition/index.html.twig",
+          "tests/Controller/PublicCompetitionSeasonTest.php"
+        ]
+      },
+      "published_at": "2026-09-30T22:24:09.179Z",
+      "claimed_on": "2026-09-30T22:24:09.179Z",
+      "claim_generation": 1,
+      "active_base_branch": "main",
+      "active_base_sha": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "active_head": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "resume_branch": "feature/wcp-632-public-competition-seasons-g1",
+      "branch_heads": {
+        "claim_branch": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+        "feature_branch": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4"
+      },
+      "next_action": "Implement public season browsing on the reserved Worker branch.",
+      "last_observed_head": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "last_checkpoint_at": "2026-09-30T22:24:09.179Z",
+      "last_verified_push_at": "2026-09-30T22:24:09.179Z",
+      "lease_expires_at": "2026-10-01T05:24:09.179Z",
+      "checkpoint_paths": []
     }
   ],
   "recovery_queue": [],
