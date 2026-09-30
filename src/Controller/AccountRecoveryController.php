@@ -128,20 +128,36 @@ final class AccountRecoveryController extends AbstractController
         return $this->redirectToRoute('app_account_security');
     }
 
-    #[Route('/verify-email/{token}', name: 'app_verify_email', requirements: ['token' => '[A-Za-z0-9_-]+'], methods: ['GET'])]
-    public function verifyEmail(string $token): Response
+    #[Route('/verify-email/{token}', name: 'app_verify_email', requirements: ['token' => '[A-Za-z0-9_-]+'], methods: ['GET', 'POST'])]
+    public function verifyEmail(string $token, Request $request): Response
     {
-        $accountToken = $this->tokens->consume($token, AccountToken::PURPOSE_EMAIL_VERIFICATION);
+        $isPost = $request->isMethod('POST');
+        if ($isPost && !$this->isCsrfTokenValid('verify-email', $request->request->getString('_token'))) {
+            throw $this->createAccessDeniedException('Invalid email verification token.');
+        }
+
+        $accountToken = $isPost
+            ? $this->tokens->consume($token, AccountToken::PURPOSE_EMAIL_VERIFICATION)
+            : $this->tokens->resolve($token, AccountToken::PURPOSE_EMAIL_VERIFICATION);
         $user = $accountToken?->getUser();
-        if (!$user instanceof User) {
-            return $this->render('security/email_verified.html.twig', ['success' => false]);
+        if (!$user instanceof User || !$user->isActive()) {
+            return $this->render('security/email_verified.html.twig', ['success' => false, 'confirmation' => false]);
+        }
+
+        if (!$isPost) {
+            return $this->render('security/email_verified.html.twig', [
+                'success' => false,
+                'confirmation' => true,
+                'token' => $token,
+            ]);
         }
 
         $user->verifyEmail();
         $this->tokens->revoke($user, AccountToken::PURPOSE_EMAIL_VERIFICATION);
         $this->audit->record('security.email.verified', $user, $user->getId(), 'E-Mail-Adresse bestätigt.');
         $this->entityManager->flush();
-        return $this->render('security/email_verified.html.twig', ['success' => true]);
+
+        return $this->render('security/email_verified.html.twig', ['success' => true, 'confirmation' => false]);
     }
 
     private function currentUser(): User
