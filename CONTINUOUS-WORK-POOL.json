@@ -61348,22 +61348,29 @@
       "code_gap_evidence": "On exact Worker main, AccountRecoveryController::verifyEmail is GET-only and calls AccountTokenManager::consume(), verifies the user, revokes tokens, and writes an audit event. Automated mail link scanning can trigger that action before the person follows the link.",
       "claimed_on": "2026-09-30T22:22:06.486Z",
       "claim_generation": 1,
-      "lease_expires_at": "2026-10-01T05:22:06.486Z",
-      "active_head": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
-      "last_observed_head": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
-      "checkpoint_commit_sha": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "lease_expires_at": "2026-10-01T05:27:11.268Z",
+      "active_head": "5747bf606a2214c7f1e0b8302d2b6ebb42b6fdde",
+      "last_observed_head": "5747bf606a2214c7f1e0b8302d2b6ebb42b6fdde",
+      "checkpoint_commit_sha": "5747bf606a2214c7f1e0b8302d2b6ebb42b6fdde",
       "branch_heads": {
         "claim_branch": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
-        "feature_branch": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4"
+        "feature_branch": "5747bf606a2214c7f1e0b8302d2b6ebb42b6fdde"
       },
-      "checkpoint_paths": [],
+      "checkpoint_paths": [
+        "src/Controller/AccountRecoveryController.php",
+        "templates/security/email_verified.html.twig",
+        "tests/Controller/AccountRecoveryControllerTest.php"
+      ],
       "worker_pr_state": "not_created",
       "pr_state": "not_created",
       "last_ci_run_id": null,
-      "last_ci_result": "not_run",
-      "last_ci_head": null,
+      "last_ci_result": "pending",
+      "last_ci_head": "5747bf606a2214c7f1e0b8302d2b6ebb42b6fdde",
       "ci_history": [],
-      "next_action": "Implement explicit CSRF-protected POST confirmation on feature/wcp-631-explicit-email-verification-g1; keep GET side-effect free."
+      "next_action": "Open a draft Worker PR against main, then run full exact-head Worker CI.",
+      "last_checkpoint_at": "2026-09-30T22:27:11.268Z",
+      "last_verified_push_at": "2026-09-30T22:27:11.268Z",
+      "worker_pr_head_sha": "5747bf606a2214c7f1e0b8302d2b6ebb42b6fdde"
     },
     {
       "priority": 632,
