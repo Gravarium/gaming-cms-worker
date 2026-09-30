@@ -10,8 +10,8 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "9e083c63e7d888af36f93a23eb924c89fad2b971",
-  "published_at": "2026-09-30T08:39:34.382Z",
-  "summary": "WCP-511, WCP-608, WCP-609, WCP-610, WCP-611, WCP-612 and WCP-613 are complete Worker proposals awaiting Trusted review; their claims remain locked. WCP-614 is active on feature/wcp-614-public-game-catalogue-pagination-g1 at checkpoint c843f8270dbc2cf48d5f63b12ed35157e64d6338. Trusted main remains the only integration and deployment source.",
+  "published_at": "2026-09-30T08:45:18.423Z",
+  "summary": "WCP-511, WCP-608, WCP-609, WCP-610, WCP-611, WCP-612 and WCP-613 are complete Worker proposals awaiting Trusted review; their claims remain locked. WCP-614 is active on feature/wcp-614-public-game-catalogue-pagination-g1 at checkpoint 749f11373e403b4970364a6fa6f04115fc4ab587. Trusted main remains the only integration and deployment source.",
   "rules": {
     "choose": "Resume the current chat's unfinished claimed branch first. Otherwise atomically claim an eligible published task. If no published task is eligible, independently derive and publish a bounded worker-only CMS proposal from approved product goals and observed code gaps; do not ask the owner for the next FCP number.",
     "atomic_reservation": "Create the exact claim_branch and suggested feature branch from that task's published proposal_base_sha. If the claim already exists, treat it as a hard lock; the owning continuation resumes it and every other AI skips it.",
@@ -58691,14 +58691,14 @@
       },
       "published_at": "2026-09-30T08:27:28.711Z",
       "claimed_on": "2026-09-30T08:27:28.711Z",
-      "lease_expires_at": "2026-09-30T15:38:43.135Z",
+      "lease_expires_at": "2026-09-30T15:44:55.385Z",
       "claim_generation": 1,
       "active_base_branch": "main",
       "active_base_sha": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
-      "active_head": "c843f8270dbc2cf48d5f63b12ed35157e64d6338",
+      "active_head": "749f11373e403b4970364a6fa6f04115fc4ab587",
       "resume_branch": "feature/wcp-614-public-game-catalogue-pagination-g1",
-      "last_observed_head": "c843f8270dbc2cf48d5f63b12ed35157e64d6338",
-      "last_checkpoint_at": "2026-09-30T08:39:34.382Z",
+      "last_observed_head": "749f11373e403b4970364a6fa6f04115fc4ab587",
+      "last_checkpoint_at": "2026-09-30T08:45:18.423Z",
       "checkpoint_paths": [
         "src/Controller/GameCatalogue/GameCatalogueController.php",
         "src/Repository/GameCatalogue/GameCatalogueEntryRepository.php",
@@ -58706,12 +58706,12 @@
         "src/GameCatalogue/Templates/public/index.html.twig",
         "tests/Controller/GameCataloguePaginationTest.php"
       ],
-      "last_verified_push_at": "2026-09-30T08:38:43.135Z",
+      "last_verified_push_at": "2026-09-30T08:44:55.385Z",
       "branch_heads": {
-        "claim_branch": "c843f8270dbc2cf48d5f63b12ed35157e64d6338",
-        "feature_branch": "c843f8270dbc2cf48d5f63b12ed35157e64d6338"
+        "claim_branch": "749f11373e403b4970364a6fa6f04115fc4ab587",
+        "feature_branch": "749f11373e403b4970364a6fa6f04115fc4ab587"
       },
-      "next_action": "Open a draft Worker PR for exact head c843f8270dbc2cf48d5f63b12ed35157e64d6338, then monitor full exact-head Worker CI including PHPStan and PostgreSQL 18 migration validation. Keep the output untrusted; do not merge to Trusted or deploy."
+      "next_action": "Monitor Worker PR #410 at exact head 749f11373e403b4970364a6fa6f04115fc4ab587. Verify the rerun's full exact-head Worker CI, including PHPStan and PostgreSQL 18 migration validation; keep the PR in draft until all checks pass. Keep all output untrusted; do not merge to Trusted or deploy."
     }
   ],
   "recovery_queue": [],
