@@ -10,8 +10,8 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "9e083c63e7d888af36f93a23eb924c89fad2b971",
-  "published_at": "2026-09-30T08:27:28.711Z",
-  "summary": "WCP-511, WCP-608, WCP-609, WCP-610, WCP-611, WCP-612 and WCP-613 are complete Worker proposals awaiting Trusted review; their claims remain locked. WCP-614 is active on feature/wcp-614-public-game-catalogue-pagination-g1 from Worker main for bounded public Game Catalogue pagination. Trusted main remains the only integration and deployment source.",
+  "published_at": "2026-09-30T08:39:34.382Z",
+  "summary": "WCP-511, WCP-608, WCP-609, WCP-610, WCP-611, WCP-612 and WCP-613 are complete Worker proposals awaiting Trusted review; their claims remain locked. WCP-614 is active on feature/wcp-614-public-game-catalogue-pagination-g1 at checkpoint c843f8270dbc2cf48d5f63b12ed35157e64d6338. Trusted main remains the only integration and deployment source.",
   "rules": {
     "choose": "Resume the current chat's unfinished claimed branch first. Otherwise atomically claim an eligible published task. If no published task is eligible, independently derive and publish a bounded worker-only CMS proposal from approved product goals and observed code gaps; do not ask the owner for the next FCP number.",
     "atomic_reservation": "Create the exact claim_branch and suggested feature branch from that task's published proposal_base_sha. If the claim already exists, treat it as a hard lock; the owning continuation resumes it and every other AI skips it.",
@@ -58102,7 +58102,7 @@
         }
       ]
     },
-            {
+    {
       "priority": 611,
       "package_id": "WCP-611",
       "title": "Add a public content-tag widget to the Page Builder",
@@ -58436,7 +58436,7 @@
         "postgres_migration_result": "success"
       }
     },
-                {
+    {
       "priority": 613,
       "package_id": "WCP-613",
       "title": "Publish a public RSS feed for gaming guides",
@@ -58691,21 +58691,27 @@
       },
       "published_at": "2026-09-30T08:27:28.711Z",
       "claimed_on": "2026-09-30T08:27:28.711Z",
-      "lease_expires_at": "2026-09-30T15:27:28.711Z",
+      "lease_expires_at": "2026-09-30T15:38:43.135Z",
       "claim_generation": 1,
       "active_base_branch": "main",
       "active_base_sha": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
-      "active_head": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "active_head": "c843f8270dbc2cf48d5f63b12ed35157e64d6338",
       "resume_branch": "feature/wcp-614-public-game-catalogue-pagination-g1",
-      "last_observed_head": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
-      "last_checkpoint_at": "2026-09-30T08:27:28.711Z",
-      "checkpoint_paths": [],
-      "last_verified_push_at": null,
+      "last_observed_head": "c843f8270dbc2cf48d5f63b12ed35157e64d6338",
+      "last_checkpoint_at": "2026-09-30T08:39:34.382Z",
+      "checkpoint_paths": [
+        "src/Controller/GameCatalogue/GameCatalogueController.php",
+        "src/Repository/GameCatalogue/GameCatalogueEntryRepository.php",
+        "config/packages/game_catalogue_pagination.yaml",
+        "src/GameCatalogue/Templates/public/index.html.twig",
+        "tests/Controller/GameCataloguePaginationTest.php"
+      ],
+      "last_verified_push_at": "2026-09-30T08:38:43.135Z",
       "branch_heads": {
-        "claim_branch": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
-        "feature_branch": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4"
+        "claim_branch": "c843f8270dbc2cf48d5f63b12ed35157e64d6338",
+        "feature_branch": "c843f8270dbc2cf48d5f63b12ed35157e64d6338"
       },
-      "next_action": "Implement count and page queries, strict page validation, preserved filters and module-local pagination view within the five reserved paths. Push a coherent checkpoint, open a draft Worker PR and run exact-head CI. Keep all output untrusted; do not merge to Trusted or deploy."
+      "next_action": "Open a draft Worker PR for exact head c843f8270dbc2cf48d5f63b12ed35157e64d6338, then monitor full exact-head Worker CI including PHPStan and PostgreSQL 18 migration validation. Keep the output untrusted; do not merge to Trusted or deploy."
     }
   ],
   "recovery_queue": [],
