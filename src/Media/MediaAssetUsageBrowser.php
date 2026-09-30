@@ -43,8 +43,9 @@ final readonly class MediaAssetUsageBrowser
             $parameters['location'] = $location;
         }
         if ($assetId !== null) {
-            $conditions[] = 'LOCATE(:mediaMarker, entry.editorDocument) > 0';
+            $conditions[] = '(LOCATE(:mediaMarker, entry.editorDocument) > 0 OR LOCATE(:mediaMarkerAtEnd, entry.editorDocument) > 0)';
             $parameters['mediaMarker'] = '"assetId":'.$assetId.',';
+            $parameters['mediaMarkerAtEnd'] = '"assetId":'.$assetId.'}';
         }
         $queryBuilder = $this->entityManager->getRepository(ContentEntry::class)->createQueryBuilder('entry')
             ->andWhere('('.implode(' OR ', $conditions).')')
