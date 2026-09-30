@@ -10,7 +10,7 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "9e083c63e7d888af36f93a23eb924c89fad2b971",
-  "published_at": "2026-09-30T21:40:30.616Z",
+  "published_at": "2026-09-30T21:50:08.161Z",
   "summary": "WCP-628 complete with green exact-head Worker CI; WCP-630 match scheduling board claimed independently.",
   "rules": {
     "choose": "Resume the current chat's unfinished claimed branch first. Otherwise atomically claim an eligible published task. If no published task is eligible, independently derive and publish a bounded worker-only CMS proposal from approved product goals and observed code gaps; do not ask the owner for the next FCP number.",
@@ -59649,21 +59649,27 @@
       },
       "published_at": "2026-09-30T12:20:16.357Z",
       "claimed_on": "2026-09-30T21:40:30.616Z",
-      "lease_expires_at": "2026-10-01T04:40:30.616Z",
+      "lease_expires_at": "2026-10-01T04:50:08.161Z",
       "claim_generation": 2,
       "active_base_branch": "main",
       "active_base_sha": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
-      "active_head": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "active_head": "058869d59376e76e3c89a26e6123ef5322e70156",
       "resume_branch": "feature/wcp-620-game-guide-withdrawal-g1",
-      "last_observed_head": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
-      "last_checkpoint_at": null,
-      "checkpoint_paths": [],
-      "last_verified_push_at": null,
+      "last_observed_head": "058869d59376e76e3c89a26e6123ef5322e70156",
+      "last_checkpoint_at": "2026-09-30T21:50:08.161Z",
+      "checkpoint_paths": [
+        "src/Controller/AdminGameGuideController.php",
+        "src/GameGuide/AdminGameGuideWorkflow.php",
+        "src/GameGuide/Templates/admin/index.html.twig",
+        "tests/Controller/AdminGameGuideControllerTest.php"
+      ],
+      "last_verified_push_at": "2026-09-30T21:50:08.161Z",
       "branch_heads": {
         "claim_branch": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
-        "feature_branch": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4"
+        "feature_branch": "058869d59376e76e3c89a26e6123ef5322e70156"
       },
-      "next_action": "Implement the admin withdrawal form, atomic workflow transition and focused tests on this exact base; push a meaningful checkpoint promptly."
+      "next_action": "Verify complete Worker CI on exact checkpoint 058869d59376e76e3c89a26e6123ef5322e70156; repair any failures without weakening checks, then open/update the Worker PR and finish the package.",
+      "checkpoint_commit_sha": "058869d59376e76e3c89a26e6123ef5322e70156"
     },
     {
       "priority": 621,
