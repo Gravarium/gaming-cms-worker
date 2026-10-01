@@ -62909,7 +62909,8 @@
         "src/Repository/GuildEventSignupRepository.php",
         "src/Controller/GuildPortalController.php",
         "src/Controller/GuildEventSignupPortalController.php",
-        "tests/Controller/GuildEventWaitlistPromotionTest.php"
+        "tests/Controller/GuildEventWaitlistPromotionTest.php",
+        "tests/Controller/GuildEventSignupPortalControllerTest.php"
       ],
       "forbidden_paths": [
         "private/",
@@ -62941,13 +62942,14 @@
       ],
       "collision_check": {
         "compared_against": "Live pool 15bbd4e8aee9c6808358d5d2b8a014de3748dd7e and Worker main 1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
-        "result": "These five paths are disjoint from active WCP-634, WCP-638, WCP-641, WCP-642 and WCP-643.",
+        "result": "Six paths are disjoint from active claims; existing portal regression expectation must reflect promotion.",
         "paths": [
           "src/GuildEventWaitlist/",
           "src/Repository/GuildEventSignupRepository.php",
           "src/Controller/GuildPortalController.php",
           "src/Controller/GuildEventSignupPortalController.php",
-          "tests/Controller/GuildEventWaitlistPromotionTest.php"
+          "tests/Controller/GuildEventWaitlistPromotionTest.php",
+          "tests/Controller/GuildEventSignupPortalControllerTest.php"
         ]
       },
       "next_action": "Implement promotion and functional regressions on the reserved feature branch, open Draft PR and verify exact-head CI.",
