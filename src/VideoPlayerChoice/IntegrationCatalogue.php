@@ -28,6 +28,6 @@ final class IntegrationCatalogue
             ['Video.js (Yii2)', 'Eigenständig / Yii2-Wrapper', 'Direkt nutzbar', 'Video.js 8.24.1 wird lokal ausgeliefert und ist für freigegebene MP4-, WebM- und HLS-Quellen auswählbar. Der Yii2-Wrapper wird nicht benötigt.', 'https://github.com/videojs/video.js/tree/v8.24.1'],
             ['mp_embed_youtube (CONTENIDO)', 'CONTENIDO', 'Identifikation offen', 'Für diesen exakten Modulnamen konnte keine verlässliche aktuelle Primärdokumentation gefunden werden. Keine Originalintegration behauptet; YouTube-Einbettung ist verfügbar.', 'https://www.contenido.org/'],
         ];
-        return array_map(static fn (array $row): array => ['name' => $row[0], 'platform' => $row[1], 'status' => $row[2], 'detail' => $row[3], 'url' => $row[4]], $rows);
+        return array_values(array_map(static fn (array $row): array => ['name' => $row[0], 'platform' => $row[1], 'status' => $row[2], 'detail' => $row[3], 'url' => $row[4]], $rows));
     }
 }
