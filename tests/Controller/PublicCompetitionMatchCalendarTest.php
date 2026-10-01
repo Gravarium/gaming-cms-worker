@@ -33,7 +33,7 @@ final class PublicCompetitionMatchCalendarTest extends WebTestCase
             }
             $em->flush();
 
-            $date = new \DateTimeImmutable('+5 days', new \DateTimeZone('Europe/Berlin'));
+            $date = new \DateTimeImmutable('+5 days', new \DateTimeZone('UTC'));
             $visible = $this->competition($game, "Visible, Cup;\nInjected ".$suffix, 'match-visible-'.$suffix);
             $private = $this->competition($game, 'Private Canary '.$suffix, 'match-private-'.$suffix)->setVisibility(Competition::VISIBILITY_PRIVATE);
             $draft = (new Competition())->setGame($game)->setName('Draft Canary '.$suffix)->setSlug('match-draft-'.$suffix);
