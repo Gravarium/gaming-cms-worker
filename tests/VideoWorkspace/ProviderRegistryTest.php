@@ -31,6 +31,12 @@ final class ProviderRegistryTest extends TestCase
         yield ['vidmoly', 'https://vidmoly.me/example-video', 'link', 'https://vidmoly.me/example-video'];
         yield ['dailymotion', 'https://www.dailymotion.com/video/x84sh87', 'iframe', 'https://www.dailymotion.com/embed/video/x84sh87'];
         yield ['cloudflare', 'https://customer-example.cloudflarestream.com/123456789abcdef/iframe', 'iframe', 'https://customer-example.cloudflarestream.com/123456789abcdef/iframe'];
+        yield ['bunny', 'https://iframe.mediadelivery.net/embed/197133/dc48a09e-d9bb-420a-83d7-72dc2304c034', 'iframe', 'https://iframe.mediadelivery.net/embed/197133/dc48a09e-d9bb-420a-83d7-72dc2304c034'];
+        yield ['wistia', 'https://fast.wistia.net/embed/iframe/gmwg9g412y', 'iframe', 'https://fast.wistia.net/embed/iframe/gmwg9g412y'];
+        yield ['streamable', 'https://streamable.com/e/5rneah', 'iframe', 'https://streamable.com/e/5rneah'];
+        yield ['vimeo', 'https://player.vimeo.com/video/123456789?h=5e2d1c1e6d', 'iframe', 'https://player.vimeo.com/video/123456789?h=5e2d1c1e6d'];
+        yield ['youtube', 'https://www.youtube.com/live/abcdef12345', 'iframe', 'https://www.youtube-nocookie.com/embed/abcdef12345'];
+        yield ['twitch', 'https://player.twitch.tv/?channel=example&parent=wrong.example.test', 'iframe', 'https://player.twitch.tv/?channel=example&parent=portal.example.test'];
         yield ['peertube', 'https://video.example.test/videos/embed/52a10666-3a18-4e73-93da-e8d3c12c305a', 'iframe', 'https://video.example.test/videos/embed/52a10666-3a18-4e73-93da-e8d3c12c305a'];
         yield ['mp4', 'https://cdn.example.test/owned.mp4?token=public-playback-token', 'video', 'https://cdn.example.test/owned.mp4?token=public-playback-token'];
         yield ['webm', 'https://cdn.example.test/owned.webm', 'video', 'https://cdn.example.test/owned.webm'];

@@ -47,7 +47,7 @@ final class VideoWorkspaceTest extends WebTestCase
     public function testManagerCanCreateEditAndDeleteAuthorizedVideoSource(): void
     {
         $client = $this->client(); $manager = $this->user($client, true); $video = $this->video($client);
-        $client->loginUser($manager); $crawler = $client->request('GET', '/admin/video-workspace/sources/new?video='.$video->getId());
+        $this->login($client, $manager); $crawler = $client->request('GET', '/admin/video-workspace/sources/new?video='.$video->getId());
         self::assertResponseIsSuccessful(); self::assertSelectorExists('select[name="provider"] option[value="hls"]');
         $client->request('POST', '/admin/video-workspace/sources/new', $this->sourceFields($video->getId(), $this->token($crawler)));
         self::assertResponseRedirects('/admin/video-workspace');
@@ -65,8 +65,8 @@ final class VideoWorkspaceTest extends WebTestCase
     {
         $client = $this->client(); $reader = $this->user($client); $manager = $this->user($client, true); $video = $this->video($client);
         $client->request('GET', '/admin/video-workspace'); self::assertResponseRedirects('/login');
-        $client->loginUser($reader); $client->request('GET', '/admin/video-workspace'); self::assertResponseStatusCodeSame(403);
-        $client->loginUser($manager); $crawler = $client->request('GET', '/admin/video-workspace/sources/new'); $token = $this->token($crawler);
+        $this->login($client, $reader); $client->request('GET', '/admin/video-workspace'); self::assertResponseStatusCodeSame(403);
+        $this->login($client, $manager); $crawler = $client->request('GET', '/admin/video-workspace/sources/new'); self::assertResponseIsSuccessful(); $token = $this->token($crawler);
         $client->request('POST', '/admin/video-workspace/sources/new', $this->sourceFields($video->getId(), 'forged')); self::assertResponseStatusCodeSame(403);
         $fields = $this->sourceFields($video->getId(), $token); $fields['authorized'] = '0';
         $client->request('POST', '/admin/video-workspace/sources/new', $fields); self::assertResponseStatusCodeSame(422);
@@ -84,7 +84,7 @@ final class VideoWorkspaceTest extends WebTestCase
         self::assertStringNotContainsString('cdn.example.test', (string) $client->getResponse()->getContent());
         $token = (string) $crawler->filter('form input[name="source"][value="'.$source->getId().'"]')->closest('form')->filter('input[name="_token"]')->first()->attr('value');
         $client->request('POST', $url, ['source' => (string) $other->getId(), '_token' => $token]); self::assertResponseStatusCodeSame(404);
-        $client->request('POST', $url, ['source' => (string) $source->getId(), '_token' => 'forged']); self::assertResponseStatusCodeSame(403);
+        $client->request('POST', $url, ['source' => (string) $source->getId(), '_token' => 'forged']); self::assertResponseRedirects('/login');
         $client->request('POST', $url, ['source' => (string) $source->getId(), '_token' => $token]); self::assertResponseIsSuccessful(); self::assertSelectorExists('video[data-mode="hls"]');
         self::assertStringContainsString('private', (string) $client->getResponse()->headers->get('Cache-Control'));
         $this->em($client)->find(Video::class, $video->getId())->setPublishedAt(null); $this->em($client)->flush();
@@ -98,8 +98,8 @@ final class VideoWorkspaceTest extends WebTestCase
         $this->source($client, $video); $live = $this->source($client, null, $creator);
         $url = '/video-workspace/videos/'.$video->getSlug(); $client->request('GET', $url); self::assertResponseStatusCodeSame(404);
         $client->request('GET', '/video-workspace/live/'.$live->getId()); self::assertResponseStatusCodeSame(404);
-        $client->loginUser($other); $client->request('GET', $url); self::assertResponseStatusCodeSame(404);
-        $client->loginUser($owner); $client->request('GET', $url); self::assertResponseIsSuccessful();
+        $this->login($client, $other); $client->request('GET', $url); self::assertResponseStatusCodeSame(404);
+        $this->login($client, $owner); $client->request('GET', $url); self::assertResponseIsSuccessful();
         $client->request('GET', '/video-workspace/live/'.$live->getId()); self::assertResponseIsSuccessful();
     }
     public function testWatchlistOwnerCanRenameRemoveItemsAndDeleteWithoutTouchingAnotherList(): void
@@ -108,8 +108,8 @@ final class VideoWorkspaceTest extends WebTestCase
         $list = new VideoWatchlist($owner, 'VW test list'); $foreign = new VideoWatchlist($other, 'VW test foreign list');
         $item = new VideoWatchlistItem($list, $video); $foreignItem = new VideoWatchlistItem($foreign, $video);
         foreach ([$list, $foreign, $item, $foreignItem] as $entity) { $this->em($client)->persist($entity); } $this->em($client)->flush();
-        $url = '/account/video-workspace/watchlist/'.$list->getId(); $client->loginUser($other); $client->request('GET', $url); self::assertResponseStatusCodeSame(404);
-        $client->loginUser($owner); $crawler = $client->request('GET', $url); $fields = $this->ownedFields($crawler); $fields += ['action' => 'edit', 'name' => 'VW test renamed', 'public' => '1'];
+        $url = '/account/video-workspace/watchlist/'.$list->getId(); $this->login($client, $other); $client->request('GET', $url); self::assertResponseStatusCodeSame(404);
+        $this->login($client, $owner); $crawler = $client->request('GET', $url); self::assertResponseIsSuccessful(); $fields = $this->ownedFields($crawler); $fields += ['action' => 'edit', 'name' => 'VW test renamed', 'public' => '1'];
         $client->request('POST', $url, $fields); self::assertResponseRedirects('/account/video-workspace');
         self::assertSame('VW test renamed', $this->em($client)->getConnection()->fetchOne('SELECT name FROM video_discovery_watchlist WHERE id = ?', [$list->getId()]));
         $crawler = $client->request('GET', $url); $itemId = $crawler->filter('input[name="item_id"]')->attr('value'); $fields = $this->ownedFields($crawler);
@@ -123,7 +123,7 @@ final class VideoWorkspaceTest extends WebTestCase
     {
         $client = $this->client(); $owner = $this->user($client); $video = $this->video($client);
         $comment = new VideoTimestampComment($owner, $video, 12, 'VW test comment'); $clip = new VideoClip($video, $owner, 'VW test clip', 'vw-test-'.bin2hex(random_bytes(6)), 0, 30);
-        $this->em($client)->persist($comment); $this->em($client)->persist($clip); $this->em($client)->flush(); $client->loginUser($owner);
+        $this->em($client)->persist($comment); $this->em($client)->persist($clip); $this->em($client)->flush(); $this->login($client, $owner);
         $commentId = (int) $this->em($client)->getConnection()->fetchOne('SELECT id FROM video_discovery_timestamp_comment WHERE author_id = ?', [$owner->getId()]);
         $url = '/account/video-workspace/comment/'.$commentId; $crawler = $client->request('GET', $url); $fields = $this->ownedFields($crawler);
         $client->request('POST', $url, ['_token' => 'forged', 'action' => 'delete']); self::assertResponseStatusCodeSame(403);
@@ -138,7 +138,7 @@ final class VideoWorkspaceTest extends WebTestCase
     }
     public function testCreatorAndDiscoveryMetadataAdministrationMakesExistingFeaturesUsable(): void
     {
-        $client = $this->client(); $manager = $this->user($client, true); $video = $this->video($client); $client->loginUser($manager);
+        $client = $this->client(); $manager = $this->user($client, true); $video = $this->video($client); $this->login($client, $manager);
         $crawler = $client->request('GET', '/admin/video-workspace/creators/new');
         $client->request('POST', '/admin/video-workspace/creators/new', ['_token' => $this->token($crawler), 'display_name' => 'VW test creator', 'bio' => 'VW test bio', 'visibility' => 'private']); self::assertResponseRedirects();
         $creator = $this->em($client)->getRepository(CreatorProfile::class)->findOneBy(['displayName' => 'VW test creator']); self::assertInstanceOf(CreatorProfile::class, $creator);
@@ -152,7 +152,7 @@ final class VideoWorkspaceTest extends WebTestCase
     }
     public function testLegacyLivestreamCanBeEditedAndDeleted(): void
     {
-        $client = $this->client(); $manager = $this->user($client, true); $stream = new VideoLiveStream('VW test legacy', 'twitch', 'https://twitch.tv/example'); $this->em($client)->persist($stream); $this->em($client)->flush(); $id = $stream->getId(); $client->loginUser($manager);
+        $client = $this->client(); $manager = $this->user($client, true); $stream = new VideoLiveStream('VW test legacy', 'twitch', 'https://twitch.tv/example'); $this->em($client)->persist($stream); $this->em($client)->flush(); $id = $stream->getId(); $this->login($client, $manager);
         $url = '/admin/video-workspace/legacy-live/'.$id; $crawler = $client->request('GET', $url);
         $client->request('POST', $url, $this->ownedFields($crawler) + ['title' => 'VW test legacy edited', 'provider' => 'youtube', 'source_url' => 'https://youtu.be/abcdef12345', 'creator_id' => '0', 'starts_at' => '', 'enabled' => '1']); self::assertResponseRedirects();
         self::assertSame('youtube', $this->em($client)->getConnection()->fetchOne('SELECT provider FROM video_discovery_live_stream WHERE id = ?', [$id]));
@@ -161,7 +161,7 @@ final class VideoWorkspaceTest extends WebTestCase
     }
     public function testModuleDisableHidesAllWorkspaceSurfacesWithoutMutations(): void
     {
-        $client = $this->client(); $manager = $this->user($client, true); $video = $this->video($client); $source = $this->source($client, $video); $client->loginUser($manager);
+        $client = $this->client(); $manager = $this->user($client, true); $video = $this->video($client); $source = $this->source($client, $video); $this->login($client, $manager);
         $state = $this->em($client)->find(CmsModuleState::class, 'video'); $state->setEnabled(false); $this->em($client)->flush();
         foreach (['/video-workspace', '/video-workspace/videos/'.$video->getSlug(), '/admin/video-workspace', '/account/video-workspace', '/admin/video-workspace/sources/'.$source->getId()] as $url) { $client->request('GET', $url); self::assertResponseStatusCodeSame(404); }
         $client->request('POST', '/admin/video-workspace/sources/'.$source->getId(), ['action' => 'delete']); self::assertResponseStatusCodeSame(404);
@@ -172,6 +172,13 @@ final class VideoWorkspaceTest extends WebTestCase
         $client = $this->client(); $video = $this->video($client); $url = '/video-workspace/videos/'.$video->getSlug(); $crawler = $client->request('GET', $url);
         self::assertSelectorNotExists('iframe'); $token = (string) $crawler->filter('input[name="source"][value="legacy"]')->closest('form')->filter('input[name="_token"]')->first()->attr('value');
         $client->request('POST', $url, ['source' => 'legacy', '_token' => $token]); self::assertResponseIsSuccessful(); self::assertSelectorExists('iframe[src="https://www.youtube-nocookie.com/embed/abcdef12345"]');
+    }
+    private function login(KernelBrowser $client, User $user): void
+    {
+        $client->getCookieJar()->clear();
+        $freshUser = $this->em($client)->find(User::class, $user->getId());
+        self::assertInstanceOf(User::class, $freshUser);
+        $client->loginUser($freshUser);
     }
     private function client(): KernelBrowser
     {

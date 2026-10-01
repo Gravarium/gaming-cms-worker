@@ -48,3 +48,10 @@ test('fatal stream failure is visible and stops playback', async () => {
     await attachPlayer(video(), { status, loadHls: async () => ({ default: Hls }) });
     handler('error', { fatal: true }); assert.equal(destroyed, true); assert.match(status.textContent, /nicht erreichbar/);
 });
+
+test('navigation during library loading cannot attach an abandoned stream', async () => {
+    let attached = false;
+    class Hls { static isSupported() { return true; } attachMedia() { attached = true; } }
+    await attachPlayer(video(), { isCurrent: () => false, loadHls: async () => ({ default: Hls }) });
+    assert.equal(attached, false);
+});

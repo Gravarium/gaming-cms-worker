@@ -1,4 +1,4 @@
-export async function attachPlayer(video, { loadHls = () => import('hls.js'), status = null, quality = null, qualityLabel = null } = {}) {
+export async function attachPlayer(video, { loadHls = () => import('hls.js'), status = null, quality = null, qualityLabel = null, isCurrent = () => true } = {}) {
     const url = video.dataset.source;
     const mode = video.dataset.mode;
     if (!url || !['video', 'hls'].includes(mode)) return () => {};
@@ -12,6 +12,7 @@ export async function attachPlayer(video, { loadHls = () => import('hls.js'), st
     }
     try {
         const { default: Hls } = await loadHls();
+        if (!isCurrent()) return cleanup;
         if (!Hls.isSupported()) { report('Dieser Browser unterstützt das Streamformat nicht. Bitte eine andere Quelle wählen.'); return cleanup; }
         hls = new Hls({ enableWorker: false, lowLatencyMode: true, maxBufferLength: 30, xhrSetup: xhr => { xhr.withCredentials = false; } });
         hls.on(Hls.Events.ERROR, (_event, data) => {
@@ -33,10 +34,27 @@ export async function attachPlayer(video, { loadHls = () => import('hls.js'), st
 }
 
 if (typeof document !== 'undefined') {
-    const cleanups = [];
-    for (const video of document.querySelectorAll('[data-workspace-player]')) {
-        const section = video.closest('section');
-        attachPlayer(video, { status: section?.querySelector('[data-player-status]'), quality: section?.querySelector('[data-quality]'), qualityLabel: section?.querySelector('[data-quality-label]') }).then(cleanup => cleanups.push(cleanup));
-    }
-    document.addEventListener('turbo:before-cache', () => { cleanups.splice(0).forEach(cleanup => cleanup()); }, { once: true });
+    const active = new Map();
+    const startPlayers = () => {
+        for (const video of document.querySelectorAll('[data-workspace-player]')) {
+            if (active.has(video)) continue;
+            const state = { cancelled: false, cleanup: null };
+            active.set(video, state);
+            const section = video.closest('section');
+            attachPlayer(video, {
+                status: section?.querySelector('[data-player-status]'),
+                quality: section?.querySelector('[data-quality]'),
+                qualityLabel: section?.querySelector('[data-quality-label]'),
+                isCurrent: () => !state.cancelled,
+            }).then(cleanup => { if (state.cancelled) cleanup(); else state.cleanup = cleanup; });
+        }
+    };
+    const stopPlayers = () => {
+        for (const state of active.values()) { state.cancelled = true; state.cleanup?.(); }
+        active.clear();
+    };
+    startPlayers();
+    document.addEventListener('turbo:load', startPlayers);
+    document.addEventListener('turbo:before-cache', stopPlayers);
+    document.addEventListener('turbo:before-render', stopPlayers);
 }
