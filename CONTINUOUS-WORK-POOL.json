@@ -62309,8 +62309,8 @@
       "priority": 638,
       "package_id": "WCP-638",
       "title": "Video source preflight, manager playback preview and continuous playlists with opt-in resume",
-      "execution_state": "worker_in_progress",
-      "claim_state": "active",
+      "execution_state": "worker_complete_awaiting_trusted_review",
+      "claim_state": "locked_until_trusted_resolution",
       "claim_generation": 1,
       "claim_branch": "claim/wcp-638-video-playback-journey-g1",
       "suggested_branch": "feature/wcp-638-video-playback-journey-g1",
@@ -62379,13 +62379,13 @@
       "collision_check": {
         "result": "New paths disjoint from all active/locked packages. FCP-072 general templates scope is unclaimed and dependency-blocked; no active reservation there. WCP-636/637 consumed read-only at exact green head."
       },
-      "next_action": "Implement owner-approved complete playback journey.",
+      "next_action": "Await review. This worker PR remains untrusted and locked until Trusted resolution. No Trusted merge or deployment.",
       "active_head": "456eb44dbaa9e9d3164b3062b3c62cd80e86b295",
       "last_observed_head": "456eb44dbaa9e9d3164b3062b3c62cd80e86b295",
       "last_verified_push_at": "2026-10-01T10:26:08Z",
       "worker_pr": 432,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/432",
-      "worker_pr_state": "draft_ci_pending",
+      "worker_pr_state": "open_ready_for_review",
       "checkpoint_paths": [
         "assets/video_playback_journey/journey.css",
         "assets/video_playback_journey/journey.js",
@@ -62405,7 +62405,17 @@
         "templates/widget/video_viewing_journey.html.twig",
         "tests/Controller/VideoPlaybackJourneyTest.php",
         "tests/JavaScript/video-playback-journey.test.mjs"
-      ]
+      ],
+      "ci_run_id": 36849113717,
+      "ci_result": "success",
+      "php_symfony_job_id": 110326299109,
+      "php_symfony_result": "success",
+      "postgres_migration_job_id": 110326298815,
+      "postgres_migration_result": "success",
+      "final_head": "456eb44dbaa9e9d3164b3062b3c62cd80e86b295",
+      "worker_pr_head_sha": "456eb44dbaa9e9d3164b3062b3c62cd80e86b295",
+      "completed_on": "2026-10-01T15:10:14Z",
+      "test_evidence": "Exact-head Worker CI run 36849113717 passed both jobs. PHP/Symfony: PHPStan level 8, Composer audit, YAML/Twig/container/asset/Doctrine checks and 1,708 PHP tests / 12,230 assertions; 1 PHPUnit deprecation and 26 notices remain. PostgreSQL 18 full migration chain passed. 28 JavaScript tests passed locally and in CI. Real external provider playback was not tested."
     },
     {
       "priority": 639,
