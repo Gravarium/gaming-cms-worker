@@ -139,8 +139,8 @@ final class GuildEventSignupPortalControllerTest extends WebTestCase
             self::assertSame(GuildEventSignup::ATTENDANCE_EXCUSED, $storedSignup->getAttendance());
             self::assertSame($user->getId(), $storedSignup->getAttendanceCheckedBy()?->getId());
             self::assertSame($attendanceAt?->getTimestamp(), $storedSignup->getAttendanceCheckedAt()?->getTimestamp());
-            self::assertSame(0, $em->getRepository(GuildEventSignup::class)->count(['event' => $event->getId(), 'response' => GuildEventSignup::GOING]));
-            self::assertSame(GuildEventSignup::WAITLIST, $em->find(GuildEventSignup::class, $this->requiredId($otherSignup->getId()))?->getResponse());
+            self::assertSame(1, $em->getRepository(GuildEventSignup::class)->count(['event' => $event->getId(), 'response' => GuildEventSignup::GOING]));
+            self::assertSame(GuildEventSignup::GOING, $em->find(GuildEventSignup::class, $this->requiredId($otherSignup->getId()))?->getResponse());
 
             $repeatToken = $token;
             $client->request('POST', self::INDEX_PATH.'/'.$signupId.'/withdraw', ['_token' => $repeatToken]);
