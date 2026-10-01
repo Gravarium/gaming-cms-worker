@@ -112,6 +112,10 @@ final class NamedPortalAdapter implements ProviderAdapter
             'vidzflow' => ['vidzflow.com', 'www.vidzflow.com'],
             'yourimageshare' => ['yourimageshare.com'],
         ];
+        if (preg_match('~(?:\A|/)\.{1,2}(?:/|\z)~', $path) === 1
+            || ($provider === 'yourimageshare' && str_starts_with($path, '/ib/'))) {
+            return null;
+        }
         return isset($linkHosts[$provider]) && in_array($host, $linkHosts[$provider], true)
             && $path !== '' && $path !== '/' ? ['mode' => 'link', 'url' => $sourceUrl] : null;
     }
