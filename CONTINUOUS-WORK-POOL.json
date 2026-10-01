@@ -62007,6 +62007,89 @@
           "result": "success"
         }
       ]
+    },
+    {
+      "priority": 637,
+      "package_id": "WCP-637",
+      "title": "Selectable playback engines and CMS player compatibility catalogue",
+      "execution_state": "worker_in_progress",
+      "claim_state": "claimed",
+      "claim_generation": 1,
+      "claim_branch": "claim/wcp-637-video-player-choice-g1",
+      "suggested_branch": "feature/wcp-637-video-player-choice-g1",
+      "resume_branch": "feature/wcp-637-video-player-choice-g1",
+      "claimed_on": "2026-10-01T07:36:20.187Z",
+      "base_branch": "main",
+      "base_sha": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "proposal_base_branch": "feature/wcp-636-video-workspace-providers-g1",
+      "proposal_base_sha": "638a82ffc0a75bbcbb53f1a482026327f14040db",
+      "active_head": "638a82ffc0a75bbcbb53f1a482026327f14040db",
+      "dependencies": [
+        "WCP-636"
+      ],
+      "proposal_kind": "worker_only",
+      "proposal_dependency_evidence": [
+        {
+          "package_id": "WCP-636",
+          "head": "638a82ffc0a75bbcbb53f1a482026327f14040db",
+          "pr": 429,
+          "ci_run": 36820018323,
+          "result": "success"
+        }
+      ],
+      "objective": "Owner-requested native/Video.js engine choice for direct media and configurable YouTube embeds plus truthful seventeen-entry compatibility inventory. Companion video-player routes and registered video widget; predecessor unchanged.",
+      "allowed_paths": [
+        "src/VideoPlayerChoice/",
+        "src/Controller/VideoPlayerChoiceController.php",
+        "templates/video_player_choice/",
+        "templates/widget/video_player_choice.html.twig",
+        "assets/video_player_choice/",
+        "public/video_player_choice/",
+        "tests/VideoPlayerChoice/",
+        "tests/Controller/VideoPlayerChoiceTest.php",
+        "tests/JavaScript/video-player-choice.test.mjs"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "ops/",
+        ".github/workflows/",
+        "src/VideoWorkspace/",
+        "templates/video_workspace/",
+        "assets/video_workspace/",
+        "importmap.php",
+        "migrations/"
+      ],
+      "deliverables": [
+        "Working engine choice, viewer preference and provider embed options",
+        "All seventeen integrations researched and clearly classified; no fake selectable plugins",
+        "Registered widget and companion routes using predecessor access/registry services"
+      ],
+      "tests": [
+        "Playback policy/compatibility unit tests",
+        "Source ownership/publication/creator/module/CSRF/consent functional tests",
+        "JS lifecycle/fallback tests",
+        "Full exact-head Worker CI and PostgreSQL migrations"
+      ],
+      "immutable_constraints": [
+        "worker-only-no-Trusted-merge-or-deployment",
+        "no-security-CI-or-access-weakening",
+        "no-provider-source-extraction-or-concealment"
+      ],
+      "collision_check": {
+        "result": "All new paths disjoint from active/locked scopes incl WCP-636, used read-only as exact-green dependency.",
+        "paths": [
+          "src/VideoPlayerChoice/",
+          "src/Controller/VideoPlayerChoiceController.php",
+          "templates/video_player_choice/",
+          "templates/widget/video_player_choice.html.twig",
+          "assets/video_player_choice/",
+          "public/video_player_choice/",
+          "tests/VideoPlayerChoice/",
+          "tests/Controller/VideoPlayerChoiceTest.php",
+          "tests/JavaScript/video-player-choice.test.mjs"
+        ]
+      },
+      "next_action": "Implement and verify player choice."
     }
   ],
   "recovery_queue": [],
