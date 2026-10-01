@@ -61179,8 +61179,8 @@
       "package_id": "WCP-630",
       "title": "Manage competition match schedules from an admin board",
       "risk": "medium",
-      "execution_state": "worker_in_progress",
-      "claim_state": "active_lease",
+      "execution_state": "worker_complete_awaiting_trusted_review",
+      "claim_state": "locked_until_trusted_resolution",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -61246,21 +61246,66 @@
       "claim_generation": 2,
       "active_base_branch": "main",
       "active_base_sha": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
-      "active_head": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "active_head": "39038999092d121f3d1a351409f5ad33651fac18",
       "resume_branch": "feature/wcp-630-competition-match-scheduling-g1",
       "branch_heads": {
         "claim_branch": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
-        "feature_branch": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4"
+        "feature_branch": "39038999092d121f3d1a351409f5ad33651fac18"
       },
-      "next_action": "Resume exact unchanged feature head, implement bounded match schedule board and tests.",
-      "last_observed_head": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
-      "lease_expires_at": "2026-10-01T17:24:00.000Z",
+      "next_action": "Await independent Worker/Trusted review; do not merge Worker code automatically.",
+      "last_observed_head": "39038999092d121f3d1a351409f5ad33651fac18",
+      "lease_expires_at": null,
       "previous_claim": {
         "claim_branch": "claim/wcp-630-competition-match-scheduling-g1",
         "generation": 1,
         "lease_expired_at": "2026-10-01T02:33:34.751Z",
         "last_observed_head": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4"
-      }
+      },
+      "checkpoint_commit_sha": "39038999092d121f3d1a351409f5ad33651fac18",
+      "worker_pr": 431,
+      "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/431",
+      "worker_pr_head_sha": "39038999092d121f3d1a351409f5ad33651fac18",
+      "worker_pr_state": "open_ready_for_review",
+      "pr_state": "open_ready_for_review",
+      "last_ci_run_id": 36849059517,
+      "last_ci_result": "success",
+      "last_ci_head": "39038999092d121f3d1a351409f5ad33651fac18",
+      "ci_run_id": 36849059517,
+      "ci_result": "success",
+      "php_symfony_job_id": 110326129365,
+      "php_symfony_result": "success",
+      "postgres_migration_job_id": 110326128985,
+      "postgres_migration_result": "success",
+      "final_head": "39038999092d121f3d1a351409f5ad33651fac18",
+      "final_changed_paths": [
+        "src/CompetitionSchedule/AdminMatchSchedule.php",
+        "src/Controller/AdminCompetitionMatchScheduleController.php",
+        "templates/admin/competition_match_schedule/index.html.twig",
+        "tests/Controller/AdminCompetitionMatchScheduleTest.php"
+      ],
+      "checkpoint_paths": [
+        "src/CompetitionSchedule/AdminMatchSchedule.php",
+        "src/Controller/AdminCompetitionMatchScheduleController.php",
+        "templates/admin/competition_match_schedule/index.html.twig",
+        "tests/Controller/AdminCompetitionMatchScheduleTest.php"
+      ],
+      "last_checkpoint_at": "2026-10-01T10:29:00.000Z",
+      "last_verified_push_at": "2026-10-01T10:29:00.000Z",
+      "completed_on": "2026-10-01T10:29:00.000Z",
+      "test_evidence": "Exact-head Worker CI #1125 passed PHP/Symfony including PHPStan and 1,645 tests/11,963 assertions plus PostgreSQL 18 migration chain.",
+      "ci_history": [
+        {
+          "run_id": 36848494128,
+          "head": "826ce285fc1d72d2f8a60a52ac3afa2a26c9103a",
+          "result": "failure",
+          "reason": "test reloaded a detached Doctrine entity after browser reboot"
+        },
+        {
+          "run_id": 36849059517,
+          "head": "39038999092d121f3d1a351409f5ad33651fac18",
+          "result": "success"
+        }
+      ]
     },
     {
       "priority": 631,
