@@ -13,7 +13,6 @@ use App\Security\CmsPermission;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 
 final class AdminNewsEditorTest extends WebTestCase
 {
@@ -22,6 +21,9 @@ final class AdminNewsEditorTest extends WebTestCase
         $client = static::createClient();
         [$user, $entry] = $this->entry($client);
         $client->loginUser($user);
+        $legacyForm = $client->request('GET', '/admin/content/'.$entry->getId().'/edit');
+        $oldToken = $legacyForm->filter('.content-editor')->attr('data-content-editor-token-value');
+        self::assertNotNull($oldToken);
         $client->request('GET', '/admin/news-editor');
         self::assertResponseIsSuccessful();
         self::assertStringContainsString('/admin/news-editor/'.$entry->getId(), $client->getResponse()->getContent() ?: '');
@@ -74,8 +76,6 @@ final class AdminNewsEditorTest extends WebTestCase
         self::assertInstanceOf(ContentEntry::class, $retitled);
         self::assertSame('Aktualisierter Titel', $retitled->getTitle());
         self::assertSame('Reicher Text', $retitled->getBody());
-        $oldToken = $client->getContainer()->get(CsrfTokenManagerInterface::class)
-            ->getToken('content-editor-'.$entry->getId())->getValue();
         $client->request('POST', '/admin/content/'.$entry->getId().'/editor/autosave', [], [], [
             'CONTENT_TYPE' => 'application/json', 'HTTP_X_CSRF_TOKEN' => $oldToken,
         ], json_encode(['document' => 'Alte Bearbeitung', 'updatedAt' => $retitled->getUpdatedAt()->format(DATE_ATOM)], JSON_THROW_ON_ERROR));
