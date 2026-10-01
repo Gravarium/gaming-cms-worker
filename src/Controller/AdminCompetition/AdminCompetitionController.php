@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controller\AdminCompetition;
 
+use App\CompetitionScheduling\MatchScheduleInput;
 use App\Entity\Competition\Competition;
 use App\Entity\Competition\CompetitionDispute;
 use App\Entity\Competition\CompetitionMatch;
@@ -36,6 +37,7 @@ final class AdminCompetitionController extends AbstractController
         private readonly CmsModuleManager $modules,
         private readonly EntityManagerInterface $entityManager,
         private readonly SluggerInterface $slugger,
+        private readonly MatchScheduleInput $scheduleInput,
     ) {
     }
 
@@ -139,11 +141,10 @@ final class AdminCompetitionController extends AbstractController
         $raw = trim((string) $request->request->get('scheduled_at'));
         if ($raw === '') { throw new BadRequestHttpException('Der Spieltermin ist erforderlich.'); }
         try {
-            $scheduledAt = new \DateTimeImmutable($raw);
-        } catch (\Exception) {
+            $scheduledAt = $this->scheduleInput->parse($raw);
+        } catch (\InvalidArgumentException) {
             throw new BadRequestHttpException('Der Spieltermin ist ungültig.');
         }
-        if ($scheduledAt < new \DateTimeImmutable('-5 minutes')) { throw new BadRequestHttpException('Ein Spieltermin darf nicht in der Vergangenheit liegen.'); }
         $match->setScheduledAt($scheduledAt);
         $this->entityManager->flush();
         return $this->redirectToRoute('app_admin_competition_index');
