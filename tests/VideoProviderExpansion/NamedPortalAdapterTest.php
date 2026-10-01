@@ -51,7 +51,10 @@ final class NamedPortalAdapterTest extends TestCase
         yield 'local network' => ['dbimg', 'https://127.0.0.1/ib/abcdef1234.mp4'];
         yield 'wrong media' => ['yourimageshare', 'https://yourimageshare.com/ib/abcdef1234.svg'];
         yield 'unsafe Kaltura entry' => ['kaltura', 'https://cdnapisec.kaltura.com/p/4834032/embedPlaykitJs/uiconf_id/50952692?entry_id=javascript:alert(1)'];
+        yield 'unsafe Kaltura playback token' => ['kaltura', 'https://cdnapisec.kaltura.com/p/4834032/embedPlaykitJs/uiconf_id/50952692?entry_id=1_fwzaeesq&ks=<script>'];
         yield 'malformed Kapwing' => ['kapwing', 'https://www.kapwing.com/e/../../admin'];
+        yield 'provider mismatch' => ['videco', 'https://www.kapwing.com/e/646e7619dfa8110017d35454'];
+        yield 'fragment on embed' => ['screenpal', 'https://go.screenpal.com/player/c0jrbPVp0Zm#different'];
         yield 'arbitrary Kinescope path' => ['kinescope', 'https://kinescope.io/admin/users'];
         yield 'unknown provider' => ['not-a-provider', 'https://screenpal.com/player/c0jrbPVp0Zm'];
     }
