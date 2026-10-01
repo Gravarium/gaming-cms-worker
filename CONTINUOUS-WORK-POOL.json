@@ -62173,6 +62173,81 @@
         "previous_green_head": "1f31414988ecc56a97c34cb60883db242a5ea7d3",
         "previous_green_ci": 36832528018
       }
+    },
+    {
+      "priority": 638,
+      "package_id": "WCP-638",
+      "title": "Video source preflight, manager playback preview and continuous playlists with opt-in resume",
+      "execution_state": "worker_in_progress",
+      "claim_state": "active",
+      "claim_generation": 1,
+      "claim_branch": "claim/wcp-638-video-playback-journey-g1",
+      "suggested_branch": "feature/wcp-638-video-playback-journey-g1",
+      "resume_branch": "feature/wcp-638-video-playback-journey-g1",
+      "claimed_on": "2026-10-01T10:12:11Z",
+      "base_branch": "main",
+      "base_sha": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "proposal_base_branch": "feature/wcp-637-video-player-choice-g1",
+      "proposal_base_sha": "0aefb975905b67bd649cc37a027fdd5d609d1a37",
+      "dependencies": [
+        "WCP-637"
+      ],
+      "proposal_kind": "worker_only",
+      "proposal_dependency_evidence": [
+        {
+          "package_id": "WCP-637",
+          "head": "0aefb975905b67bd649cc37a027fdd5d609d1a37",
+          "pr": 430,
+          "ci_run": 36838962550,
+          "result": "success"
+        }
+      ],
+      "objective": "Complete owner-requested viewing workflow with manager source preflight/consented preview, explicit actionable playback errors, a public continuous playlist companion with per-item consent and optional browser-only playback resume. Reuse management/editor and player engines from green predecessors without changing locked paths.",
+      "allowed_paths": [
+        "src/VideoPlaybackJourney/",
+        "src/Controller/VideoPlaybackJourneyController.php",
+        "src/Controller/AdminVideoPlaybackCheckController.php",
+        "templates/video_playback_journey/",
+        "assets/video_playback_journey/",
+        "tests/VideoPlaybackJourney/",
+        "tests/Controller/VideoPlaybackJourneyTest.php",
+        "tests/Controller/AdminVideoPlaybackCheckTest.php",
+        "tests/JavaScript/video-playback-journey.test.mjs"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "ops/",
+        ".github/workflows/",
+        "src/VideoWorkspace/",
+        "src/VideoPlayerChoice/",
+        "templates/video_workspace/",
+        "templates/video_player_choice/",
+        "assets/video_workspace/",
+        "assets/video_player_choice/",
+        "migrations/",
+        "importmap.php"
+      ],
+      "deliverables": [
+        "Manager source diagnostics and preview before publication; existing source creation/edit routes linked",
+        "Compatible player selection for playlist videos with previous/next and opt-in automatic advance after direct-media ended; no implicit provider loading",
+        "Opt-in browser-only resume with explicit restore/erase and no source URL/account/private identifier persistence",
+        "Actionable runtime errors; distinguish local validation from real remote playback evidence",
+        "Registered widget entry point; privacy/publication/source/module/CSRF regression tests"
+      ],
+      "tests": [
+        "Functional manager preview and playlist isolation/consent/recheck flows",
+        "JS resume/ended/error/storage/lifecycle tests",
+        "Exact-head complete Worker CI and PostgreSQL migrations"
+      ],
+      "immutable_constraints": [
+        "worker-only-no-Trusted-merge-or-deployment",
+        "no-security-CI-or-access-weakening",
+        "no-provider-source-extraction-or-concealment"
+      ],
+      "collision_check": {
+        "result": "New paths disjoint from all active/locked packages. FCP-072 general templates scope is unclaimed and dependency-blocked; no active reservation there. WCP-636/637 consumed read-only at exact green head."
+      },
+      "next_action": "Implement owner-approved complete playback journey."
     }
   ],
   "recovery_queue": [],
