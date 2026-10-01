@@ -51,8 +51,8 @@ final class PublicCompetitionMatchCalendarTest extends WebTestCase
             $draftMatch = (new CompetitionMatch())->setCompetition($draft)->setScheduledAt($date);
             $disabledMatch = (new CompetitionMatch())->setCompetition($disabled)->setScheduledAt($date);
             $otherMatch = (new CompetitionMatch())->setCompetition($other)->setScheduledAt($date);
-            $unscheduled = (new CompetitionMatch())->setCompetition($visible);
-            $past = (new CompetitionMatch())->setCompetition($visible)->setScheduledAt($date->modify('-10 days'));
+            $unscheduled = (new CompetitionMatch())->setCompetition($visible)->setSequence(2);
+            $past = (new CompetitionMatch())->setCompetition($visible)->setSequence(3)->setScheduledAt($date->modify('-10 days'));
             foreach ([$match, $hidden, $draftMatch, $disabledMatch, $otherMatch, $unscheduled, $past] as $item) {
                 $em->persist($item);
                 $entities[] = $item;
