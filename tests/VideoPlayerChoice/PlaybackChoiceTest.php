@@ -40,13 +40,18 @@ final class PlaybackChoiceTest extends TestCase
             catch (\InvalidArgumentException) { self::assertTrue(true); }
         }
     }
-    public function testRequestedIntegrationListIsCompleteAndOnlyInstalledOriginalIsActive(): void
+    public function testRequestedIntegrationListUsesExactProductsAndDoesNotClaimWrappersAreInstalled(): void
     {
         $entries = (new IntegrationCatalogue())->entries();
         self::assertCount(17, $entries);
         self::assertCount(17, array_unique(array_column($entries, 'name')));
         $active = array_values(array_filter($entries, static fn (array $entry): bool => $entry['status'] === 'Direkt nutzbar'));
-        self::assertCount(1, $active); self::assertSame('Video.js (Yii2)', $active[0]['name']);
-        self::assertSame('Identifikation offen', $entries[16]['status']);
+        self::assertCount(0, $active);
+        self::assertSame('Polanger VideoHub Lite', $entries[4]['name']);
+        self::assertSame('https://wordpress.org/plugins/polanger-videohub-lite/', $entries[4]['url']);
+        self::assertSame('Yii2-Wrapper nicht installiert', $entries[15]['status']);
+        self::assertStringContainsString('Video.js 8.24.1', $entries[15]['detail']);
+        self::assertSame('CMS-Erweiterung · identifiziert', $entries[16]['status']);
+        self::assertSame('https://packagist.org/packages/purc/mp-embed-youtube', $entries[16]['url']);
     }
 }

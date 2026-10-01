@@ -19,9 +19,21 @@ primary product/documentation links. It does not claim CMS plugins or purchased 
 SmartVideo requires the owner's Swarmify account/CDN key; MagicPlayer needs product files/license;
 standalone TubePress needs its licensed distribution/setup; Flowplay requires the documented
 Webflow/Flowplay setup and applicable plan; Framer components need their platform/product license.
-The exact `mp_embed_youtube` name lacks verified current primary documentation and stays identified
-as pending rather than guessed. Import/gallery capabilities of Video Hub/Easy Youtube Videos/TubePress
-are not implemented by an iframe. No additional provider catalogue is part of this package.
+`purc/mp-embed-youtube` is now verified at the owner's exact Packagist URL as a CONTENIDO module
+depending on CONTENIDO and Mp Dev Tools; it is not installed in this Symfony CMS. The clarified
+WordPress entry is **Polanger VideoHub Lite**, not the unrelated Video Hub importer at wpythub.com.
+The exact Yii2 reference is `besnovatyj/yii2-cms-videojs-10-widget`, a **Video.js 10** wrapper requiring
+Yii2; it is separate from our working standalone Video.js **8.24.1** integration. Neither an iframe
+nor this catalogue implements the whole Polanger/Easy Youtube Videos/TubePress CMS product.
+No additional provider catalogue is part of this package.
+
+Owner URL follow-up (2026-10-01): generic Codester/Framer portals resolve to the specific product
+pages already cited in the catalogue. wpfanyi.com redirects to wpcy.com and does not establish the
+Widget Responsive for Youtube identity; the official WordPress plugin page remains the reference.
+BRIX's Flowplay page describes ViDesigns' product, not a different engine; the primary ViDesigns
+reference is retained. The ai-visions.net Simple YouTube Player assignment remains unverified;
+the catalogue records that supplied link without substituting a different provider's product.
+Localized WordPress plugin pages share the same plugin slug as the canonical wordpress.org page.
 
 Video.js vendor assets are copied unchanged from the npm `video.js@8.24.1` distribution:
 `dist/video.min.js`, `dist/video-js.min.css`, `LICENSE`. Apache-2.0 license and bundled source notices
