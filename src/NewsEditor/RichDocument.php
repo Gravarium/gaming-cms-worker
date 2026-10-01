@@ -92,7 +92,10 @@ final class RichDocument
         return trim(implode("\n", $parts));
     }
 
-    /** @param array<string,mixed> $block @return array<string,mixed> */
+    /**
+     * @param array<string,mixed> $block
+     * @return array<string,mixed>
+     */
     private function block(array $block, int &$runs): array
     {
         $type = $block['type'] ?? null;
@@ -177,7 +180,10 @@ final class RichDocument
         return $result;
     }
 
-    /** @param array<string,mixed> $value @param list<string> $allowed */
+    /**
+     * @param array<string,mixed> $value
+     * @param list<string> $allowed
+     */
     private function keys(array $value, array $allowed): void
     {
         $actual = array_keys($value);
@@ -212,9 +218,9 @@ final class RichDocument
         return $url;
     }
 
-    /** @param list<array{text:string,marks:list<string>,href?:string}> $runs */
+    /** @param array<array<string,mixed>> $runs */
     private function runsText(array $runs): string
     {
-        return implode('', array_column($runs, 'text'));
+        return implode('', array_map(static fn (array $run): string => (string) $run['text'], $runs));
     }
 }
