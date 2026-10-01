@@ -46,8 +46,9 @@ final class AdminCompetitionMatchScheduleTest extends WebTestCase
         $form['scheduled_at'] = (new \DateTimeImmutable('+2 days'))->format('Y-m-d\TH:iP');
         $client->submit($form);
         self::assertResponseRedirects();
-        $em->refresh($visible);
-        self::assertNotNull($visible->getScheduledAt());
+        $saved = $this->em($client)->find(CompetitionMatch::class, $visible->getId());
+        self::assertInstanceOf(CompetitionMatch::class, $saved);
+        self::assertNotNull($saved->getScheduledAt());
     }
 
     public function testPermissionModuleAndGetOnlyGate(): void
