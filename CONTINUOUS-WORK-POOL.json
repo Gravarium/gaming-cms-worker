@@ -63351,7 +63351,8 @@
         "tests/Controller/AdminNewsEditorTest.php",
         "tests/JavaScript/news_editor.test.mjs",
         "tests/ContentEditor/",
-        "tests/Layout/LayoutMediaTest.php"
+        "tests/Layout/LayoutMediaTest.php",
+        "src/Controller/AdminContentController.php"
       ],
       "forbidden_paths": [
         "private/",
@@ -63394,7 +63395,7 @@
       ],
       "collision_check": {
         "compared_against": "Current continuous/work-pool-v4 active and locked allowlists and Worker main 1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
-        "result": "Reserved new paths and legacy document/parser/renderer/media usage files are disjoint from active and locked claims; WCP-441 shared UI paths are excluded.",
+        "result": "Reserved new paths and legacy document/parser/renderer/media usage files are disjoint from active and locked claims; WCP-441 shared UI paths are excluded. AdminContentController.php is disjoint from current active and locked claims; reserve it for v2 legacy-route write protection.",
         "paths": [
           "src/NewsEditor/",
           "src/Controller/AdminNewsEditorController.php",
@@ -63408,10 +63409,11 @@
           "tests/Controller/AdminNewsEditorTest.php",
           "tests/JavaScript/news_editor.test.mjs",
           "tests/ContentEditor/",
-          "tests/Layout/LayoutMediaTest.php"
+          "tests/Layout/LayoutMediaTest.php",
+          "src/Controller/AdminContentController.php"
         ]
       },
-      "next_action": "Run exact-head CI, fix remaining issues, then reconcile navigation integration with WCP-428/WCP-441 locks.",
+      "next_action": "Guard legacy content edit/autosave against v2 overwrite, then validate exact-head CI.",
       "last_verified_push_at": "2026-10-01T20:56:57.532Z",
       "last_checkpoint_at": "2026-10-01T20:56:57.532Z",
       "worker_pr": 442,
