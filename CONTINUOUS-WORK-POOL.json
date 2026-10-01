@@ -10,8 +10,8 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "9e083c63e7d888af36f93a23eb924c89fad2b971",
-  "published_at": "2026-10-01T04:51:53.285Z",
-  "summary": "WCP-643 owner-requested named video portal adapters claimed independently of active playback journeys.",
+  "published_at": "2026-10-01T15:16:01.266Z",
+  "summary": "WCP-644 guild event waitlist promotion independently claimed; active paths remain disjoint.",
   "rules": {
     "choose": "Resume the current chat's unfinished claimed branch first. Otherwise atomically claim an eligible published task. If no published task is eligible, independently derive and publish a bounded worker-only CMS proposal from approved product goals and observed code gaps; do not ask the owner for the next FCP number.",
     "atomic_reservation": "Create the exact claim_branch and suggested feature branch from that task's published proposal_base_sha. If the claim already exists, treat it as a hard lock; the owning continuation resumes it and every other AI skips it.",
@@ -62881,6 +62881,79 @@
       "last_observed_head": "0aefb975905b67bd649cc37a027fdd5d609d1a37",
       "last_verified_push_at": null,
       "worker_pr_state": "not_created"
+    },
+    {
+      "priority": 644,
+      "package_id": "WCP-644",
+      "title": "Promote guild event waitlist when confirmed places open",
+      "risk": "medium_concurrency",
+      "execution_state": "worker_in_progress",
+      "claim_state": "active_lease",
+      "claim_generation": 1,
+      "claim_branch": "claim/wcp-644-guild-event-waitlist-g1",
+      "suggested_branch": "feature/wcp-644-guild-event-waitlist-g1",
+      "resume_branch": "feature/wcp-644-guild-event-waitlist-g1",
+      "claimed_on": "2026-10-01T15:16:01.266Z",
+      "lease_expires_at": "2026-10-01T22:16:01.266Z",
+      "base_branch": "main",
+      "base_sha": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "active_head": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "dependencies": [],
+      "blocked_by_at_publication": [],
+      "proposal_kind": "worker_only",
+      "objective": "Automatically promote the oldest eligible guild event waitlist signup when a confirmed member withdraws or changes response, including both existing member flows. Keep the existing event lock and transaction, fair stable ordering, guild/team eligibility, capacity and privacy gates. Never promote after cancellation or event start.",
+      "allowed_paths": [
+        "src/GuildEventWaitlist/",
+        "src/Repository/GuildEventSignupRepository.php",
+        "src/Controller/GuildPortalController.php",
+        "src/Controller/GuildEventSignupPortalController.php",
+        "tests/Controller/GuildEventWaitlistPromotionTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "CONTINUOUS-WORKER.md",
+        "CONTINUOUS-WORK-POOL.json",
+        ".github/workflows/",
+        "migrations/",
+        "src/Entity/",
+        "src/Controller/AdminGuildCollaborationController.php"
+      ],
+      "deliverables": [
+        "Shared transactional waitlist promotion invoked by both member signup paths after a confirmed place opens.",
+        "Oldest eligible waitlisted character moves to going; no overbooking, no cross-guild or team promotion.",
+        "Auditable promotion and functional regressions for withdrawal, update, ordering and ineligible entries."
+      ],
+      "tests": [
+        "Focused functional tests for both member routes, capacity, fairness and isolation.",
+        "Full exact-head Worker PHP/Symfony and PostgreSQL CI."
+      ],
+      "immutable_constraints": [
+        "Do not weaken authorization, CSRF, event ownership, transactional locking, privacy or existing tests.",
+        "No schema changes or Trusted edits."
+      ],
+      "collision_check": {
+        "compared_against": "Live pool 15bbd4e8aee9c6808358d5d2b8a014de3748dd7e and Worker main 1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+        "result": "These five paths are disjoint from active WCP-634, WCP-638, WCP-641, WCP-642 and WCP-643.",
+        "paths": [
+          "src/GuildEventWaitlist/",
+          "src/Repository/GuildEventSignupRepository.php",
+          "src/Controller/GuildPortalController.php",
+          "src/Controller/GuildEventSignupPortalController.php",
+          "tests/Controller/GuildEventWaitlistPromotionTest.php"
+        ]
+      },
+      "next_action": "Implement promotion and functional regressions on the reserved feature branch, open Draft PR and verify exact-head CI.",
+      "last_observed_head": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "last_verified_push_at": null,
+      "worker_pr_state": "not_opened"
     }
   ],
   "recovery_queue": [],
