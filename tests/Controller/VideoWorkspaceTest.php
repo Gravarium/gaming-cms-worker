@@ -198,7 +198,8 @@ final class VideoWorkspaceTest extends WebTestCase
     }
     private function source(KernelBrowser $client, ?Video $video, ?CreatorProfile $creator = null): VideoSource
     {
-        $source = (new VideoSource())->setVideo($video)->setCreator($creator); $source->configure('VW test HLS', 'hls', 'https://cdn.example.test/live/index.m3u8', 0, true, true);
+        $em = $this->em($client);
+        $source = (new VideoSource())->setVideo($video === null ? null : $em->getReference(Video::class, $video->getId()))->setCreator($creator === null ? null : $em->getReference(CreatorProfile::class, $creator->getId())); $source->configure('VW test HLS', 'hls', 'https://cdn.example.test/live/index.m3u8', 0, true, true);
         $this->em($client)->persist($source); $this->em($client)->flush(); return $source;
     }
     /** @return array<string,mixed> */
