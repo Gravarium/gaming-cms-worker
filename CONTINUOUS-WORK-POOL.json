@@ -62412,8 +62412,8 @@
       "package_id": "WCP-639",
       "title": "Review and decide open competition disputes from a private admin board",
       "risk": "medium_privacy",
-      "execution_state": "worker_in_progress",
-      "claim_state": "active_lease",
+      "execution_state": "worker_complete_awaiting_trusted_review",
+      "claim_state": "locked_until_trusted_resolution",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -62485,24 +62485,53 @@
       "published_at": "2026-10-01T10:46:00.000Z",
       "claimed_on": "2026-10-01T10:46:00.000Z",
       "claim_generation": 1,
-      "lease_expires_at": "2026-10-01T17:46:00.000Z",
-      "active_head": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
-      "last_observed_head": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
-      "checkpoint_commit_sha": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "lease_expires_at": null,
+      "active_head": "7b1c63a639a995256ce1911b0de1b163f0135bfc",
+      "last_observed_head": "7b1c63a639a995256ce1911b0de1b163f0135bfc",
+      "checkpoint_commit_sha": "7b1c63a639a995256ce1911b0de1b163f0135bfc",
       "branch_heads": {
         "claim_branch": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
-        "feature_branch": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4"
+        "feature_branch": "7b1c63a639a995256ce1911b0de1b163f0135bfc"
       },
-      "checkpoint_paths": [],
-      "worker_pr_state": "not_created",
-      "pr_state": "not_created",
-      "last_ci_run_id": null,
-      "last_ci_result": "pending",
-      "last_ci_head": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
-      "ci_history": [],
-      "next_action": "Implement bounded dispute review board and security/decision-form tests; open draft PR and run exact-head CI.",
-      "last_checkpoint_at": "2026-10-01T10:46:00.000Z",
-      "last_verified_push_at": "2026-10-01T10:46:00.000Z"
+      "checkpoint_paths": [
+        "src/CompetitionDisputeAdmin/OpenDisputeBoard.php",
+        "src/Controller/AdminCompetitionDisputeBoardController.php",
+        "templates/admin/competition_dispute_board/index.html.twig",
+        "tests/Controller/AdminCompetitionDisputeBoardTest.php"
+      ],
+      "worker_pr_state": "open_ready_for_review",
+      "pr_state": "open_ready_for_review",
+      "last_ci_run_id": 36851598593,
+      "last_ci_result": "success",
+      "last_ci_head": "7b1c63a639a995256ce1911b0de1b163f0135bfc",
+      "ci_history": [
+        {
+          "run_id": 36851598593,
+          "head": "7b1c63a639a995256ce1911b0de1b163f0135bfc",
+          "result": "success"
+        }
+      ],
+      "next_action": "Await independent Worker/Trusted review; no automatic merge or deployment.",
+      "last_checkpoint_at": "2026-10-01T10:54:00.000Z",
+      "last_verified_push_at": "2026-10-01T10:54:00.000Z",
+      "worker_pr": 434,
+      "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/434",
+      "worker_pr_head_sha": "7b1c63a639a995256ce1911b0de1b163f0135bfc",
+      "ci_run_id": 36851598593,
+      "ci_result": "success",
+      "php_symfony_job_id": 110334292015,
+      "php_symfony_result": "success",
+      "postgres_migration_job_id": 110334291771,
+      "postgres_migration_result": "success",
+      "final_head": "7b1c63a639a995256ce1911b0de1b163f0135bfc",
+      "final_changed_paths": [
+        "src/CompetitionDisputeAdmin/OpenDisputeBoard.php",
+        "src/Controller/AdminCompetitionDisputeBoardController.php",
+        "templates/admin/competition_dispute_board/index.html.twig",
+        "tests/Controller/AdminCompetitionDisputeBoardTest.php"
+      ],
+      "completed_on": "2026-10-01T10:54:00.000Z",
+      "test_evidence": "Exact-head Worker CI #1129 passed PHP/Symfony including PHPStan and 1,646 tests/11,976 assertions plus PostgreSQL 18 migration chain."
     }
   ],
   "recovery_queue": [],
