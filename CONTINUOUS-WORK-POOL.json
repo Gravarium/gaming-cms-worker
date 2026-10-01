@@ -11,7 +11,7 @@
   "baseline_branch": "main",
   "base_sha": "9e083c63e7d888af36f93a23eb924c89fad2b971",
   "published_at": "2026-10-01T16:10:00Z",
-  "summary": "WCP-646 branding preview complete with green exact-head PR #440; active independent claims remain disjoint.",
+  "summary": "WCP-649 manager video provider JSON interface claimed on green WCP-643; active independent claims remain disjoint.",
   "rules": {
     "choose": "Resume the current chat's unfinished claimed branch first. Otherwise atomically claim an eligible published task. If no published task is eligible, independently derive and publish a bounded worker-only CMS proposal from approved product goals and observed code gaps; do not ask the owner for the next FCP number.",
     "atomic_reservation": "Create the exact claim_branch and suggested feature branch from that task's published proposal_base_sha. If the claim already exists, treat it as a hard lock; the owning continuation resumes it and every other AI skips it.",
@@ -63416,6 +63416,82 @@
       "last_checkpoint_at": "2026-10-01T16:10:00Z",
       "worker_pr": 442,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/442"
+    },
+    {
+      "priority": 649,
+      "package_id": "WCP-649",
+      "title": "Manager video provider JSON integration surface",
+      "execution_state": "worker_in_progress",
+      "claim_state": "active_lease",
+      "claim_generation": 1,
+      "claim_branch": "claim/wcp-649-video-provider-api-g1",
+      "suggested_branch": "feature/wcp-649-video-provider-api-g1",
+      "resume_branch": "feature/wcp-649-video-provider-api-g1",
+      "claimed_on": "2026-10-01T20:16:40.951Z",
+      "lease_expires_at": "2026-10-02T03:16:40.951Z",
+      "base_branch": "main",
+      "base_sha": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "proposal_base_branch": "feature/wcp-643-video-provider-expansion-g1",
+      "proposal_base_sha": "d6f5cfc634045c2a2a5b93b15be18a2ba70204bb",
+      "dependencies": [
+        "WCP-643"
+      ],
+      "proposal_kind": "worker_only",
+      "proposal_dependency_evidence": [
+        {
+          "package_id": "WCP-643",
+          "head": "d6f5cfc634045c2a2a5b93b15be18a2ba70204bb",
+          "pr": 438,
+          "ci_run": 36886718904,
+          "result": "success"
+        }
+      ],
+      "objective": "Provide a manager-only JSON surface listing supported video provider capabilities and validating an operator-supplied provider URL into its canonical iframe/direct/link mode without fetching external sites, changing data or revealing private video URLs.",
+      "allowed_paths": [
+        "src/VideoProviderApi/",
+        "src/Controller/VideoProviderApiController.php",
+        "tests/VideoProviderApi/",
+        "tests/Controller/VideoProviderApiControllerTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "ops/",
+        ".github/workflows/",
+        "src/VideoWorkspace/",
+        "src/VideoProviderExpansion/",
+        "src/VideoPlayerChoice/",
+        "src/VideoPlaybackJourney/",
+        "src/VideoPlayerBranding/",
+        "migrations/"
+      ],
+      "deliverables": [
+        "Manager-gated catalogue and CSRF-protected resolver JSON routes",
+        "Exact provider registry reuse, module gating, no persistence or outbound fetch",
+        "Authorization, malformed input, canonicalization and JSON response regression tests; exact-head Worker CI"
+      ],
+      "tests": [
+        "Focused functional tests",
+        "Full exact-head Worker CI and PostgreSQL 18 migration chain"
+      ],
+      "immutable_constraints": [
+        "worker-only-no-Trusted-merge-or-deployment",
+        "no-security-CI-or-access-weakening",
+        "no-provider-source-extraction-or-concealment"
+      ],
+      "collision_check": {
+        "result": "All new controller/API/test paths disjoint from active WCP-634/638/641/642/645/648 and locked video packages; consume green WCP-643 registry read-only.",
+        "paths": [
+          "src/VideoProviderApi/",
+          "src/Controller/VideoProviderApiController.php",
+          "tests/VideoProviderApi/",
+          "tests/Controller/VideoProviderApiControllerTest.php"
+        ]
+      },
+      "next_action": "Implement manager-only JSON routes, test and submit reviewable Worker PR.",
+      "active_head": "d6f5cfc634045c2a2a5b93b15be18a2ba70204bb",
+      "last_observed_head": "d6f5cfc634045c2a2a5b93b15be18a2ba70204bb",
+      "last_verified_push_at": null,
+      "worker_pr_state": "not_created"
     }
   ],
   "recovery_queue": [],
