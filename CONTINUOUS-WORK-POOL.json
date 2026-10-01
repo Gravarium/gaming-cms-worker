@@ -62012,8 +62012,8 @@
       "priority": 637,
       "package_id": "WCP-637",
       "title": "Selectable playback engines and CMS player compatibility catalogue",
-      "execution_state": "worker_in_progress",
-      "claim_state": "claimed",
+      "execution_state": "worker_complete_awaiting_trusted_review",
+      "claim_state": "locked_until_trusted_resolution",
       "claim_generation": 1,
       "claim_branch": "claim/wcp-637-video-player-choice-g1",
       "suggested_branch": "feature/wcp-637-video-player-choice-g1",
@@ -62089,12 +62089,12 @@
           "tests/JavaScript/video-player-choice.test.mjs"
         ]
       },
-      "next_action": "Await exact-head CI for corrected product identities and source URLs.",
+      "next_action": "Await review of green corrected PR 430 together with dependency PR 429. No merge or deployment.",
       "last_observed_head": "0aefb975905b67bd649cc37a027fdd5d609d1a37",
       "last_verified_push_at": "2026-10-01T08:51:24.940Z",
       "worker_pr": 430,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/430",
-      "worker_pr_state": "draft",
+      "worker_pr_state": "open_ready_for_review",
       "checkpoint_paths": [
         "assets/video_player_choice/choice.css",
         "assets/video_player_choice/player.js",
@@ -62115,10 +62115,10 @@
         "tests/VideoPlayerChoice/PlaybackChoiceTest.php",
         "public/video_player_choice/vendor/video-8.24.1.min.js"
       ],
-      "lease_expires_at": "2026-10-01T15:48:14.931Z",
-      "final_head": "1f31414988ecc56a97c34cb60883db242a5ea7d3",
+      "lease_expires_at": null,
+      "final_head": "0aefb975905b67bd649cc37a027fdd5d609d1a37",
       "worker_pr_head_sha": "0aefb975905b67bd649cc37a027fdd5d609d1a37",
-      "completed_on": "2026-10-01T07:54:10.828Z",
+      "completed_on": "2026-10-01T08:57:02.904Z",
       "final_changed_paths": [
         "assets/video_player_choice/choice.css",
         "assets/video_player_choice/player.js",
@@ -62139,15 +62139,15 @@
         "tests/VideoPlayerChoice/PlaybackChoiceTest.php",
         "public/video_player_choice/vendor/video-8.24.1.min.js"
       ],
-      "ci_run_id": 36832528018,
-      "ci_result": "pending",
-      "last_ci_head": "1f31414988ecc56a97c34cb60883db242a5ea7d3",
+      "ci_run_id": 36838962550,
+      "ci_result": "success",
+      "last_ci_head": "0aefb975905b67bd649cc37a027fdd5d609d1a37",
       "last_ci_result": "success",
-      "php_symfony_job_id": 110272185457,
+      "php_symfony_job_id": 110293297495,
       "php_symfony_result": "success",
-      "postgres_migration_job_id": 110272185212,
+      "postgres_migration_job_id": 110293297938,
       "postgres_migration_result": "success",
-      "test_evidence": "Exact-head Worker CI green: PHPStan/audit/lints/container/assets/Doctrine, 1699 PHP tests / 12141 assertions, 22 JS tests, full PostgreSQL 18 migration chain. Existing notices/deprecation persist. Actual remote media/browser playback not asserted. All 17 requested products inventoried; original account/CMS-dependent products are not falsely active.",
+      "test_evidence": "Corrected exact product identities/URLs for Polanger, CONTENIDO, Yii2 v10 wrapper and AI VISIONS. Final exact-head Worker CI passed: 1699 PHP tests/12145 assertions, 22 JS tests, PHPStan/audit/lints/asset compilation and full PostgreSQL 18 migration chain. No additional original CMS plugin installed and no runtime engine upgrade.",
       "ci_history": [
         {
           "head": "9c3ba9fa871e39db5bc9c9113988908db60c1a86",
@@ -62159,6 +62159,12 @@
           "head": "1f31414988ecc56a97c34cb60883db242a5ea7d3",
           "run_id": 36832528018,
           "result": "success"
+        },
+        {
+          "head": "0aefb975905b67bd649cc37a027fdd5d609d1a37",
+          "run_id": 36838962550,
+          "result": "success",
+          "scope": "Owner supplied exact URL corrections"
         }
       ],
       "owner_followup": {
