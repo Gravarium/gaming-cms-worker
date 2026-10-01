@@ -116,6 +116,7 @@ final class AdminCompetitionEvidenceTest extends WebTestCase
         $client->disableReboot();
         $fixture = $this->fixture($client);
         $unprivileged = $this->user($this->em($client), 'Unprivileged', []);
+        $this->em($client)->flush();
         $client->loginUser($unprivileged);
         $client->request('GET', $this->path($fixture['competitionId']));
         self::assertResponseStatusCodeSame(403);
