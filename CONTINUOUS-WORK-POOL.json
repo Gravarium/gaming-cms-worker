@@ -62661,6 +62661,78 @@
         }
       ],
       "lease_expires_at": null
+    },
+    {
+      "priority": 641,
+      "package_id": "WCP-641",
+      "title": "Validate and normalize competition match schedule input",
+      "risk": "medium",
+      "execution_state": "worker_in_progress",
+      "claim_state": "active",
+      "claim_generation": 1,
+      "claim_branch": "claim/wcp-641-match-schedule-input-g1",
+      "suggested_branch": "feature/wcp-641-match-schedule-input-g1",
+      "resume_branch": "feature/wcp-641-match-schedule-input-g1",
+      "claimed_on": "2026-10-01T11:51:48Z",
+      "base_branch": "main",
+      "base_sha": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "active_base_branch": "main",
+      "active_base_sha": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "active_head": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "dependencies": [],
+      "proposal_kind": "worker_only",
+      "objective": "Make manager-entered competition match times deterministic and safe for the schedule/calendar workflow: accept explicit local datetime or RFC3339 offset forms, reject relative or normalized-invalid values, normalize persisted instants to UTC, and keep current permission, module, match ownership and CSRF gates. No schema changes.",
+      "allowed_paths": [
+        "src/CompetitionScheduling/MatchScheduleInput.php",
+        "src/Controller/AdminCompetition/AdminCompetitionController.php",
+        "tests/CompetitionScheduling/MatchScheduleInputTest.php",
+        "tests/Controller/AdminCompetitionScheduleTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "CONTINUOUS-WORKER.md",
+        "CONTINUOUS-WORK-POOL.json",
+        ".github/workflows/",
+        "migrations/",
+        "src/Entity/",
+        "src/Repository/",
+        "src/Controller/PublicCompetitionMatchCalendarController.php"
+      ],
+      "deliverables": [
+        "Exact accepted date formats with rejection of relative phrases, invalid calendar dates and excessive input.",
+        "UTC normalization before Doctrine storage, preserving current datetime-local UTC interpretation and allowing explicit offsets.",
+        "Existing admin route protection and response behavior remain intact."
+      ],
+      "tests": [
+        "Parser unit tests cover local format, explicit offset, invalid dates, relative text and bounds.",
+        "Admin route tests cover authorization, CSRF, match ownership and unchanged schedule on invalid input.",
+        "Full exact-head Worker PHP/Symfony and PostgreSQL CI."
+      ],
+      "immutable_constraints": [
+        "worker-only-no-Trusted-merge-or-deployment",
+        "no-auth-csrf-or-module-gate-weakening",
+        "UTC-persistence-and-strict-input",
+        "no-schema-or-CI-weakening"
+      ],
+      "collision_check": {
+        "compared_against": "Live pool 21b4e1059f50eca03bb11be2d3fe347f70fcd7f8 and Worker main 1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+        "result": "Four exact paths are disjoint from active WCP-634/WCP-638 and locked packages; changes to existing admin route are confined to date parsing.",
+        "paths": [
+          "src/CompetitionScheduling/MatchScheduleInput.php",
+          "src/Controller/AdminCompetition/AdminCompetitionController.php",
+          "tests/CompetitionScheduling/MatchScheduleInputTest.php",
+          "tests/Controller/AdminCompetitionScheduleTest.php"
+        ]
+      },
+      "next_action": "Implement strict UTC schedule input and focused regression tests."
     }
   ],
   "recovery_queue": [],
