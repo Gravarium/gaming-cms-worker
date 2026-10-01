@@ -383,7 +383,7 @@ final class AccountRecoveryControllerTest extends WebTestCase
         $client->request('GET', '/verify-email/'.$plainToken);
         self::assertResponseIsSuccessful();
         $client->request('POST', '/verify-email/'.$plainToken, ['_token' => 'forged']);
-        self::assertResponseStatusCodeSame(403);
+        self::assertResponseRedirects('/login');
 
         $entityManager->clear();
         $stored = $entityManager->find(User::class, $userId);
@@ -470,6 +470,9 @@ final class AccountRecoveryControllerTest extends WebTestCase
         self::assertSelectorTextContains('.alert', 'ungültig');
         self::assertNull($manager->resolve($expiredPlain, AccountToken::PURPOSE_EMAIL_VERIFICATION));
 
+        $entityManager->clear();
+        $user = $entityManager->find(User::class, $userId);
+        self::assertInstanceOf(User::class, $user);
         [, $revokedPlain] = $manager->issue($user, AccountToken::PURPOSE_EMAIL_VERIFICATION, new \DateInterval('P1D'));
         $entityManager->flush();
         [, $currentEmailToken] = $manager->issue($user, AccountToken::PURPOSE_EMAIL_VERIFICATION, new \DateInterval('P1D'));
@@ -481,6 +484,9 @@ final class AccountRecoveryControllerTest extends WebTestCase
         self::assertNull($manager->resolve($revokedPlain, AccountToken::PURPOSE_EMAIL_VERIFICATION));
         self::assertNotNull($manager->resolve($currentEmailToken, AccountToken::PURPOSE_EMAIL_VERIFICATION));
 
+        $entityManager->clear();
+        $user = $entityManager->find(User::class, $userId);
+        self::assertInstanceOf(User::class, $user);
         [, $passwordToken] = $manager->issue($user, AccountToken::PURPOSE_PASSWORD_RESET, new \DateInterval('PT1H'));
         $entityManager->flush();
         $client->request('GET', '/verify-email/'.$passwordToken);
