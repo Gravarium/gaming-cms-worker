@@ -61312,8 +61312,8 @@
       "package_id": "WCP-631",
       "title": "Make email verification explicit and safe from link prefetch",
       "risk": "medium",
-      "execution_state": "worker_in_progress",
-      "claim_state": "active_lease",
+      "execution_state": "worker_complete_awaiting_trusted_review",
+      "claim_state": "locked_until_trusted_resolution",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -61399,35 +61399,63 @@
       "code_gap_evidence": "On exact Worker main, AccountRecoveryController::verifyEmail is GET-only and calls AccountTokenManager::consume(), verifies the user, revokes tokens, and writes an audit event. Automated mail link scanning can trigger that action before the person follows the link.",
       "claimed_on": "2026-10-01T10:31:00.000Z",
       "claim_generation": 2,
-      "lease_expires_at": "2026-10-01T17:31:00.000Z",
-      "active_head": "e53a0050d036d7c26627234c55846066f46b27ec",
-      "last_observed_head": "e53a0050d036d7c26627234c55846066f46b27ec",
-      "checkpoint_commit_sha": "e53a0050d036d7c26627234c55846066f46b27ec",
+      "lease_expires_at": null,
+      "active_head": "28a2e628e025fb0ce6988883a5c0da42a554b4a2",
+      "last_observed_head": "28a2e628e025fb0ce6988883a5c0da42a554b4a2",
+      "checkpoint_commit_sha": "28a2e628e025fb0ce6988883a5c0da42a554b4a2",
       "branch_heads": {
         "claim_branch": "e53a0050d036d7c26627234c55846066f46b27ec",
-        "feature_branch": "e53a0050d036d7c26627234c55846066f46b27ec"
+        "feature_branch": "28a2e628e025fb0ce6988883a5c0da42a554b4a2"
       },
       "checkpoint_paths": [
         "src/Controller/AccountRecoveryController.php",
         "templates/security/email_verified.html.twig",
         "tests/Controller/AccountRecoveryControllerTest.php"
       ],
-      "worker_pr_state": "not_created",
-      "pr_state": "not_created",
-      "last_ci_run_id": null,
-      "last_ci_result": "pending",
-      "last_ci_head": "e53a0050d036d7c26627234c55846066f46b27ec",
-      "ci_history": [],
-      "next_action": "Review exact partial head, open draft PR, and run complete exact-head Worker CI.",
-      "last_checkpoint_at": "2026-09-30T22:35:36.312Z",
-      "last_verified_push_at": "2026-09-30T22:35:36.312Z",
-      "worker_pr_head_sha": "e53a0050d036d7c26627234c55846066f46b27ec",
+      "worker_pr_state": "open_ready_for_review",
+      "pr_state": "open_ready_for_review",
+      "last_ci_run_id": 36850443665,
+      "last_ci_result": "success",
+      "last_ci_head": "28a2e628e025fb0ce6988883a5c0da42a554b4a2",
+      "ci_history": [
+        {
+          "run_id": 36849814420,
+          "head": "e53a0050d036d7c26627234c55846066f46b27ec",
+          "result": "failure",
+          "reason": "test-only anonymous redirect expectation and detached Doctrine user fixture"
+        },
+        {
+          "run_id": 36850443665,
+          "head": "28a2e628e025fb0ce6988883a5c0da42a554b4a2",
+          "result": "success"
+        }
+      ],
+      "next_action": "Await independent Worker/Trusted review; do not merge Worker code automatically.",
+      "last_checkpoint_at": "2026-10-01T10:43:00.000Z",
+      "last_verified_push_at": "2026-10-01T10:43:00.000Z",
+      "worker_pr_head_sha": "28a2e628e025fb0ce6988883a5c0da42a554b4a2",
       "previous_claim": {
         "claim_branch": "claim/wcp-631-explicit-email-verification-g1",
         "generation": 1,
         "lease_expired_at": "2026-10-01T05:35:36.312Z",
         "last_observed_head": "e53a0050d036d7c26627234c55846066f46b27ec"
-      }
+      },
+      "worker_pr": 433,
+      "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/433",
+      "ci_run_id": 36850443665,
+      "ci_result": "success",
+      "php_symfony_job_id": 110330558029,
+      "php_symfony_result": "success",
+      "postgres_migration_job_id": 110330558304,
+      "postgres_migration_result": "success",
+      "final_head": "28a2e628e025fb0ce6988883a5c0da42a554b4a2",
+      "final_changed_paths": [
+        "src/Controller/AccountRecoveryController.php",
+        "templates/security/email_verified.html.twig",
+        "tests/Controller/AccountRecoveryControllerTest.php"
+      ],
+      "completed_on": "2026-10-01T10:43:00.000Z",
+      "test_evidence": "Exact-head Worker CI #1128 passed PHP/Symfony including PHPStan and 1,645 tests/11,997 assertions plus PostgreSQL 18 migration chain."
     },
     {
       "priority": 632,
