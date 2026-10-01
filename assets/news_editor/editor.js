@@ -182,7 +182,7 @@ if (root) {
     for (const block of JSON.parse(snapshot.slice(prefix.length)).blocks) renderBlock(block);
     source.value = snapshot;
     const target = blocks.children[Math.max(0, Math.min(rowIndex, blocks.children.length - 1))];
-    target?.querySelector('[contenteditable], input')?.focus();
+    target?.querySelector('[contenteditable], textarea, input, select')?.focus();
     status.textContent = 'Ungespeicherte Änderung in der Dokument-Historie.';
     count.textContent = [...blocks.querySelectorAll('[contenteditable], textarea')].map(el => el.value ?? el.textContent).join(' ').trim().split(/\s+/u).filter(Boolean).length + ' Wörter';
   }
