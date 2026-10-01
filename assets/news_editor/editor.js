@@ -1,3 +1,5 @@
+import {parseVideoUrl} from './video-url.js';
+
 const root = document.getElementById('news-editor');
 if (root) {
   const blocks = document.getElementById('news-editor-blocks');
@@ -95,19 +97,12 @@ if (root) {
       const field = videoId.querySelector('input');
       field.addEventListener('change', () => {
         if (!/^https:\/\//i.test(field.value)) return;
-        try {
-          const url = new URL(field.value);
-          const host = url.hostname.toLowerCase();
-          let id = '';
-          if (host === 'youtu.be') id = url.pathname.slice(1);
-          else if (['youtube.com', 'www.youtube.com', 'www.youtube-nocookie.com'].includes(host)) {
-            id = url.searchParams.get('v') ?? url.pathname.match(/^\/(?:shorts|embed)\/([A-Za-z0-9_-]+)$/)?.[1] ?? '';
-          } else if (['vimeo.com', 'www.vimeo.com', 'player.vimeo.com'].includes(host)) {
-            id = url.pathname.match(/^\/(?:video\/)?([0-9]+)$/)?.[1] ?? '';
-            if (/^[0-9]{1,20}$/.test(id)) { provider.querySelector('input').value = 'vimeo'; field.value = id; changed(); return; }
-          }
-          if (/^[A-Za-z0-9_-]{6,20}$/.test(id)) { provider.querySelector('input').value = 'youtube'; field.value = id; changed(); return; }
-        } catch { /* The server validates the unmodified value on preview and save. */ }
+        const parsed = parseVideoUrl(field.value);
+        if (parsed) {
+          provider.querySelector('input').value = parsed.provider;
+          field.value = parsed.videoId;
+          changed(); return;
+        }
         status.textContent = 'Video-URL nicht erkannt. Bitte YouTube- oder Vimeo-Link prüfen.';
       });
       row.append(provider, videoId, input('Bildunterschrift', block.caption));
