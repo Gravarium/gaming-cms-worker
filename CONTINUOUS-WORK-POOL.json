@@ -10,7 +10,7 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "9e083c63e7d888af36f93a23eb924c89fad2b971",
-  "published_at": "2026-10-01T15:53:00Z",
+  "published_at": "2026-10-01T15:54:10Z",
   "summary": "WCP-646 branding preview reserved; active paths remain disjoint.",
   "rules": {
     "choose": "Resume the current chat's unfinished claimed branch first. Otherwise atomically claim an eligible published task. If no published task is eligible, independently derive and publish a bounded worker-only CMS proposal from approved product goals and observed code gaps; do not ask the owner for the next FCP number.",
@@ -63159,6 +63159,83 @@
       "last_observed_head": "456eb44dbaa9e9d3164b3062b3c62cd80e86b295",
       "last_verified_push_at": null,
       "worker_pr_state": "not_created"
+    },
+    {
+      "priority": 647,
+      "package_id": "WCP-647",
+      "title": "Compare visible game catalogue entries side by side",
+      "risk": "medium_public_visibility",
+      "execution_state": "worker_in_progress",
+      "claim_state": "active_lease",
+      "claim_generation": 1,
+      "claim_branch": "claim/wcp-647-game-comparison-g1",
+      "suggested_branch": "feature/wcp-647-game-comparison-g1",
+      "resume_branch": "feature/wcp-647-game-comparison-g1",
+      "claimed_on": "2026-10-01T15:54:10Z",
+      "lease_expires_at": "2026-10-01T22:54:10Z",
+      "base_branch": "main",
+      "base_sha": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "active_head": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "dependencies": [],
+      "proposal_kind": "worker_only",
+      "objective": "Provide a shareable comparison of two or three enabled public catalogue games with genres, publisher, developer and bounded current release data. Give editors a Page Builder widget entry point. Reject malformed, duplicate or hidden game slugs without exposing private records; preserve Gaming module gate. No mutation or schema change.",
+      "allowed_paths": [
+        "src/GameComparison/",
+        "src/Controller/GameCatalogue/GameComparisonController.php",
+        "src/Widget/GameComparisonWidgetProvider.php",
+        "templates/game_comparison/",
+        "templates/widget/game_comparison.html.twig",
+        "tests/Controller/GameComparisonTest.php",
+        "tests/Widget/GameComparisonWidgetProviderTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "CONTINUOUS-WORKER.md",
+        "CONTINUOUS-WORK-POOL.json",
+        ".github/workflows/",
+        "migrations/",
+        "src/Entity/",
+        "src/Repository/GameCatalogue/",
+        "src/Controller/GameCatalogue/GameCatalogueController.php",
+        "templates/game_catalogue/"
+      ],
+      "deliverables": [
+        "GET-only comparison page for two or three public catalogue games with strict slug validation and bounded queries.",
+        "Page Builder widget linking to the comparison page.",
+        "Disabled games/catalogue entries never appear; module gate and no private data exposure."
+      ],
+      "tests": [
+        "Functional comparison, invalid/duplicate/hidden slug and disabled module tests.",
+        "Widget registration test; complete exact-head Worker PHP/Symfony and PostgreSQL CI."
+      ],
+      "immutable_constraints": [
+        "worker-only-no-Trusted-merge-or-deployment",
+        "no-private-game-disclosure",
+        "bounded-query-and-input",
+        "no-security-test-or-CI-weakening"
+      ],
+      "collision_check": {
+        "result": "All seven reserved paths are disjoint from active and locked WCP claims; broad unclaimed dependency-blocked FCP-072 templates scope is not an active reservation. Existing game catalogue code is read-only.",
+        "compared_against": "Live pool 06681be508315d3589a0937cdd4dcc5076f74d9b and Worker main 1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+        "paths": [
+          "src/GameComparison/",
+          "src/Controller/GameCatalogue/GameComparisonController.php",
+          "src/Widget/GameComparisonWidgetProvider.php",
+          "templates/game_comparison/",
+          "templates/widget/game_comparison.html.twig",
+          "tests/Controller/GameComparisonTest.php",
+          "tests/Widget/GameComparisonWidgetProviderTest.php"
+        ]
+      },
+      "next_action": "Implement on reserved feature branch, open Draft PR, fix exact-head Worker CI."
     }
   ],
   "recovery_queue": [],
