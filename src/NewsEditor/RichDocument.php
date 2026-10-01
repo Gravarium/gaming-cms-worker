@@ -150,7 +150,9 @@ final class RichDocument
         }
         if ($type === 'video') {
             $this->keys($block, ['type', 'provider', 'videoId', 'caption']);
-            if (!in_array($block['provider'], ['youtube', 'vimeo'], true) || !is_string($block['videoId']) || preg_match('/^[a-zA-Z0-9_-]{6,64}$/D', $block['videoId']) !== 1) {
+            if (!in_array($block['provider'], ['youtube', 'vimeo'], true) || !is_string($block['videoId'])
+                || ($block['provider'] === 'youtube' && preg_match('/\A[A-Za-z0-9_-]{6,20}\z/D', $block['videoId']) !== 1)
+                || ($block['provider'] === 'vimeo' && preg_match('/\A[0-9]{1,20}\z/D', $block['videoId']) !== 1)) {
                 throw new \InvalidArgumentException('Ungültige Video-Referenz.');
             }
             return ['type' => 'video', 'provider' => $block['provider'], 'videoId' => $block['videoId'], 'caption' => $this->text($block['caption'], 500)];

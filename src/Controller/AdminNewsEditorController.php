@@ -113,7 +113,7 @@ final class AdminNewsEditorController extends AbstractController
     {
         $this->assertEditable($entry);
         $query = $request->query->get('q', '');
-        if (!is_string($query) || mb_strlen($query) > 80) {
+        if (mb_strlen($query) > 80) {
             return $this->json(['error' => 'Ungültige Mediensuche.'], 422);
         }
         $items = [];
