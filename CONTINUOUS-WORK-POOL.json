@@ -62987,14 +62987,14 @@
       "package_id": "WCP-645",
       "title": "Browse released games in a bounded public archive",
       "risk": "medium_privacy",
-      "execution_state": "worker_in_progress",
-      "claim_state": "active_lease",
+      "execution_state": "worker_complete_awaiting_trusted_review",
+      "claim_state": "locked_until_trusted_resolution",
       "claim_generation": 1,
       "claim_branch": "claim/wcp-645-game-release-archive-g1",
       "suggested_branch": "feature/wcp-645-game-release-archive-g1",
       "resume_branch": "feature/wcp-645-game-release-archive-g1",
       "claimed_on": "2026-10-01T15:29:11Z",
-      "lease_expires_at": "2026-10-01T22:39:00Z",
+      "lease_expires_at": null,
       "base_branch": "main",
       "base_sha": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
       "proposal_base_branch": "main",
@@ -63050,24 +63050,47 @@
           "tests/Controller/GameReleaseArchiveTest.php"
         ]
       },
-      "next_action": "Check new exact-head CI on 8ea67b65 and fix concrete failures.",
+      "next_action": "Await independent Worker review and later Trusted integration; this package remains locked.",
       "last_observed_head": "8ea67b65c231d87f2246fe685d664a5e8764a4d7",
       "last_verified_push_at": "2026-10-01T15:39:00Z",
-      "worker_pr_state": "draft",
+      "worker_pr_state": "ready_for_review",
       "last_checkpoint_at": "2026-10-01T15:39:00Z",
       "worker_pr": 439,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/439",
-      "last_ci_run_id": 36885209203,
-      "last_ci_head": "d7310aa749b37145042b597a306105817056b0c6",
-      "last_ci_result": "failure",
+      "last_ci_run_id": 36885914808,
+      "last_ci_head": "8ea67b65c231d87f2246fe685d664a5e8764a4d7",
+      "last_ci_result": "success",
       "ci_history": [
         {
           "run_id": 36885209203,
           "head": "d7310aa749b37145042b597a306105817056b0c6",
           "result": "failure",
           "reason": "Test changed module state within one cached browser; corrected by isolated disabled-module test."
+        },
+        {
+          "run_id": 36885914808,
+          "head": "8ea67b65c231d87f2246fe685d664a5e8764a4d7",
+          "result": "success"
         }
-      ]
+      ],
+      "pr_state": "ready_for_review",
+      "worker_pr_head_sha": "8ea67b65c231d87f2246fe685d664a5e8764a4d7",
+      "final_head": "8ea67b65c231d87f2246fe685d664a5e8764a4d7",
+      "ci_run_id": 36885914808,
+      "ci_result": "success",
+      "php_symfony_job_id": 110449043147,
+      "php_symfony_result": "success",
+      "postgres_migration_job_id": 110449042880,
+      "postgres_migration_result": "success",
+      "final_changed_paths": [
+        "src/Controller/GameCatalogue/GameReleaseArchiveController.php",
+        "src/GameReleaseArchive/PublicGameReleaseArchiveQuery.php",
+        "templates/game_catalogue/release_archive.html.twig",
+        "templates/game_catalogue/release_calendar.html.twig",
+        "tests/Controller/GameReleaseArchiveTest.php"
+      ],
+      "completed_on": "2026-10-01T15:44:40Z",
+      "test_evidence": "Exact-head Worker CI: PHP/Symfony 1645 tests, 11967 assertions; PostgreSQL 18 success."
     }
   ],
   "recovery_queue": [],
