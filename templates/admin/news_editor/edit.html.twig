@@ -1,0 +1,27 @@
+{% extends 'base.html.twig' %}
+{% block title %}News bearbeiten | Gaming CMS{% endblock %}
+{% block stylesheets %}{{ parent() }}<link rel="stylesheet" href="{{ asset('news_editor/editor.css') }}">{% endblock %}
+{% block body %}
+<header class="topbar"><a class="brand" href="{{ path('app_admin_dashboard') }}">Gaming CMS</a><nav class="top-actions"><a href="{{ path('app_admin_content_edit',{id:entry.id}) }}">Artikeldaten</a><a href="{{ path('app_admin_content_history',{id:entry.id}) }}">Versionen</a><a href="{{ path('app_admin_content_index') }}">Inhalte</a></nav></header>
+<main class="news-editor-shell" id="news-editor" data-preview-url="{{ path('app_admin_news_editor_preview',{id:entry.id}) }}" data-csrf="{{ csrf_token('news-editor-'~entry.id) }}">
+    <p class="eyebrow">News-Redaktion</p><h1>{{ entry.title }}</h1>
+    <p class="muted">{{ entry.status == 'review' ? 'In Prüfung' : 'Entwurf' }} · Änderungen werden erst nach dem Speichern als Revision übernommen.</p>
+    {% for message in app.flashes('success') %}<div class="notice" role="status">{{ message }}</div>{% endfor %}
+    {% if error %}<div class="notice" role="alert">{{ error }}</div>{% endif %}
+    <div class="news-editor-toolbar" role="toolbar" aria-label="Artikel formatieren">
+        <button type="button" data-command="bold" aria-label="Fett">Fett</button><button type="button" data-command="italic" aria-label="Kursiv">Kursiv</button><button type="button" data-command="underline" aria-label="Unterstreichen">U</button><button type="button" data-command="strikeThrough" aria-label="Durchstreichen">S</button><button type="button" data-command="link">Link</button>
+        <button type="button" data-add="paragraph">Absatz</button><button type="button" data-add="heading">Überschrift</button><button type="button" data-add="quote">Zitat</button><button type="button" data-add="list">Liste</button><button type="button" data-add="table">Tabelle</button><button type="button" data-add="media">Bild</button><button type="button" data-add="video">Video</button>
+        <button type="button" data-command="undo">Rückgängig</button><button type="button" data-command="redo">Wiederholen</button><button type="button" id="news-editor-preview-button">Vorschau</button>
+    </div>
+    <form method="post" id="news-editor-form" novalidate>
+        <input type="hidden" name="_token" value="{{ csrf_token('news-editor-'~entry.id) }}">
+        <input type="hidden" name="updatedAt" value="{{ entry.updatedAt|date('c') }}">
+        <textarea name="document" id="news-editor-document" hidden>{{ document }}</textarea>
+        <div id="news-editor-blocks" class="news-editor-blocks" aria-label="Artikelinhalt"></div>
+        <p id="news-editor-status" role="status" aria-live="polite"></p>
+        <div class="news-editor-actions"><button type="submit">Artikelentwurf speichern</button><span id="news-editor-count" class="muted"></span></div>
+    </form>
+    <section class="news-editor-preview" aria-label="Artikelvorschau"><h2>Vorschau</h2><div id="news-editor-preview"></div></section>
+</main>
+<script type="module" src="{{ asset('news_editor/editor.js') }}"></script>
+{% endblock %}

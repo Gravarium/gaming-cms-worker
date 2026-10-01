@@ -75,6 +75,9 @@ final class RichDocument
         foreach ($this->decode($document)['blocks'] as $block) {
             if (isset($block['content'])) {
                 $parts[] = $this->runsText($block['content']);
+                if ($block['type'] === 'quote' && $block['cite'] !== '') {
+                    $parts[] = $block['cite'];
+                }
             } elseif ($block['type'] === 'list') {
                 foreach ($block['items'] as $item) {
                     $parts[] = $this->runsText($item);
@@ -100,7 +103,7 @@ final class RichDocument
     {
         $type = $block['type'] ?? null;
         if (in_array($type, ['paragraph', 'heading', 'quote'], true)) {
-            $keys = $type === 'heading' ? ['type', 'level', 'content'] : ['type', 'content'];
+            $keys = $type === 'heading' ? ['type', 'level', 'content'] : ($type === 'quote' ? ['type', 'content', 'cite'] : ['type', 'content']);
             $this->keys($block, $keys);
             $result = ['type' => $type];
             if ($type === 'heading') {
@@ -110,6 +113,9 @@ final class RichDocument
                 $result['level'] = $block['level'];
             }
             $result['content'] = $this->content($block['content'], $runs);
+            if ($type === 'quote') {
+                $result['cite'] = $this->text($block['cite'], 300);
+            }
             return $result;
         }
         if ($type === 'list') {

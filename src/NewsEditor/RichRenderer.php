@@ -26,7 +26,8 @@ final readonly class RichRenderer
         if (in_array($type, ['paragraph', 'heading', 'quote'], true)) {
             $inner = $this->runs($block['content']);
             $tag = $type === 'paragraph' ? 'p' : ($type === 'quote' ? 'blockquote' : 'h'.$block['level']);
-            return '<'.$tag.'>'.$inner.'</'.$tag.'>';
+            $cite = $type === 'quote' && $block['cite'] !== '' ? '<cite>'.$this->escape($block['cite']).'</cite>' : '';
+            return '<'.$tag.'>'.$inner.$cite.'</'.$tag.'>';
         }
         if ($type === 'list') {
             $tag = $block['ordered'] ? 'ol' : 'ul';
@@ -57,16 +58,19 @@ final readonly class RichRenderer
         return '';
     }
 
-    /** @param list<array{text:string,marks:list<string>,href?:string}> $runs */
+    /** @param array<array<string,mixed>> $runs */
     private function runs(array $runs): string
     {
         $parts = [];
         foreach ($runs as $run) {
-            $value = $this->escape($run['text']);
-            foreach ($run['marks'] as $mark) {
-                $tag = match ($mark) { 'strong' => 'strong', 'em' => 'em', 'underline' => 'u', 'strike' => 's', 'code' => 'code', 'link' => 'a' };
+            $value = $this->escape((string) $run['text']);
+            foreach ((array) $run['marks'] as $mark) {
+                $tag = match ($mark) { 'strong' => 'strong', 'em' => 'em', 'underline' => 'u', 'strike' => 's', 'code' => 'code', 'link' => 'a', default => throw new \InvalidArgumentException('Ungültige Textformatierung.') };
+                if ($tag === 'a' && !isset($run['href'])) {
+                    throw new \InvalidArgumentException('Linkziel fehlt.');
+                }
                 $value = $tag === 'a'
-                    ? '<a href="'.$this->escape($run['href']).'" rel="noopener noreferrer">'.$value.'</a>'
+                    ? '<a href="'.$this->escape((string) $run['href']).'" rel="noopener noreferrer">'.$value.'</a>'
                     : '<'.$tag.'>'.$value.'</'.$tag.'>';
             }
             $parts[] = $value;
