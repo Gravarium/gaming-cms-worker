@@ -63645,6 +63645,87 @@
       "worker_pr": 444,
       "last_checkpoint_at": "2026-10-01T21:26:16.867Z",
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/444"
+    },
+    {
+      "priority": 651,
+      "package_id": "WCP-651",
+      "title": "Browse public game publishers and their visible catalogue",
+      "risk": "medium_public_visibility",
+      "execution_state": "worker_in_progress",
+      "claim_state": "active_lease",
+      "claim_generation": 1,
+      "claim_branch": "claim/wcp-651-game-publisher-directory-g1",
+      "suggested_branch": "feature/wcp-651-game-publisher-directory-g1",
+      "resume_branch": "feature/wcp-651-game-publisher-directory-g1",
+      "claimed_on": "2026-10-01T21:31:00Z",
+      "lease_expires_at": "2026-10-02T04:31:00Z",
+      "base_branch": "main",
+      "base_sha": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "active_head": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "dependencies": [],
+      "proposal_kind": "worker_only",
+      "objective": "Provide a bounded public directory and profile pages for publishers that have at least one enabled public game catalogue entry. Strictly validate slugs and pages, preserve the Gaming module gate, never reveal disabled publishers through hidden games, and add a Page Builder entry point without mutations or schema changes.",
+      "allowed_paths": [
+        "src/GamePublisherDirectory/",
+        "src/Controller/GameCatalogue/GamePublisherDirectoryController.php",
+        "src/Widget/GamePublisherDirectoryWidgetProvider.php",
+        "templates/game_publisher_directory/",
+        "templates/widget/game_publisher_directory.html.twig",
+        "tests/Controller/GamePublisherDirectoryTest.php",
+        "tests/Widget/GamePublisherDirectoryWidgetProviderTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "CONTINUOUS-WORKER.md",
+        "CONTINUOUS-WORK-POOL.json",
+        ".github/workflows/",
+        "migrations/",
+        "src/Entity/",
+        "src/Repository/",
+        "src/Security/",
+        "src/Controller/GameCatalogue/GameCatalogueController.php",
+        "templates/game_catalogue/"
+      ],
+      "deliverables": [
+        "GET-only paginated publisher directory containing only publishers backed by enabled public catalogue entries.",
+        "Strict publisher profile route with bounded visible-game pagination and stable ordering.",
+        "Page Builder widget linking to the directory while respecting the Gaming module gate.",
+        "No hidden game, disabled catalogue entry, mutation, schema change or private data exposure."
+      ],
+      "tests": [
+        "Functional directory, profile, pagination, invalid slug/page, hidden-entry and disabled-module tests.",
+        "Widget registration test and complete exact-head Worker PHP/Symfony and PostgreSQL CI."
+      ],
+      "immutable_constraints": [
+        "worker-only-no-Trusted-merge-or-deployment",
+        "no-disabled-game-or-entry-disclosure",
+        "bounded-query-and-input",
+        "no-security-test-or-CI-weakening"
+      ],
+      "collision_check": {
+        "compared_against": "Live pool bec3f1ca8140051d0c84159bf0ee01b3e92b1cee and Worker main 1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+        "result": "All seven reserved paths are new and disjoint from active WCP-634, WCP-638, WCP-641, WCP-642 and WCP-650 claims and from locked packages; existing catalogue entities are read-only.",
+        "paths": [
+          "src/GamePublisherDirectory/",
+          "src/Controller/GameCatalogue/GamePublisherDirectoryController.php",
+          "src/Widget/GamePublisherDirectoryWidgetProvider.php",
+          "templates/game_publisher_directory/",
+          "templates/widget/game_publisher_directory.html.twig",
+          "tests/Controller/GamePublisherDirectoryTest.php",
+          "tests/Widget/GamePublisherDirectoryWidgetProviderTest.php"
+        ]
+      },
+      "next_action": "Implement the bounded public publisher directory, profile pages, widget and negative visibility tests.",
+      "last_verified_push_at": null,
+      "worker_pr": null
     }
   ],
   "recovery_queue": [],
