@@ -62733,6 +62733,81 @@
         ]
       },
       "next_action": "Implement strict UTC schedule input and focused regression tests."
+    },
+    {
+      "priority": 642,
+      "package_id": "WCP-642",
+      "title": "Browse and export confirmed public competition results",
+      "risk": "medium_privacy",
+      "execution_state": "worker_in_progress",
+      "claim_state": "claimed",
+      "claim_generation": 1,
+      "claim_branch": "claim/wcp-642-competition-results-archive-g1",
+      "suggested_branch": "feature/wcp-642-competition-results-archive-g1",
+      "resume_branch": "feature/wcp-642-competition-results-archive-g1",
+      "claimed_on": "2026-10-01T11:57:48.301Z",
+      "base_branch": "main",
+      "base_sha": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "active_base_branch": "main",
+      "active_base_sha": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "active_head": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "dependencies": [],
+      "proposal_kind": "worker_only",
+      "objective": "Provide a public, bounded per-competition archive of confirmed match scores with CSV export. Exclude private and draft competitions, disabled games, and pending/disputed/cancelled matches. Keep stable ordering and protect CSV from formula injection.",
+      "allowed_paths": [
+        "src/CompetitionResultsArchive/",
+        "src/Controller/PublicCompetitionResultsArchiveController.php",
+        "templates/competition_results_archive/",
+        "tests/Controller/PublicCompetitionResultsArchiveTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "CONTINUOUS-WORKER.md",
+        "CONTINUOUS-WORK-POOL.json",
+        ".github/workflows/",
+        "migrations/",
+        "src/Entity/",
+        "src/Repository/Competition/",
+        "src/Controller/Competition/"
+      ],
+      "deliverables": [
+        "Public HTML result archive for a visible competition with bounded confirmed match history.",
+        "CSV export of the same public data with safe encoding and formula-injection protection.",
+        "No schema or mutation changes."
+      ],
+      "tests": [
+        "Functional public/private/draft/disabled-game visibility and confirmed-only result tests.",
+        "CSV formula-injection, ordering and bounded query tests.",
+        "Full exact-head Worker PHP/Symfony and PostgreSQL CI."
+      ],
+      "immutable_constraints": [
+        "worker-only-no-Trusted-merge-or-deployment",
+        "no-private-match-disclosure",
+        "bounded-query-and-safe-csv",
+        "no-security-test-or-CI-weakening"
+      ],
+      "collision_check": {
+        "compared_against": "Live pool at 0f0a2718fa9faed9799512d4f8385d45e302d2d4 and Worker main 1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+        "result": "All four allowed paths are new and disjoint from active WCP-638, WCP-641 and completed locked packages.",
+        "paths": [
+          "src/CompetitionResultsArchive/",
+          "src/Controller/PublicCompetitionResultsArchiveController.php",
+          "templates/competition_results_archive/",
+          "tests/Controller/PublicCompetitionResultsArchiveTest.php"
+        ]
+      },
+      "next_action": "Implement on reserved feature branch; open Draft PR and verify exact-head Worker CI.",
+      "last_observed_head": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "last_verified_push_at": null,
+      "lease_expires_at": null
     }
   ],
   "recovery_queue": [],
