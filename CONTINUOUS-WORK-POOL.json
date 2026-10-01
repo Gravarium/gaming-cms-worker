@@ -61740,8 +61740,8 @@
       "package_id": "WCP-634",
       "title": "Let forum authors correct their questions and replies",
       "risk": "medium_authorization",
-      "execution_state": "worker_in_progress",
-      "claim_state": "active_lease",
+      "execution_state": "worker_complete_awaiting_trusted_review",
+      "claim_state": "locked_until_trusted_resolution",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -63026,7 +63026,7 @@
       "suggested_branch": "feature/wcp-645-game-release-archive-g1",
       "resume_branch": "feature/wcp-645-game-release-archive-g1",
       "claimed_on": "2026-10-01T15:29:11Z",
-      "lease_expires_at": "2026-10-01T22:39:00Z",
+      "lease_expires_at": null,
       "base_branch": "main",
       "base_sha": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
       "proposal_base_branch": "main",
@@ -63082,23 +63082,35 @@
           "tests/Controller/GameReleaseArchiveTest.php"
         ]
       },
-      "next_action": "Check new exact-head CI on 8ea67b65 and fix concrete failures.",
+      "next_action": "Await independent Worker review and later Trusted integration; no merge or deployment.",
       "last_observed_head": "8ea67b65c231d87f2246fe685d664a5e8764a4d7",
-      "last_verified_push_at": "2026-10-01T15:39:00Z",
-      "worker_pr_state": "draft",
-      "last_checkpoint_at": "2026-10-01T15:39:00Z",
+      "last_verified_push_at": "2026-10-01T21:22:00Z",
+      "worker_pr_state": "ready_for_review",
+      "last_checkpoint_at": "2026-10-01T21:22:00Z",
       "worker_pr": 439,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/439",
-      "last_ci_run_id": 36885209203,
-      "last_ci_head": "d7310aa749b37145042b597a306105817056b0c6",
-      "last_ci_result": "failure",
+      "last_ci_run_id": 36885914808,
+      "last_ci_head": "8ea67b65c231d87f2246fe685d664a5e8764a4d7",
+      "last_ci_result": "success",
       "ci_history": [
         {
           "run_id": 36885209203,
           "head": "d7310aa749b37145042b597a306105817056b0c6",
           "result": "failure",
           "reason": "Test changed module state within one cached browser; corrected by isolated disabled-module test."
+        },
+        {
+          "run_id": 36885914808,
+          "head": "8ea67b65c231d87f2246fe685d664a5e8764a4d7",
+          "result": "success",
+          "reason": "Exact-head Worker CI completed successfully: PHP/Symfony and PostgreSQL 18."
         }
+      ],
+      "completion_report": [
+        "Worker PR #439 ready for review at exact head 8ea67b65c231d87f2246fe685d664a5e8764a4d7.",
+        "Worker CI run 36885914808: full PHP/Symfony and PostgreSQL 18 jobs successful.",
+        "Five changed paths are within the WCP-645 allowlist; public visibility, status, year and pagination boundaries retained.",
+        "No Trusted merge or deployment."
       ]
     },
     {
