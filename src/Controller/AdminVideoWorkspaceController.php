@@ -17,6 +17,7 @@ use App\VideoWorkspace\CreatorManagement;
 use App\VideoWorkspace\ProviderRegistry;
 use App\VideoWorkspace\WorkspaceInput;
 use Doctrine\DBAL\LockMode;
+use Doctrine\DBAL\Platforms\PostgreSQLPlatform;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -98,7 +99,11 @@ final class AdminVideoWorkspaceController extends AbstractController
                 $tags = array_values(array_unique(array_filter(array_map('trim', explode(',', WorkspaceInput::text($request, 'tags', 3000, false))))));
                 if (count($tags) > 30) { throw new \InvalidArgumentException('Maximal 30 Tags.'); }
                 foreach ($tags as $tag) { if (mb_strlen($tag) > 100) { throw new \InvalidArgumentException('Ein Tag ist zu lang.'); } }
-                $this->em->wrapInTransaction(function () use ($profile, $creator, $visibility, $discoverable, $tags): void {
+                $this->em->wrapInTransaction(function () use ($profile, $creator, $visibility, $discoverable, $tags, $request, $video): void {
+                    $db = $this->em->getConnection();
+                    $lock = $db->getDatabasePlatform() instanceof PostgreSQLPlatform ? ' FOR UPDATE' : '';
+                    $db->fetchOne('SELECT id FROM video WHERE id = ?'.$lock, [$video->getId()]);
+                    if (!hash_equals($this->metadataVersion($video), $request->request->getString('_version'))) { throw new ConflictHttpException('Die Metadaten wurden inzwischen geändert.'); }
                     $profile->setCreator($creator)->setVisibility($visibility)->setDiscoverable($discoverable); $profile->getTags()->clear(); $resolvedTags = [];
                     foreach ($tags as $name) {
                         $slug = trim(mb_substr(strtolower($this->slugger->slug($name)->toString()), 0, 120), '-');
@@ -112,7 +117,7 @@ final class AdminVideoWorkspaceController extends AbstractController
             } catch (\InvalidArgumentException $e) { throw new UnprocessableEntityHttpException($e->getMessage(), $e); }
             return $this->redirectToRoute('app_admin_video_workspace');
         }
-        return $this->privateResponse($this->render('video_workspace/metadata.html.twig', ['video' => $video, 'profile' => $profile, 'creators' => $this->em->getRepository(CreatorProfile::class)->findBy([], ['displayName' => 'ASC'], 200)]));
+        return $this->privateResponse($this->render('video_workspace/metadata.html.twig', ['video' => $video, 'profile' => $profile, 'version' => $this->metadataVersion($video), 'creators' => $this->em->getRepository(CreatorProfile::class)->findBy([], ['displayName' => 'ASC'], 200)]));
     }
 
     #[Route('/sources/new', name: 'app_admin_video_workspace_source_new', methods: ['GET', 'POST'])]
@@ -171,6 +176,13 @@ final class AdminVideoWorkspaceController extends AbstractController
             return $this->redirectToRoute('app_admin_video_workspace');
         }
         return $this->privateResponse($this->render('video_workspace/source_form.html.twig', ['source' => $source, 'token' => $token, 'catalogue' => $this->providers->catalogue(), 'videoId' => $request->query->getString('video', (string) ($source->getVideo()?->getId() ?? '0')), 'creators' => $this->em->getRepository(CreatorProfile::class)->findBy([], ['displayName' => 'ASC'], 200)]));
+    }
+    private function metadataVersion(Video $video): string
+    {
+        $db = $this->em->getConnection();
+        $row = $db->fetchAssociative('SELECT id, creator_id, visibility, discoverable FROM video_discovery_profile WHERE video_id = ?', [$video->getId()]);
+        $tags = $row === false ? [] : $db->fetchFirstColumn('SELECT tag_id FROM video_discovery_profile_tag WHERE profile_id = ? ORDER BY tag_id', [$row['id']]);
+        return hash('sha256', json_encode([$row, $tags], JSON_THROW_ON_ERROR));
     }
     private function enabled(): void { if (!$this->module->enabled()) { throw $this->createNotFoundException(); } }
     private function csrf(Request $request, string $token): void { if (!$this->isCsrfTokenValid($token, $request->request->getString('_token'))) { throw $this->createAccessDeniedException(); } }

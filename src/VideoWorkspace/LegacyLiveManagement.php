@@ -27,7 +27,7 @@ final readonly class LegacyLiveManagement
             if ($delete) { $this->db->delete('video_discovery_live_stream', ['id' => $id]); }
             else {
                 if (array_diff(array_keys($changes), ['title', 'provider', 'source_url', 'creator_id', 'enabled', 'starts_at']) !== []) { throw new \InvalidArgumentException(); }
-                $this->db->update('video_discovery_live_stream', $changes, ['id' => $id]);
+                $this->db->update('video_discovery_live_stream', $changes, ['id' => $id], ['enabled' => \Doctrine\DBAL\Types\Types::BOOLEAN]);
             }
         });
     }

@@ -43,10 +43,9 @@ final class VideoWorkspaceAccountController extends AbstractController
                     $changes = match ($kind) {
                         'watchlist' => ['name' => WorkspaceInput::text($request, 'name', 120), 'public' => WorkspaceInput::flag($request, 'public')],
                         'comment' => ['body' => WorkspaceInput::text($request, 'body', 4000), 'timestamp_seconds' => WorkspaceInput::integer($request, 'timestamp_seconds', 86400), 'visibility' => WorkspaceInput::visibility($request, false)],
-                        'clip' => ['title' => WorkspaceInput::text($request, 'title', 160), 'start_seconds' => WorkspaceInput::integer($request, 'start_seconds', 86400), 'end_seconds' => WorkspaceInput::integer($request, 'end_seconds', 86400), 'visibility' => WorkspaceInput::visibility($request)],
+                        'clip' => $this->clipChanges($request),
                         default => throw new \InvalidArgumentException('Unbekannter Eintrag.'),
                     };
-                    if ($kind === 'clip' && ($changes['end_seconds'] <= $changes['start_seconds'] || $changes['end_seconds'] - $changes['start_seconds'] > 600)) { throw new \InvalidArgumentException('Ein Clip muss 1 bis 600 Sekunden lang sein.'); }
                 }
                 $this->collections->mutate($kind, $id, $owner, $request->request->getString('_version'), $action, $changes, $action === 'remove' ? WorkspaceInput::integer($request, 'item_id', 2147483647) : null);
             } catch (\InvalidArgumentException $e) { throw new UnprocessableEntityHttpException($e->getMessage(), $e); }
@@ -56,6 +55,14 @@ final class VideoWorkspaceAccountController extends AbstractController
         $items = $kind === 'watchlist' ? $this->collections->watchlistItems($id) : [];
         $version = $this->collections->version($row);
         return $this->privateResponse($this->render('video_workspace/owned.html.twig', compact('row', 'kind', 'id', 'items', 'version')));
+    }
+    /** @return array{title:string,start_seconds:int,end_seconds:int,visibility:string} */
+    private function clipChanges(Request $request): array
+    {
+        $start = WorkspaceInput::integer($request, 'start_seconds', 86400);
+        $end = WorkspaceInput::integer($request, 'end_seconds', 86400);
+        if ($end <= $start || $end - $start > 600) { throw new \InvalidArgumentException('Ein Clip muss 1 bis 600 Sekunden lang sein.'); }
+        return ['title' => WorkspaceInput::text($request, 'title', 160), 'start_seconds' => $start, 'end_seconds' => $end, 'visibility' => WorkspaceInput::visibility($request)];
     }
     private function owner(): int
     {

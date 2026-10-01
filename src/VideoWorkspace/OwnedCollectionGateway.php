@@ -66,7 +66,7 @@ final readonly class OwnedCollectionGateway
                     default => [],
                 };
                 if ($action !== 'edit' || $changes === [] || array_diff(array_keys($changes), $allowed) !== []) { throw new \InvalidArgumentException('Ungültige Änderung.'); }
-                $this->db->update($table, $changes, ['id' => $id, $column => $owner]);
+                $this->db->update($table, $changes, ['id' => $id, $column => $owner], $kind === 'watchlist' ? ['public' => \Doctrine\DBAL\Types\Types::BOOLEAN] : []);
             });
         } catch (UniqueConstraintViolationException $exception) {
             throw new ConflictHttpException('Eine Watchlist mit diesem Namen existiert bereits.', $exception);

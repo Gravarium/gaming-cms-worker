@@ -71,6 +71,7 @@ final class VideoWorkspaceTest extends WebTestCase
         $fields = $this->sourceFields($video->getId(), $token); $fields['authorized'] = '0';
         $client->request('POST', '/admin/video-workspace/sources/new', $fields); self::assertResponseStatusCodeSame(422);
         self::assertNull($this->em($client)->getRepository(VideoSource::class)->findOneBy(['video' => $video]));
+        $client->request('GET', '/admin/video-workspace');
         $source = $this->source($client, $video); $id = $source->getId();
         $crawler = $client->request('GET', '/admin/video-workspace/sources/'.$id); $fields = $this->sourceFields($video->getId(), $this->token($crawler)); $fields['version'] = '0';
         $client->request('POST', '/admin/video-workspace/sources/'.$id, $fields); self::assertResponseStatusCodeSame(409);
@@ -142,7 +143,7 @@ final class VideoWorkspaceTest extends WebTestCase
         $client->request('POST', '/admin/video-workspace/creators/new', ['_token' => $this->token($crawler), 'display_name' => 'VW test creator', 'bio' => 'VW test bio', 'visibility' => 'private']); self::assertResponseRedirects();
         $creator = $this->em($client)->getRepository(CreatorProfile::class)->findOneBy(['displayName' => 'VW test creator']); self::assertInstanceOf(CreatorProfile::class, $creator);
         $url = '/admin/video-workspace/videos/'.$video->getId().'/metadata'; $crawler = $client->request('GET', $url);
-        $client->request('POST', $url, ['_token' => $this->token($crawler), 'creator_id' => (string) $creator->getId(), 'visibility' => 'private', 'discoverable' => '1', 'tags' => 'VW test tag']); self::assertResponseRedirects();
+        $client->request('POST', $url, $this->ownedFields($crawler) + ['creator_id' => (string) $creator->getId(), 'visibility' => 'private', 'discoverable' => '1', 'tags' => 'VW test tag']); self::assertResponseRedirects();
         $profile = $this->em($client)->getRepository(VideoDiscoveryProfile::class)->findOneBy(['video' => $video]); self::assertInstanceOf(VideoDiscoveryProfile::class, $profile); self::assertSame('private', $profile->getVisibility()); self::assertCount(1, $profile->getTags());
         $url = '/admin/video-workspace/creators/'.$creator->getId(); $crawler = $client->request('GET', $url);
         $client->request('POST', $url, $this->ownedFields($crawler) + ['action' => 'delete']); self::assertResponseStatusCodeSame(409);
