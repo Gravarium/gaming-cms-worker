@@ -64,7 +64,7 @@ final class GameReleaseArchiveTest extends WebTestCase
         }
     }
 
-    public function testArchiveRejectsInvalidFiltersAndDisabledModule(): void
+    public function testArchiveRejectsInvalidFilters(): void
     {
         $client = static::createClient();
         $client->disableReboot();
@@ -82,8 +82,19 @@ final class GameReleaseArchiveTest extends WebTestCase
             self::assertResponseStatusCodeSame(422);
             $client->request('GET', '/games/releases/archive', ['page' => '9999']);
             self::assertResponseStatusCodeSame(404);
-            $module['state']->setEnabled(false);
-            $em->flush();
+        } finally {
+            $this->restoreGamingState($em, $module);
+        }
+    }
+
+    public function testDisabledGamingModuleHidesArchive(): void
+    {
+        $client = static::createClient();
+        $client->disableReboot();
+        $em = $client->getContainer()->get(EntityManagerInterface::class);
+        $module = $this->gamingState($em, false);
+
+        try {
             $client->request('GET', '/games/releases/archive');
             self::assertResponseStatusCodeSame(404);
         } finally {
