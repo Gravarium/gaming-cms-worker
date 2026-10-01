@@ -1,0 +1,48 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Streitfälle verwalten | Gaming CMS{% endblock %}
+{% block head_meta %}<meta name="robots" content="noindex,nofollow,noarchive">{% endblock %}
+
+{% block body %}
+<main class="container">
+    <p><a href="{{ path('app_admin_competition_index') }}">Zurück zu Competitions</a></p>
+    <h1>Offene Streitfälle: {{ competition.name }}</h1>
+    <p>Die neuesten 50 offenen Streitfälle dieses Wettbewerbs.</p>
+    {% for dispute in disputes %}
+        {% set match = dispute.match %}
+        <article>
+            <h2>Runde {{ match.roundNumber }}, Paarung {{ match.sequence }}</h2>
+            <p>{{ match.participantA.name ?? 'Offen' }} – {{ match.participantB.name ?? 'Offen' }}</p>
+            <p>Gemeldetes Ergebnis: {{ match.scoreA }} : {{ match.scoreB }}</p>
+            <p>Eröffnet von {{ dispute.openedBy.displayName }} am {{ dispute.createdAt|date('d.m.Y H:i') }}</p>
+            <p>Begründung: {{ dispute.reason }}</p>
+            <form method="post" action="{{ path('app_admin_competition_dispute_decide', {id: competition.id, dispute: dispute.id}) }}">
+                <input type="hidden" name="_token" value="{{ csrf_token('competition-dispute-' ~ dispute.id) }}">
+                <input type="hidden" name="status" value="rejected">
+                <label for="reject-{{ dispute.id }}">Begründung für die Ablehnung</label>
+                <textarea id="reject-{{ dispute.id }}" name="decision" required maxlength="5000"></textarea>
+                <button type="submit">Einspruch ablehnen</button>
+            </form>
+            <form method="post" action="{{ path('app_admin_competition_dispute_decide', {id: competition.id, dispute: dispute.id}) }}">
+                <input type="hidden" name="_token" value="{{ csrf_token('competition-dispute-' ~ dispute.id) }}">
+                <input type="hidden" name="status" value="upheld">
+                <label for="score-a-{{ dispute.id }}">Ergebnis {{ match.participantA.name ?? 'A' }}</label>
+                <input id="score-a-{{ dispute.id }}" name="score_a" type="number" min="0" required value="{{ match.scoreA ?? '' }}">
+                <label for="score-b-{{ dispute.id }}">Ergebnis {{ match.participantB.name ?? 'B' }}</label>
+                <input id="score-b-{{ dispute.id }}" name="score_b" type="number" min="0" required value="{{ match.scoreB ?? '' }}">
+                <label for="winner-{{ dispute.id }}">Gewinner passend zum Ergebnis</label>
+                <select id="winner-{{ dispute.id }}" name="winner" required>
+                    <option value="0">Unentschieden</option>
+                    {% if match.participantA %}<option value="{{ match.participantA.id }}">{{ match.participantA.name }}</option>{% endif %}
+                    {% if match.participantB %}<option value="{{ match.participantB.id }}">{{ match.participantB.name }}</option>{% endif %}
+                </select>
+                <label for="uphold-{{ dispute.id }}">Begründung für die Korrektur</label>
+                <textarea id="uphold-{{ dispute.id }}" name="decision" required maxlength="5000"></textarea>
+                <button type="submit">Einspruch stattgeben</button>
+            </form>
+        </article>
+    {% else %}
+        <p>Keine offenen Streitfälle vorhanden.</p>
+    {% endfor %}
+</main>
+{% endblock %}
