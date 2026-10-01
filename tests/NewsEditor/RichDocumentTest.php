@@ -38,7 +38,12 @@ final class RichDocumentTest extends TestCase
             [['type' => 'paragraph', 'content' => [['text' => 'x', 'marks' => ['link'], 'href' => 'javascript:alert(1)']]]],
             [['type' => 'paragraph', 'content' => [['text' => 'x', 'marks' => ['link'], 'href' => 'https://user@example.test/']]]],
             [['type' => 'paragraph', 'content' => [['text' => 'x', 'marks' => ['strong'], 'onclick' => 'evil()']]]],
-            [['type' => 'paragraph', 'content' => [['text' => 'x', 'marks' => [['strong']]]]],
+            [[
+                'type' => 'paragraph',
+                'content' => [
+                    ['text' => 'x', 'marks' => [['strong']]],
+                ],
+            ]],
             [['type' => 'table', 'rows' => [
                 [[['text' => 'A', 'marks' => []]], [['text' => 'B', 'marks' => []]]],
                 [[['text' => 'C', 'marks' => []]]],
