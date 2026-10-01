@@ -10,8 +10,8 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "9e083c63e7d888af36f93a23eb924c89fad2b971",
-  "published_at": "2026-10-01T15:29:11Z",
-  "summary": "WCP-645 game release archive independently claimed; active paths remain disjoint.",
+  "published_at": "2026-10-01T15:47:35.671Z",
+  "summary": "WCP-646 own-player branding test package published; other active claims remain disjoint.",
   "rules": {
     "choose": "Resume the current chat's unfinished claimed branch first. Otherwise atomically claim an eligible published task. If no published task is eligible, independently derive and publish a bounded worker-only CMS proposal from approved product goals and observed code gaps; do not ask the owner for the next FCP number.",
     "atomic_reservation": "Create the exact claim_branch and suggested feature branch from that task's published proposal_base_sha. If the claim already exists, treat it as a hard lock; the owning continuation resumes it and every other AI skips it.",
@@ -62987,14 +62987,14 @@
       "package_id": "WCP-645",
       "title": "Browse released games in a bounded public archive",
       "risk": "medium_privacy",
-      "execution_state": "worker_complete_awaiting_trusted_review",
-      "claim_state": "locked_until_trusted_resolution",
+      "execution_state": "worker_in_progress",
+      "claim_state": "active_lease",
       "claim_generation": 1,
       "claim_branch": "claim/wcp-645-game-release-archive-g1",
       "suggested_branch": "feature/wcp-645-game-release-archive-g1",
       "resume_branch": "feature/wcp-645-game-release-archive-g1",
       "claimed_on": "2026-10-01T15:29:11Z",
-      "lease_expires_at": null,
+      "lease_expires_at": "2026-10-01T22:39:00Z",
       "base_branch": "main",
       "base_sha": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
       "proposal_base_branch": "main",
@@ -63050,47 +63050,108 @@
           "tests/Controller/GameReleaseArchiveTest.php"
         ]
       },
-      "next_action": "Await independent Worker review and later Trusted integration; this package remains locked.",
+      "next_action": "Check new exact-head CI on 8ea67b65 and fix concrete failures.",
       "last_observed_head": "8ea67b65c231d87f2246fe685d664a5e8764a4d7",
       "last_verified_push_at": "2026-10-01T15:39:00Z",
-      "worker_pr_state": "ready_for_review",
+      "worker_pr_state": "draft",
       "last_checkpoint_at": "2026-10-01T15:39:00Z",
       "worker_pr": 439,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/439",
-      "last_ci_run_id": 36885914808,
-      "last_ci_head": "8ea67b65c231d87f2246fe685d664a5e8764a4d7",
-      "last_ci_result": "success",
+      "last_ci_run_id": 36885209203,
+      "last_ci_head": "d7310aa749b37145042b597a306105817056b0c6",
+      "last_ci_result": "failure",
       "ci_history": [
         {
           "run_id": 36885209203,
           "head": "d7310aa749b37145042b597a306105817056b0c6",
           "result": "failure",
           "reason": "Test changed module state within one cached browser; corrected by isolated disabled-module test."
-        },
+        }
+      ]
+    },
+    {
+      "priority": 646,
+      "package_id": "WCP-646",
+      "title": "Testable own-player branding controls for video sources",
+      "risk": "medium",
+      "execution_state": "unclaimed",
+      "claim_state": "unclaimed",
+      "claim_generation": 1,
+      "claim_branch": "claim/wcp-646-video-branding-g1",
+      "suggested_branch": "feature/wcp-646-video-branding-g1",
+      "base_branch": "main",
+      "base_sha": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "proposal_base_branch": "feature/wcp-638-video-playback-journey-g1",
+      "proposal_base_sha": "456eb44dbaa9e9d3164b3062b3c62cd80e86b295",
+      "dependencies": [
+        "WCP-636",
+        "WCP-637",
+        "WCP-638"
+      ],
+      "proposal_kind": "worker_only",
+      "proposal_dependency_evidence": [
         {
-          "run_id": 36885914808,
-          "head": "8ea67b65c231d87f2246fe685d664a5e8764a4d7",
+          "package_id": "WCP-638",
+          "head": "456eb44dbaa9e9d3164b3062b3c62cd80e86b295",
+          "pr": 432,
+          "ci_run": 36849113717,
           "result": "success"
         }
       ],
-      "pr_state": "ready_for_review",
-      "worker_pr_head_sha": "8ea67b65c231d87f2246fe685d664a5e8764a4d7",
-      "final_head": "8ea67b65c231d87f2246fe685d664a5e8764a4d7",
-      "ci_run_id": 36885914808,
-      "ci_result": "success",
-      "php_symfony_job_id": 110449043147,
-      "php_symfony_result": "success",
-      "postgres_migration_job_id": 110449042880,
-      "postgres_migration_result": "success",
-      "final_changed_paths": [
-        "src/Controller/GameCatalogue/GameReleaseArchiveController.php",
-        "src/GameReleaseArchive/PublicGameReleaseArchiveQuery.php",
-        "templates/game_catalogue/release_archive.html.twig",
-        "templates/game_catalogue/release_calendar.html.twig",
-        "tests/Controller/GameReleaseArchiveTest.php"
+      "objective": "Provide a manager-only, reversible test surface to compare unbranded and own-branded playback for authorized direct MP4/WebM/HLS sources. Validate settings, preview only after CSRF-protected source selection, never obscure external provider embeds or claim their branding is removable. No persistent setting or external media extraction.",
+      "allowed_paths": [
+        "src/VideoPlayerBranding/",
+        "src/Controller/VideoPlayerBrandingController.php",
+        "templates/video_player_branding/",
+        "assets/video_player_branding/",
+        "tests/VideoPlayerBranding/",
+        "tests/Controller/VideoPlayerBrandingTest.php",
+        "tests/JavaScript/video-player-branding.test.mjs"
       ],
-      "completed_on": "2026-10-01T15:44:40Z",
-      "test_evidence": "Exact-head Worker CI: PHP/Symfony 1645 tests, 11967 assertions; PostgreSQL 18 success."
+      "forbidden_paths": [
+        "private/",
+        "ops/",
+        ".github/workflows/",
+        "src/VideoWorkspace/",
+        "src/VideoPlayerChoice/",
+        "src/VideoPlaybackJourney/",
+        "templates/video_workspace/",
+        "templates/video_player_choice/",
+        "templates/video_playback_journey/",
+        "assets/video_workspace/",
+        "assets/video_player_choice/",
+        "assets/video_playback_journey/",
+        "migrations/"
+      ],
+      "deliverables": [
+        "Manager-only preview route with no-brand and own text-brand presets, color and position; direct authorized media only.",
+        "External provider preview retains its original iframe without alteration and explains the branding limit.",
+        "Source/publication/module/CSRF checks and no persistence; exact-head Worker CI."
+      ],
+      "tests": [
+        "Settings parser validation and escaping, direct vs iframe capability cases.",
+        "Functional manager/module/source/CSRF/visibility and consent checks.",
+        "Browser-side brand rendering and cleanup cases; exact-head Worker CI and PostgreSQL migration chain."
+      ],
+      "immutable_constraints": [
+        "worker-only-no-Trusted-merge-or-deployment",
+        "no-security-CI-or-access-weakening",
+        "no-provider-source-extraction-or-concealment",
+        "no-write-to-predecessor-or-active-claim-paths"
+      ],
+      "collision_check": {
+        "result": "New dedicated controller, service, template, assets and tests paths disjoint from active WCP-638 and WCP-643 and all locked video packages; consume exact green predecessor read-only.",
+        "paths": [
+          "src/VideoPlayerBranding/",
+          "src/Controller/VideoPlayerBrandingController.php",
+          "templates/video_player_branding/",
+          "assets/video_player_branding/",
+          "tests/VideoPlayerBranding/",
+          "tests/Controller/VideoPlayerBrandingTest.php",
+          "tests/JavaScript/video-player-branding.test.mjs"
+        ]
+      },
+      "next_action": "Atomically reserve claim and implement manager branding preview."
     }
   ],
   "recovery_queue": [],
