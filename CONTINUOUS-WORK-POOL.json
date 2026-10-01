@@ -11,7 +11,7 @@
   "baseline_branch": "main",
   "base_sha": "9e083c63e7d888af36f93a23eb924c89fad2b971",
   "published_at": "2026-10-01T04:51:53.285Z",
-  "summary": "WCP-636 owner-requested complete video workflows and extensible provider playback claimed.",
+  "summary": "WCP-643 owner-requested named video portal adapters claimed independently of active playback journeys.",
   "rules": {
     "choose": "Resume the current chat's unfinished claimed branch first. Otherwise atomically claim an eligible published task. If no published task is eligible, independently derive and publish a bounded worker-only CMS proposal from approved product goals and observed code gaps; do not ask the owner for the next FCP number.",
     "atomic_reservation": "Create the exact claim_branch and suggested feature branch from that task's published proposal_base_sha. If the claim already exists, treat it as a hard lock; the owning continuation resumes it and every other AI skips it.",
@@ -62808,6 +62808,79 @@
       "last_observed_head": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
       "last_verified_push_at": null,
       "lease_expires_at": null
+    },
+    {
+      "priority": 643,
+      "package_id": "WCP-643",
+      "title": "Owner-requested video portal provider adapters and white-label playback paths",
+      "execution_state": "worker_in_progress",
+      "claim_state": "active_lease",
+      "claim_generation": 1,
+      "claim_branch": "claim/wcp-643-video-provider-expansion-g1",
+      "suggested_branch": "feature/wcp-643-video-provider-expansion-g1",
+      "resume_branch": "feature/wcp-643-video-provider-expansion-g1",
+      "claimed_on": "2026-10-01T15:12:03.164Z",
+      "lease_expires_at": "2026-10-01T22:12:03.164Z",
+      "base_branch": "main",
+      "base_sha": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "proposal_base_branch": "feature/wcp-637-video-player-choice-g1",
+      "proposal_base_sha": "0aefb975905b67bd649cc37a027fdd5d609d1a37",
+      "dependencies": [
+        "WCP-637"
+      ],
+      "proposal_kind": "worker_only",
+      "proposal_dependency_evidence": [
+        {
+          "package_id": "WCP-637",
+          "head": "0aefb975905b67bd649cc37a027fdd5d609d1a37",
+          "pr": 430,
+          "ci_run": 36838962550,
+          "result": "success"
+        }
+      ],
+      "objective": "Implement all provider/player integrations from the owner's named ScreenPal/Kinescope/VdoHide/DBimg/Internet Archive/PeerTube/GrooveVideo/Viddler/Videco/Kapwing/Kaltura/Dailymotion/MyVideoSpot/Vidzflow/YourImageShare list for which current first-party embed or direct-media formats can be verified; document unsupported hosts honestly. Prefer permitted own-player sources and provider white-label settings, no watermark extraction or circumvention.",
+      "allowed_paths": [
+        "src/VideoProviderExpansion/",
+        "tests/VideoProviderExpansion/"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "ops/",
+        ".github/workflows/",
+        "src/VideoWorkspace/",
+        "src/VideoPlayerChoice/",
+        "templates/video_workspace/",
+        "templates/video_player_choice/",
+        "assets/video_workspace/",
+        "assets/video_player_choice/",
+        "migrations/"
+      ],
+      "deliverables": [
+        "Tagged adapters for documented provider URL forms without spoofed player support",
+        "Clear capability/branding catalogue and own-player support where provider supplies media",
+        "Security and compatibility tests; exact-head Worker CI"
+      ],
+      "tests": [
+        "Provider domain/URL/mode and malicious input cases",
+        "Full exact-head Worker CI and PostgreSQL 18 migration chain"
+      ],
+      "immutable_constraints": [
+        "worker-only-no-Trusted-merge-or-deployment",
+        "no-security-CI-or-access-weakening",
+        "no-provider-source-extraction-or-concealment"
+      ],
+      "collision_check": {
+        "result": "All new adapter and test paths disjoint from locked WCP-636/637 and active WCP-638/641/642; consume predecessor registry read-only.",
+        "paths": [
+          "src/VideoProviderExpansion/",
+          "tests/VideoProviderExpansion/"
+        ]
+      },
+      "next_action": "Implement documented providers, test, and submit reviewable Worker PR.",
+      "active_head": "0aefb975905b67bd649cc37a027fdd5d609d1a37",
+      "last_observed_head": "0aefb975905b67bd649cc37a027fdd5d609d1a37",
+      "last_verified_push_at": null,
+      "worker_pr_state": "not_created"
     }
   ],
   "recovery_queue": [],
