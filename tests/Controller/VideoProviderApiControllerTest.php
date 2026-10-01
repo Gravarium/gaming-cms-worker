@@ -31,6 +31,7 @@ final class VideoProviderApiControllerTest extends WebTestCase
         $client->loginUser($this->user($client));
         $client->request('GET', '/admin/video-provider-api');
         self::assertResponseStatusCodeSame(403);
+        $client->getCookieJar()->clear();
         $client->loginUser($this->user($client, true));
         $client->request('GET', '/admin/video-provider-api');
         self::assertResponseIsSuccessful();
