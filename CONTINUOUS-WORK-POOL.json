@@ -62532,6 +62532,135 @@
       ],
       "completed_on": "2026-10-01T10:54:00.000Z",
       "test_evidence": "Exact-head Worker CI #1129 passed PHP/Symfony including PHPStan and 1,646 tests/11,976 assertions plus PostgreSQL 18 migration chain."
+    },
+    {
+      "priority": 640,
+      "package_id": "WCP-640",
+      "title": "Browse and subscribe to public competition match schedules",
+      "risk": "medium_privacy",
+      "execution_state": "worker_complete_awaiting_trusted_review",
+      "claim_state": "locked_until_trusted_resolution",
+      "claim_generation": 1,
+      "claim_branch": "claim/wcp-640-competition-match-calendar-g1",
+      "suggested_branch": "feature/wcp-640-competition-match-calendar-g1",
+      "resume_branch": "feature/wcp-640-competition-match-calendar-g1",
+      "claimed_on": "2026-10-01T11:23:49Z",
+      "base_branch": "main",
+      "base_sha": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "active_base_branch": "main",
+      "active_base_sha": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "active_head": "26a513c7d1547c98106145fd7c0b0957422abfc6",
+      "dependencies": [],
+      "proposal_kind": "worker_only",
+      "objective": "Provide a bounded public list and iCalendar subscription for upcoming scheduled competition matches. Query only visible public non-draft competitions with enabled games; exclude cancelled and unscheduled matches. Preserve module gate, deterministic ordering, UTC and RFC 5545 escaping/folding without disclosing private team fixtures.",
+      "allowed_paths": [
+        "src/CompetitionMatchCalendar/",
+        "src/Controller/PublicCompetitionMatchCalendarController.php",
+        "templates/competition_match_calendar/",
+        "templates/competition_calendar/index.html.twig",
+        "tests/Controller/PublicCompetitionMatchCalendarTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "CONTINUOUS-WORKER.md",
+        "CONTINUOUS-WORK-POOL.json",
+        ".github/workflows/",
+        "migrations/",
+        "src/Entity/",
+        "src/Repository/Competition/",
+        "src/Controller/CompetitionCalendarController.php"
+      ],
+      "deliverables": [
+        "Public match schedule page with bounded upcoming results and competition links.",
+        "Public iCalendar feed with stable match UIDs, UTC times and correctly escaped and folded fields.",
+        "Game filter and link from existing public competition calendar.",
+        "No private, draft, disabled-game, unscheduled or cancelled fixtures; no schema or mutation changes."
+      ],
+      "tests": [
+        "Functional visibility, module, filter, bounded ordering and ICS escaping/UTC tests.",
+        "Full exact-head Worker PHP/Symfony and PostgreSQL CI."
+      ],
+      "immutable_constraints": [
+        "worker-only-no-Trusted-merge-or-deployment",
+        "no-private-match-disclosure",
+        "bounded-query-and-correct-ICS-encoding",
+        "no-security-test-or-CI-weakening"
+      ],
+      "collision_check": {
+        "compared_against": "Live pool at 3f1fface6199e7d36e5f1f3b1bd5731340192b57 and Worker main 1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+        "result": "Five reserved paths are disjoint from active WCP-634 and WCP-638 and all locked paths; existing calendar template gains one link only.",
+        "paths": [
+          "src/CompetitionMatchCalendar/",
+          "src/Controller/PublicCompetitionMatchCalendarController.php",
+          "templates/competition_match_calendar/",
+          "templates/competition_calendar/index.html.twig",
+          "tests/Controller/PublicCompetitionMatchCalendarTest.php"
+        ]
+      },
+      "next_action": "Worker PR #435 ready for independent review at exact green head; no merge or deployment.",
+      "last_observed_head": "26a513c7d1547c98106145fd7c0b0957422abfc6",
+      "last_verified_push_at": "2026-10-01T11:42:00Z",
+      "last_checkpoint_at": "2026-10-01T11:42:00Z",
+      "worker_pr": 435,
+      "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/435",
+      "worker_pr_state": "open_ready_for_review",
+      "pr_state": "open_ready_for_review",
+      "worker_pr_head_sha": "26a513c7d1547c98106145fd7c0b0957422abfc6",
+      "worker_pr_base_sha": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "ci_run_id": 36857035431,
+      "ci_result": "success",
+      "last_ci_run_id": 36857035431,
+      "last_ci_result": "success",
+      "last_ci_head": "26a513c7d1547c98106145fd7c0b0957422abfc6",
+      "php_symfony_job_id": 110351872874,
+      "php_symfony_result": "success",
+      "postgres_migration_job_id": 110351872784,
+      "postgres_migration_result": "success",
+      "final_head": "26a513c7d1547c98106145fd7c0b0957422abfc6",
+      "final_changed_paths": [
+        "src/CompetitionMatchCalendar/PublicMatchSchedule.php",
+        "src/CompetitionMatchCalendar/MatchCalendarFeed.php",
+        "src/Controller/PublicCompetitionMatchCalendarController.php",
+        "templates/competition_match_calendar/index.html.twig",
+        "templates/competition_calendar/index.html.twig",
+        "tests/Controller/PublicCompetitionMatchCalendarTest.php"
+      ],
+      "completed_on": "2026-10-01T11:48:23Z",
+      "test_evidence": "Exact-head Worker CI #1133 passed PHPStan, Symfony checks, 1,644 PHP tests/12,003 assertions and PostgreSQL 18 migration chain. Functional tests cover public/private/draft/disabled-game visibility, game filter, ICS UTC/escaping, module gate and rejected writes.",
+      "ci_history": [
+        {
+          "run_id": 36855532772,
+          "head": "1cf46355dec9f117b9ec7919e2c6c07c6e377202",
+          "result": "failure",
+          "reason": "Fixture opened a competition after disabling its game."
+        },
+        {
+          "run_id": 36856035947,
+          "head": "0942179444559672786d3a7250e56234d1cbe7d7",
+          "result": "failure",
+          "reason": "Test fixtures reused one unique match slot."
+        },
+        {
+          "run_id": 36856511367,
+          "head": "304a46d150acad7c30529ea940da04f2831278b3",
+          "result": "failure",
+          "reason": "Test assumed Berlin timezone survived timezone-naive Doctrine storage."
+        },
+        {
+          "run_id": 36857035431,
+          "head": "26a513c7d1547c98106145fd7c0b0957422abfc6",
+          "result": "success"
+        }
+      ],
+      "lease_expires_at": null
     }
   ],
   "recovery_queue": [],
@@ -62679,80 +62808,6 @@
       "corrective_ci_run_id": 36200833419,
       "corrective_ci_result": "success",
       "claim_state": "locked_until_trusted_resolution"
-    },
-    {
-      "priority": 640,
-      "package_id": "WCP-640",
-      "title": "Browse and subscribe to public competition match schedules",
-      "risk": "medium_privacy",
-      "execution_state": "worker_in_progress",
-      "claim_state": "active",
-      "claim_generation": 1,
-      "claim_branch": "claim/wcp-640-competition-match-calendar-g1",
-      "suggested_branch": "feature/wcp-640-competition-match-calendar-g1",
-      "resume_branch": "feature/wcp-640-competition-match-calendar-g1",
-      "claimed_on": "2026-10-01T11:23:49Z",
-      "base_branch": "main",
-      "base_sha": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
-      "proposal_base_branch": "main",
-      "proposal_base_sha": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
-      "active_base_branch": "main",
-      "active_base_sha": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
-      "active_head": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
-      "dependencies": [],
-      "proposal_kind": "worker_only",
-      "objective": "Provide a bounded public list and iCalendar subscription for upcoming scheduled competition matches. Query only visible public non-draft competitions with enabled games; exclude cancelled and unscheduled matches. Preserve module gate, deterministic ordering, UTC and RFC 5545 escaping/folding without disclosing private team fixtures.",
-      "allowed_paths": [
-        "src/CompetitionMatchCalendar/",
-        "src/Controller/PublicCompetitionMatchCalendarController.php",
-        "templates/competition_match_calendar/",
-        "templates/competition_calendar/index.html.twig",
-        "tests/Controller/PublicCompetitionMatchCalendarTest.php"
-      ],
-      "forbidden_paths": [
-        "private/",
-        "PrivateCore/",
-        "ops/",
-        "docs/",
-        "bin/",
-        "AGENTS.md",
-        "WORKER.md",
-        "CONTINUOUS-WORKER.md",
-        "CONTINUOUS-WORK-POOL.json",
-        ".github/workflows/",
-        "migrations/",
-        "src/Entity/",
-        "src/Repository/Competition/",
-        "src/Controller/CompetitionCalendarController.php"
-      ],
-      "deliverables": [
-        "Public match schedule page with bounded upcoming results and competition links.",
-        "Public iCalendar feed with stable match UIDs, UTC times and correctly escaped and folded fields.",
-        "Game filter and link from existing public competition calendar.",
-        "No private, draft, disabled-game, unscheduled or cancelled fixtures; no schema or mutation changes."
-      ],
-      "tests": [
-        "Functional visibility, module, filter, bounded ordering and ICS escaping/UTC tests.",
-        "Full exact-head Worker PHP/Symfony and PostgreSQL CI."
-      ],
-      "immutable_constraints": [
-        "worker-only-no-Trusted-merge-or-deployment",
-        "no-private-match-disclosure",
-        "bounded-query-and-correct-ICS-encoding",
-        "no-security-test-or-CI-weakening"
-      ],
-      "collision_check": {
-        "compared_against": "Live pool at 3f1fface6199e7d36e5f1f3b1bd5731340192b57 and Worker main 1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
-        "result": "Five reserved paths are disjoint from active WCP-634 and WCP-638 and all locked paths; existing calendar template gains one link only.",
-        "paths": [
-          "src/CompetitionMatchCalendar/",
-          "src/Controller/PublicCompetitionMatchCalendarController.php",
-          "templates/competition_match_calendar/",
-          "templates/competition_calendar/index.html.twig",
-          "tests/Controller/PublicCompetitionMatchCalendarTest.php"
-        ]
-      },
-      "next_action": "Implement public match schedule and calendar feed on the feature branch."
     }
   ]
 }
