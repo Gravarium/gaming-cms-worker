@@ -62406,6 +62406,103 @@
         "tests/Controller/VideoPlaybackJourneyTest.php",
         "tests/JavaScript/video-playback-journey.test.mjs"
       ]
+    },
+    {
+      "priority": 639,
+      "package_id": "WCP-639",
+      "title": "Review and decide open competition disputes from a private admin board",
+      "risk": "medium_privacy",
+      "execution_state": "worker_in_progress",
+      "claim_state": "active_lease",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "claim_branch": "claim/wcp-639-competition-dispute-board-g1",
+      "suggested_branch": "feature/wcp-639-competition-dispute-board-g1",
+      "resume_branch": "feature/wcp-639-competition-dispute-board-g1",
+      "base_branch": "main",
+      "base_sha": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "active_base_branch": "main",
+      "active_base_sha": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "proposal_kind": "worker_only",
+      "objective": "Give Gaming managers a private per-competition board of at most 50 newest open match disputes with reason, match participants, submitted score and existing CSRF-protected decision forms. Never show disputes from another competition, private account email, or closed cases; no new mutation endpoint or schema change.",
+      "allowed_paths": [
+        "src/CompetitionDisputeAdmin/OpenDisputeBoard.php",
+        "src/Controller/AdminCompetitionDisputeBoardController.php",
+        "templates/admin/competition_dispute_board/index.html.twig",
+        "tests/Controller/AdminCompetitionDisputeBoardTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "CONTINUOUS-WORKER.md",
+        "CONTINUOUS-WORK-POOL.json",
+        ".github/workflows/",
+        "migrations/",
+        "src/Entity/",
+        "src/Repository/",
+        "src/Controller/AdminCompetition/AdminCompetitionController.php"
+      ],
+      "deliverables": [
+        "Bounded stable open-dispute query scoped to one competition, with participant and score context.",
+        "GET-only manager board with forms calling the existing CSRF-protected dispute decision POST.",
+        "Gaming module and CMS_GAMING_MANAGE gates, private no-store and noindex response; no emails or foreign records."
+      ],
+      "tests": [
+        "Positive decision form and competition isolation; bounded ordering and exclusion of closed cases.",
+        "Permission/module gates, no-store/noindex, GET-only and CSRF denial without mutation.",
+        "Complete exact-head Worker CI including PHPStan, full PHPUnit and PostgreSQL 18 migration chain."
+      ],
+      "completion_report": [
+        "Exact Worker base/head, PR, four changed paths and both CI jobs; no Trusted merge or deployment."
+      ],
+      "immutable_constraints": [
+        "worker-output-untrusted-until-independent-review",
+        "no-auth-csrf-validation-or-test-weakening",
+        "no-private-data-leak",
+        "no-schema-or-migration-change",
+        "no-Trusted-merge-or-deployment"
+      ],
+      "code_gap_evidence": "AdminCompetitionController has a protected decideDispute POST, but the admin competition template and controllers expose no dispute review page or decision form.",
+      "collision_check": {
+        "compared_against": "Live pool active and locked allowed paths and Worker main 1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+        "result": "Four new paths disjoint from all active and locked claims; existing decision controller remains untouched.",
+        "paths": [
+          "src/CompetitionDisputeAdmin/OpenDisputeBoard.php",
+          "src/Controller/AdminCompetitionDisputeBoardController.php",
+          "templates/admin/competition_dispute_board/index.html.twig",
+          "tests/Controller/AdminCompetitionDisputeBoardTest.php"
+        ]
+      },
+      "priority_rationale": "Open competition disputes currently have no manager-facing decision workflow despite an existing secure endpoint; this closes the module operation without touching other claims.",
+      "published_at": "2026-10-01T10:46:00.000Z",
+      "claimed_on": "2026-10-01T10:46:00.000Z",
+      "claim_generation": 1,
+      "lease_expires_at": "2026-10-01T17:46:00.000Z",
+      "active_head": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "last_observed_head": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "checkpoint_commit_sha": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "branch_heads": {
+        "claim_branch": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+        "feature_branch": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4"
+      },
+      "checkpoint_paths": [],
+      "worker_pr_state": "not_created",
+      "pr_state": "not_created",
+      "last_ci_run_id": null,
+      "last_ci_result": "pending",
+      "last_ci_head": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "ci_history": [],
+      "next_action": "Implement bounded dispute review board and security/decision-form tests; open draft PR and run exact-head CI.",
+      "last_checkpoint_at": "2026-10-01T10:46:00.000Z",
+      "last_verified_push_at": "2026-10-01T10:46:00.000Z"
     }
   ],
   "recovery_queue": [],
