@@ -6,10 +6,12 @@ namespace App\Controller;
 
 use App\ContentEditor\ContentBlockPolicy;
 use App\ContentEditor\ContentBlockRenderer;
+use App\ContentEditor\OwnedMediaReferenceGateway;
 use App\Entity\ContentEntry;
 use App\Entity\User;
 use App\Module\CmsModuleManager;
 use App\NewsEditor\LegacyNewsConverter;
+use App\Repository\MediaAssetRepository;
 use App\Service\AuditLogger;
 use App\Service\ContentRevisionManager;
 use Doctrine\DBAL\LockMode;
@@ -35,6 +37,8 @@ final class AdminNewsEditorController extends AbstractController
         private readonly ContentBlockRenderer $renderer,
         private readonly ContentRevisionManager $revisions,
         private readonly AuditLogger $audit,
+        private readonly MediaAssetRepository $assets,
+        private readonly OwnedMediaReferenceGateway $media,
     ) {}
 
     #[Route('/{id}', name: 'app_admin_news_editor', requirements: ['id' => '\\d+'], methods: ['GET', 'POST'])]
@@ -100,6 +104,27 @@ final class AdminNewsEditorController extends AbstractController
         } catch (\JsonException|\InvalidArgumentException $exception) {
             $response = $this->json(['error' => $exception->getMessage()], 422);
         }
+        $response->headers->set('Cache-Control', 'private, no-store');
+        return $response;
+    }
+
+    #[Route('/{id}/media', name: 'app_admin_news_editor_media', requirements: ['id' => '\\d+'], methods: ['GET'])]
+    public function media(ContentEntry $entry, Request $request): JsonResponse
+    {
+        $this->assertEditable($entry);
+        $query = $request->query->get('q', '');
+        if (!is_string($query) || mb_strlen($query) > 80) {
+            return $this->json(['error' => 'Ungültige Mediensuche.'], 422);
+        }
+        $items = [];
+        foreach ($this->assets->searchLibrary($query, 'content', null, 'image') as $asset) {
+            $id = $asset->getId();
+            if ($id === null || ($reference = $this->media->resolve($id)) === null) {
+                continue;
+            }
+            $items[] = $reference;
+        }
+        $response = $this->json(['items' => $items]);
         $response->headers->set('Cache-Control', 'private, no-store');
         return $response;
     }

@@ -6,6 +6,7 @@ namespace App\Tests\Controller;
 
 use App\Entity\ContentEntry;
 use App\Entity\ContentRevision;
+use App\Entity\MediaAsset;
 use App\Entity\User;
 use App\NewsEditor\RichDocument;
 use App\Security\CmsPermission;
@@ -99,6 +100,26 @@ final class AdminNewsEditorTest extends WebTestCase
         $client->loginUser($manager);
         $client->request('GET', '/admin/news-editor/'.$published->getId());
         self::assertResponseStatusCodeSame(403);
+    }
+
+    public function testMediaSearchOnlyListsUsableOwnedImages(): void
+    {
+        $client = static::createClient();
+        [$user, $entry] = $this->entry($client);
+        $em = $client->getContainer()->get(EntityManagerInterface::class);
+        $suffix = bin2hex(random_bytes(5));
+        $safe = (new MediaAsset())->setModuleKey('content')->setMimeType('image/png')
+            ->setOriginalName('rich-safe-'.$suffix.'.png')->setLocation('/uploads/media/rich-safe-'.$suffix.'.png');
+        $other = (new MediaAsset())->setModuleKey('branding')->setMimeType('image/png')
+            ->setOriginalName('rich-other-'.$suffix.'.png')->setLocation('/uploads/media/rich-other-'.$suffix.'.png');
+        $em->persist($safe); $em->persist($other); $em->flush();
+        $client->loginUser($user);
+        $client->request('GET', '/admin/news-editor/'.$entry->getId().'/media?q=rich-');
+        self::assertResponseIsSuccessful();
+        $data = json_decode($client->getResponse()->getContent() ?: '', true, 16, JSON_THROW_ON_ERROR);
+        self::assertContains($safe->getId(), array_column($data['items'], 'id'));
+        self::assertNotContains($other->getId(), array_column($data['items'], 'id'));
+        self::assertSame('private, no-store', $client->getResponse()->headers->get('Cache-Control'));
     }
 
     /** @param list<string> $permissions @return array{User,ContentEntry} */

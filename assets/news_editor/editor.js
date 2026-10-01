@@ -81,7 +81,14 @@ if (root) {
         if (table.rows[0].cells.length > 1) { for (const tr of table.rows) tr.lastElementChild.remove(); changed(); }
       }); row.append(removeColumn);
     }
-    if (block.type === 'media') { row.append(input('Medien-ID', block.assetId), input('Alternativtext', block.alt), input('Bildunterschrift und Quelle', block.caption)); }
+    if (block.type === 'media') {
+      const id = input('Medien-ID', block.assetId);
+      const alt = input('Alternativtext', block.alt);
+      const caption = input('Bildunterschrift und Quelle', block.caption);
+      const select = node('button', 'Bild auswählen'); select.type = 'button';
+      select.addEventListener('click', () => openMediaPicker(id.querySelector('input'), alt.querySelector('input')));
+      row.append(id, select, alt, caption);
+    }
     if (block.type === 'video') { row.append(input('Anbieter (youtube/vimeo)', block.provider), input('Video-ID', block.videoId), input('Bildunterschrift', block.caption)); }
     row.addEventListener('input', changed); blocks.append(row);
   }
@@ -150,6 +157,41 @@ if (root) {
   root.querySelectorAll('[data-add]').forEach(button => button.addEventListener('click', () => {
     renderBlock(structuredClone(defaults[button.dataset.add])); blocks.lastElementChild.querySelector('[contenteditable], input')?.focus(); changed();
   }));
+  const picker = document.getElementById('news-editor-media-picker');
+  const mediaSearch = document.getElementById('news-editor-media-search');
+  const mediaResults = document.getElementById('news-editor-media-results');
+  const mediaMessage = document.getElementById('news-editor-media-message');
+  let selectedMediaField = null;
+  let selectedAltField = null;
+  async function searchMedia() {
+    mediaMessage.textContent = 'Bilder werden geladen …'; mediaResults.replaceChildren();
+    try {
+      const url = new URL(root.dataset.mediaUrl, window.location.href);
+      url.searchParams.set('q', mediaSearch.value);
+      const response = await fetch(url, {credentials: 'same-origin'});
+      if (!response.ok) throw new Error('Mediensuche fehlgeschlagen.');
+      const {items} = await response.json();
+      for (const item of items) {
+        const button = node('button'); button.type = 'button'; button.className = 'news-editor-media-result';
+        const thumbnail = node('img'); thumbnail.src = item.url; thumbnail.alt = '';
+        thumbnail.loading = 'lazy'; thumbnail.referrerPolicy = 'no-referrer';
+        button.append(thumbnail, node('span', item.title));
+        button.addEventListener('click', () => {
+          selectedMediaField.value = String(item.id);
+          if (!selectedAltField.value) selectedAltField.value = item.title;
+          picker.hidden = true; selectedMediaField.focus(); changed();
+        }); mediaResults.append(button);
+      }
+      mediaMessage.textContent = items.length ? items.length + ' Bilder gefunden.' : 'Keine freigegebenen Bilder gefunden.';
+    } catch { mediaMessage.textContent = 'Mediensuche fehlgeschlagen.'; }
+  }
+  function openMediaPicker(idField, altField) {
+    selectedMediaField = idField; selectedAltField = altField;
+    picker.hidden = false; mediaSearch.focus(); searchMedia();
+  }
+  document.getElementById('news-editor-media-search-button').addEventListener('click', searchMedia);
+  mediaSearch.addEventListener('keydown', event => { if (event.key === 'Enter') { event.preventDefault(); searchMedia(); } });
+  document.getElementById('news-editor-media-close').addEventListener('click', () => { picker.hidden = true; selectedMediaField?.focus(); });
   blocks.addEventListener('paste', event => {
     if (!event.target.closest('[contenteditable]')) return;
     event.preventDefault();

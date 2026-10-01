@@ -3,7 +3,7 @@
 {% block stylesheets %}{{ parent() }}<link rel="stylesheet" href="{{ asset('news_editor/editor.css') }}">{% endblock %}
 {% block body %}
 <header class="topbar"><a class="brand" href="{{ path('app_admin_dashboard') }}">Gaming CMS</a><nav class="top-actions"><a href="{{ path('app_admin_content_edit',{id:entry.id}) }}">Artikeldaten</a><a href="{{ path('app_admin_content_history',{id:entry.id}) }}">Versionen</a><a href="{{ path('app_admin_content_index') }}">Inhalte</a></nav></header>
-<main class="news-editor-shell" id="news-editor" data-preview-url="{{ path('app_admin_news_editor_preview',{id:entry.id}) }}" data-csrf="{{ csrf_token('news-editor-'~entry.id) }}">
+<main class="news-editor-shell" id="news-editor" data-preview-url="{{ path('app_admin_news_editor_preview',{id:entry.id}) }}" data-media-url="{{ path('app_admin_news_editor_media',{id:entry.id}) }}" data-csrf="{{ csrf_token('news-editor-'~entry.id) }}">
     <p class="eyebrow">News-Redaktion</p><h1>{{ entry.title }}</h1>
     <p class="muted">{{ entry.status == 'review' ? 'In Prüfung' : 'Entwurf' }} · Änderungen werden erst nach dem Speichern als Revision übernommen.</p>
     {% for message in app.flashes('success') %}<div class="notice" role="status">{{ message }}</div>{% endfor %}
@@ -22,6 +22,14 @@
         <p id="news-editor-status" role="status" aria-live="polite"></p>
         <div class="news-editor-actions"><button type="submit">Artikelentwurf speichern</button><span id="news-editor-count" class="muted"></span></div>
     </form>
+    <section class="news-editor-media-picker" id="news-editor-media-picker" hidden aria-label="Bild auswählen">
+        <h2>Bild aus der Mediathek auswählen</h2>
+        <label>Suche <input id="news-editor-media-search" type="search" maxlength="80" autocomplete="off"></label>
+        <button type="button" id="news-editor-media-search-button">Suchen</button>
+        <button type="button" id="news-editor-media-close">Schließen</button>
+        <p id="news-editor-media-message" role="status"></p>
+        <div id="news-editor-media-results" class="news-editor-media-results"></div>
+    </section>
     <section class="news-editor-preview" aria-label="Artikelvorschau"><h2>Vorschau</h2><div id="news-editor-preview"></div></section>
 </main>
 <script type="module" src="{{ asset('news_editor/editor.js') }}"></script>
