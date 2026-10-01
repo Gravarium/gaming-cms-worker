@@ -11,7 +11,7 @@
   "baseline_branch": "main",
   "base_sha": "9e083c63e7d888af36f93a23eb924c89fad2b971",
   "published_at": "2026-10-01T16:10:00Z",
-  "summary": "WCP-649 manager video provider JSON interface claimed on green WCP-643; active independent claims remain disjoint.",
+  "summary": "WCP-649 manager video provider JSON interface complete with green exact-head PR #443; independent active claims remain disjoint.",
   "rules": {
     "choose": "Resume the current chat's unfinished claimed branch first. Otherwise atomically claim an eligible published task. If no published task is eligible, independently derive and publish a bounded worker-only CMS proposal from approved product goals and observed code gaps; do not ask the owner for the next FCP number.",
     "atomic_reservation": "Create the exact claim_branch and suggested feature branch from that task's published proposal_base_sha. If the claim already exists, treat it as a hard lock; the owning continuation resumes it and every other AI skips it.",
@@ -63421,14 +63421,14 @@
       "priority": 649,
       "package_id": "WCP-649",
       "title": "Manager video provider JSON integration surface",
-      "execution_state": "worker_in_progress",
-      "claim_state": "active_lease",
+      "execution_state": "worker_complete_awaiting_trusted_review",
+      "claim_state": "locked_until_trusted_resolution",
       "claim_generation": 1,
       "claim_branch": "claim/wcp-649-video-provider-api-g1",
       "suggested_branch": "feature/wcp-649-video-provider-api-g1",
       "resume_branch": "feature/wcp-649-video-provider-api-g1",
       "claimed_on": "2026-10-01T20:16:40.951Z",
-      "lease_expires_at": "2026-10-02T03:20:16.794Z",
+      "lease_expires_at": null,
       "base_branch": "main",
       "base_sha": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
       "proposal_base_branch": "feature/wcp-643-video-provider-expansion-g1",
@@ -63487,14 +63487,51 @@
           "tests/Controller/VideoProviderApiControllerTest.php"
         ]
       },
-      "next_action": "Run exact-head CI 36920782274; diagnose and repair any failures.",
-      "active_head": "8b35a259844833c93dd4afcb8306b236322d1341",
-      "last_observed_head": "8b35a259844833c93dd4afcb8306b236322d1341",
-      "last_verified_push_at": "2026-10-01T20:20:16.794Z",
-      "worker_pr_state": "draft",
+      "next_action": "Await independent Worker/Trusted review together with prerequisite PR 438, PR 430 and PR 429; no merge or deployment.",
+      "active_head": "768e9c79c614a28af821cf62dfb885e2612e44df",
+      "last_observed_head": "768e9c79c614a28af821cf62dfb885e2612e44df",
+      "last_verified_push_at": "2026-10-01T20:41:13.888Z",
+      "worker_pr_state": "open_ready_for_review",
       "last_checkpoint_at": "2026-10-01T20:20:16.794Z",
       "worker_pr": 443,
-      "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/443"
+      "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/443",
+      "worker_pr_head_sha": "768e9c79c614a28af821cf62dfb885e2612e44df",
+      "final_head": "768e9c79c614a28af821cf62dfb885e2612e44df",
+      "completed_on": "2026-10-01T20:41:13.888Z",
+      "final_changed_paths": [
+        "src/Controller/VideoProviderApiController.php",
+        "src/VideoProviderApi/ProviderCapabilities.php",
+        "src/VideoProviderApi/README.md",
+        "tests/Controller/VideoProviderApiControllerTest.php"
+      ],
+      "ci_run_id": 36922612260,
+      "ci_result": "success",
+      "last_ci_head": "768e9c79c614a28af821cf62dfb885e2612e44df",
+      "last_ci_result": "success",
+      "php_symfony_job_id": 110572091890,
+      "php_symfony_result": "success",
+      "postgres_migration_job_id": 110572091637,
+      "postgres_migration_result": "success",
+      "test_evidence": "Exact-head Worker CI passed: 1,733 PHP tests/12,221 assertions, 22 JS tests, PHPStan/audit/lints/asset compilation and PostgreSQL 18 migrations. Manager gate, CSRF, module state, URL canonicalization and invalid host tests passed. URL shape validation does not establish remote media playback.",
+      "ci_history": [
+        {
+          "head": "8b35a259844833c93dd4afcb8306b236322d1341",
+          "run_id": 36920782274,
+          "result": "failure",
+          "reason": "Test manager session needed isolation after denied access"
+        },
+        {
+          "head": "482cf29efb5d875ed6ae2cfec5188320ed40b8ac",
+          "run_id": 36921955232,
+          "result": "failure",
+          "reason": "Test asserted exact Cache-Control formatting rather than required private/no-store directives"
+        },
+        {
+          "head": "768e9c79c614a28af821cf62dfb885e2612e44df",
+          "run_id": 36922612260,
+          "result": "success"
+        }
+      ]
     }
   ],
   "recovery_queue": [],
