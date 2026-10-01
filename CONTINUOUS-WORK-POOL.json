@@ -61750,8 +61750,8 @@
       "package_id": "WCP-635",
       "title": "Review competition match evidence in a private admin board",
       "risk": "medium_privacy",
-      "execution_state": "worker_in_progress",
-      "claim_state": "active_lease",
+      "execution_state": "worker_complete_awaiting_trusted_review",
+      "claim_state": "locked_until_trusted_resolution",
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
@@ -61831,24 +61831,65 @@
       "code_gap_evidence": "Worker main persists CompetitionMatchEvidence through CompetitionController, while no controller or template reads those records for managers; searches find only submission tests and public non-disclosure checks.",
       "claimed_on": "2026-09-30T23:36:30.000Z",
       "claim_generation": 1,
-      "lease_expires_at": "2026-10-01T06:36:30.000Z",
-      "active_head": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
-      "last_observed_head": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
-      "checkpoint_commit_sha": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "lease_expires_at": null,
+      "active_head": "13d9698448e346f6a0e1f1dcbd8006c234dbe36f",
+      "last_observed_head": "13d9698448e346f6a0e1f1dcbd8006c234dbe36f",
+      "checkpoint_commit_sha": "13d9698448e346f6a0e1f1dcbd8006c234dbe36f",
       "branch_heads": {
         "claim_branch": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
-        "feature_branch": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4"
+        "feature_branch": "13d9698448e346f6a0e1f1dcbd8006c234dbe36f"
       },
-      "checkpoint_paths": [],
-      "worker_pr_state": "not_created",
-      "pr_state": "not_created",
-      "last_ci_run_id": null,
-      "last_ci_result": "pending",
-      "last_ci_head": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
-      "ci_history": [],
-      "next_action": "Implement bounded evidence query, protected private controller/template and privacy/isolation tests; then open draft PR and run exact-head CI.",
-      "last_checkpoint_at": "2026-09-30T23:36:30.000Z",
-      "last_verified_push_at": "2026-09-30T23:36:30.000Z"
+      "checkpoint_paths": [
+        "src/CompetitionEvidenceAdmin/EvidenceReviewBoard.php",
+        "src/Controller/AdminCompetitionEvidenceController.php",
+        "templates/admin/competition_evidence/index.html.twig",
+        "tests/Controller/AdminCompetitionEvidenceTest.php"
+      ],
+      "worker_pr": 428,
+      "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/428",
+      "worker_pr_head_sha": "13d9698448e346f6a0e1f1dcbd8006c234dbe36f",
+      "worker_pr_state": "open_ready_for_review",
+      "pr_state": "open_ready_for_review",
+      "last_ci_run_id": 36796842706,
+      "last_ci_result": "success",
+      "last_ci_head": "13d9698448e346f6a0e1f1dcbd8006c234dbe36f",
+      "ci_run_id": 36796842706,
+      "ci_result": "success",
+      "php_symfony_job_id": 110162120759,
+      "php_symfony_result": "success",
+      "postgres_migration_job_id": 110162120454,
+      "postgres_migration_result": "success",
+      "ci_history": [
+        {
+          "run_id": 36796003641,
+          "head": "8c097725e863227165d04cb2f5700ad42091090e",
+          "result": "failure",
+          "reason": "permission test user fixture was not flushed before login"
+        },
+        {
+          "run_id": 36796419127,
+          "head": "c78c2cb118a7e2ec8fbae39ff1026b66414f3611",
+          "result": "failure",
+          "reason": "module-gate test reused the previous browser session while switching users"
+        },
+        {
+          "run_id": 36796842706,
+          "head": "13d9698448e346f6a0e1f1dcbd8006c234dbe36f",
+          "result": "success"
+        }
+      ],
+      "final_head": "13d9698448e346f6a0e1f1dcbd8006c234dbe36f",
+      "final_changed_paths": [
+        "src/CompetitionEvidenceAdmin/EvidenceReviewBoard.php",
+        "src/Controller/AdminCompetitionEvidenceController.php",
+        "templates/admin/competition_evidence/index.html.twig",
+        "tests/Controller/AdminCompetitionEvidenceTest.php"
+      ],
+      "next_action": "Await independent Worker/Trusted review; do not merge Worker code automatically.",
+      "last_checkpoint_at": "2026-10-01T01:12:00.000Z",
+      "last_verified_push_at": "2026-10-01T01:12:00.000Z",
+      "completed_on": "2026-10-01T01:12:00.000Z",
+      "test_evidence": "Exact-head Worker CI #1114 passed both jobs; PHP/Symfony 1,647 tests and 11,992 assertions plus PHPStan/lints/container/Doctrine; PostgreSQL 18 migration chain passed."
     },
     {
       "priority": 636,
