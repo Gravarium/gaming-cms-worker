@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\VideoPlayerBranding;
 
 use App\VideoPlayerBranding\BrandingOptions;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -26,7 +27,7 @@ final class BrandingOptionsTest extends TestCase
         $options->parse(Request::create('/', 'POST', ['branding' => 'own']), 'iframe');
     }
 
-    /** @dataProvider invalidInputs */
+    #[DataProvider('invalidInputs')]
     public function testRejectsInvalidSettings(array $input): void
     {
         $this->expectException(\InvalidArgumentException::class);
