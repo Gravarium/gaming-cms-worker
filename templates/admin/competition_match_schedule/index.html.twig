@@ -1,0 +1,29 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Spieltermine verwalten | Gaming CMS{% endblock %}
+{% block head_meta %}<meta name="robots" content="noindex,nofollow,noarchive">{% endblock %}
+
+{% block body %}
+<main class="container">
+    <p><a href="{{ path('app_admin_competition_index') }}">Zurück zu Competitions</a></p>
+    <h1>Spieltermine: {{ competition.name }}</h1>
+    <p>Die nächsten 50 offenen Paarungen. Bitte einen Zeitpunkt mit Zeitzone eingeben, z. B. 2026-10-15T18:00+02:00.</p>
+    {% for match in matches %}
+        <article>
+            <h2>Runde {{ match.roundNumber }}, Paarung {{ match.sequence }} ({{ match.bracket }})</h2>
+            <p>{{ match.participantA.name ?? 'Noch offen' }} – {{ match.participantB.name ?? 'Noch offen' }}</p>
+            <p>Status: {{ match.status }}{% if match.scheduledAt %} · Termin: {{ match.scheduledAt|date('d.m.Y H:i P') }}{% endif %}</p>
+            {% if competition.status == 'in_progress' and match.participantA and match.participantB %}
+                <form method="post" action="{{ path('app_admin_competition_match_schedule', {id: competition.id, match: match.id}) }}">
+                    <label for="scheduled-at-{{ match.id }}">Neuer Termin mit Zeitzone</label>
+                    <input id="scheduled-at-{{ match.id }}" name="scheduled_at" type="text" required maxlength="40" placeholder="2026-10-15T18:00+02:00" value="{{ match.scheduledAt ? match.scheduledAt|date('Y-m-d\\TH:iP') : '' }}">
+                    <input type="hidden" name="_token" value="{{ csrf_token('competition-schedule-' ~ match.id) }}">
+                    <button type="submit">Termin speichern</button>
+                </form>
+            {% endif %}
+        </article>
+    {% else %}
+        <p>Keine offenen Paarungen vorhanden.</p>
+    {% endfor %}
+</main>
+{% endblock %}
