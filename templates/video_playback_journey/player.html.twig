@@ -1,0 +1,10 @@
+{% if playback %}<section class="panel workspace-player" aria-label="Videoplayer" data-journey-section>
+{% if playback.mode == 'iframe' %}<iframe src="{{ playback.url }}" title="{{ title }}" allow="autoplay; fullscreen; picture-in-picture; encrypted-media" allowfullscreen sandbox="allow-scripts allow-same-origin allow-presentation" referrerpolicy="strict-origin-when-cross-origin"></iframe><p>Für Anbieter-Player erfolgt der Wechsel über „Nächstes Video“. Der Anbieter steuert seine Fehlermeldungen.</p>
+{% elseif playback.mode in ['video','hls'] %}
+{% if engine == 'videojs' %}<link rel="stylesheet" href="{{ asset('video_player_choice/vendor/video-8.24.1.min.css') }}">{% endif %}
+<video controls playsinline preload="none" data-journey-player data-engine="{{ engine }}" data-mode="{{ playback.mode }}" data-source="{{ playback.url }}" data-library="{{ asset('video_player_choice/vendor/video-8.24.1.min.js') }}" data-start="{{ options.start }}" data-speed="{{ options.speed }}" data-muted="{{ options.muted ? '1' : '0' }}" data-loop="0" data-autoplay="{{ options.autoplay ? '1' : '0' }}" data-resume-key="{{ resumeKey }}" aria-label="{{ title }}"></video>
+<label data-quality-label hidden>Bildqualität <select data-quality><option value="-1">Automatisch</option></select></label>
+<p data-choice-status role="status" aria-live="polite">Zum Starten Play drücken.</p>
+{% if resumeKey %}<div class="journey-actions"><label><input type="checkbox" data-resume-opt-in> Abspielposition auf diesem Gerät speichern (30 Tage)</label><button type="button" data-resume-restore hidden>Gespeicherte Position laden</button><button type="button" data-resume-erase>Alle gespeicherten Positionen löschen</button></div><p data-resume-status role="status" aria-live="polite"></p>{% elseif showResumeNotice %}<p>Für eingeschränkte oder private Videos werden keine Abspielpositionen gespeichert.</p>{% endif %}
+{% else %}<p>Diese Quelle wird beim Anbieter geöffnet.</p>{% endif %}
+<a href="{{ playback.url }}" target="_blank" rel="noopener noreferrer">Quelle separat öffnen</a></section>{% endif %}

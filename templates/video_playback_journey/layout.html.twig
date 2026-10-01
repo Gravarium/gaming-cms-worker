@@ -1,0 +1,6 @@
+{% extends 'video_player_choice/layout.html.twig' %}
+{% block stylesheets %}{{ parent() }}<link rel="stylesheet" href="{{ asset('video_playback_journey/journey.css') }}">{% endblock %}
+{% block choice %}
+<nav class="workspace-actions" aria-label="Weiterschauen"><a href="{{ path('app_video_viewing') }}">Playlist-Player</a>{% if is_granted('CMS_VIDEO_MANAGE') %}<a href="{{ path('app_admin_video_playback_check') }}">Quellen prüfen & Vorschau</a>{% endif %}</nav>
+{% block journey %}{% endblock %}
+{% endblock %}
