@@ -63322,14 +63322,14 @@
       "package_id": "WCP-648",
       "title": "First-party rich news editor without AI",
       "risk": "high_content_integrity_and_xss",
-      "execution_state": "worker_in_progress",
-      "claim_state": "active_lease",
+      "execution_state": "worker_complete_awaiting_trusted_review",
+      "claim_state": "locked_until_trusted_resolution",
       "claim_generation": 1,
       "claim_branch": "claim/wcp-648-owned-rich-news-editor-g1",
       "suggested_branch": "feature/wcp-648-owned-rich-news-editor-g1",
       "resume_branch": "feature/wcp-648-owned-rich-news-editor-g1",
       "claimed_on": "2026-10-01T15:57:12Z",
-      "lease_expires_at": "2026-10-02T04:11:31.378Z",
+      "lease_expires_at": null,
       "base_branch": "main",
       "base_sha": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
       "proposal_base_branch": "main",
@@ -63413,11 +63413,22 @@
           "src/Controller/AdminContentController.php"
         ]
       },
-      "next_action": "Await exact-head full CI after CSRF fixture repair; do not integrate draft before verification.",
+      "next_action": "Await independent Worker review and Trusted integration; build advanced news editing as a dependent package without touching WCP-428/WCP-441 locked UI.",
       "last_verified_push_at": "2026-10-01T21:11:31.378Z",
       "last_checkpoint_at": "2026-10-01T21:11:31.378Z",
       "worker_pr": 442,
-      "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/442"
+      "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/442",
+      "last_observed_head": "a7c5ccbb5db5fc507a599f8c1f6228ac9d1a75f1",
+      "worker_pr_state": "ready_for_review",
+      "last_ci_run_id": 36926971592,
+      "last_ci_head": "a7c5ccbb5db5fc507a599f8c1f6228ac9d1a75f1",
+      "last_ci_result": "success",
+      "completion_report": [
+        "Worker PR #442 ready for review at exact head a7c5ccbb5db5fc507a599f8c1f6228ac9d1a75f1.",
+        "Worker CI run 36926971592: full PHP/Symfony including 1,654 tests and PostgreSQL 18 jobs successful.",
+        "21 changed paths are within WCP-648 allowlist; media, XSS, permissions, CSRF and stale write protection retained.",
+        "No Trusted merge or deployment."
+      ]
     },
     {
       "priority": 649,
