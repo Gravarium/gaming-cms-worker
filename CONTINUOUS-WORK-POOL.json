@@ -10,8 +10,8 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "9e083c63e7d888af36f93a23eb924c89fad2b971",
-  "published_at": "2026-10-01T15:54:10Z",
-  "summary": "WCP-646 branding preview reserved; active paths remain disjoint.",
+  "published_at": "2026-10-01T15:57:12Z",
+  "summary": "WCP-648 owner-requested first-party rich news editor reserved on disjoint paths.",
   "rules": {
     "choose": "Resume the current chat's unfinished claimed branch first. Otherwise atomically claim an eligible published task. If no published task is eligible, independently derive and publish a bounded worker-only CMS proposal from approved product goals and observed code gaps; do not ask the owner for the next FCP number.",
     "atomic_reservation": "Create the exact claim_branch and suggested feature branch from that task's published proposal_base_sha. If the claim already exists, treat it as a hard lock; the owning continuation resumes it and every other AI skips it.",
@@ -63268,6 +63268,102 @@
         ]
       },
       "next_action": "Implement on reserved feature branch, open Draft PR, fix exact-head Worker CI."
+    },
+    {
+      "priority": 648,
+      "package_id": "WCP-648",
+      "title": "First-party rich news editor without AI",
+      "risk": "high_content_integrity_and_xss",
+      "execution_state": "worker_in_progress",
+      "claim_state": "active_lease",
+      "claim_generation": 1,
+      "claim_branch": "claim/wcp-648-owned-rich-news-editor-g1",
+      "suggested_branch": "feature/wcp-648-owned-rich-news-editor-g1",
+      "resume_branch": "feature/wcp-648-owned-rich-news-editor-g1",
+      "claimed_on": "2026-10-01T15:57:12Z",
+      "lease_expires_at": "2026-10-01T22:57:12Z",
+      "base_branch": "main",
+      "base_sha": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "active_head": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "dependencies": [],
+      "proposal_kind": "worker_only",
+      "objective": "Create an owned visual news editor with rich inline formatting, tables, owned media, safe embeds, undo/redo, paste handling, preview, revisions and strong server-side validation. Preserve existing v1 content, media protection, permissions, CSRF and public rendering. Work on disjoint paths while WCP-441's shared form/JS remain locked; no paid AI or third-party editor code.",
+      "allowed_paths": [
+        "src/NewsEditor/",
+        "src/Controller/AdminNewsEditorController.php",
+        "templates/admin/news_editor/",
+        "assets/news_editor/",
+        "src/ContentEditor/ContentBlockDocument.php",
+        "src/ContentEditor/ContentBlockRenderer.php",
+        "src/ContentEditor/ContentBlockPolicy.php",
+        "src/Service/MediaAssetUsageResolver.php",
+        "tests/NewsEditor/",
+        "tests/Controller/AdminNewsEditorTest.php",
+        "tests/JavaScript/news_editor.test.mjs",
+        "tests/ContentEditor/",
+        "tests/Layout/LayoutMediaTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "CONTINUOUS-WORKER.md",
+        "CONTINUOUS-WORK-POOL.json",
+        ".github/workflows/",
+        "migrations/",
+        "src/Entity/",
+        "src/Repository/",
+        "src/Security/",
+        "templates/admin/content/form.html.twig",
+        "assets/controllers/content_editor_controller.js",
+        "assets/content_media_picker.js",
+        "assets/styles/content-editor.css"
+      ],
+      "deliverables": [
+        "Versioned bounded rich-document model and lossless legacy editing.",
+        "Visual toolbar for formatting, links, lists, quotes, tables and owned media on an independent authorized editor route.",
+        "Safe server-side validation and rendering of all persisted content; media deletion references remain protected.",
+        "CSRF-protected preview and revision-aware save with stale write rejection.",
+        "Positive and negative tests for migration, XSS, permissions, media, invalid input and full exact-head CI.",
+        "Follow-up packages can extend specialist collaboration without narrowing the comprehensive editor target."
+      ],
+      "tests": [
+        "Focused PHP and JavaScript tests.",
+        "Complete Worker CI on exact final head."
+      ],
+      "immutable_constraints": [
+        "worker-only-no-Trusted-merge-or-deployment",
+        "no-third-party-editor-or-paid-AI",
+        "preserve-legacy-content-and-security",
+        "no-security-test-or-CI-weakening",
+        "no-overlap-with-WCP-441-locked-paths"
+      ],
+      "collision_check": {
+        "compared_against": "Current continuous/work-pool-v4 active and locked allowlists and Worker main 1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+        "result": "Reserved new paths and legacy document/parser/renderer/media usage files are disjoint from active and locked claims; WCP-441 shared UI paths are excluded.",
+        "paths": [
+          "src/NewsEditor/",
+          "src/Controller/AdminNewsEditorController.php",
+          "templates/admin/news_editor/",
+          "assets/news_editor/",
+          "src/ContentEditor/ContentBlockDocument.php",
+          "src/ContentEditor/ContentBlockRenderer.php",
+          "src/ContentEditor/ContentBlockPolicy.php",
+          "src/Service/MediaAssetUsageResolver.php",
+          "tests/NewsEditor/",
+          "tests/Controller/AdminNewsEditorTest.php",
+          "tests/JavaScript/news_editor.test.mjs",
+          "tests/ContentEditor/",
+          "tests/Layout/LayoutMediaTest.php"
+        ]
+      },
+      "next_action": "Implement rich-document foundation and checkpoint on reserved feature branch, then full editor route, UI and CI."
     }
   ],
   "recovery_queue": [],
