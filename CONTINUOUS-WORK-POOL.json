@@ -10,8 +10,8 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "9e083c63e7d888af36f93a23eb924c89fad2b971",
-  "published_at": "2026-09-30T23:36:30.000Z",
-  "summary": "WCP-635 competition evidence review board published and claimed on disjoint Worker paths.",
+  "published_at": "2026-10-01T04:51:53.285Z",
+  "summary": "WCP-636 owner-requested complete video workflows and extensible provider playback claimed.",
   "rules": {
     "choose": "Resume the current chat's unfinished claimed branch first. Otherwise atomically claim an eligible published task. If no published task is eligible, independently derive and publish a bounded worker-only CMS proposal from approved product goals and observed code gaps; do not ask the owner for the next FCP number.",
     "atomic_reservation": "Create the exact claim_branch and suggested feature branch from that task's published proposal_base_sha. If the claim already exists, treat it as a hard lock; the owning continuation resumes it and every other AI skips it.",
@@ -61849,6 +61849,79 @@
       "next_action": "Implement bounded evidence query, protected private controller/template and privacy/isolation tests; then open draft PR and run exact-head CI.",
       "last_checkpoint_at": "2026-09-30T23:36:30.000Z",
       "last_verified_push_at": "2026-09-30T23:36:30.000Z"
+    },
+    {
+      "priority": 636,
+      "package_id": "WCP-636",
+      "title": "Complete video management workflows and extensible multi-provider playback",
+      "execution_state": "worker_in_progress",
+      "claim_state": "active_lease",
+      "claim_generation": 1,
+      "claim_branch": "claim/wcp-636-video-workspace-providers-g1",
+      "suggested_branch": "feature/wcp-636-video-workspace-providers-g1",
+      "resume_branch": "feature/wcp-636-video-workspace-providers-g1",
+      "claimed_on": "2026-10-01T04:51:53.285Z",
+      "lease_expires_at": "2026-10-01T11:51:53.285Z",
+      "base_branch": "main",
+      "base_sha": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "active_head": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "dependencies": [],
+      "blocked_by_at_publication": [],
+      "proposal_kind": "worker_only",
+      "objective": "Complete usable author/manager workflows for watchlists, timestamp comments, clips, creator profiles, video discovery metadata and live sources. Add persistent multiple selectable sources per video, consent-gated supported provider embeds, direct authorized MP4/WebM/HLS playback and a tagged adapter extension point for the owner's future video service. Use documented providers, keep provider branding, perform no scraping or circumvention.",
+      "allowed_paths": [
+        "src/VideoWorkspace/",
+        "src/Entity/VideoWorkspace/",
+        "src/Controller/AdminVideoWorkspaceController.php",
+        "src/Controller/VideoWorkspaceController.php",
+        "src/Controller/VideoWorkspaceAccountController.php",
+        "templates/video_workspace/",
+        "templates/admin/video/index.html.twig",
+        "config/packages/doctrine_migrations.yaml",
+        "tests/VideoWorkspace/",
+        "tests/Controller/VideoWorkspaceTest.php",
+        "assets/video_workspace/",
+        "video_workspace_migrations/",
+        "importmap.php",
+        "tests/JavaScript/video-workspace-player.test.mjs"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "ops/",
+        "migrations/",
+        "src/Entity/VideoDiscovery/",
+        "src/Video/Discovery/",
+        "src/Controller/VideoDiscovery/",
+        "templates/video_discovery/",
+        ".github/workflows/",
+        "templates/base.html.twig",
+        "templates/video/show.html.twig"
+      ],
+      "deliverables": [
+        "Author workspace with owner-only watchlist rename/privacy/delete/item removal and comment/clip editing/deletion.",
+        "Manager workspace for creator CRUD, discovery visibility/tags/creator assignment, independent live source CRUD, and multiple provider sources per video.",
+        "Extensible adapter registry; consent-gated provider playback and self-hosted player for explicitly authorized direct sources.",
+        "Own additive migration namespace and table with preserved legacy data; no locked source changes."
+      ],
+      "tests": [
+        "Unit provider URL and capability cases; no request forgery or guessed APIs.",
+        "Full functional flows, ownership, CSRF, role/module/visibility boundaries and replay.",
+        "Exact-head complete Worker CI and PostgreSQL 18 migration chain."
+      ],
+      "immutable_constraints": [
+        "worker-output-untrusted",
+        "no-Trusted-merge-or-deployment",
+        "no-security-or-CI-weakening",
+        "no-source-extraction-DRM-bypass-or-provider-concealment",
+        "POST-CSRF-and-owner-or-video-manager-checks"
+      ],
+      "collision_check": {
+        "result": "All allowed paths disjoint from active and locked pool claims; legacy FCP-067 paths and shared migrations directory untouched. New uniquely named additive migration uses a distinct namespace.",
+        "base": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4"
+      },
+      "next_action": "Implement connected video workspace, multiple authorized sources and adapter registry."
     }
   ],
   "recovery_queue": [],
