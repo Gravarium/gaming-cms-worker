@@ -120,9 +120,11 @@ if (root) {
   root.querySelectorAll('[data-add]').forEach(button => button.addEventListener('click', () => {
     renderBlock(structuredClone(defaults[button.dataset.add])); blocks.lastElementChild.querySelector('[contenteditable], input')?.focus(); changed();
   }));
-  root.querySelectorAll('[contenteditable]').forEach(el => el.addEventListener('paste', event => {
-    event.preventDefault(); document.execCommand('insertText', false, event.clipboardData.getData('text/plain'));
-  }));
+  blocks.addEventListener('paste', event => {
+    if (!event.target.closest('[contenteditable]')) return;
+    event.preventDefault();
+    document.execCommand('insertText', false, event.clipboardData.getData('text/plain'));
+  });
   document.getElementById('news-editor-preview-button').addEventListener('click', async () => {
     status.textContent = 'Vorschau wird geladen …';
     try {

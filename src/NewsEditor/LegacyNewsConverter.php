@@ -27,6 +27,7 @@ final readonly class LegacyNewsConverter
                 'link' => ['type' => 'paragraph', 'content' => [['text' => $text, 'marks' => ['link'], 'href' => $block['url']]]],
                 'list' => ['type' => 'list', 'ordered' => $block['style'] === 'ordered', 'items' => array_map(static fn (string $item): array => [['text' => $item, 'marks' => []]], $block['items'])],
                 'media' => ['type' => 'media', 'assetId' => $block['assetId'], 'alt' => $block['alt'], 'caption' => $block['caption']],
+                default => throw new \InvalidArgumentException('Nicht unterstützter Inhaltsblock.'),
             };
         }
         if ($blocks === []) {
