@@ -31,8 +31,9 @@ Owner URL follow-up (2026-10-01): generic Codester/Framer portals resolve to the
 pages already cited in the catalogue. wpfanyi.com redirects to wpcy.com and does not establish the
 Widget Responsive for Youtube identity; the official WordPress plugin page remains the reference.
 BRIX's Flowplay page describes ViDesigns' product, not a different engine; the primary ViDesigns
-reference is retained. The ai-visions.net Simple YouTube Player assignment remains unverified;
-the catalogue records that supplied link without substituting a different provider's product.
+reference is retained. The Simple YouTube Player product page under ai-visions.net was retrieved
+directly and confirms Mario G. Rizzo / AI VISIONS' Joomla module. The site displays the 7Tage.info
+branding already found earlier; the specific owner-supplied host's product URL is now recorded.
 Localized WordPress plugin pages share the same plugin slug as the canonical wordpress.org page.
 
 Video.js vendor assets are copied unchanged from the npm `video.js@8.24.1` distribution:
