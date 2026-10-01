@@ -11,7 +11,7 @@
   "baseline_branch": "main",
   "base_sha": "9e083c63e7d888af36f93a23eb924c89fad2b971",
   "published_at": "2026-10-01T15:51:00Z",
-  "summary": "WCP-646 own-player branding test package published; other active claims remain disjoint.",
+  "summary": "WCP-646 branding preview reserved; active paths remain disjoint.",
   "rules": {
     "choose": "Resume the current chat's unfinished claimed branch first. Otherwise atomically claim an eligible published task. If no published task is eligible, independently derive and publish a bounded worker-only CMS proposal from approved product goals and observed code gaps; do not ask the owner for the next FCP number.",
     "atomic_reservation": "Create the exact claim_branch and suggested feature branch from that task's published proposal_base_sha. If the claim already exists, treat it as a hard lock; the owning continuation resumes it and every other AI skips it.",
@@ -63091,8 +63091,8 @@
       "package_id": "WCP-646",
       "title": "Testable own-player branding controls for video sources",
       "risk": "medium",
-      "execution_state": "unclaimed",
-      "claim_state": "unclaimed",
+      "execution_state": "worker_in_progress",
+      "claim_state": "active_lease",
       "claim_generation": 1,
       "claim_branch": "claim/wcp-646-video-branding-g1",
       "suggested_branch": "feature/wcp-646-video-branding-g1",
@@ -63168,7 +63168,14 @@
           "tests/JavaScript/video-player-branding.test.mjs"
         ]
       },
-      "next_action": "Atomically reserve claim and implement manager branding preview."
+      "next_action": "Implement and test source-gated branding preview.",
+      "claimed_on": "2026-10-01T15:51:03.222Z",
+      "lease_expires_at": "2026-10-01T22:51:03.222Z",
+      "resume_branch": "feature/wcp-646-video-branding-g1",
+      "active_head": "456eb44dbaa9e9d3164b3062b3c62cd80e86b295",
+      "last_observed_head": "456eb44dbaa9e9d3164b3062b3c62cd80e86b295",
+      "last_verified_push_at": null,
+      "worker_pr_state": "not_created"
     }
   ],
   "recovery_queue": [],
