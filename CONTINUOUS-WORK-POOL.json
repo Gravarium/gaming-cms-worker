@@ -11,7 +11,7 @@
   "baseline_branch": "main",
   "base_sha": "9e083c63e7d888af36f93a23eb924c89fad2b971",
   "published_at": "2026-10-01T16:10:00Z",
-  "summary": "WCP-648 owner-requested first-party rich news editor reserved on disjoint paths.",
+  "summary": "WCP-646 branding preview complete with green exact-head PR #440; active independent claims remain disjoint.",
   "rules": {
     "choose": "Resume the current chat's unfinished claimed branch first. Otherwise atomically claim an eligible published task. If no published task is eligible, independently derive and publish a bounded worker-only CMS proposal from approved product goals and observed code gaps; do not ask the owner for the next FCP number.",
     "atomic_reservation": "Create the exact claim_branch and suggested feature branch from that task's published proposal_base_sha. If the claim already exists, treat it as a hard lock; the owning continuation resumes it and every other AI skips it.",
@@ -63106,8 +63106,8 @@
       "package_id": "WCP-646",
       "title": "Testable own-player branding controls for video sources",
       "risk": "medium",
-      "execution_state": "worker_in_progress",
-      "claim_state": "active_lease",
+      "execution_state": "worker_complete_awaiting_trusted_review",
+      "claim_state": "locked_until_trusted_resolution",
       "claim_generation": 1,
       "claim_branch": "claim/wcp-646-video-branding-g1",
       "suggested_branch": "feature/wcp-646-video-branding-g1",
@@ -63183,19 +63183,19 @@
           "tests/JavaScript/video-player-branding.test.mjs"
         ]
       },
-      "next_action": "Await exact-head CI; fix any genuine failures.",
+      "next_action": "Await independent Worker/Trusted review and authorized media browser QA; no merge or deployment.",
       "claimed_on": "2026-10-01T15:51:03.222Z",
-      "lease_expires_at": "2026-10-01T22:51:03.222Z",
+      "lease_expires_at": null,
       "resume_branch": "feature/wcp-646-video-branding-g1",
       "active_head": "726c9265eb05a1d9ff87c1d73eb5011384349095",
       "last_observed_head": "726c9265eb05a1d9ff87c1d73eb5011384349095",
       "last_verified_push_at": "2026-10-01T16:05:15.960Z",
-      "worker_pr_state": "draft",
+      "worker_pr_state": "open_ready_for_review",
       "worker_pr": 440,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/440",
       "last_ci_run_id": 36889149778,
       "last_ci_head": "726c9265eb05a1d9ff87c1d73eb5011384349095",
-      "last_ci_result": "pending",
+      "last_ci_result": "success",
       "ci_history": [
         {
           "run_id": 36888164087,
@@ -63203,7 +63203,28 @@
           "result": "failure",
           "reason": "PHPUnit 12 data provider annotation; corrected by attribute"
         }
-      ]
+      ],
+      "final_head": "726c9265eb05a1d9ff87c1d73eb5011384349095",
+      "pr_state": "open_ready_for_review",
+      "worker_pr_head_sha": "726c9265eb05a1d9ff87c1d73eb5011384349095",
+      "ci_run_id": 36889149778,
+      "ci_result": "success",
+      "php_symfony_job_id": 110460685751,
+      "php_symfony_result": "success",
+      "postgres_migration_job_id": 110460686279,
+      "postgres_migration_result": "success",
+      "final_changed_paths": [
+        "src/VideoPlayerBranding/BrandingOptions.php",
+        "src/Controller/VideoPlayerBrandingController.php",
+        "templates/video_player_branding/preview.html.twig",
+        "assets/video_player_branding/preview.css",
+        "assets/video_player_branding/preview.js",
+        "tests/VideoPlayerBranding/BrandingOptionsTest.php",
+        "tests/Controller/VideoPlayerBrandingTest.php",
+        "tests/JavaScript/video-player-branding.test.mjs"
+      ],
+      "completed_on": "2026-10-01T16:12:12.814Z",
+      "test_evidence": "Exact-head Worker CI 36889149778 passed PHP/Symfony and PostgreSQL 18 jobs, 1716 PHP tests/12255 assertions, JS tests, PHPStan, audit, Twig/config/container/Doctrine/assets. No remote media visual test."
     },
     {
       "priority": 647,
