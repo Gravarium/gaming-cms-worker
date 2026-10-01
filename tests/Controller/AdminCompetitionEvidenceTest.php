@@ -124,6 +124,7 @@ final class AdminCompetitionEvidenceTest extends WebTestCase
         $modules = $client->getContainer()->get(CmsModuleManager::class);
         $wasEnabled = $modules->isEnabled('gaming');
         $modules->setEnabled('gaming', false);
+        $client->restart();
         $client->loginUser($fixture['manager']);
         try {
             $client->request('GET', $this->path($fixture['competitionId']));
