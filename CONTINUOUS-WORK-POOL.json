@@ -10,7 +10,7 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "9e083c63e7d888af36f93a23eb924c89fad2b971",
-  "published_at": "2026-10-01T15:48:00Z",
+  "published_at": "2026-10-01T15:51:00Z",
   "summary": "WCP-646 own-player branding test package published; other active claims remain disjoint.",
   "rules": {
     "choose": "Resume the current chat's unfinished claimed branch first. Otherwise atomically claim an eligible published task. If no published task is eligible, independently derive and publish a bounded worker-only CMS proposal from approved product goals and observed code gaps; do not ask the owner for the next FCP number.",
@@ -62309,8 +62309,8 @@
       "priority": 638,
       "package_id": "WCP-638",
       "title": "Video source preflight, manager playback preview and continuous playlists with opt-in resume",
-      "execution_state": "worker_in_progress",
-      "claim_state": "active_lease",
+      "execution_state": "worker_complete_awaiting_trusted_review",
+      "claim_state": "locked_until_trusted_resolution",
       "claim_generation": 2,
       "claim_branch": "claim/wcp-638-video-playback-journey-g2",
       "suggested_branch": "feature/wcp-638-video-playback-journey-g1",
@@ -62379,13 +62379,13 @@
       "collision_check": {
         "result": "New paths disjoint from all active/locked packages. FCP-072 general templates scope is unclaimed and dependency-blocked; no active reservation there. WCP-636/637 consumed read-only at exact green head."
       },
-      "next_action": "Verify exact-head CI, own allowed path delta, then finalize Worker PR and pool.",
+      "next_action": "Await independent Worker review and later Trusted integration; no merge or deployment.",
       "active_head": "456eb44dbaa9e9d3164b3062b3c62cd80e86b295",
       "last_observed_head": "456eb44dbaa9e9d3164b3062b3c62cd80e86b295",
       "last_verified_push_at": "2026-10-01T10:26:08Z",
       "worker_pr": 432,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/432",
-      "worker_pr_state": "draft_ci_pending",
+      "worker_pr_state": "ready_for_review",
       "checkpoint_paths": [
         "assets/video_playback_journey/journey.css",
         "assets/video_playback_journey/journey.js",
@@ -62413,7 +62413,16 @@
         "last_verified_push_at": "2026-10-01T10:26:08Z",
         "active_head": "456eb44dbaa9e9d3164b3062b3c62cd80e86b295"
       },
-      "lease_expires_at": "2026-10-01T22:48:00Z"
+      "lease_expires_at": null,
+      "last_ci_run_id": 36849113717,
+      "last_ci_head": "456eb44dbaa9e9d3164b3062b3c62cd80e86b295",
+      "last_ci_result": "success",
+      "completion_report": [
+        "Worker PR #432 ready for review at exact head 456eb44dbaa9e9d3164b3062b3c62cd80e86b295.",
+        "Worker CI run 36849113717: PHP/Symfony and PostgreSQL 18 jobs completed successfully.",
+        "Compared with green WCP-637 head 0aefb975905b67bd649cc37a027fdd5d609d1a37: 18 added paths, all within WCP-638 allowlist; no predecessor modifications.",
+        "No Trusted merge or deployment."
+      ]
     },
     {
       "priority": 639,
