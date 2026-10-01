@@ -42,9 +42,20 @@ final class GameComparisonTest extends WebTestCase
             $em->persist($entity);
         }
         $em->flush();
+        $ids = [
+            [GameRelease::class, $release->getId()],
+            [GameCatalogueEntry::class, $hiddenEntry->getId()],
+            [GameCatalogueEntry::class, $secondEntry->getId()],
+            [GameCatalogueEntry::class, $firstEntry->getId()],
+            [GamePlatform::class, $platform->getId()],
+            [Game::class, $hidden->getId()],
+            [Game::class, $second->getId()],
+            [Game::class, $first->getId()],
+        ];
+        $selection = $first->getSlug().','.$second->getSlug();
+        $hiddenSelection = $first->getSlug().','.$hidden->getSlug();
 
         try {
-            $selection = $first->getSlug().','.$second->getSlug();
             $client->request('GET', '/games/compare?games='.rawurlencode($selection));
             self::assertResponseIsSuccessful();
             self::assertSelectorCount(2, '.game-comparison thead a');
@@ -52,7 +63,7 @@ final class GameComparisonTest extends WebTestCase
             self::assertSelectorTextContains('.game-comparison', 'Compare Platform '.$suffix);
             self::assertStringContainsString('no-store', $client->getResponse()->headers->get('Cache-Control') ?? '');
 
-            foreach ([$first->getSlug().','.$first->getSlug(), $first->getSlug().','.$hidden->getSlug(),
+            foreach ([$first->getSlug().','.$first->getSlug(), $hiddenSelection,
                 'bad slug,'.$second->getSlug(), $selection.',extra-fourth,another-fourth'] as $invalid) {
                 $client->request('GET', '/games/compare?games='.rawurlencode($invalid));
                 self::assertResponseStatusCodeSame(404);
@@ -60,19 +71,56 @@ final class GameComparisonTest extends WebTestCase
             $client->request('GET', '/games/compare?games[]=bad');
             self::assertResponseStatusCodeSame(404);
 
-            $module->setEnabled(false);
-            $em->flush();
-            $client->request('GET', '/games/compare?games='.rawurlencode($selection));
-            self::assertResponseStatusCodeSame(404);
         } finally {
+            /** @var EntityManagerInterface $cleanup */
+            $cleanup = $client->getContainer()->get(EntityManagerInterface::class);
+            $cleanup->clear();
+            $module = $cleanup->getRepository(CmsModuleState::class)->find('gaming');
+            self::assertInstanceOf(CmsModuleState::class, $module);
             $module->setEnabled($prior ?? true);
             if ($prior === null) {
-                $em->remove($module);
+                $cleanup->remove($module);
             }
-            foreach ([$release, $hiddenEntry, $secondEntry, $firstEntry, $platform, $hidden, $second, $first] as $entity) {
-                $em->remove($entity);
+            foreach ($ids as [$class, $id]) {
+                $entity = $cleanup->find($class, $id);
+                if ($entity !== null) {
+                    $cleanup->remove($entity);
+                }
             }
-            $em->flush();
+            $cleanup->flush();
+        }
+    }
+
+    public function testDisabledGamingHidesComparison(): void
+    {
+        $client = static::createClient();
+        /** @var EntityManagerInterface $em */
+        $em = $client->getContainer()->get(EntityManagerInterface::class);
+        $module = $em->getRepository(CmsModuleState::class)->find('gaming');
+        $prior = $module?->isEnabled();
+        if (!$module instanceof CmsModuleState) {
+            $module = (new CmsModuleState())->setModuleKey('gaming')->updateVersion('1.0.0');
+            $em->persist($module);
+        }
+        $module->setEnabled(false);
+        $em->flush();
+
+        try {
+            $client->request('GET', '/games/compare');
+            self::assertResponseStatusCodeSame(404);
+        } finally {
+            /** @var EntityManagerInterface $cleanup */
+            $cleanup = $client->getContainer()->get(EntityManagerInterface::class);
+            $cleanup->clear();
+            $module = $cleanup->getRepository(CmsModuleState::class)->find('gaming');
+            if ($module instanceof CmsModuleState) {
+                if ($prior === null) {
+                    $cleanup->remove($module);
+                } else {
+                    $module->setEnabled($prior);
+                }
+                $cleanup->flush();
+            }
         }
     }
 }
