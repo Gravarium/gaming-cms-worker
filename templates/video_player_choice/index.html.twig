@@ -1,0 +1,5 @@
+{% extends 'video_player_choice/layout.html.twig' %}{% block heading %}Player auswählen{% endblock %}
+{% block choice %}<p>Wähle ein Video. Anschließend kannst du die Quelle und einen passenden Player auswählen.</p>
+<section class="panel"><h2>Videos</h2><div class="workspace-grid">{% for video in videos %}<article><h3><a href="{{ path('app_video_player_choice_video', {slug: video.slug}) }}">{{ video.title }}</a></h3><p>{{ video.description|striptags|slice(0,160) }}</p></article>{% else %}<p>Keine sichtbaren Videos auf dieser Seite.</p>{% endfor %}</div></section>
+<section class="panel"><h2>Live-Quellen</h2>{% for stream in streams %}<p><a href="{{ path('app_video_player_choice_live', {id: stream.id}) }}">{{ stream.label }}</a></p>{% else %}<p>Keine sichtbaren Live-Quellen auf dieser Seite.</p>{% endfor %}</section>
+<nav class="workspace-actions" aria-label="Seiten">{% if page > 1 %}<a href="{{ path('app_video_player_choice', {page: page - 1}) }}">Zurück</a>{% endif %}{% if videos|length == 20 or streams|length == 20 %}<a href="{{ path('app_video_player_choice', {page: page + 1}) }}">Weiter</a>{% endif %}</nav>{% endblock %}
