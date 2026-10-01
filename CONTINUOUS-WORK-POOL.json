@@ -10,8 +10,8 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "9e083c63e7d888af36f93a23eb924c89fad2b971",
-  "published_at": "2026-10-01T15:16:01.266Z",
-  "summary": "WCP-644 guild event waitlist promotion independently claimed; active paths remain disjoint.",
+  "published_at": "2026-10-01T15:29:11Z",
+  "summary": "WCP-645 game release archive independently claimed; active paths remain disjoint.",
   "rules": {
     "choose": "Resume the current chat's unfinished claimed branch first. Otherwise atomically claim an eligible published task. If no published task is eligible, independently derive and publish a bounded worker-only CMS proposal from approved product goals and observed code gaps; do not ask the owner for the next FCP number.",
     "atomic_reservation": "Create the exact claim_branch and suggested feature branch from that task's published proposal_base_sha. If the claim already exists, treat it as a hard lock; the owning continuation resumes it and every other AI skips it.",
@@ -62981,6 +62981,79 @@
       ],
       "completed_on": "2026-10-01T15:26:00Z",
       "test_evidence": "Exact-head Worker CI: PHP/Symfony 1644 tests, 11955 assertions; PostgreSQL 18 success."
+    },
+    {
+      "priority": 645,
+      "package_id": "WCP-645",
+      "title": "Browse released games in a bounded public archive",
+      "risk": "medium_privacy",
+      "execution_state": "worker_in_progress",
+      "claim_state": "active_lease",
+      "claim_generation": 1,
+      "claim_branch": "claim/wcp-645-game-release-archive-g1",
+      "suggested_branch": "feature/wcp-645-game-release-archive-g1",
+      "resume_branch": "feature/wcp-645-game-release-archive-g1",
+      "claimed_on": "2026-10-01T15:29:11Z",
+      "lease_expires_at": "2026-10-01T22:29:11Z",
+      "base_branch": "main",
+      "base_sha": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "active_head": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "dependencies": [],
+      "blocked_by_at_publication": [],
+      "proposal_kind": "worker_only",
+      "objective": "Provide a public, paginated archive of past released game catalogue dates with a bounded year filter. Show only enabled catalogue entries and games, status released and dates before today. Link it from the current release calendar without changing its query behavior.",
+      "allowed_paths": [
+        "src/GameReleaseArchive/",
+        "src/Controller/GameCatalogue/GameReleaseArchiveController.php",
+        "templates/game_catalogue/release_archive.html.twig",
+        "templates/game_catalogue/release_calendar.html.twig",
+        "tests/Controller/GameReleaseArchiveTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "CONTINUOUS-WORKER.md",
+        "CONTINUOUS-WORK-POOL.json",
+        ".github/workflows/",
+        "migrations/",
+        "src/Entity/",
+        "src/Repository/"
+      ],
+      "deliverables": [
+        "Paginated release archive for past five years with strict year/page validation and stable date ordering.",
+        "No disabled game or catalogue entry, cancelled, delayed or future release appears.",
+        "Navigation from release calendar; no mutation or schema changes."
+      ],
+      "tests": [
+        "Functional tests for filters, pagination, visibility and gaming module gate.",
+        "Full exact-head Worker PHP/Symfony and PostgreSQL CI."
+      ],
+      "immutable_constraints": [
+        "Do not weaken authorization, validation, security gates or existing tests.",
+        "No Trusted edits, merge or deployment."
+      ],
+      "collision_check": {
+        "compared_against": "Live pool a3cae3703632ea2b0f4b7348d56fa3bc4d3ca8fa and Worker main 1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+        "result": "Five paths are disjoint from active WCP-634, WCP-638, WCP-641, WCP-642 and WCP-643 and locked packages.",
+        "paths": [
+          "src/GameReleaseArchive/",
+          "src/Controller/GameCatalogue/GameReleaseArchiveController.php",
+          "templates/game_catalogue/release_archive.html.twig",
+          "templates/game_catalogue/release_calendar.html.twig",
+          "tests/Controller/GameReleaseArchiveTest.php"
+        ]
+      },
+      "next_action": "Implement archive on the reserved feature branch, open Draft PR, verify exact-head CI.",
+      "last_observed_head": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "last_verified_push_at": null,
+      "worker_pr_state": "not_opened"
     }
   ],
   "recovery_queue": [],
