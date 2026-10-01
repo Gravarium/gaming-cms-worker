@@ -1,4 +1,5 @@
 import {parseVideoUrl} from './video-url.js';
+import {EditorHistory} from './history.js';
 
 const root = document.getElementById('news-editor');
 if (root) {
@@ -7,6 +8,7 @@ if (root) {
   const status = document.getElementById('news-editor-status');
   const count = document.getElementById('news-editor-count');
   const prefix = 'cms-rich:v2\n';
+  let history;
   let initial;
   try { initial = JSON.parse(source.value.slice(prefix.length)); }
   catch { initial = {version: 2, blocks: [{type: 'paragraph', content: [{text: '', marks: []}]}]}; status.textContent = 'Dokument konnte nicht geöffnet werden.'; }
@@ -83,6 +85,23 @@ if (root) {
         if (table.rows[0].cells.length > 1) { for (const tr of table.rows) tr.lastElementChild.remove(); changed(); }
       }); row.append(removeColumn);
     }
+    if (block.type === 'callout') {
+      const tone = node('select'); tone.setAttribute('aria-label', 'Art der Infobox');
+      for (const [value, label] of [['info', 'Information'], ['tip', 'Tipp'], ['warning', 'Warnung']]) {
+        const option = node('option', label); option.value = value; tone.append(option);
+      }
+      tone.value = block.tone; row.append(tone, editable('div', block.content));
+    }
+    if (block.type === 'code') {
+      const language = node('select'); language.setAttribute('aria-label', 'Codesprache');
+      for (const value of ['plain', 'bash', 'css', 'html', 'javascript', 'json', 'php', 'python']) {
+        const option = node('option', value); option.value = value; language.append(option);
+      }
+      language.value = block.language;
+      const code = node('textarea'); code.rows = 8; code.value = block.text; code.setAttribute('aria-label', 'Code');
+      row.append(language, code);
+    }
+    if (block.type === 'separator') row.append(node('hr'));
     if (block.type === 'media') {
       const id = input('Medien-ID', block.assetId);
       const alt = input('Alternativtext', block.alt);
@@ -140,21 +159,50 @@ if (root) {
         output.push(block);
       } else if (type === 'list') output.push({type, ordered: row.dataset.ordered === 'true', items: [...row.querySelectorAll('li')].map(runs)});
       else if (type === 'table') output.push({type, rows: [...row.querySelectorAll('tr')].map(tr => [...tr.cells].map(runs))});
+      else if (type === 'callout') output.push({type, tone: row.querySelector('select').value, content: runs(row.querySelector('[contenteditable]'))});
+      else if (type === 'code') output.push({type, language: row.querySelector('select').value, text: row.querySelector('textarea').value});
+      else if (type === 'separator') output.push({type});
       else if (type === 'media') { const [id, alt, caption] = row.querySelectorAll('input'); output.push({type, assetId: Number(id.value), alt: alt.value, caption: caption.value}); }
       else if (type === 'video') { const [provider, videoId, caption] = row.querySelectorAll('input'); output.push({type, provider: provider.value, videoId: videoId.value, caption: caption.value}); }
     }
     return prefix + JSON.stringify({version: 2, blocks: output});
   }
-  function changed() {
+  function changed(event) {
     status.textContent = 'Ungespeicherte Änderungen.';
-    count.textContent = [...blocks.querySelectorAll('[contenteditable]')].map(el => el.textContent).join(' ').trim().split(/\s+/u).filter(Boolean).length + ' Wörter';
+    count.textContent = [...blocks.querySelectorAll('[contenteditable], textarea')].map(el => el.value ?? el.textContent).join(' ').trim().split(/\s+/u).filter(Boolean).length + ' Wörter';
+    history?.record(serialize(), {input: event?.type === 'input'});
   }
+  history = new EditorHistory(serialize());
   changed(); status.textContent = '';
+  function restore(snapshot) {
+    if (snapshot === null) return;
+    const activeRow = document.activeElement?.closest('.news-editor-block');
+    const rowIndex = activeRow ? [...blocks.children].indexOf(activeRow) : 0;
+    blocks.replaceChildren();
+    for (const block of JSON.parse(snapshot.slice(prefix.length)).blocks) renderBlock(block);
+    source.value = snapshot;
+    const target = blocks.children[Math.max(0, Math.min(rowIndex, blocks.children.length - 1))];
+    target?.querySelector('[contenteditable], input')?.focus();
+    status.textContent = 'Ungespeicherte Änderung in der Dokument-Historie.';
+    count.textContent = [...blocks.querySelectorAll('[contenteditable], textarea')].map(el => el.value ?? el.textContent).join(' ').trim().split(/\s+/u).filter(Boolean).length + ' Wörter';
+  }
+  root.addEventListener('keydown', event => {
+    if (!blocks.contains(event.target)) return;
+    if (!(event.ctrlKey || event.metaKey) || event.altKey) return;
+    const key = event.key.toLowerCase();
+    if (key === 'z' || key === 'y') {
+      event.preventDefault();
+      restore(key === 'y' || event.shiftKey ? history.redo() : history.undo());
+    }
+  });
   document.getElementById('news-editor-form').addEventListener('submit', () => { source.value = serialize(); });
   root.querySelectorAll('[data-command]').forEach(button => {
     button.addEventListener('mousedown', event => event.preventDefault());
     button.addEventListener('click', () => {
       let command = button.dataset.command;
+      if (command === 'undo' || command === 'redo') {
+        restore(command === 'undo' ? history.undo() : history.redo()); return;
+      }
       if (command === 'link') {
         const url = window.prompt('Linkziel (HTTPS oder interner Pfad):'); if (!url) return;
         document.execCommand('createLink', false, url);
@@ -168,11 +216,14 @@ if (root) {
     quote: {type: 'quote', content: [{text: '', marks: []}], cite: ''},
     list: {type: 'list', ordered: false, items: [[{text: '', marks: []}]]},
     table: {type: 'table', rows: [[[ {text: '', marks: []} ], [ {text: '', marks: []} ]]]},
+    callout: {type: 'callout', tone: 'info', content: [{text: '', marks: []}]},
+    code: {type: 'code', language: 'plain', text: ''},
+    separator: {type: 'separator'},
     media: {type: 'media', assetId: 0, alt: '', caption: ''},
     video: {type: 'video', provider: 'youtube', videoId: '', caption: ''},
   };
   root.querySelectorAll('[data-add]').forEach(button => button.addEventListener('click', () => {
-    renderBlock(structuredClone(defaults[button.dataset.add])); blocks.lastElementChild.querySelector('[contenteditable], input')?.focus(); changed();
+    renderBlock(structuredClone(defaults[button.dataset.add])); blocks.lastElementChild.querySelector('[contenteditable], textarea, input, select')?.focus(); changed();
   }));
   const picker = document.getElementById('news-editor-media-picker');
   const mediaSearch = document.getElementById('news-editor-media-search');

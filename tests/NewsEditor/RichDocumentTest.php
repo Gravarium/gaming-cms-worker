@@ -24,12 +24,15 @@ final class RichDocumentTest extends TestCase
             ]],
             ['type' => 'media', 'assetId' => 17, 'alt' => 'Titelbild', 'caption' => 'Bildquelle'],
             ['type' => 'video', 'provider' => 'vimeo', 'videoId' => '12345', 'caption' => 'Videoquelle'],
+            ['type' => 'callout', 'tone' => 'tip', 'content' => [['text' => 'Wichtiger Tipp', 'marks' => ['strong']]]],
+            ['type' => 'code', 'language' => 'json', 'text' => '{"score": 9}'],
+            ['type' => 'separator'],
         ]);
 
         $normalized = $document->normalizeForStorage($raw);
         self::assertSame($normalized, $document->normalizeForStorage($normalized));
         self::assertSame([17], $document->mediaIds($normalized));
-        self::assertSame("Ein wichtiger Link\nSpiel | Wertung\nA | 9\nBildquelle\nVideoquelle", $document->plainText($normalized));
+        self::assertSame("Ein wichtiger Link\nSpiel | Wertung\nA | 9\nBildquelle\nVideoquelle\nWichtiger Tipp\n{\"score\": 9}", $document->plainText($normalized));
     }
 
     public function testRejectsActiveMarkupMalformedTablesAndUnownedMediaShape(): void
@@ -52,6 +55,9 @@ final class RichDocumentTest extends TestCase
             [['type' => 'media', 'assetId' => '17', 'alt' => '', 'caption' => '']],
             [['type' => 'video', 'provider' => 'evil', 'videoId' => 'aaaaaa', 'caption' => '']],
             [['type' => 'video', 'provider' => 'vimeo', 'videoId' => 'not-a-number', 'caption' => '']],
+            [['type' => 'callout', 'tone' => 'script', 'content' => [['text' => 'x', 'marks' => []]]]],
+            [['type' => 'code', 'language' => 'javascript" onload="bad', 'text' => 'x']],
+            [['type' => 'separator', 'onclick' => 'bad()']],
         ];
         foreach ($bad as $blocks) {
             try {

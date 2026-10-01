@@ -29,6 +29,9 @@ final class RichRendererTest extends TestCase
             ]],
             ['type' => 'table', 'rows' => [[[ ['text' => '<img onerror=1>', 'marks' => []] ]]]],
             ['type' => 'media', 'assetId' => 7, 'alt' => '\"><svg onload=1>', 'caption' => '<unsafe>'],
+            ['type' => 'callout', 'tone' => 'warning', 'content' => [['text' => '<img src=x>', 'marks' => []]]],
+            ['type' => 'code', 'language' => 'html', 'text' => '<script>alert(1)</script>'],
+            ['type' => 'separator'],
         ]], JSON_THROW_ON_ERROR);
 
         $normalized = (new ContentBlockPolicy($legacy, $media))->normalizeForStorage($input);
@@ -38,6 +41,10 @@ final class RichRendererTest extends TestCase
         self::assertStringContainsString('<table>', $html);
         self::assertStringContainsString('&lt;img onerror=1&gt;', $html);
         self::assertStringContainsString('src="/safe.png"', $html);
+        self::assertStringContainsString('news-callout--warning', $html);
+        self::assertStringContainsString('&lt;img src=x&gt;', $html);
+        self::assertStringContainsString('<code data-language="html">&lt;script&gt;alert(1)&lt;/script&gt;</code>', $html);
+        self::assertStringContainsString('<hr class="news-separator">', $html);
         self::assertStringNotContainsString('<script>', $html);
         self::assertStringNotContainsString('<svg ', $html);
     }

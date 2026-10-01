@@ -41,6 +41,15 @@ final readonly class RichRenderer
             }
             return '<div class="news-table-scroll"><table><thead>'.$rows[0].'</thead>'.(count($rows) > 1 ? '<tbody>'.implode('', array_slice($rows, 1)).'</tbody>' : '').'</table></div>';
         }
+        if ($type === 'callout') {
+            return '<aside class="news-callout news-callout--'.$block['tone'].'">'.$this->runs($block['content']).'</aside>';
+        }
+        if ($type === 'code') {
+            return '<pre class="news-code"><code data-language="'.$block['language'].'">'.$this->escape($block['text']).'</code></pre>';
+        }
+        if ($type === 'separator') {
+            return '<hr class="news-separator">';
+        }
         if ($type === 'media') {
             $asset = $this->media->resolve($block['assetId']);
             if ($asset === null) {

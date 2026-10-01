@@ -90,6 +90,8 @@ final class RichDocument
                 $parts[] = $block['caption'] ?: $block['alt'];
             } elseif ($block['type'] === 'video') {
                 $parts[] = $block['caption'];
+            } elseif ($block['type'] === 'code') {
+                $parts[] = $block['text'];
             }
         }
         return trim(implode("\n", $parts));
@@ -140,6 +142,24 @@ final class RichDocument
                 $rows[] = array_map(fn (mixed $cell): array => $this->content($cell, $runs), $row);
             }
             return ['type' => 'table', 'rows' => $rows];
+        }
+        if ($type === 'callout') {
+            $this->keys($block, ['type', 'tone', 'content']);
+            if (!in_array($block['tone'], ['info', 'tip', 'warning'], true)) {
+                throw new \InvalidArgumentException('Ungültige Infobox.');
+            }
+            return ['type' => 'callout', 'tone' => $block['tone'], 'content' => $this->content($block['content'], $runs)];
+        }
+        if ($type === 'code') {
+            $this->keys($block, ['type', 'language', 'text']);
+            if (!in_array($block['language'], ['plain', 'bash', 'css', 'html', 'javascript', 'json', 'php', 'python'], true)) {
+                throw new \InvalidArgumentException('Ungültige Codesprache.');
+            }
+            return ['type' => 'code', 'language' => $block['language'], 'text' => $this->text($block['text'], 12000)];
+        }
+        if ($type === 'separator') {
+            $this->keys($block, ['type']);
+            return ['type' => 'separator'];
         }
         if ($type === 'media') {
             $this->keys($block, ['type', 'assetId', 'alt', 'caption']);
