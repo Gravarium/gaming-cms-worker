@@ -99,13 +99,13 @@ final class AdminVideoWorkspaceController extends AbstractController
                 if (count($tags) > 30) { throw new \InvalidArgumentException('Maximal 30 Tags.'); }
                 foreach ($tags as $tag) { if (mb_strlen($tag) > 100) { throw new \InvalidArgumentException('Ein Tag ist zu lang.'); } }
                 $this->em->wrapInTransaction(function () use ($profile, $creator, $visibility, $discoverable, $tags): void {
-                    $profile->setCreator($creator)->setVisibility($visibility)->setDiscoverable($discoverable); $profile->getTags()->clear();
+                    $profile->setCreator($creator)->setVisibility($visibility)->setDiscoverable($discoverable); $profile->getTags()->clear(); $resolvedTags = [];
                     foreach ($tags as $name) {
                         $slug = trim(mb_substr(strtolower($this->slugger->slug($name)->toString()), 0, 120), '-');
                         if ($slug === '') { throw new \InvalidArgumentException('Ungültiger Tag.'); }
-                        $tag = $this->em->getRepository(VideoTag::class)->findOneBy(['slug' => $slug]);
+                        $tag = $resolvedTags[$slug] ?? $this->em->getRepository(VideoTag::class)->findOneBy(['slug' => $slug]);
                         if (!$tag instanceof VideoTag) { $tag = new VideoTag($name, $slug); $this->em->persist($tag); }
-                        $profile->addTag($tag);
+                        $resolvedTags[$slug] = $tag; $profile->addTag($tag);
                     }
                     $this->em->persist($profile); $this->audit->record('video.workspace.metadata.saved', $profile, $profile->getId(), 'Video-Entdeckung verwaltet.');
                 });

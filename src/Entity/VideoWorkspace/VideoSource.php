@@ -24,7 +24,7 @@ class VideoSource
     #[ORM\Column] private bool $authorized = false;
     #[ORM\Column(nullable: true)] private ?\DateTimeImmutable $startsAt = null;
 
-    #[ORM\Version, ORM\Column] private int $version = 1;
+    #[ORM\Version, ORM\Column(type: 'integer')] private int $version = 1;
     public function getVersion(): int { return $this->version; }
 
     public function getId(): ?int { return $this->id; }
