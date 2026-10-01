@@ -30,11 +30,35 @@ if (root) {
     const row = node('section'); row.className = 'news-editor-block'; row.dataset.type = block.type;
     const remove = node('button', 'Entfernen'); remove.type = 'button'; remove.className = 'remove-block'; remove.setAttribute('aria-label', 'Block entfernen');
     remove.addEventListener('click', () => { if (blocks.children.length > 1) { row.remove(); changed(); } }); row.append(remove);
+    for (const [label, direction] of [['↑', -1], ['↓', 1]]) {
+      const move = node('button', label); move.type = 'button'; move.className = 'move-block';
+      move.setAttribute('aria-label', direction < 0 ? 'Block nach oben' : 'Block nach unten');
+      move.addEventListener('click', () => {
+        const sibling = direction < 0 ? row.previousElementSibling : row.nextElementSibling;
+        if (!sibling) return;
+        if (direction < 0) blocks.insertBefore(row, sibling);
+        else blocks.insertBefore(sibling, row);
+        changed(); move.focus();
+      }); row.append(move);
+    }
     if (block.type === 'paragraph') row.append(editable('p', block.content));
-    if (block.type === 'heading') { row.dataset.level = String(block.level); row.append(editable('h' + block.level, block.content)); }
+    if (block.type === 'heading') {
+      row.dataset.level = String(block.level);
+      const level = node('select'); level.setAttribute('aria-label', 'Überschriftenebene');
+      for (const value of [2, 3, 4]) { const option = node('option', 'Überschrift '+value); option.value = String(value); level.append(option); }
+      level.value = String(block.level);
+      let heading = editable('h' + block.level, block.content);
+      level.addEventListener('change', () => { row.dataset.level = level.value; const replacement = editable('h' + level.value, runs(heading)); heading.replaceWith(replacement); heading = replacement; changed(); });
+      row.append(level, heading);
+    }
     if (block.type === 'quote') { row.append(editable('blockquote', block.content), input('Quelle', block.cite)); }
     if (block.type === 'list') {
-      row.dataset.ordered = String(block.ordered); const list = node(block.ordered ? 'ol' : 'ul');
+      row.dataset.ordered = String(block.ordered); let list = node(block.ordered ? 'ol' : 'ul');
+      const listType = node('select'); listType.setAttribute('aria-label', 'Listentyp');
+      for (const [value, label] of [['false', 'Aufzählung'], ['true', 'Nummerierung']]) { const option = node('option', label); option.value = value; listType.append(option); }
+      listType.value = row.dataset.ordered;
+      listType.addEventListener('change', () => { row.dataset.ordered = listType.value; const replacement = node(listType.value === 'true' ? 'ol' : 'ul'); replacement.append(...list.childNodes); list.replaceWith(replacement); list = replacement; changed(); });
+      row.append(listType);
       for (const item of block.items ?? []) list.append(editable('li', item)); row.append(list);
       const addItem = node('button', 'Listenpunkt hinzufügen'); addItem.type = 'button'; addItem.addEventListener('click', () => { list.append(editable('li', [{text: '', marks: []}])); changed(); }); row.append(addItem);
     }
@@ -50,6 +74,12 @@ if (root) {
         if (table.rows[0].cells.length >= 10) return;
         for (const tr of table.rows) tr.append(editable('td', [{text: '', marks: []}])); changed();
       }); row.append(addColumn);
+      const removeRow = node('button', 'Letzte Zeile entfernen'); removeRow.type = 'button'; removeRow.addEventListener('click', () => {
+        if (table.rows.length > 1) { table.lastElementChild.remove(); changed(); }
+      }); row.append(removeRow);
+      const removeColumn = node('button', 'Letzte Spalte entfernen'); removeColumn.type = 'button'; removeColumn.addEventListener('click', () => {
+        if (table.rows[0].cells.length > 1) { for (const tr of table.rows) tr.lastElementChild.remove(); changed(); }
+      }); row.append(removeColumn);
     }
     if (block.type === 'media') { row.append(input('Medien-ID', block.assetId), input('Alternativtext', block.alt), input('Bildunterschrift und Quelle', block.caption)); }
     if (block.type === 'video') { row.append(input('Anbieter (youtube/vimeo)', block.provider), input('Video-ID', block.videoId), input('Bildunterschrift', block.caption)); }

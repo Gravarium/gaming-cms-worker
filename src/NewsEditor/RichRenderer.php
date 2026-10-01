@@ -47,7 +47,7 @@ final readonly class RichRenderer
                 return '';
             }
             $alt = $block['alt'] !== '' ? $block['alt'] : $asset['title'];
-            return '<figure class="content-media"><img src="'.$this->escape($asset['url']).'" alt="'.$this->escape($alt).'" loading="lazy" decoding="async">'.($block['caption'] !== '' ? '<figcaption>'.$this->escape($block['caption']).'</figcaption>' : '').'</figure>';
+            return '<figure class="content-media"><img src="'.$this->escape($asset['url']).'" alt="'.$this->escape($alt).'" loading="lazy" decoding="async" referrerpolicy="no-referrer">'.($block['caption'] !== '' ? '<figcaption>'.$this->escape($block['caption']).'</figcaption>' : '').'</figure>';
         }
         if ($type === 'video') {
             $url = $block['provider'] === 'youtube'
@@ -63,7 +63,7 @@ final readonly class RichRenderer
     {
         $parts = [];
         foreach ($runs as $run) {
-            $value = $this->escape((string) $run['text']);
+            $value = nl2br($this->escape((string) $run['text']), false);
             foreach ((array) $run['marks'] as $mark) {
                 $tag = match ($mark) { 'strong' => 'strong', 'em' => 'em', 'underline' => 'u', 'strike' => 's', 'code' => 'code', 'link' => 'a', default => throw new \InvalidArgumentException('Ungültige Textformatierung.') };
                 if ($tag === 'a' && !isset($run['href'])) {

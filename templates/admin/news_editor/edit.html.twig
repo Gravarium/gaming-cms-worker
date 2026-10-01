@@ -16,6 +16,7 @@
     <form method="post" id="news-editor-form" novalidate>
         <input type="hidden" name="_token" value="{{ csrf_token('news-editor-'~entry.id) }}">
         <input type="hidden" name="updatedAt" value="{{ entry.updatedAt|date('c') }}">
+        <input type="hidden" name="documentHash" value="{{ documentHash }}">
         <textarea name="document" id="news-editor-document" hidden>{{ document }}</textarea>
         <div id="news-editor-blocks" class="news-editor-blocks" aria-label="Artikelinhalt"></div>
         <p id="news-editor-status" role="status" aria-live="polite"></p>

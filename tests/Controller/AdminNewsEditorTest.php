@@ -25,10 +25,12 @@ final class AdminNewsEditorTest extends WebTestCase
         self::assertStringContainsString('cms-rich:v2', $client->getResponse()->getContent() ?: '');
         $csrf = $crawler->filter('input[name="_token"]')->attr('value');
         $updated = $crawler->filter('input[name="updatedAt"]')->attr('value');
+        $documentHash = $crawler->filter('input[name="documentHash"]')->attr('value');
         self::assertNotNull($csrf);
         self::assertNotNull($updated);
+        self::assertNotNull($documentHash);
         $client->request('POST', '/admin/news-editor/'.$entry->getId(), [
-            '_token' => $csrf, 'updatedAt' => $updated, 'document' => $this->document('Reicher Text'),
+            '_token' => $csrf, 'updatedAt' => $updated, 'documentHash' => $documentHash, 'document' => $this->document('Reicher Text'),
         ]);
         self::assertResponseRedirects('/admin/news-editor/'.$entry->getId());
 
@@ -39,6 +41,15 @@ final class AdminNewsEditorTest extends WebTestCase
         self::assertSame('Reicher Text', $saved->getBody());
         self::assertStringStartsWith(RichDocument::PREFIX, $saved->getEditorDocument() ?? '');
         self::assertCount(1, $em->getRepository(ContentRevision::class)->findBy(['entry' => $saved]));
+        $client->request('POST', '/admin/news-editor/'.$entry->getId(), [
+            '_token' => $csrf, 'updatedAt' => $updated, 'documentHash' => $documentHash,
+            'document' => $this->document('Veraltete Änderung'),
+        ]);
+        self::assertResponseStatusCodeSame(422);
+        $em->clear();
+        $unchanged = $em->find(ContentEntry::class, $entry->getId());
+        self::assertInstanceOf(ContentEntry::class, $unchanged);
+        self::assertSame('Reicher Text', $unchanged->getBody());
     }
 
     public function testPreviewEscapesMarkupAndDeniedWritesDoNotChangeArticle(): void
@@ -49,17 +60,20 @@ final class AdminNewsEditorTest extends WebTestCase
         $crawler = $client->request('GET', '/admin/news-editor/'.$entry->getId());
         $csrf = $crawler->filter('input[name="_token"]')->attr('value');
         $updated = $crawler->filter('input[name="updatedAt"]')->attr('value');
+        $documentHash = $crawler->filter('input[name="documentHash"]')->attr('value');
         self::assertNotNull($csrf);
         self::assertNotNull($updated);
+        self::assertNotNull($documentHash);
         $client->request('POST', '/admin/news-editor/'.$entry->getId().'/preview', [], [], [
             'CONTENT_TYPE' => 'application/json', 'HTTP_X_CSRF_TOKEN' => $csrf,
         ], json_encode(['document' => $this->document('<script>bad()</script>')], JSON_THROW_ON_ERROR));
         self::assertResponseIsSuccessful();
-        self::assertStringNotContainsString('<script>', $client->getResponse()->getContent() ?: '');
-        self::assertStringContainsString('&lt;script&gt;', $client->getResponse()->getContent() ?: '');
+        $preview = json_decode($client->getResponse()->getContent() ?: '', true, 16, JSON_THROW_ON_ERROR);
+        self::assertStringNotContainsString('<script>', $preview['html']);
+        self::assertStringContainsString('&lt;script&gt;', $preview['html']);
 
         $client->request('POST', '/admin/news-editor/'.$entry->getId(), [
-            '_token' => 'invalid', 'updatedAt' => $updated, 'document' => $this->document('Forbidden'),
+            '_token' => 'invalid', 'updatedAt' => $updated, 'documentHash' => $documentHash, 'document' => $this->document('Forbidden'),
         ]);
         self::assertResponseStatusCodeSame(403);
         $em = $client->getContainer()->get(EntityManagerInterface::class);
@@ -69,14 +83,18 @@ final class AdminNewsEditorTest extends WebTestCase
         self::assertSame('Legacy original', $saved->getBody());
     }
 
-    public function testPermissionAndPublishedStatusAreEnforced(): void
+    public function testPermissionIsEnforced(): void
     {
         $client = static::createClient();
         [$reader, $entry] = $this->entry($client, [CmsPermission::ACCESS]);
         $client->loginUser($reader);
         $client->request('GET', '/admin/news-editor/'.$entry->getId());
         self::assertResponseStatusCodeSame(403);
+    }
 
+    public function testPublishedStatusIsEnforced(): void
+    {
+        $client = static::createClient();
         [$manager, $published] = $this->entry($client, [CmsPermission::ACCESS, CmsPermission::CONTENT], ContentEntry::STATUS_PUBLISHED);
         $client->loginUser($manager);
         $client->request('GET', '/admin/news-editor/'.$published->getId());

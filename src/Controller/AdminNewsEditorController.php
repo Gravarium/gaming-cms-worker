@@ -47,7 +47,8 @@ final class AdminNewsEditorController extends AbstractController
             $this->assertCsrf($entry, (string) $request->request->get('_token'));
             $submitted = $request->request->get('document');
             $expected = $request->request->get('updatedAt');
-            if (!is_string($submitted) || strlen($submitted) > self::MAX_REQUEST_BYTES || !is_string($expected)) {
+            $expectedHash = $request->request->get('documentHash');
+            if (!is_string($submitted) || strlen($submitted) > self::MAX_REQUEST_BYTES || !is_string($expected) || !is_string($expectedHash) || preg_match('/\A[a-f0-9]{64}\z/D', $expectedHash) !== 1) {
                 return $this->errorResponse($entry, $document, 'Ungültige oder zu große Editor-Anfrage.', 413);
             }
             $document = $submitted;
@@ -61,10 +62,11 @@ final class AdminNewsEditorController extends AbstractController
                 if (!$user instanceof User) {
                     throw $this->createAccessDeniedException();
                 }
-                $this->entityManager->wrapInTransaction(function (EntityManagerInterface $manager) use ($entry, $normalized, $plainText, $expected, $user): void {
+                $this->entityManager->wrapInTransaction(function (EntityManagerInterface $manager) use ($entry, $normalized, $plainText, $expected, $expectedHash, $user): void {
                     $manager->refresh($entry, LockMode::PESSIMISTIC_WRITE);
                     $this->assertEditable($entry);
-                    if (!hash_equals($entry->getUpdatedAt()->format(DATE_ATOM), $expected)) {
+                    if (!hash_equals($entry->getUpdatedAt()->format(DATE_ATOM), $expected)
+                        || !hash_equals(hash('sha256', $entry->getEditableDocument()), $expectedHash)) {
                         throw new \DomainException('Der Artikel wurde inzwischen geändert. Bitte neu laden.');
                     }
                     $entry->setEditorDocument($normalized)->setBody($plainText);
@@ -129,6 +131,7 @@ final class AdminNewsEditorController extends AbstractController
         $response = $this->render('admin/news_editor/edit.html.twig', [
             'entry' => $entry,
             'document' => $document,
+            'documentHash' => hash('sha256', $entry->getEditableDocument()),
             'error' => $error,
         ], new Response(status: $status));
         $response->headers->set('Cache-Control', 'private, no-store');
