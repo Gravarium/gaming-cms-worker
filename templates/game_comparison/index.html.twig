@@ -1,0 +1,23 @@
+{% extends 'base.html.twig' %}
+{% block title %}Spiele vergleichen | Gaming CMS{% endblock %}
+{% block head_meta %}<meta name="robots" content="noindex,follow">{% endblock %}
+{% block body %}
+<main class="content-shell">
+    <p class="eyebrow">Game Hub</p>
+    <h1>Spiele vergleichen</h1>
+    <form action="{{ path('app_game_comparison') }}" method="get" role="search">
+        <label for="game-comparison-games">Zwei oder drei Spiel-Slugs, durch Komma getrennt</label>
+        <input id="game-comparison-games" name="games" maxlength="422" value="{{ selection }}" required>
+        <button type="submit">Vergleichen</button>
+    </form>
+    {% if games %}
+        <div class="table-wrap"><table class="game-comparison"><thead><tr><th>Merkmal</th>{% for item in games %}<th><a href="{{ path('app_game_catalogue_show', {slug: item.entry.game.slug}) }}">{{ item.entry.game.name }}</a></th>{% endfor %}</tr></thead><tbody>
+            <tr><th>Entwickler</th>{% for item in games %}<td>{{ item.entry.developer ?: '–' }}</td>{% endfor %}</tr>
+            <tr><th>Publisher</th>{% for item in games %}<td>{{ item.entry.publisher ? item.entry.publisher.name : '–' }}</td>{% endfor %}</tr>
+            <tr><th>Genres</th>{% for item in games %}<td>{% for genre in item.entry.genres %}{{ genre.name }}{% if not loop.last %}, {% endif %}{% else %}–{% endfor %}</td>{% endfor %}</tr>
+            <tr><th>Beschreibung</th>{% for item in games %}<td>{{ item.entry.summary ?: '–' }}</td>{% endfor %}</tr>
+            <tr><th>Letzte Release-Daten</th>{% for item in games %}<td><ul>{% for release in item.releases %}<li>{{ release.releaseAt|date('d.m.Y') }} · {{ release.platform.name }} · {{ release.region }} · {{ release.status }}</li>{% else %}<li>Keine Release-Daten.</li>{% endfor %}</ul></td>{% endfor %}</tr>
+        </tbody></table></div>
+    {% endif %}
+</main>
+{% endblock %}
