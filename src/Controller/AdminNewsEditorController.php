@@ -41,6 +41,22 @@ final class AdminNewsEditorController extends AbstractController
         private readonly OwnedMediaReferenceGateway $media,
     ) {}
 
+    #[Route('', name: 'app_admin_news_editor_index', methods: ['GET'])]
+    public function index(): Response
+    {
+        if (!$this->modules->isEnabled('content')) {
+            throw $this->createNotFoundException();
+        }
+        $entries = $this->entityManager->getRepository(ContentEntry::class)->findBy([
+            'type' => ContentEntry::TYPE_NEWS,
+            'status' => [ContentEntry::STATUS_DRAFT, ContentEntry::STATUS_REVIEW],
+        ], ['updatedAt' => 'DESC'], 100);
+        $response = $this->render('admin/news_editor/index.html.twig', ['entries' => $entries]);
+        $response->headers->set('Cache-Control', 'private, no-store');
+        $response->headers->set('X-Robots-Tag', 'noindex, nofollow, noarchive');
+        return $response;
+    }
+
     #[Route('/{id}', name: 'app_admin_news_editor', requirements: ['id' => '\\d+'], methods: ['GET', 'POST'])]
     public function edit(ContentEntry $entry, Request $request): Response
     {

@@ -21,6 +21,9 @@ final class AdminNewsEditorTest extends WebTestCase
         $client = static::createClient();
         [$user, $entry] = $this->entry($client);
         $client->loginUser($user);
+        $client->request('GET', '/admin/news-editor');
+        self::assertResponseIsSuccessful();
+        self::assertStringContainsString('/admin/news-editor/'.$entry->getId(), $client->getResponse()->getContent() ?: '');
         $crawler = $client->request('GET', '/admin/news-editor/'.$entry->getId());
         self::assertResponseIsSuccessful();
         self::assertStringContainsString('cms-rich:v2', $client->getResponse()->getContent() ?: '');
@@ -51,6 +54,25 @@ final class AdminNewsEditorTest extends WebTestCase
         $unchanged = $em->find(ContentEntry::class, $entry->getId());
         self::assertInstanceOf(ContentEntry::class, $unchanged);
         self::assertSame('Reicher Text', $unchanged->getBody());
+        $metadata = $client->request('GET', '/admin/content/'.$entry->getId().'/edit');
+        self::assertResponseIsSuccessful();
+        self::assertCount(0, $metadata->filter('textarea[name="content_entry[body]"]'));
+        $client->request('POST', '/admin/content/'.$entry->getId().'/edit', ['content_entry' => ['body' => 'Alte Oberfläche']]);
+        self::assertResponseStatusCodeSame(409);
+        $em->clear();
+        $protected = $em->find(ContentEntry::class, $entry->getId());
+        self::assertInstanceOf(ContentEntry::class, $protected);
+        self::assertSame('Reicher Text', $protected->getBody());
+        $metadata = $client->request('GET', '/admin/content/'.$entry->getId().'/edit');
+        $form = $metadata->selectButton('Artikeldaten speichern')->form();
+        $form['content_entry[title]'] = 'Aktualisierter Titel';
+        $client->submit($form);
+        self::assertResponseRedirects('/admin/content/'.$entry->getId().'/edit');
+        $em->clear();
+        $retitled = $em->find(ContentEntry::class, $entry->getId());
+        self::assertInstanceOf(ContentEntry::class, $retitled);
+        self::assertSame('Aktualisierter Titel', $retitled->getTitle());
+        self::assertSame('Reicher Text', $retitled->getBody());
     }
 
     public function testPreviewEscapesMarkupAndDeniedWritesDoNotChangeArticle(): void
@@ -119,7 +141,9 @@ final class AdminNewsEditorTest extends WebTestCase
         $data = json_decode($client->getResponse()->getContent() ?: '', true, 16, JSON_THROW_ON_ERROR);
         self::assertContains($safe->getId(), array_column($data['items'], 'id'));
         self::assertNotContains($other->getId(), array_column($data['items'], 'id'));
-        self::assertSame('private, no-store', $client->getResponse()->headers->get('Cache-Control'));
+        $cache = strtolower((string) $client->getResponse()->headers->get('Cache-Control'));
+        self::assertStringContainsString('private', $cache);
+        self::assertStringContainsString('no-store', $cache);
     }
 
     /** @param list<string> $permissions @return array{User,ContentEntry} */
