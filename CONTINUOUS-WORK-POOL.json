@@ -61317,7 +61317,7 @@
       "dependencies": [],
       "dependencies_integrated_at_publication": [],
       "blocked_by_at_publication": [],
-      "claim_branch": "claim/wcp-631-explicit-email-verification-g1",
+      "claim_branch": "claim/wcp-631-explicit-email-verification-g2",
       "suggested_branch": "feature/wcp-631-explicit-email-verification-g1",
       "resume_branch": "feature/wcp-631-explicit-email-verification-g1",
       "base_branch": "main",
@@ -61397,14 +61397,14 @@
       },
       "priority_rationale": "Re-evaluation found no dependency-safe published FCP. This independent Worker-only proposal addresses an observed account-security gap with a narrow, disjoint path set.",
       "code_gap_evidence": "On exact Worker main, AccountRecoveryController::verifyEmail is GET-only and calls AccountTokenManager::consume(), verifies the user, revokes tokens, and writes an audit event. Automated mail link scanning can trigger that action before the person follows the link.",
-      "claimed_on": "2026-09-30T22:22:06.486Z",
-      "claim_generation": 1,
-      "lease_expires_at": "2026-10-01T05:35:36.312Z",
+      "claimed_on": "2026-10-01T10:31:00.000Z",
+      "claim_generation": 2,
+      "lease_expires_at": "2026-10-01T17:31:00.000Z",
       "active_head": "e53a0050d036d7c26627234c55846066f46b27ec",
       "last_observed_head": "e53a0050d036d7c26627234c55846066f46b27ec",
       "checkpoint_commit_sha": "e53a0050d036d7c26627234c55846066f46b27ec",
       "branch_heads": {
-        "claim_branch": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+        "claim_branch": "e53a0050d036d7c26627234c55846066f46b27ec",
         "feature_branch": "e53a0050d036d7c26627234c55846066f46b27ec"
       },
       "checkpoint_paths": [
@@ -61418,10 +61418,16 @@
       "last_ci_result": "pending",
       "last_ci_head": "e53a0050d036d7c26627234c55846066f46b27ec",
       "ci_history": [],
-      "next_action": "Review the exact WCP-631 diff, open a draft Worker PR against main, and run full exact-head CI.",
+      "next_action": "Review exact partial head, open draft PR, and run complete exact-head Worker CI.",
       "last_checkpoint_at": "2026-09-30T22:35:36.312Z",
       "last_verified_push_at": "2026-09-30T22:35:36.312Z",
-      "worker_pr_head_sha": "e53a0050d036d7c26627234c55846066f46b27ec"
+      "worker_pr_head_sha": "e53a0050d036d7c26627234c55846066f46b27ec",
+      "previous_claim": {
+        "claim_branch": "claim/wcp-631-explicit-email-verification-g1",
+        "generation": 1,
+        "lease_expired_at": "2026-10-01T05:35:36.312Z",
+        "last_observed_head": "e53a0050d036d7c26627234c55846066f46b27ec"
+      }
     },
     {
       "priority": 632,
