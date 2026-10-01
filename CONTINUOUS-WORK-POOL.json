@@ -62813,14 +62813,14 @@
       "priority": 643,
       "package_id": "WCP-643",
       "title": "Owner-requested video portal provider adapters and white-label playback paths",
-      "execution_state": "worker_in_progress",
-      "claim_state": "active_lease",
+      "execution_state": "worker_complete_awaiting_trusted_review",
+      "claim_state": "locked_until_trusted_resolution",
       "claim_generation": 1,
       "claim_branch": "claim/wcp-643-video-provider-expansion-g1",
       "suggested_branch": "feature/wcp-643-video-provider-expansion-g1",
       "resume_branch": "feature/wcp-643-video-provider-expansion-g1",
       "claimed_on": "2026-10-01T15:12:03.164Z",
-      "lease_expires_at": "2026-10-01T22:12:03.164Z",
+      "lease_expires_at": null,
       "base_branch": "main",
       "base_sha": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
       "proposal_base_branch": "feature/wcp-637-video-player-choice-g1",
@@ -62876,11 +62876,43 @@
           "tests/VideoProviderExpansion/"
         ]
       },
-      "next_action": "Implement documented providers, test, and submit reviewable Worker PR.",
-      "active_head": "0aefb975905b67bd649cc37a027fdd5d609d1a37",
-      "last_observed_head": "0aefb975905b67bd649cc37a027fdd5d609d1a37",
-      "last_verified_push_at": null,
-      "worker_pr_state": "not_created"
+      "next_action": "Await independent Worker/Trusted review with prerequisite PR 429 and PR 430; no merge or deployment.",
+      "active_head": "d6f5cfc634045c2a2a5b93b15be18a2ba70204bb",
+      "last_observed_head": "d6f5cfc634045c2a2a5b93b15be18a2ba70204bb",
+      "last_verified_push_at": "2026-10-01T15:55:04.063Z",
+      "worker_pr_state": "open_ready_for_review",
+      "worker_pr": 438,
+      "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/438",
+      "worker_pr_head_sha": "d6f5cfc634045c2a2a5b93b15be18a2ba70204bb",
+      "final_head": "d6f5cfc634045c2a2a5b93b15be18a2ba70204bb",
+      "completed_on": "2026-10-01T15:55:04.063Z",
+      "final_changed_paths": [
+        "src/VideoProviderExpansion/NamedPortalAdapter.php",
+        "src/VideoProviderExpansion/README.md",
+        "tests/VideoProviderExpansion/NamedPortalAdapterTest.php"
+      ],
+      "ci_run_id": 36886718904,
+      "ci_result": "success",
+      "last_ci_head": "d6f5cfc634045c2a2a5b93b15be18a2ba70204bb",
+      "last_ci_result": "success",
+      "php_symfony_job_id": 110451793335,
+      "php_symfony_result": "success",
+      "postgres_migration_job_id": 110451793829,
+      "postgres_migration_result": "success",
+      "test_evidence": "Exact-head Worker CI passed: 1,729 PHP tests/12,178 assertions, 22 JS tests, PHPStan/audit/lints/asset compilation and PostgreSQL 18 migration chain. Two invalid link fallbacks found in initial run were corrected. Thirteen named provider identifiers added to existing PeerTube/Dailymotion; four are link-only pending verified embed URLs. Fixture tests do not prove live remote playback.",
+      "ci_history": [
+        {
+          "head": "69f26913f0787358b9812657568ef37aa58d621c",
+          "run_id": 36885487744,
+          "result": "failure",
+          "reason": "Wrong media type and dot-segment links accepted as fallback"
+        },
+        {
+          "head": "d6f5cfc634045c2a2a5b93b15be18a2ba70204bb",
+          "run_id": 36886718904,
+          "result": "success"
+        }
+      ]
     },
     {
       "priority": 644,
