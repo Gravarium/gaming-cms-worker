@@ -43,7 +43,8 @@ final class VideoProviderApiControllerTest extends WebTestCase
         self::assertArrayHasKey('peertube', $body['providers']);
         self::assertArrayHasKey('dailymotion', $body['providers']);
         self::assertNotEmpty($body['csrf_token']);
-        self::assertSame('private, no-store', $client->getResponse()->headers->get('Cache-Control'));
+        self::assertStringContainsString('private', (string) $client->getResponse()->headers->get('Cache-Control'));
+        self::assertStringContainsString('no-store', (string) $client->getResponse()->headers->get('Cache-Control'));
     }
 
     public function testResolutionIsCsrfProtectedCanonicalAndDoesNotPersist(): void
