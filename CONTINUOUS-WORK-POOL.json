@@ -11,7 +11,7 @@
   "baseline_branch": "main",
   "base_sha": "9e083c63e7d888af36f93a23eb924c89fad2b971",
   "published_at": "2026-10-01T16:10:00Z",
-  "summary": "WCP-649 manager video provider JSON interface complete with green exact-head PR #443; independent active claims remain disjoint.",
+  "summary": "WCP-650 advanced news authoring follows green WCP-648 exact head; unrelated active work remains disjoint.",
   "rules": {
     "choose": "Resume the current chat's unfinished claimed branch first. Otherwise atomically claim an eligible published task. If no published task is eligible, independently derive and publish a bounded worker-only CMS proposal from approved product goals and observed code gaps; do not ask the owner for the next FCP number.",
     "atomic_reservation": "Create the exact claim_branch and suggested feature branch from that task's published proposal_base_sha. If the claim already exists, treat it as a hard lock; the owning continuation resumes it and every other AI skips it.",
@@ -63545,6 +63545,92 @@
           "result": "success"
         }
       ]
+    },
+    {
+      "priority": 650,
+      "package_id": "WCP-650",
+      "title": "Advanced first-party news authoring and structured editing",
+      "risk": "high_content_integrity_and_accessibility",
+      "execution_state": "worker_in_progress",
+      "claim_state": "active_lease",
+      "claim_generation": 1,
+      "claim_branch": "claim/wcp-650-advanced-news-authoring-g1",
+      "suggested_branch": "feature/wcp-650-advanced-news-authoring-g1",
+      "resume_branch": "feature/wcp-650-advanced-news-authoring-g1",
+      "claimed_on": "2026-10-01T21:18:56.195Z",
+      "lease_expires_at": "2026-10-02T04:18:56.195Z",
+      "base_branch": "feature/wcp-648-owned-rich-news-editor-g1",
+      "base_sha": "a7c5ccbb5db5fc507a599f8c1f6228ac9d1a75f1",
+      "proposal_base_branch": "feature/wcp-648-owned-rich-news-editor-g1",
+      "proposal_base_sha": "a7c5ccbb5db5fc507a599f8c1f6228ac9d1a75f1",
+      "active_head": "a7c5ccbb5db5fc507a599f8c1f6228ac9d1a75f1",
+      "dependencies": [
+        "WCP-648"
+      ],
+      "proposal_kind": "worker_only",
+      "objective": "Extend the first-party visual news editor for extensive articles with structured block undo/redo, accessible keyboard and paste behavior, richer table operations and additional editorial blocks while preserving the typed document, revisions, media ownership and security boundaries. No AI or third-party editor code.",
+      "allowed_paths": [
+        "src/NewsEditor/",
+        "assets/news_editor/",
+        "templates/admin/news_editor/",
+        "tests/NewsEditor/",
+        "tests/JavaScript/news_editor.test.mjs",
+        "tests/Controller/AdminNewsEditorTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "CONTINUOUS-WORKER.md",
+        "CONTINUOUS-WORK-POOL.json",
+        ".github/workflows/",
+        "migrations/",
+        "src/Entity/",
+        "src/Repository/",
+        "src/Security/",
+        "templates/admin/content/form.html.twig",
+        "templates/admin/content/index.html.twig",
+        "templates/admin/dashboard.html.twig",
+        "assets/controllers/content_editor_controller.js",
+        "assets/content_media_picker.js",
+        "assets/styles/content-editor.css"
+      ],
+      "deliverables": [
+        "Structured undo/redo across block insertions, removals, reorders and table changes without losing content.",
+        "Richer bounded article blocks and table semantics with escaped public rendering.",
+        "Keyboard and paste interactions that preserve the typed document and reject unsafe HTML.",
+        "Positive and negative document, renderer, and browser-side tests plus complete exact-head Worker CI."
+      ],
+      "tests": [
+        "Focused PHP and JavaScript tests covering structural history, validation, rendering and hostile input.",
+        "Complete Worker CI on exact final head."
+      ],
+      "immutable_constraints": [
+        "worker-only-no-Trusted-merge-or-deployment",
+        "no-third-party-editor-or-paid-AI",
+        "preserve-WCP-648-security-and-legacy-data",
+        "no-security-test-or-CI-weakening",
+        "no-overlap-with-unrelated-active-claims"
+      ],
+      "collision_check": {
+        "compared_against": "Current continuous/work-pool-v4 and exact green WCP-648 head a7c5ccbb5db5fc507a599f8c1f6228ac9d1a75f1",
+        "result": "Only deliberate descendant overlap with completed WCP-648; the proposal starts at its exact green head and no other active/locked editor UI claim is modified. WCP-428, WCP-441 and WCP-621 shared UI paths remain excluded.",
+        "paths": [
+          "src/NewsEditor/",
+          "assets/news_editor/",
+          "templates/admin/news_editor/",
+          "tests/NewsEditor/",
+          "tests/JavaScript/news_editor.test.mjs",
+          "tests/Controller/AdminNewsEditorTest.php"
+        ]
+      },
+      "next_action": "Implement structured editor history and bounded additional blocks on the WCP-648 exact green base.",
+      "last_verified_push_at": null,
+      "worker_pr": null
     }
   ],
   "recovery_queue": [],
