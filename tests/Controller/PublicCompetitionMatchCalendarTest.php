@@ -26,7 +26,7 @@ final class PublicCompetitionMatchCalendarTest extends WebTestCase
             $suffix = bin2hex(random_bytes(5));
             $game = (new Game())->setName('Match Game '.$suffix)->setSlug('match-game-'.$suffix);
             $otherGame = (new Game())->setName('Other Game '.$suffix)->setSlug('other-match-game-'.$suffix);
-            $disabledGame = (new Game())->setName('Disabled Game '.$suffix)->setSlug('disabled-match-game-'.$suffix)->setEnabled(false);
+            $disabledGame = (new Game())->setName('Disabled Game '.$suffix)->setSlug('disabled-match-game-'.$suffix);
             foreach ([$game, $otherGame, $disabledGame] as $item) {
                 $em->persist($item);
                 $entities[] = $item;
@@ -39,6 +39,7 @@ final class PublicCompetitionMatchCalendarTest extends WebTestCase
             $draft = (new Competition())->setGame($game)->setName('Draft Canary '.$suffix)->setSlug('match-draft-'.$suffix);
             $disabled = $this->competition($disabledGame, 'Disabled Canary '.$suffix, 'match-disabled-'.$suffix);
             $other = $this->competition($otherGame, 'Other Canary '.$suffix, 'match-other-'.$suffix);
+            $disabledGame->setEnabled(false);
             foreach ([$visible, $private, $draft, $disabled, $other] as $item) {
                 $em->persist($item);
                 $entities[] = $item;
