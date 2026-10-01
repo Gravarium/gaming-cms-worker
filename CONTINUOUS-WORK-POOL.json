@@ -10,7 +10,7 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "9e083c63e7d888af36f93a23eb924c89fad2b971",
-  "published_at": "2026-10-01T16:05:00Z",
+  "published_at": "2026-10-01T16:10:00Z",
   "summary": "WCP-648 owner-requested first-party rich news editor reserved on disjoint paths.",
   "rules": {
     "choose": "Resume the current chat's unfinished claimed branch first. Otherwise atomically claim an eligible published task. If no published task is eligible, independently derive and publish a bounded worker-only CMS proposal from approved product goals and observed code gaps; do not ask the owner for the next FCP number.",
@@ -63210,14 +63210,14 @@
       "package_id": "WCP-647",
       "title": "Compare visible game catalogue entries side by side",
       "risk": "medium_public_visibility",
-      "execution_state": "worker_in_progress",
-      "claim_state": "active_lease",
+      "execution_state": "worker_complete_awaiting_trusted_review",
+      "claim_state": "locked_until_trusted_resolution",
       "claim_generation": 1,
       "claim_branch": "claim/wcp-647-game-comparison-g1",
       "suggested_branch": "feature/wcp-647-game-comparison-g1",
       "resume_branch": "feature/wcp-647-game-comparison-g1",
       "claimed_on": "2026-10-01T15:54:10Z",
-      "lease_expires_at": "2026-10-01T23:05:00Z",
+      "lease_expires_at": null,
       "base_branch": "main",
       "base_sha": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
       "proposal_base_branch": "main",
@@ -63280,15 +63280,21 @@
           "tests/Widget/GameComparisonWidgetProviderTest.php"
         ]
       },
-      "next_action": "Verify fresh exact-head CI after test fixture correction.",
+      "next_action": "Await independent Worker review and later Trusted integration; no merge or deployment.",
       "last_observed_head": "d9d520a4a514a657189eda739267fdbe64f6428a",
       "last_verified_push_at": "2026-10-01T16:05:00Z",
       "worker_pr": 441,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/441",
-      "worker_pr_state": "draft_ci_pending",
-      "last_ci_run_id": 36888376098,
-      "last_ci_head": "ec1b8e5dccbe8ea1b2bea9d9d9d6f832d0bfb38e",
-      "last_ci_result": "failure"
+      "worker_pr_state": "ready_for_review",
+      "last_ci_run_id": 36889116368,
+      "last_ci_head": "d9d520a4a514a657189eda739267fdbe64f6428a",
+      "last_ci_result": "success",
+      "completion_report": [
+        "Worker PR #441 ready for review at exact head d9d520a4a514a657189eda739267fdbe64f6428a.",
+        "Worker CI run 36889116368: full PHP/Symfony and PostgreSQL 18 jobs successful.",
+        "Seven changed paths are within the WCP-647 allowlist; strict slug, visibility, module and test boundaries retained.",
+        "No Trusted merge or deployment."
+      ]
     },
     {
       "priority": 648,
