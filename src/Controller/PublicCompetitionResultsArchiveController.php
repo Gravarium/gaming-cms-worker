@@ -65,8 +65,8 @@ final class PublicCompetitionResultsArchiveController extends AbstractController
 
     private function page(Request $request): int
     {
-        $page = $request->query->get('page', '1');
-        if (!is_string($page) || preg_match('/^[1-9][0-9]{0,2}$/D', $page) !== 1) {
+        $page = $request->query->getString('page', '1');
+        if (preg_match('/^[1-9][0-9]{0,2}$/D', $page) !== 1) {
             throw $this->createNotFoundException();
         }
         $number = (int) $page;
