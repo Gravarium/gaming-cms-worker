@@ -11,6 +11,40 @@ import {articleMarkdown} from '../../assets/news_editor/markdown-io.js';
 import {applyBlockOperation, resolveBlockShortcut} from '../../assets/news_editor/keyboard-blocks.js';
 import {structuredHtml} from '../../assets/news_editor/html-paste.js';
 import {applySlashCommand, blockForCommand, matchBlockCommands} from '../../assets/news_editor/block-commands.js';
+import {applyBatchBlockOperation, normalizeBlockSelection} from '../../assets/news_editor/batch-blocks.js';
+
+test('batch block selection is explicit, ordered and contiguous', () => {
+  assert.deepEqual(normalizeBlockSelection([3, 2, 3, 1], 5), [1, 2, 3]);
+  assert.equal(normalizeBlockSelection([1, 3], 5), null);
+  assert.equal(normalizeBlockSelection([], 5), null);
+  assert.equal(normalizeBlockSelection([-1], 5), null);
+  assert.equal(normalizeBlockSelection([5], 5), null);
+  assert.equal(normalizeBlockSelection(['1'], 5), null);
+});
+
+test('batch block operations preserve unit order and immutable source data', () => {
+  const paragraph = text => ({type: 'paragraph', content: [{text, marks: []}]});
+  const source = {version: 2, blocks: ['A', 'B', 'C', 'D'].map(paragraph)};
+  const texts = result => result.document.blocks.map(block => block.content[0].text);
+  const up = applyBatchBlockOperation(source, [1, 2], 'move-up');
+  assert.deepEqual(texts(up), ['B', 'C', 'A', 'D']);
+  assert.deepEqual(up.selection, [0, 1]);
+  const down = applyBatchBlockOperation(source, [1, 2], 'move-down');
+  assert.deepEqual(texts(down), ['A', 'D', 'B', 'C']);
+  assert.deepEqual(down.selection, [2, 3]);
+  const duplicate = applyBatchBlockOperation(source, [1, 2], 'duplicate');
+  assert.deepEqual(texts(duplicate), ['A', 'B', 'C', 'B', 'C', 'D']);
+  duplicate.document.blocks[3].content[0].text = 'changed';
+  assert.equal(source.blocks[1].content[0].text, 'B');
+  const deleted = applyBatchBlockOperation(source, [1, 2], 'delete');
+  assert.deepEqual(texts(deleted), ['A', 'D']);
+  assert.deepEqual(deleted.selection, [1]);
+  assert.equal(applyBatchBlockOperation(source, [0], 'move-up'), null);
+  assert.equal(applyBatchBlockOperation(source, [3], 'move-down'), null);
+  assert.equal(applyBatchBlockOperation(source, [0, 1, 2, 3], 'delete'), null);
+  assert.equal(applyBatchBlockOperation(source, [0, 1], 'duplicate', 5), null);
+  assert.equal(applyBatchBlockOperation(source, [0], 'unknown'), null);
+});
 
 test('slash commands provide bounded locale-aware matching with predictable ranking', () => {
   assert.deepEqual(matchBlockCommands('').map(command => command.id), ['paragraph', 'heading', 'list', 'quote', 'callout', 'code', 'table', 'media', 'video', 'separator']);
