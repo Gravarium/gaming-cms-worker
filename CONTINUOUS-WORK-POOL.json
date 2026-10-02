@@ -65189,14 +65189,14 @@
       "package_id": "WCP-662",
       "title": "Conflict-safe autosave and revisions for long news drafts",
       "risk": "high_content_integrity_and_concurrent_edits",
-      "execution_state": "worker_in_progress",
-      "claim_state": "active_lease",
+      "execution_state": "worker_complete_awaiting_trusted_review",
+      "claim_state": "locked_until_trusted_resolution",
       "claim_generation": 1,
       "claim_branch": "claim/wcp-662-news-autosave-g1",
       "suggested_branch": "feature/wcp-662-news-autosave-g1",
       "resume_branch": "feature/wcp-662-news-autosave-g1",
       "claimed_on": "2026-10-02T12:45:08.252Z",
-      "lease_expires_at": "2026-10-02T19:51:04.936Z",
+      "lease_expires_at": null,
       "base_branch": "feature/wcp-659-news-editor-creation-g1",
       "base_sha": "26ba382c94d6ced35f005f1c347ed915304857ff",
       "proposal_base_branch": "feature/wcp-659-news-editor-creation-g1",
@@ -65266,11 +65266,15 @@
           "tests/JavaScript/news_editor.test.mjs"
         ]
       },
-      "next_action": "Await exact-head Worker CI, repair controller or JS errors, then mark ready.",
+      "next_action": "Trusted review and integration decision on Worker PR #456; preserve exact green head.",
       "last_verified_push_at": "2026-10-02T12:51:04.936Z",
       "last_checkpoint_at": "2026-10-02T12:51:04.936Z",
       "worker_pr": 456,
-      "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/456"
+      "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/456",
+      "ci_run": 37009181246,
+      "ci_conclusion": "success",
+      "ci_head": "d7e368e55b58cd394f3fd3940e50ada261ac66a6",
+      "completed_at": "2026-10-02T12:56:17.016Z"
     }
   ],
   "recovery_queue": [],
