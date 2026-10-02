@@ -30,9 +30,12 @@ final class NamedPortalAdapterTest extends TestCase
         yield 'DBimg supplied file' => ['dbimg', 'https://dbimg.app/ib/abcdef1234.webm', 'video', 'https://dbimg.app/ib/abcdef1234.webm'];
         yield 'Vidzflow supplied file' => ['vidzflow', 'https://vidzflow.com/media/abcdef1234.mp4', 'video', 'https://vidzflow.com/media/abcdef1234.mp4'];
         yield 'VdoHide link-only' => ['vdohide', 'https://vdohide.com/watch/demo123', 'link', 'https://vdohide.com/watch/demo123'];
-        yield 'GrooveVideo link-only' => ['groovevideo', 'https://app.groovefunnels.com/grooveembeds/video/demo123/test-video', 'link', 'https://app.groovefunnels.com/grooveembeds/video/demo123/test-video'];
-        yield 'Viddler link-only' => ['viddler', 'https://www.viddler.com/embed/demo123', 'link', 'https://www.viddler.com/embed/demo123'];
-        yield 'MyVideoSpot link-only' => ['myvideospot', 'https://live.myvrspot.com/iframe/demo123', 'link', 'https://live.myvrspot.com/iframe/demo123'];
+        yield 'GrooveVideo supplied iframe' => ['groovevideo', 'https://app.groove.cm/grooveembeds/video/70356/he5QXtUV7MI5pyz91Hdx', 'iframe', 'https://app.groove.cm/grooveembeds/video/70356/he5QXtUV7MI5pyz91Hdx'];
+        yield 'Viddler supplied iframe' => ['viddler', 'https://www.viddler.com/embed/4c57d97a/?f=1&secret=34213636', 'iframe', 'https://www.viddler.com/embed/4c57d97a?f=1&secret=34213636'];
+        yield 'MyVRSpot supplied iframe' => ['myvideospot', 'https://live.myvrspot.com/iframe?v=ODFiZTQwZDA3NjkyNzIxNDkwYWJkZDk2OWFiMjgyYzA', 'iframe', 'https://live.myvrspot.com/iframe?v=ODFiZTQwZDA3NjkyNzIxNDkwYWJkZDk2OWFiMjgyYzA'];
+        yield 'GrooveVideo legacy page remains a link' => ['groovevideo', 'https://app.groovefunnels.com/grooveembeds/video/demo123/test-video', 'link', 'https://app.groovefunnels.com/grooveembeds/video/demo123/test-video'];
+        yield 'Viddler unverified page remains a link' => ['viddler', 'https://www.viddler.com/v/demo123', 'link', 'https://www.viddler.com/v/demo123'];
+        yield 'MyVideoSpot unverified path remains a link' => ['myvideospot', 'https://live.myvrspot.com/iframe/demo123', 'link', 'https://live.myvrspot.com/iframe/demo123'];
     }
 
     #[DataProvider('playableSources')]
@@ -57,6 +60,12 @@ final class NamedPortalAdapterTest extends TestCase
         yield 'fragment on embed' => ['screenpal', 'https://go.screenpal.com/player/c0jrbPVp0Zm#different'];
         yield 'arbitrary Kinescope path' => ['kinescope', 'https://kinescope.io/admin/users'];
         yield 'unknown provider' => ['not-a-provider', 'https://screenpal.com/player/c0jrbPVp0Zm'];
+        yield 'GrooveVideo lookalike' => ['groovevideo', 'https://app.groove.cm.attacker.test/grooveembeds/video/70356/he5QXtUV7MI5pyz91Hdx'];
+        yield 'GrooveVideo arbitrary query' => ['groovevideo', 'https://app.groove.cm/grooveembeds/video/70356/he5QXtUV7MI5pyz91Hdx?next=https://attacker.test'];
+        yield 'Viddler attacker parameter' => ['viddler', 'https://www.viddler.com/embed/4c57d97a/?secret=34213636&next=https://attacker.test'];
+        yield 'Viddler duplicate secret' => ['viddler', 'https://www.viddler.com/embed/4c57d97a/?secret=34213636&secret=12345678'];
+        yield 'MyVRSpot unexpected query' => ['myvideospot', 'https://live.myvrspot.com/iframe?v=ODFiZTQwZDA3NjkyNzIxNDkwYWJkZDk2OWFiMjgyYzA&next=evil'];
+        yield 'MyVRSpot token missing' => ['myvideospot', 'https://live.myvrspot.com/iframe?v='];
     }
 
     #[DataProvider('unsafeSources')]
