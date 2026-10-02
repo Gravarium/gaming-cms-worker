@@ -13,6 +13,8 @@ use App\Security\CmsPermission;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 
 final class AdminCompetitionScheduleTest extends WebTestCase
@@ -51,7 +53,7 @@ final class AdminCompetitionScheduleTest extends WebTestCase
             $client->loginUser($manager);
             $client->request('GET', '/admin/gaming/competitions');
             self::assertResponseIsSuccessful();
-            $token = $client->getContainer()->get(CsrfTokenManagerInterface::class)->getToken('competition-schedule-'.$match->getId())->getValue();
+            $token = $this->csrfToken($client, 'competition-schedule-'.$match->getId());
 
             $client->request('POST', $url, ['scheduled_at' => '2030-10-01T12:30', '_token' => 'invalid']);
             self::assertResponseStatusCodeSame(403);
@@ -141,5 +143,24 @@ final class AdminCompetitionScheduleTest extends WebTestCase
     private function em(KernelBrowser $client): EntityManagerInterface
     {
         return $client->getContainer()->get(EntityManagerInterface::class);
+    }
+
+    private function csrfToken(KernelBrowser $client, string $tokenId): string
+    {
+        $request = $client->getRequest();
+        if (!$request instanceof Request || !$request->hasSession()) {
+            throw new \RuntimeException('A current request session is required to create a CSRF token.');
+        }
+
+        $requestStack = $client->getContainer()->get(RequestStack::class);
+        $requestStack->push($request);
+        try {
+            $token = $client->getContainer()->get(CsrfTokenManagerInterface::class)->getToken($tokenId)->getValue();
+            $request->getSession()->save();
+
+            return $token;
+        } finally {
+            $requestStack->pop();
+        }
     }
 }
