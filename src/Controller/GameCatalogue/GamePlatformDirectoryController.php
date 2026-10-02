@@ -38,12 +38,39 @@ final class GamePlatformDirectoryController extends AbstractController
     {
         $this->assertAvailable();
         $page = $this->page($request);
-        $result = $this->platforms->platform($slug, $page);
+        [$region, $status, $year] = $this->filters($request);
+        $result = $this->platforms->platform($slug, $page, $region, $status, $year);
         if ($result === null) {
             throw $this->createNotFoundException();
         }
 
-        return $this->render('game_platform_directory/show.html.twig', [...$result, 'page' => $page]);
+        return $this->render('game_platform_directory/show.html.twig', [
+            ...$result,
+            'page' => $page,
+            'selectedRegion' => $region,
+            'selectedStatus' => $status,
+            'selectedYear' => $year,
+        ]);
+    }
+
+    /** @return array{?string, ?string, ?int} */
+    private function filters(Request $request): array
+    {
+        $parameters = $request->query->all();
+        $region = $parameters['region'] ?? null;
+        if ($region !== null && (!is_string($region) || preg_match('/\A[\pL\pN ._-]{1,60}\z/u', $region) !== 1)) {
+            throw $this->createNotFoundException();
+        }
+        $status = $parameters['status'] ?? null;
+        if ($status !== null && (!is_string($status) || !in_array($status, ['announced', 'released', 'delayed'], true))) {
+            throw $this->createNotFoundException();
+        }
+        $rawYear = $parameters['year'] ?? null;
+        if ($rawYear !== null && (!is_string($rawYear) || preg_match('/\A(?:19[7-9][0-9]|2[0-1][0-9]{2}|2200)\z/', $rawYear) !== 1)) {
+            throw $this->createNotFoundException();
+        }
+
+        return [$region, $status, $rawYear === null ? null : (int) $rawYear];
     }
 
     private function page(Request $request): int
