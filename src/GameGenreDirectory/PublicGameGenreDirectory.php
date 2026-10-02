@@ -55,8 +55,9 @@ final readonly class PublicGameGenreDirectory
     {
         $this->assertPage($page);
 
-        $genre = $this->entityManager->createQueryBuilder()
-            ->select('DISTINCT genre')
+        /** @var array{genreId: int|string}|null $row */
+        $row = $this->entityManager->createQueryBuilder()
+            ->select('genre.id AS genreId')
             ->from(GameCatalogueEntry::class, 'entry')
             ->join('entry.game', 'game')
             ->join('entry.genres', 'genre')
@@ -68,6 +69,7 @@ final readonly class PublicGameGenreDirectory
             ->setMaxResults(1)
             ->getQuery()
             ->getOneOrNullResult();
+        $genre = $row === null ? null : $this->entityManager->find(GameGenre::class, (int) $row['genreId']);
         if (!$genre instanceof GameGenre) {
             return null;
         }
