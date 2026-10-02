@@ -16,6 +16,9 @@ return [
         'path' => './assets/app.js',
         'entrypoint' => true,
     ],
+    'hls.js' => [
+        'version' => '1.6.13',
+    ],
     '@hotwired/stimulus' => [
         'version' => '3.2.2',
     ],

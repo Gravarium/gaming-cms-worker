@@ -4,6 +4,7 @@
 <header class="topbar">
     <a class="brand" href="{{ path('app_admin_dashboard') }}">Gaming CMS</a>
     <nav class="top-actions">
+        <a class="button-link button-secondary" href="{{ path('app_admin_video_workspace') }}">Quellen, Creator & Live</a>
         <a class="button-link" href="{{ path('app_admin_video_new', videoBrowser.query) }}">Neues Video</a>
         <a class="button-link button-secondary" href="{{ path('app_admin_video_category_new') }}">Neue Kategorie</a>
         <a class="button-link button-secondary" href="{{ path('app_admin_video_playlist_new') }}">Neue Playlist</a>
@@ -61,6 +62,8 @@
                         {% else %}<span class="status">Entwurf</span>{% endif %}
                     </td>
                     <td class="row-actions">
+                        <a href="{{ path('app_admin_video_workspace_metadata', {id: video.id}) }}">Entdeckungs-Metadaten</a>
+                        <a href="{{ path('app_admin_video_workspace_source_new', {video: video.id}) }}">Quelle hinzufügen</a>
                         {% if video.published %}<a href="{{ path('app_video_show', {slug: video.slug}) }}">Ansehen</a>{% endif %}
                         <a href="{{ path('app_admin_video_edit', {id: video.id}|merge(videoBrowser.query)) }}">Bearbeiten</a>
                         <form class="video-delete-form" method="post" action="{{ path('app_admin_video_delete', {id: video.id}|merge(videoBrowser.query)) }}" onsubmit="return confirm('Video wirklich löschen?');">

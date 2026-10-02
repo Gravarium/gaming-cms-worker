@@ -1,0 +1,4 @@
+{% extends 'video_workspace/layout.html.twig' %}
+{% block head_meta %}{{ parent() }}<meta name="turbo-cache-control" content="no-cache">{% endblock %}
+{% block stylesheets %}{{ parent() }}<link rel="stylesheet" href="{{ asset('video_player_choice/choice.css') }}">{% endblock %}
+{% block workspace %}<nav class="workspace-actions" aria-label="Player-Navigation"><a href="{{ path('app_video_player_choice') }}">Videos mit Player-Auswahl</a><a href="{{ path('app_video_workspace') }}">Video & Live</a>{% if is_granted('CMS_VIDEO_MANAGE') %}<a href="{{ path('app_video_player_integrations') }}">Player-Integrationen</a>{% endif %}</nav>{% block choice %}{% endblock %}{% endblock %}
