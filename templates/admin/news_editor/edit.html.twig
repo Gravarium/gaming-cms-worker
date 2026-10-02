@@ -13,6 +13,7 @@
         <button type="button" data-add="paragraph">Absatz</button><button type="button" data-add="heading">Überschrift</button><button type="button" data-add="quote">Zitat</button><button type="button" data-add="list">Liste</button><button type="button" data-add="table">Tabelle</button><button type="button" data-add="callout">Infobox</button><button type="button" data-add="code">Code</button><button type="button" data-add="separator">Trennlinie</button><button type="button" data-add="media">Bild</button><button type="button" data-add="video">Video</button>
         <button type="button" data-command="undo">Rückgängig</button><button type="button" data-command="redo">Wiederholen</button><button type="button" id="news-editor-preview-button">Vorschau</button>
     </div>
+    <nav class="news-editor-outline" aria-label="Artikelgliederung"><h2>Artikelgliederung</h2><div id="news-editor-outline"></div></nav>
     <form method="post" id="news-editor-form" novalidate>
         <input type="hidden" name="_token" value="{{ csrf_token('news-editor-'~entry.id) }}">
         <input type="hidden" name="updatedAt" value="{{ entry.updatedAt|date('c') }}">
