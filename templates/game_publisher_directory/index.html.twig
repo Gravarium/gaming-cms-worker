@@ -1,0 +1,31 @@
+{% extends 'base.html.twig' %}
+{% block title %}Spiele-Publisher{% endblock %}
+{% block body %}
+<main class="content-shell">
+    <header class="page-header">
+        <p class="eyebrow">Spielekatalog</p>
+        <h1>Publisher</h1>
+        <p>Entdecke Publisher mit aktuell sichtbaren Spielen im Katalog.</p>
+        <a class="button-link button-secondary" href="{{ path('app_game_catalogue_index') }}">Zum Spielekatalog</a>
+    </header>
+
+    <section class="portal-cards" aria-label="Publisher">
+        {% for publisher in publishers %}
+            <article class="portal-card">
+                <h2><a href="{{ path('app_game_publisher_show', {slug: publisher.slug}) }}">{{ publisher.name }}</a></h2>
+                <p>Öffentliche Spiele dieses Publishers ansehen.</p>
+            </article>
+        {% else %}
+            <p>Aktuell sind keine Publisher mit veröffentlichten Spielen verfügbar.</p>
+        {% endfor %}
+    </section>
+
+    {% if totalPages > 1 %}
+        <nav aria-label="Publisher-Seiten">
+            {% if page > 1 %}<a href="{{ path('app_game_publisher_directory', {page: page - 1}) }}">Zurück</a>{% endif %}
+            <span>Seite {{ page }} von {{ totalPages }}</span>
+            {% if page < totalPages %}<a href="{{ path('app_game_publisher_directory', {page: page + 1}) }}">Weiter</a>{% endif %}
+        </nav>
+    {% endif %}
+</main>
+{% endblock %}
