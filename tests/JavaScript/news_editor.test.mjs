@@ -10,6 +10,38 @@ import {structuredMarkdown, importMarkdownArticle} from '../../assets/news_edito
 import {articleMarkdown} from '../../assets/news_editor/markdown-io.js';
 import {applyBlockOperation, resolveBlockShortcut} from '../../assets/news_editor/keyboard-blocks.js';
 import {structuredHtml} from '../../assets/news_editor/html-paste.js';
+import {applySlashCommand, blockForCommand, matchBlockCommands} from '../../assets/news_editor/block-commands.js';
+
+test('slash commands provide bounded locale-aware matching with predictable ranking', () => {
+  assert.deepEqual(matchBlockCommands('').map(command => command.id), ['paragraph', 'heading', 'list', 'quote', 'callout', 'code', 'table', 'media', 'video', 'separator']);
+  assert.deepEqual(matchBlockCommands('/übersch').map(command => command.id), ['heading']);
+  assert.deepEqual(matchBlockCommands('warnung').map(command => command.id), ['callout']);
+  assert.deepEqual(matchBlockCommands('bild').map(command => command.id), ['media']);
+  assert.deepEqual(matchBlockCommands('x'.repeat(41)), []);
+  assert.deepEqual(matchBlockCommands('', 11), []);
+  assert.equal(blockForCommand('unknown'), null);
+});
+
+test('slash commands immutably replace only a plain command paragraph', () => {
+  const source = {version: 2, blocks: [
+    {type: 'heading', level: 2, content: [{text: 'Vorher', marks: []}]},
+    {type: 'paragraph', content: [{text: '/ta', marks: []}, {text: 'belle', marks: []}]},
+  ]};
+  const result = applySlashCommand(source, 1, 'table');
+  assert.equal(result.document.blocks[1].type, 'table');
+  assert.equal(result.document.blocks[1].rows[0].length, 2);
+  assert.equal(result.index, 1);
+  assert.match(result.announcement, /Tabelle eingefügt/);
+  result.document.blocks[0].content[0].text = 'Geändert';
+  assert.equal(source.blocks[0].content[0].text, 'Vorher');
+
+  assert.equal(applySlashCommand(source, 0, 'list'), null);
+  assert.equal(applySlashCommand({version: 2, blocks: [{type: 'paragraph', content: [{text: 'Text', marks: []}]}]}, 0, 'list'), null);
+  assert.equal(applySlashCommand({version: 2, blocks: [{type: 'paragraph', content: [{text: '/code', marks: ['strong']}]}]}, 0, 'code'), null);
+  assert.equal(applySlashCommand({version: 2, blocks: [{type: 'paragraph', content: [{text: '/' + 'x'.repeat(41), marks: []}]}]}, 0, 'code'), null);
+  assert.equal(applySlashCommand(source, 1, 'unknown'), null);
+  assert.equal(applySlashCommand(source, 4, 'code'), null);
+});
 
 test('structured HTML paste creates typed inert blocks and safe inline marks', () => {
   const text = nodeValue => ({nodeType: 3, nodeValue});
