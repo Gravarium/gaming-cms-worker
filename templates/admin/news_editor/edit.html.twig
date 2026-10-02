@@ -3,7 +3,7 @@
 {% block stylesheets %}{{ parent() }}<link rel="stylesheet" href="{{ asset('news_editor/editor.css') }}">{% endblock %}
 {% block body %}
 <header class="topbar"><a class="brand" href="{{ path('app_admin_dashboard') }}">Gaming CMS</a><nav class="top-actions"><a href="{{ path('app_admin_news_editor_index') }}">News-Redaktion</a><a href="{{ path('app_admin_content_edit',{id:entry.id}) }}">Artikeldaten</a><a href="{{ path('app_admin_content_history',{id:entry.id}) }}">Versionen</a><a href="{{ path('app_admin_content_index') }}">Inhalte</a></nav></header>
-<main class="news-editor-shell" id="news-editor" data-preview-url="{{ path('app_admin_news_editor_preview',{id:entry.id}) }}" data-media-url="{{ path('app_admin_news_editor_media',{id:entry.id}) }}" data-csrf="{{ csrf_token('news-editor-'~entry.id) }}">
+<main class="news-editor-shell" id="news-editor" data-preview-url="{{ path('app_admin_news_editor_preview',{id:entry.id}) }}" data-autosave-url="{{ path('app_admin_news_editor_autosave',{id:entry.id}) }}" data-media-url="{{ path('app_admin_news_editor_media',{id:entry.id}) }}" data-csrf="{{ csrf_token('news-editor-'~entry.id) }}">
     <p class="eyebrow">News-Redaktion</p><h1>{{ entry.title }}</h1>
     <p class="muted">{{ entry.status == 'review' ? 'In Prüfung' : 'Entwurf' }} · Änderungen werden erst nach dem Speichern als Revision übernommen.</p>
     {% for message in app.flashes('success') %}<div class="notice" role="status">{{ message }}</div>{% endfor %}

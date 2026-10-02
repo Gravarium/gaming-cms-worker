@@ -177,6 +177,69 @@ final class AdminNewsEditorController extends AbstractController
         return $response;
     }
 
+    #[Route('/{id}/autosave', name: 'app_admin_news_editor_autosave', requirements: ['id' => '\\d+'], methods: ['POST'])]
+    public function autosave(ContentEntry $entry, Request $request): JsonResponse
+    {
+        $this->assertEditable($entry);
+        $this->assertCsrf($entry, (string) $request->headers->get('X-CSRF-TOKEN'));
+        if (strlen($request->getContent()) > self::MAX_REQUEST_BYTES) {
+            return $this->autosaveError('Editor-Anfrage ist zu groß.', 413);
+        }
+        try {
+            $payload = json_decode($request->getContent(), true, 16, JSON_THROW_ON_ERROR);
+            if (!is_array($payload)) {
+                throw new \InvalidArgumentException('Ungültige Autosave-Anfrage.');
+            }
+            $submitted = $payload['document'] ?? null;
+            $expected = $payload['updatedAt'] ?? null;
+            $expectedHash = $payload['documentHash'] ?? null;
+            if (!is_string($submitted) || !is_string($expected) || !is_string($expectedHash)
+                || preg_match('/\A[a-f0-9]{64}\z/D', $expectedHash) !== 1) {
+                throw new \InvalidArgumentException('Ungültige Autosave-Anfrage.');
+            }
+            $normalized = $this->policy->normalizeForStorage($submitted);
+            $plainText = $this->policy->plainText($normalized);
+            if ($plainText === '') {
+                throw new \InvalidArgumentException('Ein News-Artikel braucht lesbaren Inhalt.');
+            }
+            $user = $this->getUser();
+            if (!$user instanceof User) {
+                throw $this->createAccessDeniedException();
+            }
+            $this->entityManager->wrapInTransaction(function (EntityManagerInterface $manager) use ($entry, $normalized, $plainText, $expected, $expectedHash, $user): void {
+                $manager->refresh($entry, LockMode::PESSIMISTIC_WRITE);
+                $this->assertEditable($entry);
+                if (!hash_equals($entry->getUpdatedAt()->format(DATE_ATOM), $expected)
+                    || !hash_equals(hash('sha256', $entry->getEditableDocument()), $expectedHash)) {
+                    throw new \DomainException('Der Artikel wurde inzwischen geändert. Bitte neu laden.');
+                }
+                if ($entry->getEditableDocument() !== $normalized) {
+                    $entry->setEditorDocument($normalized)->setBody($plainText);
+                    $manager->flush();
+                    $this->revisions->capture($entry, $user);
+                    $this->audit->record('content.rich_editor.autosave', $entry, $entry->getId(), 'News-Entwurf automatisch als Revision gespeichert.');
+                }
+            });
+            $response = $this->json([
+                'updatedAt' => $entry->getUpdatedAt()->format(DATE_ATOM),
+                'documentHash' => hash('sha256', $entry->getEditableDocument()),
+            ]);
+        } catch (\DomainException $exception) {
+            return $this->autosaveError($exception->getMessage(), 409);
+        } catch (\JsonException|\InvalidArgumentException $exception) {
+            return $this->autosaveError($exception->getMessage(), 422);
+        }
+        $response->headers->set('Cache-Control', 'private, no-store');
+        return $response;
+    }
+
+    private function autosaveError(string $error, int $status): JsonResponse
+    {
+        $response = $this->json(['error' => $error], $status);
+        $response->headers->set('Cache-Control', 'private, no-store');
+        return $response;
+    }
+
     #[Route('/{id}/media', name: 'app_admin_news_editor_media', requirements: ['id' => '\\d+'], methods: ['GET'])]
     public function media(ContentEntry $entry, Request $request): JsonResponse
     {

@@ -5,6 +5,7 @@ import {EditorHistory} from '../../assets/news_editor/history.js';
 import {articleOutline, insertAfter, withinDocumentLimits} from '../../assets/news_editor/longform.js';
 import {editTable} from '../../assets/news_editor/table-ops.js';
 import {safeEditorHref, clipboardRuns, editList, replaceArticle, findArticleBlocks} from '../../assets/news_editor/authoring.js';
+import {AutosaveState} from '../../assets/news_editor/autosave-state.js';
 
 test('news editor extracts only fixed-provider video IDs', () => {
   assert.deepEqual(parseVideoUrl('https://www.youtube.com/watch?v=abc123_DEF0'), {provider: 'youtube', videoId: 'abc123_DEF0'});
@@ -120,4 +121,18 @@ test('find and replace spans rich runs while keeping surrounding marks and escap
   assert.equal(document.blocks[0].content[0].text, 'A bo');
   assert.equal(replaceArticle(document, '', 'x'), null);
   assert.equal(replaceArticle(document, 'a', 'x'.repeat(201)), null);
+});
+
+test('autosave acknowledges only the sent snapshot and blocks writes after a conflict', () => {
+  const state = new AutosaveState('saved');
+  assert.equal(state.begin('saved'), null);
+  assert.equal(state.begin('first'), 'first');
+  assert.equal(state.begin('second'), null);
+  assert.equal(state.success('other'), false);
+  assert.equal(state.success('first'), true);
+  assert.equal(state.isDirty('second'), true);
+  assert.equal(state.begin('second'), 'second');
+  state.failure(true);
+  assert.equal(state.begin('third'), null);
+  assert.equal(state.isDirty('third'), true);
 });

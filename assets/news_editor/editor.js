@@ -3,6 +3,7 @@ import {EditorHistory} from './history.js';
 import {articleOutline, insertAfter, withinDocumentLimits} from './longform.js';
 import {editTable} from './table-ops.js';
 import {safeEditorHref, clipboardRuns, editList, replaceArticle, findArticleBlocks} from './authoring.js';
+import {AutosaveState} from './autosave-state.js';
 
 const root = document.getElementById('news-editor');
 if (root) {
@@ -15,7 +16,8 @@ if (root) {
   const searchResult = document.getElementById('news-editor-find-result');
   const prefix = 'cms-rich:v2\n';
   let history;
-  let savedSnapshot;
+  let autosaveState;
+  let autosaveTimer;
   let submitting = false;
   let findCursor = -1;
   let activeRow = null;
@@ -291,7 +293,7 @@ if (root) {
     changed();
   }
   function changed(event) {
-    status.textContent = 'Ungespeicherte Änderungen.';
+    status.textContent = autosaveState?.blocked ? 'Speicherkonflikt: Der Artikel wurde anderswo geändert. Bitte lokale Änderungen sichern und neu laden.' : 'Ungespeicherte Änderungen.';
     const snapshot = serialize();
     const bytes = new TextEncoder().encode(snapshot).length;
     count.textContent = [...blocks.querySelectorAll('[contenteditable], textarea')].map(el => el.value ?? el.textContent).join(' ').trim().split(/\s+/u).filter(Boolean).length + ' Wörter · ' + blocks.children.length + '/100 Blöcke · ' + bytes + '/60000 Bytes';
@@ -299,9 +301,10 @@ if (root) {
     history?.record(snapshot, {input: event?.type === 'input'});
     updateOutline();
     updateSearch();
+    scheduleAutosave();
   }
   history = new EditorHistory(serialize());
-  savedSnapshot = serialize();
+  autosaveState = new AutosaveState(serialize());
   changed(); status.textContent = openError ? 'Dokument konnte nicht geöffnet werden. Speichern ist gesperrt.' : '';
   function restore(snapshot) {
     if (snapshot === null) return;
@@ -325,9 +328,44 @@ if (root) {
       restore(key === 'y' || event.shiftKey ? history.redo() : history.undo());
     }
   });
-  window.addEventListener('beforeunload', event => { if (!submitting && serialize() !== savedSnapshot) { event.preventDefault(); event.returnValue = ''; } });
-  document.getElementById('news-editor-form').addEventListener('submit', event => {
+  const form = document.getElementById('news-editor-form');
+  const updatedAt = form.querySelector('input[name="updatedAt"]');
+  const documentHash = form.querySelector('input[name="documentHash"]');
+  async function saveAutomatically() {
+    if (openError || submitting || !withinDocumentLimits(JSON.parse(serialize().slice(prefix.length)))) return;
+    const snapshot = autosaveState.begin(serialize());
+    if (snapshot === null) return;
+    status.textContent = 'Entwurf wird automatisch gespeichert …';
+    try {
+      const response = await fetch(root.dataset.autosaveUrl, {method: 'POST', credentials: 'same-origin', cache: 'no-store', headers: {'Content-Type': 'application/json', 'X-CSRF-TOKEN': root.dataset.csrf}, body: JSON.stringify({document: snapshot, updatedAt: updatedAt.value, documentHash: documentHash.value})});
+      const data = await response.json();
+      if (!response.ok) {
+        autosaveState.failure(response.status === 409 || response.status === 403);
+        status.textContent = response.status === 409 ? 'Speicherkonflikt: Der Artikel wurde anderswo geändert. Lokale Änderungen bleiben erhalten.' : data.error ?? 'Autosave fehlgeschlagen.';
+        return;
+      }
+      if (!autosaveState.success(snapshot)) return;
+      updatedAt.value = data.updatedAt;
+      documentHash.value = data.documentHash;
+      status.textContent = autosaveState.isDirty(serialize()) ? 'Neue Änderungen warten auf Autosave.' : 'Entwurf automatisch als Revision gespeichert.';
+      if (autosaveState.isDirty(serialize())) scheduleAutosave();
+    } catch {
+      autosaveState.failure();
+      status.textContent = 'Autosave konnte keine Verbindung herstellen. Änderungen bleiben im Editor.';
+    }
+  }
+  function scheduleAutosave() {
+    clearTimeout(autosaveTimer);
+    if (!autosaveState || openError || submitting || autosaveState.blocked || !autosaveState.isDirty(serialize())) return;
+    autosaveTimer = setTimeout(saveAutomatically, 15000);
+  }
+  window.addEventListener('beforeunload', event => { if (!submitting && autosaveState.isDirty(serialize())) { event.preventDefault(); event.returnValue = ''; } });
+  document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden' && !autosaveState.blocked) { clearTimeout(autosaveTimer); saveAutomatically(); } });
+  form.addEventListener('submit', event => {
+    if (autosaveState.inFlight !== null) { event.preventDefault(); status.textContent = 'Autosave läuft noch. Bitte Speichern gleich erneut auslösen.'; return; }
+    if (autosaveState.blocked) { event.preventDefault(); status.textContent = 'Speicherkonflikt: Bitte lokale Änderungen sichern und den Artikel neu laden.'; return; }
     if (openError || !withinDocumentLimits(JSON.parse(serialize().slice(prefix.length)))) { event.preventDefault(); status.textContent = 'Dokument kann so nicht gespeichert werden. Bitte Inhalt und Grenzen prüfen.'; return; }
+    clearTimeout(autosaveTimer);
     source.value = serialize(); submitting = true;
   });
   root.querySelectorAll('[data-command]').forEach(button => {

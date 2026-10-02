@@ -16,6 +16,71 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 final class AdminNewsEditorTest extends WebTestCase
 {
+    public function testAutosaveCreatesRevisionAndPreventsStaleOverwrite(): void
+    {
+        $client = static::createClient();
+        [$user, $entry] = $this->entry($client);
+        $client->loginUser($user);
+        $crawler = $client->request('GET', '/admin/news-editor/'.$entry->getId());
+        $csrf = $crawler->filter('input[name="_token"]')->attr('value');
+        $updated = $crawler->filter('input[name="updatedAt"]')->attr('value');
+        $hash = $crawler->filter('input[name="documentHash"]')->attr('value');
+        self::assertNotNull($csrf); self::assertNotNull($updated); self::assertNotNull($hash);
+        $endpoint = '/admin/news-editor/'.$entry->getId().'/autosave';
+        $client->request('POST', $endpoint, [], [], [
+            'CONTENT_TYPE' => 'application/json', 'HTTP_X_CSRF_TOKEN' => $csrf,
+        ], json_encode(['document' => $this->document('Autosave'), 'updatedAt' => $updated, 'documentHash' => $hash], JSON_THROW_ON_ERROR));
+        self::assertResponseIsSuccessful();
+        $saved = json_decode($client->getResponse()->getContent() ?: '', true, 16, JSON_THROW_ON_ERROR);
+        self::assertNotSame($updated, $saved['updatedAt']);
+        self::assertNotSame($hash, $saved['documentHash']);
+        self::assertStringContainsString('no-store', strtolower((string) $client->getResponse()->headers->get('Cache-Control')));
+        $em = $client->getContainer()->get(EntityManagerInterface::class);
+        $em->clear();
+        $stored = $em->find(ContentEntry::class, $entry->getId());
+        self::assertInstanceOf(ContentEntry::class, $stored);
+        self::assertSame('Autosave', $stored->getBody());
+        self::assertCount(1, $em->getRepository(ContentRevision::class)->findBy(['entry' => $stored]));
+
+        $client->request('POST', $endpoint, [], [], [
+            'CONTENT_TYPE' => 'application/json', 'HTTP_X_CSRF_TOKEN' => $csrf,
+        ], json_encode(['document' => $this->document('Stale'), 'updatedAt' => $updated, 'documentHash' => $hash], JSON_THROW_ON_ERROR));
+        self::assertResponseStatusCodeSame(409);
+        $client->request('POST', '/admin/news-editor/'.$entry->getId(), [
+            '_token' => $csrf, 'updatedAt' => $saved['updatedAt'], 'documentHash' => $saved['documentHash'], 'document' => $this->document('Manuell'),
+        ]);
+        self::assertResponseRedirects('/admin/news-editor/'.$entry->getId());
+        $em->clear();
+        $stored = $em->find(ContentEntry::class, $entry->getId());
+        self::assertInstanceOf(ContentEntry::class, $stored);
+        self::assertSame('Manuell', $stored->getBody());
+        self::assertCount(2, $em->getRepository(ContentRevision::class)->findBy(['entry' => $stored]));
+    }
+
+    public function testAutosaveRejectsInvalidDocumentAndCsrf(): void
+    {
+        $client = static::createClient();
+        [$user, $entry] = $this->entry($client);
+        $client->loginUser($user);
+        $crawler = $client->request('GET', '/admin/news-editor/'.$entry->getId());
+        $csrf = $crawler->filter('input[name="_token"]')->attr('value');
+        $updated = $crawler->filter('input[name="updatedAt"]')->attr('value');
+        $hash = $crawler->filter('input[name="documentHash"]')->attr('value');
+        self::assertNotNull($csrf); self::assertNotNull($updated); self::assertNotNull($hash);
+        $endpoint = '/admin/news-editor/'.$entry->getId().'/autosave';
+        $payload = json_encode(['document' => RichDocument::PREFIX.'<script>', 'updatedAt' => $updated, 'documentHash' => $hash], JSON_THROW_ON_ERROR);
+        $client->request('POST', $endpoint, [], [], ['CONTENT_TYPE' => 'application/json', 'HTTP_X_CSRF_TOKEN' => $csrf], $payload);
+        self::assertResponseStatusCodeSame(422);
+        $client->request('POST', $endpoint, [], [], ['CONTENT_TYPE' => 'application/json', 'HTTP_X_CSRF_TOKEN' => 'wrong'], $payload);
+        self::assertResponseStatusCodeSame(403);
+        $em = $client->getContainer()->get(EntityManagerInterface::class);
+        $em->clear();
+        $unchanged = $em->find(ContentEntry::class, $entry->getId());
+        self::assertInstanceOf(ContentEntry::class, $unchanged);
+        self::assertSame('Legacy original', $unchanged->getBody());
+        self::assertCount(0, $em->getRepository(ContentRevision::class)->findBy(['entry' => $unchanged]));
+    }
+
     public function testNewNewsStartsInRichEditorWithInitialRevision(): void
     {
         $client = static::createClient();
