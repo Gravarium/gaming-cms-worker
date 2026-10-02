@@ -65879,6 +65879,89 @@
         "assets/news_editor/editor.js",
         "tests/JavaScript/news_editor.test.mjs"
       ]
+    },
+    {
+      "priority": 668,
+      "package_id": "WCP-668",
+      "title": "Keyboard-first block operations in visual news editor",
+      "risk": "medium_editor_accessibility",
+      "execution_state": "worker_in_progress",
+      "claim_state": "claimed",
+      "claim_generation": 1,
+      "claim_branch": "claim/wcp-668-news-keyboard-blocks-g1",
+      "suggested_branch": "feature/wcp-668-news-keyboard-blocks-g1",
+      "resume_branch": "feature/wcp-668-news-keyboard-blocks-g1",
+      "claimed_on": "2026-10-02T18:25:50.000Z",
+      "lease_expires_at": "2026-10-03T01:25:50.000Z",
+      "base_branch": "main",
+      "base_sha": "9e083c63e7d888af36f93a23eb924c89fad2b971",
+      "proposal_base_branch": "feature/wcp-667-news-structured-paste-g1",
+      "proposal_base_sha": "2d9556c8e96e91f35d9de044ad7ae4ce77cf84fc",
+      "active_base_branch": "feature/wcp-667-news-structured-paste-g1",
+      "active_base_sha": "2d9556c8e96e91f35d9de044ad7ae4ce77cf84fc",
+      "active_head": "2d9556c8e96e91f35d9de044ad7ae4ce77cf84fc",
+      "last_observed_head": "2d9556c8e96e91f35d9de044ad7ae4ce77cf84fc",
+      "dependencies": [
+        "WCP-667"
+      ],
+      "proposal_kind": "worker_only",
+      "proposal_dependency_evidence": [
+        {
+          "package_id": "WCP-667",
+          "head": "2d9556c8e96e91f35d9de044ad7ae4ce77cf84fc",
+          "pr": 463,
+          "ci_run": 37044516701,
+          "result": "success"
+        }
+      ],
+      "objective": "Make structural News editing keyboard-first with deterministic shortcuts for inserting, duplicating, moving and removing the active block, while preserving focus, undo history, document limits and editable-field native behavior.",
+      "allowed_paths": [
+        "assets/news_editor/keyboard-blocks.js",
+        "assets/news_editor/editor.js",
+        "tests/JavaScript/news_editor.test.mjs"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "CONTINUOUS-WORKER.md",
+        "CONTINUOUS-WORK-POOL.json",
+        ".github/workflows/",
+        "migrations/",
+        "src/Entity/",
+        "src/Controller/",
+        "templates/",
+        "src/Security/"
+      ],
+      "deliverables": [
+        "Pure shortcut resolver accepts only documented modifier combinations and leaves native typing shortcuts untouched.",
+        "Active-block insert, duplicate, move and remove operations are bounded, focus-preserving and recorded in editor history.",
+        "Accessible status announcements identify the structural result and focused block position.",
+        "Focused JavaScript tests plus complete exact-head Worker CI."
+      ],
+      "tests": [
+        "Node focused JavaScript tests for shortcut resolution and immutable bounded operations.",
+        "Complete Worker CI on exact final head."
+      ],
+      "immutable_constraints": [
+        "worker-only-no-Trusted-merge-or-deployment",
+        "no-native-editing-shortcut-regressions",
+        "no-security-test-or-CI-weakening"
+      ],
+      "collision_check": {
+        "compared_against": "Live pool at bdad8d07f554c2c4bd9b5cc0b074d1bb4ea15ace with no worker_in_progress claim",
+        "result": "Deliberate serial News Editor descendant of completed WCP-667; no concurrent exclusive-path owner.",
+        "paths": [
+          "assets/news_editor/keyboard-blocks.js",
+          "assets/news_editor/editor.js",
+          "tests/JavaScript/news_editor.test.mjs"
+        ]
+      },
+      "next_action": "Create the feature branch from exact green WCP-667 head, implement keyboard-first block operations, test and run exact-head Worker CI."
     }
   ],
   "recovery_queue": [],
