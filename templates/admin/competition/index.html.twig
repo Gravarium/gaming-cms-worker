@@ -16,6 +16,9 @@
             {% elseif competition.status == 'open' %}
                 <form method="post" action="{{ path('app_admin_competition_seed', {id: competition.id}) }}"><input type="hidden" name="_token" value="{{ csrf_token('competition-seed-' ~ competition.id) }}"><button type="submit">Paarungen erzeugen</button></form>
             {% endif %}
+            {% if competition.status == 'in_progress' and competition.format == 'single_elimination' %}
+                <form method="post" action="{{ path('app_admin_competition_advance', {id: competition.id}) }}"><input type="hidden" name="_token" value="{{ csrf_token('competition-advance-' ~ competition.id) }}"><button type="submit">Bestätigte Runde fortsetzen oder Finale abschließen</button></form>
+            {% endif %}
             {% if competition.status != 'archived' %}<form method="post" action="{{ path('app_admin_competition_archive', {id: competition.id}) }}"><input type="hidden" name="_token" value="{{ csrf_token('competition-archive-' ~ competition.id) }}"><button type="submit">Archivieren</button></form>{% endif %}
         </article>
     {% else %}
