@@ -1,0 +1,29 @@
+{% extends 'base.html.twig' %}
+{% block title %}Abonnierte Themen{% endblock %}
+{% block body %}
+<main class="dashboard">
+    <p class="eyebrow">Community</p>
+    <h1>Abonnierte Themen</h1>
+    <p><a href="{{ path('app_gaming_forum_index') }}">Zum Forum</a></p>
+    <p>{{ total }} sichtbare Themen</p>
+    {% if threads is empty %}
+        <p>Du folgst derzeit keinen für dich sichtbaren Themen.</p>
+    {% else %}
+        <section class="dashboard-grid" aria-label="Abonnierte Themen">
+            {% for thread in threads %}
+                <article class="panel">
+                    <h2><a href="{{ path('app_gaming_forum_thread', {id: thread.id}) }}">{{ thread.title }}</a></h2>
+                    <p>{{ thread.state }}</p>
+                </article>
+            {% endfor %}
+        </section>
+    {% endif %}
+    {% if pages > 1 %}
+        <nav aria-label="Abonnementseiten">
+            {% if page > 1 %}<a href="{{ path('app_gaming_forum_subscriptions', {page: page - 1}) }}">Zurück</a>{% endif %}
+            <span>Seite {{ page }} von {{ pages }}</span>
+            {% if page < pages %}<a href="{{ path('app_gaming_forum_subscriptions', {page: page + 1}) }}">Weiter</a>{% endif %}
+        </nav>
+    {% endif %}
+</main>
+{% endblock %}
