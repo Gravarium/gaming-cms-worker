@@ -3,8 +3,18 @@
 {% block title %}E-Mail-Bestätigung | {{ site.siteName }}{% endblock %}
 {% block body %}
 <main class="auth-shell"><section class="auth-card">
-    <p class="eyebrow">Kontosicherheit</p><h1>{{ success ? 'E-Mail-Adresse bestätigt' : 'Link ungültig' }}</h1>
-    <div class="{{ success ? 'notice' : 'alert' }}">{{ success ? 'Deine E-Mail-Adresse wurde erfolgreich bestätigt.' : 'Dieser Bestätigungslink ist ungültig, abgelaufen oder wurde bereits verwendet.' }}</div>
-    <a class="button-link" href="{{ path(app.user ? 'app_account_home' : 'app_login') }}">Weiter</a>
+    <p class="eyebrow">Kontosicherheit</p>
+    {% if confirmation %}
+        <h1>E-Mail-Adresse bestätigen</h1>
+        <div class="notice">Bestätige deine E-Mail-Adresse, um den Vorgang abzuschließen.</div>
+        <form method="post" action="{{ path('app_verify_email', {token: token}) }}">
+            <input type="hidden" name="_token" value="{{ csrf_token('verify-email') }}">
+            <button type="submit">E-Mail-Adresse bestätigen</button>
+        </form>
+    {% else %}
+        <h1>{{ success ? 'E-Mail-Adresse bestätigt' : 'Link ungültig' }}</h1>
+        <div class="{{ success ? 'notice' : 'alert' }}">{{ success ? 'Deine E-Mail-Adresse wurde erfolgreich bestätigt.' : 'Dieser Bestätigungslink ist ungültig, abgelaufen oder wurde bereits verwendet.' }}</div>
+        <a class="button-link" href="{{ path(app.user ? 'app_account_home' : 'app_login') }}">Weiter</a>
+    {% endif %}
 </section></main>
 {% endblock %}
