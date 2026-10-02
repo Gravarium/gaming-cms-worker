@@ -11,6 +11,8 @@ use App\Entity\ContentEntry;
 use App\Entity\User;
 use App\Module\CmsModuleManager;
 use App\NewsEditor\LegacyNewsConverter;
+use App\NewsEditor\RichDocument;
+use App\Repository\ContentEntryRepository;
 use App\Repository\MediaAssetRepository;
 use App\Service\AuditLogger;
 use App\Service\ContentRevisionManager;
@@ -22,6 +24,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Component\String\Slugger\SluggerInterface;
 
 #[Route('/admin/news-editor')]
 #[IsGranted('CMS_CONTENT_MANAGE')]
@@ -39,6 +42,8 @@ final class AdminNewsEditorController extends AbstractController
         private readonly AuditLogger $audit,
         private readonly MediaAssetRepository $assets,
         private readonly OwnedMediaReferenceGateway $media,
+        private readonly ContentEntryRepository $entries,
+        private readonly SluggerInterface $slugger,
     ) {}
 
     #[Route('', name: 'app_admin_news_editor_index', methods: ['GET'])]
@@ -52,6 +57,54 @@ final class AdminNewsEditorController extends AbstractController
             'status' => [ContentEntry::STATUS_DRAFT, ContentEntry::STATUS_REVIEW],
         ], ['updatedAt' => 'DESC'], 100);
         $response = $this->render('admin/news_editor/index.html.twig', ['entries' => $entries]);
+        $response->headers->set('Cache-Control', 'private, no-store');
+        $response->headers->set('X-Robots-Tag', 'noindex, nofollow, noarchive');
+        return $response;
+    }
+
+    #[Route('/new', name: 'app_admin_news_editor_new', methods: ['GET', 'POST'])]
+    public function new(Request $request): Response
+    {
+        if (!$this->modules->isEnabled('content')) {
+            throw $this->createNotFoundException();
+        }
+        $title = '';
+        $error = null;
+        if ($request->isMethod('POST')) {
+            if (!$this->isCsrfTokenValid('news-editor-new', (string) $request->request->get('_token'))) {
+                throw $this->createAccessDeniedException('Ungültige Sicherheitsprüfung.');
+            }
+            $submitted = $request->request->get('title');
+            $title = is_string($submitted) ? trim($submitted) : '';
+            if ($title === '' || !mb_check_encoding($title, 'UTF-8') || mb_strlen($title) > 180 || preg_match('/[\x00-\x1f\x7f]/u', $title) === 1) {
+                $error = 'Bitte einen Titel mit höchstens 180 Zeichen eingeben.';
+            } else {
+                $user = $this->getUser();
+                if (!$user instanceof User) {
+                    throw $this->createAccessDeniedException();
+                }
+                $base = mb_strtolower($this->slugger->slug($title)->toString());
+                $base = $base === '' ? 'news' : mb_substr($base, 0, 180);
+                $slug = $base;
+                for ($suffix = 2; $this->entries->slugExists($slug); $suffix++) {
+                    $tail = '-'.$suffix;
+                    $slug = mb_substr($base, 0, 200 - mb_strlen($tail)).$tail;
+                }
+                $document = RichDocument::PREFIX.json_encode(['version' => 2, 'blocks' => [
+                    ['type' => 'paragraph', 'content' => [['text' => '', 'marks' => []]]],
+                ]], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR);
+                $entry = (new ContentEntry())->setType(ContentEntry::TYPE_NEWS)->setStatus(ContentEntry::STATUS_DRAFT)
+                    ->setAuthor($user)->setTitle($title)->setSlug($slug)->setBody('')->setEditorDocument($document);
+                $this->entityManager->wrapInTransaction(function (EntityManagerInterface $manager) use ($entry, $user): void {
+                    $manager->persist($entry);
+                    $manager->flush();
+                    $this->revisions->capture($entry, $user);
+                    $this->audit->record('content.create', $entry, $entry->getId(), 'News-Entwurf im visuellen Editor erstellt.', ['status' => ContentEntry::STATUS_DRAFT, 'type' => ContentEntry::TYPE_NEWS]);
+                });
+                return $this->redirectToRoute('app_admin_news_editor', ['id' => $entry->getId()]);
+            }
+        }
+        $response = $this->render('admin/news_editor/new.html.twig', ['title' => $title, 'error' => $error], new Response(status: $error === null ? 200 : 422));
         $response->headers->set('Cache-Control', 'private, no-store');
         $response->headers->set('X-Robots-Tag', 'noindex, nofollow, noarchive');
         return $response;

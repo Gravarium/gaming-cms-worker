@@ -16,6 +16,55 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 final class AdminNewsEditorTest extends WebTestCase
 {
+    public function testNewNewsStartsInRichEditorWithInitialRevision(): void
+    {
+        $client = static::createClient();
+        [$user] = $this->entry($client);
+        $client->loginUser($user);
+        $crawler = $client->request('GET', '/admin/news-editor/new');
+        self::assertResponseIsSuccessful();
+        $token = $crawler->filter('input[name="_token"]')->attr('value');
+        self::assertNotNull($token);
+        $title = 'Neuer Rich Draft '.bin2hex(random_bytes(4));
+        $client->request('POST', '/admin/news-editor/new', ['_token' => $token, 'title' => $title]);
+        self::assertResponseRedirects();
+        $em = $client->getContainer()->get(EntityManagerInterface::class);
+        $em->clear();
+        $created = $em->getRepository(ContentEntry::class)->findOneBy(['title' => $title]);
+        self::assertInstanceOf(ContentEntry::class, $created);
+        self::assertSame(ContentEntry::TYPE_NEWS, $created->getType());
+        self::assertSame(ContentEntry::STATUS_DRAFT, $created->getStatus());
+        self::assertSame($user->getId(), $created->getAuthor()?->getId());
+        self::assertStringStartsWith(RichDocument::PREFIX, $created->getEditorDocument() ?? '');
+        self::assertCount(1, $em->getRepository(ContentRevision::class)->findBy(['entry' => $created]));
+        self::assertSame('/admin/news-editor/'.$created->getId(), $client->getResponse()->headers->get('Location'));
+        $client->followRedirect();
+        self::assertResponseIsSuccessful();
+        self::assertStringContainsString('Artikelentwurf speichern', $client->getResponse()->getContent() ?: '');
+        $client->request('POST', '/admin/news-editor/new', ['_token' => $token, 'title' => $title]);
+        self::assertResponseRedirects();
+        $em->clear();
+        $copies = $em->getRepository(ContentEntry::class)->findBy(['title' => $title]);
+        self::assertCount(2, $copies);
+        self::assertNotSame($copies[0]->getSlug(), $copies[1]->getSlug());
+    }
+
+    public function testNewNewsRejectsInvalidTitleAndCsrf(): void
+    {
+        $client = static::createClient();
+        [$user] = $this->entry($client);
+        $client->loginUser($user);
+        $crawler = $client->request('GET', '/admin/news-editor/new');
+        $token = $crawler->filter('input[name="_token"]')->attr('value');
+        self::assertNotNull($token);
+        $client->request('POST', '/admin/news-editor/new', ['_token' => $token, 'title' => str_repeat('x', 181)]);
+        self::assertResponseStatusCodeSame(422);
+        $client->request('POST', '/admin/news-editor/new', ['_token' => 'wrong', 'title' => 'Should not exist']);
+        self::assertResponseStatusCodeSame(403);
+        $em = $client->getContainer()->get(EntityManagerInterface::class);
+        self::assertNull($em->getRepository(ContentEntry::class)->findOneBy(['title' => 'Should not exist']));
+    }
+
     public function testLegacyDraftOpensAndRichSaveCreatesRevision(): void
     {
         $client = static::createClient();
