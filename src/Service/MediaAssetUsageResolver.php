@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Service;
 
 use App\ContentEditor\ContentBlockDocument;
+use App\NewsEditor\RichDocument;
 use App\Entity\Guild;
 use App\Entity\MediaAsset;
 use App\Entity\Video;
@@ -21,6 +22,7 @@ final class MediaAssetUsageResolver
         private readonly SiteSettingsRepository $siteSettings,
         private readonly ContentEntryRepository $content,
         private readonly ContentBlockDocument $contentBlocks,
+        private readonly RichDocument $richDocuments,
     ) {
     }
 
@@ -113,7 +115,9 @@ final class MediaAssetUsageResolver
             }
 
             try {
-                $blocks = $this->contentBlocks->decode($document)['blocks'];
+                $blocks = str_starts_with($document, RichDocument::PREFIX)
+                    ? $this->richDocuments->decode($document)['blocks']
+                    : $this->contentBlocks->decode($document)['blocks'];
             } catch (\InvalidArgumentException) {
                 $pattern = '/"assetId"\\s*:\\s*'.preg_quote((string) $assetId, '/').'(?![0-9])/';
                 if (preg_match($pattern, $document) === 1) {
