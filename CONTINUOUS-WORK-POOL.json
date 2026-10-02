@@ -65527,6 +65527,96 @@
         "templates/admin/news_editor/edit.html.twig",
         "tests/Controller/AdminNewsEditorTest.php"
       ]
+    },
+    {
+      "priority": 665,
+      "package_id": "WCP-665",
+      "title": "Review and restore visual news revisions",
+      "risk": "high_content_recovery_and_revision_scope",
+      "execution_state": "worker_in_progress",
+      "claim_state": "claimed",
+      "claim_generation": 1,
+      "claim_branch": "claim/wcp-665-news-revision-recovery-g1",
+      "suggested_branch": "feature/wcp-665-news-revision-recovery-g1",
+      "resume_branch": "feature/wcp-665-news-revision-recovery-g1",
+      "claimed_on": "2026-10-02T14:31:00.000Z",
+      "lease_expires_at": "2026-10-02T21:31:00.000Z",
+      "base_branch": "main",
+      "base_sha": "9e083c63e7d888af36f93a23eb924c89fad2b971",
+      "proposal_base_branch": "feature/wcp-664-news-review-handoff-g1",
+      "proposal_base_sha": "673e0d384896f7c70d8455273c09bcfdff1ea022",
+      "active_base_branch": "feature/wcp-664-news-review-handoff-g1",
+      "active_base_sha": "673e0d384896f7c70d8455273c09bcfdff1ea022",
+      "active_head": "673e0d384896f7c70d8455273c09bcfdff1ea022",
+      "last_observed_head": "673e0d384896f7c70d8455273c09bcfdff1ea022",
+      "dependencies": [
+        "WCP-664"
+      ],
+      "proposal_kind": "worker_only",
+      "proposal_dependency_evidence": [
+        {
+          "package_id": "WCP-664",
+          "head": "673e0d384896f7c70d8455273c09bcfdff1ea022",
+          "pr": 460,
+          "ci_run": 37019638342,
+          "result": "success"
+        }
+      ],
+      "objective": "Keep visual News Editor recovery inside the visual workflow by adding a private bounded revision history, safe rendered revision preview and CSRF-protected restore that verifies entry ownership, current editable state and optimistic version before capturing the current document and restoring the selected snapshot as a draft.",
+      "allowed_paths": [
+        "src/Controller/AdminNewsEditorController.php",
+        "templates/admin/news_editor/edit.html.twig",
+        "templates/admin/news_editor/history.html.twig",
+        "templates/admin/news_editor/revision.html.twig",
+        "tests/Controller/AdminNewsEditorTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "CONTINUOUS-WORKER.md",
+        "CONTINUOUS-WORK-POOL.json",
+        ".github/workflows/",
+        "migrations/",
+        "src/Entity/",
+        "src/Repository/",
+        "src/Security/",
+        "src/Controller/AdminContentController.php",
+        "src/Service/ContentRevisionManager.php"
+      ],
+      "deliverables": [
+        "Private no-store visual News revision history limited to the existing bounded repository result.",
+        "Safe server-rendered immutable revision preview scoped to the selected News entry.",
+        "CSRF-protected restore with entry ownership and optimistic current-version checks; capture current state before restoring selected snapshot as draft.",
+        "Audit event, visual-editor redirect and positive/negative controller tests.",
+        "Complete exact-head Worker CI."
+      ],
+      "tests": [
+        "Controller tests for history/preview, cross-entry isolation, CSRF, stale restore and successful recovery.",
+        "Complete Worker CI on exact final head."
+      ],
+      "immutable_constraints": [
+        "worker-only-no-Trusted-merge-or-deployment",
+        "revision-snapshots-remain-immutable",
+        "cross-entry-revisions-must-not-be-readable-or-restorable",
+        "no-security-test-or-CI-weakening"
+      ],
+      "collision_check": {
+        "compared_against": "Live pool at af331205cb65c416b5c98561c7008b2f5a7b5840 and exact green WCP-664 head 673e0d384896f7c70d8455273c09bcfdff1ea022",
+        "result": "Deliberate serial News Editor descendant; no worker_in_progress claim existed at reservation time.",
+        "paths": [
+          "src/Controller/AdminNewsEditorController.php",
+          "templates/admin/news_editor/edit.html.twig",
+          "templates/admin/news_editor/history.html.twig",
+          "templates/admin/news_editor/revision.html.twig",
+          "tests/Controller/AdminNewsEditorTest.php"
+        ]
+      },
+      "next_action": "Implement bounded revision history, preview and safe restore, then push a checkpoint and run exact-head Worker CI."
     }
   ],
   "recovery_queue": [],
