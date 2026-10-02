@@ -2,6 +2,7 @@ import {parseVideoUrl} from './video-url.js';
 import {EditorHistory} from './history.js';
 import {articleOutline, insertAfter, withinDocumentLimits} from './longform.js';
 import {editTable} from './table-ops.js';
+import {safeEditorHref, clipboardRuns, editList, replaceArticle, findArticleBlocks} from './authoring.js';
 
 const root = document.getElementById('news-editor');
 if (root) {
@@ -9,15 +10,27 @@ if (root) {
   const source = document.getElementById('news-editor-document');
   const status = document.getElementById('news-editor-status');
   const count = document.getElementById('news-editor-count');
+  const search = document.getElementById('news-editor-find');
+  const replacement = document.getElementById('news-editor-replace');
+  const searchResult = document.getElementById('news-editor-find-result');
   const prefix = 'cms-rich:v2\n';
   let history;
+  let savedSnapshot;
+  let submitting = false;
+  let findCursor = -1;
   let activeRow = null;
   const outline = document.getElementById('news-editor-outline');
   let initial;
-  try { initial = JSON.parse(source.value.slice(prefix.length)); }
-  catch { initial = {version: 2, blocks: [{type: 'paragraph', content: [{text: '', marks: []}]}]}; status.textContent = 'Dokument konnte nicht geöffnet werden.'; }
+  let openError = false;
+  try {
+    if (!source.value.startsWith(prefix)) throw new Error('Dokumentformat');
+    initial = JSON.parse(source.value.slice(prefix.length));
+    if (initial.version !== 2 || !Array.isArray(initial.blocks) || !initial.blocks.length) throw new Error('Dokumentstruktur');
+  }
+  catch { initial = {version: 2, blocks: [{type: 'paragraph', content: [{text: '', marks: []}]}]}; openError = true; status.textContent = 'Dokument konnte nicht geöffnet werden.'; }
 
   const node = (tag, text = '') => { const el = document.createElement(tag); el.textContent = text; return el; };
+  const closestFrom = (value, selector) => (value?.nodeType === Node.ELEMENT_NODE ? value : value?.parentElement)?.closest(selector);
   const input = (label, value) => { const wrapper = node('label', label + ' '); const field = node('input'); field.value = value ?? ''; wrapper.append(field); return wrapper; };
   const editable = (tag, content) => {
     const el = node(tag); el.contentEditable = 'true'; el.setAttribute('role', 'textbox'); el.setAttribute('aria-multiline', 'true');
@@ -66,13 +79,29 @@ if (root) {
     if (block.type === 'quote') { row.append(editable('blockquote', block.content), input('Quelle', block.cite)); }
     if (block.type === 'list') {
       row.dataset.ordered = String(block.ordered); let list = node(block.ordered ? 'ol' : 'ul');
+      let selectedItem = 0;
       const listType = node('select'); listType.setAttribute('aria-label', 'Listentyp');
       for (const [value, label] of [['false', 'Aufzählung'], ['true', 'Nummerierung']]) { const option = node('option', label); option.value = value; listType.append(option); }
       listType.value = row.dataset.ordered;
       listType.addEventListener('change', () => { row.dataset.ordered = listType.value; const replacement = node(listType.value === 'true' ? 'ol' : 'ul'); replacement.append(...list.childNodes); list.replaceWith(replacement); list = replacement; changed(); });
       row.append(listType);
-      for (const item of block.items ?? []) list.append(editable('li', item)); row.append(list);
-      const addItem = node('button', 'Listenpunkt hinzufügen'); addItem.type = 'button'; addItem.addEventListener('click', () => { list.append(editable('li', [{text: '', marks: []}])); changed(); }); row.append(addItem);
+      const draw = items => { list.replaceChildren(); for (const item of items) list.append(editable('li', item)); };
+      draw(block.items ?? []); row.append(list);
+      row.addEventListener('focusin', event => { if (list.contains(event.target)) selectedItem = [...list.children].indexOf(event.target.closest('li')); });
+      const apply = action => {
+        const items = [...list.children].map(runs);
+        const edited = editList(items, action, selectedItem);
+        if (!edited) { status.textContent = 'Listenpunkt kann nicht geändert werden.'; return; }
+        const candidate = JSON.parse(serialize().slice(prefix.length));
+        candidate.blocks[[...blocks.children].indexOf(row)].items = edited;
+        if (!withinDocumentLimits(candidate)) { status.textContent = 'Dokumentgrenze erreicht.'; return; }
+        selectedItem = Math.max(0, Math.min(edited.length - 1, selectedItem + (action === 'insert' || action === 'down' ? 1 : action === 'up' ? -1 : 0)));
+        draw(edited); list.children[selectedItem].focus(); changed();
+      };
+      row.addEventListener('keydown', event => { if (list.contains(event.target) && event.key === 'Enter' && !event.shiftKey) { event.preventDefault(); apply('insert'); } });
+      for (const [label, action] of [['Punkt darunter', 'insert'], ['Gewählten Punkt entfernen', 'remove'], ['Punkt nach oben', 'up'], ['Punkt nach unten', 'down']]) {
+        const button = node('button', label); button.type = 'button'; button.addEventListener('click', () => apply(action)); row.append(button);
+      }
     }
     if (block.type === 'table') {
       const table = node('table');
@@ -220,12 +249,17 @@ if (root) {
   }
   function changed(event) {
     status.textContent = 'Ungespeicherte Änderungen.';
-    count.textContent = [...blocks.querySelectorAll('[contenteditable], textarea')].map(el => el.value ?? el.textContent).join(' ').trim().split(/\s+/u).filter(Boolean).length + ' Wörter';
-    history?.record(serialize(), {input: event?.type === 'input'});
+    const snapshot = serialize();
+    const bytes = new TextEncoder().encode(snapshot).length;
+    count.textContent = [...blocks.querySelectorAll('[contenteditable], textarea')].map(el => el.value ?? el.textContent).join(' ').trim().split(/\s+/u).filter(Boolean).length + ' Wörter · ' + blocks.children.length + '/100 Blöcke · ' + bytes + '/60000 Bytes';
+    if (!withinDocumentLimits(JSON.parse(snapshot.slice(prefix.length)))) status.textContent = 'Dokumentgrenze überschritten. Bitte Text oder Blöcke kürzen.';
+    history?.record(snapshot, {input: event?.type === 'input'});
     updateOutline();
+    updateSearch();
   }
   history = new EditorHistory(serialize());
-  changed(); status.textContent = '';
+  savedSnapshot = serialize();
+  changed(); status.textContent = openError ? 'Dokument konnte nicht geöffnet werden. Speichern ist gesperrt.' : '';
   function restore(snapshot) {
     if (snapshot === null) return;
     const activeRow = document.activeElement?.closest('.news-editor-block');
@@ -236,8 +270,7 @@ if (root) {
     const target = blocks.children[Math.max(0, Math.min(rowIndex, blocks.children.length - 1))];
     target?.querySelector('[contenteditable], textarea, input, select')?.focus();
     status.textContent = 'Ungespeicherte Änderung in der Dokument-Historie.';
-    count.textContent = [...blocks.querySelectorAll('[contenteditable], textarea')].map(el => el.value ?? el.textContent).join(' ').trim().split(/\s+/u).filter(Boolean).length + ' Wörter';
-    updateOutline();
+    changed();
   }
   blocks.addEventListener('focusin', event => { activeRow = event.target.closest('.news-editor-block'); });
   root.addEventListener('keydown', event => {
@@ -249,7 +282,11 @@ if (root) {
       restore(key === 'y' || event.shiftKey ? history.redo() : history.undo());
     }
   });
-  document.getElementById('news-editor-form').addEventListener('submit', () => { source.value = serialize(); });
+  window.addEventListener('beforeunload', event => { if (!submitting && serialize() !== savedSnapshot) { event.preventDefault(); event.returnValue = ''; } });
+  document.getElementById('news-editor-form').addEventListener('submit', event => {
+    if (openError || !withinDocumentLimits(JSON.parse(serialize().slice(prefix.length)))) { event.preventDefault(); status.textContent = 'Dokument kann so nicht gespeichert werden. Bitte Inhalt und Grenzen prüfen.'; return; }
+    source.value = serialize(); submitting = true;
+  });
   root.querySelectorAll('[data-command]').forEach(button => {
     button.addEventListener('mousedown', event => event.preventDefault());
     button.addEventListener('click', () => {
@@ -258,8 +295,24 @@ if (root) {
         restore(command === 'undo' ? history.undo() : history.redo()); return;
       }
       if (command === 'link') {
-        const url = window.prompt('Linkziel (HTTPS oder interner Pfad):'); if (!url) return;
-        document.execCommand('createLink', false, url);
+        const selection = window.getSelection();
+        const current = closestFrom(selection?.anchorNode, 'a');
+        const url = window.prompt('Linkziel (HTTP(S) oder interner Pfad):', current?.getAttribute('href') ?? '');
+        if (url === null) return;
+        const href = safeEditorHref(url);
+        if (!href) { status.textContent = 'Linkziel nicht erlaubt. Bitte HTTP(S) oder internen Pfad verwenden.'; return; }
+        if (current && blocks.contains(current)) current.setAttribute('href', href);
+        else if (selection && !selection.isCollapsed && selection.rangeCount && closestFrom(selection.anchorNode, '[contenteditable]') && closestFrom(selection.anchorNode, '[contenteditable]') === closestFrom(selection.focusNode, '[contenteditable]')) document.execCommand('createLink', false, href);
+        else { status.textContent = 'Bitte zuerst Text innerhalb eines Feldes markieren.'; return; }
+      } else if (command === 'unlink') document.execCommand('unlink', false);
+      else if (command === 'removeFormat') document.execCommand('removeFormat', false);
+      else if (command === 'inlineCode') {
+        const selection = window.getSelection();
+        if (!selection || selection.isCollapsed || !selection.rangeCount || !blocks.contains(selection.anchorNode) || !closestFrom(selection.anchorNode, '[contenteditable]') || closestFrom(selection.anchorNode, '[contenteditable]') !== closestFrom(selection.focusNode, '[contenteditable]')) return;
+        const text = selection.toString();
+        const code = node('code', text);
+        const range = selection.getRangeAt(0); range.deleteContents(); range.insertNode(code);
+        range.setStartAfter(code); range.collapse(true); selection.removeAllRanges(); selection.addRange(range);
       } else document.execCommand(command, false);
       changed();
     });
@@ -317,7 +370,57 @@ if (root) {
   blocks.addEventListener('paste', event => {
     if (!event.target.closest('[contenteditable]')) return;
     event.preventDefault();
-    document.execCommand('insertText', false, event.clipboardData.getData('text/plain'));
+    const target = event.target.closest('[contenteditable]');
+    const html = event.clipboardData?.getData('text/html');
+    const content = html ? new DOMParser().parseFromString(html, 'text/html').body : null;
+    const pasted = content ? clipboardRuns(content) : [{text: event.clipboardData?.getData('text/plain') ?? '', marks: []}];
+    if (!pasted.length) return;
+    const before = serialize();
+    const fragment = document.createDocumentFragment();
+    for (const run of pasted) {
+      let child = document.createTextNode(run.text);
+      for (const mark of run.marks) {
+        const tag = {strong: 'strong', em: 'em', underline: 'u', strike: 's', code: 'code', link: 'a'}[mark];
+        const wrapper = node(tag); if (tag === 'a') wrapper.setAttribute('href', run.href);
+        wrapper.append(child); child = wrapper;
+      }
+      fragment.append(child);
+    }
+    const selection = window.getSelection();
+    if (!selection || !selection.rangeCount) { target.focus(); selection?.selectAllChildren(target); selection?.collapseToEnd(); }
+    const range = selection?.rangeCount ? selection.getRangeAt(0) : null;
+    if (!range || !target.contains(range.commonAncestorContainer)) return;
+    range.deleteContents();
+    const last = fragment.lastChild;
+    range.insertNode(fragment);
+    range.setStartAfter(last); range.collapse(true); selection.removeAllRanges(); selection.addRange(range);
+    const candidate = JSON.parse(serialize().slice(prefix.length));
+    if (!withinDocumentLimits(candidate) || pasted.some(run => run.text.length > 8000)) { restore(before); status.textContent = 'Eingefügter Inhalt überschreitet die Dokumentgrenze.'; return; }
+    changed();
+  });
+  function updateSearch() {
+    if (!search?.value) { if (searchResult) searchResult.textContent = ''; return; }
+    const result = replaceArticle(JSON.parse(serialize().slice(prefix.length)), search.value, search.value);
+    searchResult.textContent = result ? result.count + ' Treffer' : 'Suchtext ist zu lang.';
+  }
+  search.addEventListener('input', () => { findCursor = -1; updateSearch(); });
+  document.getElementById('news-editor-find-next').addEventListener('click', () => {
+    const matches = findArticleBlocks(JSON.parse(serialize().slice(prefix.length)), search.value);
+    if (!matches.length) { searchResult.textContent = 'Keine Treffer.'; return; }
+    findCursor = (findCursor + 1) % matches.length;
+    const row = blocks.children[matches[findCursor]];
+    row?.querySelector('[contenteditable], textarea, input')?.focus();
+    row?.scrollIntoView({block: 'center'});
+    searchResult.textContent = 'Treffer in Block ' + (matches[findCursor] + 1) + ' von ' + blocks.children.length + '.';
+  });
+  document.getElementById('news-editor-replace-all').addEventListener('click', () => {
+    const result = replaceArticle(JSON.parse(serialize().slice(prefix.length)), search.value, replacement.value);
+    if (!result || !result.count) { status.textContent = 'Keine Treffer oder ungültiger Suchtext.'; return; }
+    if (!withinDocumentLimits(result.document)) { status.textContent = 'Ersetzung würde die Dokumentgrenze überschreiten.'; return; }
+    const previous = serialize();
+    restore(prefix + JSON.stringify(result.document));
+    if (serialize() === previous) return;
+    status.textContent = result.count + ' Stellen ersetzt. Ungespeicherte Änderungen.';
   });
   document.getElementById('news-editor-preview-button').addEventListener('click', async () => {
     status.textContent = 'Vorschau wird geladen …';
