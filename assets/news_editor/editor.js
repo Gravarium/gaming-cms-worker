@@ -5,6 +5,7 @@ import {editTable} from './table-ops.js';
 import {safeEditorHref, clipboardRuns, editList, replaceArticle, findArticleBlocks} from './authoring.js';
 import {AutosaveState} from './autosave-state.js';
 import {structuredMarkdown} from './markdown-paste.js';
+import {applyBlockOperation, resolveBlockShortcut} from './keyboard-blocks.js';
 
 const root = document.getElementById('news-editor');
 if (root) {
@@ -53,14 +54,18 @@ if (root) {
   function renderBlock(block) {
     const row = node('section'); row.className = 'news-editor-block'; row.dataset.type = block.type;
     const remove = node('button', 'Entfernen'); remove.type = 'button'; remove.className = 'remove-block'; remove.setAttribute('aria-label', 'Block entfernen');
+    remove.setAttribute('aria-keyshortcuts', 'Control+Shift+Backspace Meta+Shift+Backspace');
     remove.addEventListener('click', () => { if (blocks.children.length > 1) { row.remove(); changed(); } }); row.append(remove);
     const insert = node('button', 'Absatz darunter'); insert.type = 'button'; insert.setAttribute('aria-label', 'Absatz nach diesem Block einfügen');
+    insert.setAttribute('aria-keyshortcuts', 'Control+Shift+Enter Meta+Shift+Enter');
     insert.addEventListener('click', () => addBlock({type: 'paragraph', content: [{text: '', marks: []}]}, row)); row.append(insert);
     const duplicate = node('button', 'Duplizieren'); duplicate.type = 'button'; duplicate.setAttribute('aria-label', 'Block duplizieren');
+    duplicate.setAttribute('aria-keyshortcuts', 'Control+Shift+D Meta+Shift+D');
     duplicate.addEventListener('click', () => addBlock(serializeBlock(row), row)); row.append(duplicate);
     for (const [label, direction] of [['↑', -1], ['↓', 1]]) {
       const move = node('button', label); move.type = 'button'; move.className = 'move-block';
       move.setAttribute('aria-label', direction < 0 ? 'Block nach oben' : 'Block nach unten');
+      move.setAttribute('aria-keyshortcuts', direction < 0 ? 'Control+Shift+ArrowUp Meta+Shift+ArrowUp' : 'Control+Shift+ArrowDown Meta+Shift+ArrowDown');
       move.addEventListener('click', () => {
         const sibling = direction < 0 ? row.previousElementSibling : row.nextElementSibling;
         if (!sibling) return;
@@ -322,6 +327,27 @@ if (root) {
   blocks.addEventListener('focusin', event => { activeRow = event.target.closest('.news-editor-block'); });
   root.addEventListener('keydown', event => {
     if (!blocks.contains(event.target)) return;
+    const structuralCommand = resolveBlockShortcut(event);
+    if (structuralCommand) {
+      const row = closestFrom(event.target, '.news-editor-block');
+      const index = row ? [...blocks.children].indexOf(row) : -1;
+      const result = applyBlockOperation(JSON.parse(serialize().slice(prefix.length)), structuralCommand, index);
+      if (!result || !withinDocumentLimits(result.document)) {
+        event.preventDefault();
+        status.textContent = 'Blockaktion ist an dieser Position oder Dokumentgrenze nicht möglich.';
+        return;
+      }
+      event.preventDefault();
+      const snapshot = prefix + JSON.stringify(result.document);
+      blocks.replaceChildren();
+      for (const block of result.document.blocks) renderBlock(block);
+      source.value = snapshot;
+      activeRow = blocks.children[result.index];
+      activeRow?.querySelector('[contenteditable], textarea, input, select, button')?.focus();
+      changed();
+      status.textContent = result.announcement;
+      return;
+    }
     if (!(event.ctrlKey || event.metaKey) || event.altKey) return;
     const key = event.key.toLowerCase();
     if (key === 'z' || key === 'y') {
