@@ -12,6 +12,36 @@ import {applyBlockOperation, resolveBlockShortcut} from '../../assets/news_edito
 import {structuredHtml} from '../../assets/news_editor/html-paste.js';
 import {applySlashCommand, blockForCommand, matchBlockCommands} from '../../assets/news_editor/block-commands.js';
 import {applyBatchBlockOperation, normalizeBlockSelection} from '../../assets/news_editor/batch-blocks.js';
+import {insertSnippet, normalizeSnippetItems} from '../../assets/news_editor/snippets.js';
+
+test('snippet responses are bounded and reject malformed server data', () => {
+  const payload = {items: [
+    {id: 2, label: ' Intro ', block: {type: 'paragraph', content: [{text: '<safe>', marks: []}]}, updatedAt: '2026-10-02T00:00:00Z'},
+    {id: -1, label: 'bad', block: {type: 'paragraph'}},
+    {id: 3, label: '<img onerror=1>', block: {type: 'script'}},
+  ]};
+  const items = normalizeSnippetItems(payload);
+  assert.equal(items.length, 1);
+  assert.equal(items[0].label, 'Intro');
+  assert.equal(items[0].block.content[0].text, '<safe>');
+  items[0].block.content[0].text = 'changed';
+  assert.equal(payload.items[0].block.content[0].text, '<safe>');
+  assert.deepEqual(normalizeSnippetItems({items: Array(31).fill(payload.items[0])}), []);
+  assert.deepEqual(normalizeSnippetItems(null), []);
+});
+
+test('snippet insertion deep-clones a typed block and preserves document limits', () => {
+  const source = {version: 2, blocks: [{type: 'paragraph', content: [{text: 'A', marks: []}]}]};
+  const snippet = {id: 7, label: 'Quote', block: {type: 'quote', content: [{text: '<B>', marks: ['strong']}], cite: ''}};
+  const result = insertSnippet(source, snippet, 0);
+  assert.equal(result.index, 1);
+  assert.deepEqual(result.document.blocks.map(block => block.type), ['paragraph', 'quote']);
+  result.document.blocks[1].content[0].text = 'changed';
+  assert.equal(snippet.block.content[0].text, '<B>');
+  assert.equal(source.blocks.length, 1);
+  assert.equal(insertSnippet(source, {...snippet, id: 0}, 0), null);
+  assert.equal(insertSnippet({version: 2, blocks: Array(100).fill(source.blocks[0])}, snippet, 0), null);
+});
 
 test('batch block selection is explicit, ordered and contiguous', () => {
   assert.deepEqual(normalizeBlockSelection([3, 2, 3, 1], 5), [1, 2, 3]);
