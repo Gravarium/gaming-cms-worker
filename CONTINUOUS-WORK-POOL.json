@@ -65639,6 +65639,91 @@
         "templates/admin/news_editor/revision.html.twig",
         "tests/Controller/AdminNewsEditorTest.php"
       ]
+    },
+    {
+      "priority": 666,
+      "package_id": "WCP-666",
+      "title": "Complete visual news draft duplication and trash lifecycle",
+      "risk": "content_integrity_and_reversible_deletion",
+      "execution_state": "worker_in_progress",
+      "claim_state": "claimed",
+      "claim_generation": 1,
+      "claim_branch": "claim/wcp-666-news-draft-lifecycle-g1",
+      "suggested_branch": "feature/wcp-666-news-draft-lifecycle-g1",
+      "resume_branch": "feature/wcp-666-news-draft-lifecycle-g1",
+      "claimed_on": "2026-10-02T15:22:00.000Z",
+      "lease_expires_at": "2026-10-02T22:22:00.000Z",
+      "base_branch": "main",
+      "base_sha": "9e083c63e7d888af36f93a23eb924c89fad2b971",
+      "proposal_base_branch": "feature/wcp-665-news-revision-recovery-g1",
+      "proposal_base_sha": "357aa7bef14ed54791db6a913f6215ad3ec307ba",
+      "active_base_branch": "feature/wcp-665-news-revision-recovery-g1",
+      "active_base_sha": "357aa7bef14ed54791db6a913f6215ad3ec307ba",
+      "active_head": "357aa7bef14ed54791db6a913f6215ad3ec307ba",
+      "last_observed_head": "357aa7bef14ed54791db6a913f6215ad3ec307ba",
+      "dependencies": [
+        "WCP-665"
+      ],
+      "proposal_kind": "worker_only",
+      "proposal_dependency_evidence": [
+        {
+          "package_id": "WCP-665",
+          "head": "357aa7bef14ed54791db6a913f6215ad3ec307ba",
+          "pr": 461,
+          "ci_run": 37020731893,
+          "result": "success"
+        }
+      ],
+      "objective": "Complete the first-party visual News draft lifecycle with safe duplication into a new draft and reversible trashing of editable drafts/review entries. Preserve typed documents and metadata while resetting publication signals, use CSRF plus pessimistic and optimistic concurrency safeguards, capture revisions and audit events, and never hard-delete.",
+      "allowed_paths": [
+        "src/Controller/AdminNewsEditorController.php",
+        "templates/admin/news_editor/edit.html.twig",
+        "tests/Controller/AdminNewsEditorTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "CONTINUOUS-WORKER.md",
+        "CONTINUOUS-WORK-POOL.json",
+        ".github/workflows/",
+        "migrations/",
+        "src/Entity/",
+        "src/Repository/",
+        "src/Security/",
+        "src/Controller/AdminContentController.php"
+      ],
+      "deliverables": [
+        "CSRF-protected visual duplicate action creates a unique-slug draft with copied typed content, category/tags and safe metadata while clearing publication, canonical, featured and pinned state.",
+        "CSRF-protected reversible trash action accepts only editable News and verifies updatedAt/documentHash under row lock.",
+        "Initial duplicate revision and pre-trash revision plus audit events are transactional.",
+        "Visual editor exposes explicit duplicate and confirmed trash actions with positive and negative tests.",
+        "Complete exact-head Worker CI."
+      ],
+      "tests": [
+        "Controller tests for duplicate metadata reset, unique slug, initial revision, CSRF, stale trash, successful reversible trash and permission/status boundaries.",
+        "Complete Worker CI on exact final head."
+      ],
+      "immutable_constraints": [
+        "worker-only-no-Trusted-merge-or-deployment",
+        "no-hard-delete",
+        "published-or-scheduled-news-cannot-use-visual-draft-actions",
+        "no-security-test-or-CI-weakening"
+      ],
+      "collision_check": {
+        "compared_against": "Live pool at b9391893a6311df0ee4179c75b1dfebd0f2f3021 and exact green WCP-665 head 357aa7bef14ed54791db6a913f6215ad3ec307ba",
+        "result": "Deliberate serial News Editor descendant; no worker_in_progress claim existed at reservation time.",
+        "paths": [
+          "src/Controller/AdminNewsEditorController.php",
+          "templates/admin/news_editor/edit.html.twig",
+          "tests/Controller/AdminNewsEditorTest.php"
+        ]
+      },
+      "next_action": "Implement visual duplication and reversible trash actions, push checkpoint and run exact-head Worker CI."
     }
   ],
   "recovery_queue": [],
