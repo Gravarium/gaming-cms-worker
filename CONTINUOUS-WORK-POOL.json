@@ -64884,6 +64884,90 @@
       "last_checkpoint_at": "2026-10-02T08:28:43.717Z",
       "worker_pr": 454,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/454"
+    },
+    {
+      "priority": 660,
+      "package_id": "WCP-660",
+      "title": "Filter platform releases and publish platform feeds",
+      "risk": "public_feed_visibility_and_input_validation",
+      "execution_state": "worker_in_progress",
+      "claim_state": "active_lease",
+      "claim_generation": 1,
+      "claim_branch": "claim/wcp-660-platform-release-discovery-g1",
+      "suggested_branch": "feature/wcp-660-platform-release-discovery-g1",
+      "resume_branch": "feature/wcp-660-platform-release-discovery-g1",
+      "claimed_on": "2026-10-02T08:47:00.000Z",
+      "lease_expires_at": "2026-10-02T15:47:00.000Z",
+      "base_branch": "feature/wcp-658-game-platform-directory-g1",
+      "base_sha": "7f58f8efb40d148accecc71384064007d0c23ab6",
+      "proposal_base_branch": "feature/wcp-658-game-platform-directory-g1",
+      "proposal_base_sha": "7f58f8efb40d148accecc71384064007d0c23ab6",
+      "active_head": "7f58f8efb40d148accecc71384064007d0c23ab6",
+      "dependencies": [
+        "WCP-658"
+      ],
+      "proposal_kind": "worker_only",
+      "objective": "Extend the green public platform directory with strict region, release-status and year filters plus per-platform RSS and iCalendar feeds. Reuse the same fail-closed visibility boundary and never expose cancelled or hidden catalogue data.",
+      "allowed_paths": [
+        "src/GamePlatformDirectory/",
+        "src/Controller/GameCatalogue/GamePlatformDirectoryController.php",
+        "src/Controller/GameCatalogue/GamePlatformFeedController.php",
+        "templates/game_platform_directory/",
+        "tests/Controller/GamePlatformDirectoryTest.php",
+        "tests/Controller/GamePlatformFeedTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "CONTINUOUS-WORKER.md",
+        "CONTINUOUS-WORK-POOL.json",
+        ".github/workflows/",
+        "migrations/",
+        "src/Entity/",
+        "src/Repository/",
+        "src/Security/",
+        "templates/game_catalogue/"
+      ],
+      "deliverables": [
+        "Strict allowlisted status, bounded region and year filters on platform profiles with deterministic pagination.",
+        "Per-platform RSS and iCalendar feeds include only enabled games, enabled catalogue entries and non-cancelled releases.",
+        "Feed output escapes hostile text, prevents header injection and returns 404 for unknown, hidden, malformed or Gaming-disabled requests.",
+        "Positive and negative filter/feed tests plus complete exact-head Worker CI."
+      ],
+      "tests": [
+        "Focused controller tests for filters, pagination and invalid query values.",
+        "RSS/iCalendar visibility and escaping tests including disabled module and cancelled/hidden fixtures.",
+        "Complete Worker CI on exact final head."
+      ],
+      "immutable_constraints": [
+        "worker-only-no-Trusted-merge-or-deployment",
+        "preserve-WCP-658-visibility-and-bounds",
+        "no-schema-entity-or-mutation-change",
+        "feed-output-must-be-escaped-and-bounded",
+        "no-security-test-or-CI-weakening",
+        "no-overlap-with-unrelated-active-claims"
+      ],
+      "collision_check": {
+        "compared_against": "Current continuous/work-pool-v4 and exact green WCP-658 head 7f58f8efb40d148accecc71384064007d0c23ab6",
+        "result": "Deliberate descendant overlap only with completed WCP-658. Active WCP-659 news-editor paths remain disjoint.",
+        "paths": [
+          "src/GamePlatformDirectory/",
+          "src/Controller/GameCatalogue/GamePlatformDirectoryController.php",
+          "src/Controller/GameCatalogue/GamePlatformFeedController.php",
+          "templates/game_platform_directory/",
+          "tests/Controller/GamePlatformDirectoryTest.php",
+          "tests/Controller/GamePlatformFeedTest.php"
+        ]
+      },
+      "next_action": "Implement strict platform filters and bounded RSS/iCalendar feeds with negative visibility tests.",
+      "last_observed_head": "7f58f8efb40d148accecc71384064007d0c23ab6",
+      "last_verified_push_at": null,
+      "worker_pr_state": "not_created"
     }
   ],
   "recovery_queue": [],
