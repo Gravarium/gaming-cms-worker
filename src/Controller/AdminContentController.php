@@ -12,6 +12,7 @@ use App\Entity\PageLayout;
 use App\Entity\User;
 use App\Form\ContentEntryType;
 use App\Module\CmsModuleManager;
+use App\NewsEditor\RichDocument;
 use App\Repository\CategoryRepository;
 use App\Repository\ContentEntryRepository;
 use App\Repository\ContentRedirectRepository;
@@ -95,6 +96,9 @@ final class AdminContentController extends AbstractController
     #[Route('/{id}/edit', name: 'app_admin_content_edit', requirements: ['id' => '\\d+'], methods: ['GET', 'POST'])]
     public function edit(ContentEntry $entry, Request $request): Response
     {
+        if ($entry->getType() === ContentEntry::TYPE_NEWS && str_starts_with($entry->getEditorDocument() ?? '', RichDocument::PREFIX)) {
+            return $this->editRichMetadata($entry, $request);
+        }
         $oldSlug = $entry->getSlug();
         $oldType = $entry->getType();
         $form = $this->createForm(ContentEntryType::class, $entry)->handleRequest($request);
@@ -116,6 +120,36 @@ final class AdminContentController extends AbstractController
             }
         }
         return $this->render('admin/content/form.html.twig', ['form' => $form, 'heading' => 'Inhalt bearbeiten', 'entry' => $entry]);
+    }
+
+    private function editRichMetadata(ContentEntry $entry, Request $request): Response
+    {
+        $oldSlug = $entry->getSlug();
+        $form = $this->createForm(ContentEntryType::class, $entry);
+        $form->remove('body');
+        $form->remove('type');
+        if ($request->isMethod('POST') && array_key_exists('body', $request->request->all('content_entry'))) {
+            throw new ConflictHttpException('Dieser Artikel verwendet den News-Editor. Der alte Body darf ihn nicht überschreiben.');
+        }
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entry->setSlug($this->createUniqueSlug($entry->getSlug() ?: $entry->getTitle(), $entry->getId()));
+            if ($this->synchronizeOrReject($entry, $form)) {
+                $user = $this->requireUser();
+                $this->entityManager->wrapInTransaction(function (EntityManagerInterface $manager) use ($entry, $oldSlug, $user): void {
+                    if ($oldSlug !== '' && $oldSlug !== $entry->getSlug()) {
+                        $this->rememberRedirect($entry->getType(), $oldSlug, $entry);
+                    }
+                    $this->revisionManager->capture($entry, $user);
+                    $this->audit->record('content.update', $entry, $entry->getId(), 'News-Metadaten bearbeitet.', ['status' => $entry->getStatus()]);
+                });
+                $this->addFlash('success', 'Die Artikeldaten wurden als Revision gespeichert.');
+                return $this->redirectToRoute('app_admin_content_edit', ['id' => $entry->getId()]);
+            }
+        }
+        $response = $this->render('admin/news_editor/metadata.html.twig', ['form' => $form, 'entry' => $entry]);
+        $response->headers->set('Cache-Control', 'private, no-store');
+        return $response;
     }
 
     #[Route('/{id}/preview', name: 'app_admin_content_preview', requirements: ['id' => '\\d+'], methods: ['GET'])]
@@ -148,6 +182,9 @@ final class AdminContentController extends AbstractController
     {
         $this->assertContentModuleEnabled();
         $this->assertEditorCsrf($entry, $request);
+        if ($entry->getType() === ContentEntry::TYPE_NEWS && str_starts_with($entry->getEditorDocument() ?? '', RichDocument::PREFIX)) {
+            return $this->json(['error' => 'Dieser Artikel verwendet den News-Editor. Bitte dort erneut öffnen.'], 409);
+        }
         if (!in_array($entry->getStatus(), [ContentEntry::STATUS_DRAFT, ContentEntry::STATUS_REVIEW], true)) {
             return $this->json(['error' => 'Autosave ist nur für Entwurf oder Freigabe-Status erlaubt.'], 409);
         }
