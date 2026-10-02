@@ -69,10 +69,18 @@ final class PublicForumEditTest extends WebTestCase
             self::assertResponseIsSuccessful();
             self::assertSelectorTextContains('#post-'.$replyId, 'bearbeitet');
 
+            $client->restart();
+            $em = $client->getContainer()->get(EntityManagerInterface::class);
+            $other = $em->find(User::class, $otherId);
+            self::assertInstanceOf(User::class, $other);
             $client->loginUser($other);
             $client->request('GET', '/forum/threads/'.$threadId.'/posts/'.$questionId.'/edit');
             self::assertResponseStatusCodeSame(404);
 
+            $client->restart();
+            $em = $client->getContainer()->get(EntityManagerInterface::class);
+            $owner = $em->find(User::class, $ownerId);
+            self::assertInstanceOf(User::class, $owner);
             $client->loginUser($owner);
             $before = (string) $connection->fetchOne('SELECT body FROM forum_post WHERE id = :id', ['id' => $replyId]);
             $client->request('POST', '/forum/threads/'.$threadId.'/posts/'.$replyId.'/edit', [
@@ -98,6 +106,7 @@ final class PublicForumEditTest extends WebTestCase
             self::assertResponseStatusCodeSame(404);
         } finally {
             $connection->delete('forum_room', ['id' => $roomId]);
+            $em = $client->getContainer()->get(EntityManagerInterface::class);
             $this->removeUsers($em, [$ownerId, $otherId]);
         }
     }
