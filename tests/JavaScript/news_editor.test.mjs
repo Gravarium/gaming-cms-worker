@@ -6,8 +6,35 @@ import {articleOutline, insertAfter, withinDocumentLimits} from '../../assets/ne
 import {editTable} from '../../assets/news_editor/table-ops.js';
 import {safeEditorHref, clipboardRuns, editList, replaceArticle, findArticleBlocks} from '../../assets/news_editor/authoring.js';
 import {AutosaveState} from '../../assets/news_editor/autosave-state.js';
-import {structuredMarkdown} from '../../assets/news_editor/markdown-paste.js';
+import {structuredMarkdown, importMarkdownArticle} from '../../assets/news_editor/markdown-paste.js';
+import {articleMarkdown} from '../../assets/news_editor/markdown-io.js';
 import {applyBlockOperation, resolveBlockShortcut} from '../../assets/news_editor/keyboard-blocks.js';
+
+test('Markdown export and import preserve long-form text, links, tables and fenced code', () => {
+  const document = {version: 2, blocks: [
+    {type: 'heading', level: 2, content: [{text: 'Bericht', marks: []}]},
+    {type: 'paragraph', content: [{text: 'Mehr ', marks: []}, {text: 'lesen', marks: ['link'], href: '/news'}]},
+    {type: 'list', ordered: true, items: [[{text: 'Eins', marks: []}], [{text: 'Zwei', marks: ['strong']}]]},
+    {type: 'table', header: true, rows: [[[ {text: 'Spiel', marks: []} ], [ {text: 'Wert', marks: []} ]], [[ {text: 'A', marks: []} ], [ {text: '8', marks: []} ]]]},
+    {type: 'code', language: 'json', text: '{"fence":"```"}'},
+    {type: 'separator'},
+  ]};
+  const markdown = articleMarkdown(document);
+  assert.ok(markdown.includes('~~~json'));
+  assert.ok(markdown.includes('[lesen](/news)'));
+  assert.deepEqual(importMarkdownArticle(markdown), document.blocks);
+  assert.deepEqual(importMarkdownArticle('Nur ein Absatz.'), [{type: 'paragraph', content: [{text: 'Nur ein Absatz.', marks: []}]}]);
+});
+
+test('Markdown import bounds input and neutralizes untrusted links and HTML', () => {
+  assert.equal(importMarkdownArticle('## ' + 'x'.repeat(50001)), null);
+  assert.equal(importMarkdownArticle('```php\nunclosed'), null);
+  const blocks = importMarkdownArticle('## <script>alert(1)</script>\n\n[Link](javascript:alert(1))');
+  assert.equal(blocks[0].content[0].text, '<script>alert(1)</script>');
+  assert.deepEqual(blocks[1].content, [{text: 'Link', marks: []}]);
+  assert.equal(articleMarkdown({version: 3, blocks: []}), null);
+  assert.match(articleMarkdown({version: 2, blocks: [{type: 'media', assetId: 17, alt: 'Titelbild', caption: ''}]}), /CMS-Mediathek #17/);
+});
 
 test('keyboard block shortcuts require an unambiguous primary plus shift chord', () => {
   const chord = key => ({key, ctrlKey: true, metaKey: false, shiftKey: true, altKey: false});

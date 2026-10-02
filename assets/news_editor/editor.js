@@ -4,7 +4,8 @@ import {articleOutline, insertAfter, withinDocumentLimits} from './longform.js';
 import {editTable} from './table-ops.js';
 import {safeEditorHref, clipboardRuns, editList, replaceArticle, findArticleBlocks} from './authoring.js';
 import {AutosaveState} from './autosave-state.js';
-import {structuredMarkdown} from './markdown-paste.js';
+import {structuredMarkdown, importMarkdownArticle} from './markdown-paste.js';
+import {articleMarkdown} from './markdown-io.js';
 import {applyBlockOperation, resolveBlockShortcut} from './keyboard-blocks.js';
 
 const root = document.getElementById('news-editor');
@@ -324,6 +325,37 @@ if (root) {
     status.textContent = 'Ungespeicherte Änderung in der Dokument-Historie.';
     changed();
   }
+  const markdownFile = document.getElementById('news-editor-markdown-file');
+  const exchangeStatus = document.getElementById('news-editor-exchange-status');
+  document.getElementById('news-editor-markdown-import').addEventListener('click', async () => {
+    const file = markdownFile.files?.[0];
+    if (!file) { exchangeStatus.textContent = 'Bitte zuerst eine Markdown-Datei wählen.'; return; }
+    if (openError || autosaveState.blocked || file.size > 50000) { exchangeStatus.textContent = 'Import nicht möglich: Dokumentkonflikt oder Datei zu groß (maximal 50 KB).'; return; }
+    try {
+      const incoming = importMarkdownArticle((await file.text()).replace(/^\uFEFF/u, ''));
+      if (!incoming) { exchangeStatus.textContent = 'Markdown-Datei enthält keinen gültigen Artikel.'; return; }
+      const candidate = {version: 2, blocks: incoming};
+      if (!withinDocumentLimits(candidate)) { exchangeStatus.textContent = 'Import überschreitet die Dokumentgrenzen.'; return; }
+      if (!window.confirm('Aktuellen Artikelinhalt durch ' + incoming.length + ' importierte Blöcke ersetzen? Rückgängig bleibt im Editor möglich.')) return;
+      blocks.replaceChildren();
+      for (const block of incoming) renderBlock(block);
+      activeRow = blocks.firstElementChild;
+      activeRow?.querySelector('[contenteditable], textarea')?.focus();
+      changed();
+      exchangeStatus.textContent = incoming.length + ' Blöcke importiert. Der Entwurf wird automatisch gespeichert.';
+      markdownFile.value = '';
+    } catch { exchangeStatus.textContent = 'Datei konnte nicht gelesen werden.'; }
+  });
+  document.getElementById('news-editor-markdown-export').addEventListener('click', () => {
+    const markdown = articleMarkdown(JSON.parse(serialize().slice(prefix.length)));
+    if (markdown === null) { exchangeStatus.textContent = 'Export nicht möglich.'; return; }
+    const url = URL.createObjectURL(new Blob([markdown], {type: 'text/markdown;charset=utf-8'}));
+    const download = document.createElement('a');
+    download.href = url; download.download = 'news-artikel.md';
+    document.body.append(download); download.click(); download.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+    exchangeStatus.textContent = 'Markdown-Datei erstellt. Bilder und Videos sind als Referenztext enthalten.';
+  });
   blocks.addEventListener('focusin', event => { activeRow = event.target.closest('.news-editor-block'); });
   root.addEventListener('keydown', event => {
     if (!blocks.contains(event.target)) return;

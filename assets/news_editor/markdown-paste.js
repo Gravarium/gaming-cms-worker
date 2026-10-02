@@ -27,11 +27,11 @@ function inline(text) {
 }
 
 function tableCells(line) {
-  return line.trim().replace(/^\|/u, '').replace(/\|$/u, '').split('|').map(value => value.trim());
+  return line.trim().replace(/^\|/u, '').replace(/(?<!\\)\|$/u, '').split(/(?<!\\)\|/u).map(value => value.trim().replace(/\\\|/gu, '|'));
 }
 
 /** Parse a fixed Markdown subset only when structural syntax is present. No HTML is interpreted. */
-export function structuredMarkdown(text) {
+function parseMarkdown(text, requireStructure) {
   if (typeof text !== 'string' || text.length > 50000 || /\0/u.test(text)) return null;
   const lines = text.replace(/\r\n?/gu, '\n').split('\n');
   if (lines.length > 300) return null;
@@ -42,10 +42,10 @@ export function structuredMarkdown(text) {
     const line = lines[i];
     if (!line.trim()) { i++; continue; }
     let match;
-    if ((match = /^```([a-z]*)\s*$/u.exec(line))) {
-      const end = lines.findIndex((candidate, index) => index > i && /^```\s*$/u.test(candidate));
+    if ((match = /^(`{3,}|~{3,})([a-z]*)\s*$/u.exec(line))) {
+      const end = lines.findIndex((candidate, index) => index > i && candidate.trim() === match[1]);
       if (end < 0) return null;
-      const language = languages.has(match[1]) ? match[1] : 'plain';
+      const language = languages.has(match[2]) ? match[2] : 'plain';
       if (!push({type: 'code', language: language || 'plain', text: lines.slice(i + 1, end).join('\n')})) return null;
       recognized = true; i = end + 1; continue;
     }
@@ -88,8 +88,11 @@ export function structuredMarkdown(text) {
       }
     }
     const paragraph = [line]; i++;
-    while (i < lines.length && lines[i].trim() && !/^(?:#{1,3}\s|```|>\s?|\s{0,3}(?:[-*+]\s|\d+\.\s)|---+\s*$)/u.test(lines[i])) paragraph.push(lines[i++]);
+    while (i < lines.length && lines[i].trim() && !/^(?:#{1,3}\s|`{3,}|~{3,}|>\s?|\s{0,3}(?:[-*+]\s|\d+\.\s)|---+\s*$)/u.test(lines[i])) paragraph.push(lines[i++]);
     if (!push({type: 'paragraph', content: inline(paragraph.join('\n'))})) return null;
   }
-  return recognized && blocks.length ? blocks : null;
+  return (!requireStructure || recognized) && blocks.length ? blocks : null;
 }
+
+export const structuredMarkdown = text => parseMarkdown(text, true);
+export const importMarkdownArticle = text => parseMarkdown(text, false);

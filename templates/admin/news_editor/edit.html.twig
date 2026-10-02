@@ -13,6 +13,14 @@
         <button type="button" data-add="paragraph">Absatz</button><button type="button" data-add="heading">Überschrift</button><button type="button" data-add="quote">Zitat</button><button type="button" data-add="list">Liste</button><button type="button" data-add="table">Tabelle</button><button type="button" data-add="callout">Infobox</button><button type="button" data-add="code">Code</button><button type="button" data-add="separator">Trennlinie</button><button type="button" data-add="media">Bild</button><button type="button" data-add="video">Video</button>
         <button type="button" data-command="undo">Rückgängig</button><button type="button" data-command="redo">Wiederholen</button><button type="button" id="news-editor-preview-button">Vorschau</button>
     </div>
+    <section class="news-editor-find" aria-label="Artikel als Markdown übertragen">
+        <h2>Artikel übertragen</h2>
+        <label>Markdown-Datei <input id="news-editor-markdown-file" type="file" accept=".md,.markdown,.txt,text/markdown,text/plain"></label>
+        <button type="button" id="news-editor-markdown-import">Datei importieren und Inhalt ersetzen</button>
+        <button type="button" id="news-editor-markdown-export">Markdown herunterladen</button>
+        <p class="muted">Import ersetzt den Artikelinhalt nach Bestätigung. Rückgängig ist im Editor möglich. Beim Export werden Bilder und Videos als lesbare Referenzen ausgegeben und müssen für eine erneute Veröffentlichung in der Mediathek ausgewählt werden.</p>
+        <p id="news-editor-exchange-status" role="status" aria-live="polite"></p>
+    </section>
     <section class="news-editor-find" aria-label="Im Artikel suchen und ersetzen"><label>Suchen <input id="news-editor-find" type="search" maxlength="200" autocomplete="off"></label><button type="button" id="news-editor-find-next">Nächster Treffer</button><label>Ersetzen durch <input id="news-editor-replace" type="text" maxlength="200" autocomplete="off"></label><button type="button" id="news-editor-replace-all">Alle ersetzen</button><span id="news-editor-find-result" role="status" aria-live="polite"></span></section>
     <nav class="news-editor-outline" aria-label="Artikelgliederung"><h2>Artikelgliederung</h2><div id="news-editor-outline"></div></nav>
     <form method="post" id="news-editor-form" novalidate>
