@@ -64405,6 +64405,89 @@
       "ci_conclusion": "success",
       "ci_head": "2b24daf63357e89c33104957f6498b708c2356ab",
       "completed_at": "2026-10-02T07:34:08.017Z"
+    },
+    {
+      "priority": 655,
+      "package_id": "WCP-655",
+      "title": "Accessible structured news table authoring",
+      "risk": "content_integrity_and_accessibility",
+      "execution_state": "worker_in_progress",
+      "claim_state": "active_lease",
+      "claim_generation": 1,
+      "claim_branch": "claim/wcp-655-rich-news-tables-g1",
+      "suggested_branch": "feature/wcp-655-rich-news-tables-g1",
+      "resume_branch": "feature/wcp-655-rich-news-tables-g1",
+      "claimed_on": "2026-10-02T07:34:58.580Z",
+      "lease_expires_at": "2026-10-02T14:34:58.580Z",
+      "base_branch": "feature/wcp-654-long-form-news-navigation-g1",
+      "base_sha": "2b24daf63357e89c33104957f6498b708c2356ab",
+      "proposal_base_branch": "feature/wcp-654-long-form-news-navigation-g1",
+      "proposal_base_sha": "2b24daf63357e89c33104957f6498b708c2356ab",
+      "active_head": "2b24daf63357e89c33104957f6498b708c2356ab",
+      "dependencies": [
+        "WCP-654"
+      ],
+      "proposal_kind": "worker_only",
+      "objective": "Make tables in longer news practical: insert or remove the selected row/column, support a deliberate header row, preserve legacy table documents and render accessible table semantics while retaining bounded typed content and escaping.",
+      "allowed_paths": [
+        "src/NewsEditor/",
+        "assets/news_editor/",
+        "templates/admin/news_editor/",
+        "tests/NewsEditor/",
+        "tests/JavaScript/news_editor.test.mjs"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "CONTINUOUS-WORKER.md",
+        "CONTINUOUS-WORK-POOL.json",
+        ".github/workflows/",
+        "migrations/",
+        "src/Entity/",
+        "src/Repository/",
+        "src/Security/",
+        "templates/admin/content/form.html.twig",
+        "templates/admin/content/index.html.twig",
+        "templates/admin/dashboard.html.twig",
+        "assets/controllers/content_editor_controller.js",
+        "assets/content_media_picker.js",
+        "assets/styles/content-editor.css"
+      ],
+      "deliverables": [
+        "Selected-row and selected-column insertion/deletion keeps rectangular bounded tables and document history.",
+        "Opt-in header row is stored in typed v2 documents, with legacy tables retaining existing rendering semantics.",
+        "Public output distinguishes header and body with proper escaped HTML and accessible semantics.",
+        "Positive and negative document, renderer and JavaScript tests; exact-head Worker CI."
+      ],
+      "tests": [
+        "Focused PHP and JavaScript cases for table semantics, bounds and hostile cell text.",
+        "Complete Worker CI on exact final head."
+      ],
+      "immutable_constraints": [
+        "worker-only-no-Trusted-merge-or-deployment",
+        "no-third-party-editor-or-paid-AI",
+        "preserve-existing-news-and-legacy-data",
+        "no-security-test-or-CI-weakening",
+        "no-overlap-with-unrelated-active-claims"
+      ],
+      "collision_check": {
+        "compared_against": "Current continuous/work-pool-v4 and exact green WCP-654 head 2b24daf63357e89c33104957f6498b708c2356ab",
+        "result": "Deliberate descendant of completed WCP-648/650/654; unrelated active WCP-651/652/653 and locked shared UI paths are disjoint.",
+        "paths": [
+          "src/NewsEditor/",
+          "assets/news_editor/",
+          "templates/admin/news_editor/",
+          "tests/NewsEditor/",
+          "tests/JavaScript/news_editor.test.mjs"
+        ]
+      },
+      "next_action": "Implement table operations and semantic rendering on exact predecessor head, then full CI.",
+      "last_verified_push_at": null
     }
   ],
   "recovery_queue": [],
