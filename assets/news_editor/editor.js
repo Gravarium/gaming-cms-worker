@@ -9,6 +9,7 @@ import {articleMarkdown} from './markdown-io.js';
 import {applyBlockOperation, resolveBlockShortcut} from './keyboard-blocks.js';
 import {structuredHtml} from './html-paste.js';
 import {applySlashCommand, blockForCommand, matchBlockCommands} from './block-commands.js';
+import {applyBatchBlockOperation, normalizeBlockSelection} from './batch-blocks.js';
 
 const root = document.getElementById('news-editor');
 if (root) {
@@ -56,6 +57,12 @@ if (root) {
   };
   function renderBlock(block) {
     const row = node('section'); row.className = 'news-editor-block'; row.dataset.type = block.type;
+    const selectBlock = node('button', 'Auswählen'); selectBlock.type = 'button'; selectBlock.className = 'select-block';
+    selectBlock.setAttribute('aria-label', 'Block für Mehrfachaktion auswählen'); selectBlock.setAttribute('aria-pressed', 'false');
+    selectBlock.addEventListener('click', () => {
+      const selected = selectBlock.getAttribute('aria-pressed') !== 'true';
+      selectBlock.setAttribute('aria-pressed', String(selected)); row.classList.toggle('is-selected', selected); updateBatchToolbar();
+    }); row.append(selectBlock);
     const remove = node('button', 'Entfernen'); remove.type = 'button'; remove.className = 'remove-block'; remove.setAttribute('aria-label', 'Block entfernen');
     remove.setAttribute('aria-keyshortcuts', 'Control+Shift+Backspace Meta+Shift+Backspace');
     remove.addEventListener('click', () => { if (blocks.children.length > 1) { row.remove(); changed(); } }); row.append(remove);
@@ -310,11 +317,9 @@ if (root) {
     history?.record(snapshot, {input: event?.type === 'input'});
     updateOutline();
     updateSearch();
+    updateBatchToolbar();
     scheduleAutosave();
   }
-  history = new EditorHistory(serialize());
-  autosaveState = new AutosaveState(serialize());
-  changed(); status.textContent = openError ? 'Dokument konnte nicht geöffnet werden. Speichern ist gesperrt.' : '';
   function restore(snapshot) {
     if (snapshot === null) return;
     const activeRow = document.activeElement?.closest('.news-editor-block');
@@ -326,6 +331,41 @@ if (root) {
     target?.querySelector('[contenteditable], textarea, input, select')?.focus();
     status.textContent = 'Ungespeicherte Änderung in der Dokument-Historie.';
     changed();
+  }
+  const batchToolbar = node('div'); batchToolbar.className = 'news-editor-batch-toolbar'; batchToolbar.hidden = true;
+  batchToolbar.setAttribute('role', 'toolbar'); batchToolbar.setAttribute('aria-label', 'Aktionen für ausgewählte Blöcke');
+  const batchStatus = node('span'); batchStatus.setAttribute('aria-live', 'polite'); batchToolbar.append(batchStatus);
+  const batchButtons = new Map();
+  for (const [operation, label] of [['move-up', 'Auswahl nach oben'], ['move-down', 'Auswahl nach unten'], ['duplicate', 'Auswahl duplizieren'], ['delete', 'Auswahl löschen']]) {
+    const button = node('button', label); button.type = 'button'; button.addEventListener('click', () => applyBatchOperation(operation));
+    batchButtons.set(operation, button); batchToolbar.append(button);
+  }
+  const clearBatch = node('button', 'Auswahl aufheben'); clearBatch.type = 'button';
+  clearBatch.addEventListener('click', () => { for (const row of blocks.children) setBatchSelected(row, false); updateBatchToolbar(); activeRow?.querySelector('[contenteditable], textarea, input, select, button')?.focus(); });
+  batchToolbar.append(clearBatch); blocks.after(batchToolbar);
+  function selectedBlockIndexes() {
+    return [...blocks.children].flatMap((row, index) => row.querySelector('.select-block')?.getAttribute('aria-pressed') === 'true' ? [index] : []);
+  }
+  function setBatchSelected(row, selected) {
+    row?.querySelector('.select-block')?.setAttribute('aria-pressed', String(selected)); row?.classList.toggle('is-selected', selected);
+  }
+  function updateBatchToolbar() {
+    const raw = selectedBlockIndexes(), selected = normalizeBlockSelection(raw, blocks.children.length);
+    batchToolbar.hidden = !raw.length;
+    if (!raw.length) return;
+    batchStatus.textContent = selected ? raw.length + (raw.length === 1 ? ' Block ausgewählt.' : ' zusammenhängende Blöcke ausgewählt.') : 'Auswahl muss zusammenhängend sein.';
+    for (const [operation, button] of batchButtons) button.disabled = !selected || !applyBatchBlockOperation(JSON.parse(serialize().slice(prefix.length)), selected, operation);
+  }
+  function applyBatchOperation(operation) {
+    const selected = selectedBlockIndexes();
+    const result = applyBatchBlockOperation(JSON.parse(serialize().slice(prefix.length)), selected, operation);
+    if (!result || !withinDocumentLimits(result.document)) { status.textContent = 'Mehrfachaktion ist an dieser Position oder Dokumentgrenze nicht möglich.'; updateBatchToolbar(); return; }
+    blocks.replaceChildren();
+    for (const block of result.document.blocks) renderBlock(block);
+    for (const index of result.selection) setBatchSelected(blocks.children[index], true);
+    source.value = prefix + JSON.stringify(result.document); activeRow = blocks.children[result.focusIndex];
+    updateBatchToolbar(); activeRow?.querySelector('[contenteditable], textarea, input, select, button')?.focus();
+    changed(); status.textContent = result.announcement;
   }
   const slashMenu = node('div');
   slashMenu.id = 'news-editor-slash-menu'; slashMenu.className = 'news-editor-slash-menu'; slashMenu.hidden = true;
@@ -377,6 +417,9 @@ if (root) {
     field.setAttribute('aria-activedescendant', slashMenu.children[slashSelection].id);
     slashMenu.hidden = false;
   }
+  history = new EditorHistory(serialize());
+  autosaveState = new AutosaveState(serialize());
+  changed(); status.textContent = openError ? 'Dokument konnte nicht geöffnet werden. Speichern ist gesperrt.' : '';
   const markdownFile = document.getElementById('news-editor-markdown-file');
   const exchangeStatus = document.getElementById('news-editor-exchange-status');
   document.getElementById('news-editor-markdown-import').addEventListener('click', async () => {
