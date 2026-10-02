@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+{% block title %}News-Versionen: {{ entry.title }} | Gaming CMS{% endblock %}
+{% block body %}
+<header class="topbar"><a class="brand" href="{{ path('app_admin_dashboard') }}">Gaming CMS</a><nav class="top-actions"><a href="{{ path('app_admin_news_editor',{id:entry.id}) }}">Zum visuellen Editor</a><a href="{{ path('app_admin_news_editor_index') }}">News-Redaktion</a></nav></header>
+<main class="dashboard">
+    <p class="eyebrow">News-Redaktion · Versionsverlauf</p><h1>{{ entry.title }}</h1>
+    <p class="muted">Bis zu 50 unveränderliche Snapshots. Vor einer Wiederherstellung wird der aktuelle Stand als neue Revision gesichert.</p>
+    {% if error %}<div class="notice text-danger" role="alert">{{ error }}</div>{% endif %}
+    <div class="table-wrap"><table><thead><tr><th>Version</th><th>Status</th><th>Gespeichert</th><th>Von</th><th>Aktion</th></tr></thead><tbody>
+    {% for revision in revisions %}<tr><td>#{{ revision.revisionNumber }}</td><td>{{ revision.status }}</td><td>{{ revision.createdAt|date('d.m.Y H:i:s') }}</td><td>{{ revision.createdBy.email }}</td><td><a href="{{ path('app_admin_news_editor_revision',{id:entry.id,revisionId:revision.id}) }}">Ansehen</a><form method="post" action="{{ path('app_admin_news_editor_restore',{id:entry.id,revisionId:revision.id}) }}" onsubmit="return confirm('Diese Version als Entwurf wiederherstellen?')"><input type="hidden" name="_token" value="{{ csrf_token('news-editor-restore-'~entry.id~'-'~revision.id) }}"><input type="hidden" name="updatedAt" value="{{ entry.updatedAt|date('c') }}"><input type="hidden" name="documentHash" value="{{ documentHash }}"><button type="submit">Wiederherstellen</button></form></td></tr>{% else %}<tr><td colspan="5">Noch keine Versionen vorhanden.</td></tr>{% endfor %}
+    </tbody></table></div>
+</main>
+{% endblock %}

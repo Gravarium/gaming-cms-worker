@@ -8,11 +8,13 @@ use App\ContentEditor\ContentBlockPolicy;
 use App\ContentEditor\ContentBlockRenderer;
 use App\ContentEditor\OwnedMediaReferenceGateway;
 use App\Entity\ContentEntry;
+use App\Entity\ContentRevision;
 use App\Entity\User;
 use App\Module\CmsModuleManager;
 use App\NewsEditor\LegacyNewsConverter;
 use App\NewsEditor\RichDocument;
 use App\Repository\ContentEntryRepository;
+use App\Repository\ContentRevisionRepository;
 use App\Repository\MediaAssetRepository;
 use App\Service\AuditLogger;
 use App\Service\ContentRevisionManager;
@@ -39,6 +41,7 @@ final class AdminNewsEditorController extends AbstractController
         private readonly ContentBlockPolicy $policy,
         private readonly ContentBlockRenderer $renderer,
         private readonly ContentRevisionManager $revisions,
+        private readonly ContentRevisionRepository $revisionRepository,
         private readonly AuditLogger $audit,
         private readonly MediaAssetRepository $assets,
         private readonly OwnedMediaReferenceGateway $media,
@@ -229,6 +232,68 @@ final class AdminNewsEditorController extends AbstractController
         }
     }
 
+    #[Route('/{id}/history', name: 'app_admin_news_editor_history', requirements: ['id' => '\\d+'], methods: ['GET'])]
+    public function history(ContentEntry $entry): Response
+    {
+        $this->assertEditable($entry);
+        return $this->historyPage($entry);
+    }
+
+    #[Route('/{id}/revisions/{revisionId}', name: 'app_admin_news_editor_revision', requirements: ['id' => '\\d+', 'revisionId' => '\\d+'], methods: ['GET'])]
+    public function revision(ContentEntry $entry, int $revisionId): Response
+    {
+        $this->assertEditable($entry);
+        $revision = $this->revisionRepository->find($revisionId);
+        if (!$revision instanceof ContentRevision || $revision->getEntry() !== $entry) {
+            throw $this->createNotFoundException();
+        }
+        $document = $this->converter->forEditing($revision->getEditorDocument() ?? $revision->getBody());
+        $response = $this->render('admin/news_editor/revision.html.twig', [
+            'entry' => $entry,
+            'revision' => $revision,
+            'html' => $this->renderer->render($document),
+        ]);
+        return $this->privatePage($response);
+    }
+
+    #[Route('/{id}/revisions/{revisionId}/restore', name: 'app_admin_news_editor_restore', requirements: ['id' => '\\d+', 'revisionId' => '\\d+'], methods: ['POST'])]
+    public function restore(ContentEntry $entry, int $revisionId, Request $request): Response
+    {
+        $this->assertEditable($entry);
+        $revision = $this->revisionRepository->find($revisionId);
+        if (!$revision instanceof ContentRevision || $revision->getEntry() !== $entry) {
+            throw $this->createNotFoundException();
+        }
+        if (!$this->isCsrfTokenValid('news-editor-restore-'.$entry->getId().'-'.$revisionId, (string) $request->request->get('_token'))) {
+            throw $this->createAccessDeniedException('Ungültige Sicherheitsprüfung.');
+        }
+        $expected = $request->request->get('updatedAt');
+        $expectedHash = $request->request->get('documentHash');
+        if (!is_string($expected) || !is_string($expectedHash) || preg_match('/\A[a-f0-9]{64}\z/D', $expectedHash) !== 1) {
+            return $this->historyPage($entry, 'Ungültige Wiederherstellungsanfrage.', 422);
+        }
+        $user = $this->getUser();
+        if (!$user instanceof User) {
+            throw $this->createAccessDeniedException();
+        }
+        try {
+            $this->entityManager->wrapInTransaction(function (EntityManagerInterface $manager) use ($entry, $revision, $expected, $expectedHash, $user): void {
+                $manager->refresh($entry, LockMode::PESSIMISTIC_WRITE);
+                $this->assertEditable($entry);
+                if (!hash_equals($entry->getUpdatedAt()->format(DATE_ATOM), $expected)
+                    || !hash_equals(hash('sha256', $entry->getEditableDocument()), $expectedHash)) {
+                    throw new \DomainException('Der Artikel wurde inzwischen geändert. Bitte die Historie neu laden.');
+                }
+                $this->revisions->restore($entry, $revision, $user);
+                $this->audit->record('content.rich_editor.restore_revision', $entry, $entry->getId(), 'News-Revision im visuellen Editor wiederhergestellt.', ['revision' => $revision->getRevisionNumber()]);
+            });
+        } catch (\DomainException $exception) {
+            return $this->historyPage($entry, $exception->getMessage(), 409);
+        }
+        $this->addFlash('success', 'Revision '.$revision->getRevisionNumber().' wurde als Entwurf wiederhergestellt.');
+        return $this->redirectToRoute('app_admin_news_editor', ['id' => $entry->getId()]);
+    }
+
     #[Route('/{id}/preview', name: 'app_admin_news_editor_preview', requirements: ['id' => '\\d+'], methods: ['POST'])]
     public function preview(ContentEntry $entry, Request $request): JsonResponse
     {
@@ -377,6 +442,22 @@ final class AdminNewsEditorController extends AbstractController
             'documentHash' => hash('sha256', $entry->getEditableDocument()),
             'error' => $error,
         ], new Response(status: $status));
+        return $this->privatePage($response);
+    }
+
+    private function historyPage(ContentEntry $entry, ?string $error = null, int $status = 200): Response
+    {
+        $response = $this->render('admin/news_editor/history.html.twig', [
+            'entry' => $entry,
+            'revisions' => $this->revisionRepository->forEntry($entry),
+            'documentHash' => hash('sha256', $entry->getEditableDocument()),
+            'error' => $error,
+        ], new Response(status: $status));
+        return $this->privatePage($response);
+    }
+
+    private function privatePage(Response $response): Response
+    {
         $response->headers->set('Cache-Control', 'private, no-store');
         $response->headers->set('X-Robots-Tag', 'noindex, nofollow, noarchive');
         return $response;

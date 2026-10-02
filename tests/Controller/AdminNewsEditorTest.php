@@ -195,6 +195,60 @@ final class AdminNewsEditorTest extends WebTestCase
         self::assertCount(0, $em->getRepository(ContentRevision::class)->findBy(['entry' => $stored]));
     }
 
+    public function testVisualRevisionHistoryPreviewsAndRestoresSafely(): void
+    {
+        $client = static::createClient();
+        [$user, $entry] = $this->entry($client);
+        $em = $client->getContainer()->get(EntityManagerInterface::class);
+        $entry->setEditorDocument($this->document('Alte Fassung'))->setBody('Alte Fassung');
+        $revision = new ContentRevision($entry, 1, $user);
+        $em->persist($revision);
+        $entry->setEditorDocument($this->document('Aktuelle Fassung'))->setBody('Aktuelle Fassung');
+        $em->flush();
+        $client->loginUser($user);
+
+        $history = $client->request('GET', '/admin/news-editor/'.$entry->getId().'/history');
+        self::assertResponseIsSuccessful();
+        self::assertStringContainsString('private', strtolower((string) $client->getResponse()->headers->get('Cache-Control')));
+        self::assertCount(1, $history->filter('a:contains("Ansehen")'));
+        $client->request('GET', '/admin/news-editor/'.$entry->getId().'/revisions/'.$revision->getId());
+        self::assertResponseIsSuccessful();
+        self::assertStringContainsString('Alte Fassung', $client->getResponse()->getContent() ?: '');
+
+        $token = $history->filter('input[name="_token"]')->attr('value');
+        $updated = $history->filter('input[name="updatedAt"]')->attr('value');
+        $hash = $history->filter('input[name="documentHash"]')->attr('value');
+        self::assertNotNull($token); self::assertNotNull($updated); self::assertNotNull($hash);
+        $endpoint = '/admin/news-editor/'.$entry->getId().'/revisions/'.$revision->getId().'/restore';
+        $client->request('POST', $endpoint, ['_token' => 'wrong', 'updatedAt' => $updated, 'documentHash' => $hash]);
+        self::assertResponseStatusCodeSame(403);
+        $client->request('POST', $endpoint, ['_token' => $token, 'updatedAt' => '2000-01-01T00:00:00+00:00', 'documentHash' => $hash]);
+        self::assertResponseStatusCodeSame(409);
+        $client->request('POST', $endpoint, ['_token' => $token, 'updatedAt' => $updated, 'documentHash' => $hash]);
+        self::assertResponseRedirects('/admin/news-editor/'.$entry->getId());
+        $em->clear();
+        $restored = $em->find(ContentEntry::class, $entry->getId());
+        self::assertInstanceOf(ContentEntry::class, $restored);
+        self::assertSame('Alte Fassung', $restored->getBody());
+        self::assertSame(ContentEntry::STATUS_DRAFT, $restored->getStatus());
+        self::assertCount(2, $em->getRepository(ContentRevision::class)->findBy(['entry' => $restored]));
+    }
+
+    public function testVisualRevisionRoutesHideForeignSnapshots(): void
+    {
+        $client = static::createClient();
+        [$user, $entry] = $this->entry($client);
+        [, $other] = $this->entry($client);
+        $em = $client->getContainer()->get(EntityManagerInterface::class);
+        $foreign = new ContentRevision($other, 1, $user);
+        $em->persist($foreign); $em->flush();
+        $client->loginUser($user);
+        $client->request('GET', '/admin/news-editor/'.$entry->getId().'/revisions/'.$foreign->getId());
+        self::assertResponseStatusCodeSame(404);
+        $client->request('POST', '/admin/news-editor/'.$entry->getId().'/revisions/'.$foreign->getId().'/restore');
+        self::assertResponseStatusCodeSame(404);
+    }
+
     public function testNewNewsStartsInRichEditorWithInitialRevision(): void
     {
         $client = static::createClient();
