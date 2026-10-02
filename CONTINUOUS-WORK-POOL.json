@@ -65982,6 +65982,105 @@
         "tests/JavaScript/news_editor.test.mjs"
       ],
       "next_action": "Trusted review and integration decision on Worker PR #464 after prerequisite WCP-667 / PR #463; preserve exact green head."
+    },
+    {
+      "priority": 669,
+      "package_id": "WCP-669",
+      "title": "Portable Markdown article import and export in news editor",
+      "risk": "medium_content_conversion",
+      "execution_state": "worker_in_progress",
+      "claim_state": "active",
+      "claim_generation": 1,
+      "claim_branch": "claim/wcp-669-news-article-interchange-g1",
+      "suggested_branch": "feature/wcp-669-news-article-interchange-g1",
+      "resume_branch": "feature/wcp-669-news-article-interchange-g1",
+      "claimed_on": "2026-10-02T19:09:23.216Z",
+      "lease_expires_at": "2026-10-03T02:09:23.217Z",
+      "base_branch": "main",
+      "base_sha": "9e083c63e7d888af36f93a23eb924c89fad2b971",
+      "proposal_base_branch": "composition/wcp-666-668-news-editor-g1",
+      "proposal_base_sha": "69c6d754e457cd0ee0690b2a3f394d45f7a30015",
+      "active_base_branch": "composition/wcp-666-668-news-editor-g1",
+      "active_base_sha": "69c6d754e457cd0ee0690b2a3f394d45f7a30015",
+      "active_head": "69c6d754e457cd0ee0690b2a3f394d45f7a30015",
+      "dependencies": [
+        "WCP-666",
+        "WCP-667",
+        "WCP-668"
+      ],
+      "proposal_kind": "worker_only",
+      "proposal_dependency_evidence": [
+        {
+          "package_id": "WCP-666",
+          "head": "d5d87d9361d4acd66a549003bb188420a0469d2e",
+          "pr": 462,
+          "result": "success"
+        },
+        {
+          "package_id": "WCP-667",
+          "head": "2d9556c8e96e91f35d9de044ad7ae4ce77cf84fc",
+          "pr": 463,
+          "result": "success"
+        },
+        {
+          "package_id": "WCP-668",
+          "head": "5bd275cb511a5ef17bbcdb7a667f98a5a5896f93",
+          "pr": 464,
+          "result": "success"
+        },
+        {
+          "composition_head": "69c6d754e457cd0ee0690b2a3f394d45f7a30015",
+          "pr": 466,
+          "ci_run": 37051684844,
+          "result": "success"
+        }
+      ],
+      "objective": "Give the visual News Editor a bounded Markdown file import and article export flow for long-form drafting, with explicit replacement, undo, safe links, document limits and readable output of existing block types. Keep owned media in the CMS, with clear export limitations.",
+      "allowed_paths": [
+        "assets/news_editor/",
+        "templates/admin/news_editor/edit.html.twig",
+        "tests/JavaScript/news_editor.test.mjs"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "CONTINUOUS-WORKER.md",
+        "CONTINUOUS-WORK-POOL.json",
+        ".github/workflows/",
+        "migrations/",
+        "src/Entity/",
+        "src/Controller/",
+        "src/Security/"
+      ],
+      "deliverables": [
+        "Markdown file import into typed v2 blocks with explicit confirmation and undo.",
+        "Readable Markdown download from current document including headings, lists, tables, code, quotes and safe links.",
+        "Visible note for media/video representation and limits; focused JS tests; complete exact-head Worker CI."
+      ],
+      "tests": [
+        "Node JavaScript editor tests",
+        "Complete Worker CI on exact final head"
+      ],
+      "immutable_constraints": [
+        "worker-only-no-Trusted-merge-or-deployment",
+        "unsafe-links-remain-plain-text",
+        "no-security-test-or-CI-weakening"
+      ],
+      "collision_check": {
+        "compared_against": "Live pool with no active claims; green composition PR #466 head 69c6d754e457cd0ee0690b2a3f394d45f7a30015",
+        "result": "Serial descendant of WCP-666/667/668; paths free at reservation",
+        "paths": [
+          "assets/news_editor/",
+          "templates/admin/news_editor/edit.html.twig",
+          "tests/JavaScript/news_editor.test.mjs"
+        ]
+      },
+      "next_action": "Implement and submit Worker PR"
     }
   ],
   "recovery_queue": [],
