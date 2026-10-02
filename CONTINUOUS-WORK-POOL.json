@@ -67393,6 +67393,78 @@
         "tests/Controller/AdminNewsBlockSnippetControllerTest.php", "tests/JavaScript/news_editor.test.mjs"
       ],
       "next_action": "Trusted review and integration decision on Worker PR #471 after prerequisite WCP-672 / PR #470; preserve exact green head."
+    },
+    {
+      "priority": 674,
+      "package_id": "WCP-674",
+      "title": "News publication readiness and accessibility audit",
+      "risk": "medium_editor_analysis",
+      "execution_state": "worker_in_progress",
+      "claim_state": "claimed",
+      "claim_generation": 1,
+      "claim_branch": "claim/wcp-674-news-readiness-audit-g1",
+      "suggested_branch": "feature/wcp-674-news-readiness-audit-g1",
+      "resume_branch": "feature/wcp-674-news-readiness-audit-g1",
+      "claimed_on": "2026-10-02T23:11:00.000Z",
+      "lease_expires_at": "2026-10-03T06:11:00.000Z",
+      "base_branch": "main",
+      "base_sha": "08260d3f0e343615f525efd2de05767200f031c5",
+      "proposal_base_branch": "feature/wcp-673-news-block-library-g1",
+      "proposal_base_sha": "14f56a2e5f3a6b86c572eeb934aa3e1368487d29",
+      "active_base_branch": "feature/wcp-673-news-block-library-g1",
+      "active_base_sha": "14f56a2e5f3a6b86c572eeb934aa3e1368487d29",
+      "active_head": "14f56a2e5f3a6b86c572eeb934aa3e1368487d29",
+      "last_observed_head": "14f56a2e5f3a6b86c572eeb934aa3e1368487d29",
+      "last_verified_push_at": "2026-10-02T23:11:00.000Z",
+      "last_checkpoint_at": "2026-10-02T23:11:00.000Z",
+      "dependencies": ["WCP-673"],
+      "proposal_kind": "worker_only",
+      "proposal_dependency_evidence": [{
+        "package_id": "WCP-673", "head": "14f56a2e5f3a6b86c572eeb934aa3e1368487d29",
+        "pr": 471, "ci_run": 37075672478, "result": "success"
+      }],
+      "objective": "Provide editors with a server-authoritative, on-demand publication-readiness report for the current unsaved News document, covering structure, accessibility, attribution, links, readability signals and key article metadata without exposing or persisting draft content.",
+      "allowed_paths": [
+        "src/NewsEditor/NewsReadinessReport.php", "src/Controller/AdminNewsReadinessController.php",
+        "templates/admin/news_editor/edit.html.twig", "assets/news_editor/readiness.js",
+        "assets/news_editor/editor.js", "assets/news_editor/editor.css",
+        "tests/NewsEditor/NewsReadinessReportTest.php", "tests/Controller/AdminNewsReadinessControllerTest.php",
+        "tests/JavaScript/news_editor.test.mjs"
+      ],
+      "forbidden_paths": [
+        "private/", "PrivateCore/", "ops/", "docs/", "bin/", "AGENTS.md", "WORKER.md",
+        "CONTINUOUS-WORKER.md", "CONTINUOUS-WORK-POOL.json", ".github/workflows/", "migrations/",
+        "src/Entity/", "src/Repository/", "src/Security/"
+      ],
+      "deliverables": [
+        "Pure deterministic report service with bounded issue output, severity, block location, metrics and publication-ready summary.",
+        "CSRF-protected private/no-store endpoint analyzing the normalized unsaved document plus server-owned News metadata without persistence.",
+        "Accessible editor report panel with explicit refresh, grouped findings and focus navigation to affected blocks.",
+        "Unit, controller and focused JavaScript tests plus complete exact-head Worker CI."
+      ],
+      "tests": [
+        "Unit tests for heading hierarchy, empty/long content, image alt text, quote attribution, link density and bounded deterministic findings.",
+        "Controller tests for permission, CSRF, ownership-independent editor authorization, invalid payload rejection and no persistence.",
+        "Node JavaScript tests for report normalization and safe block navigation.",
+        "Complete Worker CI on exact final head."
+      ],
+      "immutable_constraints": [
+        "worker-only-no-Trusted-merge-or-deployment", "audit-is-advisory-and-never-mutates-content",
+        "draft-document-is-never-logged-or-persisted-by-the-audit", "existing-rich-document-policy-remains-authoritative",
+        "bounded-request-and-finding-count", "no-security-test-or-CI-weakening"
+      ],
+      "collision_check": {
+        "compared_against": "Live pool at ea507f87543de7f6ebdcdb190d6d8b0062ff2ffd with no worker_in_progress claim",
+        "result": "Serial News Editor descendant of completed WCP-673; new report service/controller paths are unique and shared UI paths have no concurrent owner.",
+        "paths": [
+          "src/NewsEditor/NewsReadinessReport.php", "src/Controller/AdminNewsReadinessController.php",
+          "templates/admin/news_editor/edit.html.twig", "assets/news_editor/readiness.js",
+          "assets/news_editor/editor.js", "assets/news_editor/editor.css",
+          "tests/NewsEditor/NewsReadinessReportTest.php", "tests/Controller/AdminNewsReadinessControllerTest.php",
+          "tests/JavaScript/news_editor.test.mjs"
+        ]
+      },
+      "next_action": "Implement the bounded advisory report service and endpoint, then integrate the accessible editor report and exact-head CI."
     }
   ],
   "recovery_queue": [],
