@@ -18,7 +18,12 @@ final class AdminNewsBlockSnippetControllerTest extends WebTestCase
     {
         $client = static::createClient();
         [$owner, $entry] = $this->editor($client);
-        [$other, $otherEntry] = $this->editor($client);
+        [$other] = $this->editor($client);
+        $em = $client->getContainer()->get(EntityManagerInterface::class);
+        $foreign = new NewsBlockSnippet($other, 'Fremde Vorlage', $this->paragraph('Privat'));
+        $em->persist($foreign); $em->flush();
+        $foreignId = $foreign->getId();
+        self::assertNotNull($foreignId);
         $client->loginUser($owner);
         $token = $this->token($client, $entry);
         $client->request('POST', '/admin/news-editor/snippets', [], [], [
@@ -39,16 +44,8 @@ final class AdminNewsBlockSnippetControllerTest extends WebTestCase
         self::assertSame(50, $listed['capacity']);
         self::assertStringContainsString('private', strtolower((string) $client->getResponse()->headers->get('Cache-Control')));
 
-        $client->loginUser($other);
-        $otherToken = $this->token($client, $otherEntry);
-        $client->request('GET', '/admin/news-editor/snippets');
-        self::assertResponseIsSuccessful();
-        self::assertSame([], $this->json($client)['items']);
-        $client->request('DELETE', '/admin/news-editor/snippets/'.$id, [], [], ['HTTP_X_CSRF_TOKEN' => $otherToken]);
+        $client->request('DELETE', '/admin/news-editor/snippets/'.$foreignId, [], [], ['HTTP_X_CSRF_TOKEN' => $token]);
         self::assertResponseStatusCodeSame(404);
-
-        $client->loginUser($owner);
-        $token = $this->token($client, $entry);
         $client->request('DELETE', '/admin/news-editor/snippets/'.$id, [], [], ['HTTP_X_CSRF_TOKEN' => $token]);
         self::assertResponseIsSuccessful();
         self::assertSame(['deleted' => $id], $this->json($client));
@@ -78,6 +75,11 @@ final class AdminNewsBlockSnippetControllerTest extends WebTestCase
         $client->request('GET', '/admin/news-editor/snippets?q='.str_repeat('x', 81));
         self::assertResponseStatusCodeSame(422);
 
+    }
+
+    public function testLibraryPermissionIsEnforced(): void
+    {
+        $client = static::createClient();
         [$reader] = $this->editor($client, [CmsPermission::ACCESS]);
         $client->loginUser($reader);
         $client->request('GET', '/admin/news-editor/snippets');
