@@ -67219,6 +67219,71 @@
         "tests/JavaScript/news_editor.test.mjs"
       ],
       "next_action": "Trusted review and integration decision on Worker PR #469 after prerequisite WCP-670 / PR #468; preserve exact green head."
+    },
+    {
+      "priority": 672,
+      "package_id": "WCP-672",
+      "title": "Multi-block selection and batch operations in News Editor",
+      "risk": "medium_editor_interaction",
+      "execution_state": "worker_in_progress",
+      "claim_state": "claimed",
+      "claim_generation": 1,
+      "claim_branch": "claim/wcp-672-news-batch-blocks-g1",
+      "suggested_branch": "feature/wcp-672-news-batch-blocks-g1",
+      "resume_branch": "feature/wcp-672-news-batch-blocks-g1",
+      "claimed_on": "2026-10-02T22:30:00.000Z",
+      "lease_expires_at": "2026-10-03T05:30:00.000Z",
+      "base_branch": "main",
+      "base_sha": "08260d3f0e343615f525efd2de05767200f031c5",
+      "proposal_base_branch": "feature/wcp-671-news-slash-commands-g1",
+      "proposal_base_sha": "eadfbb6929d13f4db38a858062af311d9039a1c8",
+      "active_base_branch": "feature/wcp-671-news-slash-commands-g1",
+      "active_base_sha": "eadfbb6929d13f4db38a858062af311d9039a1c8",
+      "active_head": "eadfbb6929d13f4db38a858062af311d9039a1c8",
+      "last_observed_head": "eadfbb6929d13f4db38a858062af311d9039a1c8",
+      "last_verified_push_at": "2026-10-02T22:30:00.000Z",
+      "last_checkpoint_at": "2026-10-02T22:30:00.000Z",
+      "dependencies": ["WCP-671"],
+      "proposal_kind": "worker_only",
+      "proposal_dependency_evidence": [{
+        "package_id": "WCP-671", "head": "eadfbb6929d13f4db38a858062af311d9039a1c8",
+        "pr": 469, "ci_run": 37072205874, "result": "success"
+      }],
+      "objective": "Let editors explicitly select several typed blocks and safely duplicate, delete or move the selection as one ordered unit with accessible controls, deterministic focus and full history/document-limit integration.",
+      "allowed_paths": [
+        "assets/news_editor/batch-blocks.js", "assets/news_editor/editor.js",
+        "assets/news_editor/editor.css", "tests/JavaScript/news_editor.test.mjs"
+      ],
+      "forbidden_paths": [
+        "private/", "PrivateCore/", "ops/", "docs/", "bin/", "AGENTS.md", "WORKER.md",
+        "CONTINUOUS-WORKER.md", "CONTINUOUS-WORK-POOL.json", ".github/workflows/", "migrations/",
+        "src/Entity/", "src/Controller/", "templates/", "src/Security/"
+      ],
+      "deliverables": [
+        "Pure immutable contiguous-selection operations for moving, duplicating and deleting ordered typed blocks.",
+        "Accessible per-block selection plus contextual batch toolbar with live selection count and disabled boundary states.",
+        "Document limits, at-least-one-block invariant, history/autosave and deterministic post-operation focus remain enforced.",
+        "Focused JavaScript tests plus complete exact-head Worker CI."
+      ],
+      "tests": [
+        "Node JavaScript tests for selection normalization, stable ordering, boundary movement, cloning, deletion and document limits.",
+        "Complete Worker CI on exact final head."
+      ],
+      "immutable_constraints": [
+        "worker-only-no-Trusted-merge-or-deployment",
+        "batch-actions-require-explicit-selection",
+        "at-least-one-block-and-document-limits-remain-enforced",
+        "no-security-test-or-CI-weakening"
+      ],
+      "collision_check": {
+        "compared_against": "Live pool at 6e270a52452b67e2120f8dcfa916c74be79228fd with no worker_in_progress claim",
+        "result": "Deliberate serial News Editor descendant of completed WCP-671; no concurrent exclusive-path owner.",
+        "paths": [
+          "assets/news_editor/batch-blocks.js", "assets/news_editor/editor.js",
+          "assets/news_editor/editor.css", "tests/JavaScript/news_editor.test.mjs"
+        ]
+      },
+      "next_action": "Implement on the claimed feature branch, run focused and complete test suites, open a Worker PR and record its exact green head."
     }
   ],
   "recovery_queue": [],
