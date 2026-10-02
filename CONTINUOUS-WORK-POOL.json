@@ -11946,7 +11946,7 @@
       "suggested_branch": "feature/wcp-322-guild-application-message-boundary-g1",
       "base_branch": "main",
       "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-      "objective": "Enforce GuildApplication.message's existing NotBlank and 20â5,000-character validation contract in the entity setter before assignment. Preserve trim normalization and the 20-character minimum as validation-only; reject malformed UTF-8/NUL and normalized messages above 5,000 UTF-8 characters/20,000 bytes without truncation, preserving the previous message after rejection.",
+      "objective": "Enforce GuildApplication.message's existing NotBlank and 20–5,000-character validation contract in the entity setter before assignment. Preserve trim normalization and the 20-character minimum as validation-only; reject malformed UTF-8/NUL and normalized messages above 5,000 UTF-8 characters/20,000 bytes without truncation, preserving the previous message after rejection.",
       "allowed_paths": [
         "src/Entity/GuildApplication.php",
         "tests/Entity/GuildApplicationMessageBoundaryTest.php"
@@ -12441,7 +12441,7 @@
         "Worker CI run 36245613505 (#412) succeeded on exact final HEAD f6229b64a986cdd10c372ca78ac6a19d453e5d95.",
         "PHP/Symfony job 108414134721 passed PHPStan level 8 and the complete worker-visible application suite: 432 tests and 1,872 assertions; one PHPUnit deprecation and one notice were reported.",
         "PostgreSQL 18 job 108414134893 applied and verified all 39 migrations with no pending migrations.",
-        "The first CI attempt exposed an incorrect test byte-count assumption for Ã© (two bytes); the test now uses a four-byte character and the corrected exact-head run is green. No product-code change was needed for that correction.",
+        "The first CI attempt exposed an incorrect test byte-count assumption for é (two bytes); the test now uses a four-byte character and the corrected exact-head run is green. No product-code change was needed for that correction.",
         "PR #119 is open and ready for review. Exact comparison against sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d contains only src/Entity/AccessRole.php and tests/Entity/AccessRoleKeyBoundaryTest.php."
       ],
       "worker_pr_state": "closed",
@@ -16365,7 +16365,7 @@
       "suggested_branch": "feature/wcp-357-guild-announcement-title-form-boundary-g1",
       "base_branch": "main",
       "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-      "objective": "Align the GuildAnnouncement title form boundary with its existing 180-character persisted column. Reject an overlong title at the form field and expose the same bound in the browser, so the existing controllerâs validity gate prevents audit, notifier, persist and flush side effects for invalid input.",
+      "objective": "Align the GuildAnnouncement title form boundary with its existing 180-character persisted column. Reject an overlong title at the form field and expose the same bound in the browser, so the existing controller’s validity gate prevents audit, notifier, persist and flush side effects for invalid input.",
       "allowed_paths": [
         "src/Form/GuildAnnouncementType.php",
         "tests/Form/GuildAnnouncementTypeBoundaryTest.php"
@@ -16596,7 +16596,7 @@
       "suggested_branch": "feature/wcp-359-guild-application-form-field-boundaries-g1",
       "base_branch": "main",
       "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-      "objective": "Align the public guild application formâs static core fields with the worker-visible GuildApplication length contracts: applicantName 120, email 180, characterName 120, optional characterClass 100, and message 20â5000. Add server-side Length constraints and matching browser length hints without changing email validity, nullable class normalization, dynamic-question limits, PII handling, authorization, CSRF or persistence flow.",
+      "objective": "Align the public guild application form’s static core fields with the worker-visible GuildApplication length contracts: applicantName 120, email 180, characterName 120, optional characterClass 100, and message 20–5000. Add server-side Length constraints and matching browser length hints without changing email validity, nullable class normalization, dynamic-question limits, PII handling, authorization, CSRF or persistence flow.",
       "allowed_paths": [
         "src/Form/GuildApplicationType.php",
         "tests/Form/GuildApplicationTypeBoundaryTest.php"
@@ -19006,7 +19006,7 @@
       ],
       "deliverables": [
         "Expose a labeled, keyboard-accessible GET search form from /videos and a dedicated /videos/search result page with a return link.",
-        "Search case-insensitively over title and description, bound to 2â100 valid UTF-8 characters and a fixed maximum result count.",
+        "Search case-insensitively over title and description, bound to 2–100 valid UTF-8 characters and a fixed maximum result count.",
         "Group search matching with enabled and currently-published predicates so drafts, disabled videos and future-scheduled videos never appear.",
         "Handle empty, malformed, non-string and out-of-range query values without a 500; prevent shared caching of search queries.",
         "Add functional regressions for route precedence, search results, published-only visibility, invalid inputs, form reachability and no-result state."
@@ -22015,7 +22015,7 @@
       "suggested_branch": "feature/wcp-405-guild-character-profile-self-service-g1",
       "base_branch": "main",
       "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-      "objective": "Complete the missing self-service path from the guild portalâs own-character list to editing a memberâs character name and class. Keep rank, player name, level, leader, active state, guild and account ownership outside the editable form. Require an active member row owned by the authenticated user in the route guild; use CSRF-protected form validation and return 404 for foreign, cross-guild or inactive rows. Record only a generic audit summary without character values. No schema change.",
+      "objective": "Complete the missing self-service path from the guild portal’s own-character list to editing a member’s character name and class. Keep rank, player name, level, leader, active state, guild and account ownership outside the editable form. Require an active member row owned by the authenticated user in the route guild; use CSRF-protected form validation and return 404 for foreign, cross-guild or inactive rows. Record only a generic audit summary without character values. No schema change.",
       "allowed_paths": [
         "src/Controller/GuildCharacterProfileController.php",
         "src/Form/GuildCharacterProfileType.php",
@@ -22043,10 +22043,10 @@
         "public/"
       ],
       "deliverables": [
-        "Add an edit link for each of the authenticated memberâs own active characters in the guild portal.",
+        "Add an edit link for each of the authenticated member’s own active characters in the guild portal.",
         "Add an authenticated character-profile editor limited to character name and optional class, with server-side NotBlank/Length validation and visible HTML maxlength values.",
         "Require the character to be active and owned by the current user in the route guild; return 404 for foreign-user, cross-guild and inactive membership IDs.",
-        "Use the Symfony formâs CSRF protection; invalid, missing or forged privileged form fields must not persist changes.",
+        "Use the Symfony form’s CSRF protection; invalid, missing or forged privileged form fields must not persist changes.",
         "Audit successful profile updates with a generic summary that contains neither old nor new character values.",
         "Keep privileged character attributes and schema unchanged."
       ],
@@ -24730,7 +24730,7 @@
       "suggested_branch": "feature/wcp-423-account-session-revocation-g1",
       "base_branch": "main",
       "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-      "objective": "Add focused functional regressions for individual account session revocation. Verify another authenticated user cannot revoke the ownerâs session, an owner can revoke a different session with the rendered CSRF token, and a request revoking the current tracked session redirects to login and persists the revoked state. Keep the package test-only.",
+      "objective": "Add focused functional regressions for individual account session revocation. Verify another authenticated user cannot revoke the owner’s session, an owner can revoke a different session with the rendered CSRF token, and a request revoking the current tracked session redirects to login and persists the revoked state. Keep the package test-only.",
       "allowed_paths": [
         "tests/Controller/AccountSessionRevocationSecurityTest.php"
       ],
@@ -24754,7 +24754,7 @@
         "public/"
       ],
       "deliverables": [
-        "A different authenticated user receives 404 when attempting to revoke another accountâs session, and the target session remains active.",
+        "A different authenticated user receives 404 when attempting to revoke another account’s session, and the target session remains active.",
         "The owner can revoke a different active session using the token rendered for that exact session; the response redirects back to account security and the session is marked revoked.",
         "Revoking the current tracked session redirects to login and persists that session as revoked; existing AccountBrowserAssurance coverage verifies revoked sessions are denied on a subsequent request.",
         "Only tests/Controller/AccountSessionRevocationSecurityTest.php changes."
@@ -24816,7 +24816,7 @@
           "run_id": 36277573438,
           "head": "d78952a6e7bb05f9832ed51477e489362c84e579",
           "result": "failure",
-          "note": "PHPStan and PostgreSQL 18 passed; PHPUnit showed the test clientâs loginUser override retained authentication after session invalidation, so the redundant follow-up request assertion was removed."
+          "note": "PHPStan and PostgreSQL 18 passed; PHPUnit showed the test client’s loginUser override retained authentication after session invalidation, so the redundant follow-up request assertion was removed."
         },
         {
           "run_id": 36277788368,
@@ -31317,7 +31317,7 @@
         }
       ],
       "collision_check": {
-        "compared_against": "Fresh continuous/work-pool-v4 blob 6e32b24cae56bdf85d5033b246a51146f92b4ccb; every active and claim-locked allowed-path scope; current open PRs #253â#256 and changed-file lists; exact green WCP-113 PR #76 HEAD f6247efb947195b61d9688b758ee59d0f0fd6f06; sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d.",
+        "compared_against": "Fresh continuous/work-pool-v4 blob 6e32b24cae56bdf85d5033b246a51146f92b4ccb; every active and claim-locked allowed-path scope; current open PRs #253–#256 and changed-file lists; exact green WCP-113 PR #76 HEAD f6247efb947195b61d9688b758ee59d0f0fd6f06; sanitized main f1a246c64527ef3ad51f7490773d9bbf9d42be5d.",
         "result": "No active or claim-locked task owns any proposed path. WCP-113 owns only the permission-store implementation and its boundary test; this proposal stacks on its exact green HEAD and uses that public contract without editing either owned path. WCP-114 owns the separate package inventory implementation and test; both remain unchanged. WCP-418 and completed WCP-461 own distinct module-lifecycle security test files only. Completed WCP-462 owns only AdminDashboardAccessSecurityTest.php; active WCP-463 owns the admin video catalogue paths. Active WCP-401 Game Hub, WCP-439 content duplication, WCP-383 scheduled-publishing tests, and completed WCP-460 content redirects have disjoint paths. All five unclaimed FCP packages remain dependency-blocked.",
         "paths": [
           "src/Controller/AdminExtensionCapabilityController.php",
@@ -40064,7 +40064,7 @@
       "suggested_branch": "feature/wcp-516-video-search-g1",
       "base_branch": "main",
       "base_sha": "f1a246c64527ef3ad51f7490773d9bbf9d42be5d",
-      "objective": "Complete the existing Video moduleâs public discovery workflow with an editor-placeable search widget and a bounded results page. The current public video catalogue supports category and playlist filtering but has no title/description search. Register video.search through the existing tagged WidgetProvider contract; its server-owned GET form submits to a new /video-search route. Search only enabled, already-published videos and provide stable bounded pagination; keep the route and widget unavailable when the Video module is disabled. To avoid the poolâs broad templates/ reservation, place the dedicated Twig files under src/VideoSearch/Templates and register that directory as an additional default Twig path. Do not edit the existing video controller, catalogue templates, repository, module registry, layout editor, entities, or schema.",
+      "objective": "Complete the existing Video module’s public discovery workflow with an editor-placeable search widget and a bounded results page. The current public video catalogue supports category and playlist filtering but has no title/description search. Register video.search through the existing tagged WidgetProvider contract; its server-owned GET form submits to a new /video-search route. Search only enabled, already-published videos and provide stable bounded pagination; keep the route and widget unavailable when the Video module is disabled. To avoid the pool’s broad templates/ reservation, place the dedicated Twig files under src/VideoSearch/Templates and register that directory as an additional default Twig path. Do not edit the existing video controller, catalogue templates, repository, module registry, layout editor, entities, or schema.",
       "allowed_paths": [
         "config/packages/twig.yaml",
         "src/Controller/PublicVideoSearchController.php",
@@ -40108,7 +40108,7 @@
         "The auto-tagged provider registry exposes video.search in the page-builder palette only when Video is enabled; the widget form uses the fixed app_video_search route and no configurable URL.",
         "GET /video-search renders an accessible search form, safe empty state, public matching videos and stable pages of 20 results, ordered publishedAt DESC then id DESC.",
         "Search is case-insensitive across title and description. Only enabled videos with a non-null publishedAt no later than now are returned.",
-        "Non-empty q must be scalar valid UTF-8, 2â100 characters after trimming; reject arrays, invalid UTF-8/control characters and too-short or too-long queries. Parse page as a bounded positive scalar integer.",
+        "Non-empty q must be scalar valid UTF-8, 2–100 characters after trimming; reject arrays, invalid UTF-8/control characters and too-short or too-long queries. Parse page as a bounded positive scalar integer.",
         "Search output uses Twig autoescape and the only Twig lookup change is an additive twig.paths entry for src/VideoSearch/Templates; no files are placed under templates/.",
         "No schema, migration, entity, existing repository/controller, auth policy, module registry, page-builder/editor or route-table configuration changes."
       ],
@@ -42713,7 +42713,7 @@
       ],
       "deliverables": [
         "Auto-discover a Gaming-owned gaming.game-catalogue-search WidgetProvider. Its accessible GET form uses the fixed app_public_game_catalogue_search route; no editor-supplied destination is accepted.",
-        "Add GET /game-search with a bounded text query (2â100 Unicode characters when non-empty) and deterministic pagination of at most 20 public results per page.",
+        "Add GET /game-search with a bounded text query (2–100 Unicode characters when non-empty) and deterministic pagination of at most 20 public results per page.",
         "Search game name and description, catalogue summary, developer, publisher name and genre name using parameterized queries. Exclude disabled catalogue entries and disabled Games in both count and result queries.",
         "Render result count, stable pagination, internal links through app_game_catalogue_show, and a clear empty state with Twig escaping.",
         "Return 404 while Gaming is disabled. Reject malformed, array, invalid UTF-8, control-character and out-of-range page inputs with understandable 400 responses. Add no schema or migration."
@@ -42748,7 +42748,7 @@
       "proposal_kind": "worker_only",
       "proposal_dependency_evidence": [],
       "collision_check": {
-        "compared_against": "Fresh continuous/work-pool-v4 task and path inventory; sanitized Worker main; active and claim-locked WCP-516, WCP-523/524 and WCP-526â530; FCP-056/069 scopes; exact WCP-531 branch and PR searches.",
+        "compared_against": "Fresh continuous/work-pool-v4 task and path inventory; sanitized Worker main; active and claim-locked WCP-516, WCP-523/524 and WCP-526–530; FCP-056/069 scopes; exact WCP-531 branch and PR searches.",
         "result": "No active or claim-locked task intersects the seven exact new paths. WCP-516 is a Video-specific search with separate files/config; FCP-069's global Search module uses src/Search, src/Controller/Search, src/Repository/Search and templates/search and is untouched. WCP-524's catalogue promotion widget paths are untouched. FCP-056/WCP-387 Game Catalogue controller, repository, list and show paths remain untouched. FCP-072's broad templates/ scope is currently unclaimed and dependency-blocked; revalidate if it is claimed before this package is complete.",
         "paths": [
           "src/Controller/PublicGameCatalogueSearchController.php",
@@ -44688,7 +44688,7 @@
       ],
       "deliverables": [
         "Provide an authorized Gaming-admin screen to list role needs by guild, create a role/class need for that guild's own game, update desired count/active state and delete a need. Keep role/class identity immutable after creation, consistent with the existing entity.",
-        "Validate role keys to 40 characters, class keys to 100 characters and desired counts to the entity's 0â1000 range; handle duplicate guild/game/role/class identities without a server error.",
+        "Validate role keys to 40 characters, class keys to 100 characters and desired counts to the entity's 0–1000 range; handle duplicate guild/game/role/class identities without a server error.",
         "Require CMS_GAMING_MANAGE and an enabled Gaming module for administration, require rendered CSRF tokens for create/edit/delete, and write audit records for mutations.",
         "Add a clear role-needs management link from the existing admin application-review page.",
         "Show only positive-count, active needs on the public guild application page, and only when the guild and its game are enabled and the guild is recruiting.",
@@ -46216,7 +46216,7 @@
       "blocked_by_at_publication": [],
       "claim_branch": "claim/wcp-549-global-search-widget-g1",
       "suggested_branch": "feature/wcp-549-global-search-widget-g1",
-      "objective": "Expose the existing permission-aware global search as a single-use Page Builder widget. Render a clearly labeled GET form targeting app_search_global with the q parameter and a 2â100 character input limit matching the existing global-search page. Assign the widget to the always-available core module. Reuse FCP-069 search discovery and visibility behavior without changing its index, filters, viewer rules, route, results or feeds.",
+      "objective": "Expose the existing permission-aware global search as a single-use Page Builder widget. Render a clearly labeled GET form targeting app_search_global with the q parameter and a 2–100 character input limit matching the existing global-search page. Assign the widget to the always-available core module. Reuse FCP-069 search discovery and visibility behavior without changing its index, filters, viewer rules, route, results or feeds.",
       "allowed_paths": [
         "src/Widget/PublicGlobalSearchWidgetProvider.php",
         "src/GlobalSearchWidget/Templates/widget/global_search.html.twig",
@@ -55556,7 +55556,7 @@
       "suggested_branch": "feature/wcp-597-guild-role-need-application-g1",
       "base_branch": "main",
       "base_sha": "a19ed4bcf1203bba69de472613805d5fcdc978e6",
-      "objective": "Complete the existing public Guild Role Needs â Guild Application journey. The Page Builder widget currently shows open role/class needs but its link drops applicants onto a generic form without identifying which need they selected. Add a dedicated application entry point for each need that confirms and prefills that role/class, records the selected need in the existing GuildApplication answers JSON for officers, and revalidates the exact public active need and Gaming/recruitment gates on GET and POST. Reuse the current GuildApplicationType, submission rate limiter and admin notification behavior; add no schema or migration.",
+      "objective": "Complete the existing public Guild Role Needs → Guild Application journey. The Page Builder widget currently shows open role/class needs but its link drops applicants onto a generic form without identifying which need they selected. Add a dedicated application entry point for each need that confirms and prefills that role/class, records the selected need in the existing GuildApplication answers JSON for officers, and revalidates the exact public active need and Gaming/recruitment gates on GET and POST. Reuse the current GuildApplicationType, submission rate limiter and admin notification behavior; add no schema or migration.",
       "allowed_paths": [
         "src/Controller/PublicGuildRoleNeedApplicationController.php",
         "src/GuildRoleNeedsWidget/Templates/widget/public_guild_role_needs.html.twig",
