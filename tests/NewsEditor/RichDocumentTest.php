@@ -75,6 +75,28 @@ final class RichDocumentTest extends TestCase
         (new RichDocument())->decode(RichDocument::PREFIX.str_repeat('x', 60000));
     }
 
+    public function testLegacyTableHeaderAndExplicitBodyOnlyTable(): void
+    {
+        $document = new RichDocument();
+        $rows = [[[['text' => '<game>', 'marks' => []]]]];
+        self::assertTrue($document->decode($this->raw([['type' => 'table', 'rows' => $rows]]))['blocks'][0]['header']);
+        $normalized = $document->normalizeForStorage($this->raw([['type' => 'table', 'rows' => $rows, 'header' => false]]));
+        self::assertFalse($document->decode($normalized)['blocks'][0]['header']);
+        foreach (['false', 1, null] as $invalid) {
+            $this->expectInvalidTableHeader($rows, $invalid);
+        }
+    }
+
+    private function expectInvalidTableHeader(array $rows, mixed $value): void
+    {
+        try {
+            (new RichDocument())->decode($this->raw([['type' => 'table', 'rows' => $rows, 'header' => $value]]));
+            self::fail('Non-boolean table header was accepted.');
+        } catch (\InvalidArgumentException) {
+            self::assertTrue(true);
+        }
+    }
+
     /** @param list<array<string,mixed>> $blocks */
     private function raw(array $blocks): string
     {

@@ -128,7 +128,10 @@ final class RichDocument
             return ['type' => 'list', 'ordered' => $block['ordered'], 'items' => array_map(fn (mixed $item): array => $this->content($item, $runs), $block['items'])];
         }
         if ($type === 'table') {
-            $this->keys($block, ['type', 'rows']);
+            $this->keys($block, isset($block['header']) ? ['type', 'rows', 'header'] : ['type', 'rows']);
+            if (isset($block['header']) && !is_bool($block['header'])) {
+                throw new \InvalidArgumentException('Ungültige Tabellenkopfzeile.');
+            }
             if (!is_array($block['rows']) || !array_is_list($block['rows']) || count($block['rows']) < 1 || count($block['rows']) > 20) {
                 throw new \InvalidArgumentException('Ungültige Tabelle.');
             }
@@ -141,7 +144,8 @@ final class RichDocument
                 $width = count($row);
                 $rows[] = array_map(fn (mixed $cell): array => $this->content($cell, $runs), $row);
             }
-            return ['type' => 'table', 'rows' => $rows];
+            // Older v2 documents always rendered the first row as a header.
+            return ['type' => 'table', 'rows' => $rows, 'header' => $block['header'] ?? true];
         }
         if ($type === 'callout') {
             $this->keys($block, ['type', 'tone', 'content']);

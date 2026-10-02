@@ -22,7 +22,11 @@ export function insertAfter(document, block, index) {
   if (document.version !== 2 || !Array.isArray(document.blocks) || document.blocks.length >= MAX_BLOCKS || !Number.isInteger(index) || index < -1 || index >= document.blocks.length) return null;
   const next = {version: 2, blocks: [...document.blocks]};
   next.blocks.splice(index + 1, 0, structuredClone(block));
-  if (next.blocks.reduce((sum, item) => sum + runCount(item), 0) > MAX_RUNS) return null;
-  if (new TextEncoder().encode('cms-rich:v2\n' + JSON.stringify(next)).length > MAX_BYTES) return null;
-  return next;
+  return withinDocumentLimits(next) ? next : null;
+}
+
+export function withinDocumentLimits(document) {
+  return document.version === 2 && Array.isArray(document.blocks) && document.blocks.length > 0 && document.blocks.length <= MAX_BLOCKS
+    && document.blocks.reduce((sum, item) => sum + runCount(item), 0) <= MAX_RUNS
+    && new TextEncoder().encode('cms-rich:v2\n' + JSON.stringify(document)).length <= MAX_BYTES;
 }

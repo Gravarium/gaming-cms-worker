@@ -66,4 +66,22 @@ final class RichRendererTest extends TestCase
         }
         self::assertSame('<p>Inhalt kann nicht angezeigt werden.</p>', (new ContentBlockRenderer($legacy, $media))->render(RichDocument::PREFIX.'<script>'));
     }
+
+    public function testTableHeaderScopeAndBodyOnlyCellsAreEscaped(): void
+    {
+        $media = new class implements OwnedMediaReferenceGateway {
+            public function resolve(int $assetId): ?array { return null; }
+        };
+        $renderer = new \App\NewsEditor\RichRenderer(new RichDocument(), $media);
+        $cell = [['text' => '<script>', 'marks' => []]];
+        $rows = [[$cell], [$cell]];
+        $header = RichDocument::PREFIX.json_encode(['version' => 2, 'blocks' => [['type' => 'table', 'rows' => $rows]]], JSON_THROW_ON_ERROR);
+        $html = $renderer->render($header);
+        self::assertStringContainsString('<thead><tr><th scope="col">&lt;script&gt;</th></tr></thead>', $html);
+        $bodyOnly = RichDocument::PREFIX.json_encode(['version' => 2, 'blocks' => [['type' => 'table', 'rows' => $rows, 'header' => false]]], JSON_THROW_ON_ERROR);
+        $html = $renderer->render($bodyOnly);
+        self::assertStringNotContainsString('<thead>', $html);
+        self::assertStringContainsString('<tbody><tr><td>&lt;script&gt;</td></tr>', $html);
+        self::assertStringNotContainsString('<script>', $html);
+    }
 }

@@ -2,7 +2,8 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {parseVideoUrl} from '../../assets/news_editor/video-url.js';
 import {EditorHistory} from '../../assets/news_editor/history.js';
-import {articleOutline, insertAfter} from '../../assets/news_editor/longform.js';
+import {articleOutline, insertAfter, withinDocumentLimits} from '../../assets/news_editor/longform.js';
+import {editTable} from '../../assets/news_editor/table-ops.js';
 
 test('news editor extracts only fixed-provider video IDs', () => {
   assert.deepEqual(parseVideoUrl('https://www.youtube.com/watch?v=abc123_DEF0'), {provider: 'youtube', videoId: 'abc123_DEF0'});
@@ -57,4 +58,23 @@ test('contextual insertion preserves original and rejects document bounds', () =
   assert.equal(insertAfter({version: 2, blocks: [{type: 'code', language: 'plain', text: 'x'.repeat(59900)}]}, heading, 0), null);
   const runs = Array(500).fill({text: 'x', marks: []});
   assert.equal(insertAfter({version: 2, blocks: [{type: 'paragraph', content: runs}]}, heading, 0), null);
+});
+
+test('table operations modify selected positions and keep rectangular boundaries', () => {
+  const cell = text => [{text, marks: []}];
+  const rows = [[cell('A'), cell('<B>')], [cell('C'), cell('D')]];
+  const withRow = editTable(rows, 'insert-row', 0, 1);
+  assert.deepEqual(withRow[1], [cell(''), cell('')]);
+  assert.equal(withRow[2][0][0].text, 'C');
+  const withColumn = editTable(rows, 'insert-column', 1, 0);
+  assert.deepEqual(withColumn[0].map(c => c[0].text), ['A', '', '<B>']);
+  assert.deepEqual(editTable(rows, 'remove-row', 0, 0), [rows[1]]);
+  assert.deepEqual(editTable(rows, 'remove-column', 0, 1), [[cell('A')], [cell('C')]]);
+  assert.equal(rows[0][1][0].text, '<B>');
+  assert.equal(editTable([rows[0]], 'remove-row', 0, 0), null);
+  assert.equal(editTable([[cell('A')]], 'remove-column', 0, 0), null);
+  assert.equal(editTable(rows, 'insert-column', 0, 3), null);
+  assert.equal(editTable(Array(20).fill(rows[0]), 'insert-row', 0, 0), null);
+  assert.equal(editTable([Array(10).fill(cell('x'))], 'insert-column', 0, 0), null);
+  assert.equal(withinDocumentLimits({version: 2, blocks: [{type: 'table', header: false, rows: [Array(501).fill(cell('x'))]}]}), false);
 });

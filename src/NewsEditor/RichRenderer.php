@@ -36,10 +36,14 @@ final readonly class RichRenderer
         if ($type === 'table') {
             $rows = [];
             foreach ($block['rows'] as $index => $row) {
-                $tag = $index === 0 ? 'th' : 'td';
-                $rows[] = '<tr>'.implode('', array_map(fn (array $cell): string => '<'.$tag.'>'.$this->runs($cell).'</'.$tag.'>', $row)).'</tr>';
+                $header = $index === 0 && $block['header'];
+                $tag = $header ? 'th' : 'td';
+                $scope = $header ? ' scope="col"' : '';
+                $rows[] = '<tr>'.implode('', array_map(fn (array $cell): string => '<'.$tag.$scope.'>'.$this->runs($cell).'</'.$tag.'>', $row)).'</tr>';
             }
-            return '<div class="news-table-scroll"><table><thead>'.$rows[0].'</thead>'.(count($rows) > 1 ? '<tbody>'.implode('', array_slice($rows, 1)).'</tbody>' : '').'</table></div>';
+            $head = $block['header'] ? '<thead>'.$rows[0].'</thead>' : '';
+            $body = $block['header'] ? array_slice($rows, 1) : $rows;
+            return '<div class="news-table-scroll"><table>'.$head.($body !== [] ? '<tbody>'.implode('', $body).'</tbody>' : '').'</table></div>';
         }
         if ($type === 'callout') {
             return '<aside class="news-callout news-callout--'.$block['tone'].'">'.$this->runs($block['content']).'</aside>';

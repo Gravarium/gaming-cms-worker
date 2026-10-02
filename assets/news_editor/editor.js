@@ -1,6 +1,7 @@
 import {parseVideoUrl} from './video-url.js';
 import {EditorHistory} from './history.js';
-import {articleOutline, insertAfter} from './longform.js';
+import {articleOutline, insertAfter, withinDocumentLimits} from './longform.js';
+import {editTable} from './table-ops.js';
 
 const root = document.getElementById('news-editor');
 if (root) {
@@ -75,22 +76,42 @@ if (root) {
     }
     if (block.type === 'table') {
       const table = node('table');
-      for (const cells of block.rows ?? []) { const tr = node('tr'); for (const cell of cells) tr.append(editable('td', cell)); table.append(tr); }
-      row.append(table);
-      const addRow = node('button', 'Zeile hinzufügen'); addRow.type = 'button'; addRow.addEventListener('click', () => {
-        if (table.rows.length >= 20) return;
-        const tr = node('tr'); for (let i = 0; i < table.rows[0].cells.length; i++) tr.append(editable('td', [{text: '', marks: []}])); table.append(tr); changed();
-      }); row.append(addRow);
-      const addColumn = node('button', 'Spalte hinzufügen'); addColumn.type = 'button'; addColumn.addEventListener('click', () => {
-        if (table.rows[0].cells.length >= 10) return;
-        for (const tr of table.rows) tr.append(editable('td', [{text: '', marks: []}])); changed();
-      }); row.append(addColumn);
-      const removeRow = node('button', 'Letzte Zeile entfernen'); removeRow.type = 'button'; removeRow.addEventListener('click', () => {
-        if (table.rows.length > 1) { table.lastElementChild.remove(); changed(); }
-      }); row.append(removeRow);
-      const removeColumn = node('button', 'Letzte Spalte entfernen'); removeColumn.type = 'button'; removeColumn.addEventListener('click', () => {
-        if (table.rows[0].cells.length > 1) { for (const tr of table.rows) tr.lastElementChild.remove(); changed(); }
-      }); row.append(removeColumn);
+      const header = input('Erste Zeile als Kopfzeile', '');
+      const checkbox = header.querySelector('input'); checkbox.type = 'checkbox'; checkbox.checked = block.header !== false;
+      let selectedRow = 0, selectedColumn = 0;
+      const tableRows = () => [...table.rows].map(tr => [...tr.cells].map(runs));
+      const draw = rows => {
+        table.replaceChildren();
+        for (const [index, cells] of rows.entries()) {
+          const tr = node('tr');
+          for (const cell of cells) {
+            const field = editable(index === 0 && checkbox.checked ? 'th' : 'td', cell);
+            if (field.tagName === 'TH') field.setAttribute('scope', 'col');
+            tr.append(field);
+          }
+          table.append(tr);
+        }
+      };
+      draw(block.rows ?? []);
+      table.addEventListener('focusin', event => {
+        const cell = event.target.closest('th,td');
+        if (cell) { selectedRow = cell.parentElement.rowIndex; selectedColumn = cell.cellIndex; }
+      });
+      checkbox.addEventListener('change', () => { draw(tableRows()); table.rows[selectedRow]?.cells[selectedColumn]?.focus(); changed(); });
+      row.append(header, table);
+      for (const [label, operation] of [['Zeile darunter einfügen', 'insert-row'], ['Gewählte Zeile entfernen', 'remove-row'], ['Spalte rechts einfügen', 'insert-column'], ['Gewählte Spalte entfernen', 'remove-column']]) {
+        const button = node('button', label); button.type = 'button';
+        button.addEventListener('click', () => {
+          const edited = editTable(tableRows(), operation, selectedRow, selectedColumn);
+          if (!edited) { status.textContent = 'Tabellengrenze erreicht oder gewählte Zeile/Spalte nicht vorhanden.'; return; }
+          const candidate = JSON.parse(serialize().slice(prefix.length));
+          candidate.blocks[[...blocks.children].indexOf(row)].rows = edited;
+          if (!withinDocumentLimits(candidate)) { status.textContent = 'Dokumentgrenze erreicht: Tabelle konnte nicht erweitert werden.'; return; }
+          selectedRow = Math.min(selectedRow, edited.length - 1);
+          selectedColumn = Math.min(selectedColumn, edited[0].length - 1);
+          draw(edited); table.rows[selectedRow].cells[selectedColumn].focus(); changed();
+        }); row.append(button);
+      }
     }
     if (block.type === 'callout') {
       const tone = node('select'); tone.setAttribute('aria-label', 'Art der Infobox');
@@ -167,7 +188,7 @@ if (root) {
         return block;
       }
       if (type === 'list') return {type, ordered: row.dataset.ordered === 'true', items: [...row.querySelectorAll('li')].map(runs)};
-      if (type === 'table') return {type, rows: [...row.querySelectorAll('tr')].map(tr => [...tr.cells].map(runs))};
+      if (type === 'table') return {type, rows: [...row.querySelectorAll('tr')].map(tr => [...tr.cells].map(runs)), header: row.querySelector('input[type="checkbox"]').checked};
       if (type === 'callout') return {type, tone: row.querySelector('select').value, content: runs(row.querySelector('[contenteditable]'))};
       if (type === 'code') return {type, language: row.querySelector('select').value, text: row.querySelector('textarea').value};
       if (type === 'separator') return {type};
@@ -248,7 +269,7 @@ if (root) {
     heading: {type: 'heading', level: 2, content: [{text: '', marks: []}]},
     quote: {type: 'quote', content: [{text: '', marks: []}], cite: ''},
     list: {type: 'list', ordered: false, items: [[{text: '', marks: []}]]},
-    table: {type: 'table', rows: [[[ {text: '', marks: []} ], [ {text: '', marks: []} ]]]},
+    table: {type: 'table', rows: [[[ {text: '', marks: []} ], [ {text: '', marks: []} ]]], header: true},
     callout: {type: 'callout', tone: 'info', content: [{text: '', marks: []}]},
     code: {type: 'code', language: 'plain', text: ''},
     separator: {type: 'separator'},
