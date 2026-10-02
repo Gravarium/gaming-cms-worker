@@ -18,12 +18,12 @@ final class NamedPortalAdapter implements ProviderAdapter
             'vdohide' => ['VdoHide', 'https://vdohide.com/', 'link'],
             'dbimg' => ['DBimg', 'https://dbimg.app/en/blog/best-free-image-hosting-no-account-2026', 'direct_or_link'],
             'internetarchive' => ['Internet Archive', 'https://archivesupport.zendesk.com/hc/en-us/articles/360018377531-Movies-and-Videos-Tips-Troubleshooting', 'embed_or_direct'],
-            'groovevideo' => ['GrooveVideo', 'https://groovevideo.com/', 'link'],
-            'viddler' => ['Viddler', 'https://viddler.com/how-it-works', 'link'],
+            'groovevideo' => ['GrooveVideo', 'https://app.groove.cm/grooveembeds/video/70356/he5QXtUV7MI5pyz91Hdx', 'embed'],
+            'viddler' => ['Viddler', 'https://github.com/viddler/Examples/blob/master/vapi/iframe/simple-example.html', 'embed_or_link'],
             'videco' => ['Videco', 'https://www.videco.io/help', 'embed'],
             'kapwing' => ['Kapwing', 'https://www.kapwing.com/tools/embed', 'embed_or_link'],
             'kaltura' => ['Kaltura', 'https://knowledge.kaltura.com/help/embed-code-reference', 'embed'],
-            'myvideospot' => ['MyVideoSpot', 'https://www.myvideospot.com/knowledge-base/media/the-share-bar/', 'link'],
+            'myvideospot' => ['MyVideoSpot', 'https://docs.myvideospot.com/article/298-embedding-videos', 'embed_or_link'],
             'vidzflow' => ['Vidzflow', 'https://www.vidzflow.com/pricing', 'direct_or_link'],
             'yourimageshare' => ['YourImageShare', 'https://yourimageshare.com/video-hosting', 'direct_or_link'],
         ];
@@ -87,6 +87,19 @@ final class NamedPortalAdapter implements ProviderAdapter
             }
             return ['mode' => 'iframe', 'url' => 'https://cdnapisec.kaltura.com'.$path.'?'.http_build_query($params)];
         }
+        if ($provider === 'groovevideo' && $host === 'app.groove.cm' && $query === ''
+            && preg_match('~\A/grooveembeds/video/([1-9][0-9]{0,11})/([A-Za-z0-9]{16,32})/?\z~', $path, $m) === 1) {
+            return ['mode' => 'iframe', 'url' => 'https://app.groove.cm/grooveembeds/video/'.$m[1].'/'.$m[2]];
+        }
+        if ($provider === 'viddler' && $host === 'www.viddler.com'
+            && preg_match('~\A/embed/([a-f0-9]{8})/?\z~', $path, $m) === 1
+            && preg_match('/\A(?:f=1(?:&secret=[0-9]{1,16})?|secret=[0-9]{1,16})?\z/', $query) === 1) {
+            return ['mode' => 'iframe', 'url' => 'https://www.viddler.com/embed/'.$m[1].($query === '' ? '' : '?'.$query)];
+        }
+        if ($provider === 'myvideospot' && $host === 'live.myvrspot.com' && $path === '/iframe'
+            && preg_match('/\Av=([A-Za-z0-9_-]{20,128})(?:&share=1)?\z/', $query) === 1) {
+            return ['mode' => 'iframe', 'url' => 'https://live.myvrspot.com/iframe?'.$query];
+        }
         if ($provider === 'yourimageshare' && $host === 'yourimageshare.com'
             && preg_match('~\A/ib/[A-Za-z0-9_-]{6,80}\.(mp4|webm)\z~i', $path) === 1) {
             return ['mode' => 'video', 'url' => $sourceUrl];
@@ -100,8 +113,14 @@ final class NamedPortalAdapter implements ProviderAdapter
             return ['mode' => 'video', 'url' => $sourceUrl];
         }
 
-        // These providers advertise embeds but do not document a stable source URL form.
-        // Explicit supplier URLs stay usable as outbound links until a tested embed is supplied.
+        // A malformed iframe URL must not be silently downgraded to a link.
+        if (($provider === 'groovevideo' && $host === 'app.groove.cm' && str_starts_with($path, '/grooveembeds/video/'))
+            || ($provider === 'viddler' && $host === 'www.viddler.com' && str_starts_with($path, '/embed/'))
+            || ($provider === 'myvideospot' && $host === 'live.myvrspot.com' && $path === '/iframe')) {
+            return null;
+        }
+
+        // Unrecognized supplier pages remain outbound links, never guessed iframe sources.
         $linkHosts = [
             'vdohide' => ['vdohide.com', 'www.vdohide.com'],
             'dbimg' => ['dbimg.app', 'www.dbimg.app'],
