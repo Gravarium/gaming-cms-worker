@@ -425,6 +425,216 @@ final class AdminGameGuideControllerTest extends WebTestCase
         }
     }
 
+    public function testGamingEditorCanWithdrawPublishedGuideAndPreserveItsBuild(): void
+    {
+        $client = static::createClient();
+        $this->setModules($client, true);
+        $em = $this->em($client);
+        $connection = $this->connection($client);
+        $game = $this->game($em);
+        $author = $this->user($em, CmsPermission::GAMING, 'withdraw-author');
+        $publisher = $this->user($em, CmsPermission::GAMING, 'withdraw-publisher');
+        $editor = $this->user($em, CmsPermission::GAMING, 'withdraw-editor');
+        $gameId = $game->getId();
+        $authorId = $author->getId();
+        $publisherId = $publisher->getId();
+        $editorId = $editor->getId();
+        self::assertNotNull($gameId);
+        self::assertNotNull($authorId);
+        self::assertNotNull($publisherId);
+        self::assertNotNull($editorId);
+        $guideIds = [];
+
+        try {
+            $id = $this->guide($connection, $gameId, $authorId, 'published', 'Published build '.bin2hex(random_bytes(4)));
+            $guideIds[] = $id;
+            $connection->update('game_guide', [
+                'reviewer_id' => $publisherId,
+                'published_at' => (new \DateTimeImmutable('-1 hour'))->format('Y-m-d H:i:s'),
+            ], ['id' => $id]);
+            $connection->insert('game_guide_component', [
+                'guide_id' => $id,
+                'component_type' => 'skill',
+                'component_key' => 'arcane-barrage',
+                'position' => 1,
+                'alternatives' => json_encode(['fire-bolt'], JSON_THROW_ON_ERROR),
+            ]);
+            $connection->insert('game_guide_review_audit', [
+                'guide_id' => $id,
+                'actor_id' => $publisherId,
+                'status' => 'published',
+                'reason' => 'Reviewed and approved',
+                'occurred_at' => (new \DateTimeImmutable('-1 hour'))->format('Y-m-d H:i:s'),
+            ]);
+
+            $client->loginUser($editor);
+            $crawler = $client->request('GET', '/admin/gaming/guides');
+            self::assertResponseIsSuccessful();
+            $action = '/admin/gaming/guides/'.$id.'/withdraw';
+            $form = $crawler->filter('form[action="'.$action.'"]')->form([
+                'reason' => 'Correct the build after the latest game patch.',
+            ]);
+            $values = $form->getValues();
+            $token = $values['_token'] ?? null;
+            self::assertIsString($token);
+            self::assertStringContainsString('maxlength="500"', (string) $client->getResponse()->getContent());
+            $client->submit($form);
+            self::assertResponseRedirects('/admin/gaming/guides');
+
+            $row = $connection->fetchAssociative(
+                'SELECT review_status, author_id, reviewer_id, published_at FROM game_guide WHERE id = :id',
+                ['id' => $id],
+            );
+            self::assertIsArray($row);
+            self::assertSame('draft', $row['review_status']);
+            self::assertSame($authorId, (int) $row['author_id']);
+            self::assertSame($publisherId, (int) $row['reviewer_id']);
+            self::assertNull($row['published_at']);
+            self::assertSame(1, (int) $connection->fetchOne(
+                'SELECT COUNT(*) FROM game_guide_component WHERE guide_id = :id AND component_key = :key',
+                ['id' => $id, 'key' => 'arcane-barrage'],
+            ));
+
+            $audit = $connection->fetchAssociative(
+                'SELECT actor_id, status, reason FROM game_guide_review_audit WHERE guide_id = :id ORDER BY id DESC LIMIT 1',
+                ['id' => $id],
+            );
+            self::assertIsArray($audit);
+            self::assertSame($editorId, (int) $audit['actor_id']);
+            self::assertSame('draft', $audit['status']);
+            self::assertSame('Correct the build after the latest game patch.', $audit['reason']);
+
+            $client->request('GET', '/gaming/guides/'.$id);
+            self::assertResponseStatusCodeSame(404);
+
+            $client->request('POST', $action, [
+                '_token' => $token,
+                'reason' => 'A second withdrawal must not change the guide.',
+            ]);
+            self::assertResponseStatusCodeSame(404);
+            self::assertSame(2, (int) $connection->fetchOne(
+                'SELECT COUNT(*) FROM game_guide_review_audit WHERE guide_id = :id',
+                ['id' => $id],
+            ));
+
+            $client->getCookieJar()->clear();
+            $client->loginUser($author);
+            $crawler = $client->request('GET', '/admin/gaming/guides/'.$id.'/edit');
+            self::assertResponseIsSuccessful();
+            $editForm = $crawler->selectButton('Entwurf speichern')->form(['title' => 'Withdrawn guide corrected']);
+            $client->submit($editForm);
+            self::assertResponseRedirects('/admin/gaming/guides');
+            self::assertSame('Withdrawn guide corrected', $connection->fetchOne(
+                'SELECT title FROM game_guide WHERE id = :id AND author_id = :author AND review_status = :status',
+                ['id' => $id, 'author' => $authorId, 'status' => 'draft'],
+            ));
+            self::assertSame(1, (int) $connection->fetchOne(
+                'SELECT COUNT(*) FROM game_guide_component WHERE guide_id = :id AND component_key = :key',
+                ['id' => $id, 'key' => 'arcane-barrage'],
+            ));
+
+            $crawler = $client->request('GET', '/admin/gaming/guides');
+            $submitForm = $crawler->filter('form[action="/admin/gaming/guides/'.$id.'/submit"]')->form();
+            $client->submit($submitForm);
+            self::assertResponseRedirects('/admin/gaming/guides');
+            self::assertSame('review', $connection->fetchOne('SELECT review_status FROM game_guide WHERE id = :id', ['id' => $id]));
+            self::assertSame(1, (int) $connection->fetchOne(
+                "SELECT COUNT(*) FROM game_guide_review_audit WHERE guide_id = :id AND status = 'review'",
+                ['id' => $id],
+            ));
+        } finally {
+            $this->cleanup($client, $guideIds, [$authorId, $publisherId, $editorId], [$gameId]);
+        }
+    }
+
+    public function testGuideWithdrawalRequiresCsrfAndAValidReason(): void
+    {
+        $client = static::createClient();
+        $this->setModules($client, true);
+        $em = $this->em($client);
+        $connection = $this->connection($client);
+        $game = $this->game($em);
+        $author = $this->user($em, CmsPermission::GAMING, 'withdraw-validation-author');
+        $editor = $this->user($em, CmsPermission::GAMING, 'withdraw-validation-editor');
+        $reader = $this->user($em, CmsPermission::CONTENT, 'withdraw-validation-reader');
+        $gameId = $game->getId();
+        $authorId = $author->getId();
+        $editorId = $editor->getId();
+        $readerId = $reader->getId();
+        self::assertNotNull($gameId);
+        self::assertNotNull($authorId);
+        self::assertNotNull($editorId);
+        self::assertNotNull($readerId);
+        $guideIds = [];
+
+        try {
+            $id = $this->guide($connection, $gameId, $authorId, 'published', 'Published guide for validation');
+            $guideIds[] = $id;
+            $publishedAt = (new \DateTimeImmutable('-1 hour'))->format('Y-m-d H:i:s');
+            $connection->update('game_guide', ['published_at' => $publishedAt], ['id' => $id]);
+            $connection->insert('game_guide_review_audit', [
+                'guide_id' => $id,
+                'actor_id' => $editorId,
+                'status' => 'published',
+                'reason' => 'Initial publication',
+                'occurred_at' => $publishedAt,
+            ]);
+
+            $client->loginUser($editor);
+            $crawler = $client->request('GET', '/admin/gaming/guides');
+            self::assertResponseIsSuccessful();
+            $action = '/admin/gaming/guides/'.$id.'/withdraw';
+            $form = $crawler->filter('form[action="'.$action.'"]')->form();
+            $values = $form->getValues();
+            $token = $values['_token'] ?? null;
+            self::assertIsString($token);
+
+            $client->getCookieJar()->clear();
+            $client->loginUser($reader);
+            $client->request('POST', $action, ['_token' => $token, 'reason' => 'Unauthorized withdrawal']);
+            self::assertResponseStatusCodeSame(403);
+            self::assertSame('published', $connection->fetchOne('SELECT review_status FROM game_guide WHERE id = :id', ['id' => $id]));
+            self::assertSame(1, (int) $connection->fetchOne('SELECT COUNT(*) FROM game_guide_review_audit WHERE guide_id = :id', ['id' => $id]));
+
+            $client->getCookieJar()->clear();
+            $client->loginUser($editor);
+            $editorCrawler = $client->request('GET', '/admin/gaming/guides');
+            $editorForm = $editorCrawler->filter('form[action="'.$action.'"]')->form();
+            $editorValues = $editorForm->getValues();
+            $token = $editorValues['_token'] ?? null;
+            self::assertIsString($token);
+
+            $this->setModules($client, false);
+            $client->request('POST', $action, ['_token' => $token, 'reason' => 'Gaming module disabled']);
+            self::assertResponseStatusCodeSame(404);
+            self::assertSame('published', $connection->fetchOne('SELECT review_status FROM game_guide WHERE id = :id', ['id' => $id]));
+            self::assertSame(1, (int) $connection->fetchOne('SELECT COUNT(*) FROM game_guide_review_audit WHERE guide_id = :id', ['id' => $id]));
+            $this->setModules($client, true);
+
+            $client->request('POST', $action, ['_token' => 'forged', 'reason' => 'Patch correction']);
+            self::assertResponseStatusCodeSame(403);
+            $client->request('POST', $action, ['_token' => $token, 'reason' => '   ']);
+            self::assertResponseStatusCodeSame(422);
+            self::assertSelectorTextContains('main', 'withdrawal reason');
+            $client->request('POST', $action, ['_token' => $token, 'reason' => str_repeat('x', 501)]);
+            self::assertResponseStatusCodeSame(422);
+
+            $row = $connection->fetchAssociative(
+                'SELECT review_status, published_at FROM game_guide WHERE id = :id',
+                ['id' => $id],
+            );
+            self::assertIsArray($row);
+            self::assertSame('published', $row['review_status']);
+            self::assertSame($publishedAt, $row['published_at']);
+            self::assertSame(1, (int) $connection->fetchOne(
+                'SELECT COUNT(*) FROM game_guide_review_audit WHERE guide_id = :id',
+                ['id' => $id],
+            ));
+        } finally {
+            $this->cleanup($client, $guideIds, [$authorId, $editorId, $readerId], [$gameId]);
+        }
+    }
+
     public function testGamingDashboardLinksDirectlyToGuideAdministration(): void
     {
         $client = static::createClient();

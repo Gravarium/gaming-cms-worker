@@ -25,7 +25,7 @@ final class AdminGameGuideController extends AbstractController
     #[Route('', name: 'index', methods: ['GET'])]
     public function index(): Response
     {
-        return $this->render('admin/index.html.twig', ['guides' => $this->guides->all()]);
+        return $this->indexPage();
     }
 
     #[Route('/new', name: 'new', methods: ['GET', 'POST'])]
@@ -142,6 +142,37 @@ final class AdminGameGuideController extends AbstractController
         }
 
         return $this->reviewPage($submission);
+    }
+
+    #[Route('/{id}/withdraw', name: 'withdraw', requirements: ['id' => '\d+'], methods: ['POST'])]
+    public function withdraw(int $id, Request $request): Response
+    {
+        if (!$this->isCsrfTokenValid('game-guide-withdraw-'.$id, $request->request->getString('_token'))) {
+            throw $this->createAccessDeniedException('Invalid guide withdrawal token.');
+        }
+
+        try {
+            if (!$this->guides->withdrawPublished($id, $this->editorId(), $request->request->getString('reason'))) {
+                throw $this->createNotFoundException();
+            }
+        } catch (\InvalidArgumentException $exception) {
+            return $this->indexPage($exception->getMessage(), Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+
+        $this->addFlash('success', 'Guide withdrawn for correction.');
+
+        return $this->redirectToRoute('app_admin_gaming_guide_index');
+    }
+
+    private function indexPage(?string $error = null, int $status = Response::HTTP_OK): Response
+    {
+        $response = $this->render('admin/index.html.twig', [
+            'guides' => $this->guides->all(),
+            'error' => $error,
+        ]);
+        $response->setStatusCode($status);
+
+        return $response;
     }
 
     /** @param array<string, mixed> $values */
