@@ -110,6 +110,29 @@ final class AdminMediaUsageBrowserTest extends WebTestCase
         self::assertSame($location, $this->em($client)->find(MediaAsset::class, $asset->getId())?->getLocation());
     }
 
+    public function testMediaBlockIsFoundWhenAssetIdIsLastJsonField(): void
+    {
+        $client = $this->startClient();
+        $em = $this->em($client);
+        $user = $this->persistUser($em, [CmsPermission::ACCESS, CmsPermission::STORAGE, CmsPermission::CONTENT]);
+        $asset = $this->persistAsset($em);
+        $assetId = $asset->getId();
+        self::assertNotNull($assetId);
+        $entry = $this->persistEntry($em, $user, 'usage-last-asset-id', 'Last-field media block', null, 'No location reference');
+        $entry->setEditorDocument($this->mediaDocumentWithAssetIdLast($assetId));
+        $em->flush();
+        $client->loginUser($user);
+
+        $client->request('GET', '/admin/storage/media/'.$assetId.'/usage');
+
+        self::assertResponseIsSuccessful();
+        $entryId = $entry->getId();
+        self::assertNotNull($entryId);
+        $selector = '[data-content-entry-id="'.$entryId.'"]';
+        self::assertSelectorExists($selector);
+        self::assertSelectorTextContains($selector, 'Bildblock');
+    }
+
     public function testStorageManagerWithoutContentPermissionGetsNoProtectedTitlesOrLinks(): void
     {
         $client = $this->startClient();
@@ -381,6 +404,14 @@ final class AdminMediaUsageBrowserTest extends WebTestCase
         if ($flush) {
             $em->flush();
         }
+    }
+
+    private function mediaDocumentWithAssetIdLast(int $assetId): string
+    {
+        return ContentBlockDocument::PREFIX.json_encode(
+            ['version' => ContentBlockDocument::VERSION, 'blocks' => [['type' => 'media', 'alt' => '', 'caption' => '', 'assetId' => $assetId]]],
+            JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR,
+        );
     }
 
     private function mediaDocument(int $assetId): string
