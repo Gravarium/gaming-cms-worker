@@ -65183,6 +65183,91 @@
         ]
       },
       "next_action": "Implement bounded public developer index/profile, widget and visibility regression tests."
+    },
+    {
+      "priority": 662,
+      "package_id": "WCP-662",
+      "title": "Conflict-safe autosave and revisions for long news drafts",
+      "risk": "high_content_integrity_and_concurrent_edits",
+      "execution_state": "worker_in_progress",
+      "claim_state": "active_lease",
+      "claim_generation": 1,
+      "claim_branch": "claim/wcp-662-news-autosave-g1",
+      "suggested_branch": "feature/wcp-662-news-autosave-g1",
+      "resume_branch": "feature/wcp-662-news-autosave-g1",
+      "claimed_on": "2026-10-02T12:45:08.252Z",
+      "lease_expires_at": "2026-10-02T19:45:08.252Z",
+      "base_branch": "feature/wcp-659-news-editor-creation-g1",
+      "base_sha": "26ba382c94d6ced35f005f1c347ed915304857ff",
+      "proposal_base_branch": "feature/wcp-659-news-editor-creation-g1",
+      "proposal_base_sha": "26ba382c94d6ced35f005f1c347ed915304857ff",
+      "active_head": "26ba382c94d6ced35f005f1c347ed915304857ff",
+      "dependencies": [
+        "WCP-659"
+      ],
+      "proposal_kind": "worker_only",
+      "objective": "Protect long-form news from accidental loss by adding server-backed autosave with typed document validation, CSRF, optimistic concurrency, revisions and visible UI state while preserving manual save and cross-tab conflict behavior.",
+      "allowed_paths": [
+        "src/Controller/AdminNewsEditorController.php",
+        "assets/news_editor/",
+        "templates/admin/news_editor/",
+        "tests/Controller/AdminNewsEditorTest.php",
+        "tests/JavaScript/news_editor.test.mjs"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "CONTINUOUS-WORKER.md",
+        "CONTINUOUS-WORK-POOL.json",
+        ".github/workflows/",
+        "migrations/",
+        "src/Entity/",
+        "src/Repository/",
+        "src/Security/",
+        "templates/admin/content/form.html.twig",
+        "templates/admin/content/index.html.twig",
+        "templates/admin/dashboard.html.twig",
+        "assets/controllers/content_editor_controller.js",
+        "assets/content_media_picker.js",
+        "assets/styles/content-editor.css"
+      ],
+      "deliverables": [
+        "Autosave only valid draft/review news, with same owner-media and typed-document security as manual save.",
+        "Verify updatedAt and documentHash under row lock; conflicting tabs cannot overwrite each other.",
+        "Persist revision and audit event for autosave; return updated version fields to keep manual save working.",
+        "Debounced browser autosave communicates saved/pending/conflict states and preserves newer local edits.",
+        "Controller and JavaScript tests for success, validation, conflict and no overwrite; exact-head full Worker CI."
+      ],
+      "tests": [
+        "Focused controller integration tests for revisions, conflicts and permissions.",
+        "JavaScript tests for autosave state transitions.",
+        "Complete Worker CI on exact final head."
+      ],
+      "immutable_constraints": [
+        "worker-only-no-Trusted-merge-or-deployment",
+        "no-third-party-editor-or-paid-AI",
+        "preserve-existing-news-and-legacy-data",
+        "no-security-test-or-CI-weakening",
+        "no-overlap-with-unrelated-active-claims"
+      ],
+      "collision_check": {
+        "compared_against": "Current continuous/work-pool-v4 and exact green WCP-659 head 26ba382c94d6ced35f005f1c347ed915304857ff",
+        "result": "Deliberate descendant overlap with completed news packages; active game-directory WCP-661 is disjoint.",
+        "paths": [
+          "src/Controller/AdminNewsEditorController.php",
+          "assets/news_editor/",
+          "templates/admin/news_editor/",
+          "tests/Controller/AdminNewsEditorTest.php",
+          "tests/JavaScript/news_editor.test.mjs"
+        ]
+      },
+      "next_action": "Implement conflict-safe autosave and run Worker CI.",
+      "last_verified_push_at": null
     }
   ],
   "recovery_queue": [],
