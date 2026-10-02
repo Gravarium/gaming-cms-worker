@@ -64808,14 +64808,14 @@
       "package_id": "WCP-659",
       "title": "Create news directly in first-party visual editor",
       "risk": "editorial_persistence_and_slug_integrity",
-      "execution_state": "worker_in_progress",
-      "claim_state": "active_lease",
+      "execution_state": "worker_complete_awaiting_trusted_review",
+      "claim_state": "locked_until_trusted_resolution",
       "claim_generation": 1,
       "claim_branch": "claim/wcp-659-news-editor-creation-g1",
       "suggested_branch": "feature/wcp-659-news-editor-creation-g1",
       "resume_branch": "feature/wcp-659-news-editor-creation-g1",
       "claimed_on": "2026-10-02T08:26:24.606Z",
-      "lease_expires_at": "2026-10-02T15:28:43.717Z",
+      "lease_expires_at": null,
       "base_branch": "feature/wcp-657-visual-news-media-g1",
       "base_sha": "9a24fad156553c6c9a6f1335a057f1a5a078c754",
       "proposal_base_branch": "feature/wcp-657-visual-news-media-g1",
@@ -64879,11 +64879,15 @@
           "tests/Controller/AdminNewsEditorTest.php"
         ]
       },
-      "next_action": "Await exact-head Worker CI, fix controller diagnostics, then mark ready.",
+      "next_action": "Trusted review and integration decision on Worker PR #454; preserve exact green head.",
       "last_verified_push_at": "2026-10-02T08:28:43.717Z",
       "last_checkpoint_at": "2026-10-02T08:28:43.717Z",
       "worker_pr": 454,
-      "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/454"
+      "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/454",
+      "ci_run": 36984233874,
+      "ci_conclusion": "success",
+      "ci_head": "26ba382c94d6ced35f005f1c347ed915304857ff",
+      "completed_at": "2026-10-02T08:34:24.078Z"
     },
     {
       "priority": 660,
