@@ -64540,14 +64540,14 @@
       "package_id": "WCP-656",
       "title": "Complete core first-party news authoring workflow",
       "risk": "high_content_integrity_and_editor_security",
-      "execution_state": "worker_in_progress",
-      "claim_state": "active_lease",
+      "execution_state": "worker_complete_awaiting_trusted_review",
+      "claim_state": "locked_until_trusted_resolution",
       "claim_generation": 1,
       "claim_branch": "claim/wcp-656-complete-news-authoring-g1",
       "suggested_branch": "feature/wcp-656-complete-news-authoring-g1",
       "resume_branch": "feature/wcp-656-complete-news-authoring-g1",
       "claimed_on": "2026-10-02T08:05:02.207Z",
-      "lease_expires_at": "2026-10-02T15:11:33.194Z",
+      "lease_expires_at": null,
       "base_branch": "feature/wcp-655-rich-news-tables-g1",
       "base_sha": "17c0c0ed9a6944c2172e93b01bf77793a0c64d19",
       "proposal_base_branch": "feature/wcp-655-rich-news-tables-g1",
@@ -64613,11 +64613,15 @@
           "tests/JavaScript/news_editor.test.mjs"
         ]
       },
-      "next_action": "Await exact-head Worker CI and fix diagnostics; review rich editor interactions before marking ready.",
+      "next_action": "Trusted review and integration decision on Worker PR #451; preserve exact green head. Further advanced editor capabilities need separate collision-safe work.",
       "last_verified_push_at": "2026-10-02T08:11:33.194Z",
       "last_checkpoint_at": "2026-10-02T08:11:33.194Z",
       "worker_pr": 451,
-      "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/451"
+      "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/451",
+      "ci_run": 36982635788,
+      "ci_conclusion": "success",
+      "ci_head": "d2a382af31178a84cea143f66e58d1615ed5c988",
+      "completed_at": "2026-10-02T08:15:43.598Z"
     }
   ],
   "recovery_queue": [],
