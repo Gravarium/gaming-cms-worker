@@ -37,7 +37,7 @@ final readonly class PublicGameDeveloperQuery
 
         /** @var list<array{developer: string}> $rows */
         $rows = $this->entityManager->createQueryBuilder()
-            ->select('MIN(entry.developer) AS developer')
+            ->select('MIN(entry.developer) AS developer', 'LOWER(entry.developer) AS HIDDEN developerKey')
             ->from(GameCatalogueEntry::class, 'entry')
             ->join('entry.game', 'game')
             ->andWhere('entry.developer IS NOT NULL')
@@ -45,8 +45,8 @@ final readonly class PublicGameDeveloperQuery
             ->andWhere('entry.enabled = :enabled')
             ->andWhere('game.enabled = :enabled')
             ->setParameter('enabled', true)
-            ->groupBy('LOWER(entry.developer)')
-            ->orderBy('LOWER(entry.developer)', 'ASC')
+            ->groupBy('developerKey')
+            ->orderBy('developerKey', 'ASC')
             ->setFirstResult(($page - 1) * self::PAGE_SIZE)
             ->setMaxResults(self::PAGE_SIZE)
             ->getQuery()
