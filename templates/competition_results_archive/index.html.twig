@@ -1,0 +1,33 @@
+{% extends 'base.html.twig' %}
+{% block title %}{{ competition.name }} – Ergebnisarchiv{% endblock %}
+{% block body %}
+<main class="container">
+    <p><a href="{{ path('app_competition_show', {id: competition.id}) }}">← Zur Competition</a></p>
+    <h1>{{ competition.name }} – Ergebnisarchiv</h1>
+    <p>Nur bestätigte Ergebnisse · Seite {{ page }}</p>
+    <p><a href="{{ path('app_competition_results_archive_csv', {id: competition.id, page: page}) }}">Diese Seite als CSV herunterladen</a></p>
+    {% if matches %}
+        <div class="table-wrap"><table>
+            <thead><tr><th>Runde</th><th>Bracket</th><th>Match</th><th>Teilnehmer A</th><th>Ergebnis</th><th>Teilnehmer B</th></tr></thead>
+            <tbody>
+            {% for match in matches %}
+                <tr>
+                    <td>{{ match.roundNumber }}</td>
+                    <td>{{ match.bracket }}</td>
+                    <td>{{ match.sequence }}</td>
+                    <td>{{ match.participantA.name }}</td>
+                    <td>{{ match.scoreA }} : {{ match.scoreB }}</td>
+                    <td>{{ match.participantB.name }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table></div>
+    {% else %}
+        <p>Auf dieser Seite gibt es keine bestätigten Ergebnisse.</p>
+    {% endif %}
+    <nav aria-label="Ergebnisseiten">
+        {% if page > 1 %}<a href="{{ path('app_competition_results_archive', {id: competition.id, page: page - 1}) }}">Vorherige Seite</a>{% endif %}
+        {% if hasMore and page < maxPage %}<a href="{{ path('app_competition_results_archive', {id: competition.id, page: page + 1}) }}">Nächste Seite</a>{% endif %}
+    </nav>
+</main>
+{% endblock %}
