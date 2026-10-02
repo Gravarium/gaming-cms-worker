@@ -10,6 +10,7 @@ import {applyBlockOperation, resolveBlockShortcut} from './keyboard-blocks.js';
 import {structuredHtml} from './html-paste.js';
 import {applySlashCommand, blockForCommand, matchBlockCommands} from './block-commands.js';
 import {applyBatchBlockOperation, normalizeBlockSelection} from './batch-blocks.js';
+import {insertSnippet, normalizeSnippetItems} from './snippets.js';
 
 const root = document.getElementById('news-editor');
 if (root) {
@@ -600,6 +601,62 @@ if (root) {
   document.getElementById('news-editor-media-search-button').addEventListener('click', searchMedia);
   mediaSearch.addEventListener('keydown', event => { if (event.key === 'Enter') { event.preventDefault(); searchMedia(); } });
   document.getElementById('news-editor-media-close').addEventListener('click', () => { picker.hidden = true; selectedMediaField?.focus(); });
+
+  const snippetName = document.getElementById('news-editor-snippet-name');
+  const snippetSearch = document.getElementById('news-editor-snippet-search');
+  const snippetList = document.getElementById('news-editor-snippet-list');
+  const snippetStatus = document.getElementById('news-editor-snippet-status');
+  let snippetRequest = 0;
+  function drawSnippets(items) {
+    snippetList.replaceChildren();
+    if (!items.length) { snippetList.append(node('p', 'Keine passenden Blockvorlagen.')); return; }
+    for (const snippet of items) {
+      const card = node('article'); card.className = 'news-editor-snippet';
+      const heading = node('strong', snippet.label), type = node('span', snippet.block.type);
+      const insert = node('button', 'Nach aktivem Block einfügen'); insert.type = 'button';
+      insert.addEventListener('click', () => {
+        const afterIndex = activeRow?.isConnected ? [...blocks.children].indexOf(activeRow) : blocks.children.length - 1;
+        const result = insertSnippet(JSON.parse(serialize().slice(prefix.length)), snippet, afterIndex);
+        if (!result || !withinDocumentLimits(result.document)) { snippetStatus.textContent = 'Vorlage passt nicht mehr in das Dokument.'; return; }
+        blocks.replaceChildren(); for (const block of result.document.blocks) renderBlock(block);
+        source.value = prefix + JSON.stringify(result.document); activeRow = blocks.children[result.index];
+        activeRow?.querySelector('[contenteditable], textarea, input, select, button')?.focus(); changed();
+        snippetStatus.textContent = 'Vorlage „' + snippet.label + '“ eingefügt.';
+      });
+      const remove = node('button', 'Löschen'); remove.type = 'button'; remove.className = 'text-danger';
+      remove.addEventListener('click', async () => {
+        try {
+          const response = await fetch(root.dataset.snippetsUrl + '/' + snippet.id, {method: 'DELETE', credentials: 'same-origin', cache: 'no-store', headers: {'X-CSRF-TOKEN': root.dataset.snippetsCsrf}});
+          if (!response.ok) throw new Error((await response.json()).error ?? 'Vorlage konnte nicht gelöscht werden.');
+          snippetStatus.textContent = 'Vorlage „' + snippet.label + '“ gelöscht.'; await loadSnippets();
+        } catch (error) { snippetStatus.textContent = error.message; }
+      });
+      card.append(heading, type, insert, remove); snippetList.append(card);
+    }
+  }
+  async function loadSnippets() {
+    const serial = ++snippetRequest;
+    const url = new URL(root.dataset.snippetsUrl, window.location.href); url.searchParams.set('q', snippetSearch.value.trim());
+    snippetStatus.textContent = 'Blockvorlagen werden geladen …';
+    try {
+      const response = await fetch(url, {credentials: 'same-origin', cache: 'no-store'});
+      const data = await response.json(); if (!response.ok) throw new Error(data.error ?? 'Blockvorlagen konnten nicht geladen werden.');
+      if (serial !== snippetRequest) return;
+      drawSnippets(normalizeSnippetItems(data)); snippetStatus.textContent = data.items.length + ' von ' + data.capacity + ' möglichen Vorlagen geladen.';
+    } catch (error) { if (serial === snippetRequest) { snippetList.replaceChildren(); snippetStatus.textContent = error.message; } }
+  }
+  document.getElementById('news-editor-snippet-save').addEventListener('click', async () => {
+    const label = snippetName.value.trim();
+    if (!activeRow?.isConnected || !label) { snippetStatus.textContent = 'Bitte einen Block aktivieren und einen Vorlagennamen eingeben.'; return; }
+    try {
+      const response = await fetch(root.dataset.snippetsUrl, {method: 'POST', credentials: 'same-origin', cache: 'no-store', headers: {'Content-Type': 'application/json', 'X-CSRF-TOKEN': root.dataset.snippetsCsrf}, body: JSON.stringify({label, block: serializeBlock(activeRow)})});
+      const data = await response.json(); if (!response.ok) throw new Error(data.error ?? 'Blockvorlage konnte nicht gespeichert werden.');
+      snippetName.value = ''; snippetStatus.textContent = 'Vorlage „' + data.item.label + '“ gespeichert.'; await loadSnippets();
+    } catch (error) { snippetStatus.textContent = error.message; }
+  });
+  let snippetSearchTimer;
+  snippetSearch.addEventListener('input', () => { clearTimeout(snippetSearchTimer); snippetSearchTimer = setTimeout(loadSnippets, 250); });
+  loadSnippets();
   blocks.addEventListener('paste', event => {
     if (!event.target.closest('[contenteditable]')) return;
     event.preventDefault();
