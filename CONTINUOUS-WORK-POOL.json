@@ -64534,6 +64534,87 @@
       "ci_conclusion": "success",
       "ci_head": "17c0c0ed9a6944c2172e93b01bf77793a0c64d19",
       "completed_at": "2026-10-02T07:42:56.526Z"
+    },
+    {
+      "priority": 656,
+      "package_id": "WCP-656",
+      "title": "Complete core first-party news authoring workflow",
+      "risk": "high_content_integrity_and_editor_security",
+      "execution_state": "worker_in_progress",
+      "claim_state": "active_lease",
+      "claim_generation": 1,
+      "claim_branch": "claim/wcp-656-complete-news-authoring-g1",
+      "suggested_branch": "feature/wcp-656-complete-news-authoring-g1",
+      "resume_branch": "feature/wcp-656-complete-news-authoring-g1",
+      "claimed_on": "2026-10-02T08:05:02.207Z",
+      "lease_expires_at": "2026-10-02T15:05:02.207Z",
+      "base_branch": "feature/wcp-655-rich-news-tables-g1",
+      "base_sha": "17c0c0ed9a6944c2172e93b01bf77793a0c64d19",
+      "proposal_base_branch": "feature/wcp-655-rich-news-tables-g1",
+      "proposal_base_sha": "17c0c0ed9a6944c2172e93b01bf77793a0c64d19",
+      "active_head": "17c0c0ed9a6944c2172e93b01bf77793a0c64d19",
+      "dependencies": [
+        "WCP-655"
+      ],
+      "proposal_kind": "worker_only",
+      "objective": "Complete the core first-party long-form WYSIWYG authoring workflow without AI: safe rich clipboard paste and links, full inline formatting, practical list editing, find/replace, document limit feedback and unsaved-change protection. Keep server-owned preview, revision, media and typed-document boundaries.",
+      "allowed_paths": [
+        "assets/news_editor/",
+        "templates/admin/news_editor/",
+        "tests/JavaScript/news_editor.test.mjs",
+        "tests/Controller/AdminNewsEditorTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "CONTINUOUS-WORKER.md",
+        "CONTINUOUS-WORK-POOL.json",
+        ".github/workflows/",
+        "migrations/",
+        "src/Entity/",
+        "src/Repository/",
+        "src/Security/",
+        "templates/admin/content/form.html.twig",
+        "templates/admin/content/index.html.twig",
+        "templates/admin/dashboard.html.twig",
+        "assets/controllers/content_editor_controller.js",
+        "assets/content_media_picker.js",
+        "assets/styles/content-editor.css"
+      ],
+      "deliverables": [
+        "Allowlisted rich clipboard paste preserves basic formatting and HTTPS/internal links while discarding active markup.",
+        "Inline formatting includes code, clear formatting, link edit/removal with URL validation and keyboard behavior.",
+        "List items support insertion, removal and reordering without nested DOM surprises.",
+        "Article find/replace, live limits and unsaved-change warning work with history and server validation.",
+        "Positive/negative focused JavaScript tests plus full exact-head Worker CI."
+      ],
+      "tests": [
+        "JS command and transform tests for safe links, clipboard, list and find/replace including hostile input.",
+        "Complete Worker CI on exact final head."
+      ],
+      "immutable_constraints": [
+        "worker-only-no-Trusted-merge-or-deployment",
+        "no-third-party-editor-or-paid-AI",
+        "preserve-existing-news-and-legacy-data",
+        "no-security-test-or-CI-weakening",
+        "no-overlap-with-unrelated-active-claims"
+      ],
+      "collision_check": {
+        "compared_against": "Current continuous/work-pool-v4 and exact green WCP-655 head 17c0c0ed9a6944c2172e93b01bf77793a0c64d19",
+        "result": "Deliberate descendant of completed WCP-648/650/654/655; unrelated active WCP-651/652/653 and locked shared UI paths remain disjoint.",
+        "paths": [
+          "assets/news_editor/",
+          "templates/admin/news_editor/",
+          "tests/JavaScript/news_editor.test.mjs"
+        ]
+      },
+      "next_action": "Implement complete core authoring behavior in one coherent Worker PR, then exact-head CI.",
+      "last_verified_push_at": null
     }
   ],
   "recovery_queue": [],
