@@ -1,0 +1,17 @@
+<section class="panel public-content-tags-widget" aria-labelledby="content-tags-{{ widget.id }}">
+    <h2 id="content-tags-{{ widget.id }}">Inhalte nach Schlagwort</h2>
+    {% if data.items is not empty %}
+        <ul>
+            {% for tag in data.items %}
+                <li>
+                    <a href="{{ path('app_content_tag_archive', {slug: tag.slug}) }}">{{ tag.name }}</a>
+                    {% if tag.description %}
+                        <p class="muted">{{ tag.description }}</p>
+                    {% endif %}
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p class="muted" role="status">Für Inhalte sind derzeit keine öffentlichen Schlagwörter verfügbar.</p>
+    {% endif %}
+</section>

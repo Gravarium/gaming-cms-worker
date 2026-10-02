@@ -12,7 +12,8 @@ use Symfony\Component\HttpFoundation\Request;
 
 final class AdminVideoBrowser
 {
-    private const PAGE_SIZE = 25;
+    public const PAGE_SIZE = 25;
+    public const MAX_PAGE = 999_999;
 
     private const STATUSES = ['all', 'published', 'scheduled', 'draft', 'disabled'];
 
@@ -20,6 +21,20 @@ final class AdminVideoBrowser
         private readonly VideoRepository $videos,
         private readonly VideoCategoryRepository $categories,
     ) {
+    }
+
+    public static function boundedPageCount(int $total): int
+    {
+        if ($total < 0) {
+            throw new \InvalidArgumentException('The total video count cannot be negative.');
+        }
+
+        $pages = intdiv($total, self::PAGE_SIZE);
+        if ($total % self::PAGE_SIZE !== 0) {
+            ++$pages;
+        }
+
+        return min(self::MAX_PAGE, max(1, $pages));
     }
 
     /**
@@ -41,7 +56,7 @@ final class AdminVideoBrowser
 
         $countQuery = $this->filteredQuery($filters, $now)->select('COUNT(video.id)');
         $total = (int) $countQuery->getQuery()->getSingleScalarResult();
-        $pageCount = max(1, (int) ceil($total / self::PAGE_SIZE));
+        $pageCount = self::boundedPageCount($total);
         $page = min($filters['page'], $pageCount);
 
         $rowsQuery = $this->filteredQuery($filters, $now)
@@ -157,7 +172,7 @@ final class AdminVideoBrowser
 
         $pageValue = $this->stringParameter($query, 'page', '1');
         $validatedPage = filter_var($pageValue, FILTER_VALIDATE_INT, [
-            'options' => ['min_range' => 1, 'max_range' => 999999],
+            'options' => ['min_range' => 1, 'max_range' => self::MAX_PAGE],
         ]);
         if ($validatedPage === false || (string) $validatedPage !== $pageValue) {
             throw new \InvalidArgumentException('Invalid video page.');

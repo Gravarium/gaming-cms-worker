@@ -69,6 +69,9 @@ final class PublicGameGuideController extends AbstractController
             throw $this->createNotFoundException();
         }
 
-        return $this->render('public/show.html.twig', ['guide' => $guide]);
+        return $this->render('public/show.html.twig', [
+            'guide' => $guide,
+            'relatedGuides' => $this->guides->relatedPublic($guide['id'], $guide['game_slug']),
+        ]);
     }
 }

@@ -29,7 +29,7 @@ final class PublicGameReleaseCalendarFeedController extends AbstractController
             throw $this->createNotFoundException();
         }
 
-        $now = new \DateTimeImmutable();
+        $now = new \DateTimeImmutable('now', new \DateTimeZone('UTC'));
         $until = $now->modify('+'.self::WINDOW_MONTHS.' months');
         $body = $this->calendar->build($this->releases->upcoming($now, $until), $now);
 

@@ -5,6 +5,7 @@
     <p class="eyebrow">Gaming · Builds und Tier-Listen</p>
     <h1>Öffentliche Gaming-Guides</h1>
     <p>Veröffentlichte Guides zeigen ihre Version, Saison und Gültigkeit.</p>
+    <p><a href="{{ path('app_gaming_guide_feed') }}">RSS-Feed abonnieren</a></p>
     {% if is_granted('CMS_GAMING_MANAGE') %}<p><a href="{{ path('app_admin_gaming_guide_index') }}">Guides verwalten</a></p>{% endif %}
     <form method="get" action="{{ path('app_gaming_guide_index') }}" class="content-form">
         <label for="guide-search">Titel suchen</label>

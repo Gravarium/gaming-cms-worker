@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Controller;
 
+use App\Controller\AdminContentRedirectController;
 use App\Entity\ContentEntry;
 use App\Entity\ContentRedirect;
 use App\Entity\User;
@@ -126,6 +127,44 @@ final class AdminContentRedirectBrowserTest extends WebTestCase
         self::assertSelectorNotExists('a[href="/page/old-draft-'.$suffix.'"]');
     }
 
+    public function testPageCountRoundsUpAndNeverExceedsTheAcceptedPageMaximum(): void
+    {
+        $cases = [
+            [0, 1],
+            [1, 1],
+            [AdminContentRedirectController::PAGE_SIZE, 1],
+            [AdminContentRedirectController::PAGE_SIZE + 1, 2],
+            [
+                (AdminContentRedirectController::MAX_PAGE - 1) * AdminContentRedirectController::PAGE_SIZE,
+                AdminContentRedirectController::MAX_PAGE - 1,
+            ],
+            [
+                AdminContentRedirectController::MAX_PAGE * AdminContentRedirectController::PAGE_SIZE - 1,
+                AdminContentRedirectController::MAX_PAGE,
+            ],
+            [
+                AdminContentRedirectController::MAX_PAGE * AdminContentRedirectController::PAGE_SIZE,
+                AdminContentRedirectController::MAX_PAGE,
+            ],
+            [
+                AdminContentRedirectController::MAX_PAGE * AdminContentRedirectController::PAGE_SIZE + 1,
+                AdminContentRedirectController::MAX_PAGE,
+            ],
+            [PHP_INT_MAX, AdminContentRedirectController::MAX_PAGE],
+        ];
+
+        foreach ($cases as [$total, $expectedPageCount]) {
+            self::assertSame($expectedPageCount, AdminContentRedirectController::boundedPageCount($total));
+        }
+    }
+
+    public function testNegativeRedirectPageCountsAreRejected(): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+
+        AdminContentRedirectController::boundedPageCount(-1);
+    }
+
     public function testInventoryPaginatesAllMatchingRedirectsWithoutGapsOrDuplicates(): void
     {
         $client = static::createClient();
@@ -200,6 +239,7 @@ final class AdminContentRedirectBrowserTest extends WebTestCase
             '/admin/content/redirects?type=video',
             '/admin/content/redirects?page=0',
             '/admin/content/redirects?page=-1',
+            '/admin/content/redirects?page='.(AdminContentRedirectController::MAX_PAGE + 1),
             '/admin/content/redirects?page=999999999999999999999',
         ];
 

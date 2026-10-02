@@ -1,0 +1,74 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Spiele{% endblock %}
+
+{% block body %}
+<main class="content-shell">
+    <header class="page-header">
+        <p class="eyebrow">Spielekatalog</p>
+        <h1>Game Hubs</h1>
+        <p>Spiele, Plattformen, Genres und Veröffentlichungen an einem Ort.</p>
+        <a class="button-link" href="{{ path('app_game_catalogue_releases') }}">Release-Kalender</a>
+    </header>
+
+    <form action="{{ path('app_game_catalogue_index') }}" method="get" class="content-form" aria-label="Spiele filtern">
+        <label for="game-catalogue-genre">Genre
+            <select id="game-catalogue-genre" name="genre">
+                <option value="">Alle Genres</option>
+                {% for genre in genres %}
+                    <option value="{{ genre.slug }}" {{ selectedGenre == genre.slug ? 'selected' : '' }}>{{ genre.name }}</option>
+                {% endfor %}
+            </select>
+        </label>
+        <label for="game-catalogue-platform">Plattform
+            <select id="game-catalogue-platform" name="platform">
+                <option value="">Alle Plattformen</option>
+                {% for platform in platforms %}
+                    <option value="{{ platform.slug }}" {{ selectedPlatform == platform.slug ? 'selected' : '' }}>{{ platform.name }}</option>
+                {% endfor %}
+            </select>
+        </label>
+        <button type="submit">Filter anwenden</button>
+        <a class="button-link button-secondary" href="{{ path('app_game_catalogue_index') }}" aria-label="Alle Spiele anzeigen">Alle Spiele</a>
+    </form>
+
+    {% if invalidFilter %}
+        <p class="notice" role="status">Mindestens ein ausgewählter Filter ist nicht verfügbar. Setze die Filter zurück, um alle Spiele zu sehen.</p>
+    {% endif %}
+    <p class="muted game-catalogue-count">
+        {% if hasFilters %}{{ total }} Spiele mit diesen Filtern.{% else %}{{ total }} Spiele im Katalog.{% endif %}
+    </p>
+
+    <section class="portal-cards" aria-label="Spiele">
+        {% for entry in entries %}
+            <article class="portal-card game-catalogue-entry" data-game-id="{{ entry.game.id }}">
+                <p class="portal-kicker">{{ entry.publisher ? entry.publisher.name : 'Publisher offen' }}</p>
+                <h2><a href="{{ path('app_game_catalogue_show', {slug: entry.game.slug}) }}">{{ entry.game.name }}</a></h2>
+                {% if entry.developer %}<p>{{ entry.developer }}</p>{% endif %}
+                {% if entry.summary %}<p>{{ entry.summary }}</p>{% endif %}
+                {% if entry.genres|length %}<p>{% for genre in entry.genres %}<span class="portal-tag">{{ genre.name }}</span> {% endfor %}</p>{% endif %}
+            </article>
+        {% else %}
+            {% if not invalidFilter %}
+                {% if hasFilters %}
+                    <p role="status">Keine Spiele passen zu den gewählten Filtern.</p>
+                {% else %}
+                    <p>Aktuell sind keine Spiele im Katalog veröffentlicht.</p>
+                {% endif %}
+            {% endif %}
+        {% endfor %}
+    </section>
+
+    {% if totalPages > 1 %}
+        <nav class="game-catalogue-pagination" aria-label="Spielekatalogseiten">
+            {% if page > 1 %}
+                <a rel="prev" href="{{ path('app_game_catalogue_index', {genre: selectedGenre, platform: selectedPlatform, page: page - 1}) }}">Vorherige</a>
+            {% endif %}
+            <span>Seite {{ page }} von {{ totalPages }}</span>
+            {% if page < totalPages %}
+                <a rel="next" href="{{ path('app_game_catalogue_index', {genre: selectedGenre, platform: selectedPlatform, page: page + 1}) }}">Nächste</a>
+            {% endif %}
+        </nav>
+    {% endif %}
+</main>
+{% endblock %}
