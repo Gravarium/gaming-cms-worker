@@ -63855,6 +63855,90 @@
       "last_observed_head": "d6f5cfc634045c2a2a5b93b15be18a2ba70204bb",
       "last_verified_push_at": null,
       "worker_pr_state": "not_created"
+    },
+    {
+      "priority": 653,
+      "package_id": "WCP-653",
+      "title": "Browse public game genres and their visible catalogue",
+      "risk": "medium_public_visibility",
+      "execution_state": "worker_in_progress",
+      "claim_state": "active_lease",
+      "claim_generation": 1,
+      "claim_branch": "claim/wcp-653-game-genre-directory-g1",
+      "suggested_branch": "feature/wcp-653-game-genre-directory-g1",
+      "resume_branch": "feature/wcp-653-game-genre-directory-g1",
+      "claimed_on": "2026-10-02T03:03:42Z",
+      "lease_expires_at": "2026-10-02T10:03:42Z",
+      "base_branch": "main",
+      "base_sha": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "active_base_branch": "main",
+      "active_base_sha": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "active_head": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "dependencies": [],
+      "proposal_kind": "worker_only",
+      "objective": "Provide a bounded public genre directory and strict genre profile pages containing only enabled public game catalogue entries. Preserve the Gaming module gate, stable ordering and bounded page input, and add a Page Builder entry point without mutations or schema changes.",
+      "allowed_paths": [
+        "src/GameGenreDirectory/",
+        "src/Controller/GameCatalogue/GameGenreDirectoryController.php",
+        "src/Widget/GameGenreDirectoryWidgetProvider.php",
+        "templates/game_genre_directory/",
+        "templates/widget/game_genre_directory.html.twig",
+        "tests/Controller/GameGenreDirectoryTest.php",
+        "tests/Widget/GameGenreDirectoryWidgetProviderTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "CONTINUOUS-WORKER.md",
+        "CONTINUOUS-WORK-POOL.json",
+        ".github/workflows/",
+        "migrations/",
+        "src/Entity/",
+        "src/Repository/",
+        "src/Security/",
+        "src/Controller/GameCatalogue/GameCatalogueController.php",
+        "templates/game_catalogue/"
+      ],
+      "deliverables": [
+        "GET-only paginated genre directory containing only genres backed by enabled public catalogue entries.",
+        "Strict genre profile route with bounded visible-game pagination and deterministic ordering.",
+        "Page Builder widget linking to the genre directory while respecting the Gaming module gate.",
+        "No hidden game, disabled catalogue entry, mutation, schema change or private data exposure."
+      ],
+      "tests": [
+        "Functional directory, profile, pagination, invalid slug/page, hidden-entry and disabled-module tests.",
+        "Widget registration test and complete exact-head Worker PHP/Symfony and PostgreSQL CI."
+      ],
+      "immutable_constraints": [
+        "worker-only-no-Trusted-merge-or-deployment",
+        "no-disabled-game-or-entry-disclosure",
+        "bounded-query-and-input",
+        "no-security-test-or-CI-weakening"
+      ],
+      "collision_check": {
+        "compared_against": "Live pool at 3254e1a473ad05f2f9d52259c144210c04e99c7e and Worker main 1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+        "result": "All seven reserved paths are new and disjoint from active WCP-641, WCP-651 and WCP-652 and from locked packages; existing catalogue entities are read-only.",
+        "paths": [
+          "src/GameGenreDirectory/",
+          "src/Controller/GameCatalogue/GameGenreDirectoryController.php",
+          "src/Widget/GameGenreDirectoryWidgetProvider.php",
+          "templates/game_genre_directory/",
+          "templates/widget/game_genre_directory.html.twig",
+          "tests/Controller/GameGenreDirectoryTest.php",
+          "tests/Widget/GameGenreDirectoryWidgetProviderTest.php"
+        ]
+      },
+      "next_action": "Implement the bounded public genre directory, profile pages, widget and negative visibility tests.",
+      "last_observed_head": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "last_verified_push_at": null,
+      "worker_pr_state": "not_created"
     }
   ],
   "recovery_queue": [],
