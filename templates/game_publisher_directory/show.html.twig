@@ -1,0 +1,30 @@
+{% extends 'base.html.twig' %}
+{% block title %}{{ publisher.name }}{% endblock %}
+{% block body %}
+<main class="content-shell">
+    <header class="page-header">
+        <p class="eyebrow">Publisher</p>
+        <h1>{{ publisher.name }}</h1>
+        <p>{{ total }} {{ total == 1 ? 'öffentliches Spiel' : 'öffentliche Spiele' }}</p>
+        <a class="button-link button-secondary" href="{{ path('app_game_publisher_directory') }}">Alle Publisher</a>
+    </header>
+
+    <section class="portal-cards" aria-label="Spiele von {{ publisher.name }}">
+        {% for entry in entries %}
+            <article class="portal-card">
+                <h2><a href="{{ path('app_game_catalogue_show', {slug: entry.game.slug}) }}">{{ entry.game.name }}</a></h2>
+                {% if entry.developer %}<p>{{ entry.developer }}</p>{% endif %}
+                {% if entry.summary %}<p>{{ entry.summary }}</p>{% endif %}
+            </article>
+        {% endfor %}
+    </section>
+
+    {% if totalPages > 1 %}
+        <nav aria-label="Spieleseiten">
+            {% if page > 1 %}<a href="{{ path('app_game_publisher_show', {slug: publisher.slug, page: page - 1}) }}">Zurück</a>{% endif %}
+            <span>Seite {{ page }} von {{ totalPages }}</span>
+            {% if page < totalPages %}<a href="{{ path('app_game_publisher_show', {slug: publisher.slug, page: page + 1}) }}">Weiter</a>{% endif %}
+        </nav>
+    {% endif %}
+</main>
+{% endblock %}
