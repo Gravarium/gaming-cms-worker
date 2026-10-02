@@ -181,6 +181,54 @@ final class AdminNewsEditorController extends AbstractController
         return $this->page($entry, $document, $error, $error === null ? 200 : 422);
     }
 
+    #[Route('/{id}/submit-review', name: 'app_admin_news_editor_submit_review', requirements: ['id' => '\\d+'], methods: ['POST'])]
+    public function submitReview(ContentEntry $entry, Request $request): Response
+    {
+        $this->assertEditable($entry);
+        $this->assertCsrf($entry, (string) $request->request->get('_token'));
+        $submitted = $request->request->get('document');
+        $expected = $request->request->get('updatedAt');
+        $expectedHash = $request->request->get('documentHash');
+        if (!is_string($submitted) || strlen($submitted) > self::MAX_REQUEST_BYTES
+            || !is_string($expected) || !is_string($expectedHash)
+            || preg_match('/\A[a-f0-9]{64}\z/D', $expectedHash) !== 1) {
+            return $this->errorResponse($entry, is_string($submitted) ? $submitted : '', 'Ungültige oder zu große Editor-Anfrage.', 413);
+        }
+
+        try {
+            $normalized = $this->policy->normalizeForStorage($submitted);
+            $plainText = $this->policy->plainText($normalized);
+            if ($plainText === '') {
+                throw new \InvalidArgumentException('Ein News-Artikel braucht lesbaren Inhalt.');
+            }
+            $user = $this->getUser();
+            if (!$user instanceof User) {
+                throw $this->createAccessDeniedException();
+            }
+            $this->entityManager->wrapInTransaction(function (EntityManagerInterface $manager) use ($entry, $normalized, $plainText, $expected, $expectedHash, $user): void {
+                $manager->refresh($entry, LockMode::PESSIMISTIC_WRITE);
+                $this->assertEditable($entry);
+                if ($entry->getStatus() !== ContentEntry::STATUS_DRAFT) {
+                    throw new \DomainException('Nur Entwürfe können zur Freigabe eingereicht werden.');
+                }
+                if (!hash_equals($entry->getUpdatedAt()->format(DATE_ATOM), $expected)
+                    || !hash_equals(hash('sha256', $entry->getEditableDocument()), $expectedHash)) {
+                    throw new \DomainException('Der Artikel wurde inzwischen geändert. Bitte neu laden.');
+                }
+                $entry->setEditorDocument($normalized)->setBody($plainText)
+                    ->setStatus(ContentEntry::STATUS_REVIEW)->synchronizePublication();
+                $this->revisions->capture($entry, $user);
+                $this->audit->record('content.review.submit', $entry, $entry->getId(), 'News-Entwurf aus dem visuellen Editor zur Freigabe eingereicht.');
+            });
+            $this->addFlash('success', 'Der News-Entwurf wurde zur Freigabe eingereicht.');
+            return $this->redirectToRoute('app_admin_news_editor', ['id' => $entry->getId()]);
+        } catch (\DomainException $exception) {
+            return $this->errorResponse($entry, $submitted, $exception->getMessage(), 409);
+        } catch (\InvalidArgumentException $exception) {
+            return $this->errorResponse($entry, $submitted, $exception->getMessage(), 422);
+        }
+    }
+
     #[Route('/{id}/preview', name: 'app_admin_news_editor_preview', requirements: ['id' => '\\d+'], methods: ['POST'])]
     public function preview(ContentEntry $entry, Request $request): JsonResponse
     {

@@ -135,6 +135,66 @@ final class AdminNewsEditorTest extends WebTestCase
         self::assertCount(0, $em->getRepository(ContentRevision::class)->findBy(['entry' => $unchanged]));
     }
 
+    public function testDraftCanBeSavedAndSubmittedForReviewFromVisualEditor(): void
+    {
+        $client = static::createClient();
+        [$user, $entry] = $this->entry($client);
+        $client->loginUser($user);
+        $crawler = $client->request('GET', '/admin/news-editor/'.$entry->getId());
+        $csrf = $crawler->filter('input[name="_token"]')->attr('value');
+        $updated = $crawler->filter('input[name="updatedAt"]')->attr('value');
+        $hash = $crawler->filter('input[name="documentHash"]')->attr('value');
+        self::assertNotNull($csrf); self::assertNotNull($updated); self::assertNotNull($hash);
+        self::assertCount(1, $crawler->selectButton('Speichern und zur Freigabe einreichen'));
+
+        $client->request('POST', '/admin/news-editor/'.$entry->getId().'/submit-review', [
+            '_token' => $csrf, 'updatedAt' => $updated, 'documentHash' => $hash,
+            'document' => $this->document('Bereit für das Review'),
+        ]);
+        self::assertResponseRedirects('/admin/news-editor/'.$entry->getId());
+        $em = $client->getContainer()->get(EntityManagerInterface::class);
+        $em->clear();
+        $stored = $em->find(ContentEntry::class, $entry->getId());
+        self::assertInstanceOf(ContentEntry::class, $stored);
+        self::assertSame(ContentEntry::STATUS_REVIEW, $stored->getStatus());
+        self::assertSame('Bereit für das Review', $stored->getBody());
+        self::assertCount(1, $em->getRepository(ContentRevision::class)->findBy(['entry' => $stored]));
+
+        $crawler = $client->followRedirect();
+        self::assertResponseIsSuccessful();
+        self::assertCount(0, $crawler->selectButton('Speichern und zur Freigabe einreichen'));
+        self::assertStringContainsString('In Prüfung', $client->getResponse()->getContent() ?: '');
+    }
+
+    public function testReviewSubmissionRejectsCsrfStaleStateAndInvalidDocumentWithoutMutation(): void
+    {
+        $client = static::createClient();
+        [$user, $entry] = $this->entry($client);
+        $client->loginUser($user);
+        $crawler = $client->request('GET', '/admin/news-editor/'.$entry->getId());
+        $csrf = $crawler->filter('input[name="_token"]')->attr('value');
+        $updated = $crawler->filter('input[name="updatedAt"]')->attr('value');
+        $hash = $crawler->filter('input[name="documentHash"]')->attr('value');
+        self::assertNotNull($csrf); self::assertNotNull($updated); self::assertNotNull($hash);
+        $endpoint = '/admin/news-editor/'.$entry->getId().'/submit-review';
+        $valid = ['updatedAt' => $updated, 'documentHash' => $hash, 'document' => $this->document('Review')];
+
+        $client->request('POST', $endpoint, ['_token' => 'wrong'] + $valid);
+        self::assertResponseStatusCodeSame(403);
+        $client->request('POST', $endpoint, ['_token' => $csrf, 'updatedAt' => '2000-01-01T00:00:00+00:00', 'documentHash' => $hash, 'document' => $valid['document']]);
+        self::assertResponseStatusCodeSame(409);
+        $client->request('POST', $endpoint, ['_token' => $csrf, 'updatedAt' => $updated, 'documentHash' => $hash, 'document' => RichDocument::PREFIX.'<script>']);
+        self::assertResponseStatusCodeSame(422);
+
+        $em = $client->getContainer()->get(EntityManagerInterface::class);
+        $em->clear();
+        $stored = $em->find(ContentEntry::class, $entry->getId());
+        self::assertInstanceOf(ContentEntry::class, $stored);
+        self::assertSame(ContentEntry::STATUS_DRAFT, $stored->getStatus());
+        self::assertSame('Legacy original', $stored->getBody());
+        self::assertCount(0, $em->getRepository(ContentRevision::class)->findBy(['entry' => $stored]));
+    }
+
     public function testNewNewsStartsInRichEditorWithInitialRevision(): void
     {
         $client = static::createClient();
