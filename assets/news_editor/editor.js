@@ -8,6 +8,7 @@ import {structuredMarkdown, importMarkdownArticle} from './markdown-paste.js';
 import {articleMarkdown} from './markdown-io.js';
 import {applyBlockOperation, resolveBlockShortcut} from './keyboard-blocks.js';
 import {structuredHtml} from './html-paste.js';
+import {applySlashCommand, blockForCommand, matchBlockCommands} from './block-commands.js';
 
 const root = document.getElementById('news-editor');
 if (root) {
@@ -326,6 +327,56 @@ if (root) {
     status.textContent = 'Ungespeicherte Änderung in der Dokument-Historie.';
     changed();
   }
+  const slashMenu = node('div');
+  slashMenu.id = 'news-editor-slash-menu'; slashMenu.className = 'news-editor-slash-menu'; slashMenu.hidden = true;
+  slashMenu.setAttribute('role', 'listbox'); slashMenu.setAttribute('aria-label', 'Blocktyp auswählen');
+  blocks.after(slashMenu);
+  let slashTarget = null, slashMatches = [], slashSelection = 0;
+  function slashField(row) { return row?.dataset.type === 'paragraph' ? row.querySelector('[contenteditable]') : null; }
+  function slashQuery(row) {
+    const field = slashField(row), value = field?.textContent ?? '';
+    const match = /^\/([^\r\n]{0,40})$/u.exec(value);
+    return match ? match[1] : null;
+  }
+  function closeSlashMenu() {
+    const field = slashField(slashTarget);
+    field?.removeAttribute('aria-controls'); field?.removeAttribute('aria-activedescendant'); field?.removeAttribute('aria-expanded');
+    slashTarget = null; slashMatches = []; slashSelection = 0; slashMenu.hidden = true; slashMenu.replaceChildren();
+  }
+  function selectSlashCommand(command) {
+    const row = slashTarget;
+    const index = row?.isConnected ? [...blocks.children].indexOf(row) : -1;
+    const result = applySlashCommand(JSON.parse(serialize().slice(prefix.length)), index, command.id);
+    if (!result || !withinDocumentLimits(result.document)) { closeSlashMenu(); status.textContent = 'Slash-Befehl ist an dieser Position oder Dokumentgrenze nicht möglich.'; return; }
+    closeSlashMenu(); blocks.replaceChildren();
+    for (const block of result.document.blocks) renderBlock(block);
+    source.value = prefix + JSON.stringify(result.document);
+    activeRow = blocks.children[result.index];
+    activeRow?.querySelector('[contenteditable], textarea, input, select, button')?.focus();
+    changed(); status.textContent = result.announcement;
+  }
+  function drawSlashMenu(row, preserveSelection = false) {
+    const query = slashQuery(row);
+    if (query === null) { closeSlashMenu(); return; }
+    const matches = matchBlockCommands(query);
+    if (!matches.length) { closeSlashMenu(); status.textContent = 'Kein Blocktyp passt zu /' + query + '.'; return; }
+    slashTarget = row; slashMatches = matches;
+    slashSelection = preserveSelection ? Math.min(slashSelection, matches.length - 1) : 0;
+    slashMenu.replaceChildren();
+    for (const [index, command] of matches.entries()) {
+      const option = node('button'); option.type = 'button'; option.id = 'news-slash-option-' + command.id; option.setAttribute('role', 'option');
+      option.setAttribute('aria-selected', String(index === slashSelection));
+      const label = node('strong', command.label), description = node('span', command.description);
+      option.append(label, description);
+      option.addEventListener('mousedown', event => event.preventDefault());
+      option.addEventListener('click', () => selectSlashCommand(command));
+      slashMenu.append(option);
+    }
+    const field = slashField(row);
+    field.setAttribute('aria-controls', slashMenu.id); field.setAttribute('aria-expanded', 'true');
+    field.setAttribute('aria-activedescendant', slashMenu.children[slashSelection].id);
+    slashMenu.hidden = false;
+  }
   const markdownFile = document.getElementById('news-editor-markdown-file');
   const exchangeStatus = document.getElementById('news-editor-exchange-status');
   document.getElementById('news-editor-markdown-import').addEventListener('click', async () => {
@@ -357,8 +408,17 @@ if (root) {
     setTimeout(() => URL.revokeObjectURL(url), 1000);
     exchangeStatus.textContent = 'Markdown-Datei erstellt. Bilder und Videos sind als Referenztext enthalten.';
   });
-  blocks.addEventListener('focusin', event => { activeRow = event.target.closest('.news-editor-block'); });
+  blocks.addEventListener('focusin', event => { activeRow = event.target.closest('.news-editor-block'); if (slashQuery(activeRow) !== null) drawSlashMenu(activeRow); });
+  blocks.addEventListener('input', event => { const row = event.target.closest('.news-editor-block'); if (row) drawSlashMenu(row); });
   root.addEventListener('keydown', event => {
+    if (slashTarget && slashTarget.contains(event.target) && ['ArrowDown', 'ArrowUp', 'Enter', 'Escape'].includes(event.key)) {
+      event.preventDefault();
+      if (event.key === 'Escape') { closeSlashMenu(); return; }
+      if (event.key === 'Enter') { selectSlashCommand(slashMatches[slashSelection]); return; }
+      const direction = event.key === 'ArrowDown' ? 1 : -1;
+      slashSelection = (slashSelection + direction + slashMatches.length) % slashMatches.length;
+      drawSlashMenu(slashTarget, true); return;
+    }
     if (!blocks.contains(event.target)) return;
     const structuralCommand = resolveBlockShortcut(event);
     if (structuralCommand) {
@@ -458,20 +518,8 @@ if (root) {
       changed();
     });
   });
-  const defaults = {
-    paragraph: {type: 'paragraph', content: [{text: '', marks: []}]},
-    heading: {type: 'heading', level: 2, content: [{text: '', marks: []}]},
-    quote: {type: 'quote', content: [{text: '', marks: []}], cite: ''},
-    list: {type: 'list', ordered: false, items: [[{text: '', marks: []}]]},
-    table: {type: 'table', rows: [[[ {text: '', marks: []} ], [ {text: '', marks: []} ]]], header: true},
-    callout: {type: 'callout', tone: 'info', content: [{text: '', marks: []}]},
-    code: {type: 'code', language: 'plain', text: ''},
-    separator: {type: 'separator'},
-    media: {type: 'media', assetId: 0, alt: '', caption: ''},
-    video: {type: 'video', provider: 'youtube', videoId: '', caption: ''},
-  };
   root.querySelectorAll('[data-add]').forEach(button => button.addEventListener('click', () => {
-    addBlock(defaults[button.dataset.add], activeRow?.isConnected ? activeRow : blocks.lastElementChild);
+    addBlock(blockForCommand(button.dataset.add), activeRow?.isConnected ? activeRow : blocks.lastElementChild);
   }));
   const picker = document.getElementById('news-editor-media-picker');
   const mediaSearch = document.getElementById('news-editor-media-search');
