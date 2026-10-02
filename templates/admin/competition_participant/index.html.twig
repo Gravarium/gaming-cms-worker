@@ -1,0 +1,46 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Teilnehmer verwalten · {{ competition.name }}{% endblock %}
+
+{% block body %}
+<main class="container">
+    <h1>Teilnehmer verwalten</h1>
+    <p><strong>{{ competition.name }}</strong> · {{ total }} Anmeldungen</p>
+    {% if truncated %}<p role="alert">Es werden nur die ersten {{ participants|length }} Anmeldungen angezeigt.</p>{% endif %}
+    {% if not mutable %}<p role="status">Die Teilnehmerliste ist nach Beginn oder Paarungserstellung schreibgeschützt.</p>{% endif %}
+
+    <table>
+        <thead><tr><th>Setzung</th><th>Name</th><th>Status</th><th>Aktionen</th></tr></thead>
+        <tbody>
+        {% for participant in participants %}
+            <tr data-participant-id="{{ participant.id }}">
+                <td>{{ participant.seed ?? '—' }}</td>
+                <th scope="row">{{ participant.name }}</th>
+                <td>{{ participant.status }}</td>
+                <td>
+                {% if mutable and participant.active %}
+                    <form method="post" action="{{ path('app_admin_competition_participant_seed', {competition: competition.id, participant: participant.id}) }}">
+                        <input type="hidden" name="_token" value="{{ csrf_token('competition-participant-seed-' ~ participant.id) }}">
+                        <label>Setzposition <input name="seed" type="number" min="1" required value="{{ participant.seed }}"></label>
+                        <button type="submit">Setzen</button>
+                    </form>
+                    <form method="post" action="{{ path('app_admin_competition_participant_withdraw', {competition: competition.id, participant: participant.id}) }}">
+                        <input type="hidden" name="_token" value="{{ csrf_token('competition-participant-withdraw-' ~ participant.id) }}">
+                        <label>Grund (optional) <input name="reason" maxlength="500"></label>
+                        <button type="submit">Zurückziehen</button>
+                    </form>
+                    <form method="post" action="{{ path('app_admin_competition_participant_disqualify', {competition: competition.id, participant: participant.id}) }}">
+                        <input type="hidden" name="_token" value="{{ csrf_token('competition-participant-disqualify-' ~ participant.id) }}">
+                        <label>Begründung <input name="reason" maxlength="500" required></label>
+                        <button type="submit">Disqualifizieren</button>
+                    </form>
+                {% else %}—{% endif %}
+                </td>
+            </tr>
+        {% else %}
+            <tr><td colspan="4">Noch keine Anmeldungen.</td></tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</main>
+{% endblock %}
