@@ -51,6 +51,15 @@ final class NewsletterDeliveryRepository extends ServiceEntityRepository
             ->getSingleScalarResult();
     }
 
+    /** @return list<NewsletterDelivery> */
+    public function failedFor(NewsletterCampaign $campaign): array
+    {
+        return $this->findBy(
+            ['campaign' => $campaign, 'status' => NewsletterDelivery::STATUS_FAILED],
+            ['id' => 'ASC'],
+        );
+    }
+
     public function countFailed(NewsletterCampaign $campaign): int
     {
         return $this->count(['campaign' => $campaign, 'status' => NewsletterDelivery::STATUS_FAILED]);

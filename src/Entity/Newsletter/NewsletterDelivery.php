@@ -108,6 +108,19 @@ class NewsletterDelivery
         $this->retryAt = $now->modify('+'.$delayMinutes.' minutes');
     }
 
+    public function requeueFailed(\DateTimeImmutable $now): void
+    {
+        if ($this->status !== self::STATUS_FAILED) {
+            throw new \DomainException('Only terminally failed newsletter deliveries can be requeued.');
+        }
+
+        $this->status = self::STATUS_PENDING;
+        $this->attempts = 0;
+        $this->retryAt = null;
+        $this->lastFailureCode = null;
+        $this->updatedAt = $now;
+    }
+
     public function suppress(\DateTimeImmutable $now): void
     {
         $this->status = self::STATUS_SUPPRESSED;
