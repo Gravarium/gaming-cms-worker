@@ -9,6 +9,7 @@ use App\Entity\GuildEvent;
 use App\Entity\GuildEventSignup;
 use App\Entity\GuildMember;
 use App\Entity\User;
+use App\GuildEventWaitlist\GuildEventWaitlistPromoter;
 use App\Repository\GuildEventSignupPortalRepository;
 use App\Repository\GuildEventSignupRepository;
 use App\Service\AuditLogger;
@@ -30,6 +31,7 @@ final class GuildEventSignupPortalController extends AbstractController
         private readonly GuildEventSignupRepository $guildSignups,
         private readonly EntityManagerInterface $entityManager,
         private readonly AuditLogger $audit,
+        private readonly GuildEventWaitlistPromoter $waitlistPromoter,
     ) {
     }
 
@@ -107,6 +109,7 @@ final class GuildEventSignupPortalController extends AbstractController
                 throw $this->createNotFoundException();
             }
 
+            $releasedSeat = $candidate->getResponse() === GuildEventSignup::GOING;
             $candidate->setResponse(GuildEventSignup::DECLINED)->setNote(null);
             $this->audit->record(
                 'guild_event.signup_withdraw',
@@ -115,6 +118,10 @@ final class GuildEventSignupPortalController extends AbstractController
                 'A member withdrew an event signup.',
                 ['signup_id' => $signupId, 'member_id' => $member->getId()],
             );
+            if ($releasedSeat) {
+                $entityManager->flush();
+                $this->waitlistPromoter->promoteOne($event);
+            }
         });
 
         $this->addFlash('success', 'Deine Termin-Anmeldung wurde zurückgezogen.');
@@ -192,6 +199,8 @@ final class GuildEventSignupPortalController extends AbstractController
             }
 
             // Only the response and role are editable here; keep the private note and attendance record intact.
+            $releasedSeat = $candidate->getResponse() === GuildEventSignup::GOING
+                && $response !== GuildEventSignup::GOING;
             $candidate->setResponse($response)->setRole($requestedRole);
             $this->audit->record(
                 'guild_event.signup_update',
@@ -200,6 +209,11 @@ final class GuildEventSignupPortalController extends AbstractController
                 'A member updated an event signup.',
                 ['signup_id' => $signupId, 'member_id' => $member->getId(), 'response' => $response, 'role' => $requestedRole],
             );
+
+            if ($releasedSeat) {
+                $entityManager->flush();
+                $this->waitlistPromoter->promoteOne($event);
+            }
 
             return $response;
         });
