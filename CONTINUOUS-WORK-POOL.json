@@ -67032,22 +67032,24 @@
       "package_id": "WCP-670",
       "title": "Structured HTML and office paste in visual news editor",
       "risk": "medium_content_conversion",
-      "execution_state": "worker_in_progress",
-      "claim_state": "claimed",
+      "execution_state": "worker_complete_awaiting_trusted_review",
+      "claim_state": "locked_until_trusted_resolution",
       "claim_generation": 1,
       "claim_branch": "claim/wcp-670-news-structured-html-paste-g1",
       "suggested_branch": "feature/wcp-670-news-structured-html-paste-g1",
       "resume_branch": "feature/wcp-670-news-structured-html-paste-g1",
       "claimed_on": "2026-10-02T21:23:00.000Z",
-      "lease_expires_at": "2026-10-03T04:23:00.000Z",
+      "lease_expires_at": null,
       "base_branch": "main",
       "base_sha": "08260d3f0e343615f525efd2de05767200f031c5",
       "proposal_base_branch": "feature/wcp-669-news-article-interchange-g1",
       "proposal_base_sha": "860e756021b88896bf6d4e1a53d60ed780387b32",
       "active_base_branch": "feature/wcp-669-news-article-interchange-g1",
       "active_base_sha": "860e756021b88896bf6d4e1a53d60ed780387b32",
-      "active_head": "860e756021b88896bf6d4e1a53d60ed780387b32",
-      "last_observed_head": "860e756021b88896bf6d4e1a53d60ed780387b32",
+      "active_head": "d95fcdeb8a356778d7f5191c6588b60f93544d73",
+      "last_observed_head": "d95fcdeb8a356778d7f5191c6588b60f93544d73",
+      "last_verified_push_at": "2026-10-02T21:33:00.000Z",
+      "last_checkpoint_at": "2026-10-02T21:33:00.000Z",
       "dependencies": [
         "WCP-669"
       ],
@@ -67109,7 +67111,25 @@
           "tests/JavaScript/news_editor.test.mjs"
         ]
       },
-      "next_action": "Create feature branch from exact green WCP-669 head, implement inert structured HTML paste, test and run exact-head Worker CI."
+      "worker_pr_state": "ready_for_review",
+      "worker_pr": 468,
+      "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/468",
+      "worker_pr_head_sha": "d95fcdeb8a356778d7f5191c6588b60f93544d73",
+      "final_head": "d95fcdeb8a356778d7f5191c6588b60f93544d73",
+      "completed_at": "2026-10-02T21:33:00.000Z",
+      "ci_run": 37066976882,
+      "ci_run_id": 37066976882,
+      "ci_conclusion": "success",
+      "ci_result": "success",
+      "last_ci_result": "success",
+      "ci_head": "d95fcdeb8a356778d7f5191c6588b60f93544d73",
+      "last_ci_head": "d95fcdeb8a356778d7f5191c6588b60f93544d73",
+      "final_changed_paths": [
+        "assets/news_editor/html-paste.js",
+        "assets/news_editor/editor.js",
+        "tests/JavaScript/news_editor.test.mjs"
+      ],
+      "next_action": "Trusted review and integration decision on Worker PR #468 after prerequisite WCP-669 / PR #467; preserve exact green head."
     }
   ],
   "recovery_queue": [],
