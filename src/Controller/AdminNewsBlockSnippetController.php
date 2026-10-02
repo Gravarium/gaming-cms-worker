@@ -36,7 +36,7 @@ final class AdminNewsBlockSnippetController extends AbstractController
     public function index(Request $request): JsonResponse
     {
         $user = $this->user();
-        $query = $request->query->get('q', '');
+        $query = $request->query->all()['q'] ?? '';
         if (!is_string($query) || !mb_check_encoding($query, 'UTF-8') || mb_strlen($query) > 80 || preg_match('/[\x00-\x1f\x7f]/u', $query) === 1) {
             return $this->privateJson(['error' => 'Ungültige Vorlagensuche.'], 422);
         }
