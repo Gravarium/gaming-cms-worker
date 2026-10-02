@@ -65765,14 +65765,14 @@
       "package_id": "WCP-667",
       "title": "Structured Markdown paste in visual news editor",
       "risk": "medium_content_conversion",
-      "execution_state": "worker_in_progress",
-      "claim_state": "active",
+      "execution_state": "worker_complete_awaiting_trusted_review",
+      "claim_state": "locked_until_trusted_resolution",
       "claim_generation": 1,
       "claim_branch": "claim/wcp-667-news-structured-paste-g1",
       "suggested_branch": "feature/wcp-667-news-structured-paste-g1",
       "resume_branch": "feature/wcp-667-news-structured-paste-g1",
       "claimed_on": "2026-10-02T17:55:49.031Z",
-      "lease_expires_at": "2026-10-03T01:00:29.580Z",
+      "lease_expires_at": null,
       "base_branch": "main",
       "base_sha": "9e083c63e7d888af36f93a23eb924c89fad2b971",
       "proposal_base_branch": "feature/wcp-665-news-revision-recovery-g1",
@@ -65837,14 +65837,28 @@
           "tests/JavaScript/news_editor.test.mjs"
         ]
       },
-      "next_action": "Wait for exact-head Worker CI and repair if red",
+      "next_action": "Trusted review and integration decision after WCP-665; preserve exact green head",
       "last_observed_head": "2d9556c8e96e91f35d9de044ad7ae4ce77cf84fc",
       "last_verified_push_at": "2026-10-02T18:00:29.580Z",
       "last_checkpoint_at": "2026-10-02T18:00:29.580Z",
       "worker_pr": 463,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/463",
       "worker_pr_head_sha": "2d9556c8e96e91f35d9de044ad7ae4ce77cf84fc",
-      "worker_pr_state": "draft"
+      "worker_pr_state": "ready_for_review",
+      "final_head": "2d9556c8e96e91f35d9de044ad7ae4ce77cf84fc",
+      "completed_at": "2026-10-02T18:06:05.152Z",
+      "ci_run": 37044516701,
+      "ci_run_id": 37044516701,
+      "ci_conclusion": "success",
+      "ci_result": "success",
+      "ci_head": "2d9556c8e96e91f35d9de044ad7ae4ce77cf84fc",
+      "last_ci_head": "2d9556c8e96e91f35d9de044ad7ae4ce77cf84fc",
+      "last_ci_result": "success",
+      "final_changed_paths": [
+        "assets/news_editor/markdown-paste.js",
+        "assets/news_editor/editor.js",
+        "tests/JavaScript/news_editor.test.mjs"
+      ]
     }
   ],
   "recovery_queue": [],
