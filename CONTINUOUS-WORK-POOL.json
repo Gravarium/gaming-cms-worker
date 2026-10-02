@@ -62761,8 +62761,8 @@
       "package_id": "WCP-642",
       "title": "Browse and export confirmed public competition results",
       "risk": "medium_privacy",
-      "execution_state": "worker_in_progress",
-      "claim_state": "active_lease",
+      "execution_state": "worker_complete_awaiting_trusted_review",
+      "claim_state": "locked_until_trusted_resolution",
       "claim_generation": 2,
       "claim_branch": "claim/wcp-642-competition-results-archive-g2",
       "suggested_branch": "feature/wcp-642-competition-results-archive-g1",
@@ -62774,7 +62774,7 @@
       "proposal_base_sha": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
       "active_base_branch": "main",
       "active_base_sha": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
-      "active_head": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "active_head": "63832f3f0f4bb70b1c25cfe0da8fb18c4db702ff",
       "dependencies": [],
       "proposal_kind": "worker_only",
       "objective": "Provide a public, bounded per-competition archive of confirmed match scores with CSV export. Exclude private and draft competitions, disabled games, and pending/disputed/cancelled matches. Keep stable ordering and protect CSV from formula injection.",
@@ -62826,10 +62826,28 @@
           "tests/Controller/PublicCompetitionResultsArchiveTest.php"
         ]
       },
-      "next_action": "Implement on reserved feature branch; open Draft PR and verify exact-head Worker CI.",
-      "last_observed_head": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
-      "last_verified_push_at": null,
-      "lease_expires_at": "2026-10-02T09:43:08Z",
+      "next_action": "Await independent Worker review and later Trusted integration; no merge or deployment.",
+      "last_observed_head": "63832f3f0f4bb70b1c25cfe0da8fb18c4db702ff",
+      "last_verified_push_at": "2026-10-02T02:49:22Z",
+      "last_checkpoint_at": "2026-10-02T02:55:00Z",
+      "lease_expires_at": null,
+      "worker_pr": 446,
+      "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/446",
+      "worker_pr_state": "ready_for_review",
+      "last_ci_run_id": 36957395615,
+      "last_ci_head": "63832f3f0f4bb70b1c25cfe0da8fb18c4db702ff",
+      "last_ci_result": "success",
+      "branch_heads": {
+        "claim_branch": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+        "feature_branch": "63832f3f0f4bb70b1c25cfe0da8fb18c4db702ff"
+      },
+      "completion_report": [
+        "Worker PR #446 ready for review at exact head 63832f3f0f4bb70b1c25cfe0da8fb18c4db702ff.",
+        "Worker CI run 36957395615: PHP/Symfony 1,645 tests/11,987 assertions and PostgreSQL 18 jobs successful.",
+        "Five changed paths are within the WCP-642 allowlist; private/draft/disabled-game and unconfirmed results fail closed, pagination is bounded and deterministic, and CSV formula-leading cells are neutralized.",
+        "Initial run 36957220359 failed only on a redundant is_string() PHPStan guard after Symfony query typing; getString() resolved it without weakening safeguards.",
+        "No Trusted merge or deployment."
+      ],
       "previous_claim": {
         "claim_branch": "claim/wcp-642-competition-results-archive-g1",
         "claimed_on": "2026-10-01T11:57:48.301Z",
