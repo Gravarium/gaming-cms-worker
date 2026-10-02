@@ -46,6 +46,25 @@ final class PublicCompetitionLeaderboardTest extends WebTestCase
         self::assertResponseStatusCodeSame(404);
     }
 
+    public function testCreatorCanViewPrivateLeaderboardWithoutCachingOrIndexing(): void
+    {
+        $client = static::createClient();
+        $fixture = $this->competition($client);
+        $fixture['competition']->setVisibility(Competition::VISIBILITY_PRIVATE);
+        $this->em($client)->flush();
+        $client->loginUser($fixture['userA']);
+
+        $client->request('GET', '/competitions/'.$fixture['competition']->getId().'/leaderboard');
+
+        self::assertResponseIsSuccessful();
+        $headers = $client->getResponse()->headers;
+        $cacheControl = (string) $headers->get('Cache-Control', '');
+        self::assertTrue($headers->hasCacheControlDirective('private'), 'Cache-Control must remain private. Actual: '.$cacheControl);
+        self::assertTrue($headers->hasCacheControlDirective('no-store'), 'Cache-Control must prevent storage. Actual: '.$cacheControl);
+        self::assertSame('0', (string) $headers->getCacheControlDirective('max-age'), 'Cache-Control must expire immediately. Actual: '.$cacheControl);
+        self::assertSame('noindex, nofollow, noarchive', (string) $headers->get('X-Robots-Tag', ''));
+    }
+
     public function testBoardFailsClosedWhenGamingModuleIsDisabled(): void
     {
         $client = static::createClient();

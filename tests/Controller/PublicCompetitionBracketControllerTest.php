@@ -80,6 +80,30 @@ final class PublicCompetitionBracketControllerTest extends WebTestCase
         self::assertStringNotContainsString($emailB, $html);
     }
 
+    public function testCreatorCanViewPrivateBracketWithoutCachingOrIndexing(): void
+    {
+        $client = static::createClient();
+        $em = $client->getContainer()->get(EntityManagerInterface::class);
+        $game = $this->createGame($em);
+        $owner = $this->createUser('private-owner');
+        $em->persist($owner);
+        $competition = $this->createCompetition($em, $game, 'Private owner bracket', false);
+        $competition->setCreatedBy($owner);
+        $em->flush();
+        self::assertNotNull($competition->getId());
+        $client->loginUser($owner);
+
+        $client->request('GET', '/competitions/'.$competition->getId().'/bracket');
+
+        self::assertResponseIsSuccessful();
+        $headers = $client->getResponse()->headers;
+        $cacheControl = (string) $headers->get('Cache-Control', '');
+        self::assertTrue($headers->hasCacheControlDirective('private'), 'Cache-Control must remain private. Actual: '.$cacheControl);
+        self::assertTrue($headers->hasCacheControlDirective('no-store'), 'Cache-Control must prevent storage. Actual: '.$cacheControl);
+        self::assertSame('0', (string) $headers->getCacheControlDirective('max-age'), 'Cache-Control must expire immediately. Actual: '.$cacheControl);
+        self::assertSame('noindex, nofollow, noarchive', (string) $headers->get('X-Robots-Tag', ''));
+    }
+
     public function testEmptyBracketIsExplainedAndHiddenCompetitionsReturnNotFound(): void
     {
         $client = static::createClient();

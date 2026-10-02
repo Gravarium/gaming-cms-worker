@@ -66,9 +66,15 @@ final class PublicCompetitionBracketController extends AbstractController
             return $order !== 0 ? $order : strcmp($left, $right);
         });
 
-        return $this->render('competition_bracket/show.html.twig', [
+        $response = $this->render('competition_bracket/show.html.twig', [
             'competition' => $competition,
             'brackets' => $brackets,
         ]);
+        if (!$competition->isPublic()) {
+            $response->headers->set('Cache-Control', 'private, no-store, max-age=0');
+            $response->headers->set('X-Robots-Tag', 'noindex, nofollow, noarchive');
+        }
+
+        return $response;
     }
 }
