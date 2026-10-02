@@ -1,0 +1,6 @@
+{% extends 'base.html.twig' %}
+{% block stylesheets %}{{ parent() }}<link rel="stylesheet" href="{{ asset('video_workspace/workspace.css') }}">{% endblock %}
+{% block body %}
+<header class="topbar"><a class="brand" href="{{ path('app_video_workspace') }}">Video & Live</a><nav class="top-actions" aria-label="Video-Navigation"><a href="{{ path('app_video_index') }}">Videobibliothek</a><a href="{{ path('app_video_discovery_index') }}">Entdecken</a>{% if app.user %}<a href="{{ path('app_video_workspace_account') }}">Meine Sammlung verwalten</a>{% endif %}{% if is_granted('CMS_VIDEO_MANAGE') %}<a href="{{ path('app_admin_video_workspace') }}">Verwaltung</a>{% endif %}</nav></header>
+<main class="dashboard workspace"><div class="workspace-heading"><p class="eyebrow">Video-Modul</p><h1>{% block heading %}Video & Live{% endblock %}</h1></div>{% for message in app.flashes('success') %}<div class="notice" role="status">{{ message }}</div>{% endfor %}{% block workspace %}{% endblock %}</main>
+{% endblock %}
