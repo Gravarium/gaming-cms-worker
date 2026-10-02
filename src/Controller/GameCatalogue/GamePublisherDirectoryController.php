@@ -20,7 +20,7 @@ final class GamePublisherDirectoryController extends AbstractController
     ) {
     }
 
-    #[Route('', name: 'app_game_publisher_directory', methods: ['GET'])]
+    #[Route('', name: 'app_game_publisher_directory', priority: 100, methods: ['GET'])]
     public function index(Request $request): Response
     {
         $this->assertAvailable();
