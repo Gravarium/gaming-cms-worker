@@ -167,7 +167,7 @@ final readonly class ForumWorkflowGateway
     public function postsForThread(int $threadId): array
     {
         return $this->connection->fetchAllAssociative(
-            "SELECT p.id, p.author_id, p.quoted_post_id, p.body, p.created_at,
+            "SELECT p.id, p.author_id, p.quoted_post_id, p.body, p.created_at, p.edited_at,
                     COALESCE(u.display_name, 'Gelöschtes Konto') AS author_name
              FROM forum_post p
              LEFT JOIN cms_user u ON u.id = p.author_id
@@ -175,6 +175,109 @@ final readonly class ForumWorkflowGateway
              ORDER BY p.created_at, p.id",
             ['thread_id' => $threadId],
         );
+    }
+
+    /** @return array<string, mixed>|null */
+    public function editablePost(int $threadId, int $postId, int $authorId): ?array
+    {
+        $post = $this->connection->fetchAssociative(
+            "SELECT p.id, p.thread_id, p.author_id, p.body, p.quoted_post_id, p.created_at, p.edited_at,
+                    t.title, t.version,
+                    CASE WHEN p.id = (
+                        SELECT first_post.id FROM forum_post first_post
+                        WHERE first_post.thread_id = t.id
+                        ORDER BY first_post.created_at, first_post.id
+                        LIMIT 1
+                    ) THEN 1 ELSE 0 END AS is_question
+             FROM forum_post p
+             INNER JOIN forum_thread t ON t.id = p.thread_id
+             WHERE p.id = :post_id AND p.thread_id = :thread_id AND p.author_id = :author_id
+               AND t.state = 'open' AND t.solved_post_id IS NULL",
+            ['post_id' => $postId, 'thread_id' => $threadId, 'author_id' => $authorId],
+        );
+
+        return $post === false ? null : $post;
+    }
+
+    public function editPost(
+        int $threadId,
+        int $postId,
+        int $authorId,
+        ?string $title,
+        string $body,
+        int $expectedVersion,
+    ): void {
+        $body = trim($body);
+        new ForumPost($threadId, $authorId, $body);
+
+        $this->connection->transactional(function (Connection $connection) use ($threadId, $postId, $authorId, $title, $body, $expectedVersion): void {
+            $post = $connection->fetchAssociative(
+                "SELECT p.id,
+                        CASE WHEN p.id = (
+                            SELECT first_post.id FROM forum_post first_post
+                            WHERE first_post.thread_id = t.id
+                            ORDER BY first_post.created_at, first_post.id
+                            LIMIT 1
+                        ) THEN 1 ELSE 0 END AS is_question
+                 FROM forum_post p
+                 INNER JOIN forum_thread t ON t.id = p.thread_id
+                 WHERE p.id = :post_id AND p.thread_id = :thread_id AND p.author_id = :author_id
+                   AND t.state = 'open' AND t.solved_post_id IS NULL",
+                ['post_id' => $postId, 'thread_id' => $threadId, 'author_id' => $authorId],
+            );
+            if ($post === false) {
+                throw new \DomainException('Der Beitrag kann nicht bearbeitet werden. Lade das Thema neu.');
+            }
+
+            $isQuestion = (int) $post['is_question'] === 1;
+            $normalizedTitle = trim((string) $title);
+            if ($isQuestion) {
+                new ForumThread($authorId, $normalizedTitle);
+            }
+
+            $now = $this->now();
+            $changed = $isQuestion
+                ? $connection->executeStatement(
+                    "UPDATE forum_thread
+                     SET title = :title, version = version + 1, updated_at = :updated_at
+                     WHERE id = :thread_id AND author_id = :author_id AND state = 'open'
+                       AND solved_post_id IS NULL AND version = :version",
+                    [
+                        'title' => $normalizedTitle,
+                        'updated_at' => $now,
+                        'thread_id' => $threadId,
+                        'author_id' => $authorId,
+                        'version' => $expectedVersion,
+                    ],
+                )
+                : $connection->executeStatement(
+                    "UPDATE forum_thread
+                     SET version = version + 1, updated_at = :updated_at
+                     WHERE id = :thread_id AND state = 'open' AND solved_post_id IS NULL AND version = :version",
+                    [
+                        'updated_at' => $now,
+                        'thread_id' => $threadId,
+                        'version' => $expectedVersion,
+                    ],
+                );
+            if ($changed !== 1) {
+                throw new \DomainException('Das Thema wurde inzwischen geändert oder kann nicht mehr bearbeitet werden. Bitte lade es neu.');
+            }
+
+            if ($connection->executeStatement(
+                'UPDATE forum_post SET body = :body, edited_at = :edited_at
+                 WHERE id = :post_id AND thread_id = :thread_id AND author_id = :author_id',
+                [
+                    'body' => $body,
+                    'edited_at' => $now,
+                    'post_id' => $postId,
+                    'thread_id' => $threadId,
+                    'author_id' => $authorId,
+                ],
+            ) !== 1) {
+                throw new \DomainException('Der Beitrag kann nicht bearbeitet werden. Lade das Thema neu.');
+            }
+        });
     }
 
     public function isSubscribed(int $threadId, int $userId): bool

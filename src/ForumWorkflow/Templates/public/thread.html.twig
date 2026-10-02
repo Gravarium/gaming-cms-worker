@@ -12,9 +12,15 @@
         {% for post in posts %}
             <article class="panel" id="post-{{ post.id }}">
                 <h2>Beitrag von {{ post.author_name }}</h2>
-                <p class="muted">{{ post.created_at|date('d.m.Y H:i') }}</p>
+                <p class="muted">
+                    {{ post.created_at|date('d.m.Y H:i') }}
+                    {% if post.edited_at %} · bearbeitet {{ post.edited_at|date('d.m.Y H:i') }}{% endif %}
+                </p>
                 {% if post.quoted_post_id %}<p>Antwort auf Beitrag #{{ post.quoted_post_id }}</p>{% endif %}
                 <pre class="forum-post-body">{{ post.body }}</pre>
+                {% if app.user and thread.state == 'open' and not thread.solved_post_id and post.author_id == app.user.id %}
+                    <p><a href="{{ path('app_gaming_forum_post_edit', {threadId: thread.id, postId: post.id}) }}">Beitrag bearbeiten</a></p>
+                {% endif %}
                 {% if canSolve %}
                     <form method="post" action="{{ path('app_gaming_forum_solve', {id: thread.id}) }}">
                         <input type="hidden" name="_token" value="{{ csrf_token('forum_solve_' ~ thread.id) }}">
