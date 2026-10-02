@@ -1,0 +1,24 @@
+{% extends 'base.html.twig' %}
+{% block title %}{{ genre.name }} – Spiele{% endblock %}
+{% block body %}
+<main class="container">
+    <p><a href="{{ path('app_game_genre_directory') }}">← Alle Genres</a></p>
+    <h1>{{ genre.name }}</h1>
+    {% if entries %}
+        <ul class="card-grid">
+            {% for entry in entries %}
+                <li class="panel">
+                    <h2><a href="{{ path('app_game_catalogue_show', {slug: entry.game.slug}) }}">{{ entry.game.name }}</a></h2>
+                    {% if entry.summary %}<p>{{ entry.summary }}</p>{% endif %}
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>Auf dieser Seite sind keine Spiele verfügbar.</p>
+    {% endif %}
+    <nav aria-label="Spieleseiten">
+        {% if page > 1 %}<a href="{{ path('app_game_genre_directory_show', {slug: genre.slug, page: page - 1}) }}">Vorherige Seite</a>{% endif %}
+        {% if hasMore %}<a href="{{ path('app_game_genre_directory_show', {slug: genre.slug, page: page + 1}) }}">Nächste Seite</a>{% endif %}
+    </nav>
+</main>
+{% endblock %}
