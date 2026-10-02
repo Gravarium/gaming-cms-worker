@@ -5,6 +5,7 @@
 {% block body %}
 <main class="content-shell">
     <h1>Meine Competitions</h1>
+    <p><a href="{{ path('app_competition_match_inbox') }}">Meine Matches anzeigen</a></p>
     {% for message in app.flashes('success') %}<div class="notice">{{ message }}</div>{% endfor %}
     {% for message in app.flashes('error') %}<div class="notice text-danger">{{ message }}</div>{% endfor %}
 

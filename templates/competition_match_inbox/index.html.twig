@@ -1,0 +1,25 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Meine Competition-Matches{% endblock %}
+
+{% block body %}
+<main class="content-shell">
+    <h1>Meine Competition-Matches</h1>
+    <p>Die neuesten {{ constant('App\\CompetitionMatchInbox\\CaptainMatchInbox::MAX_RESULTS') }} Matches, an denen du als Captain beteiligt bist.</p>
+    {% for match in matches %}
+        <article class="portal-card">
+            <h2>{{ match.competition.name }}</h2>
+            <p>Runde {{ match.roundNumber }} · Match {{ match.sequence }}</p>
+            <p>{{ match.participantA ? match.participantA.name : 'Freilos' }} – {{ match.participantB ? match.participantB.name : 'Freilos' }}</p>
+            {% if match.scheduledAt %}<p>Termin: {{ match.scheduledAt|date('d.m.Y H:i') }}</p>{% endif %}
+            {% if match.confirmed %}
+                <p>Bestätigt{% if match.scoreA is not null and match.scoreB is not null %}: {{ match.scoreA }}:{{ match.scoreB }}{% endif %}</p>
+            {% else %}
+                <p>Status: {{ match.status }}</p>
+            {% endif %}
+        </article>
+    {% else %}
+        <p>Du hast noch keine Competition-Matches.</p>
+    {% endfor %}
+</main>
+{% endblock %}
