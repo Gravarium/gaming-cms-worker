@@ -47,16 +47,42 @@ final class AdminNewsEditorController extends AbstractController
     ) {}
 
     #[Route('', name: 'app_admin_news_editor_index', methods: ['GET'])]
-    public function index(): Response
+    public function index(Request $request): Response
     {
         if (!$this->modules->isEnabled('content')) {
             throw $this->createNotFoundException();
         }
-        $entries = $this->entityManager->getRepository(ContentEntry::class)->findBy([
-            'type' => ContentEntry::TYPE_NEWS,
-            'status' => [ContentEntry::STATUS_DRAFT, ContentEntry::STATUS_REVIEW],
-        ], ['updatedAt' => 'DESC'], 100);
-        $response = $this->render('admin/news_editor/index.html.twig', ['entries' => $entries]);
+        $params = $request->query->all();
+        $status = $params['status'] ?? 'all';
+        $search = $params['q'] ?? '';
+        $pageInput = $params['page'] ?? '1';
+        if (!is_string($status) || !in_array($status, ['all', ContentEntry::STATUS_DRAFT, ContentEntry::STATUS_REVIEW], true)
+            || !is_string($search) || !mb_check_encoding($search, 'UTF-8') || mb_strlen($search) > 80
+            || preg_match('/[\x00-\x1f\x7f]/u', $search) === 1
+            || !is_string($pageInput) || preg_match('/\A[1-9][0-9]{0,3}\z/D', $pageInput) !== 1
+            || (int) $pageInput > 1000) {
+            throw $this->createNotFoundException();
+        }
+        $search = trim($search);
+        $page = (int) $pageInput;
+        $query = $this->entityManager->getRepository(ContentEntry::class)->createQueryBuilder('entry')
+            ->andWhere('entry.type = :type')->setParameter('type', ContentEntry::TYPE_NEWS)
+            ->andWhere('entry.status IN (:statuses)')
+            ->setParameter('statuses', $status === 'all' ? [ContentEntry::STATUS_DRAFT, ContentEntry::STATUS_REVIEW] : [$status])
+            ->orderBy('entry.updatedAt', 'DESC')->addOrderBy('entry.id', 'DESC')
+            ->setFirstResult(($page - 1) * 25)->setMaxResults(26);
+        if ($search !== '') {
+            $query->andWhere('LOCATE(:search, LOWER(entry.title)) > 0')
+                ->setParameter('search', mb_strtolower($search));
+        }
+        $entries = $query->getQuery()->getResult();
+        $hasNext = count($entries) > 25;
+        if ($hasNext) {
+            array_pop($entries);
+        }
+        $response = $this->render('admin/news_editor/index.html.twig', [
+            'entries' => $entries, 'search' => $search, 'status' => $status, 'page' => $page, 'hasNext' => $hasNext,
+        ]);
         $response->headers->set('Cache-Control', 'private, no-store');
         $response->headers->set('X-Robots-Tag', 'noindex, nofollow, noarchive');
         return $response;
