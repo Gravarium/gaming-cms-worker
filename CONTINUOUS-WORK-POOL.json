@@ -67303,6 +67303,76 @@
         "tests/JavaScript/news_editor.test.mjs"
       ],
       "next_action": "Trusted review and integration decision on Worker PR #470 after prerequisite WCP-671 / PR #469; preserve exact green head."
+    },
+    {
+      "priority": 673,
+      "package_id": "WCP-673",
+      "title": "Persistent personal block library for News Editor",
+      "risk": "high_persistent_editor_workflow",
+      "execution_state": "worker_in_progress",
+      "claim_state": "claimed",
+      "claim_generation": 1,
+      "claim_branch": "claim/wcp-673-news-block-library-g1",
+      "suggested_branch": "feature/wcp-673-news-block-library-g1",
+      "resume_branch": "feature/wcp-673-news-block-library-g1",
+      "claimed_on": "2026-10-02T22:47:00.000Z",
+      "lease_expires_at": "2026-10-03T05:47:00.000Z",
+      "base_branch": "main",
+      "base_sha": "08260d3f0e343615f525efd2de05767200f031c5",
+      "proposal_base_branch": "feature/wcp-672-news-batch-blocks-g1",
+      "proposal_base_sha": "89c6c40a0544f5ab39fb1424064f1f533eed2c96",
+      "active_base_branch": "feature/wcp-672-news-batch-blocks-g1",
+      "active_base_sha": "89c6c40a0544f5ab39fb1424064f1f533eed2c96",
+      "active_head": "89c6c40a0544f5ab39fb1424064f1f533eed2c96",
+      "last_observed_head": "89c6c40a0544f5ab39fb1424064f1f533eed2c96",
+      "last_verified_push_at": "2026-10-02T22:47:00.000Z",
+      "last_checkpoint_at": "2026-10-02T22:47:00.000Z",
+      "dependencies": ["WCP-672"],
+      "proposal_kind": "worker_only",
+      "proposal_dependency_evidence": [{
+        "package_id": "WCP-672", "head": "89c6c40a0544f5ab39fb1424064f1f533eed2c96",
+        "pr": 470, "ci_run": 37073315636, "result": "success"
+      }],
+      "objective": "Provide each authorized News editor with a persistent, private and bounded library of validated typed blocks that can be named, searched, inserted into drafts and deleted without exposing another user's content.",
+      "allowed_paths": [
+        "src/Entity/NewsBlockSnippet.php", "src/Repository/NewsBlockSnippetRepository.php",
+        "src/Controller/AdminNewsBlockSnippetController.php", "migrations/Version20261002225000.php",
+        "templates/admin/news_editor/edit.html.twig", "assets/news_editor/snippets.js",
+        "assets/news_editor/editor.js", "assets/news_editor/editor.css",
+        "tests/Controller/AdminNewsBlockSnippetControllerTest.php", "tests/JavaScript/news_editor.test.mjs"
+      ],
+      "forbidden_paths": [
+        "private/", "PrivateCore/", "ops/", "docs/", "bin/", "AGENTS.md", "WORKER.md",
+        "CONTINUOUS-WORKER.md", "CONTINUOUS-WORK-POOL.json", ".github/workflows/", "src/Security/"
+      ],
+      "deliverables": [
+        "Persistent owner-scoped snippet entity, bounded repository query and reversible PostgreSQL migration.",
+        "Private no-store JSON endpoints for list/search, validated create and owner-only delete with CSRF protection and fixed capacity.",
+        "Editor panel to save the active block, filter the personal library and insert a deep-cloned snippet through existing document-limit/history/autosave paths.",
+        "Controller isolation/security tests, focused JavaScript tests and complete exact-head Worker CI."
+      ],
+      "tests": [
+        "Controller tests for permission, CSRF, block validation, capacity, private owner isolation, bounded search and deletion.",
+        "Node JavaScript tests for safe response normalization and immutable snippet insertion.",
+        "Complete Worker CI including PostgreSQL migration chain on exact final head."
+      ],
+      "immutable_constraints": [
+        "worker-only-no-Trusted-merge-or-deployment", "snippets-are-private-to-their-owner",
+        "stored-blocks-pass-the-existing-content-policy", "bounded-count-name-query-and-payload",
+        "document-limits-history-and-autosave-remain-enforced", "no-security-test-or-CI-weakening"
+      ],
+      "collision_check": {
+        "compared_against": "Live pool at a9ad5e2099b861dd9d2d36caeb95471100079a79 with no worker_in_progress claim",
+        "result": "Serial News Editor descendant of completed WCP-672; all new persistence/API paths are unique and shared editor paths have no concurrent owner.",
+        "paths": [
+          "src/Entity/NewsBlockSnippet.php", "src/Repository/NewsBlockSnippetRepository.php",
+          "src/Controller/AdminNewsBlockSnippetController.php", "migrations/Version20261002225000.php",
+          "templates/admin/news_editor/edit.html.twig", "assets/news_editor/snippets.js",
+          "assets/news_editor/editor.js", "assets/news_editor/editor.css",
+          "tests/Controller/AdminNewsBlockSnippetControllerTest.php", "tests/JavaScript/news_editor.test.mjs"
+        ]
+      },
+      "next_action": "Implement the persistent personal block library, test owner isolation and exact-head CI, then open the Worker PR."
     }
   ],
   "recovery_queue": [],
