@@ -67130,6 +67130,76 @@
         "tests/JavaScript/news_editor.test.mjs"
       ],
       "next_action": "Trusted review and integration decision on Worker PR #468 after prerequisite WCP-669 / PR #467; preserve exact green head."
+    },
+    {
+      "priority": 671,
+      "package_id": "WCP-671",
+      "title": "Slash command palette for typed News Editor blocks",
+      "risk": "medium_editor_interaction",
+      "execution_state": "worker_in_progress",
+      "claim_state": "claimed",
+      "claim_generation": 1,
+      "claim_branch": "claim/wcp-671-news-slash-commands-g1",
+      "suggested_branch": "feature/wcp-671-news-slash-commands-g1",
+      "resume_branch": "feature/wcp-671-news-slash-commands-g1",
+      "claimed_on": "2026-10-02T22:16:00.000Z",
+      "lease_expires_at": "2026-10-03T05:16:00.000Z",
+      "base_branch": "main",
+      "base_sha": "08260d3f0e343615f525efd2de05767200f031c5",
+      "proposal_base_branch": "feature/wcp-670-news-structured-html-paste-g1",
+      "proposal_base_sha": "d95fcdeb8a356778d7f5191c6588b60f93544d73",
+      "active_base_branch": "feature/wcp-670-news-structured-html-paste-g1",
+      "active_base_sha": "d95fcdeb8a356778d7f5191c6588b60f93544d73",
+      "active_head": "d95fcdeb8a356778d7f5191c6588b60f93544d73",
+      "last_observed_head": "d95fcdeb8a356778d7f5191c6588b60f93544d73",
+      "last_verified_push_at": "2026-10-02T22:16:00.000Z",
+      "last_checkpoint_at": "2026-10-02T22:16:00.000Z",
+      "dependencies": ["WCP-670"],
+      "proposal_kind": "worker_only",
+      "proposal_dependency_evidence": [{
+        "package_id": "WCP-670",
+        "head": "d95fcdeb8a356778d7f5191c6588b60f93544d73",
+        "pr": 468,
+        "ci_run": 37066976882,
+        "result": "success"
+      }],
+      "objective": "Add an accessible, searchable slash-command palette that replaces an empty paragraph with a selected typed v2 block without bypassing document limits, history or editor safety boundaries.",
+      "allowed_paths": [
+        "assets/news_editor/block-commands.js",
+        "assets/news_editor/editor.js",
+        "assets/news_editor/editor.css",
+        "tests/JavaScript/news_editor.test.mjs"
+      ],
+      "forbidden_paths": [
+        "private/", "PrivateCore/", "ops/", "docs/", "bin/", "AGENTS.md", "WORKER.md",
+        "CONTINUOUS-WORKER.md", "CONTINUOUS-WORK-POOL.json", ".github/workflows/", "migrations/",
+        "src/Entity/", "src/Controller/", "templates/", "src/Security/"
+      ],
+      "deliverables": [
+        "Pure bounded command catalog, locale-aware search and immutable empty-paragraph replacement operation.",
+        "Keyboard and pointer-accessible slash palette with filtering, active-option semantics, escape handling and deterministic focus restoration.",
+        "Typed heading, list, quote, callout, code, table, media, video and separator creation through the existing validated editor document path.",
+        "Focused JavaScript tests plus complete exact-head Worker CI."
+      ],
+      "tests": [
+        "Node JavaScript tests for command matching, bounded queries, immutable replacement and rejection of unsafe/non-empty targets.",
+        "Complete Worker CI on exact final head."
+      ],
+      "immutable_constraints": [
+        "worker-only-no-Trusted-merge-or-deployment",
+        "slash-commands-only-replace-the-active-empty-paragraph",
+        "document-limits-and-undo-remain-enforced",
+        "no-security-test-or-CI-weakening"
+      ],
+      "collision_check": {
+        "compared_against": "Live pool at a9e8c620b8ad156c6357c5a948976e3997cec00d with no worker_in_progress claim",
+        "result": "Deliberate serial News Editor descendant of completed WCP-670; no concurrent exclusive-path owner.",
+        "paths": [
+          "assets/news_editor/block-commands.js", "assets/news_editor/editor.js",
+          "assets/news_editor/editor.css", "tests/JavaScript/news_editor.test.mjs"
+        ]
+      },
+      "next_action": "Implement on the claimed feature branch, run focused and complete test suites, open a Worker PR and record its exact green head."
     }
   ],
   "recovery_queue": [],
