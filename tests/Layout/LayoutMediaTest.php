@@ -10,6 +10,7 @@ use App\Entity\User;
 use App\Entity\PageLayout;
 use App\Layout\LayoutImages;
 use App\Layout\LayoutValidator;
+use App\NewsEditor\RichDocument;
 use App\Service\MediaAssetUsageResolver;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
@@ -45,6 +46,8 @@ final class LayoutMediaTest extends KernelTestCase
         $referencedEntry=null;
         $decoyEntry=null;
         $malformedEntry=null;
+        $richEntry=null;
+        $richDecoyEntry=null;
 
         try {
             $em->persist($asset);
@@ -90,9 +93,23 @@ final class LayoutMediaTest extends KernelTestCase
                 ->setEditorDocument($malformedDocument)
                 ->setAuthor($author);
             $em->persist($malformedEntry);
+            $richEntry=(new ContentEntry())
+                ->setType(ContentEntry::TYPE_NEWS)->setTitle('Rich media reference')
+                ->setSlug('wcp-648-reference-'.$suffix)->setBody('Rich body')
+                ->setEditorDocument(RichDocument::PREFIX.json_encode(['version'=>2,'blocks'=>[
+                    ['type'=>'media','assetId'=>$assetId,'alt'=>'','caption'=>''],
+                ]], JSON_THROW_ON_ERROR))->setAuthor($author);
+            $richDecoyEntry=(new ContentEntry())
+                ->setType(ContentEntry::TYPE_NEWS)->setTitle('Rich media text decoy')
+                ->setSlug('wcp-648-decoy-'.$suffix)->setBody('Rich body')
+                ->setEditorDocument(RichDocument::PREFIX.json_encode(['version'=>2,'blocks'=>[
+                    ['type'=>'paragraph','content'=>[['text'=>'assetId: '.$decoyId,'marks'=>[]]]],
+                ]], JSON_THROW_ON_ERROR))->setAuthor($author);
+            $em->persist($richEntry);
+            $em->persist($richDecoyEntry);
             $em->flush();
 
-            self::assertContains('Seiten/News-Editor-Medien (1)',$usage->usages($asset));
+            self::assertContains('Seiten/News-Editor-Medien (2)',$usage->usages($asset));
             self::assertTrue($usage->isUsed($asset));
             self::assertNotContains('Seiten/News-Editor-Medien (1)',$usage->usages($decoy));
             self::assertFalse($usage->isUsed($decoy));
@@ -102,6 +119,8 @@ final class LayoutMediaTest extends KernelTestCase
             if ($referencedEntry instanceof ContentEntry && $em->contains($referencedEntry)) { $em->remove($referencedEntry); }
             if ($decoyEntry instanceof ContentEntry && $em->contains($decoyEntry)) { $em->remove($decoyEntry); }
             if ($malformedEntry instanceof ContentEntry && $em->contains($malformedEntry)) { $em->remove($malformedEntry); }
+            if ($richEntry instanceof ContentEntry && $em->contains($richEntry)) { $em->remove($richEntry); }
+            if ($richDecoyEntry instanceof ContentEntry && $em->contains($richDecoyEntry)) { $em->remove($richDecoyEntry); }
             foreach ([$author,$asset,$decoy,$malformed] as $entity) {
                 if ($em->contains($entity)) { $em->remove($entity); }
             }
