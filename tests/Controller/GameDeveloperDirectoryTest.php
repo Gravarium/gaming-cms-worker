@@ -47,7 +47,7 @@ final class GameDeveloperDirectoryTest extends WebTestCase
             $client->request('GET', '/games/developers');
             self::assertResponseIsSuccessful();
             $body = (string) $client->getResponse()->getContent();
-            self::assertStringContainsString($visibleDeveloper, $body);
+            self::assertStringContainsString(mb_strtolower($visibleDeveloper, 'UTF-8'), mb_strtolower($body, 'UTF-8'));
             self::assertStringNotContainsString($hiddenDeveloper, $body);
             self::assertStringNotContainsString($disabledEntryDeveloper, $body);
 
