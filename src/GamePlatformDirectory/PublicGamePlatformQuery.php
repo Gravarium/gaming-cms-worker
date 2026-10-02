@@ -61,7 +61,7 @@ final readonly class PublicGamePlatformQuery
     }
 
     /** @return array{platform: GamePlatform, releases: list<GameRelease>, total: int, totalPages: int}|null */
-    public function platform(string $slug, int $page): ?array
+    public function platform(string $slug, int $page, ?string $region = null, ?string $status = null, ?int $year = null): ?array
     {
         $this->assertPage($page);
 
@@ -77,6 +77,20 @@ final readonly class PublicGamePlatformQuery
             ->setParameter('slug', $slug)
             ->setParameter('cancelled', 'cancelled')
             ->setParameter('enabled', true);
+
+        if ($region !== null) {
+            $base->andWhere('release.region = :region')->setParameter('region', $region);
+        }
+        if ($status !== null) {
+            $base->andWhere('release.status = :status')->setParameter('status', $status);
+        }
+        if ($year !== null) {
+            $base
+                ->andWhere('release.releaseAt >= :yearStart')
+                ->andWhere('release.releaseAt < :yearEnd')
+                ->setParameter('yearStart', new \DateTimeImmutable($year.'-01-01 00:00:00'))
+                ->setParameter('yearEnd', new \DateTimeImmutable(($year + 1).'-01-01 00:00:00'));
+        }
 
         $count = clone $base;
         $total = (int) $count->select('COUNT(release.id)')->getQuery()->getSingleScalarResult();
@@ -111,6 +125,37 @@ final readonly class PublicGamePlatformQuery
             'total' => $total,
             'totalPages' => $totalPages,
         ];
+    }
+
+    /** @return array{platform: GamePlatform, releases: list<GameRelease>}|null */
+    public function feed(string $slug): ?array
+    {
+        /** @var list<GameRelease> $releases */
+        $releases = $this->entityManager->createQueryBuilder()
+            ->select('release', 'platform', 'entry', 'game', 'edition')
+            ->from(GameRelease::class, 'release')
+            ->join('release.platform', 'platform')
+            ->join('release.entry', 'entry')
+            ->join('entry.game', 'game')
+            ->leftJoin('release.edition', 'edition')
+            ->andWhere('platform.slug = :slug')
+            ->andWhere('release.status != :cancelled')
+            ->andWhere('entry.enabled = :enabled')
+            ->andWhere('game.enabled = :enabled')
+            ->setParameter('slug', $slug)
+            ->setParameter('cancelled', 'cancelled')
+            ->setParameter('enabled', true)
+            ->orderBy('release.releaseAt', 'ASC')
+            ->addOrderBy('release.id', 'ASC')
+            ->setMaxResults(100)
+            ->getQuery()
+            ->getResult();
+
+        if ($releases === []) {
+            return null;
+        }
+
+        return ['platform' => $releases[0]->getPlatform(), 'releases' => $releases];
     }
 
     private function assertPage(int $page): void
