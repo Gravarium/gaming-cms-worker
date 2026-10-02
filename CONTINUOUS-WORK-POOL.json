@@ -65680,22 +65680,24 @@
       "package_id": "WCP-666",
       "title": "Complete visual news draft duplication and trash lifecycle",
       "risk": "content_integrity_and_reversible_deletion",
-      "execution_state": "worker_in_progress",
-      "claim_state": "claimed",
+      "execution_state": "worker_complete_awaiting_trusted_review",
+      "claim_state": "locked_until_trusted_resolution",
       "claim_generation": 1,
       "claim_branch": "claim/wcp-666-news-draft-lifecycle-g1",
       "suggested_branch": "feature/wcp-666-news-draft-lifecycle-g1",
       "resume_branch": "feature/wcp-666-news-draft-lifecycle-g1",
       "claimed_on": "2026-10-02T15:22:00.000Z",
-      "lease_expires_at": "2026-10-02T22:22:00.000Z",
+      "lease_expires_at": null,
       "base_branch": "main",
       "base_sha": "9e083c63e7d888af36f93a23eb924c89fad2b971",
       "proposal_base_branch": "feature/wcp-665-news-revision-recovery-g1",
       "proposal_base_sha": "357aa7bef14ed54791db6a913f6215ad3ec307ba",
       "active_base_branch": "feature/wcp-665-news-revision-recovery-g1",
       "active_base_sha": "357aa7bef14ed54791db6a913f6215ad3ec307ba",
-      "active_head": "357aa7bef14ed54791db6a913f6215ad3ec307ba",
-      "last_observed_head": "357aa7bef14ed54791db6a913f6215ad3ec307ba",
+      "active_head": "d5d87d9361d4acd66a549003bb188420a0469d2e",
+      "last_observed_head": "d5d87d9361d4acd66a549003bb188420a0469d2e",
+      "last_verified_push_at": "2026-10-02T18:20:36.000Z",
+      "last_checkpoint_at": "2026-10-02T18:20:36.000Z",
       "dependencies": [
         "WCP-665"
       ],
@@ -65758,7 +65760,25 @@
           "tests/Controller/AdminNewsEditorTest.php"
         ]
       },
-      "next_action": "Implement visual duplication and reversible trash actions, push checkpoint and run exact-head Worker CI."
+      "worker_pr_state": "ready_for_review",
+      "worker_pr": 462,
+      "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/462",
+      "worker_pr_head_sha": "d5d87d9361d4acd66a549003bb188420a0469d2e",
+      "final_head": "d5d87d9361d4acd66a549003bb188420a0469d2e",
+      "completed_at": "2026-10-02T18:20:36.000Z",
+      "ci_run": 37026774028,
+      "ci_run_id": 37026774028,
+      "ci_conclusion": "success",
+      "ci_result": "success",
+      "last_ci_result": "success",
+      "ci_head": "d5d87d9361d4acd66a549003bb188420a0469d2e",
+      "last_ci_head": "d5d87d9361d4acd66a549003bb188420a0469d2e",
+      "final_changed_paths": [
+        "src/Controller/AdminNewsEditorController.php",
+        "templates/admin/news_editor/edit.html.twig",
+        "tests/Controller/AdminNewsEditorTest.php"
+      ],
+      "next_action": "Trusted review and integration decision on Worker PR #462 after prerequisite WCP-665 / PR #461; preserve exact green head."
     },
     {
       "priority": 667,
