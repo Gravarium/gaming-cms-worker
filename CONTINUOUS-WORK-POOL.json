@@ -64798,6 +64798,85 @@
       "last_checkpoint_at": "2026-10-02T08:25:53.000Z",
       "worker_pr": 453,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/453"
+    },
+    {
+      "priority": 659,
+      "package_id": "WCP-659",
+      "title": "Create news directly in first-party visual editor",
+      "risk": "editorial_persistence_and_slug_integrity",
+      "execution_state": "worker_in_progress",
+      "claim_state": "active_lease",
+      "claim_generation": 1,
+      "claim_branch": "claim/wcp-659-news-editor-creation-g1",
+      "suggested_branch": "feature/wcp-659-news-editor-creation-g1",
+      "resume_branch": "feature/wcp-659-news-editor-creation-g1",
+      "claimed_on": "2026-10-02T08:26:24.606Z",
+      "lease_expires_at": "2026-10-02T15:26:24.606Z",
+      "base_branch": "feature/wcp-657-visual-news-media-g1",
+      "base_sha": "9a24fad156553c6c9a6f1335a057f1a5a078c754",
+      "proposal_base_branch": "feature/wcp-657-visual-news-media-g1",
+      "proposal_base_sha": "9a24fad156553c6c9a6f1335a057f1a5a078c754",
+      "active_head": "9a24fad156553c6c9a6f1335a057f1a5a078c754",
+      "dependencies": [
+        "WCP-657"
+      ],
+      "proposal_kind": "worker_only",
+      "objective": "Create a titled draft directly in the first-party editor with CSRF, permission, module, unique slug, revision and audit safeguards.",
+      "allowed_paths": [
+        "src/Controller/AdminNewsEditorController.php",
+        "templates/admin/news_editor/",
+        "tests/Controller/AdminNewsEditorTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "CONTINUOUS-WORKER.md",
+        "CONTINUOUS-WORK-POOL.json",
+        ".github/workflows/",
+        "migrations/",
+        "src/Entity/",
+        "src/Repository/",
+        "src/Security/",
+        "templates/admin/content/form.html.twig",
+        "templates/admin/content/index.html.twig",
+        "templates/admin/dashboard.html.twig",
+        "assets/controllers/content_editor_controller.js",
+        "assets/content_media_picker.js",
+        "assets/styles/content-editor.css"
+      ],
+      "deliverables": [
+        "News editor index offers direct new-draft creation and opens the rich editor.",
+        "New entry is a typed v2 news draft with author, unique slug, initial revision and audit event.",
+        "Invalid title/CSRF or unauthorized access cannot create; read responses private.",
+        "Focused controller tests and full exact-head Worker CI."
+      ],
+      "tests": [
+        "Controller integration tests for creation and invalid input.",
+        "Full Worker CI on exact final head."
+      ],
+      "immutable_constraints": [
+        "worker-only-no-Trusted-merge-or-deployment",
+        "no-third-party-editor-or-paid-AI",
+        "preserve-existing-news-and-legacy-data",
+        "no-security-test-or-CI-weakening",
+        "no-overlap-with-unrelated-active-claims"
+      ],
+      "collision_check": {
+        "compared_against": "Current continuous/work-pool-v4 and exact green WCP-657 head 9a24fad156553c6c9a6f1335a057f1a5a078c754",
+        "result": "Deliberate news descendant. Active WCP-658 is disjoint game directory work; no shared UI paths.",
+        "paths": [
+          "src/Controller/AdminNewsEditorController.php",
+          "templates/admin/news_editor/",
+          "tests/Controller/AdminNewsEditorTest.php"
+        ]
+      },
+      "next_action": "Implement direct draft creation and test exact-head Worker CI.",
+      "last_verified_push_at": null
     }
   ],
   "recovery_queue": [],
