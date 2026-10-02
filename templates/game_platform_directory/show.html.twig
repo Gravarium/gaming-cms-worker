@@ -7,7 +7,23 @@
         <h1>{{ platform.name }}</h1>
         <p>{{ total }} sichtbare Veröffentlichung{% if total != 1 %}en{% endif %}</p>
         <a href="{{ path('app_game_platform_directory') }}">Alle Plattformen</a>
+        <a href="{{ path('app_game_platform_feed_rss', {slug: platform.slug}) }}">RSS</a>
+        <a href="{{ path('app_game_platform_feed_ical', {slug: platform.slug}) }}">Kalender</a>
     </header>
+
+    <form method="get">
+        <label>Region <input name="region" maxlength="60" value="{{ selectedRegion ?? '' }}"></label>
+        <label>Status
+            <select name="status">
+                <option value="">Alle</option>
+                {% for value, label in {announced: 'Angekündigt', released: 'Veröffentlicht', delayed: 'Verschoben'} %}
+                    <option value="{{ value }}"{% if selectedStatus == value %} selected{% endif %}>{{ label }}</option>
+                {% endfor %}
+            </select>
+        </label>
+        <label>Jahr <input name="year" inputmode="numeric" maxlength="4" value="{{ selectedYear ?? '' }}"></label>
+        <button type="submit">Filtern</button>
+    </form>
 
     <section class="portal-cards" aria-label="Veröffentlichungen für {{ platform.name }}">
         {% for release in releases %}
@@ -22,9 +38,9 @@
 
     {% if totalPages > 1 %}
         <nav aria-label="Veröffentlichungsseiten">
-            {% if page > 1 %}<a href="{{ path('app_game_platform_show', {slug: platform.slug, page: page - 1}) }}">Zurück</a>{% endif %}
+            {% if page > 1 %}<a href="{{ path('app_game_platform_show', {slug: platform.slug, page: page - 1, region: selectedRegion, status: selectedStatus, year: selectedYear}) }}">Zurück</a>{% endif %}
             <span>Seite {{ page }} von {{ totalPages }}</span>
-            {% if page < totalPages %}<a href="{{ path('app_game_platform_show', {slug: platform.slug, page: page + 1}) }}">Weiter</a>{% endif %}
+            {% if page < totalPages %}<a href="{{ path('app_game_platform_show', {slug: platform.slug, page: page + 1, region: selectedRegion, status: selectedStatus, year: selectedYear}) }}">Weiter</a>{% endif %}
         </nav>
     {% endif %}
 </main>
