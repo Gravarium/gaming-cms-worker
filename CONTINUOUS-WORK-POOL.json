@@ -63573,14 +63573,14 @@
       "package_id": "WCP-650",
       "title": "Advanced first-party news authoring and structured editing",
       "risk": "high_content_integrity_and_accessibility",
-      "execution_state": "worker_in_progress",
-      "claim_state": "active_lease",
+      "execution_state": "worker_complete_awaiting_trusted_review",
+      "claim_state": "locked_until_trusted_resolution",
       "claim_generation": 1,
       "claim_branch": "claim/wcp-650-advanced-news-authoring-g1",
       "suggested_branch": "feature/wcp-650-advanced-news-authoring-g1",
       "resume_branch": "feature/wcp-650-advanced-news-authoring-g1",
       "claimed_on": "2026-10-01T21:18:56.195Z",
-      "lease_expires_at": "2026-10-02T04:26:16.867Z",
+      "lease_expires_at": null,
       "base_branch": "feature/wcp-648-owned-rich-news-editor-g1",
       "base_sha": "a7c5ccbb5db5fc507a599f8c1f6228ac9d1a75f1",
       "proposal_base_branch": "feature/wcp-648-owned-rich-news-editor-g1",
@@ -63650,11 +63650,22 @@
           "tests/Controller/AdminNewsEditorTest.php"
         ]
       },
-      "next_action": "GitHub Actions on exact head 6afdbee is running; inspect outcome, fix failures, then continue keyboard, paste and table editing.",
+      "next_action": "Await independent Worker review and later Trusted integration; no merge or deployment.",
       "last_verified_push_at": "2026-10-01T21:26:16.867Z",
       "worker_pr": 444,
-      "last_checkpoint_at": "2026-10-01T21:26:16.867Z",
-      "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/444"
+      "last_checkpoint_at": "2026-10-02T02:18:00Z",
+      "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/444",
+      "last_observed_head": "6afdbee29291c8f07255b4451b9775823b17e0a6",
+      "worker_pr_state": "ready_for_review",
+      "last_ci_run_id": 36928508072,
+      "last_ci_head": "6afdbee29291c8f07255b4451b9775823b17e0a6",
+      "last_ci_result": "success",
+      "completion_report": [
+        "Worker PR #444 ready for review at exact head 6afdbee29291c8f07255b4451b9775823b17e0a6.",
+        "Worker CI run 36928508072: PHP/Symfony and PostgreSQL 18 jobs successful; 1,654 PHP tests/12,025 assertions plus JavaScript, PHPStan, audit, lints, AssetMapper, Doctrine and migrations passed.",
+        "Nine declared editor paths only; bounded history, keyboard/paste/table behavior and escaped typed blocks preserve WCP-648 security and legacy-data boundaries.",
+        "No Trusted merge or deployment."
+      ]
     },
     {
       "priority": 651,
