@@ -53,7 +53,7 @@ final readonly class PublicGameDeveloperQuery
             ->getArrayResult();
 
         return [
-            'developers' => array_values(array_map(static fn (array $row): string => $row['developer'], $rows)),
+            'developers' => array_map(static fn (array $row): string => $row['developer'], $rows),
             'total' => $total,
             'totalPages' => $totalPages,
         ];
