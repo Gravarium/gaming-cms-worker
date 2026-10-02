@@ -1,0 +1,31 @@
+{% extends 'base.html.twig' %}
+{% block title %}Spiele-Plattformen{% endblock %}
+{% block body %}
+<main class="content-shell">
+    <header class="page-header">
+        <p class="eyebrow">Spielekatalog</p>
+        <h1>Plattformen</h1>
+        <p>Entdecke Plattformen mit sichtbaren, nicht abgesagten Spieleveröffentlichungen.</p>
+        <a class="button-link button-secondary" href="{{ path('app_game_catalogue_index') }}">Zum Spielekatalog</a>
+    </header>
+
+    <section class="portal-cards" aria-label="Plattformen">
+        {% for platform in platforms %}
+            <article class="portal-card">
+                <h2><a href="{{ path('app_game_platform_show', {slug: platform.slug}) }}">{{ platform.name }}</a></h2>
+                <p>Sichtbare Veröffentlichungen für diese Plattform ansehen.</p>
+            </article>
+        {% else %}
+            <p>Aktuell sind keine Plattformen mit sichtbaren Veröffentlichungen verfügbar.</p>
+        {% endfor %}
+    </section>
+
+    {% if totalPages > 1 %}
+        <nav aria-label="Plattform-Seiten">
+            {% if page > 1 %}<a href="{{ path('app_game_platform_directory', {page: page - 1}) }}">Zurück</a>{% endif %}
+            <span>Seite {{ page }} von {{ totalPages }}</span>
+            {% if page < totalPages %}<a href="{{ path('app_game_platform_directory', {page: page + 1}) }}">Weiter</a>{% endif %}
+        </nav>
+    {% endif %}
+</main>
+{% endblock %}
