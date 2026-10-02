@@ -16,6 +16,60 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 final class AdminNewsEditorTest extends WebTestCase
 {
+    public function testWorklistSearchStatusAndPaginationKeepEntriesReachable(): void
+    {
+        $client = static::createClient();
+        [$user, $original] = $this->entry($client);
+        $em = $client->getContainer()->get(EntityManagerInterface::class);
+        $prefix = 'Worklist '.bin2hex(random_bytes(5));
+        $drafts = [];
+        for ($i = 0; $i < 27; $i++) {
+            $entry = (new ContentEntry())->setAuthor($user)->setType(ContentEntry::TYPE_NEWS)
+                ->setTitle($prefix.' draft '.$i)->setSlug('worklist-'.bin2hex(random_bytes(8)))->setBody('Draft');
+            $em->persist($entry);
+            $drafts[] = $entry;
+        }
+        $review = (new ContentEntry())->setAuthor($user)->setType(ContentEntry::TYPE_NEWS)
+            ->setStatus(ContentEntry::STATUS_REVIEW)->setTitle($prefix.' review')
+            ->setSlug('worklist-'.bin2hex(random_bytes(8)))->setBody('Review');
+        $hidden = (new ContentEntry())->setAuthor($user)->setType(ContentEntry::TYPE_PAGE)
+            ->setTitle($prefix.' page')->setSlug('worklist-'.bin2hex(random_bytes(8)))->setBody('Page');
+        $em->persist($review);
+        $em->persist($hidden);
+        $em->flush();
+        $client->loginUser($user);
+
+        $crawler = $client->request('GET', '/admin/news-editor?q='.rawurlencode($prefix).'&status=draft');
+        self::assertResponseIsSuccessful();
+        self::assertCount(25, $crawler->filter('tbody tr'));
+        self::assertCount(1, $crawler->filter('a:contains("Nächste Seite")'));
+        self::assertStringNotContainsString($prefix.' review', $client->getResponse()->getContent() ?: '');
+        self::assertStringContainsString('private', strtolower((string) $client->getResponse()->headers->get('Cache-Control')));
+        $crawler = $client->request('GET', '/admin/news-editor?q='.rawurlencode($prefix).'&status=draft&page=2');
+        self::assertResponseIsSuccessful();
+        self::assertCount(2, $crawler->filter('tbody tr'));
+        self::assertCount(0, $crawler->filter('a:contains("Nächste Seite")'));
+        self::assertCount(1, $crawler->filter('a:contains("Vorherige Seite")'));
+
+        $client->request('GET', '/admin/news-editor?q='.rawurlencode($prefix).'&status=review');
+        self::assertResponseIsSuccessful();
+        self::assertStringContainsString($prefix.' review', $client->getResponse()->getContent() ?: '');
+        self::assertStringNotContainsString($prefix.' page', $client->getResponse()->getContent() ?: '');
+        self::assertStringNotContainsString($prefix.' draft', $client->getResponse()->getContent() ?: '');
+        self::assertNotNull($original->getId());
+    }
+
+    public function testWorklistRejectsUnboundedAndInvalidFilters(): void
+    {
+        $client = static::createClient();
+        [$user] = $this->entry($client);
+        $client->loginUser($user);
+        foreach (['page=0', 'page=1001', 'page=2x', 'status=published', 'status[]=draft', 'q='.str_repeat('x', 81)] as $query) {
+            $client->request('GET', '/admin/news-editor?'.$query);
+            self::assertResponseStatusCodeSame(404);
+        }
+    }
+
     public function testAutosaveCreatesRevisionAndPreventsStaleOverwrite(): void
     {
         $client = static::createClient();
