@@ -64705,6 +64705,89 @@
       },
       "next_action": "Implement owner-scoped visual image and fixed-provider video previews, then exact-head CI.",
       "last_verified_push_at": null
+    },
+    {
+      "priority": 658,
+      "package_id": "WCP-658",
+      "title": "Browse game platforms and their visible releases",
+      "risk": "public_catalogue_visibility_and_query_bounds",
+      "execution_state": "worker_in_progress",
+      "claim_state": "active_lease",
+      "claim_generation": 1,
+      "claim_branch": "claim/wcp-658-game-platform-directory-g1",
+      "suggested_branch": "feature/wcp-658-game-platform-directory-g1",
+      "resume_branch": "feature/wcp-658-game-platform-directory-g1",
+      "claimed_on": "2026-10-02T08:26:00.000Z",
+      "lease_expires_at": "2026-10-02T15:26:00.000Z",
+      "base_branch": "main",
+      "base_sha": "f7878a00e3faf08ddb319b6396d3f29dcc6f536a",
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "f7878a00e3faf08ddb319b6396d3f29dcc6f536a",
+      "active_head": "f7878a00e3faf08ddb319b6396d3f29dcc6f536a",
+      "dependencies": [],
+      "proposal_kind": "worker_only",
+      "objective": "Add a bounded public platform directory and strict platform profile pages backed only by visible game-catalogue entries and non-cancelled releases, plus a Gaming-gated Page Builder widget. Read existing catalogue data only.",
+      "allowed_paths": [
+        "src/GamePlatformDirectory/",
+        "src/Controller/GameCatalogue/GamePlatformDirectoryController.php",
+        "src/Widget/GamePlatformDirectoryWidgetProvider.php",
+        "templates/game_platform_directory/",
+        "templates/widget/game_platform_directory.html.twig",
+        "tests/Controller/GamePlatformDirectoryTest.php",
+        "tests/Widget/GamePlatformDirectoryWidgetProviderTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "CONTINUOUS-WORKER.md",
+        "CONTINUOUS-WORK-POOL.json",
+        ".github/workflows/",
+        "migrations/",
+        "src/Entity/",
+        "src/Repository/",
+        "src/Security/",
+        "templates/game_catalogue/"
+      ],
+      "deliverables": [
+        "Paginated public platform directory exposes only platforms with non-cancelled releases for enabled catalogue entries and enabled games.",
+        "Strict slug profile pages list bounded visible releases with deterministic ordering and fail closed for hidden, empty or malformed platforms.",
+        "Gaming-gated Page Builder widget links to the public platform directory without disclosing hidden catalogue data.",
+        "Positive and negative visibility, module gate, page/slug bounds and widget tests; complete exact-head Worker CI."
+      ],
+      "tests": [
+        "Focused controller and widget PHPUnit tests for visibility, cancellation, disabled module and invalid input.",
+        "Complete Worker CI on exact final head."
+      ],
+      "immutable_constraints": [
+        "worker-only-no-Trusted-merge-or-deployment",
+        "read-only-no-schema-or-entity-change",
+        "preserve-existing-catalogue-visibility-and-module-gates",
+        "bounded-queries-and-deterministic-order",
+        "no-security-test-or-CI-weakening",
+        "no-overlap-with-active-WCP-651-652-653-657"
+      ],
+      "collision_check": {
+        "compared_against": "Current continuous/work-pool-v4 and Worker main f7878a00e3faf08ddb319b6396d3f29dcc6f536a",
+        "result": "Seven new path groups are disjoint from active publisher, provider, genre and news-editor claims; existing catalogue entities are read-only.",
+        "paths": [
+          "src/GamePlatformDirectory/",
+          "src/Controller/GameCatalogue/GamePlatformDirectoryController.php",
+          "src/Widget/GamePlatformDirectoryWidgetProvider.php",
+          "templates/game_platform_directory/",
+          "templates/widget/game_platform_directory.html.twig",
+          "tests/Controller/GamePlatformDirectoryTest.php",
+          "tests/Widget/GamePlatformDirectoryWidgetProviderTest.php"
+        ]
+      },
+      "next_action": "Implement bounded platform directory, strict platform pages, widget and negative visibility tests.",
+      "last_observed_head": "f7878a00e3faf08ddb319b6396d3f29dcc6f536a",
+      "last_verified_push_at": null,
+      "worker_pr_state": "not_created"
     }
   ],
   "recovery_queue": [],
