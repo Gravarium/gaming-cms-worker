@@ -64319,6 +64319,85 @@
       "last_observed_head": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
       "last_verified_push_at": null,
       "worker_pr_state": "not_created"
+    },
+    {
+      "priority": 654,
+      "package_id": "WCP-654",
+      "title": "Long-form news outline and contextual block editing",
+      "risk": "content_integrity_and_editor_accessibility",
+      "execution_state": "worker_in_progress",
+      "claim_state": "active_lease",
+      "claim_generation": 1,
+      "claim_branch": "claim/wcp-654-long-form-news-navigation-g1",
+      "suggested_branch": "feature/wcp-654-long-form-news-navigation-g1",
+      "resume_branch": "feature/wcp-654-long-form-news-navigation-g1",
+      "claimed_on": "2026-10-02T07:24:17.618Z",
+      "lease_expires_at": "2026-10-02T14:24:17.618Z",
+      "base_branch": "feature/wcp-650-advanced-news-authoring-g1",
+      "base_sha": "6afdbee29291c8f07255b4451b9775823b17e0a6",
+      "proposal_base_branch": "feature/wcp-650-advanced-news-authoring-g1",
+      "proposal_base_sha": "6afdbee29291c8f07255b4451b9775823b17e0a6",
+      "active_head": "6afdbee29291c8f07255b4451b9775823b17e0a6",
+      "dependencies": [
+        "WCP-650"
+      ],
+      "proposal_kind": "worker_only",
+      "objective": "Make lengthy news drafts practical through a live article outline, heading navigation, contextual insertion and duplication of valid blocks, with bounded behavior and keyboard focus that preserves the typed document. No AI or third-party editor code.",
+      "allowed_paths": [
+        "assets/news_editor/",
+        "templates/admin/news_editor/",
+        "tests/JavaScript/news_editor.test.mjs"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "CONTINUOUS-WORKER.md",
+        "CONTINUOUS-WORK-POOL.json",
+        ".github/workflows/",
+        "migrations/",
+        "src/Entity/",
+        "src/Repository/",
+        "src/Security/",
+        "templates/admin/content/form.html.twig",
+        "templates/admin/content/index.html.twig",
+        "templates/admin/dashboard.html.twig",
+        "assets/controllers/content_editor_controller.js",
+        "assets/content_media_picker.js",
+        "assets/styles/content-editor.css"
+      ],
+      "deliverables": [
+        "Live outline lists the headings in document order with level and moves focus to the selected heading.",
+        "Add blocks at the current editing position and duplicate bounded valid blocks without losing content or document history.",
+        "Keyboard and focus interactions work with the typed editor and do not introduce unsafe HTML.",
+        "Focused browser-side tests and full exact-head Worker CI."
+      ],
+      "tests": [
+        "JavaScript tests for outline extraction, contextual insertion, duplication bounds and hostile text.",
+        "Complete Worker CI on exact final head."
+      ],
+      "immutable_constraints": [
+        "worker-only-no-Trusted-merge-or-deployment",
+        "no-third-party-editor-or-paid-AI",
+        "preserve-WCP-648-and-650-security-and-legacy-data",
+        "no-security-test-or-CI-weakening",
+        "no-overlap-with-unrelated-active-claims"
+      ],
+      "collision_check": {
+        "compared_against": "Current continuous/work-pool-v4 and exact green WCP-650 head 6afdbee29291c8f07255b4451b9775823b17e0a6",
+        "result": "Only deliberate descendant overlap with completed WCP-648 and WCP-650; unrelated active WCP-651/652/653 and locked shared UI paths are disjoint.",
+        "paths": [
+          "assets/news_editor/",
+          "templates/admin/news_editor/",
+          "tests/JavaScript/news_editor.test.mjs"
+        ]
+      },
+      "next_action": "Implement outline and contextual block editing on exact predecessor head, then run Worker CI.",
+      "last_verified_push_at": null
     }
   ],
   "recovery_queue": [],
