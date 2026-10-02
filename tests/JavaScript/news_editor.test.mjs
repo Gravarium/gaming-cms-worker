@@ -9,6 +9,50 @@ import {AutosaveState} from '../../assets/news_editor/autosave-state.js';
 import {structuredMarkdown, importMarkdownArticle} from '../../assets/news_editor/markdown-paste.js';
 import {articleMarkdown} from '../../assets/news_editor/markdown-io.js';
 import {applyBlockOperation, resolveBlockShortcut} from '../../assets/news_editor/keyboard-blocks.js';
+import {structuredHtml} from '../../assets/news_editor/html-paste.js';
+
+test('structured HTML paste creates typed inert blocks and safe inline marks', () => {
+  const text = nodeValue => ({nodeType: 3, nodeValue});
+  const tag = (tagName, childNodes = [], attributes = {}) => ({nodeType: 1, tagName, childNodes, getAttribute: name => attributes[name] ?? null});
+  const root = tag('BODY', [
+    tag('H1', [text('Titel')]),
+    tag('P', [text('Text '), tag('STRONG', [text('fett')]), tag('A', [text(' sicher')], {href: '/news'}), tag('A', [text(' unsicher')], {href: 'javascript:alert(1)'})]),
+    tag('UL', [tag('LI', [text('Eins')]), tag('LI', [tag('EM', [text('Zwei')])])]),
+    tag('BLOCKQUOTE', [text('Zitat')]),
+    tag('PRE', [tag('CODE', [text('const x = 1;')])]),
+    tag('HR'),
+  ]);
+  const blocks = structuredHtml(root);
+  assert.deepEqual(blocks.map(block => block.type), ['heading', 'paragraph', 'list', 'quote', 'code', 'separator']);
+  assert.equal(blocks[0].level, 2);
+  assert.deepEqual(blocks[1].content[1], {text: 'fett', marks: ['strong']});
+  assert.deepEqual(blocks[1].content[2], {text: ' sicher', marks: ['link'], href: '/news'});
+  assert.deepEqual(blocks[1].content[3], {text: ' unsicher', marks: []});
+  assert.deepEqual(blocks[2].items[1], [{text: 'Zwei', marks: ['em']}]);
+  assert.equal(blocks[4].text, 'const x = 1;');
+});
+
+test('structured HTML paste handles tables and discards active or embedded content', () => {
+  const text = nodeValue => ({nodeType: 3, nodeValue});
+  const tag = (tagName, childNodes = [], attributes = {}) => ({nodeType: 1, tagName, childNodes, getAttribute: name => attributes[name] ?? null});
+  const root = tag('BODY', [
+    tag('SCRIPT', [text('alert(1)')]),
+    tag('P', [text('Vor '), tag('IMG', [], {src: 'https://evil.test/pixel', alt: 'Cover'}), tag('IFRAME', [text('evil')])]),
+    tag('TABLE', [
+      tag('THEAD', [tag('TR', [tag('TH', [text('A')]), tag('TH', [text('B')])])]),
+      tag('TBODY', [tag('TR', [tag('TD', [text('1')]), tag('TD', [text('2')])])]),
+    ]),
+  ]);
+  const blocks = structuredHtml(root);
+  assert.deepEqual(blocks.map(block => block.type), ['paragraph', 'table']);
+  assert.equal(blocks[0].content.map(run => run.text).join(''), 'Vor [Bild: Cover]');
+  assert.equal(JSON.stringify(blocks).includes('evil.test'), false);
+  assert.equal(JSON.stringify(blocks).includes('alert'), false);
+  assert.equal(blocks[1].header, true);
+  assert.equal(blocks[1].rows[1][1][0].text, '2');
+  assert.equal(structuredHtml(tag('BODY', [tag('P', [text('ordinary inline paste')])])), null);
+  assert.equal(structuredHtml(tag('BODY', [tag('PRE', [text('x'.repeat(20001))])])), null);
+});
 
 test('Markdown export and import preserve long-form text, links, tables and fenced code', () => {
   const document = {version: 2, blocks: [
