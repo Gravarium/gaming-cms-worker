@@ -65533,22 +65533,22 @@
       "package_id": "WCP-665",
       "title": "Review and restore visual news revisions",
       "risk": "high_content_recovery_and_revision_scope",
-      "execution_state": "worker_in_progress",
-      "claim_state": "claimed",
+      "execution_state": "worker_complete_awaiting_trusted_review",
+      "claim_state": "locked_until_trusted_resolution",
       "claim_generation": 1,
       "claim_branch": "claim/wcp-665-news-revision-recovery-g1",
       "suggested_branch": "feature/wcp-665-news-revision-recovery-g1",
       "resume_branch": "feature/wcp-665-news-revision-recovery-g1",
       "claimed_on": "2026-10-02T14:31:00.000Z",
-      "lease_expires_at": "2026-10-02T21:31:00.000Z",
+      "lease_expires_at": null,
       "base_branch": "main",
       "base_sha": "9e083c63e7d888af36f93a23eb924c89fad2b971",
       "proposal_base_branch": "feature/wcp-664-news-review-handoff-g1",
       "proposal_base_sha": "673e0d384896f7c70d8455273c09bcfdff1ea022",
       "active_base_branch": "feature/wcp-664-news-review-handoff-g1",
       "active_base_sha": "673e0d384896f7c70d8455273c09bcfdff1ea022",
-      "active_head": "673e0d384896f7c70d8455273c09bcfdff1ea022",
-      "last_observed_head": "673e0d384896f7c70d8455273c09bcfdff1ea022",
+      "active_head": "357aa7bef14ed54791db6a913f6215ad3ec307ba",
+      "last_observed_head": "357aa7bef14ed54791db6a913f6215ad3ec307ba",
       "dependencies": [
         "WCP-664"
       ],
@@ -65616,7 +65616,29 @@
           "tests/Controller/AdminNewsEditorTest.php"
         ]
       },
-      "next_action": "Implement bounded revision history, preview and safe restore, then push a checkpoint and run exact-head Worker CI."
+      "next_action": "Trusted review and integration decision on Worker PR #461 after prerequisite WCP-664 / PR #460; preserve exact green head.",
+      "last_verified_push_at": "2026-10-02T14:38:10.000Z",
+      "last_checkpoint_at": "2026-10-02T14:38:10.000Z",
+      "worker_pr_state": "ready_for_review",
+      "worker_pr": 461,
+      "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/461",
+      "worker_pr_head_sha": "357aa7bef14ed54791db6a913f6215ad3ec307ba",
+      "final_head": "357aa7bef14ed54791db6a913f6215ad3ec307ba",
+      "completed_at": "2026-10-02T14:38:10.000Z",
+      "ci_run": 37020731893,
+      "ci_conclusion": "success",
+      "ci_head": "357aa7bef14ed54791db6a913f6215ad3ec307ba",
+      "ci_run_id": 37020731893,
+      "ci_result": "success",
+      "last_ci_head": "357aa7bef14ed54791db6a913f6215ad3ec307ba",
+      "last_ci_result": "success",
+      "final_changed_paths": [
+        "src/Controller/AdminNewsEditorController.php",
+        "templates/admin/news_editor/edit.html.twig",
+        "templates/admin/news_editor/history.html.twig",
+        "templates/admin/news_editor/revision.html.twig",
+        "tests/Controller/AdminNewsEditorTest.php"
+      ]
     }
   ],
   "recovery_queue": [],
