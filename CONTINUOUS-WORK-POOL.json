@@ -63226,18 +63226,18 @@
       "risk": "medium",
       "execution_state": "worker_in_progress",
       "claim_state": "active",
-      "claim_generation": 1,
-      "claim_branch": "claim/wcp-641-match-schedule-input-g1",
+      "claim_generation": 2,
+      "claim_branch": "claim/wcp-641-match-schedule-input-g2",
       "suggested_branch": "feature/wcp-641-match-schedule-input-g1",
       "resume_branch": "feature/wcp-641-match-schedule-input-g1",
-      "claimed_on": "2026-10-01T11:51:48Z",
+      "claimed_on": "2026-10-02T09:18:54Z",
       "base_branch": "main",
       "base_sha": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
       "proposal_base_branch": "main",
       "proposal_base_sha": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
       "active_base_branch": "main",
       "active_base_sha": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
-      "active_head": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
+      "active_head": "85d7996a5162ed1abdd0cc27dd0960018154ec52",
       "dependencies": [],
       "proposal_kind": "worker_only",
       "objective": "Make manager-entered competition match times deterministic and safe for the schedule/calendar workflow: accept explicit local datetime or RFC3339 offset forms, reject relative or normalized-invalid values, normalize persisted instants to UTC, and keep current permission, module, match ownership and CSRF gates. No schema changes.",
@@ -63289,7 +63289,10 @@
           "tests/Controller/AdminCompetitionScheduleTest.php"
         ]
       },
-      "next_action": "Implement strict UTC schedule input and focused regression tests."
+      "next_action": "Fix AdminCompetitionScheduleTest session setup before CSRF token creation; rerun complete exact-head Worker CI without changing application security gates.",
+      "worker_pr": 436,
+      "ci_run_id": 36858475489,
+      "ci_state": "failed"
     },
     {
       "priority": 642,
