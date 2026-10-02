@@ -69,6 +69,30 @@ final class GamePlatformDirectoryTest extends WebTestCase
             self::assertSelectorTextContains('body', $visibleGame->getName());
             self::assertSelectorTextContains('body', 'EU');
 
+            $client->request('GET', '/games/platforms/'.$visiblePlatform->getSlug(), [
+                'region' => 'EU',
+                'status' => 'announced',
+                'year' => '2030',
+            ]);
+            self::assertResponseIsSuccessful();
+            self::assertSelectorTextContains('body', $visibleGame->getName());
+
+            foreach ([
+                ['status' => 'cancelled'],
+                ['status' => ['announced']],
+                ['region' => "EU\nInjected"],
+                ['region' => str_repeat('x', 61)],
+                ['year' => '1969'],
+                ['year' => '2201'],
+                ['year' => ['2030']],
+            ] as $invalidFilter) {
+                $client->request('GET', '/games/platforms/'.$visiblePlatform->getSlug(), $invalidFilter);
+                self::assertResponseStatusCodeSame(404);
+            }
+
+            $client->request('GET', '/games/platforms/'.$visiblePlatform->getSlug(), ['region' => 'US']);
+            self::assertResponseStatusCodeSame(404);
+
             foreach ([$cancelledPlatform, $hiddenPlatform, $disabledEntryPlatform] as $platform) {
                 $client->request('GET', '/games/platforms/'.$platform->getSlug());
                 self::assertResponseStatusCodeSame(404);
