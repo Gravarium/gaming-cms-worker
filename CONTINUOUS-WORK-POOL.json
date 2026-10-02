@@ -64325,14 +64325,14 @@
       "package_id": "WCP-654",
       "title": "Long-form news outline and contextual block editing",
       "risk": "content_integrity_and_editor_accessibility",
-      "execution_state": "worker_in_progress",
-      "claim_state": "active_lease",
+      "execution_state": "worker_complete_awaiting_trusted_review",
+      "claim_state": "locked_until_trusted_resolution",
       "claim_generation": 1,
       "claim_branch": "claim/wcp-654-long-form-news-navigation-g1",
       "suggested_branch": "feature/wcp-654-long-form-news-navigation-g1",
       "resume_branch": "feature/wcp-654-long-form-news-navigation-g1",
       "claimed_on": "2026-10-02T07:24:17.618Z",
-      "lease_expires_at": "2026-10-02T14:28:44.519Z",
+      "lease_expires_at": null,
       "base_branch": "feature/wcp-650-advanced-news-authoring-g1",
       "base_sha": "6afdbee29291c8f07255b4451b9775823b17e0a6",
       "proposal_base_branch": "feature/wcp-650-advanced-news-authoring-g1",
@@ -64396,11 +64396,15 @@
           "tests/JavaScript/news_editor.test.mjs"
         ]
       },
-      "next_action": "Await exact-head full Worker CI, inspect errors if any, then final review of editor interaction and mark ready.",
+      "next_action": "Trusted review and integration decision on Worker PR #449; preserve exact green head. No Worker edits to locked package.",
       "last_verified_push_at": "2026-10-02T07:28:44.519Z",
       "last_checkpoint_at": "2026-10-02T07:28:44.519Z",
       "worker_pr": 449,
-      "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/449"
+      "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/449",
+      "ci_run": 36978744269,
+      "ci_conclusion": "success",
+      "ci_head": "2b24daf63357e89c33104957f6498b708c2356ab",
+      "completed_at": "2026-10-02T07:34:08.017Z"
     }
   ],
   "recovery_queue": [],
