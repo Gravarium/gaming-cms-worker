@@ -6,6 +6,28 @@ import {articleOutline, insertAfter, withinDocumentLimits} from '../../assets/ne
 import {editTable} from '../../assets/news_editor/table-ops.js';
 import {safeEditorHref, clipboardRuns, editList, replaceArticle, findArticleBlocks} from '../../assets/news_editor/authoring.js';
 import {AutosaveState} from '../../assets/news_editor/autosave-state.js';
+import {structuredMarkdown} from '../../assets/news_editor/markdown-paste.js';
+
+test('structured Markdown paste makes safe typed article blocks', () => {
+  const blocks = structuredMarkdown('# Intro **stark**\n\n- Eins\n- [Zwei](https://example.test/x)\n\n> Zitat\n\nA | B\n--- | ---\nX | Y\n\n```json\n{"x":1}\n```\n\n---');
+  assert.deepEqual(blocks.map(block => block.type), ['heading', 'list', 'quote', 'table', 'code', 'separator']);
+  assert.equal(blocks[0].level, 2);
+  assert.deepEqual(blocks[0].content[1], {text: 'stark', marks: ['strong']});
+  assert.deepEqual(blocks[1].items[1], [{text: 'Zwei', marks: ['link'], href: 'https://example.test/x'}]);
+  assert.equal(blocks[3].rows[1][1][0].text, 'Y');
+  assert.equal(blocks[4].text, '{"x":1}');
+  assert.equal(withinDocumentLimits({version: 2, blocks}), true);
+});
+
+test('structured paste keeps active HTML inert and discards unsafe link targets', () => {
+  const blocks = structuredMarkdown('## <img src=x onerror=1>\n\n- [unsafe](javascript:alert(1))\n- `code`');
+  assert.equal(blocks[0].content[0].text, '<img src=x onerror=1>');
+  assert.deepEqual(blocks[1].items[0], [{text: 'unsafe', marks: []}]);
+  assert.deepEqual(blocks[1].items[1], [{text: 'code', marks: ['code']}]);
+  assert.equal(structuredMarkdown('plain paragraph only'), null);
+  assert.equal(structuredMarkdown('```js\nnot closed'), null);
+  assert.equal(structuredMarkdown('## ' + 'x'.repeat(50001)), null);
+});
 
 test('news editor extracts only fixed-provider video IDs', () => {
   assert.deepEqual(parseVideoUrl('https://www.youtube.com/watch?v=abc123_DEF0'), {provider: 'youtube', videoId: 'abc123_DEF0'});
