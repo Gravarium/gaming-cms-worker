@@ -65105,6 +65105,84 @@
       "ci_conclusion": "success",
       "ci_head": "ca64b3a450d73f513ed6ab8f7dbcbb548215f31e",
       "completed_at": "2026-10-02T08:40:40.604Z"
+    },
+    {
+      "priority": 661,
+      "package_id": "WCP-661",
+      "title": "Browse game developers and their visible catalogue",
+      "risk": "public_catalogue_visibility_and_unbounded_free_text",
+      "execution_state": "worker_in_progress",
+      "claim_state": "active",
+      "claim_generation": 1,
+      "claim_branch": "claim/wcp-661-game-developer-directory-g1",
+      "suggested_branch": "feature/wcp-661-game-developer-directory-g1",
+      "resume_branch": "feature/wcp-661-game-developer-directory-g1",
+      "claimed_on": "2026-10-02T09:30:12.693Z",
+      "base_branch": "main",
+      "base_sha": "50e466d457a96e7795973cb7b625fe82a33acb92",
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "50e466d457a96e7795973cb7b625fe82a33acb92",
+      "active_head": "50e466d457a96e7795973cb7b625fe82a33acb92",
+      "dependencies": [],
+      "proposal_kind": "worker_only",
+      "objective": "Add a bounded public directory for developer names already stored on visible game catalogue entries, with case-insensitive lookup, deterministic pagination and a Page Builder widget. Preserve Gaming module and catalogue visibility gates; no schema or mutation changes.",
+      "allowed_paths": [
+        "src/GameDeveloperDirectory/",
+        "src/Controller/GameCatalogue/GameDeveloperDirectoryController.php",
+        "src/Widget/GameDeveloperDirectoryWidgetProvider.php",
+        "templates/game_developer_directory/",
+        "templates/widget/game_developer_directory.html.twig",
+        "tests/Controller/GameDeveloperDirectoryTest.php",
+        "tests/Widget/GameDeveloperDirectoryWidgetProviderTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "CONTINUOUS-WORKER.md",
+        "CONTINUOUS-WORK-POOL.json",
+        ".github/workflows/",
+        "migrations/",
+        "src/Entity/",
+        "src/Repository/",
+        "src/Security/"
+      ],
+      "deliverables": [
+        "Public developer index contains only non-empty developer names attached to enabled catalogue entries and enabled games.",
+        "Case-insensitive developer profile lookup lists only visible games with deterministic bounded pagination and rejects malformed or overlong input.",
+        "Gaming-disabled requests fail closed and the Page Builder widget is registered through normal provider discovery.",
+        "Positive and negative controller/widget tests plus complete exact-head Worker CI."
+      ],
+      "tests": [
+        "Focused controller tests for visibility, case-insensitive lookup, pagination bounds and Gaming-disabled behavior.",
+        "Widget definition regression test.",
+        "Complete Worker CI on exact final head."
+      ],
+      "immutable_constraints": [
+        "worker-only-no-Trusted-merge-or-deployment",
+        "no-schema-entity-auth-csrf-or-CI-change",
+        "public-visibility-must-require-enabled-entry-and-game",
+        "developer-input-and-pagination-must-be-bounded",
+        "no-overlap-with-active-publisher-genre-or-video-claims"
+      ],
+      "collision_check": {
+        "compared_against": "Live pool e3931a890476bb9588cc8899b2f1f79e620616b7 and Worker main 50e466d457a96e7795973cb7b625fe82a33acb92",
+        "result": "All seven reserved paths are new and disjoint from active WCP-651 publisher, WCP-652 video and WCP-653 genre claims; reads existing catalogue entities without modifying shared model or repository paths.",
+        "paths": [
+          "src/GameDeveloperDirectory/",
+          "src/Controller/GameCatalogue/GameDeveloperDirectoryController.php",
+          "src/Widget/GameDeveloperDirectoryWidgetProvider.php",
+          "templates/game_developer_directory/",
+          "templates/widget/game_developer_directory.html.twig",
+          "tests/Controller/GameDeveloperDirectoryTest.php",
+          "tests/Widget/GameDeveloperDirectoryWidgetProviderTest.php"
+        ]
+      },
+      "next_action": "Implement bounded public developer index/profile, widget and visibility regression tests."
     }
   ],
   "recovery_queue": [],
