@@ -67026,6 +67026,90 @@
         "templates/admin/news_editor/edit.html.twig",
         "tests/JavaScript/news_editor.test.mjs"
       ]
+    },
+    {
+      "priority": 670,
+      "package_id": "WCP-670",
+      "title": "Structured HTML and office paste in visual news editor",
+      "risk": "medium_content_conversion",
+      "execution_state": "worker_in_progress",
+      "claim_state": "claimed",
+      "claim_generation": 1,
+      "claim_branch": "claim/wcp-670-news-structured-html-paste-g1",
+      "suggested_branch": "feature/wcp-670-news-structured-html-paste-g1",
+      "resume_branch": "feature/wcp-670-news-structured-html-paste-g1",
+      "claimed_on": "2026-10-02T21:23:00.000Z",
+      "lease_expires_at": "2026-10-03T04:23:00.000Z",
+      "base_branch": "main",
+      "base_sha": "08260d3f0e343615f525efd2de05767200f031c5",
+      "proposal_base_branch": "feature/wcp-669-news-article-interchange-g1",
+      "proposal_base_sha": "860e756021b88896bf6d4e1a53d60ed780387b32",
+      "active_base_branch": "feature/wcp-669-news-article-interchange-g1",
+      "active_base_sha": "860e756021b88896bf6d4e1a53d60ed780387b32",
+      "active_head": "860e756021b88896bf6d4e1a53d60ed780387b32",
+      "last_observed_head": "860e756021b88896bf6d4e1a53d60ed780387b32",
+      "dependencies": [
+        "WCP-669"
+      ],
+      "proposal_kind": "worker_only",
+      "proposal_dependency_evidence": [
+        {
+          "package_id": "WCP-669",
+          "head": "860e756021b88896bf6d4e1a53d60ed780387b32",
+          "pr": 467,
+          "ci_run": 37065698795,
+          "result": "success"
+        }
+      ],
+      "objective": "Convert structured HTML pasted from browsers and office tools into inert typed v2 News blocks, preserving headings, paragraphs, lists, quotes, tables, code and safe inline marks while discarding active content and unsafe links.",
+      "allowed_paths": [
+        "assets/news_editor/html-paste.js",
+        "assets/news_editor/editor.js",
+        "tests/JavaScript/news_editor.test.mjs"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "CONTINUOUS-WORKER.md",
+        "CONTINUOUS-WORK-POOL.json",
+        ".github/workflows/",
+        "migrations/",
+        "src/Entity/",
+        "src/Controller/",
+        "templates/",
+        "src/Security/"
+      ],
+      "deliverables": [
+        "Pure bounded HTML-to-v2 converter for common document blocks and safe inline formatting.",
+        "Paste integration only replaces an empty paragraph and preserves normal native paste elsewhere.",
+        "Scripts, styles, event attributes, embedded objects, unsafe URLs and remote images never become executable editor content.",
+        "Focused JavaScript tests plus complete exact-head Worker CI."
+      ],
+      "tests": [
+        "Node JavaScript tests for structured conversion, limits and active-content rejection.",
+        "Complete Worker CI on exact final head."
+      ],
+      "immutable_constraints": [
+        "worker-only-no-Trusted-merge-or-deployment",
+        "pasted-html-is-never-executed",
+        "unsafe-links-remain-plain-text",
+        "no-security-test-or-CI-weakening"
+      ],
+      "collision_check": {
+        "compared_against": "Live pool at c1e93c392281dcbea18e3e730fb7bc1c5c580f74 with no worker_in_progress claim",
+        "result": "Deliberate serial News Editor descendant of completed WCP-669; no concurrent exclusive-path owner.",
+        "paths": [
+          "assets/news_editor/html-paste.js",
+          "assets/news_editor/editor.js",
+          "tests/JavaScript/news_editor.test.mjs"
+        ]
+      },
+      "next_action": "Create feature branch from exact green WCP-669 head, implement inert structured HTML paste, test and run exact-head Worker CI."
     }
   ],
   "recovery_queue": [],
