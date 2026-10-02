@@ -7,6 +7,48 @@ import {editTable} from '../../assets/news_editor/table-ops.js';
 import {safeEditorHref, clipboardRuns, editList, replaceArticle, findArticleBlocks} from '../../assets/news_editor/authoring.js';
 import {AutosaveState} from '../../assets/news_editor/autosave-state.js';
 import {structuredMarkdown} from '../../assets/news_editor/markdown-paste.js';
+import {applyBlockOperation, resolveBlockShortcut} from '../../assets/news_editor/keyboard-blocks.js';
+
+test('keyboard block shortcuts require an unambiguous primary plus shift chord', () => {
+  const chord = key => ({key, ctrlKey: true, metaKey: false, shiftKey: true, altKey: false});
+  assert.equal(resolveBlockShortcut(chord('Enter')), 'insert-after');
+  assert.equal(resolveBlockShortcut(chord('D')), 'duplicate');
+  assert.equal(resolveBlockShortcut(chord('ArrowUp')), 'move-up');
+  assert.equal(resolveBlockShortcut(chord('ArrowDown')), 'move-down');
+  assert.equal(resolveBlockShortcut(chord('Backspace')), 'remove');
+  assert.equal(resolveBlockShortcut({...chord('D'), shiftKey: false}), null);
+  assert.equal(resolveBlockShortcut({...chord('D'), altKey: true}), null);
+  assert.equal(resolveBlockShortcut({...chord('D'), metaKey: true}), null);
+  assert.equal(resolveBlockShortcut(chord('x')), null);
+});
+
+test('keyboard block operations are immutable, bounded and retain the focused block', () => {
+  const paragraph = text => ({type: 'paragraph', content: [{text, marks: []}]});
+  const source = {version: 2, blocks: [paragraph('A'), paragraph('<B>')]};
+  const duplicate = applyBlockOperation(source, 'duplicate', 1);
+  assert.deepEqual(duplicate.document.blocks.map(block => block.content[0].text), ['A', '<B>', '<B>']);
+  assert.equal(duplicate.index, 2);
+  assert.equal(duplicate.announcement, 'Block dupliziert. Position 3 von 3.');
+  duplicate.document.blocks[2].content[0].text = 'changed';
+  assert.equal(source.blocks[1].content[0].text, '<B>');
+
+  const moved = applyBlockOperation(source, 'move-down', 0);
+  assert.deepEqual(moved.document.blocks.map(block => block.content[0].text), ['<B>', 'A']);
+  assert.equal(moved.index, 1);
+  assert.equal(applyBlockOperation(source, 'move-up', 0), null);
+  assert.equal(applyBlockOperation(source, 'move-down', 1), null);
+
+  const inserted = applyBlockOperation(source, 'insert-after', 0);
+  assert.deepEqual(inserted.document.blocks[1], paragraph(''));
+  assert.equal(applyBlockOperation(source, 'duplicate', 0, 2), null);
+
+  const removed = applyBlockOperation(source, 'remove', 1);
+  assert.deepEqual(removed.document.blocks, [paragraph('A')]);
+  assert.equal(removed.index, 0);
+  assert.equal(applyBlockOperation({version: 2, blocks: [paragraph('only')]}, 'remove', 0), null);
+  assert.equal(applyBlockOperation(source, 'unknown', 0), null);
+  assert.equal(applyBlockOperation(source, 'duplicate', 4), null);
+});
 
 test('structured Markdown paste makes safe typed article blocks', () => {
   const blocks = structuredMarkdown('# Intro **stark**\n\n- Eins\n- [Zwei](https://example.test/x)\n\n> Zitat\n\nA | B\n--- | ---\nX | Y\n\n```json\n{"x":1}\n```\n\n---');
