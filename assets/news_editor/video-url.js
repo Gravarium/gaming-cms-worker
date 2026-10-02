@@ -14,3 +14,9 @@ export function parseVideoUrl(value) {
   }
   return id && /^[A-Za-z0-9_-]{6,20}$/.test(id) ? {provider: 'youtube', videoId: id} : null;
 }
+
+export function videoPreviewUrl(provider, videoId) {
+  if (provider === 'youtube' && /^[A-Za-z0-9_-]{6,20}$/.test(videoId)) return 'https://www.youtube-nocookie.com/embed/' + videoId;
+  if (provider === 'vimeo' && /^[0-9]{1,20}$/.test(videoId)) return 'https://player.vimeo.com/video/' + videoId;
+  return null;
+}

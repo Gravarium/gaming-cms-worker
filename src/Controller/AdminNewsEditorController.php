@@ -128,6 +128,18 @@ final class AdminNewsEditorController extends AbstractController
     public function media(ContentEntry $entry, Request $request): JsonResponse
     {
         $this->assertEditable($entry);
+        if ($request->query->has('id')) {
+            $id = $request->query->get('id');
+            if (!is_string($id) || preg_match('/\A[1-9][0-9]{0,18}\z/D', $id) !== 1
+                || strlen($id) > strlen((string) PHP_INT_MAX)
+                || (strlen($id) === strlen((string) PHP_INT_MAX) && strcmp($id, (string) PHP_INT_MAX) > 0)) {
+                return $this->json(['error' => 'Ungültige Medien-ID.'], 422);
+            }
+            $asset = $this->media->resolve((int) $id);
+            $response = $this->json(['items' => $asset === null ? [] : [$asset]]);
+            $response->headers->set('Cache-Control', 'private, no-store');
+            return $response;
+        }
         $query = $request->query->get('q', '');
         if (mb_strlen($query) > 80) {
             return $this->json(['error' => 'Ungültige Mediensuche.'], 422);

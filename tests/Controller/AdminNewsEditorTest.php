@@ -151,6 +151,18 @@ final class AdminNewsEditorTest extends WebTestCase
         $cache = strtolower((string) $client->getResponse()->headers->get('Cache-Control'));
         self::assertStringContainsString('private', $cache);
         self::assertStringContainsString('no-store', $cache);
+        $client->request('GET', '/admin/news-editor/'.$entry->getId().'/media?id='.$safe->getId());
+        self::assertResponseIsSuccessful();
+        $lookup = json_decode($client->getResponse()->getContent() ?: '', true, 16, JSON_THROW_ON_ERROR);
+        self::assertSame([$safe->getId()], array_column($lookup['items'], 'id'));
+        self::assertStringContainsString('no-store', strtolower((string) $client->getResponse()->headers->get('Cache-Control')));
+        $client->request('GET', '/admin/news-editor/'.$entry->getId().'/media?id='.$other->getId());
+        self::assertResponseIsSuccessful();
+        self::assertSame(['items' => []], json_decode($client->getResponse()->getContent() ?: '', true, 16, JSON_THROW_ON_ERROR));
+        foreach (['0', '-1', '1%20', '9223372036854775808'] as $badId) {
+            $client->request('GET', '/admin/news-editor/'.$entry->getId().'/media?id='.$badId);
+            self::assertResponseStatusCodeSame(422);
+        }
     }
 
     /** @param list<string> $permissions @return array{User,ContentEntry} */

@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {parseVideoUrl} from '../../assets/news_editor/video-url.js';
+import {parseVideoUrl, videoPreviewUrl} from '../../assets/news_editor/video-url.js';
 import {EditorHistory} from '../../assets/news_editor/history.js';
 import {articleOutline, insertAfter, withinDocumentLimits} from '../../assets/news_editor/longform.js';
 import {editTable} from '../../assets/news_editor/table-ops.js';
@@ -17,6 +17,9 @@ test('news editor extracts only fixed-provider video IDs', () => {
     'https://user@youtube.com/watch?v=abc123_DEF0',
     'https://vimeo.com/not-an-id',
   ]) assert.equal(parseVideoUrl(url), null, url);
+  assert.equal(videoPreviewUrl('youtube', 'abc123_DEF0'), 'https://www.youtube-nocookie.com/embed/abc123_DEF0');
+  assert.equal(videoPreviewUrl('vimeo', '12345'), 'https://player.vimeo.com/video/12345');
+  for (const [provider, id] of [['youtube', '<script>'], ['vimeo', '123/x'], ['evil', '12345'], ['youtube', 'abc123_DEF0?autoplay=1']]) assert.equal(videoPreviewUrl(provider, id), null);
 });
 
 test('news editor history groups typing but keeps structural steps and drops stale redo', () => {

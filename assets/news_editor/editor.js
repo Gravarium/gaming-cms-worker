@@ -1,4 +1,4 @@
-import {parseVideoUrl} from './video-url.js';
+import {parseVideoUrl, videoPreviewUrl} from './video-url.js';
 import {EditorHistory} from './history.js';
 import {articleOutline, insertAfter, withinDocumentLimits} from './longform.js';
 import {editTable} from './table-ops.js';
@@ -163,25 +163,68 @@ if (root) {
       const id = input('Medien-ID', block.assetId);
       const alt = input('Alternativtext', block.alt);
       const caption = input('Bildunterschrift und Quelle', block.caption);
+      const idField = id.querySelector('input'), altField = alt.querySelector('input'), captionField = caption.querySelector('input');
+      const figure = node('figure'); figure.className = 'news-editor-figure';
+      const image = node('img'); image.hidden = true; image.loading = 'lazy'; image.referrerPolicy = 'no-referrer';
+      const figcaption = node('figcaption', captionField.value);
+      const message = node('p'); figure.append(image, figcaption, message);
+      let lookup = 0;
+      const refreshImage = async () => {
+        const serial = ++lookup;
+        image.hidden = true; image.removeAttribute('src');
+        if (!/^[1-9][0-9]{0,18}$/.test(idField.value)) { message.textContent = 'Bild aus der Mediathek auswählen.'; return; }
+        message.textContent = 'Bild wird geladen …';
+        try {
+          const url = new URL(root.dataset.mediaUrl, window.location.href); url.searchParams.set('id', idField.value);
+          const response = await fetch(url, {credentials: 'same-origin'});
+          if (!response.ok) throw new Error('Bild nicht verfügbar');
+          const {items} = await response.json();
+          if (serial !== lookup) return;
+          if (String(items?.[0]?.id) !== idField.value) throw new Error('Bild nicht freigegeben');
+          image.src = items[0].url; image.alt = altField.value || items[0].title; image.hidden = false; message.textContent = '';
+        } catch { if (serial === lookup) message.textContent = 'Bild nicht verfügbar oder nicht freigegeben.'; }
+      };
       const select = node('button', 'Bild auswählen'); select.type = 'button';
-      select.addEventListener('click', () => openMediaPicker(id.querySelector('input'), alt.querySelector('input')));
-      row.append(id, select, alt, caption);
+      select.addEventListener('click', () => openMediaPicker(idField, altField, refreshImage));
+      idField.addEventListener('input', () => { ++lookup; image.hidden = true; image.removeAttribute('src'); message.textContent = 'Bildauswahl prüfen …'; });
+      idField.addEventListener('change', refreshImage);
+      altField.addEventListener('input', () => { image.alt = altField.value; });
+      captionField.addEventListener('input', () => { figcaption.textContent = captionField.value; });
+      row.append(id, select, alt, caption, figure);
+      if (Number(block.assetId) > 0) refreshImage(); else message.textContent = 'Bild aus der Mediathek auswählen.';
     }
     if (block.type === 'video') {
       const provider = input('Anbieter (youtube/vimeo)', block.provider);
       const videoId = input('Video-ID oder Video-URL', block.videoId);
       const field = videoId.querySelector('input');
+      const providerField = provider.querySelector('input');
+      const caption = input('Bildunterschrift', block.caption);
+      const figure = node('figure'); figure.className = 'news-editor-video';
+      const frameHolder = node('div');
+      const figcaption = node('figcaption', caption.querySelector('input').value);
+      const preview = node('button', 'Video bewusst laden'); preview.type = 'button';
+      const clearPreview = () => { frameHolder.replaceChildren(); };
+      preview.addEventListener('click', () => {
+        const url = videoPreviewUrl(providerField.value, field.value);
+        if (!url) { status.textContent = 'Video-ID und Anbieter prüfen.'; return; }
+        const iframe = node('iframe'); iframe.src = url; iframe.title = 'Video-Vorschau'; iframe.loading = 'lazy'; iframe.referrerPolicy = 'strict-origin-when-cross-origin'; iframe.allowFullscreen = true;
+        frameHolder.replaceChildren(iframe);
+      });
       field.addEventListener('change', () => {
         if (!/^https:\/\//i.test(field.value)) return;
         const parsed = parseVideoUrl(field.value);
         if (parsed) {
-          provider.querySelector('input').value = parsed.provider;
+          providerField.value = parsed.provider;
           field.value = parsed.videoId;
           changed(); return;
         }
         status.textContent = 'Video-URL nicht erkannt. Bitte YouTube- oder Vimeo-Link prüfen.';
       });
-      row.append(provider, videoId, input('Bildunterschrift', block.caption));
+      field.addEventListener('input', clearPreview);
+      providerField.addEventListener('input', clearPreview);
+      caption.querySelector('input').addEventListener('input', event => { figcaption.textContent = event.target.value; });
+      figure.append(preview, frameHolder, figcaption);
+      row.append(provider, videoId, caption, figure);
     }
     row.addEventListener('input', changed); blocks.append(row);
   }
@@ -338,6 +381,7 @@ if (root) {
   const mediaMessage = document.getElementById('news-editor-media-message');
   let selectedMediaField = null;
   let selectedAltField = null;
+  let selectedMediaRefresh = null;
   async function searchMedia() {
     mediaMessage.textContent = 'Bilder werden geladen …'; mediaResults.replaceChildren();
     try {
@@ -354,14 +398,14 @@ if (root) {
         button.addEventListener('click', () => {
           selectedMediaField.value = String(item.id);
           if (!selectedAltField.value) selectedAltField.value = item.title;
-          picker.hidden = true; selectedMediaField.focus(); changed();
+          picker.hidden = true; selectedMediaField.focus(); selectedMediaRefresh?.(); changed();
         }); mediaResults.append(button);
       }
       mediaMessage.textContent = items.length ? items.length + ' Bilder gefunden.' : 'Keine freigegebenen Bilder gefunden.';
     } catch { mediaMessage.textContent = 'Mediensuche fehlgeschlagen.'; }
   }
-  function openMediaPicker(idField, altField) {
-    selectedMediaField = idField; selectedAltField = altField;
+  function openMediaPicker(idField, altField, refresh) {
+    selectedMediaField = idField; selectedAltField = altField; selectedMediaRefresh = refresh;
     picker.hidden = false; mediaSearch.focus(); searchMedia();
   }
   document.getElementById('news-editor-media-search-button').addEventListener('click', searchMedia);
