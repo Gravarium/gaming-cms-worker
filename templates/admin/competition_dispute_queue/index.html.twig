@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Offene Competition-Streitfälle{% endblock %}
+
+{% block body %}
+<main class="container">
+    <h1>Offene Competition-Streitfälle</h1>
+    <p>Die 50 neuesten offenen Fälle.</p>
+    <a href="{{ path('app_admin_competition_index') }}">Zur Competition-Verwaltung</a>
+    {% for dispute in disputes %}
+        {% set match = dispute.match %}
+        {% set competition = match.competition %}
+        <article>
+            <h2>{{ competition.name }} · Runde {{ match.roundNumber }}, Spiel {{ match.sequence }}</h2>
+            <p>{{ dispute.createdAt|date('d.m.Y H:i') }} · {{ dispute.reason }}</p>
+            <p>{{ match.participantA ? match.participantA.name : 'Offen' }} – {{ match.participantB ? match.participantB.name : 'Offen' }}</p>
+            <a href="{{ path('app_admin_competition_edit', {id: competition.id}) }}">Competition öffnen</a>
+            <form method="post" action="{{ path('app_admin_competition_dispute_decide', {id: competition.id, dispute: dispute.id}) }}">
+                <input type="hidden" name="_token" value="{{ csrf_token('competition-dispute-' ~ dispute.id) }}">
+                <label>Entscheidung begründen <textarea name="decision" required></textarea></label>
+                <label>Punkte A <input type="number" name="score_a" min="0" value="{{ match.scoreA ?? '' }}" required></label>
+                <label>Punkte B <input type="number" name="score_b" min="0" value="{{ match.scoreB ?? '' }}" required></label>
+                <label>Gewinner
+                    <select name="winner">
+                        <option value="0">Unentschieden</option>
+                        {% if match.participantA %}<option value="{{ match.participantA.id }}">{{ match.participantA.name }}</option>{% endif %}
+                        {% if match.participantB %}<option value="{{ match.participantB.id }}">{{ match.participantB.name }}</option>{% endif %}
+                    </select>
+                </label>
+                <button type="submit" name="status" value="upheld">Einspruch stattgeben</button>
+                <button type="submit" name="status" value="rejected">Einspruch ablehnen</button>
+            </form>
+        </article>
+    {% else %}
+        <p>Keine offenen Streitfälle.</p>
+    {% endfor %}
+</main>
+{% endblock %}
