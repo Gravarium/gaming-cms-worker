@@ -64622,6 +64622,89 @@
       "ci_conclusion": "success",
       "ci_head": "d2a382af31178a84cea143f66e58d1615ed5c988",
       "completed_at": "2026-10-02T08:15:43.598Z"
+    },
+    {
+      "priority": 657,
+      "package_id": "WCP-657",
+      "title": "True visual owned-media and video authoring in news",
+      "risk": "media_ownership_privacy_and_content_integrity",
+      "execution_state": "worker_in_progress",
+      "claim_state": "active_lease",
+      "claim_generation": 1,
+      "claim_branch": "claim/wcp-657-visual-news-media-g1",
+      "suggested_branch": "feature/wcp-657-visual-news-media-g1",
+      "resume_branch": "feature/wcp-657-visual-news-media-g1",
+      "claimed_on": "2026-10-02T08:16:46.337Z",
+      "lease_expires_at": "2026-10-02T15:16:46.337Z",
+      "base_branch": "feature/wcp-656-complete-news-authoring-g1",
+      "base_sha": "d2a382af31178a84cea143f66e58d1615ed5c988",
+      "proposal_base_branch": "feature/wcp-656-complete-news-authoring-g1",
+      "proposal_base_sha": "d2a382af31178a84cea143f66e58d1615ed5c988",
+      "active_head": "d2a382af31178a84cea143f66e58d1615ed5c988",
+      "dependencies": [
+        "WCP-656"
+      ],
+      "proposal_kind": "worker_only",
+      "objective": "Finish the first-party WYSIWYG media workflow for extensive news by showing owned images with alt/caption inside the editor, keeping image lookup owner-scoped, and offering a deliberate fixed-provider video preview without leaking arbitrary embeds.",
+      "allowed_paths": [
+        "src/Controller/AdminNewsEditorController.php",
+        "assets/news_editor/",
+        "templates/admin/news_editor/",
+        "tests/Controller/AdminNewsEditorTest.php",
+        "tests/JavaScript/news_editor.test.mjs"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "CONTINUOUS-WORKER.md",
+        "CONTINUOUS-WORK-POOL.json",
+        ".github/workflows/",
+        "migrations/",
+        "src/Entity/",
+        "src/Repository/",
+        "src/Security/",
+        "templates/admin/content/form.html.twig",
+        "templates/admin/content/index.html.twig",
+        "templates/admin/dashboard.html.twig",
+        "assets/controllers/content_editor_controller.js",
+        "assets/content_media_picker.js",
+        "assets/styles/content-editor.css"
+      ],
+      "deliverables": [
+        "Existing and selected owned images render directly in the editor with current alt text and caption.",
+        "Image lookup accepts only owned image assets and remains private/no-store; malformed/foreign references fail closed.",
+        "Video blocks render a fixed-provider preview only on explicit editorial request, with validated IDs/URLs and no arbitrary iframe source.",
+        "Focused controller and JavaScript tests; exact-head full Worker CI."
+      ],
+      "tests": [
+        "Controller tests for owner-scoped image lookup and bad IDs.",
+        "JS fixed-provider URL tests and full Worker CI on exact final head."
+      ],
+      "immutable_constraints": [
+        "worker-only-no-Trusted-merge-or-deployment",
+        "no-third-party-editor-or-paid-AI",
+        "preserve-existing-news-and-legacy-data",
+        "no-security-test-or-CI-weakening",
+        "no-overlap-with-unrelated-active-claims"
+      ],
+      "collision_check": {
+        "compared_against": "Current continuous/work-pool-v4 and exact green WCP-656 head d2a382af31178a84cea143f66e58d1615ed5c988",
+        "result": "Deliberate descendant of completed news editor packages; unrelated active WCP-651/652/653 and locked shared UI paths disjoint.",
+        "paths": [
+          "src/Controller/AdminNewsEditorController.php",
+          "assets/news_editor/",
+          "templates/admin/news_editor/",
+          "tests/Controller/AdminNewsEditorTest.php",
+          "tests/JavaScript/news_editor.test.mjs"
+        ]
+      },
+      "next_action": "Implement owner-scoped visual image and fixed-provider video previews, then exact-head CI.",
+      "last_verified_push_at": null
     }
   ],
   "recovery_queue": [],
