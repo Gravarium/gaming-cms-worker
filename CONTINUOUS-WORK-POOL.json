@@ -65426,22 +65426,22 @@
       "package_id": "WCP-664",
       "title": "Submit visual news drafts for editorial review",
       "risk": "high_content_integrity_and_editorial_state_transition",
-      "execution_state": "worker_in_progress",
-      "claim_state": "claimed",
+      "execution_state": "worker_complete_awaiting_trusted_review",
+      "claim_state": "locked_until_trusted_resolution",
       "claim_generation": 1,
       "claim_branch": "claim/wcp-664-news-review-handoff-g1",
       "suggested_branch": "feature/wcp-664-news-review-handoff-g1",
       "resume_branch": "feature/wcp-664-news-review-handoff-g1",
       "claimed_on": "2026-10-02T14:20:00.000Z",
-      "lease_expires_at": "2026-10-02T21:20:00.000Z",
+      "lease_expires_at": null,
       "base_branch": "main",
       "base_sha": "9e083c63e7d888af36f93a23eb924c89fad2b971",
       "proposal_base_branch": "feature/wcp-663-news-editor-worklist-g1",
       "proposal_base_sha": "571c91f20aa3d128c21c50bdd32b25ed698aa9db",
       "active_base_branch": "feature/wcp-663-news-editor-worklist-g1",
       "active_base_sha": "571c91f20aa3d128c21c50bdd32b25ed698aa9db",
-      "active_head": "571c91f20aa3d128c21c50bdd32b25ed698aa9db",
-      "last_observed_head": "571c91f20aa3d128c21c50bdd32b25ed698aa9db",
+      "active_head": "673e0d384896f7c70d8455273c09bcfdff1ea022",
+      "last_observed_head": "673e0d384896f7c70d8455273c09bcfdff1ea022",
       "dependencies": [
         "WCP-663"
       ],
@@ -65506,7 +65506,27 @@
           "tests/Controller/AdminNewsEditorTest.php"
         ]
       },
-      "next_action": "Implement review handoff on the reserved feature branch, push a remote checkpoint, run exact-head Worker CI and repair failures."
+      "next_action": "Trusted review and integration decision on Worker PR #460 after prerequisite WCP-663 / PR #459; preserve exact green head.",
+      "last_verified_push_at": "2026-10-02T14:28:10.000Z",
+      "last_checkpoint_at": "2026-10-02T14:28:10.000Z",
+      "worker_pr_state": "ready_for_review",
+      "worker_pr": 460,
+      "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/460",
+      "worker_pr_head_sha": "673e0d384896f7c70d8455273c09bcfdff1ea022",
+      "final_head": "673e0d384896f7c70d8455273c09bcfdff1ea022",
+      "completed_at": "2026-10-02T14:28:10.000Z",
+      "ci_run": 37019638342,
+      "ci_conclusion": "success",
+      "ci_head": "673e0d384896f7c70d8455273c09bcfdff1ea022",
+      "ci_run_id": 37019638342,
+      "ci_result": "success",
+      "last_ci_head": "673e0d384896f7c70d8455273c09bcfdff1ea022",
+      "last_ci_result": "success",
+      "final_changed_paths": [
+        "src/Controller/AdminNewsEditorController.php",
+        "templates/admin/news_editor/edit.html.twig",
+        "tests/Controller/AdminNewsEditorTest.php"
+      ]
     }
   ],
   "recovery_queue": [],
