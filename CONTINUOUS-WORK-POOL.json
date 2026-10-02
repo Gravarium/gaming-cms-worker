@@ -65759,6 +65759,85 @@
         ]
       },
       "next_action": "Implement visual duplication and reversible trash actions, push checkpoint and run exact-head Worker CI."
+    },
+    {
+      "priority": 667,
+      "package_id": "WCP-667",
+      "title": "Structured Markdown paste in visual news editor",
+      "risk": "medium_content_conversion",
+      "execution_state": "worker_in_progress",
+      "claim_state": "active",
+      "claim_generation": 1,
+      "claim_branch": "claim/wcp-667-news-structured-paste-g1",
+      "suggested_branch": "feature/wcp-667-news-structured-paste-g1",
+      "resume_branch": "feature/wcp-667-news-structured-paste-g1",
+      "claimed_on": "2026-10-02T17:55:49.031Z",
+      "lease_expires_at": "2026-10-03T00:55:49.031Z",
+      "base_branch": "main",
+      "base_sha": "9e083c63e7d888af36f93a23eb924c89fad2b971",
+      "proposal_base_branch": "feature/wcp-665-news-revision-recovery-g1",
+      "proposal_base_sha": "357aa7bef14ed54791db6a913f6215ad3ec307ba",
+      "active_base_branch": "feature/wcp-665-news-revision-recovery-g1",
+      "active_base_sha": "357aa7bef14ed54791db6a913f6215ad3ec307ba",
+      "active_head": "357aa7bef14ed54791db6a913f6215ad3ec307ba",
+      "dependencies": [
+        "WCP-665"
+      ],
+      "proposal_kind": "worker_only",
+      "proposal_dependency_evidence": [
+        {
+          "package_id": "WCP-665",
+          "head": "357aa7bef14ed54791db6a913f6215ad3ec307ba",
+          "pr": 461,
+          "ci_run": 37020731893,
+          "result": "success"
+        }
+      ],
+      "objective": "Paste bounded structured Markdown into the visual News Editor as typed v2 blocks, preserving headings, lists, quotes, tables, fenced code, simple inline formatting and safe links; only in an empty paragraph to avoid replacing other content.",
+      "allowed_paths": [
+        "assets/news_editor/",
+        "tests/JavaScript/news_editor.test.mjs"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "CONTINUOUS-WORKER.md",
+        "CONTINUOUS-WORK-POOL.json",
+        ".github/workflows/",
+        "migrations/",
+        "src/Entity/",
+        "src/Controller/",
+        "templates/",
+        "src/Security/"
+      ],
+      "deliverables": [
+        "Pure bounded Markdown parser with safe link policy and typed block output.",
+        "Paste integration in empty paragraph with document limit, selection and undo handling.",
+        "Focused JS tests plus complete exact-head Worker CI."
+      ],
+      "tests": [
+        "Node focused JavaScript tests",
+        "Complete Worker CI on exact final head"
+      ],
+      "immutable_constraints": [
+        "worker-only-no-Trusted-merge-or-deployment",
+        "no-executable-HTML-or-unsafe-links",
+        "no-security-test-or-CI-weakening"
+      ],
+      "collision_check": {
+        "compared_against": "Live pool WCP-666 active claim and WCP-665 exact green head",
+        "result": "Disjoint JS-only paths; WCP-666 owns controller, Twig and PHP tests.",
+        "paths": [
+          "assets/news_editor/",
+          "tests/JavaScript/news_editor.test.mjs"
+        ]
+      },
+      "next_action": "Implement and submit Worker PR"
     }
   ],
   "recovery_queue": [],
