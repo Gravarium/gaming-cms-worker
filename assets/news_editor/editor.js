@@ -4,6 +4,7 @@ import {articleOutline, insertAfter, withinDocumentLimits} from './longform.js';
 import {editTable} from './table-ops.js';
 import {safeEditorHref, clipboardRuns, editList, replaceArticle, findArticleBlocks} from './authoring.js';
 import {AutosaveState} from './autosave-state.js';
+import {structuredMarkdown} from './markdown-paste.js';
 
 const root = document.getElementById('news-editor');
 if (root) {
@@ -454,8 +455,25 @@ if (root) {
     event.preventDefault();
     const target = event.target.closest('[contenteditable]');
     const html = event.clipboardData?.getData('text/html');
+    const row = target.closest('.news-editor-block');
+    const plainText = event.clipboardData?.getData('text/plain') ?? '';
+    if (!html && row?.dataset.type === 'paragraph' && !target.textContent.trim()) {
+      const pastedBlocks = structuredMarkdown(plainText);
+      if (pastedBlocks) {
+        const before = serialize();
+        const document = JSON.parse(before.slice(prefix.length));
+        const index = [...blocks.children].indexOf(row);
+        document.blocks.splice(index, 1, ...pastedBlocks);
+        if (!withinDocumentLimits(document)) { status.textContent = 'Eingefügter Inhalt überschreitet die Dokumentgrenze.'; return; }
+        for (const block of pastedBlocks) { renderBlock(block); row.before(blocks.lastElementChild); }
+        row.remove(); activeRow = blocks.children[index];
+        activeRow?.querySelector('[contenteditable], textarea')?.focus();
+        changed(); status.textContent = pastedBlocks.length + ' strukturierte Blöcke eingefügt.';
+        return;
+      }
+    }
     const content = html ? new DOMParser().parseFromString(html, 'text/html').body : null;
-    const pasted = content ? clipboardRuns(content) : [{text: event.clipboardData?.getData('text/plain') ?? '', marks: []}];
+    const pasted = content ? clipboardRuns(content) : [{text: plainText, marks: []}];
     if (!pasted.length) return;
     const before = serialize();
     const fragment = document.createDocumentFragment();
