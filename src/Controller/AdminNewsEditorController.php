@@ -112,13 +112,7 @@ final class AdminNewsEditorController extends AbstractController
                 if (!$user instanceof User) {
                     throw $this->createAccessDeniedException();
                 }
-                $base = mb_strtolower($this->slugger->slug($title)->toString());
-                $base = $base === '' ? 'news' : mb_substr($base, 0, 180);
-                $slug = $base;
-                for ($suffix = 2; $this->entries->slugExists($slug); $suffix++) {
-                    $tail = '-'.$suffix;
-                    $slug = mb_substr($base, 0, 200 - mb_strlen($tail)).$tail;
-                }
+                $slug = $this->uniqueSlug($title);
                 $document = RichDocument::PREFIX.json_encode(['version' => 2, 'blocks' => [
                     ['type' => 'paragraph', 'content' => [['text' => '', 'marks' => []]]],
                 ]], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR);
@@ -294,6 +288,68 @@ final class AdminNewsEditorController extends AbstractController
         return $this->redirectToRoute('app_admin_news_editor', ['id' => $entry->getId()]);
     }
 
+    #[Route('/{id}/duplicate', name: 'app_admin_news_editor_duplicate', requirements: ['id' => '\\d+'], methods: ['POST'])]
+    public function duplicate(ContentEntry $entry, Request $request): Response
+    {
+        $this->assertEditable($entry);
+        $this->assertLifecycleRequest($entry, $request, 'news-editor-duplicate-');
+        $user = $this->getUser();
+        if (!$user instanceof User) {
+            throw $this->createAccessDeniedException();
+        }
+        try {
+            $copy = $this->entityManager->wrapInTransaction(function (EntityManagerInterface $manager) use ($entry, $request, $user): ContentEntry {
+                $manager->refresh($entry, LockMode::PESSIMISTIC_WRITE);
+                $this->assertEditable($entry);
+                $this->assertCurrentVersion($entry, $request);
+                $title = mb_substr('Kopie von '.$entry->getTitle(), 0, 180);
+                $copy = (new ContentEntry())->setAuthor($user)->setType(ContentEntry::TYPE_NEWS)->setStatus(ContentEntry::STATUS_DRAFT)
+                    ->setTitle($title)->setSubtitle($entry->getSubtitle())->setSlug($this->uniqueSlug($entry->getTitle().'-kopie'))
+                    ->setExcerpt($entry->getExcerpt())->setBody($entry->getBody())->setEditorDocument($entry->getEditorDocument())
+                    ->setCategory($entry->getCategory())->setFeatured(false)->setPinned(false)->setUnlisted($entry->isUnlisted())
+                    ->setSeoTitle($entry->getSeoTitle())->setSeoDescription($entry->getSeoDescription())
+                    ->setCanonicalUrl(null)->setNoIndex(true);
+                foreach ($entry->getTags() as $tag) {
+                    $copy->addTag($tag);
+                }
+                $manager->persist($copy);
+                $manager->flush();
+                $this->revisions->capture($copy, $user);
+                $this->audit->record('content.rich_editor.duplicate', $copy, $copy->getId(), 'News-Entwurf im visuellen Editor dupliziert.', ['sourceId' => $entry->getId()]);
+                return $copy;
+            });
+        } catch (\DomainException $exception) {
+            return $this->privatePage(new Response($exception->getMessage(), 409));
+        }
+        $this->addFlash('success', 'Eine sichere Entwurfskopie wurde erstellt.');
+        return $this->redirectToRoute('app_admin_news_editor', ['id' => $copy->getId()]);
+    }
+
+    #[Route('/{id}/trash', name: 'app_admin_news_editor_trash', requirements: ['id' => '\\d+'], methods: ['POST'])]
+    public function trash(ContentEntry $entry, Request $request): Response
+    {
+        $this->assertEditable($entry);
+        $this->assertLifecycleRequest($entry, $request, 'news-editor-trash-');
+        $user = $this->getUser();
+        if (!$user instanceof User) {
+            throw $this->createAccessDeniedException();
+        }
+        try {
+            $this->entityManager->wrapInTransaction(function (EntityManagerInterface $manager) use ($entry, $request, $user): void {
+                $manager->refresh($entry, LockMode::PESSIMISTIC_WRITE);
+                $this->assertEditable($entry);
+                $this->assertCurrentVersion($entry, $request);
+                $this->revisions->capture($entry, $user);
+                $entry->trash();
+                $this->audit->record('content.rich_editor.trash', $entry, $entry->getId(), 'News-Entwurf aus dem visuellen Editor in den Papierkorb verschoben.');
+            });
+        } catch (\DomainException $exception) {
+            return $this->privatePage(new Response($exception->getMessage(), 409));
+        }
+        $this->addFlash('success', 'Der News-Entwurf wurde in den Papierkorb verschoben.');
+        return $this->redirectToRoute('app_admin_news_editor_index');
+    }
+
     #[Route('/{id}/preview', name: 'app_admin_news_editor_preview', requirements: ['id' => '\\d+'], methods: ['POST'])]
     public function preview(ContentEntry $entry, Request $request): JsonResponse
     {
@@ -427,6 +483,40 @@ final class AdminNewsEditorController extends AbstractController
         if (!$this->isCsrfTokenValid('news-editor-'.$entry->getId(), $token)) {
             throw $this->createAccessDeniedException('Ungültige Sicherheitsprüfung.');
         }
+    }
+
+    private function assertLifecycleRequest(ContentEntry $entry, Request $request, string $tokenPrefix): void
+    {
+        if (!$this->isCsrfTokenValid($tokenPrefix.$entry->getId(), (string) $request->request->get('_token'))) {
+            throw $this->createAccessDeniedException('Ungültige Sicherheitsprüfung.');
+        }
+        $expected = $request->request->get('updatedAt');
+        $expectedHash = $request->request->get('documentHash');
+        if (!is_string($expected) || !is_string($expectedHash) || preg_match('/\A[a-f0-9]{64}\z/D', $expectedHash) !== 1) {
+            throw $this->createNotFoundException('Ungültige Lebenszyklus-Anfrage.');
+        }
+    }
+
+    private function assertCurrentVersion(ContentEntry $entry, Request $request): void
+    {
+        $expected = (string) $request->request->get('updatedAt');
+        $expectedHash = (string) $request->request->get('documentHash');
+        if (!hash_equals($entry->getUpdatedAt()->format(DATE_ATOM), $expected)
+            || !hash_equals(hash('sha256', $entry->getEditableDocument()), $expectedHash)) {
+            throw new \DomainException('Der Artikel wurde inzwischen geändert. Bitte neu laden.');
+        }
+    }
+
+    private function uniqueSlug(string $value): string
+    {
+        $base = mb_strtolower($this->slugger->slug($value)->toString());
+        $base = $base === '' ? 'news' : mb_substr($base, 0, 180);
+        $slug = $base;
+        for ($suffix = 2; $this->entries->slugExists($slug); $suffix++) {
+            $tail = '-'.$suffix;
+            $slug = mb_substr($base, 0, 200 - mb_strlen($tail)).$tail;
+        }
+        return $slug;
     }
 
     private function errorResponse(ContentEntry $entry, string $document, string $error, int $status): Response

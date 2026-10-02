@@ -249,6 +249,63 @@ final class AdminNewsEditorTest extends WebTestCase
         self::assertResponseStatusCodeSame(404);
     }
 
+    public function testVisualEditorDuplicatesNewsAsSafeIndependentDraft(): void
+    {
+        $client = static::createClient();
+        [$user, $entry] = $this->entry($client);
+        $entry->setEditorDocument($this->document('Kopierter Inhalt'))->setBody('Kopierter Inhalt')
+            ->setSubtitle('Untertitel')->setExcerpt('Kurztext')->setFeatured(true)->setPinned(true)
+            ->setUnlisted(true)->setSeoTitle('SEO')->setSeoDescription('Beschreibung')
+            ->setCanonicalUrl('https://example.test/original')->setNoIndex(false);
+        $em = $client->getContainer()->get(EntityManagerInterface::class);
+        $em->flush();
+        $client->loginUser($user);
+        $crawler = $client->request('GET', '/admin/news-editor/'.$entry->getId());
+        $form = $crawler->selectButton('Als neuen Entwurf duplizieren')->form();
+        $client->submit($form);
+        self::assertResponseRedirects();
+        $location = (string) $client->getResponse()->headers->get('Location');
+        self::assertMatchesRegularExpression('#\A/admin/news-editor/\d+\z#', $location);
+        $copyId = (int) basename($location);
+        self::assertNotSame($entry->getId(), $copyId);
+        $em->clear();
+        $copy = $em->find(ContentEntry::class, $copyId);
+        self::assertInstanceOf(ContentEntry::class, $copy);
+        self::assertSame(ContentEntry::STATUS_DRAFT, $copy->getStatus());
+        self::assertSame('Kopierter Inhalt', $copy->getBody());
+        self::assertSame('Untertitel', $copy->getSubtitle());
+        self::assertSame('Kurztext', $copy->getExcerpt());
+        self::assertSame($user->getId(), $copy->getAuthor()?->getId());
+        self::assertFalse($copy->isFeatured()); self::assertFalse($copy->isPinned());
+        self::assertTrue($copy->isUnlisted()); self::assertTrue($copy->isNoIndex());
+        self::assertNull($copy->getCanonicalUrl());
+        self::assertCount(1, $em->getRepository(ContentRevision::class)->findBy(['entry' => $copy]));
+    }
+
+    public function testVisualEditorTrashIsCsrfProtectedConflictSafeAndReversible(): void
+    {
+        $client = static::createClient();
+        [$user, $entry] = $this->entry($client);
+        $client->loginUser($user);
+        $crawler = $client->request('GET', '/admin/news-editor/'.$entry->getId());
+        $form = $crawler->selectButton('In den Papierkorb')->form();
+        $values = $form->getPhpValues();
+        $endpoint = '/admin/news-editor/'.$entry->getId().'/trash';
+        $client->request('POST', $endpoint, array_replace($values, ['_token' => 'wrong']));
+        self::assertResponseStatusCodeSame(403);
+        $client->request('POST', $endpoint, array_replace($values, ['updatedAt' => '2000-01-01T00:00:00+00:00']));
+        self::assertResponseStatusCodeSame(409);
+        $client->request('POST', $endpoint, $values);
+        self::assertResponseRedirects('/admin/news-editor');
+        $em = $client->getContainer()->get(EntityManagerInterface::class);
+        $em->clear();
+        $trashed = $em->find(ContentEntry::class, $entry->getId());
+        self::assertInstanceOf(ContentEntry::class, $trashed);
+        self::assertSame(ContentEntry::STATUS_TRASHED, $trashed->getStatus());
+        self::assertNotNull($trashed->getTrashedAt());
+        self::assertCount(1, $em->getRepository(ContentRevision::class)->findBy(['entry' => $trashed]));
+    }
+
     public function testNewNewsStartsInRichEditorWithInitialRevision(): void
     {
         $client = static::createClient();
