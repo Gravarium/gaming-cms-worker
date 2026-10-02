@@ -1,0 +1,45 @@
+{% extends 'base.html.twig' %}
+{% block title %}Veröffentlichte Spiele | Gaming CMS{% endblock %}
+{% block body %}
+<main class="content-shell">
+    <header class="page-header">
+        <p class="eyebrow">Release Centre</p>
+        <h1>Veröffentlichte Spiele</h1>
+        <p>Archiv für {{ year }}</p>
+        <a href="{{ path('app_game_catalogue_release_calendar') }}">Kommende Releases</a>
+    </header>
+
+    <form method="get" action="{{ path('app_game_catalogue_release_archive') }}" class="form-stack">
+        <label for="archive-year">Jahr</label>
+        <select id="archive-year" name="year">
+            {% for option in years %}<option value="{{ option }}" {{ option == year ? 'selected' : '' }}>{{ option }}</option>{% endfor %}
+        </select>
+        <button>Archiv anzeigen</button>
+    </form>
+
+    <p role="status">{{ total }} veröffentlichte {{ total == 1 ? 'Version' : 'Versionen' }} gefunden.</p>
+    <div class="table-wrap">
+        <table>
+            <thead><tr><th>Datum</th><th>Spiel</th><th>Edition</th><th>Plattform</th><th>Region</th></tr></thead>
+            <tbody>
+            {% for release in releases %}
+                <tr class="release-row"><td>{{ release.releaseAt|date('d.m.Y') }}</td>
+                    <td><a href="{{ path('app_game_catalogue_show', {slug: release.entry.game.slug}) }}">{{ release.entry.game.name }}</a></td>
+                    <td>{{ release.edition ? release.edition.name : 'Standard' }}</td>
+                    <td>{{ release.platform.name }}</td><td>{{ release.region }}</td></tr>
+            {% else %}
+                <tr><td colspan="5">Für dieses Jahr gibt es keine veröffentlichten Spiele.</td></tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    {% if pages > 1 %}
+        <nav class="pagination" aria-label="Archivseiten">
+            {% if page > 1 %}<a href="{{ path('app_game_catalogue_release_archive', {year: year, page: page - 1}) }}">Zurück</a>{% endif %}
+            <span>Seite {{ page }} von {{ pages }}</span>
+            {% if page < pages %}<a href="{{ path('app_game_catalogue_release_archive', {year: year, page: page + 1}) }}">Weiter</a>{% endif %}
+        </nav>
+    {% endif %}
+</main>
+{% endblock %}
