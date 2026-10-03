@@ -30,6 +30,14 @@
         <p id="news-editor-snippet-status" role="status" aria-live="polite"></p>
         <div id="news-editor-snippet-list" class="news-editor-snippet-list"></div>
     </section>
+    <section class="news-editor-readiness" id="news-editor-readiness" aria-labelledby="news-editor-readiness-heading" aria-busy="false" data-url="{{ path('app_admin_news_editor_readiness',{id:entry.id}) }}" data-csrf="{{ csrf_token('news-editor-'~entry.id) }}">
+        <h2 id="news-editor-readiness-heading">Veröffentlichungscheck</h2>
+        <p class="muted">Prüft den aktuellen, noch nicht gespeicherten Text. Das Audit ist unverbindlich und ändert oder speichert den Entwurf nicht.</p>
+        <button type="button" data-readiness-refresh>Prüfung aktualisieren</button>
+        <p data-readiness-status role="status" aria-live="polite" aria-atomic="true">Noch nicht geprüft.</p>
+        <div data-readiness-summary></div>
+        <div data-readiness-results role="region" aria-label="Prüfergebnisse"></div>
+    </section>
     <form method="post" id="news-editor-form" novalidate>
         <input type="hidden" name="_token" value="{{ csrf_token('news-editor-'~entry.id) }}">
         <input type="hidden" name="updatedAt" value="{{ entry.updatedAt|date('c') }}">

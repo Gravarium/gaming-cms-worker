@@ -11,6 +11,7 @@ import {structuredHtml} from './html-paste.js';
 import {applySlashCommand, blockForCommand, matchBlockCommands} from './block-commands.js';
 import {applyBatchBlockOperation, normalizeBlockSelection} from './batch-blocks.js';
 import {insertSnippet, normalizeSnippetItems} from './snippets.js';
+import {initNewsReadinessPanel} from './readiness.js';
 
 const root = document.getElementById('news-editor');
 if (root) {
@@ -95,7 +96,11 @@ if (root) {
       level.addEventListener('change', () => { row.dataset.level = level.value; const replacement = editable('h' + level.value, runs(heading)); heading.replaceWith(replacement); heading = replacement; changed(); });
       row.append(level, heading);
     }
-    if (block.type === 'quote') { row.append(editable('blockquote', block.content), input('Quelle', block.cite)); }
+    if (block.type === 'quote') {
+      const source = input('Quelle', block.cite);
+      source.querySelector('input').dataset.readinessTarget = 'attribution.quote_missing';
+      row.append(editable('blockquote', block.content), source);
+    }
     if (block.type === 'list') {
       row.dataset.ordered = String(block.ordered); let list = node(block.ordered ? 'ol' : 'ul');
       let selectedItem = 0;
@@ -183,6 +188,7 @@ if (root) {
       const alt = input('Alternativtext', block.alt);
       const caption = input('Bildunterschrift und Quelle', block.caption);
       const idField = id.querySelector('input'), altField = alt.querySelector('input'), captionField = caption.querySelector('input');
+      altField.dataset.readinessTarget = 'accessibility.image_alt_missing accessibility.image_alt_long';
       const figure = node('figure'); figure.className = 'news-editor-figure';
       const image = node('img'); image.hidden = true; image.loading = 'lazy'; image.referrerPolicy = 'no-referrer';
       const figcaption = node('figcaption', captionField.value);
@@ -752,4 +758,5 @@ if (root) {
       document.getElementById('news-editor-preview').innerHTML = data.html; status.textContent = 'Server-Vorschau aktualisiert.';
     } catch { status.textContent = 'Vorschau konnte nicht geladen werden.'; }
   });
+  initNewsReadinessPanel(document.getElementById('news-editor-readiness'), {readDocument: serialize, blocks});
 }

@@ -13,6 +13,7 @@ import {structuredHtml} from '../../assets/news_editor/html-paste.js';
 import {applySlashCommand, blockForCommand, matchBlockCommands} from '../../assets/news_editor/block-commands.js';
 import {applyBatchBlockOperation, normalizeBlockSelection} from '../../assets/news_editor/batch-blocks.js';
 import {insertSnippet, normalizeSnippetItems} from '../../assets/news_editor/snippets.js';
+import {normalizeReadinessReport, resolveReadinessBlockIndex, resolveReadinessFocusTarget} from '../../assets/news_editor/readiness.js';
 
 test('snippet responses are bounded and reject malformed server data', () => {
   const payload = {items: [
@@ -366,4 +367,54 @@ test('autosave acknowledges only the sent snapshot and blocks writes after a con
   state.failure(true);
   assert.equal(state.begin('third'), null);
   assert.equal(state.isDirty('third'), true);
+});
+
+test('readiness reports normalize bounded metrics and known, safe findings', () => {
+  const report = normalizeReadinessReport({
+    summary: {state: 'review_recommended', message: 'Bitte prüfen.', limited: false},
+    metrics: {wordCount: 24, blockCount: 2, headingCount: 1, imageCount: 1, linkCount: 0, readingMinutes: 1, averageSentenceWords: 12, linkDensityPercent: 0},
+    findings: [
+      {code: 'accessibility.image_alt_missing', category: 'accessibility', severity: 'warning', blockIndex: 1, message: 'Alternativtext prüfen.'},
+      {code: 'bad code', category: 'unknown', severity: 'fatal', blockIndex: 101, message: '<script>'},
+    ],
+  });
+  assert.equal(report.summary.findingCount, 1);
+  assert.equal(report.summary.warningCount, 1);
+  assert.equal(report.findings[0].blockIndex, 1);
+  assert.equal(report.findings[0].message, 'Alternativtext prüfen.');
+  assert.equal(report.metrics.wordCount, 24);
+  assert.throws(() => normalizeReadinessReport({summary: {}, metrics: {}, findings: {}}), TypeError);
+  const repeated = Array.from({length: 90}, (_, index) => ({
+    code: 'metadata.description_missing', category: 'metadata', severity: 'info', blockIndex: index % 2, message: 'Beschreibung prüfen.',
+  }));
+  const bounded = normalizeReadinessReport({summary: {state: 'no_major_issues'}, metrics: {}, findings: repeated});
+  assert.equal(bounded.findings.length, 80);
+  assert.equal(bounded.summary.limited, true);
+});
+
+test('readiness navigation accepts only an in-range direct block index', () => {
+  assert.equal(resolveReadinessBlockIndex(0, 1), 0);
+  assert.equal(resolveReadinessBlockIndex('2', 3), 2);
+  assert.equal(resolveReadinessBlockIndex('-1', 3), null);
+  assert.equal(resolveReadinessBlockIndex('1.5', 3), null);
+  assert.equal(resolveReadinessBlockIndex('3', 3), null);
+  assert.equal(resolveReadinessBlockIndex('__proto__', 3), null);
+  assert.equal(resolveReadinessBlockIndex(0, 101), null);
+});
+
+test('readiness navigation focuses the matching input or editable content before block controls', () => {
+  const editable = {};
+  const specific = {};
+  const toolbar = {};
+  const row = {querySelector(selector) {
+    if (selector === '[data-readiness-target~="accessibility.image_alt_missing"]') return specific;
+    if (selector === '[contenteditable="true"]') return editable;
+    if (selector === 'textarea, input:not([type="hidden"]), select') return toolbar;
+    return null;
+  }};
+  assert.equal(resolveReadinessFocusTarget(row, 'accessibility.image_alt_missing'), specific);
+  assert.equal(resolveReadinessFocusTarget(row, 'readability.sentences_long'), editable);
+  assert.equal(resolveReadinessFocusTarget(row, 'unsafe"] button[data-x="'), editable);
+  const fallback = {querySelector: () => null};
+  assert.equal(resolveReadinessFocusTarget(fallback, 'structure.h2_missing'), fallback);
 });
