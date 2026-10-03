@@ -9,6 +9,7 @@ use App\ContentEditor\ContentBlockPolicy;
 use App\ContentEditor\ContentBlockRenderer;
 use App\ContentEditor\OwnedMediaReferenceGateway;
 use App\NewsEditor\RichDocument;
+use App\NewsEditor\RichRenderer;
 use PHPUnit\Framework\TestCase;
 
 final class RichRendererTest extends TestCase
