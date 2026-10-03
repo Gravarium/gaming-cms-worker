@@ -6,3 +6,4 @@ import './styles/video.css';
 
 import './styles/portal.css';
 import './styles/modules/compositions.css';
+import './video_workspace/provider-docs.js';
