@@ -99,6 +99,19 @@ final class NewsReadinessReportTest extends TestCase
         $this->report->analyze('not-a-rich-document', $this->entry());
     }
 
+    public function testDecorativeImageDoesNotReceiveMissingAltFinding(): void
+    {
+        $document = $this->document([
+            ['type' => 'heading', 'level' => 2, 'content' => [$this->textRun('Hauptabschnitt')]],
+            ['type' => 'media', 'assetId' => 7, 'alt' => '', 'caption' => '', 'decorative' => true],
+        ]);
+
+        $report = $this->report->analyze($document, $this->entry());
+
+        self::assertSame(1, $report['metrics']['imageCount']);
+        self::assertNotContains('accessibility.image_alt_missing', array_column($report['findings'], 'code'));
+    }
+
     private function document(array $blocks): string
     {
         $encoded = json_encode(['version' => 2, 'blocks' => $blocks], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR);

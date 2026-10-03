@@ -59,7 +59,7 @@ final readonly class RichRenderer
             if ($asset === null) {
                 return '';
             }
-            $alt = $block['alt'] !== '' ? $block['alt'] : $asset['title'];
+            $alt = ($block['decorative'] ?? false) ? '' : ($block['alt'] !== '' ? $block['alt'] : $asset['title']);
             return '<figure class="content-media"><img src="'.$this->escape($asset['url']).'" alt="'.$this->escape($alt).'" loading="lazy" decoding="async" referrerpolicy="no-referrer">'.($block['caption'] !== '' ? '<figcaption>'.$this->escape($block['caption']).'</figcaption>' : '').'</figure>';
         }
         if ($type === 'video') {

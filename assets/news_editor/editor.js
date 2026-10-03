@@ -189,10 +189,19 @@ if (root) {
       const caption = input('Bildunterschrift und Quelle', block.caption);
       const idField = id.querySelector('input'), altField = alt.querySelector('input'), captionField = caption.querySelector('input');
       altField.dataset.readinessTarget = 'accessibility.image_alt_missing accessibility.image_alt_long';
+      const decorativeLabel = node('label', 'Bild ist dekorativ; Alternativtext weglassen ');
+      const decorativeField = node('input'); decorativeField.type = 'checkbox'; decorativeField.checked = block.decorative === true;
+      decorativeField.setAttribute('aria-label', 'Bild ist dekorativ; Alternativtext weglassen'); decorativeLabel.append(decorativeField);
       const figure = node('figure'); figure.className = 'news-editor-figure';
       const image = node('img'); image.hidden = true; image.loading = 'lazy'; image.referrerPolicy = 'no-referrer';
       const figcaption = node('figcaption', captionField.value);
       const message = node('p'); figure.append(image, figcaption, message);
+      const syncDecorative = () => {
+        altField.disabled = decorativeField.checked;
+        if (decorativeField.checked) altField.value = '';
+        image.alt = decorativeField.checked ? '' : (altField.value || image.dataset.assetTitle || '');
+      };
+      syncDecorative();
       let lookup = 0;
       const refreshImage = async () => {
         const serial = ++lookup;
@@ -206,16 +215,17 @@ if (root) {
           const {items} = await response.json();
           if (serial !== lookup) return;
           if (String(items?.[0]?.id) !== idField.value) throw new Error('Bild nicht freigegeben');
-          image.src = items[0].url; image.alt = altField.value || items[0].title; image.hidden = false; message.textContent = '';
+          image.src = items[0].url; image.dataset.assetTitle = items[0].title; image.hidden = false; syncDecorative(); message.textContent = '';
         } catch { if (serial === lookup) message.textContent = 'Bild nicht verfügbar oder nicht freigegeben.'; }
       };
       const select = node('button', 'Bild auswählen'); select.type = 'button';
       select.addEventListener('click', () => openMediaPicker(idField, altField, refreshImage));
       idField.addEventListener('input', () => { ++lookup; image.hidden = true; image.removeAttribute('src'); message.textContent = 'Bildauswahl prüfen …'; });
       idField.addEventListener('change', refreshImage);
-      altField.addEventListener('input', () => { image.alt = altField.value; });
+      altField.addEventListener('input', syncDecorative);
+      decorativeField.addEventListener('change', () => { syncDecorative(); changed(); });
       captionField.addEventListener('input', () => { figcaption.textContent = captionField.value; });
-      row.append(id, select, alt, caption, figure);
+      row.append(id, select, alt, decorativeLabel, caption, figure);
       if (Number(block.assetId) > 0) refreshImage(); else message.textContent = 'Bild aus der Mediathek auswählen.';
     }
     if (block.type === 'video') {
@@ -289,7 +299,10 @@ if (root) {
       if (type === 'callout') return {type, tone: row.querySelector('select').value, content: runs(row.querySelector('[contenteditable]'))};
       if (type === 'code') return {type, language: row.querySelector('select').value, text: row.querySelector('textarea').value};
       if (type === 'separator') return {type};
-      if (type === 'media') { const [id, alt, caption] = row.querySelectorAll('input'); return {type, assetId: Number(id.value), alt: alt.value, caption: caption.value}; }
+      if (type === 'media') {
+        const [id, alt, caption] = row.querySelectorAll('input:not([type="checkbox"])');
+        return {type, assetId: Number(id.value), alt: alt.value, caption: caption.value, decorative: row.querySelector('input[type="checkbox"]').checked};
+      }
       if (type === 'video') { const [provider, videoId, caption] = row.querySelectorAll('input'); return {type, provider: provider.value, videoId: videoId.value, caption: caption.value}; }
       throw new Error('Unbekannter Blocktyp.');
   }

@@ -175,6 +175,7 @@ test('Markdown import bounds input and neutralizes untrusted links and HTML', ()
   assert.deepEqual(blocks[1].content, [{text: 'Link', marks: []}]);
   assert.equal(articleMarkdown({version: 3, blocks: []}), null);
   assert.match(articleMarkdown({version: 2, blocks: [{type: 'media', assetId: 17, alt: 'Titelbild', caption: ''}]}), /CMS-Mediathek #17/);
+  assert.match(articleMarkdown({version: 2, blocks: [{type: 'media', assetId: 17, alt: '', caption: '', decorative: true}]}), /Dekoratives Bild aus CMS-Mediathek #17 \(ohne Alternativtext\)/);
 });
 
 test('keyboard block shortcuts require an unambiguous primary plus shift chord', () => {

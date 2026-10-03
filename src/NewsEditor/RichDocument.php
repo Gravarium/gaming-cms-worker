@@ -166,11 +166,21 @@ final class RichDocument
             return ['type' => 'separator'];
         }
         if ($type === 'media') {
-            $this->keys($block, ['type', 'assetId', 'alt', 'caption']);
+            $this->keys($block, array_key_exists('decorative', $block)
+                ? ['type', 'assetId', 'alt', 'caption', 'decorative']
+                : ['type', 'assetId', 'alt', 'caption']);
             if (!is_int($block['assetId']) || $block['assetId'] < 1) {
                 throw new \InvalidArgumentException('Ungültige Medienreferenz.');
             }
-            return ['type' => 'media', 'assetId' => $block['assetId'], 'alt' => $this->text($block['alt'], 300), 'caption' => $this->text($block['caption'], 500)];
+            if (array_key_exists('decorative', $block) && !is_bool($block['decorative'])) {
+                throw new \InvalidArgumentException('Ungültige dekorative Bildkennzeichnung.');
+            }
+            $alt = $this->text($block['alt'], 300);
+            $decorative = $block['decorative'] ?? false;
+            if ($decorative && trim($alt) !== '') {
+                throw new \InvalidArgumentException('Dekorative Bilder dürfen keinen Alternativtext enthalten.');
+            }
+            return ['type' => 'media', 'assetId' => $block['assetId'], 'alt' => $alt, 'caption' => $this->text($block['caption'], 500), 'decorative' => $decorative];
         }
         if ($type === 'video') {
             $this->keys($block, ['type', 'provider', 'videoId', 'caption']);

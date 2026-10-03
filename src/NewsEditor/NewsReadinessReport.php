@@ -73,7 +73,7 @@ final readonly class NewsReadinessReport
 
             if ($type === 'media') {
                 ++$imageCount;
-                if (trim($block['alt']) === '') {
+                if (!$block['decorative'] && trim($block['alt']) === '') {
                     $this->addFinding($findings, $truncated, 'accessibility.image_alt_missing', 'accessibility', 'warning', $index, 'Prüfe, ob das Bild einen Alternativtext braucht oder bewusst dekorativ ist.');
                 } elseif (mb_strlen(trim($block['alt'])) > 125) {
                     $this->addFinding($findings, $truncated, 'accessibility.image_alt_long', 'accessibility', 'info', $index, 'Der Alternativtext ist lang; eine knappe Bildbeschreibung ist meist hilfreicher.');

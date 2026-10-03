@@ -29,7 +29,9 @@ function blockMarkdown(block) {
     case 'code': { const fence = block.text.includes('```') ? '~~~' : '```'; return fence + (block.language === 'plain' ? '' : block.language) + '\n' + block.text + '\n' + fence; }
     case 'separator': return '---';
     case 'callout': return '> ' + ({info: 'Info', tip: 'Tipp', warning: 'Warnung'}[block.tone] ?? 'Info') + ': ' + rich(block.content);
-    case 'media': return 'Bild aus CMS-Mediathek #' + block.assetId + ': ' + escapeText(block.alt || block.caption || 'Ohne Beschreibung');
+    case 'media': return block.decorative
+      ? 'Dekoratives Bild aus CMS-Mediathek #' + block.assetId + ' (ohne Alternativtext)'
+      : 'Bild aus CMS-Mediathek #' + block.assetId + ': ' + escapeText(block.alt || block.caption || 'Ohne Beschreibung');
     case 'video': return 'Video (' + block.provider + '): ' + escapeText(block.videoId) + (block.caption ? ' — ' + escapeText(block.caption) : '');
     default: return '';
   }

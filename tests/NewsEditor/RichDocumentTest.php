@@ -53,6 +53,8 @@ final class RichDocumentTest extends TestCase
                 [[['text' => 'C', 'marks' => []]]],
             ]]],
             [['type' => 'media', 'assetId' => '17', 'alt' => '', 'caption' => '']],
+            [['type' => 'media', 'assetId' => 17, 'alt' => 'Meaning', 'caption' => '', 'decorative' => true]],
+            [['type' => 'media', 'assetId' => 17, 'alt' => '', 'caption' => '', 'decorative' => 'true']],
             [['type' => 'video', 'provider' => 'evil', 'videoId' => 'aaaaaa', 'caption' => '']],
             [['type' => 'video', 'provider' => 'vimeo', 'videoId' => 'not-a-number', 'caption' => '']],
             [['type' => 'callout', 'tone' => 'script', 'content' => [['text' => 'x', 'marks' => []]]]],
@@ -67,6 +69,17 @@ final class RichDocumentTest extends TestCase
                 self::assertTrue(true);
             }
         }
+    }
+
+    public function testOldMediaDefaultsToInformativeAndDecorativeMediaIsExplicit(): void
+    {
+        $document = new RichDocument();
+        $legacy = $document->decode($this->raw([['type' => 'media', 'assetId' => 17, 'alt' => '', 'caption' => '']]]));
+        self::assertFalse($legacy['blocks'][0]['decorative']);
+
+        $decorative = $document->decode($this->raw([['type' => 'media', 'assetId' => 17, 'alt' => '', 'caption' => '', 'decorative' => true]]));
+        self::assertTrue($decorative['blocks'][0]['decorative']);
+        self::assertSame('', $decorative['blocks'][0]['alt']);
     }
 
     public function testRejectsExcessiveInputBeforeDecoding(): void

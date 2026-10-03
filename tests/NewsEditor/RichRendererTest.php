@@ -84,4 +84,22 @@ final class RichRendererTest extends TestCase
         self::assertStringContainsString('<tbody><tr><td>&lt;script&gt;</td></tr>', $html);
         self::assertStringNotContainsString('<script>', $html);
     }
+
+    public function testDecorativeMediaGetsEmptyAltWithoutAssetTitleFallback(): void
+    {
+        $media = new class implements OwnedMediaReferenceGateway {
+            public function resolve(int $assetId): ?array
+            {
+                return ['id' => $assetId, 'url' => '/safe.png', 'title' => 'Asset title', 'mime' => 'image/png'];
+            }
+        };
+        $document = RichDocument::PREFIX.json_encode(['version' => 2, 'blocks' => [
+            ['type' => 'media', 'assetId' => 7, 'alt' => '', 'caption' => '', 'decorative' => true],
+        ]], JSON_THROW_ON_ERROR);
+
+        $html = (new RichRenderer(new RichDocument(), $media))->render($document);
+
+        self::assertStringContainsString('<img src="/safe.png" alt=""', $html);
+        self::assertStringNotContainsString('Asset title', $html);
+    }
 }
