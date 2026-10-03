@@ -4,14 +4,14 @@
   "source_queue": {
     "repository": "Gravarium/gaming-cms",
     "path": "docs/ai-work-queue.json",
-    "blob_sha": "89dba8344b44c35cad7be69dfc1fab7fef9ad194",
-    "updated_at": "2026-10-02T17:15:16Z"
+    "blob_sha": "b5e3c8183382be5f32c594ec97400e354461137d",
+    "updated_at": "2026-10-02T19:48:43Z"
   },
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
-  "base_sha": "9e083c63e7d888af36f93a23eb924c89fad2b971",
-  "published_at": "2026-10-02T09:06:20.706Z",
-  "summary": "WCP-621 and WCP-622 were selectively integrated through Trusted PR #210; queue/status/handoff reconciliation merged as PR #215. All Trusted, sanitized-sync, and exact Worker CI gates passed. Worker source PRs #416/#417 closed unmerged. Other Worker assignments and claims are unchanged.",
+  "base_sha": "08260d3f0e343615f525efd2de05767200f031c5",
+  "published_at": "2026-10-03T02:08:00Z",
+  "summary": "WCP-636 integrated through Trusted PR #216; WCP-637/638/643/646/649 through Trusted PR #218. Exact Trusted CI and bare-mirror validation, post-merge Main CI, sanitized sync and exact Worker-main CI passed. Source Worker PRs #429/#430/#432/#438/#440/#443 closed unmerged. Existing Worker claims remain unchanged.",
   "rules": {
     "choose": "Resume the current chat's unfinished claimed branch first. Otherwise atomically claim an eligible published task. If no published task is eligible, independently derive and publish a bounded worker-only CMS proposal from approved product goals and observed code gaps; do not ask the owner for the next FCP number.",
     "atomic_reservation": "Create the exact claim_branch and suggested feature branch from that task's published proposal_base_sha. If the claim already exists, treat it as a hard lock; the owning continuation resumes it and every other AI skips it.",
@@ -62532,8 +62532,8 @@
       "priority": 636,
       "package_id": "WCP-636",
       "title": "Complete video management workflows and extensible multi-provider playback",
-      "execution_state": "worker_complete_awaiting_trusted_review",
-      "claim_state": "locked_until_trusted_resolution",
+      "execution_state": "trusted_integrated",
+      "claim_state": "released_after_trusted_integration",
       "claim_generation": 1,
       "claim_branch": "claim/wcp-636-video-workspace-providers-g1",
       "suggested_branch": "feature/wcp-636-video-workspace-providers-g1",
@@ -62599,17 +62599,17 @@
         "result": "All allowed paths disjoint from active and locked pool claims; legacy FCP-067 paths and shared migrations directory untouched. New uniquely named additive migration uses a distinct namespace.",
         "base": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4"
       },
-      "next_action": "Await independent Worker/Trusted review; no merge or deployment.",
+      "next_action": "Integrated through Trusted PR #216; all exact-head, bare-mirror, Main CI, sanitized-sync and Worker CI gates passed. Worker PR #429 closed unmerged; no deployment.",
       "last_observed_head": "638a82ffc0a75bbcbb53f1a482026327f14040db",
       "last_verified_push_at": "2026-10-01T05:29:10Z",
-      "worker_pr_state": "open",
+      "worker_pr_state": "closed",
       "last_checkpoint_at": "2026-10-01T05:34:41.189Z",
       "worker_pr": 429,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/429",
       "last_ci_run_id": 36820018323,
       "last_ci_head": "638a82ffc0a75bbcbb53f1a482026327f14040db",
       "last_ci_result": "success",
-      "pr_state": "open",
+      "pr_state": "closed",
       "worker_pr_head_sha": "638a82ffc0a75bbcbb53f1a482026327f14040db",
       "final_head": "638a82ffc0a75bbcbb53f1a482026327f14040db",
       "ci_run_id": 36820018323,
@@ -62719,14 +62719,40 @@
         "tests/VideoWorkspace/ProviderRegistryTest.php",
         "video_workspace_migrations/Version20261001045000.php"
       ],
-      "draft": false
+      "draft": false,
+      "trusted_resolution": {
+        "status": "integrated",
+        "worker_pr": 429,
+        "worker_head": "638a82ffc0a75bbcbb53f1a482026327f14040db",
+        "worker_exact_head_ci_run_id": 36820018323,
+        "worker_exact_head_ci_result": "success",
+        "trusted_pr": 216,
+        "trusted_pr_head": "685fc1749f19cb23dc62b862ba16a40fbdd04e59",
+        "trusted_pr_ci_run_id": 37040412495,
+        "trusted_pr_ci_result": "success",
+        "trusted_mirror_validation_run_id": 37040412516,
+        "trusted_mirror_validation_result": "success",
+        "trusted_merge_sha": "00a7d5875e7975ab3404d1df9912b5178367c2bd",
+        "trusted_main_sha": "00a7d5875e7975ab3404d1df9912b5178367c2bd",
+        "trusted_main_ci_run_id": 37052795830,
+        "trusted_main_ci_result": "success",
+        "worker_sync_run_id": 37052739999,
+        "worker_sync_result": "success",
+        "sanitized_worker_main_sha": "4c0040dc758787786209db8c10f14faad3137bf3",
+        "worker_ci_run_id": 36978429440,
+        "worker_ci_after_sync_result": "success",
+        "worker_source_pr_state": "closed",
+        "worker_source_pr_merged": false,
+        "resolved_at": "2026-10-03T02:00:28Z",
+        "trusted_import_note": "Selective Trusted integration through PR #216; source Worker PR #429 closed unmerged. No deployment."
+      }
     },
     {
       "priority": 637,
       "package_id": "WCP-637",
       "title": "Selectable playback engines and CMS player compatibility catalogue",
-      "execution_state": "worker_complete_awaiting_trusted_review",
-      "claim_state": "locked_until_trusted_resolution",
+      "execution_state": "trusted_integrated",
+      "claim_state": "released_after_trusted_integration",
       "claim_generation": 1,
       "claim_branch": "claim/wcp-637-video-player-choice-g1",
       "suggested_branch": "feature/wcp-637-video-player-choice-g1",
@@ -62802,12 +62828,12 @@
           "tests/JavaScript/video-player-choice.test.mjs"
         ]
       },
-      "next_action": "Await review of green corrected PR 430 together with dependency PR 429. No merge or deployment.",
+      "next_action": "Integrated through Trusted PR #218; all exact-head, bare-mirror, Main CI, sanitized-sync and Worker CI gates passed. Worker PR #430 closed unmerged; no deployment.",
       "last_observed_head": "0aefb975905b67bd649cc37a027fdd5d609d1a37",
       "last_verified_push_at": "2026-10-01T08:51:24.940Z",
       "worker_pr": 430,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/430",
-      "worker_pr_state": "open",
+      "worker_pr_state": "closed",
       "checkpoint_paths": [
         "assets/video_player_choice/choice.css",
         "assets/video_player_choice/player.js",
@@ -63024,15 +63050,41 @@
           "video_workspace_migrations/Version20261001045000.php"
         ]
       },
-      "pr_state": "open",
-      "draft": false
+      "pr_state": "closed",
+      "draft": false,
+      "trusted_resolution": {
+        "status": "integrated",
+        "worker_pr": 430,
+        "worker_head": "0aefb975905b67bd649cc37a027fdd5d609d1a37",
+        "worker_exact_head_ci_run_id": 36838962550,
+        "worker_exact_head_ci_result": "success",
+        "trusted_pr": 218,
+        "trusted_pr_head": "af40afd6a7b04058e1c39e8c624ccfba3630372e",
+        "trusted_pr_ci_run_id": 37056542049,
+        "trusted_pr_ci_result": "success",
+        "trusted_mirror_validation_run_id": 37056542088,
+        "trusted_mirror_validation_result": "success",
+        "trusted_merge_sha": "be785b6f8b06724957c071294df90566c412edb9",
+        "trusted_main_sha": "be785b6f8b06724957c071294df90566c412edb9",
+        "trusted_main_ci_run_id": 37057322482,
+        "trusted_main_ci_result": "success",
+        "worker_sync_run_id": 37057322365,
+        "worker_sync_result": "success",
+        "sanitized_worker_main_sha": "08260d3f0e343615f525efd2de05767200f031c5",
+        "worker_ci_run_id": 37057372801,
+        "worker_ci_after_sync_result": "success",
+        "worker_source_pr_state": "closed",
+        "worker_source_pr_merged": false,
+        "resolved_at": "2026-10-03T02:00:29Z",
+        "trusted_import_note": "Selective Trusted integration through PR #218; source Worker PR #430 closed unmerged. No deployment."
+      }
     },
     {
       "priority": 638,
       "package_id": "WCP-638",
       "title": "Video source preflight, manager playback preview and continuous playlists with opt-in resume",
-      "execution_state": "worker_complete_awaiting_trusted_review",
-      "claim_state": "locked_until_trusted_resolution",
+      "execution_state": "trusted_integrated",
+      "claim_state": "released_after_trusted_integration",
       "claim_generation": 1,
       "claim_branch": "claim/wcp-638-video-playback-journey-g1",
       "suggested_branch": "feature/wcp-638-video-playback-journey-g1",
@@ -63101,13 +63153,13 @@
       "collision_check": {
         "result": "New paths disjoint from all active/locked packages. FCP-072 general templates scope is unclaimed and dependency-blocked; no active reservation there. WCP-636/637 consumed read-only at exact green head."
       },
-      "next_action": "Await review. This worker PR remains untrusted and locked until Trusted resolution. No Trusted merge or deployment.",
+      "next_action": "Integrated through Trusted PR #218; all exact-head, bare-mirror, Main CI, sanitized-sync and Worker CI gates passed. Worker PR #432 closed unmerged; no deployment.",
       "active_head": "456eb44dbaa9e9d3164b3062b3c62cd80e86b295",
       "last_observed_head": "456eb44dbaa9e9d3164b3062b3c62cd80e86b295",
       "last_verified_push_at": "2026-10-01T10:26:08Z",
       "worker_pr": 432,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/432",
-      "worker_pr_state": "open",
+      "worker_pr_state": "closed",
       "checkpoint_paths": [
         "assets/video_playback_journey/journey.css",
         "assets/video_playback_journey/journey.js",
@@ -63350,10 +63402,36 @@
           "video_workspace_migrations/Version20261001045000.php"
         ]
       },
-      "pr_state": "open",
+      "pr_state": "closed",
       "draft": false,
       "last_ci_result": "success",
-      "last_ci_head": "456eb44dbaa9e9d3164b3062b3c62cd80e86b295"
+      "last_ci_head": "456eb44dbaa9e9d3164b3062b3c62cd80e86b295",
+      "trusted_resolution": {
+        "status": "integrated",
+        "worker_pr": 432,
+        "worker_head": "456eb44dbaa9e9d3164b3062b3c62cd80e86b295",
+        "worker_exact_head_ci_run_id": 36849113717,
+        "worker_exact_head_ci_result": "success",
+        "trusted_pr": 218,
+        "trusted_pr_head": "af40afd6a7b04058e1c39e8c624ccfba3630372e",
+        "trusted_pr_ci_run_id": 37056542049,
+        "trusted_pr_ci_result": "success",
+        "trusted_mirror_validation_run_id": 37056542088,
+        "trusted_mirror_validation_result": "success",
+        "trusted_merge_sha": "be785b6f8b06724957c071294df90566c412edb9",
+        "trusted_main_sha": "be785b6f8b06724957c071294df90566c412edb9",
+        "trusted_main_ci_run_id": 37057322482,
+        "trusted_main_ci_result": "success",
+        "worker_sync_run_id": 37057322365,
+        "worker_sync_result": "success",
+        "sanitized_worker_main_sha": "08260d3f0e343615f525efd2de05767200f031c5",
+        "worker_ci_run_id": 37057372801,
+        "worker_ci_after_sync_result": "success",
+        "worker_source_pr_state": "closed",
+        "worker_source_pr_merged": false,
+        "resolved_at": "2026-10-03T02:00:34Z",
+        "trusted_import_note": "Selective Trusted integration through PR #218; source Worker PR #432 closed unmerged. No deployment."
+      }
     },
     {
       "priority": 639,
@@ -63794,8 +63872,8 @@
       "priority": 643,
       "package_id": "WCP-643",
       "title": "Owner-requested video portal provider adapters and white-label playback paths",
-      "execution_state": "worker_complete_awaiting_trusted_review",
-      "claim_state": "locked_until_trusted_resolution",
+      "execution_state": "trusted_integrated",
+      "claim_state": "released_after_trusted_integration",
       "claim_generation": 1,
       "claim_branch": "claim/wcp-643-video-provider-expansion-g1",
       "suggested_branch": "feature/wcp-643-video-provider-expansion-g1",
@@ -63857,11 +63935,11 @@
           "tests/VideoProviderExpansion/"
         ]
       },
-      "next_action": "Await independent Worker/Trusted review with prerequisite PR 429 and PR 430; no merge or deployment.",
+      "next_action": "Integrated through Trusted PR #218; all exact-head, bare-mirror, Main CI, sanitized-sync and Worker CI gates passed. Worker PR #438 closed unmerged; no deployment.",
       "active_head": "d6f5cfc634045c2a2a5b93b15be18a2ba70204bb",
       "last_observed_head": "d6f5cfc634045c2a2a5b93b15be18a2ba70204bb",
       "last_verified_push_at": "2026-10-01T15:55:04.063Z",
-      "worker_pr_state": "open",
+      "worker_pr_state": "closed",
       "worker_pr": 438,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/438",
       "worker_pr_head_sha": "d6f5cfc634045c2a2a5b93b15be18a2ba70204bb",
@@ -64056,8 +64134,34 @@
           "video_workspace_migrations/Version20261001045000.php"
         ]
       },
-      "pr_state": "open",
-      "draft": false
+      "pr_state": "closed",
+      "draft": false,
+      "trusted_resolution": {
+        "status": "integrated",
+        "worker_pr": 438,
+        "worker_head": "d6f5cfc634045c2a2a5b93b15be18a2ba70204bb",
+        "worker_exact_head_ci_run_id": 36886718904,
+        "worker_exact_head_ci_result": "success",
+        "trusted_pr": 218,
+        "trusted_pr_head": "af40afd6a7b04058e1c39e8c624ccfba3630372e",
+        "trusted_pr_ci_run_id": 37056542049,
+        "trusted_pr_ci_result": "success",
+        "trusted_mirror_validation_run_id": 37056542088,
+        "trusted_mirror_validation_result": "success",
+        "trusted_merge_sha": "be785b6f8b06724957c071294df90566c412edb9",
+        "trusted_main_sha": "be785b6f8b06724957c071294df90566c412edb9",
+        "trusted_main_ci_run_id": 37057322482,
+        "trusted_main_ci_result": "success",
+        "worker_sync_run_id": 37057322365,
+        "worker_sync_result": "success",
+        "sanitized_worker_main_sha": "08260d3f0e343615f525efd2de05767200f031c5",
+        "worker_ci_run_id": 37057372801,
+        "worker_ci_after_sync_result": "success",
+        "worker_source_pr_state": "closed",
+        "worker_source_pr_merged": false,
+        "resolved_at": "2026-10-03T02:00:30Z",
+        "trusted_import_note": "Selective Trusted integration through PR #218; source Worker PR #438 closed unmerged. No deployment."
+      }
     },
     {
       "priority": 644,
@@ -64263,8 +64367,8 @@
       "package_id": "WCP-646",
       "title": "Testable own-player branding controls for video sources",
       "risk": "medium",
-      "execution_state": "worker_complete_awaiting_trusted_review",
-      "claim_state": "locked_until_trusted_resolution",
+      "execution_state": "trusted_integrated",
+      "claim_state": "released_after_trusted_integration",
       "claim_generation": 1,
       "claim_branch": "claim/wcp-646-video-branding-g1",
       "suggested_branch": "feature/wcp-646-video-branding-g1",
@@ -64340,14 +64444,14 @@
           "tests/JavaScript/video-player-branding.test.mjs"
         ]
       },
-      "next_action": "Await independent Worker/Trusted review and authorized media browser QA; no merge or deployment.",
+      "next_action": "Integrated through Trusted PR #218; all exact-head, bare-mirror, Main CI, sanitized-sync and Worker CI gates passed. Worker PR #440 closed unmerged; no deployment.",
       "claimed_on": "2026-10-01T15:51:03.222Z",
       "lease_expires_at": null,
       "resume_branch": "feature/wcp-646-video-branding-g1",
       "active_head": "726c9265eb05a1d9ff87c1d73eb5011384349095",
       "last_observed_head": "726c9265eb05a1d9ff87c1d73eb5011384349095",
       "last_verified_push_at": "2026-10-01T16:05:15.960Z",
-      "worker_pr_state": "open",
+      "worker_pr_state": "closed",
       "worker_pr": 440,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/440",
       "last_ci_run_id": 36889149778,
@@ -64362,7 +64466,7 @@
         }
       ],
       "final_head": "726c9265eb05a1d9ff87c1d73eb5011384349095",
-      "pr_state": "open",
+      "pr_state": "closed",
       "worker_pr_head_sha": "726c9265eb05a1d9ff87c1d73eb5011384349095",
       "ci_run_id": 36889149778,
       "ci_result": "success",
@@ -64608,7 +64712,33 @@
           "video_workspace_migrations/Version20261001045000.php"
         ]
       },
-      "draft": false
+      "draft": false,
+      "trusted_resolution": {
+        "status": "integrated",
+        "worker_pr": 440,
+        "worker_head": "726c9265eb05a1d9ff87c1d73eb5011384349095",
+        "worker_exact_head_ci_run_id": 36889149778,
+        "worker_exact_head_ci_result": "success",
+        "trusted_pr": 218,
+        "trusted_pr_head": "af40afd6a7b04058e1c39e8c624ccfba3630372e",
+        "trusted_pr_ci_run_id": 37056542049,
+        "trusted_pr_ci_result": "success",
+        "trusted_mirror_validation_run_id": 37056542088,
+        "trusted_mirror_validation_result": "success",
+        "trusted_merge_sha": "be785b6f8b06724957c071294df90566c412edb9",
+        "trusted_main_sha": "be785b6f8b06724957c071294df90566c412edb9",
+        "trusted_main_ci_run_id": 37057322482,
+        "trusted_main_ci_result": "success",
+        "worker_sync_run_id": 37057322365,
+        "worker_sync_result": "success",
+        "sanitized_worker_main_sha": "08260d3f0e343615f525efd2de05767200f031c5",
+        "worker_ci_run_id": 37057372801,
+        "worker_ci_after_sync_result": "success",
+        "worker_source_pr_state": "closed",
+        "worker_source_pr_merged": false,
+        "resolved_at": "2026-10-03T02:00:32Z",
+        "trusted_import_note": "Selective Trusted integration through PR #218; source Worker PR #440 closed unmerged. No deployment."
+      }
     },
     {
       "priority": 647,
@@ -64818,8 +64948,8 @@
       "priority": 649,
       "package_id": "WCP-649",
       "title": "Manager video provider JSON integration surface",
-      "execution_state": "worker_complete_awaiting_trusted_review",
-      "claim_state": "locked_until_trusted_resolution",
+      "execution_state": "trusted_integrated",
+      "claim_state": "released_after_trusted_integration",
       "claim_generation": 1,
       "claim_branch": "claim/wcp-649-video-provider-api-g1",
       "suggested_branch": "feature/wcp-649-video-provider-api-g1",
@@ -64884,11 +65014,11 @@
           "tests/Controller/VideoProviderApiControllerTest.php"
         ]
       },
-      "next_action": "Await independent Worker/Trusted review together with prerequisite PR 438, PR 430 and PR 429; no merge or deployment.",
+      "next_action": "Integrated through Trusted PR #218; all exact-head, bare-mirror, Main CI, sanitized-sync and Worker CI gates passed. Worker PR #443 closed unmerged; no deployment.",
       "active_head": "768e9c79c614a28af821cf62dfb885e2612e44df",
       "last_observed_head": "768e9c79c614a28af821cf62dfb885e2612e44df",
       "last_verified_push_at": "2026-10-01T20:41:13.888Z",
-      "worker_pr_state": "open",
+      "worker_pr_state": "closed",
       "last_checkpoint_at": "2026-10-01T20:20:16.794Z",
       "worker_pr": 443,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/443",
@@ -65102,8 +65232,34 @@
           "video_workspace_migrations/Version20261001045000.php"
         ]
       },
-      "pr_state": "open",
-      "draft": false
+      "pr_state": "closed",
+      "draft": false,
+      "trusted_resolution": {
+        "status": "integrated",
+        "worker_pr": 443,
+        "worker_head": "768e9c79c614a28af821cf62dfb885e2612e44df",
+        "worker_exact_head_ci_run_id": 36922612260,
+        "worker_exact_head_ci_result": "success",
+        "trusted_pr": 218,
+        "trusted_pr_head": "af40afd6a7b04058e1c39e8c624ccfba3630372e",
+        "trusted_pr_ci_run_id": 37056542049,
+        "trusted_pr_ci_result": "success",
+        "trusted_mirror_validation_run_id": 37056542088,
+        "trusted_mirror_validation_result": "success",
+        "trusted_merge_sha": "be785b6f8b06724957c071294df90566c412edb9",
+        "trusted_main_sha": "be785b6f8b06724957c071294df90566c412edb9",
+        "trusted_main_ci_run_id": 37057322482,
+        "trusted_main_ci_result": "success",
+        "worker_sync_run_id": 37057322365,
+        "worker_sync_result": "success",
+        "sanitized_worker_main_sha": "08260d3f0e343615f525efd2de05767200f031c5",
+        "worker_ci_run_id": 37057372801,
+        "worker_ci_after_sync_result": "success",
+        "worker_source_pr_state": "closed",
+        "worker_source_pr_merged": false,
+        "resolved_at": "2026-10-03T02:00:33Z",
+        "trusted_import_note": "Selective Trusted integration through PR #218; source Worker PR #443 closed unmerged. No deployment."
+      }
     },
     {
       "priority": 650,
@@ -67154,15 +67310,19 @@
       "last_observed_head": "eadfbb6929d13f4db38a858062af311d9039a1c8",
       "last_verified_push_at": "2026-10-02T22:28:00.000Z",
       "last_checkpoint_at": "2026-10-02T22:28:00.000Z",
-      "dependencies": ["WCP-670"],
+      "dependencies": [
+        "WCP-670"
+      ],
       "proposal_kind": "worker_only",
-      "proposal_dependency_evidence": [{
-        "package_id": "WCP-670",
-        "head": "d95fcdeb8a356778d7f5191c6588b60f93544d73",
-        "pr": 468,
-        "ci_run": 37066976882,
-        "result": "success"
-      }],
+      "proposal_dependency_evidence": [
+        {
+          "package_id": "WCP-670",
+          "head": "d95fcdeb8a356778d7f5191c6588b60f93544d73",
+          "pr": 468,
+          "ci_run": 37066976882,
+          "result": "success"
+        }
+      ],
       "objective": "Add an accessible, searchable slash-command palette that replaces an empty paragraph with a selected typed v2 block without bypassing document limits, history or editor safety boundaries.",
       "allowed_paths": [
         "assets/news_editor/block-commands.js",
@@ -67171,9 +67331,21 @@
         "tests/JavaScript/news_editor.test.mjs"
       ],
       "forbidden_paths": [
-        "private/", "PrivateCore/", "ops/", "docs/", "bin/", "AGENTS.md", "WORKER.md",
-        "CONTINUOUS-WORKER.md", "CONTINUOUS-WORK-POOL.json", ".github/workflows/", "migrations/",
-        "src/Entity/", "src/Controller/", "templates/", "src/Security/"
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "CONTINUOUS-WORKER.md",
+        "CONTINUOUS-WORK-POOL.json",
+        ".github/workflows/",
+        "migrations/",
+        "src/Entity/",
+        "src/Controller/",
+        "templates/",
+        "src/Security/"
       ],
       "deliverables": [
         "Pure bounded command catalog, locale-aware search and immutable empty-paragraph replacement operation.",
@@ -67195,8 +67367,10 @@
         "compared_against": "Live pool at a9e8c620b8ad156c6357c5a948976e3997cec00d with no worker_in_progress claim",
         "result": "Deliberate serial News Editor descendant of completed WCP-670; no concurrent exclusive-path owner.",
         "paths": [
-          "assets/news_editor/block-commands.js", "assets/news_editor/editor.js",
-          "assets/news_editor/editor.css", "tests/JavaScript/news_editor.test.mjs"
+          "assets/news_editor/block-commands.js",
+          "assets/news_editor/editor.js",
+          "assets/news_editor/editor.css",
+          "tests/JavaScript/news_editor.test.mjs"
         ]
       },
       "worker_pr_state": "ready_for_review",
@@ -67243,21 +67417,42 @@
       "last_observed_head": "89c6c40a0544f5ab39fb1424064f1f533eed2c96",
       "last_verified_push_at": "2026-10-02T22:41:00.000Z",
       "last_checkpoint_at": "2026-10-02T22:41:00.000Z",
-      "dependencies": ["WCP-671"],
+      "dependencies": [
+        "WCP-671"
+      ],
       "proposal_kind": "worker_only",
-      "proposal_dependency_evidence": [{
-        "package_id": "WCP-671", "head": "eadfbb6929d13f4db38a858062af311d9039a1c8",
-        "pr": 469, "ci_run": 37072205874, "result": "success"
-      }],
+      "proposal_dependency_evidence": [
+        {
+          "package_id": "WCP-671",
+          "head": "eadfbb6929d13f4db38a858062af311d9039a1c8",
+          "pr": 469,
+          "ci_run": 37072205874,
+          "result": "success"
+        }
+      ],
       "objective": "Let editors explicitly select several typed blocks and safely duplicate, delete or move the selection as one ordered unit with accessible controls, deterministic focus and full history/document-limit integration.",
       "allowed_paths": [
-        "assets/news_editor/batch-blocks.js", "assets/news_editor/editor.js",
-        "assets/news_editor/editor.css", "tests/JavaScript/news_editor.test.mjs"
+        "assets/news_editor/batch-blocks.js",
+        "assets/news_editor/editor.js",
+        "assets/news_editor/editor.css",
+        "tests/JavaScript/news_editor.test.mjs"
       ],
       "forbidden_paths": [
-        "private/", "PrivateCore/", "ops/", "docs/", "bin/", "AGENTS.md", "WORKER.md",
-        "CONTINUOUS-WORKER.md", "CONTINUOUS-WORK-POOL.json", ".github/workflows/", "migrations/",
-        "src/Entity/", "src/Controller/", "templates/", "src/Security/"
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "CONTINUOUS-WORKER.md",
+        "CONTINUOUS-WORK-POOL.json",
+        ".github/workflows/",
+        "migrations/",
+        "src/Entity/",
+        "src/Controller/",
+        "templates/",
+        "src/Security/"
       ],
       "deliverables": [
         "Pure immutable contiguous-selection operations for moving, duplicating and deleting ordered typed blocks.",
@@ -67279,8 +67474,10 @@
         "compared_against": "Live pool at 6e270a52452b67e2120f8dcfa916c74be79228fd with no worker_in_progress claim",
         "result": "Deliberate serial News Editor descendant of completed WCP-671; no concurrent exclusive-path owner.",
         "paths": [
-          "assets/news_editor/batch-blocks.js", "assets/news_editor/editor.js",
-          "assets/news_editor/editor.css", "tests/JavaScript/news_editor.test.mjs"
+          "assets/news_editor/batch-blocks.js",
+          "assets/news_editor/editor.js",
+          "assets/news_editor/editor.css",
+          "tests/JavaScript/news_editor.test.mjs"
         ]
       },
       "worker_pr_state": "ready_for_review",
@@ -67327,23 +67524,44 @@
       "last_observed_head": "14f56a2e5f3a6b86c572eeb934aa3e1368487d29",
       "last_verified_push_at": "2026-10-02T23:09:00.000Z",
       "last_checkpoint_at": "2026-10-02T23:09:00.000Z",
-      "dependencies": ["WCP-672"],
+      "dependencies": [
+        "WCP-672"
+      ],
       "proposal_kind": "worker_only",
-      "proposal_dependency_evidence": [{
-        "package_id": "WCP-672", "head": "89c6c40a0544f5ab39fb1424064f1f533eed2c96",
-        "pr": 470, "ci_run": 37073315636, "result": "success"
-      }],
+      "proposal_dependency_evidence": [
+        {
+          "package_id": "WCP-672",
+          "head": "89c6c40a0544f5ab39fb1424064f1f533eed2c96",
+          "pr": 470,
+          "ci_run": 37073315636,
+          "result": "success"
+        }
+      ],
       "objective": "Provide each authorized News editor with a persistent, private and bounded library of validated typed blocks that can be named, searched, inserted into drafts and deleted without exposing another user's content.",
       "allowed_paths": [
-        "src/Entity/NewsBlockSnippet.php", "src/Repository/NewsBlockSnippetRepository.php",
-        "src/Controller/AdminNewsBlockSnippetController.php", "migrations/Version20261002225000.php",
-        "templates/admin/news_editor/edit.html.twig", "assets/news_editor/snippets.js",
-        "assets/news_editor/editor.js", "assets/news_editor/editor.css",
-        "tests/Controller/AdminNewsBlockSnippetControllerTest.php", "tests/JavaScript/news_editor.test.mjs"
+        "src/Entity/NewsBlockSnippet.php",
+        "src/Repository/NewsBlockSnippetRepository.php",
+        "src/Controller/AdminNewsBlockSnippetController.php",
+        "migrations/Version20261002225000.php",
+        "templates/admin/news_editor/edit.html.twig",
+        "assets/news_editor/snippets.js",
+        "assets/news_editor/editor.js",
+        "assets/news_editor/editor.css",
+        "tests/Controller/AdminNewsBlockSnippetControllerTest.php",
+        "tests/JavaScript/news_editor.test.mjs"
       ],
       "forbidden_paths": [
-        "private/", "PrivateCore/", "ops/", "docs/", "bin/", "AGENTS.md", "WORKER.md",
-        "CONTINUOUS-WORKER.md", "CONTINUOUS-WORK-POOL.json", ".github/workflows/", "src/Security/"
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "CONTINUOUS-WORKER.md",
+        "CONTINUOUS-WORK-POOL.json",
+        ".github/workflows/",
+        "src/Security/"
       ],
       "deliverables": [
         "Persistent owner-scoped snippet entity, bounded repository query and reversible PostgreSQL migration.",
@@ -67357,19 +67575,27 @@
         "Complete Worker CI including PostgreSQL migration chain on exact final head."
       ],
       "immutable_constraints": [
-        "worker-only-no-Trusted-merge-or-deployment", "snippets-are-private-to-their-owner",
-        "stored-blocks-pass-the-existing-content-policy", "bounded-count-name-query-and-payload",
-        "document-limits-history-and-autosave-remain-enforced", "no-security-test-or-CI-weakening"
+        "worker-only-no-Trusted-merge-or-deployment",
+        "snippets-are-private-to-their-owner",
+        "stored-blocks-pass-the-existing-content-policy",
+        "bounded-count-name-query-and-payload",
+        "document-limits-history-and-autosave-remain-enforced",
+        "no-security-test-or-CI-weakening"
       ],
       "collision_check": {
         "compared_against": "Live pool at a9ad5e2099b861dd9d2d36caeb95471100079a79 with no worker_in_progress claim",
         "result": "Serial News Editor descendant of completed WCP-672; all new persistence/API paths are unique and shared editor paths have no concurrent owner.",
         "paths": [
-          "src/Entity/NewsBlockSnippet.php", "src/Repository/NewsBlockSnippetRepository.php",
-          "src/Controller/AdminNewsBlockSnippetController.php", "migrations/Version20261002225000.php",
-          "templates/admin/news_editor/edit.html.twig", "assets/news_editor/snippets.js",
-          "assets/news_editor/editor.js", "assets/news_editor/editor.css",
-          "tests/Controller/AdminNewsBlockSnippetControllerTest.php", "tests/JavaScript/news_editor.test.mjs"
+          "src/Entity/NewsBlockSnippet.php",
+          "src/Repository/NewsBlockSnippetRepository.php",
+          "src/Controller/AdminNewsBlockSnippetController.php",
+          "migrations/Version20261002225000.php",
+          "templates/admin/news_editor/edit.html.twig",
+          "assets/news_editor/snippets.js",
+          "assets/news_editor/editor.js",
+          "assets/news_editor/editor.css",
+          "tests/Controller/AdminNewsBlockSnippetControllerTest.php",
+          "tests/JavaScript/news_editor.test.mjs"
         ]
       },
       "worker_pr_state": "ready_for_review",
@@ -67386,11 +67612,16 @@
       "ci_head": "14f56a2e5f3a6b86c572eeb934aa3e1368487d29",
       "last_ci_head": "14f56a2e5f3a6b86c572eeb934aa3e1368487d29",
       "final_changed_paths": [
-        "src/Entity/NewsBlockSnippet.php", "src/Repository/NewsBlockSnippetRepository.php",
-        "src/Controller/AdminNewsBlockSnippetController.php", "migrations/Version20261002225000.php",
-        "templates/admin/news_editor/edit.html.twig", "assets/news_editor/snippets.js",
-        "assets/news_editor/editor.js", "assets/news_editor/editor.css",
-        "tests/Controller/AdminNewsBlockSnippetControllerTest.php", "tests/JavaScript/news_editor.test.mjs"
+        "src/Entity/NewsBlockSnippet.php",
+        "src/Repository/NewsBlockSnippetRepository.php",
+        "src/Controller/AdminNewsBlockSnippetController.php",
+        "migrations/Version20261002225000.php",
+        "templates/admin/news_editor/edit.html.twig",
+        "assets/news_editor/snippets.js",
+        "assets/news_editor/editor.js",
+        "assets/news_editor/editor.css",
+        "tests/Controller/AdminNewsBlockSnippetControllerTest.php",
+        "tests/JavaScript/news_editor.test.mjs"
       ],
       "next_action": "Trusted review and integration decision on Worker PR #471 after prerequisite WCP-672 / PR #470; preserve exact green head."
     },
@@ -67417,24 +67648,46 @@
       "last_observed_head": "14f56a2e5f3a6b86c572eeb934aa3e1368487d29",
       "last_verified_push_at": "2026-10-02T23:11:00.000Z",
       "last_checkpoint_at": "2026-10-02T23:11:00.000Z",
-      "dependencies": ["WCP-673"],
+      "dependencies": [
+        "WCP-673"
+      ],
       "proposal_kind": "worker_only",
-      "proposal_dependency_evidence": [{
-        "package_id": "WCP-673", "head": "14f56a2e5f3a6b86c572eeb934aa3e1368487d29",
-        "pr": 471, "ci_run": 37075672478, "result": "success"
-      }],
+      "proposal_dependency_evidence": [
+        {
+          "package_id": "WCP-673",
+          "head": "14f56a2e5f3a6b86c572eeb934aa3e1368487d29",
+          "pr": 471,
+          "ci_run": 37075672478,
+          "result": "success"
+        }
+      ],
       "objective": "Provide editors with a server-authoritative, on-demand publication-readiness report for the current unsaved News document, covering structure, accessibility, attribution, links, readability signals and key article metadata without exposing or persisting draft content.",
       "allowed_paths": [
-        "src/NewsEditor/NewsReadinessReport.php", "src/Controller/AdminNewsReadinessController.php",
-        "templates/admin/news_editor/edit.html.twig", "assets/news_editor/readiness.js",
-        "assets/news_editor/editor.js", "assets/news_editor/editor.css",
-        "tests/NewsEditor/NewsReadinessReportTest.php", "tests/Controller/AdminNewsReadinessControllerTest.php",
+        "src/NewsEditor/NewsReadinessReport.php",
+        "src/Controller/AdminNewsReadinessController.php",
+        "templates/admin/news_editor/edit.html.twig",
+        "assets/news_editor/readiness.js",
+        "assets/news_editor/editor.js",
+        "assets/news_editor/editor.css",
+        "tests/NewsEditor/NewsReadinessReportTest.php",
+        "tests/Controller/AdminNewsReadinessControllerTest.php",
         "tests/JavaScript/news_editor.test.mjs"
       ],
       "forbidden_paths": [
-        "private/", "PrivateCore/", "ops/", "docs/", "bin/", "AGENTS.md", "WORKER.md",
-        "CONTINUOUS-WORKER.md", "CONTINUOUS-WORK-POOL.json", ".github/workflows/", "migrations/",
-        "src/Entity/", "src/Repository/", "src/Security/"
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "CONTINUOUS-WORKER.md",
+        "CONTINUOUS-WORK-POOL.json",
+        ".github/workflows/",
+        "migrations/",
+        "src/Entity/",
+        "src/Repository/",
+        "src/Security/"
       ],
       "deliverables": [
         "Pure deterministic report service with bounded issue output, severity, block location, metrics and publication-ready summary.",
@@ -67449,18 +67702,25 @@
         "Complete Worker CI on exact final head."
       ],
       "immutable_constraints": [
-        "worker-only-no-Trusted-merge-or-deployment", "audit-is-advisory-and-never-mutates-content",
-        "draft-document-is-never-logged-or-persisted-by-the-audit", "existing-rich-document-policy-remains-authoritative",
-        "bounded-request-and-finding-count", "no-security-test-or-CI-weakening"
+        "worker-only-no-Trusted-merge-or-deployment",
+        "audit-is-advisory-and-never-mutates-content",
+        "draft-document-is-never-logged-or-persisted-by-the-audit",
+        "existing-rich-document-policy-remains-authoritative",
+        "bounded-request-and-finding-count",
+        "no-security-test-or-CI-weakening"
       ],
       "collision_check": {
         "compared_against": "Live pool at ea507f87543de7f6ebdcdb190d6d8b0062ff2ffd with no worker_in_progress claim",
         "result": "Serial News Editor descendant of completed WCP-673; new report service/controller paths are unique and shared UI paths have no concurrent owner.",
         "paths": [
-          "src/NewsEditor/NewsReadinessReport.php", "src/Controller/AdminNewsReadinessController.php",
-          "templates/admin/news_editor/edit.html.twig", "assets/news_editor/readiness.js",
-          "assets/news_editor/editor.js", "assets/news_editor/editor.css",
-          "tests/NewsEditor/NewsReadinessReportTest.php", "tests/Controller/AdminNewsReadinessControllerTest.php",
+          "src/NewsEditor/NewsReadinessReport.php",
+          "src/Controller/AdminNewsReadinessController.php",
+          "templates/admin/news_editor/edit.html.twig",
+          "assets/news_editor/readiness.js",
+          "assets/news_editor/editor.js",
+          "assets/news_editor/editor.css",
+          "tests/NewsEditor/NewsReadinessReportTest.php",
+          "tests/Controller/AdminNewsReadinessControllerTest.php",
           "tests/JavaScript/news_editor.test.mjs"
         ]
       },
