@@ -181,9 +181,10 @@ final readonly class NewsReadinessReport
         return trim((string) preg_replace('/\s+/u', ' ', $text));
     }
 
-    /** @param array<string,mixed> $block @return array{int,int,bool} */
+    /** @param array<string,mixed> $block @return array{0:int,1:int,2:bool} */
     private function linkStats(array $block): array
     {
+        /** @var list<list<array<string, mixed>>> $groups */
         $groups = [];
         if (isset($block['content'])) {
             $groups[] = $block['content'];
@@ -246,10 +247,10 @@ final readonly class NewsReadinessReport
         ], true);
     }
 
-    /** @param list<array{text:string,marks:list<string>,href?:string}> $runs */
+    /** @param array<int, array<string, mixed>> $runs */
     private function runsText(array $runs): string
     {
-        return implode('', array_map(static fn (array $run): string => $run['text'], $runs));
+        return implode('', array_map(static fn (array $run): string => (string) ($run['text'] ?? ''), $runs));
     }
 
     private function countWords(string $text): int
