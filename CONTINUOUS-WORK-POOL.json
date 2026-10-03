@@ -10,7 +10,7 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "08260d3f0e343615f525efd2de05767200f031c5",
-  "published_at": "2026-10-03T19:58:00.000Z",
+  "published_at": "2026-10-03T21:14:40.000Z",
   "summary": "Trusted queue reconciled through PR #219 after video intake; WCP-636/637/638/643/646/649 resolved. WCP-675 completed green; WCP-676 claimed for separate News image captions and source credits.",
   "rules": {
     "choose": "Resume the current chat's unfinished claimed branch first. Otherwise atomically claim an eligible published task. If no published task is eligible, independently derive and publish a bounded worker-only CMS proposal from approved product goals and observed code gaps; do not ask the owner for the next FCP number.",
@@ -67957,6 +67957,105 @@
       "worker_pr": 474,
       "ci_run_id": 37150416313,
       "ci_result": "in_progress"
+    },
+    {
+      "priority": 677,
+      "package_id": "WCP-677",
+      "title": "Show video-provider capabilities and branding limits",
+      "risk": "low_manager_read_only_ui",
+      "execution_state": "worker_in_progress",
+      "claim_state": "claimed",
+      "claim_generation": 1,
+      "claim_branch": "claim/wcp-677-provider-capability-directory-g1",
+      "suggested_branch": "feature/wcp-677-provider-capability-directory-g1",
+      "resume_branch": "feature/wcp-677-provider-capability-directory-g1",
+      "claimed_on": "2026-10-03T21:14:40.000Z",
+      "lease_expires_at": "2026-10-04T04:14:40.000Z",
+      "base_branch": "main",
+      "base_sha": "08260d3f0e343615f525efd2de05767200f031c5",
+      "proposal_base_branch": "feature/wcp-652-provider-embed-followup-g1",
+      "proposal_base_sha": "0065b970dd057ea1acc9f90facf535cb4bafa2ff",
+      "active_base_branch": "feature/wcp-652-provider-embed-followup-g1",
+      "active_base_sha": "0065b970dd057ea1acc9f90facf535cb4bafa2ff",
+      "active_head": "0065b970dd057ea1acc9f90facf535cb4bafa2ff",
+      "last_observed_head": "0065b970dd057ea1acc9f90facf535cb4bafa2ff",
+      "last_verified_push_at": null,
+      "last_checkpoint_at": null,
+      "dependencies": [
+        "WCP-652"
+      ],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "proposal_kind": "worker_only",
+      "proposal_dependency_evidence": [
+        {
+          "package_id": "WCP-652",
+          "head": "0065b970dd057ea1acc9f90facf535cb4bafa2ff",
+          "pr": 458,
+          "ci_run": 37016055047,
+          "result": "success"
+        }
+      ],
+      "objective": "Give video managers a read-only directory of every registered provider, backed by ProviderRegistry, that translates each provider's actual capability into clear options, links to its documentation, and explains which playback modes use the CMS player and which retain provider branding. Do not change source resolution or claim unsupported formats.",
+      "allowed_paths": [
+        "src/Controller/AdminVideoProviderDirectoryController.php",
+        "templates/admin/video/provider_directory.html.twig",
+        "templates/video_workspace/admin.html.twig",
+        "tests/Controller/VideoWorkspaceTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "video_workspace_migrations/",
+        "src/VideoProviderExpansion/",
+        "src/VideoWorkspace/ProviderRegistry.php",
+        "src/Entity/",
+        "src/Repository/",
+        "CONTINUOUS-WORKER.md",
+        "CONTINUOUS-WORK-POOL.json"
+      ],
+      "deliverables": [
+        "GET-only manager-protected provider directory using the live provider catalogue and module availability gate.",
+        "Accessible capability table with a documentation link for every registered provider and honest direct-media, iframe, or outbound-link labels.",
+        "Clear note: own-player branding controls apply to direct MP4/WebM/HLS; provider iframe branding remains provider-controlled.",
+        "Private/no-store response, discoverable from the video workspace, and controller coverage for access, module state, content, and caching."
+      ],
+      "tests": [
+        "Functional tests: anonymous redirect and non-manager denial; manager sees registered providers and correct capability descriptions.",
+        "Functional tests: video-module disabled response and private/no-store headers; directory does not resolve or fetch media.",
+        "Complete Worker CI on the exact final HEAD; retain current PostgreSQL 18 migration checks."
+      ],
+      "immutable_constraints": [
+        "worker-only-no-Trusted-merge-or-deployment",
+        "provider-capabilities-must-come-from-ProviderRegistry",
+        "no-provider-fetch-scraping-or-media-extraction",
+        "external-iframe-player-branding-is-not-overridden",
+        "preserve-module-and-manager-access-gates",
+        "private-no-store-response",
+        "no-new-claims-about-unsupported-provider-capabilities"
+      ],
+      "collision_check": {
+        "compared_against": "Live pool at ae86f6cfccba99a9d92c942a2a0fbabbd9f41158; WCP-676 is the only worker_in_progress claim and its allowed paths are News Editor files.",
+        "result": "All five unclaimed published tasks remain blocked by unavailable prerequisites. WCP-677 stacks on exact green WCP-652 / PR #458; its controller, template and test paths are disjoint from WCP-676 and completed provider work.",
+        "paths": [
+          "src/Controller/AdminVideoProviderDirectoryController.php",
+          "templates/admin/video/provider_directory.html.twig",
+          "templates/video_workspace/admin.html.twig",
+          "tests/Controller/VideoWorkspaceTest.php"
+        ]
+      },
+      "next_action": "Implement the protected directory and workspace link, add access/module/cache/capability tests, then run exact-head Worker CI."
     }
   ],
   "recovery_queue": [],
