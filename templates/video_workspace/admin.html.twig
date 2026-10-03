@@ -6,5 +6,31 @@
 <section class="panel"><h2>Creator</h2>{% for creator in creators %}<p><a href="{{ path('app_admin_video_workspace_creator_edit', {id: creator.id}) }}">{{ creator.displayName }}</a> · {{ creator.visibility }}</p>{% else %}<p>Noch keine Creator-Profile.</p>{% endfor %}</section>
 <section class="panel"><h2>Bestehende Livestreams</h2>{% for stream in legacyStreams %}<p>{{ stream.title }} · <a href="{{ path('app_admin_video_workspace_legacy_live', {id: stream.id}) }}">Bearbeiten / löschen</a></p>{% else %}<p>Keine bestehenden Livestream-Einträge.</p>{% endfor %}</section>
 <nav class="workspace-actions" aria-label="Verwaltungsseiten">{% if page > 1 %}<a href="{{ path('app_admin_video_workspace', {page: page - 1}) }}">Zurück</a>{% endif %}<span>Seite {{ page }}</span>{% if sources|length == 20 or creators|length == 20 or legacyStreams|length == 20 %}<a href="{{ path('app_admin_video_workspace', {page: page + 1}) }}">Weiter</a>{% endif %}</nav>
-<details class="panel"><summary>Anbieter und Quellformate</summary><p>Direkte MP4-, WebM- und HLS-Quellen verwenden den eigenen Player. Andere Anbieter verwenden ihre Einbettung oder einen externen Link. Drittanbieter werden erst nach deiner Auswahl geladen.</p><ul>{% for key, provider in catalogue %}<li>{{ provider.label }} · {{ provider.capability }} · <a href="{{ provider.documentation }}" target="_blank" rel="noopener noreferrer">Dokumentation</a></li>{% endfor %}</ul></details>
+{% set capabilityLabels = {
+    'embed': 'Anbieter-Player (iframe)',
+    'embed_or_direct': 'Anbieter-Player (iframe) oder direkte Datei',
+    'embed_or_link': 'Anbieter-Player (iframe) oder externer Link',
+    'direct': 'Direkte Datei über den CMS-Player',
+    'direct_or_link': 'Direkte Datei oder externer Link',
+    'link': 'Nur externer Link'
+} %}
+<details class="panel">
+    <summary>Anbieterunterstützung und Branding</summary>
+    <p>Direkte MP4-, WebM- und HLS-Quellen laufen über den CMS-Player; dafür gelten die eigenen Player- und Branding-Einstellungen. Bei eingebetteten Anbieter-Playern kontrolliert der Anbieter das Aussehen und mögliche Branding-Optionen. Das CMS legt dort kein eigenes Logo darüber. Reine Links führen zur Anbieter-Seite. Eine Verbindung zum Anbieter entsteht erst, wenn eine Quelle auf der Wiedergabeseite ausgewählt wird oder du die Dokumentation öffnest.</p>
+    <div class="table-wrap">
+        <table aria-label="Unterstützte Videoanbieter und Quellformate">
+            <caption>Registrierte Anbieter und Wiedergabearten</caption>
+            <thead><tr><th scope="col">Anbieter</th><th scope="col">Unterstützte Wiedergabe</th><th scope="col">Dokumentation</th></tr></thead>
+            <tbody>
+            {% for key, provider in catalogue %}
+                <tr>
+                    <th scope="row">{{ provider.label }}</th>
+                    <td>{{ capabilityLabels[provider.capability]|default('Anbieterspezifische Quelle – Details prüfen') }}</td>
+                    <td><a href="{{ provider.documentation }}" target="_blank" rel="noopener noreferrer">Dokumentation</a></td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</details>
 {% endblock %}
