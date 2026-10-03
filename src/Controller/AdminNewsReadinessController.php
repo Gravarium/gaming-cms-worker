@@ -9,12 +9,15 @@ use App\Entity\ContentEntry;
 use App\Module\CmsModuleManager;
 use App\NewsEditor\NewsReadinessReport;
 use App\NewsEditor\RichDocument;
+use App\Security\CmsPermission;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/admin/news-editor')]
+#[IsGranted(CmsPermission::CONTENT)]
 final class AdminNewsReadinessController extends AbstractController
 {
     private const MAX_REQUEST_BYTES = 131072;
@@ -29,9 +32,6 @@ final class AdminNewsReadinessController extends AbstractController
     #[Route('/{id}/readiness', name: 'app_admin_news_editor_readiness', requirements: ['id' => '\\d+'], methods: ['POST'])]
     public function analyze(ContentEntry $entry, Request $request): JsonResponse
     {
-        if (!$this->isGranted('CMS_CONTENT_MANAGE')) {
-            return $this->privateJson(['error' => 'Zugriff verweigert.'], 403);
-        }
         if (!$this->modules->isEnabled('content') || $entry->getType() !== ContentEntry::TYPE_NEWS) {
             return $this->privateJson(['error' => 'News-Artikel nicht gefunden.'], 404);
         }
@@ -75,7 +75,7 @@ final class AdminNewsReadinessController extends AbstractController
     /** @param array<string,mixed> $data */
     private function privateJson(array $data, int $status = 200): JsonResponse
     {
-        $response = new JsonResponse($data, $status);
+        $response = $this->json($data, $status);
         $response->headers->set('Cache-Control', 'private, no-store, max-age=0');
         $response->headers->set('Pragma', 'no-cache');
         $response->headers->set('X-Content-Type-Options', 'nosniff');
