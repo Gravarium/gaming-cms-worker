@@ -10,7 +10,7 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "08260d3f0e343615f525efd2de05767200f031c5",
-  "published_at": "2026-10-03T21:14:40.000Z",
+  "published_at": "2026-10-03T21:16:14.000Z",
   "summary": "Trusted queue reconciled through PR #219 after video intake; WCP-636/637/638/643/646/649 resolved. WCP-675 completed green; WCP-676 claimed for separate News image captions and source credits.",
   "rules": {
     "choose": "Resume the current chat's unfinished claimed branch first. Otherwise atomically claim an eligible published task. If no published task is eligible, independently derive and publish a bounded worker-only CMS proposal from approved product goals and observed code gaps; do not ask the owner for the next FCP number.",
@@ -67961,7 +67961,7 @@
     {
       "priority": 677,
       "package_id": "WCP-677",
-      "title": "Show video-provider capabilities and branding limits",
+      "title": "Clarify video-provider capabilities and branding in admin",
       "risk": "low_manager_read_only_ui",
       "execution_state": "worker_in_progress",
       "claim_state": "claimed",
@@ -67996,10 +67996,8 @@
           "result": "success"
         }
       ],
-      "objective": "Give video managers a read-only directory of every registered provider, backed by ProviderRegistry, that translates each provider's actual capability into clear options, links to its documentation, and explains which playback modes use the CMS player and which retain provider branding. Do not change source resolution or claim unsupported formats.",
+      "objective": "Improve the existing manager-only provider-capability disclosure on /admin/video-workspace with human-readable labels from the registered catalogue and an accessible explanation of direct media, provider iframes and external links. Clarify that own-player branding applies to direct MP4/WebM/HLS, while iframe branding remains provider-controlled. Do not add a second page, change URL resolution, or claim unsupported formats.",
       "allowed_paths": [
-        "src/Controller/AdminVideoProviderDirectoryController.php",
-        "templates/admin/video/provider_directory.html.twig",
         "templates/video_workspace/admin.html.twig",
         "tests/Controller/VideoWorkspaceTest.php"
       ],
@@ -68019,43 +68017,41 @@
         "migrations/",
         "video_workspace_migrations/",
         "src/VideoProviderExpansion/",
-        "src/VideoWorkspace/ProviderRegistry.php",
+        "src/VideoWorkspace/",
+        "src/Controller/",
         "src/Entity/",
         "src/Repository/",
         "CONTINUOUS-WORKER.md",
         "CONTINUOUS-WORK-POOL.json"
       ],
       "deliverables": [
-        "GET-only manager-protected provider directory using the live provider catalogue and module availability gate.",
-        "Accessible capability table with a documentation link for every registered provider and honest direct-media, iframe, or outbound-link labels.",
-        "Clear note: own-player branding controls apply to direct MP4/WebM/HLS; provider iframe branding remains provider-controlled.",
-        "Private/no-store response, discoverable from the video workspace, and controller coverage for access, module state, content, and caching."
+        "Replace raw capability identifiers with clear labels for every catalogue value: provider iframe, direct CMS playback, link fallback and combinations.",
+        "Show all registered providers and their documentation links in the existing accessible disclosure table.",
+        "Explain when CMS player/branding applies and when provider-controlled iframe branding or external navigation is used.",
+        "Keep the change read-only and preserve the existing manager/module gates and private/no-store behavior."
       ],
       "tests": [
-        "Functional tests: anonymous redirect and non-manager denial; manager sees registered providers and correct capability descriptions.",
-        "Functional tests: video-module disabled response and private/no-store headers; directory does not resolve or fetch media.",
-        "Complete Worker CI on the exact final HEAD; retain current PostgreSQL 18 migration checks."
+        "Functional test: manager sees registered provider rows, readable capability labels, documentation links and branding explanation.",
+        "Functional tests: anonymous and non-manager access remain denied; disabled Video module remains unavailable.",
+        "Complete exact-head Worker CI."
       ],
       "immutable_constraints": [
         "worker-only-no-Trusted-merge-or-deployment",
-        "provider-capabilities-must-come-from-ProviderRegistry",
+        "use-only-registered-ProviderRegistry-capabilities",
         "no-provider-fetch-scraping-or-media-extraction",
         "external-iframe-player-branding-is-not-overridden",
-        "preserve-module-and-manager-access-gates",
-        "private-no-store-response",
+        "preserve-existing-manager-module-and-cache-policy",
         "no-new-claims-about-unsupported-provider-capabilities"
       ],
       "collision_check": {
-        "compared_against": "Live pool at ae86f6cfccba99a9d92c942a2a0fbabbd9f41158; WCP-676 is the only worker_in_progress claim and its allowed paths are News Editor files.",
-        "result": "All five unclaimed published tasks remain blocked by unavailable prerequisites. WCP-677 stacks on exact green WCP-652 / PR #458; its controller, template and test paths are disjoint from WCP-676 and completed provider work.",
+        "compared_against": "Live pool at 6ccd74884c1d2cd7b8cef9d46056d9c4969ccf76; WCP-676 is the only other worker_in_progress claim and its paths are News Editor files.",
+        "result": "WCP-677 remains a serial UI improvement on exact green WCP-652. The two allowed paths extend the existing VideoWorkspace admin disclosure and its test class; no new route or source-resolution change is needed.",
         "paths": [
-          "src/Controller/AdminVideoProviderDirectoryController.php",
-          "templates/admin/video/provider_directory.html.twig",
           "templates/video_workspace/admin.html.twig",
           "tests/Controller/VideoWorkspaceTest.php"
         ]
       },
-      "next_action": "Implement the protected directory and workspace link, add access/module/cache/capability tests, then run exact-head Worker CI."
+      "next_action": "Translate the registered capability values in the existing disclosure table, explain player/branding behavior, add focused functional assertions, then run exact-head Worker CI."
     }
   ],
   "recovery_queue": [],
