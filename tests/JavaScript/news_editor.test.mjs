@@ -176,6 +176,9 @@ test('Markdown import bounds input and neutralizes untrusted links and HTML', ()
   assert.equal(articleMarkdown({version: 3, blocks: []}), null);
   assert.match(articleMarkdown({version: 2, blocks: [{type: 'media', assetId: 17, alt: 'Titelbild', caption: ''}]}), /CMS-Mediathek #17/);
   assert.match(articleMarkdown({version: 2, blocks: [{type: 'media', assetId: 17, alt: '', caption: '', decorative: true}]}), /Dekoratives Bild aus CMS-Mediathek #17 \(ohne Alternativtext\)/);
+  const mediaReference = articleMarkdown({version: 2, blocks: [{type: 'media', assetId: 17, alt: 'Beschreibung', caption: 'Bildunterschrift', credit: '© <Quelle>'}]});
+  assert.match(mediaReference, /Bildunterschrift: Bildunterschrift/);
+  assert.ok(mediaReference.includes('Bildnachweis: © \\<Quelle\\>'));
 });
 
 test('keyboard block shortcuts require an unambiguous primary plus shift chord', () => {

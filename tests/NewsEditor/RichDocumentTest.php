@@ -76,10 +76,29 @@ final class RichDocumentTest extends TestCase
         $document = new RichDocument();
         $legacy = $document->decode($this->raw([['type' => 'media', 'assetId' => 17, 'alt' => '', 'caption' => '']]));
         self::assertFalse($legacy['blocks'][0]['decorative']);
+        self::assertSame('', $legacy['blocks'][0]['credit']);
 
         $decorative = $document->decode($this->raw([['type' => 'media', 'assetId' => 17, 'alt' => '', 'caption' => '', 'decorative' => true]]));
         self::assertTrue($decorative['blocks'][0]['decorative']);
         self::assertSame('', $decorative['blocks'][0]['alt']);
+    }
+
+    public function testMediaCreditIsOptionalBoundedAndIndependentFromCaption(): void
+    {
+        $document = new RichDocument();
+        $stored = $document->normalizeForStorage($this->raw([['type' => 'media', 'assetId' => 17, 'alt' => 'Beschreibung', 'caption' => 'Bildunterschrift', 'credit' => '© <Quelle>']]));
+        $media = $document->decode($stored)['blocks'][0];
+        self::assertSame('Bildunterschrift', $media['caption']);
+        self::assertSame('© <Quelle>', $media['credit']);
+
+        foreach ([null, 17, str_repeat('x', 301)] as $invalid) {
+            try {
+                (new RichDocument())->decode($this->raw([['type' => 'media', 'assetId' => 17, 'alt' => '', 'caption' => 'Caption', 'credit' => $invalid]]));
+                self::fail('Invalid media credit was accepted.');
+            } catch (\InvalidArgumentException) {
+                self::assertTrue(true);
+            }
+        }
     }
 
     public function testRejectsExcessiveInputBeforeDecoding(): void

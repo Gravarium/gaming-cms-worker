@@ -103,4 +103,23 @@ final class RichRendererTest extends TestCase
         self::assertStringContainsString('<img src="/safe.png" alt=""', $html);
         self::assertStringNotContainsString('Asset title', $html);
     }
+
+    public function testImageCreditRendersSeparatelyAndEscapedFromCaption(): void
+    {
+        $media = new class implements OwnedMediaReferenceGateway {
+            public function resolve(int $assetId): ?array
+            {
+                return ['id' => $assetId, 'url' => '/safe.png', 'title' => 'Asset title', 'mime' => 'image/png'];
+            }
+        };
+        $document = RichDocument::PREFIX.json_encode(['version' => 2, 'blocks' => [
+            ['type' => 'media', 'assetId' => 7, 'alt' => 'Alternative', 'caption' => 'Bildunterschrift', 'credit' => '© <Quelle>', 'decorative' => false],
+        ]], JSON_THROW_ON_ERROR);
+
+        $html = (new RichRenderer(new RichDocument(), $media))->render($document);
+
+        self::assertStringContainsString('<figcaption>Bildunterschrift</figcaption><small class="content-media-credit">Bildnachweis: © &lt;Quelle&gt;</small>', $html);
+        self::assertStringContainsString('alt="Alternative"', $html);
+        self::assertStringNotContainsString('<Quelle>', $html);
+    }
 }

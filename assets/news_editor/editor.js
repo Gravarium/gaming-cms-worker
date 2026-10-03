@@ -186,8 +186,9 @@ if (root) {
     if (block.type === 'media') {
       const id = input('Medien-ID', block.assetId);
       const alt = input('Alternativtext', block.alt);
-      const caption = input('Bildunterschrift und Quelle', block.caption);
-      const idField = id.querySelector('input'), altField = alt.querySelector('input'), captionField = caption.querySelector('input');
+      const caption = input('Bildunterschrift', block.caption);
+      const credit = input('Bildnachweis / Quelle', block.credit);
+      const idField = id.querySelector('input'), altField = alt.querySelector('input'), captionField = caption.querySelector('input'), creditField = credit.querySelector('input');
       altField.dataset.readinessTarget = 'accessibility.image_alt_missing accessibility.image_alt_long';
       const decorativeLabel = node('label', 'Bild ist dekorativ; Alternativtext weglassen ');
       const decorativeField = node('input'); decorativeField.type = 'checkbox'; decorativeField.checked = block.decorative === true;
@@ -195,7 +196,15 @@ if (root) {
       const figure = node('figure'); figure.className = 'news-editor-figure';
       const image = node('img'); image.hidden = true; image.loading = 'lazy'; image.referrerPolicy = 'no-referrer';
       const figcaption = node('figcaption', captionField.value);
-      const message = node('p'); figure.append(image, figcaption, message);
+      const creditPreview = node('small'); creditPreview.className = 'news-editor-credit';
+      const syncCaption = () => {
+        figcaption.textContent = captionField.value;
+        figcaption.hidden = captionField.value === '';
+        creditPreview.textContent = creditField.value ? 'Bildnachweis: ' + creditField.value : '';
+        creditPreview.hidden = creditField.value === '';
+      };
+      syncCaption();
+      const message = node('p'); figure.append(image, figcaption, creditPreview, message);
       const syncDecorative = () => {
         altField.disabled = decorativeField.checked;
         if (decorativeField.checked) altField.value = '';
@@ -224,8 +233,9 @@ if (root) {
       idField.addEventListener('change', refreshImage);
       altField.addEventListener('input', syncDecorative);
       decorativeField.addEventListener('change', () => { syncDecorative(); changed(); });
-      captionField.addEventListener('input', () => { figcaption.textContent = captionField.value; });
-      row.append(id, select, alt, decorativeLabel, caption, figure);
+      captionField.addEventListener('input', syncCaption);
+      creditField.addEventListener('input', syncCaption);
+      row.append(id, select, alt, decorativeLabel, caption, credit, figure);
       if (Number(block.assetId) > 0) refreshImage(); else message.textContent = 'Bild aus der Mediathek auswählen.';
     }
     if (block.type === 'video') {
@@ -300,8 +310,8 @@ if (root) {
       if (type === 'code') return {type, language: row.querySelector('select').value, text: row.querySelector('textarea').value};
       if (type === 'separator') return {type};
       if (type === 'media') {
-        const [id, alt, caption] = row.querySelectorAll('input:not([type="checkbox"])');
-        return {type, assetId: Number(id.value), alt: alt.value, caption: caption.value, decorative: row.querySelector('input[type="checkbox"]').checked};
+        const [id, alt, caption, credit] = row.querySelectorAll('input:not([type="checkbox"])');
+        return {type, assetId: Number(id.value), alt: alt.value, caption: caption.value, decorative: row.querySelector('input[type="checkbox"]').checked, credit: credit.value};
       }
       if (type === 'video') { const [provider, videoId, caption] = row.querySelectorAll('input'); return {type, provider: provider.value, videoId: videoId.value, caption: caption.value}; }
       throw new Error('Unbekannter Blocktyp.');

@@ -30,6 +30,8 @@ final class LegacyNewsConverterTest extends TestCase
         self::assertSame('https://example.test/', $blocks[2]['content'][0]['href']);
         self::assertSame('Interview', $blocks[3]['cite']);
         self::assertFalse($blocks[5]['decorative']);
+        self::assertSame('Quelle', $blocks[5]['caption']);
+        self::assertSame('', $blocks[5]['credit']);
         self::assertSame([7], $rich->mediaIds($converted));
         self::assertSame($converted, (new LegacyNewsConverter($legacy, $rich))->forEditing($converted));
     }
