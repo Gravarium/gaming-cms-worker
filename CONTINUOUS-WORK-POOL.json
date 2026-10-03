@@ -10,7 +10,7 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "08260d3f0e343615f525efd2de05767200f031c5",
-  "published_at": "2026-10-03T21:19:10.000Z",
+  "published_at": "2026-10-03T21:20:17.000Z",
   "summary": "Trusted queue reconciled through PR #219 after video intake; WCP-636/637/638/643/646/649 resolved. WCP-675 completed green; WCP-676 claimed for separate News image captions and source credits.",
   "rules": {
     "choose": "Resume the current chat's unfinished claimed branch first. Otherwise atomically claim an eligible published task. If no published task is eligible, independently derive and publish a bounded worker-only CMS proposal from approved product goals and observed code gaps; do not ask the owner for the next FCP number.",
@@ -68051,7 +68051,13 @@
           "tests/Controller/VideoWorkspaceTest.php"
         ]
       },
-      "next_action": "Open a draft Worker PR against main, then inspect the exact-head Worker CI."
+      "next_action": "Wait for complete Worker CI on exact PR #475 head 81972729070020ede1f9099747dd6358abb1ffbc; repair any failures and revalidate.",
+      "worker_pr": 475,
+      "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/475",
+      "worker_pr_head_sha": "81972729070020ede1f9099747dd6358abb1ffbc",
+      "worker_pr_state": "draft",
+      "ci_head": "81972729070020ede1f9099747dd6358abb1ffbc",
+      "ci_result": "pending"
     }
   ],
   "recovery_queue": [],
