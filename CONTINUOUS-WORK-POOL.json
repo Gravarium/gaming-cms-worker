@@ -10,8 +10,8 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "08260d3f0e343615f525efd2de05767200f031c5",
-  "published_at": "2026-10-03T21:35:18.050Z",
-  "summary": "WCP-675 completed green; WCP-676 remains active on News image captions and source credits. WCP-677 is active on the manager-only video provider capability disclosure and branding explanation.",
+  "published_at": "2026-10-03T21:40:24.701Z",
+  "summary": "WCP-675 and WCP-677 are complete green Worker proposals awaiting Trusted review. WCP-676 remains active on separate News image caption and source-credit paths.",
   "rules": {
     "choose": "Resume the current chat's unfinished claimed branch first. Otherwise atomically claim an eligible published task. If no published task is eligible, independently derive and publish a bounded worker-only CMS proposal from approved product goals and observed code gaps; do not ask the owner for the next FCP number.",
     "atomic_reservation": "Create the exact claim_branch and suggested feature branch from that task's published proposal_base_sha. If the claim already exists, treat it as a hard lock; the owning continuation resumes it and every other AI skips it.",
@@ -67963,14 +67963,14 @@
       "package_id": "WCP-677",
       "title": "Clarify video-provider capabilities and branding in admin",
       "risk": "low_manager_read_only_ui",
-      "execution_state": "worker_in_progress",
-      "claim_state": "claimed",
+      "execution_state": "worker_complete_awaiting_trusted_review",
+      "claim_state": "locked_until_trusted_resolution",
       "claim_generation": 1,
       "claim_branch": "claim/wcp-677-provider-capability-directory-g1",
       "suggested_branch": "feature/wcp-677-provider-capability-directory-g1",
       "resume_branch": "feature/wcp-677-provider-capability-directory-g1",
       "claimed_on": "2026-10-03T21:14:40.000Z",
-      "lease_expires_at": "2026-10-04T04:35:18.050Z",
+      "lease_expires_at": null,
       "base_branch": "main",
       "base_sha": "08260d3f0e343615f525efd2de05767200f031c5",
       "proposal_base_branch": "feature/wcp-652-provider-embed-followup-g1",
@@ -67980,7 +67980,7 @@
       "active_head": "42e34418c8f85b403a9e526154878a38cacad198",
       "last_observed_head": "42e34418c8f85b403a9e526154878a38cacad198",
       "last_verified_push_at": "2026-10-03T21:35:18.050Z",
-      "last_checkpoint_at": "2026-10-03T21:35:18.050Z",
+      "last_checkpoint_at": "2026-10-03T21:40:24.701Z",
       "dependencies": [
         "WCP-652"
       ],
@@ -68051,16 +68051,28 @@
           "tests/Controller/VideoWorkspaceTest.php"
         ]
       },
-      "next_action": "Wait for complete Worker CI on exact PR #475 head 42e34418c8f85b403a9e526154878a38cacad198; repair any failures and checkpoint the verified result.",
+      "next_action": "Await Trusted review of Worker PR #475. Exact green head 42e34418c8f85b403a9e526154878a38cacad198; Worker CI #1216 (run ID 37155564207) passed. Keep claim locked until Trusted resolution.",
       "worker_pr": 475,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/475",
       "worker_pr_head_sha": "42e34418c8f85b403a9e526154878a38cacad198",
       "worker_pr_state": "ready_for_review",
       "ci_head": "42e34418c8f85b403a9e526154878a38cacad198",
-      "ci_result": "pending",
+      "ci_result": "success",
       "composition_base_branch": "main",
       "composition_base_sha": "08260d3f0e343615f525efd2de05767200f031c5",
-      "composition_note": "Current Worker main had advanced beyond WCP-652. The WCP-677 tree is based on the exact main tree; main is recorded as the second parent and the PR compare contains only the two allowed UI/test paths."
+      "composition_note": "Current Worker main had advanced beyond WCP-652. The WCP-677 tree is based on the exact main tree; main is recorded as the second parent and the PR compare contains only the two allowed UI/test paths.",
+      "final_head": "42e34418c8f85b403a9e526154878a38cacad198",
+      "completed_at": "2026-10-03T21:40:24.701Z",
+      "final_ci_run_id": 37155564207,
+      "ci_run": 1216,
+      "ci_run_id": 37155564207,
+      "ci_conclusion": "success",
+      "last_ci_head": "42e34418c8f85b403a9e526154878a38cacad198",
+      "last_ci_result": "success",
+      "final_changed_paths": [
+        "templates/video_workspace/admin.html.twig",
+        "tests/Controller/VideoWorkspaceTest.php"
+      ]
     }
   ],
   "recovery_queue": [],
