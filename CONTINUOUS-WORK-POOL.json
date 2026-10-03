@@ -10,8 +10,8 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "08260d3f0e343615f525efd2de05767200f031c5",
-  "published_at": "2026-10-03T21:40:24.701Z",
-  "summary": "WCP-675 and WCP-677 are complete green Worker proposals awaiting Trusted review. WCP-676 remains active on separate News image caption and source-credit paths.",
+  "published_at": "2026-10-03T21:48:00.344Z",
+  "summary": "WCP-675 and WCP-677 are complete green Worker proposals awaiting Trusted review. WCP-676 remains active on News image captions and credits; WCP-678 is active on provider documentation guidance in the Video source form.",
   "rules": {
     "choose": "Resume the current chat's unfinished claimed branch first. Otherwise atomically claim an eligible published task. If no published task is eligible, independently derive and publish a bounded worker-only CMS proposal from approved product goals and observed code gaps; do not ask the owner for the next FCP number.",
     "atomic_reservation": "Create the exact claim_branch and suggested feature branch from that task's published proposal_base_sha. If the claim already exists, treat it as a hard lock; the owning continuation resumes it and every other AI skips it.",
@@ -68073,6 +68073,100 @@
         "templates/video_workspace/admin.html.twig",
         "tests/Controller/VideoWorkspaceTest.php"
       ]
+    },
+    {
+      "priority": 678,
+      "package_id": "WCP-678",
+      "title": "Show selected provider documentation in the source form",
+      "risk": "low_manager_guidance_ui",
+      "execution_state": "worker_in_progress",
+      "claim_state": "claimed",
+      "claim_generation": 1,
+      "claim_branch": "claim/wcp-678-provider-documentation-link-g1",
+      "suggested_branch": "feature/wcp-678-provider-documentation-link-g1",
+      "resume_branch": "feature/wcp-678-provider-documentation-link-g1",
+      "claimed_on": "2026-10-03T21:48:00.344Z",
+      "lease_expires_at": "2026-10-04T04:48:00.344Z",
+      "base_branch": "main",
+      "base_sha": "08260d3f0e343615f525efd2de05767200f031c5",
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "08260d3f0e343615f525efd2de05767200f031c5",
+      "active_base_branch": "main",
+      "active_base_sha": "08260d3f0e343615f525efd2de05767200f031c5",
+      "active_head": "08260d3f0e343615f525efd2de05767200f031c5",
+      "last_observed_head": "08260d3f0e343615f525efd2de05767200f031c5",
+      "last_verified_push_at": null,
+      "last_checkpoint_at": null,
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "proposal_kind": "worker_only",
+      "objective": "Show a manager the official documentation link for the provider selected in the source create/edit form. Source link metadata comes only from the registered ProviderRegistry catalogue; update the link on provider selection, require a credential-free HTTPS URL in the client helper, and open documentation only after an explicit click. Do not alter source validation, URL resolution, provider capabilities, playback or routes.",
+      "allowed_paths": [
+        "templates/video_workspace/source_form.html.twig",
+        "assets/app.js",
+        "assets/video_workspace/provider-docs.js",
+        "tests/JavaScript/video-workspace-provider-docs.test.mjs",
+        "tests/Controller/VideoWorkspaceSourceDocsTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "video_workspace_migrations/",
+        "src/Controller/",
+        "src/Entity/",
+        "src/Repository/",
+        "src/VideoWorkspace/",
+        "src/VideoProviderExpansion/",
+        "src/Service/",
+        "tests/Controller/VideoWorkspaceTest.php",
+        "CONTINUOUS-WORKER.md",
+        "CONTINUOUS-WORK-POOL.json"
+      ],
+      "deliverables": [
+        "Add escaped provider label/documentation metadata to source-form options using only the registered catalogue.",
+        "Provide a selected-provider documentation link that updates when the provider changes and uses target=_blank with rel=noopener noreferrer.",
+        "Reject non-HTTPS and credential-bearing links in the browser helper; never fetch or preload provider content.",
+        "Preserve existing manager/module gates, form fields, CSRF, validation and private/no-store headers."
+      ],
+      "tests": [
+        "Browser-side unit tests for initial selected-provider link, changing providers, unsafe URLs and cleanup.",
+        "Functional manager-page test checks 29 catalogue options, selected documentation target, external-link safety, and private/no-store response.",
+        "Full exact-head Worker CI including PHPStan, Twig lint, JavaScript tests and PostgreSQL 18 migration validation."
+      ],
+      "immutable_constraints": [
+        "worker-only-no-Trusted-merge-or-deployment",
+        "only-use-registered-provider-catalogue-labels-and-documentation",
+        "no-external-provider-fetch-or-embed-loading",
+        "documentation-requires-explicit-user-click",
+        "HTTPS-only-documentation-links-without-credentials",
+        "preserve-manager-module-CSRF-validation-cache-and-source-resolution",
+        "no-provider-capability-or-format-claims"
+      ],
+      "collision_check": {
+        "compared_against": "Live pool blob 8eae8a82a180cfc0de07bbea1f3a4e09ab1cbbe6; WCP-676 active News editor paths; WCP-677 locked paths are templates/video_workspace/admin.html.twig and tests/Controller/VideoWorkspaceTest.php.",
+        "result": "Independent Worker-main proposal for an adjacent source-form workflow. All five exact paths are disjoint from active and locked claims; WCP-677 is complete and is not modified.",
+        "paths": [
+          "templates/video_workspace/source_form.html.twig",
+          "assets/app.js",
+          "assets/video_workspace/provider-docs.js",
+          "tests/JavaScript/video-workspace-provider-docs.test.mjs",
+          "tests/Controller/VideoWorkspaceSourceDocsTest.php"
+        ]
+      },
+      "next_action": "Implement the selected-provider documentation link and focused functional and browser tests.",
+      "worker_pr_state": "not_open"
     }
   ],
   "recovery_queue": [],
