@@ -24,8 +24,8 @@ final class NewsReadinessReportTest extends TestCase
     {
         $secret = 'UNSAVED_PRIVATE_NEWS_TEXT_674';
         $document = $this->document([
-            ['type' => 'heading', 'level' => 3, 'content' => [$this->run($secret)]],
-            ['type' => 'quote', 'content' => [$this->run('Ein kurzes Zitat.')], 'cite' => ''],
+            ['type' => 'heading', 'level' => 3, 'content' => [$this->textRun($secret)]],
+            ['type' => 'quote', 'content' => [$this->textRun('Ein kurzes Zitat.')], 'cite' => ''],
             ['type' => 'media', 'assetId' => 7, 'alt' => '', 'caption' => 'Bildunterschrift'],
         ]);
 
@@ -49,10 +49,10 @@ final class NewsReadinessReportTest extends TestCase
         $linked = str_repeat('Linktext ', 200);
         $plain = str_repeat('weiterer Inhalt ', 31).'Ende.';
         $document = $this->document([
-            ['type' => 'heading', 'level' => 2, 'content' => [$this->run('Hauptabschnitt')]],
+            ['type' => 'heading', 'level' => 2, 'content' => [$this->textRun('Hauptabschnitt')]],
             ['type' => 'paragraph', 'content' => [
-                $this->run($linked, ['link'], 'https://example.test/quelle'),
-                $this->run($plain),
+                $this->textRun($linked, ['link'], 'https://example.test/quelle'),
+                $this->textRun($plain),
             ]],
         ]);
 
@@ -69,12 +69,12 @@ final class NewsReadinessReportTest extends TestCase
     {
         $privateUrl = 'https://private.example.test/internal-draft-destination';
         $document = $this->document([
-            ['type' => 'heading', 'level' => 2, 'content' => [$this->run('Hauptabschnitt')]],
+            ['type' => 'heading', 'level' => 2, 'content' => [$this->textRun('Hauptabschnitt')]],
             ['type' => 'paragraph', 'content' => [
-                $this->run('Hier', ['link'], '/private-draft'),
-                $this->run(' klicken', ['link'], '/private-draft'),
-                $this->run(' oder diese Adresse ', []),
-                $this->run($privateUrl, ['link'], $privateUrl),
+                $this->textRun('Hier', ['link'], '/private-draft'),
+                $this->textRun(' klicken', ['link'], '/private-draft'),
+                $this->textRun(' oder diese Adresse ', []),
+                $this->textRun($privateUrl, ['link'], $privateUrl),
             ]],
         ]);
 
@@ -89,7 +89,7 @@ final class NewsReadinessReportTest extends TestCase
 
     public function testReportCapsFindingsAndRejectsMalformedDocuments(): void
     {
-        $blocks = array_fill(0, 100, ['type' => 'paragraph', 'content' => [$this->run('')]]);
+        $blocks = array_fill(0, 100, ['type' => 'paragraph', 'content' => [$this->textRun('')]]);
         $result = $this->report->analyze($this->document($blocks), $this->entry());
 
         self::assertLessThanOrEqual(80, count($result['findings']));
@@ -107,7 +107,7 @@ final class NewsReadinessReportTest extends TestCase
     }
 
     /** @param list<string> $marks @return array{text:string,marks:list<string>,href?:string} */
-    private function run(string $text, array $marks = [], ?string $href = null): array
+    private function textRun(string $text, array $marks = [], ?string $href = null): array
     {
         return $href === null ? ['text' => $text, 'marks' => $marks] : ['text' => $text, 'marks' => $marks, 'href' => $href];
     }
