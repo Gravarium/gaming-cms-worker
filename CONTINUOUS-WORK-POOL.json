@@ -10,8 +10,8 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "08260d3f0e343615f525efd2de05767200f031c5",
-  "published_at": "2026-10-03T22:05:27.322Z",
-  "summary": "WCP-675, WCP-677 and WCP-678 are complete green Worker proposals awaiting Trusted review. WCP-676 remains active on separate News image caption and source-credit paths.",
+  "published_at": "2026-10-03T22:08:32.357Z",
+  "summary": "WCP-675, WCP-677 and WCP-678 are complete green Worker proposals awaiting Trusted review. WCP-676 remains active on News caption and credit fields; WCP-679 is active on viewer-facing branding guidance after playback choice.",
   "rules": {
     "choose": "Resume the current chat's unfinished claimed branch first. Otherwise atomically claim an eligible published task. If no published task is eligible, independently derive and publish a bounded worker-only CMS proposal from approved product goals and observed code gaps; do not ask the owner for the next FCP number.",
     "atomic_reservation": "Create the exact claim_branch and suggested feature branch from that task's published proposal_base_sha. If the claim already exists, treat it as a hard lock; the owning continuation resumes it and every other AI skips it.",
@@ -68190,6 +68190,104 @@
         "tests/JavaScript/video-workspace-provider-docs.test.mjs",
         "tests/Controller/VideoWorkspaceSourceDocsTest.php"
       ]
+    },
+    {
+      "priority": 679,
+      "package_id": "WCP-679",
+      "title": "Explain provider and CMS branding on the playback page",
+      "risk": "low_viewer_guidance_ui",
+      "execution_state": "worker_in_progress",
+      "claim_state": "claimed",
+      "claim_generation": 1,
+      "claim_branch": "claim/wcp-679-video-branding-disclosure-g1",
+      "suggested_branch": "feature/wcp-679-video-branding-disclosure-g1",
+      "resume_branch": "feature/wcp-679-video-branding-disclosure-g1",
+      "claimed_on": "2026-10-03T22:08:32.357Z",
+      "lease_expires_at": "2026-10-04T05:08:32.357Z",
+      "base_branch": "main",
+      "base_sha": "08260d3f0e343615f525efd2de05767200f031c5",
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "08260d3f0e343615f525efd2de05767200f031c5",
+      "active_base_branch": "main",
+      "active_base_sha": "08260d3f0e343615f525efd2de05767200f031c5",
+      "active_head": "08260d3f0e343615f525efd2de05767200f031c5",
+      "last_observed_head": "08260d3f0e343615f525efd2de05767200f031c5",
+      "last_verified_push_at": null,
+      "last_checkpoint_at": null,
+      "dependencies": [
+        "WCP-646"
+      ],
+      "dependencies_integrated_at_publication": [
+        "WCP-646"
+      ],
+      "blocked_by_at_publication": [],
+      "proposal_kind": "worker_only",
+      "proposal_dependency_evidence": [
+        {
+          "package_id": "WCP-646",
+          "head": "726c9265eb05a1d9ff87c1d73eb5011384349095",
+          "pr": 440,
+          "result": "trusted_integrated"
+        }
+      ],
+      "objective": "After an explicit playback choice, explain which branding applies: CMS player settings for direct video/HLS sources, provider-controlled appearance for iframe players, and external provider branding for link-only sources. Keep the change presentation-only; do not change source resolution, consent, iframe sandbox, player options or branding controls.",
+      "allowed_paths": [
+        "templates/video_player_choice/playback.html.twig",
+        "tests/Controller/VideoPlayerChoiceTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "video_workspace_migrations/",
+        "src/",
+        "assets/",
+        "templates/video_workspace/",
+        "templates/video_player_branding/",
+        "tests/VideoPlayerChoice/",
+        "tests/JavaScript/",
+        "CONTINUOUS-WORKER.md",
+        "CONTINUOUS-WORK-POOL.json"
+      ],
+      "deliverables": [
+        "Add a clear post-selection notice for direct CMS-player sources, provider iframe sources and link-only sources.",
+        "Do not render the notices before the user chooses a source; preserve existing consent-gated third-party loading.",
+        "Keep iframe sandbox, source opening rel attributes and player controls unchanged."
+      ],
+      "tests": [
+        "Functional test confirms direct HLS playback shows CMS-branding guidance without an iframe.",
+        "Functional test confirms provider iframe playback says branding remains provider-controlled and retains existing sandbox/consent behavior.",
+        "Functional test covers link-only source disclosure and external navigation attributes.",
+        "Complete exact-head Worker CI and PostgreSQL 18 migration chain."
+      ],
+      "immutable_constraints": [
+        "worker-only-no-Trusted-merge-or-deployment",
+        "no-changes-to-source-resolution-provider-registry-consent-or-playback",
+        "provider-iframe-branding-remains-provider-controlled",
+        "CMS-branding-applies-only-to-direct-player-sources",
+        "external-link-only-source-remains-external",
+        "preserve-manager-module-cache-and-security-controls"
+      ],
+      "collision_check": {
+        "compared_against": "Live pool blob baa3bb1b046cfaee46fdc7f24517556edf67b2cd; WCP-676 active News paths, WCP-677 locked admin disclosure, WCP-678 locked source-form documentation.",
+        "result": "Only the playback-choice template and its existing functional test are in scope. They are disjoint from current active/locked video claims. WCP-646 is Trusted-integrated; Worker main contains its branding controls.",
+        "paths": [
+          "templates/video_player_choice/playback.html.twig",
+          "tests/Controller/VideoPlayerChoiceTest.php"
+        ]
+      },
+      "next_action": "Add mode-specific post-selection branding notices and functional coverage.",
+      "worker_pr_state": "not_open"
     }
   ],
   "recovery_queue": [],
