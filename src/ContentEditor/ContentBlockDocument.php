@@ -1,6 +1,7 @@
 <?php
 declare(strict_types=1);
 namespace App\ContentEditor;
+use App\NewsEditor\RichDocument;
 final class ContentBlockDocument
 {
     public const PREFIX="cms-blocks:v1\n"; public const VERSION=1; public const MAX_DOCUMENT_BYTES=60000; private const MAX_BLOCKS=100;
@@ -23,6 +24,9 @@ final class ContentBlockDocument
     }
     public function plainText(string $body): string
     {
+        if (str_starts_with($body, RichDocument::PREFIX)) {
+            return (new RichDocument())->plainText($body);
+        }
         $parts=[]; foreach($this->decode($body)['blocks'] as $block){switch($block['type']){case 'text':case 'heading':$parts[]=(string)$block['text'];break;case 'quote':$parts[]=(string)$block['text'];if(($block['cite']??'')!=='')$parts[]=(string)$block['cite'];break;case 'link':$parts[]=(string)$block['text'];break;case 'list':foreach($block['items'] as $item)$parts[]=(string)$item;break;case 'media':if(($block['caption']??'')!=='')$parts[]=(string)$block['caption'];if(($block['alt']??'')!=='')$parts[]=(string)$block['alt'];break;}} return trim(implode("\n",$parts));
     }
     /** @return list<array<string,mixed>> */
