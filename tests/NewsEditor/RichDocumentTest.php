@@ -74,7 +74,7 @@ final class RichDocumentTest extends TestCase
     public function testOldMediaDefaultsToInformativeAndDecorativeMediaIsExplicit(): void
     {
         $document = new RichDocument();
-        $legacy = $document->decode($this->raw([['type' => 'media', 'assetId' => 17, 'alt' => '', 'caption' => '']]]));
+        $legacy = $document->decode($this->raw([['type' => 'media', 'assetId' => 17, 'alt' => '', 'caption' => '']]));
         self::assertFalse($legacy['blocks'][0]['decorative']);
 
         $decorative = $document->decode($this->raw([['type' => 'media', 'assetId' => 17, 'alt' => '', 'caption' => '', 'decorative' => true]]));
