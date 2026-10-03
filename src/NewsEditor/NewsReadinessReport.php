@@ -181,7 +181,10 @@ final readonly class NewsReadinessReport
         return trim((string) preg_replace('/\s+/u', ' ', $text));
     }
 
-    /** @param array<string,mixed> $block @return array{0:int,1:int,2:bool} */
+    /**
+     * @param array<string,mixed> $block
+     * @return array{0:int,1:int,2:bool}
+     */
     private function linkStats(array $block): array
     {
         /** @var list<list<array<string, mixed>>> $groups */
