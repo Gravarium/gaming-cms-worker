@@ -1,0 +1,36 @@
+{% extends 'base.html.twig' %}
+{% block title %}News-Redaktion | Gaming CMS{% endblock %}
+{% block body %}
+<header class="topbar"><a class="brand" href="{{ path('app_admin_dashboard') }}">Gaming CMS</a><nav class="top-actions"><a href="{{ path('app_admin_news_editor_new') }}">Neue News anlegen</a><a href="{{ path('app_admin_content_index') }}">Alle Inhalte</a></nav></header>
+<main class="dashboard">
+    <p class="eyebrow">News-Redaktion</p>
+    <h1>Artikel im visuellen Editor</h1>
+    <p class="muted">Entwürfe und Beiträge in Prüfung. Veröffentlichte Artikel zuerst als Entwurf wiederherstellen.</p>
+    <form method="get" action="{{ path('app_admin_news_editor_index') }}">
+        <label for="news-search">Titel suchen</label>
+        <input id="news-search" name="q" type="search" maxlength="80" value="{{ search }}">
+        <label for="news-status">Status</label>
+        <select id="news-status" name="status">
+            <option value="all"{{ status == 'all' ? ' selected' : '' }}>Alle bearbeitbaren</option>
+            <option value="draft"{{ status == 'draft' ? ' selected' : '' }}>Entwurf</option>
+            <option value="review"{{ status == 'review' ? ' selected' : '' }}>In Prüfung</option>
+        </select>
+        <button type="submit">Suchen</button>
+    </form>
+    <div class="table-wrap"><table>
+        <thead><tr><th>Titel</th><th>Status</th><th>Geändert</th><th>Aktion</th></tr></thead>
+        <tbody>
+        {% for entry in entries %}<tr>
+            <td>{{ entry.title }}</td><td>{{ entry.status == 'review' ? 'In Prüfung' : 'Entwurf' }}</td>
+            <td>{{ entry.updatedAt|date('d.m.Y H:i') }}</td>
+            <td><a href="{{ path('app_admin_news_editor',{id:entry.id}) }}">Im Editor öffnen</a></td>
+        </tr>{% else %}<tr><td colspan="4">Derzeit keine bearbeitbaren News vorhanden.</td></tr>{% endfor %}
+        </tbody>
+    </table></div>
+    <nav aria-label="News-Seiten">
+        {% if page > 1 %}<a href="{{ path('app_admin_news_editor_index',{page:page-1,q:search,status:status}) }}">Vorherige Seite</a>{% endif %}
+        <span>Seite {{ page }}</span>
+        {% if hasNext %}<a href="{{ path('app_admin_news_editor_index',{page:page+1,q:search,status:status}) }}">Nächste Seite</a>{% endif %}
+    </nav>
+</main>
+{% endblock %}
