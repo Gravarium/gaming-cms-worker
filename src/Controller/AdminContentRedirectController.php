@@ -18,9 +18,23 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 #[IsGranted(CmsPermission::CONTENT)]
 final class AdminContentRedirectController extends AbstractController
 {
-    private const PAGE_SIZE = 25;
-    private const MAX_PAGE = 10000;
+    public const PAGE_SIZE = 25;
+    public const MAX_PAGE = 10_000;
     private const MAX_SEARCH_LENGTH = 120;
+
+    public static function boundedPageCount(int $total): int
+    {
+        if ($total < 0) {
+            throw new InvalidArgumentException('The total redirect count cannot be negative.');
+        }
+
+        $pages = intdiv($total, self::PAGE_SIZE);
+        if ($total % self::PAGE_SIZE !== 0) {
+            ++$pages;
+        }
+
+        return min(self::MAX_PAGE, max(1, $pages));
+    }
 
     #[Route('', name: 'app_admin_content_redirect_index', methods: ['GET'])]
     public function index(Request $request, ContentRedirectRepository $redirects): Response
@@ -32,7 +46,7 @@ final class AdminContentRedirectController extends AbstractController
         }
 
         $total = $redirects->countAdminResults($filters['q'], $filters['type']);
-        $pages = max(1, (int) ceil($total / self::PAGE_SIZE));
+        $pages = self::boundedPageCount($total);
         $page = min($filters['page'], $pages);
         $items = $redirects->findAdminPage($filters['q'], $filters['type'], self::PAGE_SIZE, ($page - 1) * self::PAGE_SIZE);
 

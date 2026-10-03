@@ -60,6 +60,22 @@ final class PublicGameReleaseRssFeedTest extends WebTestCase
                 $now->modify('+3 days'),
                 'delayed',
             );
+            $nearWindowStart = $this->createRelease(
+                $entityManager,
+                'Soon UTC RSS Window Canary '.$suffix,
+                'rss-soon-'.$suffix,
+                'EU',
+                $now->modify('+6 hours'),
+                'announced',
+            );
+            $this->createRelease(
+                $entityManager,
+                'Beyond UTC RSS Window Canary '.$suffix,
+                'rss-utc-boundary-'.$suffix,
+                'EU',
+                $now->modify('+18 months')->modify('+6 hours'),
+                'announced',
+            );
             $this->createRelease($entityManager, 'Cancelled RSS Canary '.$suffix, 'rss-cancelled-'.$suffix, 'EU', $now->modify('+4 days'), 'cancelled');
             $this->createRelease($entityManager, 'Released RSS Canary '.$suffix, 'rss-released-'.$suffix, 'EU', $now->modify('+4 days'), 'released');
             $this->createRelease($entityManager, 'Past RSS Canary '.$suffix, 'rss-past-'.$suffix, 'EU', $now->modify('-2 days'), 'announced');
@@ -67,7 +83,13 @@ final class PublicGameReleaseRssFeedTest extends WebTestCase
             $this->createRelease($entityManager, 'Disabled Entry RSS Canary '.$suffix, 'rss-disabled-entry-'.$suffix, 'EU', $now->modify('+4 days'), 'announced', true, false);
             $this->createRelease($entityManager, 'Outside Window RSS Canary '.$suffix, 'rss-outside-'.$suffix, 'EU', $now->modify('+20 months'), 'announced');
 
-            $client->request('GET', '/games/releases/feed.xml');
+            $previousTimezone = date_default_timezone_get();
+            self::assertTrue(date_default_timezone_set('Pacific/Kiritimati'));
+            try {
+                $client->request('GET', '/games/releases/feed.xml');
+            } finally {
+                date_default_timezone_set($previousTimezone);
+            }
 
             self::assertResponseIsSuccessful();
             self::assertSame('application/rss+xml; charset=UTF-8', $client->getResponse()->headers->get('Content-Type'));
@@ -79,7 +101,7 @@ final class PublicGameReleaseRssFeedTest extends WebTestCase
 
             $xml = $this->responseContent($client);
             $document = $this->parseXml($xml);
-            self::assertSame(2, $document->getElementsByTagName('item')->length);
+            self::assertSame(3, $document->getElementsByTagName('item')->length);
             self::assertStringContainsString('Visible RSS Release '.$suffix, $xml);
             self::assertStringContainsString('Delayed RSS Release '.$suffix, $xml);
             self::assertStringNotContainsString('Cancelled RSS Canary '.$suffix, $xml);
@@ -88,8 +110,10 @@ final class PublicGameReleaseRssFeedTest extends WebTestCase
             self::assertStringNotContainsString('Disabled Game RSS Canary '.$suffix, $xml);
             self::assertStringNotContainsString('Disabled Entry RSS Canary '.$suffix, $xml);
             self::assertStringNotContainsString('Outside Window RSS Canary '.$suffix, $xml);
+            self::assertStringNotContainsString('Beyond UTC RSS Window Canary '.$suffix, $xml);
             self::assertStringContainsString('game-release-'.$visible->getId().'@gaming-cms', $xml);
             self::assertStringContainsString('game-release-'.$delayed->getId().'@gaming-cms', $xml);
+            self::assertStringContainsString('game-release-'.$nearWindowStart->getId().'@gaming-cms', $xml);
         } finally {
             $this->restoreGamingState($entityManager, $previousGamingState);
         }

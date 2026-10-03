@@ -13,6 +13,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Routing\Attribute\Route;
 
 #[Route('/games')]
@@ -51,14 +52,36 @@ final class GameCatalogueController extends AbstractController
         $genreSlug = $this->selectedFilter($parameters, 'genre', $genreSlugs, 120, $invalidFilter);
         $platformSlug = $this->selectedFilter($parameters, 'platform', $platformSlugs, 140, $invalidFilter);
 
-        return $this->render('game_catalogue/index.html.twig', [
-            'entries' => $invalidFilter ? [] : $this->entries->publicEntries($genreSlug, $platformSlug),
+        $rawPage = $parameters['page'] ?? '1';
+        if (!is_string($rawPage) || preg_match('/\A[1-9][0-9]{0,3}\z/', $rawPage) !== 1) {
+            throw new BadRequestHttpException('The page must be a positive integer.');
+        }
+
+        $page = (int) $rawPage;
+        if ($page > GameCatalogueEntryRepository::MAX_PAGE) {
+            throw new BadRequestHttpException('The requested page is outside the supported range.');
+        }
+
+        $total = $invalidFilter ? 0 : $this->entries->countPublicEntries($genreSlug, $platformSlug);
+        $totalPages = min(
+            GameCatalogueEntryRepository::MAX_PAGE,
+            max(1, (int) ceil($total / GameCatalogueEntryRepository::PAGE_SIZE)),
+        );
+        if ($page > $totalPages) {
+            throw $this->createNotFoundException();
+        }
+
+        return $this->render('@game_catalogue/public/index.html.twig', [
+            'entries' => $invalidFilter ? [] : $this->entries->publicEntries($genreSlug, $platformSlug, $page),
             'genres' => $genres,
             'platforms' => $platforms,
             'selectedGenre' => $genreSlug,
             'selectedPlatform' => $platformSlug,
             'hasFilters' => $genreSlug !== null || $platformSlug !== null,
             'invalidFilter' => $invalidFilter,
+            'total' => $total,
+            'page' => $page,
+            'totalPages' => $totalPages,
         ]);
     }
 

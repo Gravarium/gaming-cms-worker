@@ -57,7 +57,7 @@ final class PublicVideoSearchController extends AbstractController
         if ($query !== '') {
             $now = new \DateTimeImmutable();
             $total = $this->videos->countMatches($query, $now);
-            $totalPages = max(1, intdiv($total + PublicVideoSearchRepository::PAGE_SIZE - 1, PublicVideoSearchRepository::PAGE_SIZE));
+            $totalPages = PublicVideoSearchRepository::boundedPageCount($total);
             if ($page > $totalPages) {
                 throw $this->createNotFoundException();
             }

@@ -8,6 +8,7 @@ use App\Entity\User;
 use App\Entity\Video;
 use App\Entity\VideoCategory;
 use App\Security\CmsPermission;
+use App\Video\AdminVideoBrowser;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
@@ -144,6 +145,44 @@ final class AdminVideoDirectoryBrowserTest extends WebTestCase
         self::assertStringNotContainsString($scheduled->getTitle(), (string) $client->getResponse()->getContent());
     }
 
+    public function testPageCountRoundsUpAndNeverExceedsTheAcceptedPageMaximum(): void
+    {
+        $cases = [
+            [0, 1],
+            [1, 1],
+            [AdminVideoBrowser::PAGE_SIZE, 1],
+            [AdminVideoBrowser::PAGE_SIZE + 1, 2],
+            [
+                (AdminVideoBrowser::MAX_PAGE - 1) * AdminVideoBrowser::PAGE_SIZE,
+                AdminVideoBrowser::MAX_PAGE - 1,
+            ],
+            [
+                AdminVideoBrowser::MAX_PAGE * AdminVideoBrowser::PAGE_SIZE - 1,
+                AdminVideoBrowser::MAX_PAGE,
+            ],
+            [
+                AdminVideoBrowser::MAX_PAGE * AdminVideoBrowser::PAGE_SIZE,
+                AdminVideoBrowser::MAX_PAGE,
+            ],
+            [
+                AdminVideoBrowser::MAX_PAGE * AdminVideoBrowser::PAGE_SIZE + 1,
+                AdminVideoBrowser::MAX_PAGE,
+            ],
+            [PHP_INT_MAX, AdminVideoBrowser::MAX_PAGE],
+        ];
+
+        foreach ($cases as [$total, $expectedPageCount]) {
+            self::assertSame($expectedPageCount, AdminVideoBrowser::boundedPageCount($total));
+        }
+    }
+
+    public function testNegativePageCountsAreRejected(): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+
+        AdminVideoBrowser::boundedPageCount(-1);
+    }
+
     public function testVideoPagesAreStableBoundedAndClampPastEndPages(): void
     {
         $client = $this->createBrowser();
@@ -193,7 +232,7 @@ final class AdminVideoDirectoryBrowserTest extends WebTestCase
             'status=unknown',
             'page=0',
             'page=01',
-            'page=1000000',
+            sprintf('page=%d', AdminVideoBrowser::MAX_PAGE + 1),
             'page%5B%5D=1',
             'category=0',
             'category=01',

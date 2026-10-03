@@ -143,6 +143,178 @@ final class PublicGameGuideControllerTest extends WebTestCase
         }
     }
 
+    public function testPublicDetailRecommendsOnlyRecentVisibleGuidesFromTheSameGame(): void
+    {
+        $client = static::createClient();
+        $this->setModules($client, true);
+        $em = $this->em($client);
+        $connection = $this->connection($client);
+        $guideIds = [];
+        $userIds = [];
+        $gameIds = [];
+
+        try {
+            $game = $this->game($em, true);
+            $gameId = $game->getId();
+            self::assertNotNull($gameId);
+            $gameIds[] = $gameId;
+
+            $otherGame = $this->game($em, true);
+            $otherGameId = $otherGame->getId();
+            self::assertNotNull($otherGameId);
+            $gameIds[] = $otherGameId;
+
+            $disabledGame = $this->game($em, false);
+            $disabledGameId = $disabledGame->getId();
+            self::assertNotNull($disabledGameId);
+            $gameIds[] = $disabledGameId;
+
+            $emptyGame = $this->game($em, true);
+            $emptyGameId = $emptyGame->getId();
+            self::assertNotNull($emptyGameId);
+            $gameIds[] = $emptyGameId;
+
+            $author = $this->user($em);
+            $authorId = $author->getId();
+            self::assertNotNull($authorId);
+            $userIds[] = $authorId;
+
+            $now = new \DateTimeImmutable();
+            $currentId = $this->guide(
+                $connection,
+                $gameId,
+                $authorId,
+                null,
+                'published',
+                'WCP612-Current',
+                $now->modify('-10 minutes')->format('Y-m-d H:i:s'),
+            );
+            $guideIds[] = $currentId;
+
+            $newestId = $this->guide(
+                $connection,
+                $gameId,
+                $authorId,
+                null,
+                'published',
+                'WCP612-Related-Newest',
+                $now->modify('-1 minute')->format('Y-m-d H:i:s'),
+            );
+            $guideIds[] = $newestId;
+
+            $tieOlderId = $this->guide(
+                $connection,
+                $gameId,
+                $authorId,
+                null,
+                'published',
+                'WCP612-Related-Tie-A',
+                $now->modify('-2 minutes')->format('Y-m-d H:i:s'),
+            );
+            $guideIds[] = $tieOlderId;
+            $tieNewerId = $this->guide(
+                $connection,
+                $gameId,
+                $authorId,
+                null,
+                'published',
+                'WCP612-Related-Tie-B',
+                $now->modify('-2 minutes')->format('Y-m-d H:i:s'),
+            );
+            $guideIds[] = $tieNewerId;
+
+            $overLimitId = $this->guide(
+                $connection,
+                $gameId,
+                $authorId,
+                null,
+                'published',
+                'WCP612-Related-Over-Limit',
+                $now->modify('-3 minutes')->format('Y-m-d H:i:s'),
+            );
+            $guideIds[] = $overLimitId;
+
+            $crossGameId = $this->guide(
+                $connection,
+                $otherGameId,
+                $authorId,
+                null,
+                'published',
+                'WCP612-Hidden-Cross-Game',
+            );
+            $guideIds[] = $crossGameId;
+            $disabledGameGuideId = $this->guide(
+                $connection,
+                $disabledGameId,
+                $authorId,
+                null,
+                'published',
+                'WCP612-Hidden-Disabled-Game',
+            );
+            $guideIds[] = $disabledGameGuideId;
+
+            foreach (['draft', 'review', 'scheduled'] as $status) {
+                $hiddenId = $this->guide(
+                    $connection,
+                    $gameId,
+                    $authorId,
+                    null,
+                    $status,
+                    'WCP612-Hidden-'.ucfirst($status),
+                );
+                $guideIds[] = $hiddenId;
+            }
+            $futureId = $this->guide(
+                $connection,
+                $gameId,
+                $authorId,
+                null,
+                'published',
+                'WCP612-Hidden-Future',
+                $now->modify('+1 day')->format('Y-m-d H:i:s'),
+            );
+            $guideIds[] = $futureId;
+
+            $emptyGameGuideId = $this->guide(
+                $connection,
+                $emptyGameId,
+                null,
+                null,
+                'published',
+                'WCP612-Empty-Related-List',
+            );
+            $guideIds[] = $emptyGameGuideId;
+
+            $client->request('GET', '/gaming/guides/'.$currentId);
+            self::assertResponseIsSuccessful();
+            self::assertSelectorTextContains('section[aria-labelledby="related-guides-heading"] h2', 'Weitere öffentliche Guides');
+            $html = (string) $client->getResponse()->getContent();
+
+            self::assertStringContainsString('href="/gaming/guides/'.$newestId.'"', $html);
+            self::assertStringContainsString('href="/gaming/guides/'.$tieNewerId.'"', $html);
+            self::assertStringContainsString('href="/gaming/guides/'.$tieOlderId.'"', $html);
+            self::assertStringNotContainsString('href="/gaming/guides/'.$currentId.'"', $html);
+            self::assertStringNotContainsString('WCP612-Related-Over-Limit', $html);
+            self::assertStringNotContainsString('WCP612-Hidden-', $html);
+            self::assertStringNotContainsString($author->getEmail(), $html);
+
+            $newestPosition = strpos($html, 'WCP612-Related-Newest');
+            $tieNewerPosition = strpos($html, 'WCP612-Related-Tie-B');
+            $tieOlderPosition = strpos($html, 'WCP612-Related-Tie-A');
+            self::assertNotFalse($newestPosition);
+            self::assertNotFalse($tieNewerPosition);
+            self::assertNotFalse($tieOlderPosition);
+            self::assertLessThan($tieNewerPosition, $newestPosition);
+            self::assertLessThan($tieOlderPosition, $tieNewerPosition);
+
+            $client->request('GET', '/gaming/guides/'.$emptyGameGuideId);
+            self::assertResponseIsSuccessful();
+            self::assertSelectorNotExists('section[aria-labelledby="related-guides-heading"]');
+        } finally {
+            $this->cleanup($client, $guideIds, $userIds, $gameIds);
+        }
+    }
+
     public function testDisabledGamingHidesPublicGuideRoutes(): void
     {
         $client = static::createClient();

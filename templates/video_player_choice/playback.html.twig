@@ -15,8 +15,8 @@
 {% if playback %}<section class="panel workspace-player" aria-label="Videoplayer">
 {% if playback.mode == 'iframe' %}<iframe src="{{ playback.url }}" title="{{ title }}" allow="autoplay; fullscreen; picture-in-picture; encrypted-media" allowfullscreen sandbox="allow-scripts allow-same-origin allow-presentation" referrerpolicy="strict-origin-when-cross-origin"></iframe>
 {% elseif playback.mode in ['video','hls'] %}
-{% if engine == 'videojs' %}<link rel="stylesheet" href="{{ asset('video_player_choice/vendor/video-8.24.1.min.css') }}">{% endif %}
-<video controls playsinline preload="none" data-choice-player data-engine="{{ engine }}" data-mode="{{ playback.mode }}" data-source="{{ playback.url }}" data-library="{{ asset('video_player_choice/vendor/video-8.24.1.min.js') }}" data-start="{{ options.start }}" data-speed="{{ options.speed }}" data-muted="{{ options.muted ? '1' : '0' }}" data-loop="{{ options.loop ? '1' : '0' }}" data-autoplay="{{ options.autoplay ? '1' : '0' }}" aria-label="{{ title }}"></video>
+{% if engine == 'videojs' %}<link rel="stylesheet" href="{{ asset('video_player_choice/player/video-8.24.1.min.css') }}">{% endif %}
+<video controls playsinline preload="none" data-choice-player data-engine="{{ engine }}" data-mode="{{ playback.mode }}" data-source="{{ playback.url }}" data-library="{{ asset('video_player_choice/player/video-8.24.1.min.js') }}" data-start="{{ options.start }}" data-speed="{{ options.speed }}" data-muted="{{ options.muted ? '1' : '0' }}" data-loop="{{ options.loop ? '1' : '0' }}" data-autoplay="{{ options.autoplay ? '1' : '0' }}" aria-label="{{ title }}"></video>
 <label data-quality-label hidden>Bildqualität <select data-quality><option value="-1">Automatisch</option></select></label><p data-choice-status role="status" aria-live="polite"></p>
 {% else %}<p>Diese Quelle wird beim Anbieter geöffnet.</p>{% endif %}
 <a href="{{ playback.url }}" target="_blank" rel="noopener noreferrer">Quelle separat öffnen</a></section>{% endif %}

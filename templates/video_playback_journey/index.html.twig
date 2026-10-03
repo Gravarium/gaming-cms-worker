@@ -1,0 +1,7 @@
+{% extends 'video_playback_journey/layout.html.twig' %}{% block heading %}Playlists & Weiterschauen{% endblock %}
+{% block journey %}
+<p>Playlist auswählen, Quelle laden und auf Wunsch direkt zum nächsten Video wechseln. Abspielpositionen kannst du für öffentliche Videos auf diesem Gerät speichern.</p>
+<div class="journey-grid">{% for playlist in playlists %}<section class="panel"><h2><a href="{{ path('app_video_viewing_playlist', {slug: playlist.slug}) }}">{{ playlist.title }}</a></h2><p>{{ playlist.description }}</p><a href="{{ path('app_video_viewing_playlist', {slug: playlist.slug}) }}">Playlist öffnen</a></section>{% else %}<p>Keine öffentliche Playlist vorhanden.</p>{% endfor %}</div>
+<nav aria-label="Playlist-Seiten">{% if page > 1 %}<a href="{{ path('app_video_viewing', {page: page - 1}) }}">Vorherige Seite</a>{% endif %}{% if more %}<a href="{{ path('app_video_viewing', {page: page + 1}) }}">Nächste Seite</a>{% endif %}</nav>
+<section class="panel"><h2>Direkt ein Video öffnen</h2><p>In der <a href="{{ path('app_video_player_choice') }}">Videoübersicht</a> findest du alle verfügbaren Videos. Du kannst eine Playlist in der <a href="{{ path('app_video_playlist_index') }}">Playlist-Übersicht</a> ansehen.</p></section>
+{% endblock %}

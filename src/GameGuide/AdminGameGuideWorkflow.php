@@ -10,6 +10,7 @@ use App\Gaming\Guide\GuideVersion;
 use App\Gaming\Guide\StructuredBuild;
 use App\Gaming\Guide\TierList;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Platforms\PostgreSQLPlatform;
 use Doctrine\DBAL\Types\Types;
 
 final readonly class AdminGameGuideWorkflow
@@ -242,6 +243,44 @@ final readonly class AdminGameGuideWorkflow
                 return false;
             }
             $this->appendAudit($connection, $id, $reviewerId, $status, $reason, $now);
+
+            return true;
+        });
+    }
+
+    public function withdrawPublished(int $id, int $editorId, string $reason): bool
+    {
+        if ($id < 1 || $editorId < 1) {
+            throw new \InvalidArgumentException('A persisted guide and editor are required.');
+        }
+        $reason = trim($reason);
+        if ($reason === '' || mb_strlen($reason) > 500) {
+            throw new \InvalidArgumentException('A withdrawal reason of at most 500 characters is required.');
+        }
+
+        return $this->connection->transactional(function (Connection $connection) use ($id, $editorId, $reason): bool {
+            if ($connection->getDatabasePlatform() instanceof PostgreSQLPlatform) {
+                $lockedGuide = $connection->fetchAssociative(
+                    "SELECT id FROM game_guide
+                     WHERE id = :id AND review_status = 'published' AND author_id IS NOT NULL
+                     FOR UPDATE",
+                    ['id' => $id],
+                );
+                if ($lockedGuide === false) {
+                    return false;
+                }
+            }
+
+            $changed = $connection->executeStatement(
+                "UPDATE game_guide SET review_status = 'draft', published_at = NULL
+                 WHERE id = :id AND review_status = 'published' AND author_id IS NOT NULL",
+                ['id' => $id],
+            );
+            if ($changed !== 1) {
+                return false;
+            }
+
+            $this->appendAudit($connection, $id, $editorId, 'draft', $reason, new \DateTimeImmutable());
 
             return true;
         });

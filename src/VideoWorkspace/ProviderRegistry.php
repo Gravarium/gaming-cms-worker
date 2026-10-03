@@ -42,6 +42,13 @@ final class ProviderRegistry
             || !$this->urls->isSafeRemote($result['url']) || parse_url($result['url'], PHP_URL_SCHEME) !== 'https') {
             return null;
         }
+        if ($result['mode'] === 'iframe') {
+            $parent = strtolower(rtrim(trim($parentHost, '[]'), '.'));
+            $frameHost = strtolower(rtrim(trim((string) parse_url($result['url'], PHP_URL_HOST), '[]'), '.'));
+            if ($parent !== '' && $frameHost === $parent) {
+                return null;
+            }
+        }
         return $result;
     }
 }

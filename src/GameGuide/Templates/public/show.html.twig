@@ -25,6 +25,20 @@
             </table>
         </section>
     {% endif %}
+    {% if relatedGuides is not empty %}
+        <section aria-labelledby="related-guides-heading">
+            <h2 id="related-guides-heading">Weitere öffentliche Guides</h2>
+            <ul>
+                {% for related in relatedGuides %}
+                    <li>
+                        <a href="{{ path('app_gaming_guide_show', {id: related.id}) }}">{{ related.title }}</a>
+                        <span>{{ related.guide_type == 'tier_list' ? 'Tier-Liste' : 'Build' }} · Version {{ related.game_version }} · {{ related.season }}</span>
+                        {% if related.is_outdated %}<span class="status status-disabled">Gültigkeitszeitraum abgelaufen oder noch nicht begonnen</span>{% endif %}
+                    </li>
+                {% endfor %}
+            </ul>
+        </section>
+    {% endif %}
     <p><a href="{{ path('app_gaming_guide_index', {game: guide.game_slug}) }}">Weitere Guides für {{ guide.game_name }}</a></p>
 </main>
 {% endblock %}

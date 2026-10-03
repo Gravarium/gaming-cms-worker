@@ -63,6 +63,22 @@ final class ProviderRegistryTest extends TestCase
         yield ['filemoon', 'https://filemoon.org.attacker.test/abc123/embed'];
         yield ['peertube', 'https://localhost/videos/embed/52a10666-3a18-4e73-93da-e8d3c12c305a'];
     }
+    public function testPeerTubeIframesCannotUseTheCmsOrigin(): void
+    {
+        $id = '52a10666-3a18-4e73-93da-e8d3c12c305a';
+        self::assertNull($this->registry()->resolve('peertube', 'https://portal.example.test/videos/embed/'.$id, 'portal.example.test'));
+        self::assertNull($this->registry()->resolve('peertube', 'https://PORTAL.EXAMPLE.TEST./videos/embed/'.$id, 'portal.example.test'));
+        self::assertNull($this->registry()->resolve('peertube', 'https://video.example.test/videos/embed/'.$id, 'VIDEO.EXAMPLE.TEST.'));
+    }
+    public function testCustomAdaptersCannotReturnSameOriginSandboxedIframes(): void
+    {
+        $adapter = new class implements ProviderAdapter {
+            public function catalogue(): array { return ['same-origin' => ['label' => 'Same origin', 'documentation' => 'https://owner.example.test/docs', 'capability' => 'embed']]; }
+            public function resolve(string $provider, string $sourceUrl, string $parentHost): ?array { return ['mode' => 'iframe', 'url' => 'https://PORTAL.EXAMPLE.TEST./embed/video']; }
+        };
+        $registry = new ProviderRegistry([$adapter], new MediaUrlPolicy());
+        self::assertNull($registry->resolve('same-origin', 'https://source.example.test/watch', 'portal.example.test'));
+    }
     public function testOwnerCanRegisterOwnAuthorizedProviderWithoutCoreChanges(): void
     {
         $adapter = new class implements ProviderAdapter {

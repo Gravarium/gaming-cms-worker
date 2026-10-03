@@ -1,0 +1,22 @@
+{% extends 'video_playback_journey/layout.html.twig' %}{% block heading %}{{ video.title }}{% endblock %}
+{% block journey %}
+{% if playlist %}<h2>Playlist: {{ playlist.title }}</h2><p>Reihenfolge: älteste zuerst. Videos, die du nicht sehen darfst, werden übersprungen.</p>{% endif %}
+{% if message %}<p role="status">{{ message }}</p>{% endif %}
+<p>Beim Laden wird eine Verbindung zum Anbieter hergestellt. Automatisches Weiterschauen lädt ausschließlich direkte Videodateien oder Streams. Anbieter-Player benötigen weiterhin deine Auswahl.</p>
+<div class="journey-grid">{% for source in sources %}<section class="panel"><h2>{{ source.label }}</h2>{% if source.engines %}<form method="post">
+<input type="hidden" name="_token" value="{{ csrf_token(token) }}"><input type="hidden" name="video" value="{{ video.slug }}"><input type="hidden" name="source" value="{{ source.id }}">
+<label>Player <select name="engine">{% for key,label in source.engines %}<option value="{{ key }}"{% if selected == source.id and engine == key %} selected{% endif %}>{{ label }}</option>{% endfor %}</select></label>
+<label>Startzeit (Sekunden) <input type="number" name="start" min="0" max="86400" value="0"></label>
+{% if playlist %}<label><input type="checkbox" name="continuous" value="1"{% if continuous %} checked{% endif %}> Weitere direkte Quellen dieser Playlist automatisch laden</label>{% endif %}
+<button>Auswählen und laden</button></form>{% else %}<p>Quelle nicht nutzbar. Bitte eine andere Quelle wählen oder die Verwaltung informieren.</p>{% endif %}</section>{% else %}<p>Keine abspielbare Quelle vorhanden.</p>{% endfor %}</div>
+{% include 'video_playback_journey/player.html.twig' with {title:video.title,showResumeNotice:true} %}
+{% if playlist %}<nav class="journey-actions" aria-label="Videos in der Playlist">
+{% if previous %}<a href="{{ path('app_video_viewing_playlist', {slug:playlist.slug,video:previous.slug}) }}">Vorheriges Video: {{ previous.title }}</a>{% endif %}
+{% if next %}<a href="{{ path('app_video_viewing_playlist', {slug:playlist.slug,video:next.slug}) }}">Nächstes Video: {{ next.title }}</a>{% else %}<p>Ende der Playlist.</p>{% endif %}</nav>
+{% if next and playback and playback.mode in ['video','hls'] and continuous %}
+<form method="post" action="{{ path('app_video_viewing_playlist', {slug:playlist.slug}) }}" data-next-video>
+<input type="hidden" name="_token" value="{{ csrf_token(token) }}"><input type="hidden" name="video" value="{{ next.slug }}"><input type="hidden" name="source" value="auto"><input type="hidden" name="engine" value="{{ engine }}"><input type="hidden" name="continuous" value="1"><input type="hidden" name="autoplay" value="1">
+<label><input type="checkbox" data-auto-advance checked> Automatisches Weiterschauen eingeschaltet</label><button>Nächstes Video jetzt laden</button></form>{% endif %}{% endif %}
+<p><a href="{{ path('app_video_player_choice_video', {slug:video.slug}) }}">Alle Player-Einstellungen</a> · <a href="{{ path('app_video_workspace_video', {slug:video.slug}) }}">Weitere Video-Funktionen</a></p>
+<script type="module" src="{{ asset('video_playback_journey/journey.js') }}"></script>
+{% endblock %}

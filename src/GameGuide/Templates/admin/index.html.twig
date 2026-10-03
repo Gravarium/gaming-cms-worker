@@ -5,6 +5,7 @@
     <p class="eyebrow">Gaming · Guides</p>
     <h1>Patch-Guides verwalten</h1>
     {% for message in app.flashes('success') %}<div class="notice">{{ message }}</div>{% endfor %}
+    {% if error %}<div class="notice error" role="alert">{{ error }}</div>{% endif %}
     <p>Strukturierte Builds und Ranglisten werden erst nach unabhängiger Prüfung öffentlich.</p>
     <p><a class="button-link" href="{{ path('app_admin_gaming_guide_new') }}">Neuen Entwurf anlegen</a>
         <a href="{{ path('app_gaming_guide_index') }}">Öffentlichen Guide-Katalog ansehen</a>
@@ -29,6 +30,13 @@
                         </form>
                     {% elseif guide.review_status == 'published' %}
                         <a href="{{ path('app_gaming_guide_show', {id: guide.id}) }}">Öffentliche Ansicht</a>
+                        <form method="post" action="{{ path('app_admin_gaming_guide_withdraw', {id: guide.id}) }}">
+                            <input type="hidden" name="_token" value="{{ csrf_token('game-guide-withdraw-' ~ guide.id) }}">
+                            <label>Grund für den Rückzug
+                                <textarea name="reason" maxlength="500" rows="2" required></textarea>
+                            </label>
+                            <button type="submit">Zur Überarbeitung zurückziehen</button>
+                        </form>
                     {% endif %}
                 </td>
             </tr>

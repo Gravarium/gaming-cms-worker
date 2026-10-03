@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+    <channel>
+        <title>Gaming-Guides</title>
+        <link>{{ absolute_url(path('app_gaming_guide_index'))|e('html') }}</link>
+        <description>Neu veröffentlichte Gaming-Guides</description>
+        <language>{{ app.request.locale|replace({'_': '-'})|e('html') }}</language>
+        {% if guides|length %}
+            <lastBuildDate>{{ guides[0].published_at|date('r') }}</lastBuildDate>
+        {% endif %}
+        {% for guide in guides %}
+            {% set guideUrl = absolute_url(path('app_gaming_guide_show', {id: guide.id})) %}
+            <item>
+                <title>{{ guide.title|e('html') }}</title>
+                <link>{{ guideUrl|e('html') }}</link>
+                <guid isPermaLink="true">{{ guideUrl|e('html') }}</guid>
+                <pubDate>{{ guide.published_at|date('r') }}</pubDate>
+                <description>{{ guide.game_name|e('html') }} — {{ guide.guide_type == 'tier_list' ? 'Tier-Liste' : 'Build' }} · Version {{ guide.game_version|e('html') }} · {{ guide.season|e('html') }}</description>
+            </item>
+        {% endfor %}
+    </channel>
+</rss>
