@@ -173,6 +173,27 @@ final class VideoWorkspaceTest extends WebTestCase
         self::assertSelectorNotExists('iframe'); $token = (string) $crawler->filter('input[name="source"][value="legacy"]')->closest('form')->filter('input[name="_token"]')->first()->attr('value');
         $client->request('POST', $url, ['source' => 'legacy', '_token' => $token]); self::assertResponseIsSuccessful(); self::assertSelectorExists('iframe[src="https://www.youtube-nocookie.com/embed/abcdef12345"]');
     }
+    public function testManagerSeesReadableProviderCapabilitiesAndBrandingDisclosure(): void
+    {
+        $client = $this->client();
+        $manager = $this->user($client, true);
+        $this->login($client, $manager);
+
+        $client->request('GET', '/admin/video-workspace');
+
+        self::assertResponseIsSuccessful();
+        self::assertSame('private, no-store', $client->getResponse()->headers->get('Cache-Control'));
+        self::assertSelectorCount(29, 'table[aria-label="Unterstützte Videoanbieter und Quellformate"] tbody tr');
+        self::assertSelectorCount(29, 'table[aria-label="Unterstützte Videoanbieter und Quellformate"] tbody a[target="_blank"][rel="noopener noreferrer"]');
+        self::assertSelectorTextContains('table[aria-label="Unterstützte Videoanbieter und Quellformate"]', 'Anbieter-Player (iframe)');
+        self::assertSelectorTextContains('table[aria-label="Unterstützte Videoanbieter und Quellformate"]', 'Direkte Datei über den CMS-Player');
+        self::assertSelectorTextContains('table[aria-label="Unterstützte Videoanbieter und Quellformate"]', 'Nur externer Link');
+        self::assertSelectorTextContains('table[aria-label="Unterstützte Videoanbieter und Quellformate"]', 'VdoHide');
+        self::assertSelectorTextContains('details', 'Das CMS legt dort kein eigenes Logo darüber.');
+        self::assertSelectorNotExists('table iframe');
+        self::assertStringNotContainsString('embed_or_direct', (string) $client->getResponse()->getContent());
+    }
+
     private function login(KernelBrowser $client, User $user): void
     {
         $client->getCookieJar()->clear();
