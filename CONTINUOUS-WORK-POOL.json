@@ -10,7 +10,7 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "08260d3f0e343615f525efd2de05767200f031c5",
-  "published_at": "2026-10-03T11:47:00.000Z",
+  "published_at": "2026-10-03T11:50:00.000Z",
   "summary": "Trusted queue reconciled through PR #219 after video intake; WCP-636/637/638/643/646/649 resolved. All existing Worker claims preserved.",
   "rules": {
     "choose": "Resume the current chat's unfinished claimed branch first. Otherwise atomically claim an eligible published task. If no published task is eligible, independently derive and publish a bounded worker-only CMS proposal from approved product goals and observed code gaps; do not ask the owner for the next FCP number.",
@@ -67731,6 +67731,115 @@
       "final_head": "01f5b8ee7c15b007485302689c18c016d8e215da",
       "final_ci_run_id": 37120287197,
       "completed_on": "2026-10-03T11:47:00.000Z"
+    },
+    {
+      "priority": 675,
+      "package_id": "WCP-675",
+      "title": "Explicit decorative-image semantics in the News editor",
+      "risk": "medium_rich_media",
+      "execution_state": "worker_in_progress",
+      "claim_state": "claimed",
+      "claim_generation": 1,
+      "claim_branch": "claim/wcp-675-news-decorative-image-semantics-g1",
+      "suggested_branch": "feature/wcp-675-news-decorative-image-semantics-g1",
+      "resume_branch": "feature/wcp-675-news-decorative-image-semantics-g1",
+      "claimed_on": "2026-10-03T11:50:00.000Z",
+      "lease_expires_at": "2026-10-03T18:50:00.000Z",
+      "base_branch": "main",
+      "base_sha": "08260d3f0e343615f525efd2de05767200f031c5",
+      "proposal_base_branch": "feature/wcp-674-news-readiness-audit-g1",
+      "proposal_base_sha": "01f5b8ee7c15b007485302689c18c016d8e215da",
+      "active_base_branch": "feature/wcp-674-news-readiness-audit-g1",
+      "active_base_sha": "01f5b8ee7c15b007485302689c18c016d8e215da",
+      "active_head": "01f5b8ee7c15b007485302689c18c016d8e215da",
+      "last_observed_head": "01f5b8ee7c15b007485302689c18c016d8e215da",
+      "last_verified_push_at": "2026-10-03T11:50:00.000Z",
+      "last_checkpoint_at": "2026-10-03T11:50:00.000Z",
+      "dependencies": [
+        "WCP-674"
+      ],
+      "proposal_kind": "worker_only",
+      "proposal_dependency_evidence": [
+        {
+          "package_id": "WCP-674",
+          "head": "01f5b8ee7c15b007485302689c18c016d8e215da",
+          "pr": 472,
+          "ci_run": 37120287197,
+          "result": "success"
+        }
+      ],
+      "objective": "Let News editors explicitly mark informative media as decorative. Preserve legacy media as informative by default, enforce a canonical empty alt for decorative images, render alt=\"\" without falling back to an asset title, expose the choice accessibly in the visual editor, and suppress only the corresponding missing-alt audit finding.",
+      "allowed_paths": [
+        "src/NewsEditor/RichDocument.php",
+        "src/NewsEditor/RichRenderer.php",
+        "src/NewsEditor/LegacyNewsConverter.php",
+        "src/NewsEditor/NewsReadinessReport.php",
+        "assets/news_editor/editor.js",
+        "assets/news_editor/editor.css",
+        "assets/news_editor/markdown-io.js",
+        "tests/NewsEditor/RichDocumentTest.php",
+        "tests/NewsEditor/RichRendererTest.php",
+        "tests/NewsEditor/LegacyNewsConverterTest.php",
+        "tests/NewsEditor/NewsReadinessReportTest.php",
+        "tests/JavaScript/news_editor.test.mjs"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "CONTINUOUS-WORKER.md",
+        "CONTINUOUS-WORK-POOL.json",
+        ".github/workflows/",
+        "migrations/",
+        "src/Entity/",
+        "src/Repository/",
+        "src/Security/"
+      ],
+      "deliverables": [
+        "Typed optional decorative flag with backward-compatible informative default and strict validation.",
+        "Public renderer emits alt=\"\" for decorative images and preserves asset-title fallback for legacy/informative images.",
+        "Visual editor exposes a labeled decorative toggle, clears/disables alt text while selected, and serializes the explicit choice.",
+        "Readiness audit suppresses missing-alt warnings only for explicitly decorative images.",
+        "Focused PHP and JavaScript coverage including legacy documents, malformed flag/alt combinations and Markdown export."
+      ],
+      "tests": [
+        "RichDocument accepts old v2 media as informative, validates decorative boolean, and rejects decorative media carrying non-empty alt text.",
+        "Renderer outputs empty alt for decorative media and continues resolving informative alt/title safely.",
+        "Legacy conversion leaves media informative by default.",
+        "Readiness audit suppresses only the missing-alt finding for decorative media.",
+        "Editor toggle is keyboard accessible and serialized; Markdown export labels decorative references.",
+        "Complete exact-head Worker CI."
+      ],
+      "immutable_constraints": [
+        "worker-only-no-Trusted-merge-or-deployment",
+        "legacy-v2-media-remains-informative-unless-explicitly-marked",
+        "decorative-media-must-render-empty-alt",
+        "no-untrusted-markup-or-remote-media-changes",
+        "audit-remains-advisory"
+      ],
+      "collision_check": {
+        "compared_against": "Live pool f17e050be69b810c710c345eb8af835d8bcbc88f; no worker_in_progress claims; WCP-674 green at 01f5b8ee7c15b007485302689c18c016d8e215da.",
+        "result": "Serial descendant of WCP-674. No active claim exists. Paths are limited to the typed News document, renderer, editor, export and their tests.",
+        "paths": [
+          "src/NewsEditor/RichDocument.php",
+          "src/NewsEditor/RichRenderer.php",
+          "src/NewsEditor/LegacyNewsConverter.php",
+          "src/NewsEditor/NewsReadinessReport.php",
+          "assets/news_editor/editor.js",
+          "assets/news_editor/editor.css",
+          "assets/news_editor/markdown-io.js",
+          "tests/NewsEditor/RichDocumentTest.php",
+          "tests/NewsEditor/RichRendererTest.php",
+          "tests/NewsEditor/LegacyNewsConverterTest.php",
+          "tests/NewsEditor/NewsReadinessReportTest.php",
+          "tests/JavaScript/news_editor.test.mjs"
+        ]
+      },
+      "next_action": "Implement optional decorative semantics with a backward-compatible informative default, then run exact-head Worker CI."
     }
   ],
   "recovery_queue": [],
