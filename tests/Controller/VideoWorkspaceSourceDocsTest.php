@@ -8,6 +8,7 @@ use App\Entity\CmsModuleState;
 use App\Entity\User;
 use App\Security\CmsPermission;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 final class VideoWorkspaceSourceDocsTest extends WebTestCase
@@ -36,11 +37,11 @@ final class VideoWorkspaceSourceDocsTest extends WebTestCase
         $manager = $this->user($em, true);
         $em->flush();
 
-        $client->loginUser($reader);
+        $this->login($client, $reader);
         $client->request('GET', '/admin/video-workspace/sources/new');
         self::assertResponseStatusCodeSame(403);
 
-        $client->loginUser($manager);
+        $this->login($client, $manager);
         $crawler = $client->request('GET', '/admin/video-workspace/sources/new');
         self::assertResponseIsSuccessful();
         $cacheControl = strtolower((string) $client->getResponse()->headers->get('Cache-Control'));
@@ -71,10 +72,21 @@ final class VideoWorkspaceSourceDocsTest extends WebTestCase
         self::assertSame('noopener noreferrer', $link->attr('rel'));
         self::assertSelectorNotExists('iframe');
 
-        $state->setEnabled(false);
-        $em->flush();
+        $currentEm = $client->getContainer()->get(EntityManagerInterface::class);
+        $currentState = $currentEm->find(CmsModuleState::class, 'video');
+        self::assertInstanceOf(CmsModuleState::class, $currentState);
+        $currentState->setEnabled(false);
+        $currentEm->flush();
         $client->request('GET', '/admin/video-workspace/sources/new');
         self::assertResponseStatusCodeSame(404);
+    }
+
+    private function login(KernelBrowser $client, User $user): void
+    {
+        $client->getCookieJar()->clear();
+        $freshUser = $client->getContainer()->get(EntityManagerInterface::class)->find(User::class, $user->getId());
+        self::assertInstanceOf(User::class, $freshUser);
+        $client->loginUser($freshUser);
     }
 
     private function user(EntityManagerInterface $em, bool $manager): User
