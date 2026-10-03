@@ -1,0 +1,31 @@
+{% extends 'base.html.twig' %}
+{% block title %}Spieleentwickler{% endblock %}
+{% block body %}
+<main class="content-shell">
+    <header class="page-header">
+        <p class="eyebrow">Spielekatalog</p>
+        <h1>Entwickler</h1>
+        <p>Entdecke Entwickler mit öffentlich sichtbaren Spielen.</p>
+        <a class="button-link button-secondary" href="{{ path('app_game_catalogue_index') }}">Zum Spielekatalog</a>
+    </header>
+
+    <section class="portal-cards" aria-label="Spieleentwickler">
+        {% for developer in developers %}
+            <article class="portal-card">
+                <h2><a href="{{ path('app_game_developer_show', {developer: developer}) }}">{{ developer }}</a></h2>
+                <p>Sichtbare Spiele dieses Entwicklers ansehen.</p>
+            </article>
+        {% else %}
+            <p>Aktuell sind keine Entwickler mit sichtbaren Spielen verfügbar.</p>
+        {% endfor %}
+    </section>
+
+    {% if totalPages > 1 %}
+        <nav aria-label="Entwickler-Seiten">
+            {% if page > 1 %}<a href="{{ path('app_game_developer_directory', {page: page - 1}) }}">Zurück</a>{% endif %}
+            <span>Seite {{ page }} von {{ totalPages }}</span>
+            {% if page < totalPages %}<a href="{{ path('app_game_developer_directory', {page: page + 1}) }}">Weiter</a>{% endif %}
+        </nav>
+    {% endif %}
+</main>
+{% endblock %}
