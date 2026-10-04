@@ -10,8 +10,8 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "08260d3f0e343615f525efd2de05767200f031c5",
-  "published_at": "2026-10-03T22:11:45.344Z",
-  "summary": "WCP-675, WCP-677 and WCP-678 are complete green Worker proposals awaiting Trusted review. WCP-676 remains active on News caption and credit fields; WCP-679 is active on viewer-facing branding guidance after playback choice.",
+  "published_at": "2026-10-04T13:56:09.769Z",
+  "summary": "WCP-676, WCP-679 and WCP-681–WCP-683 are complete green Worker proposals awaiting Trusted review. WCP-684 is active on an accessible manager-only video-source audit page based on WCP-683's exact green Worker HEAD.",
   "rules": {
     "choose": "Resume the current chat's unfinished claimed branch first. Otherwise atomically claim an eligible published task. If no published task is eligible, independently derive and publish a bounded worker-only CMS proposal from approved product goals and observed code gaps; do not ask the owner for the next FCP number.",
     "atomic_reservation": "Create the exact claim_branch and suggested feature branch from that task's published proposal_base_sha. If the claim already exists, treat it as a hard lock; the owning continuation resumes it and every other AI skips it.",
@@ -68765,6 +68765,102 @@
       "final_head": "5b8a0b7b96f20cb167e66f702f18705bf2f9925d",
       "final_ci_run_id": 37206730078,
       "completed_on": "2026-10-04T13:49:19.836Z"
+    },
+    {
+      "priority": 684,
+      "package_id": "WCP-684",
+      "title": "Provide a manager page for the saved video-source audit",
+      "execution_state": "worker_in_progress",
+      "claim_state": "claimed",
+      "claim_generation": 1,
+      "claim_branch": "claim/wcp-684-video-audit-page-g1",
+      "suggested_branch": "feature/wcp-684-video-audit-page-g1",
+      "resume_branch": "feature/wcp-684-video-audit-page-g1",
+      "claimed_on": "2026-10-04T13:56:09.769Z",
+      "lease_expires_at": "2026-10-04T20:56:09.769Z",
+      "base_branch": "main",
+      "base_sha": "6e9cb292bafa84862a9cedc7abb8d20878297f9d",
+      "proposal_base_branch": "feature/wcp-683-video-source-audit-g1",
+      "proposal_base_sha": "5b8a0b7b96f20cb167e66f702f18705bf2f9925d",
+      "dependencies": [
+        "WCP-683"
+      ],
+      "proposal_kind": "worker_only",
+      "proposal_dependency_evidence": [
+        {
+          "package_id": "WCP-683",
+          "head": "5b8a0b7b96f20cb167e66f702f18705bf2f9925d",
+          "pr": 481,
+          "ci_run": 37206730078,
+          "result": "success"
+        }
+      ],
+      "objective": "Make the local video-source audit directly usable by managers through an accessible, paginated admin page and dashboard entry. Reuse WCP-683 classification and expose only source IDs, registered provider keys, enabled/authorized flags, local status and mode; never show saved labels, URLs or tokens, contact providers, modify data or imply playback health.",
+      "allowed_paths": [
+        "src/Controller/VideoProviderAuditPageController.php",
+        "templates/video_provider_audit/index.html.twig",
+        "templates/admin/dashboard.html.twig",
+        "tests/Controller/VideoProviderAuditPageControllerTest.php",
+        "tests/Controller/VideoProviderAuditDashboardEntryTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "CONTINUOUS-WORKER.md",
+        "CONTINUOUS-WORK-POOL.json",
+        ".github/workflows/",
+        "migrations/",
+        "src/Entity/",
+        "src/Security/",
+        "assets/",
+        "src/Controller/VideoProviderAuditController.php",
+        "src/VideoProviderAudit/SourceAudit.php",
+        "src/VideoProviderAudit/README.md",
+        "tests/Controller/VideoProviderAuditControllerTest.php",
+        "tests/VideoProviderAudit/SourceAuditTest.php"
+      ],
+      "deliverables": [
+        "Add a server-rendered GET /admin/video-provider-audit/page with CMS_VIDEO_MANAGE and Video-module gates, strict bounded cursor pagination, stable source-ID order, and private no-store/nosniff/noindex headers.",
+        "Render only source IDs, provider keys, enabled/authorized flags, local status and playback mode; explain that classification is local and does not establish provider availability or playback.",
+        "Add an admin-dashboard link visible only when the viewer has CMS_VIDEO_MANAGE and the Video module is enabled.",
+        "Keep implementation read-only, provider-network-free, schema-free, and confined to the five declared paths."
+      ],
+      "tests": [
+        "Functional page tests for manager authorization, disabled-module 404, cursor ordering, malformed cursors/limits, no-store headers, no secret/URL/label leakage, and unchanged source counts.",
+        "Dashboard link test for the manager permission and enabled-module visibility boundary.",
+        "Complete exact-head Worker CI including PostgreSQL 18 migration validation."
+      ],
+      "immutable_constraints": [
+        "worker-only-no-Trusted-merge-or-deployment",
+        "no-provider-network-requests-or-secret-disclosure",
+        "preserve-video-module-and-manager-gates",
+        "read-only-no-migrations-or-data-writes",
+        "no-claim-of-remote-availability-or-successful-playback"
+      ],
+      "collision_check": {
+        "compared_against": "All 183 live claimed or locked Worker/FCP packages in the authoritative pool plus Worker tree at WCP-683 exact green HEAD.",
+        "result": "No overlap with any active or locked allowed path. Four new implementation/test paths do not exist at the base; the only existing path is templates/admin/dashboard.html.twig and is not claimed by a live package.",
+        "paths": [
+          "src/Controller/VideoProviderAuditPageController.php",
+          "templates/video_provider_audit/index.html.twig",
+          "templates/admin/dashboard.html.twig",
+          "tests/Controller/VideoProviderAuditPageControllerTest.php",
+          "tests/Controller/VideoProviderAuditDashboardEntryTest.php"
+        ]
+      },
+      "next_action": "Claim generation 1 reserved from exact green WCP-683 HEAD 5b8a0b7b96f20cb167e66f702f18705bf2f9925d. Implement the manager-only paginated HTML page and conditional dashboard card only in the five allowed paths; run focused permission/privacy tests and full exact-head Worker CI. Do not merge to Trusted or deploy.",
+      "active_head": "5b8a0b7b96f20cb167e66f702f18705bf2f9925d",
+      "last_observed_head": "5b8a0b7b96f20cb167e66f702f18705bf2f9925d",
+      "last_verified_push_at": null,
+      "worker_pr_state": "not_created",
+      "active_base_branch": "feature/wcp-683-video-source-audit-g1",
+      "active_base_sha": "5b8a0b7b96f20cb167e66f702f18705bf2f9925d",
+      "last_checkpoint_at": "2026-10-04T13:56:09.769Z"
     }
   ],
   "recovery_queue": [],
