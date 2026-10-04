@@ -59,7 +59,7 @@ final class AdminNewsEditorController extends AbstractController
         $status = $params['status'] ?? 'all';
         $search = $params['q'] ?? '';
         $pageInput = $params['page'] ?? '1';
-        if (!is_string($status) || !in_array($status, ['all', ContentEntry::STATUS_DRAFT, ContentEntry::STATUS_REVIEW], true)
+        if (!is_string($status) || !in_array($status, ['all', ContentEntry::STATUS_DRAFT, ContentEntry::STATUS_REVIEW, ContentEntry::STATUS_SCHEDULED], true)
             || !is_string($search) || !mb_check_encoding($search, 'UTF-8') || mb_strlen($search) > 80
             || preg_match('/[\x00-\x1f\x7f]/u', $search) === 1
             || !is_string($pageInput) || preg_match('/\A[1-9][0-9]{0,3}\z/D', $pageInput) !== 1
@@ -71,7 +71,7 @@ final class AdminNewsEditorController extends AbstractController
         $query = $this->entityManager->getRepository(ContentEntry::class)->createQueryBuilder('entry')
             ->andWhere('entry.type = :type')->setParameter('type', ContentEntry::TYPE_NEWS)
             ->andWhere('entry.status IN (:statuses)')
-            ->setParameter('statuses', $status === 'all' ? [ContentEntry::STATUS_DRAFT, ContentEntry::STATUS_REVIEW] : [$status])
+            ->setParameter('statuses', $status === 'all' ? [ContentEntry::STATUS_DRAFT, ContentEntry::STATUS_REVIEW, ContentEntry::STATUS_SCHEDULED] : [$status])
             ->orderBy('entry.updatedAt', 'DESC')->addOrderBy('entry.id', 'DESC')
             ->setFirstResult(($page - 1) * 25)->setMaxResults(26);
         if ($search !== '') {

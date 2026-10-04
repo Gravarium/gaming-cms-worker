@@ -59,6 +59,42 @@ final class AdminNewsEditorTest extends WebTestCase
         self::assertNotNull($original->getId());
     }
 
+    public function testScheduledNewsRemainsInEditorialWorklistWithBerlinTimeAndMetadataLink(): void
+    {
+        $client = static::createClient();
+        [$user, $draft] = $this->entry($client);
+        $em = $client->getContainer()->get(EntityManagerInterface::class);
+        $title = 'Geplante Redaktions-News '.bin2hex(random_bytes(5));
+        $berlin = new \DateTimeZone('Europe/Berlin');
+        $planned = new \DateTimeImmutable('+2 days', $berlin);
+        $planned = $planned->setTime(14, 30);
+        $entry = (new ContentEntry())->setAuthor($user)->setType(ContentEntry::TYPE_NEWS)
+            ->setTitle($title)->setSlug('scheduled-news-'.bin2hex(random_bytes(8)))
+            ->setBody('Geplant')->setScheduledAt($planned->setTimezone(new \DateTimeZone('UTC')))
+            ->setStatus(ContentEntry::STATUS_SCHEDULED);
+        $entry->synchronizePublication();
+        $em->persist($entry);
+        $em->flush();
+        $client->loginUser($user);
+
+        $client->request('GET', '/admin/news-editor?q='.rawurlencode($title));
+        self::assertResponseIsSuccessful();
+        $html = $client->getResponse()->getContent() ?: '';
+        self::assertStringContainsString($title, $html);
+        self::assertStringContainsString('Geplant', $html);
+        self::assertStringContainsString($planned->format('d.m.Y H:i').' (Europe/Berlin)', $html);
+        self::assertStringContainsString('/admin/content/'.$entry->getId().'/edit', $html);
+        self::assertStringNotContainsString('/admin/news-editor/'.$entry->getId().'"', $html);
+
+        $client->request('GET', '/admin/news-editor?status=scheduled&q='.rawurlencode($title));
+        self::assertResponseIsSuccessful();
+        self::assertStringContainsString($title, $client->getResponse()->getContent() ?: '');
+        $client->request('GET', '/admin/news-editor?status=draft&q='.rawurlencode($title));
+        self::assertResponseIsSuccessful();
+        self::assertStringNotContainsString($title, $client->getResponse()->getContent() ?: '');
+        self::assertNotNull($draft->getId());
+    }
+
     public function testWorklistRejectsUnboundedAndInvalidFilters(): void
     {
         $client = static::createClient();
