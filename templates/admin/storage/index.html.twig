@@ -49,7 +49,7 @@
 
     <div class="media-library-heading">
         <div><p class="eyebrow">Dateiverwaltung</p><h2>Medienbibliothek</h2><p class="muted">{{ assets|length }} Treffer · {{ (totalSize / 1048576)|number_format(2, ',', '.') }} MB</p></div>
-        <div class="top-actions"><a class="button-link" href="{{ path('app_admin_media_upload') }}">Neue Datei</a><a class="button-link button-secondary" href="{{ path('app_admin_media_folder_new') }}">Neuer Ordner</a></div>
+        <div class="top-actions"><a class="button-link" href="{{ path('app_admin_media_upload') }}">Neue Datei</a><a class="button-link button-secondary" href="{{ path('app_admin_media_folder_new') }}">Neuer Ordner</a><a class="button-link button-secondary" href="{{ path('app_admin_storage_library', filters) }}">Vollständige Mediathek</a></div>
     </div>
 
     <form class="media-filters" method="get" action="{{ path('app_admin_storage_index') }}">

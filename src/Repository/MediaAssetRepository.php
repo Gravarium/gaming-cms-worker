@@ -7,6 +7,7 @@ namespace App\Repository;
 use App\Entity\MediaAsset;
 use App\Entity\MediaFolder;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 
 /** @extends ServiceEntityRepository<MediaAsset> */
@@ -20,11 +21,72 @@ final class MediaAssetRepository extends ServiceEntityRepository
     /** @return list<MediaAsset> */
     public function searchLibrary(?string $query, ?string $moduleKey, ?string $storageMode, ?string $mediaType, ?MediaFolder $folder = null, bool $withoutFolder = false): array
     {
+        return $this->libraryQueryBuilder($query, $moduleKey, $storageMode, $mediaType, $folder, $withoutFolder)
+            ->orderBy('asset.updatedAt', 'DESC')
+            ->addOrderBy('asset.id', 'DESC')
+            ->setMaxResults(250)
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
+     * Return one deterministic page of the complete active media library.
+     *
+     * @return array{assets: list<MediaAsset>, total: int, page: int, perPage: int, pageCount: int}
+     */
+    public function searchLibraryPage(
+        ?string $query,
+        ?string $moduleKey,
+        ?string $storageMode,
+        ?string $mediaType,
+        ?MediaFolder $folder = null,
+        bool $withoutFolder = false,
+        int $page = 1,
+        int $perPage = 24,
+    ): array {
+        $page = max(1, $page);
+        $perPage = max(1, min(100, $perPage));
+
+        $builder = $this->libraryQueryBuilder($query, $moduleKey, $storageMode, $mediaType, $folder, $withoutFolder);
+        $countBuilder = clone $builder;
+        $total = (int) $countBuilder
+            ->select('COUNT(asset.id)')
+            ->getQuery()
+            ->getSingleScalarResult();
+
+        $pageCount = max(1, (int) ceil($total / $perPage));
+        $page = min($page, $pageCount);
+
+        /** @var list<MediaAsset> $assets */
+        $assets = $builder
+            ->orderBy('asset.updatedAt', 'DESC')
+            ->addOrderBy('asset.id', 'DESC')
+            ->setFirstResult(($page - 1) * $perPage)
+            ->setMaxResults($perPage)
+            ->getQuery()
+            ->getResult();
+
+        return [
+            'assets' => $assets,
+            'total' => $total,
+            'page' => $page,
+            'perPage' => $perPage,
+            'pageCount' => $pageCount,
+        ];
+    }
+
+    private function libraryQueryBuilder(
+        ?string $query,
+        ?string $moduleKey,
+        ?string $storageMode,
+        ?string $mediaType,
+        ?MediaFolder $folder,
+        bool $withoutFolder,
+    ): QueryBuilder {
         $builder = $this->createQueryBuilder('asset')
             ->leftJoin('asset.folder', 'folder')->addSelect('folder')
-            ->andWhere('asset.deletionState = :active')->setParameter('active', MediaAsset::DELETION_ACTIVE)
-            ->orderBy('asset.updatedAt', 'DESC')
-            ->setMaxResults(250);
+            ->andWhere('asset.deletionState = :active')
+            ->setParameter('active', MediaAsset::DELETION_ACTIVE);
 
         $query = trim((string) $query);
         if ($query !== '') {
@@ -52,7 +114,7 @@ final class MediaAssetRepository extends ServiceEntityRepository
                 ->setParameter('image', 'image/%')->setParameter('video', 'video/%');
         }
 
-        return $builder->getQuery()->getResult();
+        return $builder;
     }
 
     public function findDuplicate(string $checksum, int $size): ?MediaAsset
