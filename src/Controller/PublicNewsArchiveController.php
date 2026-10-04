@@ -8,11 +8,13 @@ use App\Repository\PublicNewsArchiveRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Routing\Attribute\Route;
 
 final class PublicNewsArchiveController extends AbstractController
 {
     private const PAGE_SIZE = 20;
+    private const MAX_PAGE = 10000;
 
     public function __construct(private readonly PublicNewsArchiveRepository $archive)
     {
@@ -40,8 +42,13 @@ final class PublicNewsArchiveController extends AbstractController
             throw $this->createNotFoundException();
         }
 
-        $page = $request->query->getInt('page', 1);
-        if ($page < 1 || $page > 10000) {
+        $pageValue = $request->query->getString('page', '1');
+        if (preg_match('/\\A[1-9][0-9]{0,4}\\z/', $pageValue) !== 1) {
+            throw new BadRequestHttpException('The page parameter must be a positive integer.');
+        }
+
+        $page = (int) $pageValue;
+        if ($page > self::MAX_PAGE) {
             throw $this->createNotFoundException();
         }
 

@@ -17,7 +17,7 @@ final class PublicNewsArchiveTest extends WebTestCase
     private const ARCHIVE_YEAR = 1985;
     private const ARCHIVE_MONTH = 5;
 
-    public function testArchiveListsPeriodsAndPaginatesEntriesInStableOrder(): void
+    public function testArchiveListsPeriodsAndPaginatesEntriesInStableOrderAndRejectsMalformedPages(): void
     {
         $client = static::createClient();
         $entryIds = [];
@@ -60,6 +60,17 @@ final class PublicNewsArchiveTest extends WebTestCase
             self::assertSame('Archive marker 01', $titles[0]);
 
             $client->request('GET', '/news/archive/1985/05?page=3');
+            self::assertResponseStatusCodeSame(404);
+
+            $client->request('GET', '/news/archive/1985/05?page=1');
+            self::assertResponseIsSuccessful();
+
+            foreach (['page=', 'page=0', 'page=-1', 'page=abc', 'page=1.5', 'page=01', 'page[]=1'] as $query) {
+                $client->request('GET', '/news/archive/1985/05?'.$query);
+                self::assertResponseStatusCodeSame(400, 'Expected malformed query to be rejected: '.$query);
+            }
+
+            $client->request('GET', '/news/archive/1985/05?page=10001');
             self::assertResponseStatusCodeSame(404);
         } finally {
             $this->cleanup($client, $entryIds, $authorId);
