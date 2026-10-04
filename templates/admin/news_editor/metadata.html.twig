@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+{% block title %}Artikeldaten: {{ entry.title }} | Gaming CMS{% endblock %}
+{% block body %}
+<header class="topbar"><a class="brand" href="{{ path('app_admin_dashboard') }}">Gaming CMS</a><nav class="top-actions"><a href="{{ path('app_admin_news_editor',{id:entry.id}) }}">Zum News-Editor</a><a href="{{ path('app_admin_news_editor_index') }}">News-Redaktion</a></nav></header>
+<main class="dashboard">
+    <p class="eyebrow">News-Redaktion</p><h1>Artikeldaten bearbeiten</h1>
+    <p class="muted">Text, Tabellen und Medien bearbeitest du im <a href="{{ path('app_admin_news_editor',{id:entry.id}) }}">News-Editor</a>.</p>
+    {% for message in app.flashes('success') %}<div class="notice" role="status">{{ message }}</div>{% endfor %}
+    {{ form_start(form, {'attr': {'class': 'content-form'}}) }}
+        {{ form_errors(form) }}
+        {{ form_widget(form) }}
+        <button type="submit">Artikeldaten speichern</button>
+    {{ form_end(form) }}
+</main>
+{% endblock %}
