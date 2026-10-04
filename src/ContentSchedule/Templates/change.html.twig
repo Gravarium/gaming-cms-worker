@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+{% block title %}Termin ändern: {{ entry.title }} | Gaming CMS{% endblock %}
+{% block body %}
+<header class="topbar">
+    <a class="brand" href="{{ path('app_admin_dashboard') }}">Gaming CMS</a>
+    <nav class="top-actions" aria-label="Redaktion">
+        <a href="{{ path('app_admin_content_schedule_index', {month: month}) }}">Zum Kalender</a>
+        <a href="{{ path('app_admin_content_edit', {id: entry.id}) }}">Inhalt bearbeiten</a>
+    </nav>
+</header>
+<main class="dashboard">
+    <p class="eyebrow">Content-Modul · Veröffentlichungskalender</p>
+    <h1>Termin ändern</h1>
+    <section class="panel" aria-label="Geplanter Inhaltstermin">
+        <h2>{{ entry.title }}</h2>
+        <p>{{ kind == 'publication' ? 'Geplante Veröffentlichung' : 'Geplantes Ende der Veröffentlichung' }}</p>
+        <p class="muted">
+            {% if kind == 'publication' %}
+                {{ entry.scheduledAt|date('d.m.Y H:i') }}
+            {% else %}
+                {{ entry.scheduledUnpublishAt|date('d.m.Y H:i') }}
+            {% endif %}
+        </p>
+    </section>
+    <section class="panel" aria-labelledby="schedule-change-heading">
+        <h2 id="schedule-change-heading">Neuen Zeitpunkt festlegen</h2>
+        {{ form_errors(form) }}
+        {{ form_start(form) }}
+            {{ form_row(form.scheduledAt) }}
+            {{ form_row(form.reason) }}
+            <button type="submit">Termin speichern</button>
+        {{ form_end(form) }}
+    </section>
+</main>
+{% endblock %}
