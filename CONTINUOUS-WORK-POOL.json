@@ -68579,6 +68579,75 @@
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/479",
       "worker_pr_head_sha": "22d37ace83347da568e8ef74d1896ddf34f4882f",
       "worker_pr_state": "draft"
+    },
+    {
+      "priority": 683,
+      "package_id": "WCP-683",
+      "title": "Audit saved video provider sources for manager diagnostics",
+      "execution_state": "worker_in_progress",
+      "claim_state": "active_lease",
+      "claim_generation": 1,
+      "claim_branch": "claim/wcp-683-video-source-audit-g1",
+      "suggested_branch": "feature/wcp-683-video-source-audit-g1",
+      "resume_branch": "feature/wcp-683-video-source-audit-g1",
+      "claimed_on": "2026-10-04T02:15:33.747Z",
+      "lease_expires_at": "2026-10-04T09:15:33.747Z",
+      "base_branch": "main",
+      "base_sha": "08260d3f0e343615f525efd2de05767200f031c5",
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "08260d3f0e343615f525efd2de05767200f031c5",
+      "dependencies": [
+        "WCP-636",
+        "WCP-643",
+        "WCP-649"
+      ],
+      "proposal_kind": "worker_only",
+      "objective": "Provide a paginated manager-only JSON audit of existing saved video sources, classifying recognized source modes and invalid links locally without exposing source URLs, fetching providers, modifying data, or claiming live playback health.",
+      "allowed_paths": [
+        "src/Controller/VideoProviderAuditController.php",
+        "src/VideoProviderAudit/SourceAudit.php",
+        "tests/Controller/VideoProviderAuditControllerTest.php",
+        "tests/VideoProviderAudit/SourceAuditTest.php",
+        "src/VideoProviderAudit/README.md"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "ops/",
+        ".github/workflows/",
+        "migrations/",
+        "templates/",
+        "src/NewsEditor/",
+        "assets/news_editor/",
+        "src/VideoProviderExpansion/"
+      ],
+      "deliverables": [
+        "Manager-only no-store JSON endpoint with bounded pagination and per-source status/mode, no raw URLs or tokens.",
+        "Local classification through registered ProviderRegistry and clear caveat that URL shape is not remote availability.",
+        "Functional permission/module tests and focused classification tests."
+      ],
+      "tests": [
+        "Focused audit classification and controller permission tests",
+        "Full exact-head Worker CI and PostgreSQL migration chain"
+      ],
+      "immutable_constraints": [
+        "worker-only-no-Trusted-merge-or-deployment",
+        "no-provider-network-requests-or-secret-disclosure",
+        "preserve-video-module-and-manager-gates"
+      ],
+      "collision_check": {
+        "result": "Distinct controller/service/test paths from active News WCP-676/682 and video WCP-679; no templates or migrations.",
+        "paths": [
+          "src/Controller/VideoProviderAuditController.php",
+          "src/VideoProviderAudit/",
+          "tests/Controller/VideoProviderAuditControllerTest.php",
+          "tests/VideoProviderAudit/"
+        ]
+      },
+      "next_action": "Implement source audit and verify exact-head Worker CI.",
+      "active_head": "08260d3f0e343615f525efd2de05767200f031c5",
+      "last_observed_head": "08260d3f0e343615f525efd2de05767200f031c5",
+      "last_verified_push_at": null,
+      "worker_pr_state": "not_created"
     }
   ],
   "recovery_queue": [],
