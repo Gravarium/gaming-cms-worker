@@ -10,7 +10,7 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "08260d3f0e343615f525efd2de05767200f031c5",
-  "published_at": "2026-10-04T14:01:18.060Z",
+  "published_at": "2026-10-04T14:02:17.245Z",
   "summary": "WCP-676, WCP-679 and WCP-681–WCP-683 are complete green Worker proposals awaiting Trusted review. WCP-684 is active on an accessible manager-only video-source audit page based on WCP-683's exact green Worker HEAD.",
   "rules": {
     "choose": "Resume the current chat's unfinished claimed branch first. Otherwise atomically claim an eligible published task. If no published task is eligible, independently derive and publish a bounded worker-only CMS proposal from approved product goals and observed code gaps; do not ask the owner for the next FCP number.",
@@ -68853,14 +68853,19 @@
           "tests/Controller/VideoProviderAuditDashboardEntryTest.php"
         ]
       },
-      "next_action": "Implementation pushed at exact HEAD 1077e99aba8c0b441a190bfad3478232b7909647. The comparison against WCP-683 exact green HEAD 5b8a0b7b96f20cb167e66f702f18705bf2f9925d contains exactly the five allowed files and no other paths. Create a draft Worker PR targeting feature/wcp-683-video-source-audit-g1, then trigger full exact-head CI through worker/account-ci-wcp-684-g1. Do not merge to Trusted or deploy.",
+      "next_action": "Draft Worker PR #482 targets exact green WCP-683 feature HEAD and has exactly five claimed paths. Full Worker CI run #37207749512 is in progress on exact final candidate HEAD 1077e99aba8c0b441a190bfad3478232b7909647. Inspect every job and any failure; fix only within the WCP-684 claim, rerun exact-head CI, and mark worker_complete_awaiting_trusted_review only after all jobs pass. No Trusted merge or deployment.",
       "active_head": "1077e99aba8c0b441a190bfad3478232b7909647",
       "last_observed_head": "1077e99aba8c0b441a190bfad3478232b7909647",
       "last_verified_push_at": "2026-10-04T14:01:18.060Z",
-      "worker_pr_state": "not_created",
+      "worker_pr_state": "draft",
       "active_base_branch": "feature/wcp-683-video-source-audit-g1",
       "active_base_sha": "5b8a0b7b96f20cb167e66f702f18705bf2f9925d",
-      "last_checkpoint_at": "2026-10-04T14:01:18.060Z"
+      "last_checkpoint_at": "2026-10-04T14:02:17.245Z",
+      "worker_pr": 482,
+      "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/482",
+      "worker_pr_head_sha": "1077e99aba8c0b441a190bfad3478232b7909647",
+      "ci_run_id": 37207749512,
+      "ci_result": "in_progress"
     }
   ],
   "recovery_queue": [],
