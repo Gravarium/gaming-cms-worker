@@ -60,7 +60,9 @@ final readonly class RichRenderer
                 return '';
             }
             $alt = ($block['decorative'] ?? false) ? '' : ($block['alt'] !== '' ? $block['alt'] : $asset['title']);
-            return '<figure class="content-media"><img src="'.$this->escape($asset['url']).'" alt="'.$this->escape($alt).'" loading="lazy" decoding="async" referrerpolicy="no-referrer">'.($block['caption'] !== '' ? '<figcaption>'.$this->escape($block['caption']).'</figcaption>' : '').'</figure>';
+            $caption = $block['caption'] !== '' ? '<figcaption>'.$this->escape($block['caption']).'</figcaption>' : '';
+            $credit = ($block['credit'] ?? '') !== '' ? '<small class="content-media-credit">Bildnachweis: '.$this->escape($block['credit']).'</small>' : '';
+            return '<figure class="content-media"><img src="'.$this->escape($asset['url']).'" alt="'.$this->escape($alt).'" loading="lazy" decoding="async" referrerpolicy="no-referrer">'.$caption.$credit.'</figure>';
         }
         if ($type === 'video') {
             $url = $block['provider'] === 'youtube'

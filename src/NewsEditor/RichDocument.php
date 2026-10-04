@@ -166,9 +166,14 @@ final class RichDocument
             return ['type' => 'separator'];
         }
         if ($type === 'media') {
-            $this->keys($block, array_key_exists('decorative', $block)
-                ? ['type', 'assetId', 'alt', 'caption', 'decorative']
-                : ['type', 'assetId', 'alt', 'caption']);
+            $allowed = ['type', 'assetId', 'alt', 'caption'];
+            if (array_key_exists('decorative', $block)) {
+                $allowed[] = 'decorative';
+            }
+            if (array_key_exists('credit', $block)) {
+                $allowed[] = 'credit';
+            }
+            $this->keys($block, $allowed);
             if (!is_int($block['assetId']) || $block['assetId'] < 1) {
                 throw new \InvalidArgumentException('Ungültige Medienreferenz.');
             }
@@ -180,7 +185,8 @@ final class RichDocument
             if ($decorative && trim($alt) !== '') {
                 throw new \InvalidArgumentException('Dekorative Bilder dürfen keinen Alternativtext enthalten.');
             }
-            return ['type' => 'media', 'assetId' => $block['assetId'], 'alt' => $alt, 'caption' => $this->text($block['caption'], 500), 'decorative' => $decorative];
+            $credit = array_key_exists('credit', $block) ? $this->text($block['credit'], 300) : '';
+            return ['type' => 'media', 'assetId' => $block['assetId'], 'alt' => $alt, 'caption' => $this->text($block['caption'], 500), 'decorative' => $decorative, 'credit' => $credit];
         }
         if ($type === 'video') {
             $this->keys($block, ['type', 'provider', 'videoId', 'caption']);
