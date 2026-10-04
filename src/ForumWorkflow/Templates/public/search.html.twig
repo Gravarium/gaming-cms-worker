@@ -1,0 +1,28 @@
+{% extends 'base.html.twig' %}
+{% block title %}Suche in {{ room.title }} | Forum{% endblock %}
+{% block body %}
+<main class="dashboard">
+    <p><a href="{{ path('app_gaming_forum_room', {id: room.id}) }}">Zurück zu {{ room.title }}</a></p>
+    <h1>Suche in {{ room.title }}</h1>
+    <form method="get" action="{{ path('app_gaming_forum_room_search', {id: room.id}) }}">
+        <label for="forum-search">Themen und Beiträge suchen</label>
+        <input id="forum-search" name="q" value="{{ term }}" minlength="2" maxlength="100" required>
+        <button type="submit">Suchen</button>
+    </form>
+    <p>{{ total }} passende Themen · Seite {{ page }} von {{ pages }}</p>
+    {% for thread in threads %}
+        <article class="panel">
+            <h2><a href="{{ path('app_gaming_forum_thread', {id: thread.id}) }}">{{ thread.title }}</a></h2>
+            <p>Status: {{ thread.state }} · {{ thread.post_count }} Beiträge</p>
+        </article>
+    {% else %}
+        <p>Keine passenden Themen in diesem Raum.</p>
+    {% endfor %}
+    {% if pages > 1 %}
+        <nav aria-label="Suchergebnisseiten">
+            {% if page > 1 %}<a href="{{ path('app_gaming_forum_room_search', {id: room.id, q: term, page: page - 1}) }}">Zurück</a>{% endif %}
+            {% if page < pages %}<a href="{{ path('app_gaming_forum_room_search', {id: room.id, q: term, page: page + 1}) }}">Weiter</a>{% endif %}
+        </nav>
+    {% endif %}
+</main>
+{% endblock %}
