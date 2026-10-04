@@ -68288,6 +68288,87 @@
       },
       "next_action": "Open a draft PR and run exact-head Worker CI on 362c5df33db30604b42ac89d890eaa9c8b1b1a2e; fix concrete failures.",
       "worker_pr_state": "not_open"
+    },
+    {
+      "priority": 680,
+      "package_id": "WCP-680",
+      "title": "Visual News editorial review decision and publication",
+      "risk": "high_publication_workflow",
+      "execution_state": "worker_in_progress",
+      "claim_state": "active",
+      "claim_generation": 1,
+      "claim_branch": "claim/wcp-680-news-review-decision-g1",
+      "suggested_branch": "feature/wcp-680-news-review-decision-g1",
+      "resume_branch": "feature/wcp-680-news-review-decision-g1",
+      "claimed_on": "2026-10-04T01:41:08.986Z",
+      "lease_expires_at": "2026-10-04T08:41:08.986Z",
+      "base_branch": "main",
+      "base_sha": "08260d3f0e343615f525efd2de05767200f031c5",
+      "proposal_base_branch": "feature/wcp-675-news-decorative-image-g1",
+      "proposal_base_sha": "1cb7bac13a437f03a65013a1c68b7e2e5a50f020",
+      "active_base_branch": "feature/wcp-675-news-decorative-image-g1",
+      "active_base_sha": "1cb7bac13a437f03a65013a1c68b7e2e5a50f020",
+      "active_head": "1cb7bac13a437f03a65013a1c68b7e2e5a50f020",
+      "dependencies": [
+        "WCP-675"
+      ],
+      "proposal_kind": "worker_only",
+      "proposal_dependency_evidence": [
+        {
+          "package_id": "WCP-675",
+          "head": "1cb7bac13a437f03a65013a1c68b7e2e5a50f020",
+          "pr": 473,
+          "ci_run": 37123068021,
+          "result": "success"
+        }
+      ],
+      "objective": "Complete the visual News review handoff with explicit approval/publication and return-to-draft decisions from review state, verified against current version and safe typed document, captured as revision and audit with no accidental publication of unsaved or stale editor content.",
+      "allowed_paths": [
+        "src/Controller/AdminNewsEditorController.php",
+        "templates/admin/news_editor/edit.html.twig",
+        "tests/Controller/AdminNewsEditorTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "CONTINUOUS-WORKER.md",
+        "CONTINUOUS-WORK-POOL.json",
+        ".github/workflows/",
+        "migrations/",
+        "src/Entity/",
+        "src/Security/",
+        "assets/"
+      ],
+      "deliverables": [
+        "CSRF-protected review decision endpoints with optimistic updatedAt/documentHash checks and row lock.",
+        "Publish only nonempty validated News review content; return to draft with revision and audit.",
+        "Explicit review UI actions with no-store responses and negative/positive controller coverage.",
+        "Complete exact-head Worker CI."
+      ],
+      "tests": [
+        "Controller tests for review-only decisions, CSRF, stale version, publication and revision/audit.",
+        "Complete Worker CI on exact final head."
+      ],
+      "immutable_constraints": [
+        "worker-only-no-Trusted-merge-or-deployment",
+        "never-publish-stale-or-unsaved-document",
+        "no-auth-csrf-revision-or-CI-weakening"
+      ],
+      "collision_check": {
+        "compared_against": "Live pool with WCP-676 active on rich schema/editor assets and WCP-679 active on video playback; exact green WCP-675 head",
+        "result": "Disjoint controller/Twig/PHP controller tests only; no shared WCP-676/679 paths.",
+        "paths": [
+          "src/Controller/AdminNewsEditorController.php",
+          "templates/admin/news_editor/edit.html.twig",
+          "tests/Controller/AdminNewsEditorTest.php"
+        ]
+      },
+      "next_action": "Implement and submit Worker PR"
     }
   ],
   "recovery_queue": [],
