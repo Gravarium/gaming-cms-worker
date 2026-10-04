@@ -27,9 +27,11 @@ final class RobotsTxtControllerTest extends WebTestCase
         );
         self::assertSame('text/plain; charset=UTF-8', $response->headers->get('Content-Type'));
         self::assertSame('nosniff', $response->headers->get('X-Content-Type-Options'));
-        self::assertTrue($response->headers->getCacheControlDirective('public'));
-        self::assertSame(300, $response->headers->getCacheControlDirective('max-age'));
-        self::assertSame(300, $response->headers->getCacheControlDirective('s-maxage'));
+
+        $cacheControl = strtolower($response->headers->get('Cache-Control', ''));
+        self::assertMatchesRegularExpression('/(?:^|,\s*)public(?:,|$)/', $cacheControl);
+        self::assertMatchesRegularExpression('/(?:^|,\s*)max-age=300(?:,|$)/', $cacheControl);
+        self::assertMatchesRegularExpression('/(?:^|,\s*)s-maxage=300(?:,|$)/', $cacheControl);
     }
 
     public function testPostIsNotAllowed(): void
