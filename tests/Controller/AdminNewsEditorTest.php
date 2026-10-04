@@ -77,14 +77,16 @@ final class AdminNewsEditorTest extends WebTestCase
         $em->flush();
         $client->loginUser($user);
 
-        $client->request('GET', '/admin/news-editor?q='.rawurlencode($title));
+        $crawler = $client->request('GET', '/admin/news-editor?q='.rawurlencode($title));
         self::assertResponseIsSuccessful();
-        $html = $client->getResponse()->getContent() ?: '';
-        self::assertStringContainsString($title, $html);
-        self::assertStringContainsString('Geplant', $html);
-        self::assertStringContainsString($planned->format('d.m.Y H:i').' (Europe/Berlin)', $html);
-        self::assertStringContainsString('/admin/content/'.$entry->getId().'/edit', $html);
-        self::assertStringNotContainsString('/admin/news-editor/'.$entry->getId().'"', $html);
+        self::assertCount(1, $crawler->filter('tbody tr'));
+        $row = $crawler->filter('tbody tr')->first();
+        self::assertStringContainsString($title, $row->text());
+        self::assertStringContainsString('Geplant', $row->text());
+        self::assertStringContainsString($planned->format('d.m.Y H:i').' (Europe/Berlin)', $row->text());
+        $link = $row->filter('a');
+        self::assertCount(1, $link);
+        self::assertSame('/admin/content/'.$entry->getId().'/edit', $link->attr('href'));
 
         $crawler = $client->request('GET', '/admin/news-editor?status=scheduled&q='.rawurlencode($title));
         self::assertResponseIsSuccessful();
