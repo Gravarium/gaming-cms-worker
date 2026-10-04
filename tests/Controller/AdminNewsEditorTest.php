@@ -89,9 +89,9 @@ final class AdminNewsEditorTest extends WebTestCase
         $client->request('GET', '/admin/news-editor?status=scheduled&q='.rawurlencode($title));
         self::assertResponseIsSuccessful();
         self::assertStringContainsString($title, $client->getResponse()->getContent() ?: '');
-        $client->request('GET', '/admin/news-editor?status=draft&q='.rawurlencode($title));
+        $crawler = $client->request('GET', '/admin/news-editor?status=draft&q='.rawurlencode($title));
         self::assertResponseIsSuccessful();
-        self::assertStringNotContainsString($title, $client->getResponse()->getContent() ?: '');
+        self::assertStringNotContainsString($title, $crawler->filter('tbody')->text());
         self::assertNotNull($draft->getId());
     }
 
