@@ -10,8 +10,8 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "08260d3f0e343615f525efd2de05767200f031c5",
-  "published_at": "2026-10-04T14:23:47.183Z",
-  "summary": "WCP-676, WCP-679 and WCP-681–WCP-684 are complete green Worker proposals awaiting Trusted review. WCP-685 is active on a bounded, formula-safe CSV export based on WCP-684's exact green Worker HEAD.",
+  "published_at": "2026-10-04T14:27:34.059Z",
+  "summary": "WCP-676, WCP-679, WCP-681–WCP-685 are complete green Worker proposals awaiting Trusted review. WCP-684 provides the manager audit page; WCP-685 adds a bounded formula-safe CSV export on its exact green HEAD.",
   "rules": {
     "choose": "Resume the current chat's unfinished claimed branch first. Otherwise atomically claim an eligible published task. If no published task is eligible, independently derive and publish a bounded worker-only CMS proposal from approved product goals and observed code gaps; do not ask the owner for the next FCP number.",
     "atomic_reservation": "Create the exact claim_branch and suggested feature branch from that task's published proposal_base_sha. If the claim already exists, treat it as a hard lock; the owning continuation resumes it and every other AI skips it.",
@@ -68882,8 +68882,8 @@
       "priority": 685,
       "package_id": "WCP-685",
       "title": "Add a safe paginated CSV export for video-source audits",
-      "execution_state": "worker_in_progress",
-      "claim_state": "claimed",
+      "execution_state": "worker_complete_awaiting_trusted_review",
+      "claim_state": "locked_until_trusted_resolution",
       "claim_generation": 1,
       "claim_branch": "claim/wcp-685-video-audit-csv-g1",
       "suggested_branch": "feature/wcp-685-video-audit-csv-g1",
@@ -68968,19 +68968,19 @@
           "tests/VideoProviderAudit/CsvAuditTest.php"
         ]
       },
-      "next_action": "First full CI run #37208742822 failed only because a unit test expected quotes around a formula-safe mode field without a delimiter; the CSV encoder emitted the correct RFC-compatible unquoted cell. That expectation is corrected. Full exact-head Worker CI #37209074399 is running on ced440dd059cefe6ffbdefcd123671a166d8fc8f. Inspect both jobs and fix any real issue only inside WCP-685.",
+      "next_action": "Worker PR #483 is complete and remains a draft handoff awaiting Trusted review. Exact final HEAD ced440dd059cefe6ffbdefcd123671a166d8fc8f has full Worker CI run 37209074399 green: PHP/Symfony and PostgreSQL 18 succeeded; 1,814 tests and 12,982 assertions passed. PR is open, clean/mergeable, based on exact green WCP-684 HEAD, and has exactly the four allowed paths. Keep the claim locked until Trusted resolves it; never merge or deploy.",
       "active_head": "ced440dd059cefe6ffbdefcd123671a166d8fc8f",
       "last_observed_head": "ced440dd059cefe6ffbdefcd123671a166d8fc8f",
       "last_verified_push_at": "2026-10-04T14:23:47.183Z",
       "worker_pr_state": "draft",
       "active_base_branch": "feature/wcp-684-video-audit-page-g1",
       "active_base_sha": "8d4fd54a54353b9741cc78c389616e42b6aae3cd",
-      "last_checkpoint_at": "2026-10-04T14:23:47.183Z",
+      "last_checkpoint_at": "2026-10-04T14:27:34.059Z",
       "worker_pr": 483,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/483",
       "worker_pr_head_sha": "ced440dd059cefe6ffbdefcd123671a166d8fc8f",
       "ci_run_id": 37209074399,
-      "ci_result": "in_progress",
+      "ci_result": "success",
       "previous_ci_attempts": [
         {
           "head": "d550e36f64ac4226c0114bef73da81f4128f16ee",
@@ -68988,7 +68988,10 @@
           "result": "failure",
           "failure": "One CSV unit assertion expected quotes around a formula-safe mode cell containing no CSV delimiter; CSV encoder output was correct."
         }
-      ]
+      ],
+      "final_head": "ced440dd059cefe6ffbdefcd123671a166d8fc8f",
+      "final_ci_run_id": 37209074399,
+      "completed_on": "2026-10-04T14:27:34.059Z"
     }
   ],
   "recovery_queue": [],
