@@ -10,8 +10,8 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "08260d3f0e343615f525efd2de05767200f031c5",
-  "published_at": "2026-10-04T14:12:51.581Z",
-  "summary": "WCP-676, WCP-679, WCP-681–WCP-684 are complete green Worker proposals awaiting Trusted review. WCP-684 adds an accessible manager-only audit page and dashboard entry on top of WCP-683's exact green Worker HEAD.",
+  "published_at": "2026-10-04T14:14:32.278Z",
+  "summary": "WCP-676, WCP-679 and WCP-681–WCP-684 are complete green Worker proposals awaiting Trusted review. WCP-685 is active on a bounded, formula-safe CSV export based on WCP-684's exact green Worker HEAD.",
   "rules": {
     "choose": "Resume the current chat's unfinished claimed branch first. Otherwise atomically claim an eligible published task. If no published task is eligible, independently derive and publish a bounded worker-only CMS proposal from approved product goals and observed code gaps; do not ask the owner for the next FCP number.",
     "atomic_reservation": "Create the exact claim_branch and suggested feature branch from that task's published proposal_base_sha. If the claim already exists, treat it as a hard lock; the owning continuation resumes it and every other AI skips it.",
@@ -68877,6 +68877,105 @@
       "final_head": "8d4fd54a54353b9741cc78c389616e42b6aae3cd",
       "final_ci_run_id": 37208094378,
       "completed_on": "2026-10-04T14:12:51.581Z"
+    },
+    {
+      "priority": 685,
+      "package_id": "WCP-685",
+      "title": "Add a safe paginated CSV export for video-source audits",
+      "execution_state": "worker_in_progress",
+      "claim_state": "claimed",
+      "claim_generation": 1,
+      "claim_branch": "claim/wcp-685-video-audit-csv-g1",
+      "suggested_branch": "feature/wcp-685-video-audit-csv-g1",
+      "resume_branch": "feature/wcp-685-video-audit-csv-g1",
+      "claimed_on": "2026-10-04T14:14:32.278Z",
+      "lease_expires_at": "2026-10-04T21:14:32.278Z",
+      "base_branch": "main",
+      "base_sha": "6e9cb292bafa84862a9cedc7abb8d20878297f9d",
+      "proposal_base_branch": "feature/wcp-684-video-audit-page-g1",
+      "proposal_base_sha": "8d4fd54a54353b9741cc78c389616e42b6aae3cd",
+      "dependencies": [
+        "WCP-684"
+      ],
+      "proposal_kind": "worker_only",
+      "proposal_dependency_evidence": [
+        {
+          "package_id": "WCP-684",
+          "head": "8d4fd54a54353b9741cc78c389616e42b6aae3cd",
+          "pr": 482,
+          "ci_run": 37208094378,
+          "result": "success"
+        }
+      ],
+      "objective": "Provide managers a bounded cursor-paginated CSV download of the local saved-video-source audit. Preserve stable source-ID order and the existing local classification boundary while exporting only source IDs, provider keys, enabled/authorized flags, local status and mode; never export labels, saved or resolved URLs, query tokens, contact providers, write data or claim playback health.",
+      "allowed_paths": [
+        "src/Controller/VideoProviderAuditCsvController.php",
+        "src/VideoProviderAudit/CsvAudit.php",
+        "tests/Controller/VideoProviderAuditCsvControllerTest.php",
+        "tests/VideoProviderAudit/CsvAuditTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "CONTINUOUS-WORKER.md",
+        "CONTINUOUS-WORK-POOL.json",
+        ".github/workflows/",
+        "migrations/",
+        "templates/",
+        "assets/",
+        "src/Entity/",
+        "src/Security/",
+        "src/Controller/VideoProviderAuditController.php",
+        "src/Controller/VideoProviderAuditPageController.php",
+        "src/VideoProviderAudit/SourceAudit.php",
+        "src/VideoProviderAudit/README.md",
+        "tests/Controller/VideoProviderAuditControllerTest.php",
+        "tests/Controller/VideoProviderAuditPageControllerTest.php",
+        "tests/Controller/VideoProviderAuditDashboardEntryTest.php",
+        "tests/VideoProviderAudit/SourceAuditTest.php"
+      ],
+      "deliverables": [
+        "Add GET /admin/video-provider-audit/export.csv with CMS_VIDEO_MANAGE and Video-module gates, strict bounded limit/after cursor pagination, deterministic ascending source IDs and private no-store/nosniff/noindex attachment headers.",
+        "Export only the fixed columns source_id, provider, enabled, authorized, status and mode from local SourceAudit classification; provide the next cursor in a response header when more rows exist.",
+        "Use RFC-compatible CSV quoting and neutralize spreadsheet formula-leading text cells. Omit all saved labels, URLs, query tokens and resolved playback URLs.",
+        "Keep the route read-only, provider-network-free, schema-free and inside the four declared paths."
+      ],
+      "tests": [
+        "CSV unit tests cover header/order, quoted delimiters/newlines, formula-like cells, null modes and empty exports.",
+        "Functional tests cover manager authorization, disabled Video module, cursor page ordering, headers, no sensitive data disclosure and unchanged source counts.",
+        "Complete exact-head Worker CI including PostgreSQL 18 migration validation."
+      ],
+      "immutable_constraints": [
+        "worker-only-no-Trusted-merge-or-deployment",
+        "no-provider-network-requests-or-secret-disclosure",
+        "preserve-video-module-and-manager-gates",
+        "read-only-no-migrations-or-data-writes",
+        "csv-formula-cells-must-not-be-evaluated-by-spreadsheets",
+        "no-claim-of-remote-availability-or-successful-playback"
+      ],
+      "collision_check": {
+        "compared_against": "All live claims and locked proposals in the current pool, plus Worker tree at exact green WCP-684 HEAD.",
+        "result": "No overlap with any of 184 active or locked packages; all four exact paths are absent at the proposal base.",
+        "paths": [
+          "src/Controller/VideoProviderAuditCsvController.php",
+          "src/VideoProviderAudit/CsvAudit.php",
+          "tests/Controller/VideoProviderAuditCsvControllerTest.php",
+          "tests/VideoProviderAudit/CsvAuditTest.php"
+        ]
+      },
+      "next_action": "Generation 1 is reserved from exact green WCP-684 HEAD 8d4fd54a54353b9741cc78c389616e42b6aae3cd. Implement the bounded manager-only CSV route and cell encoder only in the four allowed paths, then validate the focused tests and full exact-head Worker CI. Do not merge to Trusted or deploy.",
+      "active_head": "8d4fd54a54353b9741cc78c389616e42b6aae3cd",
+      "last_observed_head": "8d4fd54a54353b9741cc78c389616e42b6aae3cd",
+      "last_verified_push_at": null,
+      "worker_pr_state": "not_created",
+      "active_base_branch": "feature/wcp-684-video-audit-page-g1",
+      "active_base_sha": "8d4fd54a54353b9741cc78c389616e42b6aae3cd",
+      "last_checkpoint_at": "2026-10-04T14:14:32.278Z"
     }
   ],
   "recovery_queue": [],
