@@ -1,0 +1,44 @@
+{% extends 'base.html.twig' %}
+{% block title %}Menüpunkte sortieren | Gaming CMS{% endblock %}
+{% block body %}
+<header class="topbar">
+    <a class="brand" href="{{ path('app_admin_dashboard') }}">Gaming CMS</a>
+    <nav class="top-actions">
+        <a class="button-link button-secondary" href="{{ path('app_admin_menu_index') }}">Zurück zur Menüverwaltung</a>
+    </nav>
+</header>
+<main class="dashboard">
+    <p class="eyebrow">Darstellung · Hauptmenü</p>
+    <h1>Menüpunkte sortieren</h1>
+    <p>Verschiebe sichtbare und ausgeblendete Menüpunkte mit den Schaltflächen. Die öffentliche Navigation zeigt sichtbare Einträge in dieser Reihenfolge.</p>
+    {% for message in app.flashes('success') %}<div class="notice">{{ message }}</div>{% endfor %}
+    {% for message in app.flashes('info') %}<div class="notice">{{ message }}</div>{% endfor %}
+    <div class="table-wrap">
+        <table>
+            <thead><tr><th>Position</th><th>Beschriftung</th><th>Ziel</th><th>Status</th><th>Reihenfolge</th></tr></thead>
+            <tbody>
+            {% for item in items %}
+                <tr>
+                    <td>{{ item.position }}</td>
+                    <td>{{ item.label }}</td>
+                    <td>{{ item.page ? item.page.title : item.url }}</td>
+                    <td>{{ item.enabled ? 'Sichtbar' : 'Ausgeblendet' }}</td>
+                    <td class="row-actions">
+                        <form method="post" action="{{ path('app_admin_menu_order_move', {id: item.id, direction: 'up'}) }}">
+                            <input type="hidden" name="_token" value="{{ csrf_token('menu-order-' ~ item.id ~ '-up') }}">
+                            <button type="submit" aria-label="{{ item.label }} nach oben verschieben" {% if loop.first %}disabled{% endif %}>Nach oben</button>
+                        </form>
+                        <form method="post" action="{{ path('app_admin_menu_order_move', {id: item.id, direction: 'down'}) }}">
+                            <input type="hidden" name="_token" value="{{ csrf_token('menu-order-' ~ item.id ~ '-down') }}">
+                            <button type="submit" aria-label="{{ item.label }} nach unten verschieben" {% if loop.last %}disabled{% endif %}>Nach unten</button>
+                        </form>
+                    </td>
+                </tr>
+            {% else %}
+                <tr><td colspan="5">Noch keine Menüpunkte vorhanden.</td></tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</main>
+{% endblock %}
