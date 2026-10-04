@@ -10,8 +10,8 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "08260d3f0e343615f525efd2de05767200f031c5",
-  "published_at": "2026-10-04T14:27:34.059Z",
-  "summary": "WCP-676, WCP-679, WCP-681–WCP-685 are complete green Worker proposals awaiting Trusted review. WCP-684 provides the manager audit page; WCP-685 adds a bounded formula-safe CSV export on its exact green HEAD.",
+  "published_at": "2026-10-04T16:08:52.695Z",
+  "summary": "WCP-682–WCP-685 are complete green Worker proposals awaiting Trusted review. WCP-686 is in progress on responsive mobile authoring for the visual News editor.",
   "rules": {
     "choose": "Resume the current chat's unfinished claimed branch first. Otherwise atomically claim an eligible published task. If no published task is eligible, independently derive and publish a bounded worker-only CMS proposal from approved product goals and observed code gaps; do not ask the owner for the next FCP number.",
     "atomic_reservation": "Create the exact claim_branch and suggested feature branch from that task's published proposal_base_sha. If the claim already exists, treat it as a hard lock; the owning continuation resumes it and every other AI skips it.",
@@ -68671,14 +68671,14 @@
           "tests/Controller/AdminNewsEditorTest.php"
         ]
       },
-      "next_action": "Worker PR #479 is complete: exact-head CI run #1226 passed on c52ca7ad978fb8be7f1f556bff23424c2c7b5222; PHP/Symfony and PostgreSQL 18 both succeeded. The PR is a clean three-file diff based on WCP-681 head 715567ebf7378d47207f04e0a7b2b467a42ab6ea and remains a draft pending Trusted review. Keep this claim locked until dependency and Trusted resolution.",
+      "next_action": "Worker PR #479 is complete and marked ready for review. Exact-head CI run #1226 passed on c52ca7ad978fb8be7f1f556bff23424c2c7b5222; PHP/Symfony and PostgreSQL 18 succeeded. Keep the claim locked until Trusted resolution; no merge or deployment.",
       "last_observed_head": "c52ca7ad978fb8be7f1f556bff23424c2c7b5222",
       "last_verified_push_at": "2026-10-04T13:29:30Z",
-      "last_checkpoint_at": "2026-10-04T13:36:02.726Z",
+      "last_checkpoint_at": "2026-10-04T16:08:52.695Z",
       "worker_pr": 479,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/479",
       "worker_pr_head_sha": "c52ca7ad978fb8be7f1f556bff23424c2c7b5222",
-      "worker_pr_state": "draft",
+      "worker_pr_state": "ready_for_review",
       "ci_run_id": 37205861218,
       "ci_result": "success",
       "ci_branch": "worker/account-ci-wcp-682-g2",
@@ -68992,6 +68992,93 @@
       "final_head": "ced440dd059cefe6ffbdefcd123671a166d8fc8f",
       "final_ci_run_id": 37209074399,
       "completed_on": "2026-10-04T14:27:34.059Z"
+    },
+    {
+      "priority": 686,
+      "package_id": "WCP-686",
+      "title": "Responsive mobile authoring in the visual News editor",
+      "risk": "medium_editorial_workflow",
+      "execution_state": "worker_in_progress",
+      "claim_state": "worker_in_progress",
+      "claim_generation": 1,
+      "claim_branch": "claim/wcp-686-news-mobile-editor-g1",
+      "suggested_branch": "feature/wcp-686-news-mobile-editor-g1",
+      "resume_branch": "feature/wcp-686-news-mobile-editor-g1",
+      "claimed_on": "2026-10-04T16:08:52.695Z",
+      "lease_expires_at": "2026-10-04T23:08:52.695Z",
+      "base_branch": "main",
+      "base_sha": "08260d3f0e343615f525efd2de05767200f031c5",
+      "proposal_base_branch": "feature/wcp-682-news-schedule-worklist-g1",
+      "proposal_base_sha": "c52ca7ad978fb8be7f1f556bff23424c2c7b5222",
+      "active_base_branch": "feature/wcp-682-news-schedule-worklist-g1",
+      "active_base_sha": "c52ca7ad978fb8be7f1f556bff23424c2c7b5222",
+      "dependencies": [
+        "WCP-682"
+      ],
+      "proposal_kind": "worker_only",
+      "proposal_dependency_evidence": [
+        {
+          "package_id": "WCP-682",
+          "head": "c52ca7ad978fb8be7f1f556bff23424c2c7b5222",
+          "pr": 479,
+          "ci_run": 37205861218,
+          "result": "success"
+        }
+      ],
+      "objective": "Make the first-party visual News editor practical on narrow touch screens while preserving the desktop layout, keyboard access, screen-reader labels, document behavior and all server-side protections.",
+      "allowed_paths": [
+        "assets/news_editor/mobile.css",
+        "templates/admin/news_editor/edit.html.twig",
+        "tests/Controller/AdminNewsEditorTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "CONTINUOUS-WORKER.md",
+        "CONTINUOUS-WORK-POOL.json",
+        ".github/workflows/",
+        "migrations/",
+        "src/",
+        "assets/news_editor/editor.css",
+        "assets/news_editor/editor.js",
+        "templates/admin/news_editor/index.html.twig",
+        "templates/admin/news_editor/metadata.html.twig"
+      ],
+      "deliverables": [
+        "Add a dedicated mobile stylesheet and load it only in the visual News editor.",
+        "At narrow viewport widths, keep authoring controls, form fields, block actions, readiness checks and media selection visible and touch-usable without page-level horizontal overflow; preserve intentional table scrolling.",
+        "Respect safe-area insets and visible keyboard focus; retain existing labels, status announcements, save states and accessible semantics.",
+        "Add focused controller coverage that verifies the editor page loads the mobile stylesheet."
+      ],
+      "tests": [
+        "Targeted editor route test via GitHub Actions",
+        "AssetMapper compilation and complete exact-head Worker CI including PostgreSQL 18"
+      ],
+      "immutable_constraints": [
+        "worker-only-no-Trusted-merge-or-deployment",
+        "no-auth-csrf-validation-content-schema-or-save-semantics-changes",
+        "preserve-keyboard-and-screen-reader-semantics",
+        "no-page-level-horizontal-overflow"
+      ],
+      "collision_check": {
+        "compared_against": "Current work-pool-v4, all active and locked claims, exact green WCP-682 / PR #479 head.",
+        "result": "Serial descendant of WCP-682. The only shared files are the editor view and its controller test within that explicit green dependency chain; the new mobile stylesheet is a new path. No unrelated active claim overlaps.",
+        "paths": [
+          "assets/news_editor/mobile.css",
+          "templates/admin/news_editor/edit.html.twig",
+          "tests/Controller/AdminNewsEditorTest.php"
+        ]
+      },
+      "next_action": "Claim secured on the exact green WCP-682 head. Add responsive mobile styles, link them from the editor view and add focused route coverage; push a checkpoint, then rely on exact-head GitHub CI.",
+      "active_head": "c52ca7ad978fb8be7f1f556bff23424c2c7b5222",
+      "last_observed_head": "c52ca7ad978fb8be7f1f556bff23424c2c7b5222",
+      "worker_pr_state": "not_created",
+      "last_checkpoint_at": "2026-10-04T16:08:52.695Z"
     }
   ],
   "recovery_queue": [],
