@@ -1,0 +1,27 @@
+{% extends 'base.html.twig' %}
+{% block title %}Genre: {{ genre.name }}{% endblock %}
+{% block body %}
+<main class="content-shell">
+    <header class="page-header">
+        <p class="eyebrow"><a href="{{ path('app_gaming_game_genre_index') }}">Spielgenres</a></p>
+        <h1>{{ genre.name }}</h1>
+        <p>{{ total }} öffentliche Spiele in diesem Genre.</p>
+    </header>
+    <ul class="game-genre-games">
+        {% for entry in entries %}
+            <li class="game-genre-game" data-game-id="{{ entry.game.id }}">
+                <a href="{{ path('app_game_catalogue_show', {slug: entry.game.slug}) }}">{{ entry.game.name }}</a>
+            </li>
+        {% else %}
+            <li class="game-genre-empty" role="status">Für dieses Genre sind derzeit keine öffentlichen Spiele verfügbar.</li>
+        {% endfor %}
+    </ul>
+    {% if totalPages > 1 %}
+        <nav class="game-genre-pagination" aria-label="Spiel-Seiten">
+            {% if page > 1 %}<a rel="prev" href="{{ path('app_gaming_game_genre_show', {slug: genre.slug, page: page - 1}) }}">Vorherige Seite</a>{% endif %}
+            <span>Seite {{ page }} von {{ totalPages }}</span>
+            {% if page < totalPages %}<a rel="next" href="{{ path('app_gaming_game_genre_show', {slug: genre.slug, page: page + 1}) }}">Nächste Seite</a>{% endif %}
+        </nav>
+    {% endif %}
+</main>
+{% endblock %}

@@ -1,0 +1,13 @@
+<section class="widget game-genres-widget" aria-label="Spielgenres">
+    <h2>Spiele nach Genre</h2>
+    {% if data.genres is not empty %}
+        <ul>
+            {% for genre in data.genres %}
+                <li><a href="{{ path('app_gaming_game_genre_show', {slug: genre.slug}) }}">{{ genre.name }}</a></li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p role="status">Derzeit sind keine öffentlichen Spielgenres verfügbar.</p>
+    {% endif %}
+    <a href="{{ path('app_gaming_game_genre_index') }}">Alle Spielgenres</a>
+</section>
