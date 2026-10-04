@@ -10,8 +10,8 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "08260d3f0e343615f525efd2de05767200f031c5",
-  "published_at": "2026-10-04T16:38:27.499Z",
-  "summary": "WCP-687 is draft PR #485; its focused security config now adds a dedicated firewall only for /robots.txt after CI exposed the global session behavior. The unchanged /admin boundary is covered; another exact-head run is required. WCP-686 remains separately active.",
+  "published_at": "2026-10-04T16:46:26.012Z",
+  "summary": "WCP-687 is draft PR #485 at 2ce1373d90140544a7912643f6bccb92e4bd7855 with the narrowly matched robots firewall and /admin regression test; exact-head Worker CI run 37217864192 is in progress. WCP-686 remains separately active.",
   "rules": {
     "choose": "Resume the current chat's unfinished claimed branch first. Otherwise atomically claim an eligible published task. If no published task is eligible, independently derive and publish a bounded worker-only CMS proposal from approved product goals and observed code gaps; do not ask the owner for the next FCP number.",
     "atomic_reservation": "Create the exact claim_branch and suggested feature branch from that task's published proposal_base_sha. If the claim already exists, treat it as a hard lock; the owning continuation resumes it and every other AI skips it.",
@@ -69161,23 +69161,23 @@
           "tests/Controller/RobotsTxtControllerTest.php"
         ]
       },
-      "next_action": "The task scope is extended by the exact collision-free config/packages/security.yaml path. Add one security-disabled firewall for ^/robots\\.txt$ before main and prove the existing /admin redirect still applies. Then rerun full exact-head CI.",
+      "next_action": "Full exact-head Worker CI run 37217864192 is in progress on 2ce1373d90140544a7912643f6bccb92e4bd7855. Verify both PHP/Symfony checks and PostgreSQL 18 migration validation; then lock the claim for Trusted review.",
       "active_base_branch": "main",
       "active_base_sha": "6e9cb292bafa84862a9cedc7abb8d20878297f9d",
-      "active_head": "20f1d3f8bae3279d8d6f88726e2d4002f5dc2dc9",
-      "last_observed_head": "20f1d3f8bae3279d8d6f88726e2d4002f5dc2dc9",
-      "last_checkpoint_at": "2026-10-04T16:38:27.499Z",
-      "last_verified_push_at": "2026-10-04T16:32:29.070Z",
+      "active_head": "2ce1373d90140544a7912643f6bccb92e4bd7855",
+      "last_observed_head": "2ce1373d90140544a7912643f6bccb92e4bd7855",
+      "last_checkpoint_at": "2026-10-04T16:46:26.012Z",
+      "last_verified_push_at": "2026-10-04T16:46:26.012Z",
       "worker_pr_state": "draft",
       "worker_pr": 485,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/485",
-      "worker_pr_head_sha": "20f1d3f8bae3279d8d6f88726e2d4002f5dc2dc9",
+      "worker_pr_head_sha": "2ce1373d90140544a7912643f6bccb92e4bd7855",
       "ci_branch": "worker/account-ci-wcp-687-g1",
-      "ci_head": "20f1d3f8bae3279d8d6f88726e2d4002f5dc2dc9",
-      "ci_result": "failure",
-      "ci_run_id": 37217100893,
-      "ci_run_id_at": "7550f7d57f950937bb4c899c5643b82cdb25416c",
-      "last_ci_head": "20f1d3f8bae3279d8d6f88726e2d4002f5dc2dc9",
+      "ci_head": "2ce1373d90140544a7912643f6bccb92e4bd7855",
+      "ci_result": "in_progress",
+      "ci_run_id": 37217864192,
+      "ci_run_id_at": "2ce1373d90140544a7912643f6bccb92e4bd7855",
+      "last_ci_head": "574d2ffdcf56c88601aa66d0df40df62318d6113",
       "last_ci_result": "failure",
       "previous_ci_attempts": [
         {
@@ -69200,10 +69200,17 @@
           "result": "failure",
           "failed_job": "Validate worker-visible PHP and Symfony",
           "details": "The stateful main security firewall accessed a session on the route marked stateless, triggering UnexpectedSessionUsageException. Add a dedicated security-disabled firewall for exactly /robots.txt."
+        },
+        {
+          "head": "574d2ffdcf56c88601aa66d0df40df62318d6113",
+          "run_id": 37217769016,
+          "result": "failure",
+          "failed_job": "Install dependencies in both CI jobs",
+          "details": "Dependency installation failed before YAML lint, application tests, or PostgreSQL migration validation; the run was superseded by the corrected exact-head candidate."
         }
       ],
-      "previous_ci_head": "20f1d3f8bae3279d8d6f88726e2d4002f5dc2dc9",
-      "previous_ci_run_id": 37217100893,
+      "previous_ci_head": "574d2ffdcf56c88601aa66d0df40df62318d6113",
+      "previous_ci_run_id": 37217769016,
       "previous_ci_result": "failure"
     }
   ],
