@@ -68491,6 +68491,87 @@
         "templates/admin/news_editor/edit.html.twig",
         "tests/Controller/AdminNewsEditorTest.php"
       ]
+    },
+    {
+      "priority": 682,
+      "package_id": "WCP-682",
+      "title": "Scheduled News visibility in visual editorial worklist",
+      "risk": "medium_editorial_workflow",
+      "execution_state": "worker_in_progress",
+      "claim_state": "active",
+      "claim_generation": 1,
+      "claim_branch": "claim/wcp-682-news-schedule-worklist-g1",
+      "suggested_branch": "feature/wcp-682-news-schedule-worklist-g1",
+      "resume_branch": "feature/wcp-682-news-schedule-worklist-g1",
+      "claimed_on": "2026-10-04T02:03:24.732Z",
+      "lease_expires_at": "2026-10-04T09:03:24.732Z",
+      "base_branch": "main",
+      "base_sha": "08260d3f0e343615f525efd2de05767200f031c5",
+      "proposal_base_branch": "feature/wcp-681-news-review-scheduling-g1",
+      "proposal_base_sha": "715567ebf7378d47207f04e0a7b2b467a42ab6ea",
+      "active_base_branch": "feature/wcp-681-news-review-scheduling-g1",
+      "active_base_sha": "715567ebf7378d47207f04e0a7b2b467a42ab6ea",
+      "active_head": "715567ebf7378d47207f04e0a7b2b467a42ab6ea",
+      "dependencies": [
+        "WCP-681"
+      ],
+      "proposal_kind": "worker_only",
+      "proposal_dependency_evidence": [
+        {
+          "package_id": "WCP-681",
+          "head": "715567ebf7378d47207f04e0a7b2b467a42ab6ea",
+          "pr": 478,
+          "ci_run": 37169593950,
+          "result": "success"
+        }
+      ],
+      "objective": "Keep scheduled News in the visual editorial worklist after scheduling with filter, visible Europe/Berlin publication time and safe route to metadata for scheduled entries; preserve pagination and draft/review editing scope.",
+      "allowed_paths": [
+        "src/Controller/AdminNewsEditorController.php",
+        "templates/admin/news_editor/index.html.twig",
+        "tests/Controller/AdminNewsEditorTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "CONTINUOUS-WORKER.md",
+        "CONTINUOUS-WORK-POOL.json",
+        ".github/workflows/",
+        "migrations/",
+        "src/Entity/",
+        "src/Security/",
+        "assets/",
+        "templates/admin/news_editor/edit.html.twig"
+      ],
+      "deliverables": [
+        "Scheduled status filter and all-worklist inclusion with bounded pagination.",
+        "Scheduled timestamp and metadata link in worklist; no visual editing of scheduled articles.",
+        "Controller coverage for visibility, filtering and isolation; exact-head CI."
+      ],
+      "tests": [
+        "Targeted controller tests",
+        "Complete Worker CI"
+      ],
+      "immutable_constraints": [
+        "worker-only-no-Trusted-merge-or-deployment",
+        "scheduled-content-stays-noneditable-in-visual-editor",
+        "no-auth-csrf-or-CI-weakening"
+      ],
+      "collision_check": {
+        "compared_against": "Live pool active WCP-676 media assets/schema and WCP-679 video playback; exact green WCP-681 head",
+        "result": "Serial News worklist descendant, disjoint paths from active claims.",
+        "paths": [
+          "src/Controller/AdminNewsEditorController.php",
+          "templates/admin/news_editor/index.html.twig",
+          "tests/Controller/AdminNewsEditorTest.php"
+        ]
+      },
+      "next_action": "Implement and submit Worker PR"
     }
   ],
   "recovery_queue": [],
