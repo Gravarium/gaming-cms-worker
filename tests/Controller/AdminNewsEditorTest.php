@@ -67,7 +67,7 @@ final class AdminNewsEditorTest extends WebTestCase
         $client->request('GET', '/admin/news-editor/'.$entry->getId());
 
         self::assertResponseIsSuccessful();
-        self::assertStringContainsString('news_editor/mobile.css', $client->getResponse()->getContent() ?: '');
+        self::assertMatchesRegularExpression('~href="/assets/news_editor/mobile-[^"]+\.css"~', $client->getResponse()->getContent() ?: '');
     }
 
     public function testScheduledNewsRemainsInEditorialWorklistWithBerlinTimeAndMetadataLink(): void
