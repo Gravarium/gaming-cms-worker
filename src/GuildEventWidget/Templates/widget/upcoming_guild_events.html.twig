@@ -1,0 +1,20 @@
+<div class="upcoming-guild-events">
+    {% if not data.authenticated %}
+        <p class="portal-empty">Melde dich an, um die Termine deiner Gilden zu sehen. <a href="{{ path('app_login') }}">Anmelden</a></p>
+    {% elseif data.events is empty %}
+        <p class="portal-empty">Für deine Gilden stehen keine kommenden Termine an.</p>
+    {% else %}
+        <ul class="guild-event-list">
+            {% for event in data.events %}
+                <li>
+                    <a href="{{ path('app_guild_portal_show', {id: event.guild.id}) }}">
+                        <strong>{{ event.title }}</strong>
+                        <time datetime="{{ event.startsAt|date('c') }}">{{ event.startsAt|date('d.m.Y H:i') }}</time>
+                        <span>{{ event.guild.name }}</span>
+                        {% if event.team %}<span>{{ event.team.name }}</span>{% endif %}
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+</div>
