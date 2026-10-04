@@ -41,4 +41,12 @@ final class RobotsTxtControllerTest extends WebTestCase
 
         self::assertResponseStatusCodeSame(405);
     }
+
+    public function testAnonymousAdminRequestStillRedirectsToLogin(): void
+    {
+        $client = static::createClient();
+        $client->request('GET', '/admin');
+
+        self::assertResponseRedirects('/login');
+    }
 }
