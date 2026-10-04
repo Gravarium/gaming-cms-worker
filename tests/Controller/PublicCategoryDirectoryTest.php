@@ -31,8 +31,9 @@ final class PublicCategoryDirectoryTest extends WebTestCase
             ->setParent($parent)
             ->setDescription('Child category description.');
         $other = (new Category())
-            ->setName('Zeta '.$suffix)
-            ->setSlug($otherSlug);
+            ->setName('Zeta '.$suffix.' <script>alert(1)</script>')
+            ->setSlug($otherSlug)
+            ->setDescription('<img src=x onerror=alert(1)>');
         $em->persist($parent);
         $em->persist($child);
         $em->persist($other);
@@ -53,6 +54,10 @@ final class PublicCategoryDirectoryTest extends WebTestCase
             self::assertSelectorNotExists('form');
 
             $html = (string) $client->getResponse()->getContent();
+            self::assertStringNotContainsString('<script>alert(1)</script>', $html);
+            self::assertStringNotContainsString('<img src=x onerror=alert(1)>', $html);
+            self::assertStringContainsString('&lt;script&gt;alert(1)&lt;/script&gt;', $html);
+            self::assertStringContainsString('&lt;img src=x onerror=alert(1)&gt;', $html);
             self::assertLessThan(
                 strpos($html, 'Zeta '.$suffix),
                 strpos($html, 'Alpha '.$suffix),
