@@ -68597,8 +68597,8 @@
       "package_id": "WCP-682",
       "title": "Scheduled News visibility in visual editorial worklist",
       "risk": "medium_editorial_workflow",
-      "execution_state": "worker_in_progress",
-      "claim_state": "claimed",
+      "execution_state": "worker_complete_awaiting_trusted_review",
+      "claim_state": "locked_until_trusted_resolution",
       "claim_generation": 2,
       "claim_branch": "claim/wcp-682-news-schedule-worklist-g2",
       "suggested_branch": "feature/wcp-682-news-schedule-worklist-g1",
@@ -68671,17 +68671,20 @@
           "tests/Controller/AdminNewsEditorTest.php"
         ]
       },
-      "next_action": "PR #479 is clean against exact WCP-681 head with only three allowed files. The latest change scopes scheduled-item assertions to the matching table row. Worker CI run 37205861218 is running on exact head c52ca7ad978fb8be7f1f556bff23424c2c7b5222 through the supported worker/account branch trigger.",
+      "next_action": "Worker PR #479 is complete: exact-head CI run #1226 passed on c52ca7ad978fb8be7f1f556bff23424c2c7b5222; PHP/Symfony and PostgreSQL 18 both succeeded. The PR is a clean three-file diff based on WCP-681 head 715567ebf7378d47207f04e0a7b2b467a42ab6ea and remains a draft pending Trusted review. Keep this claim locked until dependency and Trusted resolution.",
       "last_observed_head": "c52ca7ad978fb8be7f1f556bff23424c2c7b5222",
-      "last_verified_push_at": "2026-10-04T13:30:30Z",
-      "last_checkpoint_at": "2026-10-04T13:31:03.595Z",
+      "last_verified_push_at": "2026-10-04T13:29:30Z",
+      "last_checkpoint_at": "2026-10-04T13:36:02.726Z",
       "worker_pr": 479,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/479",
       "worker_pr_head_sha": "c52ca7ad978fb8be7f1f556bff23424c2c7b5222",
       "worker_pr_state": "draft",
       "ci_run_id": 37205861218,
-      "ci_result": "in_progress",
-      "ci_branch": "worker/account-ci-wcp-682-g2"
+      "ci_result": "success",
+      "ci_branch": "worker/account-ci-wcp-682-g2",
+      "final_head": "c52ca7ad978fb8be7f1f556bff23424c2c7b5222",
+      "final_ci_run_id": 37205861218,
+      "completed_on": "2026-10-04T13:36:02.726Z"
     },
     {
       "priority": 683,
