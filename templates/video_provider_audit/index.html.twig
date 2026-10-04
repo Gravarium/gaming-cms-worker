@@ -1,0 +1,71 @@
+{% extends 'base.html.twig' %}
+{% block title %}Videoquellen-Audit | Gaming CMS{% endblock %}
+{% block meta_description %}Geschütfte lokale Prüfung gespeicherter Videoquellen im Gaming CMS.{% endblock %}
+{% block body %}
+<header class="topbar">
+    <a class="brand" href="{{ path('app_admin_dashboard') }}">Gaming CMS</a>
+    <nav class="top-actions">
+        <a class="button-link button-secondary" href="{{ path('app_admin_video_index') }}">Videos</a>
+        <a class="button-link button-secondary" href="{{ path('app_admin_dashboard') }}">Übersicht</a>
+    </nav>
+</header>
+<main class="dashboard">
+    <p class="eyebrow">Video-Modul · Nur Lesezugriff</p>
+    <h1>Gespeicherte Videoquellen</h1>
+    <p class="muted">Die Prüfung vergleicht nur lokale URL-Formate mit den registrierten Anbietern. Es werden keine Anbieter kontaktiert; Verfügbarkeit und Wiedergabe werden nicht geprüft.</p>
+
+    {% set statusLabels = {
+        'configured': 'Konfiguriert',
+        'disabled': 'Deaktiviert',
+        'unapproved': 'Nicht freigegeben',
+        'invalid_link': 'Ungültiger Link',
+        'unknown_provider': 'Unbekannter Anbieter'
+    } %}
+    {% set modeLabels = {
+        'video': 'Direktes Video',
+        'hls': 'HLS',
+        'iframe': 'Einbettung',
+        'link': 'Verweis'
+    } %}
+
+    <section class="panel" aria-labelledby="video-provider-audit-heading">
+        <h2 id="video-provider-audit-heading">Lokale Klassifikation</h2>
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th scope="col">Quellen-ID</th>
+                        <th scope="col">Anbieter</th>
+                        <th scope="col">Aktiv</th>
+                        <th scope="col">Freigabe</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Format</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for source in items %}
+                    <tr>
+                        <td>{{ source.sourceId }}</td>
+                        <td><code>{{ source.provider }}</code></td>
+                        <td>{{ source.enabled ? 'Ja' : 'Nein' }}</td>
+                        <td>{{ source.authorized ? 'Freigegeben' : 'Nicht freigegeben' }}</td>
+                        <td><span class="status {{ source.status == 'configured' ? 'status-ready' : (source.status == 'disabled' ? 'status-disabled' : '') }}">{{ statusLabels[source.status]|default('Unbekannt') }}</span></td>
+                        <td>{{ source.mode ? (modeLabels[source.mode]|default(source.mode)) : '—' }}</td>
+                    </tr>
+                {% else %}
+                    <tr><td colspan="6">Keine gespeicherten Videoquellen vorhanden.</td></tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        {% if hasMore %}
+            <nav aria-label="Audit-Seiten">
+                <a class="button-link" rel="next" href="{{ path('app_admin_video_provider_audit_page', {limit: limit, after: nextCursor}) }}">Nächste Quellen</a>
+            </nav>
+        {% else %}
+            <p class="muted">Ende der Liste.</p>
+        {% endif %}
+    </section>
+</main>
+{% endblock %}
