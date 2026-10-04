@@ -1,0 +1,56 @@
+{% extends 'base.html.twig' %}
+{% block title %}Bewerbungs-Postfach | Gaming CMS{% endblock %}
+{% block body %}
+<header class="topbar"><a class="brand" href="{{ path('app_admin_dashboard') }}">Gaming CMS</a><a class="button-link button-secondary" href="{{ path('app_admin_gaming_index') }}">Zurück</a></header>
+<main class="dashboard">
+<p class="eyebrow">Gaming-Modul</p>
+<h1>Bewerbungs-Postfach</h1>
+<p class="muted">Suche und filtere Bewerbungen. Öffne einen Eintrag, um ihn zu prüfen oder zu bearbeiten.</p>
+<form method="get" action="{{ path('app_admin_guild_application_inbox') }}" class="application-filters">
+<label for="application-search">Suche nach Name, E-Mail, Charakter oder Gilde</label>
+<input id="application-search" type="search" name="q" maxlength="100" value="{{ query }}" autocomplete="off">
+<label for="application-status">Status</label>
+<select id="application-status" name="status">
+<option value="all" {{ status == 'all' ? 'selected' : '' }}>Alle Status</option>
+<option value="open" {{ status == 'open' ? 'selected' : '' }}>Offen und in Prüfung</option>
+<option value="accepted" {{ status == 'accepted' ? 'selected' : '' }}>Angenommen</option>
+<option value="rejected" {{ status == 'rejected' ? 'selected' : '' }}>Abgelehnt</option>
+</select>
+<div class="row-actions"><button type="submit">Suchen</button>{% if query != '' or status != 'all' %}<a class="button-link button-secondary" href="{{ path('app_admin_guild_application_inbox') }}">Filter zurücksetzen</a>{% endif %}</div>
+</form>
+<p class="muted" aria-live="polite">{{ total }} Treffer</p>
+<div class="table-wrap">
+<table>
+<thead><tr><th>Eingang</th><th>Gilde</th><th>Bewerber und Charakter</th><th>Status</th><th>Bearbeitung</th><th>Aktion</th></tr></thead>
+<tbody>
+{% for application in applications %}
+{% set statusLabel = application.status == 'pending' ? 'Offen' : (application.status == 'reviewing' ? 'In Prüfung' : (application.status == 'accepted' ? 'Angenommen' : 'Abgelehnt')) %}
+<tr>
+<td>{{ application.createdAt|date('d.m.Y H:i') }}</td>
+<td>{{ application.guild.name }}</td>
+<td>{{ application.applicantName }}<br><span class="muted">{{ application.characterName }}{% if application.characterClass %} · {{ application.characterClass }}{% endif %}</span><br>{{ application.email }}</td>
+<td><span class="status {{ application.status == 'accepted' ? 'status-ready' : (application.status == 'rejected' ? 'status-disabled' : '') }}">{{ statusLabel }}</span></td>
+<td>{{ application.assignedTo ? application.assignedTo.email : 'Nicht zugewiesen' }}</td>
+<td><a class="button-link button-secondary" href="{{ path('app_admin_guild_application_review', {id: application.id}) }}">Prüfen</a></td>
+</tr>
+{% else %}
+<tr><td colspan="6" class="muted">Keine Bewerbungen mit diesen Filtern gefunden.</td></tr>
+{% endfor %}
+</tbody>
+</table>
+</div>
+{% if pages > 1 %}
+{% set firstVisiblePage = max(1, page - 2) %}
+{% set lastVisiblePage = min(pages, page + 2) %}
+<nav aria-label="Seiten der Bewerbungsübersicht">
+<div class="row-actions">
+{% if page > 1 %}<a class="button-link button-secondary" aria-label="Vorherige Seite" href="{{ path('app_admin_guild_application_inbox', {q: query, status: status, page: page - 1}) }}">Zurück</a>{% endif %}
+{% for pageNumber in firstVisiblePage..lastVisiblePage %}
+{% if pageNumber == page %}<span aria-current="page">{{ pageNumber }}</span>{% else %}<a class="button-link button-secondary" href="{{ path('app_admin_guild_application_inbox', {q: query, status: status, page: pageNumber}) }}">{{ pageNumber }}</a>{% endif %}
+{% endfor %}
+{% if page < pages %}<a class="button-link button-secondary" aria-label="Nächste Seite" href="{{ path('app_admin_guild_application_inbox', {q: query, status: status, page: page + 1}) }}">Weiter</a>{% endif %}
+</div>
+</nav>
+{% endif %}
+</main>
+{% endblock %}
