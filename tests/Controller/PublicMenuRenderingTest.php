@@ -115,6 +115,44 @@ final class PublicMenuRenderingTest extends WebTestCase
         self::assertSame(1, $loginNavigation->filter('a[href="'.$externalUrl.'"]')->count());
     }
 
+    public function testPublicNavigationEscapesStoredHtmlLabels(): void
+    {
+        $client = static::createClient();
+        $suffix = bin2hex(random_bytes(5));
+        $scriptLabel = '<script>alert("menu-'.$suffix.'")</script>';
+        $imageLabel = '<img src=x onerror="alert(1)">';
+        $entityManager = $this->entityManager($client);
+
+        $entityManager->persist(
+            (new MenuItem())
+                ->setLabel($scriptLabel)
+                ->setUrl('https://example.com/script-label-'.$suffix)
+                ->setPosition(10),
+        );
+        $entityManager->persist(
+            (new MenuItem())
+                ->setLabel($imageLabel)
+                ->setUrl('https://example.com/image-label-'.$suffix)
+                ->setPosition(20),
+        );
+        $entityManager->flush();
+
+        $crawler = $client->request('GET', '/');
+
+        self::assertResponseIsSuccessful();
+        $navigation = $crawler->filter('nav[aria-label="Hauptnavigation"]');
+        self::assertSame(1, $navigation->count());
+        self::assertSame(0, $navigation->filter('script, img')->count());
+
+        $navigationHtml = $navigation->html() ?? '';
+        self::assertStringNotContainsString($scriptLabel, $navigationHtml);
+        self::assertStringNotContainsString($imageLabel, $navigationHtml);
+
+        $navigationText = $navigation->text('', true);
+        self::assertStringContainsString($scriptLabel, $navigationText);
+        self::assertStringContainsString($imageLabel, $navigationText);
+    }
+
     public function testDisablingContentHidesPageLinksButKeepsExternalLinks(): void
     {
         $client = static::createClient();
