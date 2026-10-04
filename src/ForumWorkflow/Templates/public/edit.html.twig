@@ -1,0 +1,21 @@
+{% extends 'base.html.twig' %}
+{% block title %}Beitrag bearbeiten | Forum{% endblock %}
+{% block body %}
+<main class="dashboard">
+    <p><a href="{{ path('app_gaming_forum_thread', {id: thread.id}) }}">Zurück zu {{ thread.title }}</a></p>
+    <p class="eyebrow">Forumbeitrag bearbeiten</p>
+    <h1>{{ isQuestion ? 'Frage korrigieren' : 'Antwort korrigieren' }}</h1>
+    {% for message in app.flashes('forum_error') %}<p role="alert" class="notice notice-error">{{ message }}</p>{% endfor %}
+    <form method="post" action="{{ path('app_gaming_forum_post_update', {threadId: thread.id, postId: post.id}) }}" class="panel">
+        <input type="hidden" name="_token" value="{{ csrf_token('forum_edit_' ~ thread.id ~ '_' ~ post.id) }}">
+        <input type="hidden" name="version" value="{{ thread.version }}">
+        {% if isQuestion %}
+            <label for="forum-edit-title">Titel</label>
+            <input id="forum-edit-title" name="title" value="{{ thread.title }}" maxlength="180" required>
+        {% endif %}
+        <label for="forum-edit-body">{{ isQuestion ? 'Frage' : 'Antwort' }}</label>
+        <textarea id="forum-edit-body" name="body" maxlength="20000" rows="10" required>{{ post.body }}</textarea>
+        <button type="submit">Änderungen speichern</button>
+    </form>
+</main>
+{% endblock %}
