@@ -1,0 +1,34 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Competition-Saisons{% endblock %}
+
+{% block body %}
+<main class="content-shell">
+    <h1>Competition-Saisons</h1>
+    <p><a href="{{ path('app_admin_competition_index') }}">Zurück zu den Competitions</a></p>
+    {% for message in app.flashes('success') %}<div class="notice" role="status">{{ message }}</div>{% endfor %}
+
+    <h2>Saison anlegen</h2>
+    {{ form_start(form) }}
+        {{ form_widget(form) }}
+        <button type="submit">Saison anlegen</button>
+    {{ form_end(form) }}
+
+    <h2>Letzte Saisons</h2>
+    {% for season in seasons %}
+        <article class="portal-card">
+            <h3>{{ season.name }}</h3>
+            <p>{{ season.game.name }} · Beginn {{ season.startsAt|date('d.m.Y H:i') }}{% if season.endsAt %} · Ende {{ season.endsAt|date('d.m.Y H:i') }}{% endif %}</p>
+            <p>Status: {{ season.status }}</p>
+            {% if not season.archived %}
+                <form method="post" action="{{ path('app_admin_competition_season_archive', {season: season.id}) }}">
+                    <input type="hidden" name="_token" value="{{ csrf_token('competition-season-archive-' ~ season.id) }}">
+                    <button type="submit">Saison archivieren</button>
+                </form>
+            {% endif %}
+        </article>
+    {% else %}
+        <p>Noch keine Saison vorhanden.</p>
+    {% endfor %}
+</main>
+{% endblock %}
