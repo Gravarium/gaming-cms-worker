@@ -130,6 +130,31 @@ final class PublicContentTagArchiveTest extends WebTestCase
         }
     }
 
+    public function testMalformedPageParametersAreRejectedAndSupportedCapIsEnforced(): void
+    {
+        $client = static::createClient();
+        $fixture = $this->fixture($client);
+
+        try {
+            $archivePath = '/content/tag/'.$fixture['tagSlug'];
+            $client->request('GET', $archivePath);
+            self::assertResponseIsSuccessful();
+
+            $client->request('GET', $archivePath.'?page=1');
+            self::assertResponseIsSuccessful();
+
+            foreach (['page=', 'page=0', 'page=-1', 'page=abc', 'page=1.5', 'page=01', 'page[]=1'] as $query) {
+                $client->request('GET', $archivePath.'?'.$query);
+                self::assertResponseStatusCodeSame(400, 'Expected malformed query to be rejected: '.$query);
+            }
+
+            $client->request('GET', $archivePath.'?page=10001');
+            self::assertResponseStatusCodeSame(404);
+        } finally {
+            $this->cleanup($client, $fixture, []);
+        }
+    }
+
     public function testEmptyArchiveIsReachableAndMissingTagReturnsNotFound(): void
     {
         $client = static::createClient();
