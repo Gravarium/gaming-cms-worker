@@ -11,7 +11,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 final class RobotsTxtController extends AbstractController
 {
-    #[Route('/robots.txt', name: 'app_robots_txt', methods: ['GET'])]
+    #[Route('/robots.txt', name: 'app_robots_txt', methods: ['GET'], stateless: true)]
     public function index(): Response
     {
         $sitemapUrl = $this->generateUrl('app_content_sitemap', [], UrlGeneratorInterface::ABSOLUTE_URL);
