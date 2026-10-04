@@ -1,6 +1,8 @@
 <?php
 declare(strict_types=1);
 namespace App\ContentEditor;
+use App\NewsEditor\RichDocument;
+use App\NewsEditor\RichRenderer;
 final readonly class ContentBlockRenderer
 {
     public function __construct(private ContentBlockDocument $documents,private OwnedMediaReferenceGateway $media){}
@@ -8,6 +10,14 @@ final readonly class ContentBlockRenderer
     {
         if (strlen($body) > ContentBlockDocument::MAX_DOCUMENT_BYTES) {
             return '<p>Inhalt kann nicht angezeigt werden.</p>';
+        }
+
+        if (str_starts_with($body, RichDocument::PREFIX)) {
+            try {
+                return (new RichRenderer(new RichDocument(), $this->media))->render($body);
+            } catch (\InvalidArgumentException) {
+                return '<p>Inhalt kann nicht angezeigt werden.</p>';
+            }
         }
 
         try{$blocks=$this->documents->decode($body)['blocks'];}catch(\InvalidArgumentException){return '<p>'.$this->multiline($body).'</p>';}

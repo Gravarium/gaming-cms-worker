@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+{% block title %}Neue News | Gaming CMS{% endblock %}
+{% block body %}
+<header class="topbar"><a class="brand" href="{{ path('app_admin_dashboard') }}">Gaming CMS</a><nav class="top-actions"><a href="{{ path('app_admin_news_editor_index') }}">News-Redaktion</a></nav></header>
+<main class="dashboard">
+    <p class="eyebrow">News-Redaktion</p><h1>Neue News anlegen</h1>
+    <p>Gib einen Titel ein. Danach öffnet sich der visuelle Editor für den Entwurf. Artikeldaten und Veröffentlichung lassen sich anschließend getrennt bearbeiten.</p>
+    {% if error %}<p class="notice" role="alert">{{ error }}</p>{% endif %}
+    <form method="post" action="{{ path('app_admin_news_editor_new') }}">
+        <input type="hidden" name="_token" value="{{ csrf_token('news-editor-new') }}">
+        <label for="news-new-title">Titel</label>
+        <input id="news-new-title" name="title" type="text" value="{{ title }}" maxlength="180" required autofocus>
+        <button type="submit">Entwurf erstellen und Editor öffnen</button>
+    </form>
+</main>
+{% endblock %}
