@@ -1,0 +1,42 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Tests\Controller;
+
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+
+final class RobotsTxtControllerTest extends WebTestCase
+{
+    public function testAnonymousGetReturnsMinimalRobotsFileAndSameOriginSitemap(): void
+    {
+        $client = static::createClient();
+        $client->request('GET', '/robots.txt', [], [], [
+            'HTTP_HOST' => 'cms.example.test',
+            'HTTPS' => 'on',
+        ]);
+
+        self::assertResponseIsSuccessful();
+
+        $response = $client->getResponse();
+        $content = $response->getContent();
+        self::assertIsString($content);
+        self::assertSame(
+            "User-agent: *\nDisallow: /admin\nSitemap: https://cms.example.test/sitemap.xml\n",
+            $content,
+        );
+        self::assertSame('text/plain; charset=UTF-8', $response->headers->get('Content-Type'));
+        self::assertSame('nosniff', $response->headers->get('X-Content-Type-Options'));
+        self::assertTrue($response->headers->getCacheControlDirective('public'));
+        self::assertSame(300, $response->headers->getCacheControlDirective('max-age'));
+        self::assertSame(300, $response->headers->getCacheControlDirective('s-maxage'));
+    }
+
+    public function testPostIsNotAllowed(): void
+    {
+        $client = static::createClient();
+        $client->request('POST', '/robots.txt');
+
+        self::assertResponseStatusCodeSame(405);
+    }
+}
