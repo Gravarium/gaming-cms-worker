@@ -68691,13 +68691,13 @@
       "package_id": "WCP-683",
       "title": "Audit saved video provider sources for manager diagnostics",
       "execution_state": "worker_in_progress",
-      "claim_state": "active_lease",
-      "claim_generation": 1,
-      "claim_branch": "claim/wcp-683-video-source-audit-g1",
+      "claim_state": "claimed",
+      "claim_generation": 2,
+      "claim_branch": "claim/wcp-683-video-source-audit-g2",
       "suggested_branch": "feature/wcp-683-video-source-audit-g1",
       "resume_branch": "feature/wcp-683-video-source-audit-g1",
-      "claimed_on": "2026-10-04T02:15:33.747Z",
-      "lease_expires_at": "2026-10-04T09:15:33.747Z",
+      "claimed_on": "2026-10-04T13:37:10.896Z",
+      "lease_expires_at": "2026-10-04T20:37:10.896Z",
       "base_branch": "main",
       "base_sha": "08260d3f0e343615f525efd2de05767200f031c5",
       "proposal_base_branch": "main",
@@ -68749,11 +68749,14 @@
           "tests/VideoProviderAudit/"
         ]
       },
-      "next_action": "Implement source audit and verify exact-head Worker CI.",
+      "next_action": "Claimed generation 2 at the verified live feature head (08260d3f0e343615f525efd2de05767200f031c5), with all three dependencies Trusted-integrated and no PR. Fast-forward the untouched feature branch to current worker main 6e9cb292bafa84862a9cedc7abb8d20878297f9d, then implement only the allowed controller, classifier, README, and tests; do not fetch provider URLs or expose saved source URLs/tokens.",
       "active_head": "08260d3f0e343615f525efd2de05767200f031c5",
       "last_observed_head": "08260d3f0e343615f525efd2de05767200f031c5",
       "last_verified_push_at": null,
-      "worker_pr_state": "not_created"
+      "worker_pr_state": "not_created",
+      "active_base_branch": "main",
+      "active_base_sha": "6e9cb292bafa84862a9cedc7abb8d20878297f9d",
+      "last_checkpoint_at": "2026-10-04T13:37:10.896Z"
     }
   ],
   "recovery_queue": [],
