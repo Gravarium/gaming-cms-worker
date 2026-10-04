@@ -37,11 +37,17 @@ final class PublicCompetitionLeaderboardController extends AbstractController
 
         $leaderboard = $this->standings->forCompetition($competition);
 
-        return $this->render('competition_leaderboard/index.html.twig', [
+        $response = $this->render('competition_leaderboard/index.html.twig', [
             'competition' => $competition,
             'standings' => $leaderboard['standings'],
             'results' => $leaderboard['results'],
         ]);
+        if (!$competition->isPublic()) {
+            $response->headers->set('Cache-Control', 'private, no-store, max-age=0');
+            $response->headers->set('X-Robots-Tag', 'noindex, nofollow, noarchive');
+        }
+
+        return $response;
     }
 
     private function assertAvailable(): void
