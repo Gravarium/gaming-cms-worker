@@ -1,0 +1,6 @@
+{% extends 'base.html.twig' %}
+{% block title %}News-Revision #{{ revision.revisionNumber }} | Gaming CMS{% endblock %}
+{% block body %}
+<header class="topbar"><a class="brand" href="{{ path('app_admin_dashboard') }}">Gaming CMS</a><nav class="top-actions"><a href="{{ path('app_admin_news_editor_history',{id:entry.id}) }}">Zur Versionshistorie</a><a href="{{ path('app_admin_news_editor',{id:entry.id}) }}">Zum visuellen Editor</a></nav></header>
+<main class="article-shell"><p class="eyebrow">Unveränderlicher News-Snapshot #{{ revision.revisionNumber }}</p><h1>{{ revision.title }}</h1><p class="muted">{{ revision.createdAt|date('d.m.Y H:i:s') }} · {{ revision.createdBy.email }} · Status {{ revision.status }}</p><div class="article-body">{{ html|raw }}</div></main>
+{% endblock %}
