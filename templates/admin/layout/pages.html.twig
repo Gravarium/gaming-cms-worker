@@ -1,0 +1,64 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Seitenlayouts | {{ site.siteName }}{% endblock %}
+
+{% block body %}
+<header class="topbar">
+    <a class="brand" href="{{ path('app_admin_dashboard') }}">Gaming CMS</a>
+    <nav class="top-actions" aria-label="Layoutnavigation">
+        <a class="button-link button-secondary" href="{{ path('app_admin_layout', {context: 'home'}) }}">Startseitenlayout</a>
+        <a href="{{ path('app_admin_settings') }}">Website-Einstellungen</a>
+    </nav>
+</header>
+
+<main class="dashboard">
+    <p class="eyebrow">Design</p>
+    <h1>Seitenlayouts</h1>
+    <p class="muted">Finde eine Seite über ihren Titel oder Slug und öffne direkt ihr Layout.</p>
+
+    <form method="get" action="{{ path('app_admin_layout_pages') }}" class="content-form" role="search">
+        <label for="layout-page-search">Seitentitel oder Slug</label>
+        <input id="layout-page-search" type="search" name="q" value="{{ query }}" maxlength="100" autocomplete="off">
+        <button type="submit">Seiten finden</button>
+    </form>
+
+    <p class="muted" role="status" aria-live="polite">
+        {{ total }} {{ total == 1 ? 'Seite' : 'Seiten' }} · Seite {{ currentPage }} von {{ pageCount }}
+    </p>
+
+    {% if pages is empty %}
+        <p class="notice">Keine passenden Seiten gefunden.</p>
+    {% else %}
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr><th>Seite</th><th>Slug</th><th>Status</th><th>Layout</th></tr>
+                </thead>
+                <tbody>
+                    {% set statusLabels = {'draft': 'Entwurf', 'review': 'Zur Freigabe', 'scheduled': 'Geplant', 'published': 'Veröffentlicht', 'archived': 'Archiviert', 'trashed': 'Papierkorb'} %}
+                    {% for page in pages %}
+                        <tr>
+                            <td>{{ page.title }}</td>
+                            <td>{{ page.slug }}</td>
+                            <td>{{ statusLabels[page.status] ?? page.status }}</td>
+                            <td><a href="{{ path('app_admin_layout', {context: 'page-' ~ page.id}) }}">Layout öffnen</a></td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% endif %}
+
+    {% if pageCount > 1 %}
+        <nav class="top-actions" aria-label="Seitennavigation">
+            {% if currentPage > 1 %}
+                <a rel="prev" href="{{ path('app_admin_layout_pages', {q: query, page: currentPage - 1}) }}">Vorherige Seite</a>
+            {% endif %}
+            <span aria-current="page">Seite {{ currentPage }} von {{ pageCount }}</span>
+            {% if currentPage < pageCount %}
+                <a rel="next" href="{{ path('app_admin_layout_pages', {q: query, page: currentPage + 1}) }}">Nächste Seite</a>
+            {% endif %}
+        </nav>
+    {% endif %}
+</main>
+{% endblock %}
