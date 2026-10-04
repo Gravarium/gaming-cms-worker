@@ -40,7 +40,7 @@ final class CsvAuditTest extends TestCase
 
         self::assertSame(
             "source_id,provider,enabled,authorized,status,mode\r\n"
-            ."8,\"'=HYPERLINK(\"\"https://example.test\"\",1)\",false,true,\"' +SUM(1,2),\"'@CMD\r\n",
+            ."8,\"'=HYPERLINK(\"\"https://example.test\"\",1)\",false,true,\"' +SUM(1,2)\",\"'@CMD\r\n",
             $csv,
         );
     }
