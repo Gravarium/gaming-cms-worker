@@ -226,7 +226,7 @@ final class AdminNewsEditorController extends AbstractController
         }
     }
 
-    #[Route('/{id}/review/{decision}', name: 'app_admin_news_editor_review_decision', requirements: ['id' => '\\d+', 'decision' => 'publish|return-draft'], methods: ['POST'])]
+    #[Route('/{id}/review/{decision}', name: 'app_admin_news_editor_review_decision', requirements: ['id' => '\\d+', 'decision' => 'publish|return-draft|schedule'], methods: ['POST'])]
     public function reviewDecision(ContentEntry $entry, string $decision, Request $request): Response
     {
         $this->assertEditable($entry);
@@ -246,14 +246,27 @@ final class AdminNewsEditorController extends AbstractController
         try {
             $normalized = $this->policy->normalizeForStorage($submitted);
             $plainText = $this->policy->plainText($normalized);
-            if ($decision === 'publish' && trim($plainText) === '') {
+            if (in_array($decision, ['publish', 'schedule'], true) && trim($plainText) === '') {
                 throw new \InvalidArgumentException('Ein veröffentlichter News-Artikel braucht lesbaren Inhalt.');
+            }
+            $scheduledAt = null;
+            if ($decision === 'schedule') {
+                $requestedAt = $request->request->get('scheduledAt');
+                $timezone = new \DateTimeZone('Europe/Berlin');
+                if (!is_string($requestedAt) || preg_match('/\A\d{4}-\d{2}-\d{2}T\d{2}:\d{2}\z/D', $requestedAt) !== 1) {
+                    throw new \InvalidArgumentException('Bitte einen gültigen Veröffentlichungszeitpunkt eingeben.');
+                }
+                $scheduledAt = \DateTimeImmutable::createFromFormat('!Y-m-d\\TH:i', $requestedAt, $timezone);
+                if ($scheduledAt === false || $scheduledAt->format('Y-m-d\\TH:i') !== $requestedAt
+                    || $scheduledAt <= new \DateTimeImmutable('+5 minutes', $timezone)) {
+                    throw new \InvalidArgumentException('Der Veröffentlichungszeitpunkt muss mindestens fünf Minuten in der Zukunft liegen.');
+                }
             }
             $user = $this->getUser();
             if (!$user instanceof User) {
                 throw $this->createAccessDeniedException();
             }
-            $this->entityManager->wrapInTransaction(function (EntityManagerInterface $manager) use ($entry, $normalized, $plainText, $expected, $expectedHash, $decision, $user): void {
+            $this->entityManager->wrapInTransaction(function (EntityManagerInterface $manager) use ($entry, $normalized, $plainText, $expected, $expectedHash, $decision, $scheduledAt, $user): void {
                 $manager->refresh($entry, LockMode::PESSIMISTIC_WRITE);
                 $this->assertEditable($entry);
                 if ($entry->getStatus() !== ContentEntry::STATUS_REVIEW) {
@@ -263,19 +276,27 @@ final class AdminNewsEditorController extends AbstractController
                     || !hash_equals(hash('sha256', $entry->getEditableDocument()), $expectedHash)) {
                     throw new \DomainException('Der Artikel wurde inzwischen geändert. Bitte neu laden.');
                 }
-                $status = $decision === 'publish' ? ContentEntry::STATUS_PUBLISHED : ContentEntry::STATUS_DRAFT;
-                $entry->setEditorDocument($normalized)->setBody($plainText)->setStatus($status)->synchronizePublication();
+                $status = match ($decision) {
+                    'publish' => ContentEntry::STATUS_PUBLISHED,
+                    'schedule' => ContentEntry::STATUS_SCHEDULED,
+                    default => ContentEntry::STATUS_DRAFT,
+                };
+                $entry->setEditorDocument($normalized)->setBody($plainText)->setStatus($status);
+                if ($scheduledAt !== null) {
+                    $entry->setScheduledAt($scheduledAt);
+                }
+                $entry->synchronizePublication();
                 $this->revisions->capture($entry, $user);
                 $this->audit->record(
-                    $decision === 'publish' ? 'content.review.approve' : 'content.review.return',
+                    $decision === 'publish' ? 'content.review.approve' : ($decision === 'schedule' ? 'content.review.schedule' : 'content.review.return'),
                     $entry,
                     $entry->getId(),
-                    $decision === 'publish' ? 'News-Artikel im visuellen Editor freigegeben und veröffentlicht.' : 'News-Artikel zur Überarbeitung zurückgegeben.',
+                    $decision === 'publish' ? 'News-Artikel im visuellen Editor freigegeben und veröffentlicht.' : ($decision === 'schedule' ? 'News-Artikel im visuellen Editor zur Veröffentlichung geplant.' : 'News-Artikel zur Überarbeitung zurückgegeben.'),
                     ['status' => $status],
                 );
             });
-            $this->addFlash('success', $decision === 'publish' ? 'News-Artikel veröffentlicht.' : 'News-Artikel als Entwurf zur Überarbeitung zurückgegeben.');
-            return $this->redirectToRoute($decision === 'publish' ? 'app_admin_content_edit' : 'app_admin_news_editor', ['id' => $entry->getId()]);
+            $this->addFlash('success', $decision === 'publish' ? 'News-Artikel veröffentlicht.' : ($decision === 'schedule' ? 'News-Artikel zur Veröffentlichung geplant.' : 'News-Artikel als Entwurf zur Überarbeitung zurückgegeben.'));
+            return $this->redirectToRoute($decision === 'return-draft' ? 'app_admin_news_editor' : 'app_admin_content_edit', ['id' => $entry->getId()]);
         } catch (\DomainException $exception) {
             return $this->errorResponse($entry, $submitted, $exception->getMessage(), 409);
         } catch (\InvalidArgumentException $exception) {

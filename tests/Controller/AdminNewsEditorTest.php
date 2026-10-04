@@ -268,6 +268,53 @@ final class AdminNewsEditorTest extends WebTestCase
         self::assertResponseStatusCodeSame(403);
     }
 
+    public function testReviewedNewsCanBeScheduledFromVisualEditor(): void
+    {
+        $client = static::createClient();
+        [$user, $entry] = $this->entry($client, status: ContentEntry::STATUS_REVIEW);
+        $client->loginUser($user);
+        $crawler = $client->request('GET', '/admin/news-editor/'.$entry->getId());
+        self::assertCount(1, $crawler->selectButton('Änderungen speichern und Veröffentlichung planen'));
+        $csrf = $crawler->filter('input[name="_token"]')->attr('value');
+        $updated = $crawler->filter('input[name="updatedAt"]')->attr('value');
+        $hash = $crawler->filter('input[name="documentHash"]')->attr('value');
+        self::assertNotNull($csrf); self::assertNotNull($updated); self::assertNotNull($hash);
+        $planned = (new \DateTimeImmutable('+2 days', new \DateTimeZone('Europe/Berlin')))->format('Y-m-d\\TH:i');
+        $endpoint = '/admin/news-editor/'.$entry->getId().'/review/schedule';
+        $valid = [
+            '_token' => $csrf, 'updatedAt' => $updated, 'documentHash' => $hash,
+            'document' => $this->document('Geplanter Artikel'), 'scheduledAt' => $planned,
+        ];
+        $client->request('POST', $endpoint, ['_token' => 'wrong'] + $valid);
+        self::assertResponseStatusCodeSame(403);
+        $client->request('POST', $endpoint, ['scheduledAt' => '2000-01-01T00:00'] + $valid);
+        self::assertResponseStatusCodeSame(422);
+        $client->request('POST', $endpoint, ['scheduledAt' => '2026-13-01T11:30'] + $valid);
+        self::assertResponseStatusCodeSame(422);
+        $client->request('POST', $endpoint, ['updatedAt' => '2000-01-01T00:00:00+00:00'] + $valid);
+        self::assertResponseStatusCodeSame(409);
+
+        $em = $client->getContainer()->get(EntityManagerInterface::class);
+        $em->clear();
+        $unchanged = $em->find(ContentEntry::class, $entry->getId());
+        self::assertInstanceOf(ContentEntry::class, $unchanged);
+        self::assertSame(ContentEntry::STATUS_REVIEW, $unchanged->getStatus());
+        self::assertNull($unchanged->getScheduledAt());
+
+        $client->request('POST', $endpoint, $valid);
+        self::assertResponseRedirects('/admin/content/'.$entry->getId().'/edit');
+        $em->clear();
+        $scheduled = $em->find(ContentEntry::class, $entry->getId());
+        self::assertInstanceOf(ContentEntry::class, $scheduled);
+        self::assertSame(ContentEntry::STATUS_SCHEDULED, $scheduled->getStatus());
+        self::assertSame('Geplanter Artikel', $scheduled->getBody());
+        self::assertSame($planned, $scheduled->getScheduledAt()?->setTimezone(new \DateTimeZone('Europe/Berlin'))->format('Y-m-d\\TH:i'));
+        self::assertNull($scheduled->getPublishedAt());
+        self::assertCount(1, $em->getRepository(ContentRevision::class)->findBy(['entry' => $scheduled]));
+        $client->request('GET', '/admin/news-editor/'.$entry->getId());
+        self::assertResponseStatusCodeSame(403);
+    }
+
     public function testVisualRevisionHistoryPreviewsAndRestoresSafely(): void
     {
         $client = static::createClient();
