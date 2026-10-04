@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    {% for page in 1..totalPages %}
+        <sitemap><loc>{{ absolute_url(path('app_gaming_game_sitemap_page', {page: page}))|e('html') }}</loc></sitemap>
+    {% endfor %}
+</sitemapindex>
