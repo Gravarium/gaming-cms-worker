@@ -139,6 +139,30 @@ final class PublicVideoLibraryControllerTest extends WebTestCase
         }
     }
 
+    public function testMalformedPageParametersAreRejectedAndSupportedCapIsEnforced(): void
+    {
+        $client = static::createClient();
+        $previous = $this->setVideoModuleEnabled($client, true);
+
+        try {
+            $client->request('GET', '/videos/library');
+            self::assertResponseIsSuccessful();
+
+            $client->request('GET', '/videos/library?page=1');
+            self::assertResponseIsSuccessful();
+
+            foreach (['page=', 'page=0', 'page=-1', 'page=abc', 'page=1.5', 'page=01', 'page[]=1'] as $query) {
+                $client->request('GET', '/videos/library?'.$query);
+                self::assertResponseStatusCodeSame(400, 'Expected malformed query to be rejected: '.$query);
+            }
+
+            $client->request('GET', '/videos/library?page=10001');
+            self::assertResponseStatusCodeSame(404);
+        } finally {
+            $this->restoreVideoModuleEnabled($client, $previous);
+        }
+    }
+
     private function video(
         KernelBrowser $client,
         string $slug,

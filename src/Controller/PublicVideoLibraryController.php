@@ -11,6 +11,7 @@ use App\Video\Library\VideoLibraryBrowser;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Routing\Attribute\Route;
 
 final class PublicVideoLibraryController extends AbstractController
@@ -40,7 +41,15 @@ final class PublicVideoLibraryController extends AbstractController
             throw $this->createNotFoundException();
         }
 
-        $page = max(1, min(10000, $request->query->getInt('page', 1)));
+        $pageValue = $request->query->getString('page', '1');
+        if (preg_match('/\\A[1-9][0-9]{0,4}\\z/', $pageValue) !== 1) {
+            throw new BadRequestHttpException('The page parameter must be a positive integer.');
+        }
+
+        $page = (int) $pageValue;
+        if ($page > 10000) {
+            throw $this->createNotFoundException();
+        }
         $listing = $this->library->page($category, $playlist, $page);
         $pages = max(1, (int) ceil($listing['total'] / VideoLibraryBrowser::PAGE_SIZE));
         if ($listing['total'] > 0 && $page > $pages) {
