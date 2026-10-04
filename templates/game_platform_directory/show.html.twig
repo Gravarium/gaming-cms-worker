@@ -1,0 +1,31 @@
+{% extends 'base.html.twig' %}
+{% block title %}{{ platform.name }} · Spiele-Plattform{% endblock %}
+{% block body %}
+<main class="content-shell">
+    <header class="page-header">
+        <p class="eyebrow">Spiele-Plattform</p>
+        <h1>{{ platform.name }}</h1>
+        <p>{{ total }} sichtbare Veröffentlichung{% if total != 1 %}en{% endif %}</p>
+        <a href="{{ path('app_game_platform_directory') }}">Alle Plattformen</a>
+    </header>
+
+    <section class="portal-cards" aria-label="Veröffentlichungen für {{ platform.name }}">
+        {% for release in releases %}
+            <article class="portal-card">
+                <h2><a href="{{ path('app_game_catalogue_show', {slug: release.entry.game.slug}) }}">{{ release.entry.game.name }}</a></h2>
+                <p>{{ release.releaseAt|date('d.m.Y') }} · {{ release.region }}</p>
+                {% if release.edition %}<p>Edition: {{ release.edition.name }}</p>{% endif %}
+                <p>Status: {{ release.status }}</p>
+            </article>
+        {% endfor %}
+    </section>
+
+    {% if totalPages > 1 %}
+        <nav aria-label="Veröffentlichungsseiten">
+            {% if page > 1 %}<a href="{{ path('app_game_platform_show', {slug: platform.slug, page: page - 1}) }}">Zurück</a>{% endif %}
+            <span>Seite {{ page }} von {{ totalPages }}</span>
+            {% if page < totalPages %}<a href="{{ path('app_game_platform_show', {slug: platform.slug, page: page + 1}) }}">Weiter</a>{% endif %}
+        </nav>
+    {% endif %}
+</main>
+{% endblock %}
