@@ -68390,6 +68390,86 @@
         "templates/admin/news_editor/edit.html.twig",
         "tests/Controller/AdminNewsEditorTest.php"
       ]
+    },
+    {
+      "priority": 681,
+      "package_id": "WCP-681",
+      "title": "Schedule reviewed News from visual editor",
+      "risk": "high_publication_timing",
+      "execution_state": "worker_in_progress",
+      "claim_state": "active",
+      "claim_generation": 1,
+      "claim_branch": "claim/wcp-681-news-review-scheduling-g1",
+      "suggested_branch": "feature/wcp-681-news-review-scheduling-g1",
+      "resume_branch": "feature/wcp-681-news-review-scheduling-g1",
+      "claimed_on": "2026-10-04T01:51:26.970Z",
+      "lease_expires_at": "2026-10-04T08:51:26.970Z",
+      "base_branch": "main",
+      "base_sha": "08260d3f0e343615f525efd2de05767200f031c5",
+      "proposal_base_branch": "feature/wcp-680-news-review-decision-g1",
+      "proposal_base_sha": "da0a3653977298232ece3e205f775f9f260c10ff",
+      "active_base_branch": "feature/wcp-680-news-review-decision-g1",
+      "active_base_sha": "da0a3653977298232ece3e205f775f9f260c10ff",
+      "active_head": "da0a3653977298232ece3e205f775f9f260c10ff",
+      "dependencies": [
+        "WCP-680"
+      ],
+      "proposal_kind": "worker_only",
+      "proposal_dependency_evidence": [
+        {
+          "package_id": "WCP-680",
+          "head": "da0a3653977298232ece3e205f775f9f260c10ff",
+          "pr": 477,
+          "ci_run": 37168929945,
+          "result": "success"
+        }
+      ],
+      "objective": "Allow reviewed News articles to be scheduled directly from the visual editorial form using an explicit Europe/Berlin publication time, typed document validation, optimistic version and CSRF checks, revision and audit, while preserving the existing scheduler and future-time rules.",
+      "allowed_paths": [
+        "src/Controller/AdminNewsEditorController.php",
+        "templates/admin/news_editor/edit.html.twig",
+        "tests/Controller/AdminNewsEditorTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "CONTINUOUS-WORKER.md",
+        "CONTINUOUS-WORK-POOL.json",
+        ".github/workflows/",
+        "migrations/",
+        "src/Entity/",
+        "src/Security/",
+        "assets/"
+      ],
+      "deliverables": [
+        "Schedule decision from review with explicit local timezone input and server-side future/date validation.",
+        "Atomic version-checked content update and scheduled state with revision/audit.",
+        "Controller coverage for success, invalid/past time and stale/CSRF/state gates; exact-head CI."
+      ],
+      "tests": [
+        "Targeted controller tests",
+        "Complete Worker CI"
+      ],
+      "immutable_constraints": [
+        "worker-only-no-Trusted-merge-or-deployment",
+        "never-schedule-stale-or-unsaved-document",
+        "no-auth-csrf-revision-or-CI-weakening"
+      ],
+      "collision_check": {
+        "compared_against": "Live pool active WCP-676 media paths and WCP-679 video playback; green WCP-680 exact head",
+        "result": "Serial review descendant, disjoint from both active claims.",
+        "paths": [
+          "src/Controller/AdminNewsEditorController.php",
+          "templates/admin/news_editor/edit.html.twig",
+          "tests/Controller/AdminNewsEditorTest.php"
+        ]
+      },
+      "next_action": "Implement and submit Worker PR"
     }
   ],
   "recovery_queue": [],
