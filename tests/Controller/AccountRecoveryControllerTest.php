@@ -306,7 +306,7 @@ final class AccountRecoveryControllerTest extends WebTestCase
         self::assertSelectorTextContains('.alert', 'ungültig');
     }
 
-    public function testValidVerificationTokenVerifiesUserAndCannotBeReused(): void
+    public function testValidVerificationTokenRequiresConfirmationAndCannotBeReused(): void
     {
         $client = static::createClient();
         $container = $client->getContainer();
@@ -317,25 +317,187 @@ final class AccountRecoveryControllerTest extends WebTestCase
             ->setPassword('not-used-in-this-test');
         $entityManager->persist($user);
         $entityManager->flush();
+        $userId = $user->getId();
+        self::assertNotNull($userId);
 
-        [, $plainToken] = $container->get(AccountTokenManager::class)->issue(
-            $user,
-            AccountToken::PURPOSE_EMAIL_VERIFICATION,
-            new \DateInterval('P1D'),
-        );
+        $manager = $container->get(AccountTokenManager::class);
+        [, $plainToken] = $manager->issue($user, AccountToken::PURPOSE_EMAIL_VERIFICATION, new \DateInterval('P1D'));
         $entityManager->flush();
 
-        $client->request('GET', '/verify-email/'.$plainToken);
+        $crawler = $client->request('GET', '/verify-email/'.$plainToken);
         self::assertResponseIsSuccessful();
-        self::assertSelectorTextContains('body', 'bestätigt');
+        self::assertSelectorTextContains('h1', 'E-Mail-Adresse bestätigen');
+        $form = $crawler->filter('form[action="/verify-email/'.$plainToken.'"]')->form();
+        $values = $form->getValues();
+        $csrfToken = $values['_token'] ?? null;
+        self::assertIsString($csrfToken);
+        $csrfToken = (string) $csrfToken;
 
         $entityManager->clear();
-        $verified = $entityManager->find(User::class, $user->getId());
+        $pending = $entityManager->find(User::class, $userId);
+        self::assertInstanceOf(User::class, $pending);
+        self::assertFalse($pending->isEmailVerified());
+        self::assertNotNull($manager->resolve($plainToken, AccountToken::PURPOSE_EMAIL_VERIFICATION));
+        self::assertSame(0, $this->verificationAuditCount($entityManager, $userId));
+
+        $client->submit($form);
+        self::assertResponseIsSuccessful();
+        self::assertSelectorTextContains('h1', 'E-Mail-Adresse bestätigt');
+
+        $entityManager->clear();
+        $verified = $entityManager->find(User::class, $userId);
         self::assertInstanceOf(User::class, $verified);
         self::assertTrue($verified->isEmailVerified());
+        self::assertNull($manager->resolve($plainToken, AccountToken::PURPOSE_EMAIL_VERIFICATION));
+        self::assertSame(1, $this->verificationAuditCount($entityManager, $userId));
+
+        $client->request('POST', '/verify-email/'.$plainToken, ['_token' => $csrfToken]);
+        self::assertResponseIsSuccessful();
+        self::assertSelectorTextContains('.alert', 'ungültig');
+        self::assertSame(1, $this->verificationAuditCount($entityManager, $userId));
 
         $client->request('GET', '/verify-email/'.$plainToken);
         self::assertResponseIsSuccessful();
         self::assertSelectorTextContains('.alert', 'ungültig');
+        self::assertSame(1, $this->verificationAuditCount($entityManager, $userId));
+    }
+
+    public function testEmailVerificationPostRequiresCsrfAndKeepsTheTokenOnFailure(): void
+    {
+        $client = static::createClient();
+        $container = $client->getContainer();
+        $entityManager = $container->get(EntityManagerInterface::class);
+        $user = (new User())
+            ->setEmail('verification-csrf-'.bin2hex(random_bytes(6)).'@example.test')
+            ->setDisplayName('Verification CSRF Test')
+            ->setPassword('not-used-in-this-test');
+        $entityManager->persist($user);
+        $entityManager->flush();
+        $userId = $user->getId();
+        self::assertNotNull($userId);
+
+        $manager = $container->get(AccountTokenManager::class);
+        [, $plainToken] = $manager->issue($user, AccountToken::PURPOSE_EMAIL_VERIFICATION, new \DateInterval('P1D'));
+        $entityManager->flush();
+
+        $client->request('GET', '/verify-email/'.$plainToken);
+        self::assertResponseIsSuccessful();
+        $client->request('POST', '/verify-email/'.$plainToken, ['_token' => 'forged']);
+        self::assertResponseRedirects('/login');
+
+        $entityManager->clear();
+        $stored = $entityManager->find(User::class, $userId);
+        self::assertInstanceOf(User::class, $stored);
+        self::assertFalse($stored->isEmailVerified());
+        self::assertNotNull($manager->resolve($plainToken, AccountToken::PURPOSE_EMAIL_VERIFICATION));
+        self::assertSame(0, $this->verificationAuditCount($entityManager, $userId));
+    }
+
+    public function testEmailVerificationTokenCannotVerifyAnAccountDeactivatedAfterTheGet(): void
+    {
+        $client = static::createClient();
+        $container = $client->getContainer();
+        $entityManager = $container->get(EntityManagerInterface::class);
+        $user = (new User())
+            ->setEmail('verification-inactive-'.bin2hex(random_bytes(6)).'@example.test')
+            ->setDisplayName('Inactive Verification Test')
+            ->setPassword('not-used-in-this-test');
+        $entityManager->persist($user);
+        $entityManager->flush();
+        $userId = $user->getId();
+        self::assertNotNull($userId);
+
+        $manager = $container->get(AccountTokenManager::class);
+        [, $plainToken] = $manager->issue($user, AccountToken::PURPOSE_EMAIL_VERIFICATION, new \DateInterval('P1D'));
+        $entityManager->flush();
+
+        $crawler = $client->request('GET', '/verify-email/'.$plainToken);
+        self::assertResponseIsSuccessful();
+        $form = $crawler->filter('form[action="/verify-email/'.$plainToken.'"]')->form();
+
+        $entityManager->clear();
+        $inactive = $entityManager->find(User::class, $userId);
+        self::assertInstanceOf(User::class, $inactive);
+        $inactive->setActive(false);
+        $entityManager->flush();
+
+        $client->submit($form);
+        self::assertResponseIsSuccessful();
+        self::assertSelectorTextContains('.alert', 'ungültig');
+
+        $entityManager->clear();
+        $stored = $entityManager->find(User::class, $userId);
+        self::assertInstanceOf(User::class, $stored);
+        self::assertFalse($stored->isActive());
+        self::assertFalse($stored->isEmailVerified());
+        self::assertNull($manager->resolve($plainToken, AccountToken::PURPOSE_EMAIL_VERIFICATION));
+        self::assertSame(0, $this->verificationAuditCount($entityManager, $userId));
+    }
+
+    private function verificationAuditCount(EntityManagerInterface $entityManager, int $userId): int
+    {
+        return (int) $entityManager->getConnection()->fetchOne(
+            'SELECT COUNT(*) FROM audit_log WHERE action = :action AND subject_id = :subject',
+            ['action' => 'security.email.verified', 'subject' => $userId],
+        );
+    }
+
+    public function testExpiredRevokedAndWrongPurposeVerificationTokensShowNeutralPage(): void
+    {
+        $client = static::createClient();
+        $container = $client->getContainer();
+        $entityManager = $container->get(EntityManagerInterface::class);
+        $user = (new User())
+            ->setEmail('verification-token-state-'.bin2hex(random_bytes(6)).'@example.test')
+            ->setDisplayName('Verification Token State Test')
+            ->setPassword('not-used-in-this-test');
+        $entityManager->persist($user);
+        $entityManager->flush();
+        $userId = $user->getId();
+        self::assertNotNull($userId);
+
+        $manager = $container->get(AccountTokenManager::class);
+        [$expired, $expiredPlain] = $manager->issue(
+            $user,
+            AccountToken::PURPOSE_EMAIL_VERIFICATION,
+            new \DateInterval('P1D'),
+        );
+        $expired->setExpiresAt(new \DateTimeImmutable('-1 minute'));
+        $entityManager->flush();
+
+        $client->request('GET', '/verify-email/'.$expiredPlain);
+        self::assertResponseIsSuccessful();
+        self::assertSelectorTextContains('.alert', 'ungültig');
+        self::assertNull($manager->resolve($expiredPlain, AccountToken::PURPOSE_EMAIL_VERIFICATION));
+
+        $entityManager->clear();
+        $user = $entityManager->find(User::class, $userId);
+        self::assertInstanceOf(User::class, $user);
+        [, $revokedPlain] = $manager->issue($user, AccountToken::PURPOSE_EMAIL_VERIFICATION, new \DateInterval('P1D'));
+        $entityManager->flush();
+        [, $currentEmailToken] = $manager->issue($user, AccountToken::PURPOSE_EMAIL_VERIFICATION, new \DateInterval('P1D'));
+        $entityManager->flush();
+
+        $client->request('GET', '/verify-email/'.$revokedPlain);
+        self::assertResponseIsSuccessful();
+        self::assertSelectorTextContains('.alert', 'ungültig');
+        self::assertNull($manager->resolve($revokedPlain, AccountToken::PURPOSE_EMAIL_VERIFICATION));
+        self::assertNotNull($manager->resolve($currentEmailToken, AccountToken::PURPOSE_EMAIL_VERIFICATION));
+
+        $entityManager->clear();
+        $user = $entityManager->find(User::class, $userId);
+        self::assertInstanceOf(User::class, $user);
+        [, $passwordToken] = $manager->issue($user, AccountToken::PURPOSE_PASSWORD_RESET, new \DateInterval('PT1H'));
+        $entityManager->flush();
+        $client->request('GET', '/verify-email/'.$passwordToken);
+        self::assertResponseIsSuccessful();
+        self::assertSelectorTextContains('.alert', 'ungültig');
+        self::assertNotNull($manager->resolve($passwordToken, AccountToken::PURPOSE_PASSWORD_RESET));
+
+        $entityManager->clear();
+        $stored = $entityManager->find(User::class, $userId);
+        self::assertInstanceOf(User::class, $stored);
+        self::assertFalse($stored->isEmailVerified());
+        self::assertSame(0, $this->verificationAuditCount($entityManager, $userId));
     }
 }
