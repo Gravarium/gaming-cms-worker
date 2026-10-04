@@ -10,8 +10,8 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "08260d3f0e343615f525efd2de05767200f031c5",
-  "published_at": "2026-10-04T16:25:39.372Z",
-  "summary": "WCP-687 is draft PR #485 on corrected HEAD df39c3f; exact-head CI run 37216637458 is in progress. WCP-686 remains separately claimed for responsive News-editor mobile support; WCP-676, WCP-679, WCP-681–WCP-685 await Trusted review.",
+  "published_at": "2026-10-04T16:32:29.070Z",
+  "summary": "WCP-687 is open as draft PR #485 on stateless HEAD 20f1d3f; exact-head CI run 37217100893 in_progress. WCP-686 remains separately claimed for responsive News-editor mobile support; WCP-676, WCP-679, WCP-681–WCP-685 await Trusted review.",
   "rules": {
     "choose": "Resume the current chat's unfinished claimed branch first. Otherwise atomically claim an eligible published task. If no published task is eligible, independently derive and publish a bounded worker-only CMS proposal from approved product goals and observed code gaps; do not ask the owner for the next FCP number.",
     "atomic_reservation": "Create the exact claim_branch and suggested feature branch from that task's published proposal_base_sha. If the claim already exists, treat it as a hard lock; the owning continuation resumes it and every other AI skips it.",
@@ -69157,23 +69157,23 @@
           "tests/Controller/RobotsTxtControllerTest.php"
         ]
       },
-      "next_action": "Corrected Cache-Control header test is on exact HEAD df39c3fec1cfdcbc9d2cd90d9d41c851baa7247b. Full Worker CI run 37216637458 is in_progress; confirm both PHP/Symfony and PostgreSQL 18 are green, then record final exact-head evidence and keep PR #485 as a draft pending Trusted review.",
+      "next_action": "Route is now explicitly stateless on exact HEAD 20f1d3f8bae3279d8d6f88726e2d4002f5dc2dc9; this should prevent Symfony's session listener from overwriting the public cache policy. Full Worker CI 37217100893 must pass on this head before final handoff.",
       "active_base_branch": "main",
       "active_base_sha": "6e9cb292bafa84862a9cedc7abb8d20878297f9d",
-      "active_head": "df39c3fec1cfdcbc9d2cd90d9d41c851baa7247b",
-      "last_observed_head": "df39c3fec1cfdcbc9d2cd90d9d41c851baa7247b",
-      "last_checkpoint_at": "2026-10-04T16:25:39.372Z",
-      "last_verified_push_at": "2026-10-04T16:25:39.372Z",
+      "active_head": "20f1d3f8bae3279d8d6f88726e2d4002f5dc2dc9",
+      "last_observed_head": "20f1d3f8bae3279d8d6f88726e2d4002f5dc2dc9",
+      "last_checkpoint_at": "2026-10-04T16:32:29.070Z",
+      "last_verified_push_at": "2026-10-04T16:32:29.070Z",
       "worker_pr_state": "draft",
       "worker_pr": 485,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/485",
-      "worker_pr_head_sha": "df39c3fec1cfdcbc9d2cd90d9d41c851baa7247b",
+      "worker_pr_head_sha": "20f1d3f8bae3279d8d6f88726e2d4002f5dc2dc9",
       "ci_branch": "worker/account-ci-wcp-687-g1",
-      "ci_head": "df39c3fec1cfdcbc9d2cd90d9d41c851baa7247b",
+      "ci_head": "20f1d3f8bae3279d8d6f88726e2d4002f5dc2dc9",
       "ci_result": "in_progress",
-      "ci_run_id": 37216637458,
+      "ci_run_id": 37217100893,
       "ci_run_id_at": "7550f7d57f950937bb4c899c5643b82cdb25416c",
-      "last_ci_head": "df39c3fec1cfdcbc9d2cd90d9d41c851baa7247b",
+      "last_ci_head": "20f1d3f8bae3279d8d6f88726e2d4002f5dc2dc9",
       "last_ci_result": "in_progress",
       "previous_ci_attempts": [
         {
@@ -69182,10 +69182,17 @@
           "result": "failure",
           "failed_job": "Validate worker-visible PHP and Symfony",
           "details": "One test assertion used Symfony's computed cache-directive accessor, which returned null; corrected test asserts the serialized Cache-Control header."
+        },
+        {
+          "head": "df39c3fec1cfdcbc9d2cd90d9d41c851baa7247b",
+          "run_id": 37216637458,
+          "result": "failure",
+          "failed_job": "Validate worker-visible PHP and Symfony",
+          "details": "The real response header was private with max-age=0 due stateful session handling; route is now marked stateless."
         }
       ],
-      "previous_ci_head": "7550f7d57f950937bb4c899c5643b82cdb25416c",
-      "previous_ci_run_id": 37216192222,
+      "previous_ci_head": "df39c3fec1cfdcbc9d2cd90d9d41c851baa7247b",
+      "previous_ci_run_id": 37216637458,
       "previous_ci_result": "failure"
     }
   ],
