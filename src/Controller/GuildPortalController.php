@@ -11,6 +11,7 @@ use App\Entity\GuildMember;
 use App\Entity\GuildTeam;
 use App\Entity\MemberNotification;
 use App\Entity\User;
+use App\GuildEventWaitlist\GuildEventWaitlistPromoter;
 use App\Repository\GuildAnnouncementRepository;
 use App\Repository\GuildEventRepository;
 use App\Repository\GuildEventSignupRepository;
@@ -41,6 +42,7 @@ final class GuildPortalController extends AbstractController
         private readonly MemberNotificationRepository $notifications,
         private readonly EntityManagerInterface $entityManager,
         private readonly AuditLogger $audit,
+        private readonly GuildEventWaitlistPromoter $waitlistPromoter,
     ) {}
 
     #[Route('', name: 'app_guild_portal_index', methods: ['GET'])]
@@ -164,6 +166,12 @@ final class GuildPortalController extends AbstractController
             $signup->setResponse($response)->setRole($role)->setNote($note);
             if ($signup->getId() === null) { $entityManager->persist($signup); }
             $this->audit->record('guild_event.signup', $event, $event->getId(), $member->getCharacterName().' hat die Terminanmeldung aktualisiert.', ['response' => $response, 'role' => $role]);
+
+            if ($wasConfirmed && $response !== GuildEventSignup::GOING) {
+                // Count after persisting the released seat, while still holding the event lock.
+                $entityManager->flush();
+                $this->waitlistPromoter->promoteOne($event);
+            }
 
             return $response;
         });
