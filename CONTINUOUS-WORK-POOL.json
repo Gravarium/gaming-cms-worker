@@ -10,8 +10,8 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "08260d3f0e343615f525efd2de05767200f031c5",
-  "published_at": "2026-10-04T16:15:14.920Z",
-  "summary": "WCP-676, WCP-679, WCP-681–WCP-685 remain complete green Worker proposals awaiting Trusted review. WCP-686 is active for responsive News-editor mobile support; WCP-687 adds independent robots.txt and sitemap discovery.",
+  "published_at": "2026-10-04T16:17:30.669Z",
+  "summary": "WCP-687 robots.txt and sitemap discovery is open as Worker draft PR #485 with exact-head CI pending. WCP-686 remains separately claimed for responsive News-editor mobile support; WCP-676, WCP-679, WCP-681–WCP-685 await Trusted review.",
   "rules": {
     "choose": "Resume the current chat's unfinished claimed branch first. Otherwise atomically claim an eligible published task. If no published task is eligible, independently derive and publish a bounded worker-only CMS proposal from approved product goals and observed code gaps; do not ask the owner for the next FCP number.",
     "atomic_reservation": "Create the exact claim_branch and suggested feature branch from that task's published proposal_base_sha. If the claim already exists, treat it as a hard lock; the owning continuation resumes it and every other AI skips it.",
@@ -69157,12 +69157,20 @@
           "tests/Controller/RobotsTxtControllerTest.php"
         ]
       },
-      "next_action": "Implement only the two allowed files, verify public response headers and GET-only routing, then open a Worker-only draft PR and require complete green exact-head CI. Never merge to Trusted or deploy.",
+      "next_action": "Draft PR #485 is open on the exact two-file WCP-687 diff. Full CI is running on worker/account-ci-wcp-687-g1 at exact HEAD 7550f7d57f950937bb4c899c5643b82cdb25416c; record the run and result, fix only within allowed paths if needed, then finish the green handoff.",
       "active_base_branch": "main",
       "active_base_sha": "6e9cb292bafa84862a9cedc7abb8d20878297f9d",
-      "active_head": "6e9cb292bafa84862a9cedc7abb8d20878297f9d",
-      "last_observed_head": "6e9cb292bafa84862a9cedc7abb8d20878297f9d",
-      "last_checkpoint_at": "2026-10-04T16:15:14.920Z"
+      "active_head": "7550f7d57f950937bb4c899c5643b82cdb25416c",
+      "last_observed_head": "7550f7d57f950937bb4c899c5643b82cdb25416c",
+      "last_checkpoint_at": "2026-10-04T16:17:30.669Z",
+      "last_verified_push_at": "2026-10-04T16:17:30.669Z",
+      "worker_pr_state": "draft",
+      "worker_pr": 485,
+      "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/485",
+      "worker_pr_head_sha": "7550f7d57f950937bb4c899c5643b82cdb25416c",
+      "ci_branch": "worker/account-ci-wcp-687-g1",
+      "ci_head": "7550f7d57f950937bb4c899c5643b82cdb25416c",
+      "ci_result": "pending"
     }
   ],
   "recovery_queue": [],
