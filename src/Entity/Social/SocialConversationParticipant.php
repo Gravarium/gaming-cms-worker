@@ -49,15 +49,19 @@ class SocialConversationParticipant
     #[ORM\Column(type: Types::DATETIME_IMMUTABLE, nullable: true)]
     private ?\DateTimeImmutable $lastReadAt = null;
 
-    public function __construct(SocialConversation $conversation, User $user, string $role = self::ROLE_MEMBER)
-    {
+    public function __construct(
+        SocialConversation $conversation,
+        User $user,
+        string $role = self::ROLE_MEMBER,
+        ?\DateTimeImmutable $joinedAt = null,
+    ) {
         if (!in_array($role, [self::ROLE_OWNER, self::ROLE_MEMBER], true)) {
             throw new \InvalidArgumentException('Unknown conversation participant role.');
         }
         $this->conversation = $conversation;
         $this->user = $user;
         $this->role = $role;
-        $this->joinedAt = new \DateTimeImmutable();
+        $this->joinedAt = $joinedAt ?? new \DateTimeImmutable();
     }
 
     public function getId(): ?int { return $this->id; }
@@ -78,6 +82,32 @@ class SocialConversationParticipant
         }
         $this->status = self::STATUS_LEFT;
         $this->leftAt = $at;
+
+        return $this;
+    }
+
+    public function rejoin(\DateTimeImmutable $at): self
+    {
+        if (!in_array($this->status, [self::STATUS_LEFT, self::STATUS_REMOVED], true)) {
+            throw new \DomainException('Only a left or removed participant can rejoin.');
+        }
+
+        $this->role = self::ROLE_MEMBER;
+        $this->status = self::STATUS_ACTIVE;
+        $this->joinedAt = $at;
+        $this->leftAt = null;
+        $this->lastReadAt = null;
+
+        return $this;
+    }
+
+    public function promoteToOwner(): self
+    {
+        if (!$this->isActive()) {
+            throw new \DomainException('Only an active participant can own a conversation.');
+        }
+
+        $this->role = self::ROLE_OWNER;
 
         return $this;
     }

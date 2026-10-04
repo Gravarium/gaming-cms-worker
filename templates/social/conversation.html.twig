@@ -6,6 +6,13 @@
 <main>
     <h1>{{ conversation.title ?: 'Direkte Nachricht' }}</h1>
     <p><a href="{{ path('app_social_index') }}">Zurück zu Social</a></p>
+    {% if conversation.type == 'group' %}
+        <p><a href="{{ path('app_social_conversation_members', {id: conversation.id}) }}">Gruppenmitglieder verwalten</a></p>
+    {% endif %}
+    <form method="post" action="{{ path('app_social_conversation_leave', {id: conversation.id}) }}">
+        <input type="hidden" name="_token" value="{{ csrf_token('social-members-leave-' ~ conversation.id) }}">
+        <button type="submit">Unterhaltung verlassen</button>
+    </form>
 
     <section aria-label="Nachrichten">
         {% if messages is empty %}
