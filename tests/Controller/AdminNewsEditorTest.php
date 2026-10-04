@@ -59,6 +59,17 @@ final class AdminNewsEditorTest extends WebTestCase
         self::assertNotNull($original->getId());
     }
 
+    public function testEditorLoadsResponsiveMobileStylesheet(): void
+    {
+        $client = static::createClient();
+        [$user, $entry] = $this->entry($client);
+        $client->loginUser($user);
+        $client->request('GET', '/admin/news-editor/'.$entry->getId());
+
+        self::assertResponseIsSuccessful();
+        self::assertMatchesRegularExpression('~href="/assets/news_editor/mobile-[^"]+\.css"~', $client->getResponse()->getContent() ?: '');
+    }
+
     public function testScheduledNewsRemainsInEditorialWorklistWithBerlinTimeAndMetadataLink(): void
     {
         $client = static::createClient();
