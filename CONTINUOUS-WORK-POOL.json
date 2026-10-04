@@ -10,7 +10,7 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "08260d3f0e343615f525efd2de05767200f031c5",
-  "published_at": "2026-10-04T14:02:17.245Z",
+  "published_at": "2026-10-04T14:07:50.367Z",
   "summary": "WCP-676, WCP-679 and WCP-681–WCP-683 are complete green Worker proposals awaiting Trusted review. WCP-684 is active on an accessible manager-only video-source audit page based on WCP-683's exact green Worker HEAD.",
   "rules": {
     "choose": "Resume the current chat's unfinished claimed branch first. Otherwise atomically claim an eligible published task. If no published task is eligible, independently derive and publish a bounded worker-only CMS proposal from approved product goals and observed code gaps; do not ask the owner for the next FCP number.",
@@ -68777,7 +68777,7 @@
       "suggested_branch": "feature/wcp-684-video-audit-page-g1",
       "resume_branch": "feature/wcp-684-video-audit-page-g1",
       "claimed_on": "2026-10-04T13:56:09.769Z",
-      "lease_expires_at": "2026-10-04T21:01:18.060Z",
+      "lease_expires_at": "2026-10-04T21:07:50.367Z",
       "base_branch": "main",
       "base_sha": "6e9cb292bafa84862a9cedc7abb8d20878297f9d",
       "proposal_base_branch": "feature/wcp-683-video-source-audit-g1",
@@ -68853,19 +68853,27 @@
           "tests/Controller/VideoProviderAuditDashboardEntryTest.php"
         ]
       },
-      "next_action": "Draft Worker PR #482 targets exact green WCP-683 feature HEAD and has exactly five claimed paths. Full Worker CI run #37207749512 is in progress on exact final candidate HEAD 1077e99aba8c0b441a190bfad3478232b7909647. Inspect every job and any failure; fix only within the WCP-684 claim, rerun exact-head CI, and mark worker_complete_awaiting_trusted_review only after all jobs pass. No Trusted merge or deployment.",
-      "active_head": "1077e99aba8c0b441a190bfad3478232b7909647",
-      "last_observed_head": "1077e99aba8c0b441a190bfad3478232b7909647",
-      "last_verified_push_at": "2026-10-04T14:01:18.060Z",
+      "next_action": "First exact-head CI run #37207749512 failed only because two tests required a literal Cache-Control header order instead of asserting both private and no-store directives. The assertion now matches the actual Symfony response; all other tests and PostgreSQL 18 passed. Full exact-head Worker CI #37208094378 is queued on 8d4fd54a54353b9741cc78c389616e42b6aae3cd. Inspect both jobs; fix any remaining failure only inside WCP-684 and mark complete only after green.",
+      "active_head": "8d4fd54a54353b9741cc78c389616e42b6aae3cd",
+      "last_observed_head": "8d4fd54a54353b9741cc78c389616e42b6aae3cd",
+      "last_verified_push_at": "2026-10-04T14:07:50.367Z",
       "worker_pr_state": "draft",
       "active_base_branch": "feature/wcp-683-video-source-audit-g1",
       "active_base_sha": "5b8a0b7b96f20cb167e66f702f18705bf2f9925d",
-      "last_checkpoint_at": "2026-10-04T14:02:17.245Z",
+      "last_checkpoint_at": "2026-10-04T14:07:50.367Z",
       "worker_pr": 482,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/482",
-      "worker_pr_head_sha": "1077e99aba8c0b441a190bfad3478232b7909647",
-      "ci_run_id": 37207749512,
-      "ci_result": "in_progress"
+      "worker_pr_head_sha": "8d4fd54a54353b9741cc78c389616e42b6aae3cd",
+      "ci_run_id": 37208094378,
+      "ci_result": "queued",
+      "previous_ci_attempts": [
+        {
+          "head": "1077e99aba8c0b441a190bfad3478232b7909647",
+          "run_id": 37207749512,
+          "result": "failure",
+          "failure": "Two functional assertions expected exact Cache-Control header ordering; Symfony added max-age=0 and must-revalidate while private and no-store remained set."
+        }
+      ]
     }
   ],
   "recovery_queue": [],
