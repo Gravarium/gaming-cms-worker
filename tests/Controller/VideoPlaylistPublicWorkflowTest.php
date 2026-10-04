@@ -79,6 +79,44 @@ final class VideoPlaylistPublicWorkflowTest extends WebTestCase
         }
     }
 
+    public function testPublicPlaylistEscapesStoredHtml(): void
+    {
+        $client = static::createClient();
+        $entityManager = $client->getContainer()->get(EntityManagerInterface::class);
+        $suffix = bin2hex(random_bytes(5));
+        $slug = 'escaping-playlist-'.$suffix;
+        $titlePayload = '<script>alert("playlist-'.$suffix.'")</script>';
+        $descriptionPayload = 'A description <img src=x onerror="alert(1)"> end';
+        $playlist = (new VideoPlaylist())
+            ->setTitle($titlePayload)
+            ->setSlug($slug)
+            ->setDescription($descriptionPayload);
+        $entityManager->persist($playlist);
+        $entityManager->flush();
+
+        try {
+            $crawler = $client->request('GET', '/video-playlists/'.$slug);
+
+            self::assertResponseIsSuccessful();
+            $content = (string) $client->getResponse()->getContent();
+            self::assertStringNotContainsString($titlePayload, $content);
+            self::assertStringNotContainsString($descriptionPayload, $content);
+            self::assertStringContainsString(htmlspecialchars($titlePayload, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'), $content);
+            self::assertStringContainsString(htmlspecialchars($descriptionPayload, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'), $content);
+
+            $main = $crawler->filter('main.video-library');
+            self::assertSame(0, $main->filter('script, img[onerror]')->count());
+            self::assertSame($titlePayload, $crawler->filter('h1')->text());
+            self::assertSame($descriptionPayload, $crawler->filter('.article-body')->text('', true));
+        } finally {
+            $this->removeFixtures(
+                $client->getContainer()->get(EntityManagerInterface::class),
+                [],
+                [$slug],
+            );
+        }
+    }
+
     public function testVideoModuleDeactivationHidesPlaylistDirectoryAndDetails(): void
     {
         $client = static::createClient();
