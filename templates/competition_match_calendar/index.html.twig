@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Öffentliche Spieltermine{% endblock %}
+
+{% block body %}
+<header class="topbar">
+    <a class="brand" href="{{ path('app_home') }}">{{ site.siteName }}</a>
+    <nav class="top-actions"><a href="{{ path('app_competition_calendar') }}">Wettbewerbskalender</a></nav>
+</header>
+<main class="public-shell">
+    <p class="eyebrow">Gaming</p>
+    <h1>Öffentliche Spieltermine</h1>
+    <p>Die nächsten veröffentlichten Spieltermine der kommenden 90 Tage.</p>
+
+    <form method="get" action="{{ path('app_competition_match_calendar') }}" class="game-filter">
+        <label for="match-calendar-game">Spiel</label>
+        <select id="match-calendar-game" name="game">
+            <option value="">Alle Spiele</option>
+            {% for game in games %}
+                <option value="{{ game.slug }}" {% if selectedGame and selectedGame.id == game.id %}selected{% endif %}>{{ game.name }}</option>
+            {% endfor %}
+        </select>
+        <button type="submit">Filtern</button>
+    </form>
+
+    <p><a class="button-link button-secondary" href="{{ path('app_competition_match_calendar_ics', selectedGame ? {game: selectedGame.slug} : {}) }}">Spieltermine abonnieren (.ics)</a></p>
+
+    <section class="guild-grid" aria-label="Öffentliche Spieltermine">
+        {% for match in matches %}
+            <article class="guild-card">
+                <p class="eyebrow">{{ match.competition.game.name }}</p>
+                <h2><a href="{{ path('app_competition_show', {id: match.competition.id}) }}">{{ match.competition.name }}</a></h2>
+                <p>Runde {{ match.roundNumber }}, Spiel {{ match.sequence }}</p>
+                <time datetime="{{ match.scheduledAt|date('c') }}">{{ match.scheduledAt|date('d.m.Y H:i') }}</time>
+            </article>
+        {% else %}
+            <p class="muted">Zurzeit sind keine öffentlichen Spieltermine geplant.</p>
+        {% endfor %}
+    </section>
+</main>
+{% endblock %}
