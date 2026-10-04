@@ -15,11 +15,11 @@
 {% if playback %}<section class="panel workspace-player" aria-label="Videoplayer">
 {% if playback.mode == 'iframe' %}<p class="provider-branding-guidance" data-branding-guidance="provider">Bei eingebetteten Anbieter-Playern bestimmt der Anbieter Branding und Bedienelemente; CMS-Branding lässt sich hier nicht ändern.</p><iframe src="{{ playback.url }}" title="{{ title }}" allow="autoplay; fullscreen; picture-in-picture; encrypted-media" allowfullscreen sandbox="allow-scripts allow-same-origin allow-presentation" referrerpolicy="strict-origin-when-cross-origin"></iframe>
 {% elseif playback.mode in ['video','hls'] %}
-<p class="provider-branding-guidance" data-branding-guidance="cms">Diese direkte Quelle läuft im CMS-Player. CMS-Branding-Einstellungen gelten für diese Wiedergabe.</p>
+<p class="provider-branding-guidance" data-branding-guidance="cms">Direkte MP4-, WebM- oder HLS-Quelle: Wiedergabe im CMS-Player. CMS-Branding lässt sich für diese Quelle in der Branding-Vorschau ein- oder ausschalten.</p>
 {% if engine == 'videojs' %}<link rel="stylesheet" href="{{ asset('video_player_choice/player/video-8.24.1.min.css') }}">{% endif %}
 <video controls playsinline preload="none" data-choice-player data-engine="{{ engine }}" data-mode="{{ playback.mode }}" data-source="{{ playback.url }}" data-library="{{ asset('video_player_choice/player/video-8.24.1.min.js') }}" data-start="{{ options.start }}" data-speed="{{ options.speed }}" data-muted="{{ options.muted ? '1' : '0' }}" data-loop="{{ options.loop ? '1' : '0' }}" data-autoplay="{{ options.autoplay ? '1' : '0' }}" aria-label="{{ title }}"></video>
 <label data-quality-label hidden>Bildqualität <select data-quality><option value="-1">Automatisch</option></select></label><p data-choice-status role="status" aria-live="polite"></p>
-{% else %}<p class="provider-branding-guidance" data-branding-guidance="external">Diese Quelle wird auf der Anbieter-Seite geöffnet; deren Branding bleibt erhalten.</p>{% endif %}
+{% else %}<p class="provider-branding-guidance" data-branding-guidance="external">Externer Anbieter-Link: Die Wiedergabe öffnet sich auf der Anbieter-Seite; Branding und Bedienelemente des Anbieters bleiben erhalten.</p>{% endif %}
 <a href="{{ playback.url }}" target="_blank" rel="noopener noreferrer">Quelle separat öffnen</a></section>{% endif %}
 {% if video %}<p><a href="{{ path('app_video_workspace_video', {slug: video.slug}) }}">Weitere Video-Funktionen</a> · <a href="{{ path('app_video_show', {slug: video.slug}) }}">Normale Videoseite</a></p>{% endif %}
 <script type="module" src="{{ asset('video_player_choice/player.js') }}"></script>
