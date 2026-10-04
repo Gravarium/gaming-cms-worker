@@ -5,11 +5,28 @@
 <main class="dashboard"><p class="eyebrow">Gildenorganisation</p><h1>{{ guild.name }}</h1>
 {% for message in app.flashes('success') %}<div class="notice">{{ message }}</div>{% endfor %}
 <h2>Termine, Teams und Anwesenheit</h2>
+<form method="get" action="{{ path('app_admin_guild_collaboration', {guild: guild.id}) }}" class="media-filters" role="search">
+    <label for="guild-event-search"><span>Suche</span><input id="guild-event-search" type="search" name="q" value="{{ eventQuery }}" maxlength="180" placeholder="Titel oder Beschreibung"></label>
+    <label for="guild-event-status">
+        <span>Status</span>
+        <select id="guild-event-status" name="status">
+            <option value="" {{ eventStatus is null ? 'selected' }}>Alle</option>
+            <option value="planned" {{ eventStatus == 'planned' ? 'selected' }}>Geplant</option>
+            <option value="done" {{ eventStatus == 'done' ? 'selected' }}>Abgeschlossen</option>
+            <option value="cancelled" {{ eventStatus == 'cancelled' ? 'selected' }}>Abgesagt</option>
+        </select>
+    </label>
+    <input type="hidden" name="page" value="1">
+    <button type="submit">Filtern</button>
+    <a class="button-link button-secondary" href="{{ path('app_admin_guild_collaboration', {guild: guild.id}) }}">Zurücksetzen</a>
+</form>
+<p class="muted" role="status" aria-live="polite">{{ eventTotal }} {{ eventTotal == 1 ? 'Termin' : 'Termine' }} · Seite {{ eventCurrentPage }} von {{ eventPageCount }}</p>
+{% set eventStatusLabels = {'planned': 'Geplant', 'done': 'Abgeschlossen', 'cancelled': 'Abgesagt'} %}
 <div class="application-list">
 {% for event in events %}
     {% set eventSignups = signupRepository.forEvent(event) %}
-    <article class="application-card">
-        <div class="row-actions"><div><p class="eyebrow">{{ event.type }} · {{ event.startsAt|date('d.m.Y H:i') }} Uhr{% if event.team %} · Team {{ event.team.name }}{% endif %}</p><h3>{{ event.title }}</h3><p>{{ event.description|nl2br }}</p></div><a href="{{ path('app_admin_guild_event_edit', {guild: guild.id, event: event.id}) }}">Bearbeiten</a><form method="post" action="{{ path('app_admin_guild_event_delete', {guild: guild.id, event: event.id}) }}" onsubmit="return confirm('Termin löschen?');"><input type="hidden" name="_token" value="{{ csrf_token('delete-event-' ~ event.id) }}"><button class="text-danger">Löschen</button></form></div>
+    <article class="application-card" data-event-id="{{ event.id }}">
+        <div class="row-actions"><div><p class="eyebrow">{{ event.type }} · {{ eventStatusLabels[event.status] ?? event.status }} · {{ event.startsAt|date('d.m.Y H:i') }} Uhr{% if event.team %} · Team {{ event.team.name }}{% endif %}</p><h3>{{ event.title }}</h3><p>{{ event.description|nl2br }}</p></div><a href="{{ path('app_admin_guild_event_edit', {guild: guild.id, event: event.id}) }}">Bearbeiten</a><form method="post" action="{{ path('app_admin_guild_event_delete', {guild: guild.id, event: event.id}) }}" onsubmit="return confirm('Termin löschen?');"><input type="hidden" name="_token" value="{{ csrf_token('delete-event-' ~ event.id) }}"><button class="text-danger">Löschen</button></form></div>
         <p><strong>{{ eventSignups|filter(s => s.response == 'going')|length }} Zusagen</strong>{% if event.maxParticipants %} / {{ event.maxParticipants }}{% endif %} · {{ eventSignups|filter(s => s.response == 'waitlist')|length }} Warteliste</p>
         {% if eventSignups %}<div class="table-wrap"><table><thead><tr><th>Mitglied</th><th>Antwort</th><th>Rolle</th><th>Anwesenheit</th></tr></thead><tbody>
         {% for signup in eventSignups %}<tr><td>{{ signup.member.characterName }}</td><td>{{ signup.response }}</td><td>{{ signup.role }}</td><td><form class="row-actions" method="post" action="{{ path('app_admin_guild_event_attendance', {guild: guild.id, event: event.id, signup: signup.id}) }}"><input type="hidden" name="_token" value="{{ csrf_token('attendance-' ~ signup.id) }}"><select name="attendance"><option value="unknown" {{ signup.attendance == 'unknown' ? 'selected' }}>Offen</option><option value="present" {{ signup.attendance == 'present' ? 'selected' }}>Anwesend</option><option value="absent" {{ signup.attendance == 'absent' ? 'selected' }}>Gefehlt</option><option value="excused" {{ signup.attendance == 'excused' ? 'selected' }}>Entschuldigt</option></select><button>Speichern</button></form></td></tr>{% endfor %}
@@ -17,5 +34,16 @@
     </article>
 {% else %}<p class="muted">Noch keine Termine vorhanden.</p>{% endfor %}
 </div>
+{% if eventPageCount > 1 %}
+<nav class="top-actions" aria-label="Seitennavigation">
+    {% if eventCurrentPage > 1 %}
+        <a rel="prev" href="{{ path('app_admin_guild_collaboration', {guild: guild.id, q: eventQuery, status: eventStatus, page: eventCurrentPage - 1}) }}">Vorherige Seite</a>
+    {% endif %}
+    <span aria-current="page">Seite {{ eventCurrentPage }} von {{ eventPageCount }}</span>
+    {% if eventCurrentPage < eventPageCount %}
+        <a rel="next" href="{{ path('app_admin_guild_collaboration', {guild: guild.id, q: eventQuery, status: eventStatus, page: eventCurrentPage + 1}) }}">Nächste Seite</a>
+    {% endif %}
+</nav>
+{% endif %}
 <h2 class="section-heading">Interne Mitteilungen</h2><div class="application-list">{% for item in announcements %}<article class="application-card"><div><p class="eyebrow">{{ item.publishedAt|date('d.m.Y H:i') }} Uhr{% if item.pinned %} · Angeheftet{% endif %}</p><h2>{{ item.title }}</h2><p>{{ item.body|nl2br }}</p></div><div class="row-actions"><a href="{{ path('app_admin_guild_announcement_edit', {guild: guild.id, announcement: item.id}) }}">Bearbeiten</a><form method="post" action="{{ path('app_admin_guild_announcement_delete', {guild: guild.id, announcement: item.id}) }}"><input type="hidden" name="_token" value="{{ csrf_token('delete-announcement-' ~ item.id) }}"><button class="text-danger">Löschen</button></form></div></article>{% else %}<p class="muted">Noch keine internen Mitteilungen.</p>{% endfor %}</div>
 </main>{% endblock %}

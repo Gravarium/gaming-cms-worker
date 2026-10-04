@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Entity\Guild;
-use App\Entity\GuildAnnouncement;
 use App\Entity\GuildEvent;
 use App\Entity\GuildEventSignup;
 use App\Entity\GuildDiscordIntegration;
+use App\Entity\GuildAnnouncement;
 use App\Entity\User;
 use App\Form\GuildAnnouncementType;
 use App\Form\GuildEventType;
@@ -22,12 +22,14 @@ use App\Service\DiscordWebhookNotifier;
 use App\Service\DiscordWebhookUrlPolicy;
 use App\Service\GuildNotifier;
 use App\Service\SensitiveDataCipher;
+use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
@@ -35,6 +37,9 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 #[IsGranted('CMS_GAMING_MANAGE')]
 final class AdminGuildCollaborationController extends AbstractController
 {
+    private const PAGE_SIZE = 25;
+    private const MAX_QUERY_LENGTH = 180;
+
     public function __construct(
         private readonly GuildEventRepository $events,
         private readonly GuildEventSignupRepository $signups,
@@ -49,15 +54,56 @@ final class AdminGuildCollaborationController extends AbstractController
     ) {}
 
     #[Route('', name: 'app_admin_guild_collaboration', methods: ['GET'])]
-    public function index(Guild $guild): Response
+    public function index(Guild $guild, Request $request): Response
     {
-        return $this->render('admin/gaming/collaboration/index.html.twig', [
+        $parameters = $request->query->all();
+        $rawQuery = $parameters['q'] ?? '';
+        $rawStatus = $parameters['status'] ?? '';
+        $rawPage = $parameters['page'] ?? '1';
+
+        if (
+            !is_string($rawQuery)
+            || !mb_check_encoding($rawQuery, 'UTF-8')
+            || mb_strlen($rawQuery) > self::MAX_QUERY_LENGTH
+            || preg_match('/[\x00-\x1F\x7F]/', $rawQuery) === 1
+            || !is_string($rawStatus)
+            || !in_array($rawStatus, ['', GuildEvent::STATUS_PLANNED, GuildEvent::STATUS_DONE, GuildEvent::STATUS_CANCELLED], true)
+            || !is_string($rawPage)
+            || preg_match('/^[1-9][0-9]{0,8}$/D', $rawPage) !== 1
+        ) {
+            throw new BadRequestHttpException('Ungültige Terminsuche.');
+        }
+
+        $query = trim($rawQuery);
+        $status = $rawStatus === '' ? null : $rawStatus;
+        $now = new DateTimeImmutable();
+        $total = $this->events->countForGuild($guild, $query, $status);
+        $pageCount = max(1, (int) ceil($total / self::PAGE_SIZE));
+        $currentPage = min((int) $rawPage, $pageCount);
+        $events = $this->events->findForGuild(
+            $guild,
+            $query,
+            $status,
+            self::PAGE_SIZE,
+            ($currentPage - 1) * self::PAGE_SIZE,
+        );
+
+        $response = $this->render('admin/gaming/collaboration/index.html.twig', [
             'guild' => $guild,
-            'events' => $this->events->findBy(['guild' => $guild], ['startsAt' => 'DESC']),
+            'events' => $events,
+            'eventQuery' => $query,
+            'eventStatus' => $status,
+            'eventTotal' => $total,
+            'eventCurrentPage' => $currentPage,
+            'eventPageCount' => $pageCount,
             'announcements' => $this->announcements->forGuild($guild),
             'signupRepository' => $this->signups,
             'discordIntegration' => $this->discordIntegrations->forGuild($guild),
         ]);
+        $response->headers->set('Cache-Control', 'private, no-store');
+        $response->headers->set('X-Robots-Tag', 'noindex, nofollow');
+
+        return $response;
     }
 
     #[Route('/discord', name: 'app_admin_guild_discord', methods: ['GET', 'POST'])]
