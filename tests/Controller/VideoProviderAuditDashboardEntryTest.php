@@ -69,8 +69,8 @@ final class VideoProviderAuditDashboardEntryTest extends WebTestCase
             ->setPassword('unused-test-hash')
             ->verifyEmail()
             ->setPermissions($manager
-                ? [CmsPermission::ACCESS, CmsPermission::VIDEO]
-                : [CmsPermission::ACCESS, CmsPermission::CONTENT]);
+                ? [CmsPermission::VIDEO]
+                : [CmsPermission::CONTENT]);
         $client->getContainer()->get(EntityManagerInterface::class)->persist($user);
         $client->getContainer()->get(EntityManagerInterface::class)->flush();
 

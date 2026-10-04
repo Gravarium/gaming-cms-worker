@@ -128,7 +128,7 @@ final class VideoProviderAuditPageControllerTest extends WebTestCase
             ->setDisplayName('Video audit page test')
             ->setPassword('unused-test-hash')
             ->verifyEmail()
-            ->setPermissions($manager ? [CmsPermission::VIDEO] : [CmsPermission::ACCESS]);
+            ->setPermissions($manager ? [CmsPermission::VIDEO] : [CmsPermission::CONTENT]);
         $this->em($client)->persist($user);
         $this->em($client)->flush();
 
