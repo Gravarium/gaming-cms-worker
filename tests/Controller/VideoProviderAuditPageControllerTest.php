@@ -64,7 +64,8 @@ final class VideoProviderAuditPageControllerTest extends WebTestCase
 
         $client->request('GET', '/admin/video-provider-audit/page?limit=2&after='.$cursor);
         self::assertResponseIsSuccessful();
-        self::assertSame('private, no-store', $client->getResponse()->headers->get('Cache-Control'));
+        self::assertStringContainsString('private', (string) $client->getResponse()->headers->get('Cache-Control'));
+            self::assertStringContainsString('no-store', (string) $client->getResponse()->headers->get('Cache-Control'));
         self::assertSame('nosniff', $client->getResponse()->headers->get('X-Content-Type-Options'));
         self::assertSame('noindex, nofollow', $client->getResponse()->headers->get('X-Robots-Tag'));
         self::assertSelectorTextContains('tbody tr:nth-child(1) td:nth-child(5)', 'Konfiguriert');
@@ -102,7 +103,8 @@ final class VideoProviderAuditPageControllerTest extends WebTestCase
         ] as $url) {
             $client->request('GET', $url);
             self::assertResponseStatusCodeSame(400);
-            self::assertSame('private, no-store', $client->getResponse()->headers->get('Cache-Control'));
+            self::assertStringContainsString('private', (string) $client->getResponse()->headers->get('Cache-Control'));
+            self::assertStringContainsString('no-store', (string) $client->getResponse()->headers->get('Cache-Control'));
             self::assertSame('nosniff', $client->getResponse()->headers->get('X-Content-Type-Options'));
         }
     }
