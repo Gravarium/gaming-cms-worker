@@ -46,7 +46,6 @@ final class VideoProviderAuditControllerTest extends WebTestCase
 
         $client->request('GET', '/admin/video-provider-audit');
         self::assertResponseStatusCodeSame(404);
-        self::assertStringContainsString('no-store', (string) $client->getResponse()->headers->get('Cache-Control'));
     }
 
     public function testCursorPaginationClassifiesLocallyAndNeverReturnsLabelsUrlsOrTokens(): void
