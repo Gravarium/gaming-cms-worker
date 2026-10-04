@@ -195,6 +195,79 @@ final class AdminNewsEditorTest extends WebTestCase
         self::assertCount(0, $em->getRepository(ContentRevision::class)->findBy(['entry' => $stored]));
     }
 
+    public function testReviewCanPublishSavedVisualContentWithRevision(): void
+    {
+        $client = static::createClient();
+        [$user, $entry] = $this->entry($client, status: ContentEntry::STATUS_REVIEW);
+        $client->loginUser($user);
+        $crawler = $client->request('GET', '/admin/news-editor/'.$entry->getId());
+        self::assertResponseIsSuccessful();
+        self::assertCount(1, $crawler->selectButton('Änderungen speichern und jetzt veröffentlichen'));
+        $csrf = $crawler->filter('input[name="_token"]')->attr('value');
+        $updated = $crawler->filter('input[name="updatedAt"]')->attr('value');
+        $hash = $crawler->filter('input[name="documentHash"]')->attr('value');
+        self::assertNotNull($csrf); self::assertNotNull($updated); self::assertNotNull($hash);
+
+        $client->request('POST', '/admin/news-editor/'.$entry->getId().'/review/publish', [
+            '_token' => $csrf, 'updatedAt' => $updated, 'documentHash' => $hash,
+            'document' => $this->document('Freigegebener Artikel'),
+        ]);
+        self::assertResponseRedirects('/admin/content/'.$entry->getId().'/edit');
+        $em = $client->getContainer()->get(EntityManagerInterface::class);
+        $em->clear();
+        $published = $em->find(ContentEntry::class, $entry->getId());
+        self::assertInstanceOf(ContentEntry::class, $published);
+        self::assertSame(ContentEntry::STATUS_PUBLISHED, $published->getStatus());
+        self::assertSame('Freigegebener Artikel', $published->getBody());
+        self::assertNotNull($published->getPublishedAt());
+        self::assertCount(1, $em->getRepository(ContentRevision::class)->findBy(['entry' => $published]));
+        $client->request('GET', '/admin/news-editor/'.$entry->getId());
+        self::assertResponseStatusCodeSame(403);
+    }
+
+    public function testReviewDecisionRejectsCsrfStaleAndInvalidContentThenReturnsToDraft(): void
+    {
+        $client = static::createClient();
+        [$user, $entry] = $this->entry($client, status: ContentEntry::STATUS_REVIEW);
+        $client->loginUser($user);
+        $crawler = $client->request('GET', '/admin/news-editor/'.$entry->getId());
+        self::assertCount(1, $crawler->selectButton('Änderungen speichern und zur Überarbeitung zurückgeben'));
+        $csrf = $crawler->filter('input[name="_token"]')->attr('value');
+        $updated = $crawler->filter('input[name="updatedAt"]')->attr('value');
+        $hash = $crawler->filter('input[name="documentHash"]')->attr('value');
+        self::assertNotNull($csrf); self::assertNotNull($updated); self::assertNotNull($hash);
+        $endpoint = '/admin/news-editor/'.$entry->getId().'/review/publish';
+        $valid = ['_token' => $csrf, 'updatedAt' => $updated, 'documentHash' => $hash, 'document' => $this->document('Entscheidung')];
+        $client->request('POST', $endpoint, ['_token' => 'wrong'] + $valid);
+        self::assertResponseStatusCodeSame(403);
+        $client->request('POST', $endpoint, ['updatedAt' => '2000-01-01T00:00:00+00:00'] + $valid);
+        self::assertResponseStatusCodeSame(409);
+        $client->request('POST', $endpoint, ['document' => RichDocument::PREFIX.'<script>'] + $valid);
+        self::assertResponseStatusCodeSame(422);
+        $client->request('POST', $endpoint, ['document' => $this->document('')] + $valid);
+        self::assertResponseStatusCodeSame(422);
+
+        $em = $client->getContainer()->get(EntityManagerInterface::class);
+        $em->clear();
+        $unchanged = $em->find(ContentEntry::class, $entry->getId());
+        self::assertInstanceOf(ContentEntry::class, $unchanged);
+        self::assertSame(ContentEntry::STATUS_REVIEW, $unchanged->getStatus());
+        self::assertSame('Legacy original', $unchanged->getBody());
+        self::assertCount(0, $em->getRepository(ContentRevision::class)->findBy(['entry' => $unchanged]));
+
+        $client->request('POST', '/admin/news-editor/'.$entry->getId().'/review/return-draft', $valid);
+        self::assertResponseRedirects('/admin/news-editor/'.$entry->getId());
+        $em->clear();
+        $draft = $em->find(ContentEntry::class, $entry->getId());
+        self::assertInstanceOf(ContentEntry::class, $draft);
+        self::assertSame(ContentEntry::STATUS_DRAFT, $draft->getStatus());
+        self::assertSame('Entscheidung', $draft->getBody());
+        self::assertNull($draft->getPublishedAt());
+        self::assertCount(1, $em->getRepository(ContentRevision::class)->findBy(['entry' => $draft]));
+        $client->request('POST', $endpoint, $valid);
+        self::assertResponseStatusCodeSame(403);
+    }
+
     public function testVisualRevisionHistoryPreviewsAndRestoresSafely(): void
     {
         $client = static::createClient();

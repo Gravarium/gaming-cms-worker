@@ -226,6 +226,63 @@ final class AdminNewsEditorController extends AbstractController
         }
     }
 
+    #[Route('/{id}/review/{decision}', name: 'app_admin_news_editor_review_decision', requirements: ['id' => '\\d+', 'decision' => 'publish|return-draft'], methods: ['POST'])]
+    public function reviewDecision(ContentEntry $entry, string $decision, Request $request): Response
+    {
+        $this->assertEditable($entry);
+        if ($entry->getStatus() !== ContentEntry::STATUS_REVIEW) {
+            throw $this->createAccessDeniedException('Nur Beiträge in Prüfung können entschieden werden.');
+        }
+        $this->assertCsrf($entry, (string) $request->request->get('_token'));
+        $submitted = $request->request->get('document');
+        $expected = $request->request->get('updatedAt');
+        $expectedHash = $request->request->get('documentHash');
+        if (!is_string($submitted) || strlen($submitted) > self::MAX_REQUEST_BYTES
+            || !is_string($expected) || !is_string($expectedHash)
+            || preg_match('/\A[a-f0-9]{64}\z/D', $expectedHash) !== 1) {
+            return $this->errorResponse($entry, is_string($submitted) ? $submitted : '', 'Ungültige oder zu große Editor-Anfrage.', 413);
+        }
+
+        try {
+            $normalized = $this->policy->normalizeForStorage($submitted);
+            $plainText = $this->policy->plainText($normalized);
+            if ($decision === 'publish' && trim($plainText) === '') {
+                throw new \InvalidArgumentException('Ein veröffentlichter News-Artikel braucht lesbaren Inhalt.');
+            }
+            $user = $this->getUser();
+            if (!$user instanceof User) {
+                throw $this->createAccessDeniedException();
+            }
+            $this->entityManager->wrapInTransaction(function (EntityManagerInterface $manager) use ($entry, $normalized, $plainText, $expected, $expectedHash, $decision, $user): void {
+                $manager->refresh($entry, LockMode::PESSIMISTIC_WRITE);
+                $this->assertEditable($entry);
+                if ($entry->getStatus() !== ContentEntry::STATUS_REVIEW) {
+                    throw new \DomainException('Der Prüfstatus wurde inzwischen geändert. Bitte neu laden.');
+                }
+                if (!hash_equals($entry->getUpdatedAt()->format(DATE_ATOM), $expected)
+                    || !hash_equals(hash('sha256', $entry->getEditableDocument()), $expectedHash)) {
+                    throw new \DomainException('Der Artikel wurde inzwischen geändert. Bitte neu laden.');
+                }
+                $status = $decision === 'publish' ? ContentEntry::STATUS_PUBLISHED : ContentEntry::STATUS_DRAFT;
+                $entry->setEditorDocument($normalized)->setBody($plainText)->setStatus($status)->synchronizePublication();
+                $this->revisions->capture($entry, $user);
+                $this->audit->record(
+                    $decision === 'publish' ? 'content.review.approve' : 'content.review.return',
+                    $entry,
+                    $entry->getId(),
+                    $decision === 'publish' ? 'News-Artikel im visuellen Editor freigegeben und veröffentlicht.' : 'News-Artikel zur Überarbeitung zurückgegeben.',
+                    ['status' => $status],
+                );
+            });
+            $this->addFlash('success', $decision === 'publish' ? 'News-Artikel veröffentlicht.' : 'News-Artikel als Entwurf zur Überarbeitung zurückgegeben.');
+            return $this->redirectToRoute($decision === 'publish' ? 'app_admin_content_edit' : 'app_admin_news_editor', ['id' => $entry->getId()]);
+        } catch (\DomainException $exception) {
+            return $this->errorResponse($entry, $submitted, $exception->getMessage(), 409);
+        } catch (\InvalidArgumentException $exception) {
+            return $this->errorResponse($entry, $submitted, $exception->getMessage(), 422);
+        }
+    }
+
     #[Route('/{id}/history', name: 'app_admin_news_editor_history', requirements: ['id' => '\\d+'], methods: ['GET'])]
     public function history(ContentEntry $entry): Response
     {
