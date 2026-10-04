@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Widget;
 
 use App\Module\CmsModuleManager;
+use App\Social\SocialModuleAvailability;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 final class WidgetRegistry
@@ -13,7 +14,12 @@ final class WidgetRegistry
     /** @var array<string, WidgetProvider> */
     private array $providers = [];
     /** @param iterable<WidgetProvider> $providers */
-    public function __construct(iterable $providers, private readonly CmsModuleManager $modules, private readonly ?RequestStack $requests = null)
+    public function __construct(
+        iterable $providers,
+        private readonly CmsModuleManager $modules,
+        private readonly SocialModuleAvailability $socialModule,
+        private readonly ?RequestStack $requests = null,
+    )
     {
         foreach ($providers as $provider) foreach ($provider->definitions() as $definition) {
             if (isset($this->definitions[$definition->key])) throw new \LogicException('Duplicate widget key.');
@@ -30,8 +36,14 @@ final class WidgetRegistry
         $cacheKey = '_cms_widget_module_'.$definition->module;
         $cached = $request?->attributes->get($cacheKey);
         if (is_bool($cached)) return $cached;
-        try { $enabled = $this->modules->isEnabled($definition->module); }
-        catch (\InvalidArgumentException) { $enabled = false; }
+        try {
+            // Social owns a fail-closed module state outside the generic catalog.
+            $enabled = $definition->module === 'social'
+                ? $this->socialModule->enabled()
+                : $this->modules->isEnabled($definition->module);
+        } catch (\InvalidArgumentException) {
+            $enabled = false;
+        }
         $request?->attributes->set($cacheKey, $enabled);
         return $enabled;
     }
