@@ -3,6 +3,7 @@
 {% block body %}
 <main class="content-shell">
     <h1>Version für {{ package.title }} hochladen</h1>
+    <p><a href="{{ path('app_admin_download_relations_package', {package: package.id}) }}">Versionen, Abhängigkeiten und Spiegel verwalten</a></p>
     {{ form_start(form, {
         action: path('app_admin_download_upload', {id: package.id}),
         method: 'POST',

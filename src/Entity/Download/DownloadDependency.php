@@ -4,13 +4,15 @@ declare(strict_types=1);
 
 namespace App\Entity\Download;
 
+use App\Repository\Download\DownloadDependencyRepository;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity]
+#[ORM\Entity(repositoryClass: DownloadDependencyRepository::class)]
 #[ORM\Table(name: 'download_dependency')]
 class DownloadDependency
 {
-    public const KINDS = ['requires', 'optional', 'conflicts'];
+    public const KIND_REQUIRES = 'requires';
+    public const KINDS = [self::KIND_REQUIRES, 'optional', 'conflicts'];
 
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -45,10 +47,23 @@ class DownloadDependency
         }
 
         $constraintExpression = $constraintExpression === null ? null : trim($constraintExpression);
+        if ($constraintExpression !== null && (!mb_check_encoding($constraintExpression, 'UTF-8') || str_contains($constraintExpression, "\0") || mb_strlen($constraintExpression, 'UTF-8') > 80)) {
+            throw new \InvalidArgumentException('Dependency version expression is invalid or exceeds its storage column.');
+        }
         $this->version = $version;
         $this->targetPackage = $targetPackage;
         $this->kind = $kind;
         $this->constraintExpression = $constraintExpression === '' ? null : $constraintExpression;
+    }
+
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+    public function getVersion(): DownloadVersion
+    {
+        return $this->version;
     }
 
     public function getKind(): string

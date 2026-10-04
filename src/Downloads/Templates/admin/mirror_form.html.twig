@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+{% block title %}Mirror hinzufügen{% endblock %}
+{% block body %}
+<main class="content-shell">
+    <nav><a href="{{ path('app_admin_download_relations_version', {version: version.id}) }}">Zurück zur Version</a></nav>
+    <h1>HTTPS-Mirror hinzufügen</h1>
+    <p>{{ version.package.title }} · Version {{ version.version }}</p>
+    {{ form_start(form) }}
+        {{ form_errors(form) }}
+        {{ form_row(form.url) }}
+        {{ form_row(form.trusted) }}
+        {{ form_row(form.submit) }}
+    {{ form_end(form) }}
+</main>
+{% endblock %}

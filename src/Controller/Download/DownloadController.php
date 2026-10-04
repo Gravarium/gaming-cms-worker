@@ -8,9 +8,13 @@ use App\Downloads\DownloadAuthorization;
 use App\Downloads\DownloadModuleAvailability;
 use App\Downloads\DownloadPrivateStorage;
 use App\Downloads\DownloadStorageUnavailable;
+use App\Entity\Download\DownloadDependency;
+use App\Entity\Download\DownloadMirror;
 use App\Entity\Download\DownloadPackage;
 use App\Entity\Download\DownloadVersion;
 use App\Entity\User;
+use App\Repository\Download\DownloadDependencyRepository;
+use App\Repository\Download\DownloadMirrorRepository;
 use App\Repository\Download\DownloadPackageRepository;
 use App\Repository\Download\DownloadVersionRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -24,6 +28,8 @@ final class DownloadController extends AbstractController
     public function __construct(
         private readonly DownloadPackageRepository $packages,
         private readonly DownloadVersionRepository $versions,
+        private readonly DownloadDependencyRepository $dependencies,
+        private readonly DownloadMirrorRepository $mirrors,
         private readonly DownloadAuthorization $authorization,
         private readonly DownloadPrivateStorage $storage,
         private readonly DownloadModuleAvailability $availability,
@@ -55,10 +61,53 @@ final class DownloadController extends AbstractController
             throw $this->createNotFoundException();
         }
 
-        return $this->render('@DownloadReleaseMetadata/download/show.html.twig', [
+        $versions = $this->versions->forPackage($package);
+        /** @var array<int, array{dependencies: list<DownloadDependency>, mirrors: list<DownloadMirror>}> $relationsByVersion */
+        $relationsByVersion = [];
+        foreach ($versions as $version) {
+            $versionId = $version->getId();
+            if ($versionId !== null) {
+                $relationsByVersion[$versionId] = ['dependencies' => [], 'mirrors' => []];
+            }
+        }
+
+        foreach ($this->dependencies->forVersions($versions) as $dependency) {
+            $versionId = $dependency->getVersion()->getId();
+            $target = $dependency->getTargetPackage();
+            if (
+                $versionId === null
+                || !isset($relationsByVersion[$versionId])
+                || !$dependency->getVersion()->isDeliverable()
+                || !$this->authorization->canDownload($target, $this->user())
+            ) {
+                continue;
+            }
+
+            $relationsByVersion[$versionId]['dependencies'][] = $dependency;
+        }
+
+        foreach ($this->mirrors->forVersions($versions) as $mirror) {
+            $versionId = $mirror->getVersion()->getId();
+            if (
+                $versionId === null
+                || !isset($relationsByVersion[$versionId])
+                || !$mirror->getVersion()->isDeliverable()
+                || !$mirror->isTrusted()
+            ) {
+                continue;
+            }
+
+            $relationsByVersion[$versionId]['mirrors'][] = $mirror;
+        }
+
+        $response = $this->render('@DownloadReleaseMetadata/download/show.html.twig', [
             'package' => $package,
-            'versions' => $this->versions->forPackage($package),
+            'versions' => $versions,
+            'relationsByVersion' => $relationsByVersion,
         ]);
+        $response->headers->set('Cache-Control', 'private, no-store');
+
+        return $response;
     }
 
     #[Route(
