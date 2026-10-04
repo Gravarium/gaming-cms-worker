@@ -10,8 +10,8 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "08260d3f0e343615f525efd2de05767200f031c5",
-  "published_at": "2026-10-04T14:07:50.367Z",
-  "summary": "WCP-676, WCP-679 and WCP-681–WCP-683 are complete green Worker proposals awaiting Trusted review. WCP-684 is active on an accessible manager-only video-source audit page based on WCP-683's exact green Worker HEAD.",
+  "published_at": "2026-10-04T14:12:51.581Z",
+  "summary": "WCP-676, WCP-679, WCP-681–WCP-684 are complete green Worker proposals awaiting Trusted review. WCP-684 adds an accessible manager-only audit page and dashboard entry on top of WCP-683's exact green Worker HEAD.",
   "rules": {
     "choose": "Resume the current chat's unfinished claimed branch first. Otherwise atomically claim an eligible published task. If no published task is eligible, independently derive and publish a bounded worker-only CMS proposal from approved product goals and observed code gaps; do not ask the owner for the next FCP number.",
     "atomic_reservation": "Create the exact claim_branch and suggested feature branch from that task's published proposal_base_sha. If the claim already exists, treat it as a hard lock; the owning continuation resumes it and every other AI skips it.",
@@ -68770,8 +68770,8 @@
       "priority": 684,
       "package_id": "WCP-684",
       "title": "Provide a manager page for the saved video-source audit",
-      "execution_state": "worker_in_progress",
-      "claim_state": "claimed",
+      "execution_state": "worker_complete_awaiting_trusted_review",
+      "claim_state": "locked_until_trusted_resolution",
       "claim_generation": 1,
       "claim_branch": "claim/wcp-684-video-audit-page-g1",
       "suggested_branch": "feature/wcp-684-video-audit-page-g1",
@@ -68853,19 +68853,19 @@
           "tests/Controller/VideoProviderAuditDashboardEntryTest.php"
         ]
       },
-      "next_action": "First exact-head CI run #37207749512 failed only because two tests required a literal Cache-Control header order instead of asserting both private and no-store directives. The assertion now matches the actual Symfony response; all other tests and PostgreSQL 18 passed. Full exact-head Worker CI #37208094378 is queued on 8d4fd54a54353b9741cc78c389616e42b6aae3cd. Inspect both jobs; fix any remaining failure only inside WCP-684 and mark complete only after green.",
+      "next_action": "Worker PR #482 is complete and remains a draft handoff awaiting Trusted review. Exact final HEAD 8d4fd54a54353b9741cc78c389616e42b6aae3cd has full Worker CI run #1229 / 37208094378 green: PHP/Symfony and PostgreSQL 18 succeeded; 1,808 tests and 12,938 assertions passed. PR is open, clean/mergeable, based on exact green WCP-683 head, and has exactly the five allowed paths. Keep the claim locked until Trusted resolves it; never merge or deploy.",
       "active_head": "8d4fd54a54353b9741cc78c389616e42b6aae3cd",
       "last_observed_head": "8d4fd54a54353b9741cc78c389616e42b6aae3cd",
       "last_verified_push_at": "2026-10-04T14:07:50.367Z",
       "worker_pr_state": "draft",
       "active_base_branch": "feature/wcp-683-video-source-audit-g1",
       "active_base_sha": "5b8a0b7b96f20cb167e66f702f18705bf2f9925d",
-      "last_checkpoint_at": "2026-10-04T14:07:50.367Z",
+      "last_checkpoint_at": "2026-10-04T14:12:51.581Z",
       "worker_pr": 482,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/482",
       "worker_pr_head_sha": "8d4fd54a54353b9741cc78c389616e42b6aae3cd",
       "ci_run_id": 37208094378,
-      "ci_result": "queued",
+      "ci_result": "success",
       "previous_ci_attempts": [
         {
           "head": "1077e99aba8c0b441a190bfad3478232b7909647",
@@ -68873,7 +68873,10 @@
           "result": "failure",
           "failure": "Two functional assertions expected exact Cache-Control header ordering; Symfony added max-age=0 and must-revalidate while private and no-store remained set."
         }
-      ]
+      ],
+      "final_head": "8d4fd54a54353b9741cc78c389616e42b6aae3cd",
+      "final_ci_run_id": 37208094378,
+      "completed_on": "2026-10-04T14:12:51.581Z"
     }
   ],
   "recovery_queue": [],
