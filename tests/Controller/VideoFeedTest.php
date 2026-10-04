@@ -69,6 +69,63 @@ final class VideoFeedTest extends WebTestCase
         self::assertNotContains($future->getTitle(), $titles);
     }
 
+    public function testFeedEscapesMarkupInVideoTitlesAndDescriptions(): void
+    {
+        $client = static::createClient();
+        $suffix = bin2hex(random_bytes(5));
+        $slug = 'feed-escaping-'.$suffix;
+        $title = '<script>alert("feed-title-'.$suffix.'")</script> & trailer';
+        $description = 'Before <img src=x onerror="alert(1)"> description <script>feed-description-'.$suffix.'</script> & safe';
+        $video = $this->video($slug, true, (new \DateTimeImmutable())->modify('-1 minute'))
+            ->setTitle($title)
+            ->setDescription($description);
+        $this->em($client)->persist($video);
+        $this->em($client)->flush();
+
+        $client->request('GET', '/feeds/videos.xml');
+
+        self::assertResponseIsSuccessful();
+        $body = $client->getResponse()->getContent();
+        self::assertIsString($body);
+        self::assertStringNotContainsString('<script>', $body);
+        self::assertStringNotContainsString('<img', $body);
+
+        $xml = new \DOMDocument();
+        self::assertTrue($xml->loadXML($body));
+        $targetTitle = null;
+        $targetDescription = null;
+        $targetScriptCount = 0;
+        $targetImageCount = 0;
+
+        foreach ($xml->getElementsByTagName('item') as $item) {
+            if (!$item instanceof \DOMElement) {
+                continue;
+            }
+
+            $link = $item->getElementsByTagName('link')->item(0);
+            if (!$link instanceof \DOMElement || !str_ends_with($link->textContent, '/videos/'.$slug)) {
+                continue;
+            }
+
+            $titleNode = $item->getElementsByTagName('title')->item(0);
+            $descriptionNode = $item->getElementsByTagName('description')->item(0);
+            $targetTitle = $titleNode?->textContent;
+            $targetDescription = $descriptionNode?->textContent;
+            $targetScriptCount = $item->getElementsByTagName('script')->length;
+            $targetImageCount = $item->getElementsByTagName('img')->length;
+            break;
+        }
+
+        self::assertSame($title, $targetTitle);
+        self::assertIsString($targetDescription);
+        self::assertStringContainsString('Before', $targetDescription);
+        self::assertStringContainsString('feed-description-'.$suffix, $targetDescription);
+        self::assertStringContainsString('& safe', $targetDescription);
+        self::assertStringNotContainsString('<', $targetDescription);
+        self::assertSame(0, $targetScriptCount);
+        self::assertSame(0, $targetImageCount);
+    }
+
     public function testFeedContainsAtMostFiftyVideos(): void
     {
         $client = static::createClient();
