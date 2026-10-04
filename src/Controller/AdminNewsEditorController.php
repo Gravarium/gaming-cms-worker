@@ -261,6 +261,7 @@ final class AdminNewsEditorController extends AbstractController
                     || $scheduledAt <= new \DateTimeImmutable('+5 minutes', $timezone)) {
                     throw new \InvalidArgumentException('Der Veröffentlichungszeitpunkt muss mindestens fünf Minuten in der Zukunft liegen.');
                 }
+                $scheduledAt = $scheduledAt->setTimezone(new \DateTimeZone('UTC'));
             }
             $user = $this->getUser();
             if (!$user instanceof User) {
