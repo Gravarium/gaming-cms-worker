@@ -220,11 +220,15 @@ final class UpcomingGameReleaseWidgetProviderTest extends KernelTestCase
             self::assertStringContainsString('EU', $rendered);
             self::assertStringContainsString('/games/'.$game->getSlug(), $rendered);
             self::assertStringContainsString('/games/releases', $rendered);
+            self::assertStringContainsString('href="/games/releases/calendar.ics"', $rendered);
+            self::assertStringContainsString('Release-Kalender abonnieren (iCalendar)', $rendered);
             self::assertStringContainsString('&lt;script&gt;alert(1)&lt;/script&gt;', $rendered);
             self::assertStringNotContainsString('<script>alert(1)</script>', $rendered);
 
             $empty = $twig->render('widget/upcoming_game_releases.html.twig', ['data' => ['items' => []]]);
             self::assertStringContainsString('Aktuell sind keine kommenden Spielveröffentlichungen angekündigt.', $empty);
+            self::assertStringContainsString('href="/games/releases/calendar.ics"', $empty);
+            self::assertStringContainsString('Release-Kalender abonnieren (iCalendar)', $empty);
         } finally {
             if ($entityManager->isOpen()) {
                 foreach (array_reverse($entities) as $entity) {
