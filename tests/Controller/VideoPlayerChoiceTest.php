@@ -37,12 +37,12 @@ final class VideoPlayerChoiceTest extends WebTestCase
         $client = $this->client(); $video = $this->video($client); $source = $this->source($client, $video);
         $foreign = $this->source($client, $this->video($client));
         $url = '/video-players/videos/'.$video->getSlug(); $crawler = $client->request('GET', $url);
-        self::assertResponseIsSuccessful(); self::assertSelectorNotExists('video'); self::assertSelectorNotExists('iframe');
+        self::assertResponseIsSuccessful(); self::assertSelectorNotExists('video'); self::assertSelectorNotExists('iframe'); self::assertSelectorNotExists('[data-branding-guidance]');
         self::assertStringNotContainsString('cdn.example.test', (string) $client->getResponse()->getContent());
         self::assertSelectorExists('select[name="engine"] option[value="videojs"]'); $token = $this->token($crawler);
         $client->request('POST', $url, ['source' => (string) $foreign->getId(), 'engine' => 'native', '_token' => $token]); self::assertResponseStatusCodeSame(404);
         $client->request('POST', $url, ['source' => (string) $source->getId(), 'engine' => 'videojs', '_token' => $token]);
-        self::assertResponseIsSuccessful(); self::assertSelectorExists('video[data-choice-player][data-engine="videojs"][data-mode="hls"]');
+        self::assertResponseIsSuccessful(); self::assertSelectorExists('video[data-choice-player][data-engine="videojs"][data-mode="hls"]'); self::assertSelectorTextContains('[data-branding-guidance="cms"]', 'Branding-Vorschau ein- oder ausschalten');
         self::assertSelectorNotExists('iframe'); self::assertStringContainsString('private', (string) $client->getResponse()->headers->get('Cache-Control'));
         $client->request('POST', $url, ['source' => (string) $source->getId(), 'engine' => 'native', '_token' => $token, 'start' => '12', 'speed' => '1.5']);
         self::assertResponseIsSuccessful(); self::assertSelectorExists('video[data-engine="native"][data-start="12"][data-speed="1.5"]');
@@ -54,11 +54,34 @@ final class VideoPlayerChoiceTest extends WebTestCase
         $client = $this->client(); $video = $this->video($client); $url = '/video-players/videos/'.$video->getSlug();
         $crawler = $client->request('GET', $url); $token = $this->token($crawler);
         $client->request('POST', $url, ['source' => 'legacy', 'engine' => 'youtube', '_token' => $token, 'start' => '42', 'loop' => '1', 'captions' => '1']);
-        self::assertResponseIsSuccessful(); self::assertSelectorExists('iframe'); self::assertSelectorNotExists('video');
+        self::assertResponseIsSuccessful(); self::assertSelectorExists('iframe'); self::assertSelectorNotExists('video'); self::assertSelectorTextContains('[data-branding-guidance="provider"]', 'bestimmt der Anbieter');
+        self::assertSelectorTextContains('[data-branding-guidance="provider"]', 'CMS-Branding lässt sich hier nicht ändern');
         self::assertStringContainsString('start=42', (string) $client->getCrawler()->filter('iframe')->attr('src'));
         self::assertStringContainsString('playlist=abcdef12345', (string) $client->getCrawler()->filter('iframe')->attr('src'));
         $client->request('POST', $url, ['source' => 'legacy', 'engine' => 'embed', '_token' => $token]);
         self::assertResponseIsSuccessful(); self::assertSelectorExists('iframe[src="https://www.youtube-nocookie.com/embed/abcdef12345"]');
+    }
+
+    public function testLinkOnlyProviderExplainsExternalBrandingAfterConsent(): void
+    {
+        $client = $this->client();
+        $video = $this->video($client);
+        $source = $this->source($client, $video, null, 'vidmoly', 'https://vidmoly.me/watch/demo123');
+        $url = '/video-players/videos/'.$video->getSlug();
+        $crawler = $client->request('GET', $url);
+
+        self::assertResponseIsSuccessful();
+        self::assertSelectorNotExists('video');
+        self::assertSelectorNotExists('iframe');
+        self::assertSelectorNotExists('[data-branding-guidance]');
+        $token = $this->token($crawler);
+
+        $client->request('POST', $url, ['source' => (string) $source->getId(), 'engine' => 'link', '_token' => $token]);
+        self::assertResponseIsSuccessful();
+        self::assertSelectorTextContains('[data-branding-guidance="external"]', 'Branding und Bedienelemente des Anbieters bleiben erhalten');
+        self::assertSelectorExists('.workspace-player a[target="_blank"][rel="noopener noreferrer"]');
+        self::assertSelectorNotExists('video');
+        self::assertSelectorNotExists('iframe');
     }
 
     public function testCsrfAndMalformedSettingsFailBeforeAnyPlayerIsRendered(): void
@@ -138,11 +161,11 @@ final class VideoPlayerChoiceTest extends WebTestCase
         $user = (new User())->setEmail('pc-test-'.bin2hex(random_bytes(6)).'@example.test')->setDisplayName('PC test user')->setPassword('unused')->verifyEmail()->setPermissions($manager ? [CmsPermission::VIDEO] : []);
         $this->em($client)->persist($user); $this->em($client)->flush(); return $user;
     }
-    private function source(KernelBrowser $client, ?Video $video, ?CreatorProfile $creator = null): VideoSource
+    private function source(KernelBrowser $client, ?Video $video, ?CreatorProfile $creator = null, string $provider = 'hls', string $url = 'https://cdn.example.test/live/index.m3u8'): VideoSource
     {
         $em = $this->em($client); $source = (new VideoSource())->setVideo($video === null ? null : $em->getReference(Video::class, $video->getId()))
             ->setCreator($creator === null ? null : $em->getReference(CreatorProfile::class, $creator->getId()));
-        $source->configure('PC test HLS', 'hls', 'https://cdn.example.test/live/index.m3u8', 0, true, true);
+        $source->configure('PC test source', $provider, $url, 0, true, true);
         $em->persist($source); $em->flush(); return $source;
     }
     private function token(Crawler $crawler): string { return (string) $crawler->filter('input[name="_token"]')->first()->attr('value'); }
