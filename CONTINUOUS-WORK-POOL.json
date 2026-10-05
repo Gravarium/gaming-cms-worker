@@ -10,8 +10,8 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "08260d3f0e343615f525efd2de05767200f031c5",
-  "published_at": "2026-10-05T03:00:42.693Z",
-  "summary": "WCP-687 is draft PR #485 at 2ce1373d90140544a7912643f6bccb92e4bd7855 with the narrowly matched robots firewall and /admin regression test; exact-head Worker CI run 37217864192 is in progress. WCP-686 remains separately active.",
+  "published_at": "2026-10-05T03:26:54.100Z",
+  "summary": "WCP-687 is complete as open draft PR #485 at 2ce1373d90140544a7912643f6bccb92e4bd7855 with green exact-head Worker CI run 37217864192 (PHP/Symfony and PostgreSQL 18). Reclaimed as generation 2 after the prior lease expired; claim is locked for Trusted review. WCP-686 remains separately active.",
   "rules": {
     "choose": "Resume the current chat's unfinished claimed branch first. Otherwise atomically claim an eligible published task. If no published task is eligible, independently derive and publish a bounded worker-only CMS proposal from approved product goals and observed code gaps; do not ask the owner for the next FCP number.",
     "atomic_reservation": "Create the exact claim_branch and suggested feature branch from that task's published proposal_base_sha. If the claim already exists, treat it as a hard lock; the owning continuation resumes it and every other AI skips it.",
@@ -69137,14 +69137,14 @@
       "priority": 687,
       "package_id": "WCP-687",
       "title": "Expose crawler guidance and the existing public sitemap",
-      "execution_state": "worker_in_progress",
-      "claim_state": "claimed",
-      "claim_generation": 1,
-      "claim_branch": "claim/wcp-687-robots-txt-g1",
+      "execution_state": "worker_complete_awaiting_trusted_review",
+      "claim_state": "locked_until_trusted_resolution",
+      "claim_generation": 2,
+      "claim_branch": "claim/wcp-687-robots-txt-g2",
       "suggested_branch": "feature/wcp-687-robots-txt-g1",
       "resume_branch": "feature/wcp-687-robots-txt-g1",
-      "claimed_on": "2026-10-04T16:15:14.920Z",
-      "lease_expires_at": "2026-10-04T23:15:14.920Z",
+      "claimed_on": "2026-10-05T03:26:54.100Z",
+      "lease_expires_at": "2026-10-05T10:26:54.100Z",
       "base_branch": "main",
       "base_sha": "6e9cb292bafa84862a9cedc7abb8d20878297f9d",
       "proposal_base_branch": "main",
@@ -69207,12 +69207,12 @@
           "tests/Controller/RobotsTxtControllerTest.php"
         ]
       },
-      "next_action": "Full exact-head Worker CI run 37217864192 is in progress on 2ce1373d90140544a7912643f6bccb92e4bd7855. Verify both PHP/Symfony checks and PostgreSQL 18 migration validation; then lock the claim for Trusted review.",
+      "next_action": "Worker PR #485 is complete and remains a draft handoff awaiting Trusted review. Claim generation 2 was created after the prior seven-hour lease expired; the existing feature branch, PR, exact HEAD, and CI evidence were preserved. Exact final HEAD 2ce1373d90140544a7912643f6bccb92e4bd7855 has full Worker CI run #37217864192 green: PHP/Symfony and PostgreSQL 18 succeeded; 1,798 tests and 12,854 assertions passed. PHPUnit reported 1 deprecation and 26 notices in the full suite. PR is open, clean/mergeable, based on exact main HEAD 6e9cb292bafa84862a9cedc7abb8d20878297f9d, and has exactly the three allowed paths. Keep the claim locked until Trusted resolves it; never merge or deploy.",
       "active_base_branch": "main",
       "active_base_sha": "6e9cb292bafa84862a9cedc7abb8d20878297f9d",
       "active_head": "2ce1373d90140544a7912643f6bccb92e4bd7855",
       "last_observed_head": "2ce1373d90140544a7912643f6bccb92e4bd7855",
-      "last_checkpoint_at": "2026-10-04T16:46:26.012Z",
+      "last_checkpoint_at": "2026-10-05T03:26:54.100Z",
       "last_verified_push_at": "2026-10-04T16:46:26.012Z",
       "worker_pr_state": "draft",
       "worker_pr": 485,
@@ -69220,11 +69220,11 @@
       "worker_pr_head_sha": "2ce1373d90140544a7912643f6bccb92e4bd7855",
       "ci_branch": "worker/account-ci-wcp-687-g1",
       "ci_head": "2ce1373d90140544a7912643f6bccb92e4bd7855",
-      "ci_result": "in_progress",
+      "ci_result": "success",
       "ci_run_id": 37217864192,
       "ci_run_id_at": "2ce1373d90140544a7912643f6bccb92e4bd7855",
-      "last_ci_head": "574d2ffdcf56c88601aa66d0df40df62318d6113",
-      "last_ci_result": "failure",
+      "last_ci_head": "2ce1373d90140544a7912643f6bccb92e4bd7855",
+      "last_ci_result": "success",
       "previous_ci_attempts": [
         {
           "head": "7550f7d57f950937bb4c899c5643b82cdb25416c",
@@ -69257,7 +69257,15 @@
       ],
       "previous_ci_head": "574d2ffdcf56c88601aa66d0df40df62318d6113",
       "previous_ci_run_id": 37217769016,
-      "previous_ci_result": "failure"
+      "previous_ci_result": "failure",
+      "final_head": "2ce1373d90140544a7912643f6bccb92e4bd7855",
+      "final_ci_run_id": 37217864192,
+      "final_changed_paths": [
+        "src/Controller/RobotsTxtController.php",
+        "config/packages/security.yaml",
+        "tests/Controller/RobotsTxtControllerTest.php"
+      ],
+      "completed_on": "2026-10-05T03:26:54.100Z"
     }
   ],
   "recovery_queue": [],
