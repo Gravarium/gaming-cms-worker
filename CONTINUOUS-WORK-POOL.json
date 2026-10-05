@@ -4,13 +4,13 @@
   "source_queue": {
     "repository": "Gravarium/gaming-cms",
     "path": "docs/ai-work-queue.json",
-    "blob_sha": "c18637c1fd76d945037e804439ff6ea765e11265",
-    "updated_at": "2026-10-05T03:50:30.190Z"
+    "blob_sha": "81f76c3689f6b875de13f48eaf6fd56ba857a96f",
+    "updated_at": "2026-10-05T13:59:28.858Z"
   },
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "2f98de43e3cf4a26addb436cf9908b4135f2bdc6",
-  "published_at": "2026-10-05T08:14:33.486Z",
+  "published_at": "2026-10-05T15:29:33.500Z",
   "summary": "WCP-687 is complete as open draft PR #485 at 2ce1373d90140544a7912643f6bccb92e4bd7855 with green exact-head Worker CI run 37217864192 (PHP/Symfony and PostgreSQL 18). Reclaimed as generation 2 after the prior lease expired; claim is locked for Trusted review. WCP-686 remains separately active.",
   "rules": {
     "choose": "Resume the current chat's unfinished claimed branch first. Otherwise atomically claim an eligible published task. If no published task is eligible, independently derive and publish a bounded worker-only CMS proposal from approved product goals and observed code gaps; do not ask the owner for the next FCP number.",
@@ -68847,8 +68847,8 @@
       "priority": 684,
       "package_id": "WCP-684",
       "title": "Provide a manager page for the saved video-source audit",
-      "execution_state": "worker_complete_awaiting_trusted_review",
-      "claim_state": "locked_until_trusted_resolution",
+      "execution_state": "trusted_integrated",
+      "claim_state": "released_after_trusted_integration",
       "claim_generation": 1,
       "claim_branch": "claim/wcp-684-video-audit-page-g1",
       "suggested_branch": "feature/wcp-684-video-audit-page-main-g1",
@@ -68935,11 +68935,11 @@
           "tests/Controller/VideoProviderAuditDashboardEntryTest.php"
         ]
       },
-      "next_action": "WCP-684 is rebased on synchronized Worker main. Worker PR #491 uses feature branch feature/wcp-684-video-audit-page-main-g1 at exact head 3ce18bf6c190459fbb22430cbe66582037c20188; it is based on main 2f98de43e3cf4a26addb436cf9908b4135f2bdc6 and exact full Worker CI run 37262939688 passed PHP/Symfony and PostgreSQL 18. Exactly the five allowed paths are present. Superseded PRs #482 and #489 are closed unmerged. Proceed with Trusted FCP-102 review; keep the claim locked until Trusted reconciliation. Never merge Worker PRs or deploy.",
+      "next_action": "Trusted FCP-102 is integrated and reconciled; its Worker claim is released. Continue the dependent WCP-685 intake from clean Worker PR #493 based on synchronized Worker main.",
       "active_head": "3ce18bf6c190459fbb22430cbe66582037c20188",
       "last_observed_head": "3ce18bf6c190459fbb22430cbe66582037c20188",
       "last_verified_push_at": "2026-10-05T04:18:31Z",
-      "worker_pr_state": "ready_for_review",
+      "worker_pr_state": "closed",
       "active_base_branch": "main",
       "active_base_sha": "2f98de43e3cf4a26addb436cf9908b4135f2bdc6",
       "last_checkpoint_at": "2026-10-05T04:25:09Z",
@@ -68996,7 +68996,52 @@
           "superseded_by": 491
         }
       ],
-      "worker_pr_head_branch": "feature/wcp-684-video-audit-page-main-g1"
+      "worker_pr_head_branch": "feature/wcp-684-video-audit-page-main-g1",
+      "trusted_resolution": {
+        "status": "integrated",
+        "worker_pr": 491,
+        "worker_head": "3ce18bf6c190459fbb22430cbe66582037c20188",
+        "worker_exact_head_ci_run_id": 37262939688,
+        "worker_exact_head_ci_result": "success",
+        "trusted_pr": 225,
+        "trusted_pr_head": "873e2910ef71f70328ac1f5f5c2a53ef56c389d0",
+        "trusted_pr_ci_run_id": 37282779324,
+        "trusted_pr_ci_result": "success",
+        "trusted_mirror_validation_run_id": 37282779323,
+        "trusted_mirror_validation_result": "success",
+        "trusted_merge_sha": "2883743e719d2e91f8b49860d393b323d9feb0e5",
+        "trusted_main_sha": "173671e25f7245a49658823035e715c96006646c",
+        "trusted_main_ci_run_id": 37331748126,
+        "trusted_main_ci_result": "success",
+        "worker_sync_run_id": 37331748388,
+        "worker_sync_result": "success",
+        "sanitized_worker_main_sha": "1ba802789940e52b01a89e54b8f7153684a4af3d",
+        "worker_ci_run_id": 37283521379,
+        "worker_ci_after_sync_result": "success",
+        "trusted_queue_reconciliation_pr": 226,
+        "trusted_queue_reconciliation_head": "f5a38d907c30377f56b4bfaf31b7c6256c77acc8",
+        "trusted_queue_reconciliation_ci_run_id": 37321319194,
+        "trusted_queue_reconciliation_ci_result": "success",
+        "trusted_queue_reconciliation_merge_sha": "173671e25f7245a49658823035e715c96006646c",
+        "trusted_queue_reconciliation_main_ci_run_id": 37331748126,
+        "trusted_queue_reconciliation_main_ci_result": "success",
+        "trusted_queue_reconciliation_sync_run_id": 37331748388,
+        "trusted_queue_reconciliation_sync_result": "success",
+        "final_trusted_main_sha": "173671e25f7245a49658823035e715c96006646c",
+        "final_trusted_main_ci_run_id": 37331748126,
+        "final_trusted_main_ci_result": "success",
+        "final_worker_sync_run_id": 37331748388,
+        "final_worker_sync_result": "success",
+        "final_sanitized_worker_main_sha": "1ba802789940e52b01a89e54b8f7153684a4af3d",
+        "final_worker_ci_run_id": 37283521379,
+        "final_worker_ci_result": "success",
+        "trusted_queue_blob_sha": "81f76c3689f6b875de13f48eaf6fd56ba857a96f",
+        "worker_source_pr_state": "closed",
+        "worker_source_pr_merged": false,
+        "resolved_at": "2026-10-05T15:29:33.500Z",
+        "trusted_import_note": "WCP-684 was selectively imported through Trusted PR #225 from exact Worker PR #491. Exact-head Trusted CI, mapped bare-mirror validation, post-merge Trusted Main CI, sanitized Worker sync and exact Worker CI passed. Trusted queue reconciliation PR #226 passed CI and merged; its post-merge Trusted Main CI and sanitized sync passed. Worker PR #491 was closed unmerged. Current Trusted queue blob is recorded above; no deployment occurred."
+      },
+      "completed_at": "2026-10-05T15:29:33.500Z"
     },
     {
       "priority": 685,
@@ -69006,14 +69051,14 @@
       "claim_state": "locked_until_trusted_resolution",
       "claim_generation": 1,
       "claim_branch": "claim/wcp-685-video-audit-csv-g1",
-      "suggested_branch": "feature/wcp-685-video-audit-csv-g1",
-      "resume_branch": "feature/wcp-685-video-audit-csv-g1",
+      "suggested_branch": "feature/wcp-685-video-audit-csv-main-g1",
+      "resume_branch": "feature/wcp-685-video-audit-csv-main-g1",
       "claimed_on": "2026-10-04T14:14:32.278Z",
       "lease_expires_at": "2026-10-04T21:23:47.183Z",
       "base_branch": "main",
-      "base_sha": "6e9cb292bafa84862a9cedc7abb8d20878297f9d",
-      "proposal_base_branch": "feature/wcp-684-video-audit-page-g1",
-      "proposal_base_sha": "8d4fd54a54353b9741cc78c389616e42b6aae3cd",
+      "base_sha": "1ba802789940e52b01a89e54b8f7153684a4af3d",
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "1ba802789940e52b01a89e54b8f7153684a4af3d",
       "dependencies": [
         "WCP-684"
       ],
@@ -69021,10 +69066,16 @@
       "proposal_dependency_evidence": [
         {
           "package_id": "WCP-684",
-          "head": "8d4fd54a54353b9741cc78c389616e42b6aae3cd",
-          "pr": 482,
-          "ci_run": 37208094378,
-          "result": "success"
+          "trusted_fcp": "FCP-102",
+          "head": "3ce18bf6c190459fbb22430cbe66582037c20188",
+          "pr": 491,
+          "ci_run": 37262939688,
+          "result": "trusted_integrated",
+          "trusted_main_sha": "2883743e719d2e91f8b49860d393b323d9feb0e5",
+          "trusted_reconciliation_main_sha": "173671e25f7245a49658823035e715c96006646c",
+          "sanitized_worker_main_sha": "1ba802789940e52b01a89e54b8f7153684a4af3d",
+          "worker_ci_run": 37283521379,
+          "worker_ci_result": "success"
         }
       ],
       "objective": "Provide managers a bounded cursor-paginated CSV download of the local saved-video-source audit. Preserve stable source-ID order and the existing local classification boundary while exporting only source IDs, provider keys, enabled/authorized flags, local status and mode; never export labels, saved or resolved URLs, query tokens, contact providers, write data or claim playback health.",
@@ -69088,18 +69139,18 @@
           "tests/VideoProviderAudit/CsvAuditTest.php"
         ]
       },
-      "next_action": "Worker PR #483 is complete and remains a draft handoff awaiting Trusted review. Exact final HEAD ced440dd059cefe6ffbdefcd123671a166d8fc8f has full Worker CI run 37209074399 green: PHP/Symfony and PostgreSQL 18 succeeded; 1,814 tests and 12,982 assertions passed. PR is open, clean/mergeable, based on exact green WCP-684 HEAD, and has exactly the four allowed paths. Keep the claim locked until Trusted resolves it; never merge or deploy.",
-      "active_head": "ced440dd059cefe6ffbdefcd123671a166d8fc8f",
-      "last_observed_head": "ced440dd059cefe6ffbdefcd123671a166d8fc8f",
-      "last_verified_push_at": "2026-10-04T14:23:47.183Z",
+      "next_action": "Worker PR #493 is open and ready for Trusted review at exact head 40304f12b19155de463d8fa98b39a5f8bdc2e828, based on synchronized Worker main 1ba802789940e52b01a89e54b8f7153684a4af3d. Exact Worker CI run 37322006410 passed both jobs. All four changed paths are allowlisted and byte-identical to the reviewed source; superseded PR #483 is closed unmerged. Proceed with Trusted FCP-103 intake and keep the claim locked until Trusted resolution. Never merge Worker PRs or deploy.",
+      "active_head": "40304f12b19155de463d8fa98b39a5f8bdc2e828",
+      "last_observed_head": "40304f12b19155de463d8fa98b39a5f8bdc2e828",
+      "last_verified_push_at": "2026-10-05T15:29:33.500Z",
       "worker_pr_state": "ready_for_review",
-      "active_base_branch": "feature/wcp-684-video-audit-page-g1",
-      "active_base_sha": "8d4fd54a54353b9741cc78c389616e42b6aae3cd",
-      "last_checkpoint_at": "2026-10-04T14:27:34.059Z",
-      "worker_pr": 483,
-      "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/483",
-      "worker_pr_head_sha": "ced440dd059cefe6ffbdefcd123671a166d8fc8f",
-      "ci_run_id": 37209074399,
+      "active_base_branch": "main",
+      "active_base_sha": "1ba802789940e52b01a89e54b8f7153684a4af3d",
+      "last_checkpoint_at": "2026-10-05T15:29:33.500Z",
+      "worker_pr": 493,
+      "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/493",
+      "worker_pr_head_sha": "40304f12b19155de463d8fa98b39a5f8bdc2e828",
+      "ci_run_id": 37322006410,
       "ci_result": "success",
       "previous_ci_attempts": [
         {
@@ -69109,15 +69160,39 @@
           "failure": "One CSV unit assertion expected quotes around a formula-safe mode cell containing no CSV delimiter; CSV encoder output was correct."
         }
       ],
-      "final_head": "ced440dd059cefe6ffbdefcd123671a166d8fc8f",
-      "final_ci_run_id": 37209074399,
-      "completed_on": "2026-10-04T14:27:34.059Z",
+      "final_head": "40304f12b19155de463d8fa98b39a5f8bdc2e828",
+      "final_ci_run_id": 37322006410,
+      "completed_on": "2026-10-05T15:29:33.500Z",
       "draft": false,
       "pr_state": "open_ready_for_review",
       "last_ci_result": "success",
-      "last_ci_run_id": 37209074399,
-      "worker_pr_base_sha": "8d4fd54a54353b9741cc78c389616e42b6aae3cd",
-      "worker_pr_base_branch": "feature/wcp-684-video-audit-page-g1"
+      "last_ci_run_id": 37322006410,
+      "worker_pr_base_sha": "1ba802789940e52b01a89e54b8f7153684a4af3d",
+      "worker_pr_base_branch": "main",
+      "worker_pr_head_branch": "feature/wcp-685-video-audit-csv-main-g1",
+      "final_ci_result": "success",
+      "final_changed_paths": [
+        "src/Controller/VideoProviderAuditCsvController.php",
+        "src/VideoProviderAudit/CsvAudit.php",
+        "tests/Controller/VideoProviderAuditCsvControllerTest.php",
+        "tests/VideoProviderAudit/CsvAuditTest.php"
+      ],
+      "worker_pr_changed_paths": [
+        "src/Controller/VideoProviderAuditCsvController.php",
+        "src/VideoProviderAudit/CsvAudit.php",
+        "tests/Controller/VideoProviderAuditCsvControllerTest.php",
+        "tests/VideoProviderAudit/CsvAuditTest.php"
+      ],
+      "superseded_worker_prs": [
+        {
+          "number": 483,
+          "url": "https://github.com/Gravarium/gaming-cms-worker/pull/483",
+          "state": "closed",
+          "merged": false,
+          "superseded_by": 493,
+          "head": "ced440dd059cefe6ffbdefcd123671a166d8fc8f"
+        }
+      ]
     },
     {
       "priority": 686,
