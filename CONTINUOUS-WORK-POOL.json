@@ -9,8 +9,8 @@
   },
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
-  "base_sha": "08260d3f0e343615f525efd2de05767200f031c5",
-  "published_at": "2026-10-05T04:12:37.703Z",
+  "base_sha": "2f98de43e3cf4a26addb436cf9908b4135f2bdc6",
+  "published_at": "2026-10-05T08:04:13.565Z",
   "summary": "WCP-687 is complete as open draft PR #485 at 2ce1373d90140544a7912643f6bccb92e4bd7855 with green exact-head Worker CI run 37217864192 (PHP/Symfony and PostgreSQL 18). Reclaimed as generation 2 after the prior lease expired; claim is locked for Trusted review. WCP-686 remains separately active.",
   "rules": {
     "choose": "Resume the current chat's unfinished claimed branch first. Otherwise atomically claim an eligible published task. If no published task is eligible, independently derive and publish a bounded worker-only CMS proposal from approved product goals and observed code gaps; do not ask the owner for the next FCP number.",
@@ -68851,14 +68851,14 @@
       "claim_state": "locked_until_trusted_resolution",
       "claim_generation": 1,
       "claim_branch": "claim/wcp-684-video-audit-page-g1",
-      "suggested_branch": "feature/wcp-684-video-audit-page-g1",
-      "resume_branch": "feature/wcp-684-video-audit-page-g1",
+      "suggested_branch": "rebase/wcp-684-video-audit-page-main-20261005",
+      "resume_branch": "rebase/wcp-684-video-audit-page-main-20261005",
       "claimed_on": "2026-10-04T13:56:09.769Z",
       "lease_expires_at": "2026-10-04T21:07:50.367Z",
       "base_branch": "main",
-      "base_sha": "6e9cb292bafa84862a9cedc7abb8d20878297f9d",
-      "proposal_base_branch": "feature/wcp-683-video-source-audit-g1",
-      "proposal_base_sha": "5b8a0b7b96f20cb167e66f702f18705bf2f9925d",
+      "base_sha": "2f98de43e3cf4a26addb436cf9908b4135f2bdc6",
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "2f98de43e3cf4a26addb436cf9908b4135f2bdc6",
       "dependencies": [
         "WCP-683"
       ],
@@ -68869,7 +68869,12 @@
           "head": "5b8a0b7b96f20cb167e66f702f18705bf2f9925d",
           "pr": 481,
           "ci_run": 37206730078,
-          "result": "success"
+          "result": "trusted_integrated",
+          "trusted_fcp": "FCP-101",
+          "trusted_merge_sha": "032b3ba753c76d92f0b16f1966a16a90fe1",
+          "sanitized_worker_main_sha": "2f98de43e3cf4a26addb436cf9908b4135f2bdc6",
+          "worker_ci_run_id": 37260318873,
+          "worker_ci_result": "success"
         }
       ],
       "objective": "Make the local video-source audit directly usable by managers through an accessible, paginated admin page and dashboard entry. Reuse WCP-683 classification and expose only source IDs, registered provider keys, enabled/authorized flags, local status and mode; never show saved labels, URLs or tokens, contact providers, modify data or imply playback health.",
@@ -68930,18 +68935,18 @@
           "tests/Controller/VideoProviderAuditDashboardEntryTest.php"
         ]
       },
-      "next_action": "Worker PR #482 is complete and remains a draft handoff awaiting Trusted review. Exact final HEAD 8d4fd54a54353b9741cc78c389616e42b6aae3cd has full Worker CI run #1229 / 37208094378 green: PHP/Symfony and PostgreSQL 18 succeeded; 1,808 tests and 12,938 assertions passed. PR is open, clean/mergeable, based on exact green WCP-683 head, and has exactly the five allowed paths. Keep the claim locked until Trusted resolves it; never merge or deploy.",
-      "active_head": "8d4fd54a54353b9741cc78c389616e42b6aae3cd",
-      "last_observed_head": "8d4fd54a54353b9741cc78c389616e42b6aae3cd",
-      "last_verified_push_at": "2026-10-04T14:07:50.367Z",
-      "worker_pr_state": "ready_for_review",
-      "active_base_branch": "feature/wcp-683-video-source-audit-g1",
-      "active_base_sha": "5b8a0b7b96f20cb167e66f702f18705bf2f9925d",
-      "last_checkpoint_at": "2026-10-04T14:12:51.581Z",
-      "worker_pr": 482,
-      "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/482",
-      "worker_pr_head_sha": "8d4fd54a54353b9741cc78c389616e42b6aae3cd",
-      "ci_run_id": 37208094378,
+      "next_action": "Rebased WCP-684 onto sanitized Worker main after WCP-683 / FCP-101 integration. Worker PR #489 is open and ready at exact head 3ce18bf6c190459fbb22430cbe66582037c20188, directly based on main 2f98de43e3cf4a26addb436cf9908b4135f2bdc6; exact full Worker CI run 37262939688 passed PHP/Symfony and PostgreSQL 18. It contains exactly the five allowlisted paths. Prior stacked PR #482 is closed unmerged. Proceed with Trusted FCP-102 review; keep the claim locked until Trusted post-merge reconciliation. Never merge Worker PRs or deploy.",
+      "active_head": "3ce18bf6c190459fbb22430cbe66582037c20188",
+      "last_observed_head": "3ce18bf6c190459fbb22430cbe66582037c20188",
+      "last_verified_push_at": "2026-10-05T04:18:31Z",
+      "worker_pr_state": "open",
+      "active_base_branch": "main",
+      "active_base_sha": "2f98de43e3cf4a26addb436cf9908b4135f2bdc6",
+      "last_checkpoint_at": "2026-10-05T04:25:09Z",
+      "worker_pr": 489,
+      "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/489",
+      "worker_pr_head_sha": "3ce18bf6c190459fbb22430cbe66582037c20188",
+      "ci_run_id": 37262939688,
       "ci_result": "success",
       "previous_ci_attempts": [
         {
@@ -68951,15 +68956,39 @@
           "failure": "Two functional assertions expected exact Cache-Control header ordering; Symfony added max-age=0 and must-revalidate while private and no-store remained set."
         }
       ],
-      "final_head": "8d4fd54a54353b9741cc78c389616e42b6aae3cd",
-      "final_ci_run_id": 37208094378,
-      "completed_on": "2026-10-04T14:12:51.581Z",
+      "final_head": "3ce18bf6c190459fbb22430cbe66582037c20188",
+      "final_ci_run_id": 37262939688,
+      "completed_on": "2026-10-05T04:25:09Z",
       "draft": false,
       "pr_state": "open_ready_for_review",
       "last_ci_result": "success",
-      "last_ci_run_id": 37208094378,
-      "worker_pr_base_sha": "5b8a0b7b96f20cb167e66f702f18705bf2f9925d",
-      "worker_pr_base_branch": "feature/wcp-683-video-source-audit-g1"
+      "last_ci_run_id": 37262939688,
+      "worker_pr_base_sha": "2f98de43e3cf4a26addb436cf9908b4135f2bdc6",
+      "worker_pr_base_branch": "main",
+      "worker_pr_changed_paths": [
+        "src/Controller/VideoProviderAuditPageController.php",
+        "templates/video_provider_audit/index.html.twig",
+        "templates/admin/dashboard.html.twig",
+        "tests/Controller/VideoProviderAuditPageControllerTest.php",
+        "tests/Controller/VideoProviderAuditDashboardEntryTest.php"
+      ],
+      "final_changed_paths": [
+        "src/Controller/VideoProviderAuditPageController.php",
+        "templates/video_provider_audit/index.html.twig",
+        "templates/admin/dashboard.html.twig",
+        "tests/Controller/VideoProviderAuditPageControllerTest.php",
+        "tests/Controller/VideoProviderAuditDashboardEntryTest.php"
+      ],
+      "final_ci_result": "success",
+      "superseded_worker_prs": [
+        {
+          "number": 482,
+          "url": "https://github.com/Gravarium/gaming-cms-worker/pull/482",
+          "state": "closed",
+          "merged": false,
+          "superseded_by": 489
+        }
+      ]
     },
     {
       "priority": 685,
