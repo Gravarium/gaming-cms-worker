@@ -44,6 +44,48 @@ final class VideoWorkspaceTest extends WebTestCase
         }
         parent::tearDown();
     }
+    public function testManagerSeesReadableProviderCapabilitiesAndBrandingDisclosure(): void
+    {
+        $client = $this->client();
+        $manager = $this->user($client, true);
+        $this->login($client, $manager);
+        $crawler = $client->request('GET', '/admin/video-workspace');
+
+        self::assertResponseIsSuccessful();
+        $cacheControl = strtolower((string) $client->getResponse()->headers->get('Cache-Control'));
+        self::assertStringContainsString('private', $cacheControl);
+        self::assertStringContainsString('no-store', $cacheControl);
+
+        $panel = $crawler->filter('details.panel');
+        self::assertSame(1, $panel->count());
+        self::assertSame(29, $panel->filter('table tbody tr')->count());
+        $links = $panel->filter('table tbody a[target="_blank"]');
+        self::assertSame(29, $links->count());
+        foreach ($links as $link) {
+            self::assertNotSame('', $link->getAttribute('href'));
+            self::assertSame('noopener noreferrer', $link->getAttribute('rel'));
+        }
+
+        $panelText = $panel->text(' ');
+        foreach ([
+            'Anbieter-Player (Einbettung)',
+            'Einbettung oder direkte Wiedergabe im CMS-Player',
+            'Einbettung oder externer Link',
+            'Direkte Wiedergabe im CMS-Player',
+            'Direkte Wiedergabe oder externer Link',
+            'Externer Link',
+        ] as $label) {
+            self::assertStringContainsString($label, $panelText);
+        }
+        self::assertStringContainsString('VdoHide', $panelText);
+        self::assertStringContainsString('CMS-Branding-Einstellungen', $panelText);
+        self::assertStringContainsString('unter Kontrolle des Anbieters', $panelText);
+        self::assertStringContainsString('Externe Links öffnen die Anbieter-Seite', $panelText);
+        $responseHtml = (string) $client->getResponse()->getContent();
+        self::assertStringNotContainsString('embed_or_direct', $responseHtml);
+        self::assertStringNotContainsString('<iframe', strtolower($responseHtml));
+    }
+
     public function testManagerCanCreateEditAndDeleteAuthorizedVideoSource(): void
     {
         $client = $this->client(); $manager = $this->user($client, true); $video = $this->video($client);

@@ -6,5 +6,28 @@
 <section class="panel"><h2>Creator</h2>{% for creator in creators %}<p><a href="{{ path('app_admin_video_workspace_creator_edit', {id: creator.id}) }}">{{ creator.displayName }}</a> · {{ creator.visibility }}</p>{% else %}<p>Noch keine Creator-Profile.</p>{% endfor %}</section>
 <section class="panel"><h2>Bestehende Livestreams</h2>{% for stream in legacyStreams %}<p>{{ stream.title }} · <a href="{{ path('app_admin_video_workspace_legacy_live', {id: stream.id}) }}">Bearbeiten / löschen</a></p>{% else %}<p>Keine bestehenden Livestream-Einträge.</p>{% endfor %}</section>
 <nav class="workspace-actions" aria-label="Verwaltungsseiten">{% if page > 1 %}<a href="{{ path('app_admin_video_workspace', {page: page - 1}) }}">Zurück</a>{% endif %}<span>Seite {{ page }}</span>{% if sources|length == 20 or creators|length == 20 or legacyStreams|length == 20 %}<a href="{{ path('app_admin_video_workspace', {page: page + 1}) }}">Weiter</a>{% endif %}</nav>
-<details class="panel"><summary>Anbieter und Quellformate</summary><p>Direkte MP4-, WebM- und HLS-Quellen verwenden den eigenen Player. Andere Anbieter verwenden ihre Einbettung oder einen externen Link. Drittanbieter werden erst nach deiner Auswahl geladen.</p><ul>{% for key, provider in catalogue %}<li>{{ provider.label }} · {{ provider.capability }} · <a href="{{ provider.documentation }}" target="_blank" rel="noopener noreferrer">Dokumentation</a></li>{% endfor %}</ul></details>
+<details class="panel">
+    <summary>Anbieter und Quellformate</summary>
+    <p>Direkte MP4-, WebM- und HLS-Quellen verwenden den CMS-Player. Die CMS-Branding-Einstellungen gelten nur für diese Quellen. Bei Anbieter-Einbettungen bleibt das Player-Erscheinungsbild unter Kontrolle des Anbieters. Externe Links öffnen die Anbieter-Seite. Drittanbieter-Inhalte werden erst nach deiner Auswahl geladen.</p>
+    {% set capabilityLabels = {
+        'embed': 'Anbieter-Player (Einbettung)',
+        'embed_or_direct': 'Einbettung oder direkte Wiedergabe im CMS-Player',
+        'embed_or_link': 'Einbettung oder externer Link',
+        'direct': 'Direkte Wiedergabe im CMS-Player',
+        'direct_or_link': 'Direkte Wiedergabe oder externer Link',
+        'link': 'Externer Link'
+    } %}
+    <div class="table-wrap">
+        <table>
+            <thead><tr><th scope="col">Anbieter</th><th scope="col">Wiedergabe</th><th scope="col">Dokumentation</th></tr></thead>
+            <tbody>{% for provider in catalogue %}
+                <tr>
+                    <td>{{ provider.label }}</td>
+                    <td>{{ capabilityLabels[provider.capability]|default('Anbieterspezifische Quelle – Details prüfen') }}</td>
+                    <td><a href="{{ provider.documentation }}" target="_blank" rel="noopener noreferrer">Dokumentation</a></td>
+                </tr>
+            {% endfor %}</tbody>
+        </table>
+    </div>
+</details>
 {% endblock %}
