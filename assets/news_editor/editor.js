@@ -2,7 +2,7 @@ import {parseVideoUrl, videoPreviewUrl} from './video-url.js';
 import {EditorHistory} from './history.js';
 import {articleOutline, insertAfter, withinDocumentLimits} from './longform.js';
 import {editTable} from './table-ops.js';
-import {safeEditorHref, clipboardRuns, editList, replaceArticle, findArticleBlocks} from './authoring.js';
+import {safeEditorHref, classifyLinkSelection, canApplyLink, clipboardRuns, editList, replaceArticle, findArticleBlocks} from './authoring.js';
 import {AutosaveState} from './autosave-state.js';
 import {structuredMarkdown, importMarkdownArticle} from './markdown-paste.js';
 import {articleMarkdown} from './markdown-io.js';
@@ -22,6 +22,12 @@ if (root) {
   const search = document.getElementById('news-editor-find');
   const replacement = document.getElementById('news-editor-replace');
   const searchResult = document.getElementById('news-editor-find-result');
+  const linkDialog = document.getElementById('news-editor-link-dialog');
+  const linkForm = document.getElementById('news-editor-link-form');
+  const linkHref = document.getElementById('news-editor-link-href');
+  const linkStatus = document.getElementById('news-editor-link-status');
+  const removeLinkButton = document.getElementById('news-editor-link-remove');
+  let savedLinkContext = null;
   const prefix = 'cms-rich:v2\n';
   let history;
   let autosaveState;
@@ -542,6 +548,92 @@ if (root) {
     if (!autosaveState || openError || submitting || autosaveState.blocked || !autosaveState.isDirty(serialize())) return;
     autosaveTimer = setTimeout(saveAutomatically, 15000);
   }
+  function restoreLinkSelection(context) {
+    if (!context?.range || !context.editable?.isConnected || !blocks.contains(context.editable)) return false;
+    const selection = window.getSelection();
+    if (!selection) return false;
+    context.editable.focus();
+    selection.removeAllRanges();
+    selection.addRange(context.range);
+    return true;
+  }
+  function openLinkDialog() {
+    const selection = window.getSelection();
+    const range = selection?.rangeCount ? selection.getRangeAt(0).cloneRange() : null;
+    const startField = range && closestFrom(range.startContainer, '[contenteditable="true"]');
+    const endField = range && closestFrom(range.endContainer, '[contenteditable="true"]');
+    const sameField = Boolean(range && startField && startField === endField && blocks.contains(startField));
+    const link = range && closestFrom(range.startContainer, 'a');
+    const existingLink = Boolean(link && sameField && startField.contains(link));
+    const selectionInsideExistingLink = Boolean(existingLink && (range.collapsed || link.contains(range.endContainer)));
+    const selectedFragmentContainsLink = Boolean(range && range.cloneContents().querySelector?.('a'));
+    const mode = classifyLinkSelection({sameField, selectedText: selection?.toString() ?? '', existingLink, selectionInsideExistingLink, selectedFragmentContainsLink});
+    if (!mode) {
+      status.textContent = sameField
+        ? 'Zum Erstellen bitte zuerst zusammenhängenden Text in einem Textfeld markieren.'
+        : 'Bitte zuerst Text innerhalb eines einzelnen Textfelds markieren oder einen vorhandenen Link auswählen.';
+      return;
+    }
+    savedLinkContext = {range, editable: startField, link: mode === 'edit' ? link : null};
+    linkHref.value = mode === 'edit' ? link.getAttribute('href') ?? '' : '';
+    removeLinkButton.hidden = mode !== 'edit';
+    linkStatus.textContent = '';
+    linkDialog.showModal();
+    linkHref.focus();
+    linkHref.select();
+  }
+  linkForm.addEventListener('submit', event => {
+    event.preventDefault();
+    const context = savedLinkContext;
+    const selectionText = context?.range.toString() ?? '';
+    const editingExistingLink = Boolean(context?.link?.isConnected && context.editable.contains(context.link));
+    const selectedFragmentContainsLink = Boolean(context?.range.cloneContents().querySelector?.('a'));
+    if (!canApplyLink({href: linkHref.value, sameField: Boolean(context?.editable?.isConnected && blocks.contains(context.editable)), selectedText: selectionText, editingExistingLink, selectedFragmentContainsLink})) {
+      linkStatus.textContent = !safeEditorHref(linkHref.value)
+        ? 'Linkziel nicht erlaubt. Bitte HTTP(S) oder einen internen Pfad ohne Zugangsdaten verwenden.'
+        : 'Die Auswahl ist nicht mehr gültig. Bitte markiere den Text erneut.';
+      return;
+    }
+    if (editingExistingLink) {
+      context.link.setAttribute('href', safeEditorHref(linkHref.value));
+      restoreLinkSelection(context);
+    } else {
+      if (!restoreLinkSelection(context)) {
+        linkStatus.textContent = 'Die Textauswahl ist nicht mehr verfügbar. Bitte markiere den Text erneut.';
+        return;
+      }
+      const selection = window.getSelection();
+      const range = selection.getRangeAt(0);
+      const anchor = node('a');
+      anchor.setAttribute('href', safeEditorHref(linkHref.value));
+      anchor.append(range.extractContents());
+      range.insertNode(anchor);
+      range.selectNodeContents(anchor);
+      range.collapse(false);
+      selection.removeAllRanges();
+      selection.addRange(range);
+    }
+    changed();
+    status.textContent = 'Link aktualisiert.';
+    linkDialog.close('applied');
+  });
+  removeLinkButton.addEventListener('click', () => {
+    const context = savedLinkContext;
+    if (!context?.link?.isConnected || !context.editable.contains(context.link)) {
+      linkStatus.textContent = 'Der ausgewählte Link ist nicht mehr verfügbar.';
+      return;
+    }
+    context.link.replaceWith(...context.link.childNodes);
+    restoreLinkSelection(context);
+    changed();
+    status.textContent = 'Link entfernt; Text blieb erhalten.';
+    linkDialog.close('removed');
+  });
+  document.getElementById('news-editor-link-cancel').addEventListener('click', () => linkDialog.close('cancel'));
+  linkDialog.addEventListener('close', () => {
+    if (linkDialog.returnValue !== 'applied' && linkDialog.returnValue !== 'removed') restoreLinkSelection(savedLinkContext);
+    savedLinkContext = null;
+  });
   window.addEventListener('beforeunload', event => { if (!submitting && autosaveState.isDirty(serialize())) { event.preventDefault(); event.returnValue = ''; } });
   document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden' && !autosaveState.blocked) { clearTimeout(autosaveTimer); saveAutomatically(); } });
   form.addEventListener('submit', event => {
@@ -559,15 +651,8 @@ if (root) {
         restore(command === 'undo' ? history.undo() : history.redo()); return;
       }
       if (command === 'link') {
-        const selection = window.getSelection();
-        const current = closestFrom(selection?.anchorNode, 'a');
-        const url = window.prompt('Linkziel (HTTP(S) oder interner Pfad):', current?.getAttribute('href') ?? '');
-        if (url === null) return;
-        const href = safeEditorHref(url);
-        if (!href) { status.textContent = 'Linkziel nicht erlaubt. Bitte HTTP(S) oder internen Pfad verwenden.'; return; }
-        if (current && blocks.contains(current)) current.setAttribute('href', href);
-        else if (selection && !selection.isCollapsed && selection.rangeCount && closestFrom(selection.anchorNode, '[contenteditable]') && closestFrom(selection.anchorNode, '[contenteditable]') === closestFrom(selection.focusNode, '[contenteditable]')) document.execCommand('createLink', false, href);
-        else { status.textContent = 'Bitte zuerst Text innerhalb eines Feldes markieren.'; return; }
+        openLinkDialog();
+        return;
       } else if (command === 'unlink') document.execCommand('unlink', false);
       else if (command === 'removeFormat') document.execCommand('removeFormat', false);
       else if (command === 'inlineCode') {
