@@ -11,7 +11,7 @@
   "baseline_branch": "main",
   "base_sha": "2f98de43e3cf4a26addb436cf9908b4135f2bdc6",
   "published_at": "2026-10-13T22:45:00Z",
-  "summary": "WCP-688 is complete as open draft PR #497 at 34523e6577dd543f65b8ee5b68ebdbf67a08b997 with green exact-head Worker CI run 38480038083. WCP-689 is reserved as a path-disjoint Worker-only proposal, open as draft PR #498 at 05dfc0637b60a7696c81d933c1c8e6de90ab846e; exact-head CI validation PR #499 is open and pending.",
+  "summary": "WCP-688 is complete as open draft PR #497 at 34523e6577dd543f65b8ee5b68ebdbf67a08b997 with green exact-head Worker CI run 38480038083. WCP-689 is reserved as a path-disjoint Worker-only proposal, draft PR #498 at c980f5c8368ad2e6ef0bbc03463a63f217986edb; exact-head CI validation PR #499 is open and pending.",
   "rules": {
     "choose": "Resume the current chat's unfinished claimed branch first. Otherwise atomically claim an eligible published task. If no published task is eligible, independently derive and publish a bounded worker-only CMS proposal from approved product goals and observed code gaps; do not ask the owner for the next FCP number.",
     "atomic_reservation": "Create the exact claim_branch and suggested feature branch from that task's published proposal_base_sha. If the claim already exists, treat it as a hard lock; the owning continuation resumes it and every other AI skips it.",
@@ -69568,7 +69568,7 @@
           "tests/JavaScript/news_editor.test.mjs"
         ]
       },
-      "next_action": "Worker CI run 38480038083 completed successfully on exact feature HEAD 34523e6577dd543f65b8ee5b68ebdbf67a08b997. Both required PHP/Symfony and PostgreSQL 18 jobs passed; local npm run test:js passed 40/40, node --check and git diff --check passed. PR #497 remains open as draft; no merge or deployment.",
+      "next_action": "Worker CI run 38480038083 passed on exact feature HEAD 34523e6577dd543f65b8ee5b68ebdbf67a08b997. PHP/Symfony and PostgreSQL 18 passed; local JavaScript suite passed 40/40, node checks and diff check passed. PR #497 remains open as draft; no merge or deployment.",
       "active_head": "34523e6577dd543f65b8ee5b68ebdbf67a08b997",
       "last_observed_head": "34523e6577dd543f65b8ee5b68ebdbf67a08b997",
       "worker_pr_state": "draft",
@@ -69593,7 +69593,7 @@
       "suggested_branch": "feature/wcp-689-content-redirect-export-g1",
       "resume_branch": "feature/wcp-689-content-redirect-export-g1",
       "claimed_on": "2026-10-13T23:24:00Z",
-      "lease_expires_at": "2026-10-14T06:24:41Z",
+      "lease_expires_at": "2026-10-14T06:31:00Z",
       "base_branch": "main",
       "base_sha": "2f98de43e3cf4a26addb436cf9908b4135f2bdc6",
       "proposal_base_branch": "feature/wcp-688-accessible-links-g1",
@@ -69615,13 +69615,13 @@
           "result": "success"
         }
       ],
-      "objective": "Let CMS editors safely download a filtered, paginated inventory of legacy content redirects for SEO migration review. Keep the export permission-protected, private/no-store, CSV-injection-safe, stable under large datasets, and limited to the same source/type/title fields already visible in the redirect manager.",
+      "objective": "Let CMS editors safely download a filtered, paginated inventory of legacy content redirects for SEO migration review. Keep the export permission-protected, private/no-store, CSV-injection-safe, stable under large datasets, and limited to source/type/title/slug/status fields already managed in the redirect inventory.",
       "acceptance_checks": [
         "CMS content permission required; anonymous and insufficient-permission requests are denied.",
         "Only scalar UTF-8 q and supported content type filters are accepted; malformed filters return 400.",
         "CSV uses stable ordering, RFC-compatible escaping, and neutralizes spreadsheet formula prefixes.",
         "Export streams bounded pages and never exposes content body.",
-        "Response is private/no-store and noindex; tests cover escaping and pagination."
+        "Response is private/no-store and noindex; tests cover authorization, filters, formula safety, and paging."
       ],
       "collision_check": {
         "compared_against": "Current work-pool-v4 and all active/locked claims, plus exact green WCP-688 PR #497 head.",
@@ -69641,15 +69641,15 @@
         "tests/Controller/AdminContentRedirectCsvControllerTest.php",
         "tests/ContentRedirect/ContentRedirectCsvExporterTest.php"
       ],
-      "next_action": "Run Worker CI for exact PR #498 head 05dfc0637b60a7696c81d933c1c8e6de90ab846e via validation PR #499 targeting worker/account-ci-wcp-689-g1; fix failures within allowed paths, then record exact green HEAD. PHP is not installed locally in this environment.",
-      "active_head": "05dfc0637b60a7696c81d933c1c8e6de90ab846e",
-      "last_observed_head": "05dfc0637b60a7696c81d933c1c8e6de90ab846e",
+      "next_action": "Verify mandatory Worker CI on exact head c980f5c8368ad2e6ef0bbc03463a63f217986edb through validation PR #499 targeting worker/account-ci-wcp-689-g1. Fix failures within the allowed paths and update exact green HEAD; PHP is not installed locally.",
+      "active_head": "c980f5c8368ad2e6ef0bbc03463a63f217986edb",
+      "last_observed_head": "c980f5c8368ad2e6ef0bbc03463a63f217986edb",
       "worker_pr_state": "draft",
-      "last_checkpoint_at": "2026-10-13T23:25:00Z",
-      "last_verified_push_at": "2026-10-13T23:24:41Z",
+      "last_checkpoint_at": "2026-10-13T23:31:00Z",
+      "last_verified_push_at": "2026-10-13T23:31:00Z",
       "worker_pr": 498,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/498",
-      "worker_pr_head_sha": "05dfc0637b60a7696c81d933c1c8e6de90ab846e",
+      "worker_pr_head_sha": "c980f5c8368ad2e6ef0bbc03463a63f217986edb",
       "ci_result": "pending",
       "ci_branch": "worker/account-ci-wcp-689-g1",
       "ci_run_id": null,
