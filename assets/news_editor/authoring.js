@@ -12,6 +12,21 @@ export function safeEditorHref(value) {
   } catch { return null; }
 }
 
+/** Classify a saved editor selection before opening the link dialog. */
+export function classifyLinkSelection({sameField, selectedText, existingLink, selectionInsideExistingLink, selectedFragmentContainsLink}) {
+  if (!sameField) return null;
+  if (existingLink && selectionInsideExistingLink) return 'edit';
+  if (existingLink || selectedFragmentContainsLink || typeof selectedText !== 'string' || !selectedText.trim()) return null;
+  return 'create';
+}
+
+/** Validate a link-dialog submission without changing the editor document. */
+export function canApplyLink({href, sameField, selectedText, editingExistingLink, selectedFragmentContainsLink}) {
+  return Boolean(safeEditorHref(href)
+    && sameField
+    && (editingExistingLink || (typeof selectedText === 'string' && selectedText.trim() !== '' && !selectedFragmentContainsLink)));
+}
+
 /** Read an inert DOMParser tree; return text and fixed marks, never untrusted elements. */
 export function clipboardRuns(root) {
   const output = [];

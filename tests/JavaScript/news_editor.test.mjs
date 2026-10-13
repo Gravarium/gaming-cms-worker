@@ -4,7 +4,7 @@ import {parseVideoUrl, videoPreviewUrl} from '../../assets/news_editor/video-url
 import {EditorHistory} from '../../assets/news_editor/history.js';
 import {articleOutline, insertAfter, withinDocumentLimits} from '../../assets/news_editor/longform.js';
 import {editTable} from '../../assets/news_editor/table-ops.js';
-import {safeEditorHref, clipboardRuns, editList, replaceArticle, findArticleBlocks} from '../../assets/news_editor/authoring.js';
+import {safeEditorHref, classifyLinkSelection, canApplyLink, clipboardRuns, editList, replaceArticle, findArticleBlocks} from '../../assets/news_editor/authoring.js';
 import {AutosaveState} from '../../assets/news_editor/autosave-state.js';
 import {structuredMarkdown, importMarkdownArticle} from '../../assets/news_editor/markdown-paste.js';
 import {articleMarkdown} from '../../assets/news_editor/markdown-io.js';
@@ -29,6 +29,24 @@ test('snippet responses are bounded and reject malformed server data', () => {
   assert.equal(payload.items[0].block.content[0].text, '<safe>');
   assert.deepEqual(normalizeSnippetItems({items: Array(31).fill(payload.items[0])}), []);
   assert.deepEqual(normalizeSnippetItems(null), []);
+});
+
+test('link editor only opens for safe same-field selections or a selected existing link', () => {
+  assert.equal(classifyLinkSelection({sameField: true, selectedText: 'selected words', existingLink: false, selectionInsideExistingLink: false, selectedFragmentContainsLink: false}), 'create');
+  assert.equal(classifyLinkSelection({sameField: true, selectedText: '', existingLink: true, selectionInsideExistingLink: true, selectedFragmentContainsLink: false}), 'edit');
+  assert.equal(classifyLinkSelection({sameField: false, selectedText: 'words', existingLink: false, selectionInsideExistingLink: false, selectedFragmentContainsLink: false}), null);
+  assert.equal(classifyLinkSelection({sameField: true, selectedText: 'words', existingLink: false, selectionInsideExistingLink: false, selectedFragmentContainsLink: true}), null);
+  assert.equal(classifyLinkSelection({sameField: true, selectedText: '   ', existingLink: false, selectionInsideExistingLink: false, selectedFragmentContainsLink: false}), null);
+  assert.equal(classifyLinkSelection({sameField: true, selectedText: 'part of link', existingLink: true, selectionInsideExistingLink: false, selectedFragmentContainsLink: true}), null);
+});
+
+test('link editor validates destinations before allowing a content mutation', () => {
+  assert.equal(canApplyLink({href: '/news/story', sameField: true, selectedText: 'Story', editingExistingLink: false, selectedFragmentContainsLink: false}), true);
+  assert.equal(canApplyLink({href: 'https://example.test/story', sameField: true, selectedText: '', editingExistingLink: true, selectedFragmentContainsLink: false}), true);
+  assert.equal(canApplyLink({href: 'javascript:alert(1)', sameField: true, selectedText: 'Story', editingExistingLink: false, selectedFragmentContainsLink: false}), false);
+  assert.equal(canApplyLink({href: '/news/story', sameField: false, selectedText: 'Story', editingExistingLink: false, selectedFragmentContainsLink: false}), false);
+  assert.equal(canApplyLink({href: '/news/story', sameField: true, selectedText: 'Story', editingExistingLink: false, selectedFragmentContainsLink: true}), false);
+  assert.equal(canApplyLink({href: '/news/story', sameField: true, selectedText: '', editingExistingLink: false, selectedFragmentContainsLink: false}), false);
 });
 
 test('snippet insertion deep-clones a typed block and preserves document limits', () => {
