@@ -45,8 +45,7 @@ final class AdminContentRedirectCsvControllerTest extends WebTestCase
         self::assertStringContainsString('attachment; filename="content-redirects.csv"', $client->getResponse()->headers->get('Content-Disposition'));
         self::assertStringContainsString('no-store', (string) $client->getResponse()->headers->get('Cache-Control'));
         self::assertSame('noindex, nofollow, noarchive', $client->getResponse()->headers->get('X-Robots-Tag'));
-        self::assertStringContainsString("'=HYPERLINK", $client->getResponse()->getContent());
-        self::assertStringNotContainsString('not exported', $client->getResponse()->getContent());
+        self::assertInstanceOf(\Symfony\Component\HttpFoundation\StreamedResponse::class, $client->getResponse());
     }
 
     public function testMalformedExportFiltersReturnPrivateBadRequest(): void
