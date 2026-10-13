@@ -10,8 +10,8 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "2f98de43e3cf4a26addb436cf9908b4135f2bdc6",
-  "published_at": "2026-10-05T16:13:01.807Z",
-  "summary": "WCP-687 is complete as open draft PR #485 at 2ce1373d90140544a7912643f6bccb92e4bd7855 with green exact-head Worker CI run 37217864192 (PHP/Symfony and PostgreSQL 18). Reclaimed as generation 2 after the prior lease expired; claim is locked for Trusted review. WCP-686 remains separately active.",
+  "published_at": "2026-10-13T22:43:00Z",
+  "summary": "WCP-687 is complete as open draft PR #485 at 2ce1373d90140544a7912643f6bccb92e4bd7855 with green exact-head Worker CI run 37217864192 (PHP/Symfony and PostgreSQL 18). Reclaimed as generation 2 after the prior lease expired; claim is locked for Trusted review. WCP-686 remains separately active. WCP-688 is a worker-only serial descendant of green WCP-686, addressing the visual News editor's blocking window.prompt link flow with an accessible in-editor dialog; claim generation 1 is active on exclusive paths.",
   "rules": {
     "choose": "Resume the current chat's unfinished claimed branch first. Otherwise atomically claim an eligible published task. If no published task is eligible, independently derive and publish a bounded worker-only CMS proposal from approved product goals and observed code gaps; do not ask the owner for the next FCP number.",
     "atomic_reservation": "Create the exact claim_branch and suggested feature branch from that task's published proposal_base_sha. If the claim already exists, treat it as a hard lock; the owning continuation resumes it and every other AI skips it.",
@@ -69481,6 +69481,103 @@
         "tests/Controller/RobotsTxtControllerTest.php"
       ],
       "completed_on": "2026-10-05T03:26:54.100Z"
+    },
+    {
+      "priority": 688,
+      "package_id": "WCP-688",
+      "title": "Accessible link editing in the visual News editor",
+      "risk": "medium_editorial_accessibility",
+      "execution_state": "worker_in_progress",
+      "claim_state": "worker_in_progress",
+      "claim_generation": 1,
+      "claim_branch": "claim/wcp-688-accessible-links-g1",
+      "suggested_branch": "feature/wcp-688-accessible-links-g1",
+      "resume_branch": "feature/wcp-688-accessible-links-g1",
+      "claimed_on": "2026-10-13T22:43:00Z",
+      "lease_expires_at": "2026-10-14T05:43:00Z",
+      "base_branch": "main",
+      "base_sha": "2f98de43e3cf4a26addb436cf9908b4135f2bdc6",
+      "proposal_base_branch": "feature/wcp-686-news-mobile-editor-g1",
+      "proposal_base_sha": "fe7f8c8f39e6623118f9653968a4aa6f244d4559",
+      "active_base_branch": "feature/wcp-686-news-mobile-editor-g1",
+      "active_base_sha": "fe7f8c8f39e6623118f9653968a4aa6f244d4559",
+      "dependencies": [
+        "WCP-686"
+      ],
+      "proposal_kind": "worker_only",
+      "proposal_dependency_evidence": [
+        {
+          "package_id": "WCP-686",
+          "head": "fe7f8c8f39e6623118f9653968a4aa6f244d4559",
+          "pr": 484,
+          "ci_run": 38477220098,
+          "result": "success"
+        }
+      ],
+      "objective": "Replace blocking browser-prompt link creation with a keyboard- and touch-accessible, editor-integrated link dialog for creating, editing and removing links. Preserve the selected text and focus context, keep link creation scoped to a single editor field, reuse the existing safeEditorHref validation, and retain safe failure feedback. Do not change server routes, persistence, document schema, or publication semantics.",
+      "allowed_paths": [
+        "assets/news_editor/editor.js",
+        "assets/news_editor/editor.css",
+        "templates/admin/news_editor/edit.html.twig",
+        "tests/JavaScript/news_editor.test.mjs"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "CONTINUOUS-WORKER.md",
+        "CONTINUOUS-WORK-POOL.json",
+        ".github/workflows/",
+        "migrations/",
+        "src/",
+        "assets/news_editor/mobile.css",
+        "assets/news_editor/markdown-io.js",
+        "templates/admin/news_editor/index.html.twig",
+        "templates/admin/news_editor/metadata.html.twig"
+      ],
+      "deliverables": [
+        "Add an accessible link dialog with labeled URL controls, keyboard focus handling, Escape/cancel behavior, and clear validation/status messaging.",
+        "Create links only from selected text in one contenteditable block; edit or remove an existing link without losing its text or editor selection.",
+        "Use the existing safeEditorHref URL policy; reject invalid destinations without mutating document content.",
+        "Add focused JS coverage for selection preservation, add/edit/remove behavior, keyboard dismissal, invalid URLs, and cross-block/no-selection rejection."
+      ],
+      "tests": [
+        "Targeted JavaScript News Editor test suite",
+        "Complete exact-head Worker CI including PHP/Symfony and PostgreSQL 18"
+      ],
+      "immutable_constraints": [
+        "worker-only-no-Trusted-merge-or-deployment",
+        "no-server-routes-or-content-schema-changes",
+        "reuse-existing-safe-link-destination-policy",
+        "preserve-keyboard-screen-reader-and-touch-accessibility",
+        "reject-invalid-or-cross-field-link-operations-without-content-mutation"
+      ],
+      "collision_check": {
+        "compared_against": "Current work-pool-v4, all active and locked claims, and exact green WCP-686 / PR #484 head.",
+        "result": "Serial descendant of WCP-686 after exact-head Worker CI success. The only shared path is templates/admin/news_editor/edit.html.twig in the explicit green dependency chain; JavaScript, CSS, and test paths have no active conflicting claim.",
+        "paths": [
+          "assets/news_editor/editor.js",
+          "assets/news_editor/editor.css",
+          "templates/admin/news_editor/edit.html.twig",
+          "tests/JavaScript/news_editor.test.mjs"
+        ]
+      },
+      "next_action": "Generation 1 claimed from exact green WCP-686 HEAD fe7f8c8f39e6623118f9653968a4aa6f244d4559. Replace the toolbar's window.prompt link flow with the bounded accessible in-editor dialog; preserve current selection and run the JS suite plus full Worker CI on the final feature HEAD.",
+      "active_head": "fe7f8c8f39e6623118f9653968a4aa6f244d4559",
+      "last_observed_head": "fe7f8c8f39e6623118f9653968a4aa6f244d4559",
+      "worker_pr_state": "not_open",
+      "last_checkpoint_at": "2026-10-13T22:43:00Z",
+      "last_verified_push_at": null,
+      "worker_pr": null,
+      "worker_pr_url": null,
+      "worker_pr_head_sha": null,
+      "ci_result": null,
+      "ci_branch": "worker/account-ci-wcp-688-g1",
+      "ci_run_id": null
     }
   ],
   "recovery_queue": [],
