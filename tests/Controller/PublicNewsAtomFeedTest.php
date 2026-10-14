@@ -24,7 +24,11 @@ final class PublicNewsAtomFeedTest extends WebTestCase
 
         for ($index = 1; $index <= 52; ++$index) {
             $title = $index === 52 ? 'Atom & public '.$suffix : 'Atom public '.$suffix.' '.$index;
-            $entities[] = $this->entry($author, $category, $title, 'atom-'.$suffix.'-'.$index, ContentEntry::STATUS_PUBLISHED);
+            $entry = $this->entry($author, $category, $title, 'atom-'.$suffix.'-'.$index, ContentEntry::STATUS_PUBLISHED);
+            if ($index === 52) {
+                $entry->setPinned(true);
+            }
+            $entities[] = $entry;
         }
         $entities[] = $this->entry($author, $category, 'Atom draft '.$suffix, 'atom-'.$suffix.'-draft', ContentEntry::STATUS_DRAFT);
         $entities[] = $this->entry($author, $category, 'Atom unlisted '.$suffix, 'atom-'.$suffix.'-unlisted', ContentEntry::STATUS_PUBLISHED, true);
