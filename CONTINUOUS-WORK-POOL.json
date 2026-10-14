@@ -10,8 +10,8 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "2f98de43e3cf4a26addb436cf9908b4135f2bdc6",
-  "published_at": "2026-10-13T22:45:00Z",
-  "summary": "WCP-690–WCP-693 are complete as green open draft PRs awaiting Trusted review. WCP-692 adds category-filtered RSS; WCP-693 adds category-specific JSON Feed 1.1. WCP-693 exact green HEAD bfd25bacb7f1cdec339e61e83928e3bf7af35752 passed Worker CI 38506275401.",
+  "published_at": "2026-10-14T04:13:00Z",
+  "summary": "WCP-690–WCP-693 are complete as green open draft PRs awaiting Trusted review; WCP-694 claims isolated News tag-specific RSS and JSON feeds on the exact green WCP-693 base.",
   "rules": {
     "choose": "Resume the current chat's unfinished claimed branch first. Otherwise atomically claim an eligible published task. If no published task is eligible, independently derive and publish a bounded worker-only CMS proposal from approved product goals and observed code gaps; do not ask the owner for the next FCP number.",
     "atomic_reservation": "Create the exact claim_branch and suggested feature branch from that task's published proposal_base_sha. If the claim already exists, treat it as a hard lock; the owning continuation resumes it and every other AI skips it.",
@@ -69980,6 +69980,104 @@
       "ci_branch": "worker/account-ci-wcp-693-g1",
       "ci_pr": 507,
       "ci_run_id": 38506275401
+    },
+    {
+      "priority": 694,
+      "package_id": "WCP-694",
+      "title": "Publish tag-specific public News RSS and JSON feeds",
+      "risk": "low_public_read_only",
+      "execution_state": "worker_in_progress",
+      "claim_state": "claimed",
+      "claim_generation": 1,
+      "claim_branch": "claim/wcp-694-news-tag-feeds-g1",
+      "suggested_branch": "feature/wcp-694-news-tag-feeds-g1",
+      "resume_branch": "feature/wcp-694-news-tag-feeds-g1",
+      "claimed_on": "2026-10-14T04:13:00Z",
+      "lease_expires_at": "2026-10-14T11:13:00Z",
+      "base_branch": "main",
+      "base_sha": "2f98de43e3cf4a26addb436cf9908b4135f2bdc6",
+      "proposal_base_branch": "feature/wcp-693-news-category-json-feed-g1",
+      "proposal_base_sha": "bfd25bacb7f1cdec339e61e83928e3bf7af35752",
+      "active_base_branch": "feature/wcp-693-news-category-json-feed-g1",
+      "active_base_sha": "bfd25bacb7f1cdec339e61e83928e3bf7af35752",
+      "dependencies": [
+        "WCP-693"
+      ],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "proposal_kind": "worker_only",
+      "proposal_dependency_evidence": [
+        {
+          "package_id": "WCP-693",
+          "head": "bfd25bacb7f1cdec339e61e83928e3bf7af35752",
+          "pr": 506,
+          "ci_run": 38506275401,
+          "result": "success"
+        }
+      ],
+      "objective": "Add subscription feeds scoped to a public News tag, complementing existing global and category feeds while reusing the repository's published/listed tag filtering.",
+      "acceptance_checks": [
+        "Add GET /news/tag/{slug}/feed.xml and /news/tag/{slug}/feed.json using standalone controllers; unknown tags return 404.",
+        "Both feeds include only published, listed News carrying the selected tag, in repository ordering, with stable absolute article and tag URLs.",
+        "RSS XML escapes content and JSON Feed 1.1 excludes article bodies and private user fields.",
+        "Use appropriate RSS/XML and application/feed+json UTF-8 content types, bounded public caching, ETags/conditional responses, and cap cache lifetime at scheduled unpublish deadlines.",
+        "Tests cover matching versus other tags, hidden/unpublished entries, missing tag, XML/JSON metadata, content types and cache behavior.",
+        "Complete exact-head Worker CI including PHP/Symfony and PostgreSQL 18."
+      ],
+      "collision_check": {
+        "compared_against": "Latest continuous/work-pool-v4 and all active/locked claim scopes; inspected public News routes, repository filters, and exact green WCP-693 head.",
+        "result": "No exact or prefix overlap across active/locked claims. New standalone controller, template and test paths only; shared PublicContentController, category feed controllers, entities, migrations and workflows remain untouched.",
+        "paths": [
+          "src/Controller/PublicNewsTagFeedController.php",
+          "src/Controller/PublicNewsTagJsonFeedController.php",
+          "templates/content/news_tag_feed.xml.twig",
+          "tests/Controller/PublicNewsTagFeedTest.php",
+          "tests/Controller/PublicNewsTagJsonFeedTest.php"
+        ]
+      },
+      "allowed_paths": [
+        "src/Controller/PublicNewsTagFeedController.php",
+        "src/Controller/PublicNewsTagJsonFeedController.php",
+        "templates/content/news_tag_feed.xml.twig",
+        "tests/Controller/PublicNewsTagFeedTest.php",
+        "tests/Controller/PublicNewsTagJsonFeedTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "CONTINUOUS-WORKER.md",
+        "CONTINUOUS-WORK-POOL.json",
+        ".github/workflows/",
+        "migrations/",
+        "src/Controller/PublicContentController.php",
+        "src/Controller/PublicNewsCategoryFeedController.php",
+        "src/Controller/PublicNewsCategoryJsonFeedController.php"
+      ],
+      "tests": [
+        "targeted PHPUnit tests for tag-scoped RSS and JSON Feed 1.1",
+        "complete exact-head Worker CI including PHP/Symfony and PostgreSQL 18"
+      ],
+      "completion_report": [
+        "exact final worker HEAD SHA and exact sanitized base SHA",
+        "complete changed-path list and Worker PR",
+        "targeted tests plus complete Worker CI results",
+        "unresolved risks and assumptions"
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "no-executable-public-uploads",
+        "no-secrets-or-trusted-private-runtime-in-worker-source",
+        "preserve-existing-security-controls-tests-phpstan-and-ci",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
+      ]
     }
   ],
   "recovery_queue": [],
