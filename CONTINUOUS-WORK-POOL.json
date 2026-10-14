@@ -11,7 +11,7 @@
   "baseline_branch": "main",
   "base_sha": "2f98de43e3cf4a26addb436cf9908b4135f2bdc6",
   "published_at": "2026-10-13T22:45:00Z",
-  "summary": "WCP-689 complete as open draft PR #498 at 91a0cfaecaad237edebf226be2188489f970f8af with green exact-head CI run 38489311802. WCP-690 is reserved as a path-disjoint, dependent Worker-only proposal for safe CSV redirect import.",
+  "summary": "WCP-690 complete as open draft PR #500 at 68f6cca23bd5751de57b62e0ee845092c9f6b276 with green exact-head CI run 38501101608. WCP-691 is reserved as a path-disjoint, dependent Worker-only proposal for read-only content redirect chain/cycle auditing.",
   "rules": {
     "choose": "Resume the current chat's unfinished claimed branch first. Otherwise atomically claim an eligible published task. If no published task is eligible, independently derive and publish a bounded worker-only CMS proposal from approved product goals and observed code gaps; do not ask the owner for the next FCP number.",
     "atomic_reservation": "Create the exact claim_branch and suggested feature branch from that task's published proposal_base_sha. If the claim already exists, treat it as a hard lock; the owning continuation resumes it and every other AI skips it.",
@@ -69726,6 +69726,90 @@
       "ci_branch": "worker/account-ci-wcp-690-g1",
       "ci_run_id": 38501101608,
       "ci_pr": 501
+    },
+    {
+      "priority": 691,
+      "package_id": "WCP-691",
+      "title": "Audit content redirects for chains and cycles",
+      "risk": "low_admin_audit",
+      "execution_state": "worker_in_progress",
+      "claim_state": "worker_in_progress",
+      "claim_generation": 1,
+      "claim_branch": "claim/wcp-691-content-redirect-audit-g1",
+      "suggested_branch": "feature/wcp-691-content-redirect-audit-g1",
+      "resume_branch": "feature/wcp-691-content-redirect-audit-g1",
+      "claimed_on": "2026-10-14 02:33:15Z",
+      "lease_expires_at": "2026-10-14T09:33:15Z",
+      "base_branch": "main",
+      "base_sha": "2f98de43e3cf4a26addb436cf9908b4135f2bdc6",
+      "proposal_base_branch": "feature/wcp-690-content-redirect-import-g1",
+      "proposal_base_sha": "68f6cca23bd5751de57b62e0ee845092c9f6b276",
+      "active_base_branch": "feature/wcp-690-content-redirect-import-g1",
+      "active_base_sha": "68f6cca23bd5751de57b62e0ee845092c9f6b276",
+      "dependencies": [
+        "WCP-690"
+      ],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "proposal_kind": "worker_only",
+      "proposal_dependency_evidence": [
+        {
+          "package_id": "WCP-690",
+          "head": "68f6cca23bd5751de57b62e0ee845092c9f6b276",
+          "pr": 500,
+          "ci_run": 38501101608,
+          "result": "success"
+        }
+      ],
+      "objective": "Provide a read-only CLI audit for legacy content redirects that identifies redirect chains and cycles before or after CSV imports. The audit must never modify redirect/content data and must remain bounded to worker-visible content.",
+      "acceptance_checks": [
+        "Analyze redirect graph by content type and report source paths, chain paths and cycles deterministically.",
+        "Avoid false positives across page/news types; handle duplicate/invalid input safely.",
+        "CLI is read-only and returns non-zero when chain/cycle findings exist; a clean inventory returns zero.",
+        "Cover direct mapping, multi-hop chain, cycle, independent types, empty inventory and deterministic output in tests.",
+        "Complete exact-head Worker CI including PHP/Symfony and PostgreSQL 18."
+      ],
+      "collision_check": {
+        "compared_against": "Latest continuous/work-pool-v4, all active/locked claim scopes, and green WCP-690 PR #500 exact head.",
+        "result": "No exact or prefix overlap for any proposed file across 187 active/locked claims. New paths do not overlap WCP-689 export or WCP-690 importer files; no migration/schema or template edits.",
+        "paths": [
+          "src/Command/AuditContentRedirectsCommand.php",
+          "src/ContentRedirect/ContentRedirectChainAnalyzer.php",
+          "tests/Command/AuditContentRedirectsCommandTest.php",
+          "tests/ContentRedirect/ContentRedirectChainAnalyzerTest.php"
+        ]
+      },
+      "allowed_paths": [
+        "src/Command/AuditContentRedirectsCommand.php",
+        "src/ContentRedirect/ContentRedirectChainAnalyzer.php",
+        "tests/Command/AuditContentRedirectsCommandTest.php",
+        "tests/ContentRedirect/ContentRedirectChainAnalyzerTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "CONTINUOUS-WORKER.md",
+        "CONTINUOUS-WORK-POOL.json",
+        ".github/workflows/",
+        "migrations/"
+      ],
+      "next_action": "Implement a pure graph analyzer plus a read-only Symfony command and focused tests only in allowed paths. Open a draft stacked feature PR and exact-head Worker CI validation PR targeting worker/account-*. Record exact green SHA and CI evidence. Never merge or deploy.",
+      "active_head": null,
+      "last_observed_head": null,
+      "worker_pr_state": null,
+      "last_checkpoint_at": "2026-10-14 02:33:15Z",
+      "last_verified_push_at": null,
+      "worker_pr": null,
+      "worker_pr_url": null,
+      "worker_pr_head_sha": null,
+      "ci_result": "pending",
+      "ci_branch": "worker/account-ci-wcp-691-g1",
+      "ci_run_id": null
     }
   ],
   "recovery_queue": [],
