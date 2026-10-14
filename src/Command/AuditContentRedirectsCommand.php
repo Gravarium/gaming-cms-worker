@@ -13,7 +13,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
-#[AsCommand(name: 'app:content-redirect:audit', description: 'Prüft Content-Weiterleitungen auf Ketten und Zyklen.')]
+#[AsCommand(name: 'app:content-redirect:audit', description: 'Prüft Content-Weiterleitungen auf unveröffentlichte Ziele.')]
 final class AuditContentRedirectsCommand extends Command
 {
     public function __construct(
