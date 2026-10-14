@@ -71290,6 +71290,107 @@
       "ci_run": 38553368089,
       "ci_run_url": "https://github.com/Gravarium/gaming-cms-worker/actions/runs/38553368089",
       "ci_history": []
+    },
+    {
+      "priority": 706,
+      "package_id": "WCP-706",
+      "title": "Link the game-release feed directory from the release overview",
+      "risk": "low_public_read_only",
+      "execution_state": "worker_in_progress",
+      "claim_state": "active_lease",
+      "claim_generation": 1,
+      "claim_branch": "claim/wcp-706-game-release-feed-discovery-g1",
+      "suggested_branch": "feature/wcp-706-game-release-feed-discovery-g1",
+      "resume_branch": "feature/wcp-706-game-release-feed-discovery-g1",
+      "claimed_on": "2026-10-14T11:14:19Z",
+      "lease_expires_at": "2026-10-14T18:14:19Z",
+      "base_branch": "main",
+      "base_sha": "a6ff8d56cc5fd84b3eada9f6c745e43c70aa810b",
+      "proposal_base_branch": "feature/wcp-705-public-game-release-feed-directory-g1",
+      "proposal_base_sha": "4b8afdb5f442632b92ec4f3431a3ad3c82b538fb",
+      "active_base_branch": "feature/wcp-705-public-game-release-feed-directory-g1",
+      "active_base_sha": "4b8afdb5f442632b92ec4f3431a3ad3c82b538fb",
+      "dependencies": [
+        "WCP-705"
+      ],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "proposal_kind": "worker_only",
+      "proposal_dependency_evidence": [
+        {
+          "package_id": "WCP-705",
+          "head": "4b8afdb5f442632b92ec4f3431a3ad3c82b538fb",
+          "pr": 531,
+          "ci_run": 38553368089,
+          "result": "success"
+        }
+      ],
+      "objective": "Make the new public game-release feed directory discoverable from the existing release overview without changing any feed endpoint or shared handler.",
+      "acceptance_checks": [
+        "Add a clear link from the existing /games/releases overview to the named app_game_catalogue_release_feeds route.",
+        "Preserve existing release overview content and behavior.",
+        "Focused functional test confirms the release overview exposes the feed-directory link.",
+        "Keep the change read-only and limited to the approved template and new test path."
+      ],
+      "collision_check": {
+        "compared_against": "Live continuous/work-pool-v4 active and locked claims. Exact and prefix overlap checks for templates/game_catalogue/releases.html.twig and tests/Controller/PublicGameReleaseDirectoryDiscoveryTest.php both returned zero paths.",
+        "result": "No exact or prefix overlap with active/locked path claims.",
+        "paths": [
+          "templates/game_catalogue/releases.html.twig",
+          "tests/Controller/PublicGameReleaseDirectoryDiscoveryTest.php"
+        ]
+      },
+      "allowed_paths": [
+        "templates/game_catalogue/releases.html.twig",
+        "tests/Controller/PublicGameReleaseDirectoryDiscoveryTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "CONTINUOUS-WORKER.md",
+        "CONTINUOUS-WORK-POOL.json",
+        ".github/workflows/",
+        "migrations/",
+        "src/Controller/PublicGameReleaseFeedsPageController.php",
+        "src/Controller/PublicGameReleaseRssFeedController.php",
+        "src/Controller/PublicGameReleaseCalendarFeedController.php",
+        "src/Controller/PublicGameReleaseJsonFeedController.php",
+        "src/Repository/GameReleaseCalendarFeedRepository.php"
+      ],
+      "tests": [
+        "focused release-overview feed-directory discovery functional test",
+        "complete exact-head Worker CI including PHP/Symfony and PostgreSQL 18"
+      ],
+      "completion_report": [],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "preserve-existing-security-controls-tests-phpstan-and-ci",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
+      ],
+      "active_head": "4b8afdb5f442632b92ec4f3431a3ad3c82b538fb",
+      "last_observed_head": "4b8afdb5f442632b92ec4f3431a3ad3c82b538fb",
+      "last_checkpoint_at": "2026-10-14T11:14:19Z",
+      "last_verified_push_at": null,
+      "worker_pr_state": "not_opened",
+      "ci_result": "not_run",
+      "next_action": "Implement the discovery link and its focused functional test on feature/wcp-706-game-release-feed-discovery-g1 from exact green WCP-705 HEAD 4b8afdb5f442632b92ec4f3431a3ad3c82b538fb; open/update Worker and CI PRs and record exact-head CI. Never merge or deploy.",
+      "worker_pr": null,
+      "worker_pr_url": null,
+      "worker_pr_head_sha": null,
+      "ci_validation_pr": null,
+      "previous_ci_run": null,
+      "previous_ci_result": null,
+      "ci_run": null,
+      "ci_run_url": null,
+      "ci_history": []
     }
   ],
   "recovery_queue": [],
