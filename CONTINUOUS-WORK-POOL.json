@@ -10,8 +10,8 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "2f98de43e3cf4a26addb436cf9908b4135f2bdc6",
-  "published_at": "2026-10-14T10:41:33Z",
-  "summary": "WCP-698 through WCP-703 remain complete green open drafts awaiting Trusted review. WCP-704 is on exact HEAD 4c10e93e41014a9ba6a3a182b6624208980b5019 with CI run 38551191748 in progress after two test-only corrections.",
+  "published_at": "2026-10-14T18:21:35Z",
+  "summary": "WCP-707 is complete green awaiting Trusted review; WCP-708 is claimed on the exact WCP-707 green feature HEAD to expose the public game-release feed directory from individual game hubs.",
   "rules": {
     "choose": "Resume the current chat's unfinished claimed branch first. Otherwise atomically claim an eligible published task. If no published task is eligible, independently derive and publish a bounded worker-only CMS proposal from approved product goals and observed code gaps; do not ask the owner for the next FCP number.",
     "atomic_reservation": "Create the exact claim_branch and suggested feature branch from that task's published proposal_base_sha. If the claim already exists, treat it as a hard lock; the owning continuation resumes it and every other AI skips it.",
@@ -71503,6 +71503,102 @@
       "ci_run": 38580787489,
       "ci_run_url": "https://github.com/Gravarium/gaming-cms-worker/actions/runs/38580787489",
       "ci_history": []
+    },
+    {
+      "priority": 708,
+      "package_id": "WCP-708",
+      "title": "Expose the public release-feed directory from each game hub",
+      "risk": "low_public_read_only",
+      "execution_state": "worker_in_progress",
+      "claim_state": "claimed",
+      "claim_generation": 1,
+      "claim_branch": "claim/wcp-708-game-page-feed-discovery-g1",
+      "suggested_branch": "feature/wcp-708-game-page-feed-discovery-g1",
+      "resume_branch": "feature/wcp-708-game-page-feed-discovery-g1",
+      "claimed_on": "2026-10-14T18:21:35Z",
+      "lease_expires_at": "2026-10-15T01:21:35Z",
+      "base_branch": "main",
+      "base_sha": "a6ff8d56cc5fd84b3eada9f6c745e43c70aa810b",
+      "proposal_base_branch": "feature/wcp-707-catalogue-feed-discovery-g1",
+      "proposal_base_sha": "cbf1ac3be5d51fa76fb93f492a035a80c6e14431",
+      "active_base_branch": "feature/wcp-707-catalogue-feed-discovery-g1",
+      "active_base_sha": "cbf1ac3be5d51fa76fb93f492a035a80c6e14431",
+      "dependencies": [
+        "WCP-707"
+      ],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "proposal_kind": "worker_only",
+      "proposal_dependency_evidence": [
+        {
+          "package_id": "WCP-707",
+          "head": "cbf1ac3be5d51fa76fb93f492a035a80c6e14431",
+          "pr": 534,
+          "ci_run": 38580787489,
+          "result": "success"
+        }
+      ],
+      "objective": "Make the public game-release feed directory discoverable directly from an individual game's public hub, without changing feed endpoints or release data.",
+      "acceptance_checks": [
+        "Add a named-route link from the public game detail page to app_game_catalogue_release_feeds.",
+        "Preserve existing game details, release table, and linked areas.",
+        "A focused functional test confirms the link is present on the public game hub when the gaming module is enabled.",
+        "Keep the change read-only and limited to the approved template and new test path."
+      ],
+      "collision_check": {
+        "compared_against": "Live continuous/work-pool-v4 active and locked claims; exact and prefix overlap checks returned zero collisions for templates/game_catalogue/show.html.twig and tests/Controller/PublicGameHubReleaseFeedDiscoveryTest.php.",
+        "result": "No exact or prefix overlap with active/locked path claims.",
+        "paths": [
+          "templates/game_catalogue/show.html.twig",
+          "tests/Controller/PublicGameHubReleaseFeedDiscoveryTest.php"
+        ]
+      },
+      "allowed_paths": [
+        "templates/game_catalogue/show.html.twig",
+        "tests/Controller/PublicGameHubReleaseFeedDiscoveryTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "CONTINUOUS-WORKER.md",
+        "CONTINUOUS-WORK-POOL.json",
+        ".github/workflows/",
+        "migrations/",
+        "src/Controller/PublicGameReleaseFeedsPageController.php",
+        "src/Controller/PublicGameReleaseRssFeedController.php",
+        "src/Controller/PublicGameReleaseCalendarFeedController.php",
+        "src/Controller/PublicGameReleaseJsonFeedController.php",
+        "src/Repository/GameReleaseCalendarFeedRepository.php"
+      ],
+      "tests": [
+        "focused public game hub release-feed discovery functional test",
+        "complete exact-head Worker CI including PHP/Symfony and PostgreSQL 18"
+      ],
+      "completion_report": [
+        "exact final Worker HEAD SHA",
+        "complete changed-path list and worker PR",
+        "targeted tests plus complete Worker CI results",
+        "unresolved risks and assumptions"
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "preserve-existing-security-controls-tests-phpstan-and-ci",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
+      ],
+      "active_head": "cbf1ac3be5d51fa76fb93f492a035a80c6e14431",
+      "last_observed_head": "cbf1ac3be5d51fa76fb93f492a035a80c6e14431",
+      "last_checkpoint_at": "2026-10-14T18:21:35Z",
+      "last_verified_push_at": null,
+      "worker_pr_state": "not_open",
+      "ci_result": "not_run",
+      "next_action": "Implement the approved link and functional test on the feature branch, then open feature and exact-head Worker CI validation draft PRs. Never merge or deploy."
     }
   ],
   "recovery_queue": [],
