@@ -1,0 +1,20 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Spiel-Releases abonnieren | {{ site.siteName }}{% endblock %}
+{% block meta_description %}Abonniere kommende Spielveröffentlichungen mit deinem bevorzugten Feed-Reader oder Kalender.{% endblock %}
+
+{% block body %}
+<main class="content-shell">
+    <header class="page-header">
+        <p class="eyebrow">Release Centre</p>
+        <h1>Spiel-Releases abonnieren</h1>
+        <p>Wähle ein Format für kommende, öffentlich angekündigte Spiel-Releases.</p>
+    </header>
+    <ul>
+        <li><a href="{{ path('app_game_catalogue_release_rss') }}">RSS 2.0</a> <span class="muted">– für Feed-Reader</span></li>
+        <li><a href="{{ path('app_game_catalogue_release_calendar_feed') }}">iCalendar</a> <span class="muted">– zum Abonnieren in Kalender-Apps</span></li>
+        <li><a href="{{ path('app_game_catalogue_release_json') }}">JSON Feed 1.1</a> <span class="muted">– für Apps und Entwicklerwerkzeuge</span></li>
+    </ul>
+    <p><a href="{{ path('app_game_catalogue_releases') }}">Zur Release-Übersicht</a></p>
+</main>
+{% endblock %}
