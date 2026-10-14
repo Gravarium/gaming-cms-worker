@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+    <id>{{ news_url|e('html') }}</id>
+    <title>{{ site.siteName|e('html') }} News</title>
+    <link rel="alternate" href="{{ news_url|e('html') }}" />
+    <link rel="self" href="{{ self_url|e('html') }}" />
+    {% if site.description %}<subtitle>{{ site.description|e('html') }}</subtitle>{% endif %}
+    <updated>{{ feed_updated_at|date('c') }}</updated>
+    {% for entry in entries %}
+        {% set entry_url = absolute_url(path('app_news_show', {slug: entry.slug})) %}
+        <entry>
+            <id>{{ entry_url|e('html') }}</id>
+            <title>{{ entry.title|e('html') }}</title>
+            <link rel="alternate" href="{{ entry_url|e('html') }}" />
+            <updated>{{ entry.updatedAt|date('c') }}</updated>
+            {% if entry.publishedAt %}<published>{{ entry.publishedAt|date('c') }}</published>{% endif %}
+            <summary>{{ (entry.excerpt ?: entry.subtitle ?: entry.title)|e('html') }}</summary>
+            {% for tag in entry.tags %}<category term="{{ tag.name|e('html') }}" />{% endfor %}
+        </entry>
+    {% endfor %}
+</feed>
