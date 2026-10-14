@@ -10,8 +10,8 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "2f98de43e3cf4a26addb436cf9908b4135f2bdc6",
-  "published_at": "2026-10-14T04:43:16Z",
-  "summary": "WCP-690–WCP-697 are complete green open draft PRs awaiting Trusted review. WCP-697 adds a bounded OPML catalog of public News category/tag RSS feeds; exact green HEAD a51367520bd4c1aafa035371cdbe2f07fe353a12 passed Worker CI 38512602522.",
+  "published_at": "2026-10-14T08:12:00Z",
+  "summary": "WCP-690–WCP-697 are complete green open draft PRs awaiting Trusted review. WCP-698 is claimed on sanitized main a6ff8d56cc5fd84b3eada9f6c745e43c70aa810b for a standalone public News OpenSearch description endpoint.",
   "rules": {
     "choose": "Resume the current chat's unfinished claimed branch first. Otherwise atomically claim an eligible published task. If no published task is eligible, independently derive and publish a bounded worker-only CMS proposal from approved product goals and observed code gaps; do not ask the owner for the next FCP number.",
     "atomic_reservation": "Create the exact claim_branch and suggested feature branch from that task's published proposal_base_sha. If the claim already exists, treat it as a hard lock; the owning continuation resumes it and every other AI skips it.",
@@ -70409,6 +70409,98 @@
       "ci_result": "success",
       "next_action": "Worker CI run 38512602522 passed on exact HEAD a51367520bd4c1aafa035371cdbe2f07fe353a12. PHP/Symfony job (PHPStan, lint/container/mapping checks and 1,709 PHPUnit tests with 12,464 assertions) and PostgreSQL 18 migration chain succeeded. Draft feature PR #514 and CI validation PR #515 remain open for Trusted review; claim locked. Do not merge or deploy.",
       "ci_run_id": 38512602522
+    },
+    {
+      "priority": 698,
+      "package_id": "WCP-698",
+      "title": "Publish an OpenSearch description for public News",
+      "risk": "low_public_read_only",
+      "execution_state": "worker_in_progress",
+      "claim_state": "claimed",
+      "claim_generation": 1,
+      "claim_branch": "claim/wcp-698-public-news-opensearch-g1",
+      "suggested_branch": "feature/wcp-698-public-news-opensearch-g1",
+      "resume_branch": "feature/wcp-698-public-news-opensearch-g1",
+      "claimed_on": "2026-10-14T08:12:00Z",
+      "lease_expires_at": "2026-10-14T15:12:00Z",
+      "base_branch": "main",
+      "base_sha": "a6ff8d56cc5fd84b3eada9f6c745e43c70aa810b",
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "a6ff8d56cc5fd84b3eada9f6c745e43c70aa810b",
+      "active_base_branch": "main",
+      "active_base_sha": "a6ff8d56cc5fd84b3eada9f6c745e43c70aa810b",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "proposal_kind": "worker_only",
+      "objective": "Let browsers and feed clients discover the existing public News search through a standards-based OpenSearch Description endpoint, without changing shared search behavior or indexing private content.",
+      "acceptance_checks": [
+        "Add standalone GET /news/opensearch.xml endpoint and OpenSearch Description XML template.",
+        "Advertise only existing public News search, fixed to type=news, with standard {searchTerms} variable.",
+        "Emit stable UTF-8 OpenSearch content type, public cache headers, ETag and conditional 304 responses.",
+        "Keep endpoint read-only; no index, new query behavior, private data, or shared controller changes.",
+        "Tests cover endpoint status, XML escaping, absolute search URL/template, cache headers and conditional requests.",
+        "Complete exact-head Worker CI including PHP/Symfony and PostgreSQL 18."
+      ],
+      "collision_check": {
+        "compared_against": "Live continuous/work-pool-v4 active and locked claims; current public search route and WCP-690–WCP-697 changes inspected.",
+        "result": "No exact or prefix overlap with active/locked claims. Three standalone controller/template/test paths; shared controller, repository, entity, migration, workflow, and search behavior remain untouched.",
+        "paths": [
+          "src/Controller/PublicNewsOpenSearchController.php",
+          "templates/content/news_opensearch.xml.twig",
+          "tests/Controller/PublicNewsOpenSearchTest.php"
+        ]
+      },
+      "allowed_paths": [
+        "src/Controller/PublicNewsOpenSearchController.php",
+        "templates/content/news_opensearch.xml.twig",
+        "tests/Controller/PublicNewsOpenSearchTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "CONTINUOUS-WORKER.md",
+        "CONTINUOUS-WORK-POOL.json",
+        ".github/workflows/",
+        "migrations/",
+        "src/Controller/PublicContentController.php",
+        "src/Repository/ContentEntryRepository.php"
+      ],
+      "tests": [
+        "targeted OpenSearch description controller tests",
+        "complete exact-head Worker CI including PHP/Symfony and PostgreSQL 18"
+      ],
+      "completion_report": [
+        "exact final worker HEAD SHA and exact sanitized base SHA",
+        "complete changed-path list and Worker PR",
+        "targeted tests plus complete Worker CI results",
+        "unresolved risks and assumptions"
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "no-executable-public-uploads",
+        "no-secrets-or-trusted-private-runtime-in-worker-source",
+        "preserve-existing-security-controls-tests-phpstan-and-ci",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
+      ],
+      "active_head": "a6ff8d56cc5fd84b3eada9f6c745e43c70aa810b",
+      "last_observed_head": "a6ff8d56cc5fd84b3eada9f6c745e43c70aa810b",
+      "last_checkpoint_at": "2026-10-14T08:12:00Z",
+      "last_verified_push_at": null,
+      "worker_pr_state": null,
+      "worker_pr": null,
+      "worker_pr_url": null,
+      "worker_pr_head_sha": null,
+      "ci_result": "not_started",
+      "next_action": "Implement only the three allowed files on the existing feature branch, run focused checks, open a draft Worker PR and exact-head CI validation, then record CI evidence. No merge or deployment."
     }
   ],
   "recovery_queue": [],
