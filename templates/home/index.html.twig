@@ -1,5 +1,8 @@
 {% extends 'base.html.twig' %}
 {% block title %}{{ site.siteName }}{% endblock %}
+{% block head_meta %}
+    <link rel="search" type="application/opensearchdescription+xml" title="News" href="{{ absolute_url(path('app_news_opensearch')) }}">
+{% endblock %}
 {% block body %}
 {% include 'layout/portal.html.twig' with {portal: portal} %}
 {% if cms_module_enabled('gaming') %}
