@@ -126,10 +126,16 @@ final class PublicGameReleaseJsonFeedTest extends WebTestCase
     private function restoreGamingState(EntityManagerInterface $entityManager, ?bool $previous): void
     {
         $state = $entityManager->getRepository(CmsModuleState::class)->find('gaming');
-        if ($state instanceof CmsModuleState) {
-            $state->setEnabled($previous ?? true);
-            $entityManager->flush();
+        if (!$state instanceof CmsModuleState) {
+            return;
         }
+
+        if ($previous === null) {
+            $entityManager->remove($state);
+        } else {
+            $state->setEnabled($previous);
+        }
+        $entityManager->flush();
     }
 
     private function entityManager(KernelBrowser $client): EntityManagerInterface
