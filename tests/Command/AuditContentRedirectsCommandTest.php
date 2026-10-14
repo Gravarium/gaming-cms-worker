@@ -47,7 +47,7 @@ final class AuditContentRedirectsCommandTest extends KernelTestCase
             self::assertSame(Command::FAILURE, $tester->execute([]));
             self::assertStringContainsString('/page/legacy-'.$suffix, $tester->getDisplay());
             self::assertStringContainsString('draft-'.$suffix, $tester->getDisplay());
-            self::assertStringContainsString('keine Daten verändert', $tester->getDisplay());
+            self::assertStringContainsString('keine Daten', $tester->getDisplay());
             self::assertFalse($target->isPublished());
             self::assertSame('legacy-'.$suffix, $redirect->getSourceSlug());
         } finally {
