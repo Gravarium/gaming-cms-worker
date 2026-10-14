@@ -10,8 +10,8 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "2f98de43e3cf4a26addb436cf9908b4135f2bdc6",
-  "published_at": "2026-10-14T04:32:00Z",
-  "summary": "WCP-690–WCP-695 are complete as green open draft PRs awaiting Trusted review. WCP-696 claims a bounded public News taxonomy archive sitemap on sanitized worker/main.",
+  "published_at": "2026-10-14T04:34:10Z",
+  "summary": "WCP-690–WCP-695 are green draft PRs awaiting Trusted review. WCP-696 public News taxonomy sitemap is open as feature PR #512 with CI validation PR #513, based on current sanitized main; exact HEAD 40a8f502c9ee0449fe548ba319727917c5c51d7d awaits CI.",
   "rules": {
     "choose": "Resume the current chat's unfinished claimed branch first. Otherwise atomically claim an eligible published task. If no published task is eligible, independently derive and publish a bounded worker-only CMS proposal from approved product goals and observed code gaps; do not ask the owner for the next FCP number.",
     "atomic_reservation": "Create the exact claim_branch and suggested feature branch from that task's published proposal_base_sha. If the claim already exists, treat it as a hard lock; the owning continuation resumes it and every other AI skips it.",
@@ -70283,7 +70283,19 @@
         "preserve-existing-security-controls-tests-phpstan-and-ci",
         "red-ci-stops-integration",
         "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
-      ]
+      ],
+      "active_head": "40a8f502c9ee0449fe548ba319727917c5c51d7d",
+      "last_observed_head": "40a8f502c9ee0449fe548ba319727917c5c51d7d",
+      "worker_pr_state": "draft",
+      "last_checkpoint_at": "2026-10-14T04:34:10Z",
+      "last_verified_push_at": "2026-10-14T04:33:45Z",
+      "worker_pr": 512,
+      "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/512",
+      "worker_pr_head_sha": "40a8f502c9ee0449fe548ba319727917c5c51d7d",
+      "ci_branch": "worker/account-ci-wcp-696-g1",
+      "ci_pr": 513,
+      "ci_result": "pending",
+      "next_action": "Draft feature PR #512 and CI validation PR #513 are open against current worker/main base a6ff8d56cc5fd84b3eada9f6c745e43c70aa810b. Await exact-head Worker CI, including PHP/Symfony and PostgreSQL 18."
     }
   ],
   "recovery_queue": [],
