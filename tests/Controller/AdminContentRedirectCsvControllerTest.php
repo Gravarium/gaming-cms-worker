@@ -19,6 +19,7 @@ final class AdminContentRedirectCsvControllerTest extends WebTestCase
         $client->request('GET', '/admin/content/redirects/export.csv');
         self::assertResponseRedirects('/login');
 
+        static::ensureKernelShutdown();
         $client = static::createClient();
         $user = $this->user($client, [CmsPermission::ACCESS]);
         $client->loginUser($user);
