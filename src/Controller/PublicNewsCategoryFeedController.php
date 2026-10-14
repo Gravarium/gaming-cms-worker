@@ -49,6 +49,7 @@ final class PublicNewsCategoryFeedController extends AbstractController
         }
         $response->setEtag(hash('sha256', json_encode($etagInput, JSON_THROW_ON_ERROR)));
         $response->isNotModified($request);
+        $response->headers->set('Cache-Control', sprintf('public, max-age=%d, s-maxage=%d', $lifetime, $lifetime));
 
         return $response;
     }
