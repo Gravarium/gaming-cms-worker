@@ -10,8 +10,8 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "2f98de43e3cf4a26addb436cf9908b4135f2bdc6",
-  "published_at": "2026-10-14T08:12:00Z",
-  "summary": "WCP-690–WCP-697 are complete green open draft PRs awaiting Trusted review. WCP-698 is claimed on sanitized main a6ff8d56cc5fd84b3eada9f6c745e43c70aa810b for a standalone public News OpenSearch description endpoint.",
+  "published_at": "2026-10-14T08:15:10Z",
+  "summary": "WCP-690–WCP-697 remain complete green open draft PRs awaiting Trusted review. WCP-698 is in progress with feature PR #516 and CI validation PR #517 on exact head bcffc3082433ca60b1bd359fce9c6aa96cfb62f1; Worker CI runs 38533775827 and 38533787031 are pending.",
   "rules": {
     "choose": "Resume the current chat's unfinished claimed branch first. Otherwise atomically claim an eligible published task. If no published task is eligible, independently derive and publish a bounded worker-only CMS proposal from approved product goals and observed code gaps; do not ask the owner for the next FCP number.",
     "atomic_reservation": "Create the exact claim_branch and suggested feature branch from that task's published proposal_base_sha. If the claim already exists, treat it as a hard lock; the owning continuation resumes it and every other AI skips it.",
@@ -70422,7 +70422,7 @@
       "suggested_branch": "feature/wcp-698-public-news-opensearch-g1",
       "resume_branch": "feature/wcp-698-public-news-opensearch-g1",
       "claimed_on": "2026-10-14T08:12:00Z",
-      "lease_expires_at": "2026-10-14T15:12:00Z",
+      "lease_expires_at": "2026-10-14T15:14:59Z",
       "base_branch": "main",
       "base_sha": "a6ff8d56cc5fd84b3eada9f6c745e43c70aa810b",
       "proposal_base_branch": "main",
@@ -70491,16 +70491,23 @@
         "red-ci-stops-integration",
         "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
       ],
-      "active_head": "a6ff8d56cc5fd84b3eada9f6c745e43c70aa810b",
-      "last_observed_head": "a6ff8d56cc5fd84b3eada9f6c745e43c70aa810b",
-      "last_checkpoint_at": "2026-10-14T08:12:00Z",
-      "last_verified_push_at": null,
-      "worker_pr_state": null,
-      "worker_pr": null,
-      "worker_pr_url": null,
-      "worker_pr_head_sha": null,
-      "ci_result": "not_started",
-      "next_action": "Implement only the three allowed files on the existing feature branch, run focused checks, open a draft Worker PR and exact-head CI validation, then record CI evidence. No merge or deployment."
+      "active_head": "bcffc3082433ca60b1bd359fce9c6aa96cfb62f1",
+      "last_observed_head": "bcffc3082433ca60b1bd359fce9c6aa96cfb62f1",
+      "last_checkpoint_at": "2026-10-14T08:15:10Z",
+      "last_verified_push_at": "2026-10-14T08:14:59Z",
+      "worker_pr_state": "draft",
+      "worker_pr": 516,
+      "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/516",
+      "worker_pr_head_sha": "bcffc3082433ca60b1bd359fce9c6aa96cfb62f1",
+      "ci_result": "pending",
+      "next_action": "Worker CI run 38533787031 is queued and run 38533775827 is in progress on exact head bcffc3082433ca60b1bd359fce9c6aa96cfb62f1. Draft feature PR #516 and validation PR #517 remain open. Verify both required jobs on the exact head, repair failures, and record final results; no merge or deployment.",
+      "ci_branch": "worker/account-ci-wcp-698-g1",
+      "ci_pr": 517,
+      "ci_run_id": 38533787031,
+      "ci_run_ids": [
+        38533775827,
+        38533787031
+      ]
     }
   ],
   "recovery_queue": [],
