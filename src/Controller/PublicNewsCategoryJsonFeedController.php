@@ -2,20 +2,20 @@
 
 declare(strict_types=1);
 
-namespace App\\Controller;
+namespace App\Controller;
 
-use App\\Entity\\Category;
-use App\\Entity\\ContentEntry;
-use App\\Entity\\ContentTag;
-use App\\Repository\\CategoryRepository;
-use App\\Repository\\ContentEntryRepository;
-use Symfony\\Bundle\\FrameworkBundle\\Controller\\AbstractController;
-use Symfony\\Component\\HttpFoundation\\JsonResponse;
-use Symfony\\Component\\HttpFoundation\\Request;
-use Symfony\\Component\\HttpFoundation\\Response;
-use Symfony\\Component\\HttpKernel\\EventListener\\AbstractSessionListener;
-use Symfony\\Component\\Routing\\Attribute\\Route;
-use Symfony\\Component\\Routing\\Generator\\UrlGeneratorInterface;
+use App\Entity\Category;
+use App\Entity\ContentEntry;
+use App\Entity\ContentTag;
+use App\Repository\CategoryRepository;
+use App\Repository\ContentEntryRepository;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\EventListener\AbstractSessionListener;
+use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 final class PublicNewsCategoryJsonFeedController extends AbstractController
 {
