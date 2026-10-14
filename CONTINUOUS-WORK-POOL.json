@@ -71182,6 +71182,108 @@
           "issue": "New test left an initially absent CmsModuleState row in the DB and caused a later unique-key error; fixed at 4c10e93e41014a9ba6a3a182b6624208980b5019."
         }
       ]
+    },
+    {
+      "priority": 705,
+      "package_id": "WCP-705",
+      "title": "Add a public game-release feed directory",
+      "risk": "low_public_read_only",
+      "execution_state": "worker_in_progress",
+      "claim_state": "active_lease",
+      "claim_generation": 1,
+      "claim_branch": "claim/wcp-705-public-game-release-feed-directory-g1",
+      "suggested_branch": "feature/wcp-705-public-game-release-feed-directory-g1",
+      "resume_branch": "feature/wcp-705-public-game-release-feed-directory-g1",
+      "claimed_on": "2026-10-14T10:51:03Z",
+      "lease_expires_at": "2026-10-14T17:51:03Z",
+      "base_branch": "main",
+      "base_sha": "a6ff8d56cc5fd84b3eada9f6c745e43c70aa810b",
+      "proposal_base_branch": "feature/wcp-704-game-release-json-feed-g1",
+      "proposal_base_sha": "4c10e93e41014a9ba6a3a182b6624208980b5019",
+      "active_base_branch": "feature/wcp-704-game-release-json-feed-g1",
+      "active_base_sha": "4c10e93e41014a9ba6a3a182b6624208980b5019",
+      "dependencies": [
+        "WCP-704"
+      ],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "proposal_kind": "worker_only",
+      "proposal_dependency_evidence": [
+        {
+          "package_id": "WCP-704",
+          "head": "4c10e93e41014a9ba6a3a182b6624208980b5019",
+          "pr": 528,
+          "ci_run": 38551191748,
+          "result": "success"
+        }
+      ],
+      "objective": "Give visitors one public, accessible directory for subscribing to upcoming game-release RSS, iCalendar and JSON Feed formats without changing existing feed handlers.",
+      "acceptance_checks": [
+        "Expose GET /games/releases/feeds with a concise title and explanation.",
+        "Link to the existing RSS 2.0, iCalendar and JSON Feed 1.1 routes using named routes.",
+        "Keep the page read-only, behind the gaming module gate and free of private or write actions.",
+        "Focused functional tests verify all subscription links, the disabled-module fail-closed response and rejection of writes."
+      ],
+      "collision_check": {
+        "compared_against": "All live continuous/work-pool-v4 locked path claims, including WCP-555 game release RSS, WCP-593 calendar discovery, WCP-645 release archive, and WCP-698 through WCP-704. Exact and prefix checks for the new controller, template, and test paths found no overlaps.",
+        "result": "No exact or prefix overlap with active/locked path claims.",
+        "paths": [
+          "src/Controller/PublicGameReleaseFeedsPageController.php",
+          "templates/game_catalogue/release_feeds.html.twig",
+          "tests/Controller/PublicGameReleaseFeedsPageTest.php"
+        ]
+      },
+      "allowed_paths": [
+        "src/Controller/PublicGameReleaseFeedsPageController.php",
+        "templates/game_catalogue/release_feeds.html.twig",
+        "tests/Controller/PublicGameReleaseFeedsPageTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "CONTINUOUS-WORKER.md",
+        "CONTINUOUS-WORK-POOL.json",
+        ".github/workflows/",
+        "migrations/",
+        "src/Controller/PublicGameReleaseRssFeedController.php",
+        "src/Controller/PublicGameReleaseCalendarFeedController.php",
+        "src/Controller/PublicGameReleaseJsonFeedController.php",
+        "src/Repository/GameReleaseCalendarFeedRepository.php"
+      ],
+      "tests": [
+        "focused public game-release feed directory functional tests",
+        "complete exact-head Worker CI including PHP/Symfony and PostgreSQL 18"
+      ],
+      "completion_report": [],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "preserve-existing-security-controls-tests-phpstan-and-ci",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
+      ],
+      "active_head": "4c10e93e41014a9ba6a3a182b6624208980b5019",
+      "last_observed_head": "4c10e93e41014a9ba6a3a182b6624208980b5019",
+      "last_checkpoint_at": "2026-10-14T10:51:03Z",
+      "last_verified_push_at": null,
+      "worker_pr_state": "not_opened",
+      "ci_result": "not_run",
+      "next_action": "Implement the isolated public feed directory on feature/wcp-705-public-game-release-feed-directory-g1 from exact green WCP-704 HEAD 4c10e93e41014a9ba6a3a182b6624208980b5019; test it, open/update Worker and CI validation PRs, and record exact-head CI. Never merge or deploy.",
+      "worker_pr": null,
+      "worker_pr_url": null,
+      "worker_pr_head_sha": null,
+      "ci_validation_pr": null,
+      "previous_ci_run": null,
+      "previous_ci_result": null,
+      "ci_run": null,
+      "ci_run_url": null,
+      "ci_history": []
     }
   ],
   "recovery_queue": [],
