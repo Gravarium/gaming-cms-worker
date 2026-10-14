@@ -10,8 +10,8 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "2f98de43e3cf4a26addb436cf9908b4135f2bdc6",
-  "published_at": "2026-10-14T08:55:34.470Z",
-  "summary": "WCP-698 through WCP-701 are complete green open draft PRs awaiting Trusted review. WCP-701 provides a dedicated accessible public News search page; exact HEAD 3db21f9bcfec82c4929818164576a4df4fafdb74 passed Worker CI run 38538017282.",
+  "published_at": "2026-10-14T09:14:39.295Z",
+  "summary": "WCP-698 through WCP-701 are complete green open draft PRs awaiting Trusted review. WCP-702 is claimed on exact green WCP-701 head 3db21f9bcfec82c4929818164576a4df4fafdb74 for a standalone public News Atom feed with disjoint controller, template, and test paths.",
   "rules": {
     "choose": "Resume the current chat's unfinished claimed branch first. Otherwise atomically claim an eligible published task. If no published task is eligible, independently derive and publish a bounded worker-only CMS proposal from approved product goals and observed code gaps; do not ask the owner for the next FCP number.",
     "atomic_reservation": "Create the exact claim_branch and suggested feature branch from that task's published proposal_base_sha. If the claim already exists, treat it as a hard lock; the owning continuation resumes it and every other AI skips it.",
@@ -70838,6 +70838,116 @@
       "worker_pr_state": "open_draft",
       "ci_result": "success",
       "next_action": "WCP-701 is complete on exact HEAD 3db21f9bcfec82c4929818164576a4df4fafdb74. Worker CI run 38538017282 passed PHP/Symfony (1,820 tests, 13,034 assertions; 1 deprecation and 26 notices) and PostgreSQL 18 migration chain. Feature PR #522 and CI validation PR #523 remain open drafts awaiting Trusted review. Keep claim locked until Trusted resolution; no merge or deployment.",
+      "ci_run": 38538017282,
+      "ci_run_url": "https://github.com/Gravarium/gaming-cms-worker/actions/runs/38538017282",
+      "ci_validation_pr": 523
+    },
+    {
+      "priority": 702,
+      "package_id": "WCP-702",
+      "title": "Publish a standards-based public News Atom feed",
+      "risk": "low_public_read_only",
+      "execution_state": "worker_in_progress",
+      "claim_state": "claimed",
+      "claim_generation": 1,
+      "claim_branch": "claim/wcp-702-public-news-atom-feed-g1",
+      "suggested_branch": "feature/wcp-702-public-news-atom-feed-g1",
+      "resume_branch": "feature/wcp-702-public-news-atom-feed-g1",
+      "claimed_on": "2026-10-14T09:14:39.295Z",
+      "lease_expires_at": "2026-10-14T16:14:39.295Z",
+      "base_branch": "main",
+      "base_sha": "a6ff8d56cc5fd84b3eada9f6c745e43c70aa810b",
+      "proposal_base_branch": "feature/wcp-701-public-news-search-page-g1",
+      "proposal_base_sha": "3db21f9bcfec82c4929818164576a4df4fafdb74",
+      "active_base_branch": "feature/wcp-701-public-news-search-page-g1",
+      "active_base_sha": "3db21f9bcfec82c4929818164576a4df4fafdb74",
+      "dependencies": [
+        "WCP-701"
+      ],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "proposal_kind": "worker_only",
+      "proposal_dependency_evidence": [
+        {
+          "package_id": "WCP-701",
+          "head": "3db21f9bcfec82c4929818164576a4df4fafdb74",
+          "pr": 522,
+          "ci_run": 38538017282,
+          "result": "success"
+        }
+      ],
+      "objective": "Expose a standards-compliant Atom 1.0 feed of public News entries, complementing existing RSS, JSON Feed, OPML, and taxonomy feeds without modifying shared feed controllers or templates.",
+      "acceptance_checks": [
+        "Add a dedicated GET /feeds/news.atom endpoint with application/atom+xml UTF-8 content type.",
+        "Reuse ContentEntryRepository::findPublishedNews with a bounded maximum of 50 so only published, listed News appear.",
+        "Emit valid Atom 1.0 feed and entry identifiers, links, titles, update/publish timestamps, and escaped summaries without article bodies or private metadata.",
+        "Support ETag and conditional 304 responses with public cache headers; clamp cache lifetime to upcoming scheduled unpublication deadlines.",
+        "Tests verify XML validity, public-only filtering, content type, feed item limit/fields, escaping, and conditional requests.",
+        "Complete exact-head Worker CI including PHP/Symfony and PostgreSQL 18."
+      ],
+      "collision_check": {
+        "compared_against": "Live continuous/work-pool-v4 active and locked claims plus exact green WCP-701 dependency. All active path scopes were compared; the new controller, feed template, and focused test paths are disjoint. Existing PublicContentController and generic feed templates are left untouched.",
+        "result": "No exact or prefix overlap with active/locked path claims.",
+        "paths": [
+          "src/Controller/PublicNewsAtomFeedController.php",
+          "templates/content/news_atom_feed.xml.twig",
+          "tests/Controller/PublicNewsAtomFeedTest.php"
+        ]
+      },
+      "allowed_paths": [
+        "src/Controller/PublicNewsAtomFeedController.php",
+        "templates/content/news_atom_feed.xml.twig",
+        "tests/Controller/PublicNewsAtomFeedTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "CONTINUOUS-WORKER.md",
+        "CONTINUOUS-WORK-POOL.json",
+        ".github/workflows/",
+        "migrations/",
+        "src/Controller/PublicContentController.php",
+        "src/Repository/ContentEntryRepository.php",
+        "templates/content/feed.xml.twig",
+        "templates/content/search.html.twig",
+        "templates/content/news.html.twig",
+        "templates/base.html.twig"
+      ],
+      "tests": [
+        "focused public News Atom feed controller tests",
+        "complete exact-head Worker CI including PHP/Symfony and PostgreSQL 18"
+      ],
+      "completion_report": [
+        "exact final worker HEAD SHA and exact sanitized base SHA",
+        "complete changed-file list and Worker PR",
+        "targeted tests plus complete Worker CI results",
+        "unresolved risks and assumptions"
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "no-executable-public-uploads",
+        "no-secrets-or-trusted-private-runtime-in-worker-source",
+        "preserve-existing-security-controls-tests-phpstan-and-ci",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
+      ],
+      "active_head": "3db21f9bcfec82c4929818164576a4df4fafdb74",
+      "last_observed_head": "3db21f9bcfec82c4929818164576a4df4fafdb74",
+      "last_checkpoint_at": "2026-10-14T09:14:39.295Z",
+      "last_verified_push_at": null,
+      "worker_pr": null,
+      "worker_pr_url": null,
+      "worker_pr_head_sha": null,
+      "worker_pr_state": null,
+      "ci_result": "not_started",
+      "next_action": "Implement the standalone public News Atom feed controller, Twig feed template, and focused tests only. Open feature and CI validation draft PRs; inspect exact-head CI and repair within allowed paths. No merge or deployment.",
       "ci_run": 38538017282,
       "ci_run_url": "https://github.com/Gravarium/gaming-cms-worker/actions/runs/38538017282",
       "ci_validation_pr": 523
