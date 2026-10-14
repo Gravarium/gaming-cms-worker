@@ -10,6 +10,7 @@ use App\Repository\CategoryRepository;
 use App\Repository\ContentEntryRepository;
 use App\Repository\SiteSettingsRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpKernel\EventListener\AbstractSessionListener;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -18,7 +19,7 @@ final class PublicNewsCategoryFeedController extends AbstractController
 {
     private const CACHE_SECONDS = 60;
 
-    #[Route('/news/category/{slug}/feed.xml', name: 'app_news_category_feed_rss', methods: ['GET'], stateless: true)]
+    #[Route('/news/category/{slug}/feed.xml', name: 'app_news_category_feed_rss', methods: ['GET'])]
     public function __invoke(
         string $slug,
         Request $request,
@@ -49,6 +50,7 @@ final class PublicNewsCategoryFeedController extends AbstractController
         }
         $response->setEtag(hash('sha256', json_encode($etagInput, JSON_THROW_ON_ERROR)));
         $response->isNotModified($request);
+        $response->headers->set(AbstractSessionListener::NO_AUTO_CACHE_CONTROL_HEADER, 'true');
 
         return $response;
     }
