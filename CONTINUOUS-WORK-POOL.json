@@ -10,8 +10,8 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "2f98de43e3cf4a26addb436cf9908b4135f2bdc6",
-  "published_at": "2026-10-14T10:22:10Z",
-  "summary": "WCP-698 through WCP-702 remain complete green open draft PRs awaiting Trusted review. WCP-703 is complete green on exact HEAD 555b441d3eb9a130c5c9bb7d773e5b07268961c7; PRs #526/#527 await Trusted review.",
+  "published_at": "2026-10-14T10:25:43Z",
+  "summary": "WCP-698 through WCP-703 are complete green open draft PRs awaiting Trusted review. WCP-704 is claimed in progress on exact green WCP-703 predecessor 555b441d3eb9a130c5c9bb7d773e5b07268961c7.",
   "rules": {
     "choose": "Resume the current chat's unfinished claimed branch first. Otherwise atomically claim an eligible published task. If no published task is eligible, independently derive and publish a bounded worker-only CMS proposal from approved product goals and observed code gaps; do not ask the owner for the next FCP number.",
     "atomic_reservation": "Create the exact claim_branch and suggested feature branch from that task's published proposal_base_sha. If the claim already exists, treat it as a hard lock; the owning continuation resumes it and every other AI skips it.",
@@ -71057,6 +71057,103 @@
       "ci_validation_pr": 527,
       "ci_run": 38548570618,
       "ci_run_url": "https://github.com/Gravarium/gaming-cms-worker/actions/runs/38548570618"
+    },
+    {
+      "priority": 704,
+      "package_id": "WCP-704",
+      "title": "Publish upcoming game releases as JSON Feed",
+      "risk": "low_public_read_only",
+      "execution_state": "worker_in_progress",
+      "claim_state": "active_lease",
+      "claim_generation": 1,
+      "claim_branch": "claim/wcp-704-game-release-json-feed-g1",
+      "suggested_branch": "feature/wcp-704-game-release-json-feed-g1",
+      "resume_branch": "feature/wcp-704-game-release-json-feed-g1",
+      "claimed_on": "2026-10-14T10:25:43Z",
+      "lease_expires_at": "2026-10-14T17:25:43Z",
+      "base_branch": "main",
+      "base_sha": "a6ff8d56cc5fd84b3eada9f6c745e43c70aa810b",
+      "proposal_base_branch": "feature/wcp-703-public-news-feed-directory-g1",
+      "proposal_base_sha": "555b441d3eb9a130c5c9bb7d773e5b07268961c7",
+      "active_base_branch": "feature/wcp-703-public-news-feed-directory-g1",
+      "active_base_sha": "555b441d3eb9a130c5c9bb7d773e5b07268961c7",
+      "dependencies": [
+        "WCP-703"
+      ],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "proposal_kind": "worker_only",
+      "proposal_dependency_evidence": [
+        {
+          "package_id": "WCP-703",
+          "head": "555b441d3eb9a130c5c9bb7d773e5b07268961c7",
+          "pr": 526,
+          "ci_run": 38548570618,
+          "result": "success"
+        }
+      ],
+      "objective": "Offer existing upcoming game release data as a standard JSON Feed 1.1 endpoint while preserving the existing module, visibility, date-window and result-bound invariants.",
+      "acceptance_checks": [
+        "Expose GET /games/releases/feed.json with application/feed+json UTF-8 content type and an inline JSON filename.",
+        "Reuse GameReleaseCalendarFeedRepository::upcoming for the existing 18-month window and 200-result bound.",
+        "Keep the gaming-module disabled behavior fail-closed and expose only enabled, announced or delayed upcoming releases.",
+        "Emit JSON Feed 1.1 items with stable release IDs, safe absolute game URLs, release timestamps, and concise platform/region summaries.",
+        "Focused unit and functional tests cover feed schema, encoding, visibility, bounds, disabled module and rejection of writes."
+      ],
+      "collision_check": {
+        "compared_against": "Live continuous/work-pool-v4 locked claims including WCP-555 release RSS, WCP-593 calendar discovery, WCP-645 release archive, and completed WCP-703. Each proposed builder/controller/test path is a new exact file and has no exact or prefix overlap with their allowlists.",
+        "result": "No exact or prefix overlap with active/locked path claims.",
+        "paths": [
+          "src/GameReleaseFeed/JsonFeedBuilder.php",
+          "src/Controller/PublicGameReleaseJsonFeedController.php",
+          "tests/GameReleaseFeed/JsonFeedBuilderTest.php",
+          "tests/Controller/PublicGameReleaseJsonFeedTest.php"
+        ]
+      },
+      "allowed_paths": [
+        "src/GameReleaseFeed/JsonFeedBuilder.php",
+        "src/Controller/PublicGameReleaseJsonFeedController.php",
+        "tests/GameReleaseFeed/JsonFeedBuilderTest.php",
+        "tests/Controller/PublicGameReleaseJsonFeedTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "CONTINUOUS-WORKER.md",
+        "CONTINUOUS-WORK-POOL.json",
+        ".github/workflows/",
+        "migrations/",
+        "src/Repository/GameReleaseCalendarFeedRepository.php",
+        "src/Controller/PublicGameReleaseRssFeedController.php",
+        "src/Controller/PublicGameReleaseCalendarFeedController.php",
+        "src/Module/CmsModuleManager.php"
+      ],
+      "tests": [
+        "focused JSON Feed builder unit tests",
+        "focused public game-release JSON Feed functional tests",
+        "complete exact-head Worker CI including PHP/Symfony and PostgreSQL 18"
+      ],
+      "completion_report": [],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "preserve-existing-security-controls-tests-phpstan-and-ci",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
+      ],
+      "active_head": "555b441d3eb9a130c5c9bb7d773e5b07268961c7",
+      "last_observed_head": "555b441d3eb9a130c5c9bb7d773e5b07268961c7",
+      "last_checkpoint_at": "2026-10-14T10:25:43Z",
+      "last_verified_push_at": "2026-10-14T10:23:00Z",
+      "worker_pr_state": "not_opened",
+      "ci_result": "pending",
+      "next_action": "Implement only the allowed files. Open draft feature and CI validation PRs, run exact-head Worker CI, fix any failures within the allowlist, then record the exact green HEAD. Never merge or deploy."
     }
   ],
   "recovery_queue": [],
