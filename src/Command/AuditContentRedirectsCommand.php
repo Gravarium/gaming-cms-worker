@@ -18,7 +18,7 @@ final class AuditContentRedirectsCommand extends Command
 {
     public function __construct(
         private readonly ContentRedirectRepository $redirects,
-        private readonly ContentRedirectChainAnalyzer $analyzer,
+        private readonly ContentRedirectTargetAudit $audit,
     ) {
         parent::__construct();
     }
@@ -28,28 +28,24 @@ final class AuditContentRedirectsCommand extends Command
         $io = new SymfonyStyle($input, $output);
         /** @var list<ContentRedirect> $redirects */
         $redirects = $this->redirects->findAll();
-        $findings = $this->analyzer->analyze($redirects);
+        $findings = $this->audit->findUnpublishedTargets($redirects);
 
         if ($findings === []) {
-            $io->success('Keine Redirect-Ketten oder -Zyklen gefunden.');
+            $io->success('Alle Redirect-Ziele sind veröffentlicht.');
 
             return Command::SUCCESS;
         }
 
         foreach ($findings as $finding) {
-            $path = implode(' → ', array_map(
-                static fn (string $slug): string => '/'.$finding['type'].'/'.$slug,
-                $finding['path'],
-            ));
             $io->warning(sprintf(
-                '%s: %s (%s)',
-                $finding['cycle'] ? 'Zyklus' : 'Kette',
-                $path,
-                $finding['cycle'] ? 'Redirect-Schleife' : 'mehrere Weiterleitungen',
+                'Unveröffentlichtes Ziel: /%s/%s → %s',
+                $finding['type'],
+                $finding['source_slug'],
+                $finding['target_slug'],
             ));
         }
 
-        $io->error(sprintf('%d problematische Redirect-Pfade gefunden; es wurden keine Daten verändert.', count($findings)));
+        $io->error(sprintf('%d Redirect-Ziele sind unveröffentlicht; es wurden keine Daten verändert.', count($findings)));
 
         return Command::FAILURE;
     }
