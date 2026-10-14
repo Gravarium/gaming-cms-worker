@@ -11,7 +11,7 @@
   "baseline_branch": "main",
   "base_sha": "2f98de43e3cf4a26addb436cf9908b4135f2bdc6",
   "published_at": "2026-10-13T22:45:00Z",
-  "summary": "WCP-690 complete as open draft PR #500 at 68f6cca23bd5751de57b62e0ee845092c9f6b276 with green exact-head CI run 38501101608. WCP-691 complete as open draft PR #502 at 23bb4ecbdca45c784838b353ca46b89bfb8550f7 with green exact-head CI run 38502364661. Both are locked awaiting Trusted review; no merge/deployment.",
+  "summary": "WCP-690 and WCP-691 are complete as green open draft PRs. WCP-692 is reserved as a path-disjoint, dependent Worker-only News feature: public RSS feeds per News category.",
   "rules": {
     "choose": "Resume the current chat's unfinished claimed branch first. Otherwise atomically claim an eligible published task. If no published task is eligible, independently derive and publish a bounded worker-only CMS proposal from approved product goals and observed code gaps; do not ask the owner for the next FCP number.",
     "atomic_reservation": "Create the exact claim_branch and suggested feature branch from that task's published proposal_base_sha. If the claim already exists, treat it as a hard lock; the owning continuation resumes it and every other AI skips it.",
@@ -69811,6 +69811,89 @@
       "ci_branch": "worker/account-ci-wcp-691-g1",
       "ci_run_id": 38502364661,
       "ci_pr": 503
+    },
+    {
+      "priority": 692,
+      "package_id": "WCP-692",
+      "title": "Public category-filtered News RSS feeds",
+      "risk": "low_public_read_only",
+      "execution_state": "worker_in_progress",
+      "claim_state": "worker_in_progress",
+      "claim_generation": 1,
+      "claim_branch": "claim/wcp-692-news-category-feed-g1",
+      "suggested_branch": "feature/wcp-692-news-category-feed-g1",
+      "resume_branch": "feature/wcp-692-news-category-feed-g1",
+      "claimed_on": "2026-10-14 02:51:35Z",
+      "lease_expires_at": "2026-10-14T09:51:35Z",
+      "base_branch": "main",
+      "base_sha": "2f98de43e3cf4a26addb436cf9908b4135f2bdc6",
+      "proposal_base_branch": "feature/wcp-691-content-redirect-audit-g1",
+      "proposal_base_sha": "23bb4ecbdca45c784838b353ca46b89bfb8550f7",
+      "active_base_branch": "feature/wcp-691-content-redirect-audit-g1",
+      "active_base_sha": "23bb4ecbdca45c784838b353ca46b89bfb8550f7",
+      "dependencies": [
+        "WCP-691"
+      ],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "proposal_kind": "worker_only",
+      "proposal_dependency_evidence": [
+        {
+          "package_id": "WCP-691",
+          "head": "23bb4ecbdca45c784838b353ca46b89bfb8550f7",
+          "pr": 502,
+          "ci_run": 38502364661,
+          "result": "success"
+        }
+      ],
+      "objective": "Expose a public RSS feed for each News category using existing published-content filtering, so readers can subscribe to focused editorial topics without exposing drafts, scheduled articles or unlisted entries.",
+      "acceptance_checks": [
+        "Add a public GET route `/news/category/{slug}/feed.xml` separate from existing route/controller files; unknown categories return 404.",
+        "Feed includes only published, listed News in the selected category, in repository ordering, with escaped RSS XML and stable absolute article/category URLs.",
+        "Response uses application/rss+xml UTF-8 and bounded public caching; no authentication or private data is introduced.",
+        "Tests cover matching vs other categories, hidden/unpublished items, missing category, XML escaping, content type and caching.",
+        "Complete exact-head Worker CI including PHP/Symfony and PostgreSQL 18."
+      ],
+      "collision_check": {
+        "compared_against": "Latest continuous/work-pool-v4 and all active/locked claim scopes, plus WCP-691 green dependency head.",
+        "result": "No exact or prefix overlap across 188 active/locked claims. Existing PublicContentController.php and content/news.html.twig are intentionally not modified because WCP-388 and WCP-402 own those paths. New standalone route/template/test paths only; no migration or schema changes.",
+        "paths": [
+          "src/Controller/PublicNewsCategoryFeedController.php",
+          "templates/content/news_category_feed.xml.twig",
+          "tests/Controller/PublicNewsCategoryFeedTest.php"
+        ]
+      },
+      "allowed_paths": [
+        "src/Controller/PublicNewsCategoryFeedController.php",
+        "templates/content/news_category_feed.xml.twig",
+        "tests/Controller/PublicNewsCategoryFeedTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "CONTINUOUS-WORKER.md",
+        "CONTINUOUS-WORK-POOL.json",
+        ".github/workflows/",
+        "migrations/",
+        "src/Controller/PublicContentController.php",
+        "templates/content/news.html.twig"
+      ],
+      "next_action": "Implement the standalone public RSS endpoint, reuse existing CategoryRepository and ContentEntryRepository category filter, add a dedicated XML template and focused controller tests. Open draft feature PR and exact-head CI validation PR. Record exact green SHA/run; never merge or deploy.",
+      "active_head": null,
+      "last_observed_head": null,
+      "worker_pr_state": null,
+      "last_checkpoint_at": "2026-10-14 02:51:35Z",
+      "last_verified_push_at": null,
+      "worker_pr": null,
+      "worker_pr_url": null,
+      "worker_pr_head_sha": null,
+      "ci_result": "pending",
+      "ci_branch": "worker/account-ci-wcp-692-g1"
     }
   ],
   "recovery_queue": [],
