@@ -10,8 +10,8 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "2f98de43e3cf4a26addb436cf9908b4135f2bdc6",
-  "published_at": "2026-10-14T08:32:00Z",
-  "summary": "WCP-698 and WCP-699 are complete green open draft PRs awaiting Trusted review. WCP-699 adds homepage rel=search discovery; exact head d7260665bc8f8b15b4f7bdf5bb8cc368c93d5b38 passed Worker CI 38535205324 (1,816 tests, 12,994 assertions, PostgreSQL 18). No merge or deployment.",
+  "published_at": "2026-10-14T08:33:00Z",
+  "summary": "WCP-698 and WCP-699 are complete green open draft PRs awaiting Trusted review. WCP-700 is claimed on exact green WCP-699 head d7260665bc8f8b15b4f7bdf5bb8cc368c93d5b38 for a bounded public News suggestions endpoint; no shared repository/controller paths are touched.",
   "rules": {
     "choose": "Resume the current chat's unfinished claimed branch first. Otherwise atomically claim an eligible published task. If no published task is eligible, independently derive and publish a bounded worker-only CMS proposal from approved product goals and observed code gaps; do not ask the owner for the next FCP number.",
     "atomic_reservation": "Create the exact claim_branch and suggested feature branch from that task's published proposal_base_sha. If the claim already exists, treat it as a hard lock; the owning continuation resumes it and every other AI skips it.",
@@ -70621,6 +70621,111 @@
       "ci_run_ids": [
         38535205324
       ]
+    },
+    {
+      "priority": 700,
+      "package_id": "WCP-700",
+      "title": "Provide public News search suggestions",
+      "risk": "low_public_read_only",
+      "execution_state": "worker_in_progress",
+      "claim_state": "claimed",
+      "claim_generation": 1,
+      "claim_branch": "claim/wcp-700-news-search-suggestions-g1",
+      "suggested_branch": "feature/wcp-700-news-search-suggestions-g1",
+      "resume_branch": "feature/wcp-700-news-search-suggestions-g1",
+      "claimed_on": "2026-10-14T08:33:00Z",
+      "lease_expires_at": "2026-10-14T15:33:00Z",
+      "base_branch": "main",
+      "base_sha": "a6ff8d56cc5fd84b3eada9f6c745e43c70aa810b",
+      "proposal_base_branch": "feature/wcp-699-news-opensearch-discovery-g1",
+      "proposal_base_sha": "d7260665bc8f8b15b4f7bdf5bb8cc368c93d5b38",
+      "active_base_branch": "feature/wcp-699-news-opensearch-discovery-g1",
+      "active_base_sha": "d7260665bc8f8b15b4f7bdf5bb8cc368c93d5b38",
+      "dependencies": [
+        "WCP-699"
+      ],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "proposal_kind": "worker_only",
+      "proposal_dependency_evidence": [
+        {
+          "package_id": "WCP-699",
+          "head": "d7260665bc8f8b15b4f7bdf5bb8cc368c93d5b38",
+          "pr": 518,
+          "ci_run": 38535205324,
+          "result": "success"
+        }
+      ],
+      "objective": "Provide a small client-consumable JSON endpoint for typeahead on public News search, reusing the existing published/listed News search query without exposing article bodies or private/draft/unlisted content.",
+      "acceptance_checks": [
+        "Add standalone GET /news/search-suggestions.json endpoint with a bounded q parameter (2–80 UTF-8 characters) and at most five results.",
+        "Reuse ContentEntryRepository::searchPublished with TYPE_NEWS so only published, listed News can match.",
+        "Return only plain title and absolute public News URL; never return bodies, author data, drafts, scheduled, or unlisted entries.",
+        "Return JSON UTF-8, public cache headers, stable query-aware ETag and conditional 304 responses; do no search for underlength queries.",
+        "Reject array and overlong q input safely.",
+        "Tests cover public/draft/unlisted filtering, the five-result limit, invalid input, content type, URL output and conditional requests.",
+        "Complete exact-head Worker CI including PHP/Symfony and PostgreSQL 18."
+      ],
+      "collision_check": {
+        "compared_against": "Live continuous/work-pool-v4 active and locked claims plus exact green WCP-699 dependency. Existing shared ContentEntryRepository is locked by WCP-388 and is not modified; new standalone controller/test paths are disjoint.",
+        "result": "No exact or prefix overlap with active/locked path claims. Controller and test are new paths; no shared controller, repository, entity, template, migration, workflow, or frontend changes.",
+        "paths": [
+          "src/Controller/PublicNewsSearchSuggestionsController.php",
+          "tests/Controller/PublicNewsSearchSuggestionsTest.php"
+        ]
+      },
+      "allowed_paths": [
+        "src/Controller/PublicNewsSearchSuggestionsController.php",
+        "tests/Controller/PublicNewsSearchSuggestionsTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "CONTINUOUS-WORKER.md",
+        "CONTINUOUS-WORK-POOL.json",
+        ".github/workflows/",
+        "migrations/",
+        "src/Repository/ContentEntryRepository.php",
+        "src/Controller/PublicContentController.php",
+        "templates/content/search.html.twig",
+        "templates/content/news.html.twig",
+        "templates/base.html.twig"
+      ],
+      "tests": [
+        "focused public News search suggestion controller tests",
+        "complete exact-head Worker CI including PHP/Symfony and PostgreSQL 18"
+      ],
+      "completion_report": [
+        "exact final worker HEAD SHA and exact sanitized base SHA",
+        "complete changed-file list and Worker PR",
+        "targeted tests plus complete Worker CI results",
+        "unresolved risks and assumptions"
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "no-executable-public-uploads",
+        "no-secrets-or-trusted-private-runtime-in-worker-source",
+        "preserve-existing-security-controls-tests-phpstan-and-ci",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
+      ],
+      "active_head": "d7260665bc8f8b15b4f7bdf5bb8cc368c93d5b38",
+      "last_observed_head": "d7260665bc8f8b15b4f7bdf5bb8cc368c93d5b38",
+      "last_checkpoint_at": "2026-10-14T08:33:00Z",
+      "last_verified_push_at": null,
+      "worker_pr": null,
+      "worker_pr_url": null,
+      "worker_pr_head_sha": null,
+      "worker_pr_state": null,
+      "ci_result": "not_started",
+      "next_action": "Implement only the standalone suggestions controller and focused test. Open feature and CI validation draft PRs; inspect exact-head CI and repair failures; record evidence. No merge or deployment."
     }
   ],
   "recovery_queue": [],
