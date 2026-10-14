@@ -27,7 +27,8 @@ final class ImportContentRedirectsCommandTest extends KernelTestCase
         $sourceSlug = 'legacy-'.$suffix;
         $target = (new ContentEntry())->setAuthor($user)->setType(ContentEntry::TYPE_NEWS)
             ->setTitle('Imported target')->setSlug($targetSlug)->setBody('Body remains unchanged')
-            ->setStatus(ContentEntry::STATUS_PUBLISHED)->synchronizePublication();
+            ->setStatus(ContentEntry::STATUS_PUBLISHED);
+        $target->synchronizePublication();
         $em->persist($user);
         $em->persist($target);
         $em->flush();
