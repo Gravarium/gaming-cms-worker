@@ -10,8 +10,8 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "2f98de43e3cf4a26addb436cf9908b4135f2bdc6",
-  "published_at": "2026-10-14T04:24:30Z",
-  "summary": "WCP-690–WCP-694 are green draft PRs awaiting Trusted review; WCP-695 adds a recent-public-News sitemap and is open as feature PR #510 with CI validation PR #511. WCP-695 exact HEAD fd9f661b26437ca811d93acbbc6e0e68b5d46fdf awaits Worker CI.",
+  "published_at": "2026-10-14T04:26:14Z",
+  "summary": "WCP-690–WCP-694 are green draft PRs awaiting Trusted review. WCP-695 recent-News sitemap PR #510 remains active; initial CI found fixture contamination, now corrected on 8c7a2601bc579a083d788d306cbc2305a46e7f83 pending exact-head revalidation.",
   "rules": {
     "choose": "Resume the current chat's unfinished claimed branch first. Otherwise atomically claim an eligible published task. If no published task is eligible, independently derive and publish a bounded worker-only CMS proposal from approved product goals and observed code gaps; do not ask the owner for the next FCP number.",
     "atomic_reservation": "Create the exact claim_branch and suggested feature branch from that task's published proposal_base_sha. If the claim already exists, treat it as a hard lock; the owning continuation resumes it and every other AI skips it.",
@@ -70184,19 +70184,23 @@
         "red-ci-stops-integration",
         "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
       ],
-      "active_head": "fd9f661b26437ca811d93acbbc6e0e68b5d46fdf",
-      "last_observed_head": "fd9f661b26437ca811d93acbbc6e0e68b5d46fdf",
+      "active_head": "8c7a2601bc579a083d788d306cbc2305a46e7f83",
+      "last_observed_head": "8c7a2601bc579a083d788d306cbc2305a46e7f83",
       "worker_pr_state": "draft",
-      "last_checkpoint_at": "2026-10-14T04:24:30Z",
-      "last_verified_push_at": "2026-10-14T04:22:45Z",
+      "last_checkpoint_at": "2026-10-14T04:26:14Z",
+      "last_verified_push_at": "2026-10-14T04:26:14Z",
       "worker_pr": 510,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/510",
-      "worker_pr_head_sha": "fd9f661b26437ca811d93acbbc6e0e68b5d46fdf",
+      "worker_pr_head_sha": "8c7a2601bc579a083d788d306cbc2305a46e7f83",
       "ci_branch": "worker/account-ci-wcp-695-g1",
       "ci_pr": 511,
-      "ci_result": "in_progress",
-      "next_action": "Worker CI run 38511079443 is active on exact HEAD fd9f661b26437ca811d93acbbc6e0e68b5d46fdf. PHP/Symfony analysis, Twig lint, container and mapping checks passed; PostgreSQL 18 migrations passed; full PHPUnit run is still in progress. Await final result.",
-      "ci_run_id": 38511079443
+      "ci_result": "pending",
+      "next_action": "Corrected fixture is on exact HEAD 8c7a2601bc579a083d788d306cbc2305a46e7f83. The previous run 38511079443 failed one unrelated category-archive assertion due the test's shared Category fixture; sitemap tests now avoid creating any category. Await CI for the corrected exact head.",
+      "last_ci_failure": {
+        "run_id": 38511079443,
+        "head": "fd9f661b26437ca811d93acbbc6e0e68b5d46fdf",
+        "cause": "The new test associated a public Page with a newly persisted Category, contaminating an existing category archive widget test; fixture changed to use no category."
+      }
     }
   ],
   "recovery_queue": [],
