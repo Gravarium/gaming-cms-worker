@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Tests\Controller;
 
-use App\Entity\Category;
 use App\Entity\ContentEntry;
 use App\Entity\User;
 use DateTimeImmutable;
@@ -20,22 +19,21 @@ final class PublicNewsSitemapTest extends WebTestCase
         $suffix = bin2hex(random_bytes(5));
         $author = (new User())->setEmail('news-sitemap-'.$suffix.'@example.test')
             ->setDisplayName('News sitemap author')->verifyEmail();
-        $category = (new Category())->setName('Category '.$suffix)->setSlug('sitemap-'.$suffix);
-        $fresh = $this->entry($author, $category, 'Fresh <News> & '.$suffix, 'fresh-'.$suffix)
+        $fresh = $this->entry($author, 'Fresh <News> & '.$suffix, 'fresh-'.$suffix)
             ->setPublishedAt(new DateTimeImmutable('-1 hour'));
-        $old = $this->entry($author, $category, 'Old '.$suffix, 'old-'.$suffix)
+        $old = $this->entry($author, 'Old '.$suffix, 'old-'.$suffix)
             ->setPublishedAt(new DateTimeImmutable('-49 hours'));
-        $noIndex = $this->entry($author, $category, 'Noindex '.$suffix, 'noindex-'.$suffix)
+        $noIndex = $this->entry($author, 'Noindex '.$suffix, 'noindex-'.$suffix)
             ->setNoIndex(true);
-        $unlisted = $this->entry($author, $category, 'Unlisted '.$suffix, 'unlisted-'.$suffix)
+        $unlisted = $this->entry($author, 'Unlisted '.$suffix, 'unlisted-'.$suffix)
             ->setUnlisted(true);
-        $draft = (new ContentEntry())->setAuthor($author)->setCategory($category)
+        $draft = (new ContentEntry())->setAuthor($author)
             ->setType(ContentEntry::TYPE_NEWS)->setTitle('Draft '.$suffix)->setSlug('draft-'.$suffix)
             ->setBody('Draft body')->setStatus(ContentEntry::STATUS_DRAFT);
-        $page = $this->entry($author, $category, 'Page '.$suffix, 'page-'.$suffix)
+        $page = $this->entry($author, 'Page '.$suffix, 'page-'.$suffix)
             ->setType(ContentEntry::TYPE_PAGE);
 
-        foreach ([$author, $category, $fresh, $old, $noIndex, $unlisted, $draft, $page] as $entity) {
+        foreach ([$author, $fresh, $old, $noIndex, $unlisted, $draft, $page] as $entity) {
             $entityManager->persist($entity);
         }
         $entityManager->flush();
@@ -58,11 +56,10 @@ final class PublicNewsSitemapTest extends WebTestCase
         self::assertResponseStatusCodeSame(304);
     }
 
-    private function entry(User $author, Category $category, string $title, string $slug): ContentEntry
+    private function entry(User $author, string $title, string $slug): ContentEntry
     {
         $entry = (new ContentEntry())
             ->setAuthor($author)
-            ->setCategory($category)
             ->setType(ContentEntry::TYPE_NEWS)
             ->setTitle($title)
             ->setSlug($slug)
