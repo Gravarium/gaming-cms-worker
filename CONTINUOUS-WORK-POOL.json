@@ -10,8 +10,8 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "2f98de43e3cf4a26addb436cf9908b4135f2bdc6",
-  "published_at": "2026-10-14T04:20:30Z",
-  "summary": "WCP-690–WCP-694 are complete as green open draft PRs awaiting Trusted review. WCP-694 adds tag-specific public News RSS and JSON Feed endpoints; exact green HEAD 3b2fd53ade9f78edb6bd10bfe9b64e425c595791 passed Worker CI 38510523719.",
+  "published_at": "2026-10-14T04:21:00Z",
+  "summary": "WCP-690–WCP-694 are green open draft PRs awaiting Trusted review. WCP-695 claims an isolated recent-News XML sitemap on WCP-694 exact green HEAD 3b2fd53ade9f78edb6bd10bfe9b64e425c595791.",
   "rules": {
     "choose": "Resume the current chat's unfinished claimed branch first. Otherwise atomically claim an eligible published task. If no published task is eligible, independently derive and publish a bounded worker-only CMS proposal from approved product goals and observed code gaps; do not ask the owner for the next FCP number.",
     "atomic_reservation": "Create the exact claim_branch and suggested feature branch from that task's published proposal_base_sha. If the claim already exists, treat it as a hard lock; the owning continuation resumes it and every other AI skips it.",
@@ -70091,6 +70091,99 @@
       "ci_run_id": 38510523719,
       "ci_result": "success",
       "next_action": "Worker CI run 38510523719 passed on exact HEAD 3b2fd53ade9f78edb6bd10bfe9b64e425c595791. PHP/Symfony job (PHPStan, lint/container/mapping checks and 1,707 PHPUnit tests with 12,440 assertions) and PostgreSQL 18 migration chain succeeded. Draft feature PR #508 and CI validation PR #509 remain open for Trusted review; claim is locked. Do not merge or deploy."
+    },
+    {
+      "priority": 695,
+      "package_id": "WCP-695",
+      "title": "Publish a dedicated recent-News XML sitemap",
+      "risk": "low_public_read_only",
+      "execution_state": "worker_in_progress",
+      "claim_state": "claimed",
+      "claim_generation": 1,
+      "claim_branch": "claim/wcp-695-news-sitemap-g1",
+      "suggested_branch": "feature/wcp-695-news-sitemap-g1",
+      "resume_branch": "feature/wcp-695-news-sitemap-g1",
+      "claimed_on": "2026-10-14T04:21:00Z",
+      "lease_expires_at": "2026-10-14T11:21:00Z",
+      "base_branch": "main",
+      "base_sha": "2f98de43e3cf4a26addb436cf9908b4135f2bdc6",
+      "proposal_base_branch": "feature/wcp-694-news-tag-feeds-g1",
+      "proposal_base_sha": "3b2fd53ade9f78edb6bd10bfe9b64e425c595791",
+      "active_base_branch": "feature/wcp-694-news-tag-feeds-g1",
+      "active_base_sha": "3b2fd53ade9f78edb6bd10bfe9b64e425c595791",
+      "dependencies": [
+        "WCP-694"
+      ],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "proposal_kind": "worker_only",
+      "proposal_dependency_evidence": [
+        {
+          "package_id": "WCP-694",
+          "head": "3b2fd53ade9f78edb6bd10bfe9b64e425c595791",
+          "pr": 508,
+          "ci_run": 38510523719,
+          "result": "success"
+        }
+      ],
+      "objective": "Expose a dedicated News sitemap for recently published public stories so search crawlers can discover timely editorial coverage without changing the existing general sitemap.",
+      "acceptance_checks": [
+        "Add a standalone GET /news-sitemap.xml endpoint and template without modifying the shared sitemap controller/template.",
+        "Emit valid sitemap XML using the News sitemap namespace and only listed, published News from the latest 48-hour window, bounded to at most 100 entries using the existing repository cap.",
+        "Use absolute canonical article URLs and publication timestamps; exclude Pages, drafts, scheduled/future stories, unlisted content, and stories older than 48 hours.",
+        "Return application/xml UTF-8 with public bounded caching, ETag/conditional responses, and cache lifetime capped by the earliest 48-hour expiry.",
+        "Tests cover fresh versus old articles, public visibility filtering, XML escaping, content type, cache headers and 304 responses.",
+        "Complete exact-head Worker CI including PHP/Symfony and PostgreSQL 18."
+      ],
+      "collision_check": {
+        "compared_against": "Latest continuous/work-pool-v4, all active/locked claim scopes, existing general sitemap implementation, and WCP-694 exact green HEAD.",
+        "result": "No exact or prefix overlap across active/locked claims. New standalone controller, News sitemap template and controller test paths only; existing PublicContentController and content/sitemap.xml.twig remain untouched.",
+        "paths": [
+          "src/Controller/PublicNewsSitemapController.php",
+          "templates/content/news_sitemap.xml.twig",
+          "tests/Controller/PublicNewsSitemapTest.php"
+        ]
+      },
+      "allowed_paths": [
+        "src/Controller/PublicNewsSitemapController.php",
+        "templates/content/news_sitemap.xml.twig",
+        "tests/Controller/PublicNewsSitemapTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "CONTINUOUS-WORKER.md",
+        "CONTINUOUS-WORK-POOL.json",
+        ".github/workflows/",
+        "migrations/",
+        "src/Controller/PublicContentController.php",
+        "templates/content/sitemap.xml.twig"
+      ],
+      "tests": [
+        "targeted public News sitemap controller tests",
+        "complete exact-head Worker CI including PHP/Symfony and PostgreSQL 18"
+      ],
+      "completion_report": [
+        "exact final worker HEAD SHA and exact sanitized base SHA",
+        "complete changed-path list and Worker PR",
+        "targeted tests plus complete Worker CI results",
+        "unresolved risks and assumptions"
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "no-executable-public-uploads",
+        "no-secrets-or-trusted-private-runtime-in-worker-source",
+        "preserve-existing-security-controls-tests-phpstan-and-ci",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
+      ]
     }
   ],
   "recovery_queue": [],
