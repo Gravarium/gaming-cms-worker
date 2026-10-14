@@ -11,7 +11,7 @@
   "baseline_branch": "main",
   "base_sha": "2f98de43e3cf4a26addb436cf9908b4135f2bdc6",
   "published_at": "2026-10-13T22:45:00Z",
-  "summary": "WCP-690, WCP-691 and WCP-692 are complete as green open draft PRs awaiting Trusted review. WCP-692 adds public category-filtered News RSS feeds; exact green HEAD c918661cca5cd653828f1ee57122b2475963e9f2 passed Worker CI 38504985668.",
+  "summary": "WCP-690–WCP-692 complete as green open draft PRs awaiting Trusted review. WCP-693 is now claimed on WCP-692's exact green HEAD for a category-specific JSON Feed 1.1 endpoint; no merge or deployment.",
   "rules": {
     "choose": "Resume the current chat's unfinished claimed branch first. Otherwise atomically claim an eligible published task. If no published task is eligible, independently derive and publish a bounded worker-only CMS proposal from approved product goals and observed code gaps; do not ask the owner for the next FCP number.",
     "atomic_reservation": "Create the exact claim_branch and suggested feature branch from that task's published proposal_base_sha. If the claim already exists, treat it as a hard lock; the owning continuation resumes it and every other AI skips it.",
@@ -69896,6 +69896,90 @@
       "ci_branch": "worker/account-ci-wcp-692-g1",
       "ci_pr": 505,
       "ci_run_id": 38504985668
+    },
+    {
+      "priority": 693,
+      "package_id": "WCP-693",
+      "title": "Publish category-specific News JSON Feeds",
+      "risk": "low_public_read_only",
+      "execution_state": "worker_in_progress",
+      "claim_state": "worker_in_progress",
+      "claim_generation": 1,
+      "claim_branch": "claim/wcp-693-news-category-json-feed-g1",
+      "suggested_branch": "feature/wcp-693-news-category-json-feed-g1",
+      "resume_branch": "feature/wcp-693-news-category-json-feed-g1",
+      "claimed_on": "2026-10-14T03:17:41Z",
+      "lease_expires_at": "2026-10-14T10:17:41Z",
+      "base_branch": "main",
+      "base_sha": "2f98de43e3cf4a26addb436cf9908b4135f2bdc6",
+      "proposal_base_branch": "feature/wcp-692-news-category-feed-g1",
+      "proposal_base_sha": "c918661cca5cd653828f1ee57122b2475963e9f2",
+      "active_base_branch": "feature/wcp-692-news-category-feed-g1",
+      "active_base_sha": "c918661cca5cd653828f1ee57122b2475963e9f2",
+      "dependencies": [
+        "WCP-692"
+      ],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "proposal_kind": "worker_only",
+      "proposal_dependency_evidence": [
+        {
+          "package_id": "WCP-692",
+          "head": "c918661cca5cd653828f1ee57122b2475963e9f2",
+          "pr": 504,
+          "ci_run": 38504985668,
+          "result": "success"
+        }
+      ],
+      "objective": "Expose a machine-readable JSON Feed 1.1 endpoint for each News category, allowing readers to subscribe to one editorial topic without exposing drafts, scheduled stories, or unlisted content.",
+      "acceptance_checks": [
+        "Add GET `/news/category/{slug}/feed.json` on a standalone controller; unknown categories return 404 without modifying shared controllers.",
+        "Return valid JSON Feed 1.1 with absolute category/feed/article URLs, category title/description, publication dates, summaries, and public tags; never expose article body or private user fields.",
+        "Include only published, listed News in the selected category using existing bounded repository filtering; other categories and non-public content are excluded.",
+        "Use application/feed+json UTF-8, ETag/conditional responses, and a public cache lifetime capped by scheduled unpublish deadlines.",
+        "Tests cover feed schema, category isolation, missing category, published/listed filtering, response/cache headers, and stable identifiers.",
+        "Complete exact-head Worker CI including PHP/Symfony and PostgreSQL 18."
+      ],
+      "collision_check": {
+        "compared_against": "Latest continuous/work-pool-v4, all active/locked claims, and WCP-692 exact green dependency head.",
+        "result": "No exact or prefix overlap across 194 active/locked task scopes. New standalone controller/test files only; no changes to shared content/news controllers, templates, entities, migrations, or workflows.",
+        "paths": [
+          "src/Controller/PublicNewsCategoryJsonFeedController.php",
+          "tests/Controller/PublicNewsCategoryJsonFeedTest.php"
+        ]
+      },
+      "allowed_paths": [
+        "src/Controller/PublicNewsCategoryJsonFeedController.php",
+        "tests/Controller/PublicNewsCategoryJsonFeedTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "CONTINUOUS-WORKER.md",
+        "CONTINUOUS-WORK-POOL.json",
+        ".github/workflows/",
+        "migrations/",
+        "src/Controller/PublicContentController.php",
+        "templates/content/news.html.twig"
+      ],
+      "next_action": "Implement the standalone per-category JSON Feed controller and focused integration tests only in the allowed paths. Open/update a draft Worker PR and its required CI validation PR on WCP-692 exact green base; document exact-head CI before locking the claim. Do not merge or deploy.",
+      "active_head": "c918661cca5cd653828f1ee57122b2475963e9f2",
+      "last_observed_head": "c918661cca5cd653828f1ee57122b2475963e9f2",
+      "worker_pr_state": "not_open",
+      "last_checkpoint_at": "2026-10-14T03:17:41Z",
+      "last_verified_push_at": null,
+      "worker_pr": null,
+      "worker_pr_url": null,
+      "worker_pr_head_sha": null,
+      "ci_result": "not_started",
+      "ci_branch": "worker/account-ci-wcp-693-g1",
+      "ci_pr": null,
+      "ci_run_id": null
     }
   ],
   "recovery_queue": [],
