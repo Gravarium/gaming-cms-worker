@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Command;
 
-use App\ContentRedirect\ContentRedirectChainAnalyzer;
+use App\ContentRedirect\ContentRedirectTargetAudit;
 use App\Entity\ContentRedirect;
 use App\Repository\ContentRedirectRepository;
 use Symfony\Component\Console\Attribute\AsCommand;
