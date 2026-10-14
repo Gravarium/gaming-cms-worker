@@ -28,7 +28,7 @@ final class ContentRedirectCsvExporterTest extends TestCase
         fclose($stream);
 
         self::assertIsString($csv);
-        self::assertStringStartsWith("\xEF\xBB\xBF\"Quellpfad\"", $csv);
+        self::assertStringStartsWith("\xEF\xBB\xBFQuellpfad", $csv);
         self::assertSame(1, substr_count($csv, 'Quellpfad'));
         self::assertStringContainsString("'=HYPERLINK", $csv);
         self::assertStringContainsString('/news/legacy-story', $csv);
