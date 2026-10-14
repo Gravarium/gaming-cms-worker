@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}News durchsuchen{% endblock %}
+
+{% block body %}
+    <main class="container py-5">
+        <h1>News durchsuchen</h1>
+        <p id="news-search-help">Finde veröffentlichte News. Gib mindestens zwei Zeichen ein.</p>
+
+        <form action="{{ path('app_news_search_page') }}" method="get" role="search">
+            <label for="news-search-query">Suchbegriff</label>
+            <input
+                id="news-search-query"
+                name="q"
+                type="search"
+                value="{{ query }}"
+                minlength="2"
+                maxlength="80"
+                aria-describedby="news-search-help"
+            >
+            <button type="submit">Suchen</button>
+        </form>
+
+        {% if has_search %}
+            <h2>Suchergebnisse für „{{ query }}“</h2>
+            {% if results is empty %}
+                <p>Keine passenden News gefunden.</p>
+            {% else %}
+                <ul>
+                    {% for entry in results %}
+                        <li><a href="{{ path('app_news_show', {slug: entry.slug}) }}">{{ entry.title }}</a></li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        {% endif %}
+    </main>
+{% endblock %}
