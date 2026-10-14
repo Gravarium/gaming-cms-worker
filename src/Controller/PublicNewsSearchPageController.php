@@ -9,6 +9,7 @@ use App\Repository\ContentEntryRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\EventListener\AbstractSessionListener;
 use Symfony\Component\Routing\Attribute\Route;
 
 final class PublicNewsSearchPageController extends AbstractController
@@ -37,6 +38,7 @@ final class PublicNewsSearchPageController extends AbstractController
             'results' => $results,
         ]);
         $response->headers->set('Cache-Control', 'private, no-store');
+        $response->headers->set(AbstractSessionListener::NO_AUTO_CACHE_CONTROL_HEADER, 'true');
         $response->headers->set('X-Robots-Tag', 'noindex, follow');
 
         return $response;

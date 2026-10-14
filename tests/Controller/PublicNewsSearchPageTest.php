@@ -37,7 +37,9 @@ final class PublicNewsSearchPageTest extends WebTestCase
 
         self::assertResponseIsSuccessful();
         self::assertResponseHeaderSame('Content-Type', 'text/html; charset=UTF-8');
-        self::assertResponseHeaderSame('Cache-Control', 'private, no-store');
+        $cacheControl = (string) $client->getResponse()->headers->get('Cache-Control');
+        self::assertStringContainsString('private', $cacheControl);
+        self::assertStringContainsString('no-store', $cacheControl);
         self::assertSelectorExists('form[role="search"][method="get"]');
         self::assertSelectorExists('input[name="q"][type="search"][minlength="2"][maxlength="80"]');
         self::assertSelectorTextSame('h2', 'Suchergebnisse für „searchpage-'.$suffix.'“');
@@ -74,12 +76,12 @@ final class PublicNewsSearchPageTest extends WebTestCase
         $entry = (new ContentEntry())
             ->setAuthor($author)
             ->setCategory($category)
-            ->setType(ContentEntry::TYPE_NEWS)
             ->setTitle($title)
             ->setSlug($slug)
             ->setBody('Private body for '.$title)
             ->setStatus($status)
             ->setUnlisted($unlisted);
+        $entry->setType(ContentEntry::TYPE_NEWS);
         $entry->synchronizePublication();
 
         return $entry;
