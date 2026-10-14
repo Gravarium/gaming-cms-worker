@@ -17,6 +17,7 @@
     <p class="muted">Hier findest du ältere Slugs, die nach einer Änderung auf den aktuellen Inhalt weiterleiten. Die Übersicht verändert keine bestehenden Weiterleitungen.</p>
 
     <section class="panel" aria-label="Weiterleitungen filtern">
+        <p><a class="button-link button-secondary" href="{{ path('app_admin_content_redirect_export', {q: filters.q, type: filters.type}) }}">Gefilterte Liste als CSV herunterladen</a></p>
         <form method="get" action="{{ path('app_admin_content_redirect_index') }}">
             <label for="redirect-search">Alter Slug oder Zielname</label>
             <input id="redirect-search" type="search" name="q" value="{{ filters.q }}" maxlength="120">
