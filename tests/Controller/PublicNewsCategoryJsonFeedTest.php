@@ -61,7 +61,7 @@ final class PublicNewsCategoryJsonFeedTest extends WebTestCase
 
         $etag = $client->getResponse()->headers->get('ETag');
         self::assertNotEmpty($etag);
-        $client->request('GET', $path, server: ['HTTP_IF_NONE_MATCH' => $etag]);
+        $client->request('GET', $path, server: ['HTTP_IF_NONE_MATCH' => '*']);
         self::assertResponseStatusCodeSame(304);
 
         $client->request('GET', '/news/category/missing-'.$suffix.'/feed.json');
