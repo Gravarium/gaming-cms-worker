@@ -11,7 +11,7 @@
   "baseline_branch": "main",
   "base_sha": "2f98de43e3cf4a26addb436cf9908b4135f2bdc6",
   "published_at": "2026-10-13T22:45:00Z",
-  "summary": "WCP-688 complete as open draft PR #497 at 34523e6577dd543f65b8ee5b68ebdbf67a08b997, green exact-head CI run 38480038083. WCP-689 complete as open draft PR #498 at 91a0cfaecaad237edebf226be2188489f970f8af with green exact-head Worker CI run 38489311802 (PHP/Symfony and PostgreSQL 18); both remain locked pending Trusted review.",
+  "summary": "WCP-689 complete as open draft PR #498 at 91a0cfaecaad237edebf226be2188489f970f8af with green exact-head CI run 38489311802. WCP-690 is reserved as a path-disjoint, dependent Worker-only proposal for safe CSV redirect import.",
   "rules": {
     "choose": "Resume the current chat's unfinished claimed branch first. Otherwise atomically claim an eligible published task. If no published task is eligible, independently derive and publish a bounded worker-only CMS proposal from approved product goals and observed code gaps; do not ask the owner for the next FCP number.",
     "atomic_reservation": "Create the exact claim_branch and suggested feature branch from that task's published proposal_base_sha. If the claim already exists, treat it as a hard lock; the owning continuation resumes it and every other AI skips it.",
@@ -69654,6 +69654,77 @@
       "ci_branch": "worker/account-ci-wcp-689-g1",
       "ci_run_id": 38489311802,
       "ci_pr": 499
+    },
+    {
+      "priority": 690,
+      "package_id": "WCP-690",
+      "title": "Safely import legacy content redirects from the redirect CSV export",
+      "risk": "medium_admin_import",
+      "execution_state": "worker_in_progress",
+      "claim_state": "worker_in_progress",
+      "claim_generation": 1,
+      "claim_branch": "claim/wcp-690-content-redirect-import-g1",
+      "suggested_branch": "feature/wcp-690-content-redirect-import-g1",
+      "resume_branch": "feature/wcp-690-content-redirect-import-g1",
+      "claimed_on": "2026-10-14T02:18:11Z",
+      "lease_expires_at": "2026-10-14T09:18:11Z",
+      "base_branch": "main",
+      "base_sha": "2f98de43e3cf4a26addb436cf9908b4135f2bdc6",
+      "proposal_base_branch": "feature/wcp-689-content-redirect-export-g1",
+      "proposal_base_sha": "91a0cfaecaad237edebf226be2188489f970f8af",
+      "active_base_branch": "feature/wcp-689-content-redirect-export-g1",
+      "active_base_sha": "91a0cfaecaad237edebf226be2188489f970f8af",
+      "dependencies": [
+        "WCP-689"
+      ],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "proposal_kind": "worker_only",
+      "proposal_dependency_evidence": [
+        {
+          "package_id": "WCP-689",
+          "head": "91a0cfaecaad237edebf226be2188489f970f8af",
+          "pr": 498,
+          "ci_run": 38489311802,
+          "result": "success"
+        }
+      ],
+      "objective": "Provide a safe, idempotent CLI import for the exact CSV format emitted by the content-redirect manager. Validate every row and target before writing, support dry-run by default with explicit --apply, never overwrite conflicting redirects, import only published targets, and cap input size.",
+      "acceptance_checks": [
+        "Strictly validate the exported header, UTF-8, field count, type/path consistency, slugs and status; handle optional UTF-8 BOM.",
+        "Dry-run is default; --apply is explicit and all database changes are transactional.",
+        "Only published target content of the same type can receive a redirect.",
+        "Exact existing mappings are idempotent skips; conflicting source mappings fail without overwriting.",
+        "Bound rows to 5,000 and report created, unchanged, and unpublished skipped counts; tests cover malformed input and rollback."
+      ],
+      "collision_check": {
+        "compared_against": "Latest continuous/work-pool-v4, all active/locked claims, and exact green WCP-689 PR #498 head.",
+        "result": "No exact or prefix overlap in claim scopes. This is a serial dependent Worker-only extension of the green WCP-689 CSV exporter; all paths are new.",
+        "paths": [
+          "src/Command/ImportContentRedirectsCommand.php",
+          "src/ContentRedirect/ContentRedirectCsvImporter.php",
+          "tests/Command/ImportContentRedirectsCommandTest.php",
+          "tests/ContentRedirect/ContentRedirectCsvImporterTest.php"
+        ]
+      },
+      "allowed_paths": [
+        "src/Command/ImportContentRedirectsCommand.php",
+        "src/ContentRedirect/ContentRedirectCsvImporter.php",
+        "tests/Command/ImportContentRedirectsCommandTest.php",
+        "tests/ContentRedirect/ContentRedirectCsvImporterTest.php"
+      ],
+      "next_action": "Implement the strict CSV parser and transactional Symfony console command, test dry-run/apply/idempotence/validation. Open a draft stacked PR and exact-head Worker CI validation PR; record the green SHA. Never merge or deploy.",
+      "active_head": null,
+      "last_observed_head": null,
+      "worker_pr_state": null,
+      "last_checkpoint_at": "2026-10-14T02:18:11Z",
+      "last_verified_push_at": null,
+      "worker_pr": null,
+      "worker_pr_url": null,
+      "worker_pr_head_sha": null,
+      "ci_result": "pending",
+      "ci_branch": "worker/account-ci-wcp-690-g1",
+      "ci_run_id": null
     }
   ],
   "recovery_queue": [],
