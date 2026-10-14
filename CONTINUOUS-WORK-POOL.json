@@ -10,8 +10,8 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "2f98de43e3cf4a26addb436cf9908b4135f2bdc6",
-  "published_at": "2026-10-14T08:51:04.549Z",
-  "summary": "WCP-698 through WCP-700 are complete green open draft PRs awaiting Trusted review. WCP-701 adds a dedicated public News search page; after fixing one CI-discovered header assertion, exact-head run 38538017282 is validating HEAD 3db21f9bcfec82c4929818164576a4df4fafdb74.",
+  "published_at": "2026-10-14T08:55:34.470Z",
+  "summary": "WCP-698 through WCP-701 are complete green open draft PRs awaiting Trusted review. WCP-701 provides a dedicated accessible public News search page; exact HEAD 3db21f9bcfec82c4929818164576a4df4fafdb74 passed Worker CI run 38538017282.",
   "rules": {
     "choose": "Resume the current chat's unfinished claimed branch first. Otherwise atomically claim an eligible published task. If no published task is eligible, independently derive and publish a bounded worker-only CMS proposal from approved product goals and observed code gaps; do not ask the owner for the next FCP number.",
     "atomic_reservation": "Create the exact claim_branch and suggested feature branch from that task's published proposal_base_sha. If the claim already exists, treat it as a hard lock; the owning continuation resumes it and every other AI skips it.",
@@ -70735,8 +70735,8 @@
       "package_id": "WCP-701",
       "title": "Add a dedicated public News search page",
       "risk": "low_public_read_only",
-      "execution_state": "worker_in_progress",
-      "claim_state": "claimed",
+      "execution_state": "worker_complete_awaiting_trusted_review",
+      "claim_state": "locked_until_trusted_resolution",
       "claim_generation": 1,
       "claim_branch": "claim/wcp-701-public-news-search-page-g1",
       "suggested_branch": "feature/wcp-701-public-news-search-page-g1",
@@ -70811,10 +70811,12 @@
         "complete exact-head Worker CI including PHP/Symfony and PostgreSQL 18"
       ],
       "completion_report": [
-        "exact final worker HEAD SHA and exact sanitized base SHA",
-        "complete changed-file list and Worker PR",
-        "targeted tests plus complete Worker CI results",
-        "unresolved risks and assumptions"
+        "Exact final Worker HEAD: 3db21f9bcfec82c4929818164576a4df4fafdb74; sanitized dependency base: 38781e9280b789aefcd7846b3023b2341d9a7b74.",
+        "Changed files: src/Controller/PublicNewsSearchPageController.php; templates/content/news_search.html.twig; tests/Controller/PublicNewsSearchPageTest.php.",
+        "Feature PR #522 and CI validation PR #523 remain open drafts.",
+        "Exact-head Worker CI run 38538017282 passed PHP/Symfony and PostgreSQL 18; 1,820 tests and 13,034 assertions passed.",
+        "First run 38537280867 failed only on exact Cache-Control header comparison; fixed with Symfony auto-cache-control suppression and directive assertions; final CI is green.",
+        "No Trusted merge or deployment."
       ],
       "immutable_constraints": [
         "trusted-main-is-the-only-integration-and-deployment-source",
@@ -70828,14 +70830,14 @@
       ],
       "active_head": "3db21f9bcfec82c4929818164576a4df4fafdb74",
       "last_observed_head": "3db21f9bcfec82c4929818164576a4df4fafdb74",
-      "last_checkpoint_at": "2026-10-14T08:51:04.549Z",
+      "last_checkpoint_at": "2026-10-14T08:55:34.470Z",
       "last_verified_push_at": "2026-10-14T08:51:04.549Z",
       "worker_pr": 522,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/522",
       "worker_pr_head_sha": "3db21f9bcfec82c4929818164576a4df4fafdb74",
       "worker_pr_state": "open_draft",
-      "ci_result": "in_progress",
-      "next_action": "Inspect exact-head Worker CI run 38538017282 for PR #523; repair any remaining failure only within allowed paths, then record exact green HEAD. No merge or deployment.",
+      "ci_result": "success",
+      "next_action": "WCP-701 is complete on exact HEAD 3db21f9bcfec82c4929818164576a4df4fafdb74. Worker CI run 38538017282 passed PHP/Symfony (1,820 tests, 13,034 assertions; 1 deprecation and 26 notices) and PostgreSQL 18 migration chain. Feature PR #522 and CI validation PR #523 remain open drafts awaiting Trusted review. Keep claim locked until Trusted resolution; no merge or deployment.",
       "ci_run": 38538017282,
       "ci_run_url": "https://github.com/Gravarium/gaming-cms-worker/actions/runs/38538017282",
       "ci_validation_pr": 523
