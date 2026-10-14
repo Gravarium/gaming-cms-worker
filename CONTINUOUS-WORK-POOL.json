@@ -10,8 +10,8 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "2f98de43e3cf4a26addb436cf9908b4135f2bdc6",
-  "published_at": "2026-10-14T09:33:13.549Z",
-  "summary": "WCP-698 through WCP-702 are complete green open draft PRs awaiting Trusted review. WCP-702 adds a bounded public News Atom 1.0 feed; exact HEAD e3e59b8eb935dd2087b1e238badc874d7c4c5588 passed Worker CI run 38542583462.",
+  "published_at": "2026-10-14T10:16:01Z",
+  "summary": "WCP-698 through WCP-702 are complete green open draft PRs awaiting Trusted review. WCP-703 is claimed in progress with draft PR #526 stacked on exact green WCP-702 HEAD.",
   "rules": {
     "choose": "Resume the current chat's unfinished claimed branch first. Otherwise atomically claim an eligible published task. If no published task is eligible, independently derive and publish a bounded worker-only CMS proposal from approved product goals and observed code gaps; do not ask the owner for the next FCP number.",
     "atomic_reservation": "Create the exact claim_branch and suggested feature branch from that task's published proposal_base_sha. If the claim already exists, treat it as a hard lock; the owning continuation resumes it and every other AI skips it.",
@@ -70953,6 +70953,101 @@
       "ci_run": 38542583462,
       "ci_run_url": "https://github.com/Gravarium/gaming-cms-worker/actions/runs/38542583462",
       "ci_validation_pr": 525
+    },
+    {
+      "priority": 703,
+      "package_id": "WCP-703",
+      "title": "Add a public News feed directory page",
+      "risk": "low_public_read_only",
+      "execution_state": "worker_in_progress",
+      "claim_state": "active_lease",
+      "claim_generation": 1,
+      "claim_branch": "claim/wcp-703-public-news-feed-directory-g1",
+      "suggested_branch": "feature/wcp-703-public-news-feed-directory-g1",
+      "resume_branch": "feature/wcp-703-public-news-feed-directory-g1",
+      "claimed_on": "2026-10-14T10:16:01Z",
+      "lease_expires_at": "2026-10-14T17:16:01Z",
+      "base_branch": "main",
+      "base_sha": "a6ff8d56cc5fd84b3eada9f6c745e43c70aa810b",
+      "proposal_base_branch": "feature/wcp-702-public-news-atom-feed-g1",
+      "proposal_base_sha": "e3e59b8eb935dd2087b1e238badc874d7c4c5588",
+      "active_base_branch": "feature/wcp-702-public-news-atom-feed-g1",
+      "active_base_sha": "e3e59b8eb935dd2087b1e238badc874d7c4c5588",
+      "dependencies": [
+        "WCP-702"
+      ],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "proposal_kind": "worker_only",
+      "proposal_dependency_evidence": [
+        {
+          "package_id": "WCP-702",
+          "head": "e3e59b8eb935dd2087b1e238badc874d7c4c5588",
+          "pr": 524,
+          "ci_run": 38542583462,
+          "result": "success"
+        }
+      ],
+      "objective": "Give visitors a concise public directory for subscribing to available News formats without changing shared feed handlers.",
+      "acceptance_checks": [
+        "Expose a public GET /news/feeds page with a clear title and short explanation.",
+        "Link to RSS 2.0, JSON Feed 1.1, and Atom 1.0 using named routes.",
+        "Keep shared feed controllers, templates, and News listing pages unchanged.",
+        "Focused functional test verifies successful response and all feed links."
+      ],
+      "collision_check": {
+        "compared_against": "Live continuous/work-pool-v4 locked claims WCP-691 through WCP-702 and exact green WCP-702 dependency; dedicated new controller, template and test paths are distinct from every locked allowlist.",
+        "result": "No exact or prefix overlap with active/locked path claims.",
+        "paths": [
+          "src/Controller/PublicNewsFeedsPageController.php",
+          "templates/content/news_feeds.html.twig",
+          "tests/Controller/PublicNewsFeedsPageTest.php"
+        ]
+      },
+      "allowed_paths": [
+        "src/Controller/PublicNewsFeedsPageController.php",
+        "templates/content/news_feeds.html.twig",
+        "tests/Controller/PublicNewsFeedsPageTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "CONTINUOUS-WORKER.md",
+        "CONTINUOUS-WORK-POOL.json",
+        ".github/workflows/",
+        "migrations/",
+        "src/Controller/PublicContentController.php",
+        "templates/content/news.html.twig",
+        "templates/base.html.twig"
+      ],
+      "tests": [
+        "focused public News feed directory functional test",
+        "complete exact-head Worker CI including PHP/Symfony and PostgreSQL 18"
+      ],
+      "completion_report": [],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "preserve-existing-security-controls-tests-phpstan-and-ci",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
+      ],
+      "active_head": "555b441d3eb9a130c5c9bb7d773e5b07268961c7",
+      "last_observed_head": "555b441d3eb9a130c5c9bb7d773e5b07268961c7",
+      "last_checkpoint_at": "2026-10-14T10:16:01Z",
+      "last_verified_push_at": "2026-10-14T10:15:55Z",
+      "worker_pr": 526,
+      "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/526",
+      "worker_pr_head_sha": "555b441d3eb9a130c5c9bb7d773e5b07268961c7",
+      "worker_pr_state": "open_draft",
+      "ci_result": "pending",
+      "next_action": "Wait for exact-head Worker CI on PR #526. If any required job fails, correct only within allowed paths and re-run all required validation. Do not merge or deploy to Trusted."
     }
   ],
   "recovery_queue": [],
