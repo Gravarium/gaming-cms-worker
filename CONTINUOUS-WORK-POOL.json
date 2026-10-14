@@ -10,8 +10,8 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "2f98de43e3cf4a26addb436cf9908b4135f2bdc6",
-  "published_at": "2026-10-14T08:24:00Z",
-  "summary": "WCP-698 is complete as open draft PR #516 at exact green HEAD befd0618755d6ec03a004fa5750c170eeb492b59. Worker CI runs 38534273529 and 38534274789 both passed PHP/Symfony (1,815 tests, 12,991 assertions) and PostgreSQL 18. PR #517 is the CI validation PR. No merge or deployment.",
+  "published_at": "2026-10-14T08:25:00Z",
+  "summary": "WCP-698 is complete and locked pending Trusted review on exact green head befd0618755d6ec03a004fa5750c170eeb492b59. WCP-699 is claimed as a dependent homepage discovery follow-up on that exact green head; it avoids WCP-402's reserved News listing template and the locked shared base template.",
   "rules": {
     "choose": "Resume the current chat's unfinished claimed branch first. Otherwise atomically claim an eligible published task. If no published task is eligible, independently derive and publish a bounded worker-only CMS proposal from approved product goals and observed code gaps; do not ask the owner for the next FCP number.",
     "atomic_reservation": "Create the exact claim_branch and suggested feature branch from that task's published proposal_base_sha. If the claim already exists, treat it as a hard lock; the owning continuation resumes it and every other AI skips it.",
@@ -70508,6 +70508,113 @@
         38534273529,
         38534274789
       ]
+    },
+    {
+      "priority": 699,
+      "package_id": "WCP-699",
+      "title": "Advertise News OpenSearch from the public homepage",
+      "risk": "low_public_read_only",
+      "execution_state": "worker_in_progress",
+      "claim_state": "claimed",
+      "claim_generation": 1,
+      "claim_branch": "claim/wcp-699-news-opensearch-discovery-g1",
+      "suggested_branch": "feature/wcp-699-news-opensearch-discovery-g1",
+      "resume_branch": "feature/wcp-699-news-opensearch-discovery-g1",
+      "claimed_on": "2026-10-14T08:25:00Z",
+      "lease_expires_at": "2026-10-14T15:25:00Z",
+      "base_branch": "main",
+      "base_sha": "a6ff8d56cc5fd84b3eada9f6c745e43c70aa810b",
+      "proposal_base_branch": "feature/wcp-698-public-news-opensearch-g1",
+      "proposal_base_sha": "befd0618755d6ec03a004fa5750c170eeb492b59",
+      "active_base_branch": "feature/wcp-698-public-news-opensearch-g1",
+      "active_base_sha": "befd0618755d6ec03a004fa5750c170eeb492b59",
+      "dependencies": [
+        "WCP-698"
+      ],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "proposal_kind": "worker_only",
+      "proposal_dependency_evidence": [
+        {
+          "package_id": "WCP-698",
+          "head": "befd0618755d6ec03a004fa5750c170eeb492b59",
+          "pr": 516,
+          "ci_run_ids": [
+            38534273529,
+            38534274789
+          ],
+          "result": "success"
+        }
+      ],
+      "objective": "Make the existing public News OpenSearch Description discoverable to browsers from the public CMS homepage, without changing shared base templates, News search behavior, or article visibility.",
+      "acceptance_checks": [
+        "Add a rel=search link for the WCP-698 OpenSearch description in the public homepage head metadata.",
+        "Use the existing app_news_opensearch route and correct OpenSearch media type; do not duplicate or hard-code hostnames.",
+        "Keep the change confined to the homepage template and a focused discovery test.",
+        "Test that GET / emits the absolute OpenSearch link with rel=search and the correct media type.",
+        "Complete exact-head Worker CI including PHP/Symfony and PostgreSQL 18."
+      ],
+      "collision_check": {
+        "compared_against": "Live continuous/work-pool-v4 active and locked scopes, including the reserved News archive template path in WCP-402 and shared base template in WCP-607; WCP-698 exact green dependency.",
+        "result": "No exact or prefix overlap for homepage template and new test path. WCP-402 owns templates/content/news.html.twig, so this proposal deliberately uses templates/home/index.html.twig. Shared base template, News listing/show/search templates, controllers, repositories, entities, migrations, and workflows stay untouched.",
+        "paths": [
+          "templates/home/index.html.twig",
+          "tests/Controller/PublicNewsOpenSearchDiscoveryTest.php"
+        ]
+      },
+      "allowed_paths": [
+        "templates/home/index.html.twig",
+        "tests/Controller/PublicNewsOpenSearchDiscoveryTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "CONTINUOUS-WORKER.md",
+        "CONTINUOUS-WORK-POOL.json",
+        ".github/workflows/",
+        "migrations/",
+        "templates/base.html.twig",
+        "templates/content/news.html.twig",
+        "templates/content/show.html.twig",
+        "templates/content/search.html.twig",
+        "src/Controller/PublicNewsOpenSearchController.php",
+        "src/Controller/PublicContentController.php"
+      ],
+      "tests": [
+        "focused public homepage OpenSearch discovery controller test",
+        "complete exact-head Worker CI including PHP/Symfony and PostgreSQL 18"
+      ],
+      "completion_report": [
+        "exact final worker HEAD SHA and exact sanitized base SHA",
+        "complete changed-file list and Worker PR",
+        "targeted tests plus complete Worker CI results",
+        "unresolved risks and assumptions"
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "no-executable-public-uploads",
+        "no-secrets-or-trusted-private-runtime-in-worker-source",
+        "preserve-existing-security-controls-tests-phpstan-and-ci",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
+      ],
+      "active_head": "befd0618755d6ec03a004fa5750c170eeb492b59",
+      "last_observed_head": "befd0618755d6ec03a004fa5750c170eeb492b59",
+      "last_checkpoint_at": "2026-10-14T08:25:00Z",
+      "last_verified_push_at": null,
+      "worker_pr": null,
+      "worker_pr_url": null,
+      "worker_pr_head_sha": null,
+      "worker_pr_state": null,
+      "ci_result": "not_started",
+      "next_action": "Add only the rel=search block to templates/home/index.html.twig and the focused discovery test. Then open draft feature and CI validation PRs, verify exact-head Worker CI and record results. Do not merge or deploy."
     }
   ],
   "recovery_queue": [],
