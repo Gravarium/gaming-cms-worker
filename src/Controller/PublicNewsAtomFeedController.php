@@ -31,13 +31,6 @@ final class PublicNewsAtomFeedController extends AbstractController
         $newsUrl = $this->generateUrl('app_news_index', [], UrlGeneratorInterface::ABSOLUTE_URL);
         $selfUrl = $this->generateUrl('app_news_atom_feed', [], UrlGeneratorInterface::ABSOLUTE_URL);
 
-        $etag = hash('sha256', serialize([
-            $request->getSchemeAndHttpHost(),
-            $site->getSiteName(),
-            $site->getDescription(),
-            $feedUpdatedAt->format(DATE_ATOM),
-            array_map(static fn (ContentEntry $entry): string => $entry->getId().':'.$entry->getUpdatedAt()->format('U.u'), $publishedEntries),
-        ]));
         $response = $this->render('content/news_atom_feed.xml.twig', [
             'entries' => $publishedEntries,
             'site' => $site,
@@ -50,7 +43,7 @@ final class PublicNewsAtomFeedController extends AbstractController
         $response->setPublic();
         $response->setMaxAge($cacheLifetime);
         $response->setSharedMaxAge($cacheLifetime);
-        $response->setEtag($etag);
+        $response->setEtag(hash('sha256', (string) $response->getContent()));
         $response->isNotModified($request);
         $response->headers->set(AbstractSessionListener::NO_AUTO_CACHE_CONTROL_HEADER, 'true');
 
