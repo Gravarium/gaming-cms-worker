@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}News-Feeds | {{ site.siteName }}{% endblock %}
+{% block meta_description %}Abonniere die öffentlichen News von {{ site.siteName }} mit deinem bevorzugten Feed-Reader.{% endblock %}
+
+{% block body %}
+<main class="dashboard">
+    <p class="eyebrow">News</p>
+    <h1>News abonnieren</h1>
+    <p class="muted">Wähle das Feed-Format, das dein Reader unterstützt. Die Feeds enthalten ausschließlich veröffentlichte, öffentliche News.</p>
+    <ul>
+        <li><a href="{{ path('app_news_feed_rss') }}">RSS 2.0</a> <span class="muted">– kompatibel mit den meisten Feed-Readern</span></li>
+        <li><a href="{{ path('app_news_feed_json') }}">JSON Feed 1.1</a> <span class="muted">– für Apps und Entwicklerwerkzeuge</span></li>
+        <li><a href="{{ path('app_news_atom_feed') }}">Atom 1.0</a> <span class="muted">– offenes XML-Feedformat</span></li>
+    </ul>
+    <p><a href="{{ path('app_news_index') }}">Zur News-Übersicht</a></p>
+</main>
+{% endblock %}
