@@ -10,8 +10,8 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "2f98de43e3cf4a26addb436cf9908b4135f2bdc6",
-  "published_at": "2026-10-14T08:25:00Z",
-  "summary": "WCP-698 is complete and locked pending Trusted review on exact green head befd0618755d6ec03a004fa5750c170eeb492b59. WCP-699 is claimed as a dependent homepage discovery follow-up on that exact green head; it avoids WCP-402's reserved News listing template and the locked shared base template.",
+  "published_at": "2026-10-14T08:28:00Z",
+  "summary": "WCP-699 is in progress with feature PR #518 and CI validation PR #519 on exact head d7260665bc8f8b15b4f7bdf5bb8cc368c93d5b38; Worker CI run 38535205324 is running.",
   "rules": {
     "choose": "Resume the current chat's unfinished claimed branch first. Otherwise atomically claim an eligible published task. If no published task is eligible, independently derive and publish a bounded worker-only CMS proposal from approved product goals and observed code gaps; do not ask the owner for the next FCP number.",
     "atomic_reservation": "Create the exact claim_branch and suggested feature branch from that task's published proposal_base_sha. If the claim already exists, treat it as a hard lock; the owning continuation resumes it and every other AI skips it.",
@@ -70521,7 +70521,7 @@
       "suggested_branch": "feature/wcp-699-news-opensearch-discovery-g1",
       "resume_branch": "feature/wcp-699-news-opensearch-discovery-g1",
       "claimed_on": "2026-10-14T08:25:00Z",
-      "lease_expires_at": "2026-10-14T15:25:00Z",
+      "lease_expires_at": "2026-10-14T15:27:06Z",
       "base_branch": "main",
       "base_sha": "a6ff8d56cc5fd84b3eada9f6c745e43c70aa810b",
       "proposal_base_branch": "feature/wcp-698-public-news-opensearch-g1",
@@ -70605,16 +70605,22 @@
         "red-ci-stops-integration",
         "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
       ],
-      "active_head": "befd0618755d6ec03a004fa5750c170eeb492b59",
-      "last_observed_head": "befd0618755d6ec03a004fa5750c170eeb492b59",
-      "last_checkpoint_at": "2026-10-14T08:25:00Z",
-      "last_verified_push_at": null,
-      "worker_pr": null,
-      "worker_pr_url": null,
-      "worker_pr_head_sha": null,
-      "worker_pr_state": null,
-      "ci_result": "not_started",
-      "next_action": "Add only the rel=search block to templates/home/index.html.twig and the focused discovery test. Then open draft feature and CI validation PRs, verify exact-head Worker CI and record results. Do not merge or deploy."
+      "active_head": "d7260665bc8f8b15b4f7bdf5bb8cc368c93d5b38",
+      "last_observed_head": "d7260665bc8f8b15b4f7bdf5bb8cc368c93d5b38",
+      "last_checkpoint_at": "2026-10-14T08:28:00Z",
+      "last_verified_push_at": "2026-10-14T08:27:06Z",
+      "worker_pr": 518,
+      "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/518",
+      "worker_pr_head_sha": "d7260665bc8f8b15b4f7bdf5bb8cc368c93d5b38",
+      "worker_pr_state": "draft",
+      "ci_result": "pending",
+      "next_action": "Feature PR #518 and CI validation PR #519 are open at exact feature head d7260665bc8f8b15b4f7bdf5bb8cc368c93d5b38. Worker CI run 38535205324 is in progress; verify the complete PHP/Symfony and PostgreSQL 18 checks on the exact head, repair failures, and record results. No merge or deployment.",
+      "ci_branch": "worker/account-ci-wcp-699-g1",
+      "ci_pr": 519,
+      "ci_run_id": 38535205324,
+      "ci_run_ids": [
+        38535205324
+      ]
     }
   ],
   "recovery_queue": [],
