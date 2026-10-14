@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace App\\Tests\\Controller;
+namespace App\Tests\Controller;
 
-use App\\Entity\\Category;
-use App\\Entity\\ContentEntry;
-use App\\Entity\\ContentTag;
-use App\\Entity\\User;
-use Doctrine\\ORM\\EntityManagerInterface;
-use Symfony\\Bundle\\FrameworkBundle\\Test\\WebTestCase;
+use App\Entity\Category;
+use App\Entity\ContentEntry;
+use App\Entity\ContentTag;
+use App\Entity\User;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 final class PublicNewsCategoryJsonFeedTest extends WebTestCase
 {
