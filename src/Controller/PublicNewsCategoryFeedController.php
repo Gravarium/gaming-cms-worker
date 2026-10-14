@@ -18,7 +18,7 @@ final class PublicNewsCategoryFeedController extends AbstractController
 {
     private const CACHE_SECONDS = 60;
 
-    #[Route('/news/category/{slug}/feed.xml', name: 'app_news_category_feed_rss', methods: ['GET'])]
+    #[Route('/news/category/{slug}/feed.xml', name: 'app_news_category_feed_rss', methods: ['GET'], stateless: true)]
     public function __invoke(
         string $slug,
         Request $request,
@@ -49,7 +49,6 @@ final class PublicNewsCategoryFeedController extends AbstractController
         }
         $response->setEtag(hash('sha256', json_encode($etagInput, JSON_THROW_ON_ERROR)));
         $response->isNotModified($request);
-        $response->headers->set('Cache-Control', sprintf('public, max-age=%d, s-maxage=%d', $lifetime, $lifetime));
 
         return $response;
     }
