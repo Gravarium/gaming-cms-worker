@@ -7,6 +7,7 @@ namespace App\Controller;
 use App\Entity\Category;
 use App\Entity\ContentEntry;
 use App\Entity\ContentTag;
+use DateTimeImmutable;
 use App\Repository\CategoryRepository;
 use App\Repository\ContentEntryRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -92,7 +93,7 @@ final class PublicNewsCategoryJsonFeedController extends AbstractController
             if ((int) $deadline->format('u') < (int) $now->format('u')) {
                 --$remaining;
             }
-            $lifetime = min($lifetime, max(0, $remaining));
+            $lifetime = min($lifetime, max(0, (int) $remaining));
         }
 
         return $lifetime;
