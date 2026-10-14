@@ -22,7 +22,7 @@ final class ContentRedirectCsvImporter
         }
 
         $header = fgetcsv($stream, null, ',', '"', '');
-        if (!is_array($header) || $header === []) {
+        if (!is_array($header) || count($header) !== count(self::HEADER)) {
             throw new InvalidArgumentException('Die CSV-Datei enthält keine Kopfzeile.');
         }
         $header[0] = preg_replace('/\A\xEF\xBB\xBF/', '', (string) $header[0]);
@@ -40,8 +40,11 @@ final class ContentRedirectCsvImporter
             if (count($fields) !== 5) {
                 throw new InvalidArgumentException(sprintf('CSV-Zeile %d hat nicht genau fünf Felder.', $line));
             }
+            if (!is_string($fields[0]) || !is_string($fields[1]) || !is_string($fields[2]) || !is_string($fields[3]) || !is_string($fields[4])) {
+                throw new InvalidArgumentException(sprintf('CSV-Zeile %d enthält ein fehlendes Feld.', $line));
+            }
             foreach ($fields as $field) {
-                if (!is_string($field) || !mb_check_encoding($field, 'UTF-8')) {
+                if (!mb_check_encoding($field, 'UTF-8')) {
                     throw new InvalidArgumentException(sprintf('CSV-Zeile %d enthält ungültiges UTF-8.', $line));
                 }
             }
