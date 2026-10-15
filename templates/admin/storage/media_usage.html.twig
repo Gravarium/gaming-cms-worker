@@ -20,10 +20,12 @@
                         <a href="{{ path('app_admin_content_edit', {id: entry.id}) }}">Inhalt bearbeiten</a>
                     </li>
                 {% else %}
-                    <li>Keine bekannten Seiten oder News verwenden dieses Medium.</li>
+                    {% if not contentReferences.hasMore %}<li>Keine bekannten Seiten oder News verwenden dieses Medium.</li>{% endif %}
                 {% endfor %}
             </ul>
-            {% if contentReferences.truncated %}<p class="muted">Es werden höchstens 50 Inhaltsverwendungen angezeigt.</p>{% endif %}
+            {% if contentReferences.nextCursor %}
+                <a class="button-link button-secondary" data-content-usage-next href="{{ path('app_admin_media_usage', {id: asset.id, cursor: contentReferences.nextCursor}) }}">Weitere Inhaltsverwendungen anzeigen</a>
+            {% endif %}
         {% else %}
             <p class="muted">Inhaltsdetails sind nur mit aktivem Content-Modul und Content-Verwaltungsrecht sichtbar.</p>
         {% endif %}
