@@ -73149,7 +73149,7 @@
       "suggested_branch": "feature/wcp-720-newsletter-delivery-report-pagination-g1",
       "resume_branch": "feature/wcp-720-newsletter-delivery-report-pagination-g1",
       "claimed_on": "2026-10-15T19:12:49Z",
-      "lease_expires_at": "2026-10-16T02:15:46Z",
+      "lease_expires_at": "2026-10-16T02:19:10Z",
       "base_branch": "feature/wcp-718-media-accessibility-csv-g1",
       "base_sha": "bffc5193dfc97a815c9974464ffbed6e6aef2766",
       "proposal_base_branch": "feature/wcp-718-media-accessibility-csv-g1",
@@ -73238,6 +73238,19 @@
         {
           "run": 38792645162,
           "head": "753645c4c085ff3bfc0aaa966b6572114d707c62",
+          "result": "failure",
+          "base_sha": "a6ff8d56cc5fd84b3eada9f6c745e43c70aa810b",
+          "jobs": {
+            "Validate worker-visible PostgreSQL 18 migration chain": "success",
+            "Validate worker-visible PHP and Symfony": "failure: PHPStan `instanceof.alwaysTrue`; later steps skipped"
+          },
+          "pr": 559,
+          "ci_validation_pr": 560,
+          "correction": "Removed redundant type assertion in next-cursor branch."
+        },
+        {
+          "run": 38792884631,
+          "head": "22aa6ab3356e58a146a779dff6c0dc8a24f9a69b",
           "result": "in_progress",
           "base_sha": "a6ff8d56cc5fd84b3eada9f6c745e43c70aa810b",
           "jobs": {
@@ -73248,16 +73261,16 @@
           "ci_validation_pr": 560
         }
       ],
-      "next_action": "Monitor exact-head Worker CI run 38792645162. Correct issues only within WCP-720 allowed_paths; if green, record all job results and test totals, set worker_complete_awaiting_trusted_review and leave PRs open drafts.",
-      "active_head": "753645c4c085ff3bfc0aaa966b6572114d707c62",
-      "last_observed_head": "753645c4c085ff3bfc0aaa966b6572114d707c62",
-      "worker_pr_head_sha": "753645c4c085ff3bfc0aaa966b6572114d707c62",
-      "last_checkpoint_at": "2026-10-15T19:17:33Z",
-      "last_verified_push_at": "2026-10-15T19:15:46Z",
-      "ci_run": 38792645162,
-      "ci_run_url": "https://github.com/Gravarium/gaming-cms-worker/actions/runs/38792645162",
+      "next_action": "Monitor exact-head Worker CI run 38792884631 on SHA 22aa6ab3356e58a146a779dff6c0dc8a24f9a69b. If green, record all job results and test totals, set worker_complete_awaiting_trusted_review, and keep both PRs open drafts; if red, fix within allowed paths.",
+      "active_head": "22aa6ab3356e58a146a779dff6c0dc8a24f9a69b",
+      "last_observed_head": "22aa6ab3356e58a146a779dff6c0dc8a24f9a69b",
+      "worker_pr_head_sha": "22aa6ab3356e58a146a779dff6c0dc8a24f9a69b",
+      "last_checkpoint_at": "2026-10-15T19:19:21Z",
+      "last_verified_push_at": "2026-10-15T19:19:10Z",
+      "ci_run": 38792884631,
+      "ci_run_url": "https://github.com/Gravarium/gaming-cms-worker/actions/runs/38792884631",
       "ci_validation_pr": 560,
-      "ci_head": "753645c4c085ff3bfc0aaa966b6572114d707c62",
+      "ci_head": "22aa6ab3356e58a146a779dff6c0dc8a24f9a69b",
       "ci_conclusion": null
     }
   ],
