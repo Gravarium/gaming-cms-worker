@@ -11,11 +11,11 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
-#[Route('/admin/newsletter/delivery-report', name: 'app_admin_notification_newsletter_delivery_report')]
+#[Route('/admin/newsletter/delivery-report', name: 'app_admin_notification_newsletter_delivery_report_')]
 #[IsGranted('CMS_CONTENT_MANAGE')]
 final class AdminNewsletterDeliveryReportController extends AbstractController
 {
-    #[Route('', methods: ['GET'])]
+    #[Route('', name: 'index', methods: ['GET'])]
     public function __invoke(Request $request, NewsletterDeliveryReportQuery $report): Response
     {
         $parameters = $request->query->all();
