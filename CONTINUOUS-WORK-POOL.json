@@ -11,7 +11,7 @@
   "baseline_branch": "main",
   "base_sha": "2f98de43e3cf4a26addb436cf9908b4135f2bdc6",
   "published_at": "2026-10-15T01:47:45Z",
-  "summary": "WCP-710 through WCP-714 have exact-head green Worker CI and open draft PRs awaiting Trusted review. WCP-709 remains held unmerged because its template prefix overlaps locked FCP-056. WCP-714 exact green HEAD is f04e7adeb41a7394b96f977f67fe06930b0725ba; run 38672747601 passed.",
+  "summary": "WCP-710 through WCP-714 have exact-head green Worker CI and open draft PRs awaiting Trusted review. WCP-715 is claimed from sanitized worker/main a6ff8d56cc5fd84b3eada9f6c745e43c70aa810b for a public content-release JSON Feed. WCP-709 remains held unmerged due its FCP-056 prefix conflict.",
   "rules": {
     "choose": "Resume the current chat's unfinished claimed branch first. Otherwise atomically claim an eligible published task. If no published task is eligible, independently derive and publish a bounded worker-only CMS proposal from approved product goals and observed code gaps; do not ask the owner for the next FCP number.",
     "atomic_reservation": "Create the exact claim_branch and suggested feature branch from that task's published proposal_base_sha. If the claim already exists, treat it as a hard lock; the owning continuation resumes it and every other AI skips it.",
@@ -10408,96 +10408,9 @@
       "resume_branch": "feature/wcp-310-account-token-contract-boundary-g1",
       "proposal_kind": "worker_only",
       "collision_check": {
-        "compared_against": "all current continuous/work-pool-v4 published allowlists and every 
-... 2910761 bytes omitted ...
-87695f17932327079a22f15dbccf3f7a76",
-      "checkpoint_commit_sha": "51a30c87695f17932327079a22f15dbccf3f7a76",
-      "branch_heads": {
-        "claim_branch": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
-        "feature_branch": "51a30c87695f17932327079a22f15dbccf3f7a76"
-      },
-      "checkpoint_paths": [
-        "src/CompetitionParticipantAdmin/ParticipantManagement.php",
-        "src/Controller/AdminCompetitionParticipantController.php",
-        "templates/admin/competition_participant/index.html.twig",
-        "tests/Controller/AdminCompetitionParticipantTest.php"
-      ],
-      "worker_pr_state": "open_ready_for_review",
-      "pr_state": "open_ready_for_review",
-      "last_ci_run_id": 36791429490,
-      "last_ci_result": "success",
-      "last_ci_head": "51a30c87695f17932327079a22f15dbccf3f7a76",
-      "ci_history": [
-        {
-          "run_id": 36790572593,
-          "head": "ab00ee5e071c4e2f2fecabf86eac1efe959a912f",
-          "result": "failure",
-          "reason": "controller helper visibility collision"
-        },
-        {
-          "run_id": 36790656270,
-          "head": "2922879fed80ff809ed2c13aeac75daf8f45c6ea",
-          "result": "failure",
-          "reason": "replay test attempted to read intentionally absent terminal-state form"
-        },
-        {
-          "run_id": 36790984949,
-          "head": "a0091c2be0fb344ee7968af231ffb51182055240",
-          "result": "failure",
-          "reason": "test cleanup reused closed Doctrine manager and leaked fixtures"
-        },
-        {
-          "run_id": 36791429490,
-          "head": "51a30c87695f17932327079a22f15dbccf3f7a76",
-          "result": "success"
-        }
-      ],
-      "next_action": "Await independent Worker/Trusted review; do not merge Worker code automatically.",
-      "last_checkpoint_at": "2026-09-30T23:34:30.000Z",
-      "last_verified_push_at": "2026-09-30T23:34:30.000Z",
-      "worker_pr": 427,
-      "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/427",
-      "worker_pr_head_sha": "51a30c87695f17932327079a22f15dbccf3f7a76",
-      "ci_run_id": 36791429490,
-      "ci_result": "success",
-      "final_head": "51a30c87695f17932327079a22f15dbccf3f7a76",
-      "php_symfony_job_id": 110144977932,
-      "php_symfony_result": "success",
-      "postgres_migration_job_id": 110144977713,
-      "postgres_migration_result": "success",
-      "final_changed_paths": [
-        "src/CompetitionParticipantAdmin/ParticipantManagement.php",
-        "src/Controller/AdminCompetitionParticipantController.php",
-        "templates/admin/competition_participant/index.html.twig",
-        "tests/Controller/AdminCompetitionParticipantTest.php"
-      ],
-      "completed_on": "2026-09-30T23:34:30.000Z",
-      "test_evidence": "Exact-head Worker CI #1111 passed both jobs; PHP/Symfony 1,647 tests and 12,001 assertions plus PHPStan/lints/container/Doctrine; PostgreSQL 18 migration chain passed."
-    },
-    {
-      "priority": 634,
-      "package_id": "WCP-634",
-      "title": "Let forum authors correct their questions and replies",
-      "risk": "medium_authorization",
-      "execution_state": "worker_complete_awaiting_trusted_review",
-      "claim_state": "locked_until_trusted_resolution",
-      "dependencies": [],
-      "dependencies_integrated_at_publication": [],
-      "blocked_by_at_publication": [],
-      "claim_branch": "claim/wcp-634-forum-author-edit-g3",
-      "suggested_branch": "feature/wcp-634-forum-author-edit-g1",
-      "resume_branch": "feature/wcp-634-forum-author-edit-g1",
-      "base_branch": "main",
-      "base_sha": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
-      "proposal_base_branch": "main",
-      "proposal_base_sha": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
-      "active_base_branch": "main",
-      "active_base_sha": "1d03d4947f15dc3e0fe4b79a990bd45468c761e4",
-      "proposal_kind": "worker_only",
-      "objective": "Complete the existing forum author workflow: an author can reopen an edit form for their own question title/body or reply, submit a corrected bounded text with current thread version, and see an edited marker. Preserve room visibility, open/unsolved state, quote and answer ownership, CSRF, and Gaming module gate. Use existing forum_post.edited_at; no schema change.",
-      "allowed_paths": [
-        "src/Controller/PublicForumEditController.php",
-        "src/ForumWorkflow/ForumWorkflowGateway.php",
+        "compared_against": "all current continuous/work-pool-v4 published allowlis
+... 2915127 bytes omitted ...
+"src/ForumWorkflow/ForumWorkflowGateway.php",
         "src/ForumWorkflow/Templates/public/thread.html.twig",
         "src/ForumWorkflow/Templates/public/edit.html.twig",
         "tests/Controller/PublicForumEditTest.php"
@@ -20550,6 +20463,70 @@
       "ci_head": "f04e7adeb41a7394b96f977f67fe06930b0725ba",
       "ci_conclusion": "success",
       "completed_at": "2026-10-15T02:50:38Z"
+    },
+    {
+      "priority": 715,
+      "package_id": "WCP-715",
+      "title": "Publish public content releases as JSON Feed",
+      "risk": "low_public_read_only",
+      "execution_state": "worker_in_progress",
+      "claim_state": "active_until_lease_expiry",
+      "claim_generation": 1,
+      "claim_branch": "claim/wcp-715-public-content-release-json-feed-g1",
+      "suggested_branch": "feature/wcp-715-public-content-release-json-feed-g1",
+      "resume_branch": "feature/wcp-715-public-content-release-json-feed-g1",
+      "claimed_on": "2026-10-15T02:50:38Z",
+      "lease_expires_at": "2026-10-15T09:50:38Z",
+      "base_branch": "main",
+      "base_sha": "a6ff8d56cc5fd84b3eada9f6c745e43c70aa810b",
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "a6ff8d56cc5fd84b3eada9f6c745e43c70aa810b",
+      "active_base_branch": "main",
+      "active_base_sha": "a6ff8d56cc5fd84b3eada9f6c745e43c70aa810b",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "proposal_kind": "worker_only",
+      "objective": "Offer a bounded JSON Feed 1.1 representation of already-public content releases without exposing unpublished content, release entries, or editor metadata.",
+      "acceptance_checks": [
+        "Add GET /releases.jsonfeed using the existing public published-release query, limited to the newest 50 releases and gated by the content module.",
+        "Emit valid JSON Feed 1.1 with absolute stable release URLs/IDs, title, public summary as content_text, UTC date_published, homepage/feed URLs, and no author/user/private fields.",
+        "Return application/feed+json with UTF-8, no-store and nosniff headers; handle empty feeds and JSON encoding failures safely.",
+        "Functional tests prove published-only visibility, future exclusion, JSON Feed fields, escaping/encoding, headers, module gating and seeded rows without global-count assumptions."
+      ],
+      "collision_check": {
+        "compared_against": "Live continuous/work-pool-v4 blob 9f6035d4f0b9b15a424ba7ce64185073eb16ca90; 208 active/locked claims; checked exact and ancestor/descendant prefix overlaps for the four paths. No public content-release JSON Feed proposal found.",
+        "result": "Zero exact or prefix path overlaps.",
+        "paths": [
+          "src/ContentReleaseFeed/PublicContentReleaseJsonFeedBuilder.php",
+          "src/Controller/PublicContentReleaseJsonFeedController.php",
+          "tests/ContentReleaseFeed/PublicContentReleaseJsonFeedBuilderTest.php",
+          "tests/Controller/PublicContentReleaseJsonFeedControllerTest.php"
+        ]
+      },
+      "allowed_paths": [
+        "src/ContentReleaseFeed/PublicContentReleaseJsonFeedBuilder.php",
+        "src/Controller/PublicContentReleaseJsonFeedController.php",
+        "tests/ContentReleaseFeed/PublicContentReleaseJsonFeedBuilderTest.php",
+        "tests/Controller/PublicContentReleaseJsonFeedControllerTest.php"
+      ],
+      "forbidden_paths": [
+        "private/", "PrivateCore/", "ops/", "docs/", "bin/", "AGENTS.md", "WORKER.md", "CONTINUOUS-WORKER.md", "CONTINUOUS-WORK-POOL.json", ".github/workflows/", "migrations/", "src/Entity/", "src/Repository/", "src/Security/", "src/Controller/PublicContentReleaseController.php", "src/Controller/PublicContentReleaseCsvController.php", "src/Controller/PublicContentReleaseAtomFeedController.php", "src/Controller/PublicContentReleaseFeedDirectoryController.php", "src/Repository/ContentReleaseRepository.php"
+      ],
+      "tests": [
+        "focused JSON Feed builder and controller functional tests using rolled-back fixture transactions",
+        "complete exact-head Worker CI including PHP/Symfony and PostgreSQL 18"
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "preserve-existing-public-content-release-visibility-and-module-gating",
+        "no-schema-entity-or-repository-changes",
+        "no-CI-security-weakening",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
+      ],
+      "next_action": "Implement the independent bounded JSON Feed on sanitized worker/main; preserve public visibility and module gating."
     }
   ],
   "recovery_queue": [],
