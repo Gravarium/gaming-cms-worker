@@ -11,7 +11,7 @@
   "baseline_branch": "main",
   "base_sha": "2f98de43e3cf4a26addb436cf9908b4135f2bdc6",
   "published_at": "2026-10-15T01:47:45Z",
-  "summary": "WCP-709 exact-head CI is green but its templates/game_catalogue/ paths conflict by prefix with locked FCP-056; this is documented and held unmerged. WCP-710 has corrected the full-suite cache assertion at 84141ebf3085cbbe4546febcd716b949a0f1bcae; two exact-head CI runs are pending.",
+  "summary": "WCP-710 is complete at exact green HEAD 84141ebf3085cbbe4546febcd716b949a0f1bcae (run 38668395865: PHP/Symfony and PostgreSQL 18 green) with PRs #540/#541 awaiting Trusted review. WCP-709 remains held unmerged because its template paths overlap locked FCP-056 by prefix.",
   "rules": {
     "choose": "Resume the current chat's unfinished claimed branch first. Otherwise atomically claim an eligible published task. If no published task is eligible, independently derive and publish a bounded worker-only CMS proposal from approved product goals and observed code gaps; do not ask the owner for the next FCP number.",
     "atomic_reservation": "Create the exact claim_branch and suggested feature branch from that task's published proposal_base_sha. If the claim already exists, treat it as a hard lock; the owning continuation resumes it and every other AI skips it.",
@@ -71780,14 +71780,14 @@
       "package_id": "WCP-710",
       "title": "Provide a print-friendly view for public News",
       "risk": "low_public_read_only",
-      "execution_state": "worker_in_progress",
-      "claim_state": "claimed",
+      "execution_state": "worker_complete_awaiting_trusted_review",
+      "claim_state": "locked_until_trusted_resolution",
       "claim_generation": 1,
       "claim_branch": "claim/wcp-710-public-news-print-g1",
       "suggested_branch": "feature/wcp-710-public-news-print-g1",
       "resume_branch": "feature/wcp-710-public-news-print-g1",
       "claimed_on": "2026-10-15T01:45:54Z",
-      "lease_expires_at": "2026-10-15T08:45:54Z",
+      "lease_expires_at": null,
       "base_branch": "main",
       "base_sha": "a6ff8d56cc5fd84b3eada9f6c745e43c70aa810b",
       "proposal_base_branch": "main",
@@ -71858,11 +71858,11 @@
       ],
       "active_head": "84141ebf3085cbbe4546febcd716b949a0f1bcae",
       "last_observed_head": "84141ebf3085cbbe4546febcd716b949a0f1bcae",
-      "last_checkpoint_at": "2026-10-15T01:57:20Z",
+      "last_checkpoint_at": "2026-10-15T02:00:30Z",
       "last_verified_push_at": "2026-10-15T01:56:58Z",
       "worker_pr_state": "open_draft",
-      "ci_result": "pending",
-      "next_action": "Full-suite CI on 0873bbcd985187b6c5ee786ba6151b69ed89dc3c failed because Symfony appended valid Cache-Control directives and the test asserted exact string equality. The test now requires the no-store directive. Both exact-head runs 38668395865 and 38668397357 are pending/in progress on 84141ebf3085cbbe4546febcd716b949a0f1bcae. PR #540/#541 updated. No merge or deployment.",
+      "ci_result": "success",
+      "next_action": "Exact HEAD 84141ebf3085cbbe4546febcd716b949a0f1bcae passed complete Worker CI run 38668395865 (PHP/Symfony and PostgreSQL 18). PR #540 and exact-head CI PR #541 remain open drafts for Trusted review. Duplicate run 38668397357 may still finish independently. Preserve completed lock; no merge/deployment.",
       "worker_pr_head_sha": "84141ebf3085cbbe4546febcd716b949a0f1bcae",
       "worker_pr": 540,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/540",
@@ -71916,15 +71916,19 @@
         },
         {
           "run": 38668395865,
-          "result": "in_progress",
+          "result": "success",
           "sha": "84141ebf3085cbbe4546febcd716b949a0f1bcae"
         },
         {
           "run": 38668397357,
-          "result": "queued",
+          "result": "in_progress",
           "sha": "84141ebf3085cbbe4546febcd716b949a0f1bcae"
         }
-      ]
+      ],
+      "final_head": "84141ebf3085cbbe4546febcd716b949a0f1bcae",
+      "ci_conclusion": "success",
+      "ci_head": "84141ebf3085cbbe4546febcd716b949a0f1bcae",
+      "completed_at": "2026-10-15T02:00:30Z"
     }
   ],
   "recovery_queue": [],
