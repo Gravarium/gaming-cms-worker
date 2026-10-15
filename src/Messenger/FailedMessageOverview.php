@@ -24,8 +24,9 @@ final readonly class FailedMessageOverview
             ['failed'],
         );
         $headerProjectionLength = self::MAX_HEADER_BYTES + 1;
+        $bodySizeExpression = FailedMessagePayloadSizeSql::expression($this->connection->getDatabasePlatform());
         $rows = $this->connection->fetchAllAssociative(
-            'SELECT id, SUBSTR(headers, 1, '.$headerProjectionLength.') AS headers, created_at, LENGTH(body) AS body_size FROM messenger_messages WHERE queue_name = ? ORDER BY id DESC LIMIT '.$limit,
+            'SELECT id, SUBSTR(headers, 1, '.$headerProjectionLength.') AS headers, created_at, '.$bodySizeExpression.' AS body_size FROM messenger_messages WHERE queue_name = ? ORDER BY id DESC LIMIT '.$limit,
             ['failed'],
         );
 
