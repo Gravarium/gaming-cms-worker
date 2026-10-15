@@ -11,7 +11,7 @@
   "baseline_branch": "main",
   "base_sha": "2f98de43e3cf4a26addb436cf9908b4135f2bdc6",
   "published_at": "2026-10-15T01:47:45Z",
-  "summary": "WCP-710 complete at green HEAD 84141ebf3085cbbe4546febcd716b949a0f1bcae. WCP-709 unmerged due to locked FCP-056 prefix conflict. WCP-711 is corrected at c05380d017ca4d991d8c462a7e5c8996ef49a2eb with two exact-head CI runs in progress; tests now clean fixture data.",
+  "summary": "WCP-710 completed at exact green HEAD 84141ebf3085cbbe4546febcd716b949a0f1bcae (runs 38668395865 and 38668397357). WCP-709 remains unmerged due to its templates/game_catalogue/ prefix conflict with locked FCP-056. WCP-711 completed at exact green HEAD c05380d017ca4d991d8c462a7e5c8996ef49a2eb (runs 38669457988 and 38669457185); PRs #542/#543 await Trusted review.",
   "rules": {
     "choose": "Resume the current chat's unfinished claimed branch first. Otherwise atomically claim an eligible published task. If no published task is eligible, independently derive and publish a bounded worker-only CMS proposal from approved product goals and observed code gaps; do not ask the owner for the next FCP number.",
     "atomic_reservation": "Create the exact claim_branch and suggested feature branch from that task's published proposal_base_sha. If the claim already exists, treat it as a hard lock; the owning continuation resumes it and every other AI skips it.",
@@ -71935,14 +71935,14 @@
       "package_id": "WCP-711",
       "title": "Export the public game catalogue as a safe CSV",
       "risk": "low_public_read_only",
-      "execution_state": "worker_in_progress",
-      "claim_state": "claimed",
+      "execution_state": "worker_complete_awaiting_trusted_review",
+      "claim_state": "locked_until_trusted_resolution",
       "claim_generation": 1,
       "claim_branch": "claim/wcp-711-public-game-catalogue-csv-g1",
       "suggested_branch": "feature/wcp-711-public-game-catalogue-csv-g1",
       "resume_branch": "feature/wcp-711-public-game-catalogue-csv-g1",
       "claimed_on": "2026-10-15T02:02:43Z",
-      "lease_expires_at": "2026-10-15T09:02:43Z",
+      "lease_expires_at": null,
       "base_branch": "main",
       "base_sha": "a6ff8d56cc5fd84b3eada9f6c745e43c70aa810b",
       "proposal_base_branch": "main",
@@ -72016,11 +72016,11 @@
       ],
       "active_head": "c05380d017ca4d991d8c462a7e5c8996ef49a2eb",
       "last_observed_head": "c05380d017ca4d991d8c462a7e5c8996ef49a2eb",
-      "last_checkpoint_at": "2026-10-15T02:09:15Z",
+      "last_checkpoint_at": "2026-10-15T02:14:06Z",
       "last_verified_push_at": "2026-10-15T02:08:26Z",
       "worker_pr_state": "open_draft",
-      "ci_result": "pending",
-      "next_action": "The first full-suite run 38669025648 failed: two exact cache-header assertions and three pre-existing catalogue assertions because test-created entries persisted. Tests now check the no-store directive and clean fixtures in finally. New exact-head runs 38669457988 and 38669457185 are in progress on c05380d017ca4d991d8c462a7e5c8996ef49a2eb. No merge or deployment.",
+      "ci_result": "success",
+      "next_action": "Exact HEAD c05380d017ca4d991d8c462a7e5c8996ef49a2eb passed complete Worker CI runs 38669457988 and 38669457185 (both PHP/Symfony and PostgreSQL 18 green). Feature PR #542 and CI PR #543 remain open drafts for Trusted review. Preserve completed lock; no merge/deployment.",
       "worker_pr_head_sha": "c05380d017ca4d991d8c462a7e5c8996ef49a2eb",
       "worker_pr": 542,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/542",
@@ -72041,15 +72041,19 @@
         },
         {
           "run": 38669457988,
-          "result": "in_progress",
+          "result": "success",
           "sha": "c05380d017ca4d991d8c462a7e5c8996ef49a2eb"
         },
         {
           "run": 38669457185,
-          "result": "in_progress",
+          "result": "success",
           "sha": "c05380d017ca4d991d8c462a7e5c8996ef49a2eb"
         }
-      ]
+      ],
+      "final_head": "c05380d017ca4d991d8c462a7e5c8996ef49a2eb",
+      "ci_conclusion": "success",
+      "ci_head": "c05380d017ca4d991d8c462a7e5c8996ef49a2eb",
+      "completed_at": "2026-10-15T02:14:06Z"
     }
   ],
   "recovery_queue": [],
