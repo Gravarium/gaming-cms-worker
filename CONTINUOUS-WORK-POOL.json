@@ -10,8 +10,8 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "2f98de43e3cf4a26addb436cf9908b4135f2bdc6",
-  "published_at": "2026-10-14T18:26:45Z",
-  "summary": "WCP-708 is complete and green on exact HEAD 8036ac45020a75ef84db19f0fe877d8e94261c96; feature PR #536 and CI validation PR #537 remain open drafts awaiting Trusted review.",
+  "published_at": "2026-10-15T01:19:12Z",
+  "summary": "WCP-708 is complete green awaiting Trusted review; WCP-709 is claimed from sanitized worker/main to add a public game-platform directory and platform landing pages.",
   "rules": {
     "choose": "Resume the current chat's unfinished claimed branch first. Otherwise atomically claim an eligible published task. If no published task is eligible, independently derive and publish a bounded worker-only CMS proposal from approved product goals and observed code gaps; do not ask the owner for the next FCP number.",
     "atomic_reservation": "Create the exact claim_branch and suggested feature branch from that task's published proposal_base_sha. If the claim already exists, treat it as a hard lock; the owning continuation resumes it and every other AI skips it.",
@@ -71606,6 +71606,97 @@
       "ci_validation_pr": 537,
       "ci_run": 38614694486,
       "ci_run_url": "https://github.com/Gravarium/gaming-cms-worker/actions/runs/38614694486"
+    },
+    {
+      "priority": 709,
+      "package_id": "WCP-709",
+      "title": "Publish a browsable public game-platform directory",
+      "risk": "low_public_read_only",
+      "execution_state": "worker_in_progress",
+      "claim_state": "claimed",
+      "claim_generation": 1,
+      "claim_branch": "claim/wcp-709-game-platform-directory-g1",
+      "suggested_branch": "feature/wcp-709-game-platform-directory-g1",
+      "resume_branch": "feature/wcp-709-game-platform-directory-g1",
+      "claimed_on": "2026-10-15T01:19:12Z",
+      "lease_expires_at": "2026-10-15T08:19:12Z",
+      "base_branch": "main",
+      "base_sha": "a6ff8d56cc5fd84b3eada9f6c745e43c70aa810b",
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "a6ff8d56cc5fd84b3eada9f6c745e43c70aa810b",
+      "active_base_branch": "main",
+      "active_base_sha": "a6ff8d56cc5fd84b3eada9f6c745e43c70aa810b",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "proposal_kind": "worker_only",
+      "objective": "Give visitors shareable public game-platform landing pages that reuse the catalogue's existing public visibility and release filtering.",
+      "acceptance_checks": [
+        "Add a public /games/platforms directory listing only platforms with at least one visible non-cancelled game release.",
+        "Each platform links to a paginated platform page using the existing public catalogue repository query.",
+        "Platform pages show only public enabled games with non-cancelled releases; unavailable platform slugs return 404 and the gaming-module gate remains fail-closed.",
+        "A focused functional test covers directory visibility, platform results, and unavailable/disabled behavior."
+      ],
+      "collision_check": {
+        "compared_against": "Live continuous/work-pool-v4 active and locked claims; exact and prefix overlap checks returned zero conflicts for all four paths.",
+        "result": "No exact or prefix overlap with active/locked path claims.",
+        "paths": [
+          "src/Controller/PublicGamePlatformDirectoryController.php",
+          "templates/game_catalogue/platform_directory.html.twig",
+          "templates/game_catalogue/platform.html.twig",
+          "tests/Controller/PublicGamePlatformDirectoryTest.php"
+        ]
+      },
+      "allowed_paths": [
+        "src/Controller/PublicGamePlatformDirectoryController.php",
+        "templates/game_catalogue/platform_directory.html.twig",
+        "templates/game_catalogue/platform.html.twig",
+        "tests/Controller/PublicGamePlatformDirectoryTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "CONTINUOUS-WORKER.md",
+        "CONTINUOUS-WORK-POOL.json",
+        ".github/workflows/",
+        "migrations/",
+        "src/Repository/GameCatalogue/GameCatalogueEntryRepository.php",
+        "src/Controller/GameCatalogue/GameCatalogueController.php",
+        "src/Controller/PublicGameReleaseFeedsPageController.php",
+        "src/Controller/PublicGameReleaseRssFeedController.php",
+        "src/Controller/PublicGameReleaseCalendarFeedController.php",
+        "src/Controller/PublicGameReleaseJsonFeedController.php"
+      ],
+      "tests": [
+        "focused public platform directory and landing-page functional test",
+        "complete exact-head Worker CI including PHP/Symfony and PostgreSQL 18"
+      ],
+      "completion_report": [
+        "exact final Worker HEAD",
+        "complete changed-path list and worker PR",
+        "targeted tests and CI outcomes",
+        "unresolved risks and assumptions"
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "no-security-test-phpstan-ci-auth-csrf-validation-recovery-rollback-or-upload-protection-weakening",
+        "preserve-existing-security-controls-tests-phpstan-and-ci",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
+      ],
+      "active_head": "a6ff8d56cc5fd84b3eada9f6c745e43c70aa810b",
+      "last_observed_head": "a6ff8d56cc5fd84b3eada9f6c745e43c70aa810b",
+      "last_checkpoint_at": "2026-10-15T01:19:12Z",
+      "last_verified_push_at": null,
+      "worker_pr_state": "not_open",
+      "ci_result": "not_run",
+      "next_action": "Implement the new public platform directory and paginated platform landing page using only the approved new controller/template/test paths; then open feature and exact-head CI draft PRs. No merge or deployment."
     }
   ],
   "recovery_queue": [],
