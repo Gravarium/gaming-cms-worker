@@ -14,7 +14,7 @@
             <h2>Noch keine Newsletter-Kampagnen</h2>
             <p>Nach dem Anlegen einer Kampagne erscheinen hier ihre Zustellstände.</p>
             {% if hasCursor %}
-                <a href="{{ path('app_admin_notification_newsletter_delivery_report') }}">Neueste Kampagnen</a>
+                <a href="{{ path('app_admin_notification_newsletter_delivery_report_index') }}">Neueste Kampagnen</a>
             {% endif %}
         </section>
     {% else %}
@@ -60,10 +60,10 @@
         {% if hasCursor or nextCursor %}
             <nav class="pagination" aria-label="Seiten der Newsletter-Auslieferungsübersicht">
                 {% if hasCursor %}
-                    <a href="{{ path('app_admin_notification_newsletter_delivery_report') }}" aria-label="Neueste Kampagnen">Neueste Kampagnen</a>
+                    <a href="{{ path('app_admin_notification_newsletter_delivery_report_index') }}" aria-label="Neueste Kampagnen">Neueste Kampagnen</a>
                 {% endif %}
                 {% if nextCursor %}
-                    <a rel="next" href="{{ path('app_admin_notification_newsletter_delivery_report', {after: nextCursor}) }}" aria-label="Ältere Kampagnen">Ältere Kampagnen</a>
+                    <a rel="next" href="{{ path('app_admin_notification_newsletter_delivery_report_index', {after: nextCursor}) }}" aria-label="Ältere Kampagnen">Ältere Kampagnen</a>
                 {% endif %}
             </nav>
         {% endif %}
