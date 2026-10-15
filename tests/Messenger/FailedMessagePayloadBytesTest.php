@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace App\\Tests\\Messenger;
+namespace App\Tests\Messenger;
 
-use App\\Messenger\\FailedMessageOverview;
-use App\\Messenger\\FailedMessagePaginator;
-use App\\Messenger\\FailedMessagePayloadSizeSql;
-use Doctrine\\DBAL\\DriverManager;
-use Doctrine\\DBAL\\Platforms\\PostgreSQLPlatform;
-use Doctrine\\DBAL\\Platforms\\SQLitePlatform;
-use PHPUnit\\Framework\\TestCase;
+use App\Messenger\FailedMessageOverview;
+use App\Messenger\FailedMessagePaginator;
+use App\Messenger\FailedMessagePayloadSizeSql;
+use Doctrine\DBAL\DriverManager;
+use Doctrine\DBAL\Platforms\PostgreSQLPlatform;
+use Doctrine\DBAL\Platforms\SQLitePlatform;
+use PHPUnit\Framework\TestCase;
 
 final class FailedMessagePayloadBytesTest extends TestCase
 {
