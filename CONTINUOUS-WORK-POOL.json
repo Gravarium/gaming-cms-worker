@@ -11,7 +11,7 @@
   "baseline_branch": "main",
   "base_sha": "2f98de43e3cf4a26addb436cf9908b4135f2bdc6",
   "published_at": "2026-10-15T01:47:45Z",
-  "summary": "WCP-710 is complete at exact green HEAD 84141ebf3085cbbe4546febcd716b949a0f1bcae (run 38668395865: PHP/Symfony and PostgreSQL 18 green) with PRs #540/#541 awaiting Trusted review. WCP-709 remains held unmerged because its template paths overlap locked FCP-056 by prefix.",
+  "summary": "WCP-710 completed at exact green HEAD 84141ebf3085cbbe4546febcd716b949a0f1bcae (run 38668395865). WCP-709 remains unmerged because of its templates/game_catalogue/ prefix conflict with locked FCP-056. WCP-711 has been atomically claimed for bounded, formula-safe public game catalogue CSV export.",
   "rules": {
     "choose": "Resume the current chat's unfinished claimed branch first. Otherwise atomically claim an eligible published task. If no published task is eligible, independently derive and publish a bounded worker-only CMS proposal from approved product goals and observed code gaps; do not ask the owner for the next FCP number.",
     "atomic_reservation": "Create the exact claim_branch and suggested feature branch from that task's published proposal_base_sha. If the claim already exists, treat it as a hard lock; the owning continuation resumes it and every other AI skips it.",
@@ -71929,6 +71929,98 @@
       "ci_conclusion": "success",
       "ci_head": "84141ebf3085cbbe4546febcd716b949a0f1bcae",
       "completed_at": "2026-10-15T02:00:30Z"
+    },
+    {
+      "priority": 711,
+      "package_id": "WCP-711",
+      "title": "Export the public game catalogue as a safe CSV",
+      "risk": "low_public_read_only",
+      "execution_state": "worker_in_progress",
+      "claim_state": "claimed",
+      "claim_generation": 1,
+      "claim_branch": "claim/wcp-711-public-game-catalogue-csv-g1",
+      "suggested_branch": "feature/wcp-711-public-game-catalogue-csv-g1",
+      "resume_branch": "feature/wcp-711-public-game-catalogue-csv-g1",
+      "claimed_on": "2026-10-15T02:02:43Z",
+      "lease_expires_at": "2026-10-15T09:02:43Z",
+      "base_branch": "main",
+      "base_sha": "a6ff8d56cc5fd84b3eada9f6c745e43c70aa810b",
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "a6ff8d56cc5fd84b3eada9f6c745e43c70aa810b",
+      "active_base_branch": "main",
+      "active_base_sha": "a6ff8d56cc5fd84b3eada9f6c745e43c70aa810b",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "proposal_kind": "worker_only",
+      "objective": "Let visitors download a bounded, deterministic CSV of only publicly visible Game Catalogue entries while preventing spreadsheet formula injection and keeping the existing Gaming-module fail-closed gate.",
+      "acceptance_checks": [
+        "Add GET /games/catalogue.csv and preserve the catalogue's enabled-entry/game visibility rules and disabled-Gaming 404 behavior.",
+        "Export only public display fields (game name, summary, developer and genre names); do not include IDs, private/admin metadata or disabled records.",
+        "Use RFC-compatible CSV quoting and neutralize spreadsheet formula-leading cell values; return a stable attachment filename and no-store cache policy.",
+        "Bound export work at 20,000 rows using existing repository pagination; reject larger exports rather than silently truncate, and allow an empty catalogue export with headers.",
+        "Functional tests cover public/disabled visibility, content headers, CSV quoting/formula injection, pagination/bounds and empty output."
+      ],
+      "collision_check": {
+        "compared_against": "Live continuous/work-pool-v4 at blob 205579d72f787c76505e5b65880a9e7e2b98b660; 207 active or locked claims. Checked exact and ancestor/descendant prefix overlaps for each candidate file. Search of worker proposals found no existing public catalogue CSV export.",
+        "result": "Zero exact or prefix path overlaps.",
+        "paths": [
+          "src/GameCatalogueExport/PublicGameCatalogueCsvExporter.php",
+          "src/Controller/PublicGameCatalogueCsvController.php",
+          "tests/GameCatalogueExport/PublicGameCatalogueCsvExporterTest.php",
+          "tests/Controller/PublicGameCatalogueCsvControllerTest.php"
+        ]
+      },
+      "allowed_paths": [
+        "src/GameCatalogueExport/PublicGameCatalogueCsvExporter.php",
+        "src/Controller/PublicGameCatalogueCsvController.php",
+        "tests/GameCatalogueExport/PublicGameCatalogueCsvExporterTest.php",
+        "tests/Controller/PublicGameCatalogueCsvControllerTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "CONTINUOUS-WORKER.md",
+        "CONTINUOUS-WORK-POOL.json",
+        ".github/workflows/",
+        "migrations/",
+        "src/Entity/",
+        "src/Repository/",
+        "src/Security/",
+        "src/Controller/GameCatalogue/GameCatalogueController.php",
+        "src/Repository/GameCatalogue/GameCatalogueEntryRepository.php"
+      ],
+      "tests": [
+        "focused public export unit and functional tests",
+        "complete exact-head Worker CI including PHP/Symfony and PostgreSQL 18"
+      ],
+      "completion_report": [
+        "exact final Worker HEAD",
+        "complete changed-path list and worker PR",
+        "targeted tests and CI outcomes",
+        "unresolved risks and assumptions"
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "preserve-existing-game-catalogue-public-visibility-and-module-gating",
+        "no-schema-entity-or-repository-changes",
+        "no-CI-security-weakening",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
+      ],
+      "active_head": "a6ff8d56cc5fd84b3eada9f6c745e43c70aa810b",
+      "last_observed_head": "a6ff8d56cc5fd84b3eada9f6c745e43c70aa810b",
+      "last_checkpoint_at": "2026-10-15T02:02:43Z",
+      "last_verified_push_at": "2026-10-15T02:02:43Z",
+      "worker_pr_state": "not_opened",
+      "ci_result": "not_started",
+      "next_action": "Implement only the four approved files; run focused tests and open/update worker PR plus exact-head CI validation PR. No Trusted merge or deployment."
     }
   ],
   "recovery_queue": [],
