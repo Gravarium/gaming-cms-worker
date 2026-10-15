@@ -73240,16 +73240,24 @@
           "result": "pending_workflow_discovery",
           "pr": 559,
           "note": "Draft PR opened; awaiting discovery of required exact-head Worker CI jobs."
+        },
+        {
+          "head": "753645c4c085ff3bfc0aaa966b6572114d707c62",
+          "result": "pending_workflow_discovery",
+          "pr": 559,
+          "ci_validation_pr": 560,
+          "note": "Validation PR #560 targets main at the exact same feature head so required CI branch filters run without changing feature PR #559's stacked base."
         }
       ],
-      "next_action": "Inspect exact-head Worker CI for PR #559. If it is red, correct only allowed paths, push a coherent checkpoint and rerun all required exact-head checks. If green, record the run, test totals and final exact head; keep this open draft awaiting Trusted review.",
+      "next_action": "Inspect exact-head Worker CI triggered by CI-only PR #560 (head 753645c4c085ff3bfc0aaa966b6572114d707c62). Correct only WCP-720 allowed paths if checks fail; document final green run and test totals.",
       "active_head": "753645c4c085ff3bfc0aaa966b6572114d707c62",
       "last_observed_head": "753645c4c085ff3bfc0aaa966b6572114d707c62",
       "worker_pr_head_sha": "753645c4c085ff3bfc0aaa966b6572114d707c62",
-      "last_checkpoint_at": "2026-10-15T19:16:04Z",
+      "last_checkpoint_at": "2026-10-15T19:17:16Z",
       "last_verified_push_at": "2026-10-15T19:15:46Z",
       "ci_run": null,
-      "ci_run_url": null
+      "ci_run_url": null,
+      "ci_validation_pr": 560
     }
   ],
   "recovery_queue": [],
