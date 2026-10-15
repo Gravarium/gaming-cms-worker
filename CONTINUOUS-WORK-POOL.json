@@ -11,7 +11,7 @@
   "baseline_branch": "main",
   "base_sha": "2f98de43e3cf4a26addb436cf9908b4135f2bdc6",
   "published_at": "2026-10-15T11:45:13Z",
-  "summary": "WCP-719 and WCP-720 are complete with exact-head green Worker CI and remain open drafts awaiting Trusted review. WCP-721 is claimed for implementation from the exact green WCP-720 head 00059292948d10a6fbdc9681ff042acbaf5e9302; it adds a safe, page-bounded CSV export of failed queue messages without message payloads.",
+  "summary": "WCP-719 and WCP-720 remain open drafts awaiting Trusted review. WCP-721 is claimed from the exact green WCP-720 head; feature PR #561 and CI-only PR #562 target exact head 7f1bf6daaa51b8e7b55e7cf51de5cc6f053583b1, with Worker CI run 38796294140 in progress.",
   "rules": {
     "choose": "Resume the current chat's unfinished claimed branch first. Otherwise atomically claim an eligible published task. If no published task is eligible, independently derive and publish a bounded worker-only CMS proposal from approved product goals and observed code gaps; do not ask the owner for the next FCP number.",
     "atomic_reservation": "Create the exact claim_branch and suggested feature branch from that task's published proposal_base_sha. If the claim already exists, treat it as a hard lock; the owning continuation resumes it and every other AI skips it.",
@@ -73403,14 +73403,18 @@
         "red-CI-stops-integration",
         "never-merge-or-deploy-to-Trusted"
       ],
-      "worker_pr_state": "not_open",
-      "next_action": "Implement the CSV exporter, guarded download route, current-page link and focused tests in the five reserved paths. Push the exact feature head, open the stacked worker PR and validate it on a CI-compatible worker/account branch. Never merge or deploy.",
+      "worker_pr_state": "open_draft",
+      "next_action": "Wait for Worker CI run 38796294140 on exact head 7f1bf6daaa51b8e7b55e7cf51de5cc6f053583b1; fix any failures within the five reserved paths, then record the exact green HEAD and run. Never merge or deploy.",
       "claim_state": "active",
       "claimed_on": "2026-10-15T19:40:06Z",
       "lease_expires_at": "2026-10-16T02:40:06Z",
-      "active_head": "00059292948d10a6fbdc9681ff042acbaf5e9302",
-      "last_observed_head": "00059292948d10a6fbdc9681ff042acbaf5e9302",
-      "last_checkpoint_at": "2026-10-15T19:40:06Z"
+      "active_head": "7f1bf6daaa51b8e7b55e7cf51de5cc6f053583b1",
+      "last_observed_head": "7f1bf6daaa51b8e7b55e7cf51de5cc6f053583b1",
+      "last_checkpoint_at": "2026-10-15T19:44:53.268Z",
+      "worker_pr": 561,
+      "validation_pr": 562,
+      "ci_run_id": 38796294140,
+      "ci_result": "in_progress"
     }
   ],
   "recovery_queue": [],
