@@ -73233,31 +73233,32 @@
       "worker_pr_state": "open_draft",
       "worker_pr": 559,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/559",
-      "ci_result": "pending_workflow_discovery",
+      "ci_result": "in_progress",
       "ci_history": [
         {
+          "run": 38792645162,
           "head": "753645c4c085ff3bfc0aaa966b6572114d707c62",
-          "result": "pending_workflow_discovery",
+          "result": "in_progress",
+          "base_sha": "a6ff8d56cc5fd84b3eada9f6c745e43c70aa810b",
+          "jobs": {
+            "Validate worker-visible PostgreSQL 18 migration chain": "in_progress",
+            "Validate worker-visible PHP and Symfony": "in_progress"
+          },
           "pr": 559,
-          "note": "Draft PR opened; awaiting discovery of required exact-head Worker CI jobs."
-        },
-        {
-          "head": "753645c4c085ff3bfc0aaa966b6572114d707c62",
-          "result": "pending_workflow_discovery",
-          "pr": 559,
-          "ci_validation_pr": 560,
-          "note": "Validation PR #560 targets main at the exact same feature head so required CI branch filters run without changing feature PR #559's stacked base."
+          "ci_validation_pr": 560
         }
       ],
-      "next_action": "Inspect exact-head Worker CI triggered by CI-only PR #560 (head 753645c4c085ff3bfc0aaa966b6572114d707c62). Correct only WCP-720 allowed paths if checks fail; document final green run and test totals.",
+      "next_action": "Monitor exact-head Worker CI run 38792645162. Correct issues only within WCP-720 allowed_paths; if green, record all job results and test totals, set worker_complete_awaiting_trusted_review and leave PRs open drafts.",
       "active_head": "753645c4c085ff3bfc0aaa966b6572114d707c62",
       "last_observed_head": "753645c4c085ff3bfc0aaa966b6572114d707c62",
       "worker_pr_head_sha": "753645c4c085ff3bfc0aaa966b6572114d707c62",
-      "last_checkpoint_at": "2026-10-15T19:17:16Z",
+      "last_checkpoint_at": "2026-10-15T19:17:33Z",
       "last_verified_push_at": "2026-10-15T19:15:46Z",
-      "ci_run": null,
-      "ci_run_url": null,
-      "ci_validation_pr": 560
+      "ci_run": 38792645162,
+      "ci_run_url": "https://github.com/Gravarium/gaming-cms-worker/actions/runs/38792645162",
+      "ci_validation_pr": 560,
+      "ci_head": "753645c4c085ff3bfc0aaa966b6572114d707c62",
+      "ci_conclusion": null
     }
   ],
   "recovery_queue": [],
