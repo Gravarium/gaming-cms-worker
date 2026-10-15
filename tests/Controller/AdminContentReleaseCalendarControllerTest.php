@@ -87,9 +87,8 @@ final class AdminContentReleaseCalendarControllerTest extends WebTestCase
             self::assertStringStartsWith('text/plain', (string) $client->getResponse()->headers->get('Content-Type'));
         }
 
-        $limited = static::createClient();
-        $limited->loginUser($this->user($limited, false));
-        $limited->request('GET', '/admin/content/releases/calendar');
+        $client->loginUser($this->user($client, false));
+        $client->request('GET', '/admin/content/releases/calendar');
         self::assertResponseStatusCodeSame(403);
     }
 

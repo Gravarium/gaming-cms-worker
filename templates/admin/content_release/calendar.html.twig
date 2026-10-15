@@ -28,7 +28,7 @@
                         <th scope="row">{{ day.label }}</th>
                         <td>
                             {% for event in day.events %}
-                                <div class="calendar-event">
+                                <div>
                                     <time datetime="{{ day.date }}T{{ event.time }}:00Z">{{ event.time }} UTC</time>
                                     {% if event.status == 'scheduled' %}
                                         <a href="{{ path('app_admin_content_release_edit', {id: event.id}) }}">{{ event.name }}</a>
