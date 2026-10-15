@@ -66,11 +66,16 @@ final class PublicContentReleaseCsvControllerTest extends WebTestCase
             }
             fclose($stream);
 
-            self::assertCount(21, $rows);
-            self::assertSame("'=SUM(1,2)", $rows[0][0]);
-            self::assertSame('Description, with "quotes"', $rows[0][1]);
-            self::assertStringContainsString('T', $rows[0][2]);
-            self::assertNotContains('Private draft '.$suffix, array_column($rows, 0));
+            $exportedNames = array_column($rows, 0);
+            self::assertContains("'=SUM(1,2)", $exportedNames);
+            for ($number = 1; $number <= 20; ++$number) {
+                self::assertContains(sprintf('Public release %s %02d', $suffix, $number), $exportedNames);
+            }
+            $formulaIndex = array_search("'=SUM(1,2)", $exportedNames, true);
+            self::assertNotFalse($formulaIndex);
+            self::assertSame('Description, with "quotes"', $rows[$formulaIndex][1]);
+            self::assertStringContainsString('T', $rows[$formulaIndex][2]);
+            self::assertNotContains('Private draft '.$suffix, $exportedNames);
         } finally {
             if ($connection->isTransactionActive()) {
                 $connection->rollBack();
