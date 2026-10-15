@@ -11,7 +11,7 @@
   "baseline_branch": "main",
   "base_sha": "2f98de43e3cf4a26addb436cf9908b4135f2bdc6",
   "published_at": "2026-10-15T11:45:13Z",
-  "summary": "WCP-719 is complete with exact-head green CI on 155cbb836710c76da47f9a9479d65845ed9e79cc and remains an open draft awaiting Trusted review. WCP-720 is complete with exact-head green CI run #1399 on 00059292948d10a6fbdc9681ff042acbaf5e9302; feature PR #559 and CI-only PR #560 remain open drafts awaiting Trusted review. No merge or deployment was performed.",
+  "summary": "WCP-719 and WCP-720 are complete with exact-head green Worker CI and remain open drafts awaiting Trusted review. WCP-721 has been published as a conflict-free Worker-only proposal for safe, page-bounded CSV export of the failed-message queue; it depends on WCP-720's exact green head 00059292948d10a6fbdc9681ff042acbaf5e9302.",
   "rules": {
     "choose": "Resume the current chat's unfinished claimed branch first. Otherwise atomically claim an eligible published task. If no published task is eligible, independently derive and publish a bounded worker-only CMS proposal from approved product goals and observed code gaps; do not ask the owner for the next FCP number.",
     "atomic_reservation": "Create the exact claim_branch and suggested feature branch from that task's published proposal_base_sha. If the claim already exists, treat it as a hard lock; the owning continuation resumes it and every other AI skips it.",
@@ -73313,6 +73313,98 @@
       "ci_head": "00059292948d10a6fbdc9681ff042acbaf5e9302",
       "ci_conclusion": "success",
       "final_head": "00059292948d10a6fbdc9681ff042acbaf5e9302"
+    },
+    {
+      "priority": 721,
+      "package_id": "WCP-721",
+      "title": "Export the current failed-message queue page as a safe CSV",
+      "risk": "low_admin_read_only_export",
+      "execution_state": "unclaimed",
+      "claim_generation": 1,
+      "claim_branch": "claim/wcp-721-failed-queue-page-csv-g1",
+      "suggested_branch": "feature/wcp-721-failed-queue-page-csv-g1",
+      "resume_branch": "feature/wcp-721-failed-queue-page-csv-g1",
+      "base_branch": "feature/wcp-720-newsletter-delivery-report-pagination-g1",
+      "base_sha": "00059292948d10a6fbdc9681ff042acbaf5e9302",
+      "proposal_base_branch": "feature/wcp-720-newsletter-delivery-report-pagination-g1",
+      "proposal_base_sha": "00059292948d10a6fbdc9681ff042acbaf5e9302",
+      "active_base_branch": "feature/wcp-720-newsletter-delivery-report-pagination-g1",
+      "active_base_sha": "00059292948d10a6fbdc9681ff042acbaf5e9302",
+      "dependencies": [
+        "WCP-720"
+      ],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "proposal_kind": "worker_only",
+      "objective": "Let authorized CMS settings managers download the currently visible page of failed background messages as a CSV while excluding message payloads, raw headers, recipients and exception details.",
+      "acceptance_checks": [
+        "Add a read-only CSV endpoint for the current failed-message queue page, reusing the existing 25-row FailedMessagePaginator and preserving the page number in the download link.",
+        "Require the existing CMS_SETTINGS_MANAGE gate; malformed/non-scalar or unexpected query inputs return a generic 400 without echoing input. The response uses private, no-store, noindex and nosniff protections.",
+        "Export exactly the safe summary fields: message ID, sanitized message type, failure timestamp in UTC, and payload byte length. Never select or emit the body, raw headers, recipient addresses or exception text.",
+        "Encode valid RFC 4180 CSV with a stable filename that reflects the requested page; neutralize formula-leading cells and avoid mutating queue messages.",
+        "Preserve all existing retry/retry-all routes, page-scoped behavior and CSRF protections unchanged."
+      ],
+      "selection_rationale": "The five published FCPs remain ineligible because required dependency entries are missing. This read-only, page-bounded worker proposal fills a practical CMS operations need and depends on WCP-720's green Worker head only; it does not imply Trusted integration.",
+      "collision_check": {
+        "compared_against": "Live continuous/work-pool-v4 blob e52a8b4d9c2d33053688ba7fbcb2403946743a26",
+        "active_or_locked_claims_scanned": 217,
+        "result": "Zero exact or prefix path overlaps across all five allowed paths.",
+        "overlapping_packages": [],
+        "paths": [
+          "src/Messenger/FailedMessageCsvExporter.php",
+          "src/Controller/AdminQueueCsvController.php",
+          "templates/admin/queue/index.html.twig",
+          "tests/Messenger/FailedMessageCsvExporterTest.php",
+          "tests/Controller/AdminQueueCsvControllerTest.php"
+        ],
+        "at": "2026-10-15T19:39:13Z"
+      },
+      "allowed_paths": [
+        "src/Messenger/FailedMessageCsvExporter.php",
+        "src/Controller/AdminQueueCsvController.php",
+        "templates/admin/queue/index.html.twig",
+        "tests/Messenger/FailedMessageCsvExporterTest.php",
+        "tests/Controller/AdminQueueCsvControllerTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "CONTINUOUS-WORKER.md",
+        "CONTINUOUS-WORK-POOL.json",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "src/Entity/",
+        "src/Repository/",
+        "src/Security/"
+      ],
+      "tests": [
+        "Exporter unit tests cover CSV headers, quoting, formula injection handling, UTC timestamps, and strict omission of payload data.",
+        "Controller tests cover authorized downloads on page 1 and page 2, exactly the visible bounded rows, safe headers, invalid page/array/unexpected input, and access denial without CMS settings permission.",
+        "Full exact-head Worker CI including PHP/Symfony and PostgreSQL 18 migration validation."
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-Trusted-review-and-exact-head-CI",
+        "no-queue-message-body-raw-headers-recipient-data-or-exception-text-export",
+        "export-only-current-bounded-page-of-25-messages",
+        "preserve-CMS_SETTINGS_MANAGE-and-CSRF-retry-protections",
+        "no-queue-mutation-or-retry-action-from-GET",
+        "no-schema-entity-or-repository-changes",
+        "no-CI-security-weakening",
+        "red-CI-stops-integration",
+        "never-merge-or-deploy-to-Trusted"
+      ],
+      "worker_pr_state": "not_open",
+      "next_action": "Create claim and feature branches from the exact proposal_base_sha. Implement only the five allowed paths, run git diff --check, and validate the exact feature head with the normal Worker CI validation PR."
     }
   ],
   "recovery_queue": [],
