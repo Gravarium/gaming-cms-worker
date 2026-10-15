@@ -93,6 +93,28 @@ final class AdminContentReleaseCalendarControllerTest extends WebTestCase
         self::assertResponseStatusCodeSame(403);
     }
 
+    public function testCalendarCapsResultsAtOneHundredAndSignalsTruncation(): void
+    {
+        $client = static::createClient();
+        $admin = $this->user($client, true);
+        $scheduled = [];
+        for ($index = 1; $index <= 101; ++$index) {
+            $release = $this->release($client, $admin, sprintf('bounded-%03d', $index), ContentRelease::STATUS_SCHEDULED);
+            $release->setScheduledAt(new \DateTimeImmutable('2032-04-15 12:00:00', new \DateTimeZone('UTC')));
+            $scheduled[] = $release;
+        }
+        $this->em($client)->flush();
+        $client->loginUser($admin);
+
+        $crawler = $client->request('GET', '/admin/content/releases/calendar?month=2032-04');
+
+        self::assertResponseIsSuccessful();
+        self::assertSelectorTextContains('[role="status"]', 'begrenzt');
+        self::assertCount(100, $crawler->filter('.calendar-event'));
+        self::assertSame('/admin/content/releases/'.$scheduled[0]->getId().'/edit', $crawler->filter('.calendar-event a')->first()->attr('href'));
+        self::assertSame('/admin/content/releases/'.$scheduled[99]->getId().'/edit', $crawler->filter('.calendar-event a')->last()->attr('href'));
+    }
+
     private function user(\Symfony\Bundle\FrameworkBundle\KernelBrowser $client, bool $canManageContent): User
     {
         $this->connection = $this->em($client)->getConnection();
