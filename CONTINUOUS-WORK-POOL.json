@@ -11,7 +11,7 @@
   "baseline_branch": "main",
   "base_sha": "2f98de43e3cf4a26addb436cf9908b4135f2bdc6",
   "published_at": "2026-10-15T01:47:45Z",
-  "summary": "WCP-710 through WCP-714 have exact-head green Worker CI and open draft PRs awaiting Trusted review. WCP-715 is claimed from sanitized worker/main a6ff8d56cc5fd84b3eada9f6c745e43c70aa810b for a public content-release JSON Feed. WCP-709 remains held unmerged due its FCP-056 prefix conflict.",
+  "summary": "WCP-710 through WCP-715 have exact-head green Worker CI and open draft PRs awaiting Trusted review. WCP-709 remains held unmerged due its FCP-056 prefix conflict. WCP-715 exact green HEAD is 0d096f4718fc0a3dddfcc6aa3984a00a08d1eb0a; runs 38673379435 and 38673381832 passed.",
   "rules": {
     "choose": "Resume the current chat's unfinished claimed branch first. Otherwise atomically claim an eligible published task. If no published task is eligible, independently derive and publish a bounded worker-only CMS proposal from approved product goals and observed code gaps; do not ask the owner for the next FCP number.",
     "atomic_reservation": "Create the exact claim_branch and suggested feature branch from that task's published proposal_base_sha. If the claim already exists, treat it as a hard lock; the owning continuation resumes it and every other AI skips it.",
@@ -10408,13 +10408,9 @@
       "resume_branch": "feature/wcp-310-account-token-contract-boundary-g1",
       "proposal_kind": "worker_only",
       "collision_check": {
-        "compared_against": "all current continuous/work-pool-v4 published allowlis
-... 2915972 bytes omitted ...
-],
-      "deliverables": [
-        "Owners can edit the original question title/body or their own reply through a discoverable form in the visible thread; edited_at is shown.",
-        "Only authors in visible rooms and open unsolved threads may edit; no edits across hidden guild rooms, after moderation closure or solve, or by another user.",
-        "All writes require POST, CSRF and current thread version; stale edits do not change either title or body.",
+        "compared_against": "all current continuous/work-pool-v4 published allowlists and every act
+... 2916359 bytes omitted ...
+version; stale edits do not change either title or body.",
         "Existing quote relationships, solved answer, subscriptions and moderation remain intact; module disable hides all edit routes."
       ],
       "tests": [
@@ -20444,14 +20440,14 @@
       "package_id": "WCP-715",
       "title": "Publish public content releases as JSON Feed",
       "risk": "low_public_read_only",
-      "execution_state": "worker_in_progress",
-      "claim_state": "active_until_lease_expiry",
+      "execution_state": "worker_complete_awaiting_trusted_review",
+      "claim_state": "locked_until_trusted_resolution",
       "claim_generation": 1,
       "claim_branch": "claim/wcp-715-public-content-release-json-feed-g1",
       "suggested_branch": "feature/wcp-715-public-content-release-json-feed-g1",
       "resume_branch": "feature/wcp-715-public-content-release-json-feed-g1",
       "claimed_on": "2026-10-15T02:50:38Z",
-      "lease_expires_at": "2026-10-15T09:53:29Z",
+      "lease_expires_at": null,
       "base_branch": "main",
       "base_sha": "a6ff8d56cc5fd84b3eada9f6c745e43c70aa810b",
       "proposal_base_branch": "main",
@@ -20503,20 +20499,25 @@
       ],
       "active_head": "0d096f4718fc0a3dddfcc6aa3984a00a08d1eb0a",
       "last_observed_head": "0d096f4718fc0a3dddfcc6aa3984a00a08d1eb0a",
-      "last_checkpoint_at": "2026-10-15T02:54:00Z",
+      "last_checkpoint_at": "2026-10-15T02:58:10Z",
       "last_verified_push_at": "2026-10-15T02:53:29Z",
       "worker_pr_state": "open_draft",
       "worker_pr_head_sha": "0d096f4718fc0a3dddfcc6aa3984a00a08d1eb0a",
       "worker_pr": 550,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/550",
       "ci_validation_pr": 551,
-      "ci_result": "in_progress",
+      "ci_result": "success",
       "ci_run": 38673379435,
       "ci_run_url": "https://github.com/Gravarium/gaming-cms-worker/actions/runs/38673379435",
       "ci_history": [
-        {"run": 38673379435, "result": "in_progress", "sha": "0d096f4718fc0a3dddfcc6aa3984a00a08d1eb0a"}
+        {"run": 38673381832, "result": "success", "sha": "0d096f4718fc0a3dddfcc6aa3984a00a08d1eb0a"},
+        {"run": 38673379435, "result": "success", "sha": "0d096f4718fc0a3dddfcc6aa3984a00a08d1eb0a"}
       ],
-      "next_action": "PR #550 and exact-head CI validation PR #551 are open drafts at 0d096f4718fc0a3dddfcc6aa3984a00a08d1eb0a. Await full PHP/Symfony and PostgreSQL 18 CI; do not merge or deploy."
+      "next_action": "Exact HEAD 0d096f4718fc0a3dddfcc6aa3984a00a08d1eb0a passed complete Worker CI runs 38673379435 and 38673381832 (each PHP/Symfony and PostgreSQL 18). Feature PR #550 and CI PR #551 remain open drafts awaiting Trusted review. Preserve completed lock; no merge/deployment.",
+      "final_head": "0d096f4718fc0a3dddfcc6aa3984a00a08d1eb0a",
+      "ci_head": "0d096f4718fc0a3dddfcc6aa3984a00a08d1eb0a",
+      "ci_conclusion": "success",
+      "completed_at": "2026-10-15T02:58:10Z"
     }
   ],
   "recovery_queue": [],
