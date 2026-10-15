@@ -11,7 +11,7 @@
   "baseline_branch": "main",
   "base_sha": "2f98de43e3cf4a26addb436cf9908b4135f2bdc6",
   "published_at": "2026-10-15T11:45:13Z",
-  "summary": "WCP-719 and WCP-720 are complete with exact-head green Worker CI and remain open drafts awaiting Trusted review. WCP-721 has been published as a conflict-free Worker-only proposal for safe, page-bounded CSV export of the failed-message queue; it depends on WCP-720's exact green head 00059292948d10a6fbdc9681ff042acbaf5e9302.",
+  "summary": "WCP-719 and WCP-720 are complete with exact-head green Worker CI and remain open drafts awaiting Trusted review. WCP-721 is claimed for implementation from the exact green WCP-720 head 00059292948d10a6fbdc9681ff042acbaf5e9302; it adds a safe, page-bounded CSV export of failed queue messages without message payloads.",
   "rules": {
     "choose": "Resume the current chat's unfinished claimed branch first. Otherwise atomically claim an eligible published task. If no published task is eligible, independently derive and publish a bounded worker-only CMS proposal from approved product goals and observed code gaps; do not ask the owner for the next FCP number.",
     "atomic_reservation": "Create the exact claim_branch and suggested feature branch from that task's published proposal_base_sha. If the claim already exists, treat it as a hard lock; the owning continuation resumes it and every other AI skips it.",
@@ -73319,7 +73319,7 @@
       "package_id": "WCP-721",
       "title": "Export the current failed-message queue page as a safe CSV",
       "risk": "low_admin_read_only_export",
-      "execution_state": "unclaimed",
+      "execution_state": "worker_in_progress",
       "claim_generation": 1,
       "claim_branch": "claim/wcp-721-failed-queue-page-csv-g1",
       "suggested_branch": "feature/wcp-721-failed-queue-page-csv-g1",
@@ -73404,7 +73404,13 @@
         "never-merge-or-deploy-to-Trusted"
       ],
       "worker_pr_state": "not_open",
-      "next_action": "Create claim and feature branches from the exact proposal_base_sha. Implement only the five allowed paths, run git diff --check, and validate the exact feature head with the normal Worker CI validation PR."
+      "next_action": "Implement the CSV exporter, guarded download route, current-page link and focused tests in the five reserved paths. Push the exact feature head, open the stacked worker PR and validate it on a CI-compatible worker/account branch. Never merge or deploy.",
+      "claim_state": "active",
+      "claimed_on": "2026-10-15T19:40:06Z",
+      "lease_expires_at": "2026-10-16T02:40:06Z",
+      "active_head": "00059292948d10a6fbdc9681ff042acbaf5e9302",
+      "last_observed_head": "00059292948d10a6fbdc9681ff042acbaf5e9302",
+      "last_checkpoint_at": "2026-10-15T19:40:06Z"
     }
   ],
   "recovery_queue": [],
