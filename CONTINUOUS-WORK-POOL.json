@@ -11,7 +11,7 @@
   "baseline_branch": "main",
   "base_sha": "2f98de43e3cf4a26addb436cf9908b4135f2bdc6",
   "published_at": "2026-10-15T01:47:45Z",
-  "summary": "WCP-709 complete with two green exact-head Worker CI runs awaiting Trusted review; WCP-710 implemented at exact HEAD c9e2e650780ae23d12404fd69fe94d0526a11c65 with PRs #540/#541 open and two CI runs in progress.",
+  "summary": "WCP-709 has green CI but a post-completion path-prefix conflict with locked FCP-056 was recorded for Trusted resolution. WCP-710 is corrected at 0873bbcd985187b6c5ee786ba6151b69ed89dc3c; exact-head CI runs 38667966056 and 38667966816 are pending.",
   "rules": {
     "choose": "Resume the current chat's unfinished claimed branch first. Otherwise atomically claim an eligible published task. If no published task is eligible, independently derive and publish a bounded worker-only CMS proposal from approved product goals and observed code gaps; do not ask the owner for the next FCP number.",
     "atomic_reservation": "Create the exact claim_branch and suggested feature branch from that task's published proposal_base_sha. If the claim already exists, treat it as a hard lock; the owning continuation resumes it and every other AI skips it.",
@@ -71638,8 +71638,8 @@
         "A focused functional test covers directory visibility, platform results, and unavailable/disabled behavior."
       ],
       "collision_check": {
-        "compared_against": "Live continuous/work-pool-v4 active and locked claims; exact and prefix overlap checks returned zero conflicts for all four paths.",
-        "result": "No exact or prefix overlap with active/locked path claims.",
+        "compared_against": "Live continuous/work-pool-v4 FCP-056 (locked, PR #15) and its allowed templates/game_catalogue/ prefix",
+        "result": "CONFLICT DETECTED after completion: WCP-709 template paths are inside the still-locked FCP-056 allowed prefix. PR #15 changed different concrete files, but prefix exclusivity still applies. Do not treat WCP-709 as path-conflict-free or merge; retain both as untrusted drafts pending Trusted resolution/re-scope.",
         "paths": [
           "src/Controller/PublicGamePlatformDirectoryController.php",
           "templates/game_catalogue/platform_directory.html.twig",
@@ -71696,7 +71696,7 @@
       "last_verified_push_at": "2026-10-15T01:38:55Z",
       "worker_pr_state": "open_draft",
       "ci_result": "success",
-      "next_action": "Both exact-head Worker CI runs 38666794016 and 38666793726 passed on 26ee6b263cd0c9685e5a0d7942e907149b18c436. Feature PR #538 and exact-head CI PR #539 remain open drafts for Trusted review; preserve the completed lock. No merge or deployment.",
+      "next_action": "Exact-head CI is green, but post-completion live reconciliation found the templates/game_catalogue/ prefix overlap with locked FCP-056 PR #15. Preserve PR #538 and #539 as unmerged drafts; do not merge/deploy. Require a safe re-scope after Trusted resolves FCP-056.",
       "worker_pr": 538,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/538",
       "worker_pr_head_sha": "26ee6b263cd0c9685e5a0d7942e907149b18c436",
@@ -71856,19 +71856,19 @@
         "red-ci-stops-integration",
         "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
       ],
-      "active_head": "c9e2e650780ae23d12404fd69fe94d0526a11c65",
-      "last_observed_head": "c9e2e650780ae23d12404fd69fe94d0526a11c65",
-      "last_checkpoint_at": "2026-10-15T01:47:45Z",
-      "last_verified_push_at": "2026-10-15T01:47:24Z",
+      "active_head": "0873bbcd985187b6c5ee786ba6151b69ed89dc3c",
+      "last_observed_head": "0873bbcd985187b6c5ee786ba6151b69ed89dc3c",
+      "last_checkpoint_at": "2026-10-15T01:52:54Z",
+      "last_verified_push_at": "2026-10-15T01:52:11Z",
       "worker_pr_state": "open_draft",
       "ci_result": "pending",
-      "next_action": "Feature PR #540 and exact-head CI validation PR #541 are open drafts at c9e2e650780ae23d12404fd69fe94d0526a11c65. Worker CI runs 38667544367 and 38667541837 are in progress; inspect full PHP/Symfony and PostgreSQL 18 results, correct failures only in approved paths, and record exact green HEAD. No merge or deployment.",
-      "worker_pr_head_sha": "c9e2e650780ae23d12404fd69fe94d0526a11c65",
+      "next_action": "Test-only KernelBrowser namespace mismatch from exact-head runs 38667544367 and 38667541837 was corrected. New exact-head Worker CI runs 38667966056 and 38667966816 are in progress for HEAD 0873bbcd985187b6c5ee786ba6151b69ed89dc3c. Both open PRs updated with exact HEAD; no merge or deployment.",
+      "worker_pr_head_sha": "0873bbcd985187b6c5ee786ba6151b69ed89dc3c",
       "worker_pr": 540,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/540",
       "ci_validation_pr": 541,
-      "ci_run": 38667544367,
-      "ci_run_url": "https://github.com/Gravarium/gaming-cms-worker/actions/runs/38667544367",
+      "ci_run": 38667966056,
+      "ci_run_url": "https://github.com/Gravarium/gaming-cms-worker/actions/runs/38667966056",
       "ci_history": [
         {
           "run": 38667544367,
@@ -71879,6 +71879,28 @@
           "run": 38667541837,
           "result": "in_progress",
           "sha": "c9e2e650780ae23d12404fd69fe94d0526a11c65"
+        },
+        {
+          "run": 38667544367,
+          "result": "failure",
+          "sha": "c9e2e650780ae23d12404fd69fe94d0526a11c65",
+          "cause": "KernelBrowser namespace mismatch in the new functional test"
+        },
+        {
+          "run": 38667541837,
+          "result": "failure",
+          "sha": "c9e2e650780ae23d12404fd69fe94d0526a11c65",
+          "cause": "KernelBrowser namespace mismatch in the new functional test"
+        },
+        {
+          "run": 38667966056,
+          "result": "in_progress",
+          "sha": "0873bbcd985187b6c5ee786ba6151b69ed89dc3c"
+        },
+        {
+          "run": 38667966816,
+          "result": "in_progress",
+          "sha": "0873bbcd985187b6c5ee786ba6151b69ed89dc3c"
         }
       ]
     }
