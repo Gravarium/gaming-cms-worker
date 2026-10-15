@@ -11,7 +11,7 @@
   "baseline_branch": "main",
   "base_sha": "2f98de43e3cf4a26addb436cf9908b4135f2bdc6",
   "published_at": "2026-10-15T01:47:45Z",
-  "summary": "WCP-709 has green CI but a post-completion path-prefix conflict with locked FCP-056 was recorded for Trusted resolution. WCP-710 is corrected at 0873bbcd985187b6c5ee786ba6151b69ed89dc3c; exact-head CI runs 38667966056 and 38667966816 are pending.",
+  "summary": "WCP-709 exact-head CI is green but its templates/game_catalogue/ paths conflict by prefix with locked FCP-056; this is documented and held unmerged. WCP-710 has corrected the full-suite cache assertion at 84141ebf3085cbbe4546febcd716b949a0f1bcae; two exact-head CI runs are pending.",
   "rules": {
     "choose": "Resume the current chat's unfinished claimed branch first. Otherwise atomically claim an eligible published task. If no published task is eligible, independently derive and publish a bounded worker-only CMS proposal from approved product goals and observed code gaps; do not ask the owner for the next FCP number.",
     "atomic_reservation": "Create the exact claim_branch and suggested feature branch from that task's published proposal_base_sha. If the claim already exists, treat it as a hard lock; the owning continuation resumes it and every other AI skips it.",
@@ -71856,19 +71856,19 @@
         "red-ci-stops-integration",
         "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
       ],
-      "active_head": "0873bbcd985187b6c5ee786ba6151b69ed89dc3c",
-      "last_observed_head": "0873bbcd985187b6c5ee786ba6151b69ed89dc3c",
-      "last_checkpoint_at": "2026-10-15T01:52:54Z",
-      "last_verified_push_at": "2026-10-15T01:52:11Z",
+      "active_head": "84141ebf3085cbbe4546febcd716b949a0f1bcae",
+      "last_observed_head": "84141ebf3085cbbe4546febcd716b949a0f1bcae",
+      "last_checkpoint_at": "2026-10-15T01:57:20Z",
+      "last_verified_push_at": "2026-10-15T01:56:58Z",
       "worker_pr_state": "open_draft",
       "ci_result": "pending",
-      "next_action": "Test-only KernelBrowser namespace mismatch from exact-head runs 38667544367 and 38667541837 was corrected. New exact-head Worker CI runs 38667966056 and 38667966816 are in progress for HEAD 0873bbcd985187b6c5ee786ba6151b69ed89dc3c. Both open PRs updated with exact HEAD; no merge or deployment.",
-      "worker_pr_head_sha": "0873bbcd985187b6c5ee786ba6151b69ed89dc3c",
+      "next_action": "Full-suite CI on 0873bbcd985187b6c5ee786ba6151b69ed89dc3c failed because Symfony appended valid Cache-Control directives and the test asserted exact string equality. The test now requires the no-store directive. Both exact-head runs 38668395865 and 38668397357 are pending/in progress on 84141ebf3085cbbe4546febcd716b949a0f1bcae. PR #540/#541 updated. No merge or deployment.",
+      "worker_pr_head_sha": "84141ebf3085cbbe4546febcd716b949a0f1bcae",
       "worker_pr": 540,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/540",
       "ci_validation_pr": 541,
-      "ci_run": 38667966056,
-      "ci_run_url": "https://github.com/Gravarium/gaming-cms-worker/actions/runs/38667966056",
+      "ci_run": 38668395865,
+      "ci_run_url": "https://github.com/Gravarium/gaming-cms-worker/actions/runs/38668395865",
       "ci_history": [
         {
           "run": 38667544367,
@@ -71901,6 +71901,28 @@
           "run": 38667966816,
           "result": "in_progress",
           "sha": "0873bbcd985187b6c5ee786ba6151b69ed89dc3c"
+        },
+        {
+          "run": 38667966056,
+          "result": "failure",
+          "sha": "0873bbcd985187b6c5ee786ba6151b69ed89dc3c",
+          "cause": "Exact Cache-Control string assertion was too strict"
+        },
+        {
+          "run": 38667966816,
+          "result": "failure",
+          "sha": "0873bbcd985187b6c5ee786ba6151b69ed89dc3c",
+          "cause": "Exact Cache-Control string assertion was too strict"
+        },
+        {
+          "run": 38668395865,
+          "result": "in_progress",
+          "sha": "84141ebf3085cbbe4546febcd716b949a0f1bcae"
+        },
+        {
+          "run": 38668397357,
+          "result": "queued",
+          "sha": "84141ebf3085cbbe4546febcd716b949a0f1bcae"
         }
       ]
     }
