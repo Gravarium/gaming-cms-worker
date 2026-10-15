@@ -20,7 +20,7 @@ final class PublicNewsPrintController extends AbstractController
     public function show(string $slug): Response
     {
         $entry = $this->entries->findPublishedBySlug($slug, ContentEntry::TYPE_NEWS);
-        if (!$entry instanceof ContentEntry) {
+        if (!$entry instanceof ContentEntry || $entry->isUnlisted()) {
             throw $this->createNotFoundException();
         }
 
@@ -28,8 +28,7 @@ final class PublicNewsPrintController extends AbstractController
             'entry' => $entry,
         ]);
         $response->headers->set('X-Robots-Tag', 'noindex, nofollow');
-        $response->setPrivate();
-        $response->setNoStore();
+        $response->headers->set('Cache-Control', 'private, no-store');
 
         return $response;
     }
