@@ -63,12 +63,24 @@ final class PublicGamePlatformDirectoryTest extends WebTestCase
             $client->request('GET', '/games/platforms');
             self::assertResponseStatusCodeSame(404);
         } finally {
-            foreach ([$release, $cancelledRelease, $entry, $cancelledEntry, $platform, $cancelledPlatform, $game, $cancelledGame] as $entity) {
-                $entityManager->remove($entity);
+            try {
+                $connection = $entityManager->getConnection();
+                $gameSlugs = ['wcp709-public-game-'.$suffix, 'wcp709-cancelled-game-'.$suffix];
+                $platformSlugs = ['wcp709-pc-'.$suffix, 'wcp709-cancelled-'.$suffix];
+                $connection->executeStatement(
+                    'DELETE FROM game_catalogue_release WHERE entry_id IN (SELECT entry.id FROM game_catalogue_entry entry INNER JOIN game ON game.id = entry.game_id WHERE game.slug IN (?, ?))',
+                    $gameSlugs,
+                );
+                $connection->executeStatement(
+                    'DELETE FROM game_catalogue_entry WHERE game_id IN (SELECT id FROM game WHERE slug IN (?, ?))',
+                    $gameSlugs,
+                );
+                $connection->executeStatement('DELETE FROM game_catalogue_platform WHERE slug IN (?, ?)', $platformSlugs);
+                $connection->executeStatement('DELETE FROM game WHERE slug IN (?, ?)', $gameSlugs);
+            } finally {
+                $this->restoreModuleState($entityManager, 'gaming', $previousGaming);
+                $this->restoreModuleState($entityManager, 'content', $previousContent);
             }
-            $entityManager->flush();
-            $this->restoreModuleState($entityManager, 'gaming', $previousGaming);
-            $this->restoreModuleState($entityManager, 'content', $previousContent);
         }
     }
 
