@@ -40,7 +40,10 @@ final class MediaAccessibilityReportCsv
         }
     }
 
-    /** @param resource $stream @param list<int|string> $fields */
+    /**
+     * @param resource $stream
+     * @param list<int|string> $fields
+     */
     private function writeRow($stream, array $fields): void
     {
         if (fputcsv($stream, $fields, ',', '"', '', "\r\n") === false) {
