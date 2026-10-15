@@ -11,7 +11,7 @@
   "baseline_branch": "main",
   "base_sha": "2f98de43e3cf4a26addb436cf9908b4135f2bdc6",
   "published_at": "2026-10-15T11:45:13Z",
-  "summary": "WCP-719 is complete with exact-head green CI on 155cbb836710c76da47f9a9479d65845ed9e79cc and remains an open draft awaiting Trusted review. WCP-720 remains claimed as a worker-only 25-row keyset-pagination proposal based on WCP-718's exact green head bffc5193dfc97a815c9974464ffbed6e6aef2766; PHPUnit issues found on the prior head were corrected and exact-head CI is running on 00059292948d10a6fbdc9681ff042acbaf5e9302.",
+  "summary": "WCP-719 is complete with exact-head green CI on 155cbb836710c76da47f9a9479d65845ed9e79cc and remains an open draft awaiting Trusted review. WCP-720 is complete with exact-head green CI run #1399 on 00059292948d10a6fbdc9681ff042acbaf5e9302; feature PR #559 and CI-only PR #560 remain open drafts awaiting Trusted review. No merge or deployment was performed.",
   "rules": {
     "choose": "Resume the current chat's unfinished claimed branch first. Otherwise atomically claim an eligible published task. If no published task is eligible, independently derive and publish a bounded worker-only CMS proposal from approved product goals and observed code gaps; do not ask the owner for the next FCP number.",
     "atomic_reservation": "Create the exact claim_branch and suggested feature branch from that task's published proposal_base_sha. If the claim already exists, treat it as a hard lock; the owning continuation resumes it and every other AI skips it.",
@@ -73142,14 +73142,14 @@
       "package_id": "WCP-720",
       "title": "Paginate the aggregated newsletter delivery report",
       "risk": "low_admin_read_only_aggregate",
-      "execution_state": "worker_in_progress",
-      "claim_state": "active",
+      "execution_state": "worker_complete_awaiting_trusted_review",
+      "claim_state": "locked_until_trusted_resolution",
       "claim_generation": 1,
       "claim_branch": "claim/wcp-720-newsletter-delivery-report-pagination-g1",
       "suggested_branch": "feature/wcp-720-newsletter-delivery-report-pagination-g1",
       "resume_branch": "feature/wcp-720-newsletter-delivery-report-pagination-g1",
       "claimed_on": "2026-10-15T19:12:49Z",
-      "lease_expires_at": "2026-10-16T02:30:59Z",
+      "lease_expires_at": null,
       "base_branch": "feature/wcp-718-media-accessibility-csv-g1",
       "base_sha": "bffc5193dfc97a815c9974464ffbed6e6aef2766",
       "proposal_base_branch": "feature/wcp-718-media-accessibility-csv-g1",
@@ -73233,7 +73233,7 @@
       "worker_pr_state": "open_draft",
       "worker_pr": 559,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/559",
-      "ci_result": "in_progress",
+      "ci_result": "success",
       "ci_history": [
         {
           "run": 38792645162,
@@ -73290,28 +73290,29 @@
         {
           "run": 38794718827,
           "head": "00059292948d10a6fbdc9681ff042acbaf5e9302",
-          "result": "in_progress",
+          "result": "success",
           "base_sha": "a6ff8d56cc5fd84b3eada9f6c745e43c70aa810b",
           "jobs": {
-            "Validate worker-visible PostgreSQL 18 migration chain": "in_progress",
-            "Validate worker-visible PHP and Symfony": "in_progress"
+            "Validate worker-visible PHP and Symfony": "success; Composer audit passed; PHPStan passed; PHPUnit 1823 tests, 13203 assertions (1 deprecation, 26 notices)",
+            "Validate worker-visible PostgreSQL 18 migration chain": "success"
           },
           "pr": 559,
           "ci_validation_pr": 560,
-          "correction": "Exact-head rerun after PHPUnit route/header assertion failures and fixture-cleanup hardening."
+          "correction": "Exact-head rerun passed after route naming, cache-header assertion and fixture cleanup corrections."
         }
       ],
-      "next_action": "Monitor exact-head Worker CI run 38794718827 on SHA 00059292948d10a6fbdc9681ff042acbaf5e9302. Fix only allowed paths if needed; when green, record PHPStan/audit/PHPUnit and PostgreSQL results, mark worker_complete_awaiting_trusted_review and leave both PRs open drafts.",
+      "next_action": "Await Trusted review on open draft PR #559. CI-only validation PR #560 also stays open as a draft. Do not merge or deploy. After Trusted resolution, rebase on then-current worker/main if needed and rerun exact-head CI.",
       "active_head": "00059292948d10a6fbdc9681ff042acbaf5e9302",
       "last_observed_head": "00059292948d10a6fbdc9681ff042acbaf5e9302",
       "worker_pr_head_sha": "00059292948d10a6fbdc9681ff042acbaf5e9302",
-      "last_checkpoint_at": "2026-10-15T19:33:07Z",
+      "last_checkpoint_at": "2026-10-15T19:38:28Z",
       "last_verified_push_at": "2026-10-15T19:30:59Z",
       "ci_run": 38794718827,
       "ci_run_url": "https://github.com/Gravarium/gaming-cms-worker/actions/runs/38794718827",
       "ci_validation_pr": 560,
       "ci_head": "00059292948d10a6fbdc9681ff042acbaf5e9302",
-      "ci_conclusion": null
+      "ci_conclusion": "success",
+      "final_head": "00059292948d10a6fbdc9681ff042acbaf5e9302"
     }
   ],
   "recovery_queue": [],
