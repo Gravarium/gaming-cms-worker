@@ -11,7 +11,7 @@
   "baseline_branch": "main",
   "base_sha": "2f98de43e3cf4a26addb436cf9908b4135f2bdc6",
   "published_at": "2026-10-15T11:45:13Z",
-  "summary": "WCP-719 and WCP-720 remain open drafts awaiting Trusted review. WCP-721 is claimed from the exact green WCP-720 head; feature PR #561 and CI-only PR #562 target exact head 7f1bf6daaa51b8e7b55e7cf51de5cc6f053583b1, with Worker CI run 38796294140 in progress.",
+  "summary": "WCP-719, WCP-720, and WCP-721 have exact-head green Worker CI and remain open drafts awaiting Trusted review. WCP-721 final head 7f1bf6daaa51b8e7b55e7cf51de5cc6f053583b1 passed run 38796294140; feature PR #561 and CI-only PR #562.",
   "rules": {
     "choose": "Resume the current chat's unfinished claimed branch first. Otherwise atomically claim an eligible published task. If no published task is eligible, independently derive and publish a bounded worker-only CMS proposal from approved product goals and observed code gaps; do not ask the owner for the next FCP number.",
     "atomic_reservation": "Create the exact claim_branch and suggested feature branch from that task's published proposal_base_sha. If the claim already exists, treat it as a hard lock; the owning continuation resumes it and every other AI skips it.",
@@ -73319,7 +73319,7 @@
       "package_id": "WCP-721",
       "title": "Export the current failed-message queue page as a safe CSV",
       "risk": "low_admin_read_only_export",
-      "execution_state": "worker_in_progress",
+      "execution_state": "worker_complete_awaiting_trusted_review",
       "claim_generation": 1,
       "claim_branch": "claim/wcp-721-failed-queue-page-csv-g1",
       "suggested_branch": "feature/wcp-721-failed-queue-page-csv-g1",
@@ -73404,17 +73404,42 @@
         "never-merge-or-deploy-to-Trusted"
       ],
       "worker_pr_state": "open_draft",
-      "next_action": "Wait for Worker CI run 38796294140 on exact head 7f1bf6daaa51b8e7b55e7cf51de5cc6f053583b1; fix any failures within the five reserved paths, then record the exact green HEAD and run. Never merge or deploy.",
-      "claim_state": "active",
+      "next_action": "Await Trusted review on draft PR #561; CI-only PR #562 stays open as draft. Do not merge or deploy. After Trusted resolution, rebase on then-current worker/main if needed and rerun exact-head CI.",
+      "claim_state": "locked_until_trusted_resolution",
       "claimed_on": "2026-10-15T19:40:06Z",
       "lease_expires_at": "2026-10-16T02:40:06Z",
       "active_head": "7f1bf6daaa51b8e7b55e7cf51de5cc6f053583b1",
       "last_observed_head": "7f1bf6daaa51b8e7b55e7cf51de5cc6f053583b1",
-      "last_checkpoint_at": "2026-10-15T19:44:53.268Z",
+      "last_checkpoint_at": "2026-10-15T19:49:22.601Z",
       "worker_pr": 561,
       "validation_pr": 562,
       "ci_run_id": 38796294140,
-      "ci_result": "in_progress"
+      "ci_result": "success",
+      "final_head": "7f1bf6daaa51b8e7b55e7cf51de5cc6f053583b1",
+      "green_head": "7f1bf6daaa51b8e7b55e7cf51de5cc6f053583b1",
+      "worker_ci_run_id": 38796294140,
+      "validation_pr_state": "open_draft",
+      "completed_on": "2026-10-15T19:49:22.601Z",
+      "completion_report": [
+        "Exact final and green Worker head 7f1bf6daaa51b8e7b55e7cf51de5cc6f053583b1; feature PR #561 and CI-only PR #562 remain open drafts.",
+        "Worker CI run 38796294140 passed, including PHP/Symfony validation and PostgreSQL 18 migration-chain validation.",
+        "Application test job passed: 1,829 tests, 13,252 assertions, 1 PHPUnit deprecation, and 26 PHPUnit notices.",
+        "CSV download is guarded by CMS_SETTINGS_MANAGE, page-bounded, formula-neutralized, and limited to the approved summary columns; no message payload, raw headers, recipient data, or exception text is exported.",
+        "No merge or deployment performed."
+      ],
+      "test_evidence": [
+        "Exact-head Worker CI run 38796294140 succeeded on 7f1bf6daaa51b8e7b55e7cf51de5cc6f053583b1.",
+        "PHP/Symfony validation, PHPStan, Composer audit, Twig/container/mapping validation and all application tests passed.",
+        "PostgreSQL 18 complete migration chain validation passed.",
+        "Exporter and controller tests cover CSV shape, UTC conversion, formula neutralization, current-page bounds, omission of sensitive payload data, malformed query inputs, safe headers, and permission denial."
+      ],
+      "final_changed_paths": [
+        "src/Messenger/FailedMessageCsvExporter.php",
+        "src/Controller/AdminQueueCsvController.php",
+        "templates/admin/queue/index.html.twig",
+        "tests/Messenger/FailedMessageCsvExporterTest.php",
+        "tests/Controller/AdminQueueCsvControllerTest.php"
+      ]
     }
   ],
   "recovery_queue": [],
