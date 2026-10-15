@@ -10409,17 +10409,8 @@
       "proposal_kind": "worker_only",
       "collision_check": {
         "compared_against": "all current continuous/work-pool-v4 published allowlists and every active/lo
-... 2909643 bytes omitted ...
-explicitly forbidden.",
-        "paths": [
-          "src/CompetitionParticipantAdmin/ParticipantManagement.php",
-          "src/Controller/AdminCompetitionParticipantController.php",
-          "templates/admin/competition_participant/index.html.twig",
-          "tests/Controller/AdminCompetitionParticipantTest.php"
-        ]
-      },
-      "priority_rationale": "No dependency-safe published FCP exists. The base domain already supports withdrawn/disqualified states and seeds, but no manager workflow exposes them; completing participant administration has direct functional value for the Competition module.",
-      "code_gap_evidence": "On exact Worker main, CompetitionParticipant defines seed, withdraw and disqualify operations, while AdminCompetitionController exposes creation, opening, seeding matches, scheduling and disputes but no participant board or participant lifecycle actions.",
+... 2910259 bytes omitted ...
+     "code_gap_evidence": "On exact Worker main, CompetitionParticipant defines seed, withdraw and disqualify operations, while AdminCompetitionController exposes creation, opening, seeding matches, scheduling and disputes but no participant board or participant lifecycle actions.",
       "claimed_on": "2026-09-30T23:17:30.000Z",
       "claim_generation": 1,
       "lease_expires_at": null,
@@ -20496,7 +20487,7 @@ explicitly forbidden.",
       "suggested_branch": "feature/wcp-714-content-release-feed-directory-g1",
       "resume_branch": "feature/wcp-714-content-release-feed-directory-g1",
       "claimed_on": "2026-10-15T02:44:30Z",
-      "lease_expires_at": "2026-10-15T09:44:30Z",
+      "lease_expires_at": "2026-10-15T09:46:15Z",
       "base_branch": "feature/wcp-713-public-content-release-atom-feed-g1",
       "base_sha": "c2cbd18e625e51de38ff6027ef8d2e751d63b974",
       "proposal_base_branch": "feature/wcp-713-public-content-release-atom-feed-g1",
@@ -20544,7 +20535,19 @@ explicitly forbidden.",
         "red-ci-stops-integration",
         "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
       ],
-      "next_action": "Implement the dedicated public feed directory on exact green WCP-713 HEAD; do not modify locked release archive or feed templates."
+      "active_head": "f04e7adeb41a7394b96f977f67fe06930b0725ba",
+      "last_observed_head": "f04e7adeb41a7394b96f977f67fe06930b0725ba",
+      "last_checkpoint_at": "2026-10-15T02:46:34Z",
+      "last_verified_push_at": "2026-10-15T02:46:15Z",
+      "worker_pr_state": "open_draft",
+      "worker_pr_head_sha": "f04e7adeb41a7394b96f977f67fe06930b0725ba",
+      "worker_pr": 548,
+      "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/548",
+      "ci_validation_pr": 549,
+      "ci_result": "in_progress",
+      "ci_run": null,
+      "ci_history": [],
+      "next_action": "PR #548 and exact-head CI validation PR #549 are open drafts at f04e7adeb41a7394b96f977f67fe06930b0725ba. Await full PHP/Symfony and PostgreSQL 18 CI; do not merge or deploy."
     }
   ],
   "recovery_queue": [],
