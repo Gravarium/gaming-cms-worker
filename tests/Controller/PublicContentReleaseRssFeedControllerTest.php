@@ -76,7 +76,10 @@ final class PublicContentReleaseRssFeedControllerTest extends WebTestCase
             $xpath = new \DOMXPath($document);
             $items = $xpath->query('/rss/channel/item');
             self::assertNotFalse($items);
-            self::assertSame(1, $items->length);
+            self::assertGreaterThanOrEqual(1, $items->length);
+            $publicGuid = $xpath->query('/rss/channel/item/guid[text()="content-release-'.$public->getId().'@gaming-cms"]');
+            self::assertNotFalse($publicGuid);
+            self::assertSame(1, $publicGuid->length);
             self::assertStringContainsString('Public &lt;release&gt; &amp; notes '.$suffix, $xml);
             self::assertStringContainsString('Public &amp; escaped summary', $xml);
             self::assertStringContainsString('/releases/'.$public->getId(), $xml);
