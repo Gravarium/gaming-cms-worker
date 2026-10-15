@@ -10,6 +10,11 @@ use PHPUnit\Framework\TestCase;
 
 final class MediaAccessibilityReportCsvTest extends TestCase
 {
+    public function testEmptyExportKeepsTheStableHeader(): void
+    {
+        self::assertSame("asset_id,mime_type,created_at_utc\r\n", (new MediaAccessibilityReportCsv())->encode([]));
+    }
+
     public function testCsvHasStablePrivacyPreservingHeadersAndNeutralizesFormulaText(): void
     {
         $asset = (new MediaAsset())->setMimeType('=1+1');

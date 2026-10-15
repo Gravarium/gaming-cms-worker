@@ -11,7 +11,7 @@ use App\Security\CmsPermission;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
-final class AdminMediaAccessibilityCsvControllerTest extends WebTestCase
+final class AdminMediaAccessibilityReportCsvTest extends WebTestCase
 {
     public function testAuthorizedCsvIsBoundedPrivateAndExcludesStorageDetails(): void
     {
@@ -42,6 +42,9 @@ final class AdminMediaAccessibilityCsvControllerTest extends WebTestCase
             self::assertStringContainsString((string) $assetId.',image/png,', $body);
             self::assertStringNotContainsString('private-export-name-', $body);
             self::assertStringNotContainsString('private-export-location-', $body);
+            $storedAsset = $this->em($client)->find(MediaAsset::class, $assetId);
+            self::assertSame($asset->getOriginalName(), $storedAsset?->getOriginalName());
+            self::assertSame($asset->getLocation(), $storedAsset?->getLocation());
         } finally {
             $this->cleanup($client, $asset, $user);
         }
