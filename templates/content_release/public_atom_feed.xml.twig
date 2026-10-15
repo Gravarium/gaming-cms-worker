@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <id>{{ feed.feed_id|e('html') }}</id>
+  <title>{{ feed.title|e('html') }}</title>
+  <link href="{{ feed.feed_url|e('html_attr') }}" rel="self" />
+  <updated>{{ feed.updated|e('html') }}</updated>
+{% for entry in feed.entries %}  <entry>
+    <id>{{ entry.id|e('html') }}</id>
+    <title>{{ entry.title|e('html') }}</title>
+    <link href="{{ entry.url|e('html_attr') }}" />
+    <updated>{{ entry.updated|e('html') }}</updated>
+    <summary>{{ entry.summary|e('html') }}</summary>
+  </entry>
+{% endfor %}</feed>
