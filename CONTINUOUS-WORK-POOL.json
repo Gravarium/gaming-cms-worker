@@ -11,7 +11,7 @@
   "baseline_branch": "main",
   "base_sha": "2f98de43e3cf4a26addb436cf9908b4135f2bdc6",
   "published_at": "2026-10-15T01:47:45Z",
-  "summary": "WCP-710 completed at exact green HEAD 84141ebf3085cbbe4546febcd716b949a0f1bcae (runs 38668395865 and 38668397357). WCP-709 remains unmerged due to its templates/game_catalogue/ prefix conflict with locked FCP-056. WCP-711 completed at exact green HEAD c05380d017ca4d991d8c462a7e5c8996ef49a2eb (runs 38669457988 and 38669457185); PRs #542/#543 await Trusted review.",
+  "summary": "WCP-710 and WCP-711 completed at exact green HEADs awaiting Trusted review. WCP-709 remains unmerged due to its locked FCP-056 template-prefix conflict. WCP-712 is claimed for bounded, formula-safe public content release CSV export.",
   "rules": {
     "choose": "Resume the current chat's unfinished claimed branch first. Otherwise atomically claim an eligible published task. If no published task is eligible, independently derive and publish a bounded worker-only CMS proposal from approved product goals and observed code gaps; do not ask the owner for the next FCP number.",
     "atomic_reservation": "Create the exact claim_branch and suggested feature branch from that task's published proposal_base_sha. If the claim already exists, treat it as a hard lock; the owning continuation resumes it and every other AI skips it.",
@@ -72054,6 +72054,98 @@
       "ci_conclusion": "success",
       "ci_head": "c05380d017ca4d991d8c462a7e5c8996ef49a2eb",
       "completed_at": "2026-10-15T02:14:06Z"
+    },
+    {
+      "priority": 712,
+      "package_id": "WCP-712",
+      "title": "Download the public content release archive as CSV",
+      "risk": "low_public_read_only",
+      "execution_state": "worker_in_progress",
+      "claim_state": "claimed",
+      "claim_generation": 1,
+      "claim_branch": "claim/wcp-712-public-content-release-csv-g1",
+      "suggested_branch": "feature/wcp-712-public-content-release-csv-g1",
+      "resume_branch": "feature/wcp-712-public-content-release-csv-g1",
+      "claimed_on": "2026-10-15T02:15:02Z",
+      "lease_expires_at": "2026-10-15T09:15:02Z",
+      "base_branch": "main",
+      "base_sha": "a6ff8d56cc5fd84b3eada9f6c745e43c70aa810b",
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "a6ff8d56cc5fd84b3eada9f6c745e43c70aa810b",
+      "active_base_branch": "main",
+      "active_base_sha": "a6ff8d56cc5fd84b3eada9f6c745e43c70aa810b",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "proposal_kind": "worker_only",
+      "objective": "Provide a portable CSV export of the already-public content release archive without exposing unpublished releases or editor/user metadata.",
+      "acceptance_checks": [
+        "Add GET /releases.csv that reuses existing public published-release repository queries, excludes drafts/scheduled/future releases and returns 404 while the content module is disabled.",
+        "Export only release name, description and publication timestamp; use deterministic ordering and ISO-8601 timestamps without internal identifiers or author data.",
+        "Use standard CSV quoting, neutralize spreadsheet formula-leading values, and return a stable attachment filename with no-store and nosniff headers.",
+        "Bound the export to 10,000 published releases, paginate using the existing repository API, and return 413 instead of silently truncating larger archives.",
+        "Functional coverage proves public visibility, unpublished exclusion, 21-row pagination, formula safety, CSV quoting, response headers and module gating."
+      ],
+      "collision_check": {
+        "compared_against": "Live continuous/work-pool-v4 blob c5fea7939cf2ac5dbb30d2b2225ffd62d8749b80; 207 active/locked claims; checked exact and ancestor/descendant prefix overlaps for the four paths. No prior content-release CSV proposal found.",
+        "result": "Zero exact or prefix path overlaps.",
+        "paths": [
+          "src/ContentReleaseExport/PublicContentReleaseCsvExporter.php",
+          "src/Controller/PublicContentReleaseCsvController.php",
+          "tests/ContentReleaseExport/PublicContentReleaseCsvExporterTest.php",
+          "tests/Controller/PublicContentReleaseCsvControllerTest.php"
+        ]
+      },
+      "allowed_paths": [
+        "src/ContentReleaseExport/PublicContentReleaseCsvExporter.php",
+        "src/Controller/PublicContentReleaseCsvController.php",
+        "tests/ContentReleaseExport/PublicContentReleaseCsvExporterTest.php",
+        "tests/Controller/PublicContentReleaseCsvControllerTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "CONTINUOUS-WORKER.md",
+        "CONTINUOUS-WORK-POOL.json",
+        ".github/workflows/",
+        "migrations/",
+        "src/Entity/",
+        "src/Repository/",
+        "src/Security/",
+        "src/Controller/PublicContentReleaseController.php",
+        "src/Repository/ContentReleaseRepository.php"
+      ],
+      "tests": [
+        "focused public export unit and functional tests using rolled-back fixture transactions",
+        "complete exact-head Worker CI including PHP/Symfony and PostgreSQL 18"
+      ],
+      "completion_report": [
+        "exact final Worker HEAD",
+        "complete changed-path list and worker PR",
+        "targeted tests and CI outcomes",
+        "unresolved risks and assumptions"
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "preserve-existing-public-content-release-visibility-and-module-gating",
+        "no-schema-entity-or-repository-changes",
+        "no-CI-security-weakening",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
+      ],
+      "active_head": "a6ff8d56cc5fd84b3eada9f6c745e43c70aa810b",
+      "last_observed_head": "a6ff8d56cc5fd84b3eada9f6c745e43c70aa810b",
+      "last_checkpoint_at": "2026-10-15T02:15:02Z",
+      "last_verified_push_at": "2026-10-15T02:15:02Z",
+      "worker_pr_state": "not_opened",
+      "ci_result": "not_started",
+      "next_action": "Implement only the four approved files, test using transaction rollback, then open the feature and exact-head Worker CI validation PRs. No merge or deployment."
     }
   ],
   "recovery_queue": [],
