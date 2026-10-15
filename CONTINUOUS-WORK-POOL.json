@@ -11,7 +11,7 @@
   "baseline_branch": "main",
   "base_sha": "2f98de43e3cf4a26addb436cf9908b4135f2bdc6",
   "published_at": "2026-10-15T01:47:45Z",
-  "summary": "WCP-710, WCP-711 and WCP-712 all have exact-head green Worker CI and open draft PRs awaiting Trusted review. WCP-709 remains held unmerged because its template prefix overlaps locked FCP-056. WCP-712 exact green HEAD is 93806b37b3e48cb9348f60323259fd65e3a3fcd9, run 38670378468; duplicate run 38670378786 is still in progress.",
+  "summary": "WCP-710, WCP-711 and WCP-712 have exact-head green Worker CI and open draft PRs awaiting Trusted review. WCP-709 remains held unmerged because its template prefix overlaps locked FCP-056. WCP-712 exact green HEAD is 93806b37b3e48cb9348f60323259fd65e3a3fcd9; both runs 38670378468 and 38670378786 passed.",
   "rules": {
     "choose": "Resume the current chat's unfinished claimed branch first. Otherwise atomically claim an eligible published task. If no published task is eligible, independently derive and publish a bounded worker-only CMS proposal from approved product goals and observed code gaps; do not ask the owner for the next FCP number.",
     "atomic_reservation": "Create the exact claim_branch and suggested feature branch from that task's published proposal_base_sha. If the claim already exists, treat it as a hard lock; the owning continuation resumes it and every other AI skips it.",
@@ -72141,11 +72141,11 @@
       ],
       "active_head": "93806b37b3e48cb9348f60323259fd65e3a3fcd9",
       "last_observed_head": "93806b37b3e48cb9348f60323259fd65e3a3fcd9",
-      "last_checkpoint_at": "2026-10-15T02:24:06Z",
+      "last_checkpoint_at": "2026-10-15T02:24:40Z",
       "last_verified_push_at": "2026-10-15T02:19:29Z",
       "worker_pr_state": "open_draft",
       "ci_result": "success",
-      "next_action": "Exact HEAD 93806b37b3e48cb9348f60323259fd65e3a3fcd9 passed full Worker CI run 38670378468 (PHP/Symfony and PostgreSQL 18). Feature PR #544 and CI PR #545 remain open drafts awaiting Trusted review. Duplicate run 38670378786 is still in progress. Preserve completed lock; no merge/deployment.",
+      "next_action": "Exact HEAD 93806b37b3e48cb9348f60323259fd65e3a3fcd9 passed both complete Worker CI runs 38670378468 and 38670378786 (each PHP/Symfony and PostgreSQL 18 green). PR #544 and CI PR #545 remain open drafts awaiting Trusted review. Preserve completed lock; no merge/deployment.",
       "worker_pr_head_sha": "93806b37b3e48cb9348f60323259fd65e3a3fcd9",
       "worker_pr": 544,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/544",
@@ -72166,7 +72166,7 @@
         },
         {
           "run": 38670378786,
-          "result": "in_progress",
+          "result": "success",
           "sha": "93806b37b3e48cb9348f60323259fd65e3a3fcd9"
         },
         {
