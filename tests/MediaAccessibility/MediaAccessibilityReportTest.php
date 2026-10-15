@@ -76,6 +76,35 @@ final class MediaAccessibilityReportTest extends KernelTestCase
         $report->page($first['pages'] + 1);
     }
 
+    public function testExportIsDescendingAndDetectsRowsBeyondTheBound(): void
+    {
+        self::bootKernel();
+        $entityManager = static::getContainer()->get(EntityManagerInterface::class);
+        $report = static::getContainer()->get(MediaAccessibilityReport::class);
+        $fixtures = [
+            $this->asset('export-a.png', 'image/png', null),
+            $this->asset('export-b.png', 'image/png', null),
+            $this->asset('export-c.png', 'image/png', null),
+        ];
+
+        try {
+            foreach ($fixtures as $asset) {
+                $entityManager->persist($asset);
+            }
+            $entityManager->flush();
+
+            $export = $report->export(2);
+            self::assertTrue($export['truncated']);
+            $expected = array_slice($this->sortedDescending($this->ids($fixtures)), 0, 2);
+            self::assertSame($expected, $this->ids($export['assets']));
+        } finally {
+            foreach ($fixtures as $asset) {
+                $entityManager->remove($asset);
+            }
+            $entityManager->flush();
+        }
+    }
+
     #[DataProvider('invalidPages')]
     public function testReportRejectsInvalidPageBounds(int $page): void
     {

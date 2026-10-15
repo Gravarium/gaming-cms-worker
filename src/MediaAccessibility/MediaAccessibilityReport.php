@@ -12,6 +12,7 @@ final readonly class MediaAccessibilityReport
 {
     public const PAGE_SIZE = 25;
     public const MAX_PAGE = 10_000;
+    public const MAX_EXPORT_ROWS = 10_000;
 
     public function __construct(private EntityManagerInterface $entityManager)
     {
@@ -57,6 +58,23 @@ final readonly class MediaAccessibilityReport
             'pageSize' => self::PAGE_SIZE,
             'limitReached' => $unboundedPages > self::MAX_PAGE,
         ];
+    }
+
+    /** @return array{assets: list<MediaAsset>, truncated: bool} */
+    public function export(int $limit = self::MAX_EXPORT_ROWS): array
+    {
+        if ($limit < 1 || $limit > self::MAX_EXPORT_ROWS) {
+            throw new \InvalidArgumentException('Export limit is outside the allowed range.');
+        }
+
+        /** @var list<MediaAsset> $assets */
+        $assets = $this->query()->select('asset')->orderBy('asset.id', 'DESC')->setMaxResults($limit + 1)->getQuery()->getResult();
+        $truncated = count($assets) > $limit;
+        if ($truncated) {
+            array_pop($assets);
+        }
+
+        return ['assets' => $assets, 'truncated' => $truncated];
     }
 
     private function query(): QueryBuilder
