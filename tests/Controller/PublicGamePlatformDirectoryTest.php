@@ -20,8 +20,8 @@ final class PublicGamePlatformDirectoryTest extends WebTestCase
         $client->disableReboot();
         $entityManager = $client->getContainer()->get('doctrine')->getManager();
         self::assertInstanceOf(EntityManagerInterface::class, $entityManager);
-        $previousGaming = $this->setModuleEnabled($entityManager, 'gaming', true);
-        $previousContent = $this->setModuleEnabled($entityManager, 'content', true);
+        $previousGaming = $this->prepareModule($entityManager, 'gaming');
+        $previousContent = $this->prepareModule($entityManager, 'content');
         $suffix = bin2hex(random_bytes(4));
 
         $platform = new GamePlatform('WCP709 PC '.$suffix, 'wcp709-pc-'.$suffix);
@@ -72,31 +72,61 @@ final class PublicGamePlatformDirectoryTest extends WebTestCase
         }
     }
 
-    private function setModuleEnabled(EntityManagerInterface $entityManager, string $moduleKey, bool $enabled): ?bool
+    /** @return array{exists: bool, installed: bool, enabled: bool, version: ?string} */
+    private function prepareModule(EntityManagerInterface $entityManager, string $moduleKey): array
     {
         $state = $entityManager->getRepository(CmsModuleState::class)->find($moduleKey);
-        $previous = $state?->isEnabled();
+        $previous = [
+            'exists' => $state instanceof CmsModuleState,
+            'installed' => $state?->isInstalled() ?? false,
+            'enabled' => $state?->isEnabled() ?? true,
+            'version' => $state?->getInstalledVersion(),
+        ];
+
         if (!$state instanceof CmsModuleState) {
-            $state = (new CmsModuleState())->setModuleKey($moduleKey)->updateVersion('1.0.0');
+            $state = (new CmsModuleState())->setModuleKey($moduleKey);
         }
-        $state->setEnabled($enabled);
+        if (!$state->isInstalled()) {
+            $state->install($state->getInstalledVersion() ?? '1.0.0');
+        }
+        $state->setEnabled(true);
         $entityManager->persist($state);
         $entityManager->flush();
 
         return $previous;
     }
 
-    private function restoreModuleState(EntityManagerInterface $entityManager, string $moduleKey, ?bool $previous): void
+    /** @param array{exists: bool, installed: bool, enabled: bool, version: ?string} $previous */
+    private function restoreModuleState(EntityManagerInterface $entityManager, string $moduleKey, array $previous): void
     {
         $state = $entityManager->getRepository(CmsModuleState::class)->find($moduleKey);
+        if (!$previous['exists']) {
+            if ($state instanceof CmsModuleState) {
+                $entityManager->remove($state);
+                $entityManager->flush();
+            }
+
+            return;
+        }
         if (!$state instanceof CmsModuleState) {
             return;
         }
-        if ($previous === null) {
-            $entityManager->remove($state);
+
+        if ($previous['installed']) {
+            if (!$state->isInstalled()) {
+                $state->install($previous['version'] ?? '1.0.0');
+            }
+            if ($previous['version'] !== null && $state->getInstalledVersion() !== $previous['version']) {
+                $state->updateVersion($previous['version']);
+            }
+            $state->setEnabled($previous['enabled']);
         } else {
-            $state->setEnabled($previous);
+            $state->removePackage();
+            if ($previous['version'] !== null && $state->getInstalledVersion() !== $previous['version']) {
+                $state->updateVersion($previous['version']);
+            }
         }
+        $entityManager->persist($state);
         $entityManager->flush();
     }
 }
