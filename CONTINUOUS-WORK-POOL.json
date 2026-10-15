@@ -73230,16 +73230,23 @@
         "red-CI-stops-integration",
         "never-merge-or-deploy-to-Trusted"
       ],
-      "worker_pr_state": "not_open",
-      "worker_pr": null,
-      "worker_pr_url": null,
-      "ci_result": "pending",
-      "ci_history": [],
-      "next_action": "Open a draft PR against the exact green WCP-718 base, inspect full exact-head Worker CI and fix only allowed paths if it reports regressions.",
+      "worker_pr_state": "open_draft",
+      "worker_pr": 559,
+      "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/559",
+      "ci_result": "pending_workflow_discovery",
+      "ci_history": [
+        {
+          "head": "753645c4c085ff3bfc0aaa966b6572114d707c62",
+          "result": "pending_workflow_discovery",
+          "pr": 559,
+          "note": "Draft PR opened; awaiting discovery of required exact-head Worker CI jobs."
+        }
+      ],
+      "next_action": "Inspect exact-head Worker CI for PR #559. If it is red, correct only allowed paths, push a coherent checkpoint and rerun all required exact-head checks. If green, record the run, test totals and final exact head; keep this open draft awaiting Trusted review.",
       "active_head": "753645c4c085ff3bfc0aaa966b6572114d707c62",
       "last_observed_head": "753645c4c085ff3bfc0aaa966b6572114d707c62",
       "worker_pr_head_sha": "753645c4c085ff3bfc0aaa966b6572114d707c62",
-      "last_checkpoint_at": "2026-10-15T19:15:46Z",
+      "last_checkpoint_at": "2026-10-15T19:16:04Z",
       "last_verified_push_at": "2026-10-15T19:15:46Z",
       "ci_run": null,
       "ci_run_url": null
