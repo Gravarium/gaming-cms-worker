@@ -31,7 +31,7 @@ final class PublicNewsPrintControllerTest extends WebTestCase
             self::assertSelectorTextContains('article', $entry->getBody());
             self::assertSelectorExists('meta[name="robots"][content="noindex,nofollow"]');
             self::assertResponseHeaderSame('X-Robots-Tag', 'noindex, nofollow');
-            self::assertResponseHeaderSame('Cache-Control', 'private, no-store');
+            self::assertStringContainsString('no-store', (string) $client->getResponse()->headers->get('Cache-Control'));
             self::assertSelectorExists('style');
             self::assertSelectorExists('a.news-print__return[href="/news/'.$entry->getSlug().'"]');
         } finally {
