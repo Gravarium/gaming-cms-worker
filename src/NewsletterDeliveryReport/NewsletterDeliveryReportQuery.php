@@ -123,13 +123,18 @@ final readonly class NewsletterDeliveryReportQuery
             ];
         }
 
-        $lastCampaign = $campaigns === [] ? null : $campaigns[array_key_last($campaigns)];
+        $nextCursor = null;
+        if ($hasMore) {
+            $lastCampaign = end($campaigns);
+            if ($lastCampaign === false) {
+                throw new \LogicException('A newsletter report lookahead requires a visible campaign.');
+            }
+            $nextCursor = $this->encodeCursor($lastCampaign);
+        }
 
         return [
             'campaigns' => $reportCampaigns,
-            'nextCursor' => $hasMore && $lastCampaign !== null
-                ? $this->encodeCursor($lastCampaign)
-                : null,
+            'nextCursor' => $nextCursor,
         ];
     }
 
