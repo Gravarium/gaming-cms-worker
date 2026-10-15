@@ -127,7 +127,7 @@ final readonly class NewsletterDeliveryReportQuery
 
         return [
             'campaigns' => $reportCampaigns,
-            'nextCursor' => $hasMore && $lastCampaign instanceof NewsletterCampaign
+            'nextCursor' => $hasMore && $lastCampaign !== null
                 ? $this->encodeCursor($lastCampaign)
                 : null,
         ];
