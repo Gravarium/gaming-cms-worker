@@ -11,7 +11,7 @@
   "baseline_branch": "main",
   "base_sha": "2f98de43e3cf4a26addb436cf9908b4135f2bdc6",
   "published_at": "2026-10-15T01:47:45Z",
-  "summary": "WCP-710 and WCP-711 completed at exact green HEADs awaiting Trusted review. WCP-709 remains unmerged due to the FCP-056 prefix conflict. WCP-712 corrected the test to tolerate two seeded public releases while verifying 20-row pagination; exact-head CI runs 38670378786 and 38670378468 are pending.",
+  "summary": "WCP-710, WCP-711 and WCP-712 all have exact-head green Worker CI and open draft PRs awaiting Trusted review. WCP-709 remains held unmerged because its template prefix overlaps locked FCP-056. WCP-712 exact green HEAD is 93806b37b3e48cb9348f60323259fd65e3a3fcd9, run 38670378468; duplicate run 38670378786 is still in progress.",
   "rules": {
     "choose": "Resume the current chat's unfinished claimed branch first. Otherwise atomically claim an eligible published task. If no published task is eligible, independently derive and publish a bounded worker-only CMS proposal from approved product goals and observed code gaps; do not ask the owner for the next FCP number.",
     "atomic_reservation": "Create the exact claim_branch and suggested feature branch from that task's published proposal_base_sha. If the claim already exists, treat it as a hard lock; the owning continuation resumes it and every other AI skips it.",
@@ -72060,14 +72060,14 @@
       "package_id": "WCP-712",
       "title": "Download the public content release archive as CSV",
       "risk": "low_public_read_only",
-      "execution_state": "worker_in_progress",
-      "claim_state": "claimed",
+      "execution_state": "worker_complete_awaiting_trusted_review",
+      "claim_state": "locked_until_trusted_resolution",
       "claim_generation": 1,
       "claim_branch": "claim/wcp-712-public-content-release-csv-g1",
       "suggested_branch": "feature/wcp-712-public-content-release-csv-g1",
       "resume_branch": "feature/wcp-712-public-content-release-csv-g1",
       "claimed_on": "2026-10-15T02:15:02Z",
-      "lease_expires_at": "2026-10-15T09:15:02Z",
+      "lease_expires_at": null,
       "base_branch": "main",
       "base_sha": "a6ff8d56cc5fd84b3eada9f6c745e43c70aa810b",
       "proposal_base_branch": "main",
@@ -72141,17 +72141,17 @@
       ],
       "active_head": "93806b37b3e48cb9348f60323259fd65e3a3fcd9",
       "last_observed_head": "93806b37b3e48cb9348f60323259fd65e3a3fcd9",
-      "last_checkpoint_at": "2026-10-15T02:19:47Z",
+      "last_checkpoint_at": "2026-10-15T02:24:06Z",
       "last_verified_push_at": "2026-10-15T02:19:29Z",
       "worker_pr_state": "open_draft",
-      "ci_result": "pending",
-      "next_action": "Run 38670055358 failed only because the full suite includes two public release fixtures and the test asserted an exact total. The test now verifies all 21 package fixtures and the exporter pages at 20 rows. New exact-head runs 38670378786 and 38670378468 are queued/in progress at 93806b37b3e48cb9348f60323259fd65e3a3fcd9. No merge or deployment.",
+      "ci_result": "success",
+      "next_action": "Exact HEAD 93806b37b3e48cb9348f60323259fd65e3a3fcd9 passed full Worker CI run 38670378468 (PHP/Symfony and PostgreSQL 18). Feature PR #544 and CI PR #545 remain open drafts awaiting Trusted review. Duplicate run 38670378786 is still in progress. Preserve completed lock; no merge/deployment.",
       "worker_pr_head_sha": "93806b37b3e48cb9348f60323259fd65e3a3fcd9",
       "worker_pr": 544,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/544",
       "ci_validation_pr": 545,
-      "ci_run": 38670378786,
-      "ci_run_url": "https://github.com/Gravarium/gaming-cms-worker/actions/runs/38670378786",
+      "ci_run": 38670378468,
+      "ci_run_url": "https://github.com/Gravarium/gaming-cms-worker/actions/runs/38670378468",
       "ci_history": [
         {
           "run": 38670055358,
@@ -72171,10 +72171,14 @@
         },
         {
           "run": 38670378468,
-          "result": "queued",
+          "result": "success",
           "sha": "93806b37b3e48cb9348f60323259fd65e3a3fcd9"
         }
-      ]
+      ],
+      "final_head": "93806b37b3e48cb9348f60323259fd65e3a3fcd9",
+      "ci_head": "93806b37b3e48cb9348f60323259fd65e3a3fcd9",
+      "ci_conclusion": "success",
+      "completed_at": "2026-10-15T02:24:06Z"
     }
   ],
   "recovery_queue": [],
