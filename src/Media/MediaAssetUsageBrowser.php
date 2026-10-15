@@ -25,14 +25,15 @@ final readonly class MediaAssetUsageBrowser
     }
 
     /**
-     * @return array{items: list<array{id: int, title: string, type: string, status: string, areas: list<string>}>, truncated: bool}
+     * @return array{items: list<array{id: int, title: string, type: string, status: string, areas: list<string>}>, hasMore: bool, nextCursor: ?string}
      */
-    public function contentReferences(MediaAsset $asset): array
+    public function contentReferences(MediaAsset $asset, ?string $cursor = null): array
     {
         $location = $asset->getLocation();
         $assetId = $asset->getId();
+        $afterId = $this->decodeContentCursor($cursor, $assetId);
         if ($location === '' && $assetId === null) {
-            return ['items' => [], 'truncated' => false];
+            return ['items' => [], 'hasMore' => false, 'nextCursor' => null];
         }
 
         $conditions = [];
@@ -51,23 +52,28 @@ final readonly class MediaAssetUsageBrowser
             ->andWhere('('.implode(' OR ', $conditions).')')
             ->orderBy('entry.id', 'ASC')
             ->setMaxResults(self::MAX_CONTENT_CANDIDATES + 1);
+        if ($afterId !== null) {
+            $queryBuilder->andWhere('entry.id > :afterId')->setParameter('afterId', $afterId);
+        }
         foreach ($parameters as $name => $value) {
             $queryBuilder->setParameter($name, $value);
         }
 
         /** @var list<ContentEntry> $entries */
         $entries = $queryBuilder->getQuery()->getResult();
-        $truncated = count($entries) > self::MAX_CONTENT_CANDIDATES;
-        if ($truncated) {
-            array_pop($entries);
-        }
+        $hasMoreCandidates = count($entries) > self::MAX_CONTENT_CANDIDATES;
+        $entries = array_slice($entries, 0, self::MAX_CONTENT_CANDIDATES);
 
         $items = [];
+        $lastScannedId = null;
+        $lastIncludedId = null;
+        $hasMoreReferences = false;
         foreach ($entries as $entry) {
             $id = $entry->getId();
             if ($id === null) {
                 continue;
             }
+            $lastScannedId = $id;
 
             $areas = [];
             if ($location !== '' && $entry->getExcerpt() !== null && str_contains($entry->getExcerpt(), $location)) {
@@ -83,6 +89,12 @@ final readonly class MediaAssetUsageBrowser
                 continue;
             }
 
+            if (count($items) === self::MAX_REFERENCES) {
+                $hasMoreReferences = true;
+
+                break;
+            }
+
             $items[] = [
                 'id' => $id,
                 'title' => $entry->getTitle(),
@@ -90,14 +102,54 @@ final readonly class MediaAssetUsageBrowser
                 'status' => $entry->getStatus(),
                 'areas' => $areas,
             ];
+            $lastIncludedId = $id;
         }
 
-        if (count($items) > self::MAX_REFERENCES) {
-            $items = array_slice($items, 0, self::MAX_REFERENCES);
-            $truncated = true;
+        $hasMore = $hasMoreReferences || $hasMoreCandidates;
+        $cursorId = $hasMoreReferences ? $lastIncludedId : ($hasMoreCandidates ? $lastScannedId : null);
+        if ($cursorId === null || $assetId === null) {
+            $hasMore = false;
+        }
+        $nextCursor = null;
+        if ($hasMore && $assetId !== null && $cursorId !== null) {
+            $nextCursor = $this->encodeContentCursor($assetId, $cursorId);
         }
 
-        return ['items' => $items, 'truncated' => $truncated];
+        return [
+            'items' => $items,
+            'hasMore' => $hasMore,
+            'nextCursor' => $nextCursor,
+        ];
+    }
+
+    private function encodeContentCursor(int $assetId, int $afterId): string
+    {
+        return rtrim(strtr(base64_encode($assetId.':'.$afterId), '+/', '-_'), '=');
+    }
+
+    private function decodeContentCursor(?string $cursor, ?int $assetId): ?int
+    {
+        if ($cursor === null) {
+            return null;
+        }
+        if ($assetId === null || preg_match('/\A[A-Za-z0-9_-]{1,64}\z/D', $cursor) !== 1) {
+            throw new \InvalidArgumentException('Invalid media usage cursor.');
+        }
+
+        $encoded = strtr($cursor, '-_', '+/');
+        $encoded .= str_repeat('=', (4 - strlen($encoded) % 4) % 4);
+        $decoded = base64_decode($encoded, true);
+        if (!is_string($decoded) || preg_match('/\A([1-9][0-9]*):([1-9][0-9]*)\z/D', $decoded, $matches) !== 1) {
+            throw new \InvalidArgumentException('Invalid media usage cursor.');
+        }
+
+        $cursorAssetId = filter_var($matches[1], FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]);
+        $afterId = filter_var($matches[2], FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]);
+        if (!is_int($cursorAssetId) || !is_int($afterId) || $cursorAssetId !== $assetId) {
+            throw new \InvalidArgumentException('Invalid media usage cursor.');
+        }
+
+        return $afterId;
     }
 
     /**

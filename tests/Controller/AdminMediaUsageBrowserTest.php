@@ -14,6 +14,7 @@ use App\Security\CmsPermission;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\DomCrawler\Crawler;
 
 final class AdminMediaUsageBrowserTest extends WebTestCase
 {
@@ -213,6 +214,24 @@ final class AdminMediaUsageBrowserTest extends WebTestCase
         }
     }
 
+    public function testUsageCursorRejectsMalformedAndOtherAssetTokens(): void
+    {
+        $client = $this->startClient();
+        $em = $this->em($client);
+        $user = $this->persistUser($em, [CmsPermission::ACCESS, CmsPermission::STORAGE, CmsPermission::CONTENT]);
+        $asset = $this->persistAsset($em);
+        $otherAsset = $this->persistAsset($em, '/uploads/media/content/other-cursor-asset.png');
+        $this->persistEntry($em, $user, 'usage-cursor-bound', 'Cursor-bound reference', null, 'Uses '.$asset->getLocation());
+        $client->loginUser($user);
+        $cursorForDifferentAsset = rtrim(strtr(base64_encode($asset->getId().':1'), '+/', '-_'), '=');
+
+        $client->request('GET', '/admin/storage/media/'.$otherAsset->getId().'/usage?cursor='.$cursorForDifferentAsset);
+        self::assertResponseStatusCodeSame(404);
+
+        $client->request('GET', '/admin/storage/media/'.$asset->getId().'/usage?cursor=not-a-valid-cursor!');
+        self::assertResponseStatusCodeSame(404);
+    }
+
     public function testUsagePageRequiresStoragePermission(): void
     {
         $client = $this->startClient();
@@ -246,10 +265,13 @@ final class AdminMediaUsageBrowserTest extends WebTestCase
         $asset = $this->persistAsset($em);
         $contentEntries = [];
         $pages = [];
+        $expectedContentIds = [];
         $suffix = bin2hex(random_bytes(4));
 
-        for ($index = 1; $index <= 51; ++$index) {
+        for ($index = 1; $index <= 205; ++$index) {
             $contentEntries[] = $this->newEntry($user, 'usage-bound-news-'.$suffix.'-'.$index, 'Bound news '.$index, 'Uses '.$asset->getLocation());
+        }
+        for ($index = 1; $index <= 51; ++$index) {
             $pages[] = $this->newEntry($user, 'usage-bound-page-'.$suffix.'-'.$index, 'Bound page '.$index, 'Page body', ContentEntry::TYPE_PAGE);
         }
         foreach (array_merge($contentEntries, $pages) as $entry) {
@@ -261,6 +283,11 @@ final class AdminMediaUsageBrowserTest extends WebTestCase
             self::assertNotNull($id);
             $this->entryIds[] = $id;
         }
+        foreach ($contentEntries as $entry) {
+            $id = $entry->getId();
+            self::assertNotNull($id);
+            $expectedContentIds[] = $id;
+        }
 
         foreach ($pages as $page) {
             $pageId = $page->getId();
@@ -270,13 +297,32 @@ final class AdminMediaUsageBrowserTest extends WebTestCase
         $em->flush();
         $client->loginUser($user);
 
-        $crawler = $client->request('GET', '/admin/storage/media/'.$asset->getId().'/usage');
+        $nextUrl = '/admin/storage/media/'.$asset->getId().'/usage';
+        $seenTitles = [];
+        $seenIds = [];
+        $pageCounts = [];
+        do {
+            $crawler = $client->request('GET', $nextUrl);
 
-        self::assertResponseIsSuccessful();
-        self::assertCount(50, $crawler->filter('[data-usage-kind="content"]'));
-        self::assertCount(50, $crawler->filter('[data-usage-kind="layout"]'));
-        self::assertSelectorTextContains('body', 'Es werden höchstens 50 Inhaltsverwendungen angezeigt.');
-        self::assertSelectorTextContains('body', 'Es werden höchstens 50 Layoutverwendungen angezeigt.');
+            self::assertResponseIsSuccessful();
+            self::assertCount(50, $crawler->filter('[data-usage-kind="layout"]'));
+            self::assertSelectorTextContains('body', 'Es werden höchstens 50 Layoutverwendungen angezeigt.');
+
+            $contentRows = $crawler->filter('[data-usage-kind="content"]');
+            $pageCounts[] = $contentRows->count();
+            array_push($seenTitles, ...$contentRows->filter('strong')->each(static fn (Crawler $node): string => trim($node->text())));
+            array_push($seenIds, ...$contentRows->each(static fn (Crawler $node): int => (int) $node->attr('data-content-entry-id')));
+
+            $nextLink = $crawler->filter('[data-content-usage-next]');
+            $nextUrl = $nextLink->count() > 0 ? (string) $nextLink->attr('href') : '';
+        } while ($nextUrl !== '');
+
+        self::assertSame([50, 50, 50, 50, 5], $pageCounts);
+        self::assertCount(205, $seenTitles);
+        self::assertCount(205, array_unique($seenTitles));
+        self::assertSame($expectedContentIds, $seenIds);
+        self::assertSame('Bound news 1', $seenTitles[0]);
+        self::assertSame('Bound news 205', $seenTitles[204]);
     }
 
     protected function tearDown(): void

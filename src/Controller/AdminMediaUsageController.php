@@ -8,6 +8,7 @@ use App\Entity\MediaAsset;
 use App\Media\MediaAssetUsageBrowser;
 use App\Module\CmsModuleManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
@@ -23,16 +24,23 @@ final class AdminMediaUsageController extends AbstractController
     }
 
     #[Route('/{id}/usage', name: 'app_admin_media_usage', requirements: ['id' => '\\d+'], methods: ['GET'])]
-    public function show(MediaAsset $asset): Response
+    public function show(MediaAsset $asset, Request $request): Response
     {
         if (!$this->modules->isEnabled('media')) {
             throw $this->createNotFoundException();
         }
 
         $canManageContent = $this->isGranted('CMS_CONTENT_MANAGE') && $this->modules->isEnabled('content');
-        $contentReferences = $canManageContent
-            ? $this->usageBrowser->contentReferences($asset)
-            : ['items' => [], 'truncated' => false];
+        if ($canManageContent) {
+            $cursor = $request->query->get('cursor');
+            try {
+                $contentReferences = $this->usageBrowser->contentReferences($asset, $cursor);
+            } catch (\InvalidArgumentException) {
+                throw $this->createNotFoundException();
+            }
+        } else {
+            $contentReferences = ['items' => [], 'hasMore' => false, 'nextCursor' => null];
+        }
 
         $response = $this->render('admin/storage/media_usage.html.twig', [
             'asset' => $asset,
