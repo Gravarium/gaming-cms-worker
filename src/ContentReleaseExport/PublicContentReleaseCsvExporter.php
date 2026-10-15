@@ -9,7 +9,7 @@ use App\Repository\ContentReleaseRepository;
 
 final class PublicContentReleaseCsvExporter
 {
-    private const PAGE_SIZE = 100;
+    private const PAGE_SIZE = 20;
     public const MAX_EXPORT_ROWS = 10_000;
 
     public function __construct(private readonly ContentReleaseRepository $releases)
