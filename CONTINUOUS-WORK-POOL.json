@@ -10,8 +10,8 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "2f98de43e3cf4a26addb436cf9908b4135f2bdc6",
-  "published_at": "2026-10-15T01:44:07Z",
-  "summary": "WCP-709 complete: exact final HEAD 26ee6b263cd0c9685e5a0d7942e907149b18c436 passed both exact-head Worker CI runs 38666794016 and 38666793726; PRs #538/#539 remain drafts pending Trusted review.",
+  "published_at": "2026-10-15T01:45:54Z",
+  "summary": "WCP-709 is green awaiting Trusted review; WCP-710 is claimed from sanitized worker/main to add a noindex public print view for published News using the existing public visibility query.",
   "rules": {
     "choose": "Resume the current chat's unfinished claimed branch first. Otherwise atomically claim an eligible published task. If no published task is eligible, independently derive and publish a bounded worker-only CMS proposal from approved product goals and observed code gaps; do not ask the owner for the next FCP number.",
     "atomic_reservation": "Create the exact claim_branch and suggested feature branch from that task's published proposal_base_sha. If the claim already exists, treat it as a hard lock; the owning continuation resumes it and every other AI skips it.",
@@ -71774,6 +71774,95 @@
       "ci_conclusion": "success",
       "ci_head": "26ee6b263cd0c9685e5a0d7942e907149b18c436",
       "completed_at": "2026-10-15T01:43:45Z"
+    },
+    {
+      "priority": 710,
+      "package_id": "WCP-710",
+      "title": "Provide a print-friendly view for public News",
+      "risk": "low_public_read_only",
+      "execution_state": "worker_in_progress",
+      "claim_state": "claimed",
+      "claim_generation": 1,
+      "claim_branch": "claim/wcp-710-public-news-print-g1",
+      "suggested_branch": "feature/wcp-710-public-news-print-g1",
+      "resume_branch": "feature/wcp-710-public-news-print-g1",
+      "claimed_on": "2026-10-15T01:45:54Z",
+      "lease_expires_at": "2026-10-15T08:45:54Z",
+      "base_branch": "main",
+      "base_sha": "a6ff8d56cc5fd84b3eada9f6c745e43c70aa810b",
+      "proposal_base_branch": "main",
+      "proposal_base_sha": "a6ff8d56cc5fd84b3eada9f6c745e43c70aa810b",
+      "active_base_branch": "main",
+      "active_base_sha": "a6ff8d56cc5fd84b3eada9f6c745e43c70aa810b",
+      "dependencies": [],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "proposal_kind": "worker_only",
+      "objective": "Give readers a clean, printer-optimized and explicitly non-indexed view of already-public News without changing canonical article pages, editorial state, or content data.",
+      "acceptance_checks": [
+        "Add a standalone GET /news/print/{slug} route that resolves only published public News through the existing public-by-slug repository query; draft, scheduled, archived, page, missing and unlisted entries remain unavailable.",
+        "Render only the article title, optional subtitle/excerpt, publication date and safe rendered article content; exclude admin/edit controls and other private metadata.",
+        "Mark the alternate representation noindex and non-cacheable, retain normal content escaping/rendering, and supply print-specific CSS that removes site navigation and page chrome on paper.",
+        "Add functional tests for published News success, missing/non-public/wrong-type rejection, robots/cache headers, rendered content and print layout hooks."
+      ],
+      "collision_check": {
+        "compared_against": "Live continuous/work-pool-v4 at blob 01bfdb7d10f45ec2f7a666edfbded15b0c7bc0dc and exact sanitized Worker main a6ff8d56cc5fd84b3eada9f6c745e43c70aa810b",
+        "result": "All three new controller/template/test paths have zero exact or prefix overlaps with active/locked claims; no shared controller, entity, repository, migration, canonical News template or workflow path is changed.",
+        "paths": [
+          "src/Controller/PublicNewsPrintController.php",
+          "templates/content_print/news_print.html.twig",
+          "tests/Controller/PublicNewsPrintControllerTest.php"
+        ]
+      },
+      "allowed_paths": [
+        "src/Controller/PublicNewsPrintController.php",
+        "templates/content_print/news_print.html.twig",
+        "tests/Controller/PublicNewsPrintControllerTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "CONTINUOUS-WORKER.md",
+        "CONTINUOUS-WORK-POOL.json",
+        ".github/workflows/",
+        "migrations/",
+        "src/Entity/",
+        "src/Repository/",
+        "src/Security/",
+        "templates/content/show.html.twig",
+        "templates/content/news.html.twig"
+      ],
+      "tests": [
+        "focused functional tests using existing public visibility rules and synthetic article fixtures",
+        "complete exact-head Worker CI including PHP/Symfony and PostgreSQL 18"
+      ],
+      "completion_report": [
+        "exact final Worker HEAD",
+        "complete changed-path list and worker PR",
+        "targeted tests and CI outcomes",
+        "unresolved risks and assumptions"
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-trusted-review-and-exact-head-ci",
+        "preserve-existing-public-news-visibility-and-rendering-safety",
+        "no-schema-entity-or-repository-changes",
+        "no-CI-security-weakening",
+        "red-ci-stops-integration",
+        "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
+      ],
+      "active_head": "a6ff8d56cc5fd84b3eada9f6c745e43c70aa810b",
+      "last_observed_head": "a6ff8d56cc5fd84b3eada9f6c745e43c70aa810b",
+      "last_checkpoint_at": "2026-10-15T01:45:54Z",
+      "last_verified_push_at": null,
+      "worker_pr_state": "not_open",
+      "ci_result": "not_run",
+      "next_action": "Implement the standalone print view and focused functional test only in the approved new files, then open feature and exact-head CI draft PRs. No Trusted merge or deployment."
     }
   ],
   "recovery_queue": [],
