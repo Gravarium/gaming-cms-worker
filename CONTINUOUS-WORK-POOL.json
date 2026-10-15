@@ -11,7 +11,7 @@
   "baseline_branch": "main",
   "base_sha": "2f98de43e3cf4a26addb436cf9908b4135f2bdc6",
   "published_at": "2026-10-15T19:53:24.698Z",
-  "summary": "WCP-719 through WCP-721 have green exact-head Worker CI and remain open drafts awaiting Trusted review. WCP-722 is published as a no-overlap follow-up to compute accurate UTF-8 payload byte counts in the failed-message queue and export using SQL-only size projection.",
+  "summary": "WCP-719 through WCP-721 have green exact-head Worker CI and remain open drafts awaiting Trusted review. WCP-722 is claimed from WCP-721 green head; feature PR #563 and CI-only PR #564 target exact head 13f3fb326e4dca3d7855736cf56a574a0e0816f0; CI is pending.",
   "rules": {
     "choose": "Resume the current chat's unfinished claimed branch first. Otherwise atomically claim an eligible published task. If no published task is eligible, independently derive and publish a bounded worker-only CMS proposal from approved product goals and observed code gaps; do not ask the owner for the next FCP number.",
     "atomic_reservation": "Create the exact claim_branch and suggested feature branch from that task's published proposal_base_sha. If the claim already exists, treat it as a hard lock; the owning continuation resumes it and every other AI skips it.",
@@ -73530,15 +73530,19 @@
         "red-CI-stops-integration",
         "never-merge-or-deploy-to-Trusted"
       ],
-      "worker_pr_state": "not_open",
-      "next_action": "Implement SQL-only byte-length projection for the overview and paginated queue; add multibyte regression tests for both readers. Push the exact feature head, open a stacked draft PR and CI-only validation PR, fix failures, then document exact-head green CI. Never merge or deploy.",
+      "worker_pr_state": "open_draft",
+      "next_action": "Wait for Worker CI for exact feature head 13f3fb326e4dca3d7855736cf56a574a0e0816f0; fix failures only within the four reserved paths; document the exact green HEAD/run in the pool. Never merge or deploy.",
       "claim_state": "active",
       "published_at": "2026-10-15T19:53:24.698Z",
       "claimed_on": "2026-10-15T19:53:45.566Z",
-      "lease_expires_at": "2026-10-16T02:53:45.566Z",
-      "last_checkpoint_at": "2026-10-15T19:53:45.566Z",
-      "active_head": "7f1bf6daaa51b8e7b55e7cf51de5cc6f053583b1",
-      "last_observed_head": "7f1bf6daaa51b8e7b55e7cf51de5cc6f053583b1"
+      "lease_expires_at": "2026-10-16T02:55:24.054Z",
+      "last_checkpoint_at": "2026-10-15T19:55:24.054Z",
+      "active_head": "13f3fb326e4dca3d7855736cf56a574a0e0816f0",
+      "last_observed_head": "13f3fb326e4dca3d7855736cf56a574a0e0816f0",
+      "worker_pr": 563,
+      "validation_pr": 564,
+      "validation_pr_state": "open_draft",
+      "ci_result": "pending"
     }
   ],
   "recovery_queue": [],
