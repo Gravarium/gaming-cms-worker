@@ -73,7 +73,7 @@ final class AdminContentReleaseCalendarControllerTest extends WebTestCase
         self::assertNotNull($cancelled->getId());
     }
 
-    public function testInvalidMonthIsGenericUncachedBadRequestAndPermissionIsRequired(): void
+    public function testInvalidMonthIsGenericUncachedBadRequest(): void
     {
         $client = static::createClient();
         $admin = $this->user($client, true);
@@ -87,6 +87,11 @@ final class AdminContentReleaseCalendarControllerTest extends WebTestCase
             self::assertStringStartsWith('text/plain', (string) $client->getResponse()->headers->get('Content-Type'));
         }
 
+    }
+
+    public function testContentPermissionIsRequiredForCalendar(): void
+    {
+        $client = static::createClient();
         $client->loginUser($this->user($client, false));
         $client->request('GET', '/admin/content/releases/calendar');
         self::assertResponseStatusCodeSame(403);
