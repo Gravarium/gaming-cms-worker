@@ -18,6 +18,7 @@
             <p>Einträge {{ first }}–{{ last }} von {{ total }} · Seite {{ page }} von {{ pageCount }}</p>
         {% endif %}
         {% if messages %}
+            <p><a class="button-link button-secondary" href="{{ path('app_admin_queue_export', {page: page}) }}">Aktuelle Seite als CSV herunterladen</a></p>
             <form method="post" action="{{ path('app_admin_queue_retry_all', {page: page}) }}" onsubmit="return confirm('{{ messages|length }} fehlgeschlagene Nachrichten dieser Seite erneut einplanen?');">
                 <input type="hidden" name="_token" value="{{ csrf_token('queue-retry-all') }}">
                 <button type="submit">Alle {{ messages|length }} angezeigten erneut versuchen</button>
