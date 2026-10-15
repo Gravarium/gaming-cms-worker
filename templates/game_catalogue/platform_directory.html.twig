@@ -1,0 +1,25 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Plattformen | Game Hubs{% endblock %}
+
+{% block body %}
+<main class="content-shell">
+    <header class="page-header">
+        <p class="eyebrow">Spielekatalog</p>
+        <h1>Spiele nach Plattform</h1>
+        <p>Entdecke veröffentlichte Spiele und ihre verfügbaren Plattformen.</p>
+        <a class="button-link button-secondary" href="{{ path('app_game_catalogue_index') }}">Zum Spielekatalog</a>
+    </header>
+
+    <section class="portal-cards" aria-label="Verfügbare Plattformen">
+        {% for platform in platforms %}
+            <article class="portal-card">
+                <h2><a href="{{ path('app_game_catalogue_platform', {slug: platform.slug}) }}">{{ platform.name }}</a></h2>
+                <p>{{ platform.total }} Spiele mit verfügbaren Veröffentlichungen</p>
+            </article>
+        {% else %}
+            <p>Aktuell sind keine Plattformen mit veröffentlichten Spieledaten verfügbar.</p>
+        {% endfor %}
+    </section>
+</main>
+{% endblock %}
