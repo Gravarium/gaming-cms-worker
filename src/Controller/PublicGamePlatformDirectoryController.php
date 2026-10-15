@@ -20,7 +20,7 @@ final class PublicGamePlatformDirectoryController extends AbstractController
     ) {
     }
 
-    #[Route('/platforms', name: 'app_game_catalogue_platform_directory', methods: ['GET'])]
+    #[Route('/platforms', name: 'app_game_catalogue_platform_directory', methods: ['GET'], priority: 10)]
     public function index(): Response
     {
         $this->assertAvailable();
@@ -36,7 +36,7 @@ final class PublicGamePlatformDirectoryController extends AbstractController
         ]);
     }
 
-    #[Route('/platforms/{slug}', name: 'app_game_catalogue_platform', requirements: ['slug' => '[a-z0-9-]+'], methods: ['GET'])]
+    #[Route('/platforms/{slug}', name: 'app_game_catalogue_platform', requirements: ['slug' => '[a-z0-9-]+'], methods: ['GET'], priority: 10)]
     public function show(string $slug, Request $request): Response
     {
         $this->assertAvailable();
