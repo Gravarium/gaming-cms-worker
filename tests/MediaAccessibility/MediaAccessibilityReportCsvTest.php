@@ -21,7 +21,10 @@ final class MediaAccessibilityReportCsvTest extends TestCase
         $reflection = new \ReflectionProperty(MediaAsset::class, 'id');
         $reflection->setValue($asset, 42);
         $csv = (new MediaAccessibilityReportCsv())->encode([$asset]);
-        $rows = array_map('str_getcsv', explode("\r\n", trim($csv)));
+        $rows = array_map(
+            static fn (string $row): array => str_getcsv($row, ',', '"', ''),
+            explode("\r\n", trim($csv)),
+        );
 
         self::assertSame(['asset_id', 'mime_type', 'created_at_utc'], $rows[0]);
         self::assertSame('42', $rows[1][0]);
