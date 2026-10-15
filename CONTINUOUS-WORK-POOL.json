@@ -11,7 +11,7 @@
   "baseline_branch": "main",
   "base_sha": "2f98de43e3cf4a26addb436cf9908b4135f2bdc6",
   "published_at": "2026-10-15T01:47:45Z",
-  "summary": "WCP-710 and WCP-711 completed at exact green HEADs awaiting Trusted review. WCP-709 remains unmerged due to its locked FCP-056 template-prefix conflict. WCP-712 is claimed for bounded, formula-safe public content release CSV export.",
+  "summary": "WCP-710 completed at exact green HEAD 84141ebf3085cbbe4546febcd716b949a0f1bcae; WCP-711 completed at exact green HEAD c05380d017ca4d991d8c462a7e5c8996ef49a2eb. WCP-709 remains unmerged due to its locked FCP-056 template-prefix conflict. WCP-712 feature PR #544 and CI PR #545 are open at 69c83200d5f8e367f49e732b36523965c5f65213, with CI run 38670055358 in progress.",
   "rules": {
     "choose": "Resume the current chat's unfinished claimed branch first. Otherwise atomically claim an eligible published task. If no published task is eligible, independently derive and publish a bounded worker-only CMS proposal from approved product goals and observed code gaps; do not ask the owner for the next FCP number.",
     "atomic_reservation": "Create the exact claim_branch and suggested feature branch from that task's published proposal_base_sha. If the claim already exists, treat it as a hard lock; the owning continuation resumes it and every other AI skips it.",
@@ -72139,13 +72139,26 @@
         "red-ci-stops-integration",
         "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
       ],
-      "active_head": "a6ff8d56cc5fd84b3eada9f6c745e43c70aa810b",
-      "last_observed_head": "a6ff8d56cc5fd84b3eada9f6c745e43c70aa810b",
-      "last_checkpoint_at": "2026-10-15T02:15:02Z",
-      "last_verified_push_at": "2026-10-15T02:15:02Z",
-      "worker_pr_state": "not_opened",
-      "ci_result": "not_started",
-      "next_action": "Implement only the four approved files, test using transaction rollback, then open the feature and exact-head Worker CI validation PRs. No merge or deployment."
+      "active_head": "69c83200d5f8e367f49e732b36523965c5f65213",
+      "last_observed_head": "69c83200d5f8e367f49e732b36523965c5f65213",
+      "last_checkpoint_at": "2026-10-15T02:15:58Z",
+      "last_verified_push_at": "2026-10-15T02:15:35Z",
+      "worker_pr_state": "open_draft",
+      "ci_result": "pending",
+      "next_action": "Feature PR #544 and exact-head CI validation PR #545 are open drafts at 69c83200d5f8e367f49e732b36523965c5f65213. Worker CI run 38670055358 is in progress; inspect PHP/Symfony and PostgreSQL 18 results and correct failures only within the four approved paths. No merge or deployment.",
+      "worker_pr_head_sha": "69c83200d5f8e367f49e732b36523965c5f65213",
+      "worker_pr": 544,
+      "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/544",
+      "ci_validation_pr": 545,
+      "ci_run": 38670055358,
+      "ci_run_url": "https://github.com/Gravarium/gaming-cms-worker/actions/runs/38670055358",
+      "ci_history": [
+        {
+          "run": 38670055358,
+          "result": "in_progress",
+          "sha": "69c83200d5f8e367f49e732b36523965c5f65213"
+        }
+      ]
     }
   ],
   "recovery_queue": [],
