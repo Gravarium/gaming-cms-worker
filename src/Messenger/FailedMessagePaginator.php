@@ -37,8 +37,9 @@ final readonly class FailedMessagePaginator
         $page = min($requestedPage, $pageCount);
         $offset = ($page - 1) * self::PAGE_SIZE;
 
+        $bodySizeExpression = FailedMessagePayloadSizeSql::expression($this->connection->getDatabasePlatform());
         $rows = $this->connection->fetchAllAssociative(
-            'SELECT id, headers, created_at, LENGTH(body) AS body_size FROM messenger_messages WHERE queue_name = ? ORDER BY id DESC LIMIT ? OFFSET ?',
+            'SELECT id, headers, created_at, '.$bodySizeExpression.' AS body_size FROM messenger_messages WHERE queue_name = ? ORDER BY id DESC LIMIT ? OFFSET ?',
             ['failed', self::PAGE_SIZE, $offset],
             [ParameterType::STRING, ParameterType::INTEGER, ParameterType::INTEGER],
         );
