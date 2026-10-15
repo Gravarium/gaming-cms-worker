@@ -1,0 +1,50 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Release-Kalender | Gaming CMS{% endblock %}
+
+{% block body %}
+    <header class="topbar">
+        <a class="brand" href="{{ path('app_admin_content_release_index') }}">Content-Releases</a>
+        <a class="button-link" href="{{ path('app_admin_content_release_new') }}">Neuer Release</a>
+    </header>
+
+    <main class="dashboard">
+        <p class="eyebrow">Editorial Orchestration</p>
+        <h1>Release-Kalender</h1>
+        <nav aria-label="Kalendermonat">
+            <a rel="prev" href="{{ path('app_admin_content_release_calendar', {month: previousMonth}) }}">Vorheriger Monat</a>
+            <strong>{{ monthLabel }}</strong>
+            <a rel="next" href="{{ path('app_admin_content_release_calendar', {month: nextMonth}) }}">Nächster Monat</a>
+        </nav>
+        <p>Zeiten in UTC. Angezeigt werden geplante und veröffentlichte Releases.</p>
+        {% if hasMore %}<p class="notice" role="status">Die Anzeige ist auf 100 Releases begrenzt. Weitere Termine sind ausgeblendet.</p>{% endif %}
+
+        <div class="table-wrap">
+            <table>
+                <thead><tr><th>Tag</th><th>Releases</th></tr></thead>
+                <tbody>
+                {% for day in days %}
+                    <tr data-calendar-date="{{ day.date }}">
+                        <th scope="row">{{ day.label }}</th>
+                        <td>
+                            {% for event in day.events %}
+                                <div>
+                                    <time datetime="{{ day.date }}T{{ event.time }}:00Z">{{ event.time }} UTC</time>
+                                    {% if event.status == 'scheduled' %}
+                                        <a href="{{ path('app_admin_content_release_edit', {id: event.id}) }}">{{ event.name }}</a>
+                                    {% else %}
+                                        <span>{{ event.name }}</span>
+                                    {% endif %}
+                                    <span>({{ event.status == 'scheduled' ? 'Geplant' : 'Veröffentlicht' }})</span>
+                                </div>
+                            {% else %}
+                                —
+                            {% endfor %}
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </main>
+{% endblock %}
