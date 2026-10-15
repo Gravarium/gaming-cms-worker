@@ -10,8 +10,8 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "2f98de43e3cf4a26addb436cf9908b4135f2bdc6",
-  "published_at": "2026-10-15T11:45:13Z",
-  "summary": "WCP-719, WCP-720, and WCP-721 have exact-head green Worker CI and remain open drafts awaiting Trusted review. WCP-721 final head 7f1bf6daaa51b8e7b55e7cf51de5cc6f053583b1 passed run 38796294140; feature PR #561 and CI-only PR #562.",
+  "published_at": "2026-10-15T19:53:24.698Z",
+  "summary": "WCP-719 through WCP-721 have green exact-head Worker CI and remain open drafts awaiting Trusted review. WCP-722 is published as a no-overlap follow-up to compute accurate UTF-8 payload byte counts in the failed-message queue and export using SQL-only size projection.",
   "rules": {
     "choose": "Resume the current chat's unfinished claimed branch first. Otherwise atomically claim an eligible published task. If no published task is eligible, independently derive and publish a bounded worker-only CMS proposal from approved product goals and observed code gaps; do not ask the owner for the next FCP number.",
     "atomic_reservation": "Create the exact claim_branch and suggested feature branch from that task's published proposal_base_sha. If the claim already exists, treat it as a hard lock; the owning continuation resumes it and every other AI skips it.",
@@ -73440,6 +73440,100 @@
         "tests/Messenger/FailedMessageCsvExporterTest.php",
         "tests/Controller/AdminQueueCsvControllerTest.php"
       ]
+    },
+    {
+      "priority": 722,
+      "package_id": "WCP-722",
+      "title": "Report failed-message payload sizes in actual UTF-8 bytes",
+      "risk": "low_admin_read_only_data_accuracy",
+      "execution_state": "unclaimed",
+      "claim_generation": 1,
+      "claim_branch": "claim/wcp-722-failed-queue-byte-length-g1",
+      "suggested_branch": "feature/wcp-722-failed-queue-byte-length-g1",
+      "resume_branch": "feature/wcp-722-failed-queue-byte-length-g1",
+      "base_branch": "feature/wcp-721-failed-queue-page-csv-g1",
+      "base_sha": "7f1bf6daaa51b8e7b55e7cf51de5cc6f053583b1",
+      "proposal_base_branch": "feature/wcp-721-failed-queue-page-csv-g1",
+      "proposal_base_sha": "7f1bf6daaa51b8e7b55e7cf51de5cc6f053583b1",
+      "active_base_branch": "feature/wcp-721-failed-queue-page-csv-g1",
+      "active_base_sha": "7f1bf6daaa51b8e7b55e7cf51de5cc6f053583b1",
+      "dependencies": [
+        "WCP-721"
+      ],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "proposal_kind": "worker_only",
+      "objective": "Ensure the admin failed-message queue and its CSV report an accurate UTF-8 payload byte length, computed inside SQL without selecting or exporting the message body.",
+      "acceptance_checks": [
+        "Use database-platform-specific SQL to count UTF-8 storage bytes for SQLite and PostgreSQL text bodies; support the configured SQLite runtime and PostgreSQL 18 CI platform.",
+        "Both FailedMessageOverview and FailedMessagePaginator return exact payload byte lengths while keeping the existing bounded queries, sanitized summary fields, page behavior, and no-mutation semantics.",
+        "The message body is never selected into PHP, echoed, or included in CSV; only a SQL size expression is projected.",
+        "Regression tests cover ASCII and multibyte UTF-8 bodies and verify both queue-read services report strlen(body) bytes.",
+        "Full exact-head Worker CI, including PostgreSQL 18 migration validation, passes."
+      ],
+      "selection_rationale": "The five remaining unclaimed FCPs all have missing dependency task entries and cannot be safely claimed. WCP-721 is green, and review of its reused queue paginator found that both queue readers use LENGTH(body) while labeling the result bytes. SQLite and PostgreSQL define text length by characters; an independently scoped follow-up will compute byte sizes without loading payloads.",
+      "collision_check": {
+        "compared_against": "current continuous/work-pool-v4 blob 84786a6e00f4891fdfffde02e588663db418c31c",
+        "active_or_locked_claims_scanned": 215,
+        "result": "Zero exact or ancestor/descendant path overlaps across all active or locked claims.",
+        "overlapping_packages": [],
+        "paths": [
+          "src/Messenger/FailedMessagePayloadSizeSql.php",
+          "src/Messenger/FailedMessageOverview.php",
+          "src/Messenger/FailedMessagePaginator.php",
+          "tests/Messenger/FailedMessagePayloadBytesTest.php"
+        ],
+        "at": "2026-10-15T19:53:24.698Z"
+      },
+      "allowed_paths": [
+        "src/Messenger/FailedMessagePayloadSizeSql.php",
+        "src/Messenger/FailedMessageOverview.php",
+        "src/Messenger/FailedMessagePaginator.php",
+        "tests/Messenger/FailedMessagePayloadBytesTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "CONTINUOUS-WORKER.md",
+        "CONTINUOUS-WORK-POOL.json",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "src/Entity/",
+        "src/Repository/",
+        "src/Security/",
+        "src/Controller/",
+        "templates/"
+      ],
+      "tests": [
+        "FailedMessagePayloadBytesTest: ASCII and multibyte UTF-8 byte counts via the default SQLite platform.",
+        "Assert both FailedMessageOverview and FailedMessagePaginator return strlen(body) for the same row without returning body content.",
+        "Full exact-head Worker CI and PostgreSQL 18 migration-chain validation."
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-Trusted-review-and-exact-head-CI",
+        "no-queue-message-body-raw-headers-recipient-data-or-exception-text-export",
+        "no-body-selection-into-PHP-or-response",
+        "preserve-bounded-pagination-and-existing-safe-summary-data",
+        "no-queue-mutation-or-retry-action-from-GET",
+        "no-schema-entity-or-repository-changes",
+        "no-CI-security-weakening",
+        "red-CI-stops-integration",
+        "never-merge-or-deploy-to-Trusted"
+      ],
+      "worker_pr_state": "not_open",
+      "next_action": "Publish and claim this worker-only package from the exact green WCP-721 head, then implement SQL-only UTF-8 byte-size reporting in the two queue readers and regression tests.",
+      "claim_state": "unclaimed",
+      "published_at": "2026-10-15T19:53:24.698Z"
     }
   ],
   "recovery_queue": [],
