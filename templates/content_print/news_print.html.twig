@@ -1,0 +1,32 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ entry.title }} – Druckansicht{% endblock %}
+{% block head_meta %}<meta name="robots" content="noindex,nofollow">{% endblock %}
+{% block stylesheets %}
+<style>
+    .news-print { max-width: 48rem; margin: 2rem auto; padding: 0 1.25rem; color: #171717; font-family: Georgia, "Times New Roman", serif; line-height: 1.65; }
+    .news-print__eyebrow, .news-print__date { color: #555; font-family: Arial, sans-serif; font-size: .9rem; }
+    .news-print__return { display: inline-block; margin-block: 1rem 2rem; font-family: Arial, sans-serif; }
+    @media print {
+        @page { margin: 18mm; }
+        body { background: #fff !important; color: #000 !important; }
+        body > nav, body > header, .locale-switcher, .main-navigation, footer, .news-print__return { display: none !important; }
+        .news-print { max-width: none; margin: 0; padding: 0; font-size: 11pt; }
+        .news-print a { color: inherit; text-decoration: none; }
+        .news-print h1, .news-print h2, .news-print h3 { break-after: avoid; }
+        .news-print img { max-width: 100% !important; height: auto !important; }
+    }
+</style>
+{% endblock %}
+
+{% block body %}
+<main class="news-print">
+    <p class="news-print__eyebrow">News · Druckansicht</p>
+    <h1>{{ entry.title }}</h1>
+    {% if entry.subtitle %}<p><strong>{{ entry.subtitle }}</strong></p>{% endif %}
+    {% if entry.publishedAt %}<p class="news-print__date"><time datetime="{{ entry.publishedAt|date('c') }}">{{ entry.publishedAt|date('d.m.Y H:i') }}</time></p>{% endif %}
+    {% if entry.excerpt %}<p><strong>{{ entry.excerpt }}</strong></p>{% endif %}
+    <article>{{ (entry.editorDocument ?: entry.body)|content_blocks_render }}</article>
+    <a class="news-print__return" href="{{ path('app_news_show', {slug: entry.slug}) }}">Zur News zurück</a>
+</main>
+{% endblock %}
