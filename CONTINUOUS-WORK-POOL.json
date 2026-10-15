@@ -11,7 +11,7 @@
   "baseline_branch": "main",
   "base_sha": "2f98de43e3cf4a26addb436cf9908b4135f2bdc6",
   "published_at": "2026-10-15T11:45:13Z",
-  "summary": "WCP-719 is complete with exact-head green CI on 155cbb836710c76da47f9a9479d65845ed9e79cc and remains an open draft awaiting Trusted review. WCP-720 is claimed as a worker-only bounded newsletter delivery report pagination proposal based on WCP-718's exact green head bffc5193dfc97a815c9974464ffbed6e6aef2766.",
+  "summary": "WCP-719 is complete with exact-head green CI on 155cbb836710c76da47f9a9479d65845ed9e79cc and remains an open draft awaiting Trusted review. WCP-720 remains claimed as a worker-only 25-row keyset-pagination proposal based on WCP-718's exact green head bffc5193dfc97a815c9974464ffbed6e6aef2766; PHPUnit issues found on the prior head were corrected and exact-head CI is running on 00059292948d10a6fbdc9681ff042acbaf5e9302.",
   "rules": {
     "choose": "Resume the current chat's unfinished claimed branch first. Otherwise atomically claim an eligible published task. If no published task is eligible, independently derive and publish a bounded worker-only CMS proposal from approved product goals and observed code gaps; do not ask the owner for the next FCP number.",
     "atomic_reservation": "Create the exact claim_branch and suggested feature branch from that task's published proposal_base_sha. If the claim already exists, treat it as a hard lock; the owning continuation resumes it and every other AI skips it.",
@@ -73149,7 +73149,7 @@
       "suggested_branch": "feature/wcp-720-newsletter-delivery-report-pagination-g1",
       "resume_branch": "feature/wcp-720-newsletter-delivery-report-pagination-g1",
       "claimed_on": "2026-10-15T19:12:49Z",
-      "lease_expires_at": "2026-10-16T02:23:05Z",
+      "lease_expires_at": "2026-10-16T02:30:59Z",
       "base_branch": "feature/wcp-718-media-accessibility-csv-g1",
       "base_sha": "bffc5193dfc97a815c9974464ffbed6e6aef2766",
       "proposal_base_branch": "feature/wcp-718-media-accessibility-csv-g1",
@@ -73277,6 +73277,19 @@
         {
           "run": 38793474921,
           "head": "2a9cdc9595aa852b213ec49b438520ee400c22ba",
+          "result": "failure",
+          "base_sha": "a6ff8d56cc5fd84b3eada9f6c745e43c70aa810b",
+          "jobs": {
+            "Validate worker-visible PostgreSQL 18 migration chain": "success",
+            "Validate worker-visible PHP and Symfony": "failure: PHPUnit; named delivery-report route was unregistered in Twig and Cache-Control assertion omitted framework defaults"
+          },
+          "pr": 559,
+          "ci_validation_pr": 560,
+          "correction": "Use an explicit route name under the class prefix, assert required cache directives independent of framework defaults, and clean created campaign/user fixtures in finally blocks."
+        },
+        {
+          "run": 38794718827,
+          "head": "00059292948d10a6fbdc9681ff042acbaf5e9302",
           "result": "in_progress",
           "base_sha": "a6ff8d56cc5fd84b3eada9f6c745e43c70aa810b",
           "jobs": {
@@ -73284,19 +73297,20 @@
             "Validate worker-visible PHP and Symfony": "in_progress"
           },
           "pr": 559,
-          "ci_validation_pr": 560
+          "ci_validation_pr": 560,
+          "correction": "Exact-head rerun after PHPUnit route/header assertion failures and fixture-cleanup hardening."
         }
       ],
-      "next_action": "Monitor exact-head Worker CI run 38793474921 on SHA 2a9cdc9595aa852b213ec49b438520ee400c22ba. Fix only allowed paths if needed; when green, record PHPStan/audit/PHPUnit and PostgreSQL results, mark worker_complete_awaiting_trusted_review and leave both PRs open drafts.",
-      "active_head": "2a9cdc9595aa852b213ec49b438520ee400c22ba",
-      "last_observed_head": "2a9cdc9595aa852b213ec49b438520ee400c22ba",
-      "worker_pr_head_sha": "2a9cdc9595aa852b213ec49b438520ee400c22ba",
-      "last_checkpoint_at": "2026-10-15T19:23:32Z",
-      "last_verified_push_at": "2026-10-15T19:23:05Z",
-      "ci_run": 38793474921,
-      "ci_run_url": "https://github.com/Gravarium/gaming-cms-worker/actions/runs/38793474921",
+      "next_action": "Monitor exact-head Worker CI run 38794718827 on SHA 00059292948d10a6fbdc9681ff042acbaf5e9302. Fix only allowed paths if needed; when green, record PHPStan/audit/PHPUnit and PostgreSQL results, mark worker_complete_awaiting_trusted_review and leave both PRs open drafts.",
+      "active_head": "00059292948d10a6fbdc9681ff042acbaf5e9302",
+      "last_observed_head": "00059292948d10a6fbdc9681ff042acbaf5e9302",
+      "worker_pr_head_sha": "00059292948d10a6fbdc9681ff042acbaf5e9302",
+      "last_checkpoint_at": "2026-10-15T19:33:07Z",
+      "last_verified_push_at": "2026-10-15T19:30:59Z",
+      "ci_run": 38794718827,
+      "ci_run_url": "https://github.com/Gravarium/gaming-cms-worker/actions/runs/38794718827",
       "ci_validation_pr": 560,
-      "ci_head": "2a9cdc9595aa852b213ec49b438520ee400c22ba",
+      "ci_head": "00059292948d10a6fbdc9681ff042acbaf5e9302",
       "ci_conclusion": null
     }
   ],
