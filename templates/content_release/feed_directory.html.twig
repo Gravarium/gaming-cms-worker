@@ -1,0 +1,28 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Release-Feeds | {{ site.siteName }}{% endblock %}
+
+{% block body %}
+<header class="topbar">
+    <a class="brand" href="{{ path('app_home') }}">{{ site.siteName }}</a>
+    <nav class="top-actions" aria-label="Release-Navigation">
+        <a href="{{ path('app_public_content_release_index') }}">Alle Releases</a>
+        <a href="{{ path('app_news_index') }}">News</a>
+    </nav>
+</header>
+<main class="dashboard">
+    <p class="eyebrow">Updates</p>
+    <h1>Release-Feeds</h1>
+    <p class="muted">Veröffentlichte Content-Releases in einem Format deiner Wahl abonnieren oder herunterladen.</p>
+    <section aria-label="Öffentliche Release-Feeds" class="news-grid">
+        <article class="card">
+            <h2><a href="{{ path('app_public_content_release_atom') }}">Atom 1.0 abonnieren</a></h2>
+            <p>Ein Feed für Feedreader mit den zuletzt veröffentlichten Release-Notizen.</p>
+        </article>
+        <article class="card">
+            <h2><a href="{{ path('app_public_content_release_csv') }}">CSV herunterladen</a></h2>
+            <p>Eine Tabellen-Datei mit dem öffentlichen Release-Archiv.</p>
+        </article>
+    </section>
+</main>
+{% endblock %}
