@@ -10,8 +10,8 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "2f98de43e3cf4a26addb436cf9908b4135f2bdc6",
-  "published_at": "2026-10-15T01:34:29Z",
-  "summary": "WCP-709 route-priority correction pushed at exact HEAD 7d8dfb362589b8c99e955c62a0587834099bc84f; feature and CI drafts remain open; exact-head CI runs 38666375154/38666373127 are in progress.",
+  "published_at": "2026-10-15T01:39:13Z",
+  "summary": "WCP-709 now includes robust fixture DB cleanup and guaranteed module-state restore at exact HEAD 26ee6b263cd0c9685e5a0d7942e907149b18c436; exact-head CI runs 38666794016/38666793726 are pending.",
   "rules": {
     "choose": "Resume the current chat's unfinished claimed branch first. Otherwise atomically claim an eligible published task. If no published task is eligible, independently derive and publish a bounded worker-only CMS proposal from approved product goals and observed code gaps; do not ask the owner for the next FCP number.",
     "atomic_reservation": "Create the exact claim_branch and suggested feature branch from that task's published proposal_base_sha. If the claim already exists, treat it as a hard lock; the owning continuation resumes it and every other AI skips it.",
@@ -71690,19 +71690,19 @@
         "red-ci-stops-integration",
         "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
       ],
-      "active_head": "7d8dfb362589b8c99e955c62a0587834099bc84f",
-      "last_observed_head": "7d8dfb362589b8c99e955c62a0587834099bc84f",
-      "last_checkpoint_at": "2026-10-15T01:34:29Z",
-      "last_verified_push_at": "2026-10-15T01:34:15Z",
+      "active_head": "26ee6b263cd0c9685e5a0d7942e907149b18c436",
+      "last_observed_head": "26ee6b263cd0c9685e5a0d7942e907149b18c436",
+      "last_checkpoint_at": "2026-10-15T01:39:13Z",
+      "last_verified_push_at": "2026-10-15T01:38:55Z",
       "worker_pr_state": "open_draft",
       "ci_result": "pending",
-      "next_action": "Prior test setup now explicitly installs gaming/content module dependencies and restores their exact prior install/enabled/version state. CI revealed the new static /games/platforms route was shadowed by existing /games/{slug}; route priority has been raised. Exact HEAD 7d8dfb362589b8c99e955c62a0587834099bc84f is validating in runs 38666375154 and 38666373127. Await both full checks; no merge or deployment.",
+      "next_action": "WCP-709 now cleans its uniquely slugged release, entry, platform, and game fixtures through targeted database deletes, with module-state restoration guaranteed in finally despite Symfony entity-manager resets. The previous route-priority candidate failed because fixture teardown used detached entities and aborted restoration. Exact HEAD 26ee6b263cd0c9685e5a0d7942e907149b18c436 is validating in runs 38666794016 and 38666793726; await required checks. No merge or deployment.",
       "worker_pr": 538,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/538",
-      "worker_pr_head_sha": "7d8dfb362589b8c99e955c62a0587834099bc84f",
+      "worker_pr_head_sha": "26ee6b263cd0c9685e5a0d7942e907149b18c436",
       "ci_validation_pr": 539,
-      "ci_run": 38666375154,
-      "ci_run_url": "https://github.com/Gravarium/gaming-cms-worker/actions/runs/38666375154",
+      "ci_run": 38666794016,
+      "ci_run_url": "https://github.com/Gravarium/gaming-cms-worker/actions/runs/38666794016",
       "ci_history": [
         {
           "run": 38665106266,
@@ -71736,13 +71736,23 @@
         },
         {
           "run": 38666375154,
-          "result": "in_progress",
+          "result": "failure",
           "sha": "7d8dfb362589b8c99e955c62a0587834099bc84f"
         },
         {
           "run": 38666373127,
-          "result": "in_progress",
+          "result": "failure",
           "sha": "7d8dfb362589b8c99e955c62a0587834099bc84f"
+        },
+        {
+          "run": 38666794016,
+          "result": "queued",
+          "sha": "26ee6b263cd0c9685e5a0d7942e907149b18c436"
+        },
+        {
+          "run": 38666793726,
+          "result": "in_progress",
+          "sha": "26ee6b263cd0c9685e5a0d7942e907149b18c436"
         }
       ]
     }
