@@ -11,7 +11,7 @@
   "baseline_branch": "main",
   "base_sha": "2f98de43e3cf4a26addb436cf9908b4135f2bdc6",
   "published_at": "2026-10-15T01:47:45Z",
-  "summary": "WCP-710 through WCP-715 have exact-head green Worker CI and open drafts awaiting Trusted review. WCP-716 is claimed for a bounded public content-release RSS 2.0 feed on sanitized main a6ff8d56cc5fd84b3eada9f6c745e43c70aa810b. WCP-709 remains held unmerged due its FCP-056 prefix conflict.",
+  "summary": "WCP-710 through WCP-715 have exact-head green Worker CI and open drafts awaiting Trusted review. WCP-716 is claimed with feature PR #552 and exact-head CI PR #553; CI is pending on HEAD 8a1638dd1412f306ee40c2ac111f0974689a33d5. WCP-709 remains held unmerged due its FCP-056 prefix conflict.",
   "rules": {
     "choose": "Resume the current chat's unfinished claimed branch first. Otherwise atomically claim an eligible published task. If no published task is eligible, independently derive and publish a bounded worker-only CMS proposal from approved product goals and observed code gaps; do not ask the owner for the next FCP number.",
     "atomic_reservation": "Create the exact claim_branch and suggested feature branch from that task's published proposal_base_sha. If the claim already exists, treat it as a hard lock; the owning continuation resumes it and every other AI skips it.",
@@ -72520,7 +72520,7 @@
       "suggested_branch": "feature/wcp-716-public-content-release-rss-feed-g1",
       "resume_branch": "feature/wcp-716-public-content-release-rss-feed-g1",
       "claimed_on": "2026-10-15T07:24:09Z",
-      "lease_expires_at": "2026-10-15T14:24:09Z",
+      "lease_expires_at": "2026-10-15T14:32:09Z",
       "base_branch": "main",
       "base_sha": "a6ff8d56cc5fd84b3eada9f6c745e43c70aa810b",
       "proposal_base_branch": "main",
@@ -72535,6 +72535,7 @@
       "acceptance_checks": [
         "Add GET /releases.rss backed only by ContentReleaseRepository::findPublicPublished and capped to the newest 50 releases at one UTC now instant.",
         "Emit valid RSS 2.0 with absolute stable release URLs, title, optional public description, UTC pubDate, stable non-permalink GUID, channel homepage and self-link; XML-escape all data and exclude private/user fields.",
+        "Hide the endpoint with the existing content-module gate and return a non-cacheable 404 while content is disabled.",
         "Return application/rss+xml; charset=UTF-8 with no-store and nosniff headers; handle empty results and malformed XML characters safely.",
         "Functional tests prove only published releases at or before now are exposed, including future/draft exclusion, item links and dates, XML escaping, response headers and empty feed behavior."
       ],
@@ -72580,8 +72581,8 @@
         "src/Controller/PublicContentReleaseFeedDirectoryController.php"
       ],
       "tests": [
-        "focused feed-builder tests for well-formed RSS, escaping, stable links/GUIDs, UTC dates and empty feeds",
-        "functional route tests using rolled-back fixtures for published-only/future/draft visibility and response security headers",
+        "focused feed-builder tests for well-formed RSS, escaping, stable links/GUIDs, UTC dates, 50-item cap and empty feeds",
+        "functional route tests using rolled-back fixtures for published-only/future/draft visibility, content-module disablement and response security headers",
         "complete exact-head Worker CI including PHP/Symfony and PostgreSQL 18"
       ],
       "immutable_constraints": [
@@ -72594,20 +72595,20 @@
         "red-ci-stops-integration",
         "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
       ],
-      "active_head": "a6ff8d56cc5fd84b3eada9f6c745e43c70aa810b",
-      "last_observed_head": "a6ff8d56cc5fd84b3eada9f6c745e43c70aa810b",
-      "last_checkpoint_at": "2026-10-15T07:24:09Z",
-      "last_verified_push_at": null,
-      "worker_pr_state": null,
-      "worker_pr_head_sha": null,
-      "worker_pr": null,
-      "worker_pr_url": null,
-      "ci_validation_pr": null,
+      "active_head": "8a1638dd1412f306ee40c2ac111f0974689a33d5",
+      "last_observed_head": "8a1638dd1412f306ee40c2ac111f0974689a33d5",
+      "last_checkpoint_at": "2026-10-15T07:32:09Z",
+      "last_verified_push_at": "2026-10-15T07:32:09Z",
+      "worker_pr_state": "open_draft",
+      "worker_pr_head_sha": "8a1638dd1412f306ee40c2ac111f0974689a33d5",
+      "worker_pr": 552,
+      "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/552",
+      "ci_validation_pr": 553,
       "ci_result": null,
       "ci_run": null,
       "ci_run_url": null,
       "ci_history": [],
-      "next_action": "Create claim and feature branches from sanitized main a6ff8d56cc5fd84b3eada9f6c745e43c70aa810b, then implement this isolated feed package.",
+      "next_action": "Run full Worker CI on exact feature HEAD 8a1638dd1412f306ee40c2ac111f0974689a33d5 via PRs #552 and #553. If any required job fails, fix on this feature branch and rerun exact-head CI.",
       "final_head": null,
       "ci_head": null,
       "ci_conclusion": null,
