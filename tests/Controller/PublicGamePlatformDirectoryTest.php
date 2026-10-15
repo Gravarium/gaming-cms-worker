@@ -20,7 +20,8 @@ final class PublicGamePlatformDirectoryTest extends WebTestCase
         $client->disableReboot();
         $entityManager = $client->getContainer()->get('doctrine')->getManager();
         self::assertInstanceOf(EntityManagerInterface::class, $entityManager);
-        $previous = $this->setGamingEnabled($entityManager, true);
+        $previousGaming = $this->setModuleEnabled($entityManager, 'gaming', true);
+        $previousContent = $this->setModuleEnabled($entityManager, 'content', true);
         $suffix = bin2hex(random_bytes(4));
 
         $platform = new GamePlatform('WCP709 PC '.$suffix, 'wcp709-pc-'.$suffix);
@@ -33,7 +34,8 @@ final class PublicGamePlatformDirectoryTest extends WebTestCase
         $cancelledEntry = new GameCatalogueEntry($cancelledGame);
         $cancelledRelease = (new GameRelease($cancelledEntry, $cancelledPlatform, 'EU', new \DateTimeImmutable('+10 days')))->setStatus('cancelled');
 
-        foreach ([$platform, $game, $entry, $release, $cancelledPlatform, $cancelledGame, $cancelledEntry, $cancelledRelease] as $entity) {
+        $fixtures = [$platform, $game, $entry, $release, $cancelledPlatform, $cancelledGame, $cancelledEntry, $cancelledRelease];
+        foreach ($fixtures as $entity) {
             $entityManager->persist($entity);
         }
         $entityManager->flush();
@@ -61,16 +63,21 @@ final class PublicGamePlatformDirectoryTest extends WebTestCase
             $client->request('GET', '/games/platforms');
             self::assertResponseStatusCodeSame(404);
         } finally {
-            $this->restoreGamingState($entityManager, $previous);
+            foreach ([$release, $cancelledRelease, $entry, $cancelledEntry, $platform, $cancelledPlatform, $game, $cancelledGame] as $entity) {
+                $entityManager->remove($entity);
+            }
+            $entityManager->flush();
+            $this->restoreModuleState($entityManager, 'gaming', $previousGaming);
+            $this->restoreModuleState($entityManager, 'content', $previousContent);
         }
     }
 
-    private function setGamingEnabled(EntityManagerInterface $entityManager, bool $enabled): ?bool
+    private function setModuleEnabled(EntityManagerInterface $entityManager, string $moduleKey, bool $enabled): ?bool
     {
-        $state = $entityManager->getRepository(CmsModuleState::class)->find('gaming');
+        $state = $entityManager->getRepository(CmsModuleState::class)->find($moduleKey);
         $previous = $state?->isEnabled();
         if (!$state instanceof CmsModuleState) {
-            $state = (new CmsModuleState())->setModuleKey('gaming')->updateVersion('1.0.0');
+            $state = (new CmsModuleState())->setModuleKey($moduleKey)->updateVersion('1.0.0');
         }
         $state->setEnabled($enabled);
         $entityManager->persist($state);
@@ -79,9 +86,9 @@ final class PublicGamePlatformDirectoryTest extends WebTestCase
         return $previous;
     }
 
-    private function restoreGamingState(EntityManagerInterface $entityManager, ?bool $previous): void
+    private function restoreModuleState(EntityManagerInterface $entityManager, string $moduleKey, ?bool $previous): void
     {
-        $state = $entityManager->getRepository(CmsModuleState::class)->find('gaming');
+        $state = $entityManager->getRepository(CmsModuleState::class)->find($moduleKey);
         if (!$state instanceof CmsModuleState) {
             return;
         }
