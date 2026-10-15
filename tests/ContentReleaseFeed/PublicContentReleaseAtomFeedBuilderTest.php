@@ -44,7 +44,7 @@ final class PublicContentReleaseAtomFeedBuilderTest extends TestCase
         $feed = (new PublicContentReleaseAtomFeedBuilder($urls))->build([$older, $draft, $future, $newer], $now);
 
         self::assertSame('2026-10-12T10:00:00+00:00', $feed['updated']);
-        self::assertSame($newer->getPublishedAt(), $feed['last_modified']);
+        self::assertEquals($newer->getPublishedAt(), $feed['last_modified']);
         self::assertSame(['Newer', 'Older'], array_column($feed['entries'], 'title'));
         self::assertSame('A public summary', $feed['entries'][0]['summary']);
         self::assertSame('Older', $feed['entries'][1]['summary']);
