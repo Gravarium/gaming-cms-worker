@@ -11,7 +11,7 @@
   "baseline_branch": "main",
   "base_sha": "2f98de43e3cf4a26addb436cf9908b4135f2bdc6",
   "published_at": "2026-10-15T11:45:13Z",
-  "summary": "WCP-718 completed with green exact-head CI and remains an open draft awaiting Trusted review. WCP-719 is claimed from worker/main for bounded, permission-preserving media-usage pagination.",
+  "summary": "WCP-719 is complete with exact-head green CI on 155cbb836710c76da47f9a9479d65845ed9e79cc and remains an open draft awaiting Trusted review. WCP-720 is claimed as a worker-only bounded newsletter delivery report pagination proposal based on WCP-718's exact green head bffc5193dfc97a815c9974464ffbed6e6aef2766.",
   "rules": {
     "choose": "Resume the current chat's unfinished claimed branch first. Otherwise atomically claim an eligible published task. If no published task is eligible, independently derive and publish a bounded worker-only CMS proposal from approved product goals and observed code gaps; do not ask the owner for the next FCP number.",
     "atomic_reservation": "Create the exact claim_branch and suggested feature branch from that task's published proposal_base_sha. If the claim already exists, treat it as a hard lock; the owning continuation resumes it and every other AI skips it.",
@@ -73136,6 +73136,106 @@
       "ci_head": "155cbb836710c76da47f9a9479d65845ed9e79cc",
       "ci_conclusion": "success",
       "completed_at": "2026-10-15T19:09:53Z"
+    },
+    {
+      "priority": 720,
+      "package_id": "WCP-720",
+      "title": "Paginate the aggregated newsletter delivery report",
+      "risk": "low_admin_read_only_aggregate",
+      "execution_state": "worker_in_progress",
+      "claim_state": "active",
+      "claim_generation": 1,
+      "claim_branch": "claim/wcp-720-newsletter-delivery-report-pagination-g1",
+      "suggested_branch": "feature/wcp-720-newsletter-delivery-report-pagination-g1",
+      "resume_branch": "feature/wcp-720-newsletter-delivery-report-pagination-g1",
+      "claimed_on": "2026-10-15T19:12:49Z",
+      "lease_expires_at": "2026-10-16T02:12:49Z",
+      "base_branch": "feature/wcp-718-media-accessibility-csv-g1",
+      "base_sha": "bffc5193dfc97a815c9974464ffbed6e6aef2766",
+      "proposal_base_branch": "feature/wcp-718-media-accessibility-csv-g1",
+      "proposal_base_sha": "bffc5193dfc97a815c9974464ffbed6e6aef2766",
+      "active_base_branch": "feature/wcp-718-media-accessibility-csv-g1",
+      "active_base_sha": "bffc5193dfc97a815c9974464ffbed6e6aef2766",
+      "dependencies": [
+        "WCP-718"
+      ],
+      "dependencies_integrated_at_publication": [],
+      "blocked_by_at_publication": [],
+      "proposal_kind": "worker_only",
+      "objective": "Let authorized content managers browse newsletter delivery aggregates beyond the newest 100 campaigns while keeping each database read bounded and never exposing recipient-level or campaign-body data.",
+      "acceptance_checks": [
+        "Replace the fixed newest-100 cutoff with keyset continuation ordered deterministically by createdAt DESC then id DESC; keep each page at 25 campaigns plus one lookahead.",
+        "Aggregate delivery status counts only for IDs on the visible page; do not query or render recipient addresses, individual delivery rows, newsletter subjects or message bodies.",
+        "Emit a continuation cursor only when the lookahead proves more campaigns exist; use the last visible campaign as the next cursor boundary so equal timestamps cannot duplicate or skip campaigns.",
+        "Strictly validate canonical cursor encoding, timestamp and positive campaign ID; reject malformed, non-string and unexpected query parameters with a generic 400 response and private no-store headers.",
+        "Preserve CMS_CONTENT_MANAGE and notifications-module enforcement plus Cache-Control private, no-store and X-Robots-Tag noindex.",
+        "Functional tests cover page boundary, stable ordering for equal timestamps, no duplicates/skips, no next link at the end, malformed cursor input, and absence of recipient/subject/body data."
+      ],
+      "selection_rationale": "The five existing unclaimed entries (FCP-012, FCP-013, FCP-070, FCP-072 and FCP-076) each have at least one dependency ID with no task entry in the current pool. WCP-720 is therefore published as a bounded worker-only proposal. WCP-718 is its exact-green base dependency because its Composer security update is required for the audited CI path; no product/runtime dependency is implied.",
+      "collision_check": {
+        "compared_against": "Live continuous/work-pool-v4 blob 808dcf90b3838252c18704e5f9914cec63bdf4dc",
+        "active_or_locked_claims_scanned": 213,
+        "result": "Zero exact or prefix path overlaps across all four allowed paths.",
+        "overlapping_packages": [],
+        "paths": [
+          "src/NewsletterDeliveryReport/NewsletterDeliveryReportQuery.php",
+          "src/Controller/AdminNewsletterDeliveryReportController.php",
+          "src/NewsletterDeliveryReport/Templates/index.html.twig",
+          "tests/Controller/AdminNewsletterDeliveryReportPaginationTest.php"
+        ],
+        "at": "2026-10-15T19:12:49Z"
+      },
+      "allowed_paths": [
+        "src/NewsletterDeliveryReport/NewsletterDeliveryReportQuery.php",
+        "src/Controller/AdminNewsletterDeliveryReportController.php",
+        "src/NewsletterDeliveryReport/Templates/index.html.twig",
+        "tests/Controller/AdminNewsletterDeliveryReportPaginationTest.php"
+      ],
+      "forbidden_paths": [
+        "private/",
+        "PrivateCore/",
+        "ops/",
+        "docs/",
+        "bin/",
+        "AGENTS.md",
+        "WORKER.md",
+        "CONTINUOUS-WORKER.md",
+        "CONTINUOUS-WORK-POOL.json",
+        "WORKER-TASK.json",
+        "WORKER-MANIFEST.json",
+        "WORKER-FILES.sha256",
+        ".worker-snapshot",
+        ".github/workflows/",
+        "migrations/",
+        "src/Entity/",
+        "src/Repository/",
+        "src/Security/"
+      ],
+      "tests": [
+        "Focused functional test with 27 equal-timestamp campaigns proves 25+2 stable keyset pagination with no skipped or duplicated IDs.",
+        "Malformed scalar, array, non-canonical base64url, timestamp and ID cursor inputs return a generic 400 and preserve private no-store response headers.",
+        "Authorized report output contains aggregate counts only and omits recipient addresses, subject and body content; existing permission/module gates remain covered.",
+        "Complete exact-head Worker CI including PHP/Symfony and PostgreSQL 18 migration validation."
+      ],
+      "immutable_constraints": [
+        "trusted-main-is-the-only-integration-and-deployment-source",
+        "worker-output-is-untrusted-until-Trusted-review-and-exact-head-CI",
+        "newsletter-report-remains-read-only-aggregates",
+        "no-recipient-level-data-subjects-or-message-bodies",
+        "bounded-page-and-lookahead-query",
+        "preserve-CMS_CONTENT_MANAGE-and-notifications-module-gates",
+        "preserve-private-no-store-and-noindex-headers",
+        "no-schema-entity-or-repository-changes",
+        "no-CI-security-weakening",
+        "red-CI-stops-integration",
+        "never-merge-or-deploy-to-Trusted"
+      ],
+      "worker_pr_state": "not_open",
+      "worker_pr": null,
+      "worker_pr_url": null,
+      "ci_result": "pending",
+      "ci_history": [],
+      "next_action": "Create the reserved feature branch from the exact WCP-718 green head, implement strict keyset pagination within allowed_paths, test locally where supported, open/update a draft Worker PR and record exact-head CI."
     }
   ],
   "recovery_queue": [],
