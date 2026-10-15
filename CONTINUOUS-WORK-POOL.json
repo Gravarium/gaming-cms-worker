@@ -10,8 +10,8 @@
   "repository": "Gravarium/gaming-cms-worker",
   "baseline_branch": "main",
   "base_sha": "2f98de43e3cf4a26addb436cf9908b4135f2bdc6",
-  "published_at": "2026-10-15T01:39:13Z",
-  "summary": "WCP-709 now includes robust fixture DB cleanup and guaranteed module-state restore at exact HEAD 26ee6b263cd0c9685e5a0d7942e907149b18c436; exact-head CI runs 38666794016/38666793726 are pending.",
+  "published_at": "2026-10-15T01:43:45Z",
+  "summary": "WCP-709 completed Worker-only with full exact-head CI green at 26ee6b263cd0c9685e5a0d7942e907149b18c436 (run 38666794016); PRs #538/#539 remain open drafts awaiting Trusted review.",
   "rules": {
     "choose": "Resume the current chat's unfinished claimed branch first. Otherwise atomically claim an eligible published task. If no published task is eligible, independently derive and publish a bounded worker-only CMS proposal from approved product goals and observed code gaps; do not ask the owner for the next FCP number.",
     "atomic_reservation": "Create the exact claim_branch and suggested feature branch from that task's published proposal_base_sha. If the claim already exists, treat it as a hard lock; the owning continuation resumes it and every other AI skips it.",
@@ -71612,14 +71612,14 @@
       "package_id": "WCP-709",
       "title": "Publish a browsable public game-platform directory",
       "risk": "low_public_read_only",
-      "execution_state": "worker_in_progress",
-      "claim_state": "claimed",
+      "execution_state": "worker_complete_awaiting_trusted_review",
+      "claim_state": "locked_until_trusted_resolution",
       "claim_generation": 1,
       "claim_branch": "claim/wcp-709-game-platform-directory-g1",
       "suggested_branch": "feature/wcp-709-game-platform-directory-g1",
       "resume_branch": "feature/wcp-709-game-platform-directory-g1",
       "claimed_on": "2026-10-15T01:19:12Z",
-      "lease_expires_at": "2026-10-15T08:19:12Z",
+      "lease_expires_at": null,
       "base_branch": "main",
       "base_sha": "a6ff8d56cc5fd84b3eada9f6c745e43c70aa810b",
       "proposal_base_branch": "main",
@@ -71692,11 +71692,11 @@
       ],
       "active_head": "26ee6b263cd0c9685e5a0d7942e907149b18c436",
       "last_observed_head": "26ee6b263cd0c9685e5a0d7942e907149b18c436",
-      "last_checkpoint_at": "2026-10-15T01:39:13Z",
+      "last_checkpoint_at": "2026-10-15T01:43:45Z",
       "last_verified_push_at": "2026-10-15T01:38:55Z",
       "worker_pr_state": "open_draft",
-      "ci_result": "pending",
-      "next_action": "WCP-709 now cleans its uniquely slugged release, entry, platform, and game fixtures through targeted database deletes, with module-state restoration guaranteed in finally despite Symfony entity-manager resets. The previous route-priority candidate failed because fixture teardown used detached entities and aborted restoration. Exact HEAD 26ee6b263cd0c9685e5a0d7942e907149b18c436 is validating in runs 38666794016 and 38666793726; await required checks. No merge or deployment.",
+      "ci_result": "success",
+      "next_action": "Exact final HEAD 26ee6b263cd0c9685e5a0d7942e907149b18c436 passed complete Worker CI (run 38666794016: PHP/Symfony and PostgreSQL 18). Feature PR #538 and exact-head CI PR #539 remain open drafts awaiting Trusted review; a duplicate run 38666793726 is still in progress. Preserve lock; no merge or deployment.",
       "worker_pr": 538,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/538",
       "worker_pr_head_sha": "26ee6b263cd0c9685e5a0d7942e907149b18c436",
@@ -71706,12 +71706,12 @@
       "ci_history": [
         {
           "run": 38665106266,
-          "result": "queued",
+          "result": "failure",
           "sha": "34e7b3f658360cb7230420e0caf2813f60caedb7"
         },
         {
           "run": 38665107371,
-          "result": "queued",
+          "result": "failure",
           "sha": "34e7b3f658360cb7230420e0caf2813f60caedb7"
         },
         {
@@ -71731,7 +71731,7 @@
         },
         {
           "run": 38665995474,
-          "result": "success",
+          "result": "failure",
           "sha": "a0a846189bf06dd695056a58321f999458678ef9"
         },
         {
@@ -71746,7 +71746,17 @@
         },
         {
           "run": 38666794016,
-          "result": "queued",
+          "result": "success",
+          "sha": "26ee6b263cd0c9685e5a0d7942e907149b18c436"
+        },
+        {
+          "run": 38666793726,
+          "result": "in_progress",
+          "sha": "26ee6b263cd0c9685e5a0d7942e907149b18c436"
+        },
+        {
+          "run": 38666794016,
+          "result": "success",
           "sha": "26ee6b263cd0c9685e5a0d7942e907149b18c436"
         },
         {
@@ -71754,7 +71764,11 @@
           "result": "in_progress",
           "sha": "26ee6b263cd0c9685e5a0d7942e907149b18c436"
         }
-      ]
+      ],
+      "final_head": "26ee6b263cd0c9685e5a0d7942e907149b18c436",
+      "ci_conclusion": "success",
+      "ci_head": "26ee6b263cd0c9685e5a0d7942e907149b18c436",
+      "completed_at": "2026-10-15T01:43:45Z"
     }
   ],
   "recovery_queue": [],
