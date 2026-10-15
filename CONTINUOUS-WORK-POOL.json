@@ -11,7 +11,7 @@
   "baseline_branch": "main",
   "base_sha": "2f98de43e3cf4a26addb436cf9908b4135f2bdc6",
   "published_at": "2026-10-15T01:47:45Z",
-  "summary": "WCP-710 completed at exact green HEAD 84141ebf3085cbbe4546febcd716b949a0f1bcae (runs 38668395865 and 38668397357 both green). PRs #540/#541 remain open drafts awaiting Trusted review. WCP-709 remains unmerged due to templates/game_catalogue/ prefix conflict with locked FCP-056. WCP-711 open at 17780608c3ece734cd5d8d505f03235ebfd3ffb2 with CI run 38669025648 in progress.",
+  "summary": "WCP-710 complete at green HEAD 84141ebf3085cbbe4546febcd716b949a0f1bcae. WCP-709 unmerged due to locked FCP-056 prefix conflict. WCP-711 is corrected at c05380d017ca4d991d8c462a7e5c8996ef49a2eb with two exact-head CI runs in progress; tests now clean fixture data.",
   "rules": {
     "choose": "Resume the current chat's unfinished claimed branch first. Otherwise atomically claim an eligible published task. If no published task is eligible, independently derive and publish a bounded worker-only CMS proposal from approved product goals and observed code gaps; do not ask the owner for the next FCP number.",
     "atomic_reservation": "Create the exact claim_branch and suggested feature branch from that task's published proposal_base_sha. If the claim already exists, treat it as a hard lock; the owning continuation resumes it and every other AI skips it.",
@@ -72014,24 +72014,40 @@
         "red-ci-stops-integration",
         "worker-code-is-untrusted-no-direct-trusted-integration-or-deployment"
       ],
-      "active_head": "17780608c3ece734cd5d8d505f03235ebfd3ffb2",
-      "last_observed_head": "17780608c3ece734cd5d8d505f03235ebfd3ffb2",
-      "last_checkpoint_at": "2026-10-15T02:04:19Z",
-      "last_verified_push_at": "2026-10-15T02:03:28Z",
+      "active_head": "c05380d017ca4d991d8c462a7e5c8996ef49a2eb",
+      "last_observed_head": "c05380d017ca4d991d8c462a7e5c8996ef49a2eb",
+      "last_checkpoint_at": "2026-10-15T02:09:15Z",
+      "last_verified_push_at": "2026-10-15T02:08:26Z",
       "worker_pr_state": "open_draft",
       "ci_result": "pending",
-      "next_action": "Feature PR #542 and exact-head CI validation PR #543 are open drafts at 17780608c3ece734cd5d8d505f03235ebfd3ffb2. Worker CI run 38669025648 is in progress; inspect PHP/Symfony and PostgreSQL 18 results and correct failures only in the four approved paths. No merge or deployment.",
-      "worker_pr_head_sha": "17780608c3ece734cd5d8d505f03235ebfd3ffb2",
+      "next_action": "The first full-suite run 38669025648 failed: two exact cache-header assertions and three pre-existing catalogue assertions because test-created entries persisted. Tests now check the no-store directive and clean fixtures in finally. New exact-head runs 38669457988 and 38669457185 are in progress on c05380d017ca4d991d8c462a7e5c8996ef49a2eb. No merge or deployment.",
+      "worker_pr_head_sha": "c05380d017ca4d991d8c462a7e5c8996ef49a2eb",
       "worker_pr": 542,
       "worker_pr_url": "https://github.com/Gravarium/gaming-cms-worker/pull/542",
       "ci_validation_pr": 543,
-      "ci_run": 38669025648,
-      "ci_run_url": "https://github.com/Gravarium/gaming-cms-worker/actions/runs/38669025648",
+      "ci_run": 38669457988,
+      "ci_run_url": "https://github.com/Gravarium/gaming-cms-worker/actions/runs/38669457988",
       "ci_history": [
         {
           "run": 38669025648,
           "result": "in_progress",
           "sha": "17780608c3ece734cd5d8d505f03235ebfd3ffb2"
+        },
+        {
+          "run": 38669025648,
+          "result": "failure",
+          "sha": "17780608c3ece734cd5d8d505f03235ebfd3ffb2",
+          "cause": "Strict Cache-Control checks and leaked test fixtures affected existing catalogue tests"
+        },
+        {
+          "run": 38669457988,
+          "result": "in_progress",
+          "sha": "c05380d017ca4d991d8c462a7e5c8996ef49a2eb"
+        },
+        {
+          "run": 38669457185,
+          "result": "in_progress",
+          "sha": "c05380d017ca4d991d8c462a7e5c8996ef49a2eb"
         }
       ]
     }
