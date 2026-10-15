@@ -108,6 +108,7 @@ final class AdminContentReleaseBrowserTest extends WebTestCase
             'status' => ContentRelease::STATUS_DRAFT,
             'page' => 2,
         ]));
+        self::assertSame('/admin/content/releases/calendar', $crawler->filter('.topbar a[href="/admin/content/releases/calendar"]')->attr('href'));
         $parameters = [
             'q' => $this->marker,
             'status' => ContentRelease::STATUS_DRAFT,
