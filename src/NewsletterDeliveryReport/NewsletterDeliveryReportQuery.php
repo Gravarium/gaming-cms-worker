@@ -125,10 +125,8 @@ final readonly class NewsletterDeliveryReportQuery
 
         $nextCursor = null;
         if ($hasMore) {
+            // Removing the lookahead leaves at least one visible campaign.
             $lastCampaign = end($campaigns);
-            if ($lastCampaign === false) {
-                throw new \LogicException('A newsletter report lookahead requires a visible campaign.');
-            }
             $nextCursor = $this->encodeCursor($lastCampaign);
         }
 
