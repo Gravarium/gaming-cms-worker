@@ -7,12 +7,15 @@
 <main class="dashboard">
     <p class="eyebrow">Benachrichtigungen · Newsletter</p>
     <h1>Versandübersicht</h1>
-    <p>Hier siehst du die Zustellstände der letzten 100 Kampagnen. Empfängeradressen und einzelne Zustellvorgänge werden nicht angezeigt.</p>
+    <p>Hier siehst du die Zustellstände in Seiten mit jeweils 25 Kampagnen. Empfängeradressen und einzelne Zustellvorgänge werden nicht angezeigt.</p>
 
     {% if campaigns is empty %}
         <section class="panel" role="status">
             <h2>Noch keine Newsletter-Kampagnen</h2>
             <p>Nach dem Anlegen einer Kampagne erscheinen hier ihre Zustellstände.</p>
+            {% if hasCursor %}
+                <a href="{{ path('app_admin_notification_newsletter_delivery_report_index') }}">Neueste Kampagnen</a>
+            {% endif %}
         </section>
     {% else %}
         {% set campaignStatusLabels = {
@@ -54,6 +57,16 @@
                 </tbody>
             </table>
         </div>
+        {% if hasCursor or nextCursor %}
+            <nav class="pagination" aria-label="Seiten der Newsletter-Auslieferungsübersicht">
+                {% if hasCursor %}
+                    <a href="{{ path('app_admin_notification_newsletter_delivery_report_index') }}" aria-label="Neueste Kampagnen">Neueste Kampagnen</a>
+                {% endif %}
+                {% if nextCursor %}
+                    <a rel="next" href="{{ path('app_admin_notification_newsletter_delivery_report_index', {after: nextCursor}) }}" aria-label="Ältere Kampagnen">Ältere Kampagnen</a>
+                {% endif %}
+            </nav>
+        {% endif %}
     {% endif %}
 </main>
 {% endblock %}

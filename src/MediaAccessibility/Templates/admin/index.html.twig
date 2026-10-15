@@ -9,6 +9,7 @@
     <h1>Bildalternativtexte prüfen</h1>
     <p class="muted">Diese Prüfliste zeigt aktive Bilder ohne gespeicherten Alternativtext. Bei dekorativen Bildern kann ein leerer Alternativtext richtig sein; prüfe deshalb den Einsatzzweck, bevor du Metadaten änderst.</p>
     <p>{{ total }} aktive Bilder ohne Alternativtext · Seite {{ page }} von {{ pages }}</p>
+    <p><a href="{{ path('app_admin_storage_accessibility_export') }}">Bericht als CSV herunterladen</a></p>
 
     {% if limitReached %}
         <p role="status">Die Liste ist auf {{ pageSize * pages }} Einträge begrenzt. Die Gesamtzahl oben umfasst alle passenden Bilder.</p>
