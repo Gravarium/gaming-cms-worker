@@ -73446,7 +73446,7 @@
       "package_id": "WCP-722",
       "title": "Report failed-message payload sizes in actual UTF-8 bytes",
       "risk": "low_admin_read_only_data_accuracy",
-      "execution_state": "unclaimed",
+      "execution_state": "worker_in_progress",
       "claim_generation": 1,
       "claim_branch": "claim/wcp-722-failed-queue-byte-length-g1",
       "suggested_branch": "feature/wcp-722-failed-queue-byte-length-g1",
@@ -73531,9 +73531,14 @@
         "never-merge-or-deploy-to-Trusted"
       ],
       "worker_pr_state": "not_open",
-      "next_action": "Publish and claim this worker-only package from the exact green WCP-721 head, then implement SQL-only UTF-8 byte-size reporting in the two queue readers and regression tests.",
-      "claim_state": "unclaimed",
-      "published_at": "2026-10-15T19:53:24.698Z"
+      "next_action": "Implement SQL-only byte-length projection for the overview and paginated queue; add multibyte regression tests for both readers. Push the exact feature head, open a stacked draft PR and CI-only validation PR, fix failures, then document exact-head green CI. Never merge or deploy.",
+      "claim_state": "active",
+      "published_at": "2026-10-15T19:53:24.698Z",
+      "claimed_on": "2026-10-15T19:53:45.566Z",
+      "lease_expires_at": "2026-10-16T02:53:45.566Z",
+      "last_checkpoint_at": "2026-10-15T19:53:45.566Z",
+      "active_head": "7f1bf6daaa51b8e7b55e7cf51de5cc6f053583b1",
+      "last_observed_head": "7f1bf6daaa51b8e7b55e7cf51de5cc6f053583b1"
     }
   ],
   "recovery_queue": [],
