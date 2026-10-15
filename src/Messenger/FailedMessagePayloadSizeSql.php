@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\\Messenger;
+namespace App\Messenger;
 
-use Doctrine\\DBAL\\Platforms\\AbstractPlatform;
-use Doctrine\\DBAL\\Platforms\\SQLitePlatform;
+use Doctrine\DBAL\Platforms\AbstractPlatform;
+use Doctrine\DBAL\Platforms\SQLitePlatform;
 
 final class FailedMessagePayloadSizeSql
 {
